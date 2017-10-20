@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
-
+from odoo.tools import float_round
 
 class MrpSubProduct(models.Model):
     _name = 'mrp.subproduct'
@@ -33,3 +33,35 @@ class MrpSubProduct(models.Model):
             }
             self.product_uom_id = self.product_id.uom_id.id
         return res
+
+
+class MrpProductProduce(models.TransientModel):
+    _inherit = "mrp.product.produce"
+
+    @api.multi
+    def check_finished_move_lots(self):
+        lots = self.env['stock.move.lots']
+        by_product_moves = self.production_id.move_finished_ids.filtered(lambda m: m.product_id != self.product_id and m.state not in ('done', 'cancel'))
+        for by_product_move in by_product_moves:
+            if by_product_move and by_product_move.product_id.tracking != 'none':
+                qty = float_round(self.product_qty * by_product_move.unit_factor, precision_rounding=by_product_move.product_uom.rounding)
+                vals = {
+                  'move_id': by_product_move.id,
+                  'product_id': by_product_move.product_id.id,
+                  'production_id': self.production_id.id,
+                  'lot_id': False,
+                }
+                if by_product_move.product_id.tracking == 'serial':
+                    vals.update({
+                        'quantity': 1,
+                        'quantity_done': 1,
+                    })
+                    for i in range(0, int(qty)):
+                        lots.create(vals)
+                else:
+                    vals.update({
+                        'quantity': qty,
+                        'quantity_done': qty,
+                    })
+                    lots.create(vals)
+        return super(MrpProductProduce, self).check_finished_move_lots()
