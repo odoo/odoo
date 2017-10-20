@@ -7837,6 +7837,32 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('widget many2many_checkboxes: start non empty, then remove twice', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].timmy = [12,14];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<group><field name="timmy" widget="many2many_checkboxes"/></group>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {mode: 'edit'},
+        });
+
+        form.$('div.o_field_widget div.o_checkbox input').eq(0).click();
+        form.$('div.o_field_widget div.o_checkbox input').eq(1).click();
+        form.$buttons.find('.o_form_button_save').click();
+        assert.notOk(form.$('div.o_field_widget div.o_checkbox input').eq(0).prop('checked'),
+            "first checkbox should not be checked");
+        assert.notOk(form.$('div.o_field_widget div.o_checkbox input').eq(1).prop('checked'),
+            "second checkbox should not be checked");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2ManyBinaryMultiFiles');
 
     QUnit.test('widget many2many_binary', function (assert) {
