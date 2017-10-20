@@ -134,7 +134,14 @@ var ProductWishlist = Widget.extend({
         });
 
         add_to_cart.then(function(resp) {
-            $('.my_cart_quantity').text(resp.cart_quantity || '* 1');
+            if (resp.warning) {
+                if (! $('#data_warning').length) {
+                    $('.wishlist-section').prepend('<div class="mt16 alert alert-danger alert-dismissable" role="alert" id="data_warning"></div>');
+                }
+                var cart_alert = $('.wishlist-section').parent().find('#data_warning');
+                cart_alert.html('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> ' + resp.warning);
+            }
+            $('.my_cart_quantity').html(resp.cart_quantity || '<i class="fa fa-warning" /> ');
         });
         return add_to_cart;
     },
