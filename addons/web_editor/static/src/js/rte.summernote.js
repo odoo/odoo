@@ -771,7 +771,7 @@ eventHandler.attach = function (oLayoutInfo, options) {
      * Open Link Dialog on double click on a link/button.
      * Shows a tooltip on click to say to the user he can double click.
      */
-    create_dblclick_feature("a[href], .btn", function () {
+    create_dblclick_feature("a[href], a.btn, button.btn", function () {
         eventHandler.modules.linkDialog.show(oLayoutInfo);
     });
 

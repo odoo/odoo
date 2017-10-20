@@ -505,6 +505,9 @@ var FieldDomain = common.AbstractField.extend(common.ReinitializeFieldMixin).ext
             this.$errorMessage.toggleClass("hidden", this.valid);
         }).bind(this));
     },
+    is_false: function () {
+        return false;
+    },
     is_syntax_valid: function() {
         return this.field_manager.get("actual_mode") === "view" || this.valid;
     },
