@@ -25,9 +25,10 @@ class SaleOrder(models.Model):
                     # Make sure line still exists, it may have been deleted in super()_cartupdate because qty can be <= 0
                     if line.exists() and new_val['quantity']:
                         line.warning_stock = _('You ask for %s products but only %s is available') % (cart_qty, new_val['quantity'])
+                        values['warning'] = line.warning_stock
                     else:
                         self.warning_stock = _("Some products became unavailable and your cart has been updated. We're sorry for the inconvenience.")
-
+                        values['warning'] = self.warning_stock
         return values
 
     @api.multi
