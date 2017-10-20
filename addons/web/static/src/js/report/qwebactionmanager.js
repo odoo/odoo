@@ -21,7 +21,7 @@ var WKHTMLTOPDF_MESSAGES = {
 };
 
 var trigger_download = function (session, response, c, action, options) {
-    session.get_file({
+    return session.get_file({
         url: '/report/download',
         data: {data: JSON.stringify(response)},
         complete: framework.unblockUI,
@@ -107,7 +107,10 @@ ActionManager.include({
                             report_urls['qweb-pdf'],
                             action.report_type, //The 'root' report is considered the maine one, so we use its type for all the others.
                         ];
-                        trigger_download(self.getSession(), response, c, current_action, options);
+                        var success = trigger_download(self.getSession(), response, c, current_action, options);
+                        if (!success) {
+                            self.do_warn(_t('Warning'), _t('A popup window with your report was blocked.  You may need to change your browser settings to allow popup windows for this page.'), true);
+                        }
 
                         treated_actions.push(current_action);
                         current_action = current_action.next_report_to_generate;

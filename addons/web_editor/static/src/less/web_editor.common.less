@@ -23,7 +23,9 @@ html, body {
 /* ----- GENERIC LAYOUTING HELPERS ---- */
 /* table */
 #wrapwrap, .o_editable {
-    table.table {
+    // Only style editor-made tables (shop/portal/... tables are not supposed to
+    // use table-bordered...)
+    table.table.table-bordered {
         table-layout: fixed;
         td {
             min-width: 20px;
