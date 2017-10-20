@@ -12,7 +12,7 @@ from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 
 from odoo import api, fields, models, _
-from odoo.addons.base.res.res_partner import _tz_get
+from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_compare
 

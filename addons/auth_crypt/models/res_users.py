@@ -6,7 +6,7 @@ from passlib.context import CryptContext
 import odoo
 from odoo import api, fields, models
 
-from odoo.addons.base.res import res_users
+from odoo.addons.base.models import res_users
 res_users.USER_PRIVATE_FIELDS.append('password_crypt')
 
 _logger = logging.getLogger(__name__)
