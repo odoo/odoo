@@ -4,4 +4,5 @@ from . import product
 from . import sale_order
 from . import crm_team
 from . import res_config
+from . import ir_model_fields
 from . import website

@@ -799,7 +799,7 @@ class AccountTax(models.Model):
             # (145 - 15) / (1.0 + ((10 + 20) / 100.0)) = 130 / 1.3 = 100
             if fixed_amount == 0.0 and percent_amount == 0.0:
                 return base_amount
-            return round((base_amount - fixed_amount) / (1.0 + percent_amount / 100.0), prec)
+            return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0)
 
         base = round(price_unit * quantity, prec)
 
@@ -863,7 +863,7 @@ class AccountTax(models.Model):
                 'id': tax.id,
                 'name': tax.with_context(**{'lang': partner.lang} if partner else {}).name,
                 'amount': sign * tax_amount,
-                'base': sign * tax_base,
+                'base': round(sign * tax_base, prec),
                 'sequence': tax.sequence,
                 'account_id': tax.account_id.id,
                 'refund_account_id': tax.refund_account_id.id,
@@ -874,7 +874,7 @@ class AccountTax(models.Model):
             'taxes': taxes_vals,
             'total_excluded': sign * (currency.round(total_excluded) if round_total else total_excluded),
             'total_included': sign * (currency.round(total_included) if round_total else total_included),
-            'base': sign * base,
+            'base': round(sign * base, prec),
         }
 
     @api.model

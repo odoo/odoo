@@ -14,5 +14,5 @@ class ProcurementOrder(models.Model):
         return vals
 
 class ProcurementGroup(models.Model):
-	_inherit = 'procurement.group'
-	sale_order_id = fields.Many2one('sale.order', string='Sale Order')
+    _inherit = 'procurement.group'
+    sale_order_id = fields.Many2one('sale.order', string='Sale Order')

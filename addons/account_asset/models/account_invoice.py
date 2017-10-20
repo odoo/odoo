@@ -12,6 +12,16 @@ import odoo.addons.decimal_precision as dp
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
+    @api.model
+    def _refund_cleanup_lines(self, lines):
+        result = super(AccountInvoice, self)._refund_cleanup_lines(lines)
+        for i, line in enumerate(lines):
+            for name, field in line._fields.items():
+                if name == 'asset_category_id':
+                    result[i][2][name] = False
+                    break
+        return result
+
     @api.multi
     def action_cancel(self):
         res = super(AccountInvoice, self).action_cancel()
