@@ -3283,11 +3283,17 @@ var BasicModel = AbstractModel.extend({
      * This method is quite important: it is supposed to perform the /onchange
      * rpc and apply the result.
      *
+     * The changes that triggered the onchange are assumed to have already been
+     * applied to the record.
+     *
      * @param {Object} record
      * @param {string[]} fields changed fields
      * @param {string} [viewType] current viewType. If not set, we will assume
      *   main viewType from the record
-     * @returns {Deferred}
+     * @returns {Deferred} Note: this deferred cannot fail. It is either in the
+     *   'success' or 'pending' state.  If the onchange rpc fails, it will be
+     *   resolved with an empty dictionary.  Note that the initial change was
+     *   already applied.
      */
     _performOnChange: function (record, fields, viewType) {
         var self = this;
@@ -3307,7 +3313,9 @@ var BasicModel = AbstractModel.extend({
         var context = this._getContext(record, options);
         var currentData = this._generateOnChangeData(record, {changesOnly: false});
 
-        return self._rpc({
+        var def = $.Deferred();
+
+        self._rpc({
                 model: record.model,
                 method: 'onchange',
                 args: [idList, currentData, fields, onchangeSpec, context],
@@ -3332,9 +3340,12 @@ var BasicModel = AbstractModel.extend({
                     record._domains = _.extend(record._domains, result.domain);
                 }
                 return self._applyOnChange(result.value, record).then(function () {
-                    return result;
+                    def.resolve(result);
                 });
+            }).fail(function () {
+                def.resolve({});
             });
+        return def;
     },
     /**
      * Once a record is created and some data has been fetched, we need to do
