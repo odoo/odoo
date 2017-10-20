@@ -5836,6 +5836,66 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('display correct value after validation error', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.onchanges.turtles = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="turtles">' +
+                            '<tree editable="bottom">' +
+                                '<field name="turtle_foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    // we simulate a validation error.  In the 'real' web client,
+                    // the server error will be used by the session to display
+                    // an error dialog.  From the point of view of the basic
+                    // model, the deferred is just rejected.
+                    return $.Deferred().reject();
+                }
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1].turtles[0], [1,2,{turtle_foo: 'foo'}],
+                        'should send the "bad" value');
+                    // we simulate a validation error
+                    return $.Deferred().reject();
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {mode: 'edit'},
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_data_row .o_data_cell:nth(0)').text(), 'blip',
+            "initial text should be correct");
+        form.$('.o_data_row .o_data_cell:nth(0)').click();
+        form.$('.o_field_widget[name=turtle_foo]').val('foo').trigger('input');
+
+        // we try to validate the line. This triggers an onchange which will be
+        // rejected. The line will be returned to readonly mode, but with the
+        // new invalid value.
+        form.$el.click();
+
+        assert.strictEqual(form.$('.o_data_row .o_data_cell:nth(0)').text(), 'foo',
+            "turtle_foo text should now be foo (invalid value)");
+
+        // we make sure here that when we save, the values are the current
+        // values displayed in the field.
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.mode, 'edit', "form view should still be in edit mode");
+
+        form.destroy();
+    });
+
+
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {
