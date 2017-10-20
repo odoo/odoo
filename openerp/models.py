@@ -2079,7 +2079,12 @@ class BaseModel(object):
         if context is None:
             context = {}
         self.check_access_rights(cr, uid, 'read')
-        query = self._where_calc(cr, uid, domain, context=context) 
+
+        # For transient models, restrict access to the current user, except for the super-user
+        if self.is_transient() and self._log_access and user != SUPERUSER_ID:
+            domain = expression.AND(([('create_uid', '=', user)], domain or []))
+
+        query = self._where_calc(cr, uid, domain, context=context)
         fields = fields or self._columns.keys()
 
         groupby = [groupby] if isinstance(groupby, basestring) else groupby
@@ -3272,6 +3277,14 @@ class BaseModel(object):
 
         # make a query object for selecting ids, and apply security rules to it
         query = Query(['"%s"' % self._table], ['"%s".id IN %%s' % self._table], [])
+
+        # For transient models, restrict access to the current user, except for the super-user
+        if self.is_transient() and self._log_access and self._uid != SUPERUSER_ID:
+            e = expression.expression([('create_uid', '=', self._uid)], self)
+            where_clause, where_params = e.to_sql()
+            query.where_clause += [where_clause] if where_clause else []
+            query.where_clause_params += where_params
+
         self._apply_ir_rules(query, 'read')
         order_str = self._generate_order_by(None, query)
 
