@@ -294,7 +294,7 @@ var BaseSettingRenderer = FormRenderer.extend({
                     var settingBox = $(this).closest('.o_setting_box');
                     if (!settingBox.hasClass('o_invisible_modifier')) {
                         settingBox.removeClass('o_hidden');
-                        $(this).html(self._wordHighlighter($(this).text(), self.searchText));
+                        $(this).html(self._wordHighlighter($(this).html(), self.searchText));
                     } else {
                         self.inVisibleCount++;
                     }
