@@ -261,7 +261,7 @@
 
                             <div class="clearfix" />
                             <div t-attf-class="form-group #{error.get('street') and 'has-error' or ''} col-lg-6">
-                                <label class="control-label label-optional" for="street">Street</label>
+                                <label class="control-label" for="street">Street</label>
                                 <input type="text" name="street" class="form-control" t-att-value="street or partner.street"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('city') and 'has-error' or ''} col-lg-6">
