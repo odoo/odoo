@@ -1112,6 +1112,42 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('properly apply onchange when changed field is active field', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.onchanges = {
+            int_field: function (obj) {
+                obj.int_field = 14;
+            },
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group><field name="int_field"/></group>' +
+                '</form>',
+            res_id: 2,
+            viewOptions: {mode: 'edit'},
+        });
+
+
+        assert.strictEqual(form.$('input').val(), "9",
+                        "should contain input with initial value");
+
+        form.$('input').val("666").trigger('input');
+
+        assert.strictEqual(form.$('input').val(), "14",
+                "value should have been set to 14 by onchange");
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.strictEqual(form.$('.o_field_widget[name=int_field]').text(), "14",
+            "value should still be 14");
+
+        form.destroy();
+    });
+
     QUnit.test('onchange send only the present fields to the server', function (assert) {
         assert.expect(1);
         this.data.partner.records[0].product_id = false;
