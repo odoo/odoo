@@ -2,8 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import models
-from . import module
 from . import report
+from . import wizard
 
 
 def post_init(cr, registry):
