@@ -3,4 +3,3 @@
 
 from . import module
 from . import wizard
-from . import report
