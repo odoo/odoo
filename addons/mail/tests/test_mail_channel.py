@@ -44,7 +44,7 @@ class TestMailGroup(TestMail):
         cls.env['mail.channel']._patch_method('message_get_recipient_values', mail_group_message_get_recipient_values)
         super(TestMailGroup, cls).tearDownClass()
 
-    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_access_rights_public(self):
         # Read public group -> ok
         self.group_public.sudo(self.user_public).read()
@@ -72,7 +72,7 @@ class TestMailGroup(TestMail):
         with self.assertRaises(AccessError):
             self.group_public.sudo(self.user_public).unlink()
 
-    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_access_rights_groups(self):
         # Employee read employee-based group: ok
         # TODO Change the except_orm to Warning

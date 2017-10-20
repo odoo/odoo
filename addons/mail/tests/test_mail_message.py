@@ -196,7 +196,7 @@ class TestMailMessageAccess(TestMail):
         messages = self.env['mail.message'].sudo(self.user_portal).search([('subject', 'like', '_Test')])
         self.assertEqual(messages, msg4 | msg5)
 
-    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_mail_message_access_read_crash(self):
         # TODO: Change the except_orm to Warning ( Because here it's call check_access_rule
         # which still generate exception in except_orm.So we need to change all
@@ -234,7 +234,7 @@ class TestMailMessageAccess(TestMail):
         # Test: Bert reads the message, ok because linked to a doc he is allowed to read
         self.message.sudo(self.user_employee).read()
 
-    @mute_logger('odoo.addons.base.ir.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_model')
     def test_mail_message_access_create_crash_public(self):
         # Do: Bert creates a message on Pigs -> ko, no creation rights
         with self.assertRaises(AccessError):

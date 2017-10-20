@@ -17,8 +17,8 @@ from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, _SAFE_OPCODES
 from odoo.http import request
 from odoo.modules.module import get_resource_path
 
-from .qweb import QWeb, Contextifier
-from .assetsbundle import AssetsBundle
+from odoo.addons.base.models.qweb import QWeb, Contextifier
+from odoo.addons.base.models.assetsbundle import AssetsBundle
 
 _logger = logging.getLogger(__name__)
 

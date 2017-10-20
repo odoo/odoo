@@ -2,9 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import models
-from . import ir
 from . import module
-from . import res
 from . import report
 
 
