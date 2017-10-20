@@ -2080,8 +2080,8 @@ class BaseModel(object):
             context = {}
         self.check_access_rights(cr, uid, 'read')
 
-        # For transient models, restrict access to the current user, except for the super-user
-        if self.is_transient() and self._log_access and user != SUPERUSER_ID:
+        # For transient models, restrict access to the current user
+        if self.is_transient():
             domain = expression.AND(([('create_uid', '=', user)], domain or []))
 
         query = self._where_calc(cr, uid, domain, context=context)
