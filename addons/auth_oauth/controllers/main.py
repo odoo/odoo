@@ -6,6 +6,7 @@ import logging
 
 import json
 
+import werkzeug.urls
 import werkzeug.utils
 from werkzeug.exceptions import BadRequest
 
@@ -148,7 +149,11 @@ class OAuthController(http.Controller):
                     url = '/web#action=%s' % action
                 elif menu:
                     url = '/web#menu_id=%s' % menu
-                return login_and_redirect(*credentials, redirect_url=url)
+                resp = login_and_redirect(*credentials, redirect_url=url)
+                # Since /web is hardcoded, verify user has right to land on it
+                if werkzeug.urls.url_parse(resp.location).path == '/web' and not request.env.user.has_group('base.group_user'):
+                    resp.location = '/'
+                return resp
             except AttributeError:
                 # auth_signup is not installed
                 _logger.error("auth_signup not installed on database %s: oauth sign up cancelled." % (dbname,))
