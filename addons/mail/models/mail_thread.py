@@ -829,11 +829,13 @@ class MailThread(models.AbstractModel):
 
     def _routing_warn(self, error_message, warn_suffix, message_id, route, raise_exception):
         """ Tools method used in message_route_verify: whether to log a warning or raise an error """
-        full_message = _('Routing mail with Message-Id %s: route %s: %s') % (message_id, route, error_message)
+        short_message = _("Mailbox unavailable - %s") % error_message
+        full_message = ('Routing mail with Message-Id %s: route %s: %s' %
+                        (message_id, route, error_message))
+        _logger.info(full_message + (warn_suffix and '; %s' % warn_suffix or ''))
         if raise_exception:
-            raise ValueError(full_message)
-        else:
-            _logger.info(full_message + warn_suffix and '; %s' % warn_suffix or '')
+            # sender should not see private diagnostics info, just the error
+            raise ValueError(short_message)
 
     def _routing_create_bounce_email(self, email_from, body_html, message):
         bounce_to = tools.decode_message_header(message, 'Return-Path') or email_from

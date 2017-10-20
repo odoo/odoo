@@ -18,9 +18,9 @@ _logger = logging.getLogger(__name__)
 # Those are the builtin raspberry pi USB modules, they should
 # not appear in the list of connected devices.
 BANNED_DEVICES = {
-	"0424:9514",	# Standard Microsystem Corp. Builtin Ethernet module
-	"1d6b:0002",	# Linux Foundation 2.0 root hub
-	"0424:ec00",	# Standard Microsystem Corp. Other Builtin Ethernet module
+    "0424:9514",    # Standard Microsystem Corp. Builtin Ethernet module
+    "1d6b:0002",    # Linux Foundation 2.0 root hub
+    "0424:ec00",    # Standard Microsystem Corp. Other Builtin Ethernet module
 }
 
 

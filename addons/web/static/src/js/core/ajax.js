@@ -212,6 +212,9 @@ var loadJS = (function () {
  * @param {Function} [options.success] callback in case of download success
  * @param {Function} [options.error] callback in case of request error, provided with the error body
  * @param {Function} [options.complete] called after both ``success`` and ``error`` callbacks have executed
+ * @returns {boolean} a false value means that a popup window was blocked. This
+ *   mean that we probably need to inform the user that something needs to be
+ *   changed to make it work.
  */
 function get_file(options) {
     // need to detect when the file is done downloading (not used
@@ -232,7 +235,12 @@ function get_file(options) {
         var url = options.session.url(options.url, params);
         if (options.complete) { options.complete(); }
 
-        return window.open(url);
+        var w = window.open(url);
+        if (!w || w.closed || typeof w.closed === 'undefined') {
+            // popup was blocked
+            return false;
+        }
+        return true;
     }
 
     var $form, $form_data = $('<div>');
@@ -309,6 +317,7 @@ function get_file(options) {
         }
     };
     timer = setTimeout(waitLoop, CHECK_INTERVAL);
+    return true;
 };
 
 function post (controller_url, data) {

@@ -43,13 +43,13 @@ class PaymentAcquirerStripe(models.Model):
             'amount': tx_values.get('amount'),
             'currency': tx_values.get('currency') and tx_values.get('currency').name or '',
             'currency_id': tx_values.get('currency') and tx_values.get('currency').id or '',
-            'address_line1': tx_values['partner_address'],
-            'address_city': tx_values['partner_city'],
-            'address_country': tx_values['partner_country'] and tx_values['partner_country'].name or '',
-            'email': tx_values['partner_email'],
-            'address_zip': tx_values['partner_zip'],
-            'name': tx_values['partner_name'],
-            'phone': tx_values['partner_phone'],
+            'address_line1': tx_values.get('partner_address'),
+            'address_city': tx_values.get('partner_city'),
+            'address_country': tx_values.get('partner_country') and tx_values['partner_country'].name or '',
+            'email': tx_values.get('partner_email'),
+            'address_zip': tx_values.get('partner_zip'),
+            'name': tx_values.get('partner_name'),
+            'phone': tx_values.get('partner_phone'),
         }
 
         temp_stripe_tx_values['returndata'] = stripe_tx_values.pop('return_url', '')
@@ -107,14 +107,15 @@ class PaymentTransactionStripe(models.Model):
         charge_params = {
             'amount': int(self.amount if self.currency_id.name in INT_CURRENCIES else self.amount*100),
             'currency': self.currency_id.name,
-            'metadata[reference]': self.reference
+            'metadata[reference]': self.reference,
+            'description': self.reference,
         }
         if acquirer_ref:
             charge_params['customer'] = acquirer_ref
         if tokenid:
             charge_params['card'] = str(tokenid)
         if email:
-            charge_params['receipt_email'] = email
+            charge_params['receipt_email'] = email.strip()
         r = requests.post(api_url_charge,
                           auth=(self.acquirer_id.stripe_secret_key, ''),
                           params=charge_params,
@@ -156,12 +157,17 @@ class PaymentTransactionStripe(models.Model):
         transaction record. """
         reference = data.get('metadata', {}).get('reference')
         if not reference:
-            error_msg = _(
-                'Stripe: invalid reply received from provider, missing reference. Additional message: %s'
-                % data.get('error', {}).get('message', '')
-            )
-            _logger.error(error_msg)
+            stripe_error = data.get('error', {}).get('message', '')
+            _logger.error('Stripe: invalid reply received from stripe API, looks like '
+                          'the transaction failed. (error: %s)', stripe_error  or 'n/a')
+            error_msg = _("We're sorry to report that the transaction has failed.")
+            if stripe_error:
+                error_msg += " " + (_("Stripe gave us the following info about the problem: '%s'") %
+                                    stripe_error)
+            error_msg += " " + _("Perhaps the problem can be solved by double-checking your "
+                                 "credit card details, or contacting your bank?")
             raise ValidationError(error_msg)
+
         tx = self.search([('reference', '=', reference)])
         if not tx:
             error_msg = (_('Stripe: no order found for reference %s') % reference)
@@ -231,6 +237,7 @@ class PaymentTokenStripe(models.Model):
                 'card[exp_month]': str(values['cc_expiry'][:2]),
                 'card[exp_year]': str(values['cc_expiry'][-2:]),
                 'card[cvc]': values['cvc'],
+                'card[name]': values['cc_holder_name'],
             }
             r = requests.post(url_token,
                               auth=(payment_acquirer.stripe_secret_key, ''),
@@ -239,8 +246,12 @@ class PaymentTokenStripe(models.Model):
             token = r.json()
             if token.get('id'):
                 customer_params = {
-                    'source': token['id']
+                    'source': token['id'],
+                    'description': values['cc_holder_name']
                 }
+                if values.get('partner_id'):
+                    partner = self.env['res.partner'].browse(values['partner_id'])
+                    customer_params['email'] = partner.email and partner.email.strip()
                 r = requests.post(url_customer,
                                   auth=(payment_acquirer.stripe_secret_key, ''),
                                   params=customer_params,

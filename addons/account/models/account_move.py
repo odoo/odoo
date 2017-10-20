@@ -698,19 +698,36 @@ class AccountMoveLine(models.Model):
             '|', ('date_maturity', 'like', str),
             '&', ('name', '!=', '/'), ('name', 'ilike', str)
         ]
-        try:
-            amount = float(str)
-            amount_domain = [
-                '|', ('amount_residual', '=', amount),
-                '|', ('amount_residual_currency', '=', amount),
-                '|', ('amount_residual', '=', -amount),
-                '|', ('amount_residual_currency', '=', -amount),
-                '&', ('account_id.internal_type', '=', 'liquidity'),
-                '|', '|', ('debit', '=', amount), ('credit', '=', amount), ('amount_currency', '=', amount),
-            ]
-            str_domain = expression.OR([str_domain, amount_domain])
-        except:
-            pass
+        if str[0] in ['-', '+']:
+            try:
+                amounts_str = str.split('|')
+                for amount_str in amounts_str:
+                    amount = amount_str[0] == '-' and float(amount_str) or float(amount_str[1:])
+                    amount_domain = [
+                        '|', ('amount_residual', '=', amount),
+                        '|', ('amount_residual_currency', '=', amount),
+                        '|', (amount_str[0] == '-' and 'credit' or 'debit', '=', float(amount_str[1:])),
+                        ('amount_currency', '=', amount),
+                    ]
+                    str_domain = expression.OR([str_domain, amount_domain])
+            except:
+                pass
+        else:
+            try:
+                amount = float(str)
+                amount_domain = [
+                    '|', ('amount_residual', '=', amount),
+                    '|', ('amount_residual_currency', '=', amount),
+                    '|', ('amount_residual', '=', -amount),
+                    '|', ('amount_residual_currency', '=', -amount),
+                    '&', ('account_id.internal_type', '=', 'liquidity'),
+                    '|', '|', '|', ('debit', '=', amount), ('credit', '=', amount),
+                        ('amount_currency', '=', amount),
+                        ('amount_currency', '=', -amount),
+                ]
+                str_domain = expression.OR([str_domain, amount_domain])
+            except:
+                pass
         return str_domain
 
     def _domain_move_lines_for_manual_reconciliation(self, account_id, partner_id=False, excluded_ids=None, str=False):
@@ -753,6 +770,7 @@ class AccountMoveLine(models.Model):
 
         for line in self:
             company_currency = line.account_id.company_id.currency_id
+            line_currency = (line.currency_id and line.amount_currency) and line.currency_id or company_currency
             ret_line = {
                 'id': line.id,
                 'name': line.name and line.name != '/' and line.move_id.name + ': ' + line.name or line.move_id.name,
@@ -769,7 +787,7 @@ class AccountMoveLine(models.Model):
                 'journal_id': [line.journal_id.id, line.journal_id.display_name],
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
-                'currency_id': (line.currency_id and line.amount_currency) and line.currency_id.id or False,
+                'currency_id': line_currency.id,
             }
 
             debit = line.debit
@@ -784,7 +802,7 @@ class AccountMoveLine(models.Model):
 
             # Get right debit / credit:
             target_currency = target_currency or company_currency
-            line_currency = (line.currency_id and line.amount_currency) and line.currency_id or company_currency
+            amount_currency = debit - credit
             amount_currency_str = ""
             total_amount_currency_str = ""
             if line_currency != company_currency and target_currency == line_currency:
@@ -809,9 +827,10 @@ class AccountMoveLine(models.Model):
                 actual_debit = debit > 0 and amount or 0.0
                 actual_credit = credit > 0 and -amount or 0.0
                 currency = company_currency
+
             if line_currency != target_currency:
-                target_currency.compute(total_amount, line_currency)
-                amount_currency_str = formatLang(self.env, target_currency.compute(abs(actual_debit or actual_credit), line_currency), currency_obj=line_currency)
+                amount_currency = target_currency.compute(total_amount, line_currency)
+                amount_currency_str = formatLang(self.env, abs(amount_currency), currency_obj=line_currency)
                 total_amount_currency_str = formatLang(self.env, target_currency.compute(total_amount, line_currency), currency_obj=line_currency)
             if currency != target_currency:
                 ctx = context.copy()
@@ -827,6 +846,7 @@ class AccountMoveLine(models.Model):
             ret_line['amount_str'] = amount_str
             ret_line['total_amount_str'] = total_amount_str
             ret_line['amount_currency_str'] = amount_currency_str
+            ret_line['amount_currency'] = amount_currency
             ret_line['total_amount_currency_str'] = total_amount_currency_str
             ret.append(ret_line)
         return ret

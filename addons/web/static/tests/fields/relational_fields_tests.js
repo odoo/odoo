@@ -1064,14 +1064,14 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('list in form: default_get with x2many create and onchange', function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         this.data.partner.onchanges.turtles = function (obj) {
             assert.deepEqual(
                 obj.turtles,
                 [
-                    [0, 2, {turtle_foo: 'blip', id: 2}],
-                    [0, 3, {turtle_foo: 'kawa', id: 3}]
+                    [1, 2, {turtle_foo: 'blip'}],
+                    [1, 3, {turtle_foo: 'kawa'}]
                 ],
                 "should have properly created the x2many command list");
         };
@@ -1094,9 +1094,20 @@ QUnit.module('relational_fields', {
                 if (args.method === 'default_get') {
                     return $.when({turtles: [[6, 0, [2,3]]]});
                 }
+                if (args.method === 'create') {
+                    // it would be even better if we did not send the current
+                    // unchanged state with the command 1, but this seems more
+                    // difficult.
+                    assert.deepEqual(args.args[0].turtles, [
+                        [1, 2, {turtle_foo: 'blip'}],
+                        [1, 3, {turtle_foo: 'kawa'}]
+                    ], 'should send proper commands to create method');
+                }
                 return this._super.apply(this, arguments);
             },
         });
+
+        form.$buttons.find('.o_form_button_save').click();
 
         form.destroy();
     });
@@ -6313,6 +6324,66 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('display correct value after validation error', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.onchanges.turtles = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="turtles">' +
+                            '<tree editable="bottom">' +
+                                '<field name="turtle_foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    // we simulate a validation error.  In the 'real' web client,
+                    // the server error will be used by the session to display
+                    // an error dialog.  From the point of view of the basic
+                    // model, the deferred is just rejected.
+                    return $.Deferred().reject();
+                }
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1].turtles[0], [1,2,{turtle_foo: 'foo'}],
+                        'should send the "bad" value');
+                    // we simulate a validation error
+                    return $.Deferred().reject();
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {mode: 'edit'},
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_data_row .o_data_cell:nth(0)').text(), 'blip',
+            "initial text should be correct");
+        form.$('.o_data_row .o_data_cell:nth(0)').click();
+        form.$('.o_field_widget[name=turtle_foo]').val('foo').trigger('input');
+
+        // we try to validate the line. This triggers an onchange which will be
+        // rejected. The line will be returned to readonly mode, but with the
+        // new invalid value.
+        form.$el.click();
+
+        assert.strictEqual(form.$('.o_data_row .o_data_cell:nth(0)').text(), 'foo',
+            "turtle_foo text should now be foo (invalid value)");
+
+        // we make sure here that when we save, the values are the current
+        // values displayed in the field.
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.mode, 'edit', "form view should still be in edit mode");
+
+        form.destroy();
+    });
+
+
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {
@@ -7154,6 +7225,42 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 40,
             'there should be 40 records displayed on page 1');
 
+        form.destroy();
+    });
+
+    QUnit.test('default_get, onchange, onchange on m2m', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.onchanges.int_field = function (obj) {
+            if (obj.int_field === 2) {
+                assert.deepEqual(obj.timmy, [
+                    [6, false, [12]],
+                    [1, 12, {display_name: 'gold'}]
+                ]);
+            }
+            obj.timmy = [
+                [5],
+                [1, 12, {display_name: 'gold'}]
+            ];
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="timmy">' +
+                            '<tree>' +
+                                '<field name="display_name"/>' +
+                            '</tree>' +
+                        '</field>' +
+                        '<field name="int_field"/>' +
+                    '</sheet>' +
+                '</form>',
+        });
+
+        form.$('.o_field_widget[name=int_field]').val(2).trigger('input');
         form.destroy();
     });
 
@@ -8312,6 +8419,32 @@ QUnit.module('relational_fields', {
         assert.notOk(form.$('div.o_field_widget div.o_checkbox input').eq(0).prop('checked'),
             "first checkbox should be checked");
         assert.ok(form.$('div.o_field_widget div.o_checkbox input').eq(1).prop('checked'),
+            "second checkbox should not be checked");
+
+        form.destroy();
+    });
+
+    QUnit.test('widget many2many_checkboxes: start non empty, then remove twice', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].timmy = [12,14];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<group><field name="timmy" widget="many2many_checkboxes"/></group>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {mode: 'edit'},
+        });
+
+        form.$('div.o_field_widget div.o_checkbox input').eq(0).click();
+        form.$('div.o_field_widget div.o_checkbox input').eq(1).click();
+        form.$buttons.find('.o_form_button_save').click();
+        assert.notOk(form.$('div.o_field_widget div.o_checkbox input').eq(0).prop('checked'),
+            "first checkbox should not be checked");
+        assert.notOk(form.$('div.o_field_widget div.o_checkbox input').eq(1).prop('checked'),
             "second checkbox should not be checked");
 
         form.destroy();

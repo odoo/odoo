@@ -14,120 +14,111 @@ odoo.define('payment_stripe.stripe', function(require) {
         'RWF', 'KRW', 'VUV', 'VND', 'XOF'
     ];
 
-    function getStripeHandler(parentElement)
-    {
-        var handler = StripeCheckout.configure({
-            key: $("input[name='stripe_key']", parentElement).val(),
-            image: $("input[name='stripe_image']", parentElement).val(),
-            locale: 'auto',
-            token: function(token, args) {
-                handler.isTokenGenerate = true;
-                ajax.jsonRpc("/payment/stripe/create_charge", 'call', {
-                    tokenid: token.id,
-                    email: token.email,
-                    amount: $("input[name='amount']", parentElement).val(),
-                    acquirer_id: $("#acquirer_stripe", parentElement).val(),
-                    currency: $("input[name='currency']", parentElement).val(),
-                    invoice_num: $("input[name='invoice_num']", parentElement).val(),
-                    return_url: $("input[name='return_url']", parentElement).val()
-                }).done(function(data){
-                    handler.isTokenGenerate = false;
-                    window.location.href = data;
-                }).fail(function(){
-                    var msg = arguments && arguments[1] && arguments[1].data && arguments[1].data.message;
-                    var wizard = $(qweb.render('stripe.error', {'msg': msg || _t('Payment error')}));
-                    wizard.appendTo($('body')).modal({'keyboard': true});
-                });
-            },
-        });
-        return handler;
+    if ($.blockUI) {
+        // our message needs to appear above the modal dialog
+        $.blockUI.defaults.baseZ = 2147483647; //same z-index as StripeCheckout
+        $.blockUI.defaults.css.border = '0';
+        $.blockUI.defaults.css["background-color"] = '';
+        $.blockUI.defaults.overlayCSS["opacity"] = '0.9';
     }
 
-    $(document).ready(function (){
-        if (!$('.o_payment_form').length) {
-            return $.Deferred().reject("DOM doesn't contain '.o_payment_form'");
-        }
-
-        $('#o_payment_form_pay').on('click', function(ev){
-            // we retrieve the payment form
-            var parent_form = ev.target.form;
-            // then the checked radio
-            var checked_radio = $('input[type="radio"]:checked', parent_form);
-            // check if there's one checked radio
-            if(checked_radio.length != 1) {
-                return;
-            }
-            // if there's a checked radio, we retrieve the usefull data
-            var acquirer_id = checked_radio.data('acquirerId');
-            var provider = checked_radio.data('provider');
-            var is_form_payment = checked_radio.data('form-payment') === "True";
-            // now we check if the user has clicked on stripe radio button and wants to pay via the checkout form
-            if(provider != "stripe" || is_form_payment !== true) {
-                return;
-            }
-            // from here we retrieve the inputs that contains the data we need
-            var provider_form = $("#o_payment_form_acq_" + acquirer_id, parent_form);
-
-            var so_id = $("input[name='return_url']", provider_form).val().match(/quote\/([0-9]+)/) || undefined;
-            var access_token = $("input[name='return_url']", provider_form).val().match(/quote\/([0-9]+)\/([0-9a-zA-Z\-]+)/) || undefined;
-            if (so_id) {
-                so_id = parseInt(so_id[1]);
-            }
-            if(access_token) {
-                access_token = access_token[2];
-            }
-
-            if ($('.o_website_payment').length !== 0) {
-                var currency = $("input[name='currency']", provider_form).val();
-                var amount = parseFloat($("input[name='amount']", provider_form).val() || '0.0');
-                if (!_.contains(int_currencies, currency)) {
-                    amount = amount*100;
-                }
-
-                ajax.jsonRpc('/website_payment/transaction', 'call', {
-                        reference: $("input[name='invoice_num']", provider_form).val(),
-                        amount: amount,
-                        currency_id: currency,
-                        acquirer_id: acquirer_id
-                    })
-                    var handler = getStripeHandler(provider_form);
-                    handler.open({
-                        name: $("input[name='merchant']", provider_form).val(),
-                        description: $("input[name='invoice_num']", provider_form).val(),
-                        currency: currency,
-                        amount: amount,
-                    });
-            } else {
-                var currency = $("input[name='currency']", provider_form).val();
-                var amount = parseFloat($("input[name='amount']", provider_form).val() || '0.0');
-                if (!_.contains(int_currencies, currency)) {
-                    amount = amount*100;
-                }
-
-                var url = '/shop/payment/transaction/';
-                if(so_id) {
-                    url += so_id + '/';
-                    if(access_token) {
-                        url += access_token;
-                    }
-                }
-
-                ajax.jsonRpc(url, 'call', {
-                        acquirer_id: acquirer_id
-                    }, {'async': false}).then(function (data) {
-                    try {
-                        provider_form.html(data);
-                    }
-                    catch(err) { } // here it will catch an error saying that payment_stripe.stripe is already started
-                    var handler = getStripeHandler(provider_form);
-                    handler.open({
-                        name: $("input[name='merchant']", provider_form).val(),
-                        description: $("input[name='invoice_num']", provider_form).val(),
-                        currency: currency,
-                        amount: amount,
-                    });
+    var handler = StripeCheckout.configure({
+        key: $("input[name='stripe_key']").val(),
+        image: $("input[name='stripe_image']").val(),
+        locale: 'auto',
+        token: function(token, args) {
+            handler.isTokenGenerate = true;
+            if ($.blockUI) {
+                var msg = _t("Just one more second, confirming your payment...");
+                $.blockUI({
+                    'message': '<h2 class="text-white"><img src="/web/static/src/img/spin.png" class="fa-pulse"/>' +
+                               '    <br />' + msg +
+                               '</h2>'
                 });
             }
+            ajax.jsonRpc("/payment/stripe/create_charge", 'call', {
+                tokenid: token.id,
+                email: token.email,
+                amount: $("input[name='amount']").val(),
+                acquirer_id: $("#acquirer_stripe").val(),
+                currency: $("input[name='currency']").val(),
+                invoice_num: $("input[name='invoice_num']").val(),
+                tx_ref: $("input[name='invoice_num']").val(),
+                return_url: $("input[name='return_url']").val()
+            }).always(function(){
+                if ($.blockUI) {
+                    $.unblockUI();
+                }
+            }).done(function(data){
+                handler.isTokenGenerate = false;
+                window.location.href = data;
+            }).fail(function(){
+                var msg = arguments && arguments[1] && arguments[1].data && arguments[1].data.arguments && arguments[1].data.arguments[0];
+                var wizard = $(qweb.render('stripe.error', {'msg': msg || _t('Payment error')}));
+                wizard.appendTo($('body')).modal({'keyboard': true});
+            });
+        },
+    });
+
+    $('#pay_stripe').on('click', function(e) {
+        // Open Checkout with further options
+        if(!$(this).find('i').length)
+            $(this).append('<i class="fa fa-spinner fa-spin"/>');
+            $(this).attr('disabled','disabled');
+
+        var $form = $(e.currentTarget).parents('form');
+        var acquirer_id = $(e.currentTarget).closest('div.oe_sale_acquirer_button,div.oe_quote_acquirer_button,div.o_website_payment_new_payment');
+        acquirer_id = acquirer_id.data('id') || acquirer_id.data('acquirer_id');
+        if (! acquirer_id) {
+            return false;
+        }
+
+        var so_token = $("input[name='token']").val();
+        var so_id = $("input[name='return_url']").val().match(/quote\/([0-9]+)/) || undefined;
+        if (so_id) {
+            so_id = parseInt(so_id[1]);
+        }
+
+        e.preventDefault();
+
+        var currency = $("input[name='currency']").val();
+        var currency_id = $("input[name='currency_id']").val();
+        var amount = parseFloat($("input[name='amount']").val() || '0.0');
+
+
+        if ($('.o_website_payment').length !== 0) {
+            var create_tx = ajax.jsonRpc('/website_payment/transaction', 'call', {
+                    reference: $("input[name='invoice_num']").val(),
+                    amount: amount, // exact amount, not stripe cents
+                    currency_id: currency_id,
+                    acquirer_id: acquirer_id
+            });
+        }
+        else if ($('.o_website_quote').length !== 0) {
+            var url = _.str.sprintf("/quote/%s/transaction/%s/%s", so_id, acquirer_id, so_token);
+            var create_tx = ajax.jsonRpc(url, 'call', {}).then(function (data) {
+                try { $form.html(data); } catch (e) {};
+            });
+        }
+        else {
+            var create_tx = ajax.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {
+                    so_id: so_id,
+                    so_token: so_token
+            }).then(function (data) {
+                try { $form.html(data); } catch (e) {};
+            });
+        }
+        create_tx.done(function () {
+            if (!_.contains(int_currencies, currency)) {
+                amount = amount*100;
+            }
+            handler.open({
+                name: $("input[name='merchant']").val(),
+                description: $("input[name='invoice_num']").val(),
+                email: $("input[name='email']").val(),
+                currency: currency,
+                amount: amount,
+            });
         });
     });
 });
