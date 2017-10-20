@@ -1387,6 +1387,7 @@ class MailThread(models.AbstractModel):
             node.getparent().remove(node)
         if postprocessed:
             body = etree.tostring(root, pretty_print=False, encoding='UTF-8')
+            body = pycompat.to_native(body)
         return body, attachments
 
     def _message_extract_payload(self, message, save_original=False):
@@ -1495,10 +1496,8 @@ class MailThread(models.AbstractModel):
             'message_type': 'email',
         }
         if not isinstance(message, Message):
-            # message_from_string works on a native str, so on py2 we need to
-            # encode incoming unicode strings
-            if pycompat.PY2 and not isinstance(message, str):
-                message = message.encode('utf-8')
+            # message_from_string works on a native str
+            message = pycompat.to_native(message)
             message = email.message_from_string(message)
 
         message_id = message['message-id']
