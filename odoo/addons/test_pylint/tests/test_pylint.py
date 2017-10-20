@@ -26,6 +26,7 @@ class TestPyLint(TransactionCase):
         'W0123',  # eval used
         'W0101',  # unreachable code
 
+        'mixed-indentation',
         'misplaced-future',
         'relative-import',
         'deprecated-module',

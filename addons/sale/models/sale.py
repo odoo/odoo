@@ -868,7 +868,8 @@ class SaleOrderLine(models.Model):
             return price
         else:
             from_currency = self.order_id.company_id.currency_id
-            return from_currency.compute(pricelist_item and product[pricelist_item.base] or product.lst_price, self.order_id.pricelist_id.currency_id)
+            product_price = product[pricelist_item.base] if (pricelist_item and pricelist_item.base != 'pricelist') else product.lst_price
+            return from_currency.compute(product_price, self.order_id.pricelist_id.currency_id)
 
     @api.multi
     @api.onchange('product_id')
