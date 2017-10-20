@@ -28,6 +28,12 @@ class TestTax(AccountTestUsers):
             'amount': 10,
             'sequence': 3,
         })
+        self.percent_tax_bis = self.tax_model.create({
+            'name': "Percent tax bis",
+            'amount_type': 'percent',
+            'amount': 21,
+            'sequence': 3,
+        })
         self.division_tax = self.tax_model.create({
             'name': "Division tax",
             'amount_type': 'division',
@@ -168,6 +174,21 @@ class TestTax(AccountTestUsers):
                 # base , amount     | seq | amount | incl | incl_base
                 # ---------------------------------------------------
                 (181.82, 18.18),  # |  3  |    10% |   t  |     t
+                # ---------------------------------------------------
+            ],
+            res_percent
+        )
+        self.percent_tax_bis.price_include = True
+        self.percent_tax_bis.include_base_amount = True
+        res_percent = self.percent_tax_bis.compute_all(7.0)
+        self._check_compute_all_results(
+            7.0,   # 'base'
+            7.0,   # 'total_included'
+            5.79,  # 'total_excluded'
+            [
+                # base , amount     | seq | amount | incl | incl_base
+                # ---------------------------------------------------
+                (5.79, 1.21),  # |  3  |    21% |   t  |     t
                 # ---------------------------------------------------
             ],
             res_percent
