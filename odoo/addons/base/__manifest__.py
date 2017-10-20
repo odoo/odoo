@@ -38,7 +38,7 @@ The kernel of Odoo, needed for all installation.
         'report/ir_model_templates.xml',
         'views/ir_logging_views.xml',
         'views/ir_qweb_widget_templates.xml',
-        'module/module_view.xml',
+        'views/ir_module_views.xml',
         'data/ir_module_category_data.xml',
         'report/ir_module_reports.xml',
         'report/ir_module_report_templates.xml',
