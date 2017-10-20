@@ -206,7 +206,7 @@ var InputField = DebouncedField.extend({
         if (!event || event === this.lastChangeEvent) {
             this.isDirty = false;
         }
-        if (this.isDirty || (event && event.target === this)) {
+        if (this.isDirty || (event && event.target === this && event.data.changes[this.name] === this.value)) {
             return $.when();
         } else {
             return this._render();
