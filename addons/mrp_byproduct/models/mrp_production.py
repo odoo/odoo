@@ -3,6 +3,8 @@
 
 from odoo import api, models
 
+from odoo.tools import float_round
+
 
 class MrpProduction(models.Model):
     _description = 'Production'
@@ -42,3 +44,39 @@ class MrpProduction(models.Model):
             for sub_product in production.bom_id.sub_products:
                 production._create_byproduct_move(sub_product)
         return res
+
+
+class MrpProductProduce(models.TransientModel):
+    _name = "mrp.product.produce"
+    _description = "Record Production"
+    _inherit = "mrp.product.produce"
+
+    @api.multi
+    def check_finished_move_lots(self):
+        """ Handle by product tracked """
+        by_product_moves = self.production_id.move_finished_ids.filtered(lambda m: m.product_id != self.product_id and m.product_id.tracking != 'none' and m.state not in ('done', 'cancel'))
+        for by_product_move in by_product_moves:
+            rounding = by_product_move.product_uom.rounding
+            quantity = float_round(self.product_qty * by_product_move.unit_factor, precision_rounding=rounding)
+            values = {
+                'move_id': by_product_move.id,
+                'product_id': by_product_move.product_id.id,
+                'production_id': self.production_id.id,
+                'product_uom_id': by_product_move.product_uom.id,
+                'location_id': by_product_move.location_id.id,
+                'location_dest_id': by_product_move.location_dest_id.id,
+            }
+            if by_product_move.product_id.tracking == 'lot':
+                values.update({
+                    'product_uom_qty': quantity,
+                    'qty_done': quantity,
+                })
+                self.env['stock.move.line'].create(values)
+            else:
+                values.update({
+                    'product_uom_qty': 1.0,
+                    'qty_done': 1.0,
+                })
+                for i in range(0, int(quantity)):
+                    self.env['stock.move.line'].create(values)
+        return super(MrpProductProduce, self).check_finished_move_lots()

@@ -52,6 +52,8 @@
 
                 .modal-body {
                     overflow: auto;
+                    // fix iOS issue https://github.com/scottjehl/Device-Bugs/issues/8
+                    -webkit-transform: translate3d(0, 0, 0);
                     min-height: 0;
 
                     &.o_dialog_error {

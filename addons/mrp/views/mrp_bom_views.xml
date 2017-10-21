@@ -29,9 +29,20 @@
                         <group>
                             <field name="code"/>
                             <field name="type" widget="radio"/>
-                            <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
-                                When processing a sales order for this product, the delivery order
-                                will contain the raw materials, instead of the finished product.
+                            <p colspan="2" class="oe_grey oe_edit_only" attrs="{'invisible': [('type','=','normal')]}">
+                            <ul>
+                                <li>
+                                    If the product is a finished product: When processing a sales
+                                    order for this product, the delivery order will contain the raw
+                                    materials, instead of the finished product.
+                                </li>
+                                <li>
+                                    If the product is a semi-finished product: When processing a
+                                    manufacturing order that contains that product as component,
+                                    the raw materials of that product will be added to the
+                                    manufacturing order of the final product.
+                                </li>
+                            </ul>
                             </p>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         </group>

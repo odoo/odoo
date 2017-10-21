@@ -399,7 +399,7 @@ var FieldTextHtml = AbstractField.extend({
             var layoutInfo = this.editor.rte.editable().data('layoutInfo');
             $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
         }
-        this.editor.snippetsMenu.cleanForSave();
+        this.editor.snippetsMenu && this.editor.snippetsMenu.cleanForSave();
         this._setValue(this.$content.html());
         return this._super.apply(this, arguments);
     },

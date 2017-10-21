@@ -875,7 +875,10 @@ var BasicModel = AbstractModel.extend({
                 // id never changes, and should not be written
                 delete record._changes.id;
             }
-            var changes = self._generateChanges(record, {viewType: options.viewType});
+            var changes = self._generateChanges(record, {viewType: options.viewType, changesOnly: method !== 'create'});
+
+            // id field should never be written/changed
+            delete changes.id;
 
             if (method === 'create') {
                 var fieldNames = record.getFieldNames();
@@ -1551,6 +1554,9 @@ var BasicModel = AbstractModel.extend({
                     removedDef = this._applyX2ManyChange(record, fieldName, {
                         operation: 'DELETE',
                         ids: _.map(removedIds, function (resID) {
+                            if (resID in list._cache) {
+                                return list._cache[resID];
+                            }
                             return _.findWhere(listData, {res_id: resID}).id;
                         }),
                     });
@@ -2455,7 +2461,7 @@ var BasicModel = AbstractModel.extend({
             changes = _.extend({}, record.data, record._changes);
         } else {
             changes = _.extend({}, record._changes);
-        };
+        }
         var withReadonly = options.withReadonly || false;
         var commands = this._generateX2ManyCommands(record, {
             changesOnly: 'changesOnly' in options ? options.changesOnly : true,
@@ -2492,6 +2498,7 @@ var BasicModel = AbstractModel.extend({
                 changes[fieldName] = false;
             }
         }
+
         return changes;
     },
     /**
@@ -2608,6 +2615,7 @@ var BasicModel = AbstractModel.extend({
                     _.each(relRecordUpdated, function (relRecord) {
                         var changes = self._generateChanges(relRecord, options);
                         if (!_.isEmpty(changes)) {
+                            delete changes.id;
                             var command = x2ManyCommands.update(relRecord.res_id, changes);
                             commands[fieldName].push(command);
                         }
@@ -2638,7 +2646,12 @@ var BasicModel = AbstractModel.extend({
                             // this is a new id
                             relRecord = _.findWhere(relRecordAdded, {res_id: list.res_ids[i]});
                             changes = this._generateChanges(relRecord, options);
-                            commands[fieldName].push(x2ManyCommands.create(relRecord.ref, changes));
+                            if ('id' in changes) {
+                                delete changes.id;
+                                commands[fieldName].push(x2ManyCommands.update(relRecord.res_id, changes));
+                            } else {
+                                commands[fieldName].push(x2ManyCommands.create(relRecord.ref, changes));
+                            }
                         }
                     }
                     if (options.changesOnly && !didChange && addedIds.length === 0 && removedIds.length === 0) {
@@ -3294,11 +3307,17 @@ var BasicModel = AbstractModel.extend({
      * This method is quite important: it is supposed to perform the /onchange
      * rpc and apply the result.
      *
+     * The changes that triggered the onchange are assumed to have already been
+     * applied to the record.
+     *
      * @param {Object} record
      * @param {string[]} fields changed fields
      * @param {string} [viewType] current viewType. If not set, we will assume
      *   main viewType from the record
-     * @returns {Deferred}
+     * @returns {Deferred} Note: this deferred cannot fail. It is either in the
+     *   'success' or 'pending' state.  If the onchange rpc fails, it will be
+     *   resolved with an empty dictionary.  Note that the initial change was
+     *   already applied.
      */
     _performOnChange: function (record, fields, viewType) {
         var self = this;
@@ -3318,7 +3337,9 @@ var BasicModel = AbstractModel.extend({
         var context = this._getContext(record, options);
         var currentData = this._generateOnChangeData(record, {changesOnly: false});
 
-        return self._rpc({
+        var def = $.Deferred();
+
+        self._rpc({
                 model: record.model,
                 method: 'onchange',
                 args: [idList, currentData, fields, onchangeSpec, context],
@@ -3343,9 +3364,12 @@ var BasicModel = AbstractModel.extend({
                     record._domains = _.extend(record._domains, result.domain);
                 }
                 return self._applyOnChange(result.value, record).then(function () {
-                    return result;
+                    def.resolve(result);
                 });
+            }).fail(function () {
+                def.resolve({});
             });
+        return def;
     },
     /**
      * Once a record is created and some data has been fetched, we need to do

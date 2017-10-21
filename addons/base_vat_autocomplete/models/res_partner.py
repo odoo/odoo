@@ -6,6 +6,8 @@ import re
 
 from odoo import api, models
 
+from suds.client import Client
+
 _logger = logging.getLogger(__name__)
 
 try:
@@ -13,6 +15,7 @@ try:
 except ImportError:
     _logger.warning('Python `stdnum` library not found, unable to call VIES service to detect address based on VAT number.')
     stdnum_vat = None
+
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
@@ -40,7 +43,17 @@ class ResPartner(models.Model):
             if not partner.vat:
                 return {}
             if len(partner.vat) > 5 and partner.vat[:2].lower() in stdnum_vat.country_codes:
-                result = stdnum_vat.check_vies(partner.vat)
+                # Equivalent to stdnum_vat.check_vies(partner.vat).
+                # However, we want to add a custom timeout to the suds.client
+                # because by default, it's 120 seconds and this is to long.
+                try:
+                    client = Client(stdnum_vat.vies_wsdl, timeout=5)
+                    partner_vat = stdnum_vat.compact(partner.vat)
+                    result = client.service.checkVat(partner_vat[:2], partner_vat[2:])
+                except:
+                    # Avoid blocking the client when the service is unreachable/unavailable
+                    return {}
+
                 if not result['valid']:
                     return {}
 

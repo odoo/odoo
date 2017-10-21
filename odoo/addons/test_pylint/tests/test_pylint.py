@@ -27,6 +27,8 @@ class TestPyLint(TransactionCase):
         'W0123',  # eval used
         'W0101',  # unreachable code
 
+        'mixed-indentation',
+
         # py3k checks
         'print-statement',
         'backtick',

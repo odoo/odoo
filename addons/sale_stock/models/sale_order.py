@@ -127,14 +127,24 @@ class SaleOrderLine(models.Model):
                     and all(move.state in ['done', 'cancel'] for move in line.move_ids):
                 line.invoice_status = 'invoiced'
 
+    @api.depends('move_ids')
+    def _compute_product_updatable(self):
+        for line in self:
+            if not line.move_ids:
+                super(SaleOrderLine, line)._compute_product_updatable()
+            else:
+                line.product_updatable = False
+
     @api.multi
     @api.depends('product_id')
     def _compute_qty_delivered_updateable(self):
-        for line in self:
-            if line.product_id.type not in ('consu', 'product'):
-                super(SaleOrderLine, line)._compute_qty_delivered_updateable()
-            else:
-                line.qty_delivered_updateable = False
+        # prefetch field before filtering
+        self.mapped('product_id')
+        # on consumable or stockable products, qty_delivered_updateable defaults
+        # to False; on other lines use the original computation
+        lines = self.filtered(lambda line: line.product_id.type not in ('consu', 'product'))
+        lines = lines.with_prefetch(self._prefetch)
+        super(SaleOrderLine, lines)._compute_qty_delivered_updateable()
 
     @api.onchange('product_id')
     def _onchange_product_id_set_customer_lead(self):
@@ -225,7 +235,7 @@ class SaleOrderLine(models.Model):
             if line.state != 'sale' or not line.product_id.type in ('consu','product'):
                 continue
             qty = 0.0
-            for move in line.move_ids:
+            for move in line.move_ids.filtered(lambda r: r.state != 'cancel'):
                 qty += move.product_qty
             if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
                 continue

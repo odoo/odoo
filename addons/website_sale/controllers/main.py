@@ -400,9 +400,10 @@ class WebsiteSale(http.Controller):
             return {}
 
         value = order._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty)
+
         if not order.cart_quantity:
             request.website.sale_reset()
-            return {}
+            return value
 
         order = request.website.sale_get_order()
         value['cart_quantity'] = order.cart_quantity
@@ -503,6 +504,8 @@ class WebsiteSale(http.Controller):
         # vat validation
         Partner = request.env['res.partner']
         if data.get("vat") and hasattr(Partner, "check_vat"):
+            if data.get("country_id"):
+                data["vat"] = Partner.fix_eu_vat_number(data.get("country_id"), data.get("vat"))
             partner_dummy = Partner.new({
                 'vat': data['vat'],
                 'country_id': (int(data['country_id'])

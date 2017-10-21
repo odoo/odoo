@@ -223,7 +223,7 @@ class PosOrder(models.Model):
         # We convert a new id object back to a dictionary to write to
         # bridge between old and new api
         inv_line = invoice_line._convert_to_write({name: invoice_line[name] for name in invoice_line._cache})
-        inv_line.update(price_unit=line.price_unit, discount=line.discount)
+        inv_line.update(price_unit=line.price_unit, discount=line.discount, name=inv_name)
         return InvoiceLine.sudo().create(inv_line)
 
     def _create_account_move_line(self, session=None, move=None):
@@ -650,7 +650,7 @@ class PosOrder(models.Model):
                     return_picking = Picking.create(return_vals)
                     return_picking.message_post(body=message)
 
-            for line in order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu'] and not float_is_zero(l.qty, precision_digits=l.product_id.uom_id.rounding)):
+            for line in order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu'] and not float_is_zero(l.qty, precision_rounding=l.product_id.uom_id.rounding)):
                 moves |= Move.create({
                     'name': line.name,
                     'product_uom': line.product_id.uom_id.id,

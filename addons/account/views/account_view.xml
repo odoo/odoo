@@ -322,10 +322,12 @@
                                         <field name="type_control_ids" widget="many2many_tags"/>
                                         <field name="account_control_ids" widget="many2many_tags"/>
                                     </group>
-                                    <group string="Miscellaneous" groups="account.group_account_user">
+                                    <group string="Miscellaneous">
                                         <field name="inbound_payment_method_ids" widget="many2many_checkboxes" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
                                         <field name="outbound_payment_method_ids" widget="many2many_checkboxes" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
                                         <field name="group_invoice_lines" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
+                                    </group>
+                                    <group string="Accounting App Options" groups="account.group_account_user">
                                         <field name="profit_account_id" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
                                         <field name="loss_account_id" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
                                         <field name="show_on_dashboard" groups="base.group_no_one"/>

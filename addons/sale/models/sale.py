@@ -693,6 +693,14 @@ class SaleOrderLine(models.Model):
                 'price_subtotal': taxes['total_excluded'],
             })
 
+    @api.depends('product_id', 'order_id.state', 'qty_invoiced', 'qty_delivered')
+    def _compute_product_updatable(self):
+        for line in self:
+            if line.state in ['done', 'cancel'] or (line.state == 'sale' and (line.qty_invoiced > 0 or line.qty_delivered > 0)):
+                line.product_updatable = False
+            else:
+                line.product_updatable = True
+
     @api.depends('product_id.invoice_policy', 'order_id.state')
     def _compute_qty_delivered_updateable(self):
         for line in self:
@@ -852,6 +860,7 @@ class SaleOrderLine(models.Model):
     discount = fields.Float(string='Discount (%)', digits=dp.get_precision('Discount'), default=0.0)
 
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], change_default=True, ondelete='restrict', required=True)
+    product_updatable = fields.Boolean(compute='_compute_product_updatable', string='Can Edit Product', readonly=True, default=True)
     product_uom_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
     product_uom = fields.Many2one('product.uom', string='Unit of Measure', required=True)
     # Non-stored related field to allow portal user to see the image of the product he has ordered
@@ -964,7 +973,8 @@ class SaleOrderLine(models.Model):
             return price
         else:
             from_currency = self.order_id.company_id.currency_id
-            return from_currency.compute(product.lst_price, self.order_id.pricelist_id.currency_id)
+            product_price = product[pricelist_item.base] if (pricelist_item and pricelist_item.base != 'pricelist') else product.lst_price
+            return from_currency.compute(product_price, self.order_id.pricelist_id.currency_id)
 
     @api.multi
     @api.onchange('product_id')
