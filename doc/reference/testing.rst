@@ -86,3 +86,51 @@ As of Odoo 8, running tests outside of the install/update cycle is not
 supported.
 
 .. _unittest documentation: https://docs.python.org/2/library/unittest.html
+
+Test Driven Development
+-----------------------
+
+Tests at installation do not allow for tests on demand, which is when tests
+should be run.  This presents a number of challenges with Odoo mostly due
+to the API and the high level of dependencies between models.
+
+There is a way to solve this, however, as you can see by this minimal example:
+
+.. highlight:: python
+
+.. code-block:: python
+
+   # -*- coding: utf-8 -*-
+   from odoo import api
+   from odoo import sql_db, modules
+   from odoo.tests import common
+
+
+   class TestYourModule(common.TransactionCase):
+       env = api.Environment
+
+       def setUp(self):
+           db = sql_db.db_connect('csi')
+           with api.Environment.manage():
+               self.env = api.Environment(db.cursor(), 1, {})
+            modules.load_modules(db)
+        return None
+        
+        def test_your_method(self):
+            with api.Environment.manage():
+                model = self.env.get('your.model.name').browse(1)
+                result = model.method_to_test()
+            assert result is 'value'
+            
+            
+The key here is to make use of the API's Environment manager by
+creating an environment to run the tests with in the setUp method
+then copying that environment to your test methods using
+`with api.Environment.manage():`.
+
+This basic setup enables the use of Python's unittest libary from the
+command line, or in your favorite IDE.
+
+This is particularly useful if you are extending or creating models
+because of the large number of foreign key contstraints existing
+in the Odoo schema.
