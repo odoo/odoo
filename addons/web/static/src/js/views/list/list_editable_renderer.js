@@ -136,7 +136,9 @@ ListRenderer.include({
             currentRowID = this.state.data[this.currentRow].id;
             currentWidget = this.allFieldWidgets[currentRowID][this.currentFieldIndex];
             focusedElement = currentWidget.getFocusableElement().get(0);
-            selectionRange = dom.getSelectionRange(focusedElement);
+            if (currentWidget.formatType !== 'boolean') {
+                selectionRange = dom.getSelectionRange(focusedElement);
+            }
         }
 
         var oldData = this.state.data;
@@ -179,7 +181,9 @@ ListRenderer.include({
                     currentRowID = self.state.data[newRowIndex].id;
                     currentWidget = self.allFieldWidgets[currentRowID][self.currentFieldIndex];
                     focusedElement = currentWidget.getFocusableElement().get(0);
-                    dom.setSelectionRange(focusedElement, selectionRange);
+                    if (selectionRange) {
+                        dom.setSelectionRange(focusedElement, selectionRange);
+                    }
                 });
             }
         });
@@ -585,12 +589,18 @@ ListRenderer.include({
             if (fieldIndex >= (self.allFieldWidgets[record.id] || []).length) {
                 return $.Deferred().reject();
             }
+            // _activateFieldWidget might trigger an onchange,
+            // which requires currentFieldIndex to be set
+            // so that the cursor can be restored
+            var oldFieldIndex = self.currentFieldIndex;
+            self.currentFieldIndex = fieldIndex;
             fieldIndex = self._activateFieldWidget(record, fieldIndex, {
                 inc: 1,
                 wrap: wrap,
                 event: options && options.event,
             });
             if (fieldIndex < 0) {
+                self.currentFieldIndex = oldFieldIndex;
                 return $.Deferred().reject();
             }
             self.currentFieldIndex = fieldIndex;

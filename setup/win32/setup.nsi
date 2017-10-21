@@ -8,7 +8,7 @@
 !include 'FileFunc.nsh'
 !include 'LogicLib.nsh'
 !include 'Sections.nsh'
-!include 'LogicLib.nsh'
+!include 'x64.nsh'
 
 !macro IfKeyExists ROOT MAIN_KEY KEY
     # This macro comes from http://nsis.sourceforge.net/Check_for_a_Registry_Key
@@ -216,9 +216,16 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
     SetOutPath "$INSTDIR\server"
     File /r /x "${POSTGRESQL_EXE_FILENAME}" /x "wkhtmltopdf" "..\..\*"
 
+    SetOutPath "$INSTDIR\vcredist"
+    File /r "..\..\..\vcredist\*.exe"
+    
     # Install Visual C redistribuable files
     DetailPrint "Installing Visual C++ redistributable files"
-    nsExec::Exec '"$INSTDIR\service\vcredist\vcredist_x86.exe" /q'
+    ${If} ${RunningX64}
+        nsExec::Exec '"$INSTDIR\vcredist\vc_redist.x64.exe" /q'
+    ${Else}
+        nsExec::Exec '"$INSTDIR\vcredist\vc_redist.x86.exe" /q'
+    ${EndIf}
 
     SetOutPath "$INSTDIR\thirdparty"
     File /r "${STATIC_PATH}\wkhtmltopdf\*"
@@ -241,8 +248,13 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
 
     DetailPrint "Installing Windows service"
     nsExec::ExecTOLog '"$INSTDIR\python\python.exe" "$INSTDIR\server\odoo-bin" --stop-after-init --logfile "$INSTDIR\server\odoo.log" -s'
-    nsExec::ExecToLog '"$INSTDIR\nssm\win32\nssm.exe" install ${SERVICENAME} "$INSTDIR\python\python.exe" "\"$INSTDIR\server\odoo-bin\""'
-    nsExec::ExecToLog '"$INSTDIR\nssm\win32\nssm.exe" set AppDirectory "$\"$INSTDIR\server$\""'
+    ${If} ${RunningX64}
+      nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" install ${SERVICENAME} "$INSTDIR\python\python.exe" "\"$INSTDIR\server\odoo-bin\""'
+      nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppDirectory "$\"$INSTDIR\server$\""'
+    ${Else}
+      nsExec::ExecToLog '"$INSTDIR\nssm\win32\nssm.exe" install ${SERVICENAME} "$INSTDIR\python\python.exe" "\"$INSTDIR\server\odoo-bin\""'
+      nsExec::ExecToLog '"$INSTDIR\nssm\win32\nssm.exe" set ${SERVICENAME} AppDirectory "$\"$INSTDIR\server$\""'
+    ${EndIf}
     
     nsExec::Exec "net stop ${SERVICENAME}"
     sleep 2

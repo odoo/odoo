@@ -15,6 +15,16 @@ from odoo.tools.translate import html_translate
 
 _logger = logging.getLogger(__name__)
 
+MASS_MAILING_BUSINESS_MODELS = [
+    'crm.lead',
+    'event.registration',
+    'hr.applicant',
+    'res.partner',
+    'event.track',
+    'sale.order',
+    'mail.mass_mailing.list',
+]
+
 class MassMailingTag(models.Model):
     """Model of categories of mass mailing, i.e. marketing, newsletter, ... """
     _name = 'mail.mass_mailing.tag'
@@ -320,7 +330,7 @@ class MassMailing(models.Model):
         default=lambda self: self.env['mail.message']._get_default_from())
     # recipients
     mailing_model_real = fields.Char(compute='_compute_model', string='Recipients Real Model', default='mail.mass_mailing.contact', required=True)
-    mailing_model_id = fields.Many2one('ir.model', string='Recipients Model', domain="[('is_mail_thread', '=', True)]",
+    mailing_model_id = fields.Many2one('ir.model', string='Recipients Model', domain=[('model', 'in', MASS_MAILING_BUSINESS_MODELS)],
         default=lambda self: self.env.ref('mass_mailing.model_mail_mass_mailing_list').id)
     mailing_model_name = fields.Char(related='mailing_model_id.model', string='Recipients Model Name')
     mailing_domain = fields.Char(string='Domain', oldname='domain', default=[])

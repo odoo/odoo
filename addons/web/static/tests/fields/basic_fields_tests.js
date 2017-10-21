@@ -1462,6 +1462,42 @@ QUnit.module('basic_fields', {
         }
     });
 
+    QUnit.module('FieldImage');
+
+    QUnit.test('image fields are correctly rendered', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records[0].document = 'myimage';
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="document" widget="image" options="{\'size\': [90, 90]}"/> ' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route) {
+                if (route === 'data:image/png;base64,myimage') {
+                    assert.ok(true, "should called the correct route");
+                    return $.when('wow');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.ok(form.$('div[name="document"]').hasClass('o_field_image'),
+            "the widget should have the correct class");
+        assert.strictEqual(form.$('div[name="document"] > img').length, 1,
+            "the widget should contain an image");
+        assert.ok(form.$('div[name="document"] > img').hasClass('img-responsive'),
+            "the image should have the correct class");
+        assert.strictEqual(form.$('div[name="document"] > img').attr('width'), "90",
+            "the image should correctly set its attributes");
+        form.destroy();
+
+    });
+
     QUnit.module('JournalDashboardGraph');
 
     QUnit.test('graph dashboard widget is rendered correctly', function (assert) {
@@ -1841,6 +1877,39 @@ QUnit.module('basic_fields', {
         form.$buttons.find('.o_form_button_save').click();
         assert.strictEqual(form.$('.o_field_date').text(), '',
             'the selected date should be displayed after saving');
+        form.destroy();
+    });
+
+    QUnit.test('do not trigger a field_changed for datetime field with date widget', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="datetime" widget="date"/></form>',
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+                time_format: '%H:%M:%S',
+            },
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(form.$('.o_datepicker_input').val(), '02/08/2017',
+            'the date should be correct');
+
+        form.$('input[name="datetime"]').val('02/08/2017').trigger('input').trigger('change');
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.verifySteps(['read']); // should not have save as nothing changed
+
         form.destroy();
     });
 
@@ -2824,6 +2893,33 @@ QUnit.module('basic_fields', {
         form.$buttons.find('.o_form_button_save').click();
         assert.strictEqual(form.$('.o_field_widget').text().split('\u00AD').join(''), val,
             "value should have been correctly escaped");
+
+        form.destroy();
+    });
+
+    QUnit.test('use TAB to navigate to a phone field', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="display_name"/>' +
+                            '<field name="foo" widget="phone"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+        });
+
+        form.$('input[name=display_name]').click();
+        assert.strictEqual(form.$('input[name="display_name"]')[0], document.activeElement,
+            "display_name should be focused");
+        form.$('input[name="display_name"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        assert.strictEqual(form.$('input[name="foo"]')[0], document.activeElement,
+            "foo should be focused");
 
         form.destroy();
     });
@@ -3939,7 +4035,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('domain field: handle false domain as []', function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         this.data.partner.records[0].foo = false;
         this.data.partner.fields.bar.type = "char";
@@ -3965,10 +4061,12 @@ QUnit.module('basic_fields', {
                 return this._super.apply(this, arguments);
             },
             res_id: 1,
-            viewOptions: {
-                mode: 'edit',
-            },
         });
+
+        assert.strictEqual(form.$('.o_field_widget[name=foo]:not(.o_field_empty)').length, 1,
+            "there should be a domain field, not considered empty");
+
+        form.$buttons.find('.o_form_button_edit').click();
 
         var $warning = form.$('.o_field_widget[name=foo] .text-warning');
         assert.strictEqual($warning.length, 0, "should not display that the domain is invalid");

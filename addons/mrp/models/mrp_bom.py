@@ -24,9 +24,8 @@ class MrpBom(models.Model):
         help="If the active field is set to False, it will allow you to hide the bills of material without removing it.")
     type = fields.Selection([
         ('normal', 'Manufacture this product'),
-        ('phantom', 'Ship this product as a set of components (kit)')], 'BoM Type',
-        default='normal', required=True,
-        help="Kit (Phantom): When processing a sales order for this product, the delivery order will contain the raw materials, instead of the finished product.")
+        ('phantom', 'Kit')], 'BoM Type',
+        default='normal', required=True)
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product',
         domain="[('type', 'in', ['product', 'consu'])]", required=True)

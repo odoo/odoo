@@ -21,10 +21,13 @@ class TestSaleOrder(TestSale):
             'pricelist_id': self.env.ref('product.list0').id,
         })
         self.assertEqual(so.amount_total, sum([2 * p.list_price for p in self.products.values()]), 'Sale: total amount is wrong')
-
+        so.order_line._compute_product_updatable()
+        self.assertTrue(so.order_line[0].product_updatable)
         # send quotation
         so.force_quotation_send()
         self.assertTrue(so.state == 'sent', 'Sale: state after sending is wrong')
+        so.order_line._compute_product_updatable()
+        self.assertTrue(so.order_line[0].product_updatable)
 
         # confirm quotation
         so.action_confirm()
@@ -38,7 +41,8 @@ class TestSaleOrder(TestSale):
         self.assertEqual(inv.amount_total, sum([2 * p.list_price if p.invoice_policy == 'order' else 0 for p in self.products.values()]), 'Sale: invoice total amount is wrong')
         self.assertTrue(so.invoice_status == 'no', 'Sale: SO status after invoicing should be "nothing to invoice"')
         self.assertTrue(len(so.invoice_ids) == 1, 'Sale: invoice is missing')
-
+        so.order_line._compute_product_updatable()
+        self.assertFalse(so.order_line[0].product_updatable)
         # deliver lines except 'time and material' then invoice again
         for line in so.order_line:
             line.qty_delivered = 2 if line.product_id.expense_policy=='no' else 0

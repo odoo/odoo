@@ -239,9 +239,10 @@
                                 <form string="Sales Order Lines">
                                     <group>
                                         <group>
+                                            <field name="product_updatable" invisible="1"/>
                                             <field name="product_id"
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
-                                                attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"
+                                                attrs="{'readonly': [('product_updatable', '=', False)]}"
                                                 force_save="1"
                                                />
                                             <field name="layout_category_id" groups="sale.group_sale_layout"/>
@@ -294,8 +295,9 @@
                                 </form>
                                 <tree string="Sales Order Lines" editable="bottom" decoration-info="invoice_status=='to invoice'">
                                     <field name="sequence" widget="handle"/>
+                                    <field name="product_updatable" invisible="1"/>
                                     <field name="product_id"
-                                        attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"
+                                        attrs="{'readonly': [('product_updatable', '=', False)]}"
                                         context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
                                        />
                                     <field name="layout_category_id" groups="sale.group_sale_layout"/>

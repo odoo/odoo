@@ -18,13 +18,14 @@ import os
 import re
 import sys
 import time
+import zlib
+
 import werkzeug
 import werkzeug.utils
 import werkzeug.wrappers
-import zlib
+import werkzeug.wsgi
+from werkzeug.urls import url_decode, iri_to_uri
 from xml.etree import ElementTree
-from werkzeug import url_decode
-from werkzeug import iri_to_uri
 
 
 import odoo
@@ -33,11 +34,11 @@ from odoo.api import call_kw, Environment
 from odoo.modules import get_resource_path
 from odoo.tools import crop_image, topological_sort, html_escape, pycompat
 from odoo.tools.translate import _
-from odoo.tools.misc import str2bool, xlwt
+from odoo.tools.misc import str2bool, xlwt, file_open
 from odoo.tools.safe_eval import safe_eval
 from odoo import http
 from odoo.http import content_disposition, dispatch_rpc, request, \
-                      serialize_exception as _serialize_exception
+    serialize_exception as _serialize_exception, Response
 from odoo.exceptions import AccessError, UserError
 from odoo.models import check_method_name
 
@@ -513,21 +514,24 @@ class WebClient(http.Controller):
     @http.route('/web/webclient/locale/<string:lang>', type='http', auth="none")
     def load_locale(self, lang):
         magic_file_finding = [lang.replace("_", '-').lower(), lang.split('_')[0]]
-        addons_path = http.addons_manifest['web']['addons_path']
-        # load momentjs locale
-        momentjs_locale = ""
         for code in magic_file_finding:
             try:
-                with open(os.path.join(addons_path, 'web', 'static', 'lib', 'moment', 'locale', code + '.js'), 'r') as f:
-                    momentjs_locale = f.read()
-                # we found a locale matching so we can exit
-                break
+                return http.Response(
+                    werkzeug.wsgi.wrap_file(
+                        request.httprequest.environ,
+                        file_open('web/static/lib/moment/locale/%s.js' % code, 'rb')
+                    ),
+                    content_type='application/javascript; charset=utf-8',
+                    headers=[('Cache-Control', 'max-age=36000')],
+                    direct_passthrough=True,
+                )
             except IOError:
-                continue
+                _logger.debug("No moment locale for code %s", code)
 
-        # return the content of the locale
-        headers = [('Content-Type', 'application/javascript'), ('Cache-Control', 'max-age=%s' % (36000))]
-        return request.make_response(momentjs_locale, headers)
+        return request.make_response("", headers=[
+            ('Content-Type', 'application/javascript'),
+            ('Cache-Control', 'max-age=36000'),
+        ])
 
     @http.route('/web/webclient/qweb', type='http', auth="none", cors="*")
     def qweb(self, mods=None, db=None):

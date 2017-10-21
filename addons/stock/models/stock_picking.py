@@ -788,11 +788,11 @@ class Picking(models.Model):
             if operations:
                 package = self.env['stock.quant.package'].create({})
                 for operation in operations:
-                    if float_compare(operation.qty_done, operation.product_qty, precision_rounding=operation.product_uom_id.rounding) >= 0:
+                    if float_compare(operation.qty_done, operation.product_uom_qty, precision_rounding=operation.product_uom_id.rounding) >= 0:
                         operation_ids |= operation
                     else:
                         quantity_left_todo = float_round(
-                            operation.product_qty - operation.qty_done,
+                            operation.product_uom_qty - operation.qty_done,
                             precision_rounding=operation.product_uom_id.rounding,
                             rounding_method='UP')
                         new_operation = operation.copy(
