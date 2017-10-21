@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from odoo import api, fields, models
+import odoo.addons.decimal_precision as dp
 from odoo.tools.float_utils import float_compare, float_round
 from odoo.tools.translate import _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -60,7 +61,10 @@ class Quant(models.Model):
         index=True, readonly=True, required=True,
         default=lambda self: self.env['res.company']._company_default_get('stock.quant'),
         help="The company to which the quants belong")
-    inventory_value = fields.Float('Inventory Value', compute='_compute_inventory_value', readonly=True)
+    # Codigo modificado por TRESCLOUD, debido a que la precision decimal 
+    # debe ser la del precio del producto. 
+    inventory_value = fields.Float('Inventory Value', digits=dp.get_precision('Product Price'),
+                                   compute='_compute_inventory_value', readonly=True)
     # Used for negative quants to reconcile after compensated by a new positive one
     propagated_from_id = fields.Many2one(
         'stock.quant', 'Linked Quant',
