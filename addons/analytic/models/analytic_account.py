@@ -59,6 +59,24 @@ class AccountAnalyticAccount(models.Model):
     _description = 'Analytic Account'
     _order = 'code, name asc'
 
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        """
+            Override read_group to calculate the sum of the non-stored fields that depend on the user context
+        """
+        res = super(AccountAnalyticAccount, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+        accounts = self.env['account.analytic.account']
+        for line in res:
+            if '__domain' in line:
+                accounts = self.search(line['__domain'])
+            if 'balance' in fields:
+                line['balance'] = sum(accounts.mapped('balance'))
+            if 'debit' in fields:
+                line['debit'] = sum(accounts.mapped('debit'))
+            if 'credit' in fields:
+                line['credit'] = sum(accounts.mapped('credit'))
+        return res
+
     @api.multi
     def _compute_debit_credit_balance(self):
         res_currency_obj = self.env['res.currency']
