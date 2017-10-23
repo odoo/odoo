@@ -40,6 +40,7 @@ QUnit.module('basic_fields', {
                     document: {string: "Binary", type: "binary"},
                     image_selection: {string: "Image Selection", type: "selection", searchable:true,
                         selection: [['background', 'Background'],['boxed', 'Boxed'],['clean', 'Clean'],['standard', 'Standard']]},
+                    image: {string: "Image", type: "binary"},    
                 },
                 records: [{
                     id: 1,
@@ -1357,6 +1358,28 @@ QUnit.module('basic_fields', {
         session.get_file = oldGetFile;
     });
 
+    QUnit.module('FieldBinaryImage');
+
+    QUnit.test('field binary image triggers the fetching of __last_update', function (assert) {
+        assert.expect(1);
+        this.data.partner.records[0].image = 'coucou';
+        this.data.partner.records[0].__last_update = '2017-02-23';
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="image" widget="image"/>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/read') {
+                    assert.strictEqual(args.args[1].__last_update, '2017-02-23', "The field __last_update should be present when reading an image");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+    });
 
     QUnit.test('text field rendering in list view', function (assert) {
         assert.expect(1);

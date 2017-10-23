@@ -390,7 +390,7 @@ return core.Class.extend({
 
         if (attrs.Widget.prototype.fieldDependencies) {
             attrs.fieldDependencies = attrs.Widget.prototype.fieldDependencies;
-            }
+        }
 
         return attrs;
     },
@@ -423,7 +423,7 @@ return core.Class.extend({
                     var deps = fieldsInfo[node.attrs.name].fieldDependencies;
                     for (var dependency_name in deps) {
                         if (!(dependency_name in fieldsInfo)) {
-                            fieldsInfo[dependency_name] = {'name': dependency_name, 'dependency_of': node.attrs.name};
+                            fieldsInfo[dependency_name] = {'name': dependency_name, 'type': deps[dependency_name].type};
                         }
                     }
                 }

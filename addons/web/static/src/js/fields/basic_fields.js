@@ -1187,7 +1187,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
                     id: JSON.stringify(this.res_id),
                     field: this.nodeOptions.preview_image || this.name,
                     // unique forces a reload of the image when the record has been updated
-                    unique: (this.recordData.__last_update && field_utils.format.datetime(this.recordData.__last_update) || '').replace(/[^0-9]/g, ''),
+                    unique: field_utils.format.datetime(this.recordData.__last_update).replace(/[^0-9]/g, ''),
                 });
             }
         }
