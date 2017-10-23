@@ -49,6 +49,9 @@ class MassMailingList(models.Model):
     active = fields.Boolean(default=True)
     create_date = fields.Datetime(string='Creation Date')
     contact_nbr = fields.Integer(compute="_compute_contact_nbr", string='Number of Contacts')
+    contact_ids = fields.Many2many(
+        'mail.mass_mailing.contact', 'mail_mass_mailing_contact_list_rel', 'list_id', 'contact_id',
+        string='Mailing Lists')
 
     # Compute number of contacts non opt-out for a mailing list
     def _compute_contact_nbr(self):
