@@ -8,7 +8,7 @@
         </div>
         <div>
           <t t-foreach="order.picking_ids.filtered(lambda picking: picking.picking_type_id.code != 'internal')" t-as="i">
-            <t t-set="report_url" t-value="'/report/pdf/stock.report_deliveryslip/%s' % i.id"/>
+            <t t-set="report_url" t-value="'/my/picking/pdf/%s?%s' % (i.id, keep_query())"/>
             <div id='picking_info'>
               <a t-att-href="report_url"><span class="fa fa-download"/></a>
               <a t-att-href="report_url"><span t-field="i.name"/></a>
