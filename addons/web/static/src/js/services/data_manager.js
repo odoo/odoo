@@ -268,7 +268,6 @@ return core.Class.extend({
     _processField: function (viewType, field, attrs) {
         var self = this;
         attrs.Widget = this._getFieldWidgetClass(viewType, field, attrs);
-
         if (!_.isObject(attrs.options)) { // parent arch could have already been processed (TODO this should not happen)
             attrs.options = attrs.options ? pyeval.py_eval(attrs.options) : {};
         }
@@ -388,6 +387,11 @@ return core.Class.extend({
                 }
             }
         }
+
+        if (attrs.Widget.prototype.fieldDependencies) {
+            attrs.fieldDependencies = attrs.Widget.prototype.fieldDependencies;
+            }
+
         return attrs;
     },
     /**
@@ -414,6 +418,15 @@ return core.Class.extend({
             if (node.tag === 'field') {
                 fieldsInfo[node.attrs.name] = self._processField(viewType,
                     fields[node.attrs.name], node.attrs ? _.clone(node.attrs) : {});
+
+                if (fieldsInfo[node.attrs.name].fieldDependencies) {
+                    var deps = fieldsInfo[node.attrs.name].fieldDependencies;
+                    for (var dependency_name in deps) {
+                        if (!(dependency_name in fieldsInfo)) {
+                            fieldsInfo[dependency_name] = {'name': dependency_name, 'dependency_of': node.attrs.name};
+                        }
+                    }
+                }
                 return false;
             }
             return node.tag !== 'arch';
