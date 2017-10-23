@@ -31,7 +31,12 @@
                         <!-- Lines associated -->
                         <t t-foreach="layout_category['lines']" t-as="l">
                             <tr>
-                                <td><span t-field="l.name"/></td>
+                                 <td>
+                                    <span t-field="l.name"/>
+                                      <t t-foreach="l.product_id.attribute_value_ids" t-as="attrib_value">
+                                      <t t-esc=" '(%s)' % attrib_value.name"/>
+                                  </t>
+                                </td>
                                 <td class="text-right">
                                     <span t-field="l.quantity"/>
                                     <span t-field="l.uom_id"  groups="product.group_uom"/>
