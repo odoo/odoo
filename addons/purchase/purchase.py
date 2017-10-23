@@ -330,10 +330,11 @@ class PurchaseOrder(models.Model):
             return self.dest_address_id.property_stock_customer.id
         return self.picking_type_id.default_location_dest_id.id
 
-    @api.model
+    @api.multi
     def _prepare_picking(self):
+        self.ensure_one()
         if not self.group_id:
-            self.group_id = self.group_id.create({
+            self.group_id = self.env['procurement.group'].create({
                 'name': self.name,
                 'partner_id': self.partner_id.id
             })
