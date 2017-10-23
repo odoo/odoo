@@ -41,7 +41,7 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
         :param base64_source: base64-encoded version of the source
             image; if False, returns False
         :param size: 2-tuple(width, height). A None value for any of width or
-            height mean an automatically computed value based respectivelly
+            height mean an automatically computed value based respectively
             on height or width of the source image.
         :param encoding: the output encoding
         :param filetype: the output filetype, by default the source image's
@@ -245,7 +245,7 @@ def image_get_resized_images(base64_source, return_big=False, return_medium=True
         only image_medium and image_small values, to update those fields.
 
         :param base64_source: base64-encoded version of the source
-            image; if False, all returnes values will be False
+            image; if False, all returned values will be False
         :param return_{..}: if set, computes and return the related resizing
             of the image
         :param {..}_name: key of the resized image in the return dictionary;
