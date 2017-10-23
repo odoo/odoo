@@ -22,24 +22,11 @@
         <field name="name">Rating</field>
         <field name="res_model">rating.rating</field>
         <field name="view_mode">kanban,tree,graph,pivot,form</field>
-        <field name="domain">[('consumed','=',True), ('parent_res_model','=','project.project'), ('parent_res_id','=',active_id)]</field>
+        <field name="domain">[('consumed','=',True), ('parent_res_model','=','project.project')]</field>
         <field name="search_view_id" ref="rating_rating_view_search_project"/>
         <field name="help" type="html">
             <p>
                 There is no rating for this object at the moment.
-            </p>
-        </field>
-    </record>
-
-    <record id="rating_rating_action_view_project_rating_task" model="ir.actions.act_window">
-        <field name="name">Ratings for tasks</field>
-        <field name="res_model">rating.rating</field>
-        <field name="view_mode">kanban,tree,graph,pivot,form</field>
-        <field name="domain">[('consumed','=',True), ('parent_res_model','=','project.project'), ('parent_res_id','=',active_id), ('res_model','=','project.task')]</field>
-        <field name="search_view_id" ref="rating_rating_view_search_project"/>
-        <field name="help" type="html">
-            <p>
-                There is no rating for tasks of this project at the moment.
             </p>
         </field>
     </record>

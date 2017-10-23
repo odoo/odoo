@@ -409,7 +409,7 @@ class Project(models.Model):
         action['name'] = _('Ratings of %s') % (self.name,)
         action_context = safe_eval(action['context']) if action['context'] else {}
         action_context.update(self._context)
-        action_context['search_default_rating_tasks'] = 1
+        action_context['search_default_parent_res_name'] = self.name
         return dict(action, context=action_context)
 
     # ---------------------------------------------------
