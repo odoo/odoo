@@ -83,7 +83,7 @@ class Inventory(models.Model):
              "system propose for a single product / lot /... ")
     total_qty = fields.Float('Total Quantity', compute='_compute_total_qty')
     category_id = fields.Many2one(
-        'product.category', 'Inventoried Category',
+        'product.category', 'Product Category',
         readonly=True, states={'draft': [('readonly', False)]},
         help="Specify Product Category to focus your inventory on a particular Category.")
     exhausted = fields.Boolean('Include Exhausted Products', readonly=True, states={'draft': [('readonly', False)]})
