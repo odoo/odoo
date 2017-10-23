@@ -268,10 +268,10 @@ class PackOperationLot(models.Model):
     _description = "Lot/Serial number for pack ops"
 
     operation_id = fields.Many2one('stock.pack.operation')
-    qty = fields.Float('Done', default=1.0)
+    qty = fields.Float('Done', default=1.0, digits=dp.get_precision('Product Unit of Measure'))
     lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')
     lot_name = fields.Char('Lot/Serial Number')
-    qty_todo = fields.Float('To Do', default=0.0)
+    qty_todo = fields.Float('To Do', default=0.0, digits=dp.get_precision('Product Unit of Measure'))
     plus_visible = fields.Boolean(compute='_compute_plus_visible', default=True)
 
     _sql_constraints = [
