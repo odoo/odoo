@@ -47,6 +47,8 @@
                     <filter string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
+                    <separator/>
+                    <filter string="Rated tasks" name="rating_task" domain="[('rating_last_value', '!=', 0.0)]" groups="project.group_project_rating"/>
                     <group expand="0" string="Group By">
                         <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
                         <filter string="Task" name="task" context="{'group_by':'name'}"/>
@@ -113,11 +115,17 @@
                             name="%(act_project_project_2_project_task_all)d" icon="fa-tasks">
                             <field string="Tasks" name="task_count" widget="statinfo" options="{'label_field': 'label_tasks'}"/>
                         </button>
+                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', '|', ('rating_status', '=', 'no'), ('percentage_satisfaction_task', '=', -1)]}" class="oe_stat_button oe_percent" icon="fa-smile-o" groups="project.group_project_rating">
+                            <field string="% On tasks" name="percentage_satisfaction_task" widget="statinfo"/>
+                        </button>
                         <button name="toggle_active" type="object"
                                 confirm="(Un)archiving a project automatically (un)archives its tasks and issues. Do you want to proceed?"
                                 class="oe_stat_button" icon="fa-archive">
                             <field name="active" widget="boolean_button"
                                 options='{"terminology": "archive"}'/>
+                        </button>
+                        <button name="%(project.rating_rating_action_view_project_rating_task)d" attrs="{'invisible': ['|', '|', ('rating_status', '=', 'no'), ('use_tasks','=', False), ('percentage_satisfaction_task', '=', -1)]}" class="oe_stat_button oe_percent" type="action" icon="fa-smile-o" groups="project.group_project_rating">
+                            <field string="% On tasks" name="percentage_satisfaction_task" widget="statinfo"/>
                         </button>
                     </div>
                     <div class="oe_title">
@@ -139,6 +147,14 @@
                                 <field name="subtask_project_id" groups="project.group_subtask_project"/>
                                 <field name="privacy_visibility" widget="radio"/>
                                 <field name="partner_id" string="Customer"/>
+                                <label for="rating_status" groups="project.group_project_rating"/>
+                                <div groups="project.group_project_rating">
+                                    <field name="rating_status" widget="radio"/>
+                                    <p attrs="{'invisible': [('rating_status','not in',('periodic','stage'))]}" class="text-muted oe_edit_only">
+                                        Edit project's stages and set an email template on the stages on which you want to activate the rating.
+                                    </p>
+                                </div>
+                                <field name="rating_status_period"  class="oe_inline" attrs="{'required': [('rating_status','=','periodic')], 'invisible': [('rating_status','!=','periodic')]}" groups="project.group_project_rating"/>
                             </group>
                             <group name="misc">
                                 <group string="Configuration" groups="base.group_no_one">
@@ -286,6 +302,9 @@
                     <field name="alias_id"/>
                     <field name="alias_name"/>
                     <field name="alias_domain"/>
+                    <field name="is_favorite"/>
+                    <field name="percentage_satisfaction_project"/>
+                    <field name="rating_status"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon">
@@ -301,12 +320,27 @@
                                             <div t-if="record.alias_name.value and record.alias_domain.value">
                                                 <span><i class="fa fa-envelope"></i> <t t-esc="record.alias_id.value"/></span>
                                             </div>
+                                            <div t-if="record.rating_status.raw_value != 'no'" class="mt8 text-primary" title="Percentage of happy ratings over the past 30 days. Get rating details from the More menu.">
+                                                <b>
+                                                    <t t-if="record.percentage_satisfaction_project.value == -1">
+                                                        <i class="fa fa-smile-o"/> No rating yet
+                                                    </t>
+                                                    <t t-if="record.percentage_satisfaction_project.value != -1">
+                                                        <a name="action_view_all_rating" type="object" context="{'search_default_rating_last_30_days':1}">
+                                                            <i class="fa fa-smile-o"/> <t t-esc="record.percentage_satisfaction_project.value"/>%
+                                                        </a>
+                                                    </t>
+                                                </b>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="o_kanban_card_manage_pane" groups="project.group_project_manager">
                                         <div class="o_kanban_card_manage_section o_kanban_manage_reports">
                                             <div>
                                                 <a type="edit">Edit</a>
+                                            </div>
+                                            <div t-if="record.rating_status.raw_value != 'no'">
+                                                <a name="action_view_all_rating" type="object">Customer Ratings</a>
                                             </div>
                                         </div>
                                         <div class="o_project_kanban_colorpicker">
@@ -400,6 +434,9 @@
                             attrs="{'invisible' : [('parent_id', '!=', False)]}"
                             context="{'project_id': subtask_project_id, 'name': name, 'partner_id': partner_id}" groups="project.group_subtask_project">
                             <field string="Sub-tasks" name="subtask_count" widget="statinfo"/>
+                        </button>
+                        <button name="%(rating_rating_action_task)d" type="action" attrs="{'invisible': [('rating_count', '=', 0)]}" class="oe_stat_button" icon="fa-smile-o" groups="project.group_project_rating">
+                            <field name="rating_count" string="Rating" widget="statinfo"/>
                         </button>
                         <button name="toggle_active" type="object" groups="base.group_user"
                                 class="oe_stat_button" icon="fa-archive">
@@ -496,6 +533,8 @@
                     <field name="legend_done"/>
                     <field name="activity_ids"/>
                     <field name="activity_state"/>
+                    <field name="rating_last_value"/>
+                    <field name="rating_ids"/>
                     <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
                     <templates>
                     <t t-name="kanban-box">
@@ -540,6 +579,11 @@
                                         <t t-if="record.message_needaction_counter.raw_value">
                                             <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                         </t>
+                                        <b t-if="record.rating_ids.raw_value.length">
+                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-smile-o text-success" t-if="record.rating_last_value.value == 10" title="Latest Rating: Satisfied"/>
+                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-meh-o text-warning" t-if="record.rating_last_value.value == 5" title="Latest Rating: Not Satisfied"/>
+                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-frown-o text-danger" t-if="record.rating_last_value.value == 1" title="Latest Rating: Higly Dissatisfied"/>
+                                        </b>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <field name="kanban_state" widget="state_selection" groups="base.group_user"/>
@@ -741,6 +785,8 @@
                             <group>
                                 <field name="name"/>
                                 <field name="mail_template_id"/>
+                                <field name="rating_template_id" groups="project.group_project_rating"/>
+                                <field name="auto_validation_kanban_state" attrs="{'invisible': [('rating_template_id','=', False)]}" groups="project.group_project_rating"/>
                             </group>
                             <group>
                                 <field name="fold"/>
@@ -890,5 +936,11 @@
             action="project.action_project_task_user_tree"
             parent="menu_project_report"
             sequence="10"/>
+
+        <menuitem id="rating_rating_menu_project"
+            action="rating_rating_action_project_report"
+            parent="menu_project_report"
+            groups="project.group_project_rating"
+            sequence="40"/>
 
 </odoo>
