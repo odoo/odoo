@@ -3,7 +3,7 @@
 
 <template id="website_sale_coupon_cart_hide_qty" inherit_id="website_sale.cart_lines" active="True">
     <xpath expr="//td[hasclass('td-qty')]/div" position="attributes">
-        <attribute name="t-if">not line.is_reward_line</attribute>
+        <attribute name="t-att-style">line.is_reward_line and "display:none;"</attribute>
     </xpath>
     <xpath expr="//td[hasclass('td-qty')]/div" position="after">
         <div t-if="line.is_reward_line" class="css_quantity input-group oe_website_spinner" id="line_qty">
