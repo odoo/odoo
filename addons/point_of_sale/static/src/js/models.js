@@ -1463,8 +1463,8 @@ exports.Orderline = Backbone.Model.extend({
         });
         return {
             taxes: taxes_vals,
-            total_excluded: round_pr(total_excluded, currency_rounding_bak),
-            total_included: round_pr(total_included, currency_rounding_bak)
+            total_excluded: sign * round_pr(total_excluded, currency_rounding_bak),
+            total_included: sign * round_pr(total_included, currency_rounding_bak)
         };
     },
     get_all_prices: function(){
