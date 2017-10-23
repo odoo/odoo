@@ -1165,14 +1165,13 @@ class AssetsBundle(object):
                     else:
                         self.stylesheets.append(StylesheetAsset(self, url=href, media=media))
                 elif el.tag == 'link' and el.get('rel') == 'stylesheet' and self.is_absolute(href):
-                    self.absolutes_css.append(href)
+                    self.absolutes_css.append(etree.tostring(el))
                 elif el.tag == 'script' and not src:
                     self.javascripts.append(JavascriptAsset(self, inline=el.text))
                 elif el.tag == 'script' and self.can_aggregate(src):
                     self.javascripts.append(JavascriptAsset(self, url=src))
                 elif el.tag == 'script' and self.is_absolute(src):
-                    # print(etree.tostring(el))
-                    self.absolutes_js.append(src)
+                    self.absolutes_js.append(etree.tostring(el))
                 else:
                     self.remains.append(html.tostring(el))
             else:
@@ -1223,10 +1222,10 @@ class AssetsBundle(object):
                 response.append(self.registry['ir.qweb'].render_node(el, qwebcontext))
         if css:
             for style in self.absolutes_css:
-                response.append('<link rel="stylesheet" href="%s"/>' % style)
+                response.append(style)
         if js:
             for jscript in self.absolutes_js:
-                response.append('<script %stype="text/javascript" src="%s"></script>' % (async and 'async="async" ' or '', jscript))
+                response.append(jscript)
         response.extend(self.remains)
         return sep + sep.join(response)
 
