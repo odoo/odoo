@@ -1427,8 +1427,10 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldImage');
 
     QUnit.test('image fields are correctly rendered', function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
+        this.data.partner.fields.__last_update = {string: "Last updated", type: "datetime"};
+        this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
         this.data.partner.records[0].document = 'myimage';
 
         var form = createView({
@@ -1439,7 +1441,10 @@ QUnit.module('basic_fields', {
                     '<field name="document" widget="image" options="{\'size\': [90, 90]}"/> ' +
                 '</form>',
             res_id: 1,
-            mockRPC: function (route) {
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/read') {
+                    assert.deepEqual(args.args[1], ['document', '__last_update', 'display_name'], "The fields document, display_name and __last_update should be present when reading an image");
+                }
                 if (route === 'data:image/png;base64,myimage') {
                     assert.ok(true, "should called the correct route");
                     return $.when('wow');
