@@ -223,6 +223,7 @@ class SaleOrderLine(models.Model):
             'project_id': project.id,
             'sale_line_id': self.id,
             'company_id': self.company_id.id,
+            'user_id': False, # force non assigned task, as created as sudo()
         }
 
     @api.multi
