@@ -24,19 +24,25 @@ class SaleOrder(models.Model):
         Compute the total amounts of the SO.
         """
         for order in self:
-            amount_untaxed = amount_tax = 0.0
+            round_curr = order.pricelist_id.currency_id.round
+            tax_grouped = {}  # we want the same behavior as invoices
+            amount_untaxed = 0.0
             for line in order.order_line:
                 amount_untaxed += line.price_subtotal
                 # FORWARDPORT UP TO 10.0
-                if order.company_id.tax_calculation_rounding_method == 'round_globally':
-                    price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-                    taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=order.partner_shipping_id)
-                    amount_tax += sum(t.get('amount', 0.0) for t in taxes.get('taxes', []))
-                else:
-                    amount_tax += line.price_tax
+                price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+                taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=order.partner_shipping_id)
+                for tax in taxes.get('taxes'):
+                    tax_amount = order.company_id.tax_calculation_rounding_method == 'round_globally' and tax['amount'] or round_curr(tax['amount'])
+                    if tax['id'] not in tax_grouped:
+                        tax_grouped[tax['id']] = tax_amount
+                    else:
+                        tax_grouped[tax['id']] += tax_amount
+
+            amount_tax = sum(round_curr(amount) for amount in tax_grouped.values())
             order.update({
-                'amount_untaxed': order.pricelist_id.currency_id.round(amount_untaxed),
-                'amount_tax': order.pricelist_id.currency_id.round(amount_tax),
+                'amount_untaxed': round_curr(amount_untaxed),
+                'amount_tax': amount_tax,
                 'amount_total': amount_untaxed + amount_tax,
             })
 
