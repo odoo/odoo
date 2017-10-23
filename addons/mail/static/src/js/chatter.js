@@ -31,6 +31,7 @@ var Chatter = Widget.extend(chat_mixin, {
         'click .o_chatter_button_new_message': '_onOpenComposerMessage',
         'click .o_chatter_button_log_note': '_onOpenComposerNote',
         'click .o_chatter_button_schedule_activity': '_onScheduleActivity',
+        'click .o_chatter_filter_menu li': '_onChatterFilter',
     },
     supportedFieldTypes: ['one2many'],
 
@@ -71,6 +72,15 @@ var Chatter = Widget.extend(chat_mixin, {
             schedule_activity_btn: !!this.fields.activity,
             isMobile: config.device.isMobile,
         }));
+
+        // render and append filter
+        if (this.fields.thread) {
+            this.fields.thread.filter = [];
+            this.$topbar.append(QWeb.render('mail.Filters', {
+                schedule_activity_filter: !!this.fields.activity,
+                log_note_filter: this.hasLogButton,
+            }));
+        }
 
         // start and append the widgets
         var fieldDefs = _.invoke(this.fields, 'appendTo', $('<div>'));
@@ -244,6 +254,18 @@ var Chatter = Widget.extend(chat_mixin, {
     },
 
     // handlers
+    _onChatterFilter: function(event) {
+        event.stopPropagation();
+        $(event.currentTarget).toggleClass('selected');
+        var filterName = $(event.target).data('filter');
+        var filterIndex = _.indexOf(this.fields.thread.filter, filterName);
+        filterIndex === -1 ? this.fields.thread.filter.push(filterName) : this.fields.thread.filter.splice(filterIndex, 1);
+        this.fields.thread._render();
+        if (this.fields.activity) {
+            this.fields.activity.filter = this.fields.thread.filter;
+            this.fields.activity._render();
+        }
+    },
     _onOpenComposerMessage: function () {
         var self = this;
         if (!this.suggested_partners_def) {

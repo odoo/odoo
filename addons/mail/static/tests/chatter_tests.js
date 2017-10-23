@@ -160,6 +160,76 @@ QUnit.test('basic rendering', function (assert) {
     form.destroy();
 });
 
+QUnit.test('chatter: filter chatter messages', function (assert) {
+     assert.expect(9);
+ 
+     var messages = [{
+         attachment_ids: [],
+         author_id: ["1", "John Doe"],
+         body: "A message",
+         date: moment("2016-12-20 09:35:40"),
+         displayed_author: "John Doe",
+         id: 1,
+         is_note: false,
+         is_starred: false,
+         model: 'partner',
+         res_id: 2,
+         message_type: 'comment',
+     }, {
+         attachment_ids: [],
+         author_id: ["1", "John Doe"],
+         body: "A note",
+         date: moment("2016-12-20 09:35:40"),
+         displayed_author: "John Doe",
+         id: 1,
+         is_note: true,
+         is_starred: false,
+         model: 'partner',
+         res_id: 2,
+         message_type: 'comment',
+     }];
+     var form = createView({
+         View: FormView,
+         model: 'partner',
+         data: this.data,
+         arch: '<form string="Partners">' +
+                 '<sheet>' +
+                     '<field name="foo"/>' +
+                 '</sheet>' +
+                 '<div class="oe_chatter">' +
+                     '<field name="message_ids" widget="mail_thread" options="{\'display_log_button\': True}"/>' +
+                     '<field name="activity_ids" widget="mail_activity"/>' +
+                 '</div>' +
+             '</form>',
+         res_id: 2,
+         intercepts: {
+             get_messages: function (event) {
+                 event.stopPropagation();
+                 event.data.callback($.when(messages));
+             },
+             get_bus: function (event) {
+                 event.stopPropagation();
+                 event.data.callback(new Bus());
+             },
+         },
+     });
+ 
+     assert.ok(form.$('.o_chatter_filter_menu').length, "thread should contain filter");
+     assert.strictEqual(form.$('.o_thread_message').length, 2, "thread should contain two message");
+     assert.strictEqual(form.$('.o_thread_message .o_mail_note').length, 1, "thread should contain one note");
+     assert.ok(!form.$('.o_thread_message:last() .o_mail_note').length, "the last message shouldn't be a note");
+     form.$('.o_chatter_filter_menu li a[data-filter="is_note"]').click();
+     assert.strictEqual(form.$('.o_thread_message').length, 1, "after applying note filter thread should contain one message");
+     assert.strictEqual(form.$('.o_thread_message .o_mail_note').length, 1, "after applying note filter thread should contain only one note");
+     form.$('.o_chatter_filter_menu li a[data-filter="comment"]').click();
+     assert.strictEqual(form.$('.o_thread_message').length, 2, "after applying note and messages filter thread should contain two message");
+     form.$('.o_chatter_filter_menu li a[data-filter="is_note"], .o_chatter_filter_menu li a[data-filter="comment"], .o_chatter_filter_menu li a[data-filter="notification"]').click();
+     assert.ok(!form.$('.o_thread_message').length, "after removing note and messages filter and applying system notification filter thread shouldn't contain any message");
+     form.$('.o_chatter_filter_menu li a[data-filter="notification"]').click();
+     assert.strictEqual(form.$('.o_thread_message').length, 2, "after removing all filter thread should contain two message");
+     form.destroy();
+ });
+
 QUnit.test('chatter is not rendered in mode === create', function (assert) {
     assert.expect(4);
 
