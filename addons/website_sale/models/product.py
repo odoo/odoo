@@ -141,9 +141,9 @@ class ProductTemplate(models.Model):
             template.website_public_price = product.website_public_price
 
     def _default_website_sequence(self):
-        self._cr.execute("SELECT MIN(website_sequence) FROM %s" % self._table)
+        self._cr.execute("SELECT MAX(website_sequence) FROM %s" % self._table)
         min_sequence = self._cr.fetchone()[0]
-        return min_sequence and min_sequence - 1 or 10
+        return min_sequence and min_sequence + 1 or 0
 
     def set_sequence_top(self):
         self.website_sequence = self.sudo().search([], order='website_sequence desc', limit=1).website_sequence + 1
