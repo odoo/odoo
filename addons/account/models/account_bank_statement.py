@@ -819,6 +819,7 @@ class AccountBankStatementLine(models.Model):
                 whose value is the same as described in process_reconciliation except that ids are used instead of recordsets.
         """
         AccountMoveLine = self.env['account.move.line']
+        ctx = dict(self._context, force_price_include=False)
         for st_line, datum in zip(self, data):
             payment_aml_rec = AccountMoveLine.browse(datum.get('payment_aml_ids', []))
             for aml_dict in datum.get('counterpart_aml_dicts', []):
@@ -826,7 +827,7 @@ class AccountBankStatementLine(models.Model):
                 del aml_dict['counterpart_aml_id']
             if datum.get('partner_id') is not None:
                 st_line.write({'partner_id': datum['partner_id']})
-            st_line.process_reconciliation(datum.get('counterpart_aml_dicts', []), payment_aml_rec, datum.get('new_aml_dicts', []))
+            st_line.with_context(ctx).process_reconciliation(datum.get('counterpart_aml_dicts', []), payment_aml_rec, datum.get('new_aml_dicts', []))
 
     def fast_counterpart_creation(self):
         for st_line in self:

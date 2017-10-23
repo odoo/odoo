@@ -817,7 +817,7 @@ class AccountTax(models.Model):
             if tax.include_base_amount:
                 base = recompute_base(base, incl_fixed_amount, incl_percent_amount)
                 incl_fixed_amount = incl_percent_amount = 0
-            if tax.price_include:
+            if self._context.get('force_price_include', tax.price_include):
                 if tax.amount_type == 'fixed':
                     incl_fixed_amount += tax.amount
                 elif tax.amount_type == 'percent':
@@ -839,7 +839,10 @@ class AccountTax(models.Model):
             # took into account on the base amount except for 'division' tax:
             # (tax.amount_type == 'percent' && not tax.price_include)
             # == (tax.amount_type == 'division' && tax.price_include)
-            tax_amount = tax.with_context(force_price_include=False)._compute_amount(base, price_unit, quantity, product, partner)
+            # N.B: don't use the with_context if force_price_include already False in context
+            if 'force_price_include' not in self._context or self._context['force_price_include']:
+                tax = tax.with_context(force_price_include=False)
+            tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
             if not round_tax:
                 tax_amount = round(tax_amount, prec)
             else:
