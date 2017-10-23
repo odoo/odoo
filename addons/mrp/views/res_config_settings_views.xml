@@ -14,13 +14,12 @@
                             <div class="col-md-6 col-xs-12 o_setting_box" id="work_order" title="Work Order Operations allow you to create and manage the manufacturing operations that should be followed within your work centers in order to produce a product. They are attached to bills of materials that will define the required raw materials.">
                                 <div class="o_setting_left_pane">
                                     <field name="group_mrp_routings" widget="upgrade_boolean"/>
-                                    <field name="module_quality_mrp" invisible="1"/>
+                                    <field name="module_mrp_workorder" invisible="1"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="group_mrp_routings"/>
                                     <div class="text-muted">
                                         Process operations at specific work centers based on the routing
-                                        and carry out quality checks.
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('group_mrp_routings','=',False)]}">
                                         <div class="mt16">
@@ -31,6 +30,17 @@
                                                 <button name="%(mrp.mrp_workcenter_action)d" icon="fa-arrow-right" type="action" string="Work Centers" class="btn-link"/>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-xs-12 o_setting_box" attrs="{'invisible': [('group_mrp_routings', '=', False)]}" id="quality_control">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_quality_control" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_quality_control"/>
+                                    <div class="text-muted">
+                                        Add quality checks to your work orders
                                     </div>
                                 </div>
                             </div>
