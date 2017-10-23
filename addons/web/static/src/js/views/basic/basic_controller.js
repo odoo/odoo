@@ -447,7 +447,11 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      */
     _setMode: function (mode, recordID) {
         if ((recordID || this.handle) === this.handle) {
-            return this.update({mode: mode}, {reload: false});
+            return this.update({mode: mode}, {reload: false}).then(function () {
+                // necessary to allow all sub widgets to use their dimensions in
+                // layout related activities, such as autoresize on fieldtexts
+                core.bus.trigger('DOM_updated');
+            });
         }
         return $.when();
     },
