@@ -56,7 +56,7 @@ class ProductTemplate(models.Model):
              'the e-commerce such as e-books, music, pictures,... The "Digital Product" module has to be installed.')
     rental = fields.Boolean('Can be Rent')
     categ_id = fields.Many2one(
-        'product.category', 'Internal Category',
+        'product.category', 'Product Category',
         change_default=True, default=_get_default_category_id,
         required=True, help="Select category for the current product")
 
