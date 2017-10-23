@@ -20,6 +20,7 @@
         'security/mass_mailing_security.xml',
         'data/mass_mailing_data.xml',
         'wizard/mail_compose_message_views.xml',
+        'wizard/mass_mailing_list_merge_views.xml',
         'wizard/test_mailing_views.xml',
         'views/mass_mailing_report_views.xml',
         'views/mass_mailing_stats_views.xml',
