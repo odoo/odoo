@@ -33,13 +33,14 @@
 # lucasdeliege <deliegelucas@gmail.com>, 2017
 # Frédéric Clementi <frederic.clementi@camptocamp.com>, 2017
 # Lucas Deliege <lud@odoo.com>, 2017
+# Florent de Labarre <florent@iguanayachts.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Lucas Deliege <lud@odoo.com>, 2017\n"
+"Last-Translator: Florent de Labarre <florent@iguanayachts.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,7 +80,7 @@ msgstr "Nb. de lignes de versement"
 #: model:ir.cron,cron_name:account_asset.account_asset_cron
 #: model:ir.cron,name:account_asset.account_asset_cron
 msgid "Account Asset: Generate asset entries"
-msgstr ""
+msgstr "Immobilisation : Générer les écritures des immobilisations"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_date
@@ -118,7 +119,7 @@ msgstr ""
 #: code:addons/account_asset/static/src/js/account_asset.js:41
 #, python-format
 msgid "Accounting entries waiting for manual verification"
-msgstr ""
+msgstr "Entrées comptables en attente de vérification manuelle"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
@@ -352,6 +353,9 @@ msgid ""
 "  * Number of Entries: Fix the number of entries and the time between 2 depreciations.\n"
 "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
 msgstr ""
+"Choisissez la méthode à utiliser pour calculer les dates et le nombre de lignes d'amortissement.\n"
+"    * Nombre d'amortissements : fixer le nombre d'amortissements et le temps entre 2 amortissements.\n"
+"    * Date de fin : choisissez le temps entre 2 amortissements et la date de fin d'amortissement."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_asset_depreciation_confirmation_wizard_date
@@ -1023,6 +1027,8 @@ msgid ""
 "The number of depreciations or the period length of your asset category "
 "cannot be null."
 msgstr ""
+"Le nombre d'amortissements ou la durée de période de votre catégorie d'actif"
+" ne peut pas être nul."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard

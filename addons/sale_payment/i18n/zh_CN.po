@@ -8,13 +8,14 @@
 # glovebx <ruinning@163.com>, 2017
 # Luke <cialuo@qq.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
+# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Gary Wei <Gary.wei@elico-corp.com>, 2017\n"
+"Last-Translator: Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,19 +27,19 @@ msgstr ""
 #: code:addons/sale_payment/models/payment.py:111
 #, python-format
 msgid "<%s> transaction (%s) failed: <%s>"
-msgstr ""
+msgstr " <%s>事务（%s）失败：<%s>"
 
 #. module: sale_payment
 #: code:addons/sale_payment/models/payment.py:118
 #, python-format
 msgid "<%s> transaction (%s) invalid state: %s"
-msgstr ""
+msgstr "<%s>事务（%s）无效状态：%s"
 
 #. module: sale_payment
 #: code:addons/sale_payment/models/payment.py:126
 #, python-format
 msgid "<%s> transaction (%s) order confirmation failed: <%s>"
-msgstr ""
+msgstr "<%s>事务（%s）订单确认失败：<%s>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
@@ -48,7 +49,7 @@ msgstr "<i class=\"fa fa-arrow-circle-right\"/> 现在付款"
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
 msgid "<i class=\"fa fa-check-circle\"/> Done"
-msgstr ""
+msgstr "<i class=\"fa fa-check-circle\"/>完成"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
@@ -65,31 +66,33 @@ msgid ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
 "fa-fw fa-check\"/> Done</span>"
 msgstr ""
+"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
+"fa-fw fa-check\"/> 完成</span>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
 msgid "<strong>Transactions</strong>"
-msgstr ""
+msgstr "<strong>交易</strong>"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_pending_payment_transactions_amount
 msgid "Amount of pending transactions"
-msgstr ""
+msgstr "待交易金额"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_authorized_payment_transactions_amount
 msgid "Amount of transactions to capture"
-msgstr ""
+msgstr "交易捕捉的数量"
 
 #. module: sale_payment
 #: model:ir.actions.act_window,name:sale_payment.payment_transaction_action_authorized
 msgid "Authorized Payment Transactions"
-msgstr ""
+msgstr "授权付款交易"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
 msgid "Awaiting Payment"
-msgstr ""
+msgstr "等待付款"
 
 #. module: sale_payment
 #: code:addons/sale_payment/controllers/payment.py:53
@@ -102,33 +105,33 @@ msgstr "如果我们在服务器存储你的支付信息,订阅将自动支付�
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_tx_id
 msgid "Last Transaction"
-msgstr ""
+msgstr "最近交易"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_transaction_count
 msgid "Number of payment transactions"
-msgstr ""
+msgstr "付款交易次数"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_pending_payment_transactions_count
 msgid "Number of pending transactions"
-msgstr ""
+msgstr "待处理事务数"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_authorized_payment_transactions_count
 msgid "Number of transactions to capture"
-msgstr ""
+msgstr "要捕获的事务数"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_success
 msgid "Order successfully paid."
-msgstr ""
+msgstr "订单成功支付。"
 
 #. module: sale_payment
 #: code:addons/sale_payment/controllers/payment.py:50
 #, python-format
 msgid "Pay"
-msgstr ""
+msgstr "付款"
 
 #. module: sale_payment
 #: code:addons/sale_payment/models/payment.py:187
@@ -139,7 +142,7 @@ msgstr "现在付款"
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
 msgid "Pay with"
-msgstr ""
+msgstr "支付 于"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
@@ -159,7 +162,7 @@ msgstr "付款交易"
 #. module: sale_payment
 #: model:ir.actions.act_window,name:sale_payment.payment_transaction_action_pending
 msgid "Pending Payment Transactions"
-msgstr ""
+msgstr " 等待付款交易"
 
 #. module: sale_payment
 #: model:ir.model,name:sale_payment.model_sale_order
@@ -180,45 +183,45 @@ msgstr "销售订单"
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid ""
 "There was an error processing your payment: impossible to validate order."
-msgstr ""
+msgstr "您有一个付款的错误：无法验证订单。"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was an error processing your payment: invalid order state."
-msgstr ""
+msgstr "您有一个付款的错误：无效的订单状态"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was an error processing your payment: invalid order."
-msgstr ""
+msgstr "您有一个付款的错误：无效订单"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
-msgstr ""
+msgstr "您有一个付款的错误：信用卡身份验证问题。"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid ""
 "There was an error processing your payment: transaction amount issue.<br/>"
-msgstr ""
+msgstr "您有一个付款的错误：交易量的问题。<br/>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
-msgstr ""
+msgstr "您有一个付款的错误：交易失败<br/>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was an error processing your payment: transaction issue.<br/>"
-msgstr ""
+msgstr "您有一个付款的错误：交易失败。<br/>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was en error processing your payment: invalid credit card ID."
-msgstr ""
+msgstr "您有一个付款的错误：无效的信用卡号"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_tx_ids
@@ -229,4 +232,4 @@ msgstr "交易"
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
 msgid "to Capture"
-msgstr ""
+msgstr "捕捉"
