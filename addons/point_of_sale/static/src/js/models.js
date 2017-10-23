@@ -1416,7 +1416,7 @@ exports.Orderline = Backbone.Model.extend({
         var sign = 1;
         if(base < 0){
             base = -base;
-            var sign = -1;
+            sign = -1;
         }
 
         var incl_fixed_amount = 0.0;
