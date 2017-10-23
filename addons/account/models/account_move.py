@@ -1194,7 +1194,7 @@ class AccountMoveLine(models.Model):
             taxes = self.env['account.tax'].browse(tax_ids)
             currency = self.env['res.currency'].browse(vals.get('currency_id'))
             partner = self.env['res.partner'].browse(vals.get('partner_id'))
-            res = taxes.with_context(round=True).compute_all(amount,
+            res = taxes.with_context(dict(self._context, round=True)).compute_all(amount,
                 currency, 1, vals.get('product_id'), partner)
             # Adjust line amount if any tax is price_include
             if abs(res['total_excluded']) < abs(amount):
