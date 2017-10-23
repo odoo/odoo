@@ -124,9 +124,6 @@
                             <field name="active" widget="boolean_button"
                                 options='{"terminology": "archive"}'/>
                         </button>
-                        <button name="%(project.rating_rating_action_view_project_rating_task)d" attrs="{'invisible': ['|', '|', ('rating_status', '=', 'no'), ('use_tasks','=', False), ('percentage_satisfaction_task', '=', -1)]}" class="oe_stat_button oe_percent" type="action" icon="fa-smile-o" groups="project.group_project_rating">
-                            <field string="% On tasks" name="percentage_satisfaction_task" widget="statinfo"/>
-                        </button>
                     </div>
                     <div class="oe_title">
                         <h1>
@@ -320,7 +317,7 @@
                                             <div t-if="record.alias_name.value and record.alias_domain.value">
                                                 <span><i class="fa fa-envelope"></i> <t t-esc="record.alias_id.value"/></span>
                                             </div>
-                                            <div t-if="record.rating_status.raw_value != 'no'" class="mt8 text-primary" title="Percentage of happy ratings over the past 30 days. Get rating details from the More menu.">
+                                            <div t-if="record.rating_status.raw_value != 'no'" class="mt8 text-primary" title="Percentage of happy ratings over the past 30 days. Get rating details from the More menu." groups="project.group_project_rating">
                                                 <b>
                                                     <t t-if="record.percentage_satisfaction_project.value == -1">
                                                         <i class="fa fa-smile-o"/> No rating yet
