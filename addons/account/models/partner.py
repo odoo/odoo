@@ -286,12 +286,10 @@ class ResPartner(models.Model):
 
     @api.multi
     def _invoice_total(self):
-        account_invoice_report = self.env['account.invoice.report']
         if not self.ids:
             self.total_invoiced = 0.0
             return True
 
-        user_currency_id = self.env.user.company_id.currency_id
         all_partners_and_children = {}
         all_partner_ids = []
         for partner in self:
@@ -304,44 +302,13 @@ class ResPartner(models.Model):
         # In simple cases where all invoices are in the same currency than the user's company
         # access directly these elements
 
-        # generate where clause to include multicompany rules
-        where_query = account_invoice_report._where_calc([
+        domain = [
             ('partner_id', 'in', all_partner_ids), ('state', 'not in', ['draft', 'cancel']),
             ('type', 'in', ('out_invoice', 'out_refund'))
-        ])
-        account_invoice_report._apply_ir_rules(where_query, 'read')
-        from_clause, where_clause, where_clause_params = where_query.get_sql()
-
-        # price_total is in the company currency
-        query = """
-                  SELECT SUM(price_total) as total, partner_id, currency_id, date
-                    FROM account_invoice_report account_invoice_report
-                   WHERE %s
-                   GROUP BY partner_id, currency_id, date
-                """ % where_clause
-        self.env.cr.execute(query, where_clause_params)
-        price_totals = self.env.cr.dictfetchall()
+        ]
+        res = self.env['account.invoice.report'].read_group(domain, ['price_total', 'partner_id'], ['partner_id'])
         for partner, child_ids in all_partners_and_children.items():
-            total_invoiced = 0
-            currency = None
-            currency_date = None
-            for price in price_totals:
-                if price['partner_id'] not in child_ids:
-                    continue
-                total_invoiced += price['total']
-                # In case of account_invoice_report in another currency,
-                # browse this currency to show the amount in the user's company.
-                # This is necessary because the account_invoice_report is not recomputed when
-                # the user switch from one company to another. Furthermore, we cannot use the
-                # user_currency_price_total in account_invoice_report because
-                # _compute_amounts_in_user_currency don't depend of the user.
-                # see opw: 771256
-                if not currency and price['currency_id'] != user_currency_id:
-                    currency = self.env['res.currency'].browse(price['currency_id'])
-                    currency_date = price['date']
-            if currency:
-                total_invoiced = currency.with_context(date=currency_date).compute(total_invoiced, user_currency_id)
-            partner.total_invoiced = total_invoiced
+            partner.total_invoiced = sum(row['price_total'] for row in res if row['partner_id'][0] in child_ids)
 
     @api.multi
     def _journal_item_count(self):

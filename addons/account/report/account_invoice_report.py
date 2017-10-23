@@ -181,3 +181,53 @@ class AccountInvoiceReport(models.Model):
         )""" % (
                     self._table, self.pool['res.currency']._select_companies_rates(),
                     self._select(), self._sub_select(), self._from(), self._group_by()))
+
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
+        # Even if it looks crappy, it's the only way to ensure the Invoices Analysis is done
+        # in the user currency because:
+        # - The SQL view doesn't depend of the current user
+        # - The computed fields are not displayed in the Invoices Analysis (not stored fields)
+        # - _compute_amounts_in_user_currency doesn't depend of the current user
+        if not context or not context.get('skip_user_currency'):
+            # Because the read_group is sometimes done multiple times depending of the groupby,
+            # we need to ensure the conversion to the user currency is done only at the end.
+            if not context:
+                context = {}
+            context = dict(context, skip_user_currency=True)
+
+            # We need the currency_id of the account_invoice_report.
+            if 'currency_id' not in fields:
+                fields += ['currency_id']
+            if 'currency_id' not in groupby:
+                groupby += ['currency_id']
+
+            res = super(AccountInvoiceReport, self).read_group(
+                cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, lazy=False)
+
+            # Retrieve the user currency
+            env = api.Environment(cr, uid, context)
+            user_currency = env.user.company_id.currency_id
+
+            # Filter fields we need to convert to the user currency
+            fields_to_convert = [f for f in fields if self._columns[f]._type in ('integer', 'float', 'monetary')]
+
+            report_currency = None
+            for row in res:
+                currency_id = row['currency_id'][0]
+                # The rows are already is the user currency, stop the computation here
+                if currency_id == user_currency.id:
+                    return res
+
+                # The report currency is computed in a "lazy" way to avoid an useless browse
+                if not report_currency:
+                    report_currency = env['res.currency'].browse(currency_id)
+
+                # Let's print the user currency on the report
+                row['currency_id'] = (user_currency.id, user_currency.name)
+                for f in fields_to_convert:
+                    row[f] = report_currency.compute(row[f], user_currency)
+
+            return res
+
+        return super(AccountInvoiceReport, self).read_group(
+            cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, lazy=lazy)
