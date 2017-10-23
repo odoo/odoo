@@ -5988,6 +5988,49 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('autoresize of text fields is done when switching to edit mode', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.fields.text_field = { string: 'Text field', type: 'text' };
+        this.data.partner.fields.text_field.default = "some\n\nmulti\n\nline\n\ntext\n";
+        this.data.partner.records[0].text_field = "a\nb\nc\nd\ne\nf";
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="display_name"/>' +
+                        '<field name="text_field"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        // switch to edit mode to ensure that autoresize is correctly done
+        form.$buttons.find('.o_form_button_edit').click();
+        var height = form.$('.o_field_widget[name=text_field]').height();
+        // focus the field to manually trigger autoresize
+        form.$('.o_field_widget[name=text_field]').trigger('focus');
+        assert.strictEqual(form.$('.o_field_widget[name=text_field]').height(), height,
+            "autoresize should have been done automatically at rendering");
+        // next assert simply tries to ensure that the textarea isn't stucked to
+        // its minimal size, even after being focused
+        assert.ok(height > 80, "textarea should have an height of at least 80px");
+
+        // save and create a new record to ensure that autoresize is correctly done
+        form.$buttons.find('.o_form_button_save').click();
+        form.$buttons.find('.o_form_button_create').click();
+        height = form.$('.o_field_widget[name=text_field]').height();
+        // focus the field to manually trigger autoresize
+        form.$('.o_field_widget[name=text_field]').trigger('focus');
+        assert.strictEqual(form.$('.o_field_widget[name=text_field]').height(), height,
+            "autoresize should have been done automatically at rendering");
+        assert.ok(height > 80, "textarea should have an height of at least 80px");
+
+        form.destroy();
+    });
 
 });
 });
