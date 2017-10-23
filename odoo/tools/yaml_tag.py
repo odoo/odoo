@@ -5,7 +5,7 @@ import logging
 class YamlTag(object):
     """
     Superclass for constructors of custom tags defined in yaml file.
-    __str__ is overriden in subclass and used for serialization in module recorder.
+    __str__ is overridden in subclass and used for serialization in module recorder.
     """
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)

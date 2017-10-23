@@ -130,7 +130,7 @@ def _eval_xml(self, node, env):
                 # bytestring of n nuls. In Python 2 it obviously returns the
                 # stringified number, which is what we're expecting here
                 s = s.replace(found, pycompat.text_type(self.idref[id]))
-            s = s.replace('%%', '%') # Quite wierd but it's for (somewhat) backward compatibility sake
+            s = s.replace('%%', '%') # Quite weird but it's for (somewhat) backward compatibility sake
             return s
 
         if t == 'xml':
@@ -581,7 +581,7 @@ form: module.record_id""" % (xml_id,)
             )
 
         self._test_xml_id(rec_id)
-        # in update mode, the record won't be updated if the data node explicitely
+        # in update mode, the record won't be updated if the data node explicitly
         # opt-out using @noupdate="1". A second check will be performed in
         # ir.model.data#_update() using the record's ir.model.data `noupdate` field.
         if self.isnoupdate(data_node) and self.mode != 'init':
