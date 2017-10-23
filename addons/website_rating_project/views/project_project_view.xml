@@ -4,7 +4,7 @@
     <record id="project_project_view_form" model="ir.ui.view">
         <field name="name">project.project.inherit.form</field>
         <field name="model">project.project</field>
-        <field name="inherit_id" ref="rating_project.view_project_project_rating_form"/>
+        <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='rating_status_period']" position="after">
                 <field name="portal_show_rating" attrs="{'invisible': [('rating_status','==','no')]}"/>

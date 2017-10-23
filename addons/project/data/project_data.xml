@@ -17,6 +17,15 @@
             <field name="noupdate">True</field>
         </record>
 
+        <record id="ir_cron_rating_project" model="ir.cron">
+            <field name="name">Project: Send rating</field>
+            <field name="model_id" ref="project.model_project_project"/>
+            <field name="state">code</field>
+            <field name="code">model._send_rating_all()</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+
     </data>
 
 
@@ -45,6 +54,12 @@
             <field name="res_model">project.task</field>
             <field name="default" eval="False"/>
             <field name="description">Stage changed</field>
+        </record>
+        <record id="mt_task_rating" model="mail.message.subtype">
+            <field name="name">Task Rating</field>
+            <field name="res_model">project.task</field>
+            <field name="default" eval="True"/>
+            <field name="description">Ratings</field>
         </record>
         <!-- Project-related subtypes for messaging / Chatter -->
         <record id="mt_project_task_new" model="mail.message.subtype">
@@ -77,6 +92,14 @@
             <field name="res_model">project.project</field>
             <field name="default" eval="False"/>
             <field name="parent_id" eval="ref('mt_task_stage')"/>
+            <field name="relation_field">project_id</field>
+        </record>
+        <record id="mt_project_task_rating" model="mail.message.subtype">
+            <field name="name">Task Rating</field>
+            <field name="sequence">14</field>
+            <field name="res_model">project.project</field>
+            <field name="default" eval="True"/>
+            <field name="parent_id" eval="ref('mt_task_rating')"/>
             <field name="relation_field">project_id</field>
         </record>
 
