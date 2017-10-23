@@ -63,7 +63,7 @@ _LOCALE2WIN32 = {
     'hi_IN': 'Hindi',
     'hu': 'Hungarian_Hungary',
     'is_IS': 'Icelandic_Iceland',
-    'id_ID': 'Indonesian_indonesia',
+    'id_ID': 'Indonesian_Indonesia',
     'it_IT': 'Italian_Italy',
     'ja_JP': 'Japanese_Japan',
     'kn_IN': 'Kannada',
@@ -85,7 +85,7 @@ _LOCALE2WIN32 = {
     'sr_CS': 'Serbian (Cyrillic)_Serbia and Montenegro',
     'sk_SK': 'Slovak_Slovakia',
     'sl_SI': 'Slovenian_Slovenia',
-    #should find more specific locales for spanish countries,
+    #should find more specific locales for Spanish countries,
     #but better than nothing
     'es_AR': 'Spanish_Spain',
     'es_BO': 'Spanish_Spain',
@@ -116,7 +116,7 @@ _LOCALE2WIN32 = {
 
 }
 
-# These are not all english small words, just those that could potentially be isolated within views
+# These are not all English small words, just those that could potentially be isolated within views
 ENGLISH_SMALL_WORDS = set("as at by do go if in me no of ok on or to up us we".split())
 
 
@@ -410,7 +410,7 @@ class GettextAlias(object):
             if not lang:
                 # Last resort: attempt to guess the language of the user
                 # Pitfall: some operations are performed in sudo mode, and we
-                #          don't know the originial uid, so the language may
+                #          don't know the original uid, so the language may
                 #          be wrong when the admin language differs.
                 (cr, dummy) = self._get_cr(frame, allow_create=False)
                 uid = self._get_uid(frame)
@@ -560,8 +560,8 @@ class PoFile(object):
             if not source and self.first:
                 self.first = False
                 # if the source is "" and it's the first msgid, it's the special
-                # msgstr with the informations about the traduction and the
-                # traductor; we skip it
+                # msgstr with the information about the translate and the
+                # translator; we skip it
                 self.extra_lines = []
                 while line:
                     line = self.lines.pop(0).strip()
@@ -590,7 +590,7 @@ class PoFile(object):
 
         if name is None:
             if not fuzzy:
-                _logger.warning('Missing "#:" formated comment at line %d for the following source:\n\t%s',
+                _logger.warning('Missing "#:" formatted comment at line %d for the following source:\n\t%s',
                                 self.cur_line(), source[:30])
             return next(self)
         return trans_type, name, res_id, source, trad, '\n'.join(comments)
@@ -638,7 +638,7 @@ class PoFile(object):
                 code = True
 
         if code:
-            # only strings in python code are python formated
+            # only strings in python code are python formatted
             self.buffer.write(u"#, python-format\n")
 
         msg = (
@@ -1139,7 +1139,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
         irt_cursor.finish()
         Translation.clear_caches()
         if verbose:
-            _logger.info("translation file loaded succesfully")
+            _logger.info("translation file loaded successfully")
 
     except IOError:
         iso_lang = get_iso_codes(lang)

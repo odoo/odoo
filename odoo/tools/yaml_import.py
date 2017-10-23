@@ -323,7 +323,7 @@ class YamlInterpreter(object):
             view (either specified on the !record tag or the default one for this object), including the calls to
             on_change() functions, and sending only values for fields that aren't set as readonly.
             :param model: model instance (new API)
-            :param fields: dictonary mapping the field names and their values
+            :param fields: dictionary mapping the field names and their values
             :param view_info: result of fields_view_get() called on the object
             :param parent: dictionary containing the values already computed for the parent, in case of one2many fields
             :param default: if True, the default values must be processed too or not
