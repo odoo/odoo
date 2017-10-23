@@ -3,3 +3,4 @@
 
 from . import test_mailing
 from . import mail_compose_message
+from . import mass_mailing_list_merge
