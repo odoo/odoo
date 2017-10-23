@@ -108,7 +108,7 @@
                             </div>
                             <div class="content-group">
                                 <div class="mt16">
-                                    <field name="default_sale_tax_id" domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"/>
+                                    <field name="sale_tax_id" domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"/>
                                 </div>
                                 <div>
                                     <button type="action" name="%(account.action_tax_form)d" string="Taxes" class="btn-link" icon="fa-arrow-right"/>
