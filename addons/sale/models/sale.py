@@ -850,15 +850,16 @@ class SaleOrderLine(models.Model):
         # TO DO: move me in master/saas-16 on sale.order
         if self.order_id.pricelist_id.discount_policy == 'with_discount':
             return product.with_context(pricelist=self.order_id.pricelist_id.id).price
-        price, rule_id = self.order_id.pricelist_id.get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
+        final_price, rule_id = self.order_id.pricelist_id.get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
         pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
-        if (pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id.discount_policy == 'with_discount'):
-            price, rule_id = pricelist_item.base_pricelist_id.get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
-            return price
+        if pricelist_item.base == 'pricelist':
+            base_price, rule_id = pricelist_item.base_pricelist_id.get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
+            base_price = pricelist_item.base_pricelist_id.currency_id.compute(base_price, self.order_id.pricelist_id.currency_id)
         else:
-            from_currency = self.order_id.company_id.currency_id
-            product_price = product[pricelist_item.base] if (pricelist_item and pricelist_item.base != 'pricelist') else product.lst_price
-            return from_currency.compute(product_price, self.order_id.pricelist_id.currency_id)
+            base_price = product[pricelist_item.base] if pricelist_item else product.lst_price
+            base_price = product.currency_id.compute(base_price, self.order_id.pricelist_id.currency_id)
+        # negative discounts (= surcharge) are included in the display price (= unit price)
+        return max(base_price, final_price)
 
     @api.multi
     @api.onchange('product_id')
