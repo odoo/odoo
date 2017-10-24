@@ -409,7 +409,7 @@ class PurchaseOrder(models.Model):
     @api.multi
     def _create_sequence(self, moves):
         '''
-        Hook para modificar las secuencias de creacion de los movimientos de inventario.
+        Hook para modificar las secuencias de creación de los movimientos de inventario en compras.
         '''
         seq = 0
         for move in sorted(moves, key=lambda move: move.date_expected):
