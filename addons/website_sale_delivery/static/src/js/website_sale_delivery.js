@@ -1,7 +1,6 @@
 $(document).ready(function () {
 
     var $pay_button = $('.oe_sale_acquirer_button button');
-    $pay_button.prop('disabled', false);
 
     // When choosing an delivery carrier, update the quotation and the acquirers. Disable the 'Pay
     // Now' button to avoid being redirected to payment acquier if the delivery carrier update is
