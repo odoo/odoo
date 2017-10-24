@@ -54,7 +54,6 @@ var CalendarController = AbstractController.extend({
     // Public
     //--------------------------------------------------------------------------
 
-
     /**
      * Render the buttons according to the CalendarView.buttons template and
      * add listeners on it. Set this.$buttons with the produced jQuery element
@@ -154,10 +153,10 @@ var CalendarController = AbstractController.extend({
     _onQuickCreate: function (event) {
         var self = this;
         this.model.createRecord(event)
-            .then(function (id) {
+            .then(function () {
                 self.quick.destroy();
                 self.quick = null;
-                self.reload(id);
+                self.reload();
             }, function (error, errorEvent) {
                 // This will occurs if there are some more fields required
                 // Preventdefaulting the error event will prevent the traceback window
@@ -205,7 +204,6 @@ var CalendarController = AbstractController.extend({
 
         if(!options.disableQuickCreate && !event.data.disableQuickCreate && this.quickAddPop) {
             this.quick = new QuickCreate(this, true, options, data, event.data);
-            this.quick.on('added', this, this.reload.bind(this));
             this.quick.open();
             this.quick.focus();
             return;
