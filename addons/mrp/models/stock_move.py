@@ -284,7 +284,7 @@ class StockMove(models.Model):
                 quants = quant_obj.quants_get_preferred_domain(move.product_qty, move, domain=main_domain, preferred_domain_list=preferred_domain_list)
                 self.env['stock.quant'].quants_move(quants, move, move.location_dest_id)
             else:
-                for movelot in move.move_lot_ids:
+                for movelot in move.active_move_lot_ids:
                     if float_compare(movelot.quantity_done, 0, precision_rounding=rounding) > 0:
                         if not movelot.lot_id:
                             raise UserError(_('You need to supply a lot/serial number.'))
