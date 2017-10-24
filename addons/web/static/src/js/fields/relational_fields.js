@@ -367,7 +367,7 @@ var FieldMany2One = AbstractField.extend({
                         label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
                             $('<span />').text(search_val).html()),
                         action: self._quickCreate.bind(self, search_val),
-                        classname: 'o_m2o_dropdown_option'
+                        classname: 'o_m2o_dropdown_option o_m2o_dropdown_option_create'
                     });
                 }
                 // create and edit ...
