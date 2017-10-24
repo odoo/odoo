@@ -2080,6 +2080,12 @@ var set_fiscal_position_button = ActionButtonWidget.extend({
             confirm: function (fiscal_position) {
                 var order = self.pos.get_order();
                 order.fiscal_position = fiscal_position;
+                // This will trigger the recomputation of taxes on order lines.
+                // It is necessary to manually do it for the sake of consistency
+                // with what happens when changing a customer. 
+                _.each(order.orderlines.models, function (line) {
+                    line.set_quantity(line.quantity);
+                });
                 order.trigger('change');
             },
             is_selected: function (fiscal_position) {
@@ -2188,4 +2194,3 @@ return {
 };
 
 });
-
