@@ -22,7 +22,8 @@ class AccountAnalyticLine(models.Model):
 
     @api.onchange('project_id')
     def onchange_project_id(self):
-        self.task_id = False
+        if self.project_id != self.task_id.project_id:
+            self.task_id = False
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
