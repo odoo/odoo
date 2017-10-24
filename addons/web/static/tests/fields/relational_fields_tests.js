@@ -5688,6 +5688,7 @@ QUnit.module('relational_fields', {
                 if (args.method === 'read' && args.model === 'partner_type') {
                     assert.deepEqual(args.kwargs.context, {
                         key: 'yop',
+                        active_field: 2,
                         someKey: 'some value',
                     }, "sent context should be correct");
                 }
@@ -6040,6 +6041,36 @@ QUnit.module('relational_fields', {
         // values displayed in the field.
         form.$buttons.find('.o_form_button_save').click();
         assert.strictEqual(form.mode, 'edit', "form view should still be in edit mode");
+
+        form.destroy();
+    });
+
+    QUnit.test('propagate context to sub views', function (assert) {
+        assert.expect(5);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="turtles">' +
+                            '<tree editable="bottom">' +
+                                '<field name="turtle_foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                assert.strictEqual(args.kwargs.context.flutter, 'shy',
+                    'view context key should be used for every rpcs');
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {context: {flutter: 'shy'}},
+        });
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('input[name="turtle_foo"]').val('pinky pie').trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
 
         form.destroy();
     });

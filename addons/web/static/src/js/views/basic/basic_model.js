@@ -2295,6 +2295,7 @@ var BasicModel = AbstractModel.extend({
                 var ids = record.data[fieldName] || [];
                 var list = self._makeDataPoint({
                     count: ids.length,
+                    context: record.context,
                     fieldsInfo: fieldsInfo,
                     fields: view ? view.fields : fieldInfo.relatedFields,
                     limit: fieldInfo.limit,
