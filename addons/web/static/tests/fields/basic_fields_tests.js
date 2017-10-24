@@ -1367,7 +1367,6 @@ QUnit.module('basic_fields', {
         this.data.partner.records[0].image = 'coucou';
         this.data.partner.records[0].__last_update = '2017-02-23';
 
-        var def;
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -1380,7 +1379,10 @@ QUnit.module('basic_fields', {
                 if (route === '/web/dataset/call_kw/partner/read') {
                     assert.deepEqual(args.args[1], ['image', '__last_update', 'display_name'], "The fields image, display_name and __last_update should be present when reading an image");
                 }
-                return $.when(def).then(function (result) {return result;});
+                if (route === 'data:image/png;base64,coucou') {
+                    return $.when('image route');
+                }
+                return this._super.apply(this, arguments);
             },
         });
 
