@@ -1164,7 +1164,10 @@ var ClientListScreenWidget = ScreenWidget.extend({
                 order.fiscal_position = undefined;
                 order.set_pricelist(this.pos.default_pricelist);
             }
-
+            // This will trigger the recomputation of taxes on order lines
+            _.each(order.orderlines.models, function (line) {
+                line.set_quantity(line.quantity);
+            });
             order.set_client(this.new_client);
         }
     },
@@ -2081,6 +2084,10 @@ var set_fiscal_position_button = ActionButtonWidget.extend({
                 var order = self.pos.get_order();
                 order.fiscal_position = fiscal_position;
                 order.trigger('change');
+                // This will trigger the recomputation of taxes on order lines
+                _.each(order.orderlines.models, function (line) {
+                    line.set_quantity(line.quantity);
+                });
             },
             is_selected: function (fiscal_position) {
                 return fiscal_position === self.pos.get_order().fiscal_position;
@@ -2188,4 +2195,3 @@ return {
 };
 
 });
-
