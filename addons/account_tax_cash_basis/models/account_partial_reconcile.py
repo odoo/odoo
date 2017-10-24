@@ -9,6 +9,15 @@ from odoo.tools import float_is_zero
 class AccountPartialReconcileCashBasis(models.Model):
     _inherit = 'account.partial.reconcile'
 
+    def _get_tax_cash_basis_base_account(self, line, tax):
+        ''' Get the account of lines that will contain the base amount of taxes.
+
+        :param line: An account.move.line record
+        :param tax: An account.tax record
+        :return: An account record
+        '''
+        return line.account_id
+
     def _get_tax_cash_basis_lines(self, value_before_reconciliation):
         # Search in account_move if we have any taxes account move lines
         tax_group = {}
@@ -44,11 +53,12 @@ class AccountPartialReconcileCashBasis(models.Model):
                             total_by_cash_basis_account[key] = amount
                     if any([tax.use_cash_basis for tax in line.tax_ids]):
                         for tax in line.tax_ids:
+                            account_id = self._get_tax_cash_basis_base_account(line, tax)
                             line_to_create.append((0, 0, {
                                 'name': '/',
                                 'debit': currency_id.round(line.debit_cash_basis - line.debit * matched_percentage),
                                 'credit': currency_id.round(line.credit_cash_basis - line.credit * matched_percentage),
-                                'account_id': line.account_id.id,
+                                'account_id': account_id.id,
                                 'tax_ids': [(6, 0, [tax.id])],
                                 'tax_exigible': True,
                             }))
@@ -56,7 +66,7 @@ class AccountPartialReconcileCashBasis(models.Model):
                                 'name': '/',
                                 'credit': currency_id.round(line.debit_cash_basis - line.debit * matched_percentage),
                                 'debit': currency_id.round(line.credit_cash_basis - line.credit * matched_percentage),
-                                'account_id': line.account_id.id,
+                                'account_id': account_id.id,
                                 'tax_exigible': True,
                             }))
 
