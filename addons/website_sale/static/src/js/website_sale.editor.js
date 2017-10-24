@@ -67,8 +67,14 @@ function set_dropzone() {
     var $products = $("#products_grid").find(".oe_product_cart");
     _.each($products, function(product) {
         var $product = $(product);
+        var dropzone_left = $('<div/>', {
+            class: 'oe_drop_zone oe_insert oe_vertical hidden',
+        });
+        var dropzone_right = $('<div/>', {
+            class: 'oe_drop_zone oe_insert oe_vertical hidden pull-right',
+        });
         if (!$product.find(".oe_drop_zone").length) {
-            $product.append($("<div class='oe_drop_zone oe_insert oe_vertical hidden'/><div class='oe_drop_zone oe_insert oe_vertical hidden pull-right'/>"));
+            $product.append(dropzone_left, dropzone_right);
         }
     });
 };
@@ -211,7 +217,7 @@ options.registry.website_sale = options.Class.extend({
             },
             stop: function(event, ui) {
 
-                var offset = $(event.target).offset()
+                var offset = $(event.target).offset();
                 var offset_top = offset.top;
                 var offset_bottom = offset.top + $(event.target).height();
                 var offset_left = offset.left;
@@ -283,7 +289,7 @@ options.registry.website_sale = options.Class.extend({
                         self.rebind_event();
                     });
                 } else {
-                    $(this).prop("style", ""); // Bad fix to revert resize, there should be some methodo to revert resize
+                    $(this).prop("style", ""); // Bad fix to revert resize, there should be some method to revert resize
                 }
             }
         });

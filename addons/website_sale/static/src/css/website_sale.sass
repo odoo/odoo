@@ -2,6 +2,12 @@
 
 /* ---- Default Styles ---- */
 
+@mixin rotate($a)
+    -webkit-transform: rotate($a)
+    -moz-transform:    rotate($a)
+    -ms-transform:     rotate($a)
+    -o-transform:      rotate($a)
+
 .oe_product
     border: 1px solid rgba(100,100,100,0.2)
 
@@ -149,10 +155,7 @@
         font: bold 15px Sans-Serif
         color: white
         text-align: center
-        -webkit-transform: rotate(45deg)
-        -moz-transform:    rotate(45deg)
-        -ms-transform:     rotate(45deg)
-        -o-transform:      rotate(45deg)
+        @include rotate(45deg)
         position: relative
         padding: 7px 0
         left: -5px
@@ -160,15 +163,11 @@
         width: 120px
         cursor: default
 
-
 .oe_product.oe_list
     .ribbon-wrapper
         left: 0
     .ribbon
-        -webkit-transform: rotate(-45deg)
-        -moz-transform: rotate(-45deg)
-        -ms-transform: rotate(-45deg)
-        -o-transform: rotate(-45deg)
+        @include rotate(-45deg)
         left: -30px
 
 body.editor_enable
