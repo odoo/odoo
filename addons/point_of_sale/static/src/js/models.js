@@ -1393,6 +1393,7 @@ exports.Orderline = Backbone.Model.extend({
         // just like in sale.order changing the quantity will recompute the unit price
         if(! keep_price){
             this.set_unit_price(this.product.get_price(this.order.pricelist, this.get_quantity()));
+            this.order.fix_tax_included_price(this);
         }
     },
     // return the quantity of product
@@ -2294,6 +2295,7 @@ exports.Order = Backbone.Model.extend({
         this.pricelist = pricelist;
         _.each(this.get_orderlines(), function (line) {
             line.set_unit_price(line.product.get_price(self.pricelist, line.get_quantity()));
+            self.fix_tax_included_price(line);
         });
         this.trigger('change');
     },
