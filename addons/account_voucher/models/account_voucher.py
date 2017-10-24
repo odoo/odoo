@@ -184,11 +184,8 @@ class AccountVoucher(models.Model):
                 'date': self.account_date,
                 'date_maturity': self.date_due
             }
-        # Create a payment to allow the reconciliation when pay_now = 'pay_now'.
-        if self.pay_now == 'pay_now' and self.amount > 0:
-            move_line['payment_id'] = self.env['account.payment'].create(
-                self.voucher_pay_now_payment_create()
-            ).id
+        if self._context.get('payment_id'):
+            move_line['payment_id'] = self._context['payment_id']
         return move_line
 
     @api.multi
@@ -282,7 +279,8 @@ class AccountVoucher(models.Model):
                 'amount_currency': line.price_subtotal if current_currency != company_currency else 0.0,
                 'currency_id': company_currency != current_currency and current_currency or False,
             }
-
+            if self._context.get('payment_id'):
+                move_line['payment_id'] = self._context['payment_id']
             self.env['account.move.line'].with_context(apply_taxes=True).create(move_line)
         return line_total
 
@@ -302,6 +300,9 @@ class AccountVoucher(models.Model):
             ctx = local_context.copy()
             ctx['date'] = voucher.account_date
             ctx['check_move_validity'] = False
+            # Create a payment to allow the reconciliation when pay_now = 'pay_now'.
+            if self.pay_now == 'pay_now' and self.amount > 0:
+                ctx['payment_id'] = self.env['account.payment'].create(self.voucher_pay_now_payment_create()).id
             # Create the account move record.
             move = self.env['account.move'].create(voucher.account_move_get())
             # Get the name of the account_move just created
