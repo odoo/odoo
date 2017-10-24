@@ -404,7 +404,18 @@ class PurchaseOrder(models.Model):
             'location_id': self.partner_id.property_stock_supplier.id,
             'company_id': self.company_id.id,
         }
-
+    
+    #Código agregado por Trescloud    
+    @api.multi
+    def _create_sequence(self, moves):
+        '''
+        Hook para modificar las secuencias de creación de los movimientos de inventario en compras.
+        '''
+        seq = 0
+        for move in sorted(moves, key=lambda move: move.date_expected):
+            seq += 5
+            move.sequence = seq
+    
     @api.multi
     def _create_picking(self):
         StockPicking = self.env['stock.picking']
@@ -418,10 +429,8 @@ class PurchaseOrder(models.Model):
                     picking = pickings[0]
                 moves = order.order_line._create_stock_moves(picking)
                 moves = moves.filtered(lambda x: x.state not in ('done', 'cancel')).action_confirm()
-                seq = 0
-                for move in sorted(moves, key=lambda move: move.date_expected):
-                    seq += 5
-                    move.sequence = seq
+                #Siguiente línea fue creado por Trescloud
+                self._create_sequence(moves)
                 moves.force_assign()
                 picking.message_post_with_view('mail.message_origin_link',
                     values={'self': picking, 'origin': order},
