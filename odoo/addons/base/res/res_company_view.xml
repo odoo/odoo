@@ -121,11 +121,13 @@
             <field name="mode">primary</field>
             <field name="priority">1024</field>
             <field name="arch" type="xml">
-              <xpath expr="//sheet" position="before">
-                <div class="alert alert-warning" attrs="{'invisible': [('logo','!=',False)]}">
-                      Update your company details and upload your logo to get a beautiful document.
-                </div>
-              </xpath>
+                <field name="logo" position="before">
+                    <div class="row">
+                        <div class="alert alert-warning ml8 mr8" role="alert" attrs="{'invisible': [('logo','!=',False)]}">
+                            Update your company details and upload your logo to get a beautiful document.
+                        </div>
+                    </div>
+                </field>
               <xpath expr="//h1" position="replace">
                 <h2>
                     <field name="name"/>
@@ -156,7 +158,7 @@
                     </div>
                     <footer>
                         <button string="Save" type="object" class="oe_highlight" name="write"/>
-                        <button string="Close" class="oe_link" special="cancel" />
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </footer>
                 </xpath>
             </field>
