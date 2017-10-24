@@ -36,7 +36,7 @@ class MailTracking(models.Model):
         tracked = True
         values = {'field': col_name, 'field_desc': col_info['string'], 'field_type': col_info['type']}
 
-        if col_info['type'] in ['integer', 'float', 'char', 'text', 'datetime', 'monetary']:
+        if col_info['type'] in ['integer', 'float', 'char', 'text', 'datetime', 'monetary', 'html']:
             values.update({
                 'old_value_%s' % col_info['type']: initial_value,
                 'new_value_%s' % col_info['type']: new_value
