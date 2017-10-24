@@ -886,7 +886,7 @@ class Message(models.Model):
 
         # check if moderation is required or not, if required then do not notify to followers else notify
         moderate_channels = channels_sudo.filtered(lambda c: c.is_moderate)
-        if not self.need_moderation(moderate_channels):
+        if not self_sudo.need_moderation(moderate_channels):
             # notify partners and channels
             # those methods are called as SUPERUSER because portal users posting messages
             # have no access to partner model. Maybe propagating a real uid could be necessary.
