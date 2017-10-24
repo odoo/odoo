@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-16 11:13+0000\n"
-"PO-Revision-Date: 2017-10-16 11:13+0000\n"
+"POT-Creation-Date: 2017-10-24 08:59+0000\n"
+"PO-Revision-Date: 2017-10-24 08:59+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -69,7 +69,7 @@ msgid "19v,5.5 x 2.5 mm Pin Type Adapter (Power Cord Included)"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:294
+#: code:addons/mrp/models/mrp_bom.py:293
 #, python-format
 msgid "<p class=\"oe_view_nocontent_create\">\n"
 "                        Click to upload files to your product.\n"
@@ -324,7 +324,7 @@ msgid "Attachment URL"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:286
+#: code:addons/mrp/models/mrp_bom.py:285
 #, python-format
 msgid "Attachments"
 msgstr ""
@@ -507,7 +507,7 @@ msgid "BoM details"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:68
+#: code:addons/mrp/models/mrp_bom.py:67
 #, python-format
 msgid "BoM line product %s should not be same as BoM product."
 msgstr ""
@@ -1044,7 +1044,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_finished_move_line_ids
-msgid "Finished Move Line"
+#: model:ir.ui.view,arch_db:mrp.view_finisehd_move_line
+msgid "Finished Product"
 msgstr ""
 
 #. module: mrp
@@ -1438,7 +1439,7 @@ msgid "Lock"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_8237
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_8239
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Loss Reason"
 msgstr ""
@@ -1458,6 +1459,11 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_final_lot_id
 msgid "Lot/Serial Number"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_finisehd_move_line
+msgid "Lot/Serial number"
 msgstr ""
 
 #. module: mrp
@@ -2235,6 +2241,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_structure_report
 #: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
+#: model:ir.ui.view,arch_db:mrp.view_finisehd_move_line
 msgid "Quantity"
 msgstr ""
 
@@ -2317,7 +2324,7 @@ msgid "Record Production Line"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:160
+#: code:addons/mrp/models/mrp_bom.py:159
 #, python-format
 msgid "Recursion error!  A product with a Bill of Material should not have itself in its BoM or child BoMs!"
 msgstr ""
@@ -2782,8 +2789,8 @@ msgid "Technical: used to figure out default serial number on work orders"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:77
-#: code:addons/mrp/models/mrp_bom.py:255
+#: code:addons/mrp/models/mrp_bom.py:76
+#: code:addons/mrp/models/mrp_bom.py:254
 #, python-format
 msgid "The Product Unit of Measure you chose has a different category than in the product form."
 msgstr ""
@@ -3195,8 +3202,8 @@ msgid "Warehouse"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:77
-#: code:addons/mrp/models/mrp_bom.py:255
+#: code:addons/mrp/models/mrp_bom.py:76
+#: code:addons/mrp/models/mrp_bom.py:254
 #, python-format
 msgid "Warning"
 msgstr ""
@@ -3458,7 +3465,7 @@ msgid "You can not consume without telling for which lot you consumed it"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:92
+#: code:addons/mrp/models/mrp_bom.py:91
 #, python-format
 msgid "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
