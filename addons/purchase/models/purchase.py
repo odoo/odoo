@@ -405,7 +405,7 @@ class PurchaseOrder(models.Model):
             'company_id': self.company_id.id,
         }
     
-    #codigo agredado por Trescloud    
+    #Código agregado por Trescloud    
     @api.multi
     def _create_sequence(self, moves):
         '''
@@ -429,7 +429,7 @@ class PurchaseOrder(models.Model):
                     picking = pickings[0]
                 moves = order.order_line._create_stock_moves(picking)
                 moves = moves.filtered(lambda x: x.state not in ('done', 'cancel')).action_confirm()
-                #Siguiente linea fue creado por Trescloud
+                #Siguiente línea fue creado por Trescloud
                 self._create_sequence(moves)
                 moves.force_assign()
                 picking.message_post_with_view('mail.message_origin_link',
