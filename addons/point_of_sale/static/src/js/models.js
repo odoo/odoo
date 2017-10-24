@@ -1482,6 +1482,7 @@ exports.Orderline = Backbone.Model.extend({
                 return t.id === el;
             }));
         });
+        product_taxes = _.map(product_taxes, this._map_tax_fiscal_position.bind(this));
 
         var all_taxes = this.compute_all(product_taxes, price_unit, this.get_quantity(), this.pos.currency.rounding);
         _(all_taxes.taxes).each(function(tax) {
