@@ -192,7 +192,7 @@
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
           <group expand="0" string="Group By">
-            <filter string="Stage" help="By sticky note Category" context="{'group_by':'stage_id'}"/>
+            <filter string="Stage" name="stage" help="By sticky note Category" context="{'group_by':'stage_id'}"/>
           </group>
         </search>
       </field>

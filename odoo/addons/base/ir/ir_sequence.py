@@ -324,6 +324,12 @@ class IrSequenceDateRange(models.Model):
         for seq in self:
             seq.write({'number_next': seq.number_next_actual or 0})
 
+    @api.model
+    def default_get(self, fields):
+        result = super(IrSequenceDateRange, self).default_get(fields)
+        result['number_next_actual'] = 1
+        return result
+
     date_from = fields.Date(string='From', required=True)
     date_to = fields.Date(string='To', required=True)
     sequence_id = fields.Many2one("ir.sequence", string='Main Sequence', required=True, ondelete='cascade')

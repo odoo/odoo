@@ -1,19 +1,45 @@
 'use strict';
-$(document).ready(function () {
+odoo.define('website_sale_delivery.checkout', function (require) {
 
+    require('web.dom_ready');
+    var ajax = require('web.ajax');
+
+    /* Handle interactive carrier choice + cart update */
     var $pay_button = $('.oe_sale_acquirer_button button');
     $pay_button.prop('disabled', false);
 
-    // When choosing an delivery carrier, update the quotation and the acquirers. Disable the 'Pay
-    // Now' button to avoid being redirected to payment acquier if the delivery carrier update is
-    // not over.
-    var $carrier = $("#delivery_carrier");
-    $carrier.find("input[name='delivery_type']").click(function (ev) {
+    var _onCarrierUpdateAnswer = function(result) {
+        var $amount_delivery = $('#order_delivery span.oe_currency_value');
+        var $amount_untaxed = $('#order_total_untaxed span.oe_currency_value');
+        var $amount_tax = $('#order_total_taxes span.oe_currency_value');
+        if (result.status === true) {
+            $amount_delivery.text(result.new_amount_delivery);
+            $amount_untaxed.text(result.new_amount_untaxed);
+            $amount_tax.text(result.new_amount_tax);
+            var $carrier_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .badge.hidden');
+            $carrier_badge.children('span').text(result.new_amount_delivery);
+            $carrier_badge.removeClass('hidden');
+            var $compute_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_delivery_compute');
+            $compute_badge.addClass('hidden');
+        }
+        else {
+            console.error(result.error_message);
+        }
+        $pay_button.prop('disabled', false);
+    };
+
+    var _onCarrierClick = function(ev) {
         $pay_button.prop('disabled', true);
         var carrier_id = $(ev.currentTarget).val();
-        window.location.href = '/shop/payment?carrier_id=' + carrier_id;
-    });
+        var values = {'carrier_id': carrier_id};
+        ajax.jsonRpc('/shop/update_carrier', 'call', values)
+          .then(_onCarrierUpdateAnswer);
+    };
 
+    var $carriers = $("#delivery_carrier input[name='delivery_type']");
+    $carriers.click(_onCarrierClick);
+
+    /* Handle stuff */
     $(".oe_website_sale select[name='shipping_id']").on('change', function () {
         var value = $(this).val();
         var $provider_free = $("select[name='country_id']:not(.o_provider_restricted), select[name='state_id']:not(.o_provider_restricted)");

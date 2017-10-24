@@ -199,8 +199,8 @@
                     <field name="name" filter_domain="[('name','ilike',self)]" string="Budget"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
-                    <filter string="Draft" domain="[('state','=','draft')]" help="Draft Budgets"/>
-                    <filter string="To Approve" domain="[('state','=','confirm')]" help="To Approve Budgets" />
+                    <filter string="Draft" name="draft" domain="[('state','=','draft')]" help="Draft Budgets"/>
+                    <filter string="To Approve" name="toapprove" domain="[('state','=','confirm')]" help="To Approve Budgets" />
                     <field name="state"/>
                 </search>
             </field>

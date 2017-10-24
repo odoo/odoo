@@ -69,6 +69,7 @@ var Chatter = Widget.extend(chat_mixin, {
             new_message_btn: !!this.fields.thread,
             log_note_btn: this.hasLogButton,
             schedule_activity_btn: !!this.fields.activity,
+            isMobile: config.device.isMobile,
         }));
 
         // start and append the widgets

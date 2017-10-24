@@ -281,11 +281,21 @@ var ScaleScreenWidget = ScreenWidget.extend({
             return self.pos.proxy.scale_read().then(function(weight){
                 self.set_weight(weight.weight);
             });
-        },{duration:150, repeat: true});
+        },{duration:500, repeat: true});
 
     },
     get_product: function(){
         return this.gui.get_current_screen_param('product');
+    },
+    _get_active_pricelist: function(){
+        var current_order = this.pos.get_order();
+        var current_pricelist = this.pos.default_pricelist;
+
+        if (current_order) {
+            current_pricelist = current_order.pricelist;
+        }
+
+        return current_pricelist;
     },
     order_product: function(){
         this.pos.get_order().add_product(this.get_product(),{ quantity: this.weight });
@@ -296,7 +306,8 @@ var ScaleScreenWidget = ScreenWidget.extend({
     },
     get_product_price: function(){
         var product = this.get_product();
-        return (product ? product.price : 0) || 0;
+        var pricelist = this._get_active_pricelist();
+        return (product ? product.get_price(pricelist, this.weight) : 0) || 0;
     },
     get_product_uom: function(){
         var product = this.get_product();

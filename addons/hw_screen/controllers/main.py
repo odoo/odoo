@@ -13,7 +13,7 @@ from subprocess import call
 import time
 import threading
 
-self_port = str(config['xmlrpc_port'] or 8069)
+self_port = str(config['http_port'] or 8069)
 
 _logger = logging.getLogger(__name__)
 

@@ -20,7 +20,6 @@ var ControlPanel = require('web.ControlPanel');
 var dialogs = require('web.view_dialogs');
 var core = require('web.core');
 var data = require('web.data');
-var dom = require('web.dom');
 var Dialog = require('web.Dialog');
 var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
@@ -246,7 +245,8 @@ var FieldMany2One = AbstractField.extend({
                             self.reinitialize({id: result[0], display_name: result[1]});
                         }
                         def.resolve();
-                    }).fail(function () {
+                    }).fail(function (error, event) {
+                        event.preventDefault();
                         slowCreate();
                     });
                 },
@@ -372,9 +372,14 @@ var FieldMany2One = AbstractField.extend({
                 }
                 // create and edit ...
                 if (create_enabled && !self.nodeOptions.no_create_edit) {
+                    var createAndEditAction = function () {
+                        // Clear the value in case the user clicks on discard
+                        self.$('input').val('');
+                        return self._searchCreatePopup("form", false, self._createContext(search_val));
+                    };
                     values.push({
                         label: _t("Create and Edit..."),
-                        action: self._searchCreatePopup.bind(self, "form", false, self._createContext(search_val)),
+                        action: createAndEditAction,
                         classname: 'o_m2o_dropdown_option',
                     });
                 } else if (values.length === 0) {
@@ -418,7 +423,7 @@ var FieldMany2One = AbstractField.extend({
     _updateExternalButton: function () {
         var has_external_button = !this.nodeOptions.no_open && !this.floating && this.isSet();
         this.$external_button.toggle(has_external_button);
-        this.$el.toggleClass('o_with_button', has_external_button);
+        this.$el.toggleClass('o_with_button', has_external_button); // Should not be required anymore but kept for compatibility
     },
 
 
@@ -605,6 +610,11 @@ var FieldX2Many = AbstractField.extend({
         toggle_column_order: '_onToggleColumnOrder',
     }),
 
+    // We need to trigger the reset on every changes to be aware of the parent changes
+    // and then evaluate the 'column_invisible' modifier in case a evaluated value
+    // changed.
+    resetOnAnyFieldChange: true,
+
     /**
      * useSubview is used in form view to load view of the related model of the x2many field
      */
@@ -629,6 +639,9 @@ var FieldX2Many = AbstractField.extend({
                                             JSON.parse(arch.attrs.delete) :
                                             true;
             this.editable = arch.attrs.editable;
+        }
+        if (this.attrs.columnInvisibleFields) {
+            this._processColumnInvisibleFields();
         }
     },
     /**
@@ -674,10 +687,20 @@ var FieldX2Many = AbstractField.extend({
      * @override
      * @param {Object} record
      * @param {OdooEvent} [ev] an event that triggered the reset action
+     * @param {Boolean} [fieldChanged] if true, the widget field has changed
      * @returns {Deferred}
      */
-    reset: function (record, ev) {
-        if (ev && ev.target === this && ev.data.changes && this.view.arch.tag === 'tree') {
+    reset: function (record, ev, fieldChanged) {
+        // If 'fieldChanged' is false, it means that the reset was triggered by
+        // the 'resetOnAnyFieldChange' mechanism. If it is the case the
+        // modifiers are evaluated and if there is no change in the modifiers
+        // values, the reset is skipped.
+        if (!fieldChanged) {
+           var newEval = this._evalColumnInvisibleFields();
+           if (_.isEqual(this.currentColInvisibleFields, newEval)) {
+               return $.when();
+           }
+        } else if (ev && ev.target === this && ev.data.changes && this.view.arch.tag === 'tree') {
             var command = ev.data.changes[this.name];
             // Here, we only consider 'UPDATE' commands with data, which occur
             // with editable list view. In order to keep the current line in
@@ -702,6 +725,20 @@ var FieldX2Many = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Evaluates the 'column_invisible' modifier for the parent record.
+     *
+     * @return {Object} Object containing fieldName as key and the evaluated
+     *                         column_invisible modifier
+     */
+    _evalColumnInvisibleFields: function () {
+        var self = this;
+        return _.mapObject(this.columnInvisibleFields, function (domains) {
+            return self.record.evalModifiers({
+                column_invisible: domains,
+             }).column_invisible;
+        });
+    },
+    /**
      * Instanciates or updates the adequate renderer.
      *
      * @override
@@ -714,19 +751,25 @@ var FieldX2Many = AbstractField.extend({
         }
         if (this.renderer) {
             this.renderer.updateState(this.value, {});
-            this.pager.updateState({ size: this.value.count });
+            this.currentColInvisibleFields = this._evalColumnInvisibleFields();
+            this.pager.updateState({
+                size: this.value.count,
+                columnInvisibleFields: this.currentColInvisibleFields,
+            });
             return $.when();
         }
         var arch = this.view.arch;
         var viewType;
         if (arch.tag === 'tree') {
             viewType = 'list';
+            this.currentColInvisibleFields = this._evalColumnInvisibleFields();
             this.renderer = new ListRenderer(this, this.value, {
                 arch: arch,
                 mode: this.mode,
                 addCreateLine: !this.isReadonly && this.activeActions.create,
                 addTrashIcon: !this.isReadonly && this.activeActions.delete,
                 viewType: viewType,
+                columnInvisibleFields: this.currentColInvisibleFields,
             });
         }
         if (arch.tag === 'kanban') {
@@ -827,6 +870,30 @@ var FieldX2Many = AbstractField.extend({
         }
         return def;
     },
+    /**
+     * Parses the 'columnInvisibleFields' attribute to search for the domains
+     * containing the key 'parent'. If there are such domains, the string
+     * 'parent.field' is replaced with 'field' in order to be evaluated
+     * with the right field name in the parent context.
+     *
+     * @private
+     */
+    _processColumnInvisibleFields: function () {
+        var columnInvisibleFields = {};
+        _.each(this.attrs.columnInvisibleFields, function (domains, fieldName) {
+            if (_.isArray(domains)) {
+                columnInvisibleFields[fieldName] = _.map(domains, function (domain) {
+                    // We check if the domain is an array to avoid processing
+                    // the '|' and '&' cases
+                    if (_.isArray(domain)) {
+                        return [domain[0].split('.')[1]].concat(domain.slice(1));
+                    }
+                    return domain;
+                });
+            }
+        });
+        this.columnInvisibleFields = columnInvisibleFields;
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -905,33 +972,11 @@ var FieldX2Many = AbstractField.extend({
         this.lastInitialEvent = undefined;
         if (Object.keys(changes).length) {
             this.lastInitialEvent = ev;
-            // store the cursor position to restore it once potential onchanges have been applied
-            var self = this;
-            var editableID =  this.renderer.getEditableRecordID();
-            var datapoint = _.find(this.value.data, {id: editableID});
-
-            var ref = datapoint && datapoint.ref;
-            var cursor = ref && dom.getCursor(ev.target.getFocusableElement());
-            var fieldName = ev.target.name;
-
-            var def = this._setValue({
+            this._setValue({
                 operation: 'UPDATE',
                 id: ev.data.dataPointID,
                 data: changes,
             });
-
-            if (ref) {
-                def.then(function () {
-                    var nextEditableRecordID = self.renderer.getEditableRecordID();
-                    if (nextEditableRecordID && editableID !== nextEditableRecordID) {
-                        return;
-                    }
-                    var datapoint = _.find(self.value.data, {ref: ref});
-                    if (datapoint) {
-                        self.renderer.focusField(datapoint.id, fieldName, cursor && cursor.offset);
-                    }
-                });
-            }
         }
     },
     /**
@@ -1608,7 +1653,7 @@ var FieldMany2ManyTags = AbstractField.extend({
 var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
     events: _.extend({}, FieldMany2ManyTags.prototype.events, {
         'click .badge': '_onOpenColorPicker',
-        'mousedown .o_colorpicker span': '_onUpdateColor',
+        'mousedown .o_colorpicker a': '_onUpdateColor',
         'focusout .o_colorpicker': '_onCloseColorPicker',
     }),
 
@@ -1665,9 +1710,13 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
 });
 
 var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
-    events: _.extend({}, FieldMany2ManyTags.prototype.events, {
-        'click .o_tag': '_onTagClicked',
-    }),
+    // Remove event handlers on this widget to ensure that the kanban 'global
+    // click' opens the clicked record, even if the click is done on a tag
+    // This is necessary because of the weird 'global click' logic in
+    // KanbanRecord, which should definitely be cleaned.
+    // Anyway, those handlers are only necessary in Form and List views, so we
+    // can removed them here.
+    events: AbstractField.prototype.events,
 
     //--------------------------------------------------------------------------
     // Private
@@ -1681,42 +1730,20 @@ var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
         var self = this;
         this.$el.empty().addClass('o_field_many2manytags o_kanban_tags');
         _.each(this.value.data, function (m2m) {
-            var $tag = $('<span>')
-                    .text(m2m.data.display_name)
-                    .data('res_id', m2m.res_id)
-                    .prepend('<span>')
-                    .appendTo(self.$el);
-            if (self.colorField in m2m.data) {
-                if (m2m.data[self.colorField] === 10) {
-                    // 10th color is invisible
-                    $tag.hide();
-                } else {
-                    $tag.addClass('o_tag o_tag_color_' + m2m.data[self.colorField]);
-                }
-            } else {
-                // display tags in grey by default
-                $tag.addClass('o_tag o_tag_color_0');
+            if (self.colorField in m2m.data && !m2m.data[self.colorField]) {
+                // When a color field is specified and that color is the default
+                // one, the kanban tag is not rendered.
+                return;
             }
+
+            $('<span>', {
+                class: 'o_tag o_tag_color_' + (m2m.data[self.colorField] || 0),
+                text: m2m.data.display_name,
+            })
+            .prepend('<span>')
+            .appendTo(self.$el);
         });
     },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {MouseEvent} e
-     */
-    _onTagClicked: function (e) {
-        var resID = $(e.currentTarget).data('res_id');
-        var record = _.findWhere(this.value.data, {res_id: resID});
-        var displayName = record.data.display_name;
-        this.trigger_up('add_filter', {
-            domain: "[['" + this.name + "','=','" + displayName + "']]",
-            help: displayName,
-        });
-    }
 });
 
 var FieldMany2ManyCheckBoxes = AbstractField.extend({
@@ -1916,7 +1943,7 @@ var FieldSelection = AbstractField.extend({
         for (var i = 0 ; i < this.values.length ; i++) {
             this.$el.append($('<option/>', {
                 value: JSON.stringify(this.values[i][0]),
-                html: this.values[i][1]
+                text: this.values[i][1]
             }));
         }
         var value = this.value;

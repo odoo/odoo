@@ -335,6 +335,8 @@ class TestSaleMrpFlow(common.TransactionCase):
         self.partner = self.env.ref('base.res_partner_1')
         self.product = self.env.ref('mrp.product_product_build_kit')
         self.product.invoice_policy = 'delivery'
+        # Remove the MTO route as purchase is not installed and since the procurement removal the exception is directly raised
+        self.product.write({'route_ids': [(6, 0, [self.warehouse.manufacture_pull_id.route_id.id])]})
         so_vals = {
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
@@ -360,7 +362,6 @@ class TestSaleMrpFlow(common.TransactionCase):
         wiz_act = pick.button_validate()
         wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
         wiz.process()
-
         self.assertEqual(self.so.invoice_status, 'no', 'Sale MRP: so invoice_status should be "no" after partial delivery of a kit')
         del_qty = sum(sol.qty_delivered for sol in self.so.order_line)
         self.assertEqual(del_qty, 0.0, 'Sale MRP: delivered quantity should be zero after partial delivery of a kit')

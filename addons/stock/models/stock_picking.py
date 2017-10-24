@@ -134,6 +134,11 @@ class PickingType(models.Model):
             self.default_location_src_id = self.env.ref('stock.stock_location_stock').id
             self.default_location_dest_id = self.env.ref('stock.stock_location_customers').id
 
+    @api.onchange('show_operations')
+    def onchange_show_operations(self):
+        if self.show_operations is True:
+            self.show_reserved = True
+
     def _get_action(self, action_xmlid):
         # TDE TODO check to have one view + custo in methods
         action = self.env.ref(action_xmlid).read()[0]
@@ -225,7 +230,7 @@ class Picking(models.Model):
     date_done = fields.Datetime('Date of Transfer', copy=False, readonly=True, help="Completion Date of Transfer")
 
     location_id = fields.Many2one(
-        'stock.location', "Source Location Zone",
+        'stock.location', "Source Location",
         default=lambda self: self.env['stock.picking.type'].browse(self._context.get('default_picking_type_id')).default_location_src_id,
         readonly=True, required=True,
         states={'draft': [('readonly', False)]})
@@ -288,11 +293,25 @@ class Picking(models.Model):
                                'changing the done quantities.')
     # Used to search on pickings
     product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id')
-    show_operations = fields.Boolean(related='picking_type_id.show_operations')
+    show_operations = fields.Boolean(compute='_compute_show_operations')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
     ]
+
+    @api.depends('picking_type_id.show_operations')
+    def _compute_show_operations(self):
+        for picking in self:
+            if self.env.context.get('force_detailed_view'):
+                picking.show_operations = True
+                break
+            if picking.picking_type_id.show_operations:
+                if (picking.state == 'draft' and not self.env.context.get('planned_picking')) or picking.state != 'draft':
+                    picking.show_operations = True
+                else:
+                    picking.show_operations = False
+            else:
+                picking.show_operations = False
 
     @api.depends('move_type', 'move_lines.state', 'move_lines.picking_id')
     @api.one
@@ -375,13 +394,15 @@ class Picking(models.Model):
                 float_compare(move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding)
                 for move in picking.move_lines
             )
-            picking.show_check_availability = picking.is_locked and picking.state in ('confirmed', 'waiting') and has_moves_to_reserve
+            picking.show_check_availability = picking.is_locked and picking.state in ('confirmed', 'waiting', 'assigned') and has_moves_to_reserve
 
     @api.multi
-    @api.depends('state')
+    @api.depends('state', 'move_lines')
     def _compute_show_mark_as_todo(self):
         for picking in self:
-            if self._context.get('planned_picking') and picking.state == 'draft':
+            if not picking.move_lines:
+                picking.show_mark_as_todo = False
+            elif self._context.get('planned_picking') and picking.state == 'draft':
                 picking.show_mark_as_todo = True
             elif picking.state != 'draft' or not picking.id:
                 picking.show_mark_as_todo = False
@@ -493,8 +514,7 @@ class Picking(models.Model):
             .filtered(lambda move: move.state == 'draft')\
             ._action_confirm()
         # call `_action_assign` on every confirmed move which location_id bypasses the reservation
-        self.filtered(lambda picking: picking.location_id.usage in ('supplier', 'inventory', 'production'))\
-            .filtered(lambda move: move.state == 'confirmed')\
+        self.filtered(lambda picking: picking.location_id.usage in ('supplier', 'inventory', 'production') and picking.state == 'confirmed')\
             .mapped('move_lines')._action_assign()
         return True
 
@@ -523,6 +543,7 @@ class Picking(models.Model):
     @api.multi
     def action_cancel(self):
         self.mapped('move_lines')._action_cancel()
+        self.write({'is_locked': True})
         return True
 
     @api.multi
@@ -634,10 +655,9 @@ class Picking(models.Model):
                 if product and product.tracking != 'none' and (line.qty_done == 0 or (not line.lot_name and not line.lot_id)):
                     raise UserError(_('You need to supply a lot/serial number for %s.') % product.name)
 
-        # In draft or with no pack operations edited yet, ask if we can just do everything
-        if self.state == 'draft' or no_quantities_done:
+        if no_quantities_done:
             view = self.env.ref('stock.view_immediate_transfer')
-            wiz = self.env['stock.immediate.transfer'].create({'pick_id': self.id})
+            wiz = self.env['stock.immediate.transfer'].create({'pick_ids': [(4, self.id)]})
             return {
                 'name': _('Immediate Transfer?'),
                 'type': 'ir.actions.act_window',
@@ -674,7 +694,7 @@ class Picking(models.Model):
 
     def action_generate_backorder_wizard(self):
         view = self.env.ref('stock.view_backorder_confirmation')
-        wiz = self.env['stock.backorder.confirmation'].create({'pick_id': self.id})
+        wiz = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, p.id) for p in self]})
         return {
             'name': _('Create Backorder?'),
             'type': 'ir.actions.act_window',
@@ -694,19 +714,26 @@ class Picking(models.Model):
         return True
 
     def _check_backorder(self):
-        self.ensure_one()
+        """ This method will loop over all the move lines of self and
+        check if creating a backorder is necessary. This method is
+        called during button_validate if the user has already processed
+        some quantities and in the immediate transfer wizard that is
+        displayed if the user has not processed any quantities.
+
+        :return: True if a backorder is necessary else False
+        """
         quantity_todo = {}
         quantity_done = {}
-        for move in self.move_lines:
+        for move in self.mapped('move_lines'):
             quantity_todo.setdefault(move.product_id.id, 0)
             quantity_done.setdefault(move.product_id.id, 0)
             quantity_todo[move.product_id.id] += move.product_uom_qty
             quantity_done[move.product_id.id] += move.quantity_done
-        for ops in self.move_line_ids.filtered(lambda x: x.package_id and not x.product_id and not x.move_id):
+        for ops in self.mapped('move_line_ids').filtered(lambda x: x.package_id and not x.product_id and not x.move_id):
             for quant in ops.package_id.quant_ids:
                 quantity_done.setdefault(quant.product_id.id, 0)
                 quantity_done[quant.product_id.id] += quant.qty
-        for pack in self.move_line_ids.filtered(lambda x: x.product_id and not x.move_id):
+        for pack in self.mapped('move_line_ids').filtered(lambda x: x.product_id and not x.move_id):
             quantity_done.setdefault(pack.product_id.id, 0)
             quantity_done[pack.product_id.id] += pack.qty_done
         return any(quantity_done[x] < quantity_todo.get(x, 0) for x in quantity_done)
@@ -761,11 +788,11 @@ class Picking(models.Model):
             if operations:
                 package = self.env['stock.quant.package'].create({})
                 for operation in operations:
-                    if float_compare(operation.qty_done, operation.product_qty, precision_rounding=operation.product_uom_id.rounding) >= 0:
+                    if float_compare(operation.qty_done, operation.product_uom_qty, precision_rounding=operation.product_uom_id.rounding) >= 0:
                         operation_ids |= operation
                     else:
                         quantity_left_todo = float_round(
-                            operation.product_qty - operation.qty_done,
+                            operation.product_uom_qty - operation.qty_done,
                             precision_rounding=operation.product_uom_id.rounding,
                             rounding_method='UP')
                         new_operation = operation.copy(
@@ -783,6 +810,10 @@ class Picking(models.Model):
 
     def button_scrap(self):
         self.ensure_one()
+        products = self.env['product.product']
+        for move in self.move_lines:
+            if move.state not in ('draft', 'cancel') and move.product_id.type in ('product', 'consu'):
+                products |= move.product_id
         return {
             'name': _('Scrap'),
             'view_type': 'form',
@@ -790,7 +821,7 @@ class Picking(models.Model):
             'res_model': 'stock.scrap',
             'view_id': self.env.ref('stock.stock_scrap_form_view2').id,
             'type': 'ir.actions.act_window',
-            'context': {'default_picking_id': self.id, 'product_ids': self.move_line_ids.mapped('product_id').ids},
+            'context': {'default_picking_id': self.id, 'product_ids': products.ids},
             'target': 'new',
         }
 

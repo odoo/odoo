@@ -60,7 +60,7 @@ except ImportError:
         if not _phonenumbers_lib_warning:
             _logger.warning(
                 "The `phonenumbers` Python module is not installed, contact numbers will not be "
-                "verified. Try: pip install phonenumbers."
+                "verified. Please install the `phonenumbers` Python module."
             )
             _phonenumbers_lib_warning = True
         return number

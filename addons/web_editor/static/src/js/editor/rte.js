@@ -654,6 +654,28 @@ var RTEWidget = Widget.extend({
         // whitespace characters (so Tripleclicking then typing text will remove
         // the whole paragraph instead of its content).
         // http://stackoverflow.com/questions/38467334/why-does-google-chrome-always-add-space-after-selected-text
+        if ($.browser.chrome === true && event.originalEvent.detail === 3) {
+            var currentSelection = range.create();
+            if (currentSelection.sc.parentNode === currentSelection.ec) {
+                _selectSC(currentSelection);
+            } else if (currentSelection.eo === 0) {
+                var $hasNext = $(currentSelection.sc).parent();
+                while (!$hasNext.next().length && !$hasNext.is('body')) {
+                    $hasNext = $hasNext.parent();
+                }
+                if ($hasNext.next()[0] === currentSelection.ec) {
+                    _selectSC(currentSelection);
+                }
+            }
+        }
+        function _selectSC(selection) {
+            range.create(selection.sc, selection.so, selection.sc, selection.sc.length).select();
+        }
+
+        // To Fix Google Chrome Tripleclick Issue, which selects the ending
+        // whitespace characters (so Tripleclicking then typing text will remove
+        // the whole paragraph instead of its content).
+        // http://stackoverflow.com/questions/38467334/why-does-google-chrome-always-add-space-after-selected-text
         if ($.browser.chrome === true && ev.originalEvent.detail === 3) {
             var currentSelection = range.create();
             if (currentSelection.sc.parentNode === currentSelection.ec) {

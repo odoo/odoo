@@ -3,23 +3,29 @@
 # * analytic
 # 
 # Translators:
-# Xavier Belmere <Info@cartmeleon.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Lucas Deliege <lud@odoo.com>, 2016
-# Frédéric LIETART <stuff@tifred.fr>, 2016
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
-# Xavier Symons <xsy@openerp.com>, 2016
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
-# Melanie Bernard <mbe@odoo.com>, 2016
-# Fabien Pinckaers <fp@openerp.com>, 2016
+# Bertrand LATOUR <divoir@gmail.com>, 2017
+# Eloïse Stilmant <est@odoo.com>, 2017
+# Xavier Belmere <Info@cartmeleon.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
+# Saad Thaifa <saad.thaifa@gmail.com>, 2017
+# Lucas Deliege <lud@odoo.com>, 2017
+# Micky Jault <micky037@hotmail.fr>, 2017
+# Benelita Prauhart <internetinfo07@gmail.com>, 2017
+# leemannd <denis.leemann@camptocamp.com>, 2017
+# Frédéric LIETART <stuff@tifred.fr>, 2017
+# lap.odoo <lap@odoo.com>, 2017
+# Xavier Symons <xsy@openerp.com>, 2017
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
+# Melanie Bernard <mbe@odoo.com>, 2017
+# Fabien Pinckaers <fp@openerp.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Fabien Pinckaers <fp@openerp.com>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Fabien Pinckaers <fp@openerp.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,8 +40,9 @@ msgstr "Devise du compte"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_active
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_active
 msgid "Active"
-msgstr "Actif"
+msgstr "Actif/ve"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_amount
@@ -69,7 +76,7 @@ msgstr "Comptes analytiques"
 #: model:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
 #: model:ir.ui.view,arch_db:analytic.account_analytic_tag_tree_view
 msgid "Analytic Accounts Tags"
-msgstr "Tags comptes analytiques"
+msgstr "Étiquettes de comptes analytiques"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
@@ -120,6 +127,11 @@ msgid "Balance"
 msgstr "Balance"
 
 #. module: analytic
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_kanban
+msgid "Balance:"
+msgstr ""
+
+#. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
 msgid "Chart of Analytic Accounts"
 msgstr "Plan comptable analytiques"
@@ -137,7 +149,7 @@ msgstr "Cliquer pour ajouter un compte analytique."
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_color
 msgid "Color Index"
-msgstr "Couleur"
+msgstr "Index de la couleur"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_company_id
@@ -214,7 +226,7 @@ msgstr "Description"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "affichage nom"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
@@ -246,13 +258,16 @@ msgid ""
 "                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
+"Dans Odoo, les bons de commande et projets sont implémentés en utilisant les\n"
+"                comptes analytiques. Vous pouvez suivre les coûts et les revenus pour analyser\n"
+"                vos marges facilement."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag___last_update
 msgid "Last Modified on"
-msgstr "Dernière Modification le"
+msgstr "Dernière modification le"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_uid
@@ -308,6 +323,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
 msgstr "Chercher des lignes analytiques"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_tag_active
+msgid "Set active to false to hide the Analytic Tag without removing it."
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids

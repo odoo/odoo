@@ -51,7 +51,7 @@ class Product(models.Model):
     incoming_qty = fields.Float(
         'Incoming', compute='_compute_quantities', search='_search_incoming_qty',
         digits=dp.get_precision('Product Unit of Measure'),
-        help="Quantity of products that are planned to arrive.\n"
+        help="Quantity of planned incoming products.\n"
              "In a context with a single Stock Location, this includes "
              "goods arriving to this Location, or any of its children.\n"
              "In a context with a single Warehouse, this includes "
@@ -62,7 +62,7 @@ class Product(models.Model):
     outgoing_qty = fields.Float(
         'Outgoing', compute='_compute_quantities', search='_search_outgoing_qty',
         digits=dp.get_precision('Product Unit of Measure'),
-        help="Quantity of products that are planned to leave.\n"
+        help="Quantity of planned outgoing products.\n"
              "In a context with a single Stock Location, this includes "
              "goods leaving this Location, or any of its children.\n"
              "In a context with a single Warehouse, this includes "
@@ -384,7 +384,7 @@ class ProductTemplate(models.Model):
         help="This stock location will be used, instead of the default one, as the source location for stock moves generated when you do an inventory.")
     sale_delay = fields.Float(
         'Customer Lead Time', default=0,
-        help="The average delay in days between the confirmation of the customer order and the delivery of the finished products. It's the time you promise to your customers.")
+        help="Delivery lead time, in days. It's the number of days, promised to the customer, between the confirmation of the order and the delivery.")
     tracking = fields.Selection([
         ('serial', 'By Unique Serial Number'),
         ('lot', 'By Lots'),
@@ -500,6 +500,13 @@ class ProductTemplate(models.Model):
             done_moves = self.env['stock.move'].search([('product_id', 'in', updated.mapped('product_variant_ids').ids)], limit=1)
             if done_moves:
                 raise UserError(_("You can not change the unit of measure of a product that has already been used in a done stock move. If you need to change the unit of measure, you may deactivate this product."))
+        if any('type' in vals and vals['type'] != prod_tmpl.type for prod_tmpl in self):
+            existing_move_lines = self.env['stock.move.line'].search([
+                ('product_id', 'in', self.mapped('product_variant_ids').ids),
+                ('state', 'in', ['partially_available', 'assigned']),
+            ])
+            if existing_move_lines:
+                raise UserError(_("You can not change the type of a product that is currently reserved on a stock move. If you need to change the type, you should first unreserve the stock move."))
         return super(ProductTemplate, self).write(vals)
 
     def action_view_routes(self):
@@ -535,7 +542,11 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         action = self.env.ref('stock.action_production_lot_form').read()[0]
         action['domain'] = [('product_id.product_tmpl_id', '=', self.id)]
-        action['context'] = {}
+        if self.product_variant_count == 1:
+            action['context'] = {
+                'default_product_id': self.product_variant_id.id,
+            }
+
         return action
 
 class ProductCategory(models.Model):

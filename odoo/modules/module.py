@@ -139,13 +139,13 @@ def initialize_sys_path():
 
     # add base module path
     base_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons'))
-    if base_path not in ad_paths:
+    if base_path not in ad_paths and os.path.isdir(base_path):
         ad_paths.append(base_path)
 
     # add odoo.addons.__path__
     for ad in __import__('odoo.addons').addons.__path__:
         ad = os.path.abspath(ad)
-        if ad not in ad_paths:
+        if ad not in ad_paths and os.path.isdir(ad):
             ad_paths.append(ad)
 
     if not hooked:
@@ -328,9 +328,9 @@ def load_information_from_description_file(module, mod_path=None):
             'depends data demo test init_xml update_xml demo_xml'.split(),
             iter(list, None)))
 
-        f = tools.file_open(manifest_file)
+        f = tools.file_open(manifest_file, mode='rb')
         try:
-            info.update(ast.literal_eval(f.read()))
+            info.update(ast.literal_eval(pycompat.to_native(f.read())))
         finally:
             f.close()
 
@@ -432,12 +432,19 @@ def get_test_modules(module):
     modpath = 'odoo.addons.' + module
     try:
         mod = importlib.import_module('.tests', modpath)
-    except Exception as e:
-        # If module has no `tests` sub-module, no problem.
-        if not pycompat.text_type(e).startswith(u'No module named'):
-            _logger.exception('Can not `import %s`.', module)
+    except ImportError as e:  # will also catch subclass ModuleNotFoundError of P3.6
+        # Hide ImportErrors on `tests` sub-module, but display other exceptions
+        if pycompat.PY2:
+            if e.message.startswith('No module named') and e.message.endswith("tests"):
+                return []
+        else:
+            if e.name == modpath + '.tests' and e.msg.startswith('No module named'):
+                return []
+        _logger.exception('Can not `import %s`.', module)
         return []
-
+    except Exception as e:
+        _logger.exception('Can not `import %s`.', module)
+        return []
     if hasattr(mod, 'fast_suite') or hasattr(mod, 'checks'):
         _logger.warn(
             "Found deprecated fast_suite or checks attribute in test module "

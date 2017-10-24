@@ -146,6 +146,7 @@ class account_register_payments(models.TransientModel):
         # Look if we are mixin multiple commercial_partner or customer invoices with vendor bills
         multi = any(inv.commercial_partner_id != invoices[0].commercial_partner_id
             or MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type] != MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type]
+            or inv.account_id != invoices[0].account_id
             for inv in invoices)
 
         total_amount = self._compute_payment_amount(invoices)
@@ -164,14 +165,18 @@ class account_register_payments(models.TransientModel):
 
     @api.multi
     def _groupby_invoices(self):
-        '''Split the invoices linked to the wizard according to their commercial partner and their type.
+        '''Split the invoices linked to the wizard according to their commercial partner,
+         their account and their type.
 
-        :return: a dictionary mapping (commercial_partner_id, type) => invoices recordset.
+        :return: a dictionary mapping (partner_id, account_id, invoice_type) => invoices recordset.
         '''
         results = {}
         # Create a dict dispatching invoices according to their commercial_partner_id and type
         for inv in self.invoice_ids:
-            key = (inv.commercial_partner_id.id, MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type])
+            partner_id = inv.commercial_partner_id.id
+            account_id = inv.account_id.id
+            invoice_type = MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type]
+            key = (partner_id, account_id, invoice_type)
             if not key in results:
                 results[key] = self.env['account.invoice']
             results[key] += inv
@@ -316,8 +321,7 @@ class account_payment(models.Model):
             'context': action_context,
         }
 
-    @api.onchange('amount', 'currency_id')
-    def _onchange_amount(self):
+    def _compute_journal_domain_and_types(self):
         journal_type = ['bank', 'cash']
         domain = []
         if self.currency_id.is_zero(self.amount):
@@ -330,11 +334,16 @@ class account_payment(models.Model):
                 domain.append(('at_least_one_inbound', '=', True))
             else:
                 domain.append(('at_least_one_outbound', '=', True))
+        return {'domain': domain, 'journal_types': set(journal_type)}
 
-        domain.append(('type', 'in', journal_type))
-        if self.journal_id.type not in journal_type:
-            self.journal_id = self.env['account.journal'].search([('type', 'in', journal_type)], limit=1)
-        return {'domain': {'journal_id': domain}}
+    @api.onchange('amount', 'currency_id')
+    def _onchange_amount(self):
+        jrnl_filters = self._compute_journal_domain_and_types()
+        journal_types = jrnl_filters['journal_types']
+        domain_on_types = [('type', 'in', list(journal_types))]
+        if self.journal_id.type not in journal_types:
+            self.journal_id = self.env['account.journal'].search(domain_on_types, limit=1)
+        return {'domain': {'journal_id': jrnl_filters['domain'] + domain_on_types}}
 
     @api.one
     @api.depends('invoice_ids', 'payment_type', 'partner_type', 'partner_id')
@@ -369,8 +378,10 @@ class account_payment(models.Model):
         res = self._onchange_journal()
         if not res.get('domain', {}):
             res['domain'] = {}
-        res['domain']['journal_id'] = self.payment_type == 'inbound' and [('at_least_one_inbound', '=', True)] or [('at_least_one_outbound', '=', True)]
-        res['domain']['journal_id'].append(('type', 'in', ('bank', 'cash')))
+        jrnl_filters = self._compute_journal_domain_and_types()
+        journal_types = jrnl_filters['journal_types']
+        journal_types.update(['bank', 'cash'])
+        res['domain']['journal_id'] = jrnl_filters['domain'] + [('type', 'in', list(journal_types))]
         return res
 
     @api.model
@@ -455,7 +466,7 @@ class account_payment(models.Model):
         for rec in self:
 
             if rec.state != 'draft':
-                raise UserError(_("Only a draft payment can be posted. Trying to post a payment in state %s.") % rec.state)
+                raise UserError(_("Only a draft payment can be posted."))
 
             if any(inv.state != 'open' for inv in rec.invoice_ids):
                 raise ValidationError(_("The payment cannot be processed because the invoice is not open!"))
@@ -475,7 +486,7 @@ class account_payment(models.Model):
                     if rec.payment_type == 'outbound':
                         sequence_code = 'account.payment.supplier.invoice'
             rec.name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.payment_date).next_by_code(sequence_code)
-            if not rec.name and self.payment_type != 'transfer':
+            if not rec.name and rec.payment_type != 'transfer':
                 raise UserError(_("You have to define a sequence for %s in your company.") % (sequence_code,))
 
             # Create the journal entry
@@ -591,14 +602,12 @@ class account_payment(models.Model):
             'name': _('Transfer from %s') % self.journal_id.name,
             'account_id': self.destination_journal_id.default_credit_account_id.id,
             'currency_id': self.destination_journal_id.currency_id.id,
-            'payment_id': self.id,
             'journal_id': self.destination_journal_id.id})
         aml_obj.create(dst_liquidity_aml_dict)
 
         transfer_debit_aml_dict = self._get_shared_move_line_vals(credit, debit, 0, dst_move.id)
         transfer_debit_aml_dict.update({
             'name': self.name,
-            'payment_id': self.id,
             'account_id': self.company_id.transfer_account_id.id,
             'journal_id': self.destination_journal_id.id})
         if self.currency_id != self.company_id.currency_id:
@@ -637,6 +646,7 @@ class account_payment(models.Model):
             'debit': debit,
             'credit': credit,
             'amount_currency': amount_currency or False,
+            'payment_id': self.id,
         }
 
     def _get_counterpart_move_line_vals(self, invoice=False):
@@ -665,7 +675,6 @@ class account_payment(models.Model):
             'account_id': self.destination_account_id.id,
             'journal_id': self.journal_id.id,
             'currency_id': self.currency_id != self.company_id.currency_id and self.currency_id.id or False,
-            'payment_id': self.id,
         }
 
     def _get_liquidity_move_line_vals(self, amount):
@@ -675,7 +684,6 @@ class account_payment(models.Model):
         vals = {
             'name': name,
             'account_id': self.payment_type in ('outbound','transfer') and self.journal_id.default_debit_account_id.id or self.journal_id.default_credit_account_id.id,
-            'payment_id': self.id,
             'journal_id': self.journal_id.id,
             'currency_id': self.currency_id != self.company_id.currency_id and self.currency_id.id or False,
         }

@@ -42,7 +42,8 @@
             .o-flex-display();
             .o-flex(0, 0, auto);
             justify-content: space-between;
-            border-bottom: 1px solid lightgray;
+            border-bottom: 1px solid @gray-lighter-darker;
+            box-shadow: 0 0 2px @gray-lighter-darker;
             .o_filter_button, .o_new_message {
                 .btn-link;
                 padding: 5px;
@@ -71,16 +72,10 @@
                     padding: 5px;
                     .o_mail_channel_image {
                         width: 40px;
-                        > img {
-                            max-height: 40px;
-                        }
                     }
                     .o_channel_info {
                         margin-left: 10px;
                         .o_channel_title {
-                            .o_channel_name, .o_channel_counter {
-                                color: #666666;
-                            }
                             .o_last_message_date {
                                 padding-top: 2px;
                                 font-size: x-small;
@@ -125,6 +120,7 @@
                 padding: 5px;
                 height: 44px;
                 border-bottom: 1px solid #ebebeb;
+                box-shadow: 0 0 2px @gray-lighter-darker;
             }
             .o_mail_navbar_dropdown_channels {
                 max-height: none;

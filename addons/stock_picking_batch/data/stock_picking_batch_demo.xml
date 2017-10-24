@@ -25,7 +25,7 @@
         <field name="state">assigned</field>
         <field name="priority">1</field>
         <field name="picking_type_id" ref="stock.picking_type_internal"/>
-        <field name="batch_id" ref="stock_picking_batch_dry_1"/>
+        <field name="batch_id" ref="stock_picking_batch_freeze_1"/>
         <field name="location_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
     </record>
@@ -35,7 +35,7 @@
         <field name="state">assigned</field>
         <field name="priority">1</field>
         <field name="picking_type_id" ref="stock.picking_type_internal"/>
-        <field name="batch_id" ref="stock_picking_batch_freeze_1"/>
+        <field name="batch_id" ref="stock_picking_batch_dry_1"/>
         <field name="location_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
     </record>
@@ -81,6 +81,7 @@
         <field name="picking_id" ref="Picking_A"/>
         <field name="location_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
+        <field name="product_uom_qty">10</field>
         <field name="product_uom" ref="product.product_uom_unit" />
         <field name="product_id" ref="product_product_ice_cream_choco"/>
     </record>
@@ -89,6 +90,7 @@
         <field name="picking_id" ref="Picking_A"/>
         <field name="location_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
+        <field name="product_uom_qty">5</field>
         <field name="product_uom" ref="product.product_uom_unit" />
         <field name="product_id" ref="product_product_ice_cream_vani"/>
     </record>
@@ -97,6 +99,7 @@
         <field name="picking_id" ref="Picking_B"/>
         <field name="location_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
+        <field name="product_uom_qty">10</field>
         <field name="product_uom" ref="product.product_uom_unit" />
         <field name="product_id" ref="product_product_dry_specu"/>
     </record>
@@ -107,6 +110,26 @@
         <field name="location_dest_id" ref="stock.stock_location_output"/>
         <field name="product_uom" ref="product.product_uom_unit" />
         <field name="product_id" ref="product_product_ice_cream_vani"/>
+    </record>
+
+    <!-- Add stock move line -->
+    <record id="stock_move_line_1" model="stock.move.line">
+        <field name="picking_id" ref="Picking_A"/>
+        <field name="move_id" ref="stock_move1"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_output"/>
+        <field name="product_uom_qty">5</field>
+        <field name="product_uom_id" ref="product.product_uom_unit" />
+        <field name="product_id" ref="product_product_ice_cream_choco"/>
+    </record>
+    <record id="stock_move_line_1" model="stock.move.line">
+        <field name="picking_id" ref="Picking_A"/>
+        <field name="move_id" ref="stock_move2"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_output"/>
+        <field name="product_uom_qty">5</field>
+        <field name="product_uom_id" ref="product.product_uom_unit" />
+        <field name="product_id" ref="product_product_ice_cream_choco"/>
     </record>
 
 </odoo>

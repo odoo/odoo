@@ -4,7 +4,7 @@ odoo.define('web_tour.TourManager', function(require) {
 var core = require('web.core');
 var local_storage = require('web.local_storage');
 var mixins = require('web.mixins');
-var RainbowMan = require('web.rainbow_man');
+var RainbowMan = require('web.RainbowMan');
 var ServicesMixin = require('web.ServicesMixin');
 var session = require('web.session');
 var Tip = require('web_tour.Tip');
@@ -175,6 +175,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
      *   test [Boolean] true if the tour is dedicated to tests (it won't be enabled by default)
      *   skip_enabled [Boolean] true to add a link to consume the whole tour in its tips
      *   url [String] the url to load when manually running the tour
+     *   rainbowMan [Bool] use to display the rainbow effect at the end of tour
      * @param [Array] dict of steps, each step being a dict containing a tip description
      */
     register: function() {
@@ -191,6 +192,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             name: name,
             steps: steps,
             url: options.url,
+            rainbowMan: options.rainbowMan || true,
             test: options.test,
             wait_for: options.wait_for || $.when(),
         };
@@ -398,7 +400,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     _consume_tour: function (tour_name, error) {
         delete this.active_tooltips[tour_name];
         //display rainbow at the end of any tour
-        if (this.tours[tour_name].current_step === this.tours[tour_name].steps.length){
+        if (this.rainbowMan && this.tours[tour_name].current_step === this.tours[tour_name].steps.length){
             var $rainbow_message = $('<strong>' +
                                 '<b>Good job!</b>' +
                                 ' You went through all steps of this tour.' +

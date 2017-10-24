@@ -13,6 +13,7 @@ from datetime import datetime
 from odoo import http, modules, SUPERUSER_ID, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.web.controllers.main import binary_content
+from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.http import request
 
 
@@ -56,7 +57,7 @@ class WebsiteForum(http.Controller):
         request.session['validation_email_sent'] = True
         return True
 
-    @http.route('/forum/validate_email', type='http', auth='public', website=True)
+    @http.route('/forum/validate_email', type='http', auth='public', website=True, sitemap=False)
     def validate_email(self, token, id, email, forum_id=None, **kwargs):
         if forum_id:
             try:
@@ -100,11 +101,19 @@ class WebsiteForum(http.Controller):
         request.env['mail.message'].browse([int(kwargs.get('notification_id'))]).set_message_done()
         return True
 
+    def sitemap_forum(env, rule, qs):
+        Forum = env['forum.forum']
+        dom = sitemap_qs2dom(qs, '/forum', Forum._rec_name)
+        for f in Forum.search(dom):
+            loc = '/forum/%s' % slug(f)
+            if not qs or qs.lower() in loc:
+                yield {'loc': loc}
+
     @http.route(['/forum/<model("forum.forum"):forum>',
                  '/forum/<model("forum.forum"):forum>/page/<int:page>',
-                 '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag", "[('forum_id','=',forum[0])]"):tag>/questions''',
-                 '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag", "[('forum_id','=',forum[0])]"):tag>/questions/page/<int:page>''',
-                 ], type='http', auth="public", website=True)
+                 '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions''',
+                 '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions/page/<int:page>''',
+                 ], type='http', auth="public", website=True, sitemap=sitemap_forum)
     def questions(self, forum, tag=None, page=1, filters='all', sorting=None, search='', post_type=None, **post):
         Post = request.env['forum.post']
 
@@ -170,7 +179,7 @@ class WebsiteForum(http.Controller):
         values = self._prepare_forum_values(forum=forum, searches=dict(), header={'is_guidelines': True}, **post)
         return request.render("website_forum.faq", values)
 
-    @http.route('/forum/get_tags', type='http', auth="public", methods=['GET'], website=True)
+    @http.route('/forum/get_tags', type='http', auth="public", methods=['GET'], website=True, sitemap=False)
     def tag_read(self, q='', l=25, **post):
         data = request.env['forum.tag'].search_read(
             domain=[('name', '=ilike', (q or '') + "%")],
@@ -179,7 +188,7 @@ class WebsiteForum(http.Controller):
         )
         return json.dumps(data)
 
-    @http.route(['/forum/<model("forum.forum"):forum>/tag', '/forum/<model("forum.forum"):forum>/tag/<string:tag_char>'], type='http', auth="public", website=True)
+    @http.route(['/forum/<model("forum.forum"):forum>/tag', '/forum/<model("forum.forum"):forum>/tag/<string:tag_char>'], type='http', auth="public", website=True, sitemap=False)
     def tags(self, forum, tag_char=None, **post):
         # build the list of tag first char, with their value as tag_char param Ex : [('All', 'all'), ('C', 'c'), ('G', 'g'), ('Z', z)]
         first_char_tag = forum.get_tags_first_char()
@@ -323,7 +332,7 @@ class WebsiteForum(http.Controller):
         if post_type == 'question' and not post.get('post_name', ''):
             return request.render('website.http_error', {'status_code': _('Bad Request'), 'status_message': _('Title should not be empty.')})
         if post.get('content', '') == '<p><br></p>':
-            return werkzeug.utils.redirect("/forum/%s/question/%s?nocontent=1" % (slug(forum), post_parent and slug(post_parent)))
+            return request.render('website.http_error', {'status_code': _('Bad Request'), 'status_message': _('Question should not be empty.')})
 
         post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', ''))
 
@@ -569,7 +578,7 @@ class WebsiteForum(http.Controller):
                 return werkzeug.utils.redirect("/forum/%s/user/%d" % (slug(forum), partner.user_ids[0].id))
         return werkzeug.utils.redirect("/forum/%s" % slug(forum))
 
-    @http.route(['/forum/user/<int:user_id>/avatar'], type='http', auth="public", website=True)
+    @http.route(['/forum/user/<int:user_id>/avatar'], type='http', auth="public", website=True, sitemap=False)
     def user_avatar(self, user_id=0, **post):
         status, headers, content = binary_content(model='res.users', id=user_id, field='image_medium', default_mimetype='image/png', env=request.env(user=SUPERUSER_ID))
 

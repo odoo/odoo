@@ -57,7 +57,7 @@ class MrpProduction(models.Model):
     product_qty = fields.Float(
         'Quantity To Produce',
         default=1.0, digits=dp.get_precision('Product Unit of Measure'),
-        readonly=True, required=True,
+        readonly=True, required=True, track_visibility='onchange',
         states={'confirmed': [('readonly', False)]})
     product_uom_id = fields.Many2one(
         'product.uom', 'Product Unit of Measure',
@@ -106,6 +106,9 @@ class MrpProduction(models.Model):
         'stock.move', 'production_id', 'Finished Products',
         copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, 
         domain=[('scrapped', '=', False)])
+    finished_move_line_ids = fields.One2many(
+        'stock.move.line', compute='_compute_lines', inverse='_inverse_lines', string="Finished Product"
+        )
     workorder_ids = fields.One2many(
         'mrp.workorder', 'production_id', 'Work Orders',
         copy=False, oldname='workcenter_lines', readonly=True)
@@ -124,7 +127,7 @@ class MrpProduction(models.Model):
         ('assigned', 'Available'),
         ('partially_available', 'Partially Available'),
         ('waiting', 'Waiting'),
-        ('none', 'None')], string='Availability',
+        ('none', 'None')], string='Materials Availability',
         compute='_compute_availability', store=True)
 
     unreserve_visible = fields.Boolean(
@@ -157,6 +160,23 @@ class MrpProduction(models.Model):
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
     priority = fields.Selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority',
                                 readonly=True, states={'confirmed': [('readonly', False)]}, default='1')
+    is_locked = fields.Boolean('Is Locked', default=True)
+    show_final_lots = fields.Boolean('Show Final Lots', compute='_compute_show_lots')
+    production_location_id = fields.Many2one('stock.location', "Production Location", related='product_id.property_stock_production')
+
+    @api.depends('product_id.tracking')
+    def _compute_show_lots(self):
+        for production in self:
+            production.show_final_lots = production.product_id.tracking != 'none'
+
+    def _inverse_lines(self):
+        """ Little hack to make sure that when you change something on these objects, it gets saved"""
+        pass
+
+    @api.depends('move_finished_ids.move_line_ids')
+    def _compute_lines(self):
+        for production in self:
+            production.finished_move_line_ids = production.move_finished_ids.mapped('move_line_ids')
 
     @api.multi
     @api.depends('bom_id.routing_id', 'bom_id.routing_id.operation_ids')
@@ -199,18 +219,21 @@ class MrpProduction(models.Model):
                 assigned_list = [x.state in ('assigned', 'done', 'cancel') for x in order.move_raw_ids]
                 order.availability = (all(assigned_list) and 'assigned') or (any(partial_list) and 'partially_available') or 'waiting'
 
+    @api.depends('move_raw_ids', 'is_locked', 'state', 'move_raw_ids.quantity_done')
     def _compute_unreserve_visible(self):
-        return True
+        for order in self:
+            already_reserved = order.is_locked and order.state not in ('done', 'cancel') and order.mapped('move_raw_ids.move_line_ids')
+            any_quantity_done = any([m.quantity_done > 0 for m in order.move_raw_ids])
+            order.unreserve_visible = not any_quantity_done and already_reserved
 
     @api.multi
-    @api.depends('move_raw_ids.quantity_done', 'move_finished_ids.quantity_done')
+    @api.depends('move_raw_ids.quantity_done', 'move_finished_ids.quantity_done', 'is_locked')
     def _compute_post_visible(self):
         for order in self:
             if order.product_tmpl_id._is_cost_method_standard():
-                order.post_visible = any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_raw_ids) or \
-                    any((x.quantity_done > 0 and x.state not in ['done' 'cancel']) for x in order.move_finished_ids)
+                order.post_visible = order.is_locked and any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_raw_ids | order.move_finished_ids)
             else:
-                order.post_visible = any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_finished_ids)
+                order.post_visible = order.is_locked and any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_finished_ids)
 
     @api.multi
     @api.depends('move_raw_ids.quantity_done', 'move_raw_ids.product_uom_qty')
@@ -223,7 +246,7 @@ class MrpProduction(models.Model):
             )
 
     @api.multi
-    @api.depends('workorder_ids.state', 'move_finished_ids')
+    @api.depends('workorder_ids.state', 'move_finished_ids', 'is_locked')
     def _get_produced_qty(self):
         for production in self:
             done_moves = production.move_finished_ids.filtered(lambda x: x.state != 'cancel' and x.product_id.id == production.product_id.id)
@@ -231,7 +254,7 @@ class MrpProduction(models.Model):
             wo_done = True
             if any([x.state not in ('done', 'cancel') for x in production.workorder_ids]):
                 wo_done = False
-            production.check_to_done = done_moves and (qty_produced >= production.product_qty) and (production.state not in ('done', 'cancel')) and wo_done
+            production.check_to_done = production.is_locked and done_moves and (qty_produced >= production.product_qty) and (production.state not in ('done', 'cancel')) and wo_done
             production.qty_produced = qty_produced
         return True
 
@@ -292,6 +315,11 @@ class MrpProduction(models.Model):
         if any(production.state != 'cancel' for production in self):
             raise UserError(_('Cannot delete a manufacturing order not in cancel state'))
         return super(MrpProduction, self).unlink()
+
+    def action_toggle_is_locked(self):
+        self.ensure_one()
+        self.is_locked = not self.is_locked
+        return True
 
     @api.multi
     def _generate_moves(self):
@@ -399,7 +427,7 @@ class MrpProduction(models.Model):
         if move:
             if quantity > 0:
                 move[0].write({'product_uom_qty': quantity})
-            else:
+            elif quantity < 0:  # Do not remove 0 lines
                 if move[0].quantity_done > 0:
                     raise UserError(_('Lines need to be deleted, but can not as you still have some quantities to consume in them. '))
                 move[0]._action_cancel()
@@ -498,7 +526,7 @@ class MrpProduction(models.Model):
             raw_moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             (finish_moves | raw_moves)._action_cancel()
 
-        self.write({'state': 'cancel'})
+        self.write({'state': 'cancel', 'is_locked': True})
         return True
 
     def _cal_price(self, consumed_moves):
@@ -510,6 +538,8 @@ class MrpProduction(models.Model):
         for order in self:
             moves_not_to_do = order.move_raw_ids.filtered(lambda x: x.state == 'done')
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+            for move in moves_to_do.filtered(lambda m: m.product_qty == 0.0 and m.quantity_done > 0):
+                move.product_uom_qty = move.quantity_done
             moves_to_do._action_done()
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state == 'done') - moves_not_to_do
             order._cal_price(moves_to_do)
@@ -519,8 +549,10 @@ class MrpProduction(models.Model):
             consume_move_lines = moves_to_do.mapped('active_move_line_ids')
             for moveline in moves_to_finish.mapped('active_move_line_ids'):
                 if moveline.move_id.has_tracking != 'none':
+                    if any([not ml.lot_produced_id for ml in consume_move_lines]):
+                        raise UserError(_('You can not consume without telling for which lot you consumed it'))
                     # Link all movelines in the consumed with same lot_produced_id false or the correct lot_produced_id
-                    filtered_lines = consume_move_lines.filtered(lambda x: x.lot_produced_id == moveline.lot_id or not x.lot_produced_id)
+                    filtered_lines = consume_move_lines.filtered(lambda x: x.lot_produced_id == moveline.lot_id)
                     moveline.write({'consume_line_ids': [(6, 0, [x for x in filtered_lines.ids])]})
                 else:
                     # Link with everything

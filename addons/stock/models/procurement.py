@@ -233,6 +233,33 @@ class ProcurementGroup(models.Model):
         return [('procure_method', '=', 'make_to_order'), ('move_orig_ids', '=', False)]
 
     @api.model
+    def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
+        # Minimum stock rules
+        self.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id)
+
+        # Search all confirmed stock_moves and try to assign them
+        confirmed_moves = self.env['stock.move'].search([('state', '=', 'confirmed')], limit=None, order='priority desc, date_expected asc')
+        for moves_chunk in split_every(100, confirmed_moves.ids):
+            self.env['stock.move'].browse(moves_chunk)._action_assign()
+            if use_new_cursor:
+                self._cr.commit()
+
+        exception_moves = self.env['stock.move'].search(self._get_exceptions_domain())
+        for move in exception_moves:
+            values = move._prepare_procurement_values()
+            try:
+                with self._cr.savepoint():
+                    origin = (move.group_id and (move.group_id.name + ":") or "") + (move.rule_id and move.rule_id.name or move.origin or move.picking_id.name or "/")
+                    self.run(move.product_id, move.product_uom_qty, move.product_uom, move.location_id, move.rule_id and move.rule_id.name or "/", origin, values)
+            except UserError as error:
+                self.env['procurement.rule']._log_next_activity(move.product_id, error.name)
+        if use_new_cursor:
+            self._cr.commit()
+
+        # Merge duplicated quants
+        self.env['stock.quant']._merge_quants()
+
+    @api.model
     def run_scheduler(self, use_new_cursor=False, company_id=False):
         """ Call the scheduler in order to check the running procurements (super method), to check the minimum stock rules
         and the availability of moves. This function is intended to be run for all the companies at the same time, so
@@ -242,28 +269,7 @@ class ProcurementGroup(models.Model):
                 cr = registry(self._cr.dbname).cursor()
                 self = self.with_env(self.env(cr=cr))  # TDE FIXME
 
-            # Minimum stock rules
-            self.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id)
-
-            # Search all confirmed stock_moves and try to assign them
-            confirmed_moves = self.env['stock.move'].search([('state', '=', 'confirmed')], limit=None, order='priority desc, date_expected asc')
-            for moves_chunk in split_every(100, confirmed_moves.ids):
-                self.env['stock.move'].browse(moves_chunk)._action_assign()
-                if use_new_cursor:
-                    self._cr.commit()
-
-            exception_moves = self.env['stock.move'].search(self._get_exceptions_domain())
-            for move in exception_moves:
-                values = move._prepare_procurement_values()
-                try:
-                    with self._cr.savepoint():
-                        origin = (move.group_id and (move.group_id.name + ":") or "") + (move.rule_id and move.rule_id.name or move.origin or move.picking_id.name or "/")
-                        self.run(move.product_id, move.product_uom_qty, move.product_uom, move.location_id, move.rule_id and move.rule_id.name or "/", origin, values)
-                except UserError as error:
-                    self.env['procurement.rule']._log_next_activity(move.product_id, error.name)
-
-            if use_new_cursor:
-                self._cr.commit()
+            self._run_scheduler_tasks(use_new_cursor=use_new_cursor, company_id=company_id)
         finally:
             if use_new_cursor:
                 try:

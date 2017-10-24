@@ -30,16 +30,7 @@
             <field name="website_id" ref="default_website"/>
         </record>
 
-        <!--
-          Keep homepage & contactus page split between ir_ui_view & website_page record
-          So external_id of the ir_ui_view record is still 'website.contactus' and not 'website.contactus_ir_ui_view' (same for homepage)
-          Indeed Odoo put a suffix on external_id on submodels records (inherits) with the model's name as suffix.
-          eg: record website_page is 'website.contactus' & ir_ui_view record is 'website.contactus_ir_ui_view'
-          but since website_crm_template.xml (and surely others) inherit the contactus ir_ui_view record (inherit_id="website.contactus"),
-          the external_id of the contactus ir_ui_view record still has to be 'website.contactus'.
-          (Put in another way, external_id 'website.contactus' can't be the external_id of the website_page record or the inherit will ofc fail)
-          (Or change inherit_id in related files but possibly alot. Safer this way)
-        -->
+        <!-- split between ir_ui_view & website_page record to keep external_id on ir_ui_view -->
         <record id="homepage" model="ir.ui.view">
             <field name="name">Home</field>
             <field name="type">qweb</field>
@@ -54,10 +45,9 @@
             </field>
         </record>
         <record id="homepage_page" model="website.page">
-            <field name="name">Home</field>
             <field name="website_published">True</field>
             <field name="url">/</field>
-            <field name="ir_ui_view_id" ref="homepage" />
+            <field name="view_id" ref="homepage" />
         </record>
         <record id="default_website" model="website">
             <field name="homepage_id" ref="homepage_page" />
@@ -98,10 +88,9 @@
             </field>
         </record>
         <record id="contactus_page" model="website.page">
-            <field name="name">Contact Us</field>
             <field name="url">/contactus</field>
             <field name="website_published">True</field>
-            <field name="ir_ui_view_id" ref="contactus" />
+            <field name="view_id" ref="contactus" />
         </record>
 
         <record id="aboutus" model="ir.ui.view">
@@ -155,10 +144,9 @@
         </record>
 
         <record id="aboutus_page" model="website.page">
-            <field name="name">About us</field>
             <field name="website_published">True</field>
             <field name="url">/aboutus</field>
-            <field name="ir_ui_view_id" ref="aboutus" />
+            <field name="view_id" ref="aboutus" />
         </record>
 
         <record id="menu_homepage" model="website.menu">

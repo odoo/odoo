@@ -18,13 +18,14 @@ import os
 import re
 import sys
 import time
+import zlib
+
 import werkzeug
 import werkzeug.utils
 import werkzeug.wrappers
-import zlib
+import werkzeug.wsgi
+from werkzeug.urls import url_decode, iri_to_uri
 from xml.etree import ElementTree
-from werkzeug import url_decode
-from werkzeug import iri_to_uri
 
 
 import odoo
@@ -33,11 +34,11 @@ from odoo.api import call_kw, Environment
 from odoo.modules import get_resource_path
 from odoo.tools import crop_image, topological_sort, html_escape, pycompat
 from odoo.tools.translate import _
-from odoo.tools.misc import str2bool, xlwt
+from odoo.tools.misc import str2bool, xlwt, file_open
 from odoo.tools.safe_eval import safe_eval
 from odoo import http
 from odoo.http import content_disposition, dispatch_rpc, request, \
-                      serialize_exception as _serialize_exception
+    serialize_exception as _serialize_exception, Response
 from odoo.exceptions import AccessError, UserError
 from odoo.models import check_method_name
 
@@ -417,10 +418,13 @@ def xml2json_from_elementtree(el, preserve_whitespaces=False):
     res["children"] = kids
     return res
 
-def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):
+def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', unique=False,
+                   filename=None, filename_field='datas_fname', download=False, mimetype=None,
+                   default_mimetype='application/octet-stream', access_token=None, env=None):
     return request.registry['ir.http'].binary_content(
-        xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field,
-        download=download, mimetype=mimetype, default_mimetype=default_mimetype, env=env)
+        xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
+        filename_field=filename_field, download=download, mimetype=mimetype,
+        default_mimetype=default_mimetype, access_token=access_token, env=env)
 
 #----------------------------------------------------------
 # Odoo Web web Controllers
@@ -457,7 +461,7 @@ class Home(http.Controller):
     def _login_redirect(self, uid, redirect=None):
         return redirect if redirect else '/web'
 
-    @http.route('/web/login', type='http', auth="none")
+    @http.route('/web/login', type='http', auth="none", sitemap=False)
     def web_login(self, redirect=None, **kw):
         ensure_db()
         request.params['login_success'] = False
@@ -488,6 +492,9 @@ class Home(http.Controller):
         if 'login' not in values and request.session.get('auth_login'):
             values['login'] = request.session.get('auth_login')
 
+        if not odoo.tools.config['list_db']:
+            values['disable_database_manager'] = True
+
         response = request.render('web.login', values)
         response.headers['X-Frame-Options'] = 'DENY'
         return response
@@ -507,21 +514,24 @@ class WebClient(http.Controller):
     @http.route('/web/webclient/locale/<string:lang>', type='http', auth="none")
     def load_locale(self, lang):
         magic_file_finding = [lang.replace("_", '-').lower(), lang.split('_')[0]]
-        addons_path = http.addons_manifest['web']['addons_path']
-        # load momentjs locale
-        momentjs_locale = ""
         for code in magic_file_finding:
             try:
-                with open(os.path.join(addons_path, 'web', 'static', 'lib', 'moment', 'locale', code + '.js'), 'r') as f:
-                    momentjs_locale = f.read()
-                # we found a locale matching so we can exit
-                break
+                return http.Response(
+                    werkzeug.wsgi.wrap_file(
+                        request.httprequest.environ,
+                        file_open('web/static/lib/moment/locale/%s.js' % code, 'rb')
+                    ),
+                    content_type='application/javascript; charset=utf-8',
+                    headers=[('Cache-Control', 'max-age=36000')],
+                    direct_passthrough=True,
+                )
             except IOError:
-                continue
+                _logger.debug("No moment locale for code %s", code)
 
-        # return the content of the locale
-        headers = [('Content-Type', 'application/javascript'), ('Cache-Control', 'max-age=%s' % (36000))]
-        return request.make_response(momentjs_locale, headers)
+        return request.make_response("", headers=[
+            ('Content-Type', 'application/javascript'),
+            ('Cache-Control', 'max-age=36000'),
+        ])
 
     @http.route('/web/webclient/qweb', type='http', auth="none", cors="*")
     def qweb(self, mods=None, db=None):
@@ -644,7 +654,7 @@ class Database(http.Controller):
 
     def _render_template(self, **d):
         d.setdefault('manage',True)
-        d['insecure'] = odoo.tools.config['admin_passwd'] == 'admin'
+        d['insecure'] = odoo.tools.config.verify_admin_password('admin')
         d['list_db'] = odoo.tools.config['list_db']
         d['langs'] = odoo.service.db.exp_list_lang()
         d['countries'] = odoo.service.db.exp_list_countries()
@@ -971,8 +981,13 @@ class Binary(http.Controller):
         '/web/content/<int:id>-<string:unique>/<string:filename>',
         '/web/content/<string:model>/<int:id>/<string:field>',
         '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>'], type='http', auth="public")
-    def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas', filename=None, filename_field='datas_fname', unique=None, mimetype=None, download=None, data=None, token=None):
-        status, headers, content = binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype)
+    def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas',
+                       filename=None, filename_field='datas_fname', unique=None, mimetype=None,
+                       download=None, data=None, token=None, access_token=None):
+        status, headers, content = binary_content(
+            xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
+            filename_field=filename_field, download=download, mimetype=mimetype,
+            access_token=access_token)
         if status == 304:
             response = werkzeug.wrappers.Response(status=status, headers=headers)
         elif status == 301:
@@ -1004,8 +1019,13 @@ class Binary(http.Controller):
         '/web/image/<int:id>-<string:unique>/<string:filename>',
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>',
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>'], type='http', auth="public")
-    def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas', filename_field='datas_fname', unique=None, filename=None, mimetype=None, download=None, width=0, height=0, crop=False):
-        status, headers, content = binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype, default_mimetype='image/png')
+    def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
+                      filename_field='datas_fname', unique=None, filename=None, mimetype=None,
+                      download=None, width=0, height=0, crop=False, access_token=None):
+        status, headers, content = binary_content(
+            xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
+            filename_field=filename_field, download=download, mimetype=mimetype,
+            default_mimetype='image/png', access_token=access_token)
         if status == 304:
             return werkzeug.wrappers.Response(status=304, headers=headers)
         elif status == 301:

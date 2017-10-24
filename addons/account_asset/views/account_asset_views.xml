@@ -110,12 +110,12 @@
         <field name="model">account.asset.category</field>
         <field name="arch" type="xml">
             <search string="Search Asset Category">
-                <filter string="Sales" domain="[('type','=', 'sale')]" help="Deferred Revenues"/>
-                <filter string="Purchase" domain="[('type','=', 'purchase')]" help="Assets"/>
+                <filter string="Sales" name="sales" domain="[('type','=', 'sale')]" help="Deferred Revenues"/>
+                <filter string="Purchase" name="purchase" domain="[('type','=', 'purchase')]" help="Assets"/>
                 <field name="name" string="Category"/>
                 <field name="journal_id"/>
                 <group expand="0" string="Group By...">
-                    <filter string="Type" domain="[]" context="{'group_by':'type'}"/>
+                    <filter string="Type" name="type" domain="[]" context="{'group_by':'type'}"/>
                 </group>
             </search>
         </field>
@@ -148,7 +148,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="category_id" domain="[('type', '=', 'purchase')]" context="{'default_type': 'purchase'}" help="Category of asset"/>
+                            <field name="category_id" string="Asset Category" domain="[('type', '=', 'purchase')]" context="{'default_type': 'purchase'}" help="Category of asset"/>
                             <field name="code"/>
                             <field name="date" help="Date of asset"/>
                             <field name="type" invisible="1"/>
@@ -261,7 +261,7 @@
         <field name="arch" type="xml">
             <tree string="Assets" decoration-info="(state == 'draft')" decoration-muted="(state == 'close')">
                 <field name="name"/>
-                <field name="category_id"/>
+                <field name="category_id" string="Asset Category"/>
                 <field name="date"/>
                 <field name="partner_id" string="Vendor"/>
                 <field name="value"/>
@@ -280,13 +280,13 @@
             <search string="Asset Account">
                 <field name="name" string="Asset"/>
                 <field name="date"/>
-                <filter string="Current" domain="[('state','in', ('draft','open'))]" help="Assets in draft and open states"/>
-                <filter string="Closed" domain="[('state','=', 'close')]" help="Assets in closed state"/>
-                <field name="category_id"/>
+                <filter string="Current" name="current" domain="[('state','in', ('draft','open'))]" help="Assets in draft and open states"/>
+                <filter string="Closed" name="closed" domain="[('state','=', 'close')]" help="Assets in closed state"/>
+                <field name="category_id" string="Asset Category"/>
                 <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                 <group expand="0" string="Group By...">
-                        <filter string="Month" domain="[]" context="{'group_by':'date'}"/>
-                        <filter string="Category" domain="[]" context="{'group_by':'category_id'}"/>
+                        <filter string="Month" name="month" domain="[]" context="{'group_by':'date'}"/>
+                        <filter string="Asset Category" name="category" domain="[]" context="{'group_by':'category_id'}"/>
                 </group>
             </search>
         </field>

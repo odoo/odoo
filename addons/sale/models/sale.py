@@ -20,7 +20,7 @@ from odoo.addons import decimal_precision as dp
 class SaleOrder(models.Model):
     _name = "sale.order"
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
-    _description = "Sales Order"
+    _description = "Quotation"
     _order = 'date_order desc, id desc'
 
     @api.depends('order_line.price_total')
@@ -180,10 +180,6 @@ class SaleOrder(models.Model):
     @api.model
     def _get_customer_lead(self, product_tmpl_id):
         return False
-
-    @api.multi
-    def button_dummy(self):
-        return True
 
     @api.multi
     def unlink(self):
@@ -455,13 +451,13 @@ class SaleOrder(models.Model):
     @api.multi
     def action_draft(self):
         orders = self.filtered(lambda s: s.state in ['cancel', 'sent'])
-        orders.write({
+        return orders.write({
             'state': 'draft',
         })
 
     @api.multi
     def action_cancel(self):
-        self.write({'state': 'cancel'})
+        return self.write({'state': 'cancel'})
 
     @api.multi
     def action_quotation_send(self):
@@ -512,7 +508,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_done(self):
-        self.write({'state': 'done'})
+        return self.write({'state': 'done'})
 
     @api.multi
     def action_unlock(self):
@@ -697,6 +693,14 @@ class SaleOrderLine(models.Model):
                 'price_subtotal': taxes['total_excluded'],
             })
 
+    @api.depends('product_id', 'order_id.state', 'qty_invoiced', 'qty_delivered')
+    def _compute_product_updatable(self):
+        for line in self:
+            if line.state in ['done', 'cancel'] or (line.state == 'sale' and (line.qty_invoiced > 0 or line.qty_delivered > 0)):
+                line.product_updatable = False
+            else:
+                line.product_updatable = True
+
     @api.depends('product_id.invoice_policy', 'order_id.state')
     def _compute_qty_delivered_updateable(self):
         for line in self:
@@ -811,11 +815,7 @@ class SaleOrderLine(models.Model):
         orders = self.mapped('order_id')
         for order in orders:
             order_lines = self.filtered(lambda x: x.order_id == order)
-            msg = ""
-            if any([values['product_uom_qty'] < x.product_uom_qty for x in order_lines]):
-                msg += "<b>" + _(
-                    'The ordered quantity has been decreased. Do not forget to take it into account on your invoices and delivery orders.') + '</b>'
-            msg += "<ul>"
+            msg = "<b>The ordered quantity has been updated.</b><ul>"
             for line in order_lines:
                 msg += "<li> %s:" % (line.product_id.display_name,)
                 msg += "<br/>" + _("Ordered Quantity") + ": %s -> %s <br/>" % (
@@ -828,11 +828,8 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def write(self, values):
-        lines = False
         if 'product_uom_qty' in values:
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            lines = self.filtered(
-                lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
             self.filtered(
                 lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) != 0)._update_line_quantity(values)
         result = super(SaleOrderLine, self).write(values)
@@ -863,6 +860,7 @@ class SaleOrderLine(models.Model):
     discount = fields.Float(string='Discount (%)', digits=dp.get_precision('Discount'), default=0.0)
 
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], change_default=True, ondelete='restrict', required=True)
+    product_updatable = fields.Boolean(compute='_compute_product_updatable', string='Can Edit Product', readonly=True, default=True)
     product_uom_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
     product_uom = fields.Many2one('product.uom', string='Unit of Measure', required=True)
     # Non-stored related field to allow portal user to see the image of the product he has ordered
@@ -901,8 +899,8 @@ class SaleOrderLine(models.Model):
     amt_invoiced = fields.Monetary(string='Amount Invoiced', compute='_compute_invoice_amount', store=True)
 
     layout_category_id = fields.Many2one('sale.layout_category', string='Section')
-    layout_category_sequence = fields.Integer(related='layout_category_id.sequence', string='Layout Sequence', store=True)
-    #  Store is intentionally set in order to keep the "historic" order.
+    layout_category_sequence = fields.Integer(string='Layout Sequence')
+    # TODO: remove layout_category_sequence in master or make it work properly
 
     @api.multi
     def _prepare_invoice_line(self, qty):
@@ -975,7 +973,8 @@ class SaleOrderLine(models.Model):
             return price
         else:
             from_currency = self.order_id.company_id.currency_id
-            return from_currency.compute(product.lst_price, self.order_id.pricelist_id.currency_id)
+            product_price = product[pricelist_item.base] if (pricelist_item and pricelist_item.base != 'pricelist') else product.lst_price
+            return from_currency.compute(product_price, self.order_id.pricelist_id.currency_id)
 
     @api.multi
     @api.onchange('product_id')
@@ -1044,9 +1043,30 @@ class SaleOrderLine(models.Model):
             self.price_unit = self.env['account.tax']._fix_tax_included_price_company(self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)
 
     @api.multi
+    def name_get(self):
+        if self._context.get('sale_show_order_product_name'):
+            result = []
+            for so_line in self:
+                name = '%s - %s' % (so_line.order_id.name, so_line.product_id.name)
+                result.append((so_line.id, name))
+            return result
+        return super(SaleOrderLine, self).name_get()
+
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        if self._context.get('sale_show_order_product_name'):
+            if operator in ('ilike', 'like', '=', '=like', '=ilike'):
+                domain = expression.AND([
+                    args or [],
+                    ['|', ('order_id.name', operator, name), ('product_id.name', operator, name)]
+                ])
+                return self.search(domain, limit=limit).name_get()
+        return super(SaleOrderLine, self).name_search(name, args, operator, limit)
+
+    @api.multi
     def unlink(self):
         if self.filtered(lambda x: x.state in ('sale', 'done')):
-            raise UserError(_('You can not remove a sales order line.\nDiscard changes and try setting the quantity to 0.'))
+            raise UserError(_('You can not remove an order line once the sales order is confirmed.\nYou should rather set the quantity to 0.'))
         return super(SaleOrderLine, self).unlink()
 
     @api.multi

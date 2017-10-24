@@ -2,4 +2,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import stock_change_standard_price
-from . import wizard_valuation_history
+

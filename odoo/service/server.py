@@ -157,11 +157,10 @@ class FSWatcher(object):
 
 class CommonServer(object):
     def __init__(self, app):
-        # TODO Change the xmlrpc_* options to http_*
         self.app = app
         # config
-        self.interface = config['xmlrpc_interface'] or '0.0.0.0'
-        self.port = config['xmlrpc_port']
+        self.interface = config['http_interface'] or '0.0.0.0'
+        self.port = config['http_port']
         # runtime
         self.pid = os.getpid()
 
@@ -205,10 +204,14 @@ class ThreadedServer(CommonServer):
                 # logging.shutdown was already called at this point.
                 sys.stderr.write("Forced shutdown.\n")
                 os._exit(0)
+            # interrupt run() to start shutdown
+            raise KeyboardInterrupt()
         elif sig == signal.SIGHUP:
             # restart on kill -HUP
             odoo.phoenix = True
             self.quit_signals_received += 1
+            # interrupt run() to start shutdown
+            raise KeyboardInterrupt()
 
     def cron_thread(self, number):
         from odoo.addons.base.ir.ir_cron import ir_cron
@@ -272,7 +275,7 @@ class ThreadedServer(CommonServer):
             win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
 
         test_mode = config['test_enable'] or config['test_file']
-        if test_mode or (config['xmlrpc'] and not stop):
+        if test_mode or (config['http_enable'] and not stop):
             # some tests need the http deamon to be available...
             self.http_spawn()
 
@@ -322,7 +325,7 @@ class ThreadedServer(CommonServer):
         self.cron_spawn()
 
         # Wait for a first signal to be handled. (time.sleep will be interrupted
-        # by the signal handler.) The try/except is for the win32 case.
+        # by the signal handler)
         try:
             while self.quit_signals_received == 0:
                 time.sleep(60)
@@ -398,8 +401,8 @@ class PreforkServer(CommonServer):
     """
     def __init__(self, app):
         # config
-        self.address = config['xmlrpc'] and \
-            (config['xmlrpc_interface'] or '0.0.0.0', config['xmlrpc_port'])
+        self.address = config['http_enable'] and \
+            (config['http_interface'] or '0.0.0.0', config['http_port'])
         self.population = config['workers']
         self.timeout = config['limit_time_real']
         self.limit_request = config['limit_request']
@@ -533,7 +536,7 @@ class PreforkServer(CommonServer):
                 self.worker_kill(pid, signal.SIGKILL)
 
     def process_spawn(self):
-        if config['xmlrpc']:
+        if config['http_enable']:
             while len(self.workers_http) < self.population:
                 self.worker_spawn(WorkerHTTP, self.workers_http)
             if not self.long_polling_pid:
@@ -648,6 +651,7 @@ class Worker(object):
         self.multi = multi
         self.watchdog_time = time.time()
         self.watchdog_pipe = multi.pipe_new()
+        self.eintr_pipe = multi.pipe_new()
         # Can be set to None if no watchdog is desired.
         self.watchdog_timeout = multi.timeout
         self.ppid = os.getpid()
@@ -663,13 +667,16 @@ class Worker(object):
     def close(self):
         os.close(self.watchdog_pipe[0])
         os.close(self.watchdog_pipe[1])
+        os.close(self.eintr_pipe[0])
+        os.close(self.eintr_pipe[1])
 
     def signal_handler(self, sig, frame):
         self.alive = False
 
     def sleep(self):
         try:
-            select.select([self.multi.socket], [], [], self.multi.beat)
+            wakeup_fd = self.eintr_pipe[0]
+            select.select([self.multi.socket, wakeup_fd], [], [], self.multi.beat)
         except select.error as e:
             if e.args[0] not in [errno.EINTR]:
                 raise
@@ -723,6 +730,7 @@ class Worker(object):
         signal.signal(signal.SIGINT, self.signal_handler)
         signal.signal(signal.SIGTERM, signal.SIG_DFL)
         signal.signal(signal.SIGCHLD, signal.SIG_DFL)
+        signal.set_wakeup_fd(self.eintr_pipe[1])
 
     def stop(self):
         pass
@@ -791,7 +799,14 @@ class WorkerCron(Worker):
         # Really sleep once all the databases have been processed.
         if self.db_index == 0:
             interval = SLEEP_INTERVAL + self.pid % 10   # chorus effect
-            time.sleep(interval)
+
+            # simulate interruptible sleep with select(wakeup_fd, timeout)
+            try:
+                wakeup_fd = self.eintr_pipe[0]
+                select.select([wakeup_fd], [], [], interval)
+            except select.error as e:
+                if e.args[0] != errno.EINTR:
+                    raise
 
     def _db_list(self):
         if config['db_name']:
@@ -946,7 +961,10 @@ def start(preload=None, stop=False):
     """ Start the odoo http server and cron processor.
     """
     global server
+
     load_server_wide_modules()
+    odoo.service.wsgi_server._patch_xmlrpc_marshaller()
+
     if odoo.evented:
         server = GeventServer(odoo.service.wsgi_server.application)
     elif config['workers']:

@@ -55,3 +55,16 @@ class WebsiteSaleDelivery(WebsiteSale):
 
         values['delivery_action_id'] = request.env.ref('delivery.action_delivery_carrier_form').id
         return values
+
+    @http.route(['/shop/update_carrier'], type='json', auth='public', methods=['POST'], website=True, csrf=False)
+    def update_eshop_carrier(self, **post):
+        order = request.website.sale_get_order()
+        carrier_id = int(post['carrier_id'])
+        if order:
+            order._check_carrier_quotation(force_carrier_id=carrier_id)
+            return {'status': order.delivery_rating_success,
+                    'error_message': order.delivery_message,
+                    'carrier_id': carrier_id,
+                    'new_amount_delivery': order.delivery_price,
+                    'new_amount_untaxed': order.amount_untaxed,
+                    'new_amount_tax': order.amount_tax}

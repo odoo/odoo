@@ -27,6 +27,7 @@ class ResConfigSettings(models.TransientModel):
     cdn_url = fields.Char(related='website_id.cdn_url')
     cdn_filters = fields.Text(related='website_id.cdn_filters')
     module_website_version = fields.Boolean("A/B Testing")
+    module_website_links = fields.Boolean(string="Link Trackers")
 
     favicon = fields.Binary('Favicon', related='website_id.favicon')
     # Set as global config parameter since methods using it are not website-aware. To be changed
@@ -52,6 +53,13 @@ class ResConfigSettings(models.TransientModel):
         if not self.has_google_analytics_dashboard:
             self.google_management_client_id = False
             self.google_management_client_secret = False
+
+    @api.onchange('language_ids')
+    def _onchange_language_ids(self):
+        # If current default language is removed from language_ids
+        # update the default_lang_id
+        if self.language_ids and self.default_lang_id not in self.language_ids:
+            self.default_lang_id = self.language_ids[0]
 
     @api.depends('language_ids')
     def _compute_language_count(self):

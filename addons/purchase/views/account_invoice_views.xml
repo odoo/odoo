@@ -60,7 +60,7 @@
         <field name="arch" type="xml">
             <field name="reference" position="after" >
                  <field name="purchase_id" attrs="{'invisible': [('state', '=', 'purchase')]}" class="oe_edit_only" 
-                    options="{'no_create': True}"/>
+                    options="{'no_create': True}" context="{'show_total_amount': True}"/>
             </field>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='company_id']" position="after">
                 <field name="purchase_line_id" invisible="1" readonly="0"/>

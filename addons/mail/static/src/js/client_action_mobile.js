@@ -10,7 +10,7 @@ var session = require('web.session');
 
 var QWeb = core.qweb;
 
-if (!config.isMobile) {
+if (!config.device.isMobile) {
     return;
 }
 

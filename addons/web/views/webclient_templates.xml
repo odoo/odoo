@@ -123,6 +123,7 @@
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/kanban_dashboard.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/kanban_column_progressbar.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/kanban_view.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/kanban_view_mobile.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/web_calendar.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/search_view.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/search_view_extra.less"/>
@@ -156,6 +157,7 @@
         <script type="text/javascript" src="/web/static/src/js/services/crash_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/data_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/notification_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/auto_complete.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/change_password.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/debug_manager.js"></script>
@@ -214,6 +216,7 @@
         <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_controller.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_record.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_renderer.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_renderer_mobile.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_view.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/list/list_editable_renderer.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/list/list_renderer.js"></script>
@@ -249,7 +252,7 @@
             <head>
                 <meta charset="utf-8"/>
                 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
 
                 <title t-esc="title or 'Odoo'"/>
                 <link type="image/x-icon" rel="shortcut icon" t-att-href="x_icon or '/web/static/src/img/favicon.ico'"/>

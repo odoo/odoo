@@ -9708,7 +9708,7 @@ main.has_code_col article.doc-body {
 main.has_code_col article.doc-body > * {
   max-width: 100%;
 }
-main.has_code_col article.doc-body section {
+main.has_code_col article.doc-body > section {
   position: relative;
   display: block;
   float: left;
@@ -9730,62 +9730,57 @@ main.has_code_col article.doc-body section {
     top: 0;
     right: 0;
   }
-  main.has_code_col article.doc-body section > * {
+  main.has_code_col article.doc-body > section > * {
     width: 54.633333%;
     max-width: 600px;
     float: left;
     clear: left;
   }
-  main.has_code_col article.doc-body section > h1,
-  main.has_code_col article.doc-body section > h2,
-  main.has_code_col article.doc-body section > h3,
-  main.has_code_col article.doc-body section > h4,
-  main.has_code_col article.doc-body section > h5,
-  main.has_code_col article.doc-body section > h6 {
+  main.has_code_col article.doc-body > section > h1,
+  main.has_code_col article.doc-body > section > h2,
+  main.has_code_col article.doc-body > section > h3,
+  main.has_code_col article.doc-body > section > h4,
+  main.has_code_col article.doc-body > section > h5,
+  main.has_code_col article.doc-body > section > h6 {
     width: 100%;
     float: none;
     clear: none;
   }
-  main.has_code_col article.doc-body section .doc-aside {
+  main.has_code_col article.doc-body > section .doc-aside {
     width: 41%;
     float: none;
     clear: none;
     margin-right: 15px;
     margin-left: 57%;
   }
-  main.has_code_col article.doc-body section .doc-aside .content-switcher {
+  main.has_code_col article.doc-body > section .doc-aside .content-switcher {
     margin-top: 0;
   }
-  main.has_code_col article.doc-body section .doc-aside .content-switcher > ul {
+  main.has_code_col article.doc-body > section .doc-aside .content-switcher > ul {
     margin-bottom: 0;
   }
-  main.has_code_col article.doc-body section .doc-aside .content-switcher > ul > li {
+  main.has_code_col article.doc-body > section .doc-aside .content-switcher > ul > li {
     color: #dcddde;
   }
 }
+main.index .toctree-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+main.index .toctree-wrapper > .row {
+  flex: 1 0 100%;
+}
 @media screen and (min-width: 992px) {
-  main.index .toctree-wrapper {
-    position: relative;
+  main.index .toctree-wrapper > .row.tutorials,
+  main.index .toctree-wrapper .row.api {
+    flex: 0 0 50%;
+    display: flex;
+    flex-wrap: wrap;
   }
-  main.index .toctree-wrapper > .row:first-child > .col-md-3:nth-child(3),
-  main.index .toctree-wrapper > .row:first-child > .col-md-3:nth-child(5) {
-    margin-right: 50%;
-  }
-  main.index .toctree-wrapper .toc-single-entry {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 50%;
-    padding-right: 15px;
-  }
-  main.index .toctree-wrapper .toc-single-entry > .col-md-3 {
-    width: 100%;
-  }
-  main.index .toctree-wrapper .toc-single-entry > *[class^="col-"] {
-    padding-left: 0;
-  }
-  main.index .toctree-wrapper .toc-single-entry .card {
-    min-height: 420px;
+  main.index .toctree-wrapper > .row.tutorials > div,
+  main.index .toctree-wrapper .row.api > div {
+    flex: 0 0 50%;
   }
 }
 article.doc-toc .toctree-wrapper > ul > li > span {
@@ -11781,23 +11776,6 @@ main.index .card:hover .card-img span {
   -ms-transform: scale3d(1.02, 1.02, 1.02) translate3d(0, 0, 0);
   -o-transform: scale3d(1.02, 1.02, 1.02) translate3d(0, 0, 0);
   transform: scale3d(1.02, 1.02, 1.02) translate3d(0, 0, 0);
-}
-@media screen and (min-width: 992px) {
-  main.index .toc-single-entry .card figcaption {
-    font-size: 1.5em;
-    padding: 20px 15px;
-  }
-}
-@media screen and (min-width: 992px) {
-  main.index .col-md-6 .card,
-  main.index .col-md-4 .card {
-    min-height: 300px;
-  }
-  main.index .col-md-6 .card figcaption,
-  main.index .col-md-4 .card figcaption {
-    font-size: 1.5em;
-    padding: 20px 15px;
-  }
 }
 main.index.animating .card {
   -webkit-transform: scale3d(1, 1, 1) translate3d(0, 0, 0);

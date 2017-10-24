@@ -1,27 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_forum_doc
-#
+# 
 # Translators:
+# Bonny Useful <bonny.useful@gmail.com>, 2017
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
+# William Surya Permana <zarambie_game@yahoo.com>, 2017
+# Febrasari Almania <febrasari.almania@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Edy Kend <edy@azmall.co.id>, 2017
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-12-02 23:35+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
-"id/)\n"
-"Language: id\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2017\n"
+"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.forum_question_doc
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp;waktu;"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -73,7 +79,7 @@ msgstr "Klaim"
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_post_color
 msgid "Color Index"
-msgstr "urutan warna"
+msgstr "Indeks Warna"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_create_uid
@@ -95,7 +101,7 @@ msgstr "Manajemen Hubungan Pelanggan"
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_sale_customer
 msgid "Customers"
-msgstr "Customer"
+msgstr "Pelanggan"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.view_forum_post_kanban
@@ -147,7 +153,7 @@ msgstr ""
 #. module: website_forum_doc
 #: model:forum.documentation.stage,name:website_forum_doc.stage_draft
 msgid "Draft"
-msgstr "Konsep"
+msgstr "Draft"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.view_forum_post_kanban
@@ -160,7 +166,8 @@ msgid "Employee Contract"
 msgstr "Kontrak Karyawan"
 
 #. module: website_forum_doc
-#: constraint:forum.documentation.toc:0
+#: code:addons/website_forum_doc/models/forum_documentation_toc.py:38
+#, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr ""
 "Kesalahan\n"
@@ -236,19 +243,19 @@ msgstr "Pengantar"
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage___last_update
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc___last_update
 msgid "Last Modified on"
-msgstr "Terakhir Dimodifikasi pada"
+msgstr "Terakhir diubah pada"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_write_uid
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_write_uid
 msgid "Last Updated by"
-msgstr "Diperbaharui oleh"
+msgstr "Terakhir diperbarui oleh"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_write_date
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_write_date
 msgid "Last Updated on"
-msgstr "Diperbaharui pada"
+msgstr "Terakhir diperbarui pada"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_crm_lead
@@ -376,7 +383,7 @@ msgstr "Cari ..."
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_sequence
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_sequence
 msgid "Sequence"
-msgstr "Berurutan"
+msgstr "Urutan"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_name
@@ -407,8 +414,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum_doc.documentation_post
 msgid ""
 "This documentation page has been extracted\n"
-"                                        from the Q&amp;A section where you "
-"can\n"
+"                                        from the Q&amp;A section where you can\n"
 "                                        discuss it and get feedback."
 msgstr ""
 
@@ -470,12 +476,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum_doc.forum_question_doc
 msgid "official documentation"
 msgstr ""
-
-#~ msgid "Website meta description"
-#~ msgstr "Deskripsi meta situs web"
-
-#~ msgid "Website meta keywords"
-#~ msgstr "Situs meta kata kunci"
-
-#~ msgid "Website meta title"
-#~ msgstr "Judul meta situs"

@@ -225,6 +225,7 @@ class SaleOrder(models.Model):
                 'default_model': 'sale.order',
                 'default_use_template': bool(template_id),
                 'default_template_id': template_id,
+                'website_sale_send_recovery_email': True,
                 'active_ids': self.ids,
             },
         }
@@ -244,19 +245,3 @@ class SaleOrder(models.Model):
             self.payment_tx_id.state = 'done'
         else:
             raise ValidationError(_("The quote should be sent and the payment acquirer type should be manual or wire transfer"))
-
-
-class ResCountry(models.Model):
-    _inherit = 'res.country'
-
-    def get_website_sale_countries(self, mode='billing'):
-        return self.sudo().search([])
-
-    def get_website_sale_states(self, mode='billing'):
-        return self.sudo().state_ids
-
-
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
-
-    last_website_so_id = fields.Many2one('sale.order', string='Last Online Sales Order')

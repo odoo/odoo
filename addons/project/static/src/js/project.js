@@ -51,40 +51,58 @@ KanbanRecord.include({
         }
 
         function open_cover_images_dialog(attachment_ids) {
-            var coverID = self.record.displayed_image_id && self.record.displayed_image_id.raw_value[0];
+            self.imageUploadID = _.uniqueId('o_cover_image_upload');
+            self.image_only = true;  // prevent uploading of other file types
+            var coverID = self.record.displayed_image_id && self.record.displayed_image_id.raw_value;
             var $content = $(QWeb.render("project.SetCoverModal", {
                 cover_id: coverID,
                 attachment_ids: attachment_ids,
+                widget: self
             }));
-            var $imgs = $content.find('img');
+            var $imgs = $content.find('.o_kanban_task_cover_image');
             var dialog = new Dialog(self, {
                 title: _t("Set a Cover Image"),
-                buttons: [{text: _t("Select"), classes: 'btn-primary', close: true, disabled: !coverID, click: function () {
-                    var $img = $imgs.filter('.o_selected');
+                buttons: [{text: _t("Select"), classes: attachment_ids.length ? 'btn-primary' : 'hidden', close: true, disabled: !coverID, click: function () {
+                    var $img = $imgs.filter('.o_selected').find('img');
                     var data = {
                         id: $img.data('id'),
                         display_name: $img.data('name')
                     };
                     self._updateRecord({displayed_image_id: data});
-                }}, {text: _t("Remove Cover Image"), close: true, click: function () {
+                }}, {text: _t('Upload and Set'), classes: attachment_ids.length ? '' : 'btn-primary', close: false, click: function () {
+                    $content.find('input.o_input_file').click();
+                }}, {text: _t("Remove Cover Image"), classes: coverID ? '' : 'hidden', close: true, click: function () {
                     self._updateRecord({displayed_image_id: false});
                 }}, {text: _t("Discard"), close: true}],
                 $content: $content,
             });
             dialog.opened().then(function () {
                 var $selectBtn = dialog.$footer.find('.btn-primary');
-                $content.on('click', 'img', function (ev) {
+                $content.on('click', '.o_kanban_task_cover_image', function (ev) {
                     $imgs.not(ev.currentTarget).removeClass('o_selected');
                     $selectBtn.prop('disabled', !$(ev.currentTarget).toggleClass('o_selected').hasClass('o_selected'));
                 });
 
-                $content.on('dblclick', 'img', function (ev) {
-                    var $img  = $(ev.currentTarget);
+                $content.on('dblclick', '.o_kanban_task_cover_image', function (ev) {
+                    var $img  = $(ev.currentTarget).find('img');
                     var data = {
                         id: $img.data('id'),
                         display_name: $img.data('name')
                     };
                     self._updateRecord({displayed_image_id: data});
+                    dialog.close();
+                });
+                $content.on('change', 'input.o_input_file', function (event) {
+                    $content.find('form.o_form_binary_form').submit();
+                });
+                $(window).on(self.imageUploadID, function () {
+                    var images = Array.prototype.slice.call(arguments, 1);
+                    self._updateRecord({
+                        displayed_image_id: {
+                            id: images[0].id,
+                            display_name: images[0].filename
+                        }
+                    });
                     dialog.close();
                 });
             });

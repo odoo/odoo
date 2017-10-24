@@ -29,6 +29,7 @@ var KanbanModel = BasicModel.extend({
             fields: group.fields,
             fieldsInfo: group.fieldsInfo,
             viewType: group.viewType,
+            parentID: groupID,
         });
         group.data.unshift(new_record.id);
         group.res_ids.unshift(resId);
@@ -79,6 +80,11 @@ var KanbanModel = BasicModel.extend({
                     value: result,
                     viewType: parent.viewType,
                 });
+                if (parent.progressBar) {
+                    newGroup.progressBarValues = _.extend({
+                        counts: {},
+                    }, parent.progressBar);
+                }
 
                 // newGroup.is_open = true;
                 parent.data.push(newGroup.id);
@@ -123,6 +129,17 @@ var KanbanModel = BasicModel.extend({
         this.defaultGroupedBy = params.groupBy;
         params.groupedBy = (params.groupedBy && params.groupedBy.length) ? params.groupedBy : this.defaultGroupedBy;
         return this._super(params);
+    },
+    /**
+     * Opens a given group and loads its <limit> first records
+     *
+     * @param {string} groupID
+     * @returns {Deferred}
+     */
+    loadColumnRecords: function (groupID) {
+        var dataPoint = this.localData[groupID];
+        dataPoint.isOpen = true;
+        return this.reload(groupID);
     },
     /**
      * Load more records in a group.

@@ -124,8 +124,8 @@
                     <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
                     <filter string="Done" name="done" domain="[('state','=','done')]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Month" context="{'group_by': 'date'}"/>
-                        <filter string="Status" context="{'group_by': 'state'}"/>
+                        <filter string="Month" name="group_by_month" context="{'group_by': 'date'}"/>
+                        <filter string="Status" name="status" context="{'group_by': 'state'}"/>
                     </group>
                 </search>
             </field>
@@ -144,7 +144,7 @@
             </field>
         </record>
 
-        <menuitem action="action_stock_landed_cost" name="Landed Costs" parent="stock.menu_stock_inventory_control" id="menu_stock_landed_cost" sequence="99"/>
+        <menuitem action="action_stock_landed_cost" name="Landed Costs" parent="stock.menu_stock_warehouse_mgmt" id="menu_stock_landed_cost" sequence="115"/>
 
         <!-- STOCK.LANDED.COST.TYPE -->
         <record id="view_stock_landed_cost_type_form" model="ir.ui.view">
@@ -240,7 +240,7 @@
            <field name="act_window_id" ref="stock_landed_cost_type_action"/>
         </record>
 
-	<menuitem action="stock_landed_cost_type_action" name="Landed Cost Type" parent="stock.menu_warehouse_config" id="menu_stock_landed_cost_type" sequence="3"/>
+	<menuitem action="stock_landed_cost_type_action" name="Landed Cost Types" parent="stock.menu_product_in_config_stock" id="menu_stock_landed_cost_type" sequence="3"/>
 
     </data>
 </odoo>

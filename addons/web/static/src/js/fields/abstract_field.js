@@ -407,6 +407,7 @@ var AbstractField = Widget.extend({
             this._isValid = true;
         } catch (e) {
             this._isValid = false;
+            this.trigger_up('set_dirty', {dataPointID: this.dataPointID});
             return $.Deferred().reject();
         }
         if (!(options && options.forceChange) && this._isSameValue(value)) {
@@ -457,7 +458,7 @@ var AbstractField = Widget.extend({
                 this.trigger_up('navigation_move', {direction: 'next_line'});
                 break;
             case $.ui.keyCode.ESCAPE:
-                this.trigger_up('navigation_move', {direction: 'cancel'});
+                this.trigger_up('navigation_move', {direction: 'cancel', originalEvent: ev});
                 break;
             case $.ui.keyCode.UP:
                 ev.stopPropagation();

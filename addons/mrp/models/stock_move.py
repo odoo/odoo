@@ -20,20 +20,26 @@ class StockMoveLine(models.Model):
     def _get_similar_move_lines(self):
         lines = super(StockMoveLine, self)._get_similar_move_lines()
         if self.move_id.production_id:
-            lines |= self.move_id.production_id.move_finished_ids.mapped('move_line_ids').filtered(lambda l: l.lot_id)
+            finished_moves = self.move_id.production_id.move_finished_ids
+            finished_move_lines = finished_moves.mapped('move_line_ids')
+            lines |= finished_move_lines.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name))
         if self.move_id.raw_material_production_id:
-            lines |= self.move_id.raw_material_production_id.move_raw_ids.mapped('move_line_ids').filtered(lambda l: l.lot_id)
-        if self.workorder_id:
-            lines |= self.workorder_id.active_move_line_ids
+            raw_moves = self.move_id.raw_material_production_id.move_raw_ids
+            raw_moves_lines = raw_moves.mapped('move_line_ids')
+            raw_moves_lines |= self.move_id.active_move_line_ids
+            lines |= raw_moves_lines.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name))
         return lines
 
     @api.multi
     def write(self, vals):
-        if 'lot_id' in vals:
-            for movelot in self:
-                movelot.move_id.production_id.move_raw_ids.mapped('move_line_ids')\
-                    .filtered(lambda r: r.done_wo and not r.done_move and r.lot_produced_id == movelot.lot_id)\
+        for move_line in self:
+            if move_line.production_id and 'lot_id' in vals:
+                move_line.production_id.move_raw_ids.mapped('move_line_ids')\
+                    .filtered(lambda r: r.done_wo and not r.done_move and r.lot_produced_id == move_line.lot_id)\
                     .write({'lot_produced_id': vals['lot_id']})
+            production = move_line.move_id.production_id or move_line.move_id.raw_material_production_id
+            if production and move_line.state == 'done' and any(field in vals for field in ('lot_id', 'location_id', 'qty_done')):
+                move_line._log_message(production, move_line, 'mrp.track_production_move_template', vals)
         return super(StockMoveLine, self).write(vals)
 
 
@@ -61,7 +67,37 @@ class StockMove(models.Model):
         'Done', compute='_compute_is_done',
         store=True,
         help='Technical Field to order moves')
-    
+    needs_lots = fields.Boolean('Tracking', compute='_compute_needs_lots')
+    order_finished_lot_ids = fields.Many2many('stock.production.lot', compute='_compute_order_finished_lot_ids')
+    finished_lots_exist = fields.Boolean('Finished Lots Exist', compute='_compute_order_finished_lot_ids')
+
+    @api.depends('active_move_line_ids.qty_done', 'active_move_line_ids.product_uom_id')
+    def _compute_done_quantity(self):
+        super(StockMove, self)._compute_done_quantity()
+
+    @api.depends('raw_material_production_id.move_finished_ids.move_line_ids.lot_id')
+    def _compute_order_finished_lot_ids(self):
+        for move in self:
+            if move.raw_material_production_id.move_finished_ids:
+                finished_lots_ids = move.raw_material_production_id.move_finished_ids.mapped('move_line_ids.lot_id').ids
+                if finished_lots_ids:
+                    move.order_finished_lot_ids = finished_lots_ids
+                    move.finished_lots_exist = True
+                else:
+                    move.finished_lots_exist = False
+
+    @api.depends('product_id.tracking')
+    def _compute_needs_lots(self):
+        for move in self:
+            move.needs_lots = move.product_id.tracking != 'none'
+
+    @api.depends('raw_material_production_id.is_locked', 'picking_id.is_locked')
+    def _compute_is_locked(self):
+        super(StockMove, self)._compute_is_locked()
+        for move in self:
+            if move.raw_material_production_id:
+                move.is_locked = move.raw_material_production_id.is_locked
+
     def _get_move_lines(self):
         self.ensure_one()
         if self.raw_material_production_id:
@@ -74,6 +110,17 @@ class StockMove(models.Model):
         for move in self:
             move.is_done = (move.state in ('done', 'cancel'))
 
+    @api.model
+    def default_get(self, fields_list):
+        defaults = super(StockMove, self).default_get(fields_list)
+        if self.env.context.get('default_raw_material_production_id'):
+            production_id = self.env['mrp.production'].browse(self.env.context['default_raw_material_production_id'])
+            if production_id.state == 'done':
+                defaults['state'] = 'done'
+                defaults['product_uom_qty'] = 0.0
+                defaults['additional'] = True
+        return defaults
+
     def _action_assign(self):
         res = super(StockMove, self)._action_assign()
         for move in self.filtered(lambda x: x.production_id or x.raw_material_production_id):
@@ -83,48 +130,14 @@ class StockMove(models.Model):
         return res
 
     def _action_cancel(self):
-        if any(move.quantity_done for move in self): #TODO: either put in stock, or check there is a production order related to it
+        if any(move.quantity_done and (move.raw_material_production_id or move.production_id) for move in self):
             raise exceptions.UserError(_('You cannot cancel a manufacturing order if you have already consumed material.\
              If you want to cancel this MO, please change the consumed quantities to 0.'))
         return super(StockMove, self)._action_cancel()
 
-    @api.multi
-    # Could use split_move_operation from stock here
-    def split_move_lot(self):
-        ctx = dict(self.env.context)
-        self.ensure_one()
-        view = self.env.ref('mrp.view_stock_move_lots')
-        serial = (self.has_tracking == 'serial')
-        only_create = False  # Check operation type in theory
-        show_reserved = any([x for x in self.move_line_ids if x.product_qty > 0.0])
-        ctx.update({
-            'serial': serial,
-            'only_create': only_create,
-            'create_lots': True,
-            'state_done': self.is_done,
-            'show_reserved': show_reserved,
-        })
-        if ctx.get('w_production'):
-            action = self.env.ref('mrp.act_mrp_product_produce').read()[0]
-            action['context'] = ctx
-            return action
-        result = {
-            'name': _('Register Lots'),
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'stock.move',
-            'views': [(view.id, 'form')],
-            'view_id': view.id,
-            'target': 'new',
-            'res_id': self.id,
-            'context': ctx,
-        }
-        return result
-
     def _action_confirm(self, merge=True):
-        moves = self
-        for move in self.filtered(lambda m: m.production_id):
+        moves = self.env['stock.move']
+        for move in self:
             moves |= move.action_explode()
         # we go further with the list of ids potentially changed by action_explode
         return super(StockMove, moves)._action_confirm(merge=merge)
@@ -171,6 +184,38 @@ class StockMove(models.Model):
                 'name': self.name,
             })
         return self.env['stock.move']
+
+    def _generate_consumed_move_line(self, qty_to_add, final_lot, lot=False):
+        if lot:
+            ml = self.move_line_ids.filtered(lambda ml: ml.lot_id == lot and not ml.lot_produced_id)
+        else:
+            ml = self.move_line_ids.filtered(lambda ml: not ml.lot_id and not ml.lot_produced_id)
+        if ml:
+            new_quantity_done = (ml.qty_done + qty_to_add)
+            if new_quantity_done >= ml.product_uom_qty:
+                ml.write({'qty_done': new_quantity_done, 'lot_produced_id': final_lot.id})
+            else:
+                new_qty_reserved = ml.product_uom_qty - new_quantity_done
+                default = {'product_uom_qty': new_quantity_done,
+                           'qty_done': new_quantity_done,
+                           'lot_produced_id': final_lot.id}
+                ml.copy(default=default)
+                ml.with_context(bypass_reservation_update=True).write({'product_uom_qty': new_qty_reserved, 'qty_done': 0})
+        else:
+            vals = {
+                'move_id': self.id,
+                'product_id': self.product_id.id,
+                'location_id': self.location_id.id,
+                'location_dest_id': self.location_dest_id.id,
+                'product_uom_qty': 0,
+                'product_uom_id': self.product_uom.id,
+                'qty_done': qty_to_add,
+                'lot_produced_id': final_lot.id,
+            }
+            if lot:
+                vals.update({'lot_id': lot.id})
+            self.env['stock.move.line'].create(vals)
+
 
 class PushedFlow(models.Model):
     _inherit = "stock.location.path"

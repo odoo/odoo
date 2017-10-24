@@ -250,7 +250,7 @@ class TestSaleTimesheet(CommonTest):
         self.assertEqual(sale_order.invoice_status, 'no', 'Sale Timesheet: manually product should not need to be invoiced on so confirmation')
 
         # let's log some timesheets (on task and project)
-        self.env['account.analytic.line'].create({
+        timesheet1 = self.env['account.analytic.line'].create({
             'name': 'Test Line',
             'project_id': self.project_global.id,  # global project
             'task_id': so_line_manual_global_project.task_id.id,
@@ -258,13 +258,16 @@ class TestSaleTimesheet(CommonTest):
             'employee_id': self.employee_manager.id,
         })
 
-        self.env['account.analytic.line'].create({
+        timesheet2 = self.env['account.analytic.line'].create({
             'name': 'Test Line',
             'project_id': sale_order.project_project_id.id,  # global project
             'unit_amount': 3,
             'employee_id': self.employee_manager.id,
         })
 
+        self.assertEqual(so_line_manual_global_project.task_id.sale_line_id, so_line_manual_global_project, "Task from a milestone product should be linked to its SO line too")
+        self.assertEqual(timesheet1.timesheet_invoice_type, 'billable_fixed', "Milestone timesheet goes in billable fixed category")
+        self.assertTrue(float_is_zero(so_line_manual_global_project.qty_delivered, precision_digits=2), "Milestone Timesheeting should not incremented the delivered quantity on the SO line")
         self.assertEqual(so_line_manual_global_project.qty_to_invoice, 0.0, "Manual service should not be affected by timesheet on their created task.")
         self.assertEqual(so_line_manual_only_project.qty_to_invoice, 0.0, "Manual service should not be affected by timesheet on their created project.")
         self.assertEqual(sale_order.invoice_status, 'no', 'Sale Timesheet: "invoice on delivery" should not need to be invoiced on so confirmation')

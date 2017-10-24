@@ -100,7 +100,7 @@ function add_message (data, options) {
                         update_channel_unread_counter(channel, channel.unread_counter+1);
                     }
                     if (channel.is_chat && options.show_notification) {
-                        if (!client_action_open && !config.isMobile) {
+                        if (!client_action_open && !config.device.isMobile) {
                             // automatically open chat window
                             chat_manager.bus.trigger('open_chat', channel, { passively: true });
                         }
@@ -646,7 +646,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
 
     start: function () {
         this.is_ready = session.is_bound.then(function(){
-                var context = _.extend({isMobile: config.isMobile}, session.user_context);
+                var context = _.extend({isMobile: config.device.isMobile}, session.user_context);
                 return session.rpc('/mail/client_action', {context: context});
             }).then(this._onMailClientAction.bind(this));
 
@@ -1032,7 +1032,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
     create_channel: function (name, type) {
         var method = type === "dm" ? "channel_get" : "channel_create";
         var args = type === "dm" ? [[name]] : [name, type];
-        var context = _.extend({isMobile: config.isMobile}, session.user_context);
+        var context = _.extend({isMobile: config.device.isMobile}, session.user_context);
         return this._rpc({
                 model: 'mail.channel',
                 method: method,

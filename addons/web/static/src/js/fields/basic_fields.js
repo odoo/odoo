@@ -348,10 +348,53 @@ var FieldChar = InputField.extend(TranslatableFieldMixin, {
     },
 });
 
+
+var LinkButton = AbstractField.extend({
+    events: _.extend({}, AbstractField.prototype.events, {
+        'click': '_onClick'
+    }),
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Display button
+     * @override
+     * @private
+     */
+    _render: function () {
+        if (this.value) {
+            var className = this.attrs.icon || 'fa-globe';
+
+            this.$el.html("<span />");
+            this.$el.addClass("fa "+ className);
+            this.$el.attr('title', this.value);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Open link button
+     *
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onClick: function (event) {
+        event.stopPropagation();
+        window.open(this.value, '_blank');
+    },
+
+});
+
+
+
 var FieldDate = InputField.extend({
     className: "o_field_date",
     tagName: "span",
-    supportedFieldTypes: ['date'],
+    supportedFieldTypes: ['date', 'datetime'],
 
     /**
      * @override
@@ -410,12 +453,13 @@ var FieldDate = InputField.extend({
      * @override
      * @private
      * @param {Moment|false} value
+     * @returns {boolean}
      */
     _isSameValue: function (value) {
         if (value === false) {
             return this.value === false;
         }
-        return value.isSame(this.value);
+        return value.isSame(this.value, 'day');
     },
     /**
      * Instantiates a new DateWidget datepicker.
@@ -454,7 +498,16 @@ var FieldDateTime = FieldDate.extend({
         var value = this.datewidget.getValue();
         return value && value.add(-this.getSession().getTZOffset(value), 'minutes');
     },
-
+    /**
+     * @override
+     * @private
+     */
+    _isSameValue: function (value) {
+        if (value === false) {
+            return this.value === false;
+        }
+        return value.isSame(this.value);
+    },
     /**
      * Instantiates a new DateTimeWidget datepicker rather than DateWidget.
      *
@@ -923,7 +976,7 @@ var FieldPhone = FieldEmail.extend({
      * @override
      */
     getFocusableElement: function () {
-        if (this._canCall()) {
+        if (this.mode !== 'readonly' || this._canCall()) {
             return this._super.apply(this, arguments);
         }
         return $();
@@ -951,6 +1004,10 @@ var FieldPhone = FieldEmail.extend({
         } else {
             this.$el.removeClass('o_form_uri');
         }
+        // This class should technically be there in case of a very very long
+        // phone number, but it breaks the o_row mechanism, which is more
+        // important right now.
+        this.$el.removeClass('o_text_overflow');
     },
 
     /**
@@ -1006,7 +1063,7 @@ var UrlWidget = InputField.extend({
      * @private
      */
     _renderReadonly: function () {
-        this.$el.text(this.value)
+        this.$el.text(this.attrs.text || this.value)
             .addClass('o_form_uri o_text_overflow')
             .attr('href', this.value);
     }
@@ -1124,7 +1181,6 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
     supportedFieldTypes: ['binary'],
     _render: function () {
         var self = this;
-        var attrs = this.attrs;
         var url = this.placeholder;
         if (this.value) {
             if (!utils.is_bin_size(this.value)) {
@@ -1139,11 +1195,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
                 });
             }
         }
-        var $img = $('<img>').attr('src', url);
-        $img.css({
-            width: this.nodeOptions.size ? this.nodeOptions.size[0] : attrs.img_width || attrs.width,
-            height: this.nodeOptions.size ? this.nodeOptions.size[1] : attrs.img_height || attrs.height,
-        });
+        var $img = $(qweb.render("FieldBinaryImage-img", {widget: this, url: url}));
         this.$('> img').remove();
         this.$el.prepend($img);
         $img.on('error', function () {
@@ -2128,6 +2180,15 @@ var FieldDomain = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * A domain field is always set since the false value is considered to be
+     * equal to "[]" (match all records).
+     *
+     * @override
+     */
+    isSet: function () {
+        return true;
+    },
+    /**
      * @override isValid from AbstractField.isValid
      * Parsing the char value is not enough for this field. It is considered
      * valid if the internal domain selector was built correctly and that the
@@ -2451,6 +2512,7 @@ return {
     FieldBooleanButton: FieldBooleanButton,
     BooleanToggle: BooleanToggle,
     FieldChar: FieldChar,
+    LinkButton: LinkButton,
     FieldDate: FieldDate,
     FieldDateTime: FieldDateTime,
     FieldDomain: FieldDomain,

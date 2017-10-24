@@ -112,8 +112,11 @@ class AssetsBundle(object):
                     if self.css_errors:
                         msg = '\n'.join(self.css_errors)
                         response.append(JavascriptAsset(self, inline=self.dialog_message(msg)).to_html())
-                for style in self.stylesheets:
-                    response.append(style.to_html())
+                        response.append(StylesheetAsset(self, url="/web/static/lib/bootstrap/css/bootstrap.css").to_html())
+                if not self.css_errors:
+                    for style in self.stylesheets:
+                        response.append(style.to_html())
+
             if js:
                 for jscript in self.javascripts:
                     response.append(jscript.to_html())
@@ -400,7 +403,7 @@ class AssetsBundle(object):
             return ''
         result = compiler.communicate(input=source.encode('utf-8'))
         if compiler.returncode:
-            cmd_output = ''.join(result)
+            cmd_output = ''.join(misc.ustr(result))
             if not cmd_output:
                 cmd_output = "Process exited with return code %d\n" % compiler.returncode
             error = self.get_preprocessor_error(cmd_output, source=source)

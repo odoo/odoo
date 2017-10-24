@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Add action entry in the Action Menu for Partners -->
+    <record id="partner_form_send_sms_form_view" model="ir.ui.view">
+        <field name="name">res.partner.form.send.sms</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='phone']" position="replace">
+                <label for="phone"/>
+                <div class="o_row">
+                    <field name="phone" widget="phone"/>
+                    <button
+                        type="action"
+                        name="%(sms.send_sms_form_action)d"
+                        class="btn-xs btn-link mb4 fa fa-envelope-o"
+                        attrs="{'invisible':[('phone', '=', False)]}"
+                        context="{'field_name': 'phone'}"
+                    />
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='mobile']" position="replace">
+                <label for="mobile"/>
+                <div class="o_row">
+                    <field name="mobile" widget="phone"/>
+                    <button
+                        type="action"
+                        name="%(sms.send_sms_form_action)d"
+                        class="btn-xs btn-link mb4 fa fa-envelope-o"
+                        attrs="{'invisible':[('mobile', '=', False)]}"
+                        context="{'field_name': 'mobile'}"
+                        />
+                    </div>
+                </xpath>
+        </field>
+    </record>
+
+</odoo>

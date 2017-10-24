@@ -370,19 +370,19 @@
                     <filter string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
                     <filter name="confirm" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
                     <separator/>
-                    <filter string="My Events" help="My Events" domain="[('user_id','=',uid)]"/>
+                    <filter string="My Events" name="myevents" help="My Events" domain="[('user_id','=',uid)]"/>
                     <separator/>
-                    <filter string="Upcoming" name="upcoming"
-                        domain="['&amp;', ('state', '!=', 'cancel'), ('date_begin','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Upcoming events from today" />
+                    <filter string="Upcoming/Running" name="upcoming"
+                        domain="['&amp;', ('state', '!=', 'cancel'), ('date_end','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Upcoming events from today" />
                     <field name="event_type_id"/>
                     <field name="user_id"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Responsible" context="{'group_by': 'user_id'}"/>
-                        <filter string="Event Category" context="{'group_by':'event_type_id'}"/>
-                        <filter string="Status" context="{'group_by':'state'}"/>
-                        <filter string="Start Month" domain="[]" context="{'group_by':'date_begin'}"/>
+                        <filter string="Responsible" name="responsible" context="{'group_by': 'user_id'}"/>
+                        <filter string="Event Category" name="event_type_id" context="{'group_by':'event_type_id'}"/>
+                        <filter string="Status" name="status" context="{'group_by':'state'}"/>
+                        <filter string="Start Month" name="date_begin" domain="[]" context="{'group_by':'date_begin'}"/>
                     </group>
                 </search>
             </field>
@@ -534,11 +534,11 @@
                     <field name="event_id"/>
                     <field name="partner_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Event" name="group_event" domain="[]" context="{'group_by':'event_id'}"/>
-                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Registration Day" domain="[]" context="{'group_by': 'create_date:day'}"/>
-                        <filter string="Registration Month" domain="[]" context="{'group_by': 'create_date:month'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Registration Day" name="createday" domain="[]" context="{'group_by': 'create_date:day'}"/>
+                        <filter string="Registration Month" name="createmonth" domain="[]" context="{'group_by': 'create_date:month'}"/>
                    </group>
                 </search>
             </field>

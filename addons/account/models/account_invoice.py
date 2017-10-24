@@ -711,7 +711,7 @@ class AccountInvoice(models.Model):
             if tax_line.amount_rounding != 0.0:
                 tax_line.amount_rounding = 0.0
 
-        if self.cash_rounding_id:
+        if self.cash_rounding_id and self.type in ('out_invoice', 'out_refund'):
             rounding_amount = self.cash_rounding_id.compute_difference(self.currency_id, self.amount_total)
             if not self.currency_id.is_zero(rounding_amount):
                 if self.cash_rounding_id.strategy == 'biggest_tax':
@@ -1069,6 +1069,8 @@ class AccountInvoice(models.Model):
 
             if not inv.date_invoice:
                 inv.with_context(ctx).write({'date_invoice': fields.Date.context_today(self)})
+            if not inv.date_due:
+                inv.with_context(ctx).write({'date_due': inv.date_invoice})
             company_currency = inv.company_id.currency_id
 
             # create move lines (one per invoice line + eventual taxes and analytic lines)
@@ -1586,6 +1588,9 @@ class AccountInvoiceLine(models.Model):
                 self.price_unit = 0.0
             domain['uom_id'] = []
         else:
+            # Use the purchase uom by default
+            self.uom_id = self.product_id.uom_po_id
+
             if part.lang:
                 product = self.product_id.with_context(lang=part.lang)
             else:
@@ -1690,7 +1695,7 @@ class AccountInvoiceTax(models.Model):
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic account')
     amount = fields.Monetary()
     amount_rounding = fields.Monetary()
-    amount_total = fields.Monetary(compute='_compute_amount_total')
+    amount_total = fields.Monetary(string="Amount", compute='_compute_amount_total')
     manual = fields.Boolean(default=True)
     sequence = fields.Integer(help="Gives the sequence order when displaying a list of invoice tax.")
     company_id = fields.Many2one('res.company', string='Company', related='account_id.company_id', store=True, readonly=True)

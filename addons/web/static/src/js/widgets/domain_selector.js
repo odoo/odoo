@@ -636,7 +636,7 @@ var DomainLeaf = DomainNode.extend({
                 // Set list of values according to field type
                 this.selectionChoices = null;
                 if (selectedField.type === "boolean") {
-                    this.selectionChoices = [["1", "set (true)"], ["0", "not set (false)"]];
+                    this.selectionChoices = [["1", _t("set (true)")], ["0", _t("not set (false)")]];
                 } else if (selectedField.type === "selection") {
                     this.selectionChoices = selectedField.selection;
                 }
@@ -805,7 +805,7 @@ var DomainLeaf = DomainNode.extend({
             if (_.isBoolean(this.value)) {
                 this.value = "";
             } else if (_.isObject(this.value) && !_.isArray(this.value)) { // Can be object if parsed to x2x representation
-                this.value = this.value.id || "";
+                this.value = this.value.id || value || "";
             }
         }
 

@@ -7,6 +7,10 @@ from odoo.http import request
 
 
 class WebsiteHrRecruitment(http.Controller):
+    def sitemap_jobs(env, rule, qs):
+        if not qs or qs.lower() in '/jobs':
+            yield {'loc': '/jobs'}
+
     @http.route([
         '/jobs',
         '/jobs/country/<model("res.country"):country>',
@@ -16,7 +20,7 @@ class WebsiteHrRecruitment(http.Controller):
         '/jobs/country/<model("res.country"):country>/office/<int:office_id>',
         '/jobs/department/<model("hr.department"):department>/office/<int:office_id>',
         '/jobs/country/<model("res.country"):country>/department/<model("hr.department"):department>/office/<int:office_id>',
-    ], type='http', auth="public", website=True)
+    ], type='http', auth="public", website=True, sitemap=sitemap_jobs)
     def jobs(self, country=None, department=None, office_id=None, **kwargs):
         env = request.env(context=dict(request.env.context, show_address=True, no_tag_br=True))
 

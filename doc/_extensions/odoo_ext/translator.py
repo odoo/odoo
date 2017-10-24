@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
+
 import os.path
 import posixpath
 import re
@@ -114,7 +116,7 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         return u''.join(self.body)
 
     def unknown_visit(self, node):
-        print "unknown node", node.__class__.__name__
+        print("unknown node", node.__class__.__name__)
         self.body.append(u'[UNKNOWN NODE {}]'.format(node.__class__.__name__))
         raise nodes.SkipNode
 
@@ -141,6 +143,11 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         # close last section of document
         if not self.section_level:
             self.body.append(u'</section>')
+
+    def visit_topic(self, node):
+        self.body.append(self.starttag(node, 'nav'))
+    def depart_topic(self, node):
+        self.body.append(u'</nav>')
 
     def is_compact_paragraph(self, node):
         parent = node.parent

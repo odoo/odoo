@@ -208,8 +208,8 @@ tour.register('main_flow_tour', {
     position: 'left',
     run: 'text "service"',
 }, {
-    trigger: '.o_notebook a:contains("Invoicing")',
-    content: _t('Go to invoicing tab'),
+    trigger: '.o_notebook a:contains("Sales")',
+    content: _t('Go to sales tab'),
     position: 'bottom',
 }, {
     trigger: '.o_field_widget[name=service_policy] .o_radio_input[data-value="delivered_timesheet"]',
@@ -367,8 +367,8 @@ tour.register('main_flow_tour', {
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: ".o_menu_sections a:contains('Inventory Control')",
-    content: _t("Go to Inventory Control"),
+    trigger: ".o_menu_sections a:contains('Master Data')",
+    content: _t("Go to Master Data"),
     position: "bottom"
 }, {
     trigger: ".o_menu_sections a[data-menu-xmlid='stock.menu_reordering_rules_config'], .oe_secondary_submenu a[data-menu-xmlid='stock.menu_reordering_rules_config']",

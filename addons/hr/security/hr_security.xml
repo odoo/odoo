@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="base.group_user" model="res.groups">
-        <field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>
-    </record>
-
     <record id="group_hr_user" model="res.groups">
         <field name="name">Officer</field>
         <field name="category_id" ref="base.module_category_human_resources"/>

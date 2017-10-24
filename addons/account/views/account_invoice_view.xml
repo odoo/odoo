@@ -294,9 +294,9 @@
                                                 <field name="manual" invisible="1"/>
                                                 <field name="account_id" groups="account.group_account_user"/>
                                                 <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
-                                                <field name="amount" invisible="1"/>
+                                                <field name="amount"/>
                                                 <field name="amount_rounding" invisible="1"/>
-                                                <field name="amount_total"/>
+                                                <field name="amount_total" invisible="1"/>
                                                 <field name="currency_id" invisible="1"/>
                                             </tree>
                                         </field>
@@ -322,7 +322,7 @@
                                     <field name="journal_id" groups="account.group_account_user" options="{'no_create': True}"
                                         attrs="{'readonly':[('move_name','!=',False)]}"/>
                                     <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" invisible="1"/>
-                                    <field name="user_id" string="Responsible"/>
+                                    <field name="user_id" string="Purchase Representative"/>
                                     <field domain="[('company_id', '=', company_id), ('internal_type', '=', 'payable'), ('deprecated', '=', False)]"
                                 name="account_id" groups="account.group_account_user"/>
                                     <field name="payment_term_id" options="{'no_create': True}"/>
@@ -538,7 +538,7 @@
                     <field name="user_id" string="Salesperson" domain="[('share','=', False)]"/>
                     <field name="date" string="Period"/>
                     <separator/>
-                    <filter domain="[('user_id','=',uid)]" help="My Invoices"/>
+                    <filter domain="[('user_id','=',uid)]" name="myinvoices" help="My Invoices"/>
                     <separator/>
                     <filter string="My Activities" name="activities_my"
                         domain="[('activity_ids.user_id', '=', uid)]"/>
@@ -553,11 +553,11 @@
                         ]"/>
                     <group expand="0" string="Group By">
                         <filter name="group_by_partner_id" string="Partner" context="{'group_by':'commercial_partner_id'}"/>
-                        <filter string="Salesperson" context="{'group_by':'user_id'}"/>
+                        <filter string="Salesperson" name="salesperson" context="{'group_by':'user_id'}"/>
                         <filter name="status" string="Status" context="{'group_by':'state'}"/>
                         <separator/>
-                        <filter string="Invoice Date" context="{'group_by':'date_invoice'}"/>
-                        <filter string="Due Date" context="{'group_by':'date_due'}"/>
+                        <filter string="Invoice Date" name="invoicedate" context="{'group_by':'date_invoice'}"/>
+                        <filter string="Due Date" name="duedate" context="{'group_by':'date_due'}"/>
                     </group>
                </search>
             </field>

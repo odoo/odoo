@@ -3,6 +3,7 @@
 
 from odoo import http, _
 from odoo.http import request
+from odoo.osv import expression
 
 from odoo.tools import float_round
 
@@ -11,6 +12,7 @@ class SaleTimesheetController(http.Controller):
 
     @http.route('/timesheet/plan', type='json', auth="user")
     def plan(self, domain):
+        domain = expression.AND([domain, [('project_id', '!=', False)]])  # force timesheet and not AAL
         values = self._prepare_plan_values(domain)
         view = request.env.ref('sale_timesheet.timesheet_plan')
         return {
@@ -19,17 +21,12 @@ class SaleTimesheetController(http.Controller):
 
     def _prepare_plan_values(self, domain):
 
-        def float_to_time(hour_number):
-            hours, minutes = divmod(hour_number * 60, 60)
-            return _('%sh%s') % (hours, '%02d' % minutes)
-
         timesheet_lines = request.env['account.analytic.line'].search(domain)
 
         values = {
             'currency': request.env.user.company_id.currency_id,
             'timesheet_lines': timesheet_lines,
             'domain': domain,
-            'float_to_time': float_to_time,
         }
         hour_rounding = request.env.ref('product.product_uom_hour').rounding
         billable_types = ['non_billable', 'non_billable_project', 'billable_time', 'billable_fixed']
@@ -58,12 +55,14 @@ class SaleTimesheetController(http.Controller):
             dashboard_values['hours'][billable_type] = float_round(data.get('unit_amount'), precision_rounding=hour_rounding)
             dashboard_values['hours']['total'] += float_round(data.get('unit_amount'), precision_rounding=hour_rounding)
             # rates
-            dashboard_values['rates'][billable_type] = float_round(data.get('unit_amount') / dashboard_total_hours * 100, precision_rounding=hour_rounding)
-            dashboard_values['rates']['total'] += float_round(data.get('unit_amount') / dashboard_total_hours * 100, precision_rounding=hour_rounding)
+            dashboard_values['rates'][billable_type] = round(data.get('unit_amount') / dashboard_total_hours * 100, 2)
+            dashboard_values['rates']['total'] += round(data.get('unit_amount') / dashboard_total_hours * 100, 2)
 
         # money_amount
-        dashboard_values['money_amount']['invoiced'] = sum(values['timesheet_lines'].filtered(lambda l: l.timesheet_invoice_id).mapped('timesheet_revenue'))
-        dashboard_values['money_amount']['to_invoice'] = sum(values['timesheet_lines'].filtered(lambda l: not l.timesheet_invoice_id).mapped('timesheet_revenue'))
+        so_lines = values['timesheet_lines'].mapped('so_line')
+        invoice_lines = so_lines.mapped('invoice_lines')
+        dashboard_values['money_amount']['invoiced'] = sum([inv_line.price_unit * inv_line.quantity for inv_line in invoice_lines.filtered(lambda line: line.invoice_id.state in ['open', 'paid'])])
+        dashboard_values['money_amount']['to_invoice'] = sum([sol.price_unit * sol.qty_to_invoice for sol in so_lines]) + sum([i.price_unit * i.quantity for i in invoice_lines.filtered(lambda line: line.invoice_id.state == 'draft')])
         dashboard_values['money_amount']['cost'] = sum(values['timesheet_lines'].mapped('amount'))
         dashboard_values['money_amount']['total'] = sum([dashboard_values['money_amount'][item] for item in dashboard_values['money_amount'].keys()])
 

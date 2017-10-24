@@ -23,7 +23,7 @@ var UserMenu = Widget.extend({
     start: function () {
         var self = this;
         var session = this.getSession();
-        this.$el.on('click', '.dropdown-menu li a[data-menu]', function (ev) {
+        this.$el.on('click', 'li a[data-menu]', function (ev) {
             ev.preventDefault();
             var menu = $(this).data('menu');
             self['_onMenu' + menu.charAt(0).toUpperCase() + menu.slice(1)]();

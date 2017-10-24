@@ -903,12 +903,15 @@ class WizardMultiChartsAccounts(models.TransientModel):
         # Install all the templates objects and generate the real objects
         acc_template_ref, taxes_ref = self.chart_template_id._install_template(company, code_digits=self.code_digits, transfer_account_id=self.transfer_account_id)
 
-        # write values of default taxes for product as super user
+        # write values of default taxes for product as super user and write in the config
         IrDefault = self.env['ir.default']
+        IrConfig = self.env['ir.config_parameter']
         if self.sale_tax_id and taxes_ref:
             IrDefault.sudo().set('product.template', "taxes_id", [taxes_ref[self.sale_tax_id.id]], company_id=company.id)
+            IrConfig.sudo().set_param("account.default_sale_tax_id", taxes_ref[self.sale_tax_id.id])
         if self.purchase_tax_id and taxes_ref:
             IrDefault.sudo().set('product.template', "supplier_taxes_id", [taxes_ref[self.purchase_tax_id.id]], company_id=company.id)
+            IrConfig.sudo().set_param("account.default_purchase_tax_id", taxes_ref[self.purchase_tax_id.id])
 
         # Create Bank journals
         self._create_bank_journals_from_o2m(company, acc_template_ref)

@@ -110,6 +110,14 @@ var MockServer = Class.extend({
                 console.log('%c[rpc] response' + route, 'color: blue; font-weight: bold;', JSON.parse(resultString));
             }
             return JSON.parse(resultString);
+        }).fail(function (result) {
+            var errorString = JSON.stringify(result || false);
+            if (logLevel === 1) {
+                console.log('Mock: (ERROR)' + route, JSON.parse(errorString));
+            } else if (logLevel === 2) {
+                console.log('%c[rpc] response (error) ' + route, 'color: orange; font-weight: bold;', JSON.parse(errorString));
+            }
+            return JSON.parse(errorString);
         });
     },
 
@@ -234,7 +242,7 @@ var MockServer = Class.extend({
                     var pyevalContext = window.py.dict.fromJSON(context || {});
                     var v = pyeval.py_eval(node.attrs[a], {context: pyevalContext}) ? true: false;
                     if (inTreeView && a === 'invisible') {
-                        modifiers['tree_invisible'] = v;
+                        modifiers['column_invisible'] = v;
                     } else if (v || !(a in modifiers) || !_.isArray(modifiers[a])) {
                         modifiers[a] = v;
                     }

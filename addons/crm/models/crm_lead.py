@@ -106,7 +106,7 @@ class Lead(models.Model):
 
     # Only used for type opportunity
     probability = fields.Float('Probability', group_operator="avg", default=lambda self: self._default_probability())
-    planned_revenue = fields.Float('Expected Revenue', track_visibility='always')
+    planned_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', track_visibility='always')
     date_deadline = fields.Date('Expected Closing', help="Estimate of the date on which the opportunity will be won.")
     color = fields.Integer('Color Index', default=0)
     partner_address_name = fields.Char('Partner Contact Name', related='partner_id.name', readonly=True)
@@ -266,6 +266,14 @@ class Lead(models.Model):
     # ----------------------------------------
     # ORM override (CRUD, fields_view_get, ...)
     # ----------------------------------------
+
+    @api.model
+    def name_create(self, name):
+        res = super(Lead, self).name_create(name)
+
+        # update the probability of the lead if the stage is set to update it automatically
+        self.browse(res[0])._onchange_stage_id()
+        return res
 
     @api.model
     def create(self, vals):

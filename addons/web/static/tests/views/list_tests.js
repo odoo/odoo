@@ -2390,6 +2390,8 @@ QUnit.module('Views', {
             model: 'foo',
             data: this.data,
             arch: '<tree editable="bottom">' +
+                    // Adding a button column makes conversions between column and field position trickier
+                    '<button name="kikou" string="Kikou" type="object"/>' +
                     '<field name="foo"/>' +
                     '<button name="kikou" string="Kikou" type="object"/>' +
                     '<field name="int_field"/>' +
@@ -2397,7 +2399,7 @@ QUnit.module('Views', {
             res_id: 1,
         });
 
-        list.$('tbody tr:eq(2) td:eq(1)').click();
+        list.$('tbody tr:eq(2) td:eq(2)').click();
         assert.strictEqual(list.$('tbody tr:eq(2) input[name="foo"]')[0], document.activeElement,
             "foo should be focused");
         list.$('tbody tr:eq(2) input[name="foo"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));

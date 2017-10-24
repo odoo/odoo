@@ -279,6 +279,9 @@ class IrAttachment(models.Model):
     url = fields.Char('Url', index=True, size=1024)
     public = fields.Boolean('Is public document')
 
+    # for external access
+    access_token = fields.Char('Access Token')
+
     # the field 'datas' is computed and may use the other fields below
     datas = fields.Binary(string='File Content', compute='_compute_datas', inverse='_inverse_datas')
     db_datas = fields.Binary('Database Data')

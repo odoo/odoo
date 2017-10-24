@@ -46,7 +46,7 @@ class PosConfig(models.Model):
         return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.user.company_id.id)], limit=1)
 
     def _default_pricelist(self):
-        return self.env['product.pricelist'].search([], limit=1)
+        return self.env['product.pricelist'].search([('currency_id', '=', self.env.user.company_id.currency_id.id)], limit=1)
 
     def _get_default_location(self):
         return self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
@@ -327,6 +327,9 @@ class PosConfig(models.Model):
 
     @api.model
     def create(self, values):
+        if values.get('is_posbox') and values.get('iface_customer_facing_display'):
+            if values.get('customer_facing_display_html') and not values['customer_facing_display_html'].strip():
+                values['customer_facing_display_html'] = self._compute_default_customer_html()
         IrSequence = self.env['ir.sequence'].sudo()
         val = {
             'name': _('POS Order %s') % values['name'],
@@ -348,6 +351,10 @@ class PosConfig(models.Model):
 
     @api.multi
     def write(self, vals):
+        if (self.is_posbox or vals.get('is_posbox')) and (self.iface_customer_facing_display or vals.get('iface_customer_facing_display')):
+            facing_display = (self.customer_facing_display_html or vals.get('customer_facing_display_html') or '').strip()
+            if not facing_display:
+                vals['customer_facing_display_html'] = self._compute_default_customer_html()
         result = super(PosConfig, self).write(vals)
         self.sudo()._set_fiscal_position()
         self.sudo()._check_modules_to_install()

@@ -5,6 +5,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var framework = require('web.framework');
 var Sidebar = require('web.Sidebar');
+var field_utils = require('web.field_utils');
 
 var _t = core._t;
 
@@ -61,6 +62,7 @@ Sidebar.include({
      */
     _processAttachments: function (attachments) {
         //to display number in name if more then one attachment which has same name.
+        var self = this;
         _.chain(attachments)
             .groupBy(function (attachment) { return attachment.name; })
             .each(function (attachment) {
@@ -75,6 +77,10 @@ Sidebar.include({
             if (a.type === "binary") {
                 a.url = '/web/content/'  + a.id + '?download=true';
             }
+            a.create_date = field_utils.parse.datetime(a.create_date, 'create_date', {isUTC: true});
+            a.create_date_string = field_utils.format.datetime(a.create_date, 'create_date', self.env.context.params);
+            a.write_date = field_utils.parse.datetime(a.write_date, 'write_date', {isUTC: true});
+            a.write_date_string = field_utils.format.datetime(a.write_date, 'write_date', self.env.context.params);
         });
         this.items.files = attachments;
     },

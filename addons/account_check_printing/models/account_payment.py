@@ -54,7 +54,7 @@ class AccountPayment(models.Model):
         if self.journal_id.check_manual_sequencing:
             self.check_number = self.journal_id.check_sequence_id.number_next_actual
 
-    @api.onchange('amount')
+    @api.onchange('amount','currency_id')
     def _onchange_amount(self):
         res = super(AccountPayment, self)._onchange_amount()
         self.check_amount_in_words = self.currency_id.amount_to_text(self.amount)

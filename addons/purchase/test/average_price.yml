@@ -41,7 +41,7 @@
 -
   !python {model: purchase.order, id: purchase_order_average1}: |
     picking = self.picking_ids[0]
-    self.env['stock.immediate.transfer'].create({'pick_id': picking.id}).process()
+    self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
 - 
   Check the average price of the product (average icecream).
 - 
@@ -70,7 +70,7 @@
 - 
   !python {model: purchase.order, id: purchase_order_average2}: |
     picking = self.picking_ids[0]
-    self.env['stock.immediate.transfer'].create({'pick_id': picking.id}).process()
+    self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
 - 
   Check the standard price
 - 
@@ -96,7 +96,7 @@
 - 
   !python {model: stock.picking, id: outgoing_average_shipment}: |
     self.action_assign()
-    self.env['stock.immediate.transfer'].create({'pick_id': self.id}).process()
+    self.env['stock.immediate.transfer'].create({'pick_ids': [(4, self.id)]}).process()
 - 
   Check the standard price (60 * 10 + 30 * 80) / 40 = 75.0 did not change
 - 
@@ -125,7 +125,7 @@
 - 
   !python {model: purchase.order, id: purchase_order_average3}: |
     picking = self.picking_ids[0]
-    self.env['stock.immediate.transfer'].create({'pick_id': picking.id}).process()
+    self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
 - 
   Check price is (75.0*20 + 200*0.5) / 20.5 = 78.04878
 - 

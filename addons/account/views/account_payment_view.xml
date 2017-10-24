@@ -92,21 +92,21 @@
                     <field name="partner_id" />
                     <field name="journal_id" />
                     <field name="company_id" groups="base.group_multi_company" />
-                    <filter string="Payable" domain="[('payment_type','=','outbound')]"/>
-                    <filter string="Receivable" domain="[('payment_type','=','inbound')]"/>
-                    <filter string="Transfers" domain="[('payment_type','=','transfer')]"/>
+                    <filter string="Payable" name="payable" domain="[('payment_type','=','outbound')]"/>
+                    <filter string="Receivable" name="receivable" domain="[('payment_type','=','inbound')]"/>
+                    <filter string="Transfers" name="transfers" domain="[('payment_type','=','transfer')]"/>
                     <separator/>
                     <filter string="Draft" domain="[('state','=','draft')]" name='state_draft'/>
                     <filter string="Posted" domain="[('state','=','posted')]" name='state_posted'/>
                     <filter string="Sent" domain="[('state','=','sent')]" name='state_sent'/>
-                    <filter string="Reconciled" domain="[('state','=','reconciled')]"/>
+                    <filter string="Reconciled" name="reconciled" domain="[('state','=','reconciled')]"/>
                     <separator/>
-                    <filter string="Partner" domain="[]" context="{'group_by': 'partner_id'}"/>
-                    <filter string="Journal" domain="[]" context="{'group_by': 'journal_id'}"/>
-                    <filter string="Payment Method" domain="[]" context="{'group_by': 'payment_method_id'}"/>
-                    <filter string="State" domain="[]" context="{'group_by': 'state'}"/>
-                    <filter string="Currency" domain="[]" context="{'group_by': 'currency_id'}" groups="base.group_multi_currency"/>
-                    <filter string="Company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Partner" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
+                    <filter string="Payment Method" name="paymentmethod" domain="[]" context="{'group_by': 'payment_method_id'}"/>
+                    <filter string="State" name="state" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Currency" name="currency" domain="[]" context="{'group_by': 'currency_id'}" groups="base.group_multi_currency"/>
+                    <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                 </search>
             </field>
         </record>
@@ -195,8 +195,7 @@
                 <p class="oe_view_nocontent_create">
                   Click to register a payment
                 </p><p>
-                  Payments are used to register liquidity movements (send, collect or transfer money).
-                  You can then process those payments by your own means or by using installed facilities.
+                  Payments are used to register operations made on bank/cash accounts (send, collect or transfer money) and will create a journal entry upon validation.
                 </p>
             </field>
         </record>
@@ -213,8 +212,7 @@
                 <p class="oe_view_nocontent_create">
                   Click to register a payment
                 </p><p>
-                  Payments are used to register liquidity movements (send, collect or transfer money).
-                  You can then process those payments by your own means or by using installed facilities.
+                  Payments are used to register operations made on bank/cash accounts (send, collect or transfer money) and will create a journal entry upon validation.
                 </p>
             </field>
         </record>

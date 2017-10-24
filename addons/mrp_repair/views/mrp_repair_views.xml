@@ -11,8 +11,6 @@
                 <field name="product_id" />
                 <field name="partner_id"/>
                 <field name="address_id"/>
-                <field name="location_id" groups="stock.group_stock_multi_locations"/>
-                <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                 <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                 <field name="guarantee_limit"/>
                 <field name="state"/>
@@ -28,7 +26,7 @@
                <header>
                    <button name="action_send_mail" states="draft" string="Send Quotation" type="object"/>
                    <button name="print_repair_order" states="draft" string="Print Quotation" type="object"/>
-                   <button name="action_repair_confirm" states="draft" type="object" string="Confirm Repair" class="oe_highlight"/>
+                   <button name="action_validate" states="draft" type="object" string="Confirm Repair" class="oe_highlight"/>
                    <button name="action_repair_start" attrs="{'invisible': ['&amp;', ('state','!=','confirmed'), '!', '&amp;', ('state','=','ready'), ('invoice_method','=','b4repair')]}"
                     type="object" string="Start Repair" class="oe_highlight"/>
                    <button name="action_repair_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
@@ -52,19 +50,20 @@
                     </h1>
                     <group>
                         <group>
+                            <field name="tracking" invisible="1"/>
                             <field name="product_id" domain="[('type', 'in', ['product', 'consu'])]"/>
                             <label for="product_qty"/>
                             <div class="o_row">
                                 <field name="product_qty"/>
                                 <field name="product_uom" groups="product.group_uom"/>
                             </div>
-                            <field name="lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}" groups="stock.group_production_lot"/>
+                            <field name="lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}" groups="stock.group_production_lot" attrs="{'required': [('tracking', '!=', 'none')], 'readonly': [('state', '=', 'done')]}"/>
                             <field name="partner_id" attrs="{'required':[('invoice_method','!=','none')]}"/>
                             <field name="address_id" groups="sale.group_delivery_invoice_address"/>
                         </group>
                         <group>
-                            <field name="location_id" groups="stock.group_stock_multi_locations" domain="[('usage', 'in', ('internal', 'customer'))]"/>
-                            <field name="location_dest_id" groups="stock.group_stock_multi_locations" domain="[('usage', 'in', ('internal', 'customer'))]"/>
+                            <field name="location_id"/>
+                            <field name="location_dest_id"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="guarantee_limit"/>
                             <field name="invoice_method"/>
@@ -234,11 +233,11 @@
               <search string="Search Repair Orders">
                   <field name="name" string="Repair Orders"/>
                   <field name="state"/>
-                  <filter string="Quotations" domain="[('state','=','draft')]"/>
+                  <filter string="Quotations" name="quotations" domain="[('state','=','draft')]"/>
                   <filter string="Confirmed" domain="[('state','=','confirmed')]" name="current" />
-                  <filter string="Ready To Repair" domain="[('state','=','ready')]"/>
+                  <filter string="Ready To Repair" name="ready_to_repair" domain="[('state','=','ready')]"/>
                   <separator/>
-                  <filter string="Invoiced" domain="[('invoiced','=',True)]"/>
+                  <filter string="Invoiced" name="invoiced" domain="[('invoiced','=',True)]"/>
                   <field name="product_id"/>
                   <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                   <separator/>
@@ -254,11 +253,11 @@
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                   <group expand="0" string="Group By">
-                      <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                      <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
-                      <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
-                      <filter string="Guarantee limit Month" domain="[]" context="{'group_by':'guarantee_limit'}" help="Guarantee limit by Month"/>
-                      <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                      <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                      <filter string="Product" name="product" domain="[]" context="{'group_by':'product_id'}"/>
+                      <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
+                      <filter string="Guarantee limit Month" name="guarantee_limit" domain="[]" context="{'group_by':'guarantee_limit'}" help="Guarantee limit by Month"/>
+                      <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                   </group>
               </search>
           </field>

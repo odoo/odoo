@@ -11,6 +11,7 @@ from odoo import fields
 from odoo import http
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import slug, unslug
+from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
 
@@ -179,6 +180,26 @@ class WebsiteAccount(CustomerPortal):
 class WebsiteCrmPartnerAssign(WebsitePartnerPage):
     _references_per_page = 40
 
+    def sitemap_partners(env, rule, qs):
+        if not qs or qs.lower() in '/partners':
+            yield {'loc': '/partners'}
+
+        Grade = env['res.partner.grade']
+        dom = [('website_published', '=', True)]
+        dom += sitemap_qs2dom(qs=qs, route='/partners/grade/', field=Grade._rec_name)
+        for grade in env['res.partner.grade'].search(dom):
+            loc = '/partners/grade/%s' % slug(grade)
+            if not qs or qs.lower() in loc:
+                yield {'loc': loc}
+
+        partners_dom = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True), ('grade_id.website_published', '=', True)]
+        dom += sitemap_qs2dom(qs=qs, route='/partners/country/')
+        countries = env['res.partner'].sudo().read_group(partners_dom, fields=['id', 'country_id'], groupby='country_id')
+        for country in countries:
+            loc = '/partners/country/%s' % slug(country['country_id'])
+            if not qs or qs.lower() in loc:
+                yield {'loc': loc}
+
     @http.route([
         '/partners',
         '/partners/page/<int:page>',
@@ -191,7 +212,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
 
         '/partners/grade/<model("res.partner.grade"):grade>/country/<model("res.country"):country>',
         '/partners/grade/<model("res.partner.grade"):grade>/country/<model("res.country"):country>/page/<int:page>',
-    ], type='http', auth="public", website=True)
+    ], type='http', auth="public", website=True, sitemap=sitemap_partners)
     def partners(self, country=None, grade=None, page=0, **post):
         country_all = post.pop('country_all', False)
         partner_obj = request.env['res.partner']

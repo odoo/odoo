@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from datetime import timedelta
+from datetime import timedelta, datetime
+import calendar
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError
@@ -60,6 +61,15 @@ Best Regards,''')
     account_setup_fy_data_done = fields.Boolean('Financial Year Setup Marked As Done', help="Technical field holding the status of the financial year setup step.")
     account_setup_coa_done = fields.Boolean(string='Chart of Account Checked', help="Technical field holding the status of the chart of account setup step.")
     account_setup_bar_closed = fields.Boolean(string='Setup Bar Closed', help="Technical field set to True when setup bar has been closed by the user.")
+
+    @api.model
+    def _verify_fiscalyear_last_day(self, company_id, last_day, last_month):
+        company = self.browse(company_id)
+        last_day = last_day or (company and company.fiscalyear_last_day) or 31
+        last_month = last_month or (company and company.fiscalyear_last_month) or 12
+        current_year = datetime.now().year
+        last_day_of_month = calendar.monthrange(current_year, last_month)[1]
+        return last_day > last_day_of_month and last_day_of_month or last_day
 
     @api.multi
     def compute_fiscalyear_dates(self, date):

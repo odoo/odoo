@@ -1,34 +1,41 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * pos_discount
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Iulian Cutui <iulian.cutui@gmail.com>, 2017
+# Dorin Hongu <dhongu@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2015-09-08 06:42+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
-"Language: ro\n"
+"POT-Creation-Date: 2017-09-20 09:52+0000\n"
+"PO-Revision-Date: 2017-09-20 09:52+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2017\n"
+"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
-"2:1));\n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config_iface_discount
 msgid "Allow the cashier to give discounts on the whole order."
-msgstr ""
+msgstr "Permite casierului acordarea unei reduceri pentru întreaga comandă"
 
 #. module: pos_discount
 #. openerp-web
-#: code:addons/pos_discount/static/src/xml/discount.xml:6
+#: code:addons/pos_discount/static/src/xml/discount_templates.xml:6
 #, python-format
 msgid "Discount"
 msgstr "Reducere"
+
+#. module: pos_discount
+#: model:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
+msgid "Discount %"
+msgstr ""
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_discount_pc
@@ -37,30 +44,23 @@ msgstr "Procent reducere"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_discount_product_id
+#: model:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
 msgid "Discount Product"
 msgstr "Reducere produs"
 
 #. module: pos_discount
-#: model:ir.ui.view,arch_db:pos_discount.view_pos_config_form
-msgid "Discounts"
-msgstr "Reduceri:"
-
-#. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_iface_discount
 msgid "Order Discounts"
-msgstr ""
+msgstr "Reduceri comandă"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_pc
-#, fuzzy
-msgid "The default discount percentage."
-msgstr "Procent reducere"
+msgid "The default discount percentage"
+msgstr "Procentul implicit de reducere"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_product_id
-msgid ""
-"The product used to record the discount. The ability to discount on the "
-"whole order will be disabled if this field is empty."
+msgid "The product used to model the discount."
 msgstr ""
 
 #. module: pos_discount

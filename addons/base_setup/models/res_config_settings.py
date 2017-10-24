@@ -19,7 +19,7 @@ class ResConfigSettings(models.TransientModel):
     module_google_drive = fields.Boolean("Attach Google documents to any record")
     module_google_spreadsheet = fields.Boolean("Google Spreadsheet")
     module_auth_oauth = fields.Boolean("Use external authentication providers (OAuth)")
-    module_auth_ldap = fields.Boolean("LDAP Authentification")
+    module_auth_ldap = fields.Boolean("LDAP Authentication")
     module_base_gengo = fields.Boolean("Translate Your Website with Gengo")
     module_inter_company_rules = fields.Boolean("Manage Inter Company")
     module_pad = fields.Boolean("Collaborative Pads")
@@ -30,7 +30,7 @@ class ResConfigSettings(models.TransientModel):
              " * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies.")
     default_custom_report_footer = fields.Boolean("Custom Report Footer")
     report_footer = fields.Text(related="company_id.report_footer", string='Custom Report Footer', help="Footer text displayed at the bottom of all reports.")
-    group_multi_currency = fields.Boolean(string='Allow multi currencies',
+    group_multi_currency = fields.Boolean(string='Multi-Currencies',
             implied_group='base.group_multi_currency',
             help="Allows to work in a multi currency environment")
     paperformat_id = fields.Many2one(related="company_id.paperformat_id", string='Paper format')

@@ -45,7 +45,7 @@
 
         // ------- Generic layout adaptations -------
         .container {
-            max-width: 100%;
+            width: 100%;
         }
 
         // ------- Dropdown toggle & menu -------
@@ -225,5 +225,10 @@
     .o_favorite {
         left: 0;
         right: auto;
+    }
+
+    // Emphasize records' colors when necessary
+    &.o_emphasize_colors .o_kanban_record::after {
+        width: @o-kanban-color-border-width * 2;
     }
 }

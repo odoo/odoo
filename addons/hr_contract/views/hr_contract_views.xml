@@ -69,9 +69,9 @@
                     <separator/>
                     <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Employee" domain="[]" context="{'group_by':'employee_id'}"/>
-                        <filter string="Job" domain="[]" context="{'group_by':'job_id'}"/>
-                        <filter string="Contract Type" domain="[]" context="{'group_by':'type_id'}"/>
+                        <filter string="Employee" name="employee" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter string="Job" name="job" domain="[]" context="{'group_by':'job_id'}"/>
+                        <filter string="Contract Type" name="contract_type" domain="[]" context="{'group_by':'type_id'}"/>
                         <filter string="State" name='group_by_state' domain="[]" context="{'group_by': 'state'}"/>
                     </group>
                 </search>
@@ -104,19 +104,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Salary Information" name="information">
-                            <group name="main_info">
-                                <group name="salary_and_advantages" string="Monthly Advantages in Cash">
-                                    <label for="wage"/>
-                                    <div class="o_row" name="wage">
-                                        <field name="wage" nolabel="1"/>
-                                        <span>/ month</span>
-                                    </div>
-                                    <field name="advantages" nolabel="1" placeholder="Advantages..." colspan="2" invisible="1"/>
-                                </group>
-                            </group>
-                        </page>
-                        <page string="Other Information" name="other">
+                        <page string="Contract Details" name="other">
                             <group>
                                 <group name="duration_group" string="Contract Terms">
                                     <field name="date_start"/>
@@ -131,6 +119,18 @@
                             </group>
                             <group string="Notes">
                                 <field name="notes" nolabel="1"/>
+                            </group>
+                        </page>
+                        <page string="Salary Information" name="information">
+                            <group name="main_info">
+                                <group name="salary_and_advantages" string="Monthly Advantages in Cash">
+                                    <label for="wage"/>
+                                    <div class="o_row" name="wage">
+                                        <field name="wage" nolabel="1"/>
+                                        <span>/ month</span>
+                                    </div>
+                                    <field name="advantages" nolabel="1" placeholder="Advantages..." colspan="2" invisible="1"/>
+                                </group>
                             </group>
                         </page>
                     </notebook>

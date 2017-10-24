@@ -13,11 +13,6 @@ class StockMove(models.Model):
     _inherit = 'stock.move'
 
     landed_cost_value = fields.Float('Landed Cost')
-    total_value = fields.Float('Total Value', compute='_compute_total_value')
-    
-    def _compute_total_value(self):
-        for move in self:
-            move.total_value = move.value + move.landed_cost_value
 
 
 class LandedCost(models.Model):
@@ -96,13 +91,23 @@ class LandedCost(models.Model):
                 'ref': cost.name
             })
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
-                cost_to_add = line.additional_landed_cost
-                line.move_id.landed_cost_value += cost_to_add
-                
-#                 for quant in line.move_id.quant_ids:
-#                     if quant.location_id.usage != 'internal':
-#                         qty_out += quant.qty
-                line._create_accounting_entries(move, 0) #TODO: qty_out like you would do with the different moves
+                # Prorate the value at what's still in stock
+                cost_to_add = (line.move_id.remaining_qty / line.move_id.product_qty) * line.additional_landed_cost
+
+                new_landed_cost_value = line.move_id.landed_cost_value + line.additional_landed_cost
+                line.move_id.write({
+                    'landed_cost_value': new_landed_cost_value,
+                    'remaining_value': line.move_id.remaining_value + cost_to_add,
+                    'price_unit': (line.move_id.value + new_landed_cost_value) / line.move_id.product_qty,
+                })
+                # `remaining_qty` is negative if the move is out and delivered proudcts that were not
+                # in stock.
+                qty_out = 0
+                if line.move_id._is_in():
+                    qty_out = line.move_id.product_qty - line.move_id.remaining_qty
+                elif line.move_id._is_out():
+                    qty_out = line.move_id.product_qty
+                line._create_accounting_entries(move, qty_out)
                 
             move.assert_balanced()
             cost.write({'state': 'done', 'account_move_id': move.id})
@@ -131,7 +136,7 @@ class LandedCost(models.Model):
 
         for move in self.mapped('picking_ids').mapped('move_lines'):
             # it doesn't make sense to make a landed cost for a product that isn't set as being valuated in real time at real cost
-            if move.product_id.valuation != 'real_time' or move.product_id.cost_method not in ('average', 'fifo'):
+            if move.product_id.valuation != 'real_time' or move.product_id.cost_method != 'fifo':
                 continue
             vals = {
                 'product_id': move.product_id.id,

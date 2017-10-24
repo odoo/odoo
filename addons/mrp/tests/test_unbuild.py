@@ -10,46 +10,6 @@ class TestUnbuild(TestMrpCommon):
         super(TestUnbuild, self).setUp()
         self.stock_location = self.env.ref('stock.stock_location_stock')
 
-    def generate_mo(self, tracking_final='none', tracking_base_1='none', tracking_base_2='none'):
-        """ This function generate a manufacturing order with one final product
-        and two consumed product. Arguments allows to choose the tracking for each
-        different products.
-        It returns the MO, used bom, the tree products
-        """
-        product_to_build = self.env['product.product'].create({
-            'name': 'Young Tom',
-            'type': 'product',
-            'tracking': tracking_final,
-        })
-        product_to_use_1 = self.env['product.product'].create({
-            'name': 'Botox',
-            'type': 'product',
-            'tracking': tracking_base_1,
-        })
-        product_to_use_2 = self.env['product.product'].create({
-            'name': 'Old Tom',
-            'type': 'product',
-            'tracking': tracking_base_2,
-        })
-        bom_1 = self.env['mrp.bom'].create({
-            'product_id': product_to_build.id,
-            'product_tmpl_id': product_to_build.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
-            'product_qty': 1.0,
-            'type': 'normal',
-            'bom_line_ids': [
-                (0, 0, {'product_id': product_to_use_2.id, 'product_qty': 1}),
-                (0, 0, {'product_id': product_to_use_1.id, 'product_qty': 4})
-            ]})
-        mo = self.env['mrp.production'].create({
-            'name': 'MO 1',
-            'product_id': product_to_build.id,
-            'product_uom_id': product_to_build.uom_id.id,
-            'product_qty': 5.0,
-            'bom_id': bom_1.id,
-        })
-        return mo, bom_1, product_to_build, product_to_use_1, product_to_use_2
-
     def test_unbuild_standart(self):
         """ This test creates a MO and then creates 3 unbuild
         orders for the final product. None of the products for this
@@ -216,7 +176,8 @@ class TestUnbuild(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
         mo.action_assign()
         for ml in mo.move_raw_ids.mapped('move_line_ids'):
-            ml.qty_done = ml.product_qty
+            if ml.product_id.tracking != 'none':
+                ml.qty_done = ml.product_qty
             if ml.product_id.tracking != 'none':
                 self.assertEqual(ml.lot_id, lot, 'Wrong reserved lot.')
 
@@ -308,8 +269,6 @@ class TestUnbuild(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 100, lot_id=lot_1)
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5, lot_id=lot_2)
         mo.action_assign()
-        for ml in mo.move_raw_ids.mapped('move_line_ids'):
-            ml.qty_done = ml.product_qty
 
         produce_wizard = self.env['mrp.product.produce'].with_context({
             'active_id': mo.id,
@@ -318,6 +277,8 @@ class TestUnbuild(TestMrpCommon):
             'product_qty': 5.0,
             'lot_id': lot_final.id,
         })
+        for pl in produce_wizard.produce_line_ids:
+            pl.qty_done = pl.qty_to_consume
         produce_wizard.do_produce()
 
         mo.button_mark_done()
@@ -406,7 +367,7 @@ class TestUnbuild(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 3, lot_id=lot_2)
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 2, lot_id=lot_3)
         mo.action_assign()
-        for ml in mo.move_raw_ids.mapped('move_line_ids'):
+        for ml in mo.move_raw_ids.mapped('move_line_ids').filtered(lambda m: m.product_id.tracking != 'none'):
             ml.qty_done = ml.product_qty
 
         produce_wizard = self.env['mrp.product.produce'].with_context({
@@ -438,3 +399,57 @@ class TestUnbuild(TestMrpCommon):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p2, self.stock_location, lot_id=lot_1), 1, 'You should have get your product with lot 1 in stock')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p2, self.stock_location, lot_id=lot_2), 3, 'You should have the 3 basic product for lot 2 in stock')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p2, self.stock_location, lot_id=lot_3), 2, 'You should have get one product back for lot 3')
+        
+        
+    def test_production_links_with_non_tracked_lots(self):
+        """ This test produces an MO in two times and checks that the move lines are linked in a correct way
+        """
+        mo, bom, p_final, p1, p2 = self.generate_mo(tracking_final='lot', tracking_base_1='none', tracking_base_2='lot')
+        lot_1 = self.env['stock.production.lot'].create({
+            'name': 'lot_1',
+            'product_id': p2.id,
+        })
+        
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 3, lot_id=lot_1)
+        lot_finished_1 = self.env['stock.production.lot'].create({
+            'name': 'lot_finished_1',
+            'product_id': p_final.id,
+        })
+        
+        produce_wizard = self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }).create({
+            'product_qty': 3.0,
+            'lot_id': lot_finished_1.id,
+        })
+        
+        produce_wizard.produce_line_ids[0].lot_id = lot_1.id
+        produce_wizard.do_produce()
+        
+        lot_2 = self.env['stock.production.lot'].create({
+            'name': 'lot_2',
+            'product_id': p2.id,
+        })
+        
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 4, lot_id=lot_2)
+        lot_finished_2 = self.env['stock.production.lot'].create({
+            'name': 'lot_finished_2',
+            'product_id': p_final.id,
+        })
+        
+        produce_wizard = self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }).create({
+            'product_qty': 2.0,
+            'lot_id': lot_finished_2.id,
+        })
+        
+        produce_wizard.produce_line_ids[0].lot_id = lot_2.id
+        produce_wizard.do_produce()
+        mo.button_mark_done()
+        ml = mo.finished_move_line_ids[0].consume_line_ids.filtered(lambda m: m.product_id == p1 and m.lot_produced_id == lot_finished_1)
+        self.assertEqual(ml.qty_done, 12.0, 'Should have consumed 12 for the first lot')
+        ml = mo.finished_move_line_ids[1].consume_line_ids.filtered(lambda m: m.product_id == p1 and m.lot_produced_id == lot_finished_2)
+        self.assertEqual(ml.qty_done, 8.0, 'Should have consumed 8 for the second lot')

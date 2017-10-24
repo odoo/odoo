@@ -500,10 +500,10 @@ class AccountBankStatementLine(models.Model):
         if self.amount_currency and self.currency_id:
             amount = self.amount_currency
             amount_currency = self.amount
-            amount_currency_str = amount_currency > 0 and amount_currency or -amount_currency
-            amount_currency_str = formatLang(self.env, amount_currency_str, currency_obj=statement_currency)
+            amount_currency_str = formatLang(self.env, abs(amount_currency), currency_obj=statement_currency)
         else:
             amount = self.amount
+            amount_currency = amount
             amount_currency_str = ""
         amount_str = formatLang(self.env, abs(amount), currency_obj=self.currency_id or statement_currency)
 
@@ -525,6 +525,7 @@ class AccountBankStatementLine(models.Model):
             'partner_name': self.partner_id.name,
             'communication_partner_name': self.partner_name,
             'amount_currency_str': amount_currency_str,  # Amount in the statement currency
+            'amount_currency': amount_currency,  # Amount in the statement currency
             'has_no_partner': not self.partner_id.id,
         }
         if self.partner_id:
@@ -831,6 +832,9 @@ class AccountBankStatementLine(models.Model):
             }
             st_line.process_reconciliation(new_aml_dicts=[vals])
 
+    def _get_communication(self, payment_method_id):
+        return self.name or ''
+
     def process_reconciliation(self, counterpart_aml_dicts=None, payment_aml_rec=None, new_aml_dicts=None):
         """ Match statement lines with existing payments (eg. checks) and/or payables/receivables (eg. invoices and credit notes) and/or new move lines (eg. write-offs).
             If any new journal item needs to be created (via new_aml_dicts or counterpart_aml_dicts), a new journal entry will be created and will contain those
@@ -928,7 +932,7 @@ class AccountBankStatementLine(models.Model):
                     'state': 'reconciled',
                     'currency_id': currency.id,
                     'amount': abs(total),
-                    'communication': self.name or '',
+                    'communication': self._get_communication(payment_methods[0] if payment_methods else False),
                     'name': self.statement_id.name,
                 })
 

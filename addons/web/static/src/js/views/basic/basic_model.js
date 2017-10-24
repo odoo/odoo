@@ -198,7 +198,7 @@ var BasicModel = AbstractModel.extend({
      * behind must be applied. This function applies changes stored in
      * '_rawChanges' for a given viewType.
      *
-     * @param {string} id local resource id of a record
+     * @param {string} recordID local resource id of a record
      * @param {string} viewType the current viewType
      * @returns {Deferred<string>} resolves to the id of the record
      */
@@ -875,7 +875,10 @@ var BasicModel = AbstractModel.extend({
                 // id never changes, and should not be written
                 delete record._changes.id;
             }
-            var changes = self._generateChanges(record, {viewType: options.viewType});
+            var changes = self._generateChanges(record, {viewType: options.viewType, changesOnly: method !== 'create'});
+
+            // id field should never be written/changed
+            delete changes.id;
 
             if (method === 'create') {
                 var fieldNames = record.getFieldNames();
@@ -946,6 +949,17 @@ var BasicModel = AbstractModel.extend({
         var record = this.localData[recordID];
         record.fields = _.defaults(record.fields, viewInfo.fields);
         record.fieldsInfo = _.defaults(record.fieldsInfo, viewInfo.fieldsInfo);
+    },
+    /**
+     * Manually sets a resource as dirty. This is used to notify that a field
+     * has been modified, but with an invalid value. In that case, the value is
+     * not sent to the basic model, but the record should still be flagged as
+     * dirty so that it isn't discarded without any warning.
+     *
+     * @param {string} id a resource id
+     */
+    setDirty: function (id) {
+        this.localData[id]._isDirty = true;
     },
     /**
      * For list resources, this changes the orderedBy key.
@@ -1235,7 +1249,7 @@ var BasicModel = AbstractModel.extend({
                 record._rawChanges[name] = val;
                 return;
             }
-            var oldValue = record._changes[name] || record.data[name];
+            var oldValue = name in record._changes ? record._changes[name] : record.data[name];
             var id;
             if (field.type === 'many2one') {
                 id = false;
@@ -1540,6 +1554,9 @@ var BasicModel = AbstractModel.extend({
                     removedDef = this._applyX2ManyChange(record, fieldName, {
                         operation: 'DELETE',
                         ids: _.map(removedIds, function (resID) {
+                            if (resID in list._cache) {
+                                return list._cache[resID];
+                            }
                             return _.findWhere(listData, {res_id: resID}).id;
                         }),
                     });
@@ -1645,24 +1662,25 @@ var BasicModel = AbstractModel.extend({
         var hasOnchange = false;
         var specs = {};
         var fieldsInfo = record.fieldsInfo[viewType || record.viewType];
+        generateSpecs(fieldsInfo, record.fields);
 
-        _.each(Object.keys(fieldsInfo), function (name) {
-            var field = record.fields[name];
-            var fieldInfo = fieldsInfo[name];
-            specs[name] = (field.onChange) || "";
-            if (field.onChange) {
-                hasOnchange = true;
-            }
-            _.each(fieldInfo.views, function (view) {
-                _.each(view.fieldsInfo[view.type], function (field, subname) {
-                    var onChange = view.fields[subname].onChange;
-                    specs[name + '.' + subname] = onChange || "";
-                    if (onChange) {
-                        hasOnchange = true;
-                    }
+        // recursively generates the onchange specs for fields in fieldsInfo,
+        // and their subviews
+        function generateSpecs (fieldsInfo, fields, prefix) {
+            prefix = prefix || '';
+            _.each(Object.keys(fieldsInfo), function (name) {
+                var field = fields[name];
+                var fieldInfo = fieldsInfo[name];
+                var key = prefix + name;
+                specs[key] = (field.onChange) || "";
+                if (field.onChange) {
+                    hasOnchange = true;
+                }
+                _.each(fieldInfo.views, function (view) {
+                    generateSpecs(view.fieldsInfo[view.type], view.fields, key + '.');
                 });
             });
-        });
+        }
         return hasOnchange ? specs : false;
     },
     /**
@@ -1687,6 +1705,9 @@ var BasicModel = AbstractModel.extend({
         }
         if ('invisible' in modifiers) {
             result.invisible = evalModifier(modifiers.invisible);
+        }
+        if ('column_invisible' in modifiers) {
+            result.column_invisible = evalModifier(modifiers.column_invisible);
         }
         if ('readonly' in modifiers) {
             result.readonly = evalModifier(modifiers.readonly);
@@ -2435,7 +2456,12 @@ var BasicModel = AbstractModel.extend({
     _generateChanges: function (record, options) {
         options = options || {};
         var viewType = options.viewType || record.viewType;
-        var changes = _.extend({}, record._changes);
+        var changes;
+        if ('changesOnly' in options && !options.changesOnly) {
+            changes = _.extend({}, record.data, record._changes);
+        } else {
+            changes = _.extend({}, record._changes);
+        }
         var withReadonly = options.withReadonly || false;
         var commands = this._generateX2ManyCommands(record, {
             changesOnly: 'changesOnly' in options ? options.changesOnly : true,
@@ -2472,6 +2498,7 @@ var BasicModel = AbstractModel.extend({
                 changes[fieldName] = false;
             }
         }
+
         return changes;
     },
     /**
@@ -2481,10 +2508,14 @@ var BasicModel = AbstractModel.extend({
      * current value of the parent record.
      *
      * @param {Object} record
+     * @param {Object} [options] This option object will be given to the private
+     *   method _generateX2ManyCommands.  In particular, it is useful to be able
+     *   to send changesOnly:true to get all data, not only the current changes.
      * @returns {Object} the data
      */
-    _generateOnChangeData: function (record) {
-        var commands = this._generateX2ManyCommands(record, {withReadonly: true});
+    _generateOnChangeData: function (record, options) {
+        options = _.extend({}, options || {}, {withReadonly: true});
+        var commands = this._generateX2ManyCommands(record, options);
         var data = _.extend(this.get(record.id, {raw: true}).data, commands);
         // 'display_name' is automatically added to the list of fields to fetch,
         // when fetching a record, even if it doesn't appear in the view. However,
@@ -2584,6 +2615,7 @@ var BasicModel = AbstractModel.extend({
                     _.each(relRecordUpdated, function (relRecord) {
                         var changes = self._generateChanges(relRecord, options);
                         if (!_.isEmpty(changes)) {
+                            delete changes.id;
                             var command = x2ManyCommands.update(relRecord.res_id, changes);
                             commands[fieldName].push(command);
                         }
@@ -2603,6 +2635,7 @@ var BasicModel = AbstractModel.extend({
                             relRecord = _.findWhere(relRecordUpdated, {res_id: list.res_ids[i]});
                             changes = relRecord ? this._generateChanges(relRecord, options) : {};
                             if (!_.isEmpty(changes)) {
+                                delete changes.id;
                                 command = x2ManyCommands.update(relRecord.res_id, changes);
                                 didChange = true;
                             } else {
@@ -2613,7 +2646,12 @@ var BasicModel = AbstractModel.extend({
                             // this is a new id
                             relRecord = _.findWhere(relRecordAdded, {res_id: list.res_ids[i]});
                             changes = this._generateChanges(relRecord, options);
-                            commands[fieldName].push(x2ManyCommands.create(relRecord.ref, changes));
+                            if ('id' in changes) {
+                                delete changes.id;
+                                commands[fieldName].push(x2ManyCommands.update(relRecord.res_id, changes));
+                            } else {
+                                commands[fieldName].push(x2ManyCommands.create(relRecord.ref, changes));
+                            }
                         }
                     }
                     if (options.changesOnly && !didChange && addedIds.length === 0 && removedIds.length === 0) {
@@ -2846,7 +2884,7 @@ var BasicModel = AbstractModel.extend({
     _isFieldProtected: function (record, fieldName, viewType) {
         var fieldInfo = record.fieldsInfo[viewType || record.viewType][fieldName];
         if (fieldInfo) {
-            var rawModifiers = JSON.parse(fieldInfo.modifiers || "{}");
+            var rawModifiers = fieldInfo.modifiers || {};
             var modifiers = this._evalModifiers(record, rawModifiers);
             return modifiers.readonly && !fieldInfo.force_save;
         } else {
@@ -2898,7 +2936,7 @@ var BasicModel = AbstractModel.extend({
             _.each(element.getFieldNames(), function (fieldName) {
                 var field = element.fields[fieldName];
                 var fieldInfo = element.fieldsInfo[element.viewType][fieldName];
-                var rawModifiers = JSON.parse(fieldInfo.modifiers || "{}");
+                var rawModifiers = fieldInfo.modifiers || {};
                 var modifiers = self._evalModifiers(record, rawModifiers);
                 if (modifiers.required && !self._isFieldSet(recordData[fieldName], field.type)) {
                     isValid = false;
@@ -3178,8 +3216,9 @@ var BasicModel = AbstractModel.extend({
                             }
                             if (value[0] === 6) {
                                 // REPLACE_WITH
-                                x2manyList.res_ids = value[2];
-                                x2manyList.count = x2manyList.res_ids.length;
+                                _.each(value[2], function (res_id) {
+                                    x2manyList._changes.push({operation: 'ADD', resID: res_id});
+                                });
                                 var def = self._readUngroupedList(x2manyList).then(function () {
                                     return $.when(
                                         self._fetchX2ManysBatched(x2manyList),
@@ -3268,11 +3307,17 @@ var BasicModel = AbstractModel.extend({
      * This method is quite important: it is supposed to perform the /onchange
      * rpc and apply the result.
      *
+     * The changes that triggered the onchange are assumed to have already been
+     * applied to the record.
+     *
      * @param {Object} record
      * @param {string[]} fields changed fields
      * @param {string} [viewType] current viewType. If not set, we will assume
      *   main viewType from the record
-     * @returns {Deferred}
+     * @returns {Deferred} Note: this deferred cannot fail. It is either in the
+     *   'success' or 'pending' state.  If the onchange rpc fails, it will be
+     *   resolved with an empty dictionary.  Note that the initial change was
+     *   already applied.
      */
     _performOnChange: function (record, fields, viewType) {
         var self = this;
@@ -3290,9 +3335,11 @@ var BasicModel = AbstractModel.extend({
             options.fieldName = fields;
         }
         var context = this._getContext(record, options);
-        var currentData = this._generateOnChangeData(record);
+        var currentData = this._generateOnChangeData(record, {changesOnly: false});
 
-        return self._rpc({
+        var def = $.Deferred();
+
+        self._rpc({
                 model: record.model,
                 method: 'onchange',
                 args: [idList, currentData, fields, onchangeSpec, context],
@@ -3317,9 +3364,12 @@ var BasicModel = AbstractModel.extend({
                     record._domains = _.extend(record._domains, result.domain);
                 }
                 return self._applyOnChange(result.value, record).then(function () {
-                    return result;
+                    def.resolve(result);
                 });
+            }).fail(function () {
+                def.resolve({});
             });
+        return def;
     },
     /**
      * Once a record is created and some data has been fetched, we need to do
@@ -3641,10 +3691,16 @@ var BasicModel = AbstractModel.extend({
             var self = this;
 
             // sort records according to ordered_by[0]
-            var order = list.orderedBy[0];
             var data = list.data;
             var res_ids = list.res_ids;
-            data.sort(function (record1ID, record2ID) {
+            var compareRecords = function (record1ID, record2ID, level) {
+                if(!level) {
+                    level = 0;
+                }
+                if(list.orderedBy.length < level + 1) {
+                    return 0;
+                }
+                var order = list.orderedBy[level];
                 var r1 = self.localData[record1ID];
                 var r2 = self.localData[record2ID];
                 var data1 = _.extend({}, r1.data, r1._changes);
@@ -3655,8 +3711,9 @@ var BasicModel = AbstractModel.extend({
                 if (data1[order.name] > data2[order.name]) {
                     return order.asc ? 1 : -1;
                 }
-                return 0;
-            });
+                return compareRecords(record1ID, record2ID, level + 1);
+            };
+            data.sort(compareRecords);
 
             // sort res_ids accordingly (only the current range of ids, the one
             // mapping the data, needs to be sorted)

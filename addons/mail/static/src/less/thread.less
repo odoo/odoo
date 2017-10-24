@@ -15,7 +15,7 @@
             margin-top: 0px;
             margin-bottom: 15px;
         }
-        border-bottom: 1px solid @odoo-color-silver-darker; // cannot use gray-lighter-darker as this file is also frontend
+        border-bottom: 1px solid @gray-lighter-darker;
         text-align: center;
 
         .o_thread_date {
@@ -103,9 +103,16 @@
             min-width: 0;
             max-width: 100%;
             word-wrap: break-word;
+            > pre {
+                white-space: pre-wrap;
+                word-break: break-word;
+                text-align: justify;
+            }
 
             &.o_mail_note {
-                background-color: @odoo-color-silver-dark;
+                background-color: @mail-thread-note;
+                padding-left: @grid-gutter-width*0.3;
+                border-bottom: 1px solid @gray-lighter-dark;
             }
 
             .o_mail_subject {

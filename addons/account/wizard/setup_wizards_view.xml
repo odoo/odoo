@@ -66,7 +66,7 @@
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <xpath expr="//form/sheet" position="inside">
-                    <a type="action" name="account.action_account_bank_journal_form" style="cursor:pointer;">You can define additional accounts here</a>
+                    <button type="object" name="setup_save_journal_and_create_more">You can define additional accounts here</button>
                 </xpath>
                 <xpath expr="//div[@name='advanced_info']" position="attributes">
                     <attribute name="invisible">1</attribute>

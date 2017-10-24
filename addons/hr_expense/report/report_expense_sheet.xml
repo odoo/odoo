@@ -40,13 +40,14 @@
                                     <th>Taxes</th>
                                     <th class="text-center">Qty</th>
                                     <th class="text-right">Price</th>
+                                    <th t-if="o.is_multiple_currency" class="text-right">Price in Company Currency</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr t-foreach="o.expense_line_ids" t-as="line">
                                     <td><span t-field="line.date"/></td>
                                     <td>
-                                        <span t-field="line.name"/> 
+                                        <span t-field="line.name"/>
                                         <span t-field="line.description"/><br/>
                                         <span t-field="line.analytic_account_id.name"/>
                                     </td>
@@ -73,25 +74,26 @@
                                         <span t-field="line.total_amount"
                                             t-options='{"widget": "monetary", "display_currency": line.currency_id}'/>
                                     </td>
+                                    <td t-if="o.is_multiple_currency" class="text-right">
+                                        <span t-field="line.total_amount_company"/>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
 
-                        <t t-if="len(o.mapped('expense_line_ids').mapped('currency_id')) &lt; 2">
-                            <div class="row">
-                                <div class="col-xs-4 pull-right">
-                                    <table class="table table-condensed">
-                                        <tr class="border-black">
-                                            <td><strong>Total</strong></td>
-                                            <td class="text-right">
-                                                <span t-field="o.total_amount"
-                                                    t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
+                        <div class="row">
+                            <div class="col-xs-4 pull-right">
+                                <table class="table table-condensed">
+                                    <tr class="border-black">
+                                        <td><strong>Total</strong></td>
+                                        <td class="text-right">
+                                            <span t-field="o.total_amount"
+                                                t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </table>
                             </div>
-                        </t>
+                        </div>
                         <p>Certified honest and conform,<br/>(Date and signature).<br/><br/></p>
                     </div>
                 </t>

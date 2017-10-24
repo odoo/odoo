@@ -1761,6 +1761,7 @@ $.summernote.pluginEvents.outdent = function (event, editor, layoutInfo) {
 };
 
 $.summernote.pluginEvents.formatBlock = function (event, editor, layoutInfo, sTagName) {
+    $.summernote.pluginEvents.applyFont(event, editor, layoutInfo, null, null, "Default");
     var $editable = layoutInfo.editable();
     $editable.data('NoteHistory').recordUndo($editable);
     event.preventDefault();

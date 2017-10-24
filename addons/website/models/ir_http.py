@@ -3,8 +3,8 @@
 
 import logging
 import traceback
-import datetime
 import os
+import unittest
 
 import werkzeug
 import werkzeug.routing
@@ -17,10 +17,26 @@ from odoo.http import request
 from odoo.tools import config
 from odoo.exceptions import QWebException
 from odoo.tools.safe_eval import safe_eval
+from odoo.osv.expression import FALSE_DOMAIN
 
 from odoo.addons.http_routing.models.ir_http import ModelConverter, _guess_mimetype
 
 logger = logging.getLogger(__name__)
+
+
+def sitemap_qs2dom(qs, route, field='name'):
+    """ Convert a query_string (can contains a path) to a domain"""
+    dom = []
+    if qs and qs.lower() not in route:
+        needles = qs.strip('/').split('/')
+        # needles will be altered and keep only element which one is not in route
+        # diff(from=['shop', 'product'], to=['shop', 'product', 'product']) => to=['product']
+        unittest.util.unorderable_list_difference(route.strip('/').split('/'), needles)
+        if len(needles) == 1:
+            dom = [(field, 'ilike', needles[0])]
+        else:
+            dom = FALSE_DOMAIN
+    return dom
 
 
 class Http(models.AbstractModel):
@@ -52,10 +68,6 @@ class Http(models.AbstractModel):
             super(Http, cls)._auth_method_public()
 
     @classmethod
-    def get_page_key(cls):
-        return (cls._name, "cache", request.uid, request.lang, request.httprequest.full_path)
-
-    @classmethod
     def _add_dispatch_parameters(cls, func):
         if request.is_frontend:
             context = dict(request.context)
@@ -68,7 +80,7 @@ class Http(models.AbstractModel):
         super(Http, cls)._add_dispatch_parameters(func)
 
         if request.is_frontend and request.routing_iteration == 1:
-            request.website = request.website.with_context(request.context)
+            request.website = request.website.with_context(context)
 
     @classmethod
     def _get_languages(cls):
@@ -93,19 +105,24 @@ class Http(models.AbstractModel):
         req_page = request.httprequest.path
 
         domain = [('url', '=', req_page), '|', ('website_ids', 'in', request.website.id), ('website_ids', '=', False)]
+        pages = request.env['website.page'].search(domain)
 
-        if not request.website.is_publisher:
-            domain += [('is_visible', '=', True)]
+        if not request.website.is_publisher():
+            pages = pages.filtered('is_visible')
 
-        mypage = request.env['website.page'].search(domain, limit=1)
+        mypage = pages[0] if pages else False
         _, ext = os.path.splitext(req_page)
         if mypage:
-            return request.render(mypage.ir_ui_view_id.id, {
+            return request.render(mypage.view_id.id, {
                 # 'path': req_page[1:],
                 'deletable': True,
                 'main_object': mypage,
             }, mimetype=_guess_mimetype(ext))
+        return False
 
+    @classmethod
+    def _serve_404(cls):
+        req_page = request.httprequest.path
         return request.website.is_publisher() and request.render('website.page_404', {'path': req_page[1:]}) or False
 
     @classmethod
@@ -132,8 +149,7 @@ class Http(models.AbstractModel):
         if redirect:
             return request.redirect(redirect.url_to, code=redirect.type)
 
-        return False
-
+        return cls._serve_404()
 
     @classmethod
     def _handle_exception(cls, exception):
@@ -202,7 +218,10 @@ class Http(models.AbstractModel):
             return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
 
     @classmethod
-    def binary_content(cls, xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):
+    def binary_content(cls, xmlid=None, model='ir.attachment', id=None, field='datas',
+                       unique=False, filename=None, filename_field='datas_fname', download=False,
+                       mimetype=None, default_mimetype='application/octet-stream',
+                       access_token=None, env=None):
         env = env or request.env
         obj = None
         if xmlid:
@@ -212,16 +231,19 @@ class Http(models.AbstractModel):
         if obj and 'website_published' in obj._fields:
             if env[obj._name].sudo().search([('id', '=', obj.id), ('website_published', '=', True)]):
                 env = env(user=SUPERUSER_ID)
-        return super(Http, cls).binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype, default_mimetype=default_mimetype, env=env)
+        return super(Http, cls).binary_content(
+            xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
+            filename_field=filename_field, download=download, mimetype=mimetype,
+            default_mimetype=default_mimetype, access_token=access_token, env=env)
 
 
 class ModelConverter(ModelConverter):
 
-    def generate(self, uid, query=None, args=None):
+    def generate(self, uid, dom=None, args=None):
         Model = request.env[self.model].sudo(uid)
         domain = safe_eval(self.domain, (args or {}).copy())
-        if query:
-            domain.append((Model._rec_name, 'ilike', '%' + query + '%'))
+        if dom:
+            domain += dom
         for record in Model.search_read(domain=domain, fields=['write_date', Model._rec_name]):
             if record.get(Model._rec_name, False):
                 yield {'loc': (record['id'], record[Model._rec_name])}

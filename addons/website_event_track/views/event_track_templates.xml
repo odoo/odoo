@@ -50,7 +50,7 @@
             </div>
         </section>
         <t t-set="dayslist" t-value="days.keys()"/>
-        <t t-set="dayslist2" t-value="dayslist.sort()"/> <!-- display days in the right order -->
+        <t t-set="dayslist2" t-value="list(dayslist).sort()"/> <!-- display days in the right order -->
         <section class="container" t-foreach="dayslist" t-as="day">
             <t t-set="locations" t-value="days[day]['locations']"/>
             <t t-set="dates" t-value="days[day]['dates']"/>
@@ -220,11 +220,11 @@
                                     </small>
                                 </div>
                                 <div class="col-md-12">
-                                    <p t-field="track.description"/>
+                                    <div t-field="track.description"/>
                                 </div>
                                 <div class="col-md-12">
                                     <h3>About The Author</h3>
-                                    <p t-field="track.partner_biography"/>
+                                    <div t-field="track.partner_biography"/>
                                 </div>
                             </div>
                         </div>

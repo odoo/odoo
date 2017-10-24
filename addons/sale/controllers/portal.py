@@ -85,6 +85,7 @@ class CustomerPortal(CustomerPortal):
         searchbar_sortings = {
             'date': {'label': _('Order Date'), 'order': 'date_order desc'},
             'name': {'label': _('Reference'), 'order': 'name'},
+            'stage': {'label': _('Stage'), 'order': 'state'},
         }
 
         # default sortby order
@@ -136,6 +137,7 @@ class CustomerPortal(CustomerPortal):
         searchbar_sortings = {
             'date': {'label': _('Order Date'), 'order': 'date_order desc'},
             'name': {'label': _('Reference'), 'order': 'name'},
+            'stage': {'label': _('Stage'), 'order': 'state'},
         }
         # default sortby order
         if not sortby:
@@ -198,22 +200,23 @@ class CustomerPortal(CustomerPortal):
         ]
         return request.make_response(pdf, headers=pdfhttpheaders)
 
+    def _portal_quote_user_can_accept(self, order_id):
+        return request.env['ir.config_parameter'].sudo().get_param('sale.sale_portal_confirmation_options', default='none') in ('pay', 'sign')
+
     @http.route(['/my/quotes/accept'], type='json', auth="public", website=True)
     def portal_quote_accept(self, res_id, access_token=None, partner_name=None, signature=None):
-        if request.env['ir.config_parameter'].sudo().get_param(
-                'sale.sale_portal_confirmation_options', default='none') not in ('pay', 'sign'):
-            return False
+        if not self._portal_quote_user_can_accept(res_id):
+            return {'error': _('Operation not allowed')}
+        if not signature:
+            return {'error': _('Signature is missing.')}
+
         try:
             order_sudo = self._order_check_access(res_id, access_token=access_token)
         except AccessError:
-            return {
-                'error': _('Invalid order')
-            }
-
+            return {'error': _('Invalid order')}
         if order_sudo.state != 'sent':
-            return {
-                'error': _('Order is not in a state requiring customer validation.')
-            }
+            return {'error': _('Order is not in a state requiring customer validation.')}
+
         order_sudo.action_confirm()
 
         _message_post_helper(
@@ -221,7 +224,7 @@ class CustomerPortal(CustomerPortal):
             res_id=order_sudo.id,
             message=_('Order signed by %s') % (partner_name,),
             attachments=[('signature.png', base64.b64decode(signature))] if signature else [],
-            **({'token': access_token, 'token_field': 'access_token'} if access_token else {}))
+            **({'token': access_token} if access_token else {}))
         return {
             'success': _('Your Order has been confirmed.'),
             'redirect_url': '/my/orders/%s?%s' % (order_sudo.id, access_token and 'access_token=%s' % order_sudo.access_token or ''),

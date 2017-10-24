@@ -3,7 +3,6 @@
 
 import hashlib
 import hmac
-from datetime import datetime
 import logging
 import random
 import threading
@@ -11,9 +10,19 @@ import threading
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
-from odoo.tools.translate import html_translate
 
 _logger = logging.getLogger(__name__)
+
+MASS_MAILING_BUSINESS_MODELS = [
+    'crm.lead',
+    'event.registration',
+    'hr.applicant',
+    'res.partner',
+    'event.track',
+    'sale.order',
+    'mail.mass_mailing.list',
+]
+
 
 class MassMailingTag(models.Model):
     """Model of categories of mass mailing, i.e. marketing, newsletter, ... """
@@ -39,6 +48,9 @@ class MassMailingList(models.Model):
     active = fields.Boolean(default=True)
     create_date = fields.Datetime(string='Creation Date')
     contact_nbr = fields.Integer(compute="_compute_contact_nbr", string='Number of Contacts')
+    contact_ids = fields.Many2many(
+        'mail.mass_mailing.contact', 'mail_mass_mailing_contact_list_rel', 'list_id', 'contact_id',
+        string='Mailing Lists')
 
     # Compute number of contacts non opt-out for a mailing list
     def _compute_contact_nbr(self):
@@ -46,7 +58,7 @@ class MassMailingList(models.Model):
             select
                 list_id, count(*)
             from
-                mail_mass_mailing_contact_list_rel r 
+                mail_mass_mailing_contact_list_rel r
                 left join mail_mass_mailing_contact c on (r.contact_id=c.id)
             where
                 c.opt_out <> true
@@ -56,6 +68,69 @@ class MassMailingList(models.Model):
         data = dict(self.env.cr.fetchall())
         for mailing_list in self:
             mailing_list.contact_nbr = data.get(mailing_list.id, 0)
+
+    @api.multi
+    def action_merge(self, src_lists, archive):
+        """
+            Insert all the contact from the mailing lists 'src_lists' to the
+            mailing list in 'self'. Possibility to archive the mailing lists
+            'src_lists' after the merge except the destination mailing list 'self'.
+        """
+        # Explation of the SQL query with an example. There are the following lists
+        # A (id=4): yti@odoo.com; yti@example.com
+        # B (id=5): yti@odoo.com; yti@openerp.com
+        # C (id=6): nothing
+        # To merge the mailing lists A and B into C, we build the view st that looks
+        # like this with our example:
+        #
+        #  contact_id |           email           | row_number |  list_id |
+        # ------------+---------------------------+------------------------
+        #           4 | yti@odoo.com              |          1 |        4 |
+        #           6 | yti@odoo.com              |          2 |        5 |
+        #           5 | yti@example.com           |          1 |        4 |
+        #           7 | yti@openerp.com           |          1 |        5 |
+        #
+        # The row_column is kind of an occurence counter for the email address.
+        # Then we create the Many2many relation between the destination list and the contacts
+        # while avoiding to insert an existing email address (if the destination is in the source
+        # for example)
+        self.ensure_one()
+        # Put destination is sources lists if not already the case
+        src_lists |= self
+        self.env.cr.execute("""
+            INSERT INTO mail_mass_mailing_contact_list_rel (contact_id, list_id)
+            SELECT st.contact_id AS contact_id, %s AS list_id
+            FROM
+                (
+                SELECT
+                    contact.id AS contact_id,
+                    contact.email AS email,
+                    mailing_list.id AS list_id,
+                    row_number() OVER (PARTITION BY email ORDER BY email) AS rn
+                FROM
+                    mail_mass_mailing_contact contact,
+                    mail_mass_mailing_contact_list_rel contact_list_rel,
+                    mail_mass_mailing_list mailing_list
+                WHERE contact.id=contact_list_rel.contact_id
+                AND contact.opt_out = FALSE
+                AND mailing_list.id=contact_list_rel.list_id
+                AND mailing_list.id IN %s
+                AND NOT EXISTS
+                    (
+                    SELECT 1
+                    FROM
+                        mail_mass_mailing_contact contact2,
+                        mail_mass_mailing_contact_list_rel contact_list_rel2
+                    WHERE contact2.email = contact.email
+                    AND contact_list_rel2.contact_id = contact2.id
+                    AND contact_list_rel2.list_id = %s
+                    )
+                ) st
+            WHERE st.rn = 1;""", (self.id, tuple(src_lists.ids), self.id))
+        self.invalidate_cache()
+        if archive:
+            (src_lists - self).write({'active': False})
+
 
 class MassMailingContact(models.Model):
     """Model of a contact. This model is different from the partner model
@@ -320,7 +395,7 @@ class MassMailing(models.Model):
         default=lambda self: self.env['mail.message']._get_default_from())
     # recipients
     mailing_model_real = fields.Char(compute='_compute_model', string='Recipients Real Model', default='mail.mass_mailing.contact', required=True)
-    mailing_model_id = fields.Many2one('ir.model', string='Recipients Model', domain="[('is_mail_thread', '=', True)]",
+    mailing_model_id = fields.Many2one('ir.model', string='Recipients Model', domain=[('model', 'in', MASS_MAILING_BUSINESS_MODELS)],
         default=lambda self: self.env.ref('mass_mailing.model_mail_mass_mailing_list').id)
     mailing_model_name = fields.Char(related='mailing_model_id.model', string='Recipients Model Name')
     mailing_domain = fields.Char(string='Domain', oldname='domain', default=[])
@@ -445,7 +520,7 @@ class MassMailing(models.Model):
                 self.mailing_domain = "[('list_ids', 'in', [%s]), ('opt_out', '=', False)]" % (','.join(str(id) for id in self.contact_list_ids.ids),)
             else:
                 self.mailing_domain = "[(0, '=', 1)]"
-        elif 'opt_out' in self.env[self.mailing_model_name]._fields and not self.mailing_domain:
+        elif self.mailing_model_name and 'opt_out' in self.env[self.mailing_model_name]._fields and not self.mailing_domain:
             self.mailing_domain = "[('opt_out', '=', False)]"
         self.body_html = "on_change_model_and_list"
 

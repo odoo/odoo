@@ -22,8 +22,6 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
         'click div:first h1.statement_name': '_onClickStatementName',
         'click div:first h1.statement_name_edition button': '_onValidateName',
         "click *[rel='do_action']": "_onDoAction",
-        'click button.button_back_to_statement': '_onGoToBankStatement',
-        'click button.button_close_statement': '_onCloseBankStatement',
         'click button.js_load_more': '_onLoadMore',
     },
     /**
@@ -104,6 +102,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
      * @param {[object]} [state.notifications]
      */
     update: function (state) {
+        var self = this;
         this.$progress.find('.valuenow').text(state.valuenow);
         this.$progress.find('.valuemax').text(state.valuemax);
         this.$progress.find('.progress-bar')
@@ -119,6 +118,8 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
                 'timePerTransaction': Math.round(dt/1000/state.valuemax),
                 'context': state.context,
             }));
+            $done.find('.button_close_statement').click(this._onCloseBankStatement.bind(this));
+            $done.find('.button_back_to_statement').click(this._onGoToBankStatement.bind(this));
             this.$el.children().hide();
             // display rainbowman after full reconciliation
             this.trigger_up('show_effect', {
@@ -249,7 +250,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     events: {
         'click .accounting_view caption .o_buttons button': '_onValidate',
         'click .accounting_view thead td': '_onTogglePanel',
-        'click .accounting_view tfoot td': '_onShowPanel',
+        'click .accounting_view tfoot td:not(.cell_left,.cell_right)': '_onShowPanel',
+        'click tfoot .cell_left, tfoot .cell_right': '_onSearchBalanceAmount',
         'input input.filter': '_onFilterChange',
         'click .match_controls .fa-chevron-left:not(.disabled)': '_onPrevious',
         'click .match_controls .fa-chevron-right:not(.disabled)': '_onNext',
@@ -385,7 +387,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
 
         // mv_lines
         var $mv_lines = this.$('.match table tbody').empty();
-        _.each(state.mv_lines.slice(0,5), function (line) {
+        _.each(state.mv_lines.slice(0, state.limitMoveLines), function (line) {
             var $line = $(qweb.render("reconciliation.line.mv_line", {'line': line, 'state': state}));
             if (!isNaN(line.id)) {
                 $('<span class="line_info_button fa fa-info-circle"/>')
@@ -394,12 +396,18 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             }
             $mv_lines.append($line);
         });
-        this.$('.match .fa-chevron-right').toggleClass('disabled', state.mv_lines.length <= 5);
+        this.$('.match .fa-chevron-right').toggleClass('disabled', state.mv_lines.length <= state.limitMoveLines);
         this.$('.match .fa-chevron-left').toggleClass('disabled', !state.offset);
         this.$('.match').css('max-height', !state.mv_lines.length && !state.filter.length ? '0px' : '');
 
         // balance
+        this.$('.popover').remove();
         this.$('table tfoot').html(qweb.render("reconciliation.line.balance", {'state': state}));
+
+        // filter
+        if (_.str.strip(this.$('input.filter').val()) !== state.filter) {
+            this.$('input.filter').val(state.filter);
+        }
 
         // create form
         if (state.createForm) {
@@ -592,6 +600,12 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     /**
      * @private
      */
+    _onSearchBalanceAmount: function () {
+        this.trigger_up('search_balance_amount');
+    },
+    /**
+     * @private
+     */
     _onShowPanel: function () {
         var mode = (this.$el.data('mode') === 'inactive' || this.$el.data('mode') === 'match') ? 'create' : 'match';
         this.trigger_up('change_mode', {'data': mode});
@@ -636,13 +650,13 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      * @private
      */
     _onPrevious: function () {
-        this.trigger_up('change_offset', {'data': -5});
+        this.trigger_up('change_offset', {'data': -1});
     },
     /**
      * @private
      */
     _onNext: function () {
-        this.trigger_up('change_offset', {'data': 5});
+        this.trigger_up('change_offset', {'data': 1});
     },
     /**
      * @private

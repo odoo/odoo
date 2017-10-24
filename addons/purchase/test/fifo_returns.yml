@@ -49,7 +49,7 @@
 -
   !python {model: purchase.order, id: purchase_order_fiforet1}: |
     picking = self.picking_ids[0]
-    self.env['stock.immediate.transfer'].create({'pick_id': picking.id}).process()
+    self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
 - 
   Check the standard price of the product (fifo icecream)
 - 
@@ -65,7 +65,7 @@
 - 
   !python {model: purchase.order, id: purchase_order_fiforet2}: |
     picking = self.picking_ids[0]
-    self.env['stock.immediate.transfer'].create({'pick_id': picking.id}).process()
+    self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
 - 
   Return the goods of purchase order 2
 - 

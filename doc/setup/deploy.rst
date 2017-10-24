@@ -71,7 +71,8 @@ in ``/etc/odoo.conf`` set:
   Once it is correctly working and only matching a single database per hostname, it
   is strongly recommended to block access to the database manager screens,
   and to use the ``--no-database-list`` startup paramater to prevent listing
-  your databases. See also security_.
+  your databases, and to block access to the database management screens.
+  See also security_.
 
 
 PostgreSQL
@@ -211,11 +212,7 @@ the client will not connect to it.
 
 Instead you must have a proxy redirecting requests whose URL starts with
 ``/longpolling/`` to the longpolling port. Other request should be proxied to
-the :option:`normal HTTP port <odoo-bin --xmlrpc-port>`
-
-.. warning:: The livechat worker requires the ``psycogreen`` Python module,
-             which is not always included with all installation packages.
-             It can be manually installed with ``pip install psycogreen``.
+the :option:`normal HTTP port <odoo-bin --http-port>`
 
 Configuration sample
 --------------------
@@ -357,7 +354,7 @@ To run cron jobs for an Odoo deployment as a WSGI application requires
   :option:`odoo-bin -d`)
 * which should not be exposed to the network. To ensure cron runners are not
   network-accessible, it is possible to disable the built-in HTTP server
-  entirely with :option:`odoo-bin --no-xmlrpc` or setting ``xmlrpc = False``
+  entirely with :option:`odoo-bin --no-http` or setting ``http_enable = False``
   in the configuration file
 
 LiveChat
@@ -427,10 +424,14 @@ security-related topics:
 - Use appropriate database filters ( :option:`--db-filter <odoo-bin --db-filter>`)
   to restrict the visibility of your databases according to the hostname.
   See :ref:`db_filter`.
+  You may also use :option:`-d <odoo-bin -d>` to provide your own (comma-separated)
+  list of available databases to filter from, instead of letting the system fetch
+  them all from the database backend.
 
-- Once your ``db_filter`` is configured and only matches a single database per hostname,
-  you should set ``list_db`` configuration option to ``False``, to prevent listing databases
-  entirely (this is also exposed as the :option:`--no-database-list <odoo-bin --no-database-list>`
+- Once your ``db_name`` and ``db_filter`` are configured and only match a single database
+  per hostname, you should set ``list_db`` configuration option to ``False``, to prevent
+  listing databases entirely, and to block access to the database management screens
+  (this is also exposed as the :option:`--no-database-list <odoo-bin --no-database-list>`
   command-line option)
 
 - Make sure the PostgreSQL user (:option:`--db_user <odoo-bin --db_user>`) is *not* a super-user,
@@ -473,10 +474,16 @@ Database Manager Security
 This setting is used on all database management screens (to create, delete,
 dump or restore databases).
 
-If the management screens must not be accessible, or must only be accessible
-from a selected set of machines, use the proxy server's features to block
-access to all routes starting with ``/web/database`` except (maybe)
-``/web/database/selector`` which displays the database-selection screen.
+If the management screens must not be accessible at all, you should set ``list_db``
+configuration option to ``False``, to block access to all the database selection and
+management screens. But be sure to setup an appropriate ``db_name`` parameter
+(and optionally, ``db_filter`` too) so that the system can determine the target database
+for each request, otherwise users will be blocked as they won't be allowed to choose the
+database themselves.
+
+If the management screens must only be accessible from a selected set of machines,
+use the proxy server's features to block access to all routes starting with ``/web/database``
+except (maybe) ``/web/database/selector`` which displays the database-selection screen.
 
 If the database-management screen should be left accessible, the
 ``admin_passwd`` setting must be changed from its ``admin`` default: this
@@ -486,7 +493,7 @@ It should be stored securely, and should be generated randomly e.g.
 
 .. code-block:: console
 
-    $ python -c 'import base64, os; print(base64.b64encode(os.urandom(24)))'
+    $ python3 -c 'import base64, os; print(base64.b64encode(os.urandom(24)))'
 
 which will generate a 32 characters pseudorandom printable string.
 
@@ -498,9 +505,8 @@ distinction is made according to the browser version in order to be
 up-to-date. Odoo is supported on the current browser version. The list 
 of the supported browsers by Odoo version is the following:
 
-- **Odoo 8:** IE9, Mozilla Firefox, Google Chrome, Safari, Microsoft Edge
 - **Odoo 9:** IE11, Mozilla Firefox, Google Chrome, Safari, Microsoft Edge
-- **Odoo 10:** Mozilla Firefox, Google Chrome, Safari, Microsoft Edge
+- **Odoo 10+:** Mozilla Firefox, Google Chrome, Safari, Microsoft Edge
 
 .. [#different-machines]
     to have multiple Odoo installations use the same PostgreSQL database,
@@ -517,7 +523,7 @@ of the supported browsers by Odoo version is the following:
     "self-signed" certificates are easier to deploy on a controlled
     environment than over the internet.
 
-.. _regular expression: https://docs.python.org/2/library/re.html
+.. _regular expression: https://docs.python.org/3/library/re.html
 .. _ARP spoofing: http://en.wikipedia.org/wiki/ARP_spoofing
 .. _Nginx termination example:
     http://nginx.com/resources/admin-guide/nginx-ssl-termination/

@@ -5,7 +5,7 @@
         <record id="product_wishlist_rule" model="ir.rule">
             <field name="name">See own Wishlist</field>
             <field name="model_id" ref="model_product_wishlist"/>
-            <field name="domain_force">[('partner_id','=', user.partner_id.id)]</field>
+            <field name="domain_force">["|", ('partner_id','=', user.partner_id.id), "&amp;", ("partner_id", "=", False), ("session", "=", user.current_session)]</field>
             <field name="groups" eval="[(4, ref('base.group_portal')),(4, ref('base.group_public')), (4, ref('base.group_user'))]"/>
         </record>
 

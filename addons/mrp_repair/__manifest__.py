@@ -28,6 +28,7 @@ The following topics are covered by this module:
         'security/mrp_repair_security.xml',
         'wizard/mrp_repair_cancel_views.xml',
         'wizard/mrp_repair_make_invoice_views.xml',
+        'wizard/stock_warn_insufficient_qty_views.xml',
         'views/mrp_repair_views.xml',
         'report/mrp_repair_reports.xml',
         'report/mrp_repair_templates_repair_order.xml',

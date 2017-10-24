@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done'))" string="Move Lines" create="0" default_order="date">
                 <field name="date"/>
-                <field name="picking_id" string="Reference"/>
+                <field name="reference" string="Reference"/>
                 <field name="product_id"/>
                 <field name="location_id"/>
                 <field name="location_dest_id"/>
@@ -28,22 +28,26 @@
                     <group>
                         <group>
                             <field name="date"/>
-                            <field name="create_date" invisible="1" groups="base.group_no_one"/>
-                            <field name="picking_id" string="Reference"/>
+                            <field name="reference" string="Reference"/>
                             <field name="product_id"/>
                             <field name="location_id" groups="stock.group_stock_multi_locations"/>
                             <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                         </group>
                         <group>
-                            <label for="product_uom_qty" string="Quantity Reserved"/>
-                            <div class="o_row">
+                            <label for="product_uom_qty" string="Quantity Reserved" attrs="{'invisible': [('state', '=', 'done')]}"/>
+                            <div class="o_row" attrs="{'invisible': [('state', '=', 'done')]}">
                                 <field name="product_uom_qty"/>
                                 <field name="product_uom_id" options="{'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                             </div>
                             <label for="qty_done" string="Quantity Done"/>
                             <div class="o_row">
                                 <field name="qty_done"/>
+                                <field name="product_uom_id" options="{'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                             </div>
+                            <field name="lot_name" string="Lot/Serial Number" groups="stock.group_production_lot"/>
+                            <field name="package_id" string="Source Package" groups="product.group_stock_packaging"/>
+                            <field name="result_package_id" string="Destination Package" groups="stock.group_tracking_lot"/>
+                            <field name="owner_id" string="Owner" groups="stock.group_tracking_owner"/>
                         </group>
                     </group>
                 </sheet>

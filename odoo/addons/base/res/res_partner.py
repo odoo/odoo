@@ -196,7 +196,7 @@ class Partner(models.Model):
     mobile = fields.Char()
     is_company = fields.Boolean(string='Is a Company', default=False,
         help="Check if the contact is a company, otherwise it is a person")
-    industry_id = fields.Many2one('res.partner.industry', 'Sector of Activity')
+    industry_id = fields.Many2one('res.partner.industry', 'Industry')
     # company_type is only an interface field, do not use it in business logic
     company_type = fields.Selection(string='Company Type',
         selection=[('person', 'Individual'), ('company', 'Company')],
@@ -777,7 +777,7 @@ class Partner(models.Model):
 
 
 class ResPartnerIndustry(models.Model):
-    _description = 'Sector of Activity'
+    _description = 'Industry'
     _name = "res.partner.industry"
     _order = "name"
 

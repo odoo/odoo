@@ -7,7 +7,10 @@
             <field name="res_model">crm.lead</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
-            <field name="view_id" ref="crm_case_tree_view_leads"/>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_case_tree_view_leads')}),
+                          (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_crm_lead_kanban')})]"/>
             <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
             <field name="context">{
                     'search_default_team_id': [active_id],
@@ -186,7 +189,7 @@
 
                     <xpath expr="//div[hasclass('o_primary')]" position="after">
                         <div t-if="record.use_leads.raw_value and record.alias_name.value and record.alias_domain.value">
-                            <small><i class="fa fa-envelope-o"></i>&amp;nbsp; <field name="alias_id"/></small>
+                            <small t-translation="off"><i class="fa fa-envelope-o"></i>&amp;nbsp; <field name="alias_id"/></small>
                         </div>
                     </xpath>
 

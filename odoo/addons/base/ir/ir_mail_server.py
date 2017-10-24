@@ -323,7 +323,7 @@ class IrMailServer(models.Model):
 
         if subtype == 'html' and not body_alternative:
             # Always provide alternative text body ourselves if possible.
-            text = html2text.html2text(email_body_utf8)
+            text = html2text.html2text(email_body)
             alternative_part = MIMEMultipart(_subtype="alternative")
             alternative_part.attach(MIMEText(text, _charset='utf-8', _subtype='plain'))
             alternative_part.attach(email_text_part)

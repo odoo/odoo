@@ -1268,6 +1268,42 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(receipt.move_lines.origin.count('MPS'), 1, 'Origin not merged together or duplicated')
         self.assertEqual(receipt.move_lines.origin.count('PO0001'), 1, 'Origin not merged together or duplicated')
 
+    def test_merge_moves_3(self):
+        """ Create 2 moves without initial_demand and already a
+        quantity done. Check that we still have only 2 moves after
+        validation.
+        """
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_in,
+        })
+        move_1 = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 0,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': receipt.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'origin': 'MPS'
+        })
+        move_2 = self.MoveObj.create({
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 0,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': receipt.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'origin': 'PO0001'
+        })
+        move_1.quantity_done = 5
+        move_2.quantity_done = 5
+        receipt.button_validate()
+        self.assertEqual(len(receipt.move_lines), 2, 'Moves were not merged')
+
     def test_merge_chained_moves(self):
         """ Imagine multiple step delivery. Two different receipt picking for the same product should only generate
         1 picking from input to QC and another from QC to stock. The link at the end should follow this scheme.
