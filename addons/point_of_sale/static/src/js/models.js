@@ -338,7 +338,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'pos.category',
-        fields: ['id','name','parent_id','child_id','image'],
+        fields: ['id', 'name', 'parent_id', 'child_id'],
         domain: null,
         loaded: function(self, categories){
             self.db.add_categories(categories);
