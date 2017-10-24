@@ -88,6 +88,12 @@ class MrpUnbuild(models.Model):
         if self.product_id.tracking != 'none' and not self.lot_id.id:
             raise UserError(_('Should have a lot for the finished product'))
 
+        if self.mo_id:
+            if self.mo_id.state != 'done':
+                raise UserError(_('You cannot unbuild a undone manufacturing order.'))
+            if self.mo_id.product_id != self.product_id:
+                raise UserError(_('You cannot unbuild a manufacturing order with an other product.'))
+
         consume_move = self._generate_consume_moves()[0]
         produce_moves = self._generate_produce_moves()
 
@@ -156,10 +162,34 @@ class MrpUnbuild(models.Model):
     def _generate_produce_moves(self):
         moves = self.env['stock.move']
         for unbuild in self:
-            factor = unbuild.product_uom_id._compute_quantity(unbuild.product_qty, unbuild.bom_id.product_uom_id) / unbuild.bom_id.product_qty
-            boms, lines = unbuild.bom_id.explode(unbuild.product_id, factor, picking_type=unbuild.bom_id.picking_type_id)
-            for line, line_data in lines:
-                moves += unbuild._generate_move_from_bom_line(line, line_data['qty'])
+            if unbuild.mo_id:
+                raw_moves = self.mo_id.move_raw_ids.filtered(lambda move: move.state == 'done')
+                factor = unbuild.product_qty / unbuild.mo_id.product_uom_id._compute_quantity(unbuild.mo_id.product_qty, unbuild.product_uom_id)
+                moves += self._generate_move_from_raw_moves(raw_moves, factor)
+            else:
+                factor = unbuild.product_uom_id._compute_quantity(unbuild.product_qty, unbuild.bom_id.product_uom_id) / unbuild.bom_id.product_qty
+                boms, lines = unbuild.bom_id.explode(unbuild.product_id, factor, picking_type=unbuild.bom_id.picking_type_id)
+                for line, line_data in lines:
+                    moves += unbuild._generate_move_from_bom_line(line, line_data['qty'])
+        return moves
+
+    def _generate_move_from_raw_moves(self, raw_moves, factor):
+        self.ensure_one()
+        StockMove = self.env['stock.move']
+        moves = StockMove
+        for raw_move in raw_moves:
+            moves += StockMove.create({
+                        'name': self.name,
+                        'date': self.create_date,
+                        'product_id': raw_move.product_id.id,
+                        'product_uom_qty': raw_move.product_uom_qty * factor,
+                        'product_uom': raw_move.product_uom.id,
+                        'procure_method': 'make_to_stock',
+                        'location_dest_id': self.location_dest_id.id,
+                        'location_id': raw_move.location_dest_id.id,
+                        'unbuild_id': self.id,
+                        'origin': self.name,
+                    })
         return moves
 
     def _generate_move_from_bom_line(self, bom_line, quantity):
@@ -174,6 +204,7 @@ class MrpUnbuild(models.Model):
             'location_dest_id': self.location_dest_id.id,
             'location_id': self.product_id.property_stock_production.id,
             'unbuild_id': self.id,
+            'origin': self.name,
         })
 
     def action_validate(self):
