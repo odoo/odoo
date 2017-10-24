@@ -1905,8 +1905,7 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
         // Show or hide partial reconciliation
         if (self.get("mv_lines_selected").length > 0) {
             var last_line = _.last(self.get("mv_lines_selected"));
-            var propose_partial = self.getCreatedLines().length === 0
-                && balance_type === "greater"
+            var propose_partial = balance_type === "greater"
                 && Math.abs(self.get("balance")) < Math.abs(last_line.debit - last_line.credit)
                 && self.get("balance") * (last_line.debit - last_line.credit) < 0
                 && ! last_line.partial_reconcile
