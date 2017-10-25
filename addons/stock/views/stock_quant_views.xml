@@ -13,6 +13,8 @@
                 <field name="lot_id" groups="stock.group_production_lot"/>
                 <field name="owner_id" groups="stock.group_tracking_owner"/>
                 <group expand='0' string='Filters'>
+                    <filter name="stockable" string="Stockable" domain="[('product_id.type', '=', 'product')]"/>
+                    <separator/>
                     <filter name='internal_loc' string="Internal Locations" domain="[('location_id.usage','=', 'internal')]"/>
                     <filter name='transit_loc' string="Transit Locations" domain="[('location_id.usage' ,'=', 'transit')]"/>
                     <separator/>
@@ -123,7 +125,7 @@
         <field name="res_model">stock.quant</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,pivot</field>
-        <field name="context">{'search_default_internal_loc': 1, 'search_default_productgroup': 1}</field>
+        <field name="context">{'search_default_internal_loc': 1, 'search_default_stockable': 1, 'group_by': ['product_id', 'location_id']}</field>
         <field name="help">This analysis gives you a fast overview on the current stock level of your products and their current inventory value.</field>
     </record>
     <record model="ir.actions.act_window" id="product_template_open_quants"> <!-- Not used -->

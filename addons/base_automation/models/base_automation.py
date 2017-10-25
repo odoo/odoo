@@ -282,7 +282,15 @@ class BaseAutomation(models.Model):
 
         # retrieve all actions, and patch their corresponding model
         for action_rule in self.with_context({}).search([]):
-            Model = self.env[action_rule.model_name]
+            Model = self.env.get(action_rule.model_name)
+
+            # Do not crash if the model of the base_action_rule was uninstalled
+            if Model is None:
+                _logger.warning("Action rule with ID %d depends on model %s" %
+                                (action_rule.id,
+                                 action_rule.model_name))
+                continue
+
             if action_rule.trigger == 'on_create':
                 patch(Model, 'create', make_create())
 
