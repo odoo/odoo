@@ -449,7 +449,8 @@ var ViewEditor = Widget.extend({
      * @return the currently resource id (view ID or less file URL)
      */
     selectedResource: function () {
-        return this.$lists[this.currentType].select2("val");
+        var value = this.$lists[this.currentType].select2("val");
+        return parseInt(value, 10) || value;
     },
     /**
      * The displayResource method forces the view/less file identified by its ID/URL to be displayed in the editor.
