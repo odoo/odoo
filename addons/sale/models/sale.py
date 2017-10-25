@@ -389,11 +389,11 @@ class SaleOrder(models.Model):
             'state': 'draft',
             'procurement_group_id': False,
         })
-        orders.mapped('order_line').mapped('procurement_ids').write({'sale_line_id': False})
+        return orders.mapped('order_line').mapped('procurement_ids').write({'sale_line_id': False})
 
     @api.multi
     def action_cancel(self):
-        self.write({'state': 'cancel'})
+        return self.write({'state': 'cancel'})
 
     @api.multi
     def action_quotation_send(self):
@@ -443,7 +443,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_done(self):
-        self.write({'state': 'done'})
+        return self.write({'state': 'done'})
 
     def _prepare_procurement_group(self):
         return {'name': self.name}
@@ -791,8 +791,8 @@ class SaleOrderLine(models.Model):
     procurement_ids = fields.One2many('procurement.order', 'sale_line_id', string='Procurements')
 
     layout_category_id = fields.Many2one('sale.layout_category', string='Section')
-    layout_category_sequence = fields.Integer(related='layout_category_id.sequence', string='Layout Sequence', store=True)
-    #  Store is intentionally set in order to keep the "historic" order.
+    layout_category_sequence = fields.Integer(string='Layout Sequence')
+    # TODO: remove layout_category_sequence in master or make it work properly
 
     @api.multi
     def _prepare_invoice_line(self, qty):
@@ -850,14 +850,16 @@ class SaleOrderLine(models.Model):
         # TO DO: move me in master/saas-16 on sale.order
         if self.order_id.pricelist_id.discount_policy == 'with_discount':
             return product.with_context(pricelist=self.order_id.pricelist_id.id).price
-        price, rule_id = self.order_id.pricelist_id.get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
+        final_price, rule_id = self.order_id.pricelist_id.get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
         pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
-        if (pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id.discount_policy == 'with_discount'):
-            price, rule_id = pricelist_item.base_pricelist_id.get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
-            return price
+        if pricelist_item.base == 'pricelist':
+            base_price, rule_id = pricelist_item.base_pricelist_id.get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
+            base_price = pricelist_item.base_pricelist_id.currency_id.compute(base_price, self.order_id.pricelist_id.currency_id)
         else:
-            from_currency = self.order_id.company_id.currency_id
-            return from_currency.compute(product.lst_price, self.order_id.pricelist_id.currency_id)
+            base_price = product[pricelist_item.base] if pricelist_item else product.lst_price
+            base_price = product.currency_id.compute(base_price, self.order_id.pricelist_id.currency_id)
+        # negative discounts (= surcharge) are included in the display price (= unit price)
+        return max(base_price, final_price)
 
     @api.multi
     @api.onchange('product_id')

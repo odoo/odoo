@@ -44,8 +44,9 @@ class AccountInvoice(models.Model):
     @api.one
     @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id', 'date_invoice', 'type')
     def _compute_amount(self):
+        round_curr = self.currency_id.round
         self.amount_untaxed = sum(line.price_subtotal for line in self.invoice_line_ids)
-        self.amount_tax = sum(line.amount for line in self.tax_line_ids)
+        self.amount_tax = sum(round_curr(line.amount) for line in self.tax_line_ids)
         self.amount_total = self.amount_untaxed + self.amount_tax
         amount_total_company_signed = self.amount_total
         amount_untaxed_signed = self.amount_untaxed
@@ -1310,6 +1311,9 @@ class AccountInvoiceLine(models.Model):
                 self.price_unit = 0.0
             domain['uom_id'] = []
         else:
+            # Use the purchase uom by default
+            self.uom_id = self.product_id.uom_po_id
+
             if part.lang:
                 product = self.product_id.with_context(lang=part.lang)
             else:

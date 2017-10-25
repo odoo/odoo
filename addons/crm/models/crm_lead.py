@@ -283,6 +283,14 @@ class Lead(FormatAddress, models.Model):
     # ----------------------------------------
 
     @api.model
+    def name_create(self, name):
+        res = super(Lead, self).name_create(name)
+        
+        # update the probability of the lead if the stage is set to update it automatically
+        self.browse(res[0])._onchange_stage_id()
+        return res
+
+    @api.model
     def create(self, vals):
         # set up context used to find the lead's sales team which is needed
         # to correctly set the default stage_id
