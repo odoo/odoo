@@ -6563,6 +6563,71 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('onchange on nested one2manys', function (assert) {
+        assert.expect(6);
+
+        this.data.partner.onchanges.display_name = function (obj) {
+            if (obj.display_name) {
+                obj.p = [
+                    [5],
+                    [0, 0, {
+                        display_name: 'test',
+                        turtles: [[5], [0, 0, {display_name: 'test nested'}]],
+                    }],
+                ];
+            }
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="display_name"/>' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="display_name"/>' +
+                            '</tree>' +
+                            '<form>' +
+                                '<field name="turtles">' +
+                                    '<tree><field name="display_name"/></tree>' +
+                                '</field>' +
+                            '</form>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    assert.strictEqual(args.args[0].p[0][0], 0,
+                        "should send a command 0 (CREATE) for p");
+                    assert.strictEqual(args.args[0].p[0][2].display_name, 'test',
+                        "should send the correct values");
+                    assert.strictEqual(args.args[0].p[0][2].turtles[0][0], 0,
+                        "should send a command 0 (CREATE) for turtles");
+                    assert.deepEqual(args.args[0].p[0][2].turtles[0][2], {display_name: 'test nested'},
+                        "should send the correct values");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$('.o_field_widget[name=display_name]').val('trigger onchange').trigger('input');
+
+        assert.strictEqual(form.$('.o_data_cell').text(), 'test',
+            "should have added the new row to the one2many");
+
+        // open the new subrecord to check the value of the nested o2m, and to
+        // ensure that it will be saved
+        form.$('.o_data_cell:first').click();
+        assert.strictEqual($('.modal .o_data_cell').text(), 'test nested',
+            "should have added the new row to the nested one2many");
+        $('.modal .modal-footer .btn-primary').click();
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        form.destroy();
+    });
 
     QUnit.module('FieldMany2Many');
 

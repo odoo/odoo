@@ -1313,15 +1313,17 @@ var BasicModel = AbstractModel.extend({
                 } else {
                     var fieldInfo = record.fieldsInfo[viewType][name];
                     if (!fieldInfo) {
-                        return; //ignore changes of x2many not in view
+                        return; // ignore changes of x2many not in view
                     }
+                    var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
                     list = self._makeDataPoint({
-                        fieldsInfo: fieldInfo.fieldsInfo,
+                        fields: view ? view.fields : fieldInfo.relatedFields,
+                        fieldsInfo: view ? view.fieldsInfo : fieldInfo.fieldsInfo,
                         modelName: field.relation,
                         parentID: record.id,
                         static: true,
                         type: 'list',
-                        viewType: fieldInfo.viewType,
+                        viewType: view ? view.type : fieldInfo.viewType,
                     });
                 }
                 // TODO: before registering the changes, verify that the x2many
