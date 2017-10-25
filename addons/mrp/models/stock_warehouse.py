@@ -20,8 +20,7 @@ class StockWarehouse(models.Model):
         'stock.picking.type', 'Manufacture Pick Type')
     manufacture_steps = fields.Selection([
         ('manu_only', 'Produce'),
-        ('pick_manu', 'Pick / Produce'),
-        ('pick_manu_out', 'Pick / Produce / Store')],
+        ('pick_manu', 'Pick the components + Produce')],
         'Manufacture', default='manu_only', required=True,
         help="Produce : Move the raw materials to the production location directly and start the manufaturing process.\nPick / Produce : Unload the raw materials from the stock to Input location first, and then transfer it to the production location.\nPick / Produce / Store : Unload the raw materials from the stock to Input location, take it to the production location, move the finished product to the Store (output) location.")
     manu_mto_pull_id = fields.Many2one('procurement.rule', 'MTO rule')
