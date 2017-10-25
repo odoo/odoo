@@ -100,6 +100,7 @@ ListRenderer.include({
                 });
                 var $row = self.$('.o_data_row:nth(' + rowIndex + ')');
                 self._setDecorationClasses(state.data[rowIndex], $row);
+                self._updateFooter();
             }
             return widgets;
         });
