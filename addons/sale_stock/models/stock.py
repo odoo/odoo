@@ -22,7 +22,7 @@ class StockMove(models.Model):
         result = super(StockMove, self).action_done()
 
         # Update delivered quantities on sale order lines
-        sale_order_lines = self.filtered(lambda move: move.procurement_id.sale_line_id and (not move.product_id.can_be_expensed or move.product_id.expense_policy=='no')).mapped('procurement_id.sale_line_id')
+        sale_order_lines = self.filtered(lambda move: move.procurement_id.sale_line_id and move.product_id.expense_policy == 'no').mapped('procurement_id.sale_line_id')
         for line in sale_order_lines:
             line.qty_delivered = line._get_delivered_qty()
         return result
