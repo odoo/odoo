@@ -228,7 +228,7 @@ var CompletionFieldMixin = {
                     action: function() {
                         self._quick_create(search_val);
                     },
-                    classname: 'o_m2o_dropdown_option'
+                    classname: 'o_m2o_dropdown_option_create'
                 });
             }
             // create...
@@ -238,7 +238,7 @@ var CompletionFieldMixin = {
                     action: function() {
                         self._search_create_popup("form", undefined, self._create_context(search_val));
                     },
-                    classname: 'o_m2o_dropdown_option'
+                    classname: 'o_m2o_dropdown_option_create'
                 });
             }
             else if (values.length === 0) {
