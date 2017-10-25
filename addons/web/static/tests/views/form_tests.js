@@ -5317,6 +5317,53 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('buttons with "confirm" attribute save before calling the method', function (assert) {
+        assert.expect(9);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<header>' +
+                        '<button name="post" class="p" string="Confirm" type="object" ' +
+                            'confirm="Very dangerous. U sure?"/>' +
+                    '</header>' +
+                    '<sheet>' +
+                        '<field name="foo"/>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                execute_action: function (event) {
+                    assert.step('execute_action');
+                },
+            },
+        });
+
+        // click on button, and cancel in confirm dialog
+        form.$('.o_statusbar_buttons button').click();
+        assert.ok(form.$('.o_statusbar_buttons button').prop('disabled'),
+            'button should be disabled');
+        $('.modal .modal-footer button.btn-default').click();
+        assert.ok(!form.$('.o_statusbar_buttons button').prop('disabled'),
+            'button should no longer be disabled');
+
+        assert.verifySteps(['default_get']);
+
+        // click on button, and click on ok in confirm dialog
+        form.$('.o_statusbar_buttons button').click();
+        assert.verifySteps(['default_get']);
+        $('.modal .modal-footer button.btn-primary').click();
+
+        assert.verifySteps(['default_get', 'create', 'read', 'execute_action']);
+
+        form.destroy();
+    });
+
     QUnit.test('buttons are disabled until action is resolved (in dialogs)', function (assert) {
         assert.expect(3);
 
