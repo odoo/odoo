@@ -998,7 +998,6 @@ class SaleOrderLine(models.Model):
 
         price, rule_id = self.order_id.pricelist_id.with_context(pricelist_context).get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
         new_list_price, currency_id = self.with_context(context_partner)._get_real_price_currency(self.product_id, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
-        new_list_price = self.env['account.tax']._fix_tax_included_price_company(new_list_price, self.product_id.taxes_id, self.tax_id, self.company_id)
 
         if new_list_price != 0:
             if self.order_id.pricelist_id.currency_id.id != currency_id:
