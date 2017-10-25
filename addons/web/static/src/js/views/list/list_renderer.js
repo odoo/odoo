@@ -94,9 +94,6 @@ var ListRenderer = BasicRenderer.extend({
         } else {
             data = this.state.data;
         }
-        if (data.length === 0) {
-            return;
-        }
 
         _.each(this.columns, this._computeColumnAggregates.bind(this, data));
     },
@@ -138,7 +135,7 @@ var ListRenderer = BasicRenderer.extend({
                 }
             });
             if (func === 'avg') {
-                aggregateValue = aggregateValue / count;
+                aggregateValue = count ? aggregateValue / count : aggregateValue;
             }
             column.aggregate = {
                 help: attrs[func],
