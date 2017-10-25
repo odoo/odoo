@@ -37,7 +37,7 @@ except ImportError:
 FILE_TYPE_DICT = {
     'text/csv': ('csv', True, None),
     'application/vnd.ms-excel': ('xls', xlrd, 'xlrd'),
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ('xlsx', xlsx, 'xlrd >= 0.8'),
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ('xlsx', xlsx, 'xlrd >= 1.0.0'),
     'application/vnd.oasis.opendocument.spreadsheet': ('ods', odf_ods_reader, 'odfpy')
 }
 EXTENSIONS = {
