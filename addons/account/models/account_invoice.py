@@ -799,8 +799,10 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def action_invoice_cancel(self):
-        if self.filtered(lambda inv: inv.state not in ['draft', 'open']):
+        if self.filtered(lambda inv: inv.state == 'cancel'):
             raise UserError(_("Invoice must be in draft or open state in order to be cancelled."))
+        if any(self.mapped('payment_move_line_ids')):
+            raise UserError(_('You cannot cancel this document because it is already reconciled. First, unreconcile these entries.'))
         return self.action_cancel()
 
     @api.multi
