@@ -1,9 +1,9 @@
-odoo.define('hr_expense_attachment.FormRenderer', function (require) {
+odoo.define('hr_expense.FormRenderer', function (require) {
 "use strict";
 
 var FormRenderer = require('web.FormRenderer');
 
-var AttachPhoto = require('hr_expense_attachment.AttachPhoto');
+var AttachPhoto = require('hr_expense.AttachPhoto');
 
 
 /**

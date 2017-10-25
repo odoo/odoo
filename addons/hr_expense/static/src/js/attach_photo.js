@@ -1,4 +1,4 @@
-odoo.define('hr_expense_attachment.AttachPhoto', function (require) {
+odoo.define('hr_expense.AttachPhoto', function (require) {
 "use strict";
 
 var config = require('web.config')
