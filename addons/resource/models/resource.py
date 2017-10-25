@@ -664,8 +664,10 @@ class ResourceCalendarAttendance(models.Model):
     @api.constrains('hour_from', 'hour_to')
     def _check_hours(self):
         for attendance in self:
-            if attendance.hour_from > attendance.hour_to:
-                raise ValidationError(_("The start-hour must be lower than end-hour."))
+            if attendance.hour_from > 24 or attendance.hour_to > 24:
+                raise ValidationError(_("Please enter hours between 1 to 24"))
+            if (attendance.hour_to - attendance.hour_from) <= 0:
+                raise ValidationError(_("Please use 24 hours format!"))
 
 
 class ResourceResource(models.Model):
