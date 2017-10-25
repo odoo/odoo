@@ -168,7 +168,7 @@ class sale_quote(http.Controller):
 
     # note dbo: website_sale code
     @http.route(['/quote/<int:order_id>/transaction/'], type='json', auth="public", website=True)
-    def payment_transaction_token(self, acquirer_id, order_id, save_token=False,access_token=None):
+    def payment_transaction_token(self, acquirer_id, order_id, save_token=False,access_token=None, **kwargs):
         """ Json method that creates a payment.transaction, used to create a
         transaction when the user clicks on 'pay now' button. After having
         created the transaction, the event continues and the user is redirected
