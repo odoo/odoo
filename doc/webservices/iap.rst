@@ -57,9 +57,6 @@ App Developer:
     which can be done either via direct JSON-RPC2_ or if you are using Odoo
     using the convenience helpers it provides.
 
-.. contents::
-    :local:
-
 Overview
 ========
 
@@ -207,6 +204,25 @@ perform the service within:
 
 .. patch::
 
+.. todo:: for the actual IAP will the "portal" page be on odoo.com or iap.odoo.com?
+
+.. todo:: "My Account" > "Your InApp Services"?
+
+.. warning::
+
+    Your *service key* has to be created in the endpoint (production and/or
+    test) before you can actually query user accounts. To create a service,
+    go to your *Portal Account* on the IAP endpoint (https://iap.odoo.com for
+    production, http://iap-sandbox.odoo.com for testing, the endpoints are
+    *independent* and *not synchronized*).
+
+    Log in then go to :menuselection:` My Account --> Your InApp Services`,
+    click :guilabel:`Create` and provide the name of your service. It should
+    usually match the name of your Odoo App.
+
+    You can then create *credit packs* which clients can purchase in order to
+    use your service.
+
 The :class:`~odoo.addons.iap.charge` helper will:
 
 1. authorize (create) a transaction with the specified number of credits,
@@ -217,6 +233,18 @@ The :class:`~odoo.addons.iap.charge` helper will:
    transaction
 4. otherwise if an error is raised from the body of the ``with`` cancel the
    transaction (and release the hold on the credits)
+
+.. danger::
+
+    By default, :class:`~odoo.addons.iap.charge` contacts the *production*
+    IAP endpoint, https://iap.odoo.com. While developing and testing your
+    service you may want to point it towards the *development* IAP endpoint
+    https://iap-sandbox.odoo.com.
+
+    To do so, set the ``iap.endpoint`` config parameter in your service
+    Odoo: in debug/developer mode, :menuselection:`Setting --> Technical -->
+    Parameters --> System Parameters`, just define an entry for the key
+    ``iap.endpoint`` if none already exists).
 
 The :class:`~odoo.addons.iap.charge` helper has two additional optional
 parameters we can use to make things clearer to the end-user:
