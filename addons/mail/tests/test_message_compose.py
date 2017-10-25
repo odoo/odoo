@@ -7,40 +7,6 @@ from odoo.addons.mail.tests.test_mail_gateway import MAIL_TEMPLATE_PLAINTEXT
 from odoo.tools import mute_logger
 
 
-class TestMailFeatures(TestMail):
-    # TDE TODO: tests on the redirection controller
-
-    def test_alias_setup(self):
-        alias = self.env['mail.alias'].with_context(alias_model_name='mail.test').create({'alias_name': 'b4r+_#_R3wl$$'})
-        self.assertEqual(alias.alias_name, 'b4r+_-_r3wl-', 'Disallowed chars should be replaced by hyphens')
-
-    def test_10_cache_invalidation(self):
-        """ Test that creating a mail-thread record does not invalidate the whole cache. """
-        # make a new record in cache
-        record = self.env['res.partner'].new({'name': 'Brave New Partner'})
-        self.assertTrue(record.name)
-
-        # creating a mail-thread record should not invalidate the whole cache
-        self.env['res.partner'].create({'name': 'Actual Partner'})
-        self.assertTrue(record.name)
-
-
-    @mute_logger('odoo.addons.mail.models.mail_mail')
-    def test_needaction(self):
-        # needaction use Inbox notification
-        (self.user_employee | self.user_admin).write({'notification_type': 'inbox'})
-
-        na_emp1_base = self.test_pigs.sudo(self.user_employee).message_needaction_counter
-        na_emp2_base = self.test_pigs.sudo().message_needaction_counter
-
-        self.test_pigs.message_post(body='Test', message_type='comment', subtype='mail.mt_comment', partner_ids=[self.user_employee.partner_id.id])
-
-        na_emp1_new = self.test_pigs.sudo(self.user_employee).message_needaction_counter
-        na_emp2_new = self.test_pigs.sudo().message_needaction_counter
-        self.assertEqual(na_emp1_new, na_emp1_base + 1)
-        self.assertEqual(na_emp2_new, na_emp2_base)
-
-
 class TestMessagePost(TestMail):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -251,6 +217,35 @@ class TestMessagePost(TestMail):
         self.assertEqual(composer.subject, 'Re: %s' % self.test_pigs.name)
 
         # TODO: test attachments ?
+
+    def test_mail_compose_access_rights(self):
+        test_channel = self.env['mail.channel'].create({
+            'name': 'Pigs',
+            'public': 'groups',
+            'group_public_id': self.env.ref('base.group_portal').id})
+        port_msg = test_channel.message_post(body='Message')
+
+        # Do: Chell comments Pigs, ok because can write on it (public group)
+        test_channel.sudo(self.user_portal).message_post(body='I love Pigs', message_type='comment', subtype='mail.mt_comment')
+        # Do: Chell creates a mail.compose.message record on Pigs, because he uses the wizard
+        compose = self.env['mail.compose.message'].with_context({
+            'default_composition_mode': 'comment',
+            'default_model': 'mail.channel',
+            'default_res_id': test_channel.id
+        }).sudo(self.user_portal).create({
+            'subject': 'Subject',
+            'body': 'Body text',
+            'partner_ids': []})
+        compose.send_mail()
+
+        # Do: Chell replies to a Pigs message using the composer
+        compose = self.env['mail.compose.message'].with_context({
+            'default_composition_mode': 'comment',
+            'default_parent_id': port_msg.id
+        }).sudo(self.user_portal).create({
+            'subject': 'Subject',
+            'body': 'Body text'})
+        compose.send_mail()
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_message_compose_mass_mail(self):

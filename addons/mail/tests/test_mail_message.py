@@ -266,25 +266,3 @@ class TestMailMessageAccess(TestMail):
     def test_mail_message_access_create_reply(self):
         self.message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
         self.env['mail.message'].sudo(self.user_employee).create({'model': 'mail.channel', 'res_id': self.group_private.id, 'body': 'Test', 'parent_id': self.message.id})
-
-    def test_message_set_star(self):
-        msg = self.test_pigs.message_post(body='My Body', subject='1')
-        msg_emp = self.env['mail.message'].sudo(self.user_employee).browse(msg.id)
-
-        # Admin set as starred
-        msg.toggle_message_starred()
-        self.assertTrue(msg.starred)
-
-        # Employee set as starred
-        msg_emp.toggle_message_starred()
-        self.assertTrue(msg_emp.starred)
-
-        # Do: Admin unstars msg
-        msg.toggle_message_starred()
-        self.assertFalse(msg.starred)
-        self.assertTrue(msg_emp.starred)
-
-    def test_60_cache_invalidation(self):
-        msg_cnt = len(self.test_pigs.message_ids)
-        self.test_pigs.message_post(body='Hi!', subject='test')
-        self.assertEqual(len(self.test_pigs.message_ids), msg_cnt + 1)
