@@ -783,11 +783,16 @@ class PurchaseOrderLine(models.Model):
             self.name += '\n' + product_lang.description_purchase
 
         fpos = self.order_id.fiscal_position_id
+        #Código agregado por TRESCLOUD
+        ctx = self.env.context.copy()
+        ctx.update({'origin': 'purchase_order_line'})
         if self.env.uid == SUPERUSER_ID:
             company_id = self.env.user.company_id.id
-            self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id.filtered(lambda r: r.company_id.id == company_id))
+            #Código modificado por TRESCLOUD
+            self.taxes_id = fpos.with_context(ctx).map_tax(self.product_id.supplier_taxes_id.filtered(lambda r: r.company_id.id == company_id), self.product_id, self.order_id.partner_id)
         else:
-            self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id)
+            #Código modificado por TRESCLOUD
+            self.taxes_id = fpos.with_context(ctx).map_tax(self.product_id.supplier_taxes_id, self.product_id, self.order_id.partner_id)
 
         self._suggest_quantity()
         self._onchange_quantity()
