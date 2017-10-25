@@ -20,6 +20,10 @@ var config = {
     debug: ($.deparam($.param.querystring()).debug !== undefined),
     device: {
         /**
+         * Browser device name
+         */
+        name: 'unknown',
+        /**
          * touch is a boolean, true if the device supports touch interaction
          *
          * @type Boolean
@@ -80,8 +84,23 @@ function _updateSizeProps() {
     }
 }
 
+/**
+ * Sets the browser device names
+ */
+function _setBrowserDeviceNames() {
+    if (navigator.userAgent.indexOf('Android ') > -1) {
+        config.device.name = "android";
+    }
+    if ($.browser.chrome) {
+        config.device.name = "chrome";
+    } else if ($.browser.mozilla) {
+        config.device.name = "mozilla";
+    }
+}
+
 _.invoke(medias, 'addListener', _updateSizeProps);
 _updateSizeProps();
+_setBrowserDeviceNames();
 
 return config;
 
