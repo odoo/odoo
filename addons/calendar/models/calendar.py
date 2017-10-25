@@ -1125,7 +1125,8 @@ class Meeting(models.Model):
         ))
         def key(record):
             return [
-                tools.Reverse(record[name]) if desc else record[name]
+                str(record[name]) if name == 'id' else
+                (tools.Reverse(record[name]) if desc else record[name])
                 for name, desc in sort_spec
             ]
         return [r['id'] for r in sorted(result_data, key=key)]
