@@ -1730,7 +1730,7 @@ exports.Orderline = Backbone.Model.extend({
         var sign = 1;
         if(base < 0){
             base = -base;
-            var sign = -1;
+            sign = -1;
         }
 
         var incl_fixed_amount = 0.0;
@@ -1777,8 +1777,8 @@ exports.Orderline = Backbone.Model.extend({
         });
         return {
             taxes: taxes_vals,
-            total_excluded: round_pr(total_excluded, currency_rounding_bak),
-            total_included: round_pr(total_included, currency_rounding_bak)
+            total_excluded: sign * round_pr(total_excluded, currency_rounding_bak),
+            total_included: sign * round_pr(total_included, currency_rounding_bak)
         };
     },
     get_all_prices: function(){
@@ -1796,6 +1796,7 @@ exports.Orderline = Backbone.Model.extend({
                 return t.id === el;
             }));
         });
+        product_taxes = _.map(product_taxes, this._map_tax_fiscal_position.bind(this));
 
         var all_taxes = this.compute_all(product_taxes, price_unit, this.get_quantity(), this.pos.currency.rounding);
         _(all_taxes.taxes).each(function(tax) {
