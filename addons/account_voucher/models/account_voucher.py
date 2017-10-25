@@ -182,7 +182,7 @@ class AccountVoucher(models.Model):
                 'amount_currency': (sign * abs(self.amount)  # amount < 0 for refunds
                     if company_currency != current_currency else 0.0),
                 'date': self.account_date,
-                'date_maturity': self.date_due
+                'date_maturity': self.date_due,
                 'payment_id': self._context.get('payment_id'),
             }
         return move_line
