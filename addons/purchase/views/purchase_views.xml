@@ -172,7 +172,7 @@
                         <button type="object"
                             name="action_view_picking"
                             class="oe_stat_button"
-                            icon="fa-truck" attrs="{'invisible':[('state', 'in', ('draft','sent','to approve')),('picking_ids','=',[])]}">
+                            icon="fa-truck" attrs="{'invisible':[('picking_ids','=',[])]}">
                             <field name="picking_count" widget="statinfo" string="Shipment" help="Incoming Shipments"/>
                             <field name="picking_ids" invisible="1"/>
                         </button>
@@ -209,6 +209,7 @@
                                  <tree string="Purchase Order Lines" editable="bottom">
                                     <field name="currency_id" invisible="1"/>
                                     <field name="state" invisible="1"/>
+                                    <field name="product_type" invisible="1"/>
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" attrs="{'readonly': [('state', 'in', ('purchase', 'to approve','done', 'cancel'))]}" context="{'partner_id':parent.partner_id, 'quantity':product_qty,'uom':product_uom, 'company_id': parent.company_id}"/>
                                     <field name="name"/>
@@ -217,8 +218,8 @@
                                     <field name="account_analytic_id" context="{'default_partner_id':parent.partner_id}" groups="purchase.group_analytic_accounting"/>
                                     <field name="analytic_tag_ids" groups="purchase.group_analytic_accounting" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <field name="product_qty"/>
-                                    <field name="qty_received" invisible="not context.get('show_purchase', True)"/>
-                                    <field name="qty_invoiced" invisible="not context.get('show_purchase', True)"/>
+                                    <field name="qty_received" attrs="{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))], 'readonly': [('product_type', 'in', ('consu', 'product'))]}"/>
+                                    <field name="qty_invoiced" attrs="{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))]}"/>
                                     <field name="product_uom" groups="product.group_uom" attrs="{'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))]}"/>
                                     <field name="price_unit"/>
                                     <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]" context="{'default_type_tax_use': 'purchase'}" options="{'no_create': True}"/>
@@ -398,7 +399,7 @@
                     <field name="amount_total" sum="Total amount" widget="monetary"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="state"/>
-                    <field name="invoice_status" invisible="not context.get('show_purchase', True)"/>
+                    <field name="invoice_status" attrs="{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))]}"/>
                 </tree>
             </field>
         </record>
@@ -415,8 +416,6 @@
             <field name="name">Requests for Quotation</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
-            <field name="context">{'search_default_todo':1, 'show_purchase': False}</field>
-            <field name="domain">[('state','in',('draft','sent','bid','cancel', 'confirmed'))]</field>
             <field name="view_mode">tree,kanban,form,pivot,graph,calendar</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help" type="html">
@@ -441,8 +440,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="view_mode">tree,kanban,form,pivot,graph,calendar</field>
-            <field name="context">{'search_default_todo':1, 'show_purchase': True}</field>
-            <field name="domain">[('state','not in',('draft','sent','bid', 'confirmed'))]</field>
+            <field name="domain">[('state','in',('purchase', 'done'))]</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
