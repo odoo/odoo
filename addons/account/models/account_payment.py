@@ -3,6 +3,9 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 
+from itertools import groupby
+
+
 MAP_INVOICE_TYPE_PARTNER_TYPE = {
     'out_invoice': 'customer',
     'out_refund': 'customer',
@@ -111,18 +114,24 @@ class account_register_payments(models.TransientModel):
         if self.payment_type:
             return {'domain': {'payment_method_id': [('payment_type', '=', self.payment_type)]}}
 
-    @api.model
-    def _compute_payment_amount(self, invoice_ids):
-        payment_currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id
+    @api.onchange('currency_id')
+    def _onchange_currency_id(self):
+        self.amount = abs(self._compute_payment_amount())
 
-        total = 0
-        for inv in invoice_ids:
-            if inv.currency_id == payment_currency:
-                total += MAP_INVOICE_TYPE_PAYMENT_SIGN[inv.type] * inv.residual_company_signed
+    @api.model
+    def _compute_payment_amount(self, invoice_ids=None):
+        payment_currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id
+        invoices = invoice_ids or self.invoice_ids
+
+        # Avoid currency rounding issues by summing the amounts according to the company_currency_id before
+        total = 0.0
+        groups = groupby(invoices, lambda i: i.company_currency_id)
+        for currency, invoices in groups:
+            amount_total = sum([MAP_INVOICE_TYPE_PAYMENT_SIGN[i.type] * i.residual_company_signed for i in invoices])
+            if currency == payment_currency:
+                total += amount_total
             else:
-                amount_residual = inv.company_currency_id.with_context(date=self.payment_date).compute(
-                    inv.residual_company_signed, payment_currency)
-                total += MAP_INVOICE_TYPE_PAYMENT_SIGN[inv.type] * amount_residual
+                total += currency.with_context(date=self.payment_date).compute(amount_total, payment_currency)
         return total
 
     @api.model
