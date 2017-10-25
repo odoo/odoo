@@ -301,7 +301,7 @@ class InventoryLine(models.Model):
         domain=[('type', '=', 'product')],
         index=True, required=True)
     product_name = fields.Char(
-        'Product Name', related='product_id.name', store=True)
+        'Product Name', related='product_id.name', store=True, readonly=True)
     product_code = fields.Char(
         'Product Code', related='product_id.default_code', store=True)
     product_uom_id = fields.Many2one(
@@ -365,7 +365,13 @@ class InventoryLine(models.Model):
             self.product_qty = self.theoretical_qty
 
     @api.model
+    def write(self, values):
+        values.pop('product_name', False)
+        res = super(InventoryLine, self).write(values)
+
+    @api.model
     def create(self, values):
+        values.pop('product_name', False)
         if 'product_id' in values and 'product_uom_id' not in values:
             values['product_uom_id'] = self.env['product.product'].browse(values['product_id']).uom_id.id
         existings = self.search([

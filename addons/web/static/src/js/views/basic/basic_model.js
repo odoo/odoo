@@ -1092,6 +1092,9 @@ var BasicModel = AbstractModel.extend({
      * @param {boolean} [options.doNotSetDirty=false] if this flag is set to
      *   true, then we will not tag the record as dirty.  This should be avoided
      *   for most situations.
+     * @param {boolean} [options.notifyChange=true] if this flag is set to
+     *   false, then we will not notify and not trigger the onchange, even though
+     *   it was changed.
      * @param {string} [options.viewType] current viewType. If not set, we will assume
      *   main viewType from the record
      * @returns {Deferred}
@@ -1117,6 +1120,10 @@ var BasicModel = AbstractModel.extend({
             } else {
                 record._changes[fieldName] = changes[fieldName];
             }
+        }
+
+        if (options.notifyChange === false) {
+            return $.when();
         }
 
         return $.when.apply($, defs).then(function () {
@@ -2305,6 +2312,7 @@ var BasicModel = AbstractModel.extend({
                 var ids = record.data[fieldName] || [];
                 var list = self._makeDataPoint({
                     count: ids.length,
+                    context: record.context,
                     fieldsInfo: fieldsInfo,
                     fields: view ? view.fields : fieldInfo.relatedFields,
                     limit: fieldInfo.limit,

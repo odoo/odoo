@@ -800,10 +800,6 @@ var FormRenderer = BasicRenderer.extend({
         this.$el.toggleClass('o_form_editable', this.mode === 'edit');
         this.$el.toggleClass('o_form_readonly', this.mode === 'readonly');
 
-        // Necessary to allow all sub widgets to use their dimensions in
-        // layout related activities, such as autoresize on fieldtexts
-        core.bus.trigger('DOM_updated');
-
         // Attach the tooltips on the fields' label
         _.each(this.allFieldWidgets[this.state.id], function (widget) {
             var idForLabel = self.idsForLabels[widget.name];

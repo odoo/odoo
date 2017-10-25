@@ -445,7 +445,7 @@ class PricelistItem(models.Model):
         elif self.compute_price == 'percentage':
             self.price = _("%s %% discount") % (self.percent_price)
         else:
-            self.price = _("%s %% discount and %s surcharge") % (abs(self.price_discount), self.price_surcharge)
+            self.price = _("%s %% discount and %s surcharge") % (self.price_discount, self.price_surcharge)
 
     @api.onchange('applied_on')
     def _onchange_applied_on(self):

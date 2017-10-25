@@ -6,7 +6,6 @@ odoo.define('website_sale_delivery.checkout', function (require) {
 
     /* Handle interactive carrier choice + cart update */
     var $pay_button = $('#o_payment_form_pay');
-    $pay_button.prop('disabled', false);
 
     var _onCarrierUpdateAnswer = function(result) {
         var $amount_delivery = $('#order_delivery span.oe_currency_value');

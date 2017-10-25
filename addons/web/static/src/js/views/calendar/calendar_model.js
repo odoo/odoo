@@ -322,6 +322,7 @@ return AbstractModel.extend({
         // List authorized values for every field
         // fields with an active 'all' filter are skipped
         var authorizedValues = {};
+        var avoidValues = {};
 
         _.each(this.data.filters, function (filter) {
             // Skip 'all' filters because they do not affect the domain
@@ -329,11 +330,20 @@ return AbstractModel.extend({
 
             // Loop over subfilters to complete authorizedValues
             _.each(filter.filters, function (f) {
-                if (!authorizedValues[filter.fieldName])
-                    authorizedValues[filter.fieldName] = [];
+                if (filter.write_model) {
+                    if (!authorizedValues[filter.fieldName])
+                        authorizedValues[filter.fieldName] = [];
 
-                if (f.active) {
-                    authorizedValues[filter.fieldName].push(f.value);
+                    if (f.active) {
+                        authorizedValues[filter.fieldName].push(f.value);
+                    }
+                } else {
+                    if (!avoidValues[filter.fieldName])
+                        avoidValues[filter.fieldName] = [];
+
+                    if (!f.active) {
+                        avoidValues[filter.fieldName].push(f.value);
+                    }
                 }
             });
         });
@@ -342,6 +352,9 @@ return AbstractModel.extend({
         var domain = [];
         for (var field in authorizedValues) {
             domain.push([field, 'in', authorizedValues[field]]);
+        }
+        for (var field in avoidValues) {
+            domain.push([field, 'not in', avoidValues[field]]);
         }
 
         return domain;
