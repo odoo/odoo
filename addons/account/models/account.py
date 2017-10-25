@@ -724,6 +724,7 @@ class AccountTax(models.Model):
         RETURN: {
             'total_excluded': 0.0,    # Total without taxes
             'total_included': 0.0,    # Total with taxes
+            'total_void'    : 0.0,    # Total with those taxes, that don't have an account set
             'taxes': [{               # One dict for each tax in self and their children
                 'id': int,
                 'name': str,
