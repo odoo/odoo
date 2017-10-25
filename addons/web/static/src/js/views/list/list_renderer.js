@@ -640,6 +640,17 @@ var ListRenderer = BasicRenderer.extend({
         });
     },
     /**
+     * Update the footer aggregate values.  This method should be called each
+     * time the state of some field is changed, to make sure their sum are kept
+     * in sync.
+     *
+     * @private
+     */
+    _updateFooter: function () {
+        this._computeAggregates();
+        this.$('tfoot').replaceWith(this._renderFooter(!!this.state.groupedBy.length));
+    },
+    /**
      * Whenever we change the state of the selected rows, we need to call this
      * method to keep the this.selection variable in sync, and also to recompute
      * the aggregates.
@@ -653,8 +664,7 @@ var ListRenderer = BasicRenderer.extend({
             return $(row).data('id');
         });
         this.trigger_up('selection_changed', { selection: this.selection });
-        this._computeAggregates();
-        this.$('tfoot').replaceWith(this._renderFooter(!!this.state.groupedBy.length));
+        this._updateFooter();
     },
 
     //--------------------------------------------------------------------------
