@@ -1068,7 +1068,9 @@ QUnit.module('relational_fields', {
             assert.deepEqual(
                 obj.turtles,
                 [
+                    [4, 2, false],
                     [1, 2, {turtle_foo: 'blip'}],
+                    [4, 3, false],
                     [1, 3, {turtle_foo: 'kawa'}]
                 ],
                 "should have properly created the x2many command list");
@@ -1097,7 +1099,9 @@ QUnit.module('relational_fields', {
                     // unchanged state with the command 1, but this seems more
                     // difficult.
                     assert.deepEqual(args.args[0].turtles, [
+                        [4, 2, false],
                         [1, 2, {turtle_foo: 'blip'}],
+                        [4, 3, false],
                         [1, 3, {turtle_foo: 'kawa'}]
                     ], 'should send proper commands to create method');
                 }
