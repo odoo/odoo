@@ -2881,7 +2881,8 @@ var BasicModel = AbstractModel.extend({
      * @returns {boolean}
      */
     _isFieldProtected: function (record, fieldName, viewType) {
-        var fieldInfo = record.fieldsInfo[viewType || record.viewType][fieldName];
+        var fieldInfo = record.fieldsInfo &&
+                        (record.fieldsInfo[viewType || record.viewType][fieldName]);
         if (fieldInfo) {
             var rawModifiers = JSON.parse(fieldInfo.modifiers || "{}");
             var modifiers = this._evalModifiers(record, rawModifiers);
