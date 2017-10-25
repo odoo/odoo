@@ -1097,7 +1097,7 @@ var BasicModel = AbstractModel.extend({
      *   it was changed.
      * @param {string} [options.viewType] current viewType. If not set, we will assume
      *   main viewType from the record
-     * @returns {Deferred}
+     * @returns {Deferred} list of changed fields
      */
     _applyChange: function (recordID, changes, options) {
         var self = this;
@@ -1123,7 +1123,7 @@ var BasicModel = AbstractModel.extend({
         }
 
         if (options.notifyChange === false) {
-            return $.when();
+            return $.Deferred().resolve(_.keys(changes));
         }
 
         return $.when.apply($, defs).then(function () {
