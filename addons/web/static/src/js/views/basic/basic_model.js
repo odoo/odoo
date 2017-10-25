@@ -2634,13 +2634,21 @@ var BasicModel = AbstractModel.extend({
                             }
                             commands[fieldName].push(command);
                         } else if (_.contains(addedIds, list.res_ids[i])) {
-                            // this is a new id
+                            // this is a new id (maybe existing in DB, but new in JS)
                             relRecord = _.findWhere(relRecordAdded, {res_id: list.res_ids[i]});
                             changes = this._generateChanges(relRecord, options);
                             if ('id' in changes) {
+                                // the subrecord already exists in db
                                 delete changes.id;
-                                commands[fieldName].push(x2ManyCommands.update(relRecord.res_id, changes));
+                                if (this.isNew(record.id)) {
+                                    // if the main record is new, link the subrecord to it
+                                    commands[fieldName].push(x2ManyCommands.link_to(relRecord.res_id));
+                                }
+                                if (!_.isEmpty(changes)) {
+                                    commands[fieldName].push(x2ManyCommands.update(relRecord.res_id, changes));
+                                }
                             } else {
+                                // the subrecord is new, so create it
                                 commands[fieldName].push(x2ManyCommands.create(changes));
                             }
                         }

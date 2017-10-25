@@ -500,22 +500,6 @@ class HrExpenseSheet(models.Model):
             ).compute(expense.total_amount, self.currency_id)
         self.total_amount = total_amount
 
-    # FIXME: A 4 command is missing to explicitly declare the one2many relation
-    # between the sheet and the lines when using 'default_expense_line_ids':[ids]
-    # in the context. A fix from chm-odoo should come since
-    # several saas versions but sadly I had to add this hack to avoid this
-    # issue
-    @api.model
-    def _add_missing_default_values(self, values):
-        values = super(HrExpenseSheet, self)._add_missing_default_values(values)
-        if self.env.context.get('default_expense_line_ids', False):
-            lines_to_add = []
-            for line in values.get('expense_line_ids', []):
-                if line[0] == 1:
-                    lines_to_add.append([4, line[1], False])
-            values['expense_line_ids'] = lines_to_add + values['expense_line_ids']
-        return values
-
     @api.one
     def _compute_attachment_number(self):
         self.attachment_number = sum(self.expense_line_ids.mapped('attachment_number'))
