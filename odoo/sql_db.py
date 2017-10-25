@@ -606,7 +606,7 @@ class ConnectionPool(object):
                     cnx.close()
                 break
         else:
-            raise PoolError('This connection does not below to the pool')
+            raise PoolError('This connection does not belong to the pool')
 
     @locked
     def close_all(self, dsn=None):
