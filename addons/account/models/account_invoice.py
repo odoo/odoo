@@ -1812,6 +1812,7 @@ class AccountPaymentTermLine(models.Model):
         if self.option in ('last_day_current_month', 'last_day_following_month'):
             self.days = 0
 
+
 class MailComposeMessage(models.TransientModel):
     _inherit = 'mail.compose.message'
 
@@ -1821,7 +1822,7 @@ class MailComposeMessage(models.TransientModel):
         if context.get('default_model') == 'account.invoice' and \
                 context.get('default_res_id') and context.get('mark_invoice_as_sent'):
             invoice = self.env['account.invoice'].browse(context['default_res_id'])
-            invoice = invoice.with_context(mail_post_autofollow=True)
-            invoice.sent = True
-            invoice.message_post(body=_("Invoice sent"))
+            if not invoice.sent:
+                invoice.sent = True
+            self = self.with_context(mail_post_autofollow=True)
         return super(MailComposeMessage, self).send_mail(auto_commit=auto_commit)
