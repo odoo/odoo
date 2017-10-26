@@ -186,11 +186,7 @@ class sale_quote(http.Controller):
         token = request.env['payment.token'].sudo()  # currently no support of payment tokens
         tx = request.env['payment.transaction'].sudo().search([('reference', '=', order.name)], limit=1)
         tx_type = order._get_payment_type()
-        tx = tx._check_or_create_sale_tx(order, acquirer, payment_token=token, tx_type=tx_type, add_tx_values={
-            'callback_model_id': request.env['ir.model'].sudo().search([('model', '=', order._name)], limit=1).id,
-            'callback_res_id': order.id,
-            'callback_method': '_confirm_online_quote',
-        })
+        tx = tx._check_or_create_sale_tx(order, acquirer, payment_token=token, tx_type=tx_type)
         request.session['quote_%s_transaction_id' % order.id] = tx.id
 
         return tx.render_sale_button(order, '/quote/%s/%s' % (order_id, access_token) if access_token else '/quote/%s' % order_id,
@@ -222,11 +218,7 @@ class sale_quote(http.Controller):
         # set the transaction type to server2server
         tx_type = 'server2server'
         # check if the transaction exists, if not then it create one
-        tx = tx._check_or_create_sale_tx(order, token.acquirer_id, payment_token=token, tx_type=tx_type, add_tx_values={
-            'callback_model_id': request.env['ir.model'].sudo().search([('model', '=', order._name)], limit=1).id,
-            'callback_res_id': order.id,
-            'callback_method': '_confirm_online_quote',
-        })
+        tx = tx._check_or_create_sale_tx(order, token.acquirer_id, payment_token=token, tx_type=tx_type)
         # set the transaction id into the session
         request.session['quote_%s_transaction_id' % order_id] = tx.id
         # proceed to the payment
