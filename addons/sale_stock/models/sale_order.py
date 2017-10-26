@@ -218,6 +218,7 @@ class SaleOrderLine(models.Model):
             'company_id': self.order_id.company_id,
             'group_id': group_id,
             'sale_line_id': self.id,
+            'description': self.name,
             'date_planned': date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
             'route_ids': self.route_id,
             'warehouse_id': self.order_id.warehouse_id or False,

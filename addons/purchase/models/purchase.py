@@ -697,6 +697,7 @@ class PurchaseOrderLine(models.Model):
         template = {
             'name': self.name or '',
             'product_id': self.product_id.id,
+            'description': self.name,
             'product_uom': self.product_uom.id,
             'date': self.order_id.date_order,
             'date_expected': self.date_planned,
