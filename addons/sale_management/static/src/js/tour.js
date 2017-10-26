@@ -54,7 +54,7 @@ tour.register('sale_tour', {
     },
     id: "quotation_product_selected",
 }, {
-    trigger: ".o_form_button_save",
+    trigger: ".o_cp_buttons .o_form_button_save",
     extra_trigger: ".o_sale_order",
     content: _t("Once your quotation is ready, you can save, print or send it by email."),
     position: "right",
