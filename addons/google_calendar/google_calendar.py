@@ -954,7 +954,7 @@ class google_calendar(osv.AbstractModel):
 
     def get_minTime(self, cr, uid, context=None):
         number_of_week = int(self.pool['ir.config_parameter'].get_param(cr, uid, 'calendar.week_synchro', default=13))
-        return datetime.now() - timedelta(weeks=number_of_week)
+        return datetime.now() - timedelta(weeks=int(number_of_week))
 
     def get_need_synchro_attendee(self, cr, uid, context=None):
         return self.pool['ir.config_parameter'].get_param(cr, uid, 'calendar.block_synchro_attendee', default=True)
