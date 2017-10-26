@@ -219,39 +219,6 @@
             <field name="stage_id" ref="project_stage_data_1"/>
         </record>
 
-        <record forcecreate="False" id="project_task_data_8" model="project.task">
-            <field name="user_id" ref="base.user_root"/>
-            <field name="priority">0</field>
-            <field name="project_id" ref="project.project_project_data"/>
-            <field name="active" eval="False"/>
-            <field name="name">Do you want to learn more? Try our implementation guide!</field>
-            <field name="stage_id" ref="project_stage_data_2"/>
-            <field name="description">Click on the bar in the upper right corner</field>
-        </record>
-
-        <record forcecreate="False" id="msg_task_data_8_attach" model="ir.attachment">
-            <field name="name">planner_icon.png</field>
-            <field name="datas_fname">planner_icon.png</field>
-            <field name="datas" type="base64" file="project/static/src/img/planner_icon.png"></field>
-            <field name="res_model">project.task</field>
-            <field name="res_id" ref="project_task_data_8"/>
-        </record>
-        
-        <record forcecreate="False" id="msg_task_data_8" model="mail.message">
-            <field name="subject">How to open the implementation guide ?</field>
-            <field name="model">project.task</field>
-            <field name="res_id" ref="project_task_data_8"/>
-            <field name="author_id" ref="base.partner_root"/>
-            <field name="body"><![CDATA[Click on this icon in the upper right corner to open the planner<br/>
-            Best regards,<br/>Me.</p>]]></field>
-            <field name="message_type">comment</field>
-            <field name="attachment_ids" eval="[(6, 0, [ref('msg_task_data_8_attach')])]"/>
-        </record>
-
-        <record forcecreate="False" id="project_task_data_8" model="project.task">
-            <field name="displayed_image_id" ref="msg_task_data_8_attach"/>
-        </record>
-
         <record forcecreate="False" id="project_task_data_7" model="project.task">
             <field name="user_id" ref="base.user_root"/>
             <field name="priority">0</field>
@@ -291,30 +258,6 @@
             <field name="stage_id" ref="project_stage_data_2"/>
             <field name="description">In the chatter, sending an email with an attachment will display the picture on the card. When there are several image attachments, you can choose which one you want to display.</field>
         </record>
-
-        <record forcecreate="False" id="msg_task_data_14_attach" model="ir.attachment">
-            <field name="name">bird.jpg</field>
-            <field name="datas_fname">bird.jpg</field>
-            <field name="datas" type="base64" file="project/static/src/img/bird.jpg"></field>
-            <field name="res_model">project.task</field>
-            <field name="res_id" ref="project_task_data_14"/>
-        </record>
-
-
-        <record forcecreate="False" id="msg_task_data_14" model="mail.message">
-            <field name="subject">How to open the planner?</field>
-            <field name="model">project.task</field>
-            <field name="res_id" ref="project_task_data_14"/>
-            <field name="author_id" ref="base.partner_root"/>
-            <field name="body"><![CDATA[Look at this beautiful bird !]]></field>
-            <field name="message_type">comment</field>
-            <field name="attachment_ids" eval="[(6, 0, [ref('msg_task_data_14_attach')])]"/>
-        </record>
-
-        <record forcecreate="False" id="project_task_data_14" model="project.task">
-            <field name="displayed_image_id" ref="msg_task_data_14_attach"/>
-        </record>
-
 
     </data>
     <template id="mail_template_task_merge">

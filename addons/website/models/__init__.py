@@ -9,5 +9,4 @@ from . import website
 from . import ir_ui_view
 from . import res_company
 from . import res_partner
-from . import web_planner
 from . import res_config_settings

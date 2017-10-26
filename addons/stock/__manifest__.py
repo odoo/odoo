@@ -7,7 +7,7 @@
     'summary': 'Inventory, Logistics, Warehousing',
     'description': "",
     'website': 'https://www.odoo.com/page/warehouse',
-    'depends': ['product', 'barcodes', 'web_planner'],
+    'depends': ['product', 'barcodes'],
     'category': 'Warehouse',
     'sequence': 13,
     'demo': [
@@ -69,7 +69,6 @@
         'data/stock_data.yml',
         'data/stock_incoterms_data.xml',
         'data/stock_sequence_data.xml',
-        'data/web_planner_data.xml',
     ],
     'qweb': [
         'static/src/xml/stock_traceability_report_backend.xml',
