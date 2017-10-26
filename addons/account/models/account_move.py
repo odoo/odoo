@@ -1550,6 +1550,15 @@ class AccountPartialReconcile(models.Model):
         partial_reconciles._compute_partial_lines()
         return move_lines, partial_reconciles
 
+    def _get_tax_cash_basis_base_account(self, line, tax):
+        ''' Get the account of lines that will contain the base amount of taxes.
+
+        :param line: An account.move.line record
+        :param tax: An account.tax record
+        :return: An account record
+        '''
+        return line.account_id
+
     def create_tax_cash_basis_entry(self, percentage_before_rec):
         self.ensure_one()
         move_date = self.debit_move_id.date
@@ -1607,11 +1616,12 @@ class AccountPartialReconcile(models.Model):
                             newly_created_move = self._create_tax_basis_move()
                         #create cash basis entry for the base
                         for tax in line.tax_ids:
+                            account_id = self._get_tax_cash_basis_base_account(line, tax)
                             self.env['account.move.line'].with_context(check_move_validity=False).create({
                                 'name': line.name,
                                 'debit': rounded_amt > 0 and rounded_amt or 0.0,
                                 'credit': rounded_amt < 0 and abs(rounded_amt) or 0.0,
-                                'account_id': line.account_id.id,
+                                'account_id': account_id.id,
                                 'tax_exigible': True,
                                 'tax_ids': [(6, 0, [tax.id])],
                                 'move_id': newly_created_move.id,
@@ -1623,7 +1633,7 @@ class AccountPartialReconcile(models.Model):
                                 'name': line.name,
                                 'credit': rounded_amt > 0 and rounded_amt or 0.0,
                                 'debit': rounded_amt < 0 and abs(rounded_amt) or 0.0,
-                                'account_id': line.account_id.id,
+                                'account_id': account_id.id,
                                 'tax_exigible': True,
                                 'move_id': newly_created_move.id,
                                 'currency_id': line.currency_id.id,
