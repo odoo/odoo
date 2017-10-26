@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug import url_encode
-
 from odoo import http, _
+from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.http import request, route
 
 
@@ -68,7 +67,7 @@ class PaymentPortal(http.Controller):
         order_sudo = request.env['sale.order'].sudo().browse(order_id)
         if not order_sudo:
             params['error'] = 'pay_sale_invalid_doc'
-            return request.redirect('%s?%s' % (error_url, url_encode(params)))
+            return request.redirect(_build_url_w_params(error_url, params))
 
         try:
             token = request.env['payment.token'].sudo().browse(int(pm_id))
@@ -76,7 +75,7 @@ class PaymentPortal(http.Controller):
             token = False
         if not token:
             params['error'] = 'pay_sale_invalid_token'
-            return request.redirect('%s?%s' % (error_url, url_encode(params)))
+            return request.redirect(_build_url_w_params(error_url, params))
 
         # find an existing tx or create a new one
         tx = request.env['payment.transaction'].sudo()._check_or_create_sale_tx(
@@ -97,7 +96,7 @@ class PaymentPortal(http.Controller):
         res = tx.confirm_sale_token()
         if res is not True:
             params['error'] = res
-            return request.redirect('%s?%s' % (error_url, url_encode(params)))
+            return request.redirect(_build_url_w_params(error_url, params))
 
         params['success'] = 'pay_sale'
-        return request.redirect('%s?%s' % (success_url, url_encode(params)))
+        return request.redirect(_build_url_w_params(success_url, params))
