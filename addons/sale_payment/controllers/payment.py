@@ -64,7 +64,7 @@ class PaymentPortal(http.Controller):
         if access_token:
             params['access_token'] = access_token
 
-        order_sudo = request.env['sale.order'].sudo().browse(order_id)
+        order_sudo = request.env['sale.order'].sudo().browse(order_id).exists()
         if not order_sudo:
             params['error'] = 'pay_sale_invalid_doc'
             return request.redirect(_build_url_w_params(error_url, params))
