@@ -1303,16 +1303,6 @@
                                 </table>
                             </div>
                             <div class="col-md-12">
-                                <div class="col-lg-5 col-sm-6 col-xs-12 text-muted" id="coupon_box">
-                                    <t t-if="request.env.ref('website_sale.reduction_code').active">
-                                        <p>
-                                          Have a promo code? Fill in this field and apply.
-                                        </p>
-                                        <t t-call='website_sale.coupon_form'>
-                                            <t t-set='redirect'>/shop/payment</t>
-                                        </t>
-                                    </t>
-                                </div>
                                 <t t-call="website_sale.total">
                                     <t t-set='extra_class' t-value='"col-md-4 col-md-offset-8 col-sm-4 col-sm-offset-8 col-xs-8 col-xs-offset-4"'/>
                                 </t>
