@@ -123,7 +123,7 @@ class StockQuant(models.Model):
     #Metodo agregado por Trescloud
     def move_lines(self, journal_id, move_lines, date, move):
         '''hook para poder agrupar lineas del asiento contable'''
-        new_account_move = self.env['account.move'].create({
+        new_account_move = move.env['account.move'].create({
             'journal_id': journal_id,
             'line_ids': move_lines,
             'date': date,
