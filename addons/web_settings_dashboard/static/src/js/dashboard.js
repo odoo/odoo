@@ -3,8 +3,6 @@ odoo.define('web_settings_dashboard', function (require) {
 
 var core = require('web.core');
 var framework = require('web.framework');
-var PlannerCommon = require('web.planner.common');
-var PlannerDialog = PlannerCommon.PlannerDialog;
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
@@ -14,7 +12,7 @@ var Dashboard = Widget.extend({
     template: 'DashboardMain',
 
     init: function(){
-        this.all_dashboards = ['apps', 'invitations', 'planner', 'share', 'translations', 'company'];
+        this.all_dashboards = ['apps', 'invitations', 'share', 'translations', 'company'];
         return this._super.apply(this, arguments);
     },
 
@@ -54,10 +52,6 @@ var Dashboard = Widget.extend({
 
     load_invitations: function(data){
         return new DashboardInvitations(this, data.users_info).replace(this.$('.o_web_settings_dashboard_invitations'));
-    },
-
-    load_planner: function(data){
-        return  new DashboardPlanner(this, data.planner).replace(this.$('.o_web_settings_dashboard_planner'));
     },
 
     load_translations: function (data) {
@@ -156,72 +150,6 @@ var DashboardInvitations = Widget.extend({
     },
     reload:function(){
         return this.parent.load(['invitations']);
-    },
-});
-
-var DashboardPlanner = Widget.extend({
-
-    template: 'DashboardPlanner',
-
-    events: {
-        'click .o_web_settings_dashboard_planner_progress_bar': 'on_planner_clicked',
-    },
-
-    init: function(parent, data){
-        this.data = data;
-        this.parent = parent;
-        this.planner_by_menu = {};
-        this._super.apply(this, arguments);
-    },
-
-    willStart: function () {
-        var self = this;
-        return this._rpc({
-                model: 'web.planner',
-                method: 'search_read',
-            })
-            .then(function(res) {
-                self.planners = res;
-                _.each(self.planners, function(planner) {
-                    self.planner_by_menu[planner.menu_id[0]] = planner;
-                    self.planner_by_menu[planner.menu_id[0]].data = $.parseJSON(planner.data) || {};
-                });
-                self.set_overall_progress();
-            });
-    },
-
-    update_planner_progress: function(){
-        this.set_overall_progress();
-        this.$('.o_web_settings_dashboard_planners_list').replaceWith(
-            QWeb.render("DashboardPlanner.PlannersList", {'planners': this.planners})
-        );
-    },
-
-    set_overall_progress: function(){
-        var self = this;
-        this.sort_planners_list();
-        var average = _.reduce(self.planners, function(memo, planner) {
-            return planner.progress + memo;
-        }, 0) / (self.planners.length || 1);
-        self.overall_progress = Math.floor(average);
-        self.$('.o_web_settings_dashboard_planner_overall_progress').text(self.overall_progress);
-    },
-
-    sort_planners_list: function(){
-        // sort planners alphabetically but with fully completed planners at the end:
-        this.planners = _.sortBy(this.planners, function(planner){return (planner.progress >= 100) + planner.name;});
-    },
-
-    on_planner_clicked: function (e) {
-        var menu_id = $(e.currentTarget).attr('data-menu-id');
-        this.planner = this.planner_by_menu[menu_id];
-
-        this.dialog = new PlannerDialog(this, undefined, this.planner);
-        this.dialog.on("planner_progress_changed", this, function(percent) {
-            this.planner.progress = percent;
-            this.update_planner_progress();
-        });
-        this.dialog.open();
     },
 });
 
@@ -347,7 +275,6 @@ return {
     Dashboard: Dashboard,
     DashboardApps: DashboardApps,
     DashboardInvitations: DashboardInvitations,
-    DashboardPlanner: DashboardPlanner,
     DashboardShare: DashboardShare,
     DashboardTranslations: DashboardTranslations,
     DashboardCompany: DashboardCompany

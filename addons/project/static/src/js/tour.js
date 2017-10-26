@@ -96,11 +96,7 @@ tour.STEPS.MENU_MORE, {
 }, tour.STEPS.TOGGLE_APPSWITCHER,
 tour.STEPS.MENU_MORE, {
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"], .oe_menu_toggler[data-menu-xmlid="project.menu_main_pm"]',
-    content: _t("Good job! Your completed the Project Management tour. You can continue with the <b>implementation guide</b> to help you setup Project Management in your company."),
-    position: 'bottom',
-}, {
-    trigger: '.o_planner_systray div.progress',
-    content: _t("Use the <b>implementation guide</b> to setup Project Management in your company."),
+    content: _t("Good job! Your completed the Project Management tour."),
     position: 'bottom',
 }]);
 

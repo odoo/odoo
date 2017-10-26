@@ -76,11 +76,7 @@ tour.STEPS.MENU_MORE, {
 }, tour.STEPS.TOGGLE_APPSWITCHER,
 tour.STEPS.MENU_MORE, {
     trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"], .oe_menu_toggler[data-menu-xmlid="crm.crm_menu_root"]',
-    content: _t("Good job! Your completed the tour of the CRM. You can continue with the <b>implementation guide</b> to help you setup the CRM in your company."),
-    position: 'bottom',
-}, {
-    trigger: '.o_planner_systray div.progress',
-    content: _t("Use the <b>implementation guide</b> to setup the CRM in your company."),
+    content: _t("Good job! Your completed the tour of the CRM."),
     position: 'bottom',
 }]);
 
