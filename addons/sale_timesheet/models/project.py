@@ -86,6 +86,12 @@ class ProjectTask(models.Model):
         return super(ProjectTask, self).unlink()
 
     @api.multi
+    def _subtask_implied_fields(self):
+        fields_list = super(ProjectTask, self)._subtask_implied_fields()
+        fields_list += ['sale_line_id']
+        return fields_list
+
+    @api.multi
     def action_view_so(self):
         self.ensure_one()
         return {
@@ -95,10 +101,6 @@ class ProjectTask(models.Model):
             "res_id": self.sale_line_id.order_id.id,
             "context": {"create": False, "show_sale": True},
         }
-
-    @api.onchange('parent_id')
-    def onchange_parent_id(self):
-        self.sale_line_id = self.parent_id.sale_line_id.id
 
     def rating_get_partner_id(self):
         partner = self.partner_id or self.sale_line_id.order_id.partner_id
