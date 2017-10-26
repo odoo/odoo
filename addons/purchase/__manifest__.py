@@ -28,7 +28,6 @@
         'report/purchase_order_templates.xml',
         'report/purchase_quotation_templates.xml',
     ],
-    'test': [],
     'demo': [
         'data/purchase_order_demo.yml',
         'data/purchase_demo.xml',
