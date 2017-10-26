@@ -753,54 +753,60 @@ class AccountMoveLine(models.Model):
                 amount = abs(debit - credit)
                 amount_currency = abs(line.amount_currency)
 
-            # Get right debit / credit:
             target_currency = target_currency or company_currency
-            amount_currency = debit - credit
-            amount_currency_str = ""
-            total_amount_currency_str = ""
-            if line_currency != company_currency and target_currency == line_currency:
-                # The payment currency is the invoice currency, but they are different than the company currency
-                # We use the `amount_currency` computed during the invoice validation, at the invoice date
-                # to avoid exchange gain/loss
-                # e.g. an invoice of 100€ must be paid with 100€, whatever the company currency and the exchange rates
-                total_amount = line.amount_currency
-                actual_debit = debit > 0 and amount_currency or 0.0
-                actual_credit = credit > 0 and -amount_currency or 0.0
-                currency = line_currency
-            else:
-                # Either:
-                #  - the invoice, payment, company currencies are all the same,
-                #  - the payment currency is the company currency, but the invoice currency is different,
-                #  - the invoice currency is the company currency, but the payment currency is different,
-                #  - the invoice, payment and company currencies are all different.
-                # For the two first cases, we can simply use the debit/credit of the invoice move line, which are always in the company currency,
-                # and this is what the target need.
-                # For the two last cases, we can use the debit/credit which are in the company currency, and then change them to the target currency
-                total_amount = abs(debit - credit)
-                actual_debit = debit > 0 and amount or 0.0
-                actual_credit = credit > 0 and -amount or 0.0
-                currency = company_currency
+            
+            ctx = context.copy()
+            ctx.update({'date': target_date or line.date})
+            # Use case:
+            # Let's assume that company currency is in USD and that we have the 3 following move lines
+            #      Debit  Credit  Amount currency  Currency
+            # 1)    25      0            0            NULL
+            # 2)    17      0           25             EUR
+            # 3)    33      0           25             YEN
+            # 
+            # If we ask to see the information in the reconciliation widget in company currency, we want to see
+            # The following informations
+            # 1) 25 USD (no currency information)
+            # 2) 17 USD [25 EUR] (show 25 euro in currency information, in the little bill)
+            # 3) 33 USD [25 YEN] (show 25 yen in currencu information)
+            # 
+            # If we ask to see the information in another currency than the company let's say EUR
+            # 1) 35 EUR [25 USD]
+            # 2) 25 EUR (no currency information)
+            # 3) 50 EUR [25 YEN]
+            # In that case, we have to convert the debit-credit to the currency we want and we show next to it
+            # the value of the amount_currency or the debit-credit if no amount currency
+            if target_currency == company_currency:
+                if line_currency == target_currency:
+                    amount = amount
+                    amount_currency = ""
+                    total_amount = debit - credit
+                    total_amount_currency = ""
+                else:
+                    amount = amount
+                    amount_currency = amount_currency
+                    total_amount = debit - credit
+                    total_amount_currency = line.amount_currency
 
-            if line_currency != target_currency:
-                amount_currency = target_currency.compute(total_amount, line_currency)
-                amount_currency_str = formatLang(self.env, abs(amount_currency), currency_obj=line_currency)
-                total_amount_currency_str = formatLang(self.env, target_currency.compute(total_amount, line_currency), currency_obj=line_currency)
-            if currency != target_currency:
-                ctx = context.copy()
-                ctx.update({'date': target_date or line.date})
-                total_amount = currency.with_context(ctx).compute(total_amount, target_currency)
-                actual_debit = currency.with_context(ctx).compute(actual_debit, target_currency)
-                actual_credit = currency.with_context(ctx).compute(actual_credit, target_currency)
-            amount_str = formatLang(self.env, abs(actual_debit or actual_credit), currency_obj=target_currency)
-            total_amount_str = formatLang(self.env, total_amount, currency_obj=target_currency)
+            if target_currency != company_currency:
+                if line_currency == target_currency:
+                    amount = amount_currency
+                    amount_currency = ""
+                    total_amount = line.amount_currency
+                    total_amount_currency = ""
+                else:
+                    amount_currency = line.currency_id and amount_currency or amount
+                    amount = company_currency.with_context(ctx).compute(amount, target_currency)
+                    total_amount = company_currency.with_context(ctx).compute((line.debit - line.credit), target_currency)
+                    total_amount_currency = line.currency_id and line.amount_currency or (line.debit - line.credit)
 
-            ret_line['debit'] = abs(actual_debit)
-            ret_line['credit'] = abs(actual_credit)
-            ret_line['amount_str'] = amount_str
-            ret_line['total_amount_str'] = total_amount_str
-            ret_line['amount_currency_str'] = amount_currency_str
+            ret_line['debit'] = amount > 0 and amount or 0
+            ret_line['credit'] = amount < 0 and -amount or 0
             ret_line['amount_currency'] = amount_currency
-            ret_line['total_amount_currency_str'] = total_amount_currency_str
+            ret_line['amount_str'] = formatLang(self.env, abs(amount), currency_obj=target_currency)
+            ret_line['total_amount_str'] = formatLang(self.env, abs(total_amount), currency_obj=target_currency)
+            ret_line['amount_currency_str'] = amount_currency and formatLang(self.env, abs(amount_currency), currency_obj=line_currency) or ""
+            ret_line['total_amount_currency_str'] = total_amount_currency and formatLang(self.env, abs(total_amount_currency), currency_obj=line_currency) or ""
             ret.append(ret_line)
         return ret
 
