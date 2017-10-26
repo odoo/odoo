@@ -69,7 +69,7 @@ class MrpRoutingWorkcenter(models.Model):
     batch = fields.Selection([
         ('no',  'Once all products are processed'),
         ('yes', 'Once a minimum number of products is processed')], string='Next Operation',
-        help="""Will determine if the next work order will be scheduled after the previous one or after the first Quantity To Process of the previous one.""",
+        help="Set 'no' to schedule the next work order after the previous one. Set 'yes' to produce after the quantity set in 'Quantity To Process' has been produced.",
         default='no', required=True)
     batch_size = fields.Float('Quantity to Process', default=1.0)
     workorder_ids = fields.One2many('mrp.workorder', 'operation_id', string="Work Orders")
