@@ -267,7 +267,7 @@
                           Your transaction is waiting confirmation.
                           <span t-if='tx_post_msg' t-raw="tx_post_msg"/>
                       </div>
-                      <div class="alert alert-warning alert-dismissable" t-if="tx_id and tx_state == 'authorized'">
+                      <div class="alert alert-success alert-dismissable" t-if="tx_id and tx_state == 'authorized'">
                           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
                           Your payment has been authorized.
                           <span t-if='tx_post_msg' t-raw="tx_post_msg"/>
