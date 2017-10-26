@@ -61,6 +61,31 @@ class Base(models.AbstractModel):
     """ The base model, which is implicitly inherited by all models. """
     _name = 'base'
 
+    def add_company_suffix(self, names):
+        res = []
+        multicompany_group = self.env.ref('base.group_multi_company')
+        if multicompany_group not in self.env.user.groups_id or \
+                self._context.get('not_display_company'):
+            return names
+        for name in names:
+            rec = self.browse(name[0])
+            name = '%s [%s]' % (name[1], rec.company_id.sudo().name) if \
+                rec.company_id else name[1]
+            res += [(rec.id, name)]
+        return res
+
+    @api.multi
+    @api.depends('company_id')
+    def name_get(self):
+        """When the user is assigned to the multi-company group,
+        all of the multi-company dependent objects will be listed with the
+        company as suffix, in brackets."""
+        names = super(Base, self).name_get()
+        if 'company_id' not in self._fields:
+            return names
+        res = self.add_company_suffix(names)
+        return res
+
 
 class Unknown(models.AbstractModel):
     """
