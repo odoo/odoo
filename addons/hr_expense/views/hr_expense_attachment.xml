@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<record id="hr_expense_form_view_inherited" model="ir.ui.view">
+		<field name="name">hr.expense.form.inherit</field>
+		<field name="model">hr.expense</field>
+		<field name="inherit_id" ref="hr_expense.hr_expense_form_view" />
+		<field name="arch" type="xml">
+			<div name="button_box" position="inside">
+				<attachphoto> </attachphoto>
+			</div>
+		</field>
+	</record>
+</odoo>

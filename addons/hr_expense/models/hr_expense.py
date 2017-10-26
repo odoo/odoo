@@ -50,6 +50,7 @@ class HrExpense(models.Model):
     sheet_id = fields.Many2one('hr.expense.sheet', string="Expense Report", readonly=True, copy=False)
     reference = fields.Char(string="Bill Reference")
     is_refused = fields.Boolean(string="Explicitely Refused by manager or acccountant", readonly=True, copy=False)
+    attachment_ids = fields.One2many("ir.attachment",string='Expense Attachments', compute="_compute_expense_attachments")
 
     @api.depends('sheet_id', 'sheet_id.account_move_id', 'sheet_id.state')
     def _compute_state(self):
@@ -85,6 +86,11 @@ class HrExpense(models.Model):
         attachment = dict((data['res_id'], data['res_id_count']) for data in attachment_data)
         for expense in self:
             expense.attachment_number = attachment.get(expense.id, 0)
+
+    def _compute_expense_attachments(self):
+        attachments = self.env["ir.attachment"]
+        for record in self:
+            record.attachment_ids = attachments.search([('res_model', '=', 'hr.expense'), ('res_id', '=', record.id)])
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

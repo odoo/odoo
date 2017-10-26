@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+	<t t-name="AttachPhoto">
+		<button t-attf-class="btn btn-sm oe_stat_button" widget="attach_photo">
+			<div class="fa fa-plus fa-fw o_button_icon"> </div>
+			<div class="o_field_widget o_stat_info o_attach_photo">
+				<span class="o_stat_info">Attach a</span><br/>
+				<span class="o_stat_info">Photo</span>
+			</div>
+			<span class="hide">
+				<t t-call="HiddenInputFile">
+					<t t-set="fileupload_id" t-value="widget.fileuploadId"/>
+					<t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
+					<t t-set="multi_upload" t-value="true"/>
+					<input type="hidden" name="model" t-att-value="widget.res_model"/>
+					<input type="hidden" name="id" t-att-value="widget.res_id"/>
+					<input type="hidden" name="session_id" t-att-value="widget.getSession().session_id"/>
+				</t>
+			</span>
+		</button>
+	</t>
+
+</templates>
