@@ -228,7 +228,7 @@ base.ready().then(function () {
         init_kanban(this);
     });
 
-    $('.js_website_submit_form').on('submit', function() {
+    $('body').on('submit', '.js_website_submit_form', function() {
         var $buttons = $(this).find('button[type="submit"], a.a-submit');
         _.each($buttons, function(btn) {
             $(btn).attr('data-loading-text', '<i class="fa fa-spinner fa-spin"></i> ' + $(btn).text()).button('loading');
