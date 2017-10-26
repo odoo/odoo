@@ -60,7 +60,7 @@ Best Regards,''')
     account_setup_bank_data_done = fields.Boolean('Bank Setup Marked As Done', help="Technical field holding the status of the bank setup step.")
     account_setup_fy_data_done = fields.Boolean('Financial Year Setup Marked As Done', help="Technical field holding the status of the financial year setup step.")
     account_setup_coa_done = fields.Boolean(string='Chart of Account Checked', help="Technical field holding the status of the chart of account setup step.")
-    account_setup_bar_closed = fields.Boolean(string='Setup Bar Closed', help="Technical field set to True when setup bar has been closed by the user.")
+    account_setup_bar_closed = fields.Boolean(string='Setup Bar Closed', default=True, help="Technical field set to True when setup bar has been closed by the user.")
 
     @api.model
     def _verify_fiscalyear_last_day(self, company_id, last_day, last_month):
