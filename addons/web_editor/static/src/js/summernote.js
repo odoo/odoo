@@ -2324,17 +2324,26 @@ eventHandler.modules.clipboard.attach = function(layoutInfo) {
     var $editable = layoutInfo.editable();
     $editable.on('paste', function(e) {
         var clipboardData = ((e.originalEvent || e).clipboardData || window.clipboardData);
+        // force text pasting when inside phrasing content
+        var phrasing_root = $editable.is('b,em,i,p,span,strong');
         // Change nothing if pasting html (copy from text editor / web / ...) or
         // if clipboardData is not available (IE / ...)
-        if (clipboardData && clipboardData.types && clipboardData.types.length === 1 && clipboardData.types[0] === "text/plain") {
+        var has_text_data = clipboardData && _.contains(clipboardData.types, 'text/plain');
+        if (has_text_data && (phrasing_root || clipboardData.types.length === 1)) {
             e.preventDefault();
             $editable.data('NoteHistory').recordUndo($editable); // FIXME
             var pastedText = clipboardData.getData("text/plain");
+            var command = "insertText";
             // Try removing linebreaks which are not really linebreaks (in a PDF,
             // when a sentence goes over the next line, copying it considers it
             // a linebreak for example).
             var formattedText = pastedText.replace(/([\w-])\r?\n([\w-])/g, "$1 $2").trim();
-            document.execCommand("insertText", false, formattedText);
+            // insertText may add <div /> which we don't want inside a phrasing element
+            if (phrasing_root) {
+                command = "insertHTML";
+                formattedText = $('<div />').text(formattedText).html().replace(/\n/g, '<br />');
+            }
+            document.execCommand(command, false, formattedText);
         }
     });
 };
