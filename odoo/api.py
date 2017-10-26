@@ -164,6 +164,8 @@ def constrains(*args):
         value).
 
     """
+    if args and callable(args[0]):
+        args = args[0]
     return attrsetter('_constrains', args)
 
 
@@ -195,6 +197,8 @@ def onchange(*args):
             (fields of relational fields e.g. ``partner_id.tz``) are not
             supported and will be ignored
     """
+    if args and callable(args[0]):
+        args = args[0]
     return attrsetter('_onchange', args)
 
 

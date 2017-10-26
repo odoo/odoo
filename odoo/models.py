@@ -562,7 +562,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls = type(self)
         methods = []
         for attr, func in getmembers(cls, is_constraint):
-            for name in func._constrains:
+            if callable(func._constrains):
+                func_constrains = list(func._constrains(self))
+            else:
+                func_constrains = func._constrains
+            for name in func_constrains:
                 field = cls._fields.get(name)
                 if not field:
                     _logger.warning("method %s.%s: @constrains parameter %r is not a field name", cls._name, attr, name)
@@ -584,7 +588,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls = type(self)
         methods = defaultdict(list)
         for attr, func in getmembers(cls, is_onchange):
-            for name in func._onchange:
+            if callable(func._onchange):
+                func_onchange = list(func._onchange(self))
+            else:
+                func_onchange = func._onchange
+            for name in func_onchange:
                 if name not in cls._fields:
                     _logger.warning("@onchange%r parameters must be field names", func._onchange)
                 methods[name].append(func)
@@ -1041,7 +1049,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # new-style constraint methods
         for check in self._constraint_methods:
-            if set(check._constrains) & field_names:
+            if callable(check._constrains):
+                check_constrains = list(check._constrains(self))
+            else:
+                check_constrains = check._constrains
+            if set(check_constrains) & field_names:
                 try:
                     check(self)
                 except ValidationError as e:
