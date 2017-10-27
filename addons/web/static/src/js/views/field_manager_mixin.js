@@ -46,7 +46,7 @@ var FieldManagerMixin = {
      */
     _applyChanges: function (dataPointID, changes, event) {
         var self = this;
-        var options = _.pick(event.data, 'viewType', 'doNotSetDirty');
+        var options = _.pick(event.data, 'viewType', 'doNotSetDirty', 'notifyChange');
         return this.model.notifyChanges(dataPointID, changes, options)
             .then(function (result) {
                 if (event.data.force_save) {

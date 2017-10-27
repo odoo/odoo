@@ -1070,7 +1070,9 @@ QUnit.module('relational_fields', {
             assert.deepEqual(
                 obj.turtles,
                 [
+                    [4, 2, false],
                     [1, 2, {turtle_foo: 'blip'}],
+                    [4, 3, false],
                     [1, 3, {turtle_foo: 'kawa'}]
                 ],
                 "should have properly created the x2many command list");
@@ -1099,7 +1101,9 @@ QUnit.module('relational_fields', {
                     // unchanged state with the command 1, but this seems more
                     // difficult.
                     assert.deepEqual(args.args[0].turtles, [
+                        [4, 2, false],
                         [1, 2, {turtle_foo: 'blip'}],
+                        [4, 3, false],
                         [1, 3, {turtle_foo: 'kawa'}]
                     ], 'should send proper commands to create method');
                 }
@@ -2003,9 +2007,10 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('embedded one2many with handle widget', function (assert) {
-        assert.expect(8);
+        assert.expect(7);
 
-        this.data.partner.records[0].p = [1, 2, 4];
+        this.data.partner.records[0].turtles = [1, 2, 3];
+
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -2014,10 +2019,10 @@ QUnit.module('relational_fields', {
                     '<sheet>' +
                         '<notebook>' +
                             '<page string="P page">' +
-                                '<field name="p">' +
-                                    '<tree default_order="int_field">' +
-                                        '<field name="int_field" widget="handle"/>' +
-                                        '<field name="foo"/>' +
+                                '<field name="turtles">' +
+                                    '<tree default_order="turtle_int">' +
+                                        '<field name="turtle_int" widget="handle"/>' +
+                                        '<field name="turtle_foo"/>' +
                                     '</tree>' +
                                 '</field>' +
                             '</page>' +
@@ -2028,14 +2033,14 @@ QUnit.module('relational_fields', {
         });
 
         testUtils.intercept(form, "field_changed", function (event) {
-            assert.step(event.data.changes.p.data.int_field.toString());
+            assert.step(event.data.changes.turtles.data.turtle_int.toString());
         }, true);
 
-        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "My little Foo Valueblipyop",
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "yopblipkawa",
             "should have the 3 rows in the correct order");
 
         form.$buttons.find('.o_form_button_edit').click();
-        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "My little Foo Valueblipyop",
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "yopblipkawa",
             "should still have the 3 rows in the correct order");
 
         // Drag and drop the fourth line in second position
@@ -2045,21 +2050,169 @@ QUnit.module('relational_fields', {
             {position: 'top'}
         );
 
-        assert.verifySteps(["0", "1", "2"],
+        assert.verifySteps(["0", "1"],
             "sequences values should be incremental starting from the previous minimum one");
 
-        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipMy little Foo Valueyop",
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipyopkawa",
             "should have the 3 rows in the new order");
 
         form.$buttons.find('.o_form_button_save').click();
-        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipMy little Foo Valueyop",
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipyopkawa",
             "should still have the 3 rows in the new order");
 
         form.destroy();
     });
 
+    QUnit.test('onchange for embedded one2many with handle widget', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].turtles = [1, 2, 3];
+        var partnerOnchange = 0;
+        this.data.partner.onchanges = {
+            turtles: function (obj) {
+                partnerOnchange++;
+            },
+        };
+        var turtleOnchange = 0;
+        this.data.turtle.onchanges = {
+            turtle_int: function (obj) {
+                turtleOnchange++;
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<notebook>' +
+                            '<page string="P page">' +
+                                '<field name="turtles">' +
+                                    '<tree default_order="turtle_int">' +
+                                        '<field name="turtle_int" widget="handle"/>' +
+                                        '<field name="turtle_foo"/>' +
+                                    '</tree>' +
+                                '</field>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                 '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        // Drag and drop the fourth line in second position
+        testUtils.dragAndDrop(
+            form.$('.ui-sortable-handle').eq(1),
+            form.$('tbody tr').first(),
+            {position: 'top'}
+        );
+
+        assert.strictEqual(turtleOnchange, 2, "should trigger one onchange per line updated");
+        assert.strictEqual(partnerOnchange, 1, "should trigger only one onchange on the parent");
+
+        form.destroy();
+    });
+
+    QUnit.test('embedded one2many with handle widget with minimum setValue calls', function (assert) {
+        var done = assert.async();
+        assert.expect(20);
+
+
+        this.data.turtle.records[0].turtle_int = 6;
+        this.data.turtle.records.push({
+                id: 4,
+                turtle_int: 20,
+                turtle_foo: "a1",
+            }, {
+                id: 5,
+                turtle_int: 9,
+                turtle_foo: "a2",
+            }, {
+                id: 6,
+                turtle_int: 2,
+                turtle_foo: "a3",
+            }, {
+                id: 7,
+                turtle_int: 11,
+                turtle_foo: "a4",
+            });
+        this.data.partner.records[0].turtles = [1, 2, 3, 4, 5, 6, 7];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<notebook>' +
+                            '<page string="P page">' +
+                                '<field name="turtles">' +
+                                    '<tree default_order="turtle_int">' +
+                                        '<field name="turtle_int" widget="handle"/>' +
+                                        '<field name="turtle_foo"/>' +
+                                    '</tree>' +
+                                '</field>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                 '</form>',
+            res_id: 1,
+        });
+
+        testUtils.intercept(form, "field_changed", function (event) {
+            assert.step(form.model.get(event.data.changes.turtles.id).res_id);
+        }, true);
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        var steps = [];
+        var positions = [
+            [6, 0, 'top', [3, 6, 1, 2, 5, 7, 4]], // move the last to the first line
+            [5, 1, 'top', [7, 6, 1, 2, 5]], // move the penultimate to the second line
+            [2, 5, 'center', [1, 2, 5, 6]], // move the third to the penultimate line
+        ];
+        function dragAndDrop() {
+            var pos = positions.shift();
+
+            testUtils.dragAndDrop(
+                form.$('.ui-sortable-handle').eq(pos[0]),
+                form.$('tbody tr').eq(pos[1]),
+                {position: pos[2]}
+            );
+
+            steps = steps.concat(pos[3]);
+            assert.verifySteps(steps,
+                "sequences values should be apply from the begin index to the drop index");
+
+            if (positions.length) {
+
+                setTimeout(dragAndDrop, 10);
+
+            } else {
+
+                assert.deepEqual(_.pluck(form.model.get(form.handle).data.turtles.data, 'data'), [
+                    {  id: 3,  turtle_foo: "kawa",  turtle_int: 2 },
+                    {  id: 7,  turtle_foo: "a4",  turtle_int: 3 },
+                    {  id: 1,  turtle_foo: "yop",  turtle_int: 4 },
+                    {  id: 2,  turtle_foo: "blip",  turtle_int: 5 },
+                    {  id: 5,  turtle_foo: "a2",  turtle_int: 6 },
+                    {  id: 6,  turtle_foo: "a3",  turtle_int: 7 },
+                    {  id: 4,  turtle_foo: "a1",  turtle_int: 8 }
+                ], "sequences must be apply correctly");
+
+                form.destroy();
+                done();
+            }
+        }
+
+        dragAndDrop();
+    });
+
     QUnit.test('embedded one2many (editable list) with handle widget', function (assert) {
-        assert.expect(9);
+        assert.expect(8);
 
         this.data.partner.records[0].p = [1, 2, 4];
         var form = createView({
@@ -2101,7 +2254,7 @@ QUnit.module('relational_fields', {
             {position: 'top'}
         );
 
-        assert.verifySteps(["0", "1", "2"],
+        assert.verifySteps(["0", "1"],
             "sequences values should be incremental starting from the previous minimum one");
 
         assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipMy little Foo Valueyop",
@@ -5904,6 +6057,7 @@ QUnit.module('relational_fields', {
                 if (args.method === 'read' && args.model === 'partner_type') {
                     assert.deepEqual(args.kwargs.context, {
                         key: 'yop',
+                        active_field: 2,
                         someKey: 'some value',
                     }, "sent context should be correct");
                 }
@@ -6324,10 +6478,50 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('default value for nested one2manys (coming from onchange)', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.onchanges.p = function (obj) {
+            obj.p = [
+                [5],
+                [0, 0, {turtles: [[5], [4, 1]]}], // link record 1 by default
+            ];
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree><field name="turtles"/></tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    assert.strictEqual(args.args[0].p[0][0], 0,
+                        "should send a command 0 (CREATE) for p");
+                    assert.deepEqual(args.args[0].p[0][2], {turtles: [[4, 1, false]]},
+                        "should send the correct values");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(form.$('.o_data_cell').text(), '1 record',
+            "should correctly display the value of the inner o2m");
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        form.destroy();
+    });
+
     QUnit.test('display correct value after validation error', function (assert) {
         assert.expect(4);
 
-        this.data.partner.onchanges.turtles = true;
+        this.data.partner.onchanges.turtles = function () { };
 
         var form = createView({
             View: FormView,
@@ -6344,17 +6538,17 @@ QUnit.module('relational_fields', {
                 '</form>',
             mockRPC: function (route, args) {
                 if (args.method === 'onchange') {
-                    // we simulate a validation error.  In the 'real' web client,
-                    // the server error will be used by the session to display
-                    // an error dialog.  From the point of view of the basic
-                    // model, the deferred is just rejected.
-                    return $.Deferred().reject();
+                    if (args.args[1].turtles[0][2].turtle_foo === 'pinky') {
+                        // we simulate a validation error.  In the 'real' web client,
+                        // the server error will be used by the session to display
+                        // an error dialog.  From the point of view of the basic
+                        // model, the deferred is just rejected.
+                        return $.Deferred().reject();
+                    }
                 }
                 if (args.method === 'write') {
                     assert.deepEqual(args.args[1].turtles[0], [1,2,{turtle_foo: 'foo'}],
-                        'should send the "bad" value');
-                    // we simulate a validation error
-                    return $.Deferred().reject();
+                        'should send the "good" value');
                 }
                 return this._super.apply(this, arguments);
             },
@@ -6364,26 +6558,124 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_data_row .o_data_cell:nth(0)').text(), 'blip',
             "initial text should be correct");
+
+        // click and edit value to 'foo', which will trigger onchange
         form.$('.o_data_row .o_data_cell:nth(0)').click();
         form.$('.o_field_widget[name=turtle_foo]').val('foo').trigger('input');
+        form.$el.click();
+        assert.strictEqual(form.$('.o_data_row .o_data_cell:nth(0)').text(), 'foo',
+            "field should have been changed to foo");
 
-        // we try to validate the line. This triggers an onchange which will be
-        // rejected. The line will be returned to readonly mode, but with the
-        // new invalid value.
+        // click and edit value to 'pinky', which trigger a failed onchange
+        form.$('.o_data_row .o_data_cell:nth(0)').click();
+        form.$('.o_field_widget[name=turtle_foo]').val('pinky').trigger('input');
         form.$el.click();
 
         assert.strictEqual(form.$('.o_data_row .o_data_cell:nth(0)').text(), 'foo',
-            "turtle_foo text should now be foo (invalid value)");
+            "turtle_foo text should now be set back to foo");
 
         // we make sure here that when we save, the values are the current
         // values displayed in the field.
         form.$buttons.find('.o_form_button_save').click();
-        assert.strictEqual(form.mode, 'edit', "form view should still be in edit mode");
 
         form.destroy();
     });
 
+    QUnit.test('propagate context to sub views', function (assert) {
+        assert.expect(5);
 
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="turtles">' +
+                            '<tree editable="bottom">' +
+                                '<field name="turtle_foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                assert.strictEqual(args.kwargs.context.flutter, 'shy',
+                    'view context key should be used for every rpcs');
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {context: {flutter: 'shy'}},
+        });
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('input[name="turtle_foo"]').val('pinky pie').trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
+
+        form.destroy();
+    });
+
+    QUnit.test('onchange on nested one2manys', function (assert) {
+        assert.expect(6);
+
+        this.data.partner.onchanges.display_name = function (obj) {
+            if (obj.display_name) {
+                obj.p = [
+                    [5],
+                    [0, 0, {
+                        display_name: 'test',
+                        turtles: [[5], [0, 0, {display_name: 'test nested'}]],
+                    }],
+                ];
+            }
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="display_name"/>' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="display_name"/>' +
+                            '</tree>' +
+                            '<form>' +
+                                '<field name="turtles">' +
+                                    '<tree><field name="display_name"/></tree>' +
+                                '</field>' +
+                            '</form>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    assert.strictEqual(args.args[0].p[0][0], 0,
+                        "should send a command 0 (CREATE) for p");
+                    assert.strictEqual(args.args[0].p[0][2].display_name, 'test',
+                        "should send the correct values");
+                    assert.strictEqual(args.args[0].p[0][2].turtles[0][0], 0,
+                        "should send a command 0 (CREATE) for turtles");
+                    assert.deepEqual(args.args[0].p[0][2].turtles[0][2], {display_name: 'test nested'},
+                        "should send the correct values");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$('.o_field_widget[name=display_name]').val('trigger onchange').trigger('input');
+
+        assert.strictEqual(form.$('.o_data_cell').text(), 'test',
+            "should have added the new row to the one2many");
+
+        // open the new subrecord to check the value of the nested o2m, and to
+        // ensure that it will be saved
+        form.$('.o_data_cell:first').click();
+        assert.strictEqual($('.modal .o_data_cell').text(), 'test nested',
+            "should have added the new row to the nested one2many");
+        $('.modal .modal-footer .btn-primary').click();
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        form.destroy();
+    });
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {

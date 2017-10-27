@@ -29,9 +29,9 @@ Index: addons/openacademy/reports.xml
 +        report_type="qweb-pdf" />
 +
 +    <template id="report_session_view">
-+        <t t-call="report.html_container">
++        <t t-call="web.html_container">
 +            <t t-foreach="docs" t-as="doc">
-+                <t t-call="report.external_layout">
++                <t t-call="web.external_layout">
 +                    <div class="page">
 +                        <h2 t-field="doc.name"/>
 +                        <p>From <span t-field="doc.start_date"/> to <span t-field="doc.end_date"/></p>

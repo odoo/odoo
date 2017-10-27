@@ -14,13 +14,14 @@
 # Yaroslav Molochko <onorua@gmail.com>, 2017
 # Евгений Жердев <e.v.zherdev@gmail.com>, 2017
 # Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
+# Olha Koshelieva <olha.koshelieva@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
+"Last-Translator: Olha Koshelieva <olha.koshelieva@gmail.com>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -332,6 +333,8 @@ msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-check\"/><span "
 "class=\"hidden-xs\"> Paid</span></span>"
 msgstr ""
+"<span class=\"label label-default\"><i class=\"fa fa-fw fa-check\"/><span "
+"class=\"hidden-xs\"> Сплачений</span></span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -339,6 +342,8 @@ msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/><span "
 "class=\"hidden-xs\"> Cancelled</span></span>"
 msgstr ""
+"<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/><span "
+"class=\"hidden-xs\"> Скасовано</span></span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -346,6 +351,8 @@ msgid ""
 "<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
 "class=\"hidden-xs\"> Waiting for Payment</span></span>"
 msgstr ""
+"<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
+"class=\"hidden-xs\"> Очікування платежу</span></span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
@@ -684,7 +691,7 @@ msgstr "<strong>Код клієнта:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
 msgid "<strong>Customer: </strong>"
-msgstr ""
+msgstr "<strong>Замовник: </strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_financial
@@ -2718,7 +2725,7 @@ msgstr "Префікс касового рахунку"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_tax_exigibility
 msgid "Cash Basis"
-msgstr ""
+msgstr "На основі касового нарахування"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_tax_cash_basis_journal_id
@@ -4801,7 +4808,7 @@ msgstr "Післядія"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Follow-up Levels"
-msgstr ""
+msgstr "Рівні нагадувань"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_report_sign
@@ -6919,7 +6926,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_tax
 msgid "Net"
-msgstr ""
+msgstr "Чистий"
 
 #. module: account
 #: selection:account.bank.statement,state:0
@@ -7655,7 +7662,7 @@ msgstr "Ліміт заборгованості"
 #: model:ir.ui.view,arch_db:account.product_template_form_view
 #: model:ir.ui.view,arch_db:account.view_account_bank_journal_form
 msgid "Payables"
-msgstr ""
+msgstr "Кредиторська заборгованість"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_amount
@@ -8258,7 +8265,7 @@ msgstr "Рахунки дебіторів і кредиторів"
 #: model:ir.ui.view,arch_db:account.product_template_form_view
 #: model:ir.ui.view,arch_db:account.view_account_bank_journal_form
 msgid "Receivables"
-msgstr ""
+msgstr "Дебіторська заборгованість"
 
 #. module: account
 #: selection:account.abstract.payment,payment_type:0
@@ -9401,7 +9408,7 @@ msgstr "Рахунок нарахування податку"
 #: model:ir.ui.menu,name:account.menu_account_report
 #: model:ir.ui.view,arch_db:account.report_tax
 msgid "Tax Report"
-msgstr ""
+msgstr "Податковий звіт"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_report
@@ -9637,6 +9644,9 @@ msgid ""
 " is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
 msgstr ""
+"Технічне поле використовується для відстеження узгодження податкової касової"
+" бази. Це потрібно при скасуванні джерела: він публікує зворотній журнал для"
+" скасування цієї частини."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_tax_exigible
@@ -10149,6 +10159,8 @@ msgid ""
 "There is no tax cash basis journal defined for this company: \"%s\" \n"
 "Configure it in Accounting/Configuration/Settings"
 msgstr ""
+"Для цієї компанії немає журналу податкової касової бази: \"%s\" \n"
+"Налаштуйте його в бухобліку / конфігурації / налаштуваннях"
 
 #. module: account
 #. openerp-web

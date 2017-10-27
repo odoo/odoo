@@ -385,7 +385,8 @@ var ViewEditor = Widget.extend({
      * @returns {integer|string} view ID or less file URL
      */
     _getSelectedResource: function () {
-        return this.$lists[this.currentType].select2('val');
+        var value = this.$lists[this.currentType].select2('val');
+        return parseInt(value, 10) || value;
     },
     /**
      * Loads data the ace editor will vizualize and process it. Default behavior

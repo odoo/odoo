@@ -20,6 +20,7 @@ var framework = require('web.framework');
 var session = require('web.session');
 var utils = require('web.utils');
 var view_dialogs = require('web.view_dialogs');
+var field_utils = require('web.field_utils');
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -205,7 +206,7 @@ var InputField = DebouncedField.extend({
         if (!event || event === this.lastChangeEvent) {
             this.isDirty = false;
         }
-        if (this.isDirty || (event && event.target === this)) {
+        if (this.isDirty || (event && event.target === this && event.data.changes[this.name] === this.value)) {
             return $.when();
         } else {
             return this._render();
@@ -1169,6 +1170,10 @@ var AbstractFieldBinary = AbstractField.extend({
 });
 
 var FieldBinaryImage = AbstractFieldBinary.extend({
+    fieldDependencies: _.extend({}, AbstractFieldBinary.prototype.fieldDependencies, {
+        __last_update: {type: 'datetime'},
+    }),
+
     template: 'FieldBinaryImage',
     placeholder: "/web/static/src/img/placeholder.png",
     events: _.extend({}, AbstractFieldBinary.prototype.events, {
@@ -1191,7 +1196,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
                     id: JSON.stringify(this.res_id),
                     field: this.nodeOptions.preview_image || this.name,
                     // unique forces a reload of the image when the record has been updated
-                    unique: (this.recordData.__last_update || '').replace(/[^0-9]/g, ''),
+                    unique: field_utils.format.datetime(this.recordData.__last_update).replace(/[^0-9]/g, ''),
                 });
             }
         }

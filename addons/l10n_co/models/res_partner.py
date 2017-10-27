@@ -19,7 +19,7 @@ class ResPartner(models.Model):
     def _compute_verification_code(self):
         multiplication_factors = [71, 67, 59, 53, 47, 43, 41, 37, 29, 23, 19, 17, 13, 7, 3]
 
-        for partner in self.filtered(lambda partner: partner.country_id == self.env.ref('base.co') and
+        for partner in self.filtered(lambda partner: partner.vat and partner.country_id == self.env.ref('base.co') and
                                      len(partner.vat) <= len(multiplication_factors)):
             number = 0
             padded_vat = partner.vat

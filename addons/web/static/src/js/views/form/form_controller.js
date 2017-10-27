@@ -368,20 +368,8 @@ var FormController = BasicController.extend({
 
         this._disableButtons();
 
-        var attrs = event.data.attrs;
-        if (attrs.confirm) {
-            var d = $.Deferred();
-            Dialog.confirm(this, attrs.confirm, { confirm_callback: function () {
-                self._callButtonAction(attrs, event.data.record);
-            }}).on("closed", null, function () {
-                d.resolve();
-            });
-            def = d.promise();
-        } else if (attrs.special === 'cancel') {
-            def = this._callButtonAction(attrs, event.data.record);
-        } else if (!attrs.special || attrs.special === 'save') {
-            // save the record but don't switch to readonly mode
-            def = this.saveRecord(this.handle, {
+        function saveAndExecuteAction () {
+            return self.saveRecord(self.handle, {
                 stayInEdit: true,
             }).then(function () {
                 // we need to reget the record to make sure we have changes made
@@ -390,6 +378,21 @@ var FormController = BasicController.extend({
                 var record = self.model.get(event.data.record.id);
                 return self._callButtonAction(attrs, record);
             });
+        }
+        var attrs = event.data.attrs;
+        if (attrs.confirm) {
+            var d = $.Deferred();
+            Dialog.confirm(this, attrs.confirm, {
+                confirm_callback: saveAndExecuteAction,
+            }).on("closed", null, function () {
+                d.resolve();
+            });
+            def = d.promise();
+        } else if (attrs.special === 'cancel') {
+            def = this._callButtonAction(attrs, event.data.record);
+        } else if (!attrs.special || attrs.special === 'save') {
+            // save the record but don't switch to readonly mode
+            def = saveAndExecuteAction();
         }
 
         def.always(this._enableButtons.bind(this));
