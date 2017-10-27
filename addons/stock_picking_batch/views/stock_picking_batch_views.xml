@@ -18,7 +18,9 @@
                         <h1><field name="name" class="oe_inline" readonly="1"/></h1>
                     </div>
                     <group>
-                        <field name="user_id"/>
+                        <group>
+                            <field name="user_id"/>
+                        </group>
                     </group>
                     <separator string="Pickings"/>
                     <field name="picking_ids" widget="many2many" domain="[('state', 'not in', ('done', 'cancel'))]" options="{'not_delete': True}">
