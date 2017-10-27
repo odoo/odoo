@@ -479,6 +479,14 @@ class LazyCursor(object):
     def __getattr__(self, name):
         cr = self._cursor
         if cr is None:
+            # retrieve a valid cursor from some environment
+            from odoo.api import Environment
+            for env in Environment.envs:
+                if isinstance(env.cr, Cursor) and not env.cr.closed:
+                    cr = env.cr
+                    break
+        if cr is None:
+            # create a brand new cursor
             from odoo import registry
             cr = self._cursor = registry(self.dbname).cursor()
             for _ in range(self._depth):

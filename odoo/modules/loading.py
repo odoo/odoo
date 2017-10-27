@@ -133,7 +133,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             registry.setup_models(cr)
             registry.init_models(cr, model_names, {'module': package.name})
-            cr.commit()
 
         idref = {}
 
@@ -204,13 +203,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
         if package.name is not None:
             registry._init_modules.add(package.name)
-        cr.commit()
 
     _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
 
     registry.clear_caches()
-
-    cr.commit()
 
     return loaded_modules, processed_modules
 
@@ -378,8 +374,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         for kind in ('init', 'demo', 'update'):
             tools.config[kind] = {}
-
-        cr.commit()
 
         # STEP 5: Uninstall modules to remove
         if update_module:
