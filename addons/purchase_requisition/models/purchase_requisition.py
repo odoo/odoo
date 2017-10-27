@@ -66,6 +66,25 @@ class PurchaseRequisition(models.Model):
                               copy=False, default='draft')
     account_analytic_id = fields.Many2one('account.analytic.account', 'Analytic Account')
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', required=True, default=_get_picking_in)
+    is_quantity_copy = fields.Boolean(compute='_is_quantity_copy')
+
+    @api.model
+    def create(self, vals):
+        rec = super(PurchaseRequisition, self).create(vals)
+        if rec.name == 'New':
+            if rec.is_quantity_copy:
+                rec.name = self.env['ir.sequence'].next_by_code('purchase.requisition.purchase.tender')
+            else:
+                rec.name = self.env['ir.sequence'].next_by_code('purchase.requisition.blanket.order')
+        return rec
+
+    @api.depends('type_id')
+    def _is_quantity_copy(self):
+        for requisition in self:
+            if requisition.type_id.quantity_copy == 'none':
+                requisition.is_quantity_copy = False
+            else:
+                requisition.is_quantity_copy = True
 
     @api.multi
     @api.depends('purchase_ids')
