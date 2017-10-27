@@ -202,17 +202,6 @@ class SaleOrder(models.Model):
         return super(SaleOrder, self).get_portal_confirmation_action()
 
     @api.multi
-    def _confirm_online_quote(self, transaction):
-        """ Payment callback: validate the order and write transaction details in chatter """
-        # create draft invoice if transaction is ok
-        if transaction and transaction.state == 'done':
-            transaction._confirm_so()
-            message = _('Order paid by %s. Transaction: %s. Amount: %s.') % (transaction.partner_id.name, transaction.acquirer_reference, transaction.amount)
-            self.message_post(body=message)
-            return True
-        return False
-
-    @api.multi
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for order in self:
