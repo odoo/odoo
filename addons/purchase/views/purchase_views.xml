@@ -142,8 +142,8 @@
             <field name="arch" type="xml">
                 <form string="Purchase Order">
                 <header>
-                    <button name="action_rfq_send" states="draft" string="Send RFQ by Email" type="object" context="{'send_rfq':True}" class="oe_highlight"/>
-                    <button name="action_rfq_send" states="sent" string="Re-Send RFQ by Email" type="object" context="{'send_rfq':True}"/>
+                    <button name="action_rfq_send" states="draft" string="Send by Email" type="object" context="{'send_rfq':True}" class="oe_highlight"/>
+                    <button name="action_rfq_send" states="sent" string="Re-Send by Email" type="object" context="{'send_rfq':True}"/>
                     <button name="print_quotation" string="Print RFQ" type="object" states="draft" class="oe_highlight" groups="base.group_user"/>
                     <button name="print_quotation" string="Print RFQ" type="object" states="sent" groups="base.group_user"/>
                     <button name="button_confirm" type="object" states="draft" string="Confirm Order" id="draft_confirm"/>
@@ -163,7 +163,7 @@
                             name="action_view_picking"
                             class="oe_stat_button"
                             icon="fa-truck" attrs="{'invisible':[('picking_ids','=',[])]}">
-                            <field name="picking_count" widget="statinfo" string="Shipment" help="Incoming Shipments"/>
+                            <field name="picking_count" widget="statinfo" string="Receipt" help="Incoming Shipments"/>
                             <field name="picking_ids" invisible="1"/>
                         </button>
                         <button type="object"  name="action_view_invoice"
@@ -259,7 +259,7 @@
                             <field name="notes" class="oe_inline" placeholder="Define your terms and conditions ..."/>
                             <div class="oe_clear"/>
                         </page>
-                        <page string="Deliveries &amp; Invoices">
+                        <page string="Other Information">
                             <group>
                                 <group>
                                     <label for="date_planned"/>
