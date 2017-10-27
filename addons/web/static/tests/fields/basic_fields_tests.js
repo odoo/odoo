@@ -1429,7 +1429,6 @@ QUnit.module('basic_fields', {
     QUnit.test('image fields are correctly rendered', function (assert) {
         assert.expect(6);
 
-        this.data.partner.fields.__last_update = {string: "Last updated", type: "datetime"};
         this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
         this.data.partner.records[0].document = 'myimage';
 
