@@ -47,7 +47,7 @@ MAIL_TEMPLATE_PLAINTEXT = """Return-Path: <whatever-2a840@postmaster.twitter.com
 To: {to}
 Received: by mail1.openerp.com (Postfix, from userid 10002)
     id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
-From: Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>
+From: {email_from}
 Subject: {subject}
 MIME-Version: 1.0
 Content-Type: text/plain
