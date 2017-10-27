@@ -77,7 +77,7 @@ class Website(models.Model):
         :param bool show_visible: if True, we don't display pricelist where selectable is False (Eg: Code promo)
         :returns: pricelist recordset
         """
-        website = request and request.website or None
+         website = request and hasattr(request, 'website') and request.website or None
         if not website:
             if self.env.context.get('website_id'):
                 website = self.browse(self.env.context['website_id'])
