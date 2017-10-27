@@ -81,7 +81,7 @@ var FieldMany2ManyTagsEmail = M2MTags.extend({
                 res_model: self.field.relation,
                 res_id: resID,
                 context: self.record.context,
-                title: _t("Please complete partner's informations and Email"),
+                title: _t("Please complete customer's informations and email"),
                 on_saved: function (record) {
                     if (record.data.email) {
                         validPartners.push(record.res_id);

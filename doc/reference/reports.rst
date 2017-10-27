@@ -83,9 +83,9 @@ Minimal viable template
 A minimal template would look like::
 
     <template id="report_invoice">
-        <t t-call="report.html_container">
+        <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
-                <t t-call="report.external_layout">
+                <t t-call="web.external_layout">
                     <div class="page">
                         <h2>Report title</h2>
                         <p>This object's name is <span t-field="o.name"/></p>
@@ -143,7 +143,7 @@ For example, let's look at the Sale Order report from the Sale module::
 
     <!-- Main template -->
     <template id="report_saleorder">
-        <t t-call="report.html_container">
+        <t t-call="web.html_container">
             <t t-foreach="docs" t-as="doc">
                 <t t-call="sale.report_saleorder_document" t-lang="doc.partner_id.lang"/>
             </t>
@@ -154,7 +154,7 @@ For example, let's look at the Sale Order report from the Sale module::
     <template id="report_saleorder_document">
         <!-- Re-browse of the record with the partner lang -->
         <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})" />
-        <t t-call="report.external_layout">
+        <t t-call="web.external_layout">
             <div class="page">
                 <div class="oe_structure"/>
                 <div class="row">
@@ -175,7 +175,7 @@ each Sale Order will be printed in the language of the corresponding customer. I
 to translate only the body of the document, but keep the header and footer in a default 
 language, you could call the report's external layout this way::
 
-    <t t-call="report.external_layout" t-lang="en_US">
+    <t t-call="web.external_layout" t-lang="en_US">
 
 .. tip::
 

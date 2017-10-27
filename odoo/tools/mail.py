@@ -396,7 +396,7 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
         content = re.sub(r'(?i)(</?(?:html|body|head|!\s*DOCTYPE)[^>]*>)', '', content)
         content = u'\n%s\n' % ustr(content)
     # Force all tags to lowercase
-    html = re.sub(r'(</?)\W*(\w+)([ >])',
+    html = re.sub(r'(</?)(\w+)([ >])',
         lambda m: '%s%s%s' % (m.group(1), m.group(2).lower(), m.group(3)), html)
     insert_location = html.find('</body>')
     if insert_location == -1:

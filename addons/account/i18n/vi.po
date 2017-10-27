@@ -16,13 +16,14 @@
 # Phạm Lân <phamquanglan@gmail.com>, 2017
 # file aio <fileaio@gmail.com>, 2017
 # Jean-Charles Drubay <jcdrubay@gmail.com>, 2017
+# Thang Tong <thangtn0586@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Jean-Charles Drubay <jcdrubay@gmail.com>, 2017\n"
+"Last-Translator: Thang Tong <thangtn0586@gmail.com>, 2017\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +40,11 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+"* Trạng thái 'Dự thảo' được sử dụng khi một người dùng tạo một hóa đơn chưa được xác nhận. \n"
+"* Hóa đơn 'Chiếu lệ' là một trạng thái tạm thời mà chưa có số hóa đơn.\n"
+"* Trạng thái 'Mở' được sử dụng khi người dùng tạo hóa đơn, và khi số hóa đơn được sinh ra. Hóa đơn sẽ ở trong tình trạng mở cho đến khi người dùng thanh toán hóa đơn này. \n"
+"* Trạng thái 'Đã thanh toán' được thiết lập tự động khi hóa đơn được thanh toán hết. Nó liên quan đến bút toán đã đối soát hoặc chưa đối soát.\n"
+"* Trạng thái 'Hủy bỏ' được sử dụng khi người dùng hủy hóa đơn"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
@@ -168,7 +174,7 @@ msgstr ": Sổ cái"
 #: code:addons/account/models/account.py:539
 #, python-format
 msgid ": Refund"
-msgstr ""
+msgstr "Hoàn tiền"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance

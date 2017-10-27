@@ -288,7 +288,7 @@ def build_deb(o):
         deb.expect(pexpect.EOF, timeout=1200)
     else:
         subprocess.call(['dpkg-buildpackage', '-rfakeroot', '-uc', '-us'], cwd=o.build_dir)
-    # As the packages are builded in the parent of the buildir, we move them back to build_dir
+    # As the packages are built in the parent of the buildir, we move them back to build_dir
     build_dir_parent = '{}/../'.format(o.build_dir)
     wildcards = ['odoo_{}'.format(wc) for wc in ('*.deb', '*.dsc', '*_amd64.changes', '*.tar.gz', '*.tar.xz')]
     move_glob(build_dir_parent, wildcards, o.build_dir)
@@ -445,7 +445,7 @@ def options():
 
     op.add_option("-b", "--build-dir", default=build_dir, help="build directory (%default)", metavar="DIR")
     op.add_option("-p", "--pub", default=None, help="pub directory (%default)", metavar="DIR")
-    op.add_option("", "--no-testing", action="store_true", help="don't test the builded packages")
+    op.add_option("", "--no-testing", action="store_true", help="don't test the built packages")
 
     op.add_option("", "--no-debian", action="store_true", help="don't build the debian package")
     op.add_option("", "--no-debsign", action="store_true", help="don't sign the debian package")

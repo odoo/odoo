@@ -92,5 +92,5 @@ class ProductProduct(models.Model):
             'default_product_tmpl_id': template_ids[0],
             'default_product_id': self.ids[0],
         }
-        action['domain'] = ['|', ('product_id', 'in', [self.ids]), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', template_ids)]
+        action['domain'] = ['|', ('product_id', 'in', self.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', template_ids)]
         return action
