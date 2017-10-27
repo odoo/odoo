@@ -21,4 +21,5 @@ This module applies to companies based in Vietnamese Accounting Standard (VAS).
     "data" : ["account_chart.xml","account_tax.xml","account_chart_template.yml"],
     "demo" : [],
     "installable": True,
+    'post_init_hook': '_preserve_tag_on_taxes',
 }

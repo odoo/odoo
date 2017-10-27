@@ -16,4 +16,5 @@ Updated for Odoo 9 by Bringsvor Consulting AS <www.bringsvor.com>
                     'account_tax.xml','account_chart_template.yml'],
     "active": False,
     "installable": True
+    'post_init_hook': '_preserve_tag_on_taxes',
 }

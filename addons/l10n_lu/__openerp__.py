@@ -43,4 +43,5 @@ Notes:
     'demo': [],
     'installable': True,
     'auto_install': False,
+    'post_init_hook': '_preserve_tag_on_taxes',
 }
