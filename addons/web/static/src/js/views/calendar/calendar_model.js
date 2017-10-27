@@ -255,6 +255,8 @@ return AbstractModel.extend({
      */
     setDate: function (start, highlight) {
         this.data.start_date = this.data.end_date = this.data.target_date = this.data.highlight_date = start;
+        this.data.start_date.utc().add(this.getSession().getTZOffset(this.data.start_date), 'minutes');
+
         switch (this.data.scale) {
             case 'month':
                 this.data.start_date = this.data.start_date.clone().startOf('month').startOf('week');
@@ -391,6 +393,12 @@ return AbstractModel.extend({
             firstDay: moment().startOf('week').isoWeekday(),
         };
     },
+    /**
+     * Return a domain from the date range
+     *
+     * @private
+     * @returns {Array}
+     */
     _getRangeDomain: function () {
         // Build OpenERP Domain to filter object by this.mapping.date_start field
         // between given start, end dates.
@@ -623,8 +631,10 @@ return AbstractModel.extend({
             date_stop = date_start.clone().add(date_delay,'hours');
         }
 
-        date_start.add(this.getSession().getTZOffset(date_start), 'minutes');
-        date_stop.add(this.getSession().getTZOffset(date_stop), 'minutes');
+        if (!all_day) {
+            date_start.add(this.getSession().getTZOffset(date_start), 'minutes');
+            date_stop.add(this.getSession().getTZOffset(date_stop), 'minutes');
+        }
 
         if (this.mapping.all_day && evt[this.mapping.all_day]) {
             date_stop.add(1, 'days');

@@ -560,7 +560,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('aggregates are computed correctly', function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         var list = createView({
             View: ListView,
@@ -581,6 +581,11 @@ QUnit.module('Views', {
         $thead_selector.click();
         assert.strictEqual(list.$('tfoot td:nth(2)').text(), "32",
                         "total should be 32 as all records are selected");
+
+        // Let's update the view to dislay NO records
+        list.update({domain: ['&', ['bar', '=', false], ['int_field', '>', 0]]});
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), "0", "total should have been recomputed to 0");
+
         list.destroy();
     });
 
