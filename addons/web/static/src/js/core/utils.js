@@ -458,6 +458,20 @@ var utils = {
         }
     },
     /**
+     * Enhanced traverse function with 'path' building on traverse.
+     *
+     * @param {Object} tree an object describing a tree structure
+     * @param {function} f a callback
+     * @param {Object} path the path to the current 'tree' object
+     */
+    traversePath: function (tree, f, path) {
+        path = path || [];
+        f(tree, path);
+        _.each(tree.children, function (node) {
+            utils.traversePath(node, f, path.concat(tree));
+        });
+    },
+    /**
      * Visit a tree of objects and freeze all
      *
      * @param {Object} obj
