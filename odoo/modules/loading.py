@@ -35,6 +35,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
        :return: list of modules that were installed or updated
     """
     def load_test(module_name, idref, mode):
+        allowed = cr.allow_commit(True)
         cr.commit()
         try:
             _load_data(cr, module_name, idref, mode, 'test')
@@ -50,6 +51,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 cr.rollback()
                 # avoid keeping stale xml_id, etc. in cache
                 odoo.registry(cr.dbname).clear_caches()
+            cr.allow_commit(allowed)
 
 
     def _get_files_of_kind(kind):
@@ -131,6 +133,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
         loaded_modules.append(package.name)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
+            cr.allow_commit(False)
+            # install/upgrade database schema
             registry.setup_models(cr)
             registry.init_models(cr, model_names, {'module': package.name})
 
@@ -394,10 +398,13 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 Module.browse(modules_to_remove.values()).module_uninstall()
                 # Recursive reload, should only happen once, because there should be no
                 # modules to remove next time
+                cr.allow_commit(True)
                 cr.commit()
                 _logger.info('Reloading registry once more after uninstalling modules')
                 api.Environment.reset()
                 return odoo.modules.registry.Registry.new(cr.dbname, force_demo, status, update_module)
+
+        cr.allow_commit(True)
 
         # STEP 6: verify custom views on every model
         if update_module:
