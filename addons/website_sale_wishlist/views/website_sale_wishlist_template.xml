@@ -5,6 +5,7 @@
         <xpath expr="." position="inside">
             <link type="text/less" rel='stylesheet' href='/website_sale_wishlist/static/src/less/website_sale_wishlist.less'/>
             <script type="text/javascript" src="/website_sale_wishlist/static/src/js/website_sale_wishlist.js"></script>
+            <script type="text/javascript" src="/website_sale_wishlist/static/src/js/website_sale_product_catalog.js"></script>
         </xpath>
     </template>
 
@@ -82,6 +83,12 @@
                 </div>
             </div>
         </t>
+    </template>
+
+    <template id="s_product_catalog_snippet_options_inherited" inherit_id="website_sale.s_product_catalog_snippet_options">
+        <xpath expr="//div[@data-js='catalog']/li[last()]/ul/li[@class='separator']" position="before">
+            <li data-toggle_class="products_add_to_wishlist"><a href="#"><i class="fa fa-heart"></i>Add to Wishlist</a></li>
+        </xpath>
     </template>
 
 </odoo>

@@ -3,39 +3,110 @@
 <template id="website_sale" inherit_id="website.snippets" name="Snippet Ecommerce">
 
     <xpath expr="//div[@id='snippet_options']" position="inside">
-        <div data-js='website_sale'
-            data-selector=".oe_product.oe_grid"
+        <div data-js='website_sale' data-selector=".oe_product.oe_grid"
             data-no-check="true">
-
-          <li class='dropdown-submenu'>
-            <a tabindex="-1" href="#">Size</a>
-            <ul class="dropdown-menu" name="size">
-              <li><a href="#">
-                <table>
-                  <tr><td class="selected"></td><td></td><td></td><td></td></tr>
-                  <tr><td></td><td></td><td></td><td></td></tr>
-                  <tr><td></td><td></td><td></td><td></td></tr>
-                  <tr><td></td><td></td><td></td><td></td></tr>
-                </table>
-              </a></li>
-            </ul>
-          </li>
-          <li class='dropdown-submenu'>
-            <a tabindex="-1" href="#">Styles</a>
-            <ul class="dropdown-menu" name="style">
-            </ul>
-          </li>
-          <li class='dropdown-submenu'>
-              <a tabindex="-1" href="#">Promote</a>
-              <ul class="dropdown-menu" data-no-preview="true">
-                  <li data-go_to="top"><a>Push to top</a></li>
-                  <li data-go_to="up"><a>Push up</a></li>
-                  <li data-go_to="down"><a>Push down</a></li>
-                  <li data-go_to="bottom"><a>Push to bottom</a></li>
-              </ul>
-          </li>
+            <li class='dropdown-submenu'>
+                <a tabindex="-1" href="#">Size</a>
+                <ul class="dropdown-menu" name="size">
+                    <li><a href="#">
+                    <table>
+                        <tr><td class="selected"></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td></tr>
+                    </table>
+                    </a></li>
+                </ul>
+            </li>
+            <li class='dropdown-submenu'>
+                <a tabindex="-1" href="#">Styles</a>
+                <ul class="dropdown-menu" name="style">
+                </ul>
+            </li>
+            <li class='dropdown-submenu'>
+                <a tabindex="-1" href="#">Promote</a>
+                <ul class="dropdown-menu" data-no-preview="true">
+                    <li data-go_to="top"><a>Push to top</a></li>
+                    <li data-go_to="up"><a>Push up</a></li>
+                    <li data-go_to="down"><a>Push down</a></li>
+                    <li data-go_to="bottom"><a>Push to bottom</a></li>
+                </ul>
+            </li>
         </div>
     </xpath>
 
 </template>
+
+    <template id="remove_external_snippets" inherit_id="website.external_snippets">
+        <xpath expr="//t[@t-install='website_sale']" position="replace"/>
+    </template>
+
+    <template id="s_product_catalog" name="Product Catalog">
+        <section class="s_catalog products_name products_price products_add_to_cart products_view_all" data-x="3" data-y="1" data-selection="all" data-sortby="name_asc" data-reorder-ids="">
+            <div class="container">
+                <h1 class="text-center">Our New Products</h1>
+                <h3 class="text-center text-muted">Shop with us now!</h3>
+            </div>
+        </section>
+    </template>
+
+    <template  id="register_s_product_catalog" inherit_id="website.snippets" name="Product Catalog">
+        <xpath expr="//div[@id='snippet_feature']//t[@t-snippet][last()]" position="after">
+            <t t-snippet="website_sale.s_product_catalog" t-thumbnail="/website/static/src/img/blocks/product_catalog_icon.png"/>
+        </xpath>
+    </template>
+
+    <template id="s_product_catalog_snippet_options" inherit_id="website.snippet_options">
+        <xpath expr="//div" position="after">
+            <div data-selector=".s_catalog" data-js="catalog">
+                <li class="dropdown-submenu">
+                    <a tabindex="-1" href="#"><i class="fa fa-th"></i>Catalog Size</a>
+                    <ul class="dropdown-menu" name="size">
+                        <li data-size="">
+                            <a href="#">
+                                <table>
+                                    <tr><td class="selected"></td><td></td><td></td><td></td></tr>
+                                    <tr><td></td><td></td><td></td><td></td></tr>
+                                    <tr><td></td><td></td><td></td><td></td></tr>
+                                    <tr><td></td><td></td><td></td><td></td></tr>
+                                </table>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown-submenu">
+                    <a tabindex="-1" href="#"><i class="fa fa-hand-pointer-o"></i>Product Selection</a>
+                    <ul class="dropdown-menu" name="selection">
+                        <li data-selection="all"><a href="#">All</a></li>
+                        <li data-selection="category"><a href="#">Specific Category</a></li>
+                        <li data-selection="manual"><a href="#">Manually</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown-submenu">
+                    <a tabindex="-1" href="#"><i class="fa fa-sort"></i>Sort By</a>
+                    <ul class="dropdown-menu" name="sortby">
+                        <li data-sortby="price_desc"><a href="#"><i class="fa fa-sort-numeric-desc"></i>Price High to Low</a></li>
+                        <li data-sortby="price_asc"><a href="#"><i class="fa fa-sort-numeric-asc"></i>Price Low to High</a></li>
+                        <li data-sortby="name_asc"><a href="#"><i class="fa fa-sort-alpha-asc"></i>Name A to Z</a></li>
+                        <li data-sortby="name_desc"><a href="#"><i class="fa fa-sort-alpha-desc"></i>Name Z to A</a></li>
+                        <li data-sortby="newest_to_oldest"><a href="#"><i class="fa fa-chevron-down"></i>Newest to Oldest</a></li>
+                        <li data-sortby="oldest_to_newest"><a href="#"><i class="fa fa-chevron-up"></i>Oldest to Newest</a></li>
+                        <li data-sortby="reorder_products"><a href="#"><i class="fa fa-bars"></i>Re-Order Products</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown-submenu">
+                    <a tabindex="-1" href="#"><i class="fa fa-eye"></i>Display Options</a>
+                    <ul class="dropdown-menu">
+                        <li data-toggle-class="products_name"><a href="#"><i class="fa fa-align-justify"></i>Product Name</a></li>
+                        <li data-toggle-class="products_price"><a href="#"><i class="fa fa-money"></i>Product Price</a></li>
+                        <li data-toggle-class="products_description"><a href="#"><i class="fa fa-comment"></i>Product Description</a></li>
+                        <li data-toggle-class="products_rating"><a href="#"><i class="fa fa-star"></i>Product Rating</a></li>
+                        <li data-toggle-class="products_add_to_cart"><a href="#"><i class="fa fa-shopping-cart"></i>Add to Cart</a></li>
+                        <li class="separator" />
+                        <li data-toggle-class="products_view_all"><a href="#"><i class="fa fa-eye"></i>View All Products</a></li>
+                    </ul>
+                </li>
+            </div>
+        </xpath>
+    </template>
 </odoo>

@@ -1044,3 +1044,31 @@ class WebsiteSale(http.Controller):
             states=[(st.id, st.name, st.code) for st in country.get_website_sale_states(mode=mode)],
             phone_code=country.phone_code
         )
+
+    @http.route(['/get_product_catalog_details'], type='json', auth='public', website=True)
+    def get_product_catalog_details(self, domain, sortby, limit=None):
+        ProductTemplate = request.env['product.template']
+        productDetails = []
+        if domain:
+            domain = [tuple(domain)]
+        domain += [('website_published', '=', True)]
+        order = ''
+        if sortby:
+            order = '%s %s' % (sortby['name'], sortby['asc'] and 'ASC' or 'DESC');
+        products = ProductTemplate.search(domain, order=order, limit=limit)
+        for product in products:
+            productDetails.append({
+                'id': product.id,
+                'name': product.name,
+                'image': product.image,
+                'description_sale': product.description_sale,
+                'website_price': product.website_price,
+                'product_variant_id': product.product_variant_id.id,
+                'product_variant_count': product.product_variant_count,
+                'currency_symbol': product.currency_id.symbol,
+                'currency_position': product.currency_id.position,
+                'currency_decimal_places': product.currency_id.decimal_places,
+                'rating': product.rating_get_stats(),
+            })
+        is_rating_active = request.env.ref('website_sale.product_comment').active
+        return {'products': productDetails, 'is_rating_active': is_rating_active}

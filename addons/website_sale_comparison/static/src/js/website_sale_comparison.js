@@ -10,10 +10,6 @@ var Widget = require('web.Widget');
 var website = require('web_editor.base');
 var website_sale_utils = require('website_sale.utils');
 
-if(!$('.oe_website_sale').length) {
-    return $.Deferred().reject("DOM doesn't contain '.oe_website_sale'");
-}
-
 var qweb = core.qweb;
 ajax.loadXML('/website_sale_comparison/static/src/xml/comparison.xml', qweb);
 
@@ -154,7 +150,13 @@ var ProductComparison = Widget.extend({
 });
 
 website.ready().done(function() {
-    new ProductComparison().appendTo('.oe_website_sale');
+    if($('.oe_website_sale').length) {
+        new ProductComparison().appendTo('.oe_website_sale');
+    }
 });
+
+return {
+    ProductComparison: ProductComparison,
+};
 
 });
