@@ -115,7 +115,7 @@ var CalendarController = AbstractController.extend({
      */
     _onChangeDate: function (event) {
         var modelData = this.model.get();
-        if (modelData.target_date.isSame(event.data.date)) {
+        if (modelData.target_date.format('YYYY-MM-DD') === event.data.date.format('YYYY-MM-DD')) {
             // When clicking on same date, toggle between the two views
             switch (modelData.scale) {
                 case 'month': this.model.setScale('week'); break;

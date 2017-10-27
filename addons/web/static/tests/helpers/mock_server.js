@@ -26,6 +26,9 @@ var MockServer = Class.extend({
             if (!('display_name' in model.fields)) {
                 model.fields.display_name = {string: "Display Name", type: "char"};
             }
+            if (!('__last_update' in model.fields)) {
+                model.fields.__last_update = {string: "Last Modified on", type: "datetime"};
+            }
             if (!('name' in model.fields)) {
                 model.fields.name = {string: "Name", type: "char", default: "name"};
             }

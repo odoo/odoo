@@ -21,7 +21,8 @@ CalendarRenderer.include({
 
 var createView = testUtils.createView;
 
-var initialDate = new Date("2016-12-12T08:00:00Z");
+var initialDate = new Date(2016, 11, 12, 8, 0, 0);
+initialDate = new Date(initialDate.getTime() - initialDate.getTimezoneOffset()*60*1000);
 
 
 QUnit.module('Views', {

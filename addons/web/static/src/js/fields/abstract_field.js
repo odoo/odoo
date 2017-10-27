@@ -43,6 +43,15 @@ var AbstractField = Widget.extend({
     custom_events: {
         navigation_move: '_onNavigationMove',
     },
+
+    /**
+    * An object representing fields to be fetched by the model eventhough not present in the view
+    * This object contains "field name" as key and an object as value.
+    * That value object must contain the key "type"
+    * see FieldBinaryImage for an example.
+    */
+    fieldDependencies: {},
+
     /**
      * If this flag is set to true, the field widget will be reset on every
      * change which is made in the view (if the view supports it). This is
