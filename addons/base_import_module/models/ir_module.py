@@ -36,7 +36,8 @@ class IrModule(models.Model):
         unmet_dependencies = set(terp['depends']).difference(installed_mods)
 
         if unmet_dependencies:
-            if _is_studio_custom(path):
+            if (unmet_dependencies == set(['web_studio']) and
+                    _is_studio_custom(path)):
                 err = _("Studio customizations require Studio")
             else:
                 err = _("Unmet module dependencies: %s") % ', '.join(
