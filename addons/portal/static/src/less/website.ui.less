@@ -11,7 +11,7 @@ body.o_connected_user {
 #oe_main_menu_navbar {
     .o-position-absolute(0, 0, auto, 0);
     position: fixed;
-    z-index: 1001;
+    z-index: @zindex-modal - 10;
 
     font-family: @o-we-font-family;
     font-size: @odoo-font-size-base;
