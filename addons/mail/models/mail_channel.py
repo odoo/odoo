@@ -15,7 +15,7 @@ from odoo.tools.safe_eval import safe_eval
 
 class ChannelPartner(models.Model):
     _name = 'mail.channel.partner'
-    _description = 'Last Seen Many2many'
+    _description = 'Listeners of a Channel'
     _table = 'mail_channel_partner'
     _rec_name = 'partner_id'
 
