@@ -41,4 +41,5 @@ configuration of their taxes and fiscal positions manually.
     'demo': [],
     'auto_install': False,
     'installable': True,
+    'post_init_hook': '_preserve_tag_on_taxes',
 }

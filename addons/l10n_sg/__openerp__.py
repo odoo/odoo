@@ -34,4 +34,5 @@ After installing this module, the Configuration wizard for accounting is launche
              'account_chart_template.yml',
     ],
     'installable': True,
+    'post_init_hook': '_preserve_tag_on_taxes',
 }
