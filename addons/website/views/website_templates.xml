@@ -213,7 +213,8 @@
 <template id="layout_logo_show" inherit_id="website.layout" customize_show="True" name="Show Logo">
     <xpath expr="//header//a[@class='navbar-brand']" position="replace">
         <a href="/" class="navbar-brand logo">
-            <img t-att-src="'/logo.png?company=%d' % request.website.company_id.id"  t-att-alt="'Logo of %s' % request.website.company_id.name" t-att-title="request.website.company_id.name" />
+            <t t-set="website_company_id" t-value="request.website.company_id if request.website else res_company"/>
+            <img t-att-src="'/logo.png?company=%d' % website_company_id.id"  t-att-alt="'Logo of %s' % website_company_id.name" t-att-title="website_company_id.name" />
         </a>
     </xpath>
 </template>
