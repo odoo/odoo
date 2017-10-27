@@ -94,6 +94,10 @@ CREATE TABLE ir_model_data (
     primary key(id)
 );
 
+CREATE TABLE ir_cron (
+    id serial NOT NULL
+);
+
 CREATE TABLE res_currency (
     id serial,
     name varchar NOT NULL,

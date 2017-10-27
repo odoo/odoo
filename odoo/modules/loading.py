@@ -134,6 +134,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         loaded_modules.append(package.name)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             cr.allow_commit(False)
+            # prevent cron workers from running during installations/upgrades
+            cr.execute("LOCK TABLE ir_cron")
             # install/upgrade database schema
             registry.setup_models(cr)
             registry.init_models(cr, model_names, {'module': package.name})
