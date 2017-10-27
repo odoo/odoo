@@ -91,7 +91,7 @@
             <field name="name">product.valuation.tree</field>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree create="false">
                     <field name="display_name" string="Product"/>
                     <field name="qty_available" context="{'company_owned': True}" string="Quantity on Hand"/>
                     <field name="uom_id" groups="uom.group_uom"/>
