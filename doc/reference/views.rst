@@ -281,7 +281,7 @@ Possible children elements of the list view are:
             filled, and a cross if it is not
         ``handle``
             for ``sequence`` fields, instead of displaying the field's value
-            just displays a dra&drop icon
+            just displays a drag&drop icon
     ``sum``, ``avg``
         displays the corresponding aggregate at the bottom of the column. The
         aggregation is only computed on *currently displayed* records. The
