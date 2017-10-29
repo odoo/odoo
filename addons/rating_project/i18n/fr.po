@@ -11,13 +11,14 @@
 # Sébastien Le Ray <sebastien-github@orniz.org>, 2017
 # Lucas Deliege <lud@openerp.com>, 2017
 # Eloïse Stilmant <est@odoo.com>, 2017
+# fr trans <e2ftrans1@yahoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2017\n"
+"Last-Translator: fr trans <e2ftrans1@yahoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -149,6 +150,8 @@ msgid ""
 "Customer ratings on tasks/issues. If you have no rating, change your project"
 " Settings to activate it."
 msgstr ""
+"Évaluations des clients sur les tâches/anomalies. Si elles ne sont pas "
+"disponibles, modifiez la configuration de votre projet pour les activer."
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status
@@ -188,6 +191,11 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"Comment obtenir les commentaires du client ?\n"
+"- Évaluation au changement d'étape : un email est envoyé lorsqu'une tâche ou un incident passe à une autre étape\n"
+"- Évaluation périodique : un email est envoyé regulièrement\n"
+"\n"
+"N'oubliez pas de configurer les modèles d'email pour les étapes pour lesquelles vous souhaitez obtenir les commentaires du client."
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
@@ -225,11 +233,13 @@ msgid ""
 "Percentage of happy ratings over the past 30 days. Get rating details from "
 "the More menu."
 msgstr ""
+"Pourcentage de notes satisfaites au cours des 30 derniers jours. Pour "
+"obtenir des détails d'évaluation, accédez au menu Plus."
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "Periodical Rating"
-msgstr ""
+msgstr "Évaluation périodique"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_project
@@ -254,7 +264,7 @@ msgstr "Evaluation des modèles de courriel"
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status_period
 msgid "Rating Frequency"
-msgstr ""
+msgstr "Fréquence des évaluations"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_request_deadline

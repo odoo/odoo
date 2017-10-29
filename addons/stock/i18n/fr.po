@@ -34,7 +34,7 @@
 # lucasdeliege <deliegelucas@gmail.com>, 2016
 # Nicolas Seinlet <nicolas@seinlet.com>, 2016
 # Benedicte HANET <hanetb@gmail.com>, 2016
-# zeroheure <xavier@alternatif.org>, 2016
+# Xavier Brochard <xavier@alternatif.org>, 2016
 # Régis GEROMEGNACE <regis.geromegnace@gmail.com>, 2016
 # Nicolas JEUDY <njeudy@panda-chi.io>, 2016
 # Shark McGnark <peculiarcheese@gmail.com>, 2016
@@ -2300,6 +2300,11 @@ msgid ""
 "            location to the Stock location. Each report can be performed on\n"
 "            physical, partner or virtual locations."
 msgstr ""
+"Toute opération de stock dans Odoo déplace des articles d'un emplacement à "
+"un autre. Par exemple, si vous recevez des articles d'un fournisseur, Odoo "
+"déplacera les articles de l'emplacement Fournisseurs vers l'emplacement "
+"Stock. Chaque rapport peut porter sur un emplacement physique, un "
+"emplacement partenaire ou un emplacement virtuel."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:647
@@ -2560,7 +2565,7 @@ msgstr "A des Opérations de Colisage"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_has_scrap_move
 msgid "Has Scrap Moves"
-msgstr ""
+msgstr "Comporte des mises au rebut"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_quant_reserved_exist
@@ -7548,7 +7553,7 @@ msgstr ""
 #: code:addons/stock/models/stock_scrap.py:72
 #, python-format
 msgid "You cannot delete a scrap which is done."
-msgstr ""
+msgstr "Vous ne pouvez pas supprimer une mise au rebut terminée."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:374
