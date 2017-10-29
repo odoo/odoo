@@ -1157,7 +1157,7 @@ Possible children elements of the search view are:
         fields don't generate domains.
 
         .. note:: the domain and context are inclusive and both are generated
-                  if if a ``context`` is specified. To only generate context
+                  if a ``context`` is specified. To only generate context
                   values, set ``filter_domain`` to an empty list:
                   ``filter_domain="[]"``
     ``groups``
