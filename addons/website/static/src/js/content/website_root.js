@@ -43,8 +43,17 @@ var WebsiteRoot = BodyManager.extend({
     }),
     custom_events: _.extend({}, BodyManager.prototype.custom_events || {}, {
         animation_start_demand: '_onAnimationStartDemand',
+        animation_stop_demand: '_onAnimationStopDemand',
+        ready_to_clean_for_save: '_onAnimationStopDemand',
     }),
 
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.animations = [];
+    },
     /**
      * @override
      */
@@ -108,6 +117,7 @@ var WebsiteRoot = BodyManager.extend({
      * registry has been instantiated outside of the class and is simply
      * returned here.
      *
+     * @private
      * @override
      */
     _getRegistry: function () {
@@ -118,6 +128,7 @@ var WebsiteRoot = BodyManager.extend({
      * `selector` key of one of the registered animations
      * (@see Animation.selector).
      *
+     * @private
      * @param {boolean} [editableMode=false] - true if the page is in edition mode
      * @param {jQuery} [$initTarget]
      *        only initialize the animations whose `selector` matches the element
@@ -127,23 +138,45 @@ var WebsiteRoot = BodyManager.extend({
         var self = this;
         editableMode = editableMode || false;
         var $wrapwrap = this.$('#wrapwrap');
-        var defs = _.map(sAnimation.registry, function (Animation) {
+        var defs = _.map(sAnimation.registry, function (Animation, animationName) {
             var selector = Animation.prototype.selector || '';
             var $target = $initTarget ? $initTarget.filter(selector) : $wrapwrap.find(selector).addBack(selector);
 
             var defs = _.map($target, function (el) {
                 var $snippet = $(el);
-                var animation = $snippet.data('snippet-view');
-                if (animation) {
-                    animation.destroy();
+                var animationIndex = _.findIndex(self.animations, function (animation) {
+                    return animation.__name === animationName && $snippet[0] === animation.el;
+                });
+                if (animationIndex >= 0) {
+                    self.animations[animationIndex].destroy();
+                    self.animations.splice(animationIndex, 1);
                 }
-                animation = new Animation(self, editableMode);
-                $snippet.data('snippet-view', animation);
+                var animation = new Animation(self, editableMode);
+                animation.__name = animationName;
+                self.animations.push(animation);
                 return animation.attachTo($snippet);
             });
             return $.when.apply($, defs);
         });
         return $.when.apply($, defs);
+    },
+    /**
+     * Destroys all animation instances. Especially needed before saving while
+     * in edition mode for example.
+     *
+     * @private
+     * @param {jQuery} [$stopTarget]
+     *        only stop the animations linked to the given element(s)
+     */
+    _stopAnimations: function ($stopTarget) {
+        var removedAnimations = _.map(this.animations, function (animation) {
+            if (!$stopTarget || $stopTarget.filter(animation.el).length) {
+                animation.destroy();
+                return animation;
+            }
+            return null;
+        });
+        this.animations = _.difference(this.animations, removedAnimations);
     },
 
     //--------------------------------------------------------------------------
@@ -161,6 +194,16 @@ var WebsiteRoot = BodyManager.extend({
         this._startAnimations(ev.data.editableMode, ev.data.$target)
             .done(ev.data.onSuccess)
             .fail(ev.data.onFailure);
+    },
+    /**
+     * Called when the root is notified that the animations have to be
+     * stopped.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onAnimationStopDemand: function (ev) {
+        this._stopAnimations(ev.data.$target);
     },
     /**
      * @todo review

@@ -622,6 +622,7 @@ var SnippetsMenu = Widget.extend({
      * - Remove the 'contentEditable' attributes
      */
     cleanForSave: function () {
+        this.trigger_up('ready_to_clean_for_save');
         _.each(this.snippetEditors, function (snippetEditor) {
             snippetEditor.cleanForSave();
         });
