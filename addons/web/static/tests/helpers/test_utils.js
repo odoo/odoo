@@ -164,13 +164,6 @@ function createAsyncView(params) {
     var $content = $('<div>').addClass('o_content').appendTo($web_client);
     var $view_manager = $('<div>').addClass('o_view_manager_content').appendTo($content);
 
-    // make sure all Odoo events bubbling up are intercepted
-    if (params.intercepts) {
-        _.each(params.intercepts, function (cb, name) {
-            intercept(widget, name, cb);
-        });
-    }
-
     return view.getController(widget).then(function (view) {
         // override the view's 'destroy' so that it calls 'destroy' on the widget
         // instead, as the widget is the parent of the view and the mockServer.
@@ -246,6 +239,12 @@ function createAsyncView(params) {
  * @param {Object} [params.translateParameters] if given, it will be used to
  *   extend the core._t.database.parameters object. After the widget
  *   destruction, the original parameters will be restored.
+ * @param {Object} [params.intercepts] an object with event names as key, and
+ *   callback as value.  Each key,value will be used to intercept the event.
+ *   Note that this is particularly useful if you want to intercept events going
+ *   up in the init process of the view, because there are no other way to do it
+ *   after this method returns. Some events ('call_service', "load_views",
+ *   "get_session", "load_filters") have a special treatment beforehand.
  *
  * @returns {MockServer} the instance of the mock server, created by this
  *   function. It is necessary for createAsyncView so that method can call some
@@ -361,6 +360,13 @@ function addMockEnvironment(widget, params) {
         }
         event.data.on_success([]);
     });
+
+    // make sure all Odoo events bubbling up are intercepted
+    if ('intercepts' in params) {
+        _.each(params.intercepts, function (cb, name) {
+            intercept(widget, name, cb);
+        });
+    }
 
     return mockServer;
 }
