@@ -46,9 +46,9 @@ sOptions.registry.twitter = sOptions.Class.extend({
         this.$target.on('click.website_twitter', '.lnk_configure', function (e) {
             window.location = e.currentTarget.href;
         });
-        if (this.$target.data('snippet-view')) {
-            this.$target.data('snippet-view').destroy();
-        }
+        this.trigger_up('animation_stop_demand', {
+            $target: this.$target,
+        });
         return this._super.apply(this, arguments);
     },
     /**
