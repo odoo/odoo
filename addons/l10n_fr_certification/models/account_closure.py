@@ -12,7 +12,7 @@ class AccountClosure(models.Model):
     total_interval = fields.Monetary()
     grand_total_fiscal = fields.Monetary()
     total_beginning = fields.Monetary()
-    sequence_id = fields.Many2one('ir.sequence')
+    sequence_number = fields.Integer()
     first_move_id = fields.Many2one('account.move')
     last_move_id = fields.Many2one('account.move')
 
@@ -28,12 +28,14 @@ class AccountClosure(models.Model):
         # take previous object same frequency and compute sum(am.balance) + previous.amount
         return 0
 
+    @api.multi
     def write(self, vals):
         raise UserError()
 
     def unlink(self):
         raise UserError()
 
+    @api.model
     def automated_closure(self, frequency='daily'):
         # To be executed by the CRON to compute all the amount
         # call every _compute to get the amounts

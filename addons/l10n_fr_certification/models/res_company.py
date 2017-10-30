@@ -11,7 +11,10 @@ UNALTERABLE_COUNTRIES = ['FR', 'MF', 'MQ', 'NC', 'PF', 'RE', 'GF', 'GP', 'TF']
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
+    # To do in master : refactor to set sequences more generic
+
     l10n_fr_secure_sequence_id = fields.Many2one('ir.sequence', 'Sequence to use to ensure the securisation of data', readonly=True)
+    l10n_fr_closure_sequence_id = fields.Many2one('ir.sequence')
 
     @api.model
     def create(self, vals):

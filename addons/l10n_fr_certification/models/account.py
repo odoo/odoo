@@ -17,6 +17,8 @@ LINE_FIELDS = ['debit', 'credit', 'account_id', 'partner_id']
 class AccountMove(models.Model):
     _inherit = "account.move"
 
+    # TO DO in master : refactor hashing algo to go into a mixin
+
     l10n_fr_secure_sequence_number = fields.Integer(readonly=True, copy=False)
     l10n_fr_hash = fields.Char(readonly=True, copy=False)
     l10n_fr_string_to_hash = fields.Char(compute='_compute_string_to_hash', readonly=True, store=False)
