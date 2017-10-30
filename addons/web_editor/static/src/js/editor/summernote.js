@@ -970,6 +970,44 @@ renderer.tplButtonInfo.fontsize = function (lang, options) {
     });
 };
 
+renderer.tplButtonInfo.color = function (lang, options) {
+    var colorButtonLabel = '<i class="' + options.iconPrefix + options.icons.color.recent + '" id="colors_preview"></i>';
+    // We have to put recent color button because foreground and background color click event going to update recent color value
+    // so, it's give error in browser console
+    var recentColorButton = renderer.getTemplate().button(colorButtonLabel, {
+        className: 'note-recent-color d-none',
+        title: lang.color.recent,
+        event: 'color',
+        value: '{"backColor":"#B35E9B"}'
+    });
+    var items = [
+        '<div class="text-center">',
+        '<button type="button" class="btn btn-default btn-sm active" data-event="textColor">' + lang.color.text + '</button>',
+        '<button type="button" class="btn btn-default btn-sm" data-event="highlightColor">' + lang.color.highlight + '</button>',
+        '</div>',
+        '<li class="flex"><div class="btn-group d-none flex-column">',
+        '<div class="note-color-reset" data-event="backColor" data-value="inherit" title="' + lang.color.transparent + '">',
+        lang.color.setTransparent + '</div>',
+        '<div class="note-color-palette" data-target-event="backColor"></div>',
+        '<div class="note-custom-color" data-event="customColor" data-value="backColor" title="' + lang.color.custom + '">',
+        lang.color.custom + '<input type="color" class="hidden"/></div>',
+        '<div class="note-custom-color-palette" data-target-event="backColor"></div>',
+        '</div><div class="btn-group flex-column">',
+        '<div class="note-color-reset" data-event="foreColor" data-value="inherit" title="' + lang.color.reset + '">',
+        lang.color.resetToDefault + '</div>',
+        '<div class="note-color-palette" data-target-event="foreColor"></div>',
+        '<div class="note-custom-color" data-event="customColor" data-value="foreColor" title="' + lang.color.custom + '">',
+        lang.color.custom + '<input type="color" class="hidden"/></div>',
+        '<div class="note-custom-color-palette" data-target-event="foreColor"></div>',
+        '</div></li>'
+    ];
+    var colorButton = renderer.getTemplate().button(colorButtonLabel, {
+        title: lang.color.more,
+        dropdown: renderer.getTemplate().dropdown(items)
+    });
+    return recentColorButton + colorButton;
+},
+
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 key.nameFromCode[46] = 'DELETE';
@@ -1922,65 +1960,21 @@ $.summernote.pluginEvents.removeFormat = function (event, editor, layoutInfo, va
     event.preventDefault();
     return false;
 };
-var fn_boutton_updateRecentColor = eventHandler.modules.toolbar.button.updateRecentColor;
-eventHandler.modules.toolbar.button.updateRecentColor = function (elBtn, sEvent, sValue) {
-    fn_boutton_updateRecentColor.call(this, elBtn, sEvent, sValue);
-    var $recentcolor = $.find('.note-recent-color i');
-    var $recentcolorbtn = $.find('.note-recent-color');
-
-    //find last used color for fonts or for icons
-    //set this color into recentcolor button of both font and icon
-    for (var i in $recentcolor) {
-        var $font = $recentcolor[i];
-        var $button = $($recentcolorbtn[i]);
-        var className = $font.className.split(/\s+/);
-        var k;
-        if (sEvent === "foreColor") {
-            //set class for forecolor to recentcolor button font-icon
-            for (k=2; k<className.length; k++) {
-                if (className[k].length && className[k].slice(0,5) === "text-") {
-                  className.splice(k,1);
-                  k--;
-                }
-            }
-            if (sValue.indexOf('text-') !== -1) {
-                $font.className = className.join(' ') + ' ' + sValue;
-                $font.style.color = '';
-            } else {
-                $font.className = $font.className.replace(/(^|\s+)text-\S+/, '');
-                $font.style.color = sValue !== 'inherit' ? sValue : "";
-            }
-        } else {
-            //set class for backcolor to recentcolor button font-icon
-            for (k=2; k<className.length; k++) {
-                if (className[k].length && className[k].slice(0,3) === "bg-") {
-                  className.splice(k,1);
-                  k--;
-                }
-            }
-            if (sValue.indexOf('bg-') !== -1) {
-                $font.className =className.join(' ') + ' ' + sValue;
-                $font.style.backgroundColor = "";
-            } else {
-                $font.className = $font.className.replace(/(^|\s+)bg-\S+/, '');
-                $font.style.backgroundColor = sValue !== 'inherit' ? sValue : "";
-            }
-        }
-        if (sValue !== 'inherit') {
-            //set attribute for color to the recentcolor button
-            var colorInfo = JSON.parse($button.attr('data-value'));
-            colorInfo[sEvent] = sValue;
-            $button.attr('data-value', JSON.stringify(colorInfo));
-        }
-    }
-    return false;
-};
 
 eventHandler.modules.editor.undo = function ($popover) {
     if (!$popover.attr('disabled')) $popover.data('NoteHistory').undo();
 };
 eventHandler.modules.editor.redo = function ($popover) {
     if (!$popover.attr('disabled'))  $popover.data('NoteHistory').redo();
+};
+
+// Get color and background color of node to update recent color button
+var fn_from_node = eventHandler.modules.editor.style.fromNode;
+eventHandler.modules.editor.style.fromNode = function ($node) {
+    var styleInfo = fn_from_node.apply(this, arguments);
+    styleInfo['color'] = $node.css('color');
+    styleInfo['background-color'] = $node.css('background-color');
+    return styleInfo;
 };
 
 // use image toolbar if current range is on image
@@ -2234,6 +2228,10 @@ $.summernote.pluginEvents.foreColor = function (event, editor, layoutInfo, foreC
   var $editable = layoutInfo.editable();
   $.summernote.pluginEvents.applyFont(event, editor, layoutInfo, foreColor, null, null);
   editor.afterCommand($editable);
+};
+$.summernote.pluginEvents.customColor = function (event, editor, layoutInfo, customColor) {
+  event.stopPropagation();
+  $(event.target).find('input').click();
 };
 $.summernote.pluginEvents.backColor = function (event, editor, layoutInfo, backColor) {
   var $editable = layoutInfo.editable();

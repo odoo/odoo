@@ -44,20 +44,8 @@ tour.register('rte', {
         this.$anchor.html(html);
     }
 }, {
-    content: "simulate triple click and change text bg-color",
-    trigger: '#editable_area > section .row > div:first',
-    run: function () {
-        var $h1 = $('h1', this.$anchor);
-        $.summernote.core.range.create($h1[0].firstChild, 0, $('p', this.$anchor)[0], 0).select();
-        simulateClickEvent($h1[0], 'mouseup');
-    }
-}, {
-    content: "change text bg-color after triple click",
-    trigger: '.note-popover button[data-event="color"]',
-    extra_trigger: '#editable_area > section .row > div:first',
-}, {
     content: "change selection to change text color",
-    trigger: '#editable_area > section .row > div:first:not(:has(p font)) h1 font',
+    trigger: '#editable_area > section .row > div:first h1',
     run: function () {
         $.summernote.core.range.create(this.$anchor[0].firstChild, 5, this.$anchor[0].firstChild, 10).select();
         simulateClickEvent(this.$anchor[0], 'mouseup');
@@ -69,28 +57,50 @@ tour.register('rte', {
     content: "change text color",
     trigger: ".btn-group.show button[data-event=foreColor]:first",
 }, {
-    content: "change selection to change text bg-color again",
-    trigger: '#editable_area > section .row > div:first h1 font:eq(2)',
+    content: "change selection to change text custom-color again",
+    trigger: '#editable_area > section .row > div:first h1 font',
     run: function () {
-        $.summernote.core.range.create(this.$anchor.prev()[0].firstChild, 3, this.$anchor[0].firstChild, 10).select();
-        simulateClickEvent(this.$anchor.prev()[0], 'mouseup');
+        $.summernote.core.range.create(this.$anchor.parent()[0].lastChild, 0, this.$anchor.parent()[0].lastChild, 10).select();
+        simulateClickEvent(this.$anchor[0], 'mouseup');
     }
 }, {
     content: "open color dropdown",
     trigger: ".note-color button.dropdown-toggle",
+}, {
+    content: "apply custom color to text",
+    trigger: ".btn-group.open .note-custom-color:last",
+    run: function () {
+        this.$anchor.find('input').val('#e66465').change();
+    }
+}, {
+    content: "change selection to change text bg-color again",
+    trigger: '#editable_area > section .row > div:first h1 font',
+    run: function () {
+        $.summernote.core.range.create(this.$anchor[0].firstChild, 3, this.$anchor.parent()[0].lastChild, 10).select();
+        simulateClickEvent(this.$anchor[0], 'mouseup');
+    }
+}, {
+    content: "open color dropdown",
+    trigger: ".note-color button.dropdown-toggle",
+}, {
+    content: "switch to highlight color button",
+    trigger: "button[data-event='highlightColor']",
 }, {
     content: "change text backColor again",
     trigger: "button[data-event=backColor]:visible:first",
 }, {
     content: "change selection (h1 and p) to change text color with class",
-    trigger: '#editable_area > section .row > div:first h1 font:eq(4)',
+    trigger: '#editable_area > section .row > div:first h1 font:eq(2)',
     run: function () {
-        $.summernote.core.range.create(this.$anchor.prev()[0].firstChild, 3, this.$anchor.parent("h1").next("p")[0].firstChild, 30).select();
-        simulateClickEvent(this.$anchor.prev()[0], 'mouseup');
+        $.summernote.core.range.create(this.$anchor[0].firstChild, 3, this.$anchor.parent("h1").next("p")[0].firstChild, 30).select();
+        simulateClickEvent(this.$anchor[0], 'mouseup');
     }
 }, {
     content: "open color dropdown",
     trigger: ".note-color button.dropdown-toggle",
+}, {
+    content: "switch to text color button",
+    trigger: "button[data-event='textColor']",
 }, {
     content: "change text color again",
     trigger: "button[data-event=foreColor]:visible:eq(3)",
@@ -127,7 +137,7 @@ tour.register('rte', {
 }, {
     content: "undo",
     trigger: '.note-image-popover button[data-event="undo"]',
-    extra_trigger: '#editable_area > section .row > div:first:has( font:last:containsExact(Bat) )',
+    extra_trigger: '#editable_area > section .row > div:first:has( h1 )',
 }, {
     content: "undo again",
     trigger: '.note-air-popover button[data-event="undo"]',

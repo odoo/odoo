@@ -790,12 +790,19 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
         }
 
         #colors_preview {
-            padding: 4px;
+            padding: 4px 0px;
             border-radius: 2px;
             border: 1px solid #989898;
             border-color: fade-out($o-we-color-text-normal, 0.5);
+            &.bg-transparent {
+                background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAClJREFUeNpivHnzJgMSUFNTQ+YyMeAFNJVm/P//PzL/1q1bg8VpAAEGAMiICJs4Ce8uAAAAAElFTkSuQmCC');
+            }
+            &::before {
+                padding: 4px;
+                background-color: rgba(0, 0, 0, 0.25);
+            }
         }
-        .note-color-palette .note-color-row {
+        .note-color-palette .note-color-row, .note-custom-color-palette .note-color-row {
             height: auto!important;
 
             &::after {
@@ -841,9 +848,27 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
         }
     }
 
+    .note-custom-color-palette .note-color-btn {
+        height: 20px;
+        width: 20px;
+        border: 1px solid white;
+    }
+    .note-custom-color {
+        margin: 5px 0px;
+        padding: 5px 0px;
+        border-radius: 10px;
+        font-weight: bold;
+        font-size: 12px;
+        cursor: pointer;
+        &:hover {
+            background: $gray-light;
+            color: $gray-darker;
+        }
+    }
+
     .note-color {
         .dropdown-toggle {
-            width: auto;
+            width: auto !important;
         }
         .o_foreground_toggle > button:before {
             font-family: FontAwesome;
@@ -854,7 +879,24 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
             content: '\f0c3';
         }
         .dropdown-menu {
-            min-width: 353px!important;
+            min-width: 181px !important;
+            > div > .btn {
+                height: auto;
+                width: 50%;
+                border-top: 0px;
+                &:not(.active):hover{
+                    background-color: transparent;
+                }
+                &.active:before {
+                    font-family: FontAwesome;
+                    content: '\f00c';
+                    margin-right: 3px;
+                    color: $o-brand-optional;
+                }
+            }
+            > li .btn-group {
+                margin: 0 5px !important;
+            }
         }
     }
 }
