@@ -689,7 +689,7 @@ class GoogleCalendar(models.AbstractModel):
 
             my_google_attendees = CalendarAttendee.with_context(context_novirtual).search([
                 ('partner_id', '=', my_partner_id),
-                ('google_internal_event_id', 'in', all_event_from_google.keys())
+                ('google_internal_event_id', 'in', list(all_event_from_google))
             ])
             my_google_att_ids = my_google_attendees.ids
 
