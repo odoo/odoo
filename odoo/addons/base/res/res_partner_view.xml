@@ -307,7 +307,7 @@
                                                 <div class="oe_kanban_details">
                                                     <field name="name"/>
                                                     <div t-if="record.function.raw_value"><field name="function"/></div>
-                                                    <div t-if="record.email.raw_value"><field name="email"/></div>
+                                                    <div t-if="record.email.raw_value"><field name="email" widget="email"/></div>
                                                     <div t-if="record.type.raw_value != 'contact'">
                                                         <div>
                                                             <field name="zip"/>
