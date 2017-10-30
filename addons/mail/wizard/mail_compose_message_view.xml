@@ -7,6 +7,11 @@
             <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
             <field name="arch" type="xml">
                 <form string="Compose Email">
+                    <field name="is_mail_config" invisible="1"/>
+                    <div class="alert alert-danger text-center" attrs="{'invisible': [('is_mail_config', '=', True)]}" groups="base.group_system">
+                        <strong>You can set up corresponding incoming and outgoing mail servers.</strong>
+                        <button string="Click here for mail configuration" name="action_mail_server_configuration" type="object" class="btn-link"/>
+                    </div>
                     <group>
                         <!-- truly invisible fields for control and options -->
                         <field name="composition_mode" invisible="1"/>

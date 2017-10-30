@@ -1,0 +1,43 @@
+<odoo>
+    <data>
+        <record id="mail_server_configuration_wizard_form" model="ir.ui.view">
+            <field name="name">mail.server.configuration.form</field>
+            <field name="model">mail.server.configuration</field>
+            <field name="arch" type="xml">
+                <form string="Configure Email">
+                    <div class="alert alert-info text-center">
+                        <strong attrs="{'invisible': [('is_alias_domain', '=', True)]}">Please enter the domain name of your email server in order to send and receive emails in Odoo.</strong>
+                        <strong attrs="{'invisible': [('is_alias_domain', '=', False)]}">Let’s now set up corresponding incoming and outgoing mail servers.</strong>
+                    </div>
+                    <group>
+                        <field name="alias_domain" placeholder="mycompany.odoo.com"/>
+                        <field name="is_alias_domain" invisible="1"/>
+                        <field name="is_incoming_server" invisible="1"/>
+                        <field name="is_outgoing_server" invisible="1"/>
+                    </group>
+                    <group attrs="{'invisible': [('is_alias_domain', '=', False)]}">
+                        <div class="row">
+                            <div>
+                                <button type="object"
+                                name="action_email_server_from"
+                                string="Incoming Email Servers" icon="fa-arrow-right" class="btn-link"/><i class="fa fa-check-circle text-success" attrs="{'invisible': [('is_incoming_server', '=', False)]}"/>
+                            </div>
+                            <div>
+                                <button type="object"
+                                name="action_ir_mail_server_from"
+                                string="Outgoing Email Servers" icon="fa-arrow-right" class="btn-link"/><i class="fa fa-check-circle text-success" attrs="{'invisible': [('is_outgoing_server', '=', False)]}"/>
+                            </div>
+                        </div>
+                    </group>
+                    <div>
+                        <strong attrs="{'invisible': [('is_alias_domain', '=', False)]}">You can change your email settings anytime from the menu settings > General Settings.</strong>
+                    </div>
+                    <footer>
+                        <button string="Ok" name="set_mail_server" type="object" class="btn-primary"/>
+                        <button string="Discard" class="btn-default" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
