@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
-# SV <sv@grimmette.ru>, 2017
+# Sergey Vilizhanin <sv@grimmette.ru>, 2017
 # Viktor Pogrebniak <vp@aifil.ru>, 2017
 # Максим Дронь <dronmax@gmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
@@ -18,10 +18,10 @@
 # Evgeny <transingularity@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2017-10-24 08:59+0000\n"
+"PO-Revision-Date: 2017-10-24 08:59+0000\n"
 "Last-Translator: Evgeny <transingularity@gmail.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -1583,7 +1583,7 @@ msgid "Enter a name for your new product"
 msgstr "Введите название вашего нового продукта"
 
 #. module: website_sale
-#: code:addons/website_sale/models/product.py:91
+#: code:addons/website_sale/models/product.py:92
 #, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "Ошибка! Нельзя создавать рекурсивные категории."
@@ -1655,6 +1655,11 @@ msgstr "Быстрое соединение. Во всем мире."
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "FedEx"
 msgstr ""
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_ir_model_fields
+msgid "Fields"
+msgstr "Поля"
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
@@ -1921,7 +1926,7 @@ msgid "Installs *e-Commerce Inventory*"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:501
+#: code:addons/website_sale/controllers/main.py:502
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr ""
@@ -2186,7 +2191,7 @@ msgstr "Сеть"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:964
+#: code:addons/website_sale/controllers/main.py:967
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:32
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
@@ -2337,7 +2342,7 @@ msgid "Parent Category"
 msgstr "Категория предка"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:752
+#: code:addons/website_sale/controllers/main.py:755
 #, python-format
 msgid "Pay Now"
 msgstr "Оплатить сейчас"
@@ -3106,7 +3111,7 @@ msgstr ""
 "использоваться как платежные шлюзы с процессом оплаты."
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:517
+#: code:addons/website_sale/controllers/main.py:520
 #, python-format
 msgid "Some required fields are empty."
 msgstr "Некоторые обязательные поля не заполнены."
@@ -3553,6 +3558,12 @@ msgstr "Мета-название Веб-сайта"
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_price
 msgid "Website price"
 msgstr "Вебсайт цена"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product_website_price_difference
+#: model:ir.model.fields,field_description:website_sale.field_product_template_website_price_difference
+msgid "Website price difference"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_public_price

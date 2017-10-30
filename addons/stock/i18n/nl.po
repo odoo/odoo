@@ -168,8 +168,8 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Find Incoming "
 "Shipments</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">Vind inkomende "
-"zendingen</span>"
+"<span class=\"label label-default text-center odoo_purple\">Vind "
+"ontvangsten</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -195,8 +195,8 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Validate the "
 "Receipt Order</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">Valideer het "
-"orderticket</span>"
+"<span class=\"label label-default text-center odoo_purple\">Bevestig de "
+"kassaorder</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -263,7 +263,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon=\"\"/>\n"
-"                                        <strong> Maak manueel</strong><br/>\n"
+"                                        <strong> Handmatig aanmaken</strong><br/>\n"
 "                                        <span class=\"small\">&lt; 50 leveranciers</span>\n"
 "                                    </span>"
 
@@ -278,7 +278,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon=\"\"/>\n"
-"                                        <strong> Maak manueel</strong><br/>\n"
+"                                        <strong> Handmatig aanmaken</strong><br/>\n"
 "                                        <span class=\"small\">Aanbevolen indien &lt;100 producten</span>\n"
 "                                    </span>"
 
@@ -660,7 +660,7 @@ msgid ""
 "delivery</strong>, assign a lot number or different lot numbers or serial "
 "numbers to a product by clicking on the <span class=\"fa fa-list\"/> icon"
 msgstr ""
-"<strong>Wanneer u een inkomende zending, interne verplaatsing of levering "
+"<strong>Wanneer u een ontvangst, interne verplaatsing of levering "
 "verwerkt</strong> wijst u een partijnummer of verschillende partijnummers of"
 " serienummers toe aan een product door te klikken op het <span class=\"fa "
 "fa-list\"/> icoon"
@@ -1064,7 +1064,7 @@ msgstr "Bose Mini Bluetooth Speaker"
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Bring goods to output location before shipping (Pick + Ship)"
 msgstr ""
-"Brengt goederen naar de leverlocatie, voor levering (verzamelen + leveren)"
+"Brengt goederen naar de leverlocatie, voor levering (picken + leveren)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_quant_ids
@@ -1223,7 +1223,7 @@ msgstr "Hoeveelheid aanpassen"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Change must be higher than"
-msgstr "Wijziging moet hoger zijn dan"
+msgstr "Wijziging moet groter zijn dan"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line_move_id
@@ -1464,7 +1464,7 @@ msgstr "Gefeliciteerd!"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_tracking_owner
 msgid "Consignment"
-msgstr "Zending"
+msgstr "Consignatie"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_consume_line_ids
@@ -1679,7 +1679,7 @@ msgstr "Maakt"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Creation"
-msgstr "Aanmaaken"
+msgstr "Aanmaken"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_create_date
@@ -1717,12 +1717,12 @@ msgstr "Huidige voorraad"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_picking_id
 msgid "Current Picking"
-msgstr ""
+msgstr "Huidige picking"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_picking_move_line_ids
 msgid "Current Picking Move Line"
-msgstr ""
+msgstr "Huidige picking mutatie"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.location_open_quants
@@ -2010,7 +2010,7 @@ msgstr "Leveringen"
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
 msgid "Delivery Orders"
-msgstr "Uitgaande leveringen"
+msgstr "Leveringen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_tracking_lot
@@ -2056,7 +2056,7 @@ msgstr "Omschrijving"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Delivery Orders"
-msgstr "Omschrijving voor uitgaande orders"
+msgstr "Omschrijving voor leveringen"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
@@ -2072,7 +2072,7 @@ msgstr "Omschrijving voor ontvangsten"
 #: model:ir.model.fields,field_description:stock.field_product_product_description_pickingout
 #: model:ir.model.fields,field_description:stock.field_product_template_description_pickingout
 msgid "Description on Delivery Orders"
-msgstr "Omschrijving op uitgaande orders"
+msgstr "Omschrijving op leveringen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_description_picking
@@ -2107,13 +2107,13 @@ msgstr "Bestemming"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
 msgid "Destination Location:"
-msgstr ""
+msgstr "Bestemminglocatie:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_move_dest_ids
 #: model:ir.ui.view,arch_db:stock.view_move_form
 msgid "Destination Moves"
-msgstr ""
+msgstr "Bestemming muttaies"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_result_package_id
@@ -2124,7 +2124,7 @@ msgstr "Doel verpakking"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
 msgid "Destination Package :"
-msgstr ""
+msgstr "Bestemming verpakking:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_route_ids
@@ -2242,6 +2242,8 @@ msgstr "Verplaatsingen gereed op datum"
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Don’t propagate scheduling changes through chains of operations"
 msgstr ""
+"Geen wijzigingen in planning doorvoeren bij doorgifte van gekoppelde "
+"bewerkingen"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2787,6 +2789,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will show which products are reserved "
 "(lot/serial number, source location, source package)."
 msgstr ""
+"Indien aangevinkt zal Odoo aangeven welke producten zijn gereserveerd "
+"(partij/serienummer, bronlocatie, bronverpakking)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_show_operations
@@ -2982,7 +2986,7 @@ msgstr "Ontvangst datum"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_reception_steps
 msgid "Incoming Shipments"
-msgstr "Inkomende leveringen"
+msgstr "Ontvangsten"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_incoterms_code
@@ -3227,7 +3231,7 @@ msgstr "Voorraadtelling referentie"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_quantity_history
 msgid "Inventory Report"
-msgstr ""
+msgstr "Voorraad rapportage"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_route
@@ -3705,6 +3709,10 @@ msgid ""
 "                        The tracking can be configured on every product: not any tracing at\n"
 "                        all, tracking by lot, or tracking by unique serial number."
 msgstr ""
+"Partijen kunnen gecodeerd worden bij ontvangsten, interne mutaties en\n"
+"leveringen overeenkomstig met de instellingen van het type levering.\n"
+"Voor elk product kunt u de tracering instellen: geen partijtracering, tracering\n"
+"per partij of op unieke serienummer."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
@@ -3805,7 +3813,7 @@ msgstr "Handmatige verwerking"
 #. module: stock
 #: selection:res.config.settings,module_procurement_jit:0
 msgid "Manually or based on automatic scheduler"
-msgstr "Manueel of gebaseerd op een automatische planner"
+msgstr "Handmatig of gebaseerd op een automatische planner"
 
 #. module: stock
 #: selection:procurement.rule,action:0
@@ -4039,7 +4047,7 @@ msgstr "Geen bericht"
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_propagation_minimum_delta
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_use_propagation_minimum_delta
 msgid "No Rescheduling Propagation"
-msgstr ""
+msgstr "Geen herplanning bij doorgifte"
 
 #. module: stock
 #: selection:product.template,tracking:0
@@ -4386,7 +4394,7 @@ msgstr "Uitgaand"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_delivery_steps
 msgid "Outgoing Shippings"
-msgstr "Uitgaande leveringen"
+msgstr "Leveringen"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:99
@@ -4636,19 +4644,19 @@ msgstr "Fysieke verpakkkingen"
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer_pick_ids
 #, python-format
 msgid "Pick"
-msgstr "Verzamelen"
+msgstr "Pick"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:435
 #, python-format
 msgid "Pick + Pack + Ship"
-msgstr "Verzamelen + inpakken + leveren"
+msgstr "Orderpicken + inpakken + leveren"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:434
 #, python-format
 msgid "Pick + Ship"
-msgstr "Verzamelen + leveren"
+msgstr "Orderpicken + leveren"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_pick_type_id
@@ -4661,7 +4669,7 @@ msgstr "Verzameltype"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_picking_id
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Picking"
-msgstr "Verzamelen"
+msgstr "Picking"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -4849,7 +4857,7 @@ msgstr "Verwervingsgroep"
 #: model:ir.cron,cron_name:stock.ir_cron_scheduler_action
 #: model:ir.cron,name:stock.ir_cron_scheduler_action
 msgid "Procurement: run scheduler"
-msgstr ""
+msgstr "Verwervingen: start planner"
 
 #. module: stock
 #: model:stock.location,name:stock.location_procurement
@@ -5660,6 +5668,8 @@ msgid ""
 "Scrapping a product will remove it from your stock. The product will\n"
 "                end up in a scrap location that can be used for reporting purpose."
 msgstr ""
+"Door een product af te keuren wordt deze verwijderd van de voorraad. het product wordt\n"
+"opgenomen in de afkeur locatie, welke kan worden gebruikt voor rapportages."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -5803,7 +5813,7 @@ msgstr "Stel eigenaar op opgeslagen producten in"
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set product attributes (e.g. color, size) to manage variants"
 msgstr ""
-"Stel productattributen in (bijvoorbeeld kleur, grootte) om varianten te "
+"Stel productkenmerken in (bijvoorbeeld kleur, grootte) om varianten te "
 "beheren"
 
 #. module: stock
@@ -5913,7 +5923,7 @@ msgstr "Toon gedetailleerde operaties"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_show_mark_as_todo
 msgid "Show Mark As Todo"
-msgstr ""
+msgstr "Geef Markeer als te doen weer"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_show_operations
@@ -6403,7 +6413,7 @@ msgstr "De nieuwe locatie waar de goederen naar toe moeten gaan"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "The operation type determines the picking view"
-msgstr ""
+msgstr "De bewerkingssoort bepaald de picking weergave"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -6623,7 +6633,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "This note will show up on delivery orders."
-msgstr "Deze opmerking wordt getoond op de uitgaande orders."
+msgstr "Deze opmerking wordt getoond op de leveringen"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
@@ -7498,7 +7508,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move_line.py:115
 #, python-format
 msgid "You can not enter negative quantities!"
-msgstr ""
+msgstr "U mag geen negatieve waardes ingeven!"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:392
