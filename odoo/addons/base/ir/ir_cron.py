@@ -186,17 +186,23 @@ class ir_cron(models.Model):
         jobs = []
         try:
             with db.cursor() as cr:
-                # Make sure the database we poll has the same version as the code of base
-                cr.execute("SELECT 1 FROM ir_module_module WHERE name=%s AND latest_version=%s", ('base', BASE_VERSION))
-                if cr.fetchone():
+                # Make sure the database has the same version as the code of
+                # base and that no module must be installed/upgraded/removed
+                cr.execute("SELECT latest_version FROM ir_module_module WHERE name=%s", ['base'])
+                (version,) = cr.fetchone()
+                cr.execute("SELECT COUNT(*) FROM ir_module_module WHERE state LIKE %s", ['to %'])
+                (changes,) = cr.fetchone()
+                if not version or changes:
+                    _logger.warning('Skipping database %s because of modules to install/upgrade/remove.', db_name)
+                elif version != BASE_VERSION:
+                    _logger.warning('Skipping database %s as its base version is not %s.', db_name, BASE_VERSION)
+                else:
                     # Careful to compare timestamps with 'UTC' - everything is UTC as of v6.1.
                     cr.execute("""SELECT * FROM ir_cron
                                   WHERE numbercall != 0
                                       AND active AND nextcall <= (now() at time zone 'UTC')
                                   ORDER BY priority""")
                     jobs = cr.dictfetchall()
-                else:
-                    _logger.warning('Skipping database %s as its base version is not %s.', db_name, BASE_VERSION)
         except psycopg2.ProgrammingError, e:
             if e.pgcode == '42P01':
                 # Class 42 — Syntax Error or Access Rule Violation; 42P01: undefined_table
