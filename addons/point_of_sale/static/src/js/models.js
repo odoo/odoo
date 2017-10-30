@@ -87,7 +87,7 @@ exports.PosModel = Backbone.Model.extend({
 
         // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
         // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched. 
-        // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
+        // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used.
         this.ready = this.load_server_data().then(function(){
             return self.after_load_server_data();
         });
@@ -1404,15 +1404,20 @@ exports.Orderline = Backbone.Model.extend({
            currency_rounding = currency_rounding * 0.00001;
         }
 
-        var recompute_base = function(base_amount, fixed_amount, percent_amount){
-            if(fixed_amount === 0.0 && percent_amount === 0.0)
-                return base_amount;
-             return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0);
-        }
-
         // 4) Iterate the taxes in the reversed sequence order to retrieve the initial base of the computation.
 
         var base = round_pr(price_unit * quantity, currency_rounding);
+
+        var base_gaps = [];
+
+        var recompute_base = function(base_amount, fixed_amount, percent_amount){
+            if(fixed_amount === 0.0 && percent_amount === 0.0)
+                return base_amount;
+             var new_base = (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0);
+             base_gaps.push(base_amount - new_base);
+             return new_base;
+        }
+
         var sign = 1;
         if(base < 0){
             base = -base;
@@ -1441,9 +1446,24 @@ exports.Orderline = Backbone.Model.extend({
 
         // 5) Iterate the taxes in the sequence order to fill missing base/amount values.
 
+        var compute_amount = function(tax){
+            var amount = self._compute_all(tax, base, quantity, false);
+
+            if(!tax.price_include || base_gaps.length == 0)
+                return tax_amount;
+
+            var new_gap = base_gaps[base_gaps.length - 1] - amount;
+
+            if(round_pr(new_gap, currency_rounding) === 0.0)
+                return base_gaps.pop();
+
+            base_gaps[base_gaps.length - 1] = new_gap;
+            return amount;
+        };
+
         var taxes_vals = [];
         _(taxes.reverse()).each(function(tax){
-            var tax_amount = self._compute_all(tax, base, quantity, false);
+            var tax_amount = compute_amount(tax);
             tax_amount = round_pr(tax_amount, currency_rounding);
 
             var tax_base = base;
