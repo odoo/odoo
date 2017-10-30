@@ -38,13 +38,14 @@
 # Katharina Moritz <kmo@e2f.com>, 2017
 # Malte Jansen <work@maltejansen.de>, 2017
 # Constantin Ehrenstein <transifex@skiller.eu>, 2017
+# DE T1 <e2f8846@yahoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 13:14+0000\n"
-"PO-Revision-Date: 2017-10-10 13:14+0000\n"
-"Last-Translator: Constantin Ehrenstein <transifex@skiller.eu>, 2017\n"
+"POT-Creation-Date: 2017-10-24 09:14+0000\n"
+"PO-Revision-Date: 2017-10-24 09:14+0000\n"
+"Last-Translator: DE T1 <e2f8846@yahoo.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -349,6 +350,18 @@ msgid ""
 "and get rewards.\n"
 "\n"
 msgstr ""
+
+#. module: base
+#: code:addons/model.py:136
+#, python-format
+msgid ""
+"\n"
+"\n"
+"[object with reference: %s - %s]"
+msgstr ""
+"\n"
+"\n"
+"[Objekt mit Referenz: %s - %s]"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_invoice_bba
@@ -6856,11 +6869,6 @@ msgid "Add Delivery Costs to Online Sales"
 msgstr "Erlaubt es Frachtkosten im Online-Shop zu berechnen"
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Add Followers"
-msgstr "Abonnenten hinzufügen"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_transifex
 msgid "Add a link to edit a translation in Transifex"
 msgstr ""
@@ -7177,6 +7185,13 @@ msgstr ""
 "Applikation zur Erstellung von Rechnungen mit offener Posten Buchhaltung zur"
 " Zahlungsüberwachung. Diese vereinfachte Version kann auch durch Mitarbeiter"
 " genutzt werden, die keine ausgewiesenen Buchhaltungsexperten sind."
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid ""
+"Also you will find here all the related documents and download it by "
+"clicking on any individual document."
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:378
@@ -7546,11 +7561,6 @@ msgid "Automate Marketing Campaigns"
 msgstr ""
 
 #. module: base
-#: selection:ir.actions.server,usage:0
-msgid "Automated Action"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
 msgid "Automated Action Rules"
 msgstr "Regeln für automatische Aktionen"
@@ -7661,6 +7671,12 @@ msgstr "B9  23  33 x 62 mm"
 #: selection:res.company,external_report_layout:0
 msgid "Background"
 msgstr "Hintergrund"
+
+#. module: base
+#: code:addons/translate.py:1066
+#, python-format
+msgid "Bad file format: %s"
+msgstr "Falsches Dateiformat: %s"
 
 #. module: base
 #: model:res.country,name:base.bs
@@ -8515,14 +8531,14 @@ msgid "Clean"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid "Click here to attach a new document."
-msgstr "Klicken Sie hier, um ein neues Dokument anzuhängen."
-
-#. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view_custom
 msgid "Click here to create a customized view"
 msgstr "Klicken Sie hier, um eine angepasste Ansicht zu erstellen"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid "Click here to create new documents."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
@@ -9146,7 +9162,6 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_create_date
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_create_date
-#: model:ir.model.fields,field_description:base.field_res_users_create_date
 msgid "Create Date"
 msgstr "Erstellt am"
 
@@ -9382,6 +9397,7 @@ msgstr "Erstellt von"
 #: model:ir.model.fields,field_description:base.field_res_partner_industry_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title_create_date
 #: model:ir.model.fields,field_description:base.field_res_request_link_create_date
+#: model:ir.model.fields,field_description:base.field_res_users_create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log_create_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_create_date
 msgid "Created on"
@@ -9757,27 +9773,6 @@ msgstr "Tag: %(day)s"
 #: selection:ir.cron,interval_type:0
 msgid "Days"
 msgstr "Tage"
-
-#. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Dear Sir/Madam,\n"
-"\n"
-"Our records indicate that some payments on your account are still due. Please find details below.\n"
-"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
-"If you have any queries regarding your account, Please contact us.\n"
-"\n"
-"Thank you in advance for your cooperation.\n"
-"Best Regards,"
-msgstr ""
-"Sehr geehrte Damen und Herren,\n"
-"\n"
-"unsere Aufzeichnungen zeigen, dass einige Zahlungen auf Ihrem Konto noch unbeglichen sind. Details finden Sie unten.\n"
-"Wurde der Betrag zwischenzeitlich bezahlt, betrachten Sie diese Nachricht als gegenstandslos. Ansonsten weisen Sie den unten angegeben Betrag zur Zahlung an uns an. Wenn Sie Fragen zu Ihrem Konto haben, sprechen Sie uns bitte an.\n"
-"\n"
-"Vielen Dank für Ihre Kooperation.\n"
-"\n"
-"Mit freundlichen Grüßen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_debug
@@ -10414,7 +10409,7 @@ msgstr "E-Mail Gateway"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing
 msgid "Email Marketing"
-msgstr ""
+msgstr "E-Mail-Marketing"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -10447,7 +10442,6 @@ msgstr "Mitarbeiterverzeichnis"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_employee_form
 #: model:ir.module.category,name:base.module_category_human_resources
-#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Employees"
 msgstr "Personal"
 
@@ -11453,6 +11447,13 @@ msgid "General Settings"
 msgstr "Allgemeine Einstellungen"
 
 #. module: base
+#: model:ir.actions.act_window,name:base.action_wizard_update_translations
+#: model:ir.ui.menu,name:base.menu_wizard_update_translations
+#: model:ir.ui.view,arch_db:base.wizard_update_translations
+msgid "Generate Missing Terms"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.ir_property_view_search
 msgid "Generic"
 msgstr "Allgemein"
@@ -12229,11 +12230,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: base
-#: model:ir.model.fields,help:base.field_ir_act_server_xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr "Die ID für diese ist in einem xml File definiert."
-
-#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data_res_id
 msgid "ID of the target record in the database"
 msgstr "ID des Zieldatensatzes in der DB"
@@ -12861,7 +12857,7 @@ msgid "Introspection report on objects"
 msgstr "Eigene Projektrevision"
 
 #. module: base
-#: code:addons/models.py:3482
+#: code:addons/models.py:3483
 #, python-format
 msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
@@ -13219,7 +13215,7 @@ msgid "Language Name"
 msgstr "Sprache"
 
 #. module: base
-#: code:addons/base/module/wizard/base_language_install.py:28
+#: code:addons/base/module/wizard/base_language_install.py:39
 #, python-format
 msgid "Language Pack"
 msgstr "Sprachpaket"
@@ -14153,7 +14149,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_mrp_mps
 #: model:ir.module.module,summary:base.module_mrp_mps
 msgid "Master Production Schedule"
-msgstr ""
+msgstr "Hauptfertigungszeitplan"
 
 #. module: base
 #: model:res.country,name:base.mr
@@ -14330,7 +14326,7 @@ msgid "Missing document(s)"
 msgstr "Fehlende(s) Dokument(e)"
 
 #. module: base
-#: code:addons/models.py:5134
+#: code:addons/models.py:5135
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
 msgstr "Ein erforderlicher Wert für das Feld '%s' (%s) fehlt."
@@ -14491,7 +14487,7 @@ msgstr "Modulbezeichnung"
 #. module: base
 #: model:ir.model,name:base.model_base_module_uninstall
 msgid "Module Uninstallation"
-msgstr ""
+msgstr "Modul-Deinstallation"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_update
@@ -14522,6 +14518,16 @@ msgstr "Modulabhängigkeiten"
 #: model:ir.model,name:base.model_ir_module_module_exclusion
 msgid "Module exclusion"
 msgstr ""
+
+#. module: base
+#: code:addons/convert.py:829
+#, python-format
+msgid ""
+"Module loading %s failed: file %s could not be processed:\n"
+" %s"
+msgstr ""
+"Laden des Moduls %s fehlgeschlagen: Datei %s konnte nicht verarbeitet werden:\n"
+"%s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_module
@@ -14822,13 +14828,13 @@ msgid "No gap"
 msgstr "Lückenlos"
 
 #. module: base
-#: code:addons/fields.py:2189
+#: code:addons/fields.py:2222
 #, python-format
 msgid "No inverse field %r found for %r"
 msgstr "Kein Gegenfeld %r für %r gefunden"
 
 #. module: base
-#: code:addons/base/module/wizard/base_update_translations.py:33
+#: code:addons/base/module/wizard/base_update_translations.py:26
 #, python-format
 msgid "No language with code \"%s\" exists"
 msgstr "Es existiert keine Sprache mit dem Code \"%s\""
@@ -14968,6 +14974,12 @@ msgstr "OHADA Buchführung"
 #: model:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Object"
 msgstr "Objekt"
+
+#. module: base
+#: code:addons/model.py:148
+#, python-format
+msgid "Object %s doesn't exist"
+msgstr "Objekt %s existiert nicht!"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_model
@@ -17253,7 +17265,7 @@ msgstr "Produktmailvorlage"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_plm
 msgid "Product Lifecycle Management (PLM)"
-msgstr ""
+msgstr "Produktlebenszyklusverwaltung (Product Lifecycle Management, PLM)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_extended
@@ -17673,7 +17685,7 @@ msgstr ""
 "Versuchen Sie es in einigen Minuten nochmal."
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:230 code:addons/models.py:3875
+#: code:addons/base/ir/ir_actions.py:230 code:addons/models.py:3876
 #, python-format
 msgid "Record does not exist or has been deleted."
 msgstr "Datensatz existiert nicht oder kann nicht gefunden werden."
@@ -18383,6 +18395,12 @@ msgid "See all possible values"
 msgstr "Alle möglichen Werte anzeigen"
 
 #. module: base
+#: code:addons/common.py:42
+#, python-format
+msgid "See http://openerp.com"
+msgstr "Siehe http://openerp.com"
+
+#. module: base
 #: model:ir.model.fields,help:base.field_report_paperformat_format
 msgid "Select Proper Paper size"
 msgstr "Wähle korrektes Druckformat"
@@ -18435,11 +18453,6 @@ msgstr "Verkaufen Sie Ihre Produkte online"
 #: model:ir.module.module,summary:base.module_sale_timesheet
 msgid "Sell based on timesheets"
 msgstr "Verkauf basierend auf Zeiterfassung"
-
-#. module: base
-#: selection:ir.actions.server,state:0
-msgid "Send Email"
-msgstr "E-Mail versenden"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account
@@ -18860,7 +18873,7 @@ msgid "Sort"
 msgstr "Sortieren"
 
 #. module: base
-#: code:addons/models.py:3615
+#: code:addons/models.py:3616
 #, python-format
 msgid "Sorting field %s not found on model %s"
 msgstr "Das Sortierfeld %s wurde im Modell %s nicht gefunden"
@@ -19228,18 +19241,6 @@ msgid "Synchronization with the external timesheet application"
 msgstr "Synchronisation mit externer Zeiterfassungsanwendung"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_wizard_update_translations
-#: model:ir.ui.menu,name:base.menu_wizard_update_translations
-#: model:ir.ui.view,arch_db:base.wizard_update_translations
-msgid "Synchronize Terms"
-msgstr "Begriffe abgleichen"
-
-#. module: base
-#: model:ir.ui.view,arch_db:base.wizard_update_translations
-msgid "Synchronize Translation"
-msgstr "Synchronisiere Übersetzung"
-
-#. module: base
 #: model:res.country,name:base.sy
 msgid "Syria"
 msgstr "Syrien"
@@ -19392,7 +19393,6 @@ msgstr "Technischer Name"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
-#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "Technische Einstellungen"
 
@@ -19776,6 +19776,18 @@ msgid "The only predefined variables are"
 msgstr "Die einzigen vordefinierten Variablen sind"
 
 #. module: base
+#: code:addons/model.py:121
+#, python-format
+msgid ""
+"The operation cannot be completed, probably due to the following:\n"
+"- deletion: you may be trying to delete a record while other records still reference it\n"
+"- creation/update: a mandatory field is not correctly set"
+msgstr ""
+"Die Aktion kann nicht fertiggestellt werden, wahrscheinlich aufgrund einer der folgenden Fehler:\n"
+"- Löschen: Sie versuchen einen Datensatz zu löschen, auf den noch andere Datensätze referenzieren\n"
+"- Neu/Aktualisierung: Ein Pflicht-Feld wurde nicht oder nicht richtig ausgefüllt"
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_domain
 msgid ""
 "The optional domain to restrict possible values for relationship fields, "
@@ -19911,7 +19923,7 @@ msgstr ""
 "verfügbar."
 
 #. module: base
-#: code:addons/models.py:5166
+#: code:addons/models.py:5167
 #, python-format
 msgid ""
 "The value for the field '%s' already exists (this is probably '%s' in the "
@@ -19919,7 +19931,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:5172
+#: code:addons/models.py:5173
 #, python-format
 msgid ""
 "The values for the fields '%s' already exist (they are probably '%s' in the "
@@ -20639,6 +20651,15 @@ msgstr ""
 "Unbekannter Wert '%s' für ein Bool'sches Feld '%%(field)s', vermutlich '%s'"
 
 #. module: base
+#: code:addons/translate.py:708
+#, python-format
+msgid ""
+"Unrecognized extension: must be one of .csv, .po, or .tgz (received .%s)."
+msgstr ""
+"Erweiterung nicht erkannt: Muss eine von .csv, .po, or .tgz sein (erhalten "
+".%s)."
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.view_translation_search
 msgid "Untranslated"
 msgstr "Nicht übersetzt"
@@ -21239,7 +21260,7 @@ msgid "Warning!"
 msgstr "Warnung!"
 
 #. module: base
-#: code:addons/models.py:4884
+#: code:addons/models.py:4885
 #, python-format
 msgid "Warnings"
 msgstr "Warnungen"

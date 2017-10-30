@@ -13,10 +13,10 @@
 # Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
 "Last-Translator: Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -150,13 +150,13 @@ msgid ""
 "                % set record = ctx.get('record')\n"
 "                % set company = record and record.company_id or user.company_id\n"
 "                <body style=\"margin: 0; padding: 0;\">\n"
-"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
+"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
 "                    <tbody>\n"
 "\n"
 "                      <!-- HEADER -->\n"
 "                      <tr>\n"
 "                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
 "                            <tr>\n"
 "                              <td valign=\"middle\">\n"
 "                                  <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
@@ -174,7 +174,7 @@ msgid ""
 "                      <!-- CONTENT -->\n"
 "                      <tr>\n"
 "                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px; border-collapse:separate;\">\n"
 "                            <tbody>\n"
 "                              <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
 "                                ${object.body | safe}\n"
@@ -187,7 +187,7 @@ msgid ""
 "                      <!-- FOOTER -->\n"
 "                      <tr>\n"
 "                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
 "                            <tr>\n"
 "                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
 "                                ${company.name}<br/>\n"
@@ -493,7 +493,7 @@ msgstr "Alle verkooporders gegroepeerd op verkoopkanaal"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allow manual discounts on order lines"
-msgstr "Sta manuele korting op orderlijnen toe"
+msgstr "Sta handmatige korting op orderregels toe"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -605,6 +605,11 @@ msgid "Can Edit Delivered"
 msgstr "Kan leveringen wijzigen"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line_product_updatable
+msgid "Can Edit Product"
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Cancel"
@@ -692,11 +697,6 @@ msgstr "Bereken afleverkosten op orders"
 #: model:ir.ui.menu,name:sale.menu_sale_config
 msgid "Configuration"
 msgstr "Configuratie"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_sale_config_settings
-msgid "Configure Sales"
-msgstr "Instellen verkoop"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -834,7 +834,7 @@ msgid "Delivered"
 msgstr "Geleverd"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:816
+#: code:addons/sale/models/sale.py:824
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Delivered Quantity"
@@ -1008,7 +1008,7 @@ msgid "Extended Filters"
 msgstr "Uitgebreide filters"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:799
+#: code:addons/sale/models/sale.py:807
 #, python-format
 msgid "Extra line with %s "
 msgstr "Extra regel met %s"
@@ -1178,12 +1178,12 @@ msgstr ""
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
 msgid "Invoice what is delivered"
-msgstr "Factuur wat geleverd is"
+msgstr "Factureer wat is geleverd"
 
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
 msgid "Invoice what is ordered"
-msgstr "Factuur welke is besteld"
+msgstr "Factureer wat is besteld"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1201,7 +1201,7 @@ msgid "Invoiced"
 msgstr "Gefactureerd"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:817
+#: code:addons/sale/models/sale.py:825
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Invoiced Quantity"
@@ -1347,7 +1347,7 @@ msgstr "Blokkeer"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_auto_done_setting
 msgid "Lock Confirmed Orders"
-msgstr "Bevestigde orders locken"
+msgstr "Bevestigde orders vastzetten"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1631,7 +1631,7 @@ msgid "Ordered Qty"
 msgstr "Bestelde hvh."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:813
+#: code:addons/sale/models/sale.py:821
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Ordered Quantity"
@@ -1741,7 +1741,7 @@ msgid "Please define an accounting sales journal for this company."
 msgstr "U dient een verkoop dagboek aan te maken voor dit bedrijf."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:907
+#: code:addons/sale/models/sale.py:916
 #, python-format
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
@@ -1953,7 +1953,7 @@ msgstr "Offertedatum"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Quotation Number"
-msgstr "Offerte nummer"
+msgstr "Offertenummer"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
@@ -2189,7 +2189,7 @@ msgstr "Verkoopprijs"
 #: code:addons/sale/models/sales_team.py:94
 #, python-format
 msgid "Sales: Untaxed Total"
-msgstr ""
+msgstr "Verkoop: Totaal excl. BTW"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_user_id
@@ -2309,7 +2309,7 @@ msgstr "Stel meerdere prijzen per product in, automatische kortingen, enz."
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set product attributes (e.g. color, size) to sell variants"
 msgstr ""
-"Stel productattributen in (bijvoorbeeld kleur, grootte) om varianten te "
+"Stel productkenmerken in (bijvoorbeeld kleur, grootte) om varianten te "
 "verkopen"
 
 #. module: sale
@@ -2323,6 +2323,7 @@ msgid "Set to Quotation"
 msgstr "Zet op offerte"
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_sale_config_settings
 #: model:ir.ui.menu,name:sale.menu_sale_general_settings
 msgid "Settings"
 msgstr "Instellingen"
@@ -2650,7 +2651,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,service_type:0
 msgid "Timesheets on project (one fare per SO/Project)"
-msgstr ""
+msgstr "Urenstaten op project (één prijs per Verkooporder/Project)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
@@ -2776,7 +2777,7 @@ msgid "Warning"
 msgstr "Waarschuwing"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:996
+#: code:addons/sale/models/sale.py:1006
 #, python-format
 msgid "Warning for %s"
 msgstr "Waarschuwing voor %s"
@@ -2820,7 +2821,7 @@ msgstr ""
 " deze eerst te annuleren."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1059
+#: code:addons/sale/models/sale.py:1069
 #, python-format
 msgid ""
 "You can not remove a sales order line.\n"

@@ -11,10 +11,10 @@
 # Volluta <volluta@tutanota.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
 "Last-Translator: Volluta <volluta@tutanota.com>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -536,7 +536,7 @@ msgstr ""
 "de foruminhoud gebeurd. "
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:187
+#: code:addons/website_forum/controllers/main.py:196
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 #, python-format
 msgid "All"
@@ -553,7 +553,7 @@ msgid "Answer"
 msgstr "Antwoord"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:501
+#: code:addons/website_forum/models/forum.py:499
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
@@ -737,8 +737,9 @@ msgid "Back to"
 msgstr "Terug naar"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:324
-#: code:addons/website_forum/controllers/main.py:395
+#: code:addons/website_forum/controllers/main.py:333
+#: code:addons/website_forum/controllers/main.py:335
+#: code:addons/website_forum/controllers/main.py:404
 #, python-format
 msgid "Bad Request"
 msgstr "Slechte aanvraag"
@@ -884,7 +885,7 @@ msgstr "Hoofd commentator"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "City"
-msgstr "Gemeente"
+msgstr "Plaats"
 
 #. module: website_forum
 #. openerp-web
@@ -1910,20 +1911,20 @@ msgid "Nofollow links"
 msgstr "Nofollow links"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:870
-#: code:addons/website_forum/models/forum.py:890
+#: code:addons/website_forum/models/forum.py:868
+#: code:addons/website_forum/models/forum.py:888
 #, python-format
 msgid "Not allowed to vote for its own post"
 msgstr "Niet toegestaan om te stemmen op zijn eigen bericht"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:934
+#: code:addons/website_forum/models/forum.py:932
 #, python-format
 msgid "Not enough karma to create a new Tag"
 msgstr "Niet genoeg karma om een nieuw label aan te maken"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:491
+#: code:addons/website_forum/models/forum.py:489
 #, python-format
 msgid "Not enough karma to retag."
 msgstr "Niet genoeg karma om opnieuw te labellen."
@@ -2120,7 +2121,7 @@ msgid "Posted 100 comments"
 msgstr "Heeft 100 reacties geplaatst"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:435
+#: code:addons/website_forum/models/forum.py:433
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible"
 msgstr ""
@@ -2178,7 +2179,7 @@ msgid "Question"
 msgstr "Vraag"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:504
+#: code:addons/website_forum/models/forum.py:502
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
@@ -2216,6 +2217,12 @@ msgid "Question set as favorite by 5 users"
 msgstr "Vraag ingesteld als favoriet door 5 gebruikers"
 
 #. module: website_forum
+#: code:addons/website_forum/controllers/main.py:335
+#, python-format
+msgid "Question should not be empty."
+msgstr "Vraag kan niet leeg zijn."
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Question tools"
 msgstr "Vraag hulpmiddelen"
@@ -2249,7 +2256,7 @@ msgid "Questions"
 msgstr "Vragen"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:522
+#: code:addons/website_forum/models/forum.py:520
 #, python-format
 msgid "Re: %s"
 msgstr "Re: %s"
@@ -2343,7 +2350,7 @@ msgstr "Gecontroleerd door"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_post
 msgid "Save"
-msgstr "Bewaar"
+msgstr "Opslaan"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_26
@@ -2655,7 +2662,7 @@ msgstr ""
 "aantal dagen sinds de aanmaak van de vraag"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:411
+#: code:addons/website_forum/models/forum.py:409
 #, python-format
 msgid "This forum does not allow %s"
 msgstr "Dit forum staat niet %s toe"
@@ -2705,8 +2712,8 @@ msgid "Title must not be empty"
 msgstr "Titel mag niet leeg zijn"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:324
-#: code:addons/website_forum/controllers/main.py:395
+#: code:addons/website_forum/controllers/main.py:333
+#: code:addons/website_forum/controllers/main.py:404
 #, python-format
 msgid "Title should not be empty."
 msgstr "Titel zou niet leeg moeten zijn."
@@ -2954,7 +2961,7 @@ msgstr ""
 "Wacht op een moderator om uw vorige bericht te valideren alvorens verder te gaan."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:140
+#: code:addons/website_forum/models/forum.py:138
 #, python-format
 msgid ""
 "You cannot choose %s as default post since the forum does not allow it."

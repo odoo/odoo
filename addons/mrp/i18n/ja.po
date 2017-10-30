@@ -12,13 +12,14 @@
 # NOKA Shigekazu <shigekazu.noka@gmail.com>, 2017
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2017
 # Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2017
+# Tim Siu Lai <tl@roomsfor.hk>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 11:34+0000\n"
-"PO-Revision-Date: 2017-10-10 11:34+0000\n"
-"Last-Translator: Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2017\n"
+"POT-Creation-Date: 2017-10-24 08:59+0000\n"
+"PO-Revision-Date: 2017-10-24 08:59+0000\n"
+"Last-Translator: Tim Siu Lai <tl@roomsfor.hk>, 2017\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,7 +81,7 @@ msgid "19v,5.5 x 2.5 mm Pin Type Adapter (Power Cord Included)"
 msgstr "19v,5.5 x 2.5 mm ピンタイプアダプタ(パワーコード込)"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:294
+#: code:addons/mrp/models/mrp_bom.py:293
 #, python-format
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -352,7 +353,7 @@ msgid "Attachment URL"
 msgstr "添付URL"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:286
+#: code:addons/mrp/models/mrp_bom.py:285
 #, python-format
 msgid "Attachments"
 msgstr "添付"
@@ -454,17 +455,11 @@ msgstr "部品表項目"
 #: model:ir.actions.act_window,name:mrp.template_open_bom
 #: model:ir.model.fields,field_description:mrp.field_product_product_bom_ids
 #: model:ir.model.fields,field_description:mrp.field_product_template_bom_ids
-#: model:ir.ui.view,arch_db:mrp.mrp_bom_line_tree_view
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_tree_view
 #: model:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
 #: model:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 msgid "Bill of Materials"
 msgstr "部品表"
-
-#. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_bom_line_action_from_bom
-msgid "Bill of Materials Structure"
-msgstr "部品表構造"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_bom_id
@@ -550,7 +545,7 @@ msgid "BoM details"
 msgstr "部品表 詳細"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:68
+#: code:addons/mrp/models/mrp_bom.py:67
 #, python-format
 msgid "BoM line product %s should not be same as BoM product."
 msgstr "部品表項目の製品 %s は部品表の製品と同じにはできません。"
@@ -736,20 +731,20 @@ msgid "Confirmed"
 msgstr "確認済"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_consume_line_ids
-msgid "Consume Line"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_unbuild_id
-msgid "Consume Unbuild Order"
-msgstr "消費 解体オーダ"
+msgid "Consumed Disassembly Order"
+msgstr ""
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.production_message
 msgid "Consumed"
 msgstr "消費済"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_consume_line_ids
+msgid "Consumed Disassembly Lines"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_consumed_less_than_planned
@@ -924,6 +919,13 @@ msgid "Destination Location"
 msgstr "移動先ロケーション"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_mrp_unbuild
+#: model:ir.model.fields,field_description:mrp.field_stock_move_unbuild_id
+#: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
+msgid "Disassembly Order"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_bom
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_product
 msgid "Discard"
@@ -1085,7 +1087,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_finished_move_line_ids
-msgid "Finished Move Line"
+#: model:ir.ui.view,arch_db:mrp.view_finisehd_move_line
+msgid "Finished Product"
 msgstr ""
 
 #. module: mrp
@@ -1107,7 +1110,7 @@ msgstr "完全生産"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 msgid "Future Activitie"
-msgstr ""
+msgstr "将来の活動"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1175,6 +1178,11 @@ msgstr "HDDオンデマンド"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_has_attachments
 msgid "Has Attachments"
 msgstr "添付あり"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_produced
+msgid "Has Been Produced"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_has_moves
@@ -1251,6 +1259,23 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+msgid ""
+"If the product is a finished product: When processing a sales\n"
+"                                    order for this product, the delivery order will contain the raw\n"
+"                                    materials, instead of the finished product."
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+msgid ""
+"If the product is a semi-finished product: When processing a\n"
+"                                    manufacturing order that contains that product as component,\n"
+"                                    the raw materials of that product will be added to the\n"
+"                                    manufacturing order of the final product."
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1307,18 +1332,8 @@ msgid ""
 msgstr "この作業オーダでロット番号をスキャンする必要のある在庫移動"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_user_working
-msgid "Is Current User Working"
-msgstr "現在のユーザ作業"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_is_locked
 msgid "Is Locked"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_produced
-msgid "Is Produced"
 msgstr ""
 
 #. module: mrp
@@ -1337,6 +1352,11 @@ msgid "Is public document"
 msgstr "パブリックドキュメント"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_user_working
+msgid "Is the Current User Working"
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:162
 #, python-format
 msgid "It has been unblocked already. "
@@ -1352,16 +1372,9 @@ msgstr ""
 "完成した製品を必要とされる場所で生産する場合は空のままとして下さい。固定の場所で生産する場合は場所を設定して下さい。製造業務を外注する場合は、取引先の場所を設定して下さい。"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter selection:mrp.bom,type:0
 msgid "Kit"
 msgstr "キット"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom_type
-msgid ""
-"Kit (Phantom): When processing a sales order for this product, the delivery "
-"order will contain the raw materials, instead of the finished product."
-msgstr "キット(仮想): この製品の受注を処理する場合、配送オーダには、最終製品ではなく原材料が含まれます。"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_laptop_charger
@@ -1489,7 +1502,7 @@ msgid "Lock"
 msgstr "ロック"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_8237
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_8239
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Loss Reason"
 msgstr "ロス理由"
@@ -1510,6 +1523,11 @@ msgstr "ロット/シリアル"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_final_lot_id
 msgid "Lot/Serial Number"
 msgstr "ロット/シリアル番号"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_finisehd_move_line
+msgid "Lot/Serial number"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_active_move_line_ids
@@ -1535,7 +1553,7 @@ msgstr "作業オーダオペレーションを管理"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
 msgid "Manager"
-msgstr "マネージャ"
+msgstr "マネジャー"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_time_cycle_manual
@@ -1712,11 +1730,6 @@ msgstr "その他"
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_move_id
 msgid "Move"
 msgstr "移動"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_dest_ids
-msgid "Move Dest"
-msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line_done_move
@@ -1920,7 +1933,7 @@ msgstr "消費操作"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_picking_type_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_picking_type_id
 msgid "Operation Type"
-msgstr ""
+msgstr "オペレーションタイプ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_operation_ids
@@ -2097,7 +2110,7 @@ msgstr "製造"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_produce_line_ids
-msgid "Produce Line"
+msgid "Processed Disassembly Lines"
 msgstr ""
 
 #. module: mrp
@@ -2190,6 +2203,11 @@ msgstr "製造"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_production_date
 msgid "Production Date"
 msgstr "生産日（実績）"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_document
+msgid "Production Document"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_production_location_id
@@ -2301,6 +2319,7 @@ msgstr "品質ロス"
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_structure_report
 #: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
+#: model:ir.ui.view,arch_db:mrp.view_finisehd_move_line
 msgid "Quantity"
 msgstr "数量"
 
@@ -2383,7 +2402,7 @@ msgid "Record Production Line"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:160
+#: code:addons/mrp/models/mrp_bom.py:159
 #, python-format
 msgid ""
 "Recursion error!  A product with a Bill of Material should not have itself "
@@ -2664,6 +2683,14 @@ msgid "Sequence"
 msgstr "付番"
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_batch
+msgid ""
+"Set 'no' to schedule the next work order after the previous one. Set 'yes' "
+"to produce after the quantity set in 'Quantity To Process' has been "
+"produced."
+msgstr ""
+
+#. module: mrp
 #: selection:mrp.routing.workcenter,time_mode:0
 msgid "Set duration manually"
 msgstr "所要時間を手動で設定"
@@ -2675,11 +2702,6 @@ msgstr "所要時間を手動で設定"
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "Settings"
 msgstr "管理設定"
-
-#. module: mrp
-#: selection:mrp.bom,type:0
-msgid "Ship this product as a set of components (kit)"
-msgstr "この製品を構成品のセット (キット) として出荷"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:89
@@ -2758,6 +2780,11 @@ msgstr "ステータス"
 #: model:ir.model,name:mrp.model_stock_move
 msgid "Stock Move"
 msgstr "在庫移動"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_dest_ids
+msgid "Stock Movements of Produced Goods"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_store_fname
@@ -2860,12 +2887,18 @@ msgid "Technical: used to figure out default serial number on work orders"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:77 code:addons/mrp/models/mrp_bom.py:255
+#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:254
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
 msgstr "選択された計量単位は、製品形態とは異なるカテゴリのものです。"
+
+#. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:94
+#, python-format
+msgid "The production order for '%s' has no quantity specified"
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:156
@@ -3144,13 +3177,6 @@ msgid "Unbuild"
 msgstr "解体"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_unbuild
-#: model:ir.model.fields,field_description:mrp.field_stock_move_unbuild_id
-#: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
-msgid "Unbuild Order"
-msgstr "解体オーダ"
-
-#. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:77
 #, python-format
 msgid "Unbuild Order product quantity has to be strictly positive."
@@ -3319,7 +3345,7 @@ msgid "Warehouse"
 msgstr "倉庫"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:77 code:addons/mrp/models/mrp_bom.py:255
+#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:254
 #, python-format
 msgid "Warning"
 msgstr "警告"
@@ -3334,24 +3360,10 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-msgid ""
-"When processing a sales order for this product, the delivery order\n"
-"                                will contain the raw materials, instead of the finished product."
-msgstr "この製品の受注を処理した場合、配送には完成品ではなく原材料が含まれます。"
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse_manufacture_to_resupply
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
 msgstr "製造対象の製品がこの倉庫で製造できることを示します。"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_batch
-msgid ""
-"Will determine if the next work order will be scheduled after the previous "
-"one or after the first Quantity To Process of the previous one."
-msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -3611,7 +3623,7 @@ msgid "You can not consume without telling for which lot you consumed it"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:92
+#: code:addons/mrp/models/mrp_bom.py:91
 #, python-format
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
@@ -3687,12 +3699,6 @@ msgid "You need to provide a lot for the finished product"
 msgstr "完製品にロット番号を付与する必要があります "
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:94
-#, python-format
-msgid "You should at least produce some quantity"
-msgstr "少なくともいくらかの量を生成する必要があります"
-
-#. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:314
 #, python-format
 msgid "You should provide a lot/serial number for a component"
@@ -3744,11 +3750,6 @@ msgstr "分"
 #: model:ir.model,name:mrp.model_mrp_bom_line
 msgid "mrp.bom.line"
 msgstr "mrp.bom.line"
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_mrp_document
-msgid "mrp.document"
-msgstr ""
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.production_message

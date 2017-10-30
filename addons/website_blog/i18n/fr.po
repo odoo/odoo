@@ -13,7 +13,6 @@
 # Frédéric LIETART <stuff@tifred.fr>, 2017
 # Eloïse Stilmant <est@odoo.com>, 2017
 # lucasdeliege <deliegelucas@gmail.com>, 2017
-# Benelita Prauhart <internetinfo07@gmail.com>, 2017
 # Fred Gilson <fgi@odoo.com>, 2017
 # Richard Mathot <rim@odoo.com>, 2017
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2017
@@ -24,10 +23,10 @@
 # Xavier Symons <xsy@openerp.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
 "Last-Translator: Xavier Symons <xsy@openerp.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -241,6 +240,7 @@ msgstr "Nom du blog"
 
 #. module: website_blog
 #: code:addons/website_blog/models/website.py:22
+#: code:addons/website_blog/models/website.py:47
 #: model:ir.model,name:website_blog.model_blog_post
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_form
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
@@ -249,7 +249,13 @@ msgid "Blog Post"
 msgstr "Article de blog"
 
 #. module: website_blog
-#: code:addons/website_blog/models/website.py:26
+#: code:addons/website_blog/models/website.py:53
+#, python-format
+msgid "Blog Post <b>%s</b> seems to be calling this file !"
+msgstr ""
+
+#. module: website_blog
+#: code:addons/website_blog/models/website.py:28
 #, python-format
 msgid "Blog Post <b>%s</b> seems to have a link to this page !"
 msgstr "Le post blog <b>%s</b> semble contenir un lien vers cette page !"
@@ -262,9 +268,12 @@ msgid "Blog Post Title"
 msgstr "Titre de l'article de blog"
 
 #. module: website_blog
+#: code:addons/website_blog/models/website.py:24
+#: code:addons/website_blog/models/website.py:49
 #: model:ir.actions.act_window,name:website_blog.action_blog_post
 #: model:ir.ui.menu,name:website_blog.menu_page
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_list
+#, python-format
 msgid "Blog Posts"
 msgstr "Articles du blog"
 
@@ -387,7 +396,7 @@ msgstr "Parcours de discussion"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_display_name
 msgid "Display Name"
-msgstr "affichage nom"
+msgstr "Nom à afficher"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_edit_options
