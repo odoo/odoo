@@ -6,6 +6,16 @@ from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 
 
+PURCHASE_REQUISITION_STATES = [
+    ('draft', 'Draft'),
+    ('ongoing', 'Ongoing'),
+    ('in_progress', 'Confirmed'),
+    ('open', 'Bid Selection'),
+    ('done', 'Closed'),
+    ('cancel', 'Cancelled')
+]
+
+
 class PurchaseRequisitionType(models.Model):
     _name = "purchase.requisition.type"
     _description = "Purchase Agreement Type"
@@ -59,14 +69,17 @@ class PurchaseRequisition(models.Model):
     purchase_ids = fields.One2many('purchase.order', 'requisition_id', string='Purchase Orders', states={'done': [('readonly', True)]})
     line_ids = fields.One2many('purchase.requisition.line', 'requisition_id', string='Products to Purchase', states={'done': [('readonly', True)]}, copy=True)
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
-    state = fields.Selection([('draft', 'Draft'), ('in_progress', 'Confirmed'),
-                               ('open', 'Bid Selection'), ('done', 'Done'),
-                               ('cancel', 'Cancelled')],
+    state = fields.Selection(PURCHASE_REQUISITION_STATES,
                               'Status', track_visibility='onchange', required=True,
                               copy=False, default='draft')
+    state_blanket_order = fields.Selection(PURCHASE_REQUISITION_STATES, compute='_set_state')
     account_analytic_id = fields.Many2one('account.analytic.account', 'Analytic Account')
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', required=True, default=_get_picking_in)
     is_quantity_copy = fields.Boolean(compute='_is_quantity_copy')
+
+    @api.depends('state')
+    def _set_state(self):
+        self.state_blanket_order = self.state
 
     @api.model
     def create(self, vals):
@@ -116,7 +129,9 @@ class PurchaseRequisition(models.Model):
                     if requisition_line.product_qty <= 0.0:
                         raise UserError(_('You cannot confirm the blanket order without quantity.'))
                     requisition_line.create_supplier_info()
-        self.write({'state': 'in_progress'})
+                self.write({'state': 'ongoing'})
+            else:
+                self.write({'state': 'in_progress'})
 
     @api.multi
     def action_open(self):

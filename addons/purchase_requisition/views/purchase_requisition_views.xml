@@ -80,7 +80,7 @@
         <field name="arch" type="xml">
             <field name="partner_ref" position="after">
                 <field name="requisition_id"
-                    domain="[('state', 'in', ('in_progress', 'open')), ('vendor_id', 'in', (partner_id, False))]"/>
+                    domain="[('state', 'in', ('in_progress', 'open', 'ongoing')), ('vendor_id', 'in', (partner_id, False))]"/>
             </field>
         </field>
     </record>
@@ -139,13 +139,14 @@
                     attrs="{'invisible': [('state', '!=', 'open')]}"/>
                 <button name="%(action_purchase_requisition_to_so)d" type="action"
                     string="New Quotation" class="btn-primary"
-                    attrs="{'invisible': [('state', '!=', 'in_progress')]}"/>
+                    attrs="{'invisible': [('state', 'not in', ('in_progress', 'ongoing'))]}"/>
                 <button name="action_in_progress" states="draft" string="Confirm" type="object" class="btn-primary"/>
                 <button name="action_open" states="in_progress" string="Validate" type="object" class="btn-primary"/>
-                <button name="action_done" states="open" string="Done" type="object" class="btn-primary"/>
+                <button name="action_done" states="open,ongoing" string="Close" type="object" class="btn-primary"/>
                 <button name="action_draft" states="cancel" string="Reset to Draft" type="object"/>
-                <button name="action_cancel" states="draft,in_progress" string="Cancel Call" type="object"/>
-                <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,open,done"/>
+                <button name="action_cancel" states="draft,in_progress,ongoing" string="Cancel" type="object"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,open,done" attrs="{'invisible': [('is_quantity_copy', '=', False)]}"/>
+                <field name="state_blanket_order" widget="statusbar" statusbar_visible="draft,ongoing,done" attrs="{'invisible': [('is_quantity_copy', '=', True)]}"/>
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
@@ -165,13 +166,13 @@
                         <field name="is_quantity_copy" invisible='1'/>
                         <field name="user_id" attrs="{'readonly': [('state','not in',('draft','in_progress','open'))]}"/>
                         <field name="type_id" attrs="{'readonly': [('state','!=','draft')]}" widget="selection"/>
-                        <field name="vendor_id" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]" attrs="{'required': [('is_quantity_copy', '=', False)]}"/>
+                        <field name="vendor_id" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]" attrs="{'required': [('is_quantity_copy', '=', False)], 'readonly': [('state', 'in', ['ongoing','done'])]}"/>
                         <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                     </group>
                     <group>
-                        <field name="date_end" attrs="{'readonly': [('state','not in',('draft','in_progress','open'))]}"/>
-                        <field name="ordering_date" attrs="{'readonly': [('state','not in',('draft','in_progress','open'))]}"/>
-                        <field name="schedule_date" attrs="{'readonly': [('state','not in',('draft','in_progress','open'))]}"/>
+                        <field name="date_end" attrs="{'readonly': [('state','not in',('draft','in_progress','open','ongoing'))]}"/>
+                        <field name="ordering_date" attrs="{'readonly': [('state','not in',('draft','in_progress','open','ongoing'))]}"/>
+                        <field name="schedule_date" attrs="{'readonly': [('state','not in',('draft','in_progress','open','ongoing'))]}"/>
                         <field name="origin" placeholder="e.g. PO0025" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         <field name="picking_type_id" widget="selection" groups="stock.group_adv_location" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state','not in',('draft'))]}"/>
@@ -209,7 +210,7 @@
             <div class="oe_chatter">
               <field name="message_follower_ids" widget="mail_followers"/>
               <field name="message_ids" widget="mail_thread"/>
-            </div> 
+            </div>
             </form>
         </field>
     </record>
