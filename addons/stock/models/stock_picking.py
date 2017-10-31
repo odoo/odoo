@@ -184,6 +184,8 @@ class Picking(models.Model):
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="If this shipment was split, then this field links to the shipment which contains the already processed part.")
 
+    backorder_ids = fields.One2many('stock.picking', 'backorder_id', 'Back Orders')
+
     move_type = fields.Selection([
         ('direct', 'As soon as possible'), ('one', 'When all products are ready')], 'Shipping Policy',
         default='direct', required=True,
