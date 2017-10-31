@@ -26,6 +26,7 @@ import odoo
 from odoo import api, fields, models, modules, tools, _
 from odoo.exceptions import AccessDenied, UserError
 from odoo.tools.parse_version import parse_version
+from odoo.tools.misc import topological_sort
 
 _logger = logging.getLogger(__name__)
 
@@ -763,7 +764,13 @@ class Module(models.Model):
             filter_lang = [lang.code for lang in langs]
         elif not isinstance(filter_lang, (list, tuple)):
             filter_lang = [filter_lang]
-        mod_names = [mod.name for mod in self if mod.state in ('installed', 'to install', 'to upgrade')]
+
+        update_mods = self.filtered(lambda r: r.state in ('installed', 'to install', 'to upgrade'))
+        mod_dict = {
+            mod.name: mod.dependencies_id.mapped('name')
+            for mod in update_mods
+        }
+        mod_names = topological_sort(mod_dict)
         self.env['ir.translation'].load_module_terms(mod_names, filter_lang)
 
     @api.multi
