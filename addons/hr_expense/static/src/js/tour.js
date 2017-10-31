@@ -13,22 +13,17 @@ tour.register('hr_expense_tour' ,
 [tour.STEPS.MENU_MORE,
 {
     trigger: '.o_app[data-menu-xmlid="hr_expense.menu_hr_expense_root"], .oe_menu_toggler[data-menu-xmlid="hr_expense.menu_hr_expense_root"]',
-    content: _t("Go to the expense to attach a receipt."),
+    content: _t("Want to manage your expenses? It starts here."),
     position: 'bottom',
 }, {
     trigger: '.o_list_button_add',
     extra_trigger: ".o_expense_tree",
-    content: _t('<p>Click here to create your first expense and add it under here.</p>'),
+    content: _t('<p>Let’s start by creating your first expense.</p>'),
     position: 'bottom'
-}, {
-    trigger: ".o_required_modifier input",
-    extra_trigger: ".o_expense_form",
-    content: _t("Write the name of the product, or select an existing one."),
-    position: "top",
 }, {
     trigger: '.o_form_button_save',
     extra_trigger: ".o_expense_form",
-    content: _t("<p>Once your Expense is ready, you can save it.</p>"),
+    content: _t("<p>Once your <b>Expense report</b> is ready, you can save it and wait for the approval from your manager.</p>"),
     position: 'bottom',
 }, {
     trigger: '.o_expense_form .o_chatter_button_new_message',
