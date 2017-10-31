@@ -33,6 +33,26 @@ class Users(models.Model):
              "- Emails: notifications are sent to your email\n"
              "- Odoo: notifications appear in your Odoo Inbox")
 
+    is_moderator = fields.Boolean(string="Is moderator", compute="_compute_is_moderator")
+    messages_to_moderate_count = fields.Integer(string="Count of messages to moderate", compute="_compute_messages_to_moderate_count")
+
+
+    @api.multi
+    def _compute_is_moderator(self):
+        for user in self:
+            user.is_moderator = bool(self.env['mail.channel'].search_count([('moderation', '=', True), ('moderator_ids', 'in', user.id)]))
+
+
+    @api.multi
+    def _compute_messages_to_moderate_count(self):
+        for user in self:
+            user.messages_to_moderate_count = self.env['mail.channel.message'].search_count([
+                ('status', '=', 'pending_moderation'),
+                ('mail_message_id.type', '=', 'email'),
+                ('mail_message_id.moderation', '=', True),
+                ('mail_message_id.moderator_ids', 'in', user.id)
+                ])
+
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights on notification_email_send
             and alias fields. Access rights are disabled by default, but allowed
@@ -153,6 +173,12 @@ class Users(models.Model):
                 user_activities[activity['model']]['total_count'] += activity['count']
 
         return list(user_activities.values())
+
+    @api.multi
+    def _compute_is_moderator(self):
+        for user in self:
+            user.is_moderator = bool(self.env['mail.channel'].search_count([('moderation', '=', True), ('moderator_ids', 'in', user.id)]))
+
 
 
 class res_groups_mail_channel(models.Model):

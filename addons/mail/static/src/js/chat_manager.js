@@ -744,7 +744,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         var domain =
             (channel.id === "channel_inbox") ? [['needaction', '=', true]] :
             (channel.id === "channel_starred") ? [['starred', '=', true]] :
-            (channel.id === "channel_moderation") ? [['channel_ids.moderator_ids', '=', session.uid], ['channel_ids.is_moderate', '=', true], ['message_type', '=', 'email'], ['moderator_status', '=', 'pending_moderation']] :
+            (channel.id === "channel_moderation") ? [['channel_ids.moderator_ids', '=', session.uid], ['channel_ids.moderation', '=', true], ['message_type', '=', 'email'], ['moderator_status', '=', 'pending_moderation']] :
                                                 [['channel_ids', 'in', channel.id]];
         var cache = get_channel_cache(channel, options.domain);
 

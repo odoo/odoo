@@ -269,16 +269,6 @@ class Message(models.Model):
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
 
     @api.multi
-    def get_moderation_count(self):
-        """ compute the number of to moderate messages of the current user (moderator)"""
-        return self.search_count([
-            ('channel_ids.moderator_ids', '=', self.env.user.id),
-            ('channel_ids.is_moderate', '=', True),
-            ('moderator_status', '=', 'pending_moderation'),
-            ('message_type', '=', 'email')
-        ])
-
-    @api.multi
     def moderator_action(self, moderator_action=''):
         """ Moderator actions
             :param moderator_action
@@ -298,7 +288,7 @@ class Message(models.Model):
             elif moderator_action in ['reject', 'discard']:
                 message.unlink()
             elif moderator_action in ['allow', 'ban']:
-                channels = message.channel_ids.filtered(lambda c: c.is_moderate)
+                channels = message.channel_ids.filtered(lambda c: c.moderation)
                 channels._add_to_moderated_email_list(message.email_from, moderator_action)
                 message.accept_message() if moderator_action == 'allow' else message.unlink()
         return True
@@ -306,7 +296,7 @@ class Message(models.Model):
     def accept_message(self):
         self.write({'moderator_status': 'accepted', 'moderator_id': self.env.uid})
         #notify to followers of channel by email
-        channels = self.channel_ids.filtered(lambda c: c.is_moderate)
+        channels = self.channel_ids.filtered(lambda c: c.moderation)
         partners = channels.mapped('channel_partner_ids') - self.env.user.partner_id
         partners._notify(self)
         channels._notify(self)
@@ -318,7 +308,7 @@ class Message(models.Model):
         """
         messages = self.search([('moderator_status', '=', 'pending_moderation'), ('message_type', '=', 'email')])
         #Find the Moderators from messages
-        moderators = messages.mapped('channel_ids').filtered(lambda c: c.is_moderate).mapped('moderator_ids')
+        moderators = messages.mapped('channel_ids').filtered(lambda c: c.moderation).mapped('moderator_ids')
         template = self.env.ref('mail.moderator_notification_email', raise_if_not_found=False)
         for moderator in moderators.filtered(lambda m: m.email):
             template.with_context(lang=moderator.lang).send_mail(moderator.id, raise_exception=True)
@@ -894,7 +884,7 @@ class Message(models.Model):
             self.write(message_values)
 
         # check if moderation is required or not, if required then do not notify to followers else notify
-        moderate_channels = channels_sudo.filtered(lambda c: c.is_moderate)
+        moderate_channels = channels_sudo.filtered(lambda c: c.moderation)
         if not self_sudo.need_moderation(moderate_channels):
             # notify partners and channels
             # those methods are called as SUPERUSER because portal users posting messages
@@ -952,3 +942,4 @@ class Message(models.Model):
     @api.model
     def create_notification_email(self, vals):
         self.env['mail.mail'].create(vals).send()
+
