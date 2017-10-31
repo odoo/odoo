@@ -19,3 +19,9 @@ class WebsiteSale(WebsiteSale):
         order = request.website.sale_get_order()
         order.recompute_coupon_lines()
         return super(WebsiteSale, self).payment(**post)
+
+    @http.route(['/shop/cart'], type='http', auth="public", website=True)
+    def cart(self, **post):
+        order = request.website.sale_get_order()
+        order.recompute_coupon_lines()
+        return super(WebsiteSale, self).cart(**post)
