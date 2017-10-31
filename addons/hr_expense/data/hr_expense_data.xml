@@ -52,6 +52,12 @@
             <field name="description">Expense report paid</field>
             <field name="default" eval="False"/>
         </record>
+        <record id="mt_expense_responsible" model="mail.message.subtype">
+            <field name="name">Responsible</field>
+            <field name="res_model">hr.expense.sheet</field>
+            <field name="description">Changes of responsible</field>
+            <field name="default" eval="True"/>
+        </record>
         <!-- Department (Parent) related subtypes for messaging / Chatter -->
         <record id="mt_department_expense_confirmed" model="mail.message.subtype">
             <field name="name">Expenses To Approve</field>

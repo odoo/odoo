@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+        <record id="hr_employee_view_form_inherit_expense" model="ir.ui.view">
+            <field name="name">hr.employee.view.form.expense</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='active_group']" position="before">
+                    <group string="Expenses" name="timesheet">
+                        <field name="expense_manager_id"/>   
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_expenses_tree" model="ir.ui.view">
             <field name="name">hr.expense.tree</field>
             <field name="model">hr.expense</field>
@@ -82,9 +95,9 @@
             <field name="arch" type="xml">
                 <xpath expr="/form/*" position="before">
                     <header>
-                        <button name="submit_expenses" states="draft" string="Submit to Manager" type="object" class="oe_highlight"/>
+                        <button name="action_submit_expenses" states="draft" string="Submit to Manager" type="object" class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,reported,approved,done,refused"/>
-                        <button name="view_sheet" type="object" string="View Report" class="oe_highlight" attrs="{'invisible': [('state', '=','draft')]}"/>
+                        <button name="action_view_sheet" type="object" string="View Report" class="oe_highlight" attrs="{'invisible': [('state', '=','draft')]}"/>
                     </header>
                 </xpath>
                 <xpath expr="/form/sheet/*" position="before">
@@ -126,8 +139,8 @@
                                     </div>
                                     <div class="col-xs-6">
                                         <span class="pull-right text-right">
-                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'submit': 'default', 'cancel': 'danger', 'post': 'warning',
-                                            'done': 'success'}}"/>
+                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'reported': 'primary', 'refused': 'danger', 'done': 'warning',
+                                            'approved': 'success'}}"/>
                                         </span>
                                     </div>
                                 </div>
@@ -174,9 +187,9 @@
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     <separator />
                     <filter domain="[('state', '=', 'draft')]" string="To Submit" name="to_report" help="New Expense"/>
-                    <filter domain="[('state', '=', 'reported')]" string="Reported" name="submitted" help="Confirmed Expenses"/>
+                    <filter domain="[('state', '!=', 'draft')]" string="Reported" name="submitted" help="Confirmed Expenses"/>
                     <filter domain="[('state', '=', 'refused')]" string="Refused" name="refused" help="Refused Expenses"/>
-                    <filter domain="[('state', '!=', 'cancel')]" string="Not Refused" name="uncancelled" help="Actual expense sheets, not the refused ones"/>
+                    <filter domain="['|', ('state', '=', 'approved'), ('state', '=', 'done')]" string="Approved" name="approved" help="Actual expense sheets, not the refused ones"/>
                     <separator />
                     <filter string="My Team Expenses" name="my_team_expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_expense.group_hr_expense_manager" help="Expenses of Your Team Member"/>
                     <filter string="My Expenses" name="my_expenses" domain="[('employee_id.user_id', '=', uid)]"/>
@@ -361,7 +374,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,pivot</field>
             <field name="context">{
-                'search_default_uncancelled': 1,
+                'search_default_approved': 1,
                 }
             </field>
         </record>

@@ -22,7 +22,7 @@ tour.register('hr_expense_tour' ,
     position: 'bottom'
 }, {
     trigger: '.o_form_button_save',
-    extra_trigger: ".o_expense_form",
+    extra_trigger: ".o_expense_sheet",
     content: _t("<p>Once your <b>Expense report</b> is ready, you can save it and wait for the approval from your manager.</p>"),
     position: 'bottom',
 }, {
