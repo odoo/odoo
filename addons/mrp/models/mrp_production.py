@@ -132,10 +132,10 @@ class MrpProduction(models.Model):
         compute='_compute_availability', store=True)
 
     unreserve_visible = fields.Boolean(
-        'Inventory Unreserve Visible', compute='_compute_unreserve_visible',
+        'Allowed to Unreserve Inventory', compute='_compute_unreserve_visible',
         help='Technical field to check when we can unreserve')
     post_visible = fields.Boolean(
-        'Inventory Post Visible', compute='_compute_post_visible',
+        'Allowed to Post Inventory', compute='_compute_post_visible',
         help='Technical field to check when we can post')
     consumed_less_than_planned = fields.Boolean(
         compute='_compute_consumed_less_than_planned',
