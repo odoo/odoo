@@ -623,8 +623,10 @@ return AbstractModel.extend({
             date_stop = date_start.clone().add(date_delay,'hours');
         }
 
-        date_start.add(this.getSession().getTZOffset(date_start), 'minutes');
-        date_stop.add(this.getSession().getTZOffset(date_stop), 'minutes');
+        if (!all_day) {
+            date_start.add(this.getSession().getTZOffset(date_start), 'minutes');
+            date_stop.add(this.getSession().getTZOffset(date_stop), 'minutes');
+        }
 
         if (this.mapping.all_day && evt[this.mapping.all_day]) {
             date_stop.add(1, 'days');
