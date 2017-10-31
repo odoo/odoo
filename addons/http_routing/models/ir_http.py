@@ -281,24 +281,19 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _add_dispatch_parameters(cls, func):
-        if request.is_frontend:
-            request.redirect = lambda url, code=302: werkzeug.utils.redirect(url_for(url), code)
+        # only called for is_frontend request
+        if request.routing_iteration == 1:
             context = dict(request.context)
-
-            if not context.get('tz'):
-                context['tz'] = request.session.get('geoip', {}).get('time_zone')
-
             path = request.httprequest.path.split('/')
-            if request.routing_iteration == 1:
-                langs = [lg.code for lg in cls._get_languages()]
-                is_a_bot = cls.is_a_bot()
-                cook_lang = request.httprequest.cookies.get('frontend_lang')
-                nearest_lang = not func and cls.get_nearest_lang(path[1])
-                preferred_lang = ((cook_lang if cook_lang in langs else False)
-                                  or (not is_a_bot and cls.get_nearest_lang(request.lang))
-                                  or cls._get_default_lang().code)
+            langs = [lg.code for lg in cls._get_languages()]
+            is_a_bot = cls.is_a_bot()
+            cook_lang = request.httprequest.cookies.get('frontend_lang')
+            nearest_lang = not func and cls.get_nearest_lang(path[1])
+            preferred_lang = ((cook_lang if cook_lang in langs else False)
+                              or (not is_a_bot and cls.get_nearest_lang(request.lang))
+                              or cls._get_default_lang().code)
 
-                request.lang = context['lang'] = nearest_lang or preferred_lang
+            request.lang = context['lang'] = nearest_lang or preferred_lang
 
             # bind modified context
             request.context = context
@@ -384,16 +379,15 @@ class IrHttp(models.AbstractModel):
                     routing_error = None
                     return cls.reroute('/'.join(path) or '/')
 
-            context = dict(request.context)
             if request.lang == cls._get_default_lang().code:
+                context = dict(request.context)
                 context['edit_translations'] = False
-            request.context = context
+                request.context = context
 
         if routing_error:
             return cls._handle_exception(routing_error)
 
         # removed cache for auth public
-        request.cache_save = False
         result = super(IrHttp, cls)._dispatch()
 
         if request.is_frontend and cook_lang != request.lang and hasattr(result, 'set_cookie'):
