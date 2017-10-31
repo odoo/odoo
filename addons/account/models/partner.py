@@ -18,6 +18,7 @@ class AccountFiscalPosition(models.Model):
     name = fields.Char(string='Fiscal Position', required=True)
     active = fields.Boolean(default=True,
         help="By unchecking the active field, you may hide a fiscal position without deleting it.")
+    accounting_company_id = fields.Many2one('res.company', related='company_id.accounting_company_id', store=True)
     company_id = fields.Many2one('res.company', string='Company')
     account_ids = fields.One2many('account.fiscal.position.account', 'position_id', string='Account Mapping', copy=True)
     tax_ids = fields.One2many('account.fiscal.position.tax', 'position_id', string='Tax Mapping', copy=True)
@@ -387,23 +388,23 @@ class ResPartner(models.Model):
     contracts_count = fields.Integer(compute='_journal_item_count', string="Contracts", type='integer')
     journal_item_count = fields.Integer(compute='_journal_item_count', string="Journal Items", type="integer")
     issued_total = fields.Monetary(compute='_compute_issued_total', string="Journal Items")
-    property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
+    property_account_payable_id = fields.Many2one('account.account', company_dependent='accounting',
         string="Account Payable", oldname="property_account_payable",
         domain="[('internal_type', '=', 'payable'), ('deprecated', '=', False)]",
         help="This account will be used instead of the default one as the payable account for the current partner",
         required=True)
-    property_account_receivable_id = fields.Many2one('account.account', company_dependent=True,
+    property_account_receivable_id = fields.Many2one('account.account', company_dependent='accounting',
         string="Account Receivable", oldname="property_account_receivable",
         domain="[('internal_type', '=', 'receivable'), ('deprecated', '=', False)]",
         help="This account will be used instead of the default one as the receivable account for the current partner",
         required=True)
-    property_account_position_id = fields.Many2one('account.fiscal.position', company_dependent=True,
+    property_account_position_id = fields.Many2one('account.fiscal.position', company_dependent='accounting',
         string="Fiscal Position",
         help="The fiscal position will determine taxes and accounts used for the partner.", oldname="property_account_position")
-    property_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
+    property_payment_term_id = fields.Many2one('account.payment.term', company_dependent='accounting',
         string='Customer Payment Terms',
         help="This payment term will be used instead of the default one for sale orders and customer invoices", oldname="property_payment_term")
-    property_supplier_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
+    property_supplier_payment_term_id = fields.Many2one('account.payment.term', company_dependent='accounting',
          string='Vendor Payment Terms',
          help="This payment term will be used instead of the default one for purchase orders and vendor bills", oldname="property_supplier_payment_term")
     ref_company_ids = fields.One2many('res.company', 'partner_id',
@@ -418,7 +419,7 @@ class ResPartner(models.Model):
     invoice_ids = fields.One2many('account.invoice', 'partner_id', string='Invoices', readonly=True, copy=False)
     contract_ids = fields.One2many('account.analytic.account', 'partner_id', string='Contracts', readonly=True)
     bank_account_count = fields.Integer(compute='_compute_bank_count', string="Bank")
-    trust = fields.Selection([('good', 'Good Debtor'), ('normal', 'Normal Debtor'), ('bad', 'Bad Debtor')], string='Degree of trust you have in this debtor', default='normal', company_dependent=True)
+    trust = fields.Selection([('good', 'Good Debtor'), ('normal', 'Normal Debtor'), ('bad', 'Bad Debtor')], string='Degree of trust you have in this debtor', default='normal', company_dependent='accounting')
     invoice_warn = fields.Selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP, required=True, default="no-message")
     invoice_warn_msg = fields.Text('Message for Invoice')
 

@@ -292,6 +292,7 @@ class AccountInvoice(models.Model):
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         default=_default_journal,
         domain="[('type', 'in', {'out_invoice': ['sale'], 'out_refund': ['sale'], 'in_refund': ['purchase'], 'in_invoice': ['purchase']}.get(type, [])), ('company_id', '=', company_id)]")
+    accounting_company_id = fields.Many2one('res.company', related='company_id.accounting_company_id', store=True)
     company_id = fields.Many2one('res.company', string='Company', change_default=True,
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         default=lambda self: self.env['res.company']._company_default_get('account.invoice'))
@@ -1238,6 +1239,7 @@ class AccountInvoiceLine(models.Model):
     account_analytic_id = fields.Many2one('account.analytic.account',
         string='Analytic Account')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
+    accounting_company_id = fields.Many2one('res.company', related='company_id.accounting_company_id', store=True)
     company_id = fields.Many2one('res.company', string='Company',
         related='invoice_id.company_id', store=True, readonly=True, related_sudo=False)
     partner_id = fields.Many2one('res.partner', string='Partner',
@@ -1421,6 +1423,7 @@ class AccountInvoiceTax(models.Model):
     amount = fields.Monetary()
     manual = fields.Boolean(default=True)
     sequence = fields.Integer(help="Gives the sequence order when displaying a list of invoice tax.")
+    accounting_company_id = fields.Many2one('res.company', related='company_id.accounting_company_id', store=True)
     company_id = fields.Many2one('res.company', string='Company', related='account_id.company_id', store=True, readonly=True)
     currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True, readonly=True)
     base = fields.Monetary(string='Base', compute='_compute_base_amount')
@@ -1440,6 +1443,7 @@ class AccountPaymentTerm(models.Model):
     active = fields.Boolean(default=True, help="If the active field is set to False, it will allow you to hide the payment term without removing it.")
     note = fields.Text(string='Description on the Invoice', translate=True)
     line_ids = fields.One2many('account.payment.term.line', 'payment_id', string='Terms', copy=True, default=_default_line_ids)
+    accounting_company_id = fields.Many2one('res.company', related='company_id.accounting_company_id', store=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
 
     @api.constrains('line_ids')

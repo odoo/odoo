@@ -95,6 +95,7 @@ class AccountMove(models.Model):
     partner_id = fields.Many2one('res.partner', compute='_compute_partner_id', string="Partner", store=True, readonly=True)
     amount = fields.Monetary(compute='_amount_compute', store=True)
     narration = fields.Text(string='Internal Note')
+    accounting_company_id = fields.Many2one('res.company', related='company_id.accounting_company_id', store=True)
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
         default=lambda self: self.env.user.company_id)
     matched_percentage = fields.Float('Percentage Matched', compute='_compute_matched_percentage', digits=0, store=True, readonly=True, help="Technical field used in cash basis method")
@@ -145,7 +146,7 @@ class AccountMove(models.Model):
                             if not journal.refund_sequence_id:
                                 raise UserError(_('Please define a sequence for the refunds'))
                             sequence = journal.refund_sequence_id
-                                                            
+
                         new_name = sequence.with_context(ir_sequence_date=move.date).next_by_id()
                     else:
                         raise UserError(_('Please define a sequence on the journal.'))
@@ -179,8 +180,9 @@ class AccountMove(models.Model):
     @api.multi
     def _post_validate(self):
         for move in self:
+            accounting_company_id = move.accounting_company_id
             if move.line_ids:
-                if not all([x.company_id.id == move.company_id.id for x in move.line_ids]):
+                if not all([x.accounting_company_id == accounting_company_id for x in move.line_ids]):
                     raise UserError(_("Cannot create moves for different companies."))
         self.assert_balanced()
         return self._check_lock_date()
@@ -406,7 +408,8 @@ class AccountMoveLine(models.Model):
     tax_line_id = fields.Many2one('account.tax', string='Originator tax', ondelete='restrict')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic tags')
-    company_id = fields.Many2one('res.company', related='account_id.company_id', string='Company', store=True)
+    accounting_company_id = fields.Many2one('res.company', related='company_id.accounting_company_id', store=True)
+    company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True)
     counterpart = fields.Char("Counterpart", compute='_get_counterpart', help="Compute the counter part accounts of this journal item for this journal entry. This can be needed in reports.")
 
     # TODO: put the invoice link and partner_id on the account_move
@@ -502,7 +505,7 @@ class AccountMoveLine(models.Model):
                         {3}
                         {4}
                         {5}
-                        AND l.company_id = {6}
+                        AND l.accounting_company_id = {6}
                         AND EXISTS (
                             SELECT NULL
                             FROM account_move_line l
@@ -528,7 +531,7 @@ class AccountMoveLine(models.Model):
                 is_partner and ' ' or "AND at.type <> 'payable' AND at.type <> 'receivable'",
                 account_type and "AND at.type = %(account_type)s" or '',
                 res_ids and 'AND ' + res_alias + '.id in %(res_ids)s' or '',
-                self.env.user.company_id.id,
+                self.env.user.company_id.accounting_company_id.id,
                 is_partner and 'AND l.partner_id = p.id' or ' ',
                 is_partner and 'l.partner_id, p.id,' or ' ',
                 res_alias=res_alias
@@ -877,17 +880,17 @@ class AccountMoveLine(models.Model):
             return True
 
         #Perform all checks on lines
-        company_ids = set()
+        accounting_company_ids = set()
         all_accounts = []
         partners = set()
         for line in self:
-            company_ids.add(line.company_id.id)
+            accounting_company_ids.add(line.accounting_company_id.id)
             all_accounts.append(line.account_id)
             if (line.account_id.internal_type in ('receivable', 'payable')):
                 partners.add(line.partner_id.id)
             if line.reconciled:
                 raise UserError(_('You are trying to reconcile some entries that are already reconciled!'))
-        if len(company_ids) > 1:
+        if len(accounting_company_ids) > 1:
             raise UserError(_('To reconcile the entries company should be the same for all entries!'))
         if len(set(all_accounts)) > 1:
             raise UserError(_('Entries are not of the same account!'))
@@ -1365,6 +1368,7 @@ class AccountPartialReconcile(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency')
     company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True,
         help='Utility field to express amount currency')
+    accounting_company_id = fields.Many2one('res.company', related='company_id.accounting_company_id', store=True)
     company_id = fields.Many2one('res.company', related='debit_move_id.company_id', store=True, string='Currency')
     full_reconcile_id = fields.Many2one('account.full.reconcile', string="Full Reconcile", copy=False)
 
@@ -1376,9 +1380,9 @@ class AccountPartialReconcile(models.Model):
         for rec in self:
             if not rec.company_id.currency_exchange_journal_id:
                 raise UserError(_("You should configure the 'Exchange Rate Journal' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
-            if not rec.company_id.income_currency_exchange_account_id.id:
+            if not rec.company_id.accounting_company_id.income_currency_exchange_account_id.id:
                 raise UserError(_("You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
-            if not rec.company_id.expense_currency_exchange_account_id.id:
+            if not rec.company_id.accounting_company_id.expense_currency_exchange_account_id.id:
                 raise UserError(_("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
             move_vals = {'journal_id': rec.company_id.currency_exchange_journal_id.id}
 
@@ -1603,9 +1607,9 @@ class AccountFullReconcile(models.Model):
     def _prepare_exchange_diff_move(self, move_date, company):
         if not company.currency_exchange_journal_id:
             raise UserError(_("You should configure the 'Exchange Rate Journal' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
-        if not company.income_currency_exchange_account_id.id:
+        if not company.accounting_company_id.income_currency_exchange_account_id.id:
             raise UserError(_("You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
-        if not company.expense_currency_exchange_account_id.id:
+        if not company.accounting_company_id.expense_currency_exchange_account_id.id:
             raise UserError(_("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
         res = {'journal_id': company.currency_exchange_journal_id.id}
         # The move date should be the maximum date between payment and invoice

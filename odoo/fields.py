@@ -454,11 +454,18 @@ class Field(object):
             # by default, company-dependent fields are not stored and not copied
             attrs['store'] = False
             attrs['copy'] = attrs.get('copy', False)
-            attrs['default'] = self._default_company_dependent
-            attrs['compute'] = self._compute_company_dependent
-            if not attrs.get('readonly'):
-                attrs['inverse'] = self._inverse_company_dependent
-            attrs['search'] = self._search_company_dependent
+            if attrs.get('company_dependent') == 'accounting':
+                attrs['default'] = self._default_company_dependent_accounting
+                attrs['compute'] = self._compute_company_dependent_accounting
+                if not attrs.get('readonly'):
+                    attrs['inverse'] = self._inverse_company_dependent_accounting
+                attrs['search'] = self._search_company_dependent_accounting
+            else:
+                attrs['default'] = self._default_company_dependent
+                attrs['compute'] = self._compute_company_dependent
+                if not attrs.get('readonly'):
+                    attrs['inverse'] = self._inverse_company_dependent
+                attrs['search'] = self._search_company_dependent
         if attrs.get('sparse'):
             # by default, sparse fields are not stored and not copied
             attrs['store'] = False
@@ -649,26 +656,38 @@ class Field(object):
     # Company-dependent fields
     #
 
-    def _default_company_dependent(self, model):
-        return model.env['ir.property'].get(self.name, self.model_name)
+    def _default_company_dependent(self, model, mode=False):
+        return model.env['ir.property'].get(self.name, self.model_name, mode)
 
-    def _compute_company_dependent(self, records):
+    def _compute_company_dependent(self, records, mode=False):
         Property = records.env['ir.property']
-        values = Property.get_multi(self.name, self.model_name, records.ids)
+        values = Property.get_multi(self.name, self.model_name, records.ids, mode)
         for record in records:
             record[self.name] = values.get(record.id)
 
-    def _inverse_company_dependent(self, records):
+    def _inverse_company_dependent(self, records, mode=False):
         Property = records.env['ir.property']
         values = {
             record.id: self.convert_to_write(record[self.name], record)
             for record in records
         }
-        Property.set_multi(self.name, self.model_name, values)
+        Property.set_multi(self.name, self.model_name, values, mode)
 
-    def _search_company_dependent(self, records, operator, value):
+    def _search_company_dependent(self, records, operator, value, mode=False):
         Property = records.env['ir.property']
-        return Property.search_multi(self.name, self.model_name, operator, value)
+        return Property.search_multi(self.name, self.model_name, operator, value, mode)
+
+    def _default_company_dependent_accounting(self, model):
+        return self._default_company_dependent(model, mode='accounting')
+
+    def _compute_company_dependent_accounting(self, records):
+        self._compute_company_dependent(records, mode='accounting')
+
+    def _inverse_company_dependent_accounting(self, records):
+        self._inverse_company_dependent(records, mode='accounting')
+
+    def _search_company_dependent_accounting(self, records, operator, value):
+        return self._search_company_dependent(records, operator, value, mode='accounting')
 
     #
     # Sparse fields

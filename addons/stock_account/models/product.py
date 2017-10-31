@@ -13,7 +13,7 @@ class ProductTemplate(models.Model):
     property_valuation = fields.Selection([
         ('manual_periodic', 'Periodic (manual)'),
         ('real_time', 'Perpetual (automated)')], string='Inventory Valuation',
-        company_dependent=True, copy=True, default='manual_periodic',
+        company_dependent='accounting', copy=True, default='manual_periodic',
         help="If perpetual valuation is enabled for a product, the system will automatically create journal entries corresponding to stock moves, with product price as specified by the 'Costing Method'" \
              "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products.")
     valuation = fields.Char(compute='_compute_valuation_type', inverse='_set_valuation_type')
@@ -21,19 +21,19 @@ class ProductTemplate(models.Model):
         ('standard', 'Standard Price'),
         ('average', 'Average Price'),
         ('real', 'Real Price')], string='Costing Method',
-        company_dependent=True, copy=True,
+        company_dependent='accounting', copy=True,
         help="""Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).
                 Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.
                 Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example).""")
     cost_method = fields.Char(compute='_compute_cost_method', inverse='_set_cost_method')
     property_stock_account_input = fields.Many2one(
         'account.account', 'Stock Input Account',
-        company_dependent=True, domain=[('deprecated', '=', False)],
+        company_dependent='accounting', domain=[('deprecated', '=', False)],
         help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
              "there is a specific valuation account set on the source location. When not set on the product, the one from the product category is used.")
     property_stock_account_output = fields.Many2one(
         'account.account', 'Stock Output Account',
-        company_dependent=True, domain=[('deprecated', '=', False)],
+        company_dependent='accounting', domain=[('deprecated', '=', False)],
         help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
              "there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used.")
 
@@ -146,7 +146,7 @@ class ProductCategory(models.Model):
     property_valuation = fields.Selection([
         ('manual_periodic', 'Periodic (manual)'),
         ('real_time', 'Perpetual (automated)')], string='Inventory Valuation',
-        company_dependent=True, copy=True, required=True,
+        company_dependent='accounting', copy=True, required=True,
         help="If perpetual valuation is enabled for a product, the system "
              "will automatically create journal entries corresponding to "
              "stock moves, with product price as specified by the 'Costing "
@@ -158,7 +158,7 @@ class ProductCategory(models.Model):
         ('standard', 'Standard Price'),
         ('average', 'Average Price'),
         ('real', 'Real Price')], string="Costing Method",
-        company_dependent=True, copy=True, required=True,
+        company_dependent='accounting', copy=True, required=True,
         help="Standard Price: The cost price is manually updated at the end "
              "of a specific period (usually once a year).\nAverage Price: "
              "The cost price is recomputed at each incoming shipment and "
@@ -169,18 +169,18 @@ class ProductCategory(models.Model):
         'account.journal', 'Stock Journal', company_dependent=True,
         help="When doing real-time inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed.")
     property_stock_account_input_categ_id = fields.Many2one(
-        'account.account', 'Stock Input Account', company_dependent=True,
+        'account.account', 'Stock Input Account', company_dependent='accounting',
         domain=[('deprecated', '=', False)], oldname="property_stock_account_input_categ",
         help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
              "there is a specific valuation account set on the source location. This is the default value for all products in this category. It "
              "can also directly be set on each product")
     property_stock_account_output_categ_id = fields.Many2one(
-        'account.account', 'Stock Output Account', company_dependent=True,
+        'account.account', 'Stock Output Account', company_dependent='accounting',
         domain=[('deprecated', '=', False)], oldname="property_stock_account_output_categ",
         help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
              "there is a specific valuation account set on the destination location. This is the default value for all products in this category. It "
              "can also directly be set on each product")
     property_stock_valuation_account_id = fields.Many2one(
-        'account.account', 'Stock Valuation Account', company_dependent=True,
+        'account.account', 'Stock Valuation Account', company_dependent='accounting',
         domain=[('deprecated', '=', False)],
         help="When real-time inventory valuation is enabled on a product, this account will hold the current value of the products.",)

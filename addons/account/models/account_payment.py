@@ -43,6 +43,7 @@ class account_abstract_payment(models.AbstractModel):
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False)
     communication = fields.Char(string='Memo')
     journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True, domain=[('type', 'in', ('bank', 'cash'))])
+    accounting_company_id = fields.Many2one('res.company', related='company_id.accounting_company_id', store=True)
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
 
     hide_payment_method = fields.Boolean(compute='_compute_hide_payment_method',
@@ -189,6 +190,7 @@ class account_payment(models.Model):
         else:
             self.payment_difference = self._compute_total_invoices_amount() - self.amount
 
+    accounting_company_id = fields.Many2one('res.company', related='company_id.accounting_company_id', store=True)
     company_id = fields.Many2one(store=True)
 
     name = fields.Char(readonly=True, copy=False, default="Draft Payment") # The name is attributed upon post()

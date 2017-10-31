@@ -151,7 +151,7 @@ class ProductProduct(models.Model):
         help="Image of the product variant (Medium-sized image of product template if false).")
 
     standard_price = fields.Float(
-        'Cost', company_dependent=True,
+        'Cost', company_dependent='accounting',
         digits=dp.get_precision('Product Price'),
         groups="base.group_user",
         help="Cost of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. "
@@ -560,7 +560,7 @@ class ProductProduct(models.Model):
     @api.multi
     def get_history_price(self, company_id, date=None):
         history = self.env['product.price.history'].search([
-            ('company_id', '=', company_id),
+            ('company_id', '=', company_id.id),
             ('product_id', 'in', self.ids),
             ('datetime', '<=', date or fields.Datetime.now())], order='datetime desc,id desc', limit=1)
         return history.cost or 0.0
