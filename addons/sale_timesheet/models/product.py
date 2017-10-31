@@ -16,7 +16,7 @@ class ProductTemplate(models.Model):
         ('timesheet', 'Timesheets on project (one fare per SO/Project)'),
     ])
     service_tracking = fields.Selection([
-        ('no', 'Don\'t create task'),
+        ('no', 'Don\'t create a task'),
         ('task_global_project', 'Create a task in an existing project'),
         ('task_new_project', 'Create a task in a new project'),
         ('project_only', 'Create a new project but no task'),
