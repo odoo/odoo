@@ -1396,17 +1396,6 @@ class Root(object):
         else:
             response = result
 
-        # save to cache if requested and possible
-        if getattr(request, 'cache_save', False) and response.status_code == 200:
-            response.freeze()
-            r = response.response
-            if isinstance(r, list) and len(r) == 1 and isinstance(r[0], str):
-                request.registry.cache[request.cache_save] = {
-                    'content': r[0],
-                    'mimetype': response.headers['Content-Type'],
-                    'time': time.time(),
-                }
-
         if httprequest.session.should_save:
             if httprequest.session.rotate:
                 self.session_store.delete(httprequest.session)
