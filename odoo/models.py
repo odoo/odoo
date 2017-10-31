@@ -805,14 +805,8 @@ class BaseModel(object):
                             for j, val in enumerate(lines2[0]):
                                 if val or isinstance(val, bool):
                                     current[j] = val
-                            # check value of current field
-                            if not current[i] and not isinstance(current[i], bool):
-                                # assign xml_ids, and forget about remaining lines
-                                xml_ids = [item[1] for item in value.name_get()]
-                                current[i] = ','.join(xml_ids)
-                            else:
-                                # append the other lines at the end
-                                lines += lines2[1:]
+                            # append the other lines at the end
+                            lines += lines2[1:]
                         else:
                             current[i] = False
 
