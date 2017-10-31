@@ -515,7 +515,7 @@ class SaleOrder(models.Model):
         self.write({'state': 'sale'})
 
     @api.multi
-    def action_confirm(self):
+    def _action_confirm(self):
         for order in self.filtered(lambda order: order.partner_id not in order.message_partner_ids):
             order.message_subscribe([order.partner_id.id])
         self.write({
@@ -524,14 +524,19 @@ class SaleOrder(models.Model):
         })
         if self.env.context.get('send_email'):
             self.force_quotation_send()
-        if self.env['ir.config_parameter'].sudo().get_param('sale.auto_done_setting'):
-            self.action_done()
 
         # create an analytic account if at least an expense product
         if any([expense_policy != 'no' for expense_policy in self.order_line.mapped('product_id.expense_policy')]):
             if not self.analytic_account_id:
                 self._create_analytic_account()
 
+        return True
+
+    @api.multi
+    def action_confirm(self):
+        self._action_confirm()
+        if self.env['ir.config_parameter'].sudo().get_param('sale.auto_done_setting'):
+            self.action_done()
         return True
 
     @api.multi
