@@ -122,12 +122,11 @@ options.registry.carousel = options.Class.extend({
         this.$target.on('slid.bs.carousel', function () {
             self.$target.carousel('pause');
             self.trigger_up('option_update', {
-                optionNames: ['background', 'background_position', 'colorpicker'],
+                optionNames: ['background', 'background_position', 'colorpicker', 'sizing_y'],
                 name: 'target',
                 data: self.$target.find('.item.active'),
             });
         });
-        this.$target.trigger('slid.bs.carousel');
 
         return def;
     },
@@ -142,6 +141,14 @@ options.registry.carousel = options.Class.extend({
         this.$target.find('[data-slide]').attr('data-cke-saved-href', '#' + this.id);
         this.$target.find('[data-target]').attr('data-target', '#' + this.id);
         this._rebindEvents();
+    },
+    /**
+     * @override
+     */
+    onFocus: function () {
+        // Needs to be done on focus, not on start, as all other options are
+        // maybe not all initialized in start
+        this.$target.trigger('slid.bs.carousel');
     },
     /**
      * Associates unique ID on cloned slider elements.
@@ -161,7 +168,7 @@ options.registry.carousel = options.Class.extend({
         this._super.apply(this, arguments);
         this.$target.find('.item').removeClass('next prev left right active')
             .first().addClass('active');
-        this.$target.find('.carousel-indicators').find('li').removeClass('active')
+        this.$target.find('.carousel-indicators').find('li').removeClass('active').html('')
             .first().addClass('active');
         this.$target.removeClass('oe_img_bg ' + this._class).css('background-image', '');
     },
@@ -262,9 +269,7 @@ options.registry.carousel = options.Class.extend({
     },
 });
 
-options.registry['margin-x'] = options.registry.marginAndResize.extend({
-    preventChildPropagation: true,
-
+options.registry.sizing_x = options.registry.sizing.extend({
     /**
      * @override
      */
@@ -286,15 +291,13 @@ options.registry['margin-x'] = options.registry.marginAndResize.extend({
      * @override
      */
     _getSize: function () {
-        this.grid = this._super();
-        var width = this.$target.parents('.row:first').first().outerWidth();
-
-        var grid = [1,2,3,4,5,6,7,8,9,10,11,12];
-        this.grid.e = [_.map(grid, function (v) {return 'col-md-'+v;}), _.map(grid, function (v) {return width/12*v;})];
-
-        grid = [-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11];
-        this.grid.w = [_.map(grid, function (v) {return 'col-md-offset-'+v;}), _.map(grid, function (v) {return width/12*v;}), 12];
-
+        var width = this.$target.closest('.row').width();
+        var gridE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        var gridW = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+        this.grid = {
+            e: [_.map(gridE, function (v) { return 'col-md-' + v; }), _.map(gridE, function (v) { return width/12*v; }), 'width'],
+            w: [_.map(gridW, function (v) { return 'col-md-offset-' + v; }), _.map(gridW, function (v) { return width/12*v; }), 'margin-left'],
+        };
         return this.grid;
     },
     /**
@@ -321,7 +324,7 @@ options.registry['margin-x'] = options.registry.marginAndResize.extend({
                 this.$target.addClass('col-md-offset-' + offset);
             }
         }
-        this._super(compass, beginClass, current);
+        this._super.apply(this, arguments);
     },
 });
 

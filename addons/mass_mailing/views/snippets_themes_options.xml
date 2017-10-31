@@ -5,9 +5,8 @@
     <t t-call="web_editor.snippet_options"/>
     <t t-raw="0"/>
 
-    <div data-js="width-x"
-        data-selector="img, .mv, .col_mv, td:not(.o_mail_no_resize), th">
-    </div>
+    <div data-js="sizing_x"
+        data-selector="img, .mv, .col_mv, td:not(.o_mail_no_resize), th"/>
 
     <div data-js="table_item" data-selector="td, th"/>
 
@@ -32,13 +31,8 @@
         data-drop-in="[data-oe-field='body_html']:not(:has(.o_layout)), .oe_structure">
     </div>
 
-    <div data-js="resize"
-        data-selector="[data-oe-field='body_html'] > div:not(.o_layout), [data-oe-field='body_html'] .oe_structure > div">
-    </div>
-
-    <div data-js="margin-y"
-        data-selector="[data-oe-field='body_html'] > div:not(.o_layout), [data-oe-field='body_html'] .oe_structure > div, td:not(.o_mail_no_resize), th">
-    </div>
+    <div data-js="sizing_y"
+        data-selector="[data-oe-field='body_html'] > div:not(.o_layout), [data-oe-field='body_html'] .oe_structure > div, td:not(.o_mail_no_resize), th"/>
 
     <div data-js="colorpicker"
         data-selector="

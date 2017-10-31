@@ -539,62 +539,43 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
         }
 
         // HANDLES
-        > .oe_handles {
+        > .o_handles {
             @o-handles-offset-to-hide: 10000px;
             @o-handless-accent-color: #00e2ff;
             .o-position-absolute(-@o-handles-offset-to-hide, 0, auto, 0);
 
-            &:hover > .oe_handle {
+            &:hover > .o_handle {
                 background-color: fade(@o-handless-accent-color, 5%);
             }
 
-            > .oe_handle {
+            > .o_handle {
                 @o-handle-btn-size: 18px;
-                opacity: 0.5;
-                .o-transition(opacity, 400ms);
+
+                position: relative;
                 border: 0 solid @o-handless-accent-color;
+                .o-transition(background, 300ms);
 
-                // MARGINS PREVIEW
-                &.n, &.s, &.w {
-                    position: relative;
-                    .o-transition(background, 0.3s);
+                &:hover, &.o_active {
+                    background-color: fade(@o-handless-accent-color, 20%);
 
-                    &.oe_handle_change, &.oe_handle_active, &:hover {
-                        background-color: fade(@o-handless-accent-color, 20%);
+                    &:before {
+                        content: '';
+                        .o-position-absolute(0, @left:50%);
+                        width: 1px;
+                        height: 100%;
+                        margin-left: -1px;
+                        background-color: fade(@o-handless-accent-color, 50%);
                     }
 
-                    &.o_handle_edited {
-                        opacity: 0.9;
-
-                        &:after {
-                            color: white;
-                            border-color: darken(@o-handless-accent-color, 10%);
-                            background-color: darken(@o-handless-accent-color, 20%);
-                        }
+                    &.w:before {
+                        .o-position-absolute(50%, @left: 0);
+                        width: 100%;
+                        height: 1px;
                     }
 
-                    &.oe_handle_change, &:hover {
-                        opacity: 1;
-
-                        &:before {
-                            .o-position-absolute(0, @left:50%);
-                            width: 1px;
-                            height: 100%;
-                            margin-left: -1px;
-                            background-color: fade(@o-handless-accent-color, 50%);
-                            content:'';
-                        }
-
-                        &.w:before {
-                            .o-position-absolute(50%,@left: 0);
-                            width: 100%;
-                            height: 1px;
-                        }
-
-                        &:after {
-                            border-color: darken(@o-handless-accent-color, 10%);
-                            background-color: darken(@o-handless-accent-color, 20%);
-                        }
+                    &:after {
+                        border-color: darken(@o-handless-accent-color, 10%);
+                        background-color: darken(@o-handless-accent-color, 20%);
                     }
                 }
 
@@ -602,17 +583,13 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                     display: block;
                     width: @o-handle-btn-size;
                     height: @o-handle-btn-size;
-                    border: solid 1px rgba(0, 0, 0, 0.2);
+                    border: solid 1px darken(@o-handless-accent-color, 10%);
                     line-height: @o-handle-btn-size - 2;
                     font-size: 14px;
                     font-family: FontAwesome;
-                    background-color: @o-we-color-light;
-                    color: @o-we-color-text-light;
+                    background-color: darken(@o-handless-accent-color, 20%);
+                    color: white;
                 }
-                &:hover {
-                    opacity: 0.9;
-                }
-
                 &.w:after, &.e:after {
                     content: "\f07e";
                 }
@@ -620,144 +597,77 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                     content: "\f07d";
                 }
 
+                &.o_handle_start {
+                    &.w:after, &.e:after {
+                        content: '\f061';
+                    }
+                    &.n:after, &.s:after {
+                        content: '\f063';
+                    }
+                }
+                &.o_handle_end {
+                    &.w:after, &.e:after {
+                        content: '\f060';
+                    }
+                    &.n:after, &.s:after {
+                        content: '\f062';
+                    }
+                }
+
                 &.w {
+                    .o-position-absolute(@o-handles-offset-to-hide, auto, -@o-handles-offset-to-hide, 0);
+                    width: @odoo-handle-edge-size;
                     border-width: @odoo-handle-border-width;
                     border-right-width: 0;
                     cursor: e-resize;
-                    width: @odoo-handle-edge-size;
-                    .o-position-absolute(@o-handles-offset-to-hide, auto, -@o-handles-offset-to-hide, 0);
 
                     &:after {
-                        .o-position-absolute(@top: 50%, @left: 50%);
+                        .o-position-absolute(@top: 50%, @left: 40%);
                         margin-top: -@o-handle-btn-size/2;
-                    }
-                    &.oe_handle_centered:after {
-                        margin-left: -@o-handle-btn-size/2;
                     }
                 }
                 &.e {
+                    .o-position-absolute(@o-handles-offset-to-hide, 0, -@o-handles-offset-to-hide, auto);
+                    width: @odoo-handle-edge-size;
                     border-right-width: @odoo-handle-border-width;
                     cursor: w-resize;
-                    width: @odoo-handle-edge-size;
-                    .o-position-absolute(@o-handles-offset-to-hide, 0, -@o-handles-offset-to-hide, auto);
 
                     &:after {
-                        .o-position-absolute(@top: 50%, @right: -@odoo-handle-border-width);
+                        .o-position-absolute(@top: 50%, @right: 40%);
                         margin-top: -@o-handle-btn-size/2;
                     }
                 }
                 &.n {
-                    border-top-width: @odoo-handle-border-width;
                     .o-position-absolute(@o-handles-offset-to-hide, 0, auto, 0);
+                    border-top-width: @odoo-handle-border-width;
+                    cursor: ns-resize;
 
                     &:after {
-                        .o-position-absolute(@left: 50%, @top: 50%);
+                        .o-position-absolute(@left: 50%, @top: 40%);
                         margin-left: -@o-handle-btn-size/2;
                     }
                 }
                 &.s {
-                    border-bottom-width: @odoo-handle-border-width;
                     .o-position-absolute(auto, 0, -@o-handles-offset-to-hide, 0);
-
-                    &:after {
-                        .o-position-absolute(@left: 50%, @bottom: 50%);
-                        margin-left: -@o-handle-btn-size/2;
-                    }
-                }
-                &.n, &.s {
+                    border-bottom-width: @odoo-handle-border-width;
                     cursor: ns-resize;
 
-                    &.oe_handle_centered:after {
-                        .o-position-absolute(@left: 50%, @top: 50%);
-                        margin-top:  -@o-handle-btn-size/2;
-                    }
-                }
-
-                // SIZE HANDLERS
-                &.size {
-                    @o-handle-size-height: 15px;
-
-                    height: 0;
-                    background: transparent;
-                    .o-position-absolute(@bottom: -@o-handles-offset-to-hide + @o-handle-size-height, @left: 50%);
-                    width: 250px;
-                    margin-left: -125px;
-
-                    > .oe_handle_button {
-                        position: relative;
-                        display: block;
-                        width: 100px;
-                        height: @o-handle-size-height;
-                        padding-top: 2px;
-                        font-weight: 600;
-                        font-size: 9px;
-                        text-transform: uppercase;
-                        background-color: @o-we-color-light;
-                        color: @o-we-color-text-light;
-                        &:hover {
-                            background-color: @o-we-color-dark;
-                            color: white;
-                        }
-                        &.auto_size {
-                            cursor: pointer;
-                            float: left;
-                        }
-                        &.size {
-                            cursor: row-resize;
-                            float: right;
-                        }
-                        &.active:before {
-                            content: "\f00c";
-                            font-family: "FontAwesome";
-                            color: @odoo-brand-optional;
-                            .o-position-absolute(@top: 0, @left: 3px);
-                            font-size: 11px;
-                        }
+                    &:after {
+                        .o-position-absolute(@left: 50%, @bottom: 40%);
+                        margin-left: -@o-handle-btn-size/2;
                     }
                 }
 
                 &.readonly {
-                    cursor: auto !important;
+                    cursor: auto!important;
 
-                    &:after, &.size {
-                        display: none !important;
+                    &:after {
+                        display: none!important;
                     }
                     &:hover {
                         opacity: 0.5;
                     }
                 }
-            }
-        }
-
-        // HANDLERS ICONS
-        &.block-w-left .w:after {
-            content: "" !important;
-        }
-        &.block-w-right .w:after {
-            content: "" !important;
-        }
-        &.block-w-left.block-w-right .w:after {
-            display: none !important;
-        }
-        &.block-e-left .e:after {
-            content: "" !important;
-        }
-        &.block-e-right .e:after {
-            content: "" !important;
-        }
-        &.block-e-left.block-e-right .e:after {
-            display: none !important;
-        }
-        &.block-s-bottom .s, &.block-n-top .n {
-            cursor: n-resize!important;
-            &:after {
-                content: "\f062" !important;
-            }
-        }
-        &.block-s-top .s, &.block-n-bottom .n {
-            cursor: s-resize!important;
-            &:after {
-                content: "\f063" !important;
             }
         }
     }
@@ -777,17 +687,6 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 }
 .move-important * {
     cursor: move !important;
-}
-
-.block-s-top .s,
-.block-s-bottom .s,
-.block-n-top .n,
-.block-n-bottom .n,
-.block-w-left .w,
-.block-e-right .e {
-    &:before {
-        font-size: 10px;
-    }
 }
 
 // NOTE EDITOR

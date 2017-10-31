@@ -74,7 +74,7 @@ var SnippetEditor = Widget.extend({
                 },
                 helper: function () {
                     var $clone = $(this).clone().css({width: '24px', height: '24px', border: 0});
-                    $clone.find('.oe_overlay_options >:not(:contains(.oe_snippet_move)), .oe_handle').remove();
+                    $clone.find('.oe_overlay_options >:not(:contains(.oe_snippet_move)), .o_handle').remove();
                     $clone.find(':not(.glyphicon)').css({position: 'absolute', top: 0, left: 0});
                     $clone.appendTo('body').removeClass('hidden');
                     return $clone;
@@ -123,17 +123,16 @@ var SnippetEditor = Widget.extend({
      * Makes the editor overlay cover the associated snippet.
      */
     cover: function () {
-        var mt = parseInt(this.$target.css('margin-top') || 0);
         var offset = this.$target.offset();
         var manipulatorOffset = this.$el.parent().offset();
-        offset.top -= (manipulatorOffset.top + mt);
+        offset.top -= manipulatorOffset.top;
         offset.left -= manipulatorOffset.left;
         this.$el.css({
             width: this.$target.outerWidth(),
             left: offset.left,
             top: offset.top,
         });
-        this.$('.oe_handles').css('height', this.$target.outerHeight(true));
+        this.$('.o_handles').css('height', this.$target.outerHeight());
         this.$el.toggleClass('o_top_cover', offset.top < 15);
     },
     /**

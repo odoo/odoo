@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="s_cover" name="Cover">
-    <section class="s_text_block_image_fw oe_img_bg oe_custom_bg" style="background-image: url(/web/image/website.s_cover_default_image); background-position: 50% 100%">
+    <section class="s_text_block_image_fw oe_img_bg oe_custom_bg pt64 pb64" style="background-image: url(/web/image/website.s_cover_default_image); background-position: 50% 100%">
         <div class="container">
             <div class="row">
-                <div class="col-md-6 mt64 mb64 bg-black-25">
+                <div class="col-md-6 bg-black-25 pt32 pb32">
                     <h2 style="font-size:62px">Headline</h2>
                     <h4>With a great subtitle</h4>
                     <p>Write one or two paragraphs describing your product, services or a specific feature. To be successful your content needs to be useful to your readers.</p>
@@ -15,21 +15,21 @@
 </template>
 
 <template id="s_banner" name="Slider">
-    <div id="myCarousel" class="carousel slide s_banner" data-interval="10000" style="height: 400px;">
+    <div id="myCarousel" class="carousel slide s_banner" data-interval="10000">
         <!-- Indicators -->
         <ol class="carousel-indicators hidden">
             <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
         </ol>
         <div class="carousel-inner">
-            <div class="item oe_img_bg active bg-alpha">
+            <div class="item oe_img_bg active bg-alpha pt48 pb48">
                 <div class="container">
                     <div class="row content">
-                        <div class="carousel-content col-md-4 col-md-offset-1 mt128 mb96">
+                        <div class="carousel-content col-md-4 col-md-offset-1 mt64">
                             <h2>Your Slide Title</h2>
                             <h4>Click to customize this text</h4>
                             <p><a href="/contactus" class="btn btn-warning btn-large">Contact us</a></p>
                         </div>
-                        <div class="carousel-img col-md-6 col-md-offset-1 hidden-sm hidden-xs mt48">
+                        <div class="carousel-img col-md-6 col-md-offset-1 hidden-sm hidden-xs">
                             <img class="img-responsive" src="/web/image/website.s_banner_default_image" alt="Slider Odoo Image"/>
                         </div>
                     </div>
@@ -42,10 +42,10 @@
 </template>
 
 <template id="s_text_image" name="Text-Image">
-    <section class="s_text_image">
+    <section class="s_text_image pt32 pb32">
         <div class="container">
             <div class="row">
-                <div class="col-md-6 mt64 mb32">
+                <div class="col-md-6 mt32">
                     <h3 style="text-align: right;">A Section Subtitle</h3>
                     <p style="text-align: right;">
                         Write one or two paragraphs describing your product or
@@ -56,7 +56,7 @@
                         and give it to them.
                     </p>
                 </div>
-                <div class="col-md-6 mt32 mb32">
+                <div class="col-md-6">
                   <img class="img img-responsive pull-left mb16" src="/web/image/website.s_text_image_default_image" alt="Odoo text and image block"/>
                 </div>
             </div>
@@ -65,13 +65,13 @@
 </template>
 
 <template id="s_image_text" name="Image-Text">
-    <section class="s_image_text">
+    <section class="s_image_text pt32 pb32">
         <div class="container">
             <div class="row">
-                <div class="col-md-6 mt32 mb32">
+                <div class="col-md-6">
                   <img class="img img-responsive center-block mb16" src="/web/image/website.s_image_text_default_image"  alt="Odoo image and text block"/>
                 </div>
-                <div class="col-md-6 mt64 mb32">
+                <div class="col-md-6 mt32">
                     <h3>A Section Subtitle</h3>
                     <p>
                         Write one or two paragraphs describing your product,
@@ -88,10 +88,10 @@
 </template>
 
 <template id="s_big_message" name="Big Message">
-    <section class="jumbotron s_big_message oe_img_bg oe_custom_bg" style="background-image: url('/web/image/website.s_background_image_01');">
+    <section class="jumbotron s_big_message oe_img_bg oe_custom_bg pb32" style="background-image: url('/web/image/website.s_background_image_01');">
         <div class="container">
             <div class="row">
-                <div class="mb32 col-md-offset-1 col-md-8">
+                <div class="col-md-offset-1 col-md-8">
                     <h1>Sell Online. Easily.</h1>
                     <p>Write one sentence to convince visitor about your message.</p>
                     <a class="btn btn-warning btn-lg" href="/contactus">Contact us</a>
@@ -102,12 +102,12 @@
 </template>
 
 <template id="s_text_block" name="Text Block">
-    <section class="s_text_block">
+    <section class="s_text_block pt16 pb16">
         <div class="container">
             <h2 class="text-center">A Great Headline</h2>
             <h3 class="text-center text-muted">A good subtitle</h3>
             <div class="row">
-                <div class="col-md-12 mb16 mt16">
+                <div class="col-md-12">
                     <p>
                         A great way to catch your reader's attention is to tell a story.
                         Everything you consider writing can be told as a story.
@@ -144,9 +144,9 @@
 </template>
 
 <template id="s_features" name="Features">
-    <section class="s_features">
+    <section class="s_features pt16 pb16">
         <div class="container">
-            <div class="row mt16 mb16">
+            <div class="row">
                 <div class="col-md-4 text-center">
                     <span class="fa fa-suitcase fa-5x"></span>
                     <div>
@@ -174,14 +174,14 @@
 </template>
 
 <template id="s_big_picture" name="Big Picture">
-    <section class="s_big_picture bg-gray-lighter">
+    <section class="s_big_picture bg-gray-lighter pb16">
         <div class="container">
             <h2 class="text-center">A Punchy Headline</h2>
             <div class="row">
                 <div class="col-md-12">
                   <img class="img img-responsive" src="/web/image/website.s_big_picture_default_image" style="margin: 0 auto;"  alt="Odoo CMS - a big picture"/>
                 </div>
-                <div class="col-md-6 col-md-offset-3 mb16 mt16">
+                <div class="col-md-6 col-md-offset-3 mt16">
                     <p class="text-center">
                         <b>A Small Subtitle</b>
                     </p>
@@ -200,10 +200,10 @@
 </template>
 
 <template id="s_three_columns" name="Three Columns">
-    <section class="s_three_columns">
+    <section class="s_three_columns pt32 pb48">
         <div class="container">
             <div class="row">
-                <div class="col-md-4 mt32 mb48">
+                <div class="col-md-4">
                     <img class="img img-responsive" src="/web/image/website.library_image_11" alt="Odoo - Sample 1 for three columns"/>
                     <h4 class="mt16">Feature One</h4>
                     <p>
@@ -212,7 +212,7 @@
                         column and use the top icons to perform your action.
                     </p>
                 </div>
-                <div class="col-md-4 mt32 mb48">
+                <div class="col-md-4">
                     <img class="img img-responsive" src="/web/image/website.library_image_13" alt="Odoo - Sample 2 for three columns"/>
                     <h4 class="mt16">Feature Two</h4>
                     <p>
@@ -222,7 +222,7 @@
                         one as a copy.
                     </p>
                 </div>
-                <div class="col-md-4 mt32 mb48">
+                <div class="col-md-4">
                     <img class="img img-responsive" src="/web/image/website.library_image_07" alt="Odoo - Sample 3 for three columns"/>
                     <h4 class="mt16">Feature Three</h4>
                     <p>
@@ -384,11 +384,11 @@
 <template id="s_company_team" name="Company Team">
     <section class="s_company_team">
         <div class="container">
-            <h1 class="text-center mb32">
+            <h1 class="text-center mb16">
                 Meet the Executive Team
             </h1>
             <div class="row">
-                <div class="col-md-6 mb32">
+                <div class="col-md-6 pt16 pb16">
                     <div class="row s_no_resize_cols">
                         <div class="col-md-4">
                             <img src="/web/image/website.s_company_team_image_1" class="img-responsive img-circle center-block shadow"/>
@@ -403,7 +403,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 mb32">
+                <div class="col-md-6 pt16 pb16">
                     <div class="row s_no_resize_cols">
                         <div class="col-md-4">
                             <img src="/web/image/website.s_company_team_image_2" class="img-responsive img-circle center-block shadow"/>
@@ -418,7 +418,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 mb32">
+                <div class="col-md-6 pt16 pb16">
                     <div class="row s_no_resize_cols">
                         <div class="col-md-4">
                             <img src="/web/image/website.s_company_team_image_3" class="img-responsive img-circle center-block shadow"/>
@@ -433,7 +433,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 mb32">
+                <div class="col-md-6 pt16 pb16">
                     <div class="row s_no_resize_cols">
                         <div class="col-md-4">
                             <img src="/web/image/website.s_company_team_image_4" class="img-responsive img-circle center-block shadow"/>
@@ -540,25 +540,25 @@
 </template>
 
 <template id="s_references" name="References">
-    <section class="s_references bg-gray-lighter">
+    <section class="s_references bg-gray-lighter pt16 pb16">
         <div class="container">
             <div class="row">
-                <div class="col-md-2 mt48">
-                  <h4 class="text-center mt16">Our References</h4>
+                <div class="col-md-2 mt32">
+                  <h4 class="text-center">Our References</h4>
                 </div>
-                <div class="col-md-2 col-sm-3 col-xs-6 mt16 mb16">
+                <div class="col-md-2 col-sm-3 col-xs-6">
                   <img src="/web/image/website.s_reference_demo_image_1" class="img img-responsive " alt="Demo Logo"/>
                 </div>
-                <div class="col-md-2 col-sm-3 col-xs-6 mt16 mb16">
+                <div class="col-md-2 col-sm-3 col-xs-6">
                   <img src="/web/image/website.s_reference_demo_image_2" class="img img-responsive " alt="Demo Logo"/>
                 </div>
-                <div class="col-md-2 col-sm-3 col-xs-6 mt16 mb16">
+                <div class="col-md-2 col-sm-3 col-xs-6">
                   <img src="/web/image/website.s_reference_demo_image_3" class="img img-responsive " alt="Demo Logo"/>
                 </div>
-                <div class="col-md-2 col-sm-3 col-xs-6 mt16 mb16">
+                <div class="col-md-2 col-sm-3 col-xs-6">
                   <img src="/web/image/website.s_reference_demo_image_4" class="img img-responsive " alt="Demo Logo"/>
                 </div>
-                <div class="col-md-2 col-sm-3 col-xs-6 mt16 mb16">
+                <div class="col-md-2 col-sm-3 col-xs-6">
                   <img src="/web/image/website.s_reference_demo_image_5" class="img img-responsive " alt="Demo Logo"/>
                 </div>
             </div>
@@ -567,14 +567,14 @@
 </template>
 
 <template id="s_feature_grid" name="Feature Grid">
-    <section class="s_feature_grid">
+    <section class="s_feature_grid pt16">
         <div class="container">
             <div class="row">
                 <div class="col-md-5 col-md-offset-1">
                     <div class="row">
-                        <div class="col-md-12 mt16 mb16">
+                        <div class="col-md-12 pb16">
                             <h3 class="mb0">List of Features</h3>
-                            <h5 class="text-muted mb16">Add a great slogan</h5>
+                            <h5 class="text-muted">Add a great slogan</h5>
                         </div>
                         <div class="col-md-12">
                             <span style="min-width: 45px" class="fa fa-2x fa-comment pull-left mb16"></span>
@@ -595,9 +595,9 @@
                 </div>
                 <div class="col-md-5">
                     <div class="row">
-                        <div class="col-md-12 mt16 mb16">
+                        <div class="col-md-12 pb16">
                             <h3 class="mb0">Second List</h3>
-                            <h5 class="text-muted mb16">Add a great slogan</h5>
+                            <h5 class="text-muted">Add a great slogan</h5>
                         </div>
                         <div class="col-md-12">
                             <span style="min-width: 45px" class="fa fa-2x fa-magic pull-left mb16"></span>
@@ -622,7 +622,7 @@
 </template>
 
 <template id="s_parallax" name="Parallax">
-    <section class="parallax s_parallax oe_img_bg"
+    <section class="parallax s_parallax oe_img_bg pt96 pb96"
         style="background-image: url(/web/image/website.s_background_image_04);"
         data-scroll-background-ratio="1.6"><div class="oe_structure"/></section>
 </template>
@@ -903,16 +903,14 @@
         <li data-remove-slide="true" data-no-preview="true"><a href="#" ><i class="fa fa-trash-o"/>Remove Slide</a></li>
     </div>
 
-    <div data-js='margin-y'
+    <div data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax"
+        data-drop-in=":not(p).oe_structure, :not(p)[data-oe-type=html]"/>
+
+    <div data-js="sizing_y"
         data-selector="section, .row:not(.s_no_resize_cols) > [class*='col-md-'], :not(.o_gallery > .container) > .carousel, .parallax, hr">
     </div>
 
-    <div data-js='resize'
-        data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax"
-        data-drop-in=":not(p).oe_structure, :not(p)[data-oe-type=html]">
-    </div>
-
-    <div data-js='margin-x'
+    <div data-js="sizing_x"
         data-selector=".row:not(.s_no_resize_cols) > [class*='col-md-']"
         data-drop-near=".row:not(.s_no_resize_cols) > [class*='col-md-']">
     </div>

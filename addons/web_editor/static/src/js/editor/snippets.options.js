@@ -355,7 +355,7 @@ var SnippetOption = Widget.extend({
  */
 var registry = {};
 
-registry.marginAndResize = SnippetOption.extend({
+registry.sizing = SnippetOption.extend({
     preventChildPropagation: true,
 
     /**
@@ -363,92 +363,64 @@ registry.marginAndResize = SnippetOption.extend({
      */
     start: function () {
         var self = this;
-        this._super();
+        var def = this._super.apply(this, arguments);
 
-        var resize_values = this._getSize();
-        if (resize_values.n) this.$overlay.find('.oe_handle.n').removeClass('readonly');
-        if (resize_values.s) this.$overlay.find('.oe_handle.s').removeClass('readonly');
-        if (resize_values.e) this.$overlay.find('.oe_handle.e').removeClass('readonly');
-        if (resize_values.w) this.$overlay.find('.oe_handle.w').removeClass('readonly');
-        if (resize_values.size) this.$overlay.find('.oe_handle.size').removeClass('readonly');
+        this.$handles = this.$overlay.find('.o_handle');
+        var resizeValues = this._getSize();
+        _.each(resizeValues, function (value, key) {
+            self.$handles.filter('.' + key).toggleClass('readonly', !value);
+        });
 
-        var $auto_size = this.$overlay.find('.oe_handle.size .auto_size');
-        var $fixed_size = this.$overlay.find('.oe_handle.size .size');
+        this.$handles.on('mousedown', function (ev) {
+            ev.preventDefault();
 
-        var auto_sized = isNaN(parseInt(self.$target.prop('style').height));
-        $fixed_size.toggleClass('active', !auto_sized);
-        $auto_size.toggleClass('active', auto_sized);
+            var $handle = $(ev.currentTarget);
 
-        $fixed_size.add(this.$overlay.find('.oe_handle:not(.size)')).on('mousedown', function (event) {
-            event.preventDefault();
-
-            var $handle = $(this);
-
-            var resize_values = self._getSize();
             var compass = false;
             var XY = false;
             if ($handle.hasClass('n')) {
                 compass = 'n';
                 XY = 'Y';
-            }
-            else if ($handle.hasClass('s')) {
+            } else if ($handle.hasClass('s')) {
                 compass = 's';
                 XY = 'Y';
-            }
-            else if ($handle.hasClass('e')) {
+            } else if ($handle.hasClass('e')) {
                 compass = 'e';
                 XY = 'X';
-            }
-            else if ($handle.hasClass('w')) {
+            } else if ($handle.hasClass('w')) {
                 compass = 'w';
                 XY = 'X';
             }
-            else if ($handle.hasClass('size')) {
-                compass = 'size';
-                XY = 'Y';
+
+            var resize = resizeValues[compass];
+            if (!resize) {
+                return;
             }
 
-            var resize = resize_values[compass];
-            if (!resize) return;
+            var current = 0;
+            var cssProperty = resize[2];
+            var cssPropertyValue = parseInt(self.$target.css(cssProperty));
+            _.each(resize[0], function (val, key) {
+                if (self.$target.hasClass(val)) {
+                    current = key;
+                } else if (resize[1][key] === cssPropertyValue) {
+                    current = key;
+                }
+            });
+            var begin = current;
+            var beginClass = self.$target.attr('class');
+            var regClass = new RegExp('\\s*' + resize[0][begin].replace(/[-]*[0-9]+/, '[-]*[0-9]+'), 'g');
 
-
-            if (compass === 'size') {
-                var offset = self.$target.offset().top;
-            } else {
-                var xy = event['page'+XY];
-                var current = resize[2] || 0;
-                var margin_dir = {s:'bottom', n: 'top', w: 'left', e: 'right'}[compass];
-                var real_margin = parseInt(self.$target.css('margin-'+margin_dir));
-                _.each(resize[0], function (val, key) {
-                    if (self.$target.hasClass(val)) {
-                        current = key;
-                    } else if (resize[1][key] === real_margin) {
-                        current = key;
-                    }
-                });
-                var begin = current;
-                var beginClass = self.$target.attr('class');
-                var regClass = new RegExp('\\s*' + resize[0][begin].replace(/[-]*[0-9]+/, '[-]*[0-9]+'), 'g');
-            }
-
-            var cursor = $handle.css('cursor')+'-important';
+            var cursor = $handle.css('cursor') + '-important';
             var $body = $(document.body);
             $body.addClass(cursor);
 
-            var body_mousemove = function (event) {
-                event.preventDefault();
-                if (compass === 'size') {
-                    var dy = event.pageY-offset;
-                    dy = dy - dy%resize;
-                    if (dy <= 0) dy = resize;
-                    self.$target.css('height', dy+'px');
-                    self.$target.css('overflow', 'hidden');
-                    self._onResize(compass, null, dy);
-                    self.trigger_up('cover_update');
-                    return;
-                }
-                var dd = event['page'+XY] - xy + resize[1][begin];
-                var next = current+1 === resize[1].length ? current : (current+1);
+            var xy = ev['page' + XY];
+            var body_mousemove = function (ev) {
+                ev.preventDefault();
+
+                var dd = ev['page' + XY] - xy + resize[1][begin];
+                var next = current + (current+1 === resize[1].length ? 0 : 1);
                 var prev = current ? (current-1) : 0;
 
                 var change = false;
@@ -468,56 +440,54 @@ registry.marginAndResize = SnippetOption.extend({
                 if (change) {
                     self._onResize(compass, beginClass, current);
                     self.trigger_up('cover_update');
-                    self._adaptMarginsPreviews();
-                    $handle.addClass('oe_handle_change');
+                    $handle.addClass('o_active');
                 }
             };
-
             var body_mouseup = function () {
-                $body.unbind('mousemove', body_mousemove);
-                $body.unbind('mouseup', body_mouseup);
+                $body.off('mousemove', body_mousemove);
+                $body.off('mouseup', body_mouseup);
                 $body.removeClass(cursor);
-                setTimeout(function () {
-                    if (begin !== current) {
-                        self.trigger_up('request_history_undo_record', {
-                            $target: self.$target,
-                            event: 'resize_' + XY,
-                        });
-                    }
-                },0);
-                $handle.removeClass('oe_handle_change');
+                $handle.removeClass('o_active');
 
-                if (compass === 'size') {
-                    $fixed_size.addClass('active');
-                    $auto_size.removeClass('active');
-                } else {
-                    self._highlightMarginsPreviews();
+                // Highlights the previews for a while
+                var $handlers = self.$overlay.find('.o_handle');
+                $handlers.addClass('o_active').delay(300).queue(function () {
+                    $handlers.removeClass('o_active').dequeue();
+                });
+
+                if (begin === current) {
+                    return;
                 }
+                setTimeout(function () {
+                    self.trigger_up('request_history_undo_record', {
+                        $target: self.$target,
+                        event: 'resize_' + XY,
+                    });
+                }, 0);
             };
-            $body.mousemove(body_mousemove);
-            $body.mouseup(body_mouseup);
+            $body.on('mousemove', body_mousemove);
+            $body.on('mouseup', body_mouseup);
         });
-        $auto_size.on('click', function () {
-            self.$target.css('height', '');
-            self.$target.css('overflow', '');
-            self.trigger_up('request_history_undo_record', {
-                $target: self.$target,
-                event: 'resize_Y',
-            });
-            self.trigger_up('cover_update');
 
-            $fixed_size.removeClass('active');
-            $auto_size.addClass('active');
-
-            return false;
-        });
+        return def;
     },
     /**
      * @override
      */
-    onFocus : function () {
-        this._updateCursor();
-        this._adaptMarginsPreviews();
+    onFocus: function () {
+        this._onResize();
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    setTarget: function () {
+        this._super.apply(this, arguments);
+        this._onResize();
     },
 
     //--------------------------------------------------------------------------
@@ -525,98 +495,72 @@ registry.marginAndResize = SnippetOption.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Adapts the margin handles to fit the left, top and bottom margins.
+     * Returns an object mapping one or several cardinal direction (n, e, s, w)
+     * to an Array containing:
+     * 1) A list of classes to toggle when using this cardinal direction
+     * 2) A list of values these classes are supposed to set on a given CSS prop
+     * 3) The mentioned CSS prop
      *
-     * @private
-     */
-    _adaptMarginsPreviews: function () {
-        var self = this;
-        var ml = this.$target.css('margin-left');
-        _.each(this.$overlay.find(".oe_handle.n, .oe_handle.s"), function (handle) {
-            var $handle = $(handle);
-            var direction = $handle.hasClass('n') ? 'top': 'bottom';
-            $handle.height(self.$target.css('margin-' + direction));
-        });
-        this.$overlay.find(".oe_handle.w").css({
-            width: ml,
-            left: '-' + ml,
-        });
-    },
-    /**
-     * Returns an object whose keys indicate the different editable dimensions.
+     * Note: this object must also be saved in this.grid before being returned.
      *
+     * @abstract
      * @private
      * @returns {Object}
      */
-    _getSize: function () {
-        this.grid = {};
-        return this.grid;
-    },
-    /**
-     * Highlights the margins previews for a while.
-     *
-     * @private
-     */
-    _highlightMarginsPreviews: function () {
-        var $handlers = this.$overlay.find(".oe_handle.n, .oe_handle.s, .oe_handle.w");
-        $handlers.addClass('oe_handle_active').delay(300).queue(function () {
-            $handlers.removeClass('oe_handle_active').dequeue();
-        });
-    },
+    _getSize: function () {},
     /**
      * Called when the snippet is being resized and its classes changes.
      *
      * @private
-     * @param {string} compass - resize direction ('n', 's', 'e' or 'w')
-     * @param {?} beginClass - attributes class at the beginning
-     * @param {?} current - curent increment in this.grid
+     * @param {string} [compass] - resize direction ('n', 's', 'e' or 'w')
+     * @param {string} [beginClass] - attributes class at the beginning
+     * @param {integer} [current] - current increment in this.grid
      */
     _onResize: function (compass, beginClass, current) {
-        this._updateCursor();
-    },
-    /**
-     * Adapts the resize handles according to the classes and dimensions.
-     *
-     * @private
-     */
-    _updateCursor : function () {
-        var _class = this.$target.attr('class') || '';
-        var $handle_s = this.$overlay.find('.oe_handle.s');
-        var $handle_n = this.$overlay.find('.oe_handle.n');
-        var $handle_w = this.$overlay.find('.oe_handle.w');
+        var self = this;
 
-        var col = _class.match(/col-md-([0-9-]+)/i);
-        col = col ? +col[1] : 0;
+        // Adapt the resize handles according to the classes and dimensions
+        var resizeValues = this._getSize();
+        var $handles = this.$overlay.find('.o_handle');
+        _.each(resizeValues, function (resizeValue, direction) {
+            var classes = resizeValue[0];
+            var values = resizeValue[1];
+            var cssProperty = resizeValue[2];
 
-        var offset = _class.match(/col-md-offset-([0-9-]+)/i);
-        offset = offset ? +offset[1] : 0;
+            var $handle = $handles.filter('.' + direction);
 
-        var overlay_class = this.$overlay.attr('class').replace(/(^|\s+)block-[^\s]*/gi, '');
-        if (col+offset >= 12) overlay_class+= ' block-e-right';
-        if (col === 1) overlay_class+= ' block-w-right block-e-left';
-        if (offset === 0) overlay_class+= ' block-w-left';
-        $handle_w.toggleClass('oe_handle_centered', offset > 0).toggleClass('o_handle_edited', offset >= 1 );
+            var current = 0;
+            var cssPropertyValue = parseInt(self.$target.css(cssProperty));
+            _.each(classes, function (className, key) {
+                if (self.$target.hasClass(className)) {
+                    current = key;
+                } else if (values[key] === cssPropertyValue) {
+                    current = key;
+                }
+            });
 
-        var mb = _class.match(/mb([0-9-]+)/i);
-        mb = mb ? +mb[1] : parseInt(this.$target.css('margin-bottom'));
-        if (mb >= 128) overlay_class+= ' block-s-bottom';
-        else if (!mb) overlay_class+= ' block-s-top';
-        $handle_s.toggleClass('oe_handle_centered', mb >= 32).toggleClass('o_handle_edited', mb > 0 );
+            $handle.toggleClass('o_handle_start', current === 0);
+            $handle.toggleClass('o_handle_end', current === classes.length - 1);
+        });
 
-        var mt = _class.match(/mt([0-9-]+)/i);
-        mt = mt ? +mt[1] : parseInt(this.$target.css('margin-top'));
-        if (mt >= 128) overlay_class+= ' block-n-top';
-        else if (!mt) overlay_class+= ' block-n-bottom';
-        $handle_n.toggleClass('oe_handle_centered', mt >= 32).toggleClass('o_handle_edited', mt > 0 );
-
-        this.$overlay.attr('class', overlay_class);
+        // Adapt the handles to fit the left, top and bottom sizes
+        var ml = this.$target.css('margin-left');
+        this.$overlay.find('.o_handle.w').css({
+            width: ml,
+            left: '-' + ml,
+        });
+        _.each(this.$overlay.find(".o_handle.n, .o_handle.s"), function (handle) {
+            var $handle = $(handle);
+            var direction = $handle.hasClass('n') ? 'top': 'bottom';
+            $handle.height(self.$target.css('padding-' + direction));
+        });
     },
 });
 
 /**
- * Handles the edition of margin-top and margin-bottom.
+ * Handles the edition of padding-top and padding-bottom.
  */
-registry['margin-y'] = registry.marginAndResize.extend({
+registry.sizing_y = registry.sizing.extend({
 
     //--------------------------------------------------------------------------
     // Private
@@ -626,34 +570,26 @@ registry['margin-y'] = registry.marginAndResize.extend({
      * @override
      */
     _getSize: function () {
-        this.grid = this._super();
-        var grid = [0,4,8,16,32,48,64,92,128];
+        var nClass = 'pt';
+        var nProp = 'padding-top';
+        var sClass = 'pb';
+        var sProp = 'padding-bottom';
+        if (this.$target.is('hr')) {
+            nClass = 'mt';
+            nProp = 'margin-top';
+            sClass = 'mb';
+            sProp = 'margin-bottom';
+        }
+
+        var grid = [];
+        for (var i = 0 ; i <= 256/8 ; i++) {
+            grid.push(i * 8);
+        }
+        grid.splice(1, 0, 4);
         this.grid = {
-            // list of class (Array), grid (Array), default value (INT)
-            n: [_.map(grid, function (v) {return 'mt'+v;}), grid],
-            s: [_.map(grid, function (v) {return 'mb'+v;}), grid],
-            // INT if the user can resize the snippet (resizing per INT px)
-            size: null
+            n: [_.map(grid, function (v) { return nClass + v; }), grid, nProp],
+            s: [_.map(grid, function (v) { return sClass + v; }), grid, sProp],
         };
-        return this.grid;
-    },
-});
-
-/**
- * Handles the edition of snippet's height.
- */
-registry.resize = registry.marginAndResize.extend({
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _getSize: function () {
-        this.grid = this._super();
-        this.grid.size = 8;
         return this.grid;
     },
 });

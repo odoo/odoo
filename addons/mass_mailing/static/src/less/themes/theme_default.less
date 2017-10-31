@@ -322,31 +322,11 @@
     }
 }
 
-// ===== Margins on td (replaced by paddings) =====
-.o-paddings-all(@factor: 1) {
-    .o-paddings(128, @factor);
-    .o-paddings(96, @factor);
-    .o-paddings(92, @factor);
-    .o-paddings(64, @factor);
-    .o-paddings(48, @factor);
-    .o-paddings(32, @factor);
-    .o-paddings(24, @factor);
-    .o-paddings(16, @factor);
-    .o-paddings(8, @factor);
-    .o-paddings(4, @factor);
-    .o-paddings(0, @factor);
+// Compatibility: mb/mt classes on <td/> elements were interpreted as paddings
+// instead of margins before the introduction of pb/pt classes. As thoses mb/mt
+// classes may remain on clients' templates, <td/> are forced to 0 margin to
+// be sure (normally <td/> should not consider margin properties but some mail
+// clients might make the mistake to do so).
+td[class*="mb"], td[class*="mt"] {
+    margin: 0!important;
 }
-.o-paddings(@name, @factor: 1) {
-    .o-paddings-define(@name, @factor * @name);
-}
-.o-paddings-define(@name, @size: @name) {
-    td.mt@{name} {
-        margin-top: auto!important;
-        padding-top: ~"@{size}px"!important;
-    }
-    td.mb@{name} {
-        margin-bottom: auto!important;
-        padding-bottom: ~"@{size}px"!important;
-    }
-}
-.o-paddings-all();

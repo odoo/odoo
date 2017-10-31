@@ -431,6 +431,23 @@ registry.slider = Animation.extend({
      * @override
      */
     start: function () {
+        if (!this.editableMode) {
+            var maxHeight = 0;
+            var $items = this.$('.item');
+            _.each($items, function (el) {
+                var $item = $(el);
+                var isActive =  $item.hasClass('active');
+                $item.addClass('active');
+                var height = $item.outerHeight();
+                if (height > maxHeight) {
+                    maxHeight = height;
+                }
+                $item.toggleClass('active', isActive);
+            });
+            _.each($items, function (el) {
+                $(el).css('min-height', maxHeight);
+            });
+        }
         this.$target.carousel();
         return this._super.apply(this, arguments);
     },
@@ -441,6 +458,9 @@ registry.slider = Animation.extend({
         this._super.apply(this, arguments);
         this.$target.carousel('pause');
         this.$target.removeData('bs.carousel');
+        _.each(this.$('.item'), function (el) {
+            $(el).css('min-height', '');
+        });
     },
 });
 

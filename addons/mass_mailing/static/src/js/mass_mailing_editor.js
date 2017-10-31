@@ -12,32 +12,35 @@ var $editable_area = $('#editable_area');
 var odoo_top = window.top.odoo;
 
 // Snippet option for resizing  image and column width inline like excel
-options.registry["width-x"] = options.Class.extend({
+options.registry.sizing_x = options.Class.extend({
+    /**
+     * @override
+     */
     start: function () {
-        this.container_width = this.$target.parent().closest("td, table, div").width();
+        var def = this._super.apply(this, arguments);
+
+        this.containerWidth = this.$target.parent().closest("td, table, div").width();
 
         var self = this;
         var offset, sib_offset, target_width, sib_width;
-        var $body = $(document.body);
-        this.is_image = false;
-        this._super.apply(this, arguments);
 
-        this.$overlay.find(".oe_handle.e, .oe_handle.w").removeClass("readonly");
-        if (this.$target.is("img")) {
-            this.$overlay.find(".oe_handle.w").addClass("readonly");
+        this.$overlay.find(".o_handle.e, .o_handle.w").removeClass("readonly");
+        this.isIMG = this.$target.is("img");
+        if (this.isIMG) {
+            this.$overlay.find(".o_handle.w").addClass("readonly");
             this.$overlay.find(".oe_snippet_move, .oe_snippet_clone").addClass("hidden");
-            this.is_image=true;
         }
 
-        this.$overlay.find(".oe_handle").on('mousedown', function (event) {
+        var $body = $(document.body);
+        this.$overlay.find(".o_handle").on('mousedown', function (event) {
             event.preventDefault();
             var $handle = $(this);
             var compass = false;
 
-            _.each(['n', 's', 'e', 'w' ], function (handler) {
+            _.each(['n', 's', 'e', 'w'], function (handler) {
                 if ($handle.hasClass(handler)) { compass = handler; }
             });
-            if (self.is_image) { compass = "image"; }
+            if (self.isIMG) { compass = "image"; }
 
             $body.on("mousemove.mass_mailing_width_x", function (event) {
                 event.preventDefault();
@@ -59,11 +62,12 @@ options.registry["width-x"] = options.Class.extend({
                     self.change_width(event, self.$target, target_width, offset, true);
                 }
             });
-
-            $body.one("mouseup", function(){
+            $body.one("mouseup", function () {
                 $body.off('.mass_mailing_width_x');
             });
         });
+
+        return def;
     },
     change_width: function (event, target, target_width, offset, grow) {
         target.css("width", grow ? (event.pageX - offset) : (offset + target_width - event.pageX));
@@ -73,13 +77,13 @@ options.registry["width-x"] = options.Class.extend({
         return parseInt($(el).css("width"), 10);
     },
     get_max_width: function ($el) {
-        return this.container_width - _.reduce(_.map($el.siblings(), this.get_int_width), function (memo, w) { return memo + w; });
+        return this.containerWidth - _.reduce(_.map($el.siblings(), this.get_int_width), function (memo, w) { return memo + w; });
     },
     onFocus: function () {
         this._super.apply(this, arguments);
 
         if (this.$target.is("td, th")) {
-            this.$overlay.find(".oe_handle.e, .oe_handle.w").toggleClass("readonly", this.$target.siblings().length === 0);
+            this.$overlay.find(".o_handle.e, .o_handle.w").toggleClass("readonly", this.$target.siblings().length === 0);
         }
     },
 });
@@ -407,7 +411,7 @@ if ($editable_area.html().indexOf('on_change_model_and_list') !== -1) {
 // Adding compatibility for the outlook compliance of mailings.
 // Commit of such compatibility : a14f89c8663c9cafecb1cc26918055e023ecbe42
 options.registry.background.include({
-    start: function() {
+    start: function () {
         this._super();
         var $table_target = this.$target.find('table:first');
         if ($table_target) {
