@@ -864,7 +864,7 @@
         </table>
         <div class="js_cart_lines row">
             <t t-call="website_sale.total">
-                <t t-set='extra_class' t-value='"col-md-5 col-md-offset-7 col-xs-8 col-xs-offset-4"'/>
+                <t t-set='extra_class' t-value='"col-md-4 col-md-offset-8 col-sm-4 col-sm-offset-8 col-xs-8 col-xs-offset-4"'/>
             </t>
         </div>
     </template>
@@ -1303,19 +1303,20 @@
                                 </table>
                             </div>
                             <div class="col-md-12">
-                                <div class="col-lg-5 col-sm-6 col-xs-12 text-muted" id="coupon_box">
-                                    <t t-if="request.env.ref('website_sale.reduction_code').active">
-                                        <p>
-                                          Have a promo code? Fill in this field and apply.
-                                        </p>
-                                        <t t-call='website_sale.coupon_form'>
-                                            <t t-set='redirect'>/shop/payment</t>
-                                        </t>
-                                    </t>
-                                </div>
                                 <t t-call="website_sale.total">
                                     <t t-set='extra_class' t-value='"col-md-4 col-md-offset-8 col-sm-4 col-sm-offset-8 col-xs-8 col-xs-offset-4"'/>
                                 </t>
+                                <div class="col-md-offset-6 col-md-6 coupon_box">
+                                     <t t-if="request.env.ref('website_sale.reduction_code').active">
+                                         <h4>Promo Code</h4>
+                                         <p>
+                                           Have a promo code? Fill in this field and apply.
+                                         </p>
+                                         <t t-call='website_sale.coupon_form'>
+                                             <t t-set='redirect'>/shop/payment</t>
+                                         </t>
+                                     </t>
+                                 </div>
                             </div>
                             <div class="clearfix" />
                             <div class="oe_structure" />
@@ -1530,7 +1531,7 @@
 
     <template id="reduction_code" inherit_id="website_sale.total" active="False" customize_show="True" name="Promo Code">
         <xpath expr="//div[@id='cart_total']" position="after">
-            <div class='col-md-offset-6 col-md-6'>
+            <div class='col-md-offset-6 col-md-6 coupon_box'>
                 <h4>Promo Code</h4>
                 <p>
                   Have a promo code? Fill in this field and apply.
