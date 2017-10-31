@@ -543,7 +543,7 @@ class ProductProduct(models.Model):
         history = self.env['product.price.history'].search([
             ('company_id', '=', company_id),
             ('product_id', 'in', self.ids),
-            ('datetime', '<=', date or fields.Datetime.now())], limit=1)
+            ('datetime', '<=', date or fields.Datetime.now())], order='datetime desc,id desc', limit=1)
         return history.cost or 0.0
 
     def _need_procurement(self):

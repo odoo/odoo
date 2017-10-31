@@ -245,12 +245,13 @@ class Website(models.Model):
         :param bool show_visible: if True, we don't display pricelist where selectable is False (Eg: Code promo)
         :returns: pricelist recordset
         """
-        website = request and request.website or None
+        website = request and hasattr(request, 'website') and request.website or None
         if not website:
             if self.env.context.get('website_id'):
                 website = self.browse(self.env.context['website_id'])
             else:
-                website = self.search([], limit=1)
+                # In the weird case we are coming from the backend (https://github.com/odoo/odoo/issues/20245)
+                website = len(self) == 1 and self or self.search([], limit=1)
         isocountry = request and request.session.geoip and request.session.geoip.get('country_code') or False
         partner = self.env.user.partner_id
         order_pl = partner.last_website_so_id and partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
