@@ -28,26 +28,33 @@ class ResCompany(models.Model):
     def write(self, vals):
         res = super(ResCompany, self).write(vals)
         #if country changed to fr, create the securisation sequence
-        if self._is_accounting_unalterable():
-            self.filtered(lambda c: not c.l10n_fr_secure_sequence_id)._create_secure_sequence()
+        for company in self:
+            if company._is_accounting_unalterable():
+                sequence_fields = ['l10n_fr_secure_sequence_id', 'l10n_fr_closure_sequence_id']
+                company._create_secure_sequence(sequence_fields)
         return res
 
-    def _create_secure_sequence(self):
+    def _create_secure_sequence(self, sequence_fields):
         """This function creates a no_gap sequence on each companies in self that will ensure
         a unique number is given to all posted account.move in such a way that we can always
         find the previous move of a journal entry.
         """
         for company in self:
-            vals = {
-                'name': 'French Securisation of account_move_line - ' + company.name,
-                'code': 'FRSECUR',
-                'implementation': 'no_gap',
-                'prefix': '',
-                'suffix': '',
-                'padding': 0,
-                'company_id': company.id}
-            seq = self.env['ir.sequence'].create(vals)
-            company.write({'l10n_fr_secure_sequence_id': seq.id})
+            vals_write = {}
+            for seq_field in sequence_fields:
+                if not company[seq_field]:
+                    vals = {
+                        'name': 'French Securisation of ' + seq_field + ' - ' + company.name,
+                        'code': 'FRSECUR',
+                        'implementation': 'no_gap',
+                        'prefix': '',
+                        'suffix': '',
+                        'padding': 0,
+                        'company_id': company.id}
+                    seq = self.env['ir.sequence'].create(vals)
+                    vals_write[seq_field] = seq.id
+            if vals_write:
+                company.write(vals_write)
 
     def _is_vat_french(self):
         return self.vat and self.vat.startswith('FR') and len(self.vat) == 13
