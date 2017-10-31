@@ -34,11 +34,10 @@ class SaleOrder(models.Model):
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
 
     @api.multi
-    def action_confirm(self):
-        result = super(SaleOrder, self).action_confirm()
+    def _action_confirm(self):
+        super(SaleOrder, self)._action_confirm()
         for order in self:
             order.order_line._action_launch_procurement_rule()
-        return result
 
     @api.depends('picking_ids')
     def _compute_picking_ids(self):

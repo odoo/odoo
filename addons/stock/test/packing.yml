@@ -118,10 +118,13 @@
     for rec in self.move_line_ids:
       if rec.package_id.name == 'Pallet 1':
         rec.qty_done = 120
+        rec.result_package_id = False
       if rec.package_id.name == 'Pallet 2':
         rec.qty_done = 20
+        rec.result_package_id = False
       if rec.package_id.name == 'Pallet 3':
         rec.qty_done = 10
+        rec.result_package_id = False
 -
   Process this picking
 - 

@@ -26,7 +26,7 @@ class ResConfigSettings(models.TransientModel):
     group_manage_vendor_price = fields.Boolean("Vendor Pricelists",
         implied_group="purchase.group_manage_vendor_price")
     module_account_3way_match = fields.Boolean("3-way matching: purchases, receptions and bills")
-    is_installed_sale = fields.Boolean()
+    is_installed_sale = fields.Boolean(string="Is the Sale Module Installed")
     group_analytic_account_for_purchases = fields.Boolean('Analytic accounting for purchases',
         implied_group='purchase.group_analytic_accounting')
 

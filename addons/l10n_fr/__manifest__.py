@@ -45,4 +45,5 @@ configuration of their taxes and fiscal positions manually.
         'data/account_reconcile_model_template.xml',
         'data/account_chart_template_data.yml',
     ],
+    'post_init_hook': '_preserve_tag_on_taxes',
 }
