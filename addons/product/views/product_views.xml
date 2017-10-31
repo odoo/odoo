@@ -81,7 +81,7 @@
                         </page>
                         <page string="Purchase" name="purchase" attrs="{'invisible': [('purchase_ok','=',False)]}">
                             <group name="purchase">
-                                <group string="Purchase Bills" name="bill"/>
+                                <group string="Vendor Bills" name="bill"/>
                             </group>
                         </page>
                         <page string="Inventory" name="inventory" groups="stock.group_stock_user,product.group_stock_packaging" attrs="{'invisible':[('type', '=', 'service')]}">
