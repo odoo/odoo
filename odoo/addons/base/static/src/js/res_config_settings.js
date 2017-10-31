@@ -132,6 +132,22 @@ var BaseSettingRenderer = FormRenderer.extend({
         return index;
     },
     /**
+     * Enables swipe navigation between settings pages
+     *
+     * @private
+     */
+    _enableSwipe: function () {
+        var self = this;
+        this.$('.settings').swipe({
+            swipeLeft: function () {
+                self._moveToTab(self.currentIndex + 1);
+            },
+            swipeRight: function () {
+                self._moveToTab(self.currentIndex - 1);
+            }
+        });
+    },
+    /**
      *
      * @private
      * @param {string} module
@@ -245,6 +261,9 @@ var BaseSettingRenderer = FormRenderer.extend({
         }
         this._renderLeftPanel();
         this._initSearch();
+        if (config.device.isMobile) {
+            this._enableSwipe();
+        }
         return res;
     },
 
@@ -328,10 +347,24 @@ var BaseSettingController = FormController.extend({
 });
 
 var BaseSettingView = FormView.extend({
+    jsLibs: [],
+
     config: _.extend({}, FormView.prototype.config, {
         Renderer: BaseSettingRenderer,
         Controller: BaseSettingController,
     }),
+
+    /**
+     * Overrides to lazy-load touchSwipe library in mobile.
+     *
+     * @override
+    */
+    init: function () {
+        if (config.device.isMobile) {
+            this.jsLibs.push('/web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js');
+        }
+        this._super.apply(this, arguments);
+    },
 });
 
 view_registry.add('base_settings', BaseSettingView);
