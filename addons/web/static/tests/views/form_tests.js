@@ -6227,6 +6227,28 @@ QUnit.module('Views', {
         delete widgetRegistry.map.test;
     });
 
+    QUnit.test('support header button as widgets on form statusbar', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<header>' +
+                        '<widget name="attach_document" string="Attach document"/>' +
+                    '</header>' +
+                '</form>',
+        });
+
+        assert.strictEqual(form.$('button.o_attachment_button').length, 1,
+            "should have 1 attach_document widget in the statusbar");
+        assert.strictEqual(form.$('span.o_attach_document').text().trim(), 'Attach document',
+            "widget should have been instantiated");
+
+        form.destroy();
+    });
+
     QUnit.test('bounce edit button in readonly mode', function (assert) {
         assert.expect(3);
 
