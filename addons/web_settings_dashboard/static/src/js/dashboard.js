@@ -66,49 +66,70 @@ var Dashboard = Widget.extend({
 var DashboardInvitations = Widget.extend({
     template: 'DashboardInvitations',
     events: {
-        'click .o_web_settings_dashboard_invitations': 'send_invitations',
+        'click .o_web_settings_dashboard_invite': '_onClickInvite',
         'click .o_web_settings_dashboard_access_rights': 'on_access_rights_clicked',
         'click .o_web_settings_dashboard_user': 'on_user_clicked',
         'click .o_web_settings_dashboard_more': 'on_more',
+        'click .o_badge_remove': '_onClickBadgeRemove',
+        'keydown textarea#user_emails': '_onKeydownUserEmails',
     },
     init: function(parent, data){
         this.data = data;
         this.parent = parent;
+        this.emails = [];
         return this._super.apply(this, arguments);
     },
-    send_invitations: function(e){
-        var self = this;
-        var $target = $(e.currentTarget);
-        var user_emails =  _.filter($(e.delegateTarget).find('#user_emails').val().split(/[\n, ]/), function(email){
-            return email !== "";
-        });
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Create badges for valid and unique emails
+     *
+     * @private
+     */
+    _createBadges: function () {
+        var $userEmails = this.$('#user_emails');
+        var value = $userEmails.val().trim();
+        if (value) {
+            var emails = _.uniq(value.split(/[ ,\n]+/));
+            if (this._validateEmails(emails)) {
+                // Check emails already exist in invite and pending
+                var pendingEmails = _.map(this.data.pending_users, function (email) { return email[1]; });
+                if (_.difference(emails, this.emails.concat(pendingEmails)).length == emails.length) {
+                    this.emails = this.emails.concat(emails);
+                    $userEmails.before(QWeb.render('EmailBadge', {'emails': emails}));
+                    $userEmails.val('');
+                } else {
+                    this.do_warn(_t('Email address already exist'), '');
+                }
+            } else {
+                this.do_warn(_t('Please provide valid email address'), '');
+            }
+        }
+    },
+    /**
+     * Remove badge
+     *
+     * @private
+     * @param {jQueryElement} $badge
+     */
+    _removeBadge: function ($badge) {
+        var email = $badge.text().trim();
+        this.emails = _.without(this.emails, email);
+        $badge.remove();
+    },
+    /**
+     * @private
+     * @param {string[]} emails
+     * @returns {boolean} emails are valid or not
+     */
+    _validateEmails: function (emails) {
         var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,63}(?:\.[a-z]{2})?)$/i;
-        var is_valid_emails = _.every(user_emails, function(email) {
+        return _.every(emails, function (email) {
             return re.test(email);
         });
-        if (is_valid_emails) {
-            // Disable button
-            $target.prop('disabled', true);
-            $target.find('i.fa-cog').removeClass('hidden');
-            // Try to create user accountst
-            this._rpc({
-                    model: 'res.users',
-                    method: 'web_dashboard_create_users',
-                    args: [user_emails],
-                })
-                .then(function() {
-                    self.reload();
-                })
-                .always(function() {
-                    // Re-enable button
-                    $(e.delegateTarget).find('.o_web_settings_dashboard_invitations').prop('disabled', false);
-                    $(e.delegateTarget).find('i.fa-cog').addClass('hidden');
-                });
-
-        }
-        else {
-            this.do_warn(_t("Please provide valid email addresses"), "");
-        }
     },
     on_access_rights_clicked: function (e) {
         var self = this;
@@ -137,11 +158,13 @@ var DashboardInvitations = Widget.extend({
         var self = this;
         e.preventDefault();
         var action = {
+            name: _t('Users'),
             type: 'ir.actions.act_window',
             view_type: 'form',
             view_mode: 'tree,form',
             res_model: 'res.users',
             domain: [['log_ids', '=', false]],
+            context: {'search_default_no_share': true},
             views: [[false, 'list'], [false, 'form']],
         };
         this.do_action(action,{
@@ -150,6 +173,58 @@ var DashboardInvitations = Widget.extend({
     },
     reload:function(){
         return this.parent.load(['invitations']);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onClickBadgeRemove: function (event) {
+        var $badge = this.$(event.target).closest('.badge');
+        this._removeBadge($badge);
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onClickInvite: function (event) {
+        var self = this;
+        this._createBadges();
+        if (this.emails.length) {
+            var $button = this.$(event.target);
+            $button.button('loading');
+            this._rpc({
+                model: 'res.users',
+                method: 'web_dashboard_create_users',
+                args: [this.emails],
+            })
+            .then(function () {
+                self.reload();
+            })
+            .fail(function () {
+                $button.button('reset');
+            });
+        }
+    },
+    /**
+     * @private
+     * @param {KeyboardEvent} event
+     */
+     _onKeydownUserEmails: function (event) {
+        var $userEmails = this.$(event.target);
+        var keyCodes = [$.ui.keyCode.TAB, $.ui.keyCode.COMMA, $.ui.keyCode.ENTER, $.ui.keyCode.SPACE];
+        if (_.contains(keyCodes, event.keyCode)) {
+            event.preventDefault();
+            this._createBadges();
+        }
+        // Remove Emails on backspace
+        if (event.keyCode === $.ui.keyCode.BACKSPACE && this.emails.length && !$userEmails.val()) {
+            this._removeBadge($userEmails.prev('.badge'));
+        }
     },
 });
 
