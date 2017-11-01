@@ -229,17 +229,10 @@ ChatAction.include({
     _updateControlPanel: function () {
         this.$buttons.appendTo(this.$('.o_mail_chat_mobile_control_panel'));
         this.searchview.$el.appendTo(this.$('.o_mail_chat_mobile_control_panel'));
-
-        if (_.last(session.server_version_info) === 'e') {
-            var SystrayMenu = this.action_manager.webclient.menu.systray_menu;
-            SystrayMenu.$('.o_mobile_search_systray').removeClass('o_hidden');
-            this.searchview.do_show();
-        } else {
-            var $enable_searchview = $('<button/>', {type: 'button'})
+        var $enable_searchview = $('<button/>', {type: 'button'})
                 .addClass('o_enable_searchview btn fa fa-search')
                 .on('click', this._toggleSearchView.bind(this));
             $enable_searchview.insertAfter(this.searchview.$el);
-        }
     },
 
     //--------------------------------------------------------------------------
