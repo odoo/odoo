@@ -370,6 +370,9 @@ var FormRenderer = BasicRenderer.extend({
             if (child.tag === 'button') {
                 $buttons.append(self._renderHeaderButton(child));
             }
+            if (child.tag === 'widget') {
+                $buttons.append(self._renderTagWidget(child));
+            }
         });
         return $buttons;
     },

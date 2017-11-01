@@ -594,7 +594,7 @@ var BasicRenderer = AbstractRenderer.extend({
      */
     _renderWidget: function (record, node) {
         var Widget = widgetRegistry.get(node.attrs.name);
-        var widget = new Widget(this, record);
+        var widget = new Widget(this, record, node);
 
         // Prepare widget rendering and save the related deferred
         var def = widget._widgetRenderAndInsert(function () {});
