@@ -94,7 +94,7 @@ tour.STEPS.MENU_MORE, {
     content: _t("Configuration options are available in the Settings app."),
     position: "bottom"
 }, {
-    trigger: ".o_web_settings_dashboard textarea#user_emails",
+    trigger: ".o_web_settings_dashboard .o_user_emails",
     content: _t("<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"),
     position: "right"
 }, tour.STEPS.TOGGLE_HOME_MENU,
