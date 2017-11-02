@@ -35,6 +35,7 @@ class ResConfigSettings(models.TransientModel):
             help="Allows to work in a multi currency environment")
     paperformat_id = fields.Many2one(related="company_id.paperformat_id", string='Paper format')
     external_report_layout = fields.Selection(related="company_id.external_report_layout")
+    rainbow_gamification = fields.Boolean('Rainbow Gamification')
 
     @api.model
     def get_values(self):
@@ -48,6 +49,7 @@ class ResConfigSettings(models.TransientModel):
             default_user_rights=default_user_rights,
             default_custom_report_footer=default_custom_report_footer,
             company_share_partner=not self.env.ref('base.res_partner_rule').active,
+            rainbow_gamification=params.get_param('base_setup.rainbow_gamification'),
         )
         return res
 
@@ -57,6 +59,7 @@ class ResConfigSettings(models.TransientModel):
         self.env['ir.config_parameter'].sudo().set_param("base_setup.default_external_email_server", self.default_external_email_server)
         self.env['ir.config_parameter'].sudo().set_param("base_setup.default_user_rights", self.default_user_rights)
         self.env['ir.config_parameter'].sudo().set_param("base_setup.default_custom_report_footer", self.default_custom_report_footer)
+        self.env['ir.config_parameter'].sudo().set_param("base_setup.rainbow_gamification", self.rainbow_gamification)
         self.env.ref('base.res_partner_rule').write({'active': not self.company_share_partner})
 
     @api.multi

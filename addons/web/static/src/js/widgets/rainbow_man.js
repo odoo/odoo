@@ -38,6 +38,9 @@ var RainbowMan = Widget.extend({
      */
     init: function (options) {
         this._super.apply(this, arguments);
+        if (odoo.session_info && !odoo.session_info.enable_rainbow) {
+            this.template = false;
+        }
         var rainbowDelay = {slow: 4500, medium: 3500, fast:2000, no: false };
         this.options = _.defaults(options || {}, {
             fadeout: 'medium',

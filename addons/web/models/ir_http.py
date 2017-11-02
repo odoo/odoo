@@ -38,6 +38,7 @@ class Http(models.AbstractModel):
             "user_companies": {'current_company': (user.company_id.id, user.company_id.name), 'allowed_companies': [(comp.id, comp.name) for comp in user.company_ids]} if display_switch_company_menu else False,
             "currencies": self.get_currencies(),
             "web.base.url": self.env['ir.config_parameter'].sudo().get_param('web.base.url', default=''),
+            "enable_rainbow": self.env['ir.config_parameter'].sudo().get_param('base_setup.rainbow_gamification'),
         }
 
     def get_currencies(self):
