@@ -188,14 +188,14 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         }
         var options = args.length === 2 ? {} : args[1];
         var steps = last_arg instanceof Array ? last_arg : [last_arg];
-        var tour = {
+        var tour = _.extend({
             name: name,
             steps: steps,
             url: options.url,
-            rainbowMan: options.rainbowMan || true,
+            rainbowMan: true,
             test: options.test,
-            wait_for: options.wait_for || $.when(),
-        };
+            wait_for: $.when()
+        }, options);
         if (options.skip_enabled) {
             tour.skip_link = '<p><span class="o_skip_tour">' + _t('Skip tour') + '</span></p>';
             tour.skip_handler = function (tip) {
@@ -400,7 +400,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     _consume_tour: function (tour_name, error) {
         delete this.active_tooltips[tour_name];
         //display rainbow at the end of any tour
-        if (this.rainbowMan && this.tours[tour_name].current_step === this.tours[tour_name].steps.length){
+        if (this.tours[tour_name].rainbowMan && this.tours[tour_name].current_step === this.tours[tour_name].steps.length) {
             var $rainbow_message = $('<strong>' +
                                 '<b>Good job!</b>' +
                                 ' You went through all steps of this tour.' +
