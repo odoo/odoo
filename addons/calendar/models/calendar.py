@@ -493,7 +493,7 @@ class MeetingType(models.Model):
     _name = 'calendar.event.type'
     _description = 'Meeting Type'
 
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', translate=True, required=True)
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag name already exists !"),
@@ -680,7 +680,7 @@ class Meeting(models.Model):
                 return round(duration, 2)
             return 0.0
 
-    name = fields.Char('Meeting Subject', required=True, states={'done': [('readonly', True)]})
+    name = fields.Char('Meeting Subject', required=True, translate=True, states={'done': [('readonly', True)]})
     state = fields.Selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', readonly=True, track_visibility='onchange', default='draft')
 
     is_attendee = fields.Boolean('Attendee', compute='_compute_attendee')
