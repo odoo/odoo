@@ -1,10 +1,13 @@
+from datetime import datetime, timedelta
+import calendar
+
 from openerp import models, api, fields
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
-from datetime import datetime, timedelta, date
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 WRITE_MSG = _('Closures of receivable accounts are not meant to be written or deleted under any circumstances.')
+
 
 class AccountClosure(models.Model):
     _name = 'account.sale.closure'
@@ -22,11 +25,12 @@ class AccountClosure(models.Model):
 
     def _build_query(self, company, date_start='', date_stop='', avoid_move_ids=[]):
         params = {'company_id': company.id}
-        query = '''SELECT m.write_date AS move_write_date, m.id AS move_id, debit-credit AS balance FROM account_move_line aml
+        query = '''SELECT m.write_date AS move_write_date, m.id AS move_id, debit-credit AS balance
+            FROM account_move_line aml
             JOIN account_journal j ON aml.journal_id = j.id
-            JOIN  (SELECT acc.id FROM account_account acc 
+            JOIN  (SELECT acc.id FROM account_account acc
                         JOIN account_account_type t ON t.id = acc.user_type_id
-                        WHERE t.type = 'receivable') AS a 
+                        WHERE t.type = 'receivable') AS a
                   ON a.id = aml.account_id
             JOIN account_move m ON m.id = aml.move_id
             WHERE j.type = 'sale'
@@ -54,64 +58,64 @@ class AccountClosure(models.Model):
             ('frequency', '=', frequency),
             ('company_id', '=', company.id)], limit=1, order='sequence_number desc')
 
+        date_query_start = ''
+        previous_move_ids = []
+        riding_fiscal_periods = interval_dates['riding_fiscal_periods']
+
         if previous_closure and previous_closure.move_ids:
-            date_interval_start = previous_closure.move_ids.sorted(key=lambda m: m.write_date)[-1].write_date
-            previous_move_ids = previous_closure.move_ids
-            rinding_fiscal_periods = previous_closure.create_date < interval_dates['fiscal_from']
+            previous_date = previous_closure.move_ids.sorted(key=lambda m: m.write_date)[-1].write_date
+            date_query_start = min(previous_date, interval_dates['interval_from'])
+            previous_move_ids = previous_closure.move_ids.ids
+            riding_fiscal_periods = date_query_start < interval_dates['fiscal_from']
 
-            query, params = self._build_query(company, date_interval_start, interval_dates['date_stop'])
-            self.env.cr.execute(query, params)
-            results = self.env.cr.dictfetchall()
+        query, params = self._build_query(company, date_query_start, interval_dates['date_stop'])
+        self.env.cr.execute(query, params)
+        results = self.env.cr.dictfetchall()
 
-            aml_interval = filter(lambda aml: aml['move_write_date'] >= date_interval_start, results)
-            aml_fiscal = filter(lambda aml: aml['move_write_date'] >= interval_dates['fiscal_from'] and aml['move_id'] not in previous_move_ids, results)
-            aml_beginning = filter(lambda aml: aml['move_id'] not in previous_move_ids, results)
+        date_interval_start = date_query_start and date_query_start or interval_dates['interval_from']
+        aml_interval = filter(lambda aml: aml['move_write_date'] >= date_interval_start, results)
+        aml_beginning = filter(lambda aml: aml['move_id'] not in previous_move_ids, results)
 
-            total_interval = sum(aml['balance'] for aml in aml_interval)
+        total_interval = sum(aml['balance'] for aml in aml_interval)
+        total_beginning = sum(aml['balance'] for aml in aml_beginning)
+
+        aml_fiscal = []
+        total_fiscal = 0
+        if riding_fiscal_periods:
+            aml_fiscal = filter(lambda aml: aml['move_write_date'] >= interval_dates['fiscal_from'], results)
             total_fiscal = sum(aml['balance'] for aml in aml_fiscal)
-            total_beginning = sum(aml['balance'] for aml in aml_beginning)
-
-            return {'total_interval': total_interval,
-                    'total_fiscal': total_fiscal + (not rinding_fiscal_periods and previous_closure.total_fiscal or 0),
-                    'total_beginning': previous_closure.total_beginning + total_beginning,
-                    'move_ids': [(4, aml['move_id'], False) for aml in aml_interval],
-                    'date_closure_stop': interval_dates['date_stop'],
-                    'date_closure_start': interval_dates['interval_from']}
         else:
-            query_full, params_full = self._build_query(company, date_stop=interval_dates['date_stop'])
-            self.env.cr.execute(query_full, params_full)
-            results_full = self.env.cr.dictfetchall()
+            aml_fiscal = filter(lambda aml: aml['move_id'] not in previous_move_ids, results)
+            total_fiscal = previous_closure.total_fiscal + sum(aml['balance'] for aml in aml_fiscal)
 
-            total_beginning = sum(aml['balance'] for aml in results_full)
-            total_fiscal = sum(aml['balance'] for aml in filter(lambda aml: aml['move_write_date'] >= interval_dates['fiscal_from'], results_full))
-            total_interval = sum(aml['balance'] for aml in filter(lambda aml: aml['move_write_date'] >= interval_dates['interval_from'], results_full))
-
-            return {'total_interval': total_interval,
-                    'total_fiscal': total_fiscal,
-                    'total_beginning': total_beginning,
-                    'move_ids': [(4, aml['move_id'], False) for aml in results_full],
-                    'date_closure_stop': interval_dates['date_stop'],
-                    'date_closure_start': interval_dates['interval_from']}
+        return {'total_interval': total_interval,
+                'total_fiscal': total_fiscal,
+                'total_beginning': previous_closure.total_beginning + total_beginning,
+                'move_ids': [(4, aml['move_id'], False) for aml in aml_interval],
+                'date_closure_stop': interval_dates['date_stop'],
+                'date_closure_start': interval_dates['interval_from']}
 
     def _interval_dates(self, frequency, company):
         def time_to_string(datetime):
             return datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
         date_stop = datetime.utcnow()
-        fiscal_year_dates = company.compute_fiscalyear_dates(date_stop)
-        delta_time = None
+        fiscal_year_dates = company.compute_fiscalyear_dates(datetime(year=date_stop.year, month=date_stop.month, day=date_stop.day))
+        interval_from = None
         if frequency == 'daily':
-            delta_time = timedelta(days=1)
+            interval_from = date_stop - timedelta(days=1)
         elif frequency == 'monthly':
-            delta_time = timedelta(days=30)
+            month_target = date_stop.month > 1 and date_stop.month - 1 or 12
+            year_target = month_target < 12 and date_stop.year or date_stop.year - 1
+            interval_from = date_stop.replace(year=year_target, month=month_target)
         elif frequency == 'annually':
-            delta_time = timedelta(days=365)
-
-        interval_from = date_stop - delta_time
+            year_target = date_stop.year - 1
+            interval_from = date_stop.replace(year=year_target)
 
         return {'interval_from': time_to_string(interval_from),
                 'fiscal_from': time_to_string(fiscal_year_dates['date_from']),
-                'date_stop': time_to_string(date_stop)}
+                'date_stop': time_to_string(date_stop),
+                'riding_fiscal_periods': interval_from < fiscal_year_dates['date_from']}
 
     @api.multi
     def write(self, vals):
@@ -137,3 +141,9 @@ class AccountClosure(models.Model):
             account_closures |= account_closures.create(values)
 
         return account_closures
+
+    def do_all_frequencies(self):
+        results = self.env['account.sale.closure']
+        for frequency in [freq[0] for freq in self._fields['frequency'].selection]:
+            results |= self.automated_closure(frequency)
+        return results
