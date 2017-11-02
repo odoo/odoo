@@ -210,9 +210,14 @@ class AccountInvoice(models.Model):
 
     @api.model
     def create(self, vals):
+        recurrent_invoice = self.env.context.get('recurrent_invoice')
+        if recurrent_invoice:
+            # recurrent invoices created by cron should not be shown under Vendor Bills stat button available in PO form view
+            for line_data in vals.get('invoice_line_ids', []):
+                line_data[-1].update(purchase_line_id=False)
         invoice = super(AccountInvoice, self).create(vals)
         purchase = invoice.invoice_line_ids.mapped('purchase_line_id.order_id')
-        if purchase and not invoice.refund_invoice_id:
+        if purchase and not invoice.refund_invoice_id and not recurrent_invoice:
             message = _("This vendor bill has been created from: %s") % (",".join(["<a href=# data-oe-model=purchase.order data-oe-id="+str(order.id)+">"+order.name+"</a>" for order in purchase]))
             invoice.message_post(body=message)
         return invoice
