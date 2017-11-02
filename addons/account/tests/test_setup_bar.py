@@ -26,7 +26,7 @@ class TestSetupBar(AccountingTestCase):
 
         self.assertEqual(len(initial_setup_wizard.opening_move_line_ids), 2, "The wizard should contain 2 lines: 1 manually created, and 1 automatic adjustment.")
         automatic_line = initial_setup_wizard.opening_move_line_ids.filtered(lambda x: x != test_line_1)
-        self.assertEqual(automatic_line.account_id.user_type_id, unaffected_earnings_type, "Automatic adjustement line should be of type 'current year earnings'.")
+        self.assertEqual(automatic_line.account_id.user_type_id, unaffected_earnings_type, "Automatic adjustment line should be of type 'current year earnings'.")
         self.assertEqual(automatic_line.credit, 42.0, "Automatic line should balance opening move.")
         self.assertEqual(automatic_line.debit, 0.0, "Automatic line should balance opening move.")
 
@@ -46,7 +46,7 @@ class TestSetupBar(AccountingTestCase):
         self.assertEqual(automatic_line.credit, 30.0, "Automatic line should balance opening move.")
         self.assertEqual(automatic_line.debit, 0.0, "Automatic line should balance opening move.")
 
-        # When a new line balances the move, the adjusment line gets automatically removed
+        # When a new line balances the move, the adjustment line gets automatically removed
         test_line_3 = self.env['account.move.line'].with_context({'check_move_validity': False}).create({
                         'name': 'Test line 3',
                         'move_id': company.account_opening_move_id.id,

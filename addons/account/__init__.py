@@ -41,7 +41,7 @@ def _auto_install_l10n(cr, registry):
             ]:
             module_list.append('base_vat')
 
-        #european countries will be using SEPA
+        # European countries will be using SEPA
         europe = env.ref('base.europe', raise_if_not_found=False)
         if europe:
             europe_country_codes = [x.code for x in europe.country_ids]
