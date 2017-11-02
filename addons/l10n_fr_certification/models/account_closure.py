@@ -57,6 +57,7 @@ class AccountClosure(models.Model):
         if previous_closure and previous_closure.move_ids:
             date_interval_start = previous_closure.move_ids.sorted(key=lambda m: m.write_date)[-1].write_date
             previous_move_ids = previous_closure.move_ids
+            rinding_fiscal_periods = previous_closure.create_date < interval_dates['fiscal_from']
 
             query, params = self._build_query(company, date_interval_start, interval_dates['date_stop'])
             self.env.cr.execute(query, params)
@@ -71,7 +72,7 @@ class AccountClosure(models.Model):
             total_beginning = sum(aml['balance'] for aml in aml_beginning)
 
             return {'total_interval': total_interval,
-                    'total_fiscal': previous_closure.total_fiscal + total_fiscal,
+                    'total_fiscal': total_fiscal + (not rinding_fiscal_periods and previous_closure.total_fiscal or 0),
                     'total_beginning': previous_closure.total_beginning + total_beginning,
                     'move_ids': [(4, aml['move_id'], False) for aml in aml_interval],
                     'date_closure_stop': interval_dates['date_stop'],
@@ -110,8 +111,7 @@ class AccountClosure(models.Model):
 
         return {'interval_from': time_to_string(interval_from),
                 'fiscal_from': time_to_string(fiscal_year_dates['date_from']),
-                'date_stop': time_to_string(date_stop),
-                'riding_fiscal_periods': not interval_from < fiscal_year_dates['date_from']}
+                'date_stop': time_to_string(date_stop)}
 
     @api.multi
     def write(self, vals):
