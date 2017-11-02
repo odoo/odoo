@@ -236,7 +236,8 @@ class PurchaseOrder(models.Model):
         else:
             self.fiscal_position_id = self.env['account.fiscal.position'].with_context(company_id=self.company_id.id).get_fiscal_position(self.partner_id.id)
             self.payment_term_id = self.partner_id.property_supplier_payment_term_id.id
-            self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.user.company_id.currency_id.id
+            if not self.currency_id:
+                self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.user.company_id.currency_id.id
         return {}
 
     @api.onchange('fiscal_position_id')
