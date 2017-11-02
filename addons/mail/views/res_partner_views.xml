@@ -7,6 +7,9 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='image']" position="before">
+                    <div class="alert alert-info" invisible="not context.get('show_email')" role="alert">Please enter email address of this contact</div>
+                </xpath>
                 <xpath expr="//field[@name='user_id']" position="after">
                     <field name="opt_out" string="Mailing Opt-Out" groups="base.group_no_one"/>
                     <field name="message_bounce" groups="base.group_no_one"/>

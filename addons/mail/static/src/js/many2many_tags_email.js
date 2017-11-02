@@ -80,7 +80,7 @@ var FieldMany2ManyTagsEmail = M2MTags.extend({
             var pop = new form_common.FormViewDialog(self, {
                 res_model: self.field.relation,
                 res_id: resID,
-                context: self.record.context,
+                context: _.extend(self.record.context, {show_email: true}),
                 title: _t("Please complete customer's informations and email"),
                 on_saved: function (record) {
                     if (record.data.email) {
