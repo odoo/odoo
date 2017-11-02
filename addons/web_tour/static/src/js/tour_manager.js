@@ -61,6 +61,9 @@ var RunningTourActionHelper = core.Class.extend({
     text: function (text, element) {
         this._text(this._get_action_values(element), text);
     },
+    val: function (text, element) {
+        this._val(this._get_action_values(element), text);
+    },
     drag_and_drop: function (to, element) {
         this._drag_and_drop(this._get_action_values(element), to);
     },
@@ -120,6 +123,11 @@ var RunningTourActionHelper = core.Class.extend({
         } else {
             values.$element.text(text);
         }
+        values.$element.trigger("change");
+    },
+    _val: function (values, text) {
+        text = text || "Test";
+        values.$element.val(text);
         values.$element.trigger("change");
     },
     _drag_and_drop: function (values, to) {
