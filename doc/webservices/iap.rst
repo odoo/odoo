@@ -123,6 +123,53 @@ For this example, the service we will provide is ~~mining dogecoins~~ burning
 * act as intermediary to an other service provider (e.g. bridge to an MMS
   gateway)
 
+Register the service on Odoo
+----------------------------
+
+.. queue:: iap_service/series
+
+.. todo:: complete this part with screenshots
+
+The first step is to register your service on the IAP endpoint (production 
+and/or test) before you can actually query user accounts. To create a service,
+go to your *Portal Account* on the IAP endpoint (https://iap.odoo.com for
+production, http://iap-sandbox.odoo.com for testing, the endpoints are
+*independent* and *not synchronized*). 
+
+Log in then go to :menuselection:`My Account --> Your InApp Services`, click 
+Create and provide the name of your service. 
+
+
+The now created service has *two* important fields:
+
+* :samp:`name` - :class:`ServiceName`: this will identify your service in the
+  client's :ref:`app <iap-odoo-app>` communicates directly with IAP.
+* :samp:`key` - :class:`ServiceKey`: the developer key that identifies you in 
+  IAP (see :ref:`your service <iap-service>`) and allows to draw credits from the client's account.
+
+.. warning::
+    The :class:`ServiceName` is unique and should usually match the name of your 
+    Odoo App.
+
+.. danger:: 
+    Your :class:`ServiceKey` *is a secret*, leaking your service key
+    allows other application developers to draw credits bought for
+    your service(s).
+
+.. image:: images/service_select.png
+    :align: center
+
+.. image:: images/service_create.png
+    :align: center
+
+.. image:: images/service_packs.png
+    :align: center
+
+You can then create *credit packs* which clients can purchase in order to
+use your service.
+
+.. _iap-odoo-app:
+
 Odoo App
 --------
 
@@ -130,7 +177,7 @@ Odoo App
 
 .. todo:: does this actually require apps?
 
-The first step is to develop an `Odoo App`_ which clients can install in their
+The second step is to develop an `Odoo App`_ which clients can install in their
 Odoo instance and through which they can *request* services you will provide.
 Our app will just add a button to the Partners form which lets a user request
 burning some CPU time on the server.
@@ -157,7 +204,7 @@ There are no requirements when it comes to the server or the communication
 protocol between the app and our server, but ``iap`` provides a
 :func:`~odoo.addons.iap.jsonrpc` helper to call a JSON-RPC2_ endpoint on an
 other Odoo instance and transparently re-raise relevant Odoo exceptions
-(:class:`~odoo.addons.iap.InsufficientCreditError`,
+(:class:`~odoo.addons.iap.models.iap.InsufficientCreditError`,
 :class:`odoo.exceptions.AccessError` and :class:`odoo.exceptions.UserError`).
 
 In that call, we will need to provide:
@@ -165,26 +212,30 @@ In that call, we will need to provide:
 * any relevant client parameter (none here)
 * the :class:`token <UserToken>` of the current client, this is provided by
   the ``iap.account`` model's ``account_token`` field. You can retrieve the
-  account for your service by calling :samp:`env['iap.account'].get({servicename})`
+  account for your service by calling :samp:`env['iap.account'].get({service_name})`
+  where :class:`service_name <ServiceName>` is the name of the service registered 
+  on IAP endpoint.
 
 .. patch::
 
 .. note::
 
     ``iap`` automatically handles
-    :class:`~odoo.addons.iap.InsufficientCreditError` coming from the action
+    :class:`~odoo.addons.iap.models.iap.InsufficientCreditError` coming from the action
     and prompts the user to add credits to their account.
 
     :func:`~odoo.addons.iap.jsonrpc` takes care of re-raising
-    :class:`~odoo.addons.iap.InsufficientCreditError` for you.
+    :class:`~odoo.addons.iap.models.iap.InsufficientCreditError` for you.
 
 .. danger::
 
     If you are not using :func:`~odoo.addons.iap.jsonrpc` you *must* be
     careful to re-raise
-    :class:`~odoo.addons.iap.InsufficientCreditError` in your handler
+    :class:`~odoo.addons.iap.models.iap.InsufficientCreditError` in your handler
     otherwise the user will not be prompted to credit their account, and the
     next call will fail the same way.
+
+.. _iap-service:
 
 Service
 -------
@@ -193,13 +244,13 @@ Service
 
 Though that is not *required*, since ``iap`` provides both a client helper
 for JSON-RPC2_ calls (:func:`~odoo.addons.iap.jsonrpc`) and a service helper
-for transactions (:class:`~odoo.addons.iap.charge`) we will also be
+for transactions (:class:`~odoo.addons.iap.models.iap.charge`) we will also be
 implementing the service side as an Odoo module:
 
 .. patch::
 
 Since the query from the client comes as JSON-RPC2_ we will need the
-corresponding controller which can call :class:`~odoo.addons.iap.charge` and
+corresponding controller which can call :class:`~odoo.addons.iap.models.iap.charge` and
 perform the service within:
 
 .. patch::
@@ -208,22 +259,7 @@ perform the service within:
 
 .. todo:: "My Account" > "Your InApp Services"?
 
-.. warning::
-
-    Your *service key* has to be created in the endpoint (production and/or
-    test) before you can actually query user accounts. To create a service,
-    go to your *Portal Account* on the IAP endpoint (https://iap.odoo.com for
-    production, http://iap-sandbox.odoo.com for testing, the endpoints are
-    *independent* and *not synchronized*).
-
-    Log in then go to :menuselection:` My Account --> Your InApp Services`,
-    click :guilabel:`Create` and provide the name of your service. It should
-    usually match the name of your Odoo App.
-
-    You can then create *credit packs* which clients can purchase in order to
-    use your service.
-
-The :class:`~odoo.addons.iap.charge` helper will:
+The :class:`~odoo.addons.iap.models.iap.charge` helper will:
 
 1. authorize (create) a transaction with the specified number of credits,
    if the account does not have enough credits it will raise the relevant
@@ -236,7 +272,7 @@ The :class:`~odoo.addons.iap.charge` helper will:
 
 .. danger::
 
-    By default, :class:`~odoo.addons.iap.charge` contacts the *production*
+    By default, :class:`~odoo.addons.iap.models.iap.charge` contacts the *production*
     IAP endpoint, https://iap.odoo.com. While developing and testing your
     service you may want to point it towards the *development* IAP endpoint
     https://iap-sandbox.odoo.com.
@@ -246,7 +282,7 @@ The :class:`~odoo.addons.iap.charge` helper will:
     Parameters --> System Parameters`, just define an entry for the key
     ``iap.endpoint`` if none already exists).
 
-The :class:`~odoo.addons.iap.charge` helper has two additional optional
+The :class:`~odoo.addons.iap.models.iap.charge` helper has two additional optional
 parameters we can use to make things clearer to the end-user:
 
 ``description``
@@ -387,6 +423,11 @@ Types
 Exceptions aside, these are *abstract types* used for clarity, you should not
 care how they are implemented
 
+.. class:: ServiceName
+
+    String identifying your service on https://iap.odoo.com (production) as well
+    as the account related to your service in the client's database.
+
 .. class:: ServiceKey
 
     Identifier generated for the provider's service. Each key (and service)
@@ -398,7 +439,7 @@ care how they are implemented
 
     .. danger:: your service key *is a secret*, leaking your service key
                 allows other application developers to draw credits bought for
-                your service(s)
+                your service(s).
 
 .. class:: UserToken
 
@@ -417,8 +458,14 @@ care how they are implemented
 
 .. exception:: odoo.exceptions.AccessError
 
-    Raised by any operation to which a service token is required, if the
-    service token is invalid.
+    Raised by:
+
+    * any operation to which a service token is required, if the service token is invalid.
+    * any failure in an inter-server call. (typically, in :func:`~odoo.addons.iap.jsonrpc`)
+
+.. exception:: odoo.exceptions.UserError
+
+    Raised by any unexpeted behaviour at the discretion of the App developer (*you*).
 
 Odoo Helpers
 ============
@@ -429,7 +476,7 @@ module provides a few helpers to make IAP flow even simpler:
 Charging
 --------
 
-.. class:: odoo.addons.iap.charge(env, key, account_token, credit[, description])
+.. class:: odoo.addons.iap.models.iap.charge(env, key, account_token, credit[, description, credit_template])
 
     A *context manager* for authorizing and automatically capturing or
     cancelling transactions for use in the backend/proxy.
