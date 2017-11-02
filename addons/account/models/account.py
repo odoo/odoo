@@ -4,7 +4,7 @@ import time
 import math
 
 from openerp.osv import expression
-from openerp.tools.float_utils import float_round as round
+from openerp.tools.float_utils import float_round as round, float_is_zero as is_zero
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.exceptions import UserError, ValidationError
 from openerp import api, fields, models, _
@@ -745,6 +745,23 @@ class AccountTax(models.Model):
         # ||  ...  |   ..   |    ..    |
         #    ----------------------------
 
+        base = round(price_unit * quantity, prec)
+
+        # Keep track of subsequent recomputed bases in order to avoid some rounding issues.
+        # For example, 399.99 computed with a tax 20% price_include leads to
+        # base = 399.99 / 1.2 = 333.32500000000005
+        # tax_amount = base * 0.2 = 66.665
+        # round(base) + round(tax_amount) = 333.33 + 66.67 = 400.0 (!= 399.99: WRONG)
+        #
+        # To fix such issues, base_gaps will contains amount between two bases.
+        # In our example, the gap between 333.32500000000005 and 399.99 is 66.66499999999996
+        #
+        # Then, when processing the tax and because 66.665 - 66.66499999999996 is close to zero,
+        # the real gap is returned and so:
+        # tax_amount = 66.66499999999996
+        # round(base) + round(tax_amount) = 333.33 + 66.66 = 399.99 (CORRECT)
+        base_gaps = []
+
         def recompute_base(base_amount, fixed_amount, percent_amount):
             # Recompute the new base amount based on included fixed/percent amount and the current base amount.
             # Example:
@@ -758,9 +775,9 @@ class AccountTax(models.Model):
             # (145 - 15) / (1.0 + ((10 + 20) / 100.0)) = 130 / 1.3 = 100
             if fixed_amount == 0.0 and percent_amount == 0.0:
                 return base_amount
-            return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0)
-
-        base = round(price_unit * quantity, prec)
+            new_base = (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0)
+            base_gaps.append(base_amount - new_base)
+            return new_base
 
         # For the computation of move lines, we could have a negative base value.
         # In this case, compute all with positive values and negative them at the end.
@@ -790,15 +807,38 @@ class AccountTax(models.Model):
         # ||  tax_1 |   OK   |   XXXX   |
         # ||  tax_2 |  XXXX  |   XXXX   |
         # ||  tax_3 |  XXXX  |   XXXX   |
-        # \/  ...  |   ..   |    ..    |
+        # \/  ...   |   ..   |    ..    |
         #     ----------------------------
-        taxes_vals = []
-        for tax in taxes:
+
+        def compute_amount(tax):
             # Compute the amount of the tax but don't deal with the price_include because it's already
             # took into account on the base amount except for 'division' tax:
             # (tax.amount_type == 'percent' && not tax.price_include)
             # == (tax.amount_type == 'division' && tax.price_include)
-            tax_amount = tax.with_context(force_price_include=False)._compute_amount(base, price_unit, quantity, product, partner)
+            #
+            # In case of price_included tax, subtract the amount to the corresponding
+            # gap between the current base and the next one.
+            amount = tax.with_context(force_price_include=False)._compute_amount(
+                base, price_unit, quantity, product, partner)
+
+            if not tax.price_include or not base_gaps:
+                return amount
+
+            # Compute the new gap after subtracting of the tax amount
+            new_gap = base_gaps[-1] - amount
+
+            # If the newly computed gap is very close of zero, return the current gap to avoid
+            # rounding issues (see comments above base_gaps).
+            if is_zero(new_gap, prec):
+                return base_gaps.pop()
+
+            # Update the current gap with the new one
+            base_gaps[-1] = new_gap
+            return amount
+
+        taxes_vals = []
+        for tax in taxes:
+            tax_amount = compute_amount(tax)
             if not round_tax:
                 tax_amount = round(tax_amount, prec)
             else:
