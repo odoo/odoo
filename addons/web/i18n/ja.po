@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 11:35+0000\n"
-"PO-Revision-Date: 2017-10-10 11:35+0000\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
 "Last-Translator: Manami Hashi <manami@roomsfor.hk>, 2017\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -179,21 +179,21 @@ msgstr "'%s' は正しいフォーマット（datetime）ではありません"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/field_utils.js:429
+#: code:addons/web/static/src/js/fields/field_utils.js:452
 #, python-format
 msgid "'%s' is not a correct float"
 msgstr "'%s' は正しいフォーマット（float）ではありません"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/field_utils.js:499
+#: code:addons/web/static/src/js/fields/field_utils.js:530
 #, python-format
 msgid "'%s' is not a correct integer"
 msgstr "'%s' は正しいフォーマット（integer）ではありません"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/field_utils.js:465
+#: code:addons/web/static/src/js/fields/field_utils.js:488
 #, python-format
 msgid "'%s' is not a correct monetary field"
 msgstr ""
@@ -235,6 +235,15 @@ msgstr "<span class=\"oe_logo_edit\">会社データを編集</span>"
 #: model:ir.ui.view,arch_db:web.menu_secondary
 msgid "<span>Odoo</span>"
 msgstr "<span>Odoo</span>"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/report/qwebactionmanager.js:112
+#, python-format
+msgid ""
+"A popup window with your report was blocked.  You may need to change your "
+"browser settings to allow popup windows for this page."
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -287,7 +296,7 @@ msgstr "アクションID："
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1617
+#: code:addons/web/static/src/js/fields/basic_fields.js:1622
 #, python-format
 msgid "Activate"
 msgstr "有効化"
@@ -301,16 +310,16 @@ msgstr "資産のデバッグを有効にします"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1616
-#: code:addons/web/static/src/js/fields/basic_fields.js:1620
-#: code:addons/web/static/src/js/fields/basic_fields.js:1624
+#: code:addons/web/static/src/js/fields/basic_fields.js:1621
+#: code:addons/web/static/src/js/fields/basic_fields.js:1625
+#: code:addons/web/static/src/js/fields/basic_fields.js:1629
 #, python-format
 msgid "Active"
 msgstr "有効"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/relational_fields.js:1197
+#: code:addons/web/static/src/js/fields/relational_fields.js:1202
 #: code:addons/web/static/src/xml/base.xml:1184
 #: code:addons/web/static/src/xml/kanban.xml:54
 #: code:addons/web/static/src/xml/kanban.xml:64
@@ -334,7 +343,7 @@ msgstr "条件追加"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/list/list_editable_renderer.js:512
+#: code:addons/web/static/src/js/views/list/list_editable_renderer.js:516
 #, python-format
 msgid "Add an item"
 msgstr "項目を追加"
@@ -369,7 +378,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1541
+#: code:addons/web/static/src/js/fields/basic_fields.js:1546
 #, python-format
 msgid "Add to Favorites"
 msgstr ""
@@ -383,7 +392,7 @@ msgstr "追加"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/relational_fields.js:1220
+#: code:addons/web/static/src/js/fields/relational_fields.js:1225
 #, python-format
 msgid "Add: "
 msgstr "追加: "
@@ -466,7 +475,7 @@ msgstr "適用"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1621
+#: code:addons/web/static/src/js/fields/basic_fields.js:1626
 #: code:addons/web/static/src/js/views/list/list_controller.js:138
 #, python-format
 msgid "Archive"
@@ -481,7 +490,7 @@ msgstr "アーカイブする"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1620
+#: code:addons/web/static/src/js/fields/basic_fields.js:1625
 #, python-format
 msgid "Archived"
 msgstr "アーカイブ済"
@@ -503,7 +512,7 @@ msgstr "このフィルタを本当に削除しますか？"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/basic/basic_controller.js:290
-#: code:addons/web/static/src/js/views/calendar/calendar_controller.js:299
+#: code:addons/web/static/src/js/views/calendar/calendar_controller.js:306
 #, python-format
 msgid "Are you sure you want to delete this record ?"
 msgstr "このレコードを削除しますか？"
@@ -595,10 +604,10 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/controllers/main.py:779
-#: code:addons/web/controllers/main.py:781
-#: code:addons/web/controllers/main.py:786
-#: code:addons/web/controllers/main.py:787
+#: code:addons/web/controllers/main.py:783
+#: code:addons/web/controllers/main.py:785
+#: code:addons/web/controllers/main.py:790
+#: code:addons/web/controllers/main.py:791
 #: code:addons/web/static/src/js/widgets/change_password.js:27
 #: code:addons/web/static/src/xml/base.xml:175
 #, python-format
@@ -629,8 +638,8 @@ msgstr "イベントのクリア"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1625
-#: code:addons/web/static/src/js/views/calendar/calendar_controller.js:310
+#: code:addons/web/static/src/js/fields/basic_fields.js:1630
+#: code:addons/web/static/src/js/views/calendar/calendar_controller.js:317
 #: code:addons/web/static/src/js/views/view_dialogs.js:111
 #: code:addons/web/static/src/js/widgets/data_export.js:203
 #: code:addons/web/static/src/js/widgets/debug_manager.js:428
@@ -641,7 +650,7 @@ msgstr "閉じる"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1624
+#: code:addons/web/static/src/js/fields/basic_fields.js:1629
 #, python-format
 msgid "Closed"
 msgstr "クローズ"
@@ -713,7 +722,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1199
+#: code:addons/web/static/src/js/fields/basic_fields.js:1204
 #, python-format
 msgid "Could not display the selected image."
 msgstr "選択されたイメージを表示できませんでした"
@@ -774,7 +783,7 @@ msgstr "%s を作成"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/relational_fields.js:376
+#: code:addons/web/static/src/js/fields/relational_fields.js:381
 #, python-format
 msgid "Create and Edit..."
 msgstr "作成・編集..."
@@ -788,7 +797,7 @@ msgstr "作成・編集"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/relational_fields.js:405
+#: code:addons/web/static/src/js/fields/relational_fields.js:410
 #: code:addons/web/static/src/js/views/calendar/calendar_quick_create.js:85
 #, python-format
 msgid "Create: "
@@ -837,7 +846,7 @@ msgstr "日"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1617
+#: code:addons/web/static/src/js/fields/basic_fields.js:1622
 #, python-format
 msgid "Deactivate"
 msgstr "無効化"
@@ -851,7 +860,7 @@ msgstr "デフォルト値："
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/calendar/calendar_controller.js:297
+#: code:addons/web/static/src/js/views/calendar/calendar_controller.js:304
 #: code:addons/web/static/src/js/views/form/form_controller.js:155
 #: code:addons/web/static/src/js/views/list/list_controller.js:148
 #: code:addons/web/static/src/xml/base.xml:1225
@@ -951,7 +960,7 @@ msgstr "複製"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/calendar/calendar_controller.js:291
+#: code:addons/web/static/src/js/views/calendar/calendar_controller.js:298
 #: code:addons/web/static/src/js/views/calendar/calendar_quick_create.js:50
 #: code:addons/web/static/src/xml/base.xml:266
 #: code:addons/web/static/src/xml/base.xml:420
@@ -1018,7 +1027,7 @@ msgid "Error"
 msgstr "エラー"
 
 #. module: web
-#: code:addons/web/controllers/main.py:787
+#: code:addons/web/controllers/main.py:791
 #, python-format
 msgid "Error, password not changed !"
 msgstr "エラー、パスワードは変更されませんでした！"
@@ -1138,14 +1147,14 @@ msgstr "エクスポートする項目"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1118
+#: code:addons/web/static/src/js/fields/basic_fields.js:1128
 #, python-format
 msgid "File Upload"
 msgstr "ファイルアップロード"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1098
+#: code:addons/web/static/src/js/fields/basic_fields.js:1108
 #, python-format
 msgid "File upload"
 msgstr "ファイルのアップロード"
@@ -1276,7 +1285,7 @@ msgstr "ID："
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1199
+#: code:addons/web/static/src/js/fields/basic_fields.js:1204
 #, python-format
 msgid "Image"
 msgstr "画像"
@@ -1290,7 +1299,7 @@ msgstr "インポート互換のエクスポート"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1616
+#: code:addons/web/static/src/js/fields/basic_fields.js:1621
 #, python-format
 msgid "Inactive"
 msgstr "無効"
@@ -1304,8 +1313,8 @@ msgid "Invalid data"
 msgstr "無効なデータ"
 
 #. module: web
-#: code:addons/web/controllers/main.py:683
-#: code:addons/web/controllers/main.py:697
+#: code:addons/web/controllers/main.py:687
+#: code:addons/web/controllers/main.py:701
 #, python-format
 msgid ""
 "Invalid database name. Only alphanumerical characters, underscore, hyphen "
@@ -1349,7 +1358,7 @@ msgid "Kanban"
 msgstr "かんばん"
 
 #. module: web
-#: code:addons/web/controllers/main.py:794
+#: code:addons/web/controllers/main.py:798
 #, python-format
 msgid "Languages"
 msgstr "言語"
@@ -1676,7 +1685,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/relational_fields.js:382
+#: code:addons/web/static/src/js/fields/relational_fields.js:387
 #, python-format
 msgid "No results to show..."
 msgstr "該当結果なし..."
@@ -1757,7 +1766,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1633
+#: code:addons/web/static/src/js/fields/basic_fields.js:1638
 #, python-format
 msgid "Off"
 msgstr "オフ"
@@ -1783,7 +1792,7 @@ msgstr "古いパスワード"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1632
+#: code:addons/web/static/src/js/fields/basic_fields.js:1637
 #, python-format
 msgid "On"
 msgstr "オン"
@@ -1797,13 +1806,13 @@ msgstr "変更:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1879
+#: code:addons/web/static/src/js/fields/basic_fields.js:1884
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "整数値のみが有効です。"
 
 #. module: web
-#: code:addons/web/controllers/main.py:489
+#: code:addons/web/controllers/main.py:490
 #, python-format
 msgid ""
 "Only employee can access this database. Please contact the administrator."
@@ -1818,7 +1827,7 @@ msgstr "自分のみ"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1625
+#: code:addons/web/static/src/js/fields/basic_fields.js:1630
 #, python-format
 msgid "Open"
 msgstr "オープン"
@@ -1839,8 +1848,8 @@ msgstr "ビューを開く"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/relational_fields.js:470
-#: code:addons/web/static/src/js/views/calendar/calendar_controller.js:277
+#: code:addons/web/static/src/js/fields/relational_fields.js:475
+#: code:addons/web/static/src/js/views/calendar/calendar_controller.js:284
 #: code:addons/web/static/src/js/views/form/form_controller.js:475
 #: code:addons/web/static/src/js/views/form/form_controller.js:494
 #, python-format
@@ -2028,7 +2037,7 @@ msgstr "全て削除"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1541
+#: code:addons/web/static/src/js/fields/basic_fields.js:1546
 #, python-format
 msgid "Remove from Favorites"
 msgstr ""
@@ -2049,7 +2058,7 @@ msgstr "レポート"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1621
+#: code:addons/web/static/src/js/fields/basic_fields.js:1626
 #, python-format
 msgid "Restore"
 msgstr ""
@@ -2089,7 +2098,7 @@ msgstr "保存して新規"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1254
+#: code:addons/web/static/src/js/fields/basic_fields.js:1259
 #, python-format
 msgid "Save As..."
 msgstr "名前を付けて保存"
@@ -2161,7 +2170,7 @@ msgstr "検索..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/relational_fields.js:405
+#: code:addons/web/static/src/js/fields/relational_fields.js:410
 #, python-format
 msgid "Search: "
 msgstr "検索: "
@@ -2203,7 +2212,7 @@ msgstr "ビューを選択"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:2289
+#: code:addons/web/static/src/js/fields/basic_fields.js:2303
 #, python-format
 msgid "Selected records"
 msgstr "選択されたレコード"
@@ -2251,7 +2260,7 @@ msgid "Size:"
 msgstr "サイズ:"
 
 #. module: web
-#: code:addons/web/controllers/main.py:1105
+#: code:addons/web/controllers/main.py:1109
 #, python-format
 msgid "Something horrible happened"
 msgstr "恐ろしいことが起こった"
@@ -2293,14 +2302,14 @@ msgstr "サポート"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1634
+#: code:addons/web/static/src/js/fields/basic_fields.js:1639
 #, python-format
 msgid "Switch Off"
 msgstr "スイッチオフ"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1635
+#: code:addons/web/static/src/js/fields/basic_fields.js:1640
 #, python-format
 msgid "Switch On"
 msgstr "スイッチオン"
@@ -2358,7 +2367,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1254
+#: code:addons/web/static/src/js/fields/basic_fields.js:1259
 #, python-format
 msgid "The field is empty, there's nothing to save !"
 msgstr "項目は空です。何も保存するものはありません。"
@@ -2371,13 +2380,13 @@ msgid "The following fields are invalid:"
 msgstr "次のフィールドは無効："
 
 #. module: web
-#: code:addons/web/controllers/main.py:781
+#: code:addons/web/controllers/main.py:785
 #, python-format
 msgid "The new password and its confirmation must be identical."
 msgstr "新しいパスワードとその確認は同一でなければなりません。"
 
 #. module: web
-#: code:addons/web/controllers/main.py:786
+#: code:addons/web/controllers/main.py:790
 #, python-format
 msgid ""
 "The old password you provided is incorrect, your password was not changed."
@@ -2394,14 +2403,14 @@ msgstr "レコードに変更がありましたが、変更内容は破棄され
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1097
+#: code:addons/web/static/src/js/fields/basic_fields.js:1107
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
 msgstr "選択したファイルが最大ファイルサイズ%sを超えています。"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/relational_fields.js:1284
+#: code:addons/web/static/src/js/fields/relational_fields.js:1289
 #, python-format
 msgid ""
 "The type of the field '%s' must be a many2many field with a relation to "
@@ -2409,7 +2418,7 @@ msgid ""
 msgstr "フィールド '%s' のタイプは、 'ir.attachment'モデルとの関係を持つmany2manyフィールドでなければなりません。"
 
 #. module: web
-#: code:addons/web/controllers/main.py:1442
+#: code:addons/web/controllers/main.py:1446
 #, python-format
 msgid ""
 "There are too many rows (%s rows, limit: 65535) to export as Excel 97-2003 "
@@ -2418,7 +2427,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1118
+#: code:addons/web/static/src/js/fields/basic_fields.js:1128
 #, python-format
 msgid "There was a problem while uploading your file"
 msgstr "ファイルのアップロード中に問題が発生しました"
@@ -2614,7 +2623,7 @@ msgstr "ファイルをアップロード"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/relational_fields.js:1442
+#: code:addons/web/static/src/js/fields/relational_fields.js:1447
 #, python-format
 msgid "Uploading Error"
 msgstr "アップロードエラー"
@@ -2665,6 +2674,7 @@ msgstr "メタデータ照会"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/report/qwebactionmanager.js:112
 #: code:addons/web/static/src/js/services/crash_manager.js:13
 #: code:addons/web/static/src/js/services/crash_manager.js:14
 #: code:addons/web/static/src/js/views/basic/basic_controller.js:78
@@ -2699,7 +2709,7 @@ msgstr "週"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/calendar/calendar_controller.js:344
+#: code:addons/web/static/src/js/views/calendar/calendar_controller.js:351
 #, python-format
 msgid "Week "
 msgstr "週"
@@ -2719,14 +2729,14 @@ msgid "Widget:"
 msgstr "ウィジェット:"
 
 #. module: web
-#: code:addons/web/controllers/main.py:486
+#: code:addons/web/controllers/main.py:487
 #, python-format
 msgid "Wrong login/password"
 msgstr "間違ったログイン/パスワード"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:1879
+#: code:addons/web/static/src/js/fields/basic_fields.js:1884
 #, python-format
 msgid "Wrong value entered!"
 msgstr "入力した値が間違っています!"
@@ -2775,7 +2785,7 @@ msgid "You cannot follow relations for this field chain construction"
 msgstr ""
 
 #. module: web
-#: code:addons/web/controllers/main.py:779
+#: code:addons/web/controllers/main.py:783
 #, python-format
 msgid "You cannot leave any password empty."
 msgstr "パスワードを空のままにすることはできません。"

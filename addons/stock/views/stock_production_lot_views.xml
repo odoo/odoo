@@ -9,6 +9,7 @@
     <record id="view_production_lot_form" model="ir.ui.view">
         <field name="name">stock.production.lot.form</field>
         <field name="model">stock.production.lot</field>
+        <field name="priority">10</field>
         <field name="arch" type="xml">
             <form string="Lots/Serial Numbers">
                 <sheet>
@@ -41,6 +42,29 @@
             </form>
         </field>
     </record>
+
+    <record id="view_production_lot_form_simple" model="ir.ui.view">
+        <field name="name">stock.production.lot.form.simple</field>
+        <field name="model">stock.production.lot</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <form string="Lots/Serial Numbers">
+                <sheet>
+                    <div class="oe_title">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name" placeholder="e.g. LOT/0001/20121"/>
+                    </h1>
+                </div>
+                    <group name="main_group">
+                        <field name="product_id" attrs="{'readonly': [('product_id', '!=', False)]}" force_save="1" help="Product this lot/serial number contains. You cannot change it anymore if it has already been moved."/>
+                        <field name="ref"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <record id="view_production_lot_tree" model="ir.ui.view">
         <field name="name">stock.production.lot.tree</field>
         <field name="model">stock.production.lot</field>
@@ -71,8 +95,10 @@
         <field name="name">Lots/Serial Numbers</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">stock.production.lot</field>
-        <field name="view_type">form</field>
-        <field name="view_id" ref="view_production_lot_tree"/>
+        <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('view_production_lot_tree')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('view_production_lot_form')})]"/>
         <field name="search_view_id" ref="search_product_lot_filter"/>
         <field name="context">{'search_default_group_by_product': 1}</field>
         <field name="help" type="html">

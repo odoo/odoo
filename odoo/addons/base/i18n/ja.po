@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 13:14+0000\n"
-"PO-Revision-Date: 2017-10-10 13:14+0000\n"
+"POT-Creation-Date: 2017-10-24 09:14+0000\n"
+"PO-Revision-Date: 2017-10-24 09:14+0000\n"
 "Last-Translator: Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2017\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -248,6 +248,18 @@ msgid ""
 "and get rewards.\n"
 "\n"
 msgstr ""
+
+#. module: base
+#: code:addons/model.py:136
+#, python-format
+msgid ""
+"\n"
+"\n"
+"[object with reference: %s - %s]"
+msgstr ""
+"\n"
+"\n"
+"[object with reference: %s - %s]"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_invoice_bba
@@ -545,6 +557,8 @@ msgid ""
 "\n"
 "        Make Call from all modules using the VOIP system."
 msgstr ""
+"\n"
+"        VOIPシステムと連携したコール機能"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_quote_subscription
@@ -780,6 +794,9 @@ msgid ""
 "    Resource management for Project\n"
 "    "
 msgstr ""
+"\n"
+"    プロジェクトリソース管理\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_ebay
@@ -2709,14 +2726,14 @@ msgstr ""
 "================\n"
 "\n"
 "このアプリケーションでは、従業員の1日の経費を管理できます。 それはあなたの従業員の手数料ノートにアクセスし、あなたのノートを完了し、検証または拒否する権利を与える与えます。 検証後、従業員の請求書が作成されます。\n"
-"従業員は、独自の経費をコード化することができ、検証フローによって、マネージャによる検証後に自動的に会計処理に反映されます。\n"
+"従業員は、独自の経費をコード化することができ、検証フローによって、マネジャーによる検証後に自動的に会計処理に反映されます。\n"
 "\n"
 "\n"
 "全体の流れは次のように実装されます：\n"
 "---------------------------------\n"
 "*ドラフト経費\n"
-"*従業員がマネージャに提出する\n"
-"*当該従業員のマネージャの承認\n"
+"*従業員がマネジャーに提出する\n"
+"*当該従業員のマネジャーの承認\n"
 "*経理担当者と経理記入項目の作成による検証\n"
 "\n"
 "このモジュールは分析会計も使用し、タイムシートモジュールの請求書と互換性があるため、プロジェクトごとに作業する場合に顧客の経費を自動的に再請求することができます。"
@@ -4794,7 +4811,7 @@ msgstr ""
 "このモジュールにより、経理担当者は分析予算とクロスオーバー予算を管理できます。\n"
 "========================================== ============\n"
 "\n"
-"予算が(請求書/予算/予算で)定義されると、プロジェクトマネージャは、各分析勘定に計画された金額を設定することができます。\n"
+"予算が(請求書/予算/予算で)定義されると、プロジェクトマネジャーは、各分析勘定に計画された金額を設定することができます。\n"
 "\n"
 "経理担当者は、計画全体がこの予算に対して計画したものよりも大きくない/小さくないことを保証するために、各予算について計画された合計額を確認する可能性があります。 \n"
 "レコードの各リストは、そのレコードのグラフィカル表示に切り替えることもできます。\n"
@@ -6537,11 +6554,6 @@ msgid "Add Delivery Costs to Online Sales"
 msgstr "オンライン販売に配送費用を追加します。"
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Add Followers"
-msgstr "フォロワーを追加"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_transifex
 msgid "Add a link to edit a translation in Transifex"
 msgstr ""
@@ -6559,7 +6571,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode
 msgid "Add barcode scanning facilities to Warehouse Management."
-msgstr ""
+msgstr "倉庫管理にバーコードスキャン機能を追加"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event_barcode
@@ -6876,7 +6888,14 @@ msgstr ""
 msgid ""
 "Allows you to create your invoices and track the payments. It is an easier "
 "version of the accounting module for managers who are not accountants."
-msgstr "請求書の作成と支払いの追跡ができます。これは、会計士ではないマネジャのための会計モジュールの簡易バージョンです。"
+msgstr "請求書の作成と支払いの追跡ができます。これは、会計士ではないマネジャーのための会計モジュールの簡易バージョンです。"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid ""
+"Also you will find here all the related documents and download it by "
+"clicking on any individual document."
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:378
@@ -6972,7 +6991,7 @@ msgstr "アプリケーション"
 #: model:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Application Accesses"
-msgstr ""
+msgstr "アプリケーションアクセス"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_planner
@@ -7025,7 +7044,7 @@ msgstr "更新に適用"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_calendar
 msgid "Appointment Scheduling"
-msgstr ""
+msgstr "アポイントメント"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_appraisal
@@ -7232,12 +7251,7 @@ msgstr "自動検索"
 #. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation
 msgid "Automate Marketing Campaigns"
-msgstr ""
-
-#. module: base
-#: selection:ir.actions.server,usage:0
-msgid "Automated Action"
-msgstr ""
+msgstr "マーケティングキャンペーン自動化"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
@@ -7346,6 +7360,12 @@ msgstr "B9  23  33 x 62 mm"
 #: selection:res.company,external_report_layout:0
 msgid "Background"
 msgstr "背景"
+
+#. module: base
+#: code:addons/translate.py:1066
+#, python-format
+msgid "Bad file format: %s"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.bs
@@ -7603,7 +7623,7 @@ msgstr "ブータン"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_plm
 msgid "Bill of Materials, Routings, Versions, Engineering Change Orders"
-msgstr ""
+msgstr "BOM、工順、バージョン、設計変更オーダ"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -8182,14 +8202,14 @@ msgid "Clean"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid "Click here to attach a new document."
-msgstr "新しいドキュメントを添付するには、ここをクリックしてください。"
-
-#. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view_custom
 msgid "Click here to create a customized view"
 msgstr "クリックしてカスタマイズビューを作成してください。"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid "Click here to create new documents."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
@@ -8810,7 +8830,6 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_create_date
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_create_date
-#: model:ir.model.fields,field_description:base.field_res_users_create_date
 msgid "Create Date"
 msgstr "作成日"
 
@@ -9040,6 +9059,7 @@ msgstr "作成者"
 #: model:ir.model.fields,field_description:base.field_res_partner_industry_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title_create_date
 #: model:ir.model.fields,field_description:base.field_res_request_link_create_date
+#: model:ir.model.fields,field_description:base.field_res_users_create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log_create_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_create_date
 msgid "Created on"
@@ -9249,7 +9269,7 @@ msgstr "顧客"
 #. module: base
 #: model:ir.module.module,summary:base.module_contacts
 msgid "Customers, Vendors, Partners,..."
-msgstr "顧客、ベンダー、取引先..."
+msgstr "顧客、仕入先、取引先..."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view_custom
@@ -9408,25 +9428,6 @@ msgstr "日: %(day)s"
 #: selection:ir.cron,interval_type:0
 msgid "Days"
 msgstr "日"
-
-#. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Dear Sir/Madam,\n"
-"\n"
-"Our records indicate that some payments on your account are still due. Please find details below.\n"
-"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
-"If you have any queries regarding your account, Please contact us.\n"
-"\n"
-"Thank you in advance for your cooperation.\n"
-"Best Regards,"
-msgstr ""
-"担当者様,\n"
-"\n"
-"未払いがあります。詳細は後に記述します。すでにお支払いの場合は大変失礼しました。\n"
-"ご連絡いただきたくよろしくお願いします。\n"
-"\n"
-"以上よろしくお願いいたします,"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_debug
@@ -9946,7 +9947,7 @@ msgstr "各モジュールは固有でなければなりません。"
 #. module: base
 #: model:ir.module.module,summary:base.module_web_studio
 msgid "Easily create and customize your applications"
-msgstr ""
+msgstr "アプリを簡単に作成・カスタマイズ"
 
 #. module: base
 #: model:res.country,name:base.ec
@@ -10086,7 +10087,6 @@ msgstr "従業員ディレクトリ"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_employee_form
 #: model:ir.module.category,name:base.module_category_human_resources
-#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Employees"
 msgstr "従業員"
 
@@ -11077,6 +11077,13 @@ msgid "General Settings"
 msgstr "一般設定"
 
 #. module: base
+#: model:ir.actions.act_window,name:base.action_wizard_update_translations
+#: model:ir.ui.menu,name:base.menu_wizard_update_translations
+#: model:ir.ui.view,arch_db:base.wizard_update_translations
+msgid "Generate Missing Terms"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.ir_property_view_search
 msgid "Generic"
 msgstr "汎用"
@@ -11826,11 +11833,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: base
-#: model:ir.model.fields,help:base.field_ir_act_server_xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr "XMLファイルで定義されている場合、アクションのID"
-
-#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data_res_id
 msgid "ID of the target record in the database"
 msgstr "データベース内の目的レコードのID"
@@ -12052,7 +12054,7 @@ msgstr "画像"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
 msgid "Impacted Apps"
-msgstr "影響を受ける Apps"
+msgstr "影響を受けるアプリ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall_model_ids
@@ -12127,7 +12129,7 @@ msgstr "関連モジュール"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap
 msgid "In-App Purchases"
-msgstr ""
+msgstr "アプリ内課金"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_currency_search
@@ -12421,7 +12423,7 @@ msgid "Introspection report on objects"
 msgstr "オブジェクトのイントロスペクションレポート"
 
 #. module: base
-#: code:addons/models.py:3482
+#: code:addons/models.py:3483
 #, python-format
 msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
@@ -12772,7 +12774,7 @@ msgid "Language Name"
 msgstr "言語名"
 
 #. module: base
-#: code:addons/base/module/wizard/base_language_install.py:28
+#: code:addons/base/module/wizard/base_language_install.py:39
 #, python-format
 msgid "Language Pack"
 msgstr "言語パック"
@@ -13111,7 +13113,7 @@ msgstr "休暇管理"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays
 msgid "Leave allocations and leave requests"
-msgstr ""
+msgstr "休暇割当、休暇申請"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_holidays
@@ -13296,7 +13298,7 @@ msgstr "ライブチャット"
 #. module: base
 #: model:ir.module.module,summary:base.module_im_livechat
 msgid "Live Chat with Visitors/Customers"
-msgstr ""
+msgstr "ビジター/顧客とのライブチャット"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_currency_rate_live
@@ -13870,7 +13872,7 @@ msgid "Missing document(s)"
 msgstr "ドキュメントがありません"
 
 #. module: base
-#: code:addons/models.py:5134
+#: code:addons/models.py:5135
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
 msgstr "フィールドに必要な値がありません'%s' (%s)"
@@ -14059,6 +14061,14 @@ msgstr "モジュール依存"
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_exclusion
 msgid "Module exclusion"
+msgstr ""
+
+#. module: base
+#: code:addons/convert.py:829
+#, python-format
+msgid ""
+"Module loading %s failed: file %s could not be processed:\n"
+" %s"
 msgstr ""
 
 #. module: base
@@ -14358,13 +14368,13 @@ msgid "No gap"
 msgstr "ギャップなし"
 
 #. module: base
-#: code:addons/fields.py:2189
+#: code:addons/fields.py:2222
 #, python-format
 msgid "No inverse field %r found for %r"
 msgstr "逆フィールド %r はみつかりませんでした %r"
 
 #. module: base
-#: code:addons/base/module/wizard/base_update_translations.py:33
+#: code:addons/base/module/wizard/base_update_translations.py:26
 #, python-format
 msgid "No language with code \"%s\" exists"
 msgstr "コード %s を持つ言語が存在しません。"
@@ -14502,6 +14512,12 @@ msgstr "OHADA - 会計"
 #: model:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Object"
 msgstr "オブジェクト"
+
+#. module: base
+#: code:addons/model.py:148
+#, python-format
+msgid "Object %s doesn't exist"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_model
@@ -16466,7 +16482,7 @@ msgstr "PayuMoney 決済サービス"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal
 msgid "Periodical Appraisal"
-msgstr ""
+msgstr "定期評価"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_calendar
@@ -16972,7 +16988,7 @@ msgstr "団体、グループとメンバーシップの公開"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event
 msgid "Publish Events and Manage Online Registrations on your Website"
-msgstr ""
+msgstr "ウェブサイトでのイベント公開、オンライン参加登録管理"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_partner_assign
@@ -17065,7 +17081,7 @@ msgstr "カタール"
 #. module: base
 #: model:ir.module.module,summary:base.module_quality
 msgid "Quality Alerts and Control Points"
-msgstr ""
+msgstr "品質アラート、管理ポイント"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality
@@ -17181,7 +17197,7 @@ msgstr ""
 "レコードは今変更することはできません: このクーロン・タスクは、現在実行されているため、変更することはできません。数分後にもう一度お試しください"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:230 code:addons/models.py:3875
+#: code:addons/base/ir/ir_actions.py:230 code:addons/models.py:3876
 #, python-format
 msgid "Record does not exist or has been deleted."
 msgstr "レコードが存在しないか、削除されました。"
@@ -17205,7 +17221,7 @@ msgstr "採用プロセス"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription
 msgid "Recurring invoicing, renewals"
-msgstr ""
+msgstr "繰返請求、契約更新"
 
 #. module: base
 #: code:addons/base/module/module.py:343
@@ -17446,7 +17462,7 @@ msgstr "リソース名"
 #. module: base
 #: model:ir.module.module,summary:base.module_project_forecast
 msgid "Resource management for Project"
-msgstr ""
+msgstr "プロジェクトリソース管理"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant
@@ -17476,7 +17492,7 @@ msgstr "小売業"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_timesheet
 msgid "Review and approve employees time reports"
-msgstr ""
+msgstr "従業員時間報告のレビュー・承認"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat_margin_right
@@ -17792,12 +17808,12 @@ msgstr "添付ファイルのプレフィクス"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_calendar
 msgid "Schedule Appointments with Clients"
-msgstr ""
+msgstr "顧客とのアポイントメント調整"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_maintenance
 msgid "Schedule and manage maintenance on machine and tools."
-msgstr ""
+msgstr "設備/機器の保守管理"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_timesheet_holidays
@@ -17888,6 +17904,12 @@ msgid "See all possible values"
 msgstr "利用可能なすべての値を見る"
 
 #. module: base
+#: code:addons/common.py:42
+#, python-format
+msgid "See http://openerp.com"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_report_paperformat_format
 msgid "Select Proper Paper size"
 msgstr "適切な用紙サイズを選択します。"
@@ -17939,11 +17961,6 @@ msgid "Sell based on timesheets"
 msgstr "タイムシートに基づいた販売"
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Send Email"
-msgstr "Eメール送信"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_account
 #: model:ir.module.module,summary:base.module_account_invoicing
 msgid "Send Invoices and Track Payments"
@@ -17979,7 +17996,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_website_sign
 msgid ""
 "Send documents to sign online, receive and archive filled copies (esign)"
-msgstr ""
+msgstr "オンライン署名、署名済ドキュメントの受領・アーカイブ"
 
 #. module: base
 #: model:ir.module.module,description:base.module_calendar_sms
@@ -18166,7 +18183,7 @@ msgstr "共有ユーザ"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides
 msgid "Share and Publish Videos, Presentations and Documents"
-msgstr "像、プレゼンテーション、ドキュメントの共有と公開"
+msgstr "ビデオ、プレゼンテーション、ドキュメントの共有・公開"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_filters_view_search
@@ -18351,7 +18368,7 @@ msgid "Sort"
 msgstr "ソート"
 
 #. module: base
-#: code:addons/models.py:3615
+#: code:addons/models.py:3616
 #, python-format
 msgid "Sorting field %s not found on model %s"
 msgstr "ソートフィールド %s がこのモデル %s で見つかりません "
@@ -18714,18 +18731,6 @@ msgid "Synchronization with the external timesheet application"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_wizard_update_translations
-#: model:ir.ui.menu,name:base.menu_wizard_update_translations
-#: model:ir.ui.view,arch_db:base.wizard_update_translations
-msgid "Synchronize Terms"
-msgstr "用語の同期"
-
-#. module: base
-#: model:ir.ui.view,arch_db:base.wizard_update_translations
-msgid "Synchronize Translation"
-msgstr "翻訳を同期"
-
-#. module: base
 #: model:res.country,name:base.sy
 msgid "Syria"
 msgstr "シリア"
@@ -18876,7 +18881,6 @@ msgstr "技術名称"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
-#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "技術設定"
 
@@ -19244,6 +19248,15 @@ msgid "The only predefined variables are"
 msgstr "事前に定義された変数は、"
 
 #. module: base
+#: code:addons/model.py:121
+#, python-format
+msgid ""
+"The operation cannot be completed, probably due to the following:\n"
+"- deletion: you may be trying to delete a record while other records still reference it\n"
+"- creation/update: a mandatory field is not correctly set"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_domain
 msgid ""
 "The optional domain to restrict possible values for relationship fields, "
@@ -19363,7 +19376,7 @@ msgid ""
 msgstr "このユーザに提供されているプライベートフィルタ。空のままにすると、フィルタは、すべてのユーザへの公開と利用可能です。"
 
 #. module: base
-#: code:addons/models.py:5166
+#: code:addons/models.py:5167
 #, python-format
 msgid ""
 "The value for the field '%s' already exists (this is probably '%s' in the "
@@ -19371,7 +19384,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:5172
+#: code:addons/models.py:5173
 #, python-format
 msgid ""
 "The values for the fields '%s' already exist (they are probably '%s' in the "
@@ -19496,7 +19509,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_livechat
 msgid "Ticketing, Support, Livechat"
-msgstr ""
+msgstr "チケット、サポート、ライブチャット"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_slides
@@ -20069,6 +20082,13 @@ msgid "Unknown value '%s' for boolean field '%%(field)s', assuming '%s'"
 msgstr "不明な値です '%s' ブール値フィールド '%%(field)s', もしかして '%s'"
 
 #. module: base
+#: code:addons/translate.py:708
+#, python-format
+msgid ""
+"Unrecognized extension: must be one of .csv, .po, or .tgz (received .%s)."
+msgstr ""
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.view_translation_search
 msgid "Untranslated"
 msgstr "未翻訳"
@@ -20308,7 +20328,7 @@ msgstr "ユーザ"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_users
 msgid "Users & Companies"
-msgstr ""
+msgstr "ユーザと会社"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_groups_form
@@ -20655,7 +20675,7 @@ msgid "Warning!"
 msgstr "警告！"
 
 #. module: base
-#: code:addons/models.py:4884
+#: code:addons/models.py:4885
 #, python-format
 msgid "Warnings"
 msgstr "警告"

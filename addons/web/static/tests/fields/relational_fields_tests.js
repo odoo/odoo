@@ -572,6 +572,38 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2one field and list navigation', function (assert) {
+        assert.expect(3);
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="trululu"/></tree>',
+        });
+
+        // edit first input, to trigger autocomplete
+        list.$('.o_data_row .o_data_cell').first().click();
+        list.$('.o_data_cell input').val('').trigger('input');
+
+        // press keydown, to select first choice
+        list.$('.o_data_cell input').focus().trigger($.Event('keydown', {
+            which: $.ui.keyCode.DOWN,
+            keyCode: $.ui.keyCode.DOWN,
+        }));
+
+        // we now check that the dropdown is open (and that the focus did not go
+        // to the next line)
+        var $dropdown = list.$('.o_field_many2one input').autocomplete('widget');
+        assert.ok($dropdown.is(':visible'), "dropdown should be visible");
+        assert.ok(list.$('.o_data_row:eq(0)').hasClass('o_selected_row'),
+            'first data row should still be selected');
+        assert.ok(!list.$('.o_data_row:eq(1)').hasClass('o_selected_row'),
+            'second data row should not be selected');
+
+        list.destroy();
+    });
+
     QUnit.test('standalone many2one field', function (assert) {
         assert.expect(3);
         var done = assert.async();

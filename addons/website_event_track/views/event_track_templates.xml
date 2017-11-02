@@ -42,6 +42,7 @@
 
 <template id="agenda">
     <t t-call="website_event.layout">
+        <div class="oe_structure"/>
         <section class="container">
             <h1 class="text-center" t-field="event.name"/>
             <div class="form-inline pull-right">
@@ -107,12 +108,14 @@
             </tr>
             </table>
         </section>
+        <div class="oe_structure"/>
     </t>
 </template>
 
 
 <template id="tracks">
     <t t-call="website_event.event_details">
+        <div class="oe_structure"/>
         <div id="left_column">
         </div>
         <div class="col-md-9">
@@ -151,6 +154,7 @@
                 </div>
             </div>
         </div>
+        <div class="oe_structure"/>
     </t>
 </template>
 
