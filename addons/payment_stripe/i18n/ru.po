@@ -3,16 +3,16 @@
 # * payment_stripe
 # 
 # Translators:
-# SV <sv@grimmette.ru>, 2017
+# Sergey Vilizhanin <sv@grimmette.ru>, 2017
 # Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 # Anishchuk Sergei <anishukserg@l-profit.ru>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
 "Last-Translator: Anishchuk Sergei <anishukserg@l-profit.ru>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -79,6 +79,13 @@ msgid "Expires (MM / YY)"
 msgstr ""
 
 #. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/js/stripe.js:32
+#, python-format
+msgid "Just one more second, confirming your payment..."
+msgstr ""
+
+#. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
 msgid "Payment Acquirer"
 msgstr "Платежи клиентов"
@@ -90,10 +97,18 @@ msgstr "Операция Оплаты"
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/js/stripe.js:38
+#: code:addons/payment_stripe/static/src/js/stripe.js:57
 #, python-format
 msgid "Payment error"
 msgstr "Ошибка платежа"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:167
+#, python-format
+msgid ""
+"Perhaps the problem can be solved by double-checking your credit card "
+"details, or contacting your bank?"
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_publishable_key
@@ -106,24 +121,28 @@ msgid "Stripe Secret Key"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:171
+#: code:addons/payment_stripe/models/payment.py:165
+#, python-format
+msgid "Stripe gave us the following info about the problem: '%s'"
+msgstr ""
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:177
 #, python-format
 msgid "Stripe: %s orders found for reference %s"
 msgstr "Stripe: %s заказы нашли для ссылки %s"
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:161
-#, python-format
-msgid ""
-"Stripe: invalid reply received from provider, missing reference. Additional "
-"message: %s"
-msgstr ""
-
-#. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:167
+#: code:addons/payment_stripe/models/payment.py:173
 #, python-format
 msgid "Stripe: no order found for reference %s"
 msgstr "Stripe: не найдены заказы для ссылки %s"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:163
+#, python-format
+msgid "We're sorry to report that the transaction has failed."
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token

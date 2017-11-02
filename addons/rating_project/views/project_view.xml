@@ -37,7 +37,7 @@
         </record>
 
         <record id="rating_rating_action_view_project_rating_task" model="ir.actions.act_window">
-            <field name="name">Ratings for tasks</field>
+            <field name="name">Ratings on tasks</field>
             <field name="res_model">rating.rating</field>
             <field name="view_mode">kanban,tree,graph,pivot,form</field>
             <field name="domain">[('consumed','=',True), ('parent_res_model','=','project.project'), ('parent_res_id','=',active_id), ('res_model','=','project.task')]</field>
@@ -50,7 +50,7 @@
         </record>
 
         <record id="rating_rating_action_task" model="ir.actions.act_window">
-            <field name="name">Customer Ratings from task</field>
+            <field name="name">Customer Ratings on tasks</field>
             <field name="res_model">rating.rating</field>
             <field name="view_mode">kanban,tree,pivot,graph,form</field>
             <field name="domain">[('res_model', '=', 'project.task'), ('res_id', '=', active_id), ('consumed', '=', True)]</field>

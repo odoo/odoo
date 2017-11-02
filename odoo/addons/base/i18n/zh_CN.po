@@ -42,15 +42,14 @@
 # 北京路远通 <sales@luyuantong.com>, 2017
 # glovebx <ruinning@163.com>, 2017
 # 朱仁杰 <johnson19960308@gmail.com>, 2017
-# 木头 <mynameisshiy@gmail.com>, 2017
 # Connie Xiao <connie.xiao@elico-corp.com>, 2017
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 13:14+0000\n"
-"PO-Revision-Date: 2017-10-10 13:14+0000\n"
+"POT-Creation-Date: 2017-10-24 09:14+0000\n"
+"PO-Revision-Date: 2017-10-24 09:14+0000\n"
 "Last-Translator: Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -250,7 +249,7 @@ msgstr ""
 "\n"
 "\n"
 "\n"
-"该模块已经安装到你的系统中了。"
+"该模块已经安装到您的系统中了。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_sale
@@ -292,6 +291,18 @@ msgid ""
 "and get rewards.\n"
 "\n"
 msgstr ""
+
+#. module: base
+#: code:addons/model.py:136
+#, python-format
+msgid ""
+"\n"
+"\n"
+"[object with reference: %s - %s]"
+msgstr ""
+"\n"
+"\n"
+"[object with reference: %s - %s]"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_invoice_bba
@@ -6336,11 +6347,6 @@ msgid "Add Delivery Costs to Online Sales"
 msgstr "添加交货成本到在线销售"
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Add Followers"
-msgstr "添加关注者"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_transifex
 msgid "Add a link to edit a translation in Transifex"
 msgstr ""
@@ -6610,6 +6616,13 @@ msgid ""
 "Allows you to create your invoices and track the payments. It is an easier "
 "version of the accounting module for managers who are not accountants."
 msgstr "允许你创建发票，以及跟踪付款。这是为不是会计师的管理人员准备的简化版会计模块。"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid ""
+"Also you will find here all the related documents and download it by "
+"clicking on any individual document."
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:378
@@ -6967,11 +6980,6 @@ msgid "Automate Marketing Campaigns"
 msgstr ""
 
 #. module: base
-#: selection:ir.actions.server,usage:0
-msgid "Automated Action"
-msgstr "自动动作"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
 msgid "Automated Action Rules"
 msgstr "自动动作规则"
@@ -7078,6 +7086,12 @@ msgstr "B9 23 33 x 62 毫米"
 #: selection:res.company,external_report_layout:0
 msgid "Background"
 msgstr "背景"
+
+#. module: base
+#: code:addons/translate.py:1066
+#, python-format
+msgid "Bad file format: %s"
+msgstr "错误的文件格式: %s"
 
 #. module: base
 #: model:res.country,name:base.bs
@@ -7913,14 +7927,14 @@ msgid "Clean"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid "Click here to attach a new document."
-msgstr "单击此处附加新文档。"
-
-#. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view_custom
 msgid "Click here to create a customized view"
 msgstr "单击此处创建自定义视图"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid "Click here to create new documents."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
@@ -8530,7 +8544,6 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_create_date
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_create_date
-#: model:ir.model.fields,field_description:base.field_res_users_create_date
 msgid "Create Date"
 msgstr "创建日期"
 
@@ -8759,6 +8772,7 @@ msgstr "创建人"
 #: model:ir.model.fields,field_description:base.field_res_partner_industry_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title_create_date
 #: model:ir.model.fields,field_description:base.field_res_request_link_create_date
+#: model:ir.model.fields,field_description:base.field_res_users_create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log_create_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_create_date
 msgid "Created on"
@@ -9127,27 +9141,6 @@ msgstr "日：%(day)s"
 #: selection:ir.cron,interval_type:0
 msgid "Days"
 msgstr "天数"
-
-#. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Dear Sir/Madam,\n"
-"\n"
-"Our records indicate that some payments on your account are still due. Please find details below.\n"
-"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
-"If you have any queries regarding your account, Please contact us.\n"
-"\n"
-"Thank you in advance for your cooperation.\n"
-"Best Regards,"
-msgstr ""
-"尊敬的先生/女士,\n"
-"    我们的记录表明，你的账户仍有到期的付款。请查找下面的明细。\n"
-"    如果款项已经支付，请忽略此通知。否则，请按如下所述的总金额转交给我们。\n"
-"    如果有任何关于账户的疑问，请联系我们。\n"
-"\n"
-"    谢谢你的合作。\n"
-"    此致 ,\n"
-"           敬礼"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_debug
@@ -9802,7 +9795,6 @@ msgstr "员工目录"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_employee_form
 #: model:ir.module.category,name:base.module_category_human_resources
-#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Employees"
 msgstr "员工"
 
@@ -10788,6 +10780,13 @@ msgid "General Settings"
 msgstr "常规设置"
 
 #. module: base
+#: model:ir.actions.act_window,name:base.action_wizard_update_translations
+#: model:ir.ui.menu,name:base.menu_wizard_update_translations
+#: model:ir.ui.view,arch_db:base.wizard_update_translations
+msgid "Generate Missing Terms"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.ir_property_view_search
 msgid "Generic"
 msgstr "通用的"
@@ -11537,11 +11536,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: base
-#: model:ir.model.fields,help:base.field_ir_act_server_xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr "在XML文件中定义的动作的ID"
-
-#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data_res_id
 msgid "ID of the target record in the database"
 msgstr "在数据库中目标记录的ID"
@@ -12129,7 +12123,7 @@ msgid "Introspection report on objects"
 msgstr "对象的自省报告"
 
 #. module: base
-#: code:addons/models.py:3482
+#: code:addons/models.py:3483
 #, python-format
 msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
@@ -12478,7 +12472,7 @@ msgid "Language Name"
 msgstr "语言名称"
 
 #. module: base
-#: code:addons/base/module/wizard/base_language_install.py:28
+#: code:addons/base/module/wizard/base_language_install.py:39
 #, python-format
 msgid "Language Pack"
 msgstr "语言包"
@@ -13572,7 +13566,7 @@ msgid "Missing document(s)"
 msgstr "缺失单据"
 
 #. module: base
-#: code:addons/models.py:5134
+#: code:addons/models.py:5135
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
 msgstr "找不到字段 '%s' (%s)所需的值"
@@ -13762,6 +13756,16 @@ msgstr "模块依赖"
 #: model:ir.model,name:base.model_ir_module_module_exclusion
 msgid "Module exclusion"
 msgstr ""
+
+#. module: base
+#: code:addons/convert.py:829
+#, python-format
+msgid ""
+"Module loading %s failed: file %s could not be processed:\n"
+" %s"
+msgstr ""
+"模块加载 %s 失败: 文件 %s 无法处理:\n"
+" %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_module
@@ -14060,13 +14064,13 @@ msgid "No gap"
 msgstr "无间隔"
 
 #. module: base
-#: code:addons/fields.py:2189
+#: code:addons/fields.py:2222
 #, python-format
 msgid "No inverse field %r found for %r"
 msgstr "未找到%r对应的字段%r"
 
 #. module: base
-#: code:addons/base/module/wizard/base_update_translations.py:33
+#: code:addons/base/module/wizard/base_update_translations.py:26
 #, python-format
 msgid "No language with code \"%s\" exists"
 msgstr "不存在代码为“%s”的语言"
@@ -14204,6 +14208,12 @@ msgstr "OHADA - 会计"
 #: model:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Object"
 msgstr "对象"
+
+#. module: base
+#: code:addons/model.py:148
+#, python-format
+msgid "Object %s doesn't exist"
+msgstr "对象%s 不存在"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_model
@@ -16868,7 +16878,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:230 code:addons/models.py:3875
+#: code:addons/base/ir/ir_actions.py:230 code:addons/models.py:3876
 #, python-format
 msgid "Record does not exist or has been deleted."
 msgstr "记录不存在或已删除"
@@ -17575,6 +17585,12 @@ msgid "See all possible values"
 msgstr "查看所有的可能值"
 
 #. module: base
+#: code:addons/common.py:42
+#, python-format
+msgid "See http://openerp.com"
+msgstr "见 http://openerp.com"
+
+#. module: base
 #: model:ir.model.fields,help:base.field_report_paperformat_format
 msgid "Select Proper Paper size"
 msgstr "选择正确的纸张尺寸"
@@ -17626,11 +17642,6 @@ msgstr "在线销售你的产品"
 #: model:ir.module.module,summary:base.module_sale_timesheet
 msgid "Sell based on timesheets"
 msgstr "基于工时表销售"
-
-#. module: base
-#: selection:ir.actions.server,state:0
-msgid "Send Email"
-msgstr "发送电子邮件"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account
@@ -18039,7 +18050,7 @@ msgid "Sort"
 msgstr "排序"
 
 #. module: base
-#: code:addons/models.py:3615
+#: code:addons/models.py:3616
 #, python-format
 msgid "Sorting field %s not found on model %s"
 msgstr "模型%s 中未找到排序字段 %s "
@@ -18402,18 +18413,6 @@ msgid "Synchronization with the external timesheet application"
 msgstr "与外部的工时单应用同步"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_wizard_update_translations
-#: model:ir.ui.menu,name:base.menu_wizard_update_translations
-#: model:ir.ui.view,arch_db:base.wizard_update_translations
-msgid "Synchronize Terms"
-msgstr "同步术语"
-
-#. module: base
-#: model:ir.ui.view,arch_db:base.wizard_update_translations
-msgid "Synchronize Translation"
-msgstr "同步翻译"
-
-#. module: base
 #: model:res.country,name:base.sy
 msgid "Syria"
 msgstr "叙利亚"
@@ -18564,7 +18563,6 @@ msgstr "技术名称"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
-#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "技术设置"
 
@@ -18903,6 +18901,17 @@ msgid "The only predefined variables are"
 msgstr "唯一预设的变量是"
 
 #. module: base
+#: code:addons/model.py:121
+#, python-format
+msgid ""
+"The operation cannot be completed, probably due to the following:\n"
+"- deletion: you may be trying to delete a record while other records still reference it\n"
+"- creation/update: a mandatory field is not correctly set"
+msgstr ""
+"该操作无法完成，可能是由于以下原因：\\n - 删除：您可能正试图删除一个记录，但是仍有其它记录引用到它 \\n - "
+"创建/更新：一个强制字段没有正确设置"
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_domain
 msgid ""
 "The optional domain to restrict possible values for relationship fields, "
@@ -19022,7 +19031,7 @@ msgid ""
 msgstr "用户的这个筛选是私有的。留空的话，这个筛选是公开，所有用户都可用。"
 
 #. module: base
-#: code:addons/models.py:5166
+#: code:addons/models.py:5167
 #, python-format
 msgid ""
 "The value for the field '%s' already exists (this is probably '%s' in the "
@@ -19030,7 +19039,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:5172
+#: code:addons/models.py:5173
 #, python-format
 msgid ""
 "The values for the fields '%s' already exist (they are probably '%s' in the "
@@ -19720,6 +19729,13 @@ msgid "Unknown value '%s' for boolean field '%%(field)s', assuming '%s'"
 msgstr "'%s'对于布尔字段'%%(field)s'是未知值，期望 '%s'"
 
 #. module: base
+#: code:addons/translate.py:708
+#, python-format
+msgid ""
+"Unrecognized extension: must be one of .csv, .po, or .tgz (received .%s)."
+msgstr "无法识别的扩展名后缀名: 规定为 .csv, 或.po, 或 .tgz格式的后续名扩展名 (公认的 .%s)."
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.view_translation_search
 msgid "Untranslated"
 msgstr "未翻译的"
@@ -20299,7 +20315,7 @@ msgid "Warning!"
 msgstr "警告!"
 
 #. module: base
-#: code:addons/models.py:4884
+#: code:addons/models.py:4885
 #, python-format
 msgid "Warnings"
 msgstr "警告"

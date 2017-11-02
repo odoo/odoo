@@ -295,6 +295,16 @@ msgid "All product quantities must be greater or equal to 0.\n"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_post_visible
+msgid "Allowed to Post Inventory"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_unreserve_visible
+msgid "Allowed to Unreserve Inventory"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
 msgid "Approve"
 msgstr ""
@@ -694,19 +704,19 @@ msgid "Confirmed"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_consume_line_ids
-msgid "Consume Line"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_unbuild_id
-msgid "Consume Unbuild Order"
+msgid "Consumed Disassembly Order"
 msgstr ""
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.production_message
 msgid "Consumed"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_consume_line_ids
+msgid "Consumed Disassembly Lines"
 msgstr ""
 
 #. module: mrp
@@ -732,21 +742,6 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
 msgid "Cost Structure"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_late
-msgid "Count Mo Late"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_todo
-msgid "Count Mo Todo"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_waiting
-msgid "Count Mo Waiting"
 msgstr ""
 
 #. module: mrp
@@ -879,6 +874,13 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_location_dest_id
 msgid "Destination Location"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_unbuild
+#: model:ir.model.fields,field_description:mrp.field_stock_move_unbuild_id
+#: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
+msgid "Disassembly Order"
 msgstr ""
 
 #. module: mrp
@@ -1136,6 +1138,11 @@ msgid "Has Attachments"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_produced
+msgid "Has Been Produced"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_has_moves
 msgid "Has Moves"
 msgstr ""
@@ -1254,33 +1261,13 @@ msgid "Inventory Moves"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_post_visible
-msgid "Inventory Post Visible"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_unreserve_visible
-msgid "Inventory Unreserve Visible"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_move_line_ids
 msgid "Inventory moves for which you must scan a lot number at this work order"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_user_working
-msgid "Is Current User Working"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_is_locked
 msgid "Is Locked"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_produced
-msgid "Is Produced"
 msgstr ""
 
 #. module: mrp
@@ -1296,6 +1283,11 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_public
 msgid "Is public document"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_user_working
+msgid "Is the Current User Working"
 msgstr ""
 
 #. module: mrp
@@ -1663,11 +1655,6 @@ msgid "Move"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_dest_ids
-msgid "Move Dest"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line_done_move
 msgid "Move Done"
 msgstr ""
@@ -1802,6 +1789,21 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 msgid "Notes"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_late
+msgid "Number of Manufacturing Orders Late"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_todo
+msgid "Number of Manufacturing Orders to Process"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_waiting
+msgid "Number of Manufacturing Orders Waiting"
 msgstr ""
 
 #. module: mrp
@@ -2042,7 +2044,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_produce_line_ids
-msgid "Produce Line"
+msgid "Processed Disassembly Lines"
 msgstr ""
 
 #. module: mrp
@@ -2134,6 +2136,11 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_production_date
 msgid "Production Date"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_document
+msgid "Production Document"
 msgstr ""
 
 #. module: mrp
@@ -2702,6 +2709,11 @@ msgid "Stock Move"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_dest_ids
+msgid "Stock Movements of Produced Goods"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_store_fname
 msgid "Stored Filename"
 msgstr ""
@@ -2803,6 +2815,12 @@ msgstr ""
 #: code:addons/mrp/models/mrp_bom.py:254
 #, python-format
 msgid "The Product Unit of Measure you chose has a different category than in the product form."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:94
+#, python-format
+msgid "The production order for '%s' has no quantity specified"
 msgstr ""
 
 #. module: mrp
@@ -3043,13 +3061,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild_unbuild_id
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_mrp_unbuild
-#: model:ir.model.fields,field_description:mrp.field_stock_move_unbuild_id
-#: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
-msgid "Unbuild Order"
 msgstr ""
 
 #. module: mrp
@@ -3519,12 +3530,6 @@ msgid "You need to provide a lot for the finished product"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:94
-#, python-format
-msgid "You should at least produce some quantity"
-msgstr ""
-
-#. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:314
 #, python-format
 msgid "You should provide a lot/serial number for a component"
@@ -3573,11 +3578,6 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_line
 msgid "mrp.bom.line"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_mrp_document
-msgid "mrp.document"
 msgstr ""
 
 #. module: mrp

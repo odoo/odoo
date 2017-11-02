@@ -1,28 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr
-#
-# Translators:
-# Arma Gedonsky <armagedonsky@hot.ee>, 2016
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-03-12 20:34+0000\n"
-"Last-Translator: Arma Gedonsky <armagedonsky@hot.ee>\n"
-"Language-Team: Estonian (http://www.transifex.com/odoo/odoo-9/language/et/)\n"
-"Language: et\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr
-#: code:addons/hr/hr.py:120
+#: code:addons/hr/models/hr.py:75
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (koopia)"
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -65,14 +62,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid ""
 "<span class=\"o_unfollow\">Unfollow</span>\n"
-"                                    <span class=\"o_following\">Following</"
-"span>"
+"                                    <span class=\"o_following\">Following</span>"
 msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
-msgid "<span>Reports</span>"
-msgstr "<span>Raportid</span>"
+msgid "<span>Reporting</span>"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -111,9 +107,10 @@ msgid "A good job in a young and dynamic team"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
 msgid "Active"
-msgstr "Aktiivne"
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -121,9 +118,10 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr ""
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
-msgstr "Arhiveeritud"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_bank_account_id
@@ -147,8 +145,8 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_marketing
 msgid ""
 "Because of our constant growth, we're now looking for people to reinforce "
-"our team of enthusiastic developers. So if working on an open source project "
-"in a friendly and cooperative atmosphere sounds like fun to you, read on..."
+"our team of enthusiastic developers. So if working on an open source project"
+" in a friendly and cooperative atmosphere sounds like fun to you, read on..."
 msgstr ""
 
 #. module: hr
@@ -177,7 +175,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_child_ids
 msgid "Child Departments"
-msgstr "Alamosakonnad"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -185,29 +183,14 @@ msgid "Citizenship & Other Information"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_city
-msgid "City"
-msgstr "Linn"
-
-#. module: hr
-#: model:web.tip,description:hr.hr_tip_2
-msgid "Click here to change the recruitment goal!"
-msgstr ""
-
-#. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Click to add a new employee."
-msgstr "Kliki uue töötaja lisamiseks."
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Click to create a department."
-msgstr ""
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid "Click to define a new department."
 msgstr ""
 
 #. module: hr
@@ -233,11 +216,6 @@ msgid "Coach"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_code
-msgid "Code"
-msgstr "Kood"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_color
@@ -247,21 +225,35 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_tree
 msgid "Companies"
-msgstr "Ettevõtted"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_company_id
-#: model:ir.model.fields,field_description:hr.field_hr_employee_company_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_company_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Company"
-msgstr "Ettevõte"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings_resource_calendar_id
+msgid "Company Working Hours"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
+msgid "Complete Name"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
 msgid "Configuration"
-msgstr "Seadistus"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_config_settings_action
+msgid "Configure HR"
+msgstr ""
 
 #. module: hr
 #: model:hr.job,name:hr.job_consultant
@@ -269,9 +261,14 @@ msgid "Consultant"
 msgstr ""
 
 #. module: hr
+#: model:ir.model,name:hr.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Contact Information"
-msgstr "KontaktInformatsioon"
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
@@ -281,17 +278,12 @@ msgid "Contributions to open source projects"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.view_department_form_installer
-msgid "Create Your Departments"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job_create_uid
 msgid "Created by"
-msgstr "Loonud"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_date
@@ -299,7 +291,7 @@ msgstr "Loonud"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_date
 #: model:ir.model.fields,field_description:hr.field_hr_job_create_date
 msgid "Created on"
-msgstr "Loodud"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_employee
@@ -319,36 +311,30 @@ msgid "Define a clear communication strategy"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_calendar_id
-msgid "Define the schedule of resource"
-msgstr ""
-
-#. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "Deliver generic Odoo functional training sessions"
 msgstr ""
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_department_id
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Department"
-msgstr "Osakond"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_name
 msgid "Department Name"
-msgstr "Osakonna nimi"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 msgid "Departments"
-msgstr "Osakonnad"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_display_name
@@ -356,28 +342,28 @@ msgstr "Osakonnad"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job_display_name
 msgid "Display Name"
-msgstr "Näidatav nimi"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Divorced"
-msgstr "Lahutatud"
+msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_time_efficiency
-msgid "Efficiency Factor"
-msgstr "Kasuteguri faktor"
+#: model:ir.model,name:hr.model_mail_alias
+msgid "Email Aliases"
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee"
-msgstr "Töötaja"
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_category
 msgid "Employee Category"
-msgstr "Töötaja kategooria"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_name
@@ -399,7 +385,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee's Name"
-msgstr "Töötaja nimi"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.act_employee_from_department
@@ -414,12 +400,12 @@ msgstr "Töötaja nimi"
 #: model:ir.ui.view,arch_db:hr.view_employee_tree
 #: model:ir.ui.view,arch_db:hr.view_partner_tree2
 msgid "Employees"
-msgstr "Töötajad"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
 msgid "Employees Structure"
-msgstr "Töötajate Struktuur"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_category_list
@@ -427,13 +413,20 @@ msgid "Employees Tags"
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/hr.py:294 constraint:hr.department:0
+#: model:ir.model.fields,help:hr.field_hr_employee_address_home_id
+msgid ""
+"Enter here the private address of the employee, not the one linked to your "
+"company."
+msgstr ""
+
+#. module: hr
+#: code:addons/hr/models/hr.py:303
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/hr.py:264 constraint:hr.employee:0
+#: code:addons/hr/models/hr.py:184
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr ""
@@ -457,7 +450,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,gender:0
 msgid "Female"
-msgstr "Naine"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
@@ -472,16 +465,11 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Followers"
-msgstr "Jälgijad"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
 msgid "Gender"
-msgstr "Sugu"
-
-#. module: hr
-#: model:web.tip,description:hr.hr_tip_1
-msgid "Get all applications related to this job position."
 msgstr ""
 
 #. module: hr
@@ -501,7 +489,7 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_developer
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Good knowledge of the latest web technologies"
-msgstr "Head teadmised viimastest veebitehnoloogiatest"
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
@@ -528,7 +516,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Group By"
-msgstr "Rühmitamine"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_department
+msgid "HR Department"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -561,14 +554,9 @@ msgid "Hired Employees"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
-msgid "Home Address"
-msgstr "Kodune aadress"
-
-#. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
-msgstr "Inimressursid"
+msgstr ""
 
 #. module: hr
 #: model:hr.job,name:hr.job_hrm
@@ -581,7 +569,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_identification_id
@@ -632,7 +620,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.view_hr_job_tree
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Job"
-msgstr "Töö"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_description
@@ -640,41 +628,24 @@ msgid "Job Description"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job_name
-msgid "Job Name"
-msgstr ""
-
-#. module: hr
 #: model:ir.model,name:hr.model_hr_job
+#: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
+#: model:ir.model.fields,field_description:hr.field_hr_job_name
 msgid "Job Position"
-msgstr "Ametipositsioon"
-
-#. module: hr
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
-msgid "Job Position Name"
 msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
-#: model:ir.ui.menu,name:hr.menu_hr_job_position
-#: model:ir.ui.menu,name:hr.menu_hr_job_position_config
 msgid "Job Positions"
-msgstr "Ametipositsioon"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
 msgid ""
 "Job Positions are used to define jobs and their requirements.\n"
-"                You can keep track of the number of employees you have per "
-"job\n"
-"                position and follow the evolution according to what you "
-"planned\n"
+"                You can keep track of the number of employees you have per job\n"
+"                position and follow the evolution according to what you planned\n"
 "                for the future."
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
-msgid "Job Title"
 msgstr ""
 
 #. module: hr
@@ -689,7 +660,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_job___last_update
 msgid "Last Modified on"
-msgstr "Viimati muudetud"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_uid
@@ -697,7 +668,7 @@ msgstr "Viimati muudetud"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job_write_uid
 msgid "Last Updated by"
-msgstr "Viimati uuendatud"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_date
@@ -705,11 +676,6 @@ msgstr "Viimati uuendatud"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_date
 #: model:ir.model.fields,field_description:hr.field_hr_job_write_date
 msgid "Last Updated on"
-msgstr "Viimati uuendatud"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_last_login
-msgid "Latest Connection"
 msgstr ""
 
 #. module: hr
@@ -733,26 +699,22 @@ msgid "Launch new products, marketing campaigns and offers"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_login
-msgid "Login"
-msgstr "Kasutajanimi"
-
-#. module: hr
 #: selection:hr.employee,gender:0
 msgid "Male"
-msgstr "Mees"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_manager_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_parent_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:res.groups,name:hr.group_hr_manager
 msgid "Manager"
-msgstr "Juhataja"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_marital
 msgid "Marital Status"
-msgstr "Perekonnaseis"
+msgstr ""
 
 #. module: hr
 #: model:hr.job,name:hr.job_marketing
@@ -761,7 +723,7 @@ msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
-msgid "Married"
+msgid "Married (or similar)"
 msgstr ""
 
 #. module: hr
@@ -787,16 +749,11 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_member_ids
 msgid "Members"
-msgstr "Liikmed"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Messages"
-msgstr "Sõnumid"
-
-#. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
-msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr ""
 
 #. module: hr
@@ -811,11 +768,9 @@ msgid "Must have ..."
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name
-#: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
 msgid "Name"
-msgstr "Nimi"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_country_id
@@ -834,14 +789,19 @@ msgid "Nice to have"
 msgstr ""
 
 #. module: hr
+#: selection:hr.job,state:0
+msgid "Not Recruiting"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
 msgid "Note"
-msgstr "Märkus"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_notes
 msgid "Notes"
-msgstr "Märkmed"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_employee
@@ -864,13 +824,18 @@ msgstr ""
 msgid ""
 "Odoo's department structure is used to manage all documents\n"
 "                related to employees by departments: expenses, timesheets,\n"
-"                leaves and holidays, recruitments, etc."
+"                leaves, recruitments, etc."
+msgstr ""
+
+#. module: hr
+#: model:res.groups,name:hr.group_hr_user
+msgid "Officer"
 msgstr ""
 
 #. module: hr
 #: selection:hr.employee,gender:0
 msgid "Other"
-msgstr "Muu"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -891,11 +856,6 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_parent_id
 msgid "Parent Department"
-msgstr "Ülemosakond"
-
-#. module: hr
-#: model:ir.model,name:hr.model_res_partner
-msgid "Partner"
 msgstr ""
 
 #. module: hr
@@ -907,11 +867,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_passport_id
 msgid "Passport No"
 msgstr ""
-
-#. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Personal Information"
-msgstr "Isiklikud andmed"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_image
@@ -942,8 +897,18 @@ msgid "Preferably 1 year of experience"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
+msgid "Private Address"
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Public Information"
+msgid "Private Information"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Prout prout prout"
 msgstr ""
 
 #. module: hr
@@ -957,19 +922,19 @@ msgid "Quick and autonomous learner"
 msgstr ""
 
 #. module: hr
-#: selection:hr.job,state:0
-msgid "Recruitment Closed"
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Recruitment"
 msgstr ""
 
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Recruitment in Progress"
-msgstr "Värbamine on töös"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Related User"
-msgstr "Seotud kasutaja"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users_employee_ids
@@ -983,23 +948,13 @@ msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
-msgid "Reports"
-msgstr "Aruanded"
+msgid "Reporting"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_requirements
 msgid "Requirements"
 msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_resource_id
-msgid "Resource"
-msgstr "Ressurss"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_resource_type
-msgid "Resource Type"
-msgstr "Ressursi tüüp"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1010,17 +965,17 @@ msgstr "Ressursi tüüp"
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Responsibilities"
-msgstr "Kohustused"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_sinid
 msgid "SIN No"
-msgstr "SK nr"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_ssnid
 msgid "SSN No"
-msgstr "Isikukood"
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1030,15 +985,38 @@ msgid "Scale our events organization all around the world"
 msgstr ""
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid ""
+"Set default calendar used to compute time allocation for leaves, timesheets,"
+" ..."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_state
 msgid ""
 "Set whether the recruitment process is open or closed for this job position."
 msgstr ""
 
 #. module: hr
+#: model:ir.ui.menu,name:hr.hr_menu_configuration
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Settings"
-msgstr "Seaded"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings_module_hr_org_chart
+msgid "Show Organizational Chart"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Show organizational chart on employee form"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Show organizational chart on employee form."
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -1065,8 +1043,8 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_employee_image_small
 msgid ""
 "Small-sized photo of the employee. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
 msgstr ""
 
 #. module: hr
@@ -1084,7 +1062,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Status"
-msgstr "Olek"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -1099,17 +1077,17 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_child_ids
 msgid "Subordinates"
-msgstr "Alluvad"
+msgstr ""
 
 #. module: hr
 #: sql_constraint:hr.employee.category:0
 msgid "Tag name already exists !"
-msgstr "Sildi nimi on juba olemas!"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_ids
 msgid "Tags"
-msgstr "Sildid"
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -1122,17 +1100,13 @@ msgid "Team spirit and good communication"
 msgstr ""
 
 #. module: hr
-#: sql_constraint:hr.job:0
-msgid "The name of the job position must be unique per department in company!"
+#: model:ir.model.fields,field_description:hr.field_hr_employee_is_address_home_a_company
+msgid "The employee adress has a company linked"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
-msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
+#: sql_constraint:hr.job:0
+msgid "The name of the job position must be unique per department in company!"
 msgstr ""
 
 #. module: hr
@@ -1150,7 +1124,7 @@ msgstr ""
 #. module: hr
 #: model:hr.job,name:hr.job_trainee
 msgid "Trainee"
-msgstr "Treener"
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
@@ -1163,27 +1137,50 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
-msgstr "Lugemata sõnumid"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid ""
+"Use here the home address of the employee.\n"
+"                                            This private address is used in the expense report reimbursement document.\n"
+"                                            It should be different from the work address."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
 msgid "User"
-msgstr "Kasutaja"
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
 msgid "Users"
-msgstr "Kasutajad"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.hr_job_view_kanban
+msgid "Vacancies :"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_visa_expire
+msgid "Visa Expire Date"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_visa_no
+msgid "Visa No"
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid ""
-"We are looking for a motivated and results-driven Functional Consultant! You "
-"will take part in the consulting services we provide to our partners and "
+"We are looking for a motivated and results-driven Functional Consultant! You"
+" will take part in the consulting services we provide to our partners and "
 "customers, on the functional side. Your job start from the quotation to the "
-"customer to the delivery to the customer. You listen the customer and try to "
-"give him the best service. You report to the head of consulting service and "
-"will be coached by a senior consultant."
+"customer to the delivery to the customer. You listen the customer and try to"
+" give him the best service. You report to the head of consulting service and"
+" will be coached by a senior consultant."
 msgstr ""
 
 #. module: hr
@@ -1191,23 +1188,24 @@ msgstr ""
 msgid ""
 "We are looking for a passionated Human Resources Manager to help us make "
 "products people love to use. We need someone who is ambitious, passionated, "
-"and ..... not afraid to start new things, a lot of new things and scale them."
+"and ..... not afraid to start new things, a lot of new things and scale "
+"them."
 msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
 msgid ""
 "We are looking for a passionated executive manager to help us make products "
-"people love to use. We need someone who is ambitious, passionated, and ..... "
-"not afraid to start new things, a lot of new things and scale them."
+"people love to use. We need someone who is ambitious, passionated, and ....."
+" not afraid to start new things, a lot of new things and scale them."
 msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
 msgid ""
 "We are looking for a passionated marketer manager to help us make products "
-"people love to use. We need someone who is ambitious, passionated, and ..... "
-"not afraid to start new things, a lot of new things and scale them."
+"people love to use. We need someone who is ambitious, passionated, and ....."
+" not afraid to start new things, a lot of new things and scale them."
 msgstr ""
 
 #. module: hr
@@ -1219,7 +1217,7 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "What we offer"
-msgstr "Mida me pakume"
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1247,8 +1245,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid ""
 "With just a quick glance on the Odoo employee screen, you\n"
-"                can easily find all the information you need for each "
-"person;\n"
+"                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc."
 msgstr ""
 
@@ -1267,9 +1264,19 @@ msgid ""
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_address_id
+msgid "Work Address"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_email
 msgid "Work Email"
-msgstr "Töö e-post"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Work Information"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_location
@@ -1282,19 +1289,24 @@ msgid "Work Mobile"
 msgstr ""
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Work Organization"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Work Permit"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_permit_no
+msgid "Work Permit No"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_phone
 msgid "Work Phone"
-msgstr "Töötelefon"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_address_id
-msgid "Working Address"
-msgstr "Tööaadress"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_calendar_id
-msgid "Working Time"
-msgstr "Tööaeg"
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
@@ -1314,7 +1326,7 @@ msgstr ""
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "You are a quick and autonomous learner"
-msgstr "Sa oled kiire ja iseseisev õppija"
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -1331,7 +1343,7 @@ msgstr ""
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "You are available immediately"
-msgstr "Oled koheselt saadaval"
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1343,7 +1355,7 @@ msgstr ""
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "You are ready to travel in US"
-msgstr "Oled valmis reisimiseks Ameerika Ühendriikidesse"
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1356,8 +1368,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:hr.action_hr_job
 msgid ""
 "You can attach a survey to a job position. It will be used in\n"
-"                the recruitment process to evaluate the applicants for this "
-"job\n"
+"                the recruitment process to evaluate the applicants for this job\n"
 "                position."
 msgstr ""
 
@@ -1387,7 +1398,7 @@ msgstr ""
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "You have good knowledge in accounting"
-msgstr "Sul on head teadmised raamatupidamises"
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -1405,8 +1416,8 @@ msgstr ""
 msgid ""
 "You will be responsible for developing and improving applications. You will "
 "work autonomously as well as                     coordinate and supervise "
-"small distributed development teams for specific projects. You will become a "
-"technical                 expert of the product."
+"small distributed development teams for specific projects. You will become a"
+" technical                 expert of the product."
 msgstr ""
 
 #. module: hr
@@ -1474,53 +1485,51 @@ msgid "You will work closely with all trainees"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
+#: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
+msgid "Your document has not been created"
+msgstr ""
+
+#. module: hr
+#: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
 msgid ""
-"Your departments structure is used to manage all documents\n"
-"                related to employees by departments: expenses and "
-"timesheets,\n"
-"                leaves and holidays, recruitments, etc."
+"Your document has not been created because your email address is not "
+"recognized. Please send emails with the email address recorded on your "
+"employee information, or contact your HR manager."
 msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
-msgstr "osakond"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Part Time"
 msgstr ""
 
-#~ msgid "Action Needed"
-#~ msgstr "Vajalik toiming"
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "e.g. Sales Manager"
+msgstr ""
 
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Kui kontrollitud, siis uued sõnumid nõuavad Su tähelepanu."
+#. module: hr
+#: model:ir.model,name:hr.model_mail_alias_mixin
+msgid "mail.alias.mixin"
+msgstr ""
 
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Kui kontrollitud, siis uued sõnumid nõuavad Su tähelepanu"
+#. module: hr
+#: model:ir.model,name:hr.model_res_config_settings
+msgid "res.config.settings"
+msgstr ""
 
-#~ msgid "Is Follower"
-#~ msgstr "Jälgija"
+#. module: hr
+#: model:res.groups,comment:hr.group_hr_user
+msgid "the user will be able to approve document created by employees."
+msgstr ""
 
-#~ msgid "Last Message Date"
-#~ msgstr "Viimase sõnumi kuupäev"
-
-#~ msgid "Last Online Sale Order"
-#~ msgstr "Viimane Online müügitellimus"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Toimingute arv"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Tegutsemist nõudvate sõnumite arv"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Lugemata sõnumite arv"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Lugemata sõnumite loendur"
-
-#~ msgid "Update Date"
-#~ msgstr "Uuendamise kuupäev"
+#. module: hr
+#: model:res.groups,comment:hr.group_hr_manager
+msgid ""
+"the user will have an access to the human resources configuration as well as"
+" statistic reports."
+msgstr ""

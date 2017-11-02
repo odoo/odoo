@@ -16,13 +16,15 @@
 # Muhammad Herdiansyah <herdiansyah@openmailbox.org>, 2017
 # firman firman <firman.olxbpn@gmail.com>, 2017
 # Andhitia Rama <andhitia.r@gmail.com>, 2017
+# Ryanto The <ry.the77@gmail.com>, 2017
+# Gusti Rini <gustirini@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Andhitia Rama <andhitia.r@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Last-Translator: Gusti Rini <gustirini@gmail.com>, 2017\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +40,7 @@ msgstr "<b>Kategori:</b>"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "<b>Model Number:</b>"
-msgstr ""
+msgstr "<b>Nomor Model:</b>"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
@@ -48,7 +50,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "<b>Serial Number:</b>"
-msgstr ""
+msgstr "<b>Nomor Seri:</b>"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -407,7 +409,7 @@ msgid "Equipment Categories"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_id_3448
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_id_3470
 msgid "Equipment Category"
 msgstr ""
 
@@ -448,7 +450,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Future Activities"
-msgstr ""
+msgstr "Aktifitas Akan Datang"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_search
@@ -460,13 +462,13 @@ msgstr "Dikelompokan berdasarkan ...."
 #. module: maintenance
 #: model:maintenance.equipment,name:maintenance.equipment_printer1
 msgid "HP Inkjet printer"
-msgstr ""
+msgstr "HP Inkjet printer"
 
 #. module: maintenance
 #: model:maintenance.equipment,name:maintenance.equipment_computer11
 #: model:maintenance.equipment,name:maintenance.equipment_computer9
 msgid "HP Laptop"
-msgstr ""
+msgstr "HP Laptop"
 
 #. module: maintenance
 #: selection:maintenance.request,priority:0
@@ -720,6 +722,31 @@ msgid "Note"
 msgstr "Catatan"
 
 #. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count
+msgid "Number of Requests"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_block
+msgid "Number of Requests Blocked"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_date
+msgid "Number of Requests Scheduled"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_high_priority
+msgid "Number of Requests in High Priority"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_unscheduled
+msgid "Number of Requests Unscheduled"
+msgstr ""
+
+#. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_force_thread_id
 msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
@@ -851,27 +878,32 @@ msgstr "pelaporan."
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team_request_ids
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Request"
+msgstr "Permintaan"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_ids
+msgid "Requests"
 msgstr ""
 
 #. module: maintenance
 #: model:mail.message.subtype,name:maintenance.mt_req_created
 msgid "Request Created"
-msgstr ""
+msgstr "Permintaan dibuat"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_request_date
 msgid "Request Date"
-msgstr ""
+msgstr "Tanggal permintaan"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage_done
 msgid "Request Done"
-msgstr ""
+msgstr "Permintaan Dilakukan"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Requested By"
-msgstr ""
+msgstr "Diminta oleh"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
@@ -895,7 +927,7 @@ msgstr ""
 #: model:maintenance.equipment,name:maintenance.equipment_monitor4
 #: model:maintenance.equipment,name:maintenance.equipment_monitor6
 msgid "Samsung Monitor 15\""
-msgstr ""
+msgstr "Samsung Monitor 15\""
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -948,7 +980,7 @@ msgstr "Pengaturan"
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "Tampilkan semua dokumen dengan aksi berikut sebelum hari ini"
 
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_software
@@ -1004,12 +1036,12 @@ msgstr "Tim"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_technician_user_id
 msgid "Technician"
-msgstr ""
+msgstr "Teknisi"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Technicians"
-msgstr ""
+msgstr "Teknisi"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_model_id
@@ -1055,7 +1087,7 @@ msgstr "Pengguna dapat mengatur peralatan-peralatan."
 msgid ""
 "This application helps you to track equipments used by employees.\n"
 "                Create some laptop, printer or phone and link each equipment to\n"
-"                an employee or departement. You will manage allocations, issues\n"
+"                an employee or department. You will manage allocations, issues\n"
 "                and maintenance of equipment."
 msgstr ""
 
@@ -1063,7 +1095,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:maintenance.hr_equipment_action_from_category_form
 msgid ""
 "This application helps you to track equipments used by employees.\n"
-"                Create some laptop, printer or phone and link each equipment to an employee or departement.\n"
+"                Create some laptop, printer or phone and link each equipment to an employee or department.\n"
 "                You will manage allocations, issues and maintenance of equipment."
 msgstr ""
 
@@ -1084,40 +1116,10 @@ msgid "Today Activities"
 msgstr "Aktivitas Hari ini"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_ids
-msgid "Todo Request"
-msgstr ""
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count
-msgid "Todo Request Count"
-msgstr ""
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_block
-msgid "Todo Request Count Block"
-msgstr ""
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_date
-msgid "Todo Request Count Date"
-msgstr ""
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_high_priority
-msgid "Todo Request Count High Priority"
-msgstr ""
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_unscheduled
-msgid "Todo Request Count Unscheduled"
-msgstr ""
-
-#. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Top Priorities"
-msgstr ""
+msgstr "Prioritas Utama"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
@@ -1144,7 +1146,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Unscheduled Maintenance"
-msgstr ""
+msgstr "Pemeliharaan tidak berjadwal"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
@@ -1189,6 +1191,8 @@ msgid ""
 "You cannot delete an equipment category containing equipments or maintenance"
 " requests."
 msgstr ""
+"Anda tidak dapat menghapus kategori peralatan yang berisi permintaan "
+"peralatan atau pemeliharaan."
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
@@ -1198,7 +1202,7 @@ msgstr "hari"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "for"
-msgstr ""
+msgstr "untuk"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -1211,9 +1215,9 @@ msgstr "jam"
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_pivot
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_tree
 msgid "maintenance Request"
-msgstr ""
+msgstr "Permintaan pemeliharaan"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "maintenance Request Search"
-msgstr ""
+msgstr "Cari permintaan pemeliharaan"

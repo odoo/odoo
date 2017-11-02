@@ -10,6 +10,7 @@ class ChooseDeliveryPackage(models.TransientModel):
 
     stock_quant_package_id = fields.Many2one(
         'stock.quant.package',
+        string="Physical Package",
         default=lambda self: self._default_stock_quant_package_id()
     ) 
     delivery_packaging_id = fields.Many2one(

@@ -156,13 +156,23 @@ window = jsdoc.UnknownNS({
     'doc': '<window>',
     'name': 'window',
 })
-BASE_SCOPE = {
+
+class BaseScope(collections.defaultdict):
+    """ The base scope assumes anything it's asked for is just an unknown
+    (global) namespace of some sort. Can hold a bunch of predefined params but
+    avoids the variables inference system blowing up when new (browser)
+    globals get used in module bodies.
+    """
+    def __missing__(self, key):
+        it = jsdoc.UnknownNS({
+            'name': key,
+            'doc': u'<%s>' % key,
+        })
+        self[key] = it
+        return it
+BASE_SCOPE = BaseScope(None, {
     '_': jsdoc.UnknownNS({'doc': u'<underscore.js>', 'name': u'_'}),
     '$': jq, 'jQuery': jq,
-    'nv': jsdoc.UnknownNS({
-        'doc': u'<nvd3>',
-        'name': u'nv',
-    }),
     'window': window,
     'document': window.get_property('document'),
     'Date': jsdoc.ClassDoc({
@@ -188,8 +198,8 @@ BASE_SCOPE = {
             ('name', jsdoc.PropertyDoc({'name': u'csrf_token', 'type': u'{String}'})),
         ]
     }),
-    'undefined': jsdoc.LiteralDoc({'name': u'undefined', 'value': None})
-}
+    'undefined': jsdoc.LiteralDoc({'name': u'undefined', 'value': None}),
+})
 
 class Scope(object):
     """
@@ -198,20 +208,26 @@ class Scope(object):
     have the final Foo extending itself...
     """
     def __init__(self, mapping):
-        self._namemap = {}
+        self._namemap = self._empty(mapping)
         self._targets = []
         for k, v in mapping.items():
             self[k] = v
+
+    @staticmethod
+    def _empty(mapping):
+        m = mapping.copy()
+        m.clear()
+        return m
 
     def __setitem__(self, k, v):
         self._namemap[k] = len(self._targets)
         self._targets.append(v)
 
     def freeze(self):
-        return {
-            k: self._targets[v]
-            for k, v in self._namemap.items()
-        }
+        d = self._empty(self._namemap)
+        for k, v in self._namemap.items():
+            d[k] = self._targets[v]
+        return d
 
 class ModuleExtractor(Visitor):
     def __init__(self, module, requirefunc):

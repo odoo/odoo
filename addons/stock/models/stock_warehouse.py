@@ -462,6 +462,7 @@ class Warehouse(models.Model):
             'name': self._format_routename(route_type=route_type),
             'product_categ_selectable': True,
             'product_selectable': False,
+            'company_id': self.company_id.id,
             'sequence': 10,
         }
 
@@ -482,7 +483,9 @@ class Warehouse(models.Model):
             'product_selectable': True,
             'product_categ_selectable': True,
             'supplied_wh_id': self.id,
-            'supplier_wh_id': supplier_warehouse.id}
+            'supplier_wh_id': supplier_warehouse.id,
+            'company_id': self.company_id.id,
+        }
 
     def _get_crossdock_route_values(self):
         return {
@@ -491,6 +494,7 @@ class Warehouse(models.Model):
             'product_selectable': True,
             'product_categ_selectable': True,
             'active': self.delivery_steps != 'ship_only' and self.reception_steps != 'one_step',
+            'company_id': self.company_id.id,
             'sequence': 20}
 
     # Pull / Push tools
@@ -506,7 +510,9 @@ class Warehouse(models.Model):
                 'location_dest_id': routing.dest_loc.id,
                 'auto': 'manual',
                 'picking_type_id': routing.picking_type.id,
-                'warehouse_id': self.id}
+                'warehouse_id': self.id,
+                'company_id': self.company_id.id,
+            }
             route_push_values.update(values or {})
             route_push_values.update(push_values or {})
             push_rules_list.append(route_push_values)
@@ -518,6 +524,7 @@ class Warehouse(models.Model):
                 'picking_type_id': routing.picking_type.id,
                 'procure_method': first_rule is True and 'make_to_stock' or 'make_to_order',
                 'warehouse_id': self.id,
+                'company_id': self.company_id.id,
                 'propagate': routing.picking_type != self.pick_type_id,
             }
             route_pull_values.update(values or {})

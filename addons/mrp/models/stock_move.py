@@ -52,9 +52,9 @@ class StockMove(models.Model):
     raw_material_production_id = fields.Many2one(
         'mrp.production', 'Production Order for raw materials')
     unbuild_id = fields.Many2one(
-        'mrp.unbuild', 'Unbuild Order')
+        'mrp.unbuild', 'Disassembly Order')
     consume_unbuild_id = fields.Many2one(
-        'mrp.unbuild', 'Consume Unbuild Order')
+        'mrp.unbuild', 'Consumed Disassembly Order')
     operation_id = fields.Many2one(
         'mrp.routing.workcenter', 'Operation To Consume')  # TDE FIXME: naming
     workorder_id = fields.Many2one(
