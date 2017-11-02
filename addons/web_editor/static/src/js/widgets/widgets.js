@@ -621,6 +621,9 @@ var fontIconsDialog = Widget.extend({
         ];
     },
     clear: function () {
+        if (!this.media) {
+            return;
+        }
         this.media.className = this.media.className.replace(/(^|\s)(fa(\s|$)|fa-[^\s]*)/g, ' ');
     },
 });
@@ -700,6 +703,9 @@ var VideoDialog = Widget.extend({
      * @override
      */
     clear: function () {
+        if (!this.media) {
+            return;
+        }
         if (this.media.dataset.src) {
             try {
                 delete this.media.dataset.src;
