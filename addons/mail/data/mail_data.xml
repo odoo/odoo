@@ -27,6 +27,20 @@
             <field name="priority">1000</field>
         </record>
 
+        <!--notify moderator only once per day-->
+        <record id="ir_cron_module_moderator_notification" model="ir.cron">
+            <field name="name">Moderator Notification</field>
+            <field name="model_id" ref="model_mail_message"/>
+            <field name="state">code</field>
+            <field name="code">model.notify_moderator()</field>
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall" />
+            <field name="priority">1000</field>
+        </record>
+
         <!-- Admin should not receive emails at creation -->
         <record id="base.user_root" model="res.users">
             <field name="notification_type">inbox</field>
@@ -156,6 +170,25 @@
     <a target="_blank" href="https://www.odoo.com" style="text-decoration:none; color: #875A7B;">Odoo</a>.
 </p>
 </div>]]></field>
+        </record>
+
+        <!--Moderator Notification Template-->
+
+        <record id="moderator_notification_email" model="mail.template">
+            <field name="name">Notification Email</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="email_from">${object.company_id.name or object.company_id.email}</field>
+            <field name="email_to">${object.email|safe}</field>
+            <field name="subject">Need Moderation</field>
+            <field name="body_html" type="xml">
+<p>Hello ${object.name or ''},</p>
+<p>You have messages to moderate, please go for the procedings.</p><br/><br/>
+<center>
+    <a href="/web#action=mail.mail_channel_action_client_chat&amp;active_id=channel_moderation" style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;" class="o_default_snippet_text">Moderate Messages</a>
+    <br/><br/><br/>
+</center>
+<p>Thank you!</p></field>
+            <field name="user_signature" eval="False"/>
         </record>
 
     </data>
