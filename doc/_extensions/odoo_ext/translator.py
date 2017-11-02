@@ -381,6 +381,10 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
                     "Unsupported alignment value \"%s\"" % node['align'],
                     location=doc
                 )
+        elif 'align' in node.parent and node.parent['align'] == 'center':
+            # figure > image
+            attrs['class'] += ' center-block'
+
         # todo: explicit width/height/scale?
         self.body.append(self.starttag(node, 'img', **attrs))
     def depart_image(self, node): pass

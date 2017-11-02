@@ -82,7 +82,14 @@ def charge(env, key, account_token, credit, description=None, credit_template=No
     :param str key: service identifier
     :param str account_token: user identifier
     :param int credit: cost of the body's operation
-    :param str description:
+    :param description: a description of the purpose of the charge,
+                        the user will be able to see it in their
+                        dashboard
+    :type description: str
+    :param credit_template: a QWeb template to render and show to the
+                            user if their account does not have enough
+                            credits for the requested operation
+    :type credit_template: str
     """
     endpoint = get_endpoint(env)
     params = {
