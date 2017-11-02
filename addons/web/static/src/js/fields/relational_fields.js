@@ -46,7 +46,7 @@ var M2ODialog = Dialog.extend({
                 click: function () {
                     if (this.$("input").val() !== ''){
                         this.trigger_up('quick_create', { value: this.$('input').val() });
-                        this.close();
+                        this.close(true);
                     } else {
                         this.$("input").focus();
                     }
@@ -71,12 +71,30 @@ var M2ODialog = Dialog.extend({
         this.$("p").text(_.str.sprintf(_t("You are creating a new %s, are you sure it does not exist yet?"), this.name));
         this.$("input").val(this.value);
     },
+    /**
+     * @override
+     * @param {boolean} isSet
+     */
+    close: function (isSet) {
+        this.isSet = isSet;
+        this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        if (!this.isSet) {
+            this.trigger_up('closed_unset');
+        }
+        this._super.apply(this, arguments);
+    },
 });
 
 var FieldMany2One = AbstractField.extend({
     supportedFieldTypes: ['many2one'],
     template: 'FieldMany2One',
     custom_events: _.extend({}, AbstractField.prototype.custom_events, {
+        'closed_unset': '_onDialogClosedUnset',
         'quick_create': '_onQuickCreate',
         'search_create_popup': '_onSearchCreatePopup',
     }),
@@ -449,6 +467,16 @@ var FieldMany2One = AbstractField.extend({
                     self.trigger_up('do_action', {action: action});
                 });
         }
+    },
+
+    /**
+     * Reset the input as dialog has been closed without m2o creation.
+     *
+     * @private
+     */
+    _onDialogClosedUnset: function () {
+        this.floating = false;
+        this._render();
     },
     /**
      * @private
