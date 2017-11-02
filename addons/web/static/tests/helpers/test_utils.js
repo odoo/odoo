@@ -399,6 +399,19 @@ function createModel(params) {
 }
 
 /**
+ * create a widget parent from given parameters.
+ *
+ * @param {Object} params This object will be given to addMockEnvironment, so
+ *   any parameters from that method applies
+ * @returns {Widget}
+ */
+function createParent(params) {
+    var widget = new Widget();
+    addMockEnvironment(widget, params);
+    return widget;
+}
+
+/**
  * simulate a drag and drop operation between 2 jquery nodes: $el and $to.
  * This is a crude simulation, with only the mousedown, mousemove and mouseup
  * events, but it is enough to help test drag and drop operations with jqueryUI
@@ -554,6 +567,7 @@ return $.when(
         createView: createView,
         createAsyncView: createAsyncView,
         createModel: createModel,
+        createParent: createParent,
         addMockEnvironment: addMockEnvironment,
         dragAndDrop: dragAndDrop,
         triggerMouseEvent: triggerMouseEvent,
