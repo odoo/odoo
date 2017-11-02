@@ -422,3 +422,9 @@ class ProcurementRule(models.Model):
         values['picking_type_id'] = self.picking_type_id.id
         self.env['purchase.requisition'].create(values)
         return True
+
+    def _prepare_purchase_order(self, product_id, product_qty, product_uom, origin, values, partner):
+        res = super(ProcurementRule, self)._prepare_purchase_order(product_id, product_qty, product_uom, origin, values, partner)
+        res['partner_ref'] = values['supplier'].purchase_requisition_id.name
+        res['requisition_id'] = values['supplier'].purchase_requisition_id.id
+        return res
