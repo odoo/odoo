@@ -21,7 +21,7 @@ CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
 class Currency(models.Model):
     _name = "res.currency"
     _description = "Currency"
-    _order = "name"
+    _order = 'active desc, name'
 
     # Note: 'code' column was removed as of v6.0, the 'name' should now hold the ISO code.
     name = fields.Char(string='Currency', size=3, required=True, help="Currency Code (ISO 4217)")
