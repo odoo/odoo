@@ -76,6 +76,8 @@ class PurchaseRequisition(models.Model):
     account_analytic_id = fields.Many2one('account.analytic.account', 'Analytic Account')
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', required=True, default=_get_picking_in)
     is_quantity_copy = fields.Boolean(compute='_is_quantity_copy')
+    currency_id = fields.Many2one('res.currency', 'Currency', required=True,
+        default=lambda self: self.env.user.company_id.currency_id.id)
 
     @api.depends('state')
     def _set_state(self):
@@ -177,7 +179,7 @@ class PurchaseRequisition(models.Model):
 class SupplierInfo(models.Model):
     _inherit = "product.supplierinfo"
     _order = 'sequence, purchase_requisition_id desc, min_qty desc, price'
- 
+
     purchase_requisition_id = fields.Many2one('purchase.requisition', related='purchase_requisition_line_id.requisition_id', string='Blanket order')
     purchase_requisition_line_id = fields.Many2one('purchase.requisition.line')
 
@@ -293,7 +295,6 @@ class PurchaseOrder(models.Model):
         else:
             partner = requisition.vendor_id
         payment_term = partner.property_supplier_payment_term_id
-        currency = partner.property_purchase_currency_id or requisition.company_id.currency_id
 
         FiscalPosition = self.env['account.fiscal.position']
         fpos = FiscalPosition.get_fiscal_position(partner.id)
@@ -303,7 +304,7 @@ class PurchaseOrder(models.Model):
         self.fiscal_position_id = fpos.id
         self.payment_term_id = payment_term.id,
         self.company_id = requisition.company_id.id
-        self.currency_id = currency.id
+        self.currency_id = requisition.currency_id.id
         self.origin = requisition.name
         self.partner_ref = requisition.name # to control vendor bill based on agreement reference
         self.notes = requisition.description
@@ -341,10 +342,6 @@ class PurchaseOrder(models.Model):
 
             if requisition.type_id.quantity_copy != 'copy':
                 product_qty = 0
-
-            # Compute price_unit in appropriate currency
-            if requisition.company_id.currency_id != currency:
-                price_unit = requisition.company_id.currency_id.compute(price_unit, currency)
 
             # Create PO line
             order_line_values = line._prepare_purchase_order_line(
@@ -427,4 +424,6 @@ class ProcurementRule(models.Model):
         res = super(ProcurementRule, self)._prepare_purchase_order(product_id, product_qty, product_uom, origin, values, partner)
         res['partner_ref'] = values['supplier'].purchase_requisition_id.name
         res['requisition_id'] = values['supplier'].purchase_requisition_id.id
+        if values['supplier'].purchase_requisition_id.currency_id:
+            res['currency_id'] = values['supplier'].purchase_requisition_id.currency_id.id
         return res

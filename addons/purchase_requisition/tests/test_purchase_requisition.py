@@ -15,6 +15,7 @@ class TestPurchaseRequisition(common.TransactionCase):
         self.product_13_id = self.ref('product.product_product_13')
         self.res_partner_1_id = self.ref('base.res_partner_1')
         self.res_company_id = self.ref('base.main_company')
+        self.env.user.company_id.currency_id = self.env.ref("base.USD").id
 
         self.ResUser = self.env['res.users']
         # Create a user as 'Purchase Requisition Manager'
@@ -174,6 +175,7 @@ class TestPurchaseRequisition(common.TransactionCase):
             'line_ids': [line1],
             'type_id': requisition_type.id,
             'vendor_id': vendor1.id,
+            'currency_id': self.env.ref("base.USD").id,
         })
         requisition_blanket.action_in_progress()
 
