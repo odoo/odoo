@@ -307,7 +307,7 @@
                         <page string="Product Information">
                             <group>
                                 <group>
-                                    <field name="partner_id"/>
+                                    <field name="partner_id" context="{'default_supplier': True, 'default_customer': False}"/>
                                     <field name="partner_ref"/>
                                     <field name="model"/>
                                     <field name="serial_no"/>
