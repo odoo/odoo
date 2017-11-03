@@ -33,3 +33,10 @@ class pos_session(models.Model):
             if session_start.date() != date_today.date():
                 raise UserError(NOT_SAME_DAY_ERROR % session.name)
         return super(pos_session, self).open_frontend_cb()
+
+
+class pos_order(models.Model):
+    _inherit = 'pos.order'
+
+    l10n_fr_pos_cert_hash = fields.Char()
+    l10n_fr_pos_cert_sequence_number = fields.Char()
