@@ -232,6 +232,22 @@ class TestTax(AccountTestUsers):
             res
         )
 
+        self.fixed_tax.price_include = True
+        self.fixed_tax.include_base_amount = False
+        res = self.fixed_tax.compute_all(100.0, quantity=2.0)
+        self._check_compute_all_results(
+            180,     # 'base'
+            200,     # 'total_included'
+            180,     # 'total_excluded'
+            [
+                # base , amount     | seq | amount | incl | incl_base
+                # ---------------------------------------------------
+                (180.0, 20.0),    # |  1  |    20  |      |     t
+                # ---------------------------------------------------
+            ],
+            res
+        )
+
     def test_tax_include_base_amount_2(self):
         self.percent_tax.price_include = True
         self.percent_tax.amount = 21.0
