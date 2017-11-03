@@ -1450,7 +1450,7 @@ exports.Orderline = Backbone.Model.extend({
             var amount = self._compute_all(tax, base, quantity, false);
 
             if(!tax.price_include || base_gaps.length == 0)
-                return tax_amount;
+                return amount;
 
             var new_gap = base_gaps[base_gaps.length - 1] - amount;
 
