@@ -869,7 +869,7 @@ class AccountTax(models.Model):
                 incl_fixed_amount = incl_percent_amount = 0
             if tax.price_include:
                 if tax.amount_type == 'fixed':
-                    incl_fixed_amount += tax.amount
+                    incl_fixed_amount += quantity * tax.amount
                 elif tax.amount_type == 'percent':
                     incl_percent_amount += tax.amount
         # Start the computation of accumulated amounts at the total_excluded value.
