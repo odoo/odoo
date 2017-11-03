@@ -7,7 +7,7 @@ from odoo.tools import float_round
 class AccountCashRounding(models.Model):
     """
     In some countries, we need to be able to make appear on an invoice a rounding line, appearing there only because the
-    smallest coinage has been removed from the circulation. For example, in Switerzland invoices have to be rounded to
+    smallest coinage has been removed from the circulation. For example, in Switzerland invoices have to be rounded to
     0.05 CHF because coins of 0.01 CHF and 0.02 CHF aren't used anymore.
     see https://en.wikipedia.org/wiki/Cash_rounding for more details.
     """

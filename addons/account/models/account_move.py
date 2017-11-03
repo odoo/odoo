@@ -812,10 +812,10 @@ class AccountMoveLine(models.Model):
             # 3)    33      0           25             YEN
             # 
             # If we ask to see the information in the reconciliation widget in company currency, we want to see
-            # The following informations
+            # The following information
             # 1) 25 USD (no currency information)
             # 2) 17 USD [25 EUR] (show 25 euro in currency information, in the little bill)
-            # 3) 33 USD [25 YEN] (show 25 yen in currencu information)
+            # 3) 33 USD [25 YEN] (show 25 yen in currency information)
             # 
             # If we ask to see the information in another currency than the company let's say EUR
             # 1) 35 EUR [25 USD]
@@ -863,7 +863,7 @@ class AccountMoveLine(models.Model):
             :param data: list of dicts containing:
                 - 'type': either 'partner' or 'account'
                 - 'id': id of the affected res.partner or account.account
-                - 'mv_line_ids': ids of exisiting account.move.line to reconcile
+                - 'mv_line_ids': ids of existing account.move.line to reconcile
                 - 'new_mv_line_dicts': list of dicts containing values suitable for account_move_line.create()
         """
         for datum in data:
@@ -881,7 +881,7 @@ class AccountMoveLine(models.Model):
     def process_reconciliation(self, new_mv_line_dicts):
         """ Create new move lines from new_mv_line_dicts (if not empty) then call reconcile_partial on self and new move lines
 
-            :param new_mv_line_dicts: list of dicts containing values suitable fot account_move_line.create()
+            :param new_mv_line_dicts: list of dicts containing values suitable for account_move_line.create()
         """
         if len(self) < 1 or len(self) + len(new_mv_line_dicts) < 2:
             raise UserError(_('A reconciliation must involve at least 2 move lines.'))
@@ -1028,7 +1028,7 @@ class AccountMoveLine(models.Model):
             if not all_aml_share_same_currency:
                 writeoff_vals['amount_currency'] = False
             writeoff_to_reconcile = remaining_moves._create_writeoff(writeoff_vals)
-            #add writeoff line to reconcile algo and finish the reconciliation
+            #add writeoff line to reconcile algorithm and finish the reconciliation
             remaining_moves = (remaining_moves + writeoff_to_reconcile).auto_reconcile_lines()
             return writeoff_to_reconcile
         return True
@@ -1037,7 +1037,7 @@ class AccountMoveLine(models.Model):
         """ Create a writeoff move for the account.move.lines in self. If debit/credit is not specified in vals,
             the writeoff amount will be computed as the sum of amount_residual of the given recordset.
 
-            :param vals: dict containing values suitable fot account_move_line.create(). The data in vals will
+            :param vals: dict containing values suitable for account_move_line.create(). The data in vals will
                 be processed to create bot writeoff acount.move.line and their enclosing account.move.
         """
         # Check and complete vals
@@ -1141,7 +1141,7 @@ class AccountMoveLine(models.Model):
             #eventually create journal entries to book the difference due to foreign currency's exchange rate that fluctuates
             aml_recs, partial_recs = self.env['account.partial.reconcile'].create_exchange_rate_entry(aml_to_balance, 0.0, total_amount_currency, currency, exchange_move)
 
-            #add the ecxhange rate line and the exchange rate partial reconciliation in the et of the full reconcile
+            #add the exchange rate line and the exchange rate partial reconciliation in the et of the full reconcile
             self |= aml_recs
             partial_rec_set |= partial_recs
 
@@ -1372,7 +1372,7 @@ class AccountMoveLine(models.Model):
 
     def _get_matched_percentage(self):
         """ This function returns a dictionary giving for each move_id of self, the percentage to consider as cash basis factor.
-        This is actuallty computing the same as the matched_percentage field of account.move, except in case of multi-currencies
+        This is actually computing the same as the matched_percentage field of account.move, except in case of multi-currencies
         where we recompute the matched percentage based on the amount_currency fields.
         Note that this function is used only by the tax cash basis module since we want to consider the matched_percentage only
         based on the company currency amounts in reports.
@@ -1565,7 +1565,7 @@ class AccountPartialReconcile(models.Model):
     def create_exchange_rate_entry(self, aml_to_fix, amount_diff, diff_in_currency, currency, move):
         """
         Automatically create a journal items to book the exchange rate
-        differences that can occure in multi-currencies environment. That
+        differences that can occur in multi-currencies environment. That
         new journal item will be made into the given `move` in the company
         `currency_exchange_journal_id`, and one of its journal items is
         matched with the other lines to balance the full reconciliation.
@@ -1642,7 +1642,7 @@ class AccountPartialReconcile(models.Model):
             if move_date < move.date:
                 move_date = move.date
             for line in move.line_ids:
-                #TOCHECK: normal and cash basis taxes shoudn't be mixed together (on the same invoice line for example) as it will
+                #TOCHECK: normal and cash basis taxes shouldn't be mixed together (on the same invoice line for example) as it will
                 # create reporting issues. Not sure of the behavior to implement in that case, though.
                 if not line.tax_exigible:
                     percentage_before = percentage_before_rec[move.id]
@@ -1852,7 +1852,7 @@ class AccountFullReconcile(models.Model):
     def unlink(self):
         """ When removing a full reconciliation, we need to revert the eventual journal entries we created to book the
             fluctuation of the foreign currency's exchange rate.
-            We need also to reconcile together the origin currency difference line and its reversal in order to completly
+            We need also to reconcile together the origin currency difference line and its reversal in order to completely
             cancel the currency difference entry on the partner account (otherwise it will still appear on the aged balance
             for example).
         """

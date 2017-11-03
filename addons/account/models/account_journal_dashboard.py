@@ -219,7 +219,7 @@ class account_journal(models.Model):
 
     def _get_open_bills_to_pay_query(self):
         """
-        Returns a tuple contaning the SQL query used to gather the open bills
+        Returns a tuple containing the SQL query used to gather the open bills
         data as its first element, and the arguments dictionary to use to run
         it as its second.
         """

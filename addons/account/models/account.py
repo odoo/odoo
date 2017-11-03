@@ -52,7 +52,7 @@ class AccountAccount(models.Model):
     def _check_reconcile(self):
         for account in self:
             if account.internal_type in ('receivable', 'payable') and account.reconcile == False:
-                raise ValidationError(_('You cannot have a receivable/payable account that is not reconciliable. (account code: %s)') % account.code)
+                raise ValidationError(_('You cannot have a receivable/payable account that is not reconcilable. (account code: %s)') % account.code)
 
     name = fields.Char(required=True, index=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency',
@@ -107,7 +107,7 @@ class AccountAccount(models.Model):
     def _set_opening_debit_credit(self, amount, field):
         """ Generic function called by both opening_debit and opening_credit's
         inverse function. 'Amount' parameter is the value to be set, and field
-        either 'debit' or 'credit', depending on wich one of these two fields
+        either 'debit' or 'credit', depending on which one of these two fields
         got assigned.
         """
         opening_move = self.company_id.account_opening_move_id
@@ -215,7 +215,7 @@ class AccountAccount(models.Model):
     def load(self, fields, data):
         """ Overridden for better performances when importing a list of account
         with opening debit/credit. In that case, the auto-balance is postpone
-        untill the whole file has been imported.
+        until the whole file has been imported.
         """
         rslt = super(AccountAccount, self).load(fields, data)
 
@@ -227,7 +227,7 @@ class AccountAccount(models.Model):
 
     @api.multi
     def write(self, vals):
-        # Dont allow changing the company_id when account_move_line already exist
+        # Do not allow changing the company_id when account_move_line already exist
         if vals.get('company_id', False):
             move_lines = self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1)
             for account in self:
@@ -364,7 +364,7 @@ class AccountJournal(models.Model):
         domain=[('payment_type', '=', 'inbound')], string='Debit Methods', default=lambda self: self._default_inbound_payment_methods(),
         help="Manual: Get paid by cash, check or any other method outside of Odoo.\n"\
              "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"\
-             "Batch Deposit: Encash several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings.")
+             "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings.")
     outbound_payment_method_ids = fields.Many2many('account.payment.method', 'account_journal_outbound_payment_method_rel', 'journal_id', 'outbound_payment_method',
         domain=[('payment_type', '=', 'outbound')], string='Payment Methods', default=lambda self: self._default_outbound_payment_methods(),
         help="Manual:Pay bill by cash or any other method outside of Odoo.\n"\
@@ -558,7 +558,7 @@ class AccountJournal(models.Model):
 
         :param name: name of the bank account
         :param company: company for which the wizard is running
-        :param currency_id: ID of the currency in wich is the bank account
+        :param currency_id: ID of the currency in which is the bank account
         :param type: either 'cash' or 'bank'
         :return: mapping of field names and values
         :rtype: dict
@@ -796,7 +796,7 @@ class AccountTax(models.Model):
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=80):
-        """ Returns a list of tupples containing id, name, as internally it is called {def name_get}
+        """ Returns a list of tuples containing id, name, as internally it is called {def name_get}
             result format: {[(id, name), (id, name), ...]}
         """
         args = args or []
@@ -882,7 +882,7 @@ class AccountTax(models.Model):
 
     @api.multi
     def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None):
-        """ Returns all information required to apply taxes (in self + their children in case of a tax goup).
+        """ Returns all information required to apply taxes (in self + their children in case of a tax group).
             We consider the sequence of the parent for group of taxes.
                 Eg. considering letters as taxes and alphabetic order as sequence :
                 [G, B([A, D, F]), E, C] will be computed as [A, D, F, C, E, G]

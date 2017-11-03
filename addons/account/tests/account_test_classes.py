@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 class AccountingTestCase(HttpCase):
     """ This class extends the base TransactionCase, in order to test the
     accounting with localization setups. It is configured to run the tests after
-    the installation of all modules, and will SKIP TESTS ifit  cannot find an already
+    the installation of all modules, and will SKIP TESTS if it  cannot find an already
     configured accounting (which means no localization module has been installed).
     """
 
@@ -30,7 +30,7 @@ class AccountingTestCase(HttpCase):
         return True
 
     def ensure_account_property(self, property_name):
-        '''Ensure the ir.property targetting an account.account passed as parameter exists.
+        '''Ensure the ir.property targeting an account.account passed as parameter exists.
         In case it's not: create it with a random account. This is useful when testing with
         partially defined localization (missing stock properties for example)
 
