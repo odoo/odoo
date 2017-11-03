@@ -240,8 +240,8 @@ class KVMWinTestExe(KVM):
         self.rsync('"%s" %s@127.0.0.1:' % (setuppath, self.login))
         self.ssh("TEMP=/tmp ./%s /S" % setupfile)
         self.ssh('PGPASSWORD=openpgpwd /cygdrive/c/"Program Files"/"Odoo %s"/PostgreSQL/bin/createdb.exe -e -U openpg mycompany' % setupversion)
-        self.ssh('/cygdrive/c/"Program Files"/"Odoo %s"/server/odoo-bin.exe -d mycompany -i base --stop-after-init' % setupversion)
-        self.ssh('net start %s' % nt_service_name)
+        self.ssh('netsh advfirewall set publicprofile state off')
+        self.ssh('/cygdrive/c/"Program Files"/"Odoo {sv}"/python/python.exe \'c:\\Program Files\\Odoo {sv}\\server\\odoo-bin\' -d mycompany -i base --stop-after-init'.format(sv=setupversion))
         _rpc_count_modules(port=18069)
 
 #----------------------------------------------------------
@@ -524,7 +524,7 @@ def main():
             shutil.rmtree(o.build_dir)
             logging.info('Build dir %s removed' % o.build_dir)
 
-        if not o.no_testing:
+        if not o.no_testing and not (o.no_debian and o.no_rpm and o.no_tarball):
             system("docker rm -f `docker ps -a | awk '{print $1 }'` 2>>/dev/null")
             logging.info('Remaining dockers removed')
 
