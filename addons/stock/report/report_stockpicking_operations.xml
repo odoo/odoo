@@ -81,23 +81,23 @@
                               <t t-set="has_serial_number" t-value="o.move_line_ids.filtered(lambda ml: ml.lot_id or ml.lot_name)" groups="stock.group_production_lot"/>
                               <thead>
                                 <tr>
-                                    <th width="8%">Product</th>
-                                    <th width="8%">Quantity</th>
-                                    <th width="20%" class="text-center">
-                                        <t t-if="has_barcode">Barcode</t>
-                                    </th>
-                                    <th width="8%">
+                                    <th width="5%">Product</th>
+                                    <th width="5%">Quantity</th>
+                                    <th width="12%">
                                         <t t-if="o.picking_type_id.code != 'incoming'" align="left">
                                             Source
                                         </t>
                                     </th>
-                                    <th width="28%">
+                                    <th width="12%">Destination</th>
+                                    <th width="28%" class="text-center">
                                         <t t-if="has_serial_number">Lot/Serial Number</t>
                                     </th>
-                                    <th width="14%">
-                                        <t t-if="o.move_line_ids.lot_id">Lot Barcode</t>
+                                    <th width="14%" class="text-center">
+                                        <t t-if="has_serial_number">Lot/Serial Barcode</t>
                                     </th>
-                                    <th width="14%" class="text-right">Destination</th>
+                                    <th width="30%" class="text-center">
+                                        <t t-if="has_barcode">Barcode</t>
+                                    </th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -111,13 +111,6 @@
                                             <span t-if="not move.product_qty" t-esc="move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id, rounding_method='HALF-UP')"/>
                                             <span t-field="move.product_id.uom_id" groups="product.group_uom"/>
                                         </td>
-                                        <td width="20%">
-                                            <t t-if="has_barcode">
-                                                <span t-if="move.product_id and move.product_id.barcode">
-                                                    <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', move.product_id.barcode, 600, 100)" style="width:100%;height:50px"/>
-                                                </span>
-                                            </t>
-                                        </td>
                                         <td colspan="4">
                                             <t t-if="move.move_line_ids">
                                                 <table width="100%">
@@ -127,7 +120,18 @@
                                                                 <span t-esc="ml.location_id.display_name"/>
                                                             </t>
                                                         </td>
-                                                        <td width="44%">
+                                                        <td width="22%" class="text-center">
+                                                            <div>
+                                                                <span t-field="ml.location_dest_id"/>
+                                                            </div>
+                                                            <div t-if="ml.result_package_id or ml.result_package_id">
+                                                                <span t-field="ml.package_id"/>
+                                                                <span t-if="ml.result_package_id and not ml.package_id" class="fa fa-dropbox"/>
+                                                                <span t-if="ml.result_package_id and ml.package_id">&#8594;</span>
+                                                                <span t-field="ml.result_package_id"/>
+                                                            </div>
+                                                        </td>
+                                                        <td width="44%" align="right">
                                                             <t t-if="has_serial_number and ml.product_id.tracking != 'none'">
                                                                 <div class="col-xs-4">
                                                                     <span t-field="ml.lot_id"/>
@@ -142,26 +146,22 @@
                                                             </t>
                                                         </td>
                                                         <td width="22%">
-                                                           <t t-if="o.move_line_ids.lot_id">
-                                                                <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.move_line_ids.lot_id, 600, 100)" style="width:100%;height:30px"/>
+                                                           <t t-if="has_serial_number">
+                                                                <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', ml.lot_id, 600, 100)" style="width:100%;height:30px"/>
                                                             </t>
-                                                        </td>
-                                                        <td width="22%" align="right">
-                                                            <div>
-                                                                <span t-field="ml.location_dest_id"/>
-                                                            </div>
-                                                            <div t-if="ml.result_package_id or ml.result_package_id">
-                                                                <span t-field="ml.package_id"/>
-                                                                <span t-if="ml.result_package_id and not ml.package_id" class="fa fa-dropbox"/>
-                                                                <span t-if="ml.result_package_id and ml.package_id">&#8594;</span>
-                                                                <span t-field="ml.result_package_id"/>
-                                                            </div>
                                                         </td>
                                                     </tr>
                                                 </table>
                                             </t>
                                             <t t-else="">
                                                 <span>No reservation or quantity done yet.</span>
+                                            </t>
+                                        </td>
+                                        <td width="30%">
+                                            <t t-if="has_barcode">
+                                                <span t-if="move.product_id and move.product_id.barcode">
+                                                    <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', move.product_id.barcode, 600, 100)" style="width:100%;height:50px"/>
+                                                </span>
                                             </t>
                                         </td>
                                     </tr>
