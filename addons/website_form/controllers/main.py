@@ -199,19 +199,15 @@ class WebsiteForm(http.Controller):
 
     # Link all files attached on the form
     def insert_attachment(self, model, id_record, files):
+        IrAttachment = request.env['ir.attachment'].sudo()
         orphan_attachment_ids = []
         record = model.env[model.model].browse(id_record)
         authorized_fields = model.sudo()._get_form_writable_fields()
         for file in files:
             custom_field = file.field_name not in authorized_fields
-            attachment_value = {
-                'name': file.field_name if custom_field else file.filename,
-                'datas': base64.encodestring(file.read()),
-                'datas_fname': file.filename,
-                'res_model': model.model,
-                'res_id': record.id,
-            }
-            attachment_id = request.env['ir.attachment'].sudo().create(attachment_value)
+            attachment_value = self.get_attachment_values(
+                model, record, file, authorized_fields)
+            attachment_id = IrAttachment.create(attachment_value)
             if attachment_id and not custom_field:
                 record.sudo()[file.field_name] = [(4, attachment_id.id)]
             else:
@@ -235,3 +231,16 @@ class WebsiteForm(http.Controller):
             # attach the custom binary field files on the attachment_ids field.
             for attachment_id_id in orphan_attachment_ids:
                 record.attachment_ids = [(4, attachment_id_id)]
+
+    def get_attachment_values(
+            self, model, record, attached_file, authorized_fields):
+        custom_field = attached_file.field_name not in authorized_fields
+        attachment_name = attached_file.field_name \
+            if custom_field else attached_file.filename
+        return {
+            'name': attachment_name,
+            'datas': base64.encodestring(attached_file.read()),
+            'datas_fname': attached_file.filename,
+            'res_model': model.model,
+            'res_id': record.id,
+        }
