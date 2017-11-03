@@ -464,15 +464,18 @@ class ProductProduct(models.Model):
                 'res_id': self.product_tmpl_id.id,
                 'target': 'new'}
 
+    def _prepare_sellers(self, params):
+        return self.seller_ids
+
     @api.multi
-    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False):
+    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
         self.ensure_one()
         if date is None:
             date = fields.Date.context_today(self)
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
         res = self.env['product.supplierinfo']
-        for seller in self.seller_ids:
+        for seller in self._prepare_sellers(params):
             # Set quantity in UoM of seller
             quantity_uom_seller = quantity
             if quantity_uom_seller and uom_id and uom_id != seller.product_uom:
