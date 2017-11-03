@@ -821,12 +821,13 @@ class PurchaseOrderLine(models.Model):
     def _onchange_quantity(self):
         if not self.product_id:
             return
-
+        params = {'order_id': self.order_id}
         seller = self.product_id._select_seller(
             partner_id=self.partner_id,
             quantity=self.product_qty,
             date=self.order_id.date_order and self.order_id.date_order[:10],
-            uom_id=self.product_uom)
+            uom_id=self.product_uom,
+            params=params)
 
         if seller or not self.date_planned:
             self.date_planned = self._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)

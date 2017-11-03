@@ -406,6 +406,16 @@ class PurchaseOrderLine(models.Model):
         return res
 
 
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    def _prepare_sellers(self, params):
+        if params and params.get('order_id'):
+            return self.seller_ids.filtered(lambda s: not s.purchase_requisition_id or s.purchase_requisition_id == params['order_id'].requisition_id)
+        else:
+            return self.seller_ids
+
+
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
@@ -434,3 +444,11 @@ class ProcurementRule(models.Model):
         if values['supplier'].purchase_requisition_id.currency_id:
             res['currency_id'] = values['supplier'].purchase_requisition_id.currency_id.id
         return res
+
+    def _make_po_get_domain(self, values, partner):
+        domain = super(ProcurementRule, self)._make_po_get_domain(values, partner)
+        if 'supplier' in values and values['supplier'].purchase_requisition_id:
+            domain += (
+                ('requisition_id', '=', values['supplier'].purchase_requisition_id.id),
+            )
+        return domain
