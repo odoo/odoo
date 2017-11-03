@@ -73,14 +73,20 @@ $(document).ready(function() {
         }
 
         $('#o_blog_tag_collapse').on('click', '.fa-chevron-right',function(){
-        $(this).parents('li').find('ul:first').show('normal');
-        $(this).toggleClass('fa-chevron-right fa-chevron-down');
+            $(this).parents('li').find('ul:first').show('normal');
+            $(this).toggleClass('fa-chevron-right fa-chevron-down');
+        });
 
         $('#o_blog_tag_collapse').on('click', '.fa-chevron-down',function(){
-        $(this).parent().find('ul:first').hide('normal');
-        $(this).toggleClass('fa-chevron-right fa-chevron-down');
-    });
-    });
+            $(this).parent().find('ul:first').hide('normal');
+            $(this).toggleClass(' fa-chevron-right fa-chevron-down');
+        });
+
+        var $activeBlogTag = $('#o_blog_tag_collapse li.active');
+        if ($activeBlogTag.length) {
+            $activeBlogTag.parentsUntil("#o_blog_tag_collapse").find('i.fa').click()
+        }
+
     }
 
     /* Sharing links hover in blogpost */

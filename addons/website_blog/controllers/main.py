@@ -106,7 +106,7 @@ class WebsiteBlog(http.Controller):
         # retrocompatibility to accept tag as slug
         active_tag_ids = tag and [int(unslug(t)[1]) for t in tag.split(',')] or []
         if active_tag_ids:
-            domain += [('tag_ids', 'in', active_tag_ids)]
+            domain += [('tag_ids', 'child_of', active_tag_ids)]
         if blog:
             domain += [('blog_id', '=', blog.id)]
         if date_begin and date_end:
@@ -153,7 +153,8 @@ class WebsiteBlog(http.Controller):
             if current_tag in tag_ids:
                 tag_ids.remove(current_tag)
             else:
-                tag_ids.append(current_tag)
+                tag_ids = current_tag
+
             tag_ids = request.env['blog.tag'].browse(tag_ids).exists()
             return ','.join(slug(tag) for tag in tag_ids)
         values = {
