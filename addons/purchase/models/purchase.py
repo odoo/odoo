@@ -829,7 +829,7 @@ class PurchaseOrderLine(models.Model):
         if not self.product_id:
             return
 
-        seller = self.product_id._select_seller(
+        seller = self.product_id.with_context(current_po=self.order_id)._select_seller(
             partner_id=self.partner_id,
             quantity=self.product_qty,
             date=self.order_id.date_order and self.order_id.date_order[:10],

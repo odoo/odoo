@@ -3,6 +3,8 @@
 
 from odoo.tests import common
 from odoo import fields
+from datetime import datetime
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 class TestPurchaseRequisition(common.TransactionCase):
@@ -193,4 +195,103 @@ class TestPurchaseRequisition(common.TransactionCase):
         move2._action_confirm()
 
         # Verifications
-        self.assertEqual(purchase1.order_line.price_unit, 42, 'The price on the purchase order is not the blanquet order one')
+        purchase2 = self.env['purchase.order'].search([('partner_id', '=', vendor1.id), ('requisition_id', '=', requisition_blanket.id)])
+        self.assertEqual(purchase2.order_line.price_unit, 42, 'The price on the purchase order is not the blanquet order one')
+
+    def test_05_purchase_requisition(self):
+        """ Two blanket orders on different 'make to order' products must generate
+        two different purchase orders
+        """
+
+        # Product creation
+        unit = self.ref("product.product_uom_unit")
+        warehouse1 = self.env.ref('stock.warehouse0')
+        route_buy = self.ref('purchase.route_warehouse0_buy')
+        route_mto = warehouse1.mto_pull_id.route_id.id
+        vendor1 = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
+        supplier_info1 = self.env['product.supplierinfo'].create({
+            'name': vendor1.id,
+            'price': 50,
+        })
+        product_1 = self.env['product.product'].create({
+            'name': 'product1',
+            'type': 'product',
+            'uom_id': unit,
+            'uom_po_id': unit,
+            'seller_ids': [(6, 0, [supplier_info1.id])],
+            'route_ids': [(6, 0, [route_buy, route_mto])]
+        })
+        product_2 = self.env['product.product'].create({
+            'name': 'product2',
+            'type': 'product',
+            'uom_id': unit,
+            'uom_po_id': unit,
+            'seller_ids': [(6, 0, [supplier_info1.id])],
+            'route_ids': [(6, 0, [route_buy, route_mto])]
+        })
+        # Blanket orders creation
+        requisition_type = self.env['purchase.requisition.type'].create({
+            'name': 'Blanket test',
+            'quantity_copy': 'none',
+        })
+        line1 = (0, 0, {'product_id': product_1.id, 'product_qty': 18, 'product_uom_id': product_1.uom_po_id.id, 'price_unit': 41})
+        line2 = (0, 0, {'product_id': product_2.id, 'product_qty': 18, 'product_uom_id': product_2.uom_po_id.id, 'price_unit': 42})
+        requisition_1 = self.env['purchase.requisition'].create({
+            'line_ids': [line1],
+            'type_id': requisition_type.id,
+            'vendor_id': vendor1.id,
+            'currency_id': self.env.ref("base.USD").id,
+        })
+        requisition_2 = self.env['purchase.requisition'].create({
+            'line_ids': [line2],
+            'type_id': requisition_type.id,
+            'vendor_id': vendor1.id,
+            'currency_id': self.env.ref("base.USD").id,
+        })
+        requisition_1.action_in_progress()
+        requisition_2.action_in_progress()
+        # Stock moves
+        stock_location = self.env.ref('stock.stock_location_stock')
+        customer_location = self.env.ref('stock.stock_location_customers')
+        move1 = self.env['stock.move'].create({
+            'name': '10 in',
+            'procure_method': 'make_to_order',
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'product_id': product_1.id,
+            'product_uom': unit,
+            'product_uom_qty': 10.0,
+            'price_unit': 100,
+        })
+        move2 = self.env['stock.move'].create({
+            'name': '10 in',
+            'procure_method': 'make_to_order',
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'product_id': product_2.id,
+            'product_uom': unit,
+            'product_uom_qty': 10.0,
+            'price_unit': 100,
+        })
+        move1._action_confirm()
+        move2._action_confirm()
+        # Verifications
+        POL1 = self.env['purchase.order.line'].search([('product_id', '=', product_1.id)]).order_id
+        POL2 = self.env['purchase.order.line'].search([('product_id', '=', product_2.id)]).order_id
+        self.assertFalse(POL1 == POL2, 'The two blanket orders should generate two purchase different purchase orders')
+        POL1.write({'order_line': [
+            (0, 0, {
+                'name': product_2.name,
+                'product_id': product_2.id,
+                'product_qty': 5.0,
+                'product_uom': product_2.uom_po_id.id,
+                'price_unit': 0,
+                'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            })
+        ]})
+        order_line = self.env['purchase.order.line'].search([
+            ('product_id', '=', product_2.id),
+            ('product_qty', '=', 5.0),
+        ])
+        order_line._onchange_quantity()
+        self.assertEqual(order_line.price_unit, 50, 'The supplier info chosen should be the one without requisition id')

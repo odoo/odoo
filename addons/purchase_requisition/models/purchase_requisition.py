@@ -101,6 +101,21 @@ class PurchaseRequisition(models.Model):
             else:
                 requisition.is_quantity_copy = True
 
+    @api.onchange('vendor_id')
+    def _onchange_vendor(self):
+        requisitions = self.env['purchase.requisition'].search([
+            ('vendor_id', '=', self.vendor_id.id),
+            ('state', '=', 'ongoing'),
+            ('type_id.quantity_copy', '=', 'none'),
+        ])
+        if any(requisitions):
+            title = _("Warning for %s") % self.vendor_id.name
+            message = _("%s has already an ongoing blanket order") % self.vendor_id.name
+            warning = {
+                'title': title,
+                'message': message
+            }
+            return {'warning': warning}
 
     @api.multi
     @api.depends('purchase_ids')
@@ -399,6 +414,16 @@ class PurchaseOrderLine(models.Model):
         return res
 
 
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    def _prepare_sellers(self):
+        if self.env.context and 'current_po' in self.env.context:
+            return [s for s in self.seller_ids if not s.purchase_requisition_id or s.purchase_requisition_id == self.env.context.get('current_po').requisition_id]
+        else:
+            return self.seller_ids
+
+
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
@@ -427,3 +452,11 @@ class ProcurementRule(models.Model):
         if values['supplier'].purchase_requisition_id.currency_id:
             res['currency_id'] = values['supplier'].purchase_requisition_id.currency_id.id
         return res
+
+    def _make_po_get_domain(self, values, partner):
+        domain = super(ProcurementRule, self)._make_po_get_domain(values, partner)
+        if 'supplier' in values and values['supplier'].purchase_requisition_id:
+            domain += (
+                ('requisition_id', '=', values['supplier'].purchase_requisition_id.id),
+            )
+        return domain
