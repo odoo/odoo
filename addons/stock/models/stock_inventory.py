@@ -373,7 +373,7 @@ class InventoryLine(models.Model):
             self._compute_theoretical_qty()
             self.product_qty = self.theoretical_qty
 
-    @api.model
+    @api.multi
     def write(self, values):
         values.pop('product_name', False)
         res = super(InventoryLine, self).write(values)
