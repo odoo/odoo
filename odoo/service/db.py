@@ -12,12 +12,13 @@ import zipfile
 
 from functools import wraps
 from contextlib import closing
+from decorator import decorator
 
 import psycopg2
 
 import odoo
 from odoo import SUPERUSER_ID
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessDenied
 import odoo.release
 import odoo.sql_db
 import odoo.tools
@@ -26,6 +27,15 @@ _logger = logging.getLogger(__name__)
 
 class DatabaseExists(Warning):
     pass
+
+
+def check_db_management_enabled(method):
+    def if_db_mgt_enabled(method, self, *args, **kwargs):
+        if not odoo.tools.config['list_db']:
+            _logger.error('Database management functions blocked, admin disabled database listing')
+            raise AccessDenied()
+        return method(self, *args, **kwargs)
+    return decorator(if_db_mgt_enabled, method)
 
 #----------------------------------------------------------
 # Master password required
@@ -86,6 +96,7 @@ def _create_empty_database(name):
             cr.autocommit(True)     # avoid transaction block
             cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (name, chosen_template))
 
+@check_db_management_enabled
 def exp_create_database(db_name, demo, lang, user_password='admin', login='admin', country_code=None):
     """ Similar to exp_create but blocking."""
     _logger.info('Create database `%s`.', db_name)
@@ -93,6 +104,7 @@ def exp_create_database(db_name, demo, lang, user_password='admin', login='admin
     _initialize_db(id, db_name, demo, lang, user_password, login, country_code)
     return True
 
+@check_db_management_enabled
 def exp_duplicate_database(db_original_name, db_name):
     _logger.info('Duplicate database `%s` to `%s`.', db_original_name, db_name)
     odoo.sql_db.close_db(db_original_name)
@@ -130,6 +142,7 @@ def _drop_conn(cr, db_name):
     except Exception:
         pass
 
+@check_db_management_enabled
 def exp_drop(db_name):
     if db_name not in list_dbs(True):
         return False
@@ -154,12 +167,14 @@ def exp_drop(db_name):
         shutil.rmtree(fs)
     return True
 
+@check_db_management_enabled
 def exp_dump(db_name, format):
     with tempfile.TemporaryFile() as t:
         dump_db(db_name, t, format)
         t.seek(0)
         return t.read().encode('base64')
 
+@check_db_management_enabled
 def dump_db_manifest(cr):
     pg_version = "%d.%d" % divmod(cr._obj.connection.server_version / 100, 100)
     cr.execute("SELECT name, latest_version FROM ir_module_module WHERE state = 'installed'")
@@ -175,6 +190,7 @@ def dump_db_manifest(cr):
     }
     return manifest
 
+@check_db_management_enabled
 def dump_db(db_name, stream, backup_format='zip'):
     """Dump database `db` into file-like object `stream` if stream is None
     return a file object with the dump """
@@ -210,6 +226,7 @@ def dump_db(db_name, stream, backup_format='zip'):
         else:
             return stdout
 
+@check_db_management_enabled
 def exp_restore(db_name, data, copy=False):
     data_file = tempfile.NamedTemporaryFile(delete=False)
     try:
@@ -220,6 +237,7 @@ def exp_restore(db_name, data, copy=False):
         os.unlink(data_file.name)
     return True
 
+@check_db_management_enabled
 def restore_db(db, dump_file, copy=False):
     assert isinstance(db, basestring)
     if exp_db_exist(db):
@@ -274,6 +292,7 @@ def restore_db(db, dump_file, copy=False):
 
     _logger.info('RESTORE DB: %s', db)
 
+@check_db_management_enabled
 def exp_rename(old_name, new_name):
     odoo.modules.registry.Registry.delete(old_name)
     odoo.sql_db.close_db(old_name)
@@ -295,11 +314,13 @@ def exp_rename(old_name, new_name):
         shutil.move(old_fs, new_fs)
     return True
 
+@check_db_management_enabled
 def exp_change_admin_password(new_password):
     odoo.tools.config['admin_passwd'] = new_password
     odoo.tools.config.save()
     return True
 
+@check_db_management_enabled
 def exp_migrate_databases(databases):
     for db in databases:
         _logger.info('migrate database %s', db)
