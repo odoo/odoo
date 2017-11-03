@@ -18,7 +18,7 @@ components**, in other words it is a Odoo Web instance loaded inside native
 WebView container of mobile.
 
 This page documents how you can access mobile native components like Camera,
-Vibration, Notification, Toast through Odoo Web (via JavaScript). For this, you
+Vibration, Notification, Toast through Odoo Web (via JavaScript) in your Android and iOS devices. For this, you
 do not need to be a mobile developer, if you know Odoo JavaScript API you can
 access all available mobile features.
 
@@ -30,6 +30,8 @@ How does it work?
 Internal working of Mobile application:
 
 .. image:: images/mobile_working.jpg
+
+.. note:: Same for both Android and iOS
 
 Of course, it is a web page that loads on a Mobile Native Web container. But it
 is integrated in such a way that you can access native resources from your web
@@ -56,9 +58,7 @@ As Odoo Web Framework, Mobile api can be used anywhere by getting object of
 .. image:: images/odoo_mobile_api.png
 
 Mobile rpc object provide list of methods available (Works only with Mobile
-App). 
-
-Just check for method availability and execute it.
+App Android and iOS). Just check for method availability and execute it.
 
 Methods
 -------
@@ -72,6 +72,8 @@ Show Toast in device
 .. js:function:: showToast
 
 	:param object args: **message** text to display
+
+*Available in* ``iOS``, ``Android``
 
 A toast provides simple feedback about an operation in a small popup. It only
 fills the amount of space required for the message and the current activity
@@ -93,6 +95,8 @@ Vibrating device
 	:param object args: Vibrates constantly for the specified period of time
 	       (in milliseconds).
 
+*Available in* ``iOS``, ``Android``
+
 Vibrate mobile device with given duration.
 
 .. code-block:: javascript
@@ -106,6 +110,8 @@ Show snackbar with action
 
 	:param object args: (*required*) **Message** to show in snackbar and action **button label** in Snackbar (optional)
 	:returns:  ``True`` if User click on Action button, ``False`` if SnackBar auto dismissed after some time
+
+*Available in* ``iOS``, ``Android``
 
 Snackbars provide lightweight feedback about an operation. They show a brief
 message at the bottom of the screen on mobile and lower left on larger devices.
@@ -131,6 +137,8 @@ Showing notification
 
 	:param object args: **title** (first row) of the notification, **message** (second row) of the notification, in a standard notification.
 
+*Available in* ``iOS``, ``Android``
+
 A notification is a message you can display to the user outside of your
 application's normal UI. When you tell the system to issue a notification, it
 first appears as an icon in the notification area. To see the details of the
@@ -151,6 +159,8 @@ Create contact in device
 .. js:function:: addContact
 
 	:param object args: Dictionary with contact details. Possible keys (name, mobile, phone, fax, email, website, street, street2, country_id, state_id, city, zip, parent_id, function and image)
+
+*Available in* ``iOS``, ``Android``
 
 Create device contact with given contact details.
 
@@ -185,12 +195,18 @@ Scanning barcodes
 
 	:returns: Scanned ``code`` from any barcodes
 
+*Available in* ``iOS``, ``Android``
+
 The Barcode API detects barcodes in real-time, on device, in any orientation.
 
-It reads the following barcode formats:
+**Android** reads the following barcode formats:
 
 * 1D barcodes: EAN-13, EAN-8, UPC-A, UPC-E, Code-39, Code-93, Code-128, ITF, Codabar
 * 2D barcodes: QR Code, Data Matrix, PDF-417, AZTEC
+
+**iOS** reads the following barcode formats:
+
+* UPCE, Code 39, Code 39 Mod 43, EAN 13, EAN 8, Code 93, Code 128, PDF 417, QR Code, Aztec, Interleaved 2 of 5 (iOS 8 and later), ITF 14 (iOS 8 and later), Data Matrix (iOS 8 and later)
 
 .. code-block:: javascript
 
@@ -204,6 +220,8 @@ Switching account in device
 ...........................
 
 .. js:function:: switchAccount
+
+*Available in* ``Android``
 
 Use to switch device account.
 
