@@ -20,7 +20,8 @@
     'data': [
         'data/account_move.xml',
         'views/res_config.xml',
-        'views/account_sale_closure.xml'
+        'views/account_sale_closure.xml',
+        'data/account_sale_closure_cron.xml',
     ],
     'post_init_hook': '_setup_inalterability',
 }
