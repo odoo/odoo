@@ -6,7 +6,12 @@
 
     .o_account_dashboard_header {
         .o-flex(1, 0, 100%);
+        .o-flex-flow(column, nowrap);
         background-color: @odoo-view-background-color;
+
+        .o_form_statusbar {
+            padding-right: @odoo-horizontal-padding;
+        }
 
         h4 {
             font-size: @font-size-base;
