@@ -13,7 +13,7 @@
         https://accounts.odoo.com/my/contract/certification-french-accounting/
 
 """,
-    'depends': ['l10n_fr'],
+    'depends': ['l10n_fr_certification', 'point_of_sale'],
     'installable': True,
     'auto_install': False,
     'application': False,
