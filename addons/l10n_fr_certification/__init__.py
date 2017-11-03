@@ -18,5 +18,4 @@ def _setup_inalterability(cr, registry):
 
         #reset the update_posted field on journals
         journals = env['account.journal'].search([('company_id', 'in', fr_companies.ids)])
-        for journal in journals:
-            journal.write({'update_posted': False})
+        journals.write({'update_posted': False})
