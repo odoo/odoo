@@ -271,7 +271,7 @@ Best Regards,''')
             default_journal = self.env['account.journal'].search([('type', '=', 'general'), ('company_id', '=', self.id)], limit=1)
 
             if not default_journal:
-                raise UserError(_("No miscellanous journal could be found. Please create one before proceeding."))
+                raise UserError(_("No miscellaneous journal could be found. Please create one before proceeding."))
 
             self.account_opening_move_id = self.env['account.move'].create({
                 'name': _('Opening Journal Entry'),
