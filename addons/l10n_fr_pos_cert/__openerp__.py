@@ -18,7 +18,7 @@
     'auto_install': False,
     'application': False,
     'data': [
-        'views/account_sale_closure.xml',
+        'data/pos_inalterability.xml',
     ],
     'post_init_hook': '_setup_inalterability',
 }

@@ -21,7 +21,8 @@ class ResCompany(models.Model):
         company = super(ResCompany, self).create(vals)
         #when creating a new french company, create the securisation sequence as well
         if self._is_accounting_unalterable():
-            company._create_secure_sequence()
+            sequence_fields = ['l10n_fr_secure_sequence_id', 'l10n_fr_closure_sequence_id']
+            company._create_secure_sequence(sequence_fields)
         return company
 
     @api.multi

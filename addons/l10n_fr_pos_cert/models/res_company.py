@@ -1,6 +1,4 @@
 from openerp import models, api, fields
-from openerp.tools.translate import _
-from openerp.exceptions import UserError
 
 
 class ResCompany(models.Model):
@@ -8,5 +6,21 @@ class ResCompany(models.Model):
 
     l10n_fr_pos_cert_sequence_id = fields.Many2one('ir.sequence')
 
-    # To do in master : refactor to set sequences more generic
-    # Do basically the same as in l10n_fr_certification for automatically fill this field
+    @api.model
+    def create(self, vals):
+        company = super(ResCompany, self).create(vals)
+        #when creating a new french company, create the securisation sequence as well
+        if self._is_accounting_unalterable():
+            sequence_fields = ['l10n_fr_pos_cert_sequence_id']
+            company._create_secure_sequence(sequence_fields)
+        return company
+
+    @api.multi
+    def write(self, vals):
+        res = super(ResCompany, self).write(vals)
+        #if country changed to fr, create the securisation sequence
+        for company in self:
+            if company._is_accounting_unalterable():
+                sequence_fields = ['l10n_fr_pos_cert_sequence_id']
+                company._create_secure_sequence(sequence_fields)
+        return res

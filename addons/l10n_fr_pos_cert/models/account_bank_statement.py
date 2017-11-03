@@ -1,4 +1,4 @@
-from openerp import models, api, fields
+from openerp import models, api
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
@@ -13,8 +13,14 @@ class AccountBankStatement(models.Model):
     @api.multi
     def write(self, vals):
         # Even draft bank statement cannot be modified if related to the pos
+        # Condition is soooo crappy, but so many writes happen when just initiating a pos session
         for statement in self.filtered(lambda s: s.company_id._is_accounting_unalterable() and s.journal_id.journal_user):
-            if vals.keys() != ['state', 'date_done'] and not vals.keys() == ['balance_end_real']:
+            if vals.keys() != ['state', 'date_done'] and\
+                not vals.keys() == ['balance_end_real'] and\
+                not (self._context.get('params') and
+                    'action' in self._context['params'].keys() and
+                    vals.keys() == ['pos_session_id']) and\
+                not vals == {'state': 'open'}:
                 raise UserError(BKN_NO_TOUCH % (_('bank statement'), statement.name))
         return super(AccountBankStatement, self).write(vals)
 
