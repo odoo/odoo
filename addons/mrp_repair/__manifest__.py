@@ -24,8 +24,8 @@ The following topics are covered by this module:
     'depends': ['stock', 'sale_management', 'account'],
     'website': 'https://www.odoo.com/page/manufacturing',
     'data': [
-        'security/ir.model.access.csv',
         'security/mrp_repair_security.xml',
+        'security/ir.model.access.csv',
         'wizard/mrp_repair_cancel_views.xml',
         'wizard/mrp_repair_make_invoice_views.xml',
         'wizard/stock_warn_insufficient_qty_views.xml',

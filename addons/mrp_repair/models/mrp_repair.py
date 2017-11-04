@@ -12,8 +12,12 @@ from odoo.tools import float_compare
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    repair_id = fields.Many2one('mrp.repair')
+    repair_id = fields.Many2one('mrp.repair', readonly=True)
 
+class AccountInvoice(models.Model):
+    _inherit = 'account.invoice'
+
+    repair_id = fields.Many2one('mrp.repair', readonly=True)
 
 class Repair(models.Model):
     _name = 'mrp.repair'
@@ -318,7 +322,8 @@ class Repair(models.Model):
                         'partner_id': repair.partner_invoice_id.id or repair.partner_id.id,
                         'currency_id': repair.pricelist_id.currency_id.id,
                         'comment': repair.quotation_notes,
-                        'fiscal_position_id': repair.partner_id.property_account_position_id.id
+                        'fiscal_position_id': repair.partner_id.property_account_position_id.id,
+                        'repair_id': repair.id,
                     })
                     invoices_group[repair.partner_invoice_id.id] = invoice
                 repair.write({'invoiced': True, 'invoice_id': invoice.id})
@@ -448,7 +453,7 @@ class Repair(models.Model):
                     'location_id': operation.location_id.id,
                     'location_dest_id': operation.location_dest_id.id,
                     'move_line_ids': [(0, 0, {'product_id': operation.product_id.id,
-                                           'lot_id': operation.lot_id.id, 
+                                           'lot_id': operation.lot_id.id,
                                            'product_uom_qty': 0,  # bypass reservation here
                                            'product_uom_id': operation.product_uom.id,
                                            'qty_done': operation.product_uom_qty,
@@ -470,7 +475,7 @@ class Repair(models.Model):
                 'location_id': repair.location_id.id,
                 'location_dest_id': repair.location_dest_id.id,
                 'move_line_ids': [(0, 0, {'product_id': repair.product_id.id,
-                                           'lot_id': repair.lot_id.id, 
+                                           'lot_id': repair.lot_id.id,
                                            'product_uom_qty': 0,  # bypass reservation here
                                            'product_uom_id': repair.product_uom.id or repair.product_id.uom_id.id,
                                            'qty_done': repair.product_qty,
