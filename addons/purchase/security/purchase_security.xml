@@ -64,14 +64,14 @@
 
     <record id="account_invoice_purchase_user" model="ir.rule">
         <field name="name">Invoices acces for purchase user</field>
-        <field name="model_id" ref="purchase.model_account.invoice"/>
+        <field name="model_id" ref="purchase.model_account_invoice"/>
         <field name="domain_force">[('type','in',['in_invoice','in_refund'])]</field>
         <field name="groups" eval="[(4, ref('purchase.group_purchase_user'))]"/>
     </record>
 
     <record id="account_invoice_line_purchase_user" model="ir.rule">
         <field name="name">Invoices line acces for purchase user</field>
-        <field name="model_id" ref="purchase.model_account.invoice.line"/>
+        <field name="model_id" ref="purchase.model_account_invoice.line"/>
         <field name="domain_force">[('invoice_id.type','in',['in_invoice','in_refund'])]</field>
         <field name="groups" eval="[(4, ref('purchase.group_purchase_user'))]"/>
     </record>

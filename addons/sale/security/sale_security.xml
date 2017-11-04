@@ -86,14 +86,14 @@
 
     <record id="account_invoice_sale_user" model="ir.rule">
         <field name="name">Invoices acces for sale user</field>
-        <field name="model_id" ref="purchase.model_account.invoice"/>
+        <field name="model_id" ref="purchase.model_account_invoice"/>
         <field name="domain_force">[('type','in',['out_invoice','out_refund'])]</field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
 
     <record id="account_invoice_line_sale_user" model="ir.rule">
         <field name="name">Invoices line acces for sale user</field>
-        <field name="model_id" ref="purchase.model_account.invoice.line"/>
+        <field name="model_id" ref="purchase.model_account_invoice_line"/>
         <field name="domain_force">[('invoice_id.type','in',['out_invoice','out_refund'])]</field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
