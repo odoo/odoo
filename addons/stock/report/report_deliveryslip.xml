@@ -86,10 +86,10 @@
                                 <td>
                                     <span t-field="move_line.product_id"/>
                                     <p t-if="o.picking_type_code == 'outgoing'">
-                                        <span t-field="move_line.product_id.description_pickingout"/>
+                                        <span t-field="move_line.product_id.sudo().description_pickingout"/>
                                     </p>
                                     <p t-if="o.picking_type_code == 'incoming'">
-                                        <span t-field="move_line.product_id.description_pickingin"/>
+                                        <span t-field="move_line.product_id.sudo().description_pickingin"/>
                                     </p>
                                     <t t-if="not move_line.product_id and move_line.package_id">
                                         <span  t-field="move_line.package_id"/>

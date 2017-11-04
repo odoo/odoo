@@ -25,7 +25,7 @@
             <div class="notification_area"/>
         </div>
         <div class="o_reconciliation_lines"/>
-        <div t-if="widget._initialState.valuemax > widget._initialState.defaultDisplayQty">
+        <div t-if="widget._initialState.valuemax &gt; widget._initialState.defaultDisplayQty">
             <button class="btn btn-default js_load_more">Load more</button>
         </div>
         <div class="pull-right text-muted">Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet.</div>
@@ -129,8 +129,8 @@
         <td class="cell_account_code"><t t-esc="state.balance.account_code"/></td>
         <td class="cell_due_date"></td>
         <td class="cell_label"><t t-if="state.balance.amount &lt; 0">Create Write-off</t><t t-elif="state.st_line.partner_id">Open balance</t><t t-else="">Choose counterpart</t></td>
-        <td class="cell_left"><t t-if="state.balance.amount &lt; 0"><t t-raw="state.balance.amount_str"/></t></td>
-        <td class="cell_right"><t t-if="state.balance.amount &gt; 0"><t t-raw="state.balance.amount_str"/></t></td>
+        <td class="cell_left"><t t-if="state.balance.amount &lt; 0"><span t-if="state.balance.amount_currency_str" t-attf-class="o_multi_currency o_multi_currency_color_#{state.balance.currency_id%8} line_info_button fa fa-money" t-att-data-content="state.balance.amount_currency_str"/><t t-raw="state.balance.amount_str"/></t></td>
+        <td class="cell_right"><t t-if="state.balance.amount &gt; 0"><span t-if="state.balance.amount_currency_str" t-attf-class="o_multi_currency o_multi_currency_color_#{state.balance.currency_id%8} line_info_button fa fa-money" t-att-data-content="state.balance.amount_currency_str"/><t t-raw="state.balance.amount_str"/></t></td>
         <td class="cell_info_popover"></td>
     </tr>
 </t>

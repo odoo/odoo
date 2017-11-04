@@ -268,7 +268,7 @@ class ResPartner(models.Model):
         all_partner_ids = []
         for partner in self:
             # price_total is in the company currency
-            all_partners_and_children[partner] = self.search([('id', 'child_of', partner.id)]).ids
+            all_partners_and_children[partner] = self.with_context(active_test=False).search([('id', 'child_of', partner.id)]).ids
             all_partner_ids += all_partners_and_children[partner]
 
         # searching account.invoice.report via the orm is comparatively expensive
@@ -278,7 +278,7 @@ class ResPartner(models.Model):
 
         # generate where clause to include multicompany rules
         where_query = account_invoice_report._where_calc([
-            ('partner_id', 'in', all_partner_ids), ('state', 'not in', ['draft', 'cancel']), ('company_id', '=', self.env.user.company_id.id),
+            ('partner_id', 'in', all_partner_ids), ('state', 'not in', ['draft', 'cancel']),
             ('type', 'in', ('out_invoice', 'out_refund'))
         ])
         account_invoice_report._apply_ir_rules(where_query, 'read')

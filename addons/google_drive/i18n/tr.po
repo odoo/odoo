@@ -4,13 +4,18 @@
 # 
 # Translators:
 # Murat Kaplan <muratk@projetgrup.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Saban Yildiz <sabany@projetgrup.com>, 2017
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2017
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2017\n"
+"Last-Translator: Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +33,12 @@ msgid ""
 "                                - If you don't select \"Share with all users\", link of google document in \"More\" options will not appear for other users in opportunities of Sales Department.<br/>\n"
 "                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
 msgstr ""
+"<b>yeni bir süzgeç oluşturmak için:</b><br/>\n"
+"                                - Süzgeç oluşturmak istediğiniz Odoo belgesine gidin. Örneğin, Fırsatlara gidin ve Satış Bölümünde arayın.<br/>\n"
+"                                - Bu \"Arama\" görünümünde \"Geçerli Süzgeçi Kaydet\"i seçin, adını girin (Örn: Satış Bölümü)<br/>\n"
+"                                - Eğer \"Bütün kullanıcılarla paylaş\"ı seçerseniz, \"Fazlası\" seçeneğinde google belgeleri bağlantısı Satış Bölümündeki fırsatlardaki tüm kullanıcılarda görünecektir.<br/>\n"
+"                                - Eğer \"Bütün kullanıcılarla paylaş\"ı seçmezseniz, \"Fazlası\" seçeneğinde google belgeleri bağlantısı fırsatlardaki tüm kullanıcılarda görünmeyecektir.<br/>\n"
+"                                - Eğer süzgeç belirtilmemişse,  \"Fazlası\" seçeneğinde google belgeleri bağlantısı fırsatlardaki tüm kullanıcılarda görünecektir."
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
@@ -47,18 +58,18 @@ msgstr ""
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_active
 msgid "Active"
-msgstr ""
+msgstr "Aktif"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:41
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern"
-msgstr ""
+msgstr "Google sürücü adı şeklinde en az bir anahtar bulunamıyor"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings_google_drive_authorization_code
 msgid "Authorization Code"
-msgstr ""
+msgstr "Yetki Kodu"
 
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_google_drive_config_name_template
@@ -66,27 +77,29 @@ msgid ""
 "Choose how the new google drive will be named, on google side. Eg. "
 "gdoc_%(field_name)s"
 msgstr ""
+"Yeni google sürücü, google tarafında adlandırılacağını seçin. Örneğin. gdoc_"
+" % (field_name) s"
 
 #. module: google_drive
 #: model:ir.actions.act_window,help:google_drive.action_google_drive_users_config
 msgid "Click to add a new template."
-msgstr ""
+msgstr "Yeni bir şablon eklemek için tıklayın."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Oluşturan"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_create_date
 msgid "Created on"
-msgstr ""
+msgstr "Oluşturulma"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:157
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
-msgstr ""
+msgstr "Google sürücü oluşturma yalnızca tek tek tarafından yapılabilir."
 
 #. module: google_drive
 #: model:ir.filters,name:google_drive.filter_partner
@@ -96,19 +109,19 @@ msgstr "Müşteri"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Görünüm Adı"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_filter_id
 msgid "Filter"
-msgstr ""
+msgstr "Filtre"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:60
 #: code:addons/google_drive/models/google_drive.py:81
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "Yapılandırma paneline git"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_client_id
@@ -119,12 +132,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_tree
 msgid "Google Drive Configuration"
-msgstr ""
+msgstr "Google Drive Konfigürasyonu"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name_template
 msgid "Google Drive Name Pattern"
-msgstr ""
+msgstr "Google Drive Adı"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
@@ -136,32 +149,32 @@ msgstr ""
 #: code:addons/google_drive/models/google_drive.py:83
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
-msgstr ""
+msgstr "Google sürücü henüz yapılandırılmadı. Lütfen yöneticinize başvurun."
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_google_drive_config
 msgid "Google Drive templates config"
-msgstr ""
+msgstr "Google Drive Şablon Ayarı"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Son Güncelleme"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Son Güncelleyen"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Son Güncelleme"
 
 #. module: google_drive
 #: model:ir.actions.act_window,help:google_drive.action_google_drive_users_config
@@ -172,17 +185,23 @@ msgid ""
 "checklist for each order in a foreign country, ... Its very easy to manage "
 "them, link them to Odoo and use them to collaborate with your employees."
 msgstr ""
+"Kendi google drive şablonlarınızı herhangi bir Odoo kaydına bağlantılayın. "
+"Örn. gerçekten işbirliği yaptığınız kimsenin doldurmasını istediğiniz özel "
+"belgeler varsa. Ürününüzün kalitesini kontrol etmek için bir çalışma tablosu"
+" kullanın veya yabancı bir ülkeye olan her sipariş için teslimat denetim "
+"listesini inceleyin, ... Onları yönetmek çok kolaydır, Odoo'ya bağlantılayın"
+" ve çalışanlarınızla işbirliği için kullanın."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model_id
 msgid "Model"
-msgstr ""
+msgstr "Model"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:199
 #, python-format
 msgid "Please enter a valid Google Document URL."
-msgstr ""
+msgstr "Lütfen geçerli bir Google belge URL'si girin."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model
@@ -192,7 +211,7 @@ msgstr ""
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_resource_id
 msgid "Resource Id"
-msgstr ""
+msgstr "Kaynak ID"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:80
@@ -201,32 +220,34 @@ msgid ""
 "Something went wrong during the token generation. Please request again an "
 "authorization code ."
 msgstr ""
+"Simge oluşturma sırasında bir şeyler ters gitti. Lütfen tekrar bir "
+"yetkilendirme kodu isteyin."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name
 msgid "Template Name"
-msgstr ""
+msgstr "Şablon Adı"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_template_url
 msgid "Template URL"
-msgstr ""
+msgstr "Şablon"
 
 #. module: google_drive
 #: model:ir.actions.act_window,name:google_drive.action_google_drive_users_config
 msgid "Templates"
-msgstr ""
+msgstr "Şablonlar"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:98
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
-msgstr ""
+msgstr "Google şablonu bulunamıyor. Belki silindi."
 
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_res_config_settings_google_drive_uri
 msgid "The URL to generate the authorization code from Google"
-msgstr ""
+msgstr "Google'dan yetkilendirme kodu oluşturmak için URL"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
@@ -236,6 +257,9 @@ msgid ""
 "                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
 "                                'Agrolait_SO0001_Sales'."
 msgstr ""
+"Eklenen dosyanın adı sabit ya da değişken bir data kullanabilir. Google drive'da verileri birbirinden ayırmak için, sabit kelimeler ve alanlar kullanın.Örnekte olduğu gibi eğer  Agrolait_%(name)s_Sales yazarsanız\n"
+"                               , Google drivedaki dokumanın adı\n"
+"                                'Agrolait_SO0001_Sales' olarak kaydedilecektir."
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:134
@@ -244,11 +268,13 @@ msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
 "the document"
 msgstr ""
+"İzin 'herkes' ile belgili tanımlık bağlantı için ' okuyucu' belge üzerinde "
+"yazılı değil"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings_google_drive_uri
 msgid "URI"
-msgstr ""
+msgstr "URI"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:59
@@ -257,14 +283,17 @@ msgid ""
 "You haven't configured 'Authorization Code' generated from google, Please "
 "generate and configure it ."
 msgstr ""
+"Google oluşturulan &#39;Yetki Kanunu&#39; yapılandırılmamış değil, üretmek "
+"ve bunu yapılandırın."
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
 "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
 msgstr ""
+"https://docs.Google.com/Document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/Edit"
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_res_config_settings
 msgid "res.config.settings"
-msgstr ""
+msgstr "res.config.settings"

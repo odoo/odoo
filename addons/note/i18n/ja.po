@@ -1,22 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * note
-#
+# 
 # Translators:
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2015-2016
-# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
+# Manami Hashi <manami@roomsfor.hk>, 2017
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2017
+# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-21 01:49+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
-"Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
-"Language: ja\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: NOKA Shigekazu <shigekazu.noka@gmail.com>, 2017\n"
+"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: note
@@ -33,18 +37,23 @@ msgstr "アーカイブ"
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
-msgstr ""
+msgstr "付箋メモカテゴリ"
+
+#. module: note
+#: model:ir.actions.act_window,help:note.note_tag_action
+msgid "Click to add a new tag."
+msgstr "クリックで新しいタグを追加。"
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
 msgid "Click to add a personal note."
-msgstr ""
+msgstr "クリックで個人ノートを追加。"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_color
 #: model:ir.model.fields,field_description:note.field_note_tag_color
 msgid "Color Index"
-msgstr "カラーインデックス"
+msgstr "カラーインデクス"
 
 #. module: note
 #: model:ir.ui.menu,name:note.menu_note_configuration
@@ -89,6 +98,11 @@ msgstr "デフォルトで折りたたむ"
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Future Activities"
+msgstr "将来の活動"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
 msgstr "グループ化"
 
@@ -121,10 +135,20 @@ msgid "Last Updated on"
 msgstr "最終更新日"
 
 #. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Late Activities"
+msgstr "遅れた活動"
+
+#. module: note
 #: model:note.stage,name:note.demo_note_stage_03
 #: model:note.stage,name:note.note_stage_03
 msgid "Later"
 msgstr "以降"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "My Activities"
+msgstr "自分の活動"
 
 #. module: note
 #: model:note.stage,name:note.note_stage_00
@@ -132,37 +156,31 @@ msgid "New"
 msgstr "新規"
 
 #. module: note
-#: code:addons/note/note.py:165
-#, python-format
-msgid "New Note"
-msgstr ""
-
-#. module: note
 #: model:ir.model,name:note.model_note_note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Note"
-msgstr "注記"
+msgstr "ノート"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_memo
 msgid "Note Content"
-msgstr ""
+msgstr "ノート内容"
 
 #. module: note
 #: model:ir.model,name:note.model_note_stage
 msgid "Note Stage"
-msgstr ""
+msgstr "ノートステージ"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_name
 msgid "Note Summary"
-msgstr ""
+msgstr "ノート概要"
 
 #. module: note
 #: model:ir.model,name:note.model_note_tag
 msgid "Note Tag"
-msgstr ""
+msgstr "ノートタグ"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.action_note_note
@@ -170,7 +188,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:note.stage,name:note.note_stage_04
 msgid "Notes"
-msgstr "注記"
+msgstr "ノート"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_user_id
@@ -180,8 +198,8 @@ msgstr "オーナー"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
-msgid "Owner of the note stage."
-msgstr ""
+msgid "Owner of the note stage"
+msgstr "ノートステージのオーナー"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_sequence
@@ -190,10 +208,15 @@ msgid "Sequence"
 msgstr "付番"
 
 #. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_stage_id
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Stage"
-msgstr "段階"
+msgstr "ステージ"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage_name
@@ -203,7 +226,7 @@ msgstr "ステージ名"
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_stage_form
 msgid "Stage of Notes"
-msgstr ""
+msgstr "ノートのステージ"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.action_note_stage
@@ -215,17 +238,17 @@ msgstr "ステージ"
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_stage_tree
 msgid "Stages of Notes"
-msgstr ""
+msgstr "ノートステージ"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_stage_ids
 msgid "Stages of Users"
-msgstr ""
+msgstr "ユーザステージ"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_tag_name
 msgid "Tag Name"
-msgstr ""
+msgstr "タグ名"
 
 #. module: note
 #: sql_constraint:note.tag:0
@@ -233,13 +256,16 @@ msgid "Tag name already exists !"
 msgstr "そのタグ名は既に使われています！"
 
 #. module: note
+#: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.ui.menu,name:note.notes_tag_menu
+#: model:ir.ui.view,arch_db:note.note_tag_view_form
+#: model:ir.ui.view,arch_db:note.note_tag_view_tree
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "タグ"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_04
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
 msgstr "今週"
@@ -251,6 +277,11 @@ msgid "Today"
 msgstr "本日"
 
 #. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Today Activities"
+msgstr "本日の活動"
+
+#. module: note
 #: model:note.stage,name:note.demo_note_stage_02
 msgid "Tomorrow"
 msgstr "明日"
@@ -259,18 +290,21 @@ msgstr "明日"
 #: model:ir.actions.act_window,help:note.action_note_note
 msgid ""
 "Use notes to organize personal tasks or notes. All\n"
-"            notes are private; no one else will be able to see them. "
-"However\n"
-"            you can share some notes with other people by inviting "
-"followers\n"
+"            notes are private; no one else will be able to see them. However\n"
+"            you can share some notes with other people by inviting followers\n"
 "            on the note. (Useful for meeting minutes, especially if\n"
 "            you activate the pad feature for collaborative writings)."
 msgstr ""
+"ノートを使用して個人的なタスクやノートを整理します。 \n"
+"すべてのノートはプライベートです。 誰もそれらを見ることはできません。\n"
+" しかし、あなたはノート上でフォロワーを招待することによって、\n"
+"他の人といくつかのノートを共有することができます。 \n"
+"(会議の議事録に便利です。特に、共同編集のためにパッド機能を有効にしている場合に便利です)。"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_sequence
 msgid "Used to order the note stages"
-msgstr ""
+msgstr "ノートステージの注文に使用されます"
 
 #. module: note
 #: model:ir.model,name:note.model_res_users
@@ -283,39 +317,5 @@ msgid ""
 "You can customize how you process your notes/tasks by adding,\n"
 "            removing or modifying columns."
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "必要なアクション"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "記録上の最後のメッセージが投稿された日"
-
-#~ msgid "Followers"
-#~ msgstr "フォロワー"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "フォロワー(チャンネル)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "フォロワー(取引先)"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最終メッセージ日"
-
-#~ msgid "Messages"
-#~ msgstr "メッセージ"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "メッセージとコミュニケーション履歴"
-
-#~ msgid "Number of Actions"
-#~ msgstr "アクションの数"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未読メッセージ数"
-
-#~ msgid "Unread Messages"
-#~ msgstr "未読メッセージ"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未読メッセージカウンター"
+"列を追加、削除、または変更することで、\n"
+"ノート/タスクの処理方法をカスタマイズできます。"

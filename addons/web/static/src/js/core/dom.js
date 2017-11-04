@@ -159,10 +159,8 @@ return {
     /**
      * Returns the selection range of an input or textarea
      *
-     * @param {Object} DOM item input or texteara
+     * @param {Object} node DOM item input or texteara
      * @returns {Object} range
-     * @returns {integer} range.start
-     * @returns {integer} range.end
      */
     getSelectionRange: function (node) {
         return {
@@ -174,7 +172,7 @@ return {
      * Returns the distance between a DOM element and the top-left corner of the
      * window
      *
-     * @param {Object} node DOM element (input or texteara)
+     * @param {Object} e DOM element (input or texteara)
      * @return {Object} the left and top distances in pixels
      */
     getPosition: function (e) {

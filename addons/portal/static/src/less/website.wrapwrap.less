@@ -191,6 +191,9 @@ hr {
         &.divider {
             .o-w-fill-navbar();
             border-right: 1px solid @navbar-default-link-disabled-color;
+            @media (max-width: @screen-xs-max) {
+                display: none;
+            }
         }
 
         &.active + .divider {

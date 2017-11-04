@@ -144,6 +144,14 @@ class SaleOrderLine(models.Model):
         for so_line in self:
             so_line.is_service = so_line.product_id.type == 'service'
 
+    @api.depends('product_id.type')
+    def _compute_product_updatable(self):
+        for line in self:
+            if line.product_id.type == 'service' and line.state == 'sale':
+                line.product_updatable = False
+            else:
+                super(SaleOrderLine, line)._compute_product_updatable()
+
     @api.model
     def create(self, values):
         line = super(SaleOrderLine, self).create(values)
@@ -215,6 +223,7 @@ class SaleOrderLine(models.Model):
             'project_id': project.id,
             'sale_line_id': self.id,
             'company_id': self.company_id.id,
+            'user_id': False, # force non assigned task, as created as sudo()
         }
 
     @api.multi

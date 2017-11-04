@@ -25,7 +25,11 @@ class TestSaleService(CommonTest):
             'pricelist_id': self.pricelist_usd.id,
         }
         sale_order = self.env['sale.order'].create(sale_order_vals)
+        sale_order.order_line._compute_product_updatable()
+        self.assertTrue(sale_order.order_line[0].product_updatable)
         sale_order.action_confirm()
+        sale_order.order_line._compute_product_updatable()
+        self.assertFalse(sale_order.order_line[0].product_updatable)
         self.assertEqual(sale_order.invoice_status, 'no', 'Sale Service: there should be nothing to invoice after validation')
 
         # check task creation

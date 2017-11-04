@@ -43,6 +43,12 @@ def migrate_tags_on_taxes(cr, registry):
         if len(tax_id.ids) == 1:
             tax_id.sudo().write({'tag_ids': [(6, 0, tax_template.tag_ids.ids)]})
 
+def preserve_existing_tags_on_taxes(cr, registry, module):
+    ''' This is a utility function used to preserve existing previous tags during upgrade of the module.'''
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    xml_records = env['ir.model.data'].search([('model', '=', 'account.account.tag'), ('module', 'like', module)])
+    if xml_records:
+        cr.execute("update ir_model_data set noupdate = 't' where id in %s", [tuple(xml_records.ids)])
 
 #  ---------------------------------------------------------------
 #   Account Templates: Account, Tax, Tax Code and chart. + Wizard
@@ -532,7 +538,7 @@ class AccountTaxTemplate(models.Model):
         'account.account.template',
         string='Tax Received Account',
         domain=[('deprecated', '=', False)],
-        help='Account used as counterpart for the journal entry, for taxes exigible based on payments.')
+        help='Account used as counterpart for the journal entry, for taxes eligible based on payments.')
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, type_tax_use, chart_template_id)', 'Tax names must be unique !'),
@@ -628,7 +634,7 @@ class AccountFiscalPositionTemplate(models.Model):
     country_id = fields.Many2one('res.country', string='Country',
         help="Apply only if delivery or invoicing country match.")
     country_group_id = fields.Many2one('res.country.group', string='Country Group',
-        help="Apply only if delivery or invocing country match the group.")
+        help="Apply only if delivery or invoicing country match the group.")
     state_ids = fields.Many2many('res.country.state', string='Federal States')
     zip_from = fields.Integer(string='Zip Range From', default=0)
     zip_to = fields.Integer(string='Zip Range To', default=0)

@@ -24,6 +24,7 @@ class TestPickShip(TestStockCommon):
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
             'state': 'waiting',
+            'procure_method': 'make_to_order',
         })
 
         picking_pick = self.env['stock.picking'].create({
@@ -508,6 +509,26 @@ class TestPickShip(TestStockCommon):
 
         self.assertEqual(set(return_pick_picking.move_lines.move_orig_ids.ids), set((picking_pick.move_lines | return_pack_picking.move_lines).ids))
         self.assertEqual(len(return_pick_picking.move_lines.move_dest_ids), 0)
+
+    def test_merge_move_mto_mts(self):
+        """ Create 2 moves of the same product in the same picking with
+        one in 'MTO' and the other one in 'MTS'. The moves shouldn't be merged
+        """
+        picking_pick, picking_client = self.create_pick_ship()
+
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 3,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_client.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'origin': 'MPS',
+            'procure_method': 'make_to_stock',
+        })
+        picking_client.action_confirm()
+        self.assertEqual(len(picking_client.move_lines), 2, 'Moves should not be merged')
 
 class TestSinglePicking(TestStockCommon):
     def test_backorder_1(self):

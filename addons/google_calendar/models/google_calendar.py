@@ -689,7 +689,7 @@ class GoogleCalendar(models.AbstractModel):
 
             my_google_attendees = CalendarAttendee.with_context(context_novirtual).search([
                 ('partner_id', '=', my_partner_id),
-                ('google_internal_event_id', 'in', all_event_from_google.keys())
+                ('google_internal_event_id', 'in', list(all_event_from_google))
             ])
             my_google_att_ids = my_google_attendees.ids
 
@@ -920,7 +920,7 @@ class GoogleCalendar(models.AbstractModel):
 
     def get_minTime(self):
         number_of_week = self.env['ir.config_parameter'].sudo().get_param('calendar.week_synchro', default=13)
-        return datetime.now() - timedelta(weeks=number_of_week)
+        return datetime.now() - timedelta(weeks=int(number_of_week))
 
     def get_need_synchro_attendee(self):
         return self.env['ir.config_parameter'].sudo().get_param('calendar.block_synchro_attendee', default=True)

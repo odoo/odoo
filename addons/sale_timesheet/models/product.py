@@ -52,3 +52,12 @@ class ProductTemplate(models.Model):
     def _onchange_service_tracking(self):
         if self.service_tracking != 'task_global_project':
             self.project_id = False
+
+    @api.onchange('type')
+    def _onchange_type(self):
+        if self.type == 'service':
+            self.invoice_policy = 'order'
+            self.service_type = 'timesheet'
+        elif self.type == 'consu':
+            self.invoice_policy = 'order'
+            self.service_type = 'manual'

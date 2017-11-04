@@ -3,21 +3,43 @@
 # * website_links
 # 
 # Translators:
-# krnkris <krnkris@freemail.hu>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# krnkris <krnkris@freemail.hu>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# gezza <geza.nagy@oregional.hu>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2017\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:53
+#, python-format
+msgid " clicks"
+msgstr ""
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:104
+#, python-format
+msgid " countries"
+msgstr ""
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:57
+#, python-format
+msgid "# of clicks"
+msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.share_page_menu
@@ -80,7 +102,7 @@ msgstr "Másolás"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:350
+#: code:addons/website_links/static/src/js/website_links.js:358
 #, python-format
 msgid "Generating link..."
 msgstr "Elérési link generálás..."
@@ -93,18 +115,18 @@ msgstr "Nyomon követett elérési link megkapása"
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "Last Month"
-msgstr "Utolsó hónap"
+msgstr "Előző hónap"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "Last Week"
-msgstr "Utolsó hét"
+msgstr "Előző hét"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "Link Tracker"
-msgstr "Elérési link nyomonkövetés"
+msgstr "Kapcsolat követő"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -161,6 +183,15 @@ msgid "Stats"
 msgstr "Statisztikák"
 
 #. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:229
+#: code:addons/website_links/static/src/js/website_links_charts.js:230
+#: code:addons/website_links/static/src/js/website_links_charts.js:231
+#, python-format
+msgid "There is no data to show"
+msgstr ""
+
+#. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
 "Those trackers can be used in Google Analytics to track clicks and visitors,"
@@ -174,14 +205,21 @@ msgstr "URL"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:216
+#: code:addons/website_links/static/src/js/website_links.js:225
 #, python-format
 msgid "Unable to get recent links"
 msgstr ""
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:239
+#: code:addons/website_links/static/src/js/website_links_charts.js:99
+#, python-format
+msgid "Undefined"
+msgstr "Nincs meghatározva"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links.js:248
 #, python-format
 msgid "You don't have any recent links."
 msgstr "Nincsenek régebbi linkjei."
@@ -197,7 +235,7 @@ msgstr "Nyomon követett linkek"
 #: model:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "cancel"
-msgstr "mégsem"
+msgstr "Mégsem"
 
 #. module: website_links
 #. openerp-web
@@ -213,21 +251,21 @@ msgstr "másolás"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:259
+#: code:addons/website_links/static/src/js/website_links.js:268
 #, python-format
 msgid "e.g. Newsletter, Social Network, .."
 msgstr "pl. Hírlevél, Szociális hálózat, ..."
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:256
+#: code:addons/website_links/static/src/js/website_links.js:265
 #, python-format
 msgid "e.g. Promotion of June, Winter Newsletter, .."
 msgstr "pl. Júniusi promóció, Téli hírlevél, .."
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:262
+#: code:addons/website_links/static/src/js/website_links.js:271
 #, python-format
 msgid "e.g. Search Engine, Website page, .."
 msgstr ""

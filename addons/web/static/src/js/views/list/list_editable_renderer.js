@@ -101,6 +101,7 @@ ListRenderer.include({
                 });
                 var $row = self.$('.o_data_row:nth(' + rowIndex + ')');
                 self._setDecorationClasses(state.data[rowIndex], $row);
+                self._updateFooter();
             }
             return widgets;
         });
@@ -136,7 +137,9 @@ ListRenderer.include({
             currentRowID = this.state.data[this.currentRow].id;
             currentWidget = this.allFieldWidgets[currentRowID][this.currentFieldIndex];
             focusedElement = currentWidget.getFocusableElement().get(0);
-            selectionRange = dom.getSelectionRange(focusedElement);
+            if (currentWidget.formatType !== 'boolean') {
+                selectionRange = dom.getSelectionRange(focusedElement);
+            }
         }
 
         var oldData = this.state.data;
@@ -179,7 +182,9 @@ ListRenderer.include({
                     currentRowID = self.state.data[newRowIndex].id;
                     currentWidget = self.allFieldWidgets[currentRowID][self.currentFieldIndex];
                     focusedElement = currentWidget.getFocusableElement().get(0);
-                    dom.setSelectionRange(focusedElement, selectionRange);
+                    if (selectionRange) {
+                        dom.setSelectionRange(focusedElement, selectionRange);
+                    }
                 });
             }
         });
@@ -538,12 +543,21 @@ ListRenderer.include({
     _resequence: function (event, ui) {
         var self = this;
         var movedRecordID = ui.item.data('id');
-        var rowIDs = _.pluck(this.state.data, 'id');
-        rowIDs = _.without(rowIDs, movedRecordID);
-        rowIDs.splice(ui.item.index(), 0, movedRecordID);
-        var sequences = _.map(this.state.data, function(record) {
-            return record.data[self.handleField];
-        });
+        var rows = this.state.data;
+        var row = _.findWhere(rows, {id: movedRecordID});
+        var index0 = rows.indexOf(row);
+        var index1 = ui.item.index();
+        rows = rows.slice(Math.min(index0, index1), Math.max(index0, index1) + 1);
+        rows = _.without(rows, row);
+        if (index0 > index1) {
+            rows.unshift(row);
+        } else {
+            rows.push(row);
+        }
+
+        var sequences = _.pluck(_.pluck(rows, 'data'), self.handleField);
+        var rowIDs = _.pluck(rows, 'id');
+
         this.trigger_up('resequence', {
             rowIDs: rowIDs,
             offset: _.min(sequences),
@@ -585,12 +599,18 @@ ListRenderer.include({
             if (fieldIndex >= (self.allFieldWidgets[record.id] || []).length) {
                 return $.Deferred().reject();
             }
+            // _activateFieldWidget might trigger an onchange,
+            // which requires currentFieldIndex to be set
+            // so that the cursor can be restored
+            var oldFieldIndex = self.currentFieldIndex;
+            self.currentFieldIndex = fieldIndex;
             fieldIndex = self._activateFieldWidget(record, fieldIndex, {
                 inc: 1,
                 wrap: wrap,
                 event: options && options.event,
             });
             if (fieldIndex < 0) {
+                self.currentFieldIndex = oldFieldIndex;
                 return $.Deferred().reject();
             }
             self.currentFieldIndex = fieldIndex;

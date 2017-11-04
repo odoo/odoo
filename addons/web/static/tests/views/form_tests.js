@@ -1116,6 +1116,42 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('properly apply onchange when changed field is active field', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.onchanges = {
+            int_field: function (obj) {
+                obj.int_field = 14;
+            },
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group><field name="int_field"/></group>' +
+                '</form>',
+            res_id: 2,
+            viewOptions: {mode: 'edit'},
+        });
+
+
+        assert.strictEqual(form.$('input').val(), "9",
+                        "should contain input with initial value");
+
+        form.$('input').val("666").trigger('input');
+
+        assert.strictEqual(form.$('input').val(), "14",
+                "value should have been set to 14 by onchange");
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.strictEqual(form.$('.o_field_widget[name=int_field]').text(), "14",
+            "value should still be 14");
+
+        form.destroy();
+    });
+
     QUnit.test('onchange send only the present fields to the server', function (assert) {
         assert.expect(1);
         this.data.partner.records[0].product_id = false;
@@ -2646,6 +2682,44 @@ QUnit.module('Views', {
         form.$('.o_field_x2many_list_row_add a').click();
         assert.strictEqual(form.$('tr.o_data_row').length, 0,
             "should not have added a line");
+        form.destroy();
+    });
+
+    QUnit.test('default_get, onchange which fails, should still work', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.onchanges.foo = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="foo"/>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    // we simulate a validation error.  In the 'real' web client,
+                    // the server error will be used by the session to display
+                    // an error dialog.  From the point of view of the basic
+                    // model, the deferred is just rejected.
+                    return $.Deferred().reject();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // this test checks that a form view is still rendered when the server
+        // onchange fails (for example, because of a validation error, or, more
+        // likely, a bug in the onchange code).  This is quite rare, but if the
+        // onchange fails, we still want to display the form view (with the error
+        // dialog from the session/crashmanager).  Otherwise, we could be in the
+        // situation where a user clicks on a button, it should open a wizard,
+        // but something fails and the wizard is not even rendered.  In that
+        // case, there is nothing that the user could do.
+        assert.strictEqual(form.$('.o_field_widget[name="foo"]').val(), 'My little Foo Value',
+            "should display proper default value");
+
         form.destroy();
     });
 
@@ -5281,6 +5355,53 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('buttons with "confirm" attribute save before calling the method', function (assert) {
+        assert.expect(9);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<header>' +
+                        '<button name="post" class="p" string="Confirm" type="object" ' +
+                            'confirm="Very dangerous. U sure?"/>' +
+                    '</header>' +
+                    '<sheet>' +
+                        '<field name="foo"/>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                execute_action: function (event) {
+                    assert.step('execute_action');
+                },
+            },
+        });
+
+        // click on button, and cancel in confirm dialog
+        form.$('.o_statusbar_buttons button').click();
+        assert.ok(form.$('.o_statusbar_buttons button').prop('disabled'),
+            'button should be disabled');
+        $('.modal .modal-footer button.btn-default').click();
+        assert.ok(!form.$('.o_statusbar_buttons button').prop('disabled'),
+            'button should no longer be disabled');
+
+        assert.verifySteps(['default_get']);
+
+        // click on button, and click on ok in confirm dialog
+        form.$('.o_statusbar_buttons button').click();
+        assert.verifySteps(['default_get']);
+        $('.modal .modal-footer button.btn-primary').click();
+
+        assert.verifySteps(['default_get', 'create', 'read', 'execute_action']);
+
+        form.destroy();
+    });
+
     QUnit.test('buttons are disabled until action is resolved (in dialogs)', function (assert) {
         assert.expect(3);
 
@@ -5977,5 +6098,79 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('proper context stringification in debug mode tooltip', function (assert) {
+        assert.expect(2);
+
+        var initialDebugMode = config.debug;
+        config.debug = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="product_id" context="{\'lang\': \'en_US\'}"/>' +
+                    '</sheet>' +
+                '</form>',
+        });
+
+        var $field = form.$('[name="product_id"]');
+        $field.tooltip('show', true);
+        $field.trigger($.Event('mouseenter'));
+        assert.strictEqual($('.oe_tooltip_technical>li[data-item="context"]').length,
+            1, 'context should be present for this field');
+        assert.strictEqual($('.oe_tooltip_technical>li[data-item="context"]')[0].lastChild.wholeText.trim(),
+            "{'lang': 'en_US'}", "context should be properly stringified");
+
+        config.debug = initialDebugMode;
+        form.destroy();
+    });
+
+    QUnit.test('autoresize of text fields is done when switching to edit mode', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.fields.text_field = { string: 'Text field', type: 'text' };
+        this.data.partner.fields.text_field.default = "some\n\nmulti\n\nline\n\ntext\n";
+        this.data.partner.records[0].text_field = "a\nb\nc\nd\ne\nf";
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="display_name"/>' +
+                        '<field name="text_field"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        // switch to edit mode to ensure that autoresize is correctly done
+        form.$buttons.find('.o_form_button_edit').click();
+        var height = form.$('.o_field_widget[name=text_field]').height();
+        // focus the field to manually trigger autoresize
+        form.$('.o_field_widget[name=text_field]').trigger('focus');
+        assert.strictEqual(form.$('.o_field_widget[name=text_field]').height(), height,
+            "autoresize should have been done automatically at rendering");
+        // next assert simply tries to ensure that the textarea isn't stucked to
+        // its minimal size, even after being focused
+        assert.ok(height > 80, "textarea should have an height of at least 80px");
+
+        // save and create a new record to ensure that autoresize is correctly done
+        form.$buttons.find('.o_form_button_save').click();
+        form.$buttons.find('.o_form_button_create').click();
+        height = form.$('.o_field_widget[name=text_field]').height();
+        // focus the field to manually trigger autoresize
+        form.$('.o_field_widget[name=text_field]').trigger('focus');
+        assert.strictEqual(form.$('.o_field_widget[name=text_field]').height(), height,
+            "autoresize should have been done automatically at rendering");
+        assert.ok(height > 80, "textarea should have an height of at least 80px");
+
+        form.destroy();
+    });
+
 });
 });

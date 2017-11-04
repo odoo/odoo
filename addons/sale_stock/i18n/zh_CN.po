@@ -3,20 +3,24 @@
 # * sale_stock
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
-# Gary Wei <Gary.wei@elico-corp.com>, 2016
-# Talway <9010446@qq.com>, 2016
-# 卓忆科技 <zhanghao@jointd.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# 苏州远鼎 <tiexinliu@126.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2017
+# liAnGjiA <liangjia@qq.com>, 2017
 # xiaobin wu <bd5dml@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Talway <9010446@qq.com>, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
+# Connie Xiao <connie.xiao@elico-corp.com>, 2017
+# waveyeung <waveyeung@qq.com>, 2017
+# 卓忆科技 <zhanghao@jointd.com>, 2017
+# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
+# 苏州远鼎 <tiexinliu@126.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: xiaobin wu <bd5dml@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: 苏州远鼎 <tiexinliu@126.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,9 +29,17 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:170
+#, python-format
+msgid ""
+"\n"
+"There are %s %s available accross all warehouses."
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
-msgstr "<strong>客户参考:</strong>"
+msgstr "<strong>客户参照:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
@@ -41,17 +53,18 @@ msgid "After-Sale"
 msgstr "售后"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
-msgstr ""
+msgstr "适用于从订单的专用线路（例如dropshipping，MTO）"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid ""
 "By default Odoo computes the expected delivery date this way: order date + "
 "highest customer lead time of products. With this option, you can set a "
 "specific delivery date on orders rather than setting lead times on products."
 msgstr ""
+"默认情况下，Odoo计算预期的交货日期是这样的：订单日期+最高客户的交货时间的产品。使用此选项，您可以在订单上设置特定的交货日期，而不是在产品上设置前置时间。"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -74,7 +87,7 @@ msgid "Delivery"
 msgstr "交货"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_sale_order_dates
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_module_sale_order_dates
 msgid "Delivery Date"
 msgstr "交货日期"
 
@@ -89,9 +102,9 @@ msgid "Display incoterms on Sales Order and related invoices"
 msgstr "在销售订单和发票中显示国际贸易术语"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
-msgstr ""
+msgstr "国际贸易术语解释通则显示我们的订单和发票；"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
@@ -100,9 +113,9 @@ msgstr "开启销售订单行上的路线"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
-#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_display_incoterm
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_group_display_incoterm
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_incoterm
-#: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Incoterms"
 msgstr "贸易术语"
 
@@ -119,7 +132,7 @@ msgstr "贸易术语是一系列的销售术语,用来划分交易成本和买�
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr "国际商业条款是一系列预定义的用于国际贸易的商业条款。"
+msgstr "国际商业条款是一系列用于国际交易的商业条款。"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
@@ -142,8 +155,17 @@ msgid "Invoicing"
 msgstr "开票"
 
 #. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_res_config_settings_use_security_lead
+msgid ""
+"Margin of error for dates promised to customers. Products will be scheduled "
+"for delivery that many days earlier than the actual promised date, to cope "
+"with unexpected delays in the supply chain."
+msgstr "对顾客承诺的日期的误差幅度。产品将安排比实际交货日期提前几天交货，以应付供应链中意外的延误。"
+
+#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
-#: model:ir.model.fields,help:sale_stock.field_sale_config_settings_security_lead
+#: model:ir.model.fields,help:sale_stock.field_res_config_settings_security_lead
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
 "for procurement and delivery that many days earlier than the actual promised"
@@ -151,56 +173,65 @@ msgid ""
 msgstr "向客户承诺日期的误差幅度。产品将被比实际承诺的日期提前很多天安排采购和交货，以应对供应链中的意外延误。"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:145
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "Move forward expected delivery dates by"
+msgstr "将预期交货日期提前"
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:174
 #, python-format
 msgid "Not enough inventory!"
 msgstr "库存不够！"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_route_so_lines
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_group_route_so_lines
 msgid "Order-Specific Routes"
-msgstr ""
+msgstr "以具体的路线"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:156
+#: code:addons/sale_stock/models/sale_order.py:188
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr "订货数量减少"
+msgstr "订货数量减少！"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
-msgid "Packaging"
-msgstr "包装"
+msgid "Package"
+msgstr "包裹"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_ids
-msgid "Picking associated to this sale"
-msgstr "与此销售相关的分拣"
+msgid "Pickings"
+msgstr "拣货"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_procurement_order
-msgid "Procurement"
-msgstr "补货"
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_procurement_group_id
+msgid "Procurement Group"
+msgstr "补货组"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_group
 msgid "Procurement Requisition"
-msgstr "补货请求"
+msgstr "补货申请"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_product_product
-msgid "Product"
-msgstr "产品"
+#: model:ir.model,name:sale_stock.model_procurement_rule
+msgid "Procurement Rule"
+msgstr "补货规则"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_tmpl_id
-msgid "Product Template"
-msgstr "产品模板"
+#: model:ir.model,name:sale_stock.model_sale_order
+msgid "Quotation"
+msgstr "报价单"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_return_picking
-msgid "Return Picking"
-msgstr "退货分拣"
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid ""
+"Reserving products manually in delivery orders or by running the scheduler "
+"is advised to better manage priorities in case of long customer lead times "
+"or/and frequent stock-outs. By default, the scheduler runs automatically "
+"every 24 hours."
+msgstr "在交付订单或运行调度程序时手动保留产品，建议在长客户提前期或/或频繁缺货时更好地管理优先级。默认情况下，调度器每隔24小时自动运行。"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
@@ -208,17 +239,26 @@ msgid "Route"
 msgstr "路线"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Routes for Sales Order Lines"
-msgstr ""
+msgstr "销售订单线"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_procurement_group_sale_order_id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move_sale_line_id
+msgid "Sale Line"
+msgstr "销售明细"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_procurement_group_sale_id
 msgid "Sale Order"
 msgstr "销售订单"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_order
+#: model:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
+msgid "Sales"
+msgstr "销售"
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking_sale_id
 msgid "Sales Order"
 msgstr "销售订单"
@@ -229,7 +269,7 @@ msgid "Sales Order Line"
 msgstr "销售订单行"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.stock_location_route_form_view_inherit_sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
 msgid "Sales Order Lines"
 msgstr "销售订单明细"
 
@@ -241,12 +281,22 @@ msgstr "销售订单统计"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
 msgid "Sales Safety Days"
-msgstr "销售送货安全期"
+msgstr "销售安全天数"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_security_lead
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "Schedule deliveries earlier to avoid delays"
+msgstr "提前安排交货以避免延误"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_security_lead
 msgid "Security Lead Time"
-msgstr ""
+msgstr "安全时间"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_use_security_lead
+msgid "Security Lead Time for Sales"
+msgstr "销售的安全提前期"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
@@ -254,9 +304,19 @@ msgid "Selectable on Sales Order Line"
 msgstr "在销售订单行上可选"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Set a delivery date on orders"
-msgstr ""
+msgstr "按订单设定交货日期"
+
+#. module: sale_stock
+#: selection:res.config.settings,default_picking_policy:0
+msgid "Ship all products at once"
+msgstr "立即装运所有产品"
+
+#. module: sale_stock
+#: selection:res.config.settings,default_picking_policy:0
+msgid "Ship products as soon as available, with back orders"
+msgstr "船舶产品，尽快，与回订单"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -264,9 +324,14 @@ msgid "Shipping Information"
 msgstr "送货信息"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_default_picking_policy
+msgid "Shipping Management"
+msgstr "送货管理"
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
 msgid "Shipping Policy"
-msgstr "送货策略"
+msgstr "交货策略"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -274,41 +339,29 @@ msgid "Stock Move"
 msgstr "库存移动"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_move_ids
+msgid "Stock Moves"
+msgstr "库存移动"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid ""
 "This allows to apply a special route on sales order lines (e.g. "
 "dropshipping, make-to-order) in case of unusual order scenario. To be "
 "available in sales orders, routes must have 'Sales Order Line' option "
 "checked in their setup form."
-msgstr ""
+msgstr "这允许应用在销售订单行的一种特殊的路径（如直销、定做）在不寻常的情况下。为了销售订单，路线必须有“销售订单线”选项在他们的设置形式检查。"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:202
+#: code:addons/sale_stock/models/sale_order.py:273
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking_line_to_refund_so
-msgid "To Refund"
-msgstr "待退款"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_stock_move_to_refund_so
-msgid "To Refund in SO"
-msgstr ""
+msgstr "这个产品是由%.2f%s包装的。你应该卖掉。%.2f%s"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "转账"
-
-#. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_stock_move_to_refund_so
-#: model:ir.model.fields,help:sale_stock.field_stock_return_picking_line_to_refund_so
-msgid ""
-"Trigger a decrease of the delivered quantity in the associated Sales Order"
-msgstr ""
+msgstr "调拨"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_warehouse_id
@@ -317,33 +370,42 @@ msgid "Warehouse"
 msgstr "仓库"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:201
+#: code:addons/sale_stock/models/sale_order.py:272
 #, python-format
 msgid "Warning"
 msgstr "警告"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:157
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "When to reserve sold products"
+msgstr "何时保留销售产品"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "When to start shipping"
+msgstr "何时开始装运"
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:189
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
-msgstr "你在减少订单数量，不要忘记需要手工更新发货单的数量"
+msgstr "你在减少订单数量，不要忘记需要手工更新发货单的数量。"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:146
+#: code:addons/sale_stock/models/sale_order.py:166
 #, python-format
 msgid ""
-"You plan to sell %s %s but you only have %s %s available!\n"
-"The stock on hand is %s %s."
-msgstr ""
+"You plan to sell %s %s but you only have %s %s available in %s warehouse."
+msgstr "你打算出售%s%s，但你只能%s%s在%s仓库里买到。"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "sale.config.settings"
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "days"
+msgstr "天"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_return_picking_line
-msgid "stock.return.picking.line"
-msgstr "stock.return.picking.line"
+#: model:ir.model,name:sale_stock.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

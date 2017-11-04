@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
+
 import os.path
 import posixpath
 import re
@@ -114,7 +116,7 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         return u''.join(self.body)
 
     def unknown_visit(self, node):
-        print "unknown node", node.__class__.__name__
+        print("unknown node", node.__class__.__name__)
         self.body.append(u'[UNKNOWN NODE {}]'.format(node.__class__.__name__))
         raise nodes.SkipNode
 
@@ -379,6 +381,10 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
                     "Unsupported alignment value \"%s\"" % node['align'],
                     location=doc
                 )
+        elif 'align' in node.parent and node.parent['align'] == 'center':
+            # figure > image
+            attrs['class'] += ' center-block'
+
         # todo: explicit width/height/scale?
         self.body.append(self.starttag(node, 'img', **attrs))
     def depart_image(self, node): pass

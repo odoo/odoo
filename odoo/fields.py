@@ -52,6 +52,10 @@ def copy_cache(records, env):
                 if value and field.type in ('many2one', 'one2many', 'many2many', 'reference'):
                     todo.update(field.convert_to_record(value, record))
 
+def first(records):
+    """ Return the first record in ``records``, with the same prefetching. """
+    return next(iter(records)) if len(records) > 1 else records
+
 
 def resolve_mro(model, name, predicate):
     """ Return the list of successively overridden values of attribute ``name``
@@ -558,12 +562,41 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Compute the related field ``self`` on ``records``. """
         # when related_sudo, bypass access rights checks when reading values
         others = records.sudo() if self.related_sudo else records
-        for record, other in pycompat.izip(records, others):
-            if not record.id and record.env != other.env:
-                # draft records: copy record's cache to other's cache first
-                copy_cache(record, other.env)
-            other, field = self.traverse_related(other)
-            record[self.name] = other[field.name]
+        # copy the cache of draft records into others' cache
+        if records.env != others.env:
+            copy_cache(records - records.filtered('id'), others.env)
+        #
+        # Traverse fields one by one for all records, in order to take advantage
+        # of prefetching for each field access. In order to clarify the impact
+        # of the algorithm, consider traversing 'foo.bar' for records a1 and a2,
+        # where 'foo' is already present in cache for a1, a2. Initially, both a1
+        # and a2 are marked for prefetching. As the commented code below shows,
+        # traversing all fields one record at a time will fetch 'bar' one record
+        # at a time.
+        #
+        #       b1 = a1.foo         # mark b1 for prefetching
+        #       v1 = b1.bar         # fetch/compute bar for b1
+        #       b2 = a2.foo         # mark b2 for prefetching
+        #       v2 = b2.bar         # fetch/compute bar for b2
+        #
+        # On the other hand, traversing all records one field at a time ensures
+        # maximal prefetching for each field access.
+        #
+        #       b1 = a1.foo         # mark b1 for prefetching
+        #       b2 = a2.foo         # mark b2 for prefetching
+        #       v1 = b1.bar         # fetch/compute bar for b1, b2
+        #       v2 = b2.bar         # value already in cache
+        #
+        # This difference has a major impact on performance, in particular in
+        # the case where 'bar' is a computed field that takes advantage of batch
+        # computation.
+        #
+        values = list(others)
+        for name in self.related[:-1]:
+            values = [first(value[name]) for value in values]
+        # assign final values to records
+        for record, value in pycompat.izip(records, values):
+            record[self.name] = value[self.related_field.name]
 
     def _inverse_related(self, records):
         """ Inverse the related field ``self`` on ``records``. """
@@ -2245,14 +2278,13 @@ class One2many(_RelationalMulti):
                 elif act[0] == 6:
                     record = records[-1]
                     comodel.browse(act[2]).write({inverse: record.id})
-                    query = "SELECT id FROM %s WHERE %s=%%s AND id <> ALL(%%s)" % (comodel._table, inverse)
-                    comodel._cr.execute(query, (record.id, act[2] or [0]))
-                    lines = comodel.browse([row[0] for row in comodel._cr.fetchall()])
+                    domain = self.domain(records) if callable(self.domain) else self.domain
+                    domain = domain + [(inverse, 'in', records.ids), ('id', 'not in', act[2] or [0])]
                     inverse_field = comodel._fields[inverse]
                     if inverse_field.ondelete == 'cascade':
-                        lines.unlink()
+                        comodel.search(domain).unlink()
                     else:
-                        lines.write({inverse: False})
+                        comodel.search(domain).write({inverse: False})
 
 
 class Many2many(_RelationalMulti):

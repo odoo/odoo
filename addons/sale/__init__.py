@@ -20,6 +20,6 @@ def uninstall_hook(cr, registry):
             if 'crm.team' in env:
                 recs = env['crm.team'].search([])
                 for rec in recs:
-                	rec._onchange_team_type()
+                    rec._onchange_team_type()
 
     cr.after("commit", partial(update_dashboard_graph_model, cr.dbname))

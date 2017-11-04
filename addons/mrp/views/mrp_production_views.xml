@@ -103,7 +103,7 @@
                             <field name="date_planned_start"/>
                             <field name="date_planned_finished" invisible="1"/>
                             <field name="user_id"/>
-                            <field name="origin" groups="base.group_no_one"/>
+                            <field name="origin"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('has_moves', '=', True)]}"/>
                             <field name="show_final_lots" invisible="1"/>
                             <field name="production_location_id" invisible="1" readonly="1"/>
@@ -131,7 +131,7 @@
                             </field>
                         </page>
                         <page string="Finished Products">
-                            <field name="finished_move_line_ids" attrs="{'readonly': [('is_locked', '=', True)], 'invisible': [('finished_move_line_ids', '=', [])]}">
+                            <field name="finished_move_line_ids" context="{'form_view_ref': 'mrp.view_finisehd_move_line'}" attrs="{'readonly': [('is_locked', '=', True)], 'invisible': [('finished_move_line_ids', '=', [])]}">
                                  <tree default_order="done_move" editable="bottom" create="0" delete="0" decoration-muted="state in ('done', 'cancel')">
                                     <field name="product_id" readonly="1"/>
                                     <field name="lot_id" groups="stock.group_production_lot" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}" attrs="{'invisible': [('lots_visible', '=', False)]}"/>

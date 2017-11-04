@@ -338,7 +338,7 @@ code by replacing it with some other method altogether.
 ``xrange``
 ##########
 
-In Python 3, ``range()`` behaves the same as Python 3's ``xrange``.
+In Python 3, ``range()`` behaves the same as Python 2's ``xrange``.
 
 For cross-version code, you can just use ``range()`` everywhere: while this
 will incur a slight allocation cost on Python 2, Python 3's ``range`` supports
