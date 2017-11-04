@@ -347,7 +347,6 @@ var BasicModel = AbstractModel.extend({
                 if (!field) {
                     continue;
                 }
-
                 // get relational datapoint
                 if (field.type === 'many2one') {
                     if (options.raw) {
@@ -1689,6 +1688,9 @@ var BasicModel = AbstractModel.extend({
             prefix = prefix || '';
             _.each(Object.keys(fieldsInfo), function (name) {
                 var field = fields[name];
+                if (field === undefined){
+                    return;
+                }
                 var fieldInfo = fieldsInfo[name];
                 var key = prefix + name;
                 specs[key] = (field.onChange) || "";
@@ -1980,6 +1982,9 @@ var BasicModel = AbstractModel.extend({
         var fieldNames = list.getFieldNames();
         for (var i = 0; i < fieldNames.length; i++) {
             var field = list.fields[fieldNames[i]];
+            if (field === undefined){
+                continue;
+            }
             if (field.type === 'reference') {
                 defs.push(this._fetchReferenceBatched(list, fieldNames[i]));
             }
@@ -2009,6 +2014,9 @@ var BasicModel = AbstractModel.extend({
         // find all many2one related records to be fetched
         _.each(record.getFieldNames(), function (name) {
             var field = record.fields[name];
+            if (field === undefined){
+                return;
+            }
             if (field.type === 'many2one' && !record.fieldsInfo[record.viewType][name].__no_fetch) {
                 var localId = (record._changes && record._changes[name]) || record.data[name];
                 var relatedRecord = self.localData[localId];
@@ -2450,6 +2458,9 @@ var BasicModel = AbstractModel.extend({
         var fieldNames = list.getFieldNames();
         for (var i = 0; i < fieldNames.length; i++) {
             var field = list.fields[fieldNames[i]];
+            if (field === undefined){
+                continue;
+            }
             if (field.type === 'many2many' || field.type === 'one2many') {
                 defs.push(this._fetchX2ManyBatched(list, fieldNames[i]));
             }
@@ -3127,6 +3138,9 @@ var BasicModel = AbstractModel.extend({
                     var fieldName = fieldNames[i];
                     if (!(fieldName in result)) {
                         var field = params.fields[fieldName];
+                        if (field === undefined){
+                            continue;
+                        }
                         if (field.type === 'float' ||
                             field.type === 'integer' ||
                             field.type === 'monetary') {
@@ -3150,13 +3164,15 @@ var BasicModel = AbstractModel.extend({
                     res_ids: params.res_ids,
                     viewType: params.viewType,
                 });
-
                 var defs = [];
                 _.each(fieldNames, function (name) {
                     var field = params.fields[name];
                     data[name] = null;
                     record._changes = record._changes || {};
                     var dp;
+                    if (field === undefined){
+                       return;
+                    }
                     if (field.type === 'many2one' && result[name]) {
                         dp = self._makeDataPoint({
                             context: record.context,
@@ -3309,6 +3325,11 @@ var BasicModel = AbstractModel.extend({
         _.each(fieldNames, function (fieldName) {
             var field = element.fields[fieldName];
             var val = data[fieldName];
+            
+            if (field === undefined){
+                return;
+            }
+            
             if (field.type === 'many2one') {
                 // process many2one: split [id, nameget] and create corresponding record
                 if (val !== false) {
