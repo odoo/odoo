@@ -84,6 +84,58 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
+    <record id="account_invoice_sale_user" model="ir.rule">
+        <field name="name">Invoices acces for sale user</field>
+        <field name="model_id" ref="account.model_account_invoice"/>
+        <field name="domain_force">[('type','in',['out_invoice','out_refund'])]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="account_invoice_line_sale_user" model="ir.rule">
+        <field name="name">Invoices line acces for sale user</field>
+        <field name="model_id" ref="account.model_account_invoice_line"/>
+        <field name="domain_force">[('invoice_id.type','in',['out_invoice','out_refund'])]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="account_invoice_personal_rule" model="ir.rule">
+        <field name="name">Personal Invoice</field>
+        <field ref="account.model_account_invoice" name="model_id"/>
+        <field name="domain_force">[('type','in',['out_invoice','out_refund']),'|',('user_id','=',user.id),('user_id','=',False)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+    <record id="account_invoice_line_personal_rule" model="ir.rule">
+        <field name="name">Personal Invoice Line</field>
+        <field ref="account.model_account_invoice_line" name="model_id"/>
+        <field name="domain_force">[('invoice_id.type','in',['out_invoice','out_refund']),'|',('invoice_id.user_id','=',user.id),('invoice_id.user_id','=',False)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+    <record id="account_invoice_tax_personal_rule" model="ir.rule">
+        <field name="name">Personal Invoice Tax</field>
+        <field ref="account.model_account_invoice_tax" name="model_id"/>
+        <field name="domain_force">[('invoice_id.type','in',['out_invoice','out_refund']),'|',('invoice_id.user_id','=',user.id),('invoice_id.user_id','=',False)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="account_invoice_all_leads_rule" model="ir.rule">
+        <field name="name">All Invoice</field>
+        <field ref="account.model_account_invoice" name="model_id"/>
+        <field name="domain_force">[('type','in',['out_invoice','out_refund'])]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+    </record>
+    <record id="account_invoice_line_all_leads_rule" model="ir.rule">
+        <field name="name">All Invoice Line</field>
+        <field ref="account.model_account_invoice_line" name="model_id"/>
+        <field name="domain_force">[('invoice_id.type','in',['out_invoice','out_refund'])]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+    </record>
+    <record id="account_invoice_tax_all_leads_rule" model="ir.rule">
+        <field name="name">All Invoice Tax</field>
+        <field ref="account.model_account_invoice_tax" name="model_id"/>
+        <field name="domain_force">[('invoice_id.type','in',['out_invoice','out_refund'])]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+    </record>
+
     <!-- Portal Access Rules -->
     <record id="sale_order_rule_portal" model="ir.rule">
         <field name="name">Portal Personal Quotations/Sales Orders</field>
