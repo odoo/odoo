@@ -3,7 +3,7 @@
 from odoo.tests import common
 import odoo
 
-GIF = "R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="
+GIF = b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="
 
 
 class test_ir_http_mimetype(common.TransactionCase):

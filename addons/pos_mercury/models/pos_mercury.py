@@ -46,7 +46,7 @@ class AccountBankStatementLine(models.Model):
 class AccountJournal(models.Model):
     _inherit = 'account.journal'
 
-    pos_mercury_config_id = fields.Many2one('pos_mercury.configuration', string='Mercury configuration', help='The configuration of Mercury used for this journal')
+    pos_mercury_config_id = fields.Many2one('pos_mercury.configuration', string='Mercury Credentials', help='The configuration of Mercury used for this journal')
 
 
 class PosOrder(models.Model):

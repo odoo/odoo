@@ -3,22 +3,22 @@
 # * account_voucher
 # 
 # Translators:
-# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
-# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2016
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
-# zbik2607 <darek@krokus.com.pl>, 2016
-# Jakobus Buntownikus <buntownix@gmail.com>, 2016
-# Zdzisław Krajewski <zdzichucb@gmail.com>, 2016
+# zbik2607 <darek@krokus.com.pl>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2017
+# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2017
+# Jakobus Buntownikus <buntownix@gmail.com>, 2017
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2017
+# Zdzisław Krajewski <zdzichucb@gmail.com>, 2017
 # Paweł Michoń <michon.pawel@wp.pl>, 2017
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Paweł Michoń <michon.pawel@wp.pl>, 2017\n"
+"POT-Creation-Date: 2017-09-20 09:52+0000\n"
+"PO-Revision-Date: 2017-09-20 09:52+0000\n"
+"Last-Translator: Marcin Młynarczyk <mlynarczyk@gmail.com>, 2017\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,7 +49,7 @@ msgstr "Data zaksięgowania"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
 msgid "Accounting Date"
-msgstr "Data księgowa"
+msgstr "Data wpływu"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
@@ -87,7 +87,7 @@ msgstr "Inofrmacja o rachunku"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_reference
 msgid "Bill Reference"
-msgstr "Rachunek odnośnika"
+msgstr "Odnośnik rachunku"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -136,13 +136,13 @@ msgstr "Firma związana z tym dziennikiem"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_uid
 msgid "Created by"
-msgstr "Utworzona przez"
+msgstr "Utworzone przez"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_date
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_date
 msgid "Created on"
-msgstr "Data utworzenia"
+msgstr "Utworzono"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_currency_id
@@ -179,7 +179,7 @@ msgstr "Nazwa wyświetlana"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Draft"
-msgstr "Projekt"
+msgstr "Szkic"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -263,7 +263,7 @@ msgstr "Ostatnio aktualizowane przez"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_date
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_date
 msgid "Last Updated on"
-msgstr "Data ostatniej aktualizacji"
+msgstr "Ostatnia aktualizacja"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_narration
@@ -283,7 +283,7 @@ msgstr "Tylko dla podatków wyłączonych z ceny"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_paid
 msgid "Paid"
-msgstr "Zapłacono"
+msgstr "Zapłacona"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_partner_id
@@ -377,7 +377,7 @@ msgstr "Ilość"
 #. module: account_voucher
 #: selection:account.voucher,voucher_type:0
 msgid "Sale"
-msgstr "Sprzedaż"
+msgstr "Wyprzedaż"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
@@ -411,7 +411,7 @@ msgstr "Numeracja"
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Set to Draft"
-msgstr "Ustaw na projekt"
+msgstr "Ustaw jako szkic"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_state
@@ -429,7 +429,7 @@ msgstr "Zmiana statusu"
 #. module: account_voucher
 #: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
 msgid "Status changed"
-msgstr "Zmieniony status"
+msgstr "Zmieniony stan"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_tax_ids
@@ -438,13 +438,13 @@ msgstr "Podatek"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
-msgid "Tax amount"
-msgstr "Kwota podatku"
+msgid "Tax Amount"
+msgstr "Kwota Podatku"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
-msgid "Tax correction"
-msgstr "Poprawka podatku"
+msgid "Tax Correction"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
@@ -454,7 +454,7 @@ msgstr "Rachunek został zapłacony"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_account_id
 msgid "The income or expense account related to the selected product."
-msgstr "Konto dochodów i wydatków związane z wybranym produktem."
+msgstr "Konto przychodów i wydatków związane z wybranym produktem."
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_reference
@@ -557,7 +557,7 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:361
+#: code:addons/account_voucher/models/account_voucher.py:377
 #, python-format
 msgid "You must first select a partner!"
 msgstr "Musisz najpierw wybrać partnera!"

@@ -27,6 +27,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="price_include" eval="True"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_cobrar')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_15"/>
         </record>
 
         <!-- Ventas e ISV por Pagar -->
@@ -42,6 +43,7 @@
             <field name="type_tax_use">sale</field>
             <field name="price_include" eval="True"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_pagar')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_15"/>
         </record>
 
     </data>

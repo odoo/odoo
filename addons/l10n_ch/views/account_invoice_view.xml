@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="isr_invoice_form" model="ir.ui.view">
+            <field name="name">l10n_ch.account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_bank_id']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='sent']" position="after">
+                    <field name="l10n_ch_isr_sent" invisible="1"/>
+                    <field name="l10n_ch_currency_name" invisible="1"/>
+                </xpath>
+
+                <xpath expr="//button[@id='account_invoice_payment_btn']" position="before">
+                    <button id="l10n_ch_btn_isr_print_highlight"
+                        name="isr_print"
+                        string="Print ISR"
+                        type="object"
+                        attrs="{'invisible':['|', ('l10n_ch_isr_sent', '=', True),
+                                                '|', ('state', '!=', 'open'),
+                                                    ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
+                        class="oe_highlight"
+                        groups="base.group_user"
+                        />
+                </xpath>
+
+                <xpath expr="//button[@id='account_invoice_payment_btn']" position="before">
+                    <button id="btn_isr_print_normal"
+                        name="isr_print"
+                        string="Print ISR"
+                        type="object"
+                        attrs="{'invisible':['|', ('l10n_ch_isr_sent', '=', False),
+                                                '|', ('state', '!=', 'open'),
+                                                    ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
+                        groups="base.group_user"
+                        />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="isr_invoice_search_view" model="ir.ui.view">
+            <field name="name">l10n_ch.invoice.select</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                    <field name="l10n_ch_isr_number" string="ISR reference number"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!--Overridden action (and primary child view), so the filter are only
+        available for customer invoices-->
+        <record id="account.action_invoice_tree1" model="ir.actions.act_window">
+            <field name="name">Customer Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="search_view_id" ref="isr_invoice_search_view"/>
+        </record>
+    </data>
+</odoo>

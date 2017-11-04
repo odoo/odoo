@@ -31,7 +31,7 @@ tour.register('project_tour', {
     content: _t('Click on the card to <b>go to your project</b> and start organizing tasks.'),
     position: 'right',
     run: function (actions) {
-        actions.auto(this.$anchor.find(".o_project_kanban_box:first > a"));
+        actions.auto(this.$anchor.find(".o_project_kanban_box:first"));
     },
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create",
@@ -64,7 +64,7 @@ tour.register('project_tour', {
     content: _t('Click on this button to modify the task.'),
     position: "bottom"
 }, {
-    trigger: ".o_form_field.o_task_user_field",
+    trigger: ".o_form_view .o_task_user_field",
     extra_trigger: '.o_form_project_tasks.o_form_editable',
     content: _t('<b>Assign the task</b> to someone. <i>You can create and invite a new user on the fly.</i>'),
     position: "bottom",

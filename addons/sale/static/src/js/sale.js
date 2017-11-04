@@ -2,16 +2,22 @@ odoo.define('sale.sales_team_dashboard', function (require) {
 "use strict";
 
 var core = require('web.core');
-var KanbanRecord = require('web_kanban.Record');
-var Model = require('web.Model');
+var KanbanRecord = require('web.KanbanRecord');
 var _t = core._t;
 
 KanbanRecord.include({
     events: _.defaults({
-        'click .sales_team_target_definition': 'on_sales_team_target_click',
+        'click .sales_team_target_definition': '_onSalesTeamTargetClick',
     }, KanbanRecord.prototype.events),
 
-    on_sales_team_target_click: function(ev) {
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @param {MouseEvent} ev
+     */
+    _onSalesTeamTargetClick: function (ev) {
         ev.preventDefault();
 
         this.$target_input = $('<input>');
@@ -25,9 +31,14 @@ KanbanRecord.include({
             if (isNaN(value)) {
                 self.do_warn(_t("Wrong value entered!"), _t("Only Integer Value should be valid."));
             } else {
-                new Model('crm.team').call('write', [[self.id], { 'invoiced_target': value }]).done(function() {
-                    self.trigger_up('kanban_record_update', {id: self.id});
-                });
+                self._rpc({
+                        model: 'crm.team',
+                        method: 'write',
+                        args: [[self.id], { 'invoiced_target': value }],
+                    })
+                    .done(function() {
+                        self.trigger_up('kanban_record_update', {id: self.id});
+                    });
             }
         });
     },

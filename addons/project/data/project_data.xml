@@ -18,10 +18,6 @@
             <field name="object">project.task</field>
         </record>
 
-        <!-- alias domain: project.config.settings -->
-        <function id="default_alias_domain_project" model="ir.values" name="set_default" eval="('project.config.settings', 'generate_project_alias', 1)"/>
-
-
         <!-- sale_timesheet and project define the same field without depending on each, which causes the field to be deleted when the module that created it
         is deleted. To avoid this, we create xmlids manually for this field in both modules to prevent accidental deletion. To fix in saas-7 by moving the field definition-->
         <record id="duplicate_field_xmlid" model="ir.model.data">
@@ -95,15 +91,6 @@
             <field name="relation_field">project_id</field>
         </record>
 
-        <record model="mail.message" id="module_install_notification">
-            <field name="model">mail.channel</field>
-            <field name="res_id" ref="mail.channel_all_employees"/>
-            <field name="message_type">notification</field>
-            <field name="subtype_id" ref="mail.mt_comment"/>
-            <field name="subject">Project Management application installed!</field>
-            <field name="body"><![CDATA[<p>Manage your projects and tasks in a clean kanban view.</p>]]></field>
-        </record>
-
     <data noupdate="1">
 
         <record forcecreate="False" id="project_project_data" model="project.project">
@@ -111,7 +98,6 @@
             <field name="privacy_visibility">followers</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="active" eval="False"/>
-            <field name="alias_model">project.task</field>
             <field name="alias_name">discover</field>
             <field name="alias_model_id" ref="model_project_task"/>
             <field name="alias_contact">everyone</field>
@@ -340,6 +326,24 @@
             <field name="displayed_image_id" ref="msg_task_data_14_attach"/>
         </record>
 
+
     </data>
+    <template id="mail_template_task_merge">
+        <t t-if="target">
+            <t t-if="len(tasks) == 1"><p>The following task has been merged into this one:</p></t>
+            <t t-if="len(tasks) &gt; 1"><p>The following tasks have been merged into this one:</p></t>
+            <ul>
+                <t t-foreach="tasks" t-as="task">
+                    <li><a href="#" t-att-data-oe-model="task._name" t-att-data-oe-id="task.id"><t t-esc="task.name"/></a></li>
+                </t>
+            </ul>
+        </t>
+        <t t-if="not target">
+            <p>This task has been merged into the following task:</p>
+            <ul>
+                <li><a href="#" t-att-data-oe-model="task._name" t-att-data-oe-id="task.id"><t t-esc="task.name"/></a></li>
+            </ul>
+        </t>
+    </template>
 
 </odoo>

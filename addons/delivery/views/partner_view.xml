@@ -4,7 +4,7 @@
         <record id="view_partner_property_form" model="ir.ui.view">
             <field name="name">res.partner.carrier.property.form.inherit</field>
             <field name="model">res.partner</field>
-            <field name="inherit_id" ref="mail.view_emails_partner_info_form" />
+            <field name="inherit_id" ref="mail.res_partner_view_form_inherit_mail" />
             <field name="arch" type="xml">
                 <field name="opt_out" position="after">
                     <field name="property_delivery_carrier_id"/>

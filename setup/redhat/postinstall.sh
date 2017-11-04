@@ -28,7 +28,7 @@ db_host = False
 db_port = False
 db_user = $ODOO_USER
 db_password = False
-addons_path = /usr/lib/python2.7/site-packages/odoo/addons
+addons_path = /usr/lib/python3.6/site-packages/odoo/addons
 " > $ODOO_CONFIGURATION_FILE
     chown $ODOO_USER:$ODOO_GROUP $ODOO_CONFIGURATION_FILE
     chmod 0640 $ODOO_CONFIGURATION_FILE
@@ -54,8 +54,8 @@ Type=simple
 User=odoo
 Group=odoo
 ExecStart=/usr/bin/odoo --config $ODOO_CONFIGURATION_FILE --logfile $ODOO_LOG_FILE
+KillMode=mixed
 
 [Install]
 WantedBy=multi-user.target
 EOF
-easy_install pyPdf vatnumber pydot psycogreen suds ofxparse XlsxWriter

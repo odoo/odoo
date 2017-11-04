@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import csv
 import datetime
 import io
 import itertools
@@ -15,13 +14,7 @@ from odoo import api, fields, models
 from odoo.tools.translate import _
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import ustr
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
-
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
-
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 
 FIELDS_RECURSION_LIMIT = 2
 ERROR_PREVIEW_BYTES = 200
@@ -37,19 +30,19 @@ except ImportError:
     xlrd = xlsx = None
 
 try:
-    import odf_ods_reader
+    from . import odf_ods_reader
 except ImportError:
     odf_ods_reader = None
 
 FILE_TYPE_DICT = {
     'text/csv': ('csv', True, None),
     'application/vnd.ms-excel': ('xls', xlrd, 'xlrd'),
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ('xlsx', xlsx, 'xlrd >= 0.8'),
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ('xlsx', xlsx, 'xlrd >= 1.0.0'),
     'application/vnd.oasis.opendocument.spreadsheet': ('ods', odf_ods_reader, 'odfpy')
 }
 EXTENSIONS = {
     '.' + ext: handler
-    for mime, (ext, handler, req) in FILE_TYPE_DICT.iteritems()
+    for mime, (ext, handler, req) in FILE_TYPE_DICT.items()
 }
 
 
@@ -121,7 +114,7 @@ class Import(models.TransientModel):
         }]
         model_fields = Model.fields_get()
         blacklist = models.MAGIC_COLUMNS + [Model.CONCURRENCY_CHECK_FIELD]
-        for name, field in model_fields.iteritems():
+        for name, field in model_fields.items():
             if name in blacklist:
                 continue
             # an empty string means the field is deprecated, @deprecated must
@@ -134,7 +127,7 @@ class Import(models.TransientModel):
                     continue
                 # states = {state: [(attr, value), (attr2, value2)], state2:...}
                 if not any(attr == 'readonly' and value is False
-                           for attr, value in itertools.chain.from_iterable(states.itervalues())):
+                           for attr, value in itertools.chain.from_iterable(states.values())):
                     continue
             field_value = {
                 'id': name,
@@ -208,15 +201,15 @@ class Import(models.TransientModel):
     def _read_xls_book(self, book):
         sheet = book.sheet_by_index(0)
         # emulate Sheet.get_rows for pre-0.9.4
-        for row in itertools.imap(sheet.row, range(sheet.nrows)):
+        for row in pycompat.imap(sheet.row, range(sheet.nrows)):
             values = []
             for cell in row:
                 if cell.ctype is xlrd.XL_CELL_NUMBER:
                     is_float = cell.value % 1 != 0.0
                     values.append(
-                        unicode(cell.value)
+                        pycompat.text_type(cell.value)
                         if is_float
-                        else unicode(int(cell.value))
+                        else pycompat.text_type(int(cell.value))
                     )
                 elif cell.ctype is xlrd.XL_CELL_DATE:
                     is_datetime = cell.value % 1 != 0.0
@@ -268,14 +261,13 @@ class Import(models.TransientModel):
             # csv module expect utf-8, see http://docs.python.org/2/library/csv.html
             csv_data = csv_data.decode(encoding).encode('utf-8')
 
-        csv_iterator = csv.reader(
-            StringIO(csv_data),
+        csv_iterator = pycompat.csv_reader(
+            io.BytesIO(csv_data),
             quotechar=str(options['quoting']),
             delimiter=str(options['separator']))
 
         return (
-            [item.decode('utf-8') for item in row]
-            for row in csv_iterator
+            row for row in csv_iterator
             if any(x for x in row if x.strip())
         )
 
@@ -294,8 +286,8 @@ class Import(models.TransientModel):
         # If all values can be cast to int type is either id, float or monetary
         # Exception: if we only have 1 and 0, it can also be a boolean
         try:
-            field_type = ['id', 'integer', 'float', 'monetary', 'many2one', 'many2many', 'one2many']
-            res = set(int(v) for v in preview_values)
+            field_type = ['id', 'integer', 'char', 'float', 'monetary', 'many2one', 'many2many', 'one2many']
+            res = set(int(v) for v in preview_values if v)
             if {0, 1}.issuperset(res):
                 field_type.append('boolean')
             return field_type
@@ -383,7 +375,7 @@ class Import(models.TransientModel):
 
         if results:
             return results
-        return ['text', 'char', 'datetime', 'selection', 'many2one', 'one2many', 'many2many', 'html']
+        return ['id', 'text', 'char', 'datetime', 'selection', 'many2one', 'one2many', 'many2many', 'html']
 
     @api.model
     def _find_type_from_preview(self, options, preview):
@@ -507,7 +499,7 @@ class Import(models.TransientModel):
                 'advanced_mode': any([len(models.fix_import_export_id_paths(col)) > 1 for col in headers or []]),
                 'debug': self.user_has_groups('base.group_no_one'),
             }
-        except Exception, error:
+        except Exception as error:
             # Due to lazy generators, UnicodeDecodeError (for
             # instance) may only be raised when serializing the
             # preview to a list in the return.
@@ -526,7 +518,7 @@ class Import(models.TransientModel):
 
     @api.model
     def _convert_import_data(self, fields, options):
-        """ Extracts the input browse_record and fields list (with
+        """ Extracts the input BaseModel and fields list (with
             ``False``-y placeholders for fields to *not* import) into a
             format Model.import_data can use: a fields list without holes
             and the precisely matching data matrix
@@ -547,13 +539,13 @@ class Import(models.TransientModel):
         else:
             mapper = operator.itemgetter(*indices)
         # Get only list of actually imported fields
-        import_fields = filter(None, fields)
+        import_fields = [f for f in fields if f]
 
         rows_to_import = self._read_file(options)
         if options.get('headers'):
             rows_to_import = itertools.islice(rows_to_import, 1, None)
         data = [
-            list(row) for row in itertools.imap(mapper, rows_to_import)
+            list(row) for row in pycompat.imap(mapper, rows_to_import)
             # don't try inserting completely empty rows (e.g. from
             # filtering out o2m fields)
             if any(row)
@@ -570,7 +562,7 @@ class Import(models.TransientModel):
             value = value[1:-1]
             negative = True
         float_regex = re.compile(r'([-]?[0-9.,]+)')
-        split_value = filter(None, float_regex.split(value))
+        split_value = [g for g in float_regex.split(value) if g]
         if len(split_value) > 2:
             # This is probably not a float
             return False
@@ -605,9 +597,18 @@ class Import(models.TransientModel):
 
     @api.multi
     def _parse_import_data(self, data, import_fields, options):
+        """ Lauch first call to _parse_import_data_recursive with an
+        empty prefix. _parse_import_data_recursive will be run
+        recursively for each relational field.
+        """
+        return self._parse_import_data_recursive(self.res_model, '', data, import_fields, options)
+
+    @api.multi
+    def _parse_import_data_recursive(self, model, prefix, data, import_fields, options):
         # Get fields of type date/datetime
-        all_fields = self.env[self.res_model].fields_get()
-        for name, field in all_fields.iteritems():
+        all_fields = self.env[model].fields_get()
+        for name, field in all_fields.items():
+            name = prefix + name
             if field['type'] in ('date', 'datetime') and name in import_fields:
                 # Parse date
                 index = import_fields.index(name)
@@ -615,16 +616,22 @@ class Import(models.TransientModel):
                 server_format = DEFAULT_SERVER_DATE_FORMAT if field['type'] == 'date' else DEFAULT_SERVER_DATETIME_FORMAT
 
                 if options.get('%s_format' % field['type'], server_format) != server_format:
-                    user_format = ustr(options.get('%s_format' % field['type'])).encode('utf-8')
+                    # datetime.str[fp]time takes *native strings* in both
+                    # versions, for both data and pattern
+                    user_format = pycompat.to_native(options.get('%s_format' % field['type']))
                     for num, line in enumerate(data):
                         if line[index]:
                             try:
-                                line[index] = dt.strftime(dt.strptime(ustr(line[index].strip()).encode('utf-8'), user_format), server_format)
-                            except ValueError, e:
-                                raise ValueError(_("Column %s contains incorrect values. Error in line %d: %s") % (name, num + 1, ustr(e.message)))
-                            except Exception, e:
-                                raise ValueError(_("Error Parsing Date [%s:L%d]: %s") % (name, num + 1, ustr(e.message)))
-
+                                line[index] = dt.strftime(dt.strptime(pycompat.to_native(line[index].strip()), user_format), server_format)
+                            except ValueError as e:
+                                raise ValueError(_("Column %s contains incorrect values. Error in line %d: %s") % (name, num + 1, e))
+                            except Exception as e:
+                                raise ValueError(_("Error Parsing Date [%s:L%d]: %s") % (name, num + 1, e))
+            # Check if the field is in import_field and is a relational (followed by /)
+            # Also verify that the field name exactly match the import_field at the correct level.
+            elif any(name + '/' in import_field and name == import_field.split('/')[prefix.count('/')] for import_field in import_fields):
+                # Recursive call with the relational as new model and add the field name to the prefix
+                self._parse_import_data_recursive(field['relation'], name + '/', data, import_fields, options)
             elif field['type'] in ('float', 'monetary') and name in import_fields:
                 # Parse float, sometimes float values from file have currency symbol or () to denote a negative value
                 # We should be able to manage both case
@@ -660,15 +667,21 @@ class Import(models.TransientModel):
             data, import_fields = self._convert_import_data(fields, options)
             # Parse date and float field
             data = self._parse_import_data(data, import_fields, options)
-        except ValueError, error:
+        except ValueError as error:
             return [{
                 'type': 'error',
-                'message': unicode(error),
+                'message': pycompat.text_type(error),
                 'record': False,
             }]
 
         _logger.info('importing %d rows...', len(data))
-        import_result = self.env[self.res_model].with_context(import_file=True).load(import_fields, data)
+
+        model = self.env[self.res_model].with_context(import_file=True)
+        defer_parent_store = self.env.context.get('defer_parent_store_computation', True)
+        if defer_parent_store and model._parent_store:
+            model = model.with_context(defer_parent_store_computation=True)
+        
+        import_result = model.load(import_fields, data)
         _logger.info('done')
 
         # If transaction aborted, RELEASE SAVEPOINT is going to raise

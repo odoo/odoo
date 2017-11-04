@@ -1,6 +1,9 @@
 import json
+import warnings
+
 from lxml import etree
 
+from odoo.tools import pycompat
 from ..exceptions import except_orm
 from ..models import (
     MetaModel,
@@ -16,17 +19,25 @@ from odoo.tools.safe_eval import safe_eval
 # extra definitions for backward compatibility
 browse_record_list = BaseModel
 
-class browse_record(object):
-    """ Pseudo-class for testing record instances """
-    class __metaclass__(type):
-        def __instancecheck__(self, inst):
-            return isinstance(inst, BaseModel) and len(inst) <= 1
+class BRM(type):
+    def __instancecheck__(self, inst):
+        warnings.warn(DeprecationWarning(
+            "browse_record is a deprecated concept and should not be used "
+            "anymore, you can replace `isinstance(o, browse_record)` by "
+            "`isinstance(o, BaseModel)`"
+        ))
+        return isinstance(inst, BaseModel) and len(inst) <= 1
+browse_record = BRM('browse_record', (object,), {})
 
-class browse_null(object):
-    """ Pseudo-class for testing null instances """
-    class __metaclass__(type):
-        def __instancecheck__(self, inst):
-            return isinstance(inst, BaseModel) and not inst
+class NBM(type):
+    def __instancecheck__(self, inst):
+        warnings.warn(DeprecationWarning(
+            "browse_record is a deprecated concept and should not be used "
+            "anymore, you can replace `isinstance(o, browse_null)` by "
+            "`isinstance(o, BaseModel) and not o`"
+        ))
+        return isinstance(inst, BaseModel) and not inst
+browse_null = NBM('browse_null', (object,), {})
 
 
 def transfer_field_to_modifiers(field, modifiers):
@@ -35,7 +46,7 @@ def transfer_field_to_modifiers(field, modifiers):
     for attr in ('invisible', 'readonly', 'required'):
         state_exceptions[attr] = []
         default_values[attr] = bool(field.get(attr))
-    for state, modifs in (field.get("states",{})).items():
+    for state, modifs in field.get("states",{}).items():
         for modif in modifs:
             if default_values[modif[0]] != modif[1]:
                 state_exceptions[modif[0]].append(state)
@@ -67,7 +78,7 @@ def transfer_node_to_modifiers(node, modifiers, context=None, in_tree_view=False
             if in_tree_view and a == 'invisible':
                 # Invisible in a tree view has a specific meaning, make it a
                 # new key in the modifiers attribute.
-                modifiers['tree_invisible'] = v
+                modifiers['column_invisible'] = v
             elif v or (a not in modifiers or not isinstance(modifiers[a], list)):
                 # Don't set the attribute to False if a dynamic value was
                 # provided (i.e. a domain from attrs or states).
@@ -95,14 +106,14 @@ def setup_modifiers(node, field=None, context=None, in_tree_view=False):
     :type node: lxml.etree._Element
     :param dict field: field descriptor corresponding to the provided node
     :param dict context: execution context used to evaluate node attributes
-    :param bool in_tree_view: triggers the ``tree_invisible`` code
+    :param bool in_tree_view: triggers the ``column_invisible`` code
                               path (separate from ``invisible``): in
                               tree view there are two levels of
                               invisibility, cell content (a column is
                               present but the cell itself is not
                               displayed) with ``invisible`` and column
                               invisibility (the whole column is
-                              hidden) with ``tree_invisible``.
+                              hidden) with ``column_invisible``.
     :returns: nothing
     """
     modifiers = {}
@@ -114,36 +125,34 @@ def setup_modifiers(node, field=None, context=None, in_tree_view=False):
 
 def test_modifiers(what, expected):
     modifiers = {}
-    if isinstance(what, basestring):
+    if isinstance(what, pycompat.string_types):
         node = etree.fromstring(what)
         transfer_node_to_modifiers(node, modifiers)
         simplify_modifiers(modifiers)
-        dump = json.dumps(modifiers)
-        assert dump == expected, "%s != %s" % (dump, expected)
+        assert modifiers == expected, "%s != %s" % (modifiers, expected)
     elif isinstance(what, dict):
         transfer_field_to_modifiers(what, modifiers)
         simplify_modifiers(modifiers)
-        dump = json.dumps(modifiers)
-        assert dump == expected, "%s != %s" % (dump, expected)
+        assert modifiers == expected, "%s != %s" % (modifiers, expected)
 
 
 # To use this test:
 # import odoo
 # odoo.osv.orm.modifiers_tests()
 def modifiers_tests():
-    test_modifiers('<field name="a"/>', '{}')
-    test_modifiers('<field name="a" invisible="1"/>', '{"invisible": true}')
-    test_modifiers('<field name="a" readonly="1"/>', '{"readonly": true}')
-    test_modifiers('<field name="a" required="1"/>', '{"required": true}')
-    test_modifiers('<field name="a" invisible="0"/>', '{}')
-    test_modifiers('<field name="a" readonly="0"/>', '{}')
-    test_modifiers('<field name="a" required="0"/>', '{}')
-    test_modifiers('<field name="a" invisible="1" required="1"/>', '{"invisible": true, "required": true}') # TODO order is not guaranteed
-    test_modifiers('<field name="a" invisible="1" required="0"/>', '{"invisible": true}')
-    test_modifiers('<field name="a" invisible="0" required="1"/>', '{"required": true}')
-    test_modifiers("""<field name="a" attrs="{'invisible': [('b', '=', 'c')]}"/>""", '{"invisible": [["b", "=", "c"]]}')
+    test_modifiers('<field name="a"/>', {})
+    test_modifiers('<field name="a" invisible="1"/>', {"invisible": True})
+    test_modifiers('<field name="a" readonly="1"/>', {"readonly": True})
+    test_modifiers('<field name="a" required="1"/>', {"required": True})
+    test_modifiers('<field name="a" invisible="0"/>', {})
+    test_modifiers('<field name="a" readonly="0"/>', {})
+    test_modifiers('<field name="a" required="0"/>', {})
+    test_modifiers('<field name="a" invisible="1" required="1"/>', {"invisible": True, "required": True}) # TODO order is not guaranteed
+    test_modifiers('<field name="a" invisible="1" required="0"/>', {"invisible": True})
+    test_modifiers('<field name="a" invisible="0" required="1"/>', {"required": True})
+    test_modifiers("""<field name="a" attrs="{'invisible': [['b', '=', 'c']]}"/>""", {"invisible": [["b", "=", "c"]]})
 
     # The dictionary is supposed to be the result of fields_get().
-    test_modifiers({}, '{}')
-    test_modifiers({"invisible": True}, '{"invisible": true}')
-    test_modifiers({"invisible": False}, '{}')
+    test_modifiers({}, {})
+    test_modifiers({"invisible": True}, {"invisible": True})
+    test_modifiers({"invisible": False}, {})

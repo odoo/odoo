@@ -1,7 +1,7 @@
 odoo.define('point_of_sale.BaseWidget', function (require) {
 "use strict";
 
-var formats = require('web.formats');
+var field_utils = require('web.field_utils');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
 
@@ -44,7 +44,7 @@ var PosBaseWidget = Widget.extend({
 
         if (typeof amount === 'number') {
             amount = round_di(amount,decimals).toFixed(decimals);
-            amount = formats.format_value(round_di(amount, decimals), { type: 'float', digits: [69, decimals]});
+            amount = field_utils.format.float(round_di(amount, decimals), {digits: [69, decimals]});
         }
 
         return amount;

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <!-- Menu items -->
+        <menuitem name="Website"
+            id="menu_website_configuration"
+            sequence="9"
+            groups="base.group_user"
+            web_icon="website,static/description/icon.png"/>
 
         <!-- website views -->
         <record id="view_website_form" model="ir.ui.view">
@@ -55,6 +61,106 @@
             </field>
         </record>
 
+        <!-- website.redirect views -->
+        <record id="website_redirect_form_view" model="ir.ui.view">
+            <field name="name">website.redirect.form</field>
+            <field name="model">website.redirect</field>
+            <field name="arch" type="xml">
+                <form string="Website Redirect Settings">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="type"/>
+                                <field name="url_from"/>
+                                <field name="url_to"/>
+                            </group>
+                            <group>
+                                <field name="website_id"/>
+                                <field name="active"/>
+                                <field name="sequence"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="website_redirect_tree_view" model="ir.ui.view">
+            <field name="name">website.redirect.list</field>
+            <field name="model">website.redirect</field>
+            <field name="arch" type="xml">
+                <tree string="Website Redirects">
+                    <field name="type"/>
+                    <field name="url_from"/>
+                    <field name="url_to"/>
+                    <field name="website_id"/>
+                    <field name="active"/>
+                    <field name="sequence"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_website_redirect_list" model="ir.actions.act_window">
+            <field name="name">Website Redirects</field>
+            <field name="res_model">website.redirect</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="website_redirect_tree_view"/>
+            <field name="target">current</field>
+        </record>
+
+        <!-- website.page views -->
+        <record id="website_pages_form_view" model="ir.ui.view">
+            <field name="name">website.page.form</field>
+            <field name="model">website.page</field>
+            <field name="arch" type="xml">
+                <form string="Website Page Settings">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="url"/>
+                                <field name="view_id"/>
+                            </group>
+                            <group>
+                                <field name="website_indexed"/>
+                                <field name="website_published"/>
+                                <field name="date_publish"/>
+                            </group>
+                        </group>
+                        <field groups="base.group_no_one" name="website_ids"/>
+                        <label string="Related Menu Items"/>
+                        <field name="menu_ids"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="website_pages_tree_view" model="ir.ui.view">
+            <field name="name">website.page.list</field>
+            <field name="model">website.page</field>
+            <field name="arch" type="xml">
+                <tree string="Website Pages">
+                    <field name="name"/>
+                    <field name="url"/>
+                    <field name="website_indexed"/>
+                    <field name="website_published"/>
+                    <field name="create_uid" invisible="1"/>
+                    <field name="write_uid"/>
+                    <field name="write_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_website_pages_list" model="ir.actions.act_window">
+            <field name="name">Website Pages</field>
+            <field name="res_model">website.page</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="website_pages_tree_view"/>
+            <field name="target">current</field>
+        </record>
+
         <!-- website.menu views -->
         <record id="action_website_menu" model="ir.actions.act_window">
             <field name="name">Website Menu</field>
@@ -103,14 +209,38 @@
 
             <field name="inherit_id" ref="base.view_view_form"/>
             <field name="arch" type="xml">
-
                 <field name="name" position="after">
-                    <field name="website_id"/>
-                    <field name="key"/>
+                    <field name="website_id" readonly="1"/>
+                    <field name="key" readonly="1"/>
+                    <field name="page_ids" invisible="1" />
                 </field>
-
+                <sheet position="before">
+                    <header>
+                        <button name="redirect_to_page_manager" string="Go to Page Manager"
+                            type="object" attrs="{'invisible': [('page_ids', '=', [])]}"/>
+                    </header>
+                </sheet>
             </field>
         </record>
+
+        <!-- Dashboard -->
+        <record id="backend_dashboard" model="ir.actions.client">
+            <field name="name">Dashboard</field>
+            <field name="tag">backend_dashboard</field>
+        </record>
+
+        <record id="ir_actions_server_website_dashboard" model="ir.actions.server">
+            <field name="name">Website: Dashboard</field>
+            <field name="model_id" ref="website.model_website"/>
+            <field name="state">code</field>
+            <field name="code">action = model.action_dashboard_redirect()</field>
+        </record>
+
+        <menuitem id="menu_dashboard"
+            name="Dashboard"
+            sequence="1"
+            action="website.ir_actions_server_website_dashboard"
+            parent="website.menu_website_configuration"/>
 
     </data>
 </odoo>

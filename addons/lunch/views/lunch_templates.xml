@@ -6,4 +6,10 @@
             <script type="text/javascript" src="/lunch/static/src/js/lunch.js"></script>
         </xpath>
     </template>
+
+    <template id="qunit_suite" name="lunch tests" inherit_id="web.qunit_suite">
+        <xpath expr="//t[@t-set='head']" position="inside">
+            <script type="text/javascript" src="/lunch/static/tests/lunch_tests.js"/>
+        </xpath>
+    </template>
 </odoo>

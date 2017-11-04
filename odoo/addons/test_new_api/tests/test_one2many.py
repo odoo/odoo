@@ -45,7 +45,7 @@ class One2manyCase(TransactionCase):
         # Check the lines first
         self.assertItemsEqual(
             self.multi.lines.mapped('name'),
-            map(str, range(10)))
+            [str(i) for i in range(10)])
         # Modify the first line and drop the last one
         self.multi.lines[0].name = "hello"
         self.multi.lines = self.multi.lines[:-1]
@@ -117,16 +117,16 @@ class One2manyCase(TransactionCase):
         self.assertFalse(t(res_books_with_movie_edition))
 
         res_books_without_movie_edition = self.Book.search([('editions', 'not in', movie_editions.ids)])
-        self.assertItemsEqual(t(res_books_without_movie_edition), t(books_with_edition))
+        self.assertItemsEqual(t(res_books_without_movie_edition), t(books))
 
         res_books_without_one_movie_edition = self.Book.search([('editions', 'not in', movie_editions[:1].ids)])
-        self.assertItemsEqual(t(res_books_without_one_movie_edition), t(books_with_edition))
+        self.assertItemsEqual(t(res_books_without_one_movie_edition), t(books))
 
         res_books_with_one_movie_edition_name = self.Book.search([('editions', '=', movie_editions[:1].name)])
         self.assertFalse(t(res_books_with_one_movie_edition_name))
 
         res_books_without_one_movie_edition_name = self.Book.search([('editions', '!=', movie_editions[:1].name)])
-        self.assertItemsEqual(t(res_books_without_one_movie_edition_name), t(books_with_edition))
+        self.assertItemsEqual(t(res_books_without_one_movie_edition_name), t(books))
 
         res_movies_not_of_edition_name = self.Movie.search([('editions', '!=', one_movie_edition.name)])
         self.assertItemsEqual(t(res_movies_not_of_edition_name), t(movies.filtered(lambda r: one_movie_edition not in r.editions)))

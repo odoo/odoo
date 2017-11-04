@@ -13,7 +13,7 @@
 -
   !record {model: product.product, id: product_landed_cost_3}:
     name: "LC product 3"
-    cost_method: real
+    cost_method: fifo
     uom_id: product_uom_unit_round_1
     valuation: real_time
     property_stock_account_input: o_expense
@@ -21,7 +21,7 @@
 -
   !record {model: product.product, id: product_landed_cost_4}:
     name: "LC product 4"
-    cost_method: real
+    cost_method: fifo
     uom_id: product_uom_unit_round_1
     valuation: real_time
     property_stock_account_input: o_expense
@@ -62,11 +62,6 @@
     self.action_confirm()
     self.action_assign()
     self.action_done()
-
-    quants = self.move_lines.quant_ids
-    assert len(quants) == 1
-    assert quants.qty == 13
-    assert quants.cost == 1.0
 -
   I create a landed cost for picking 3
 -
@@ -102,14 +97,6 @@
     - state == 'done'
     - account_move_id
 -
-  I check the quants quantity and cost
--
-  !python {model: stock.landed.cost, id: stock_landed_cost_2}: |
-    for valuation in self.valuation_adjustment_lines:
-        quants = valuation.move_id.quant_ids
-        assert quants.mapped('qty') == [12.0, 1.0]
-        assert quants.mapped('cost') == [2.15, 2.2]
--
   We perform all the tests for LC_pick_4
 -
   I receive picking LC_pick_4, and check how many quants are created
@@ -120,11 +107,6 @@
     self.action_confirm()
     self.action_assign()
     self.action_done()
-
-    quants = self.move_lines.quant_ids
-    assert len(quants) == 2
-    assert quants.mapped('qty') == [11.0, 1.0]
-    assert [round(c, 2) for c in quants.mapped('cost')] == [1.42, 1.38]
 -
   I create a landed cost for picking 4
 -
@@ -159,11 +141,3 @@
   !assert {model: stock.landed.cost, id: stock_landed_cost_3}:
     - state == 'done'
     - account_move_id
--
-  I check the quants quantity and cost
--
-  !python {model: stock.landed.cost, id: stock_landed_cost_3}: |
-    for valuation in self.valuation_adjustment_lines:
-        quants = valuation.move_id.quant_ids
-        assert quants.mapped('qty') == [11.0, 1.0]
-        assert [round(c, 2) for c in quants.mapped('cost')] == [2.34, 2.26]

@@ -7,10 +7,15 @@ import unittest
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
-from odoo.tools.safe_eval import safe_eval
+from odoo.tools.safe_eval import safe_eval, const_eval
 
 
 class TestSafeEval(unittest.TestCase):
+    def test_const(self):
+        # NB: True and False are names in Python 2 not consts
+        expected = (1, {"a": {2.5}}, [None, u"foo"])
+        actual = const_eval('(1, {"a": {2.5}}, [None, u"foo"])')
+        self.assertEqual(actual, expected)
 
     def test_01_safe_eval(self):
         """ Try a few common expressions to verify they work with safe_eval """

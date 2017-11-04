@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import hashlib
 import os
 
@@ -16,14 +16,14 @@ class TestIrAttachment(TransactionCase):
         self.filestore = self.Attachment._filestore()
 
         # Blob1
-        self.blob1 = 'blob1'
-        self.blob1_b64 = self.blob1.encode('base64')
+        self.blob1 = b'blob1'
+        self.blob1_b64 = base64.b64encode(self.blob1)
         blob1_hash = hashlib.sha1(self.blob1).hexdigest()
         self.blob1_fname = blob1_hash[:HASH_SPLIT] + '/' + blob1_hash
 
         # Blob2
-        self.blob2 = 'blob2'
-        self.blob2_b64 = self.blob2.encode('base64')
+        self.blob2 = b'blob2'
+        self.blob2_b64 = base64.b64encode(self.blob2)
 
     def test_01_store_in_db(self):
         # force storing in database

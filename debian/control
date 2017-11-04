@@ -3,9 +3,8 @@ Section: net
 Priority: optional
 Maintainer: Odoo S.A. <info@odoo.com>
 Uploaders: Aaron Bohy <aab@odoo.com>, Simon Lejeune <sle@odoo.com>
-Build-Depends: debhelper (>= 9.0), python, rsync
-X-Python-Version: 2.7
-Standards-Version: 3.9.5.0
+Build-Depends: debhelper (>= 9.2), dh-python, python3, rsync, python3-setuptools
+Standards-Version: 3.9.8
 Homepage: http://www.odoo.com/
 Vcs-Git: https://github.com/odoo/odoo
 
@@ -13,45 +12,44 @@ Package: odoo
 Architecture: all
 Depends:
  ${misc:Depends},
+ ${python3:Depends},
  adduser,
+ lsb-base,
  node-less,
  postgresql-client,
- python,
- python-babel,
- python-dateutil,
- python-decorator,
- python-docutils,
- python-feedparser,
- python-imaging,
- python-jinja2,
- python-ldap,
- python-libxslt1,
- python-lxml,
- python-mako,
- python-mock,
- python-openid,
- python-passlib,
- python-psutil,
- python-psycopg2,
- python-pychart,
- python-pydot,
- python-pyparsing,
- python-pypdf,
- python-reportlab,
- python-requests,
- python-suds,
- python-tz,
- python-vatnumber,
- python-vobject,
- python-werkzeug,
- python-xlsxwriter,
- python-xlwt,
- python-yaml,
+ python3-babel,
+ python3-dateutil,
+ python3-decorator,
+ python3-docutils,
+ python3-feedparser,
+ python3-html2text,
+ python3-pil,
+ python3-jinja2,
+ python3-lxml,
+ python3-mako,
+ python3-mock,
+ python3-passlib,
+ python3-psutil,
+ python3-psycopg2,
+ python3-pydot,
+ python3-pyparsing,
+ python3-pypdf2,
+ python3-reportlab,
+ python3-requests,
+ python3-suds,
+ python3-tz,
+ python3-vatnumber,
+ python3-werkzeug,
+ python3-xlsxwriter,
+ python3-yaml,
 Conflicts: tinyerp-server, openerp-server, openerp-web, openerp
 Replaces: tinyerp-server, openerp-server, openerp-web, openerp
 Recommends:
+ ${python3:Recommends},
  postgresql,
- python-gevent,
+ python3-pyldap,
+ python3-qrcode,
+ python3-vobject,
 Description: Open Source Apps To Grow Your Business
  Odoo, formerly known as OpenERP, is a suite of open-source business apps
  written in Python and released under the LGPLv3 license. This suite of

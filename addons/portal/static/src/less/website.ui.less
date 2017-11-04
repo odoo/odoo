@@ -1,0 +1,75 @@
+///
+/// This file regroups main website UI layout rules (when the user is connected).
+///
+
+// LAYOUTING
+body.o_connected_user {
+    padding-top: @odoo-navbar-height!important;
+}
+
+// MAIN MENU STYLE (added above navbar.less)
+#oe_main_menu_navbar {
+    .o-position-absolute(0, 0, auto, 0);
+    position: fixed;
+    z-index: 1001;
+
+    font-family: @o-we-font-family;
+    font-size: @odoo-font-size-base;
+    a:hover, a:focus {
+        text-decoration: none;
+    }
+    .dropdown-menu {
+        font-size: inherit;
+        border-radius: 0;
+    }
+
+    .o_menu_sections {
+        a {
+            > .fa-plus, > .fa-pencil {
+                margin-right: @grid-gutter-width/4;
+            }
+        }
+
+        .o_mobile_preview a {
+            text-align: center;
+            font-size: 20px;
+        }
+    }
+    .o_menu_systray {
+        a {
+            padding: 0 @grid-gutter-width/2;
+
+            &.css_edit_dynamic{
+                padding: 0 @grid-gutter-width/4;
+            }
+
+            &[data-action="edit"], &[data-action="translate"], &.css_edit_dynamic {
+                .button-variant(white, @odoo-brand-optional, @odoo-brand-optional);
+            }
+
+            > .fa-plus, > .fa-pencil {
+                margin-right: @grid-gutter-width/4;
+            }
+        }
+
+        .o_mobile_preview a {
+            text-align: center;
+            font-size: 20px;
+        }
+    }
+    @media only screen and (max-width: @screen-xs-max) {
+        #oe_applications {
+            position: inherit;
+            z-index: 1002;
+        }
+    }
+}
+
+// TODO should be a common backend/frontend style
+div.o_checkbox {
+    display: inline-block;
+    vertical-align: sub;
+    > input + span {
+        display: none;
+    }
+}

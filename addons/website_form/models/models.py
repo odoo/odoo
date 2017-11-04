@@ -4,12 +4,18 @@
 import itertools
 
 from odoo import models, fields, api
+from odoo.http import request
 
-MAGIC_FIELDS = ["id", "create_uid", "create_date", "write_uid", "write_date", "__last_update"]
 
 class website_form_config(models.Model):
     _inherit = 'website'
-    website_form_enable_metadata = fields.Boolean('Write metadata',help="Enable writing metadata on form submit.")
+
+    website_form_enable_metadata = fields.Boolean('Write metadata', help="Enable writing metadata on form submit.")
+
+    def _website_form_last_record(self):
+        if request and request.session.form_builder_model_model:
+            return request.env[request.session.form_builder_model_model].browse(request.session.form_builder_id)
+        return False
 
 
 class website_form_model(models.Model):
@@ -35,25 +41,27 @@ class website_form_model(models.Model):
             ])
         }
         return {
-            k: v for k, v in self.get_authorized_fields().iteritems()
+            k: v for k, v in self.get_authorized_fields(self.model).items()
             if k in included
         }
 
-    @api.multi
-    def get_authorized_fields(self):
-        model = self.env[self.model]
+    @api.model
+    def get_authorized_fields(self, model_name):
+        """ Return the fields of the given model name as a mapping like method `fields_get`. """
+        model = self.env[model_name]
         fields_get = model.fields_get()
 
-        for key, val in model._inherits.iteritems():
-            fields_get.pop(val,None)
+        for key, val in model._inherits.items():
+            fields_get.pop(val, None)
 
         # Unrequire fields with default values
-        default_values = model.default_get(fields_get.keys())
+        default_values = model.default_get(list(fields_get))
         for field in [f for f in fields_get if f in default_values]:
             fields_get[field]['required'] = False
 
         # Remove readonly and magic fields
-        for field in fields_get.keys():
+        MAGIC_FIELDS = models.MAGIC_COLUMNS + [model.CONCURRENCY_CHECK_FIELD]
+        for field in list(fields_get):
             if fields_get[field]['readonly'] or field in MAGIC_FIELDS:
                 del fields_get[field]
 
@@ -73,7 +81,7 @@ class website_form_model_fields(models.Model):
                          ' SET website_form_blacklisted=true'
                          ' WHERE website_form_blacklisted IS NULL')
         # add an SQL-level default value on website_form_blacklisted to that
-        # pure-SQL ir.model.field creations (e.g. in _field_create) generate
+        # pure-SQL ir.model.field creations (e.g. in _reflect) generate
         # the right default value for a whitelist (aka fields should be
         # blacklisted by default)
         self._cr.execute('ALTER TABLE ir_model_fields '

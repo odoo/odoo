@@ -24,7 +24,7 @@ class MakeInvoice(models.TransientModel):
             # but that second call will not do anything, since the repairs are already invoiced.
             repairs.action_repair_invoice_create()
         return {
-            'domain': [('id', 'in', new_invoice.values())],
+            'domain': [('id', 'in', list(new_invoice.values()))],
             'name': 'Invoices',
             'view_type': 'form',
             'view_mode': 'tree,form',

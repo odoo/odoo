@@ -1,18 +1,17 @@
-/*global $, _, PDFJS */
 odoo.define('website_slides.upload', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');
 var core = require('web.core');
 var Widget = require('web.Widget');
-var base = require('web_editor.base');
+require('web.dom_ready');
+var weContext = require("web_editor.context");
 var slides = require('website_slides.slides');
-var website = require('website.website');
 
 var qweb = core.qweb;
 var _t = core._t;
 
-if(!$('.oe_slide_js_upload').length) {
+if (!$('.oe_slide_js_upload').length) {
     return $.Deferred().reject("DOM doesn't contain '.oe_slide_js_upload'");
 }
 
@@ -150,6 +149,8 @@ var SlideDialog = Widget.extend({
                                 _.each(data.items, function (obj) {
                                     page_content = page_content + obj.str + " ";
                                 });
+                                // page_content may contain null characters
+                                page_content = page_content.replace(/\0/g, "");
                                 self.index_content = self.index_content + page_number + ". " + page_content + '\n';
                                 if (maxPages === page_number) {
                                     if (loaded) {
@@ -208,9 +209,9 @@ var SlideDialog = Widget.extend({
                 }
                 return data.text;
             },
-            createSearchChoice: function(term, data) {
+            createSearchChoice: function (term, data) {
                 var added_tags = $(this.opts.element).select2('data');
-                if (_.filter(_.union(added_tags, data), function(tag) {
+                if (_.filter(_.union(added_tags, data), function (tag) {
                     return tag.text.toLowerCase().localeCompare(term.toLowerCase()) === 0;
                 }).length === 0) {
                     return {
@@ -257,7 +258,7 @@ var SlideDialog = Widget.extend({
                     kwargs: {
                         fields: ['name'],
                         domain: [['channel_id', '=', self.channel_id]],
-                        context: base.get_context()
+                        context: weContext.get()
                     }
                 });
             }));
@@ -278,7 +279,7 @@ var SlideDialog = Widget.extend({
                 args: [],
                 kwargs: {
                     fields: ['name'],
-                    context: base.get_context()
+                    context: weContext.get()
                 }
             });
         }));
@@ -296,7 +297,7 @@ var SlideDialog = Widget.extend({
         return res;
     },
     //Python PIL does not support SVG, so converting SVG to PNG
-    svg_to_png: function() {
+    svg_to_png: function () {
         var img = this.$el.find("img#slide-image")[0];
         var canvas = document.createElement("canvas");
         canvas.width = img.width;
@@ -372,10 +373,9 @@ var SlideDialog = Widget.extend({
     }
 });
 
-    // bind the event to the button
-    $('.oe_slide_js_upload').on('click', function () {
-        var channel_id = $(this).attr('channel_id');
-        slides.page_widgets['upload_dialog'] = new SlideDialog(this, channel_id).appendTo(document.body);
-    });
-
+// bind the event to the button
+$('.oe_slide_js_upload').on('click', function () {
+    var channel_id = $(this).attr('channel_id');
+    slides.page_widgets['upload_dialog'] = new SlideDialog(this, channel_id).appendTo(document.body);
+});
 });

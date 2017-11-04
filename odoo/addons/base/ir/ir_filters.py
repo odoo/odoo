@@ -3,7 +3,7 @@
 
 import ast
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 
 
@@ -20,7 +20,7 @@ class IrFilters(models.Model):
     context = fields.Text(default='{}', required=True)
     sort = fields.Text(default='[]', required=True)
     model_id = fields.Selection(selection='_list_all_models', string='Model', required=True)
-    is_default = fields.Boolean(string='Default filter')
+    is_default = fields.Boolean(string='Default Filter')
     action_id = fields.Many2one('ir.actions.actions', string='Action', ondelete='cascade',
                                 help="The menu action this filter applies to. "
                                      "When left empty the filter applies to all menus "
@@ -150,9 +150,6 @@ class IrFilters(models.Model):
     def _auto_init(self):
         result = super(IrFilters, self)._auto_init()
         # Use unique index to implement unique constraint on the lowercase name (not possible using a constraint)
-        self._cr.execute("DROP INDEX IF EXISTS ir_filters_name_model_uid_unique_index")  # drop old index w/o action
-        self._cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = 'ir_filters_name_model_uid_unique_action_index'")
-        if not self._cr.fetchone():
-            self._cr.execute("""CREATE UNIQUE INDEX "ir_filters_name_model_uid_unique_action_index" ON ir_filters
-                                (lower(name), model_id, COALESCE(user_id,-1), COALESCE(action_id,-1))""")
+        tools.create_unique_index(self._cr, 'ir_filters_name_model_uid_unique_action_index',
+            self._table, ['lower(name)', 'model_id', 'COALESCE(user_id,-1)', 'COALESCE(action_id,-1)'])
         return result

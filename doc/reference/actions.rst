@@ -324,18 +324,6 @@ Executes multiple actions one after the other. Actions to execute are defined
 via the ``child_ids`` m2m. If sub-actions themselves return actions, the last
 one will be returned to the client as the multi's own next action
 
-``trigger``
------------
-
-Sends a signal to a workflow.
-
-``wkf_transition_id``
-    :class:`~odoo.fields.Many2one` to a ``workflow.transition`` to trigger
-``use_relational_model``
-    if ``base`` (the default), trigger the signal on behalf of the current
-    record. If ``relational``, trigger the signal on behalf of a field of the
-    current record selected through ``wkf_model_id`` and ``wkf_field_id``
-
 ``client_action``
 -----------------
 
@@ -368,13 +356,10 @@ server actions:
 ``Warning``
     constructor for the ``Warning`` exception
 
-.. ignored uid (available through ``user``), workflow (available through
-   workflow methods on models)
-
 .. _reference/actions/report:
 
-Report Actions (``ir.actions.report.xml``)
-==========================================
+Report Actions (``ir.actions.report``)
+======================================
 
 Triggers the printing of a report
 

@@ -16,6 +16,13 @@
         <field name="context">{'search_default_opportunity_id': [active_id], 'default_opportunity_id': active_id}</field>
     </record>
 
+    <record id="sale_action_orders" model="ir.actions.act_window">
+        <field name="name">Sale orders</field>
+        <field name="res_model">sale.order</field>
+        <field name="domain">[('opportunity_id', '=', active_id), ('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
+        <field name="context">{'search_default_opportunity_id': [active_id], 'default_opportunity_id': active_id}</field>
+    </record>
+
     <record id="sale_view_inherit123" model="ir.ui.view">
         <field name="name">sale.order.form.inherit.sale</field>
         <field name="model">sale.order</field>
@@ -32,5 +39,12 @@
             </xpath>
         </field>
     </record>
+
+    <!-- This menu is display in CRM app when sale is installed-->
+    <menuitem
+        id="sale_order_menu_quotations_crm"
+        action="sale.action_quotations"
+        parent="crm.crm_menu_pipeline"
+        sequence="10"/>
 
 </odoo>

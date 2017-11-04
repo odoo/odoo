@@ -5,7 +5,7 @@ from datetime import date, datetime
 
 from odoo.exceptions import AccessError, except_orm
 from odoo.tests import common
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, float_repr, pycompat
 
 
 class TestFields(common.TransactionCase):
@@ -16,8 +16,8 @@ class TestFields(common.TransactionCase):
         discussion = self.env.ref('test_new_api.discussion_0')
 
         # read field as a record attribute or as a record item
-        self.assertIsInstance(discussion.name, basestring)
-        self.assertIsInstance(discussion['name'], basestring)
+        self.assertIsInstance(discussion.name, pycompat.string_types)
+        self.assertIsInstance(discussion['name'], pycompat.string_types)
         self.assertEqual(discussion['name'], discussion.name)
 
         # read it with method read()
@@ -202,6 +202,11 @@ class TestFields(common.TransactionCase):
         self.assertEqual(c.display_name, 'X / C')
         self.assertEqual(d.display_name, 'X / C / D')
 
+        # delete b; both c and d are deleted in cascade; c should also be marked
+        # to recompute, but recomputation should not fail...
+        b.unlink()
+        self.assertEqual((a + b + c + d).exists(), a)
+
     def test_12_cascade(self):
         """ test computed field depending on computed field """
         message = self.env.ref('test_new_api.message_0_0')
@@ -305,21 +310,65 @@ class TestFields(common.TransactionCase):
         record.number = 2.4999999999999996
         self.assertEqual(record.number, 2.50)
 
+    def check_monetary(self, record, amount, currency, msg=None):
+        # determine the possible roundings of amount
+        if currency:
+            ramount = currency.round(amount)
+            samount = float(float_repr(ramount, currency.decimal_places))
+        else:
+            ramount = samount = amount
+
+        # check the currency on record
+        self.assertEqual(record.currency_id, currency)
+
+        # check the value on the record
+        self.assertIn(record.amount, [ramount, samount], msg)
+
+        # check the value in the database
+        self.cr.execute('SELECT amount FROM test_new_api_mixed WHERE id=%s', [record.id])
+        value = self.cr.fetchone()[0]
+        self.assertEqual(value, samount, msg)
+
     def test_20_monetary(self):
         """ test monetary fields """
-        record = self.env['test_new_api.mixed'].create({})
-        self.assertTrue(record.currency_id)
-        self.assertEqual(record.currency_id.rounding, 0.01)
+        model = self.env['test_new_api.mixed']
+        currency = self.env['res.currency'].with_context(active_test=False)
+        amount = 14.70126
 
-        # the conversion to cache should round the value to 14.700000000000001
-        record.amount = 14.7
-        self.assertNotEqual(record.amount, 14.7)
-        self.assertEqual(record.amount, 14.700000000000001)
+        for rounding in [0.01, 0.0001, 1.0, 0]:
+            # first retrieve a currency corresponding to rounding
+            if rounding:
+                currency = currency.search([('rounding', '=', rounding)], limit=1)
+                self.assertTrue(currency, "No currency found for rounding %s" % rounding)
+            else:
+                # rounding=0 corresponds to currency=False
+                currency = currency.browse()
 
-        # however when stored to database, it should be serialized as 14.70
-        self.cr.execute('SELECT amount FROM test_new_api_mixed WHERE id=%s', (record.id,))
-        (amount,) = self.cr.fetchone()
-        self.assertEqual(amount, 14.7)
+            # case 1: create with amount and currency
+            record = model.create({'amount': amount, 'currency_id': currency.id})
+            self.check_monetary(record, amount, currency, 'create(amount, currency)')
+
+            # case 2: assign amount
+            record.amount = 0
+            record.amount = amount
+            self.check_monetary(record, amount, currency, 'assign(amount)')
+
+            # case 3: write with amount and currency
+            record.write({'amount': 0, 'currency_id': False})
+            record.write({'amount': amount, 'currency_id': currency.id})
+            self.check_monetary(record, amount, currency, 'write(amount, currency)')
+
+            # case 4: write with amount only
+            record.write({'amount': 0})
+            record.write({'amount': amount})
+            self.check_monetary(record, amount, currency, 'write(amount)')
+
+            # case 5: write with amount on several records
+            records = record + model.create({'currency_id': currency.id})
+            records.write({'amount': 0})
+            records.write({'amount': amount})
+            for record in records:
+                self.check_monetary(record, amount, currency, 'multi write(amount)')
 
     def test_21_date(self):
         """ test date fields """
@@ -330,10 +379,10 @@ class TestFields(common.TransactionCase):
         self.assertFalse(record.date)
 
         # one may assign date and datetime objects
-        record.date = date(2012, 05, 01)
+        record.date = date(2012, 5, 1)
         self.assertEqual(record.date, '2012-05-01')
 
-        record.date = datetime(2012, 05, 01, 10, 45, 00)
+        record.date = datetime(2012, 5, 1, 10, 45, 00)
         self.assertEqual(record.date, '2012-05-01')
 
         # one may assign dates in the default format, and it must be checked
@@ -540,40 +589,6 @@ class TestFields(common.TransactionCase):
         self.assertEqual(attribute_record.bar, 'DEFDEF')
         self.assertFalse(self.env.has_todo())
 
-    def test_28_sparse(self):
-        """ test sparse fields. """
-        record = self.env['test_new_api.sparse'].create({})
-        self.assertFalse(record.data)
-
-        partner = self.env.ref('base.main_partner')
-        values = [
-            ('boolean', True),
-            ('integer', 42),
-            ('float', 3.14),
-            ('char', 'John'),
-            ('selection', 'two'),
-            ('partner', partner.id),
-        ]
-        for n, (key, val) in enumerate(values):
-            record.write({key: val})
-            self.assertEqual(record.data, dict(values[:n+1]))
-
-        for key, val in values[:-1]:
-            self.assertEqual(record[key], val)
-        self.assertEqual(record.partner, partner)
-
-        for n, (key, val) in enumerate(values):
-            record.write({key: False})
-            self.assertEqual(record.data, dict(values[n+1:]))
-
-        # check reflection of sparse fields in 'ir.model.fields'
-        names = [name for name, _ in values]
-        domain = [('model', '=', 'test_new_api.sparse'), ('name', 'in', names)]
-        fields = self.env['ir.model.fields'].search(domain)
-        self.assertEqual(len(fields), len(names))
-        for field in fields:
-            self.assertEqual(field.serialization_field_id.name, 'data')
-
     def test_30_read(self):
         """ test computed fields as returned by read(). """
         discussion = self.env.ref('test_new_api.discussion_0')
@@ -696,6 +711,168 @@ class TestFields(common.TransactionCase):
         discussion.write({'very_important_messages': [(5,)]})
         self.assertFalse(discussion.very_important_messages)
         self.assertFalse(message.exists())
+
+    def test_70_x2many_write(self):
+        discussion = self.env.ref('test_new_api.discussion_0')
+        Message = self.env['test_new_api.message']
+        # There must be 3 messages, 0 important
+        self.assertEqual(len(discussion.messages), 3)
+        self.assertEqual(len(discussion.important_messages), 0)
+        self.assertEqual(len(discussion.very_important_messages), 0)
+        discussion.important_messages = [(0, 0, {
+            'body': 'What is the answer?',
+            'important': True,
+        })]
+        # There must be 4 messages, 1 important
+        self.assertEqual(len(discussion.messages), 4)
+        self.assertEqual(len(discussion.important_messages), 1)
+        self.assertEqual(len(discussion.very_important_messages), 1)
+        discussion.very_important_messages |= Message.new({
+            'body': '42',
+            'important': True,
+        })
+        # There must be 5 messages, 2 important
+        self.assertEqual(len(discussion.messages), 5)
+        self.assertEqual(len(discussion.important_messages), 2)
+        self.assertEqual(len(discussion.very_important_messages), 2)
+
+    def test_70_x2many_write(self):
+        discussion = self.env.ref('test_new_api.discussion_0')
+        Message = self.env['test_new_api.message']
+        # There must be 3 messages, 0 important
+        self.assertEqual(len(discussion.messages), 3)
+        self.assertEqual(len(discussion.important_messages), 0)
+        self.assertEqual(len(discussion.very_important_messages), 0)
+        discussion.important_messages = [(0, 0, {
+            'body': 'What is the answer?',
+            'important': True,
+        })]
+        # There must be 4 messages, 1 important
+        self.assertEqual(len(discussion.messages), 4)
+        self.assertEqual(len(discussion.important_messages), 1)
+        self.assertEqual(len(discussion.very_important_messages), 1)
+        discussion.very_important_messages |= Message.new({
+            'body': '42',
+            'important': True,
+        })
+        # There must be 5 messages, 2 important
+        self.assertEqual(len(discussion.messages), 5)
+        self.assertEqual(len(discussion.important_messages), 2)
+        self.assertEqual(len(discussion.very_important_messages), 2)
+
+
+class TestX2many(common.TransactionCase):
+    def test_search_many2many(self):
+        """ Tests search on many2many fields. """
+        tags = self.env['test_new_api.multi.tag']
+        tagA = tags.create({})
+        tagB = tags.create({})
+        tagC = tags.create({})
+        recs = self.env['test_new_api.multi.line']
+        recW = recs.create({})
+        recX = recs.create({'tags': [(4, tagA.id)]})
+        recY = recs.create({'tags': [(4, tagB.id)]})
+        recZ = recs.create({'tags': [(4, tagA.id), (4, tagB.id)]})
+        recs = recW + recX + recY + recZ
+
+        # test 'in'
+        result = recs.search([('tags', 'in', (tagA + tagB).ids)])
+        self.assertEqual(result, recX + recY + recZ)
+
+        result = recs.search([('tags', 'in', tagA.ids)])
+        self.assertEqual(result, recX + recZ)
+
+        result = recs.search([('tags', 'in', tagB.ids)])
+        self.assertEqual(result, recY + recZ)
+
+        result = recs.search([('tags', 'in', tagC.ids)])
+        self.assertEqual(result, recs.browse())
+
+        result = recs.search([('tags', 'in', [])])
+        self.assertEqual(result, recs.browse())
+
+        # test 'not in'
+        result = recs.search([('id', 'in', recs.ids), ('tags', 'not in', (tagA + tagB).ids)])
+        self.assertEqual(result, recs - recX - recY - recZ)
+
+        result = recs.search([('id', 'in', recs.ids), ('tags', 'not in', tagA.ids)])
+        self.assertEqual(result, recs - recX - recZ)
+
+        result = recs.search([('id', 'in', recs.ids), ('tags', 'not in', tagB.ids)])
+        self.assertEqual(result, recs - recY - recZ)
+
+        result = recs.search([('id', 'in', recs.ids), ('tags', 'not in', tagC.ids)])
+        self.assertEqual(result, recs)
+
+        result = recs.search([('id', 'in', recs.ids), ('tags', 'not in', [])])
+        self.assertEqual(result, recs)
+
+        # special case: compare with False
+        result = recs.search([('id', 'in', recs.ids), ('tags', '=', False)])
+        self.assertEqual(result, recW)
+
+        result = recs.search([('id', 'in', recs.ids), ('tags', '!=', False)])
+        self.assertEqual(result, recs - recW)
+
+    def test_search_one2many(self):
+        """ Tests search on one2many fields. """
+        recs = self.env['test_new_api.multi']
+        recX = recs.create({'lines': [(0, 0, {}), (0, 0, {})]})
+        recY = recs.create({'lines': [(0, 0, {})]})
+        recZ = recs.create({})
+        recs = recX + recY + recZ
+        line1, line2, line3 = recs.mapped('lines')
+        line4 = recs.create({'lines': [(0, 0, {})]}).lines
+        line0 = line4.create({})
+
+        # test 'in'
+        result = recs.search([('id', 'in', recs.ids), ('lines', 'in', (line1 + line2 + line3 + line4).ids)])
+        self.assertEqual(result, recX + recY)
+
+        result = recs.search([('id', 'in', recs.ids), ('lines', 'in', (line1 + line3 + line4).ids)])
+        self.assertEqual(result, recX + recY)
+
+        result = recs.search([('id', 'in', recs.ids), ('lines', 'in', (line1 + line4).ids)])
+        self.assertEqual(result, recX)
+
+        result = recs.search([('id', 'in', recs.ids), ('lines', 'in', line4.ids)])
+        self.assertEqual(result, recs.browse())
+
+        result = recs.search([('id', 'in', recs.ids), ('lines', 'in', [])])
+        self.assertEqual(result, recs.browse())
+
+        # test 'not in'
+        result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', (line1 + line2 + line3).ids)])
+        self.assertEqual(result, recs - recX - recY)
+
+        result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', (line1 + line3).ids)])
+        self.assertEqual(result, recs - recX - recY)
+
+        result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', line1.ids)])
+        self.assertEqual(result, recs - recX)
+
+        result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', (line1 + line4).ids)])
+        self.assertEqual(result, recs - recX)
+
+        result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', line4.ids)])
+        self.assertEqual(result, recs)
+
+        result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', [])])
+        self.assertEqual(result, recs)
+
+        # these cases are weird
+        result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', (line1 + line0).ids)])
+        self.assertEqual(result, recs.browse())
+
+        result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', line0.ids)])
+        self.assertEqual(result, recs.browse())
+
+        # special case: compare with False
+        result = recs.search([('id', 'in', recs.ids), ('lines', '=', False)])
+        self.assertEqual(result, recZ)
+
+        result = recs.search([('id', 'in', recs.ids), ('lines', '!=', False)])
+        self.assertEqual(result, recs - recZ)
 
 
 class TestHtmlField(common.TransactionCase):

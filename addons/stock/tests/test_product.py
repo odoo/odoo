@@ -12,15 +12,19 @@ class TestVirtualAvailable(TestStockCommon):
     def setUp(self):
         super(TestVirtualAvailable, self).setUp()
 
-        self.env['stock.quant'].create({
-            'product_id': self.product_3.id,
-            'location_id': self.env.ref('stock.stock_location_stock').id,
-            'qty': 30.0})
+        # Make `product3` a stockable product for this test. Indeed, creating quants
+        # and playing with owners is not possible for consumables.
+        self.product_3.type = 'product'
 
         self.env['stock.quant'].create({
             'product_id': self.product_3.id,
             'location_id': self.env.ref('stock.stock_location_stock').id,
-            'qty': 10.0,
+            'quantity': 30.0})
+
+        self.env['stock.quant'].create({
+            'product_id': self.product_3.id,
+            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'quantity': 10.0,
             'owner_id': self.user_stock_user.partner_id.id})
 
         self.picking_out = self.env['stock.picking'].create({

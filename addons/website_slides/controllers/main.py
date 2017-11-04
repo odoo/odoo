@@ -8,6 +8,8 @@ import werkzeug
 from odoo import http, _
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request
+from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.website.models.ir_http import sitemap_qs2dom
 
 _logger = logging.getLogger(__name__)
 
@@ -66,22 +68,30 @@ class WebsiteSlides(http.Controller):
             'is_public_user': request.env.user == request.website.user_id
         })
 
+    def sitemap_slide(env, rule, qs):
+        Channel = env['slide.channel']
+        dom = sitemap_qs2dom(qs=qs, route='/slides/', field=Channel._rec_name)
+        for channel in Channel.search(dom):
+            loc = '/slides/%s' % slug(channel)
+            if not qs or qs.lower() in loc:
+                yield {'loc': loc}
+
     @http.route([
-        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>''',
-        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/page/<int:page>''',
+        '''/slides/<model("slide.channel"):channel>''',
+        '''/slides/<model("slide.channel):channel>/page/<int:page>''',
 
-        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/<string:slide_type>''',
-        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/<string:slide_type>/page/<int:page>''',
+        '''/slides/<model("slide.channel"):channel>/<string:slide_type>''',
+        '''/slides/<model("slide.channel"):channel>/<string:slide_type>/page/<int:page>''',
 
-        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/tag/<model("slide.tag"):tag>''',
-        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/tag/<model("slide.tag"):tag>/page/<int:page>''',
+        '''/slides/<model("slide.channel"):channel>/tag/<model("slide.tag"):tag>''',
+        '''/slides/<model("slide.channel"):channel>/tag/<model("slide.tag"):tag>/page/<int:page>''',
 
-        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/category/<model("slide.category"):category>''',
-        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/category/<model("slide.category"):category>/page/<int:page>''',
+        '''/slides/<model("slide.channel"):channel>/category/<model("slide.category"):category>''',
+        '''/slides/<model("slide.channel"):channel>/category/<model("slide.category"):category>/page/<int:page>''',
 
-        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/category/<model("slide.category"):category>/<string:slide_type>''',
-        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/category/<model("slide.category"):category>/<string:slide_type>/page/<int:page>'''],
-        type='http', auth="public", website=True)
+        '''/slides/<model("slide.channel"):channel>/category/<model("slide.category"):category>/<string:slide_type>''',
+        '''/slides/<model("slide.channel"):channel>/category/<model("slide.category"):category>/<string:slide_type>/page/<int:page>'''],
+        type='http', auth="public", website=True, sitemap=sitemap_slide)
     def channel(self, channel, category=None, tag=None, page=1, slide_type=None, sorting='creation', search=None, **kw):
         user = request.env.user
         Slide = request.env['slide.slide']
@@ -161,61 +171,16 @@ class WebsiteSlides(http.Controller):
             self._set_viewed_slide(slide, 'slide')
         return request.render('website_slides.slide_detail_view', values)
 
-    @http.route('''/slides/slide/<model("slide.slide", "[('channel_id.can_see', '=', True), ('datas', '!=', False), ('slide_type', '=', 'presentation')]"):slide>/pdf_content''', type='http', auth="public", website=True)
+    @http.route('''/slides/slide/<model("slide.slide"):slide>/pdf_content''',
+                type='http', auth="public", website=True, sitemap=False)
     def slide_get_pdf_content(self, slide):
         response = werkzeug.wrappers.Response()
-        response.data = slide.datas and slide.datas.decode('base64') or ''
+        response.data = slide.datas and base64.b64decode(slide.datas) or b''
         response.mimetype = 'application/pdf'
         return response
 
-    @http.route('''/slides/slide/<model("slide.slide", "[('channel_id.can_see', '=', True)]"):slide>/comment''', type='http', auth="public", methods=['POST'], website=True)
-    def slide_comment(self, slide, **post):
-        """ Controller for message_post. Public user can post; their name and
-        email is used to find or create a partner and post as admin with the
-        right partner. Their comments are unpublished by default. Logged
-        users can post as usual. """
-        # TDE TODO :
-        # - subscribe partner instead of user writing the message ?
-        # - public user -> cannot create mail.message ?
-        if not post.get('comment'):
-            return werkzeug.utils.redirect(request.httprequest.referrer + "#discuss")
-        # public user: check or find author based on email, do not subscribe public user
-        # and do not publish their comments by default to avoid direct spam
-        if request.uid == request.website.user_id.id:
-            if not post.get('email'):
-                return werkzeug.utils.redirect(request.httprequest.referrer + "#discuss")
-            # TDE FIXME: public user has no right to create mail.message, should
-            # be investigated - using SUPERUSER_ID meanwhile
-            contextual_slide = slide.sudo().with_context(mail_create_nosubcribe=True)
-            # TDE FIXME: check in mail_thread, find partner from emails should maybe work as public user
-            partner_id = slide.sudo()._find_partner_from_emails([post.get('email')])[0]
-            if partner_id:
-                partner = request.env['res.partner'].sudo().browse(partner_id)
-            else:
-                partner = request.env['res.partner'].sudo().create({
-                    'name': post.get('name', post['email']),
-                    'email': post['email']
-                })
-            post_kwargs = {
-                'author_id': partner.id,
-                'website_published': False,
-                'email_from': partner.email,
-            }
-        # logged user: as usual, published by default
-        else:
-            contextual_slide = slide
-            post_kwargs = {}
-
-        contextual_slide.message_post(
-            body=post['comment'],
-            message_type='comment',
-            subtype='mt_comment',
-            **post_kwargs
-        )
-        return werkzeug.utils.redirect(request.httprequest.referrer + "#discuss")
-
-    @http.route('''/slides/slide/<model("slide.slide", "[('channel_id.can_see', '=', True), ('download_security', '=', 'public')]"):slide>/download''', type='http', auth="public", website=True)
-    def slide_download(self, slide):
+    @http.route('''/slides/slide/<model("slide.slide"):slide>/download''', type='http', auth="public", website=True)
+    def slide_download(self, slide, sitemap=False):
         if slide.download_security == 'public' or (slide.download_security == 'user' and request.session.uid):
             filecontent = base64.b64decode(slide.datas)
             disposition = 'attachment; filename=%s.pdf' % werkzeug.urls.url_quote(slide.name)
@@ -263,10 +228,10 @@ class WebsiteSlides(http.Controller):
                 'caption': slide.name,
                 'url': slide.website_url
             }
-        vals = map(slide_mapped_dict, slide.get_related_slides(slides_to_suggest))
+        vals = [slide_mapped_dict(s) for s in slide.get_related_slides(slides_to_suggest)]
         add_more_slide = slides_to_suggest - len(vals)
         if max(add_more_slide, 0):
-            vals += map(slide_mapped_dict, slide.get_most_viewed_slides(add_more_slide))
+            vals.extend(slide_mapped_dict(s) for s in slide.get_most_viewed_slides(add_more_slide))
         return vals
 
     # --------------------------------------------------
@@ -293,10 +258,8 @@ class WebsiteSlides(http.Controller):
 
     @http.route(['/slides/add_slide'], type='json', auth='user', methods=['POST'], website=True)
     def create_slide(self, *args, **post):
-        payload = request.httprequest.content_length
-        # payload is total request content size so it's not exact size of file.
-        # already add client validation this is for double check if client alter.
-        if (payload / 1024 / 1024 > 25):
+        file_size = len(post['datas']) * 3 / 4; # base64
+        if (file_size / 1024.0 / 1024.0) > 25:
             return {'error': _('File is too big. File size cannot exceed 25MB')}
 
         values = dict((fname, post[fname]) for fname in [
@@ -319,13 +282,13 @@ class WebsiteSlides(http.Controller):
             return {'error': e.name}
         except Exception as e:
             _logger.error(e)
-            return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e.message}
+            return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e}
         return {'url': "/slides/slide/%s" % (slide_id.id)}
 
     # --------------------------------------------------
     # EMBED IN THIRD PARTY WEBSITES
     # --------------------------------------------------
-    @http.route('/slides/embed/<int:slide_id>', type='http', auth='public', website=True)
+    @http.route('/slides/embed/<int:slide_id>', type='http', auth='public', website=True, sitemap=False)
     def slides_embed(self, slide_id, page="1", **kw):
         # Note : don't use the 'model' in the route (use 'slide_id'), otherwise if public cannot access the embedded
         # slide, the error will be the website.403 page instead of the one of the website_slides.embed_slide.
@@ -333,7 +296,7 @@ class WebsiteSlides(http.Controller):
 
         # determine if it is embedded from external web page
         referrer_url = request.httprequest.headers.get('Referer', '')
-        base_url = request.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
         is_embedded = referrer_url and not bool(base_url in referrer_url) or False
         # try accessing slide, and display to corresponding template
         try:

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from lxml import objectify
-import urlparse
+from werkzeug import urls
 
 import odoo
 from odoo.addons.payment.models.payment_acquirer import ValidationError
@@ -41,10 +41,10 @@ class BuckarooForm(BuckarooCommon):
             'Brq_invoicenumber': 'SO004',
             'Brq_signature': '1b8c10074c622d965272a91a9e88b5b3777d2474',  # update me
             'brq_test': 'True',
-            'Brq_return': '%s' % urlparse.urljoin(base_url, BuckarooController._return_url),
-            'Brq_returncancel': '%s' % urlparse.urljoin(base_url, BuckarooController._cancel_url),
-            'Brq_returnerror': '%s' % urlparse.urljoin(base_url, BuckarooController._exception_url),
-            'Brq_returnreject': '%s' % urlparse.urljoin(base_url, BuckarooController._reject_url),
+            'Brq_return': urls.url_join(base_url, BuckarooController._return_url),
+            'Brq_returncancel': urls.url_join(base_url, BuckarooController._cancel_url),
+            'Brq_returnerror': urls.url_join(base_url, BuckarooController._exception_url),
+            'Brq_returnreject': urls.url_join(base_url, BuckarooController._reject_url),
             'Brq_culture': 'en-US',
         }
 

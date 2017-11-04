@@ -1,0 +1,35 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    color: #000 !important;
+    word-wrap: break-word;
+}
+.border-black td {
+    border-top: 1px solid black !important;
+}
+
+/* See https://github.com/wkhtmltopdf/wkhtmltopdf/issues/1524 */
+.table-condensed {
+    > thead > tr > th {
+        border-bottom: none !important;
+    }
+    > tbody > tr {
+        page-break-inside: avoid !important;
+        border-top: none !important;
+    }
+}
+.zero_min_height {
+    min-height: 0px !important;
+}
+
+/* To avoid broken snippets in report rendering */
+.jumbotron, .panel, .carousel, section{
+    page-break-inside: avoid;
+}
+
+/* Wkhtmltopdf doesn't support very well the media-print CSS (depends on the version) */
+.hidden-print{
+    display: none;
+}

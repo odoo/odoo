@@ -9,14 +9,9 @@ var _t = core._t;
 tour.register('crm_tour', {
     url: "/web",
 }, [tour.STEPS.MENU_MORE, {
-    trigger: '.o_app[data-menu-xmlid="sales_team.menu_base_partner"], .oe_menu_toggler[data-menu-xmlid="sales_team.menu_base_partner"]',
-    content: _t("Ready to boost you sales? Your <b>sales pipeline</b> can be found here, under this app."),
+    trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"], .oe_menu_toggler[data-menu-xmlid="crm.crm_menu_root"]',
+    content: _t("Ready to boost your sales? Your <b>Pipeline</b> can be found here, under <b>CRM</b> app."),
     position: 'bottom',
-}, {
-    trigger: ".o_sales_dashboard .o_dashboard_action[name=\"crm.action_your_pipeline\"]:last",
-    extra_trigger: '.o_sales_dashboard',
-    content: _t("Let\'s have a look at your opportunities pipeline."),
-    position: "bottom"
 }, {
     trigger: ".o-kanban-button-new",
     extra_trigger: '.o_opportunity_kanban',
@@ -35,18 +30,22 @@ tour.register('crm_tour', {
     position: "right",
     run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(2) ",
 }, {
-    trigger: ".o_kanban_record:not(.o_updating) .oe_kanban_status_grey",
+    trigger: ".o_kanban_record:not(.o_updating) .o_activity_color_default",
     extra_trigger: ".o_opportunity_kanban",
-    content: _t("This opportunity has <b>no next activity scheduled</b>. <i>Click to set one.</i>"),
+    content: _t("This opportunity has <b>no activity planned</b>. <i>Click to check them.</i>"),
     position: "bottom"
 }, {
-    trigger: ".o_recommended_activity .o_radio_item",
+    trigger: ".o_schedule_activity",
+    extra_trigger: ".o_opportunity_kanban",
+    content: _t("Schedule an activity by clicking here"),
+    position: "bottom"
+}, {
+    trigger: ".modal-body .o_field_many2one",
     extra_trigger: ".o_opportunity_kanban",
     content: _t("<p>You will be able to customize your followup activities. Examples:</p><ol><li>introductory email</li><li>call 10 days after</li><li>second call 3 days after, ...</li></ol><p class='mb0'><i>Select a standard activity for now on.</i></p>"),
-    position: "left",
+    position: "bottom",
     run: function (actions) {
-        actions.auto(this.$anchor.children("input").first());
-        actions.auto(".modal-footer .btn-primary");
+        actions.auto(".modal-footer .btn-default");
     },
 }, {
     trigger: ".o_kanban_record",
@@ -76,7 +75,7 @@ tour.STEPS.MENU_MORE, {
     position: "right"
 }, tour.STEPS.TOGGLE_APPSWITCHER,
 tour.STEPS.MENU_MORE, {
-    trigger: '.o_app[data-menu-xmlid="sales_team.menu_base_partner"], .oe_menu_toggler[data-menu-xmlid="sales_team.menu_base_partner"]',
+    trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"], .oe_menu_toggler[data-menu-xmlid="crm.crm_menu_root"]',
     content: _t("Good job! Your completed the tour of the CRM. You can continue with the <b>implementation guide</b> to help you setup the CRM in your company."),
     position: 'bottom',
 }, {

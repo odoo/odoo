@@ -6,7 +6,17 @@
                 <link rel="stylesheet" href="/web_diagram/static/src/less/diagram_view.less"/>
                 <script type="text/javascript" src="/web_diagram/static/src/js/vec2.js"></script>
                 <script type="text/javascript" src="/web_diagram/static/src/js/graph.js"></script>
-                <script type="text/javascript" src="/web_diagram/static/src/js/diagram.js"></script>
+                <script type="text/javascript" src="/web_diagram/static/src/js/diagram_model.js"></script>
+                <script type="text/javascript" src="/web_diagram/static/src/js/diagram_controller.js"></script>
+                <script type="text/javascript" src="/web_diagram/static/src/js/diagram_renderer.js"></script>
+                <script type="text/javascript" src="/web_diagram/static/src/js/diagram_view.js"></script>
+                <script type="text/javascript" src="/web_diagram/static/src/js/view_registry.js"></script>
+            </xpath>
+        </template>
+
+        <template id="qunit_suite" name="web_diagram tests" inherit_id="web.qunit_suite">
+            <xpath expr="//script[contains(@src, '/web/static/tests/views/kanban_tests.js')]" position="after">
+                <script type="text/javascript" src="/web_diagram/static/tests/diagram_tests.js"></script>
             </xpath>
         </template>
     </data>

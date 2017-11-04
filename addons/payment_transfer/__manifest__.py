@@ -8,6 +8,7 @@
     'description': """Transfer Payment Acquirer""",
     'depends': ['payment'],
     'data': [
+        'views/payment_views.xml',
         'views/payment_transfer_templates.xml',
         'data/payment_acquirer_data.xml',
     ],

@@ -50,6 +50,9 @@
                                 <a class="media-heading" t-attf-href="/customers/#{slug(partner)}">
                                     <span t-field="partner.display_name"/>
                                 </a>
+                                <t t-if="partner.industry_id">
+                                    <a class="label label-default" t-attf-href="/customers/#{ 'industry/%s/' % slug(partner.industry_id) }#{ current_country_id and 'country/%s' % slug(current_country) or '' }" t-esc="partner.industry_id.name"/>
+                                </t>
                                 <div t-field="partner.website_short_description"/>
                             </div>
                         </div>
@@ -91,15 +94,32 @@
     </xpath>
 </template>
 
+<template id="opt_industry_list" inherit_id="website_customer.index" customize_show="True" name="Filter on Industry" priority="20">
+    <xpath expr="//div[@id='ref_left_column']" position="inside">
+        <h3>References by Sectors of Activity</h3>
+        <ul class="nav nav-pills nav-stacked mt16 mb32">
+            <t t-foreach="industries" t-as="industry_dict">
+                <t t-if="industry_dict['industry_id']">
+                    <li t-att-class="industry_dict['industry_id'][0] == current_industry_id and 'active' or None">
+                        <a t-attf-href="/customers/#{ industry_dict['industry_id'][0] and 'industry/%s/' % slug(industry_dict['industry_id']) or '' }#{ current_country_id and 'country/%s' % current_country_id or '' }#{ search_path }">
+                            <span class="badge pull-right" t-esc="industry_dict['industry_id_count'] or '0'"/>
+                            <t t-esc="industry_dict['industry_id'][1]"/>
+                        </a>
+                    </li>
+                </t>
+            </t>
+        </ul>
+    </xpath>
+</template>
 
-<template id="opt_country_list" inherit_id="website_customer.index" customize_show="True" name="Filter on Countries">
+<template id="opt_country_list" inherit_id="website_customer.index" customize_show="True" name="Filter on Countries" priority="30">
     <xpath expr="//div[@id='ref_left_column']" position="inside">
         <h3>References by Country</h3>
         <ul class="nav nav-pills nav-stacked mt16 mb32">
             <t t-foreach="countries" t-as="country_dict">
                 <t t-if="country_dict['country_id']">
                     <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or None">
-                        <a t-attf-href="/customers/#{ tag and 'tag/%s/' % slug(tag) or '' }#{ country_dict['country_id'][0] and 'country/%s' % slug(country_dict['country_id']) or '' }#{ search_path }">
+                        <a t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ country_dict['country_id'][0] and 'country/%s' % slug(country_dict['country_id']) or '' }#{ search_path }">
                             <span class="badge pull-right" t-esc="country_dict['country_id_count'] or '0'"/>
                             <t t-esc="country_dict['country_id'][1]"/>
                         </a>
@@ -107,20 +127,20 @@
                 </t>
             </t>
         </ul>
-
     </xpath>
 </template>
 
-<template id="opt_tag_list" inherit_id="website_customer.index" customize_show="True" name="Filter on Tags" priority="5">
+
+<template id="opt_tag_list" inherit_id="website_customer.index" customize_show="True" name="Filter on Tags" priority="40">
     <xpath expr="//div[@id='ref_left_column']" position="inside">
 
         <h3 t-if="len(tags)">References by Tag</h3>
         <ul class="nav nav-pills nav-stacked mt16 mb32" t-if="len(tags)">
-            <a class="mr8" t-attf-href="/customers/#{ current_country and 'country/%s' % slug(current_country) or '' }#{ search_path }">
+            <a class="mr8" t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }">
                 <span class="fa fa-1x fa-tags"/> All </a>
             <t t-foreach="tags" t-as="o_tag">
                 <a t-attf-class="label label-#{o_tag.classname}" t-esc="o_tag.name" t-att-style="tag and tag.id==o_tag.id and 'text-decoration: underline'"
-                    t-attf-href="/customers/#{ 'tag/%s/' % slug(o_tag) }#{ current_country and 'country/%s' % slug(current_country)  or '' }#{ search_path }"/>
+                    t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }?tag_id=#{slug(o_tag)}"/>
             </t>
         </ul>
     </xpath>
@@ -160,6 +180,14 @@
  </xpath>
 </template>
 
+<template id="partner_detail" inherit_id="website_partner.partner_detail" name="Partner Details">
+    <xpath expr="//address" position="inside">
+        <t t-if="partner.industry_id">
+            <span class="label label-default"><t t-esc="partner.industry_id.name"/></span>
+        </t>
+    </xpath>
+</template>
+
 <template id="implemented_by_block" name="Partner Implemented By Block">
         <t t-if="partner.assigned_partner_id and partner.assigned_partner_id.website_published">
             <div class="panel panel-default">
@@ -181,7 +209,7 @@
         <address class="well text-left">
              <div t-field="partner.assigned_partner_id" t-options='{
                  "widget": "contact",
-                 "fields": ["address", "website", "phone", "fax", "email"]
+                 "fields": ["address", "website", "phone", "email"]
              }'/>
         </address>
                 </div>
@@ -201,6 +229,9 @@
                     <a class="media-heading" t-attf-href="/customers/#{slug(reference)}">
                         <span t-field="reference.self"/>
                     </a>
+                    <t t-if="reference.industry_id">
+                        <span class="label label-default"><t t-esc="reference.industry_id.name"/></span>
+                    </t>
                     <div t-field='reference.website_short_description'/>
                 </div>
               </t>

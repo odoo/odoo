@@ -3,14 +3,26 @@
 # * website_blog
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2017
+# Talway <9010446@qq.com>, 2017
+# fausthuang <faust_huang@hotmail.com>, 2017
+# n37r06u3 <n37r06u3@gmail.com>, 2017
+# liAnGjiA <liangjia@qq.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# SHOM <shanmuxin@yeah.net>, 2017
+# 菜小蛇 <lttlsnk@gmail.com>, 2017
+# glovebx <ruinning@163.com>, 2017
+# waveyeung <waveyeung@qq.com>, 2017
+# 苏州远鼎 <tiexinliu@126.com>, 2017
+# THL <wt39181819@gmail.com>, 2017
+# 卓忆科技 <zhanghao@jointd.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-23 13:28+0000\n"
-"PO-Revision-Date: 2017-06-23 13:28+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Last-Translator: 卓忆科技 <zhanghao@jointd.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -217,7 +229,8 @@ msgid "Blog Name"
 msgstr "博客名称"
 
 #. module: website_blog
-#: code:addons/website_blog/models/website.py:23
+#: code:addons/website_blog/models/website.py:22
+#: code:addons/website_blog/models/website.py:47
 #: model:ir.model,name:website_blog.model_blog_post
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_form
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
@@ -226,7 +239,13 @@ msgid "Blog Post"
 msgstr "博文"
 
 #. module: website_blog
-#: code:addons/website_blog/models/website.py:27
+#: code:addons/website_blog/models/website.py:53
+#, python-format
+msgid "Blog Post <b>%s</b> seems to be calling this file !"
+msgstr ""
+
+#. module: website_blog
+#: code:addons/website_blog/models/website.py:28
 #, python-format
 msgid "Blog Post <b>%s</b> seems to have a link to this page !"
 msgstr "博客文章 <b>%s</b> 似乎有一个链接到这个网页！"
@@ -239,9 +258,12 @@ msgid "Blog Post Title"
 msgstr "博文标题"
 
 #. module: website_blog
+#: code:addons/website_blog/models/website.py:24
+#: code:addons/website_blog/models/website.py:49
 #: model:ir.actions.act_window,name:website_blog.action_blog_post
 #: model:ir.ui.menu,name:website_blog.menu_page
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_list
+#, python-format
 msgid "Blog Posts"
 msgstr "博文"
 
@@ -268,7 +290,7 @@ msgstr "博客标签"
 #: model:ir.ui.menu,name:website_blog.menu_blog
 #: model:ir.ui.view,arch_db:website_blog.view_blog_blog_list
 msgid "Blogs"
-msgstr "博文"
+msgstr "博客"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
@@ -361,7 +383,7 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: website_blog
-#: model:ir.ui.view,arch_db:website_blog.blog_post_complete
+#: model:ir.ui.view,arch_db:website_blog.blog_edit_options
 msgid "Duplicate"
 msgstr "复制"
 
@@ -503,13 +525,13 @@ msgstr "最近的贡献者"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_write_date
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag___last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog_write_uid
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_write_uid
 msgid "Last Updated by"
-msgstr "最后更新人"
+msgstr "最后更新者"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog_write_date
@@ -538,7 +560,7 @@ msgstr "低"
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Medium"
-msgstr "普通"
+msgstr "媒体"
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_mail_message
@@ -574,7 +596,7 @@ msgstr ""
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_name
 msgid "Name"
-msgstr "名字"
+msgstr "名称"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
@@ -583,7 +605,7 @@ msgstr "变窄"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website_blog.editor.js:21
+#: code:addons/website_blog/static/src/js/website_blog.editor.js:37
 #: model:ir.ui.view,arch_db:website_blog.content_new_blogpost
 #, python-format
 msgid "New Blog Post"
@@ -674,7 +696,7 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
-#: code:addons/website_blog/controllers/main.py:263
+#: code:addons/website_blog/controllers/main.py:270
 #, python-format
 msgid "Public user cannot post comments on blog post."
 msgstr "公众用户不能在博客发表评论。"
@@ -696,14 +718,14 @@ msgid "Published Post"
 msgstr "已发布的帖子"
 
 #. module: website_blog
-#: model:ir.model.fields,field_description:website_blog.field_blog_post_post_date
-msgid "Published date"
-msgstr "发布日期"
-
-#. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Publishing Options"
 msgstr "发布选项"
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_post_date
+msgid "Publishing date"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
@@ -763,11 +785,11 @@ msgid ""
 "Small-sized image of this contact. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr "联系人小尺寸图像。自动缩放为64x64px ，保留纵横比。此字段用于任何需要小图像的场合"
+msgstr "联系人小尺寸图像。自动缩放为64x64px ，保留纵横比。此字段用于任何需要小图像的场合。"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/models/website_blog.py:103
+#: code:addons/website_blog/models/website_blog.py:123
 #: code:addons/website_blog/static/src/js/website.tour.blog.js:52
 #, python-format
 msgid "Start writing here..."
@@ -813,7 +835,7 @@ msgstr "标签名已存在!"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_tag_ids
 #: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_tags
 msgid "Tags"
-msgstr "标签"
+msgstr "摘要"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_teaser
@@ -840,6 +862,13 @@ msgstr ""
 #: model:blog.post,website_meta_description:website_blog.blog_post_1
 msgid "The Future of Emails"
 msgstr "电子邮件的未来"
+
+#. module: website_blog
+#: model:ir.model.fields,help:website_blog.field_blog_post_post_date
+msgid ""
+"The blog post will be visible for your visitors as of this date on the "
+"website if it is set as published."
+msgstr ""
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.latest_blogs
@@ -920,12 +949,12 @@ msgstr "博客地址"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_website_message_ids
 msgid "Website Messages"
-msgstr "网站消息"
+msgstr "网站信息"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_post_website_message_ids
 msgid "Website communication history"
-msgstr "网站沟通历史"
+msgstr "网站沟通记录"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
@@ -1009,4 +1038,4 @@ msgstr "浏览次数"
 #. module: website_blog
 #: model:blog.tag,name:website_blog.blog_tag_2
 msgid "website"
-msgstr ""
+msgstr "网站"

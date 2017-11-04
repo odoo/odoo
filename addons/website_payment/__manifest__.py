@@ -9,12 +9,11 @@
     'depends': [
         'website',
         'payment',
-        'website_portal',
+        'portal',
     ],
     'data': [
         'views/website_payment_view.xml',
         'views/website_payment_templates.xml',
-        'views/res_config_view.xml',
     ],
     'auto_install': False,
 }

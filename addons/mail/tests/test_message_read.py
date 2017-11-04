@@ -10,7 +10,7 @@ class TestMessageRead(TestMail):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def setUp(self):
         super(TestMessageRead, self).setUp()
-        self.user_employee.write({'notify_email': 'none'})
+        self.user_employee.write({'notification_type': 'inbox'})
         self.group_pigs.message_subscribe_users([self.user_employee.id])
         self.msg_0 = self.group_pigs.message_post(body='0', subtype='mt_comment')
         self.msg_1 = self.group_pigs.message_post(body='1', subtype='mt_comment')

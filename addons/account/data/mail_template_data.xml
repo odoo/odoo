@@ -1,0 +1,140 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <!-- Mail template are declared in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="1">
+        <!--Email template -->
+        <record id="email_template_edi_invoice" model="mail.template">
+            <field name="name">Invoicing: Invoice email</field>
+            <field name="email_from">${(object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '')|safe}</field>
+            <field name="subject">${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="model_id" ref="account.model_account_invoice"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="report_template" ref="account_invoices"/>
+            <field name="report_name">Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html" type="html">
+<div>
+<p>Dear ${object.partner_id.name}
+% set access_action = object.with_context(force_website=True).get_access_action()
+% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'
+% set access_url = object.get_mail_url()
+
+% if object.partner_id.parent_id:
+    (<i>${object.partner_id.parent_id.name}</i>)
+% endif
+,</p>
+<p>Here is, in attachment, your 
+% if object.number:
+invoice <strong>${object.number}</strong>
+% else:
+invoice
+% endif
+% if object.origin:
+(with reference: ${object.origin})
+% endif
+amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>
+from ${object.company_id.name}.
+</p>
+
+% if is_online:
+    <br/><br/>
+    <center>
+      <a href="${access_url}" style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;" class="o_default_snippet_text">View Invoice</a>
+    </center>
+% endif
+    <br/><br/>
+
+% if object.state=='paid':
+    <p>This invoice is already paid.</p>
+% else:
+    <p>Please remit payment at your earliest convenience.</p>
+% endif
+
+<p>Thank you,</p>
+<p style="color:#888888">
+% if object.user_id and object.user_id.signature:
+    ${object.user_id.signature | safe}
+% endif
+</p>
+</div></field>
+        </record>
+
+        <!--Default Notification Email template for invoices-->
+        <record id="account.mail_template_data_notification_email_account_invoice" model="mail.template">
+            <field name="name">Account: Invoice notification header</field>
+            <field name="subject">${object.subject}</field>
+            <field name="model_id" ref="mail.model_mail_message"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+<div>
+% set record = ctx.get('record')
+% set company = record and record.company_id or user.company_id
+<table border="0" width="100%" cellpadding="0" bgcolor="#ededed" style="padding: 20px; background-color: #ededed; border-collapse:separate;" summary="o_mail_notification">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;">
+                <tr>
+                    <td valign="middle">
+                        <span style="font-size:20px; color:white; font-weight: bold;">
+                            Invoice ${object.record_name}
+                        </span>
+                    </td>
+                    <td valign="middle" align="right">
+                        <img src="/logo.png?company=${company.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${company.name}"/>
+                    </td>
+                </tr>
+          </table>
+    </td>
+  </tr>
+  <!-- CONTENT -->
+  <tr>
+        <td align="center" style="min-width: 590px;">
+            <table width="590" border="0" cellpadding="0" bgcolor="#ffffff" style="min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px; border-collapse:separate;">
+                <tbody>
+                    <td valign="top" style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;">
+                        ${object.body | safe}
+                    </td>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;">
+                <tr>
+                    <td valign="middle" align="left" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
+                        ${company.name}<br/>
+                        ${company.phone or ''}
+                    </td>
+                    <td valign="middle" align="right" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
+                        % if company.email:
+                        <a href="mailto:${company.email}" style="text-decoration:none; color: white;">${company.email}</a><br/>
+                        % endif
+                        % if company.website:
+                        <a href="${company.website}" style="text-decoration:none; color: white;">
+                        ${company.website}
+                        </a>
+                        % endif
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            Powered by <a target="_blank" href="https://www.odoo.com">Odoo</a>.
+        </td>
+    </tr>
+</tbody>
+</table>
+</div></field>
+        </record>
+
+    </data>
+</odoo>

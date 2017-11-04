@@ -6,90 +6,73 @@ from odoo import api, fields, models
 
 class StockLocationRoute(models.Model):
     _inherit = "stock.location.route"
-
     sale_selectable = fields.Boolean("Selectable on Sales Order Line")
 
 
 class StockMove(models.Model):
     _inherit = "stock.move"
+    sale_line_id = fields.Many2one('sale.order.line', 'Sale Line')
 
-    to_refund_so = fields.Boolean(
-        "To Refund in SO", copy=False, default=False,
-        help='Trigger a decrease of the delivered quantity in the associated Sale Order')
+    @api.model
+    def _prepare_merge_moves_distinct_fields(self):
+        distinct_fields = super(StockMove, self)._prepare_merge_moves_distinct_fields()
+        distinct_fields.append('sale_line_id')
+        return distinct_fields
 
-    @api.multi
-    def action_done(self):
-        result = super(StockMove, self).action_done()
+    @api.model
+    def _prepare_merge_move_sort_method(self, move):
+        move.ensure_one()
+        keys_sorted = super(StockMove, self)._prepare_merge_move_sort_method(move)
+        keys_sorted.append(move.sale_line_id.id)
+        return keys_sorted
 
-        # Update delivered quantities on sale order lines
-        sale_order_lines = self.filtered(lambda move: move.procurement_id.sale_line_id and move.product_id.expense_policy == 'no').mapped('procurement_id.sale_line_id')
-        for line in sale_order_lines:
+    def _action_done(self):
+        result = super(StockMove, self)._action_done()
+        for line in self.mapped('sale_line_id'):
             line.qty_delivered = line._get_delivered_qty()
         return result
 
     @api.multi
-    def assign_picking(self):
-        result = super(StockMove, self).assign_picking()
-        for move in self:
-            if move.picking_id and move.picking_id.group_id:
-                picking = move.picking_id
-                order = self.env['sale.order'].sudo().search([('procurement_group_id', '=', picking.group_id.id)])
-                picking.message_post_with_view(
-                    'mail.message_origin_link',
-                    values={'self': picking, 'origin': order},
-                    subtype_id=self.env.ref('mail.mt_note').id)
+    def write(self, vals):
+        res = super(StockMove, self).write(vals)
+        if 'product_uom_qty' in vals:
+            for move in self:
+                if move.state == 'done':
+                    sale_order_lines = self.filtered(lambda move: move.sale_line_id and move.product_id.expense_policy == 'no').mapped('sale_line_id')
+                    for line in sale_order_lines:
+                        line.qty_delivered = line._get_delivered_qty()
+        return res
+
+
+class ProcurementGroup(models.Model):
+    _inherit = 'procurement.group'
+
+    sale_id = fields.Many2one('sale.order', 'Sale Order')
+
+
+class ProcurementRule(models.Model):
+    _inherit = 'procurement.rule'
+
+    def _get_stock_move_values(self, product_id, product_qty, product_uom, location_id, name, origin, values, group_id):
+        result = super(ProcurementRule, self)._get_stock_move_values(product_id, product_qty, product_uom, location_id, name, origin, values, group_id)
+        if values.get('sale_line_id', False):
+            result['sale_line_id'] = values['sale_line_id']
         return result
 
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    sale_id = fields.Many2one('sale.order', "Sale Order", compute='_compute_sale_id', search='_search_sale_id')
-
-    @api.one
-    @api.depends('move_lines.procurement_id.sale_line_id.order_id')
-    def _compute_sale_id(self):
-        for move in self.move_lines:
-            if move.procurement_id.sale_line_id:
-                self.sale_id = move.procurement_id.sale_line_id.order_id
-                return
-
-    def _search_sale_id(self, operator, value):
-        moves = self.env['stock.move'].search(
-            [('picking_id', '!=', False), ('procurement_id.sale_line_id.order_id', operator, value)]
-        )
-        return [('id', 'in', moves.mapped('picking_id').ids)]
+    sale_id = fields.Many2one(related="group_id.sale_id", string="Sales Order", store=True)
 
     @api.multi
     def _create_backorder(self, backorder_moves=[]):
         res = super(StockPicking, self)._create_backorder(backorder_moves)
         for picking in self.filtered(lambda pick: pick.picking_type_id.code == 'outgoing'):
             backorder = picking.search([('backorder_id', '=', picking.id)])
-            if backorder.group_id: # origin from a sale
-                order = self.env['sale.order'].search([('procurement_group_id', '=', backorder.group_id.id)])
+            if backorder.sale_id:
                 backorder.message_post_with_view(
                     'mail.message_origin_link',
-                    values={'self': backorder, 'origin': order},
+                    values={'self': backorder, 'origin': backorder.sale_id},
                     subtype_id=self.env.ref('mail.mt_note').id)
         return res
-
-
-class StockReturnPicking(models.TransientModel):
-    _inherit = "stock.return.picking"
-
-    @api.multi
-    def _create_returns(self):
-        new_picking_id, pick_type_id = super(StockReturnPicking, self)._create_returns()
-        new_picking = self.env['stock.picking'].browse([new_picking_id])
-        for move in new_picking.move_lines:
-            return_picking_line = self.product_return_moves.filtered(lambda r: r.move_id == move.origin_returned_move_id)
-            if return_picking_line and return_picking_line.to_refund_so:
-                move.to_refund_so = True
-
-        return new_picking_id, pick_type_id
-
-
-class StockReturnPickingLine(models.TransientModel):
-    _inherit = "stock.return.picking.line"
-
-    to_refund_so = fields.Boolean(string="To Refund", help='Trigger a decrease of the delivered quantity in the associated Sale Order')

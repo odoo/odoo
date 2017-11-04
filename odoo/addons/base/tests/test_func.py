@@ -4,7 +4,7 @@
 import functools
 import unittest
 
-from odoo.tools import frozendict
+from odoo.tools import frozendict, pycompat
 from odoo.tools.func import compose
 
 
@@ -16,7 +16,7 @@ class TestCompose(unittest.TestCase):
     def test_decorator(self):
         """ ensure compose() can be partially applied as a decorator
         """
-        @functools.partial(compose, unicode)
+        @functools.partial(compose, pycompat.text_type)
         def mul(a, b):
             return a * b
 

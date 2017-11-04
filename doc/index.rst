@@ -14,7 +14,7 @@ Index
     :maxdepth: 2
 
     tutorials
-    api_integration
+    webservices
     setup
     reference
 

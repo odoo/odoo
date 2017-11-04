@@ -40,14 +40,14 @@
             <field name="model">test_new_api.discussion</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <form string="Discussion" version="7.0">
+                <form string="Discussion">
                     <sheet>
                         <group>
                             <field name="name"/>
                             <!--
                                 Bug if the view contains at least 5 fields.
                                 The order of the dic values changes and the _check_author constraint raise.
-                                <field name="categories" widget="many2many_tags"/>
+                                <field name="categories" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             -->
                             <field name="moderator"/>
                         </group>
@@ -59,7 +59,7 @@
                                         <field name="body"/>
                                         <field name="important"/>
                                     </tree>
-                                    <form string="Message" version="7.0">
+                                    <form string="Message">
                                         <group>
                                             <field name="name"/>
                                             <field name="author"/>
@@ -79,7 +79,7 @@
                                         <field name="important"/>
                                         <field name="email_to"/>
                                     </tree>
-                                    <form string="Important Message" version="7.0">
+                                    <form string="Important Message">
                                         <group>
                                             <field name="name"/>
                                             <field name="author"/>
@@ -114,11 +114,11 @@
             <field name="model">test_new_api.discussion</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <form string="Discussion" version="7.0">
+                <form string="Discussion">
                     <sheet>
                         <group>
                             <field name="name"/>
-                            <field name="categories" widget="many2many_tags"/>
+                            <field name="categories" widget="many2many_tags" options="{'color_field': 'color'}"/>
                         </group>
                         <notebook>
                             <page string="Messages">
@@ -158,7 +158,7 @@
             <field name="model">test_new_api.discussion</field>
             <field name="priority" eval="11"/>
             <field name="arch" type="xml">
-                <form string="Discussion" version="7.0">
+                <form string="Discussion">
                     <sheet>
                         <group>
                             <field name="name" context="{'generate_dummy_message': True}"/>
@@ -207,7 +207,7 @@
             <field name="name">message form view</field>
             <field name="model">test_new_api.message</field>
             <field name="arch" type="xml">
-                <form string="Message" version="7.0">
+                <form string="Message">
                     <sheet>
                         <group>
                             <field name="discussion"/>
@@ -238,7 +238,7 @@
             <field name="name">category form view</field>
             <field name="model">test_new_api.category</field>
             <field name="arch" type="xml">
-                <form string="Category" version="7.0">
+                <form string="Category">
                     <sheet>
                         <group>
                             <field name="name"/>
@@ -267,7 +267,7 @@
             <field name="name">multi form view</field>
             <field name="model">test_new_api.multi</field>
             <field name="arch" type="xml">
-                <form string="Multi" version="7.0">
+                <form string="Multi">
                     <sheet>
                         <group>
                             <field name="name"/>
@@ -275,10 +275,21 @@
                         </group>
                         <label for="lines"/>
                         <field name="lines">
-                            <tree string="Lines" editable="1">
+                            <tree string="Lines">
                                 <field name="name"/>
                                 <field name="partner"/>
                             </tree>
+                            <form string="Lines">
+                                <group>
+                                    <field name="name"/>
+                                    <field name="partner"/>
+                                </group>
+                                <field name="tags">
+                                    <tree string="Tags" editable="1">
+                                        <field name="name"/>
+                                    </tree>
+                                </field>
+                            </form>
                         </field>
                     </sheet>
                 </form>

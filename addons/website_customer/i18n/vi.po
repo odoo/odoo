@@ -3,19 +3,19 @@
 # * website_customer
 # 
 # Translators:
-# lam nguyen <lamev.inc@gmail.com>, 2016
-# fanha99 <fanha99@hotmail.com>, 2016
-# Phạm Lân <phamquanglan@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# son dang <son.dang@doda100.com>, 2016
-# Hoang Loc Le Huu <loclhh@gmail.com>, 2016
+# fanha99 <fanha99@hotmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# son dang <son.dang@doda100.com>, 2017
+# Hoang Loc Le Huu <loclhh@gmail.com>, 2017
+# lam nguyen <lamev.inc@gmail.com>, 2017
+# Phạm Lân <phamquanglan@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Hoang Loc Le Huu <loclhh@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"Last-Translator: Phạm Lân <phamquanglan@gmail.com>, 2017\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,10 +34,16 @@ msgid "Active"
 msgstr "Có hiệu lực"
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:65
+#: code:addons/website_customer/controllers/main.py:80
 #, python-format
 msgid "All Countries"
 msgstr "Tất cả Quốc gia"
+
+#. module: website_customer
+#: code:addons/website_customer/controllers/main.py:61
+#, python-format
+msgid "All Sectors of Activity"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag_classname
@@ -58,6 +64,11 @@ msgstr ""
 #: model:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid "Click to create a new partner tag."
 msgstr ""
+
+#. module: website_customer
+#: model:ir.model,name:website_customer.model_res_partner
+msgid "Contact"
+msgstr "Liên hệ"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_create_uid
@@ -119,11 +130,6 @@ msgid "Our References"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model,name:website_customer.model_res_partner
-msgid "Partner"
-msgstr "Đối tác"
-
-#. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.view_partner_tag_form
 msgid "Partner Tag"
 msgstr "Partner Tag"
@@ -148,6 +154,11 @@ msgstr "Các tham chiếu"
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.opt_country_list
 msgid "References by Country"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.ui.view,arch_db:website_customer.opt_industry_list
+msgid "References by Sectors of Activity"
 msgstr ""
 
 #. module: website_customer
@@ -180,6 +191,7 @@ msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_website_tag_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_users_website_tag_ids
 msgid "Website tags"
 msgstr ""
 

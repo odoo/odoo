@@ -1,6 +1,17 @@
 @odoo-datepicker-week-color: #8f8f8f;
 @odoo-datepicker-week-bg-color: lighten(@odoo-datepicker-week-color, 30%);
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
+
 .o_datepicker {
     position: relative;
 
@@ -15,6 +26,13 @@
             .o-caret-down;
         }
     }
+}
+
+// Need to put datetimepicker widget above everything else
+// The '.dropdown-menu' part is needed to override default bootstrap rule as
+// this file is unfortunately placed in common assets.
+.bootstrap-datetimepicker-widget.dropdown-menu {
+    z-index: @zindex-modal + 1;
 }
 
 .datepicker {
@@ -55,5 +73,5 @@
                 }
             }
         }
-    } 
+    }
 }

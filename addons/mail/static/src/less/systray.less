@@ -8,17 +8,23 @@
     }
     &.o_no_notification > a {
         opacity: 0.5;
+        > i {
+            .o-transform(translateY(0px));
+        }
         .o_notification_counter {
             display: none;
         }
     }
-    &.o_unread_chat > a > i {
-        color: @odoo-brand-optional;
-    }
-
     &.open .o_mail_navbar_dropdown {
         .o-flex-display();
         .o-flex-flow(column, nowrap);
+    }
+    .o_notification_counter {
+        .o-position-absolute(@top: 20%, @right: 1px);
+        background: @odoo-brand-optional;
+        color: white;
+        padding: 0em 0.3em;
+        font-size: 0.7em;
     }
     .o_mail_navbar_dropdown {
         width: 350px;
@@ -36,18 +42,18 @@
             .o-flex-display();
             .o-flex(0, 0, auto);
             justify-content: space-between;
-            border-bottom: 1px solid lightgray;
-
+            border-bottom: 1px solid @gray-lighter-darker;
+            box-shadow: 0 0 2px @gray-lighter-darker;
             .o_filter_button, .o_new_message {
                 .btn-link;
                 padding: 5px;
             }
             .o_filter_button {
                 color: @odoo-main-color-muted;
-                &:hover, &.o_selected {
+                &:hover, &.active {
                     color: @odoo-brand-optional;
                 }
-                &.o_selected {
+                &.active {
                     cursor: default;
                     font-weight: bold;
                 }
@@ -60,62 +66,74 @@
             min-height: 50px;
             overflow-y: auto;
 
-            @media (max-width: @screen-xs-max) {
-                max-height: none;
-            }
-
-            .o_mail_channel_preview {
-                .o-flex-display();
-                height: 50px;
-                align-items: center;
-                padding: 5px;
-                cursor: pointer;
-                font-size: 12px;
-                overflow: hidden;
-                &~.o_mail_channel_preview {
-                    border-top: 1px solid lightgray;
-                }
-                &.o_channel_unread {
-                    background-color: lighten(lightgray, 10%);
-                }
-                &:hover {
-                    background-color: lighten(lightgray, 5%);
-                }
-
-                .o_channel_image {
-                    .o-flex(0, 0, 36px);
-                    max-height: 36px;
-                }
-                .o_channel_info {
-                    .o-flex(1, 1, 100%);
-                    margin-left: 5px;
-                    overflow: hidden;
-
-                    .o_channel_title {
-                        .o-flex-display();
-                        .o_channel_name {
-                            .o-flex(1, 1, auto);
-                            .o-text-overflow();
-                            color: @odoo-main-text-color;
-                        }
-                        .o_last_message_date {
-                            .o-flex(0, 0, auto);
-                            padding-top: 3px;
-                            font-size: xx-small;
-                            color: @odoo-main-color-muted;
-                        }
+            @media (min-width: @screen-sm-min) {
+                .o_mail_channel_preview {
+                    height: 50px;
+                    padding: 5px;
+                    .o_mail_channel_image {
+                        width: 40px;
                     }
-                    .o_last_message_preview {
-                        width: 100%;
-                        color: @odoo-main-color-muted;
-                        .o-text-overflow();
+                    .o_channel_info {
+                        margin-left: 10px;
+                        .o_channel_title {
+                            .o_last_message_date {
+                                padding-top: 2px;
+                                font-size: x-small;
+                                margin-left: 10px;
+                            }
+                        }
                     }
                 }
             }
+        }
+        .o_activity_filter_button {
+            .btn-link;
+            padding: 2px;
+        }
+        .o_no_activity {
+            cursor: initial;
+            .o-align-items(center);
+            color: grey;
+            opacity: 0.5;
+            padding: 3px;
         }
     }
 }
 
 .o_no_chat_window .o_mail_navbar_dropdown .o_new_message {
     display: none;  // hide 'new message' button if chat windows are disabled
+}
+
+// Mobile rules
+// Goal: mock the design of Discuss in mobile
+@media (max-width: @screen-xs-max) {
+    .o_mail_navbar_item {
+        .o_notification_counter {
+            top: 10%;
+        }
+        .o_mail_navbar_dropdown {
+            position: relative;
+            .o_mail_navbar_dropdown_top {
+                padding: 5px;
+            }
+            .o_mail_navbar_mobile_header {
+                padding: 5px;
+                height: 44px;
+                border-bottom: 1px solid #ebebeb;
+                box-shadow: 0 0 2px @gray-lighter-darker;
+            }
+            .o_mail_navbar_dropdown_channels {
+                max-height: none;
+                padding-bottom: 52px; // leave space for tabs
+            }
+            .o_mail_mobile_tabs {
+                position: fixed;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+                background-color: white;
+                color: @odoo-main-text-color;
+            }
+        }
+    }
 }

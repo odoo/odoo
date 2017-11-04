@@ -2,7 +2,7 @@ odoo.define('web.datepicker', function (require) {
 "use strict";
 
 var core = require('web.core');
-var formats = require('web.formats');
+var field_utils = require('web.field_utils');
 var time = require('web.time');
 var Widget = require('web.Widget');
 
@@ -12,10 +12,13 @@ var DateWidget = Widget.extend({
     template: "web.datepicker",
     type_of_date: "date",
     events: {
-        'dp.change': 'change_datetime',
-        'dp.show': 'set_datetime_default',
-        'change .o_datepicker_input': 'change_datetime',
+        'dp.change': 'changeDatetime',
+        'dp.show': '_onShow',
+        'change .o_datepicker_input': 'changeDatetime',
     },
+    /**
+     * @override
+     */
     init: function(parent, options) {
         this._super.apply(this, arguments);
 
@@ -23,95 +26,168 @@ var DateWidget = Widget.extend({
 
         this.name = parent.name;
         this.options = _.defaults(options || {}, {
-            pickTime: this.type_of_date === 'datetime',
-            useSeconds: this.type_of_date === 'datetime',
-            startDate: moment({ y: 1900 }),
-            endDate: moment().add(200, "y"),
+            format : time.strftime_to_moment_format((this.type_of_date === 'datetime')? (l10n.date_format + ' ' + l10n.time_format) : l10n.date_format),
+            minDate: moment({ y: 1900 }),
+            maxDate: moment().add(200, "y"),
             calendarWeeks: true,
             icons: {
                 time: 'fa fa-clock-o',
                 date: 'fa fa-calendar',
+                next: 'fa fa-chevron-right',
+                previous: 'fa fa-chevron-left',
                 up: 'fa fa-chevron-up',
-                down: 'fa fa-chevron-down'
+                down: 'fa fa-chevron-down',
+                close: 'fa fa-times',
             },
-            language : moment.locale(),
-            format : time.strftime_to_moment_format((this.type_of_date === 'datetime')? (l10n.date_format + ' ' + l10n.time_format) : l10n.date_format),
+            locale : moment.locale(),
+            allowInputToggle: true,
+            keyBinds: null,
+            widgetParent: 'body',
+            useCurrent: false,
         });
     },
+    /**
+     * @override
+     */
     start: function() {
         this.$input = this.$('input.o_datepicker_input');
-        this.$el.datetimepicker(this.options);
-        this.picker = this.$el.data('DateTimePicker');
-        this.set_readonly(false);
-        this.set_value(false);
+        this.$input.focus(function(e) {
+            e.stopImmediatePropagation();
+        });
+        this.$input.datetimepicker(this.options);
+        this.picker = this.$input.data('DateTimePicker');
+        this.$input.click(this.picker.toggle.bind(this.picker));
+        this._setReadonly(false);
     },
-    set_value: function(value) {
-        this.set({'value': value});
-        this.$input.val((value)? this.format_client(value) : '');
-        this.picker.setValue(this.format_client(value));
+    /**
+     * @override
+     */
+    destroy: function() {
+        this.picker.destroy();
+        this._super.apply(this, arguments);
     },
-    get_value: function() {
-        return this.get('value');
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * set datetime value
+     */
+    changeDatetime: function () {
+        if (this.isValid()) {
+            var oldValue = this.getValue();
+            this._setValueFromUi();
+            var newValue = this.getValue();
+
+            if (!oldValue !== !newValue || oldValue && newValue && !oldValue.isSame(newValue)) {
+                // The condition is strangely written; this is because the
+                // values can be false/undefined
+                this.trigger("datetime_changed");
+            }
+        }
     },
-    set_value_from_ui: function() {
-        var value = this.$input.val() || false;
-        this.set_value(this.parse_client(value));
+    /**
+     * @returns {Moment|false}
+     */
+    getValue: function () {
+        var value = this.get('value');
+        return value && value.clone();
     },
-    set_readonly: function(readonly) {
-        this.readonly = readonly;
-        this.$input.prop('readonly', this.readonly);
-    },
-    is_valid: function() {
+    /**
+     * @returns {boolean}
+     */
+    isValid: function () {
         var value = this.$input.val();
         if(value === "") {
             return true;
         } else {
             try {
-                this.parse_client(value);
+                this._parseClient(value);
                 return true;
             } catch(e) {
                 return false;
             }
         }
     },
-    parse_client: function(v) {
-        return formats.parse_value(v, {"widget": this.type_of_date});
+    /**
+     * @param {Moment|false} value
+     */
+    setValue: function (value) {
+        this.set({'value': value});
+        var formatted_value = value ? this._formatClient(value) : null;
+        this.$input.val(formatted_value);
+        if (this.picker) {
+            this.picker.date(value || null);
+        }
     },
-    format_client: function(v) {
-        return formats.format_value(v, {"widget": this.type_of_date});
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Moment} v
+     * @returns {string}
+     */
+    _formatClient: function (v) {
+        return field_utils.format[this.type_of_date](v, null, {timezone: false});
     },
-    set_datetime_default: function() {
+    /**
+     * @private
+     * @param {string|false} v
+     * @returns {Moment}
+     */
+    _parseClient: function (v) {
+        return field_utils.parse[this.type_of_date](v, null, {timezone: false});
+    },
+    /**
+     * @private
+     * @param {boolean} readonly
+     */
+    _setReadonly: function (readonly) {
+        this.readonly = readonly;
+        this.$input.prop('readonly', this.readonly);
+    },
+    /**
+     * set the value from the input value
+     *
+     * @private
+     */
+    _setValueFromUi: function() {
+        var value = this.$input.val() || false;
+        this.setValue(this._parseClient(value));
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * set the date of the picker by the current date or the today date
+     *
+     * @private
+     */
+    _onShow: function () {
         //when opening datetimepicker the date and time by default should be the one from
         //the input field if any or the current day otherwise
-        var value = moment().second(0);
-        if(this.$input.val().length !== 0 && this.is_valid()) {
-            value = this.$input.val();
+        if(this.$input.val().length !== 0 && this.isValid()) {
+            var value = this._parseClient(this.$input.val());
+            this.picker.date(value);
+            this.$input.select();
         }
-
-        // temporarily set pickTime to true to bypass datetimepicker hiding on setValue
-        // see https://github.com/Eonasdan/bootstrap-datetimepicker/issues/603
-        var saved_picktime = this.picker.options.pickTime;
-        this.picker.options.pickTime = true;
-        this.picker.setValue(value);
-        this.picker.options.pickTime = saved_picktime;
-    },
-    change_datetime: function(e) {
-        if(this.is_valid()) {
-            this.set_value_from_ui();
-            this.trigger("datetime_changed");
-        }
-    },
-    commit_value: function() {
-        this.change_datetime();
-    },
-    destroy: function() {
-        this.picker.destroy();
-        this._super.apply(this, arguments);
     },
 });
 
 var DateTimeWidget = DateWidget.extend({
-    type_of_date: "datetime"
+    type_of_date: "datetime",
+    init: function() {
+        this._super.apply(this, arguments);
+        this.options = _.defaults(this.options, {
+            showClose: true,
+        });
+    },
 });
 
 return {

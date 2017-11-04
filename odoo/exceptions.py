@@ -12,7 +12,7 @@ If you consider introducing new exceptions, check out the test_exceptions addon.
 
 import logging
 from inspect import currentframe
-from tools.func import frame_codeinfo
+from .tools.func import frame_codeinfo
 
 _logger = logging.getLogger(__name__)
 

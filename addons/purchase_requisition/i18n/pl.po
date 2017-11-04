@@ -3,21 +3,22 @@
 # * purchase_requisition
 # 
 # Translators:
-# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2016
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
-# zbik2607 <darek@krokus.com.pl>, 2016
-# Arek Smagacz <arek.smagacz@gmail.com>, 2016
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
-# Zdzisław Krajewski <zdzichucb@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2017
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2017
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2017
+# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2017
+# zbik2607 <darek@krokus.com.pl>, 2017
+# Arek Smagacz <arek.smagacz@gmail.com>, 2017
+# Zdzisław Krajewski <zdzichucb@gmail.com>, 2017
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2017
+# Paweł Michoń <michon.pawel@wp.pl>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:54+0000\n"
-"PO-Revision-Date: 2016-11-14 15:54+0000\n"
-"Last-Translator: Zdzisław Krajewski <zdzichucb@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Paweł Michoń <michon.pawel@wp.pl>, 2017\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,10 +97,15 @@ msgid "Agreement Selection Type"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10833
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10513
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_name
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.res_config_settings_view_form
+msgid "Agreement Types"
 msgstr ""
 
 #. module: purchase_requisition
@@ -119,7 +125,7 @@ msgid "Blanket Order"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.actions.report.xml,name:purchase_requisition.action_report_purchase_requisitions
+#: model:ir.actions.report,name:purchase_requisition.action_report_purchase_requisitions
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Call for Tenders"
 msgstr ""
@@ -135,7 +141,7 @@ msgid "Cancelled"
 msgstr "Anulowano"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:76
+#: code:addons/purchase_requisition/models/purchase_requisition.py:82
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
@@ -172,14 +178,14 @@ msgstr "Utwórz projekt zamówienia zakupu"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_create_uid
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_create_uid
 msgid "Created by"
-msgstr "Utworzona przez"
+msgstr "Utworzone przez"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_date
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_create_date
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_create_date
 msgid "Created on"
-msgstr "Data utworzenia"
+msgstr "Utworzono"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
@@ -216,10 +222,15 @@ msgid "Done"
 msgstr "Wykonano"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_move_dest_id
+msgid "Downstream Move"
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 #: selection:purchase.requisition,state:0
 msgid "Draft"
-msgstr "Projekt"
+msgstr "Szkic"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -285,12 +296,7 @@ msgstr "Ostatnio aktualizowane przez"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_write_date
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_write_date
 msgid "Last Updated on"
-msgstr "Data ostatniej aktualizacji"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_procurement_order_requisition_id
-msgid "Latest Requisition"
-msgstr "Ostatnie zlecenie"
+msgstr "Ostatnia aktualizacja"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_line_copy
@@ -318,6 +324,11 @@ msgid "Number of Orders"
 msgstr ""
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_picking_type_id
+msgid "Operation Type"
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_qty_ordered
 msgid "Ordered Quantities"
 msgstr ""
@@ -329,16 +340,15 @@ msgid "Ordering Date"
 msgstr "Data zamawiania"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_picking_type_id
-msgid "Picking Type"
-msgstr "Typ pobrania"
-
-#. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_procurement_order
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_product_purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_template_purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_procurement_id
 msgid "Procurement"
 msgstr "Zapotrzebowanie"
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_procurement_rule
+msgid "Procurement Rule"
+msgstr "Reguła zapotrzebowania"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_product_id
@@ -430,12 +440,6 @@ msgid "Purchase Requisition Line"
 msgstr "Pozycja zlecenia zakupu"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:315
-#, python-format
-msgid "Purchase Requisition created"
-msgstr "Zakup rekwizycji utworzona"
-
-#. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_multi
 msgid "Purchase Tender"
 msgstr ""
@@ -458,6 +462,11 @@ msgstr "Ilość"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "RFQs/Orders"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.product_template_form_view_inherit
+msgid "Reordering"
 msgstr ""
 
 #. module: purchase_requisition
@@ -597,13 +606,13 @@ msgid "Warehouse"
 msgstr "Magazyn"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:82
+#: code:addons/purchase_requisition/models/purchase_requisition.py:88
 #, python-format
 msgid "You cannot confirm call because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:99
+#: code:addons/purchase_requisition/models/purchase_requisition.py:105
 #, python-format
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
@@ -613,4 +622,4 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "e.g. PO0025"
-msgstr "e.g. PO0025"
+msgstr "np. PO0025"

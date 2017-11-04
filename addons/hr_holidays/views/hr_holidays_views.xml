@@ -6,7 +6,7 @@
                 <field name="name">hr.holidays.graph</field>
                 <field name="model">hr.holidays</field>
                 <field name="arch" type="xml">
-                <graph string="Appraisal Analysis" type="pivot" stacked="True">
+                <graph string="Appraisal Analysis" stacked="True">
                     <field name="employee_id" type="row"/>
                     <field name="holiday_status_id" type="row"/>
                     <field name="date_from" type="col"/>
@@ -24,7 +24,7 @@
                     <filter domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
                     <filter string="Approved Leaves" domain="[('state', '=', 'validate')]" name="validated"/>
                     <separator/>
-                    <filter name="active_types" string="Active Types" domain="[('holiday_status_id.active', '=', True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
+                    <filter name="active_types" string="Active Types" domain="[('holiday_status_id.active', '=', True)]" help="Filters only on allocations and requests that belong to an leave type that is 'active' (active field is True)"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <separator/>
@@ -49,7 +49,8 @@
                         <filter name="group_name" string="Description" context="{'group_by':'name'}"/>
                         <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
                         <filter name="group_category" string="Category" context="{'group_by':'category_id'}"/>
-                        <filter string="Manager" context="{'group_by':'manager_id'}"/>
+                        <filter name="group_manager" string="Manager" context="{'group_by':'manager_id'}"/>
+                        <filter name="group_second_approver_id" string="Validator" context="{'group_by':'second_approver_id'}"/>
                         <filter name="group_type" string="Type" context="{'group_by':'holiday_status_id'}"/>
                         <separator/>
                         <filter name="group_date_from" string="Start Month" context="{'group_by':'date_from'}"/>
@@ -64,10 +65,7 @@
             <field name="name">Leave Request</field>
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
-                <calendar string="Leave Request" color="employee_id"
-                          date_start="date_from" date_stop="date_to"
-                          mode="month"
-                          quick_add="False" avatar_model="hr.employee">
+                <calendar string="Leave Request" date_start="date_from" date_stop="date_to" mode="month" quick_add="False" color="employee_id">
                     <field name="display_name"/>
                 </calendar>
             </field>
@@ -168,10 +166,8 @@
                     <field name="date_to" required="1"/>
                     <field name="number_of_days_temp" string="Allocated Days" sum="Remaining Days"/>
                     <field name="state"/>
-                    <button name="toggle_payslip_status" field_name="payslip_status" type="object"
-                        widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr_holidays.group_hr_holidays_manager"/>
+                    <field name="payslip_status" widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr_holidays.group_hr_holidays_manager"/>
                     <field name="report_note" groups="hr_holidays.group_hr_holidays_manager"/>
-                    <field name="payslip_status" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -198,6 +194,60 @@
             </field>
         </record>
 
+        <record id="view_hr_holidays_kanban" model="ir.ui.view">
+            <field name="name">hr.holidays.kanban</field>
+            <field name="model">hr.holidays</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="employee_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="name"/>
+                    <field name="number_of_days"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div>
+                                    <span>
+                                        <img t-att-src="kanban_image('hr.employee', 'image_small', record.employee_id.raw_value)" t-att-title="record.employee_id.value" width="40" height="40" class="oe_kanban_avatar pull-left mr4"/>
+                                    </span>
+                                    <span>
+                                        <div>
+                                            <strong class="o_kanban_record_title"><t t-esc="record.employee_id.value"/></strong>
+                                            <span class="pull-right">
+                                                <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'validate': 'success','confirm': 'default', 'cancel': 'danger'}}"/>
+                                            </span>
+                                        </div>
+                                        <div class="text-muted o_kanban_record_subtitle">
+                                            <t t-esc="record.name.value"/>
+                                        </div>
+                                    </span>
+                                </div>
+                                <hr class="mt4 mb8"/>
+                                <div class="o_kanban_record_bottom mt8 mb4">
+                                    <div t-attf-class="oe_kanban_bottom_left #{record.date_from.value ? 'mt8 mb4': ''}">
+                                        <table class="text-right" t-if="record.date_from.value">
+                                            <tr>
+                                                <td style="padding-bottom:4px"><small class="text-muted">from</small></td>
+                                                <td style="padding:0 0 4px 4px"><t t-esc="record.date_from.value"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><small class="text-muted">to</small></td>
+                                                <td style="padding-left:4px"><t t-esc="record.date_to.value"/></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div t-attf-class="oe_kanban_bottom_right #{record.date_from.value ? 'mt8': ''}">
+                                        <span class="badge"><t t-esc="record.number_of_days.value"/> days</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="view_holiday_employee" model="ir.ui.view">
             <field name="name">hr.holidays.report_employee_tree</field>
             <field name="model">hr.holidays</field>
@@ -212,10 +262,8 @@
                     <field name="date_to"/>
                     <field name="holiday_status_id"/>
                     <field name="state"/>
-                    <button name="toggle_payslip_status" field_name="payslip_status" type="object"
-                        widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr_holidays.group_hr_holidays_manager"/>
+                    <field name="payslip_status" widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr_holidays.group_hr_holidays_manager"/>
                     <field name="report_note"/>
-                    <field name="payslip_status" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -234,9 +282,7 @@
                     <field name="date_to"/>
                     <field name="number_of_days" string="Number of Days" sum="Remaining Days"/>
                     <field name="state"/>
-                    <field name="payslip_status" invisible="1"/>
-                    <button name="toggle_payslip_status" field_name="payslip_status" type="object"
-                        widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr_holidays.group_hr_holidays_manager"/>
+                    <field name="payslip_status" widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr_holidays.group_hr_holidays_manager"/>
                     <field name="category_id" invisible="1"/>
                     <field name="department_id" invisible="not context.get('set_visible',False)"/>
                     <field name="manager_id" invisible="1"/>
@@ -286,7 +332,7 @@
 
         <menuitem
             id="menu_hr_holidays_report"
-            name="Reports"
+            name="Reporting"
             parent="menu_hr_holidays_root"
             sequence="99"
             groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"/>
@@ -312,7 +358,7 @@
               </p><p>
                 Once you have recorded your leave request, it will be sent
                 to a manager for validation. Be sure to set the right leave
-                type (recuperation, legal holidays, sickness) and the exact
+                type (recuperation, legal leaves, sickness) and the exact
                 number of open days related to your leave.
               </p>
             </field>
@@ -382,6 +428,7 @@
             <field name="name">Allocation Request</field>
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="context">{
                 'default_type':'add',
                 'search_default_my_leaves': 1,
@@ -456,7 +503,7 @@
             <field name="name">Leaves Summary</field>
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" eval="view_holiday_simple"/>
             <field name="context">{
                 'search_default_group_type': 1,
@@ -490,7 +537,7 @@
             <field name="name">Leave Details</field>
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="view_id" eval="view_holiday_employee"/>
             <field name="context">{'default_type': 'remove', 'search_default_todo': 1}</field>
             <field name="help" type="html">
@@ -572,19 +619,26 @@
             <field name="model">hr.holidays.status</field>
             <field name="arch" type="xml">
                 <form string="Leave Type">
-                    <group>
-                        <group name="selection">
-                            <field name="name"/>
-                            <field name="double_validation"/>
-                            <field name="limit"/>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <group>
+                            <group name="description" string="Description">
+                                <field name="name"/>
+                                <field name="double_validation"/>
+                                <field name="limit"/>
+                            </group>
+                            <group name="options" string="Options">
+                                <field name="categ_id"/>
+                                <field name="color_name"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
                         </group>
-                        <group name="second">
-                            <field name="categ_id"/>
-                            <field name="color_name"/>
-                            <field name="active"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
-                        </group>
-                    </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -599,6 +653,28 @@
                     <field name="leaves_taken"/>
                     <field name="remaining_leaves"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="hr_holiday_status_view_kanban" model="ir.ui.view">
+            <field name="name">hr.holidays.status.kanban</field>
+            <field name="model">hr.holidays.status</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div>
+                                    <strong><field name="name"/></strong>
+                                </div>
+                                <div>
+                                    <span>Max Leaves: <field name="max_leaves"/></span>
+                                    <span class="pull-right">Leaves Taken: <field name="leaves_taken"/></span>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
             </field>
         </record>
 
@@ -630,7 +706,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.holidays.status</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" eval="view_holiday_status_normal_tree"/>
             <field name="search_view_id" ref="view_hr_holidays_status_search"/>
         </record>
@@ -698,14 +774,6 @@
        </record>
 
 
-        <act_window
-            id="act_hr_leave_request_to_meeting"
-            name="Leave Meetings"
-            src_model="hr.holidays"
-            res_model="calendar.event"
-            view_mode="tree,form,calendar"
-            view_type="form"/>
-
         <record id="hr_holidays_action_request_from_department" model="ir.actions.act_window">
             <field name="name">Leave Request to Approve</field>
             <field name="res_model">hr.holidays</field>
@@ -754,7 +822,7 @@
             <field name="name">Leaves Analysis</field>
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
-            <field name="view_mode">pivot,graph</field>
+            <field name="view_mode">graph,pivot</field>
             <field name="domain">[('holiday_type','=','employee')]</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
@@ -763,7 +831,7 @@
             <field name="name">Leaves Analysis</field>
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
-            <field name="view_mode">pivot,graph</field>
+            <field name="view_mode">graph,pivot</field>
             <field name="domain">[('holiday_type','=','employee')]</field>
             <field name="context">{
                 'search_default_department_id': [active_id],

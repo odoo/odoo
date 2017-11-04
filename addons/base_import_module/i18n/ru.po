@@ -3,18 +3,18 @@
 # * base_import_module
 # 
 # Translators:
-# KingOPl Slav <87slava13@gmail.com>, 2016
-# Максим Дронь <dronmax@gmail.com>, 2016
-# Harry <harrierr@mail.ru>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Sergey Vilizhanin <sv@grimmette.ru>, 2016
+# Martin Trigaux <mat@odoo.com>, 2017
+# Harry <harrierr@mail.ru>, 2017
+# Максим Дронь <dronmax@gmail.com>, 2017
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
+# Sergey Vilizhanin <sv@grimmette.ru>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-23 13:27+0000\n"
-"PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>, 2016\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +25,7 @@ msgstr ""
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Cancel"
-msgstr "Отмена"
+msgstr "Отменить"
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -41,26 +41,26 @@ msgstr "Невозможно выбрать базу данных «%s»"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_uid
 msgid "Created by"
-msgstr "Создал"
+msgstr "Создано"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_date
 msgid "Created on"
-msgstr "Создано"
+msgstr "Создан"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_display_name
 msgid "Display Name"
-msgstr "Отображаемое имя"
+msgstr "Отображаемое Имя"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:96
+#: code:addons/base_import_module/models/ir_module.py:112
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
 msgstr "Файл «%s» превышает максимально допустимый размер файла"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:88
+#: code:addons/base_import_module/models/ir_module.py:104
 #, python-format
 msgid "File is not a zip file!"
 msgstr "Файл не является zip-архивом !"
@@ -81,12 +81,17 @@ msgstr ""
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_id
 msgid "ID"
-msgstr "ID"
+msgstr "Номер"
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import App"
 msgstr "Импорт приложения"
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
+msgid "Import Message"
+msgstr ""
 
 #. module: base_import_module
 #: model:ir.actions.act_window,name:base_import_module.action_view_base_module_import
@@ -95,11 +100,6 @@ msgstr "Импорт приложения"
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import Module"
 msgstr "Импорт модуля"
-
-#. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
-msgid "Import message"
-msgstr "Импорт сообщения"
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -114,7 +114,7 @@ msgstr "Импортированный модуль"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module___last_update
 msgid "Last Modified on"
-msgstr "Последний раз изменено"
+msgstr "Последнее изменение"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_write_uid
@@ -124,7 +124,7 @@ msgstr "Последний раз обновил"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_write_date
 msgid "Last Updated on"
-msgstr "Последний раз обновлено"
+msgstr "Последнее обновление"
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
@@ -137,7 +137,7 @@ msgid "Module .ZIP file"
 msgstr ".ZIP-файл модуля"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:86
+#: code:addons/base_import_module/models/ir_module.py:102
 #, python-format
 msgid "No file sent."
 msgstr "Файл не отправлен."
@@ -164,7 +164,14 @@ msgid "Status"
 msgstr "Статус"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:35
+#: code:addons/base_import_module/models/ir_module.py:40
+#: code:addons/base_import_module/models/ir_module.py:47
+#, python-format
+msgid "Studio customizations require Studio"
+msgstr ""
+
+#. module: base_import_module
+#: code:addons/base_import_module/models/ir_module.py:42
 #, python-format
 msgid "Unmet module dependencies: %s"
 msgstr "Нерешённые зависимости модуля: %s"
@@ -178,3 +185,8 @@ msgstr "выполнено"
 #: selection:base.import.module,state:0
 msgid "init"
 msgstr "вкл"
+
+#. module: base_import_module
+#: model:ir.model,name:base_import_module.model_ir_ui_view
+msgid "ir.ui.view"
+msgstr "ir.ui.view"

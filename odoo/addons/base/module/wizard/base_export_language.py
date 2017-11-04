@@ -3,7 +3,7 @@
 
 import base64
 import contextlib
-import cStringIO
+import io
 
 from odoo import api, fields, models, tools, _
 
@@ -34,7 +34,7 @@ class BaseLanguageExport(models.TransientModel):
         lang = this.lang if this.lang != NEW_LANG_KEY else False
         mods = sorted(this.mapped('modules.name')) or ['all']
 
-        with contextlib.closing(cStringIO.StringIO()) as buf:
+        with contextlib.closing(io.BytesIO()) as buf:
             tools.trans_export(lang, mods, buf, this.format, self._cr)
             out = base64.encodestring(buf.getvalue())
 

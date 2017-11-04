@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Shopping Cart Lines -->
+    <template id="website_sale_stock_modal" inherit_id="website_sale_options.modal" name="Stocks Modal">
+        <xpath expr="//input[@type='text'][hasclass('quantity')]" position="attributes">
+          <attribute name='t-att-data-max'>max(product.sudo().virtual_available - product.cart_qty, 1) if product.type == "product" and product.inventory_availability in ["always", "threshold"] else None</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('css_quantity')]" position="after">
+          <div class='availability_messages'/>
+        </xpath>
+    </template>
+
+</odoo>

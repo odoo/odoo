@@ -1,19 +1,20 @@
 odoo.define('website_mail_channel.snippet', function (require) {
 'use strict';
 
-var ajax = require('web.ajax');
-var base = require('web_editor.base');
-var animation = require('web_editor.snippets.animation');
+var sAnimation = require('website.content.snippets.animation');
 
-animation.registry.follow_alias = animation.Class.extend({
+sAnimation.registry.follow_alias = sAnimation.Class.extend({
     selector: ".js_follow_alias",
-    start: function (editable_mode) {
+    start: function () {
         var self = this;
         this.is_user = false;
-        ajax.jsonRpc('/groups/is_member', 'call', {
-            model: this.$target.data('object'),
-            channel_id: this.$target.data('id'),
-            get_alias_info: true,
+        this._rpc({
+            route: '/groups/is_member',
+            params: {
+                model: this.$target.data('object'),
+                channel_id: this.$target.data('id'),
+                get_alias_info: true,
+            },
         }).always(function (data) {
             self.is_user = data.is_user;
             self.email = data.email;
@@ -23,17 +24,23 @@ animation.registry.follow_alias = animation.Class.extend({
         });
 
         // not if editable mode to allow designer to edit alert field
-        if (!editable_mode) {
-            $('.js_follow_alias > .alert').addClass("hidden");
-            $('.js_follow_alias > .input-group-btn.hidden').removeClass("hidden");
-            this.$target.find('.js_follow_btn, .js_unfollow_btn').on('click', function (event) {
+        if (!this.editableMode) {
+            this.$('> .alert').addClass("hidden");
+            this.$('> .input-group-btn.hidden').removeClass("hidden");
+            this.$('.js_follow_btn, .js_unfollow_btn').on('click', function (event) {
                 event.preventDefault();
-                self.on_click();
+                self._onClick();
+            });
+
+            this.$('.js_follow_btn').on('click', function (ev) {
+                if ($(ev.currentTarget).closest('.js_mg_follow_form').length) {
+                    self.$('.js_follow_email').val($(ev.currentTarget).closest('.js_mg_follow_form').find('.js_follow_email').val());
+                }
             });
         }
-        return;
+        return this._super.apply(this, arguments);
     },
-    on_click: function () {
+    _onClick: function () {
         var self = this;
         var $email = this.$target.find(".js_follow_email");
 
@@ -44,20 +51,23 @@ animation.registry.follow_alias = animation.Class.extend({
         this.$target.removeClass('has-error');
 
         var subscription_action = this.$target.attr("data-follow") || "off";
-        if (location.search.slice(1).split('&').indexOf("unsubscribe") >= 0) {
+        if (window.location.search.slice(1).split('&').indexOf("unsubscribe") >= 0) {
             // force unsubscribe mode via URI /groups?unsubscribe
             subscription_action = 'on';
         }
-        ajax.jsonRpc('/groups/subscription', 'call', {
-            'channel_id': +this.$target.data('id'),
-            'object':  this.$target.data('object'),
-            'subscription': subscription_action,
-            'email': $email.length ? $email.val() : false,
+        this._rpc({
+            route: '/groups/subscription',
+            params: {
+                'channel_id': +this.$target.data('id'),
+                'object':  this.$target.data('object'),
+                'subscription': subscription_action,
+                'email': $email.length ? $email.val() : false,
+            },
         }).then(function (follow) {
             self.toggle_subscription(follow, self.email);
         });
     },
-    toggle_subscription: function(follow, email) {
+    toggle_subscription: function (follow, email) {
         // .js_mg_follow_form contains subscribe form
         // .js_mg_details contains send/archives/unsubscribe links
         // .js_mg_confirmation contains message warning has been sent
@@ -78,7 +88,7 @@ animation.registry.follow_alias = animation.Class.extend({
             this.$target.find(".js_mg_details").addClass("hidden");
             this.$target.find(".js_mg_confirmation").removeClass("hidden");
         } else {
-            console.error("Unknown subscription action", follow)
+            console.error("Unknown subscription action", follow);
         }
         this.$target.find('input.js_follow_email')
             .val(email ? email : "")
@@ -86,12 +96,12 @@ animation.registry.follow_alias = animation.Class.extend({
         this.$target.attr("data-follow", follow);
         return $.when(alias_done);
     },
-    get_alias_info: function() {
+    get_alias_info: function () {
         var self = this;
         if (! this.$target.data('id')) {
             return $.Deferred().resolve();
         }
-        return ajax.jsonRpc('/groups/' + this.$target.data('id') + '/get_alias_info', 'call', {}).then(function (data) {
+        return this._rpc({route: '/groups/' + this.$target.data('id') + '/get_alias_info'}).then(function (data) {
             if (data.alias_name) {
                 self.$target.find('.js_mg_email').attr('href', 'mailto:' + data.alias_name);
                 self.$target.find('.js_mg_email').removeClass('hidden');
@@ -102,12 +112,4 @@ animation.registry.follow_alias = animation.Class.extend({
         });
     }
 });
-
-
-$('.js_follow_btn').on('click', function (ev) {
-    if ($(ev.currentTarget).closest('.js_mg_follow_form').length) {
-        $('.js_follow_email').val($(ev.currentTarget).closest('.js_mg_follow_form').find('.js_follow_email').val());
-    }
-});
-
 });

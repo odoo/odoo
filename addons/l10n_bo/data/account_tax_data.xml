@@ -117,6 +117,7 @@
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
       <field name="tag_ids" eval="[(6,0,[ref('tag_bo_08'),ref('tag_bo_21') ])]"/>
+      <field name="tax_group_id" ref="tax_group_iva_13"/>
     </record>
 
     <record id="OTAX_21" model="account.tax.template">
@@ -129,6 +130,7 @@
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
       <field name="tag_ids" eval="[(6,0,[ref('tag_bo_12'), ref('tag_bo_17')])]"/>
+      <field name="tax_group_id" ref="tax_group_iva_13"/>
     </record>
 
     <record id="ITAX_03" model="account.tax.template">
@@ -141,5 +143,6 @@
       <field name="refund_account_id" ref="232"/>
       <field name="account_id" ref="232"/>
       <field name="tag_ids" eval="[(6,0,[ref('tag_bo_03'), ref('tag_bo_21')])]"/>
+      <field name="tax_group_id" ref="tax_group_it_3"/>
     </record>
 </odoo>

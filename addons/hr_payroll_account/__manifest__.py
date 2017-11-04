@@ -11,7 +11,7 @@ Generic Payroll system Integrated with Accounting.
     * Payment Encoding
     * Company Contribution Management
     """,
-    'depends': ['hr_payroll', 'account', 'hr_expense'],
+    'depends': ['hr_payroll', 'account'],
     'data': ['views/hr_payroll_account_views.xml'],
     'demo': ['data/hr_payroll_account_demo.xml'],
     'test': ['../account/test/account_minimal_test.xml'],

@@ -116,16 +116,16 @@ class TestIrSequenceDateRangeChangeImplementation(SingleTransactionCase):
         seq = self.env['ir.sequence']
         seq16 = self.env['ir.sequence'].with_context({'ir_sequence_date': january(16)})
 
-        for i in xrange(1, 5):
+        for i in range(1, 5):
             n = seq.next_by_code('test_sequence_date_range_3')
             self.assertEqual(n, str(i))
-        for i in xrange(1, 5):
+        for i in range(1, 5):
             n = seq16.next_by_code('test_sequence_date_range_3')
             self.assertEqual(n, str(i))
-        for i in xrange(1, 5):
+        for i in range(1, 5):
             n = seq.next_by_code('test_sequence_date_range_4')
             self.assertEqual(n, str(i))
-        for i in xrange(1, 5):
+        for i in range(1, 5):
             n = seq16.next_by_code('test_sequence_date_range_4')
             self.assertEqual(n, str(i))
 

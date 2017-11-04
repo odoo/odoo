@@ -93,7 +93,7 @@ class ReportHrSalaryEmployeeBymonth(models.AbstractModel):
         return self.total
 
     @api.model
-    def render_html(self, docids, data=None):
+    def get_report_values(self, docids, data=None):
         if not data.get('form') or not self.env.context.get('active_model') or not self.env.context.get('active_id'):
             raise UserError(_("Form content is missing, this report cannot be printed."))
 
@@ -103,7 +103,7 @@ class ReportHrSalaryEmployeeBymonth(models.AbstractModel):
         get_employee = self.get_employee(data['form'], months, total_mnths)
         get_months_tol = self.get_months_tol()
         get_total = self.get_total(get_months_tol)
-        docargs = {
+        return {
             'doc_ids': docids,
             'doc_model': model,
             'data': data,
@@ -114,4 +114,3 @@ class ReportHrSalaryEmployeeBymonth(models.AbstractModel):
             'get_total': get_total,
             'month_len': len(total_mnths) + 1
         }
-        return self.env['report'].render('l10n_in_hr_payroll.report_hrsalarybymonth', docargs)

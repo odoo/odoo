@@ -5,40 +5,44 @@
 """
 Miscellaneous tools used by OpenERP.
 """
-
 from functools import wraps
-import cPickle
-import cProfile
+import babel
 from contextlib import contextmanager
+import datetime
 import subprocess
-import logging
+import io
 import os
+
+import collections
 import passlib.utils
+import pickle as pickle_
 import re
 import socket
 import sys
 import threading
 import time
+import types
 import werkzeug.utils
 import zipfile
-from cStringIO import StringIO
 from collections import defaultdict, Iterable, Mapping, MutableSet, OrderedDict
-from itertools import islice, izip, groupby, repeat
+from itertools import islice, groupby, repeat
 from lxml import etree
-from which import which
-from threading import local
+
+from .which import which
 import traceback
-import csv
 from operator import itemgetter
 
 try:
-    from html2text import html2text
+    # pylint: disable=bad-python3-import
+    import cProfile
 except ImportError:
-    html2text = None
+    import profile as cProfile
 
-from config import config
-from cache import *
+
+from .config import config
+from .cache import *
 from .parse_version import parse_version 
+from . import pycompat
 
 import odoo
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
@@ -141,7 +145,6 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     
     >>> file_open('hr/report/timesheer.xsl')
     >>> file_open('addons/hr/report/timesheet.xsl')
-    >>> file_open('../../base/report/rml_template.xsl', subdir='addons/hr/report', pathinfo=True)
 
     @param name name of the file
     @param mode file open mode
@@ -212,7 +215,10 @@ def _fileopen(path, mode, basedir, pathinfo, basename=None):
     # Give higher priority to module directories, which is
     # a more common case than zipped modules.
     if os.path.isfile(name):
-        fo = open(name, mode)
+        if 'b' in mode:
+            fo = open(name, mode)
+        else:
+            fo = io.open(name, mode, encoding='utf-8')
         if pathinfo:
             return fo, name
         return fo
@@ -232,10 +238,9 @@ def _fileopen(path, mode, basedir, pathinfo, basename=None):
             zipname = tail
         zpath = os.path.join(basedir, head + '.zip')
         if zipfile.is_zipfile(zpath):
-            from cStringIO import StringIO
             zfile = zipfile.ZipFile(zpath)
             try:
-                fo = StringIO()
+                fo = io.BytesIO()
                 fo.write(zfile.read(os.path.join(
                     os.path.basename(head), zipname).replace(
                         os.sep, '/')))
@@ -273,20 +278,16 @@ def flatten(list):
     >>> flatten(t)
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     """
-
-    def isiterable(x):
-        return hasattr(x, "__iter__")
-
     r = []
     for e in list:
-        if isiterable(e):
-            map(r.append, flatten(e))
-        else:
+        if isinstance(e, (bytes, pycompat.text_type)) or not isinstance(e, collections.Iterable):
             r.append(e)
+        else:
+            r.extend(flatten(e))
     return r
 
 def reverse_enumerate(l):
-    """Like enumerate but in the other sens
+    """Like enumerate but in the other direction
     
     Usage::
     >>> a = ['a', 'b', 'c']
@@ -302,7 +303,7 @@ def reverse_enumerate(l):
       File "<stdin>", line 1, in <module>
     StopIteration
     """
-    return izip(xrange(len(l)-1, -1, -1), reversed(l))
+    return pycompat.izip(range(len(l)-1, -1, -1), reversed(l))
 
 def partition(pred, elems):
     """ Return a pair equivalent to:
@@ -335,10 +336,12 @@ def topological_sort(elems):
             visited.add(n)
             if n in elems:
                 # first visit all dependencies of n, then append n to result
-                map(visit, elems[n])
+                for it in elems[n]:
+                    visit(it)
                 result.append(n)
 
-    map(visit, elems)
+    for el in elems:
+        visit(el)
 
     return result
 
@@ -361,7 +364,6 @@ try:
 
 except ImportError:
     xlwt = None
-
 
 try:
     import xlsxwriter
@@ -386,122 +388,6 @@ except ImportError:
     xlsxwriter = None
 
 
-class UpdateableStr(local):
-    """ Class that stores an updateable string (used in wizards)
-    """
-
-    def __init__(self, string=''):
-        self.string = string
-
-    def __str__(self):
-        return str(self.string)
-
-    def __repr__(self):
-        return str(self.string)
-
-    def __nonzero__(self):
-        return bool(self.string)
-
-
-class UpdateableDict(local):
-    """Stores an updateable dict to use in wizards
-    """
-
-    def __init__(self, dict=None):
-        if dict is None:
-            dict = {}
-        self.dict = dict
-
-    def __str__(self):
-        return str(self.dict)
-
-    def __repr__(self):
-        return str(self.dict)
-
-    def clear(self):
-        return self.dict.clear()
-
-    def keys(self):
-        return self.dict.keys()
-
-    def __setitem__(self, i, y):
-        self.dict.__setitem__(i, y)
-
-    def __getitem__(self, i):
-        return self.dict.__getitem__(i)
-
-    def copy(self):
-        return self.dict.copy()
-
-    def iteritems(self):
-        return self.dict.iteritems()
-
-    def iterkeys(self):
-        return self.dict.iterkeys()
-
-    def itervalues(self):
-        return self.dict.itervalues()
-
-    def pop(self, k, d=None):
-        return self.dict.pop(k, d)
-
-    def popitem(self):
-        return self.dict.popitem()
-
-    def setdefault(self, k, d=None):
-        return self.dict.setdefault(k, d)
-
-    def update(self, E, **F):
-        return self.dict.update(E, F)
-
-    def values(self):
-        return self.dict.values()
-
-    def get(self, k, d=None):
-        return self.dict.get(k, d)
-
-    def has_key(self, k):
-        return self.dict.has_key(k)
-
-    def items(self):
-        return self.dict.items()
-
-    def __cmp__(self, y):
-        return self.dict.__cmp__(y)
-
-    def __contains__(self, k):
-        return self.dict.__contains__(k)
-
-    def __delitem__(self, y):
-        return self.dict.__delitem__(y)
-
-    def __eq__(self, y):
-        return self.dict.__eq__(y)
-
-    def __ge__(self, y):
-        return self.dict.__ge__(y)
-
-    def __gt__(self, y):
-        return self.dict.__gt__(y)
-
-    def __hash__(self):
-        return self.dict.__hash__()
-
-    def __iter__(self):
-        return self.dict.__iter__()
-
-    def __le__(self, y):
-        return self.dict.__le__(y)
-
-    def __len__(self):
-        return self.dict.__len__()
-
-    def __lt__(self, y):
-        return self.dict.__lt__(y)
-
-    def __ne__(self, y):
-        return self.dict.__ne__(y)
-
 def to_xml(s):
     return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
 
@@ -520,14 +406,15 @@ def scan_languages():
     csvpath = odoo.modules.module.get_resource_path('base', 'res', 'res.lang.csv')
     try:
         # read (code, name) from languages in base/res/res.lang.csv
-        result = []
-        with open(csvpath) as csvfile:
-            reader = csv.reader(csvfile, delimiter=',', quotechar='"')
-            fields = reader.next()
+        with open(csvpath, 'rb') as csvfile:
+            reader = pycompat.csv_reader(csvfile, delimiter=',', quotechar='"')
+            fields = next(reader)
             code_index = fields.index("code")
             name_index = fields.index("name")
-            for row in reader:
-                result.append((ustr(row[code_index]), ustr(row[name_index])))
+            result = [
+                (row[code_index], row[name_index])
+                for row in reader
+            ]
     except Exception:
         _logger.error("Could not read %s", csvpath)
         result = []
@@ -580,7 +467,7 @@ def human_size(sz):
     if not sz:
         return False
     units = ('bytes', 'Kb', 'Mb', 'Gb')
-    if isinstance(sz,basestring):
+    if isinstance(sz,pycompat.string_types):
         sz=len(sz)
     s, i = float(sz), 0
     while s >= 1024 and i < len(units)-1:
@@ -618,7 +505,7 @@ class profile(object):
         def wrapper(*args, **kwargs):
             profile = cProfile.Profile()
             result = profile.runcall(f, *args, **kwargs)
-            profile.dump_stats(self.fname or ("%s.cprof" % (f.func_name,)))
+            profile.dump_stats(self.fname or ("%s.cprof" % (f.__name__,)))
             return result
 
         return wrapper
@@ -661,9 +548,9 @@ def detect_ip_addr():
 
             # try 32 bit kernel:
             if ip_addr is None:
-                ifaces = filter(None, [namestr[i:i+32].split('\0', 1)[0] for i in range(0, outbytes, 32)])
+                ifaces = [namestr[i:i+32].split('\0', 1)[0] for i in range(0, outbytes, 32)]
 
-                for ifname in [iface for iface in ifaces if iface != 'lo']:
+                for ifname in [iface for iface in ifaces if iface if iface != 'lo']:
                     ip_addr = socket.inet_ntoa(fcntl.ioctl(s.fileno(), 0x8915, pack('256s', ifname[:15]))[20:24])
                     break
 
@@ -680,6 +567,8 @@ DEFAULT_SERVER_TIME_FORMAT = "%H:%M:%S"
 DEFAULT_SERVER_DATETIME_FORMAT = "%s %s" % (
     DEFAULT_SERVER_DATE_FORMAT,
     DEFAULT_SERVER_TIME_FORMAT)
+
+DATE_LENGTH = len(datetime.date.today().strftime(DEFAULT_SERVER_DATE_FORMAT))
 
 # Python's strftime supports only the format directives
 # that are available on the platform's libc, so in order to
@@ -799,37 +688,17 @@ def posix_to_ldml(fmt, locale):
 def split_every(n, iterable, piece_maker=tuple):
     """Splits an iterable into length-n pieces. The last piece will be shorter
        if ``n`` does not evenly divide the iterable length.
-       @param ``piece_maker``: function to build the pieces
-       from the slices (tuple,list,...)
+       
+       :param int n: maximum size of each generated chunk
+       :param Iterable iterable: iterable to chunk into pieces
+       :param piece_maker: callable taking an iterable and collecting each 
+                           chunk from its slice, *must consume the entire slice*.
     """
     iterator = iter(iterable)
     piece = piece_maker(islice(iterator, n))
     while piece:
         yield piece
         piece = piece_maker(islice(iterator, n))
-
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod()
-
-class upload_data_thread(threading.Thread):
-    def __init__(self, email, data, type):
-        self.args = [('email',email),('type',type),('data',data)]
-        super(upload_data_thread,self).__init__()
-    def run(self):
-        try:
-            import urllib
-            args = urllib.urlencode(self.args)
-            fp = urllib.urlopen('http://www.openerp.com/scripts/survey.php', args)
-            fp.read()
-            fp.close()
-        except Exception:
-            pass
-
-def upload_data(email, data, type='SURVEY'):
-    a = upload_data_thread(email, data, type)
-    a.start()
-    return True
 
 def get_and_group_by_field(cr, uid, obj, ids, field, context=None):
     """ Read the values of ``field´´ for the given ``ids´´ and group ids by value.
@@ -931,7 +800,7 @@ class mute_logger(object):
 
     def __enter__(self):
         for logger in self.loggers:
-            assert isinstance(logger, basestring),\
+            assert isinstance(logger, pycompat.string_types),\
                 "A logger name must be a string, got %s" % type(logger)
             logging.getLogger(logger).addFilter(self)
 
@@ -978,6 +847,7 @@ class CountingStream(object):
             self.stopped = True
             raise StopIteration()
         return val
+    __next__ = next
 
 def stripped_sys_argv(*strip_args):
     """Return sys.argv with some arguments stripped, suitable for reexecution or subprocesses"""
@@ -1037,16 +907,15 @@ def dumpstacks(sig=None, frame=None):
 
     # code from http://stackoverflow.com/questions/132058/getting-stack-trace-from-a-running-python-application#answer-2569696
     # modified for python 2.5 compatibility
-    threads_info = {th.ident: {'name': th.name,
+    threads_info = {th.ident: {'repr': repr(th),
                                'uid': getattr(th, 'uid', 'n/a'),
                                'dbname': getattr(th, 'dbname', 'n/a'),
                                'url': getattr(th, 'url', 'n/a')}
                     for th in threading.enumerate()}
     for threadId, stack in sys._current_frames().items():
         thread_info = threads_info.get(threadId, {})
-        code.append("\n# Thread: %s (id:%s) (db:%s) (uid:%s) (url:%s)" %
-                    (thread_info.get('name', 'n/a'),
-                     threadId,
+        code.append("\n# Thread: %s (db:%s) (uid:%s) (url:%s)" %
+                    (thread_info.get('repr', threadId),
                      thread_info.get('dbname', 'n/a'),
                      thread_info.get('uid', 'n/a'),
                      thread_info.get('url', 'n/a')))
@@ -1073,7 +942,7 @@ def freehash(arg):
         if isinstance(arg, Mapping):
             return hash(frozendict(arg))
         elif isinstance(arg, Iterable):
-            return hash(frozenset(map(freehash, arg)))
+            return hash(frozenset(freehash(item) for item in arg))
         else:
             return id(arg)
 
@@ -1094,7 +963,7 @@ class frozendict(dict):
     def update(self, *args, **kwargs):
         raise NotImplementedError("'update' not supported on frozendict")
     def __hash__(self):
-        return hash(frozenset((key, freehash(val)) for key, val in self.iteritems()))
+        return hash(frozenset((key, freehash(val)) for key, val in self.items()))
 
 class Collector(Mapping):
     """ A mapping from keys to lists. This is essentially a space optimization
@@ -1136,6 +1005,39 @@ class LastOrderedSet(OrderedSet):
         OrderedSet.discard(self, elem)
         OrderedSet.add(self, elem)
 
+def unique(it):
+    """ "Uniquifier" for the provided iterable: will output each element of
+    the iterable once.
+
+    The iterable's elements must be hashahble.
+
+    :param Iterable it:
+    :rtype: Iterator
+    """
+    seen = set()
+    for e in it:
+        if e not in seen:
+            seen.add(e)
+            yield e
+
+class Reverse(object):
+    """ Wraps a value and reverses its ordering, useful in key functions when
+    mixing ascending and descending sort on non-numeric data as the
+    ``reverse`` parameter can not do piecemeal reordering.
+    """
+    __slots__ = ['val']
+
+    def __init__(self, val):
+        self.val = val
+
+    def __eq__(self, other): return self.val == other.val
+    def __ne__(self, other): return self.val != other.val
+
+    def __ge__(self, other): return self.val <= other.val
+    def __gt__(self, other): return self.val < other.val
+    def __le__(self, other): return self.val >= other.val
+    def __lt__(self, other): return self.val > other.val
+
 @contextmanager
 def ignore(*exc):
     try:
@@ -1172,7 +1074,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
                 if not digits and digits is not 0:
                     digits = DEFAULT_DIGITS
 
-    if isinstance(value, (str, unicode)) and not value:
+    if isinstance(value, pycompat.string_types) and not value:
         return ''
 
     lang = env.user.company_id.partner_id.lang or 'en_US'
@@ -1190,30 +1092,57 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
             res = '%s %s' % (currency_obj.symbol, res)
     return res
 
+def format_date(env, value, lang_code=False, date_format=False):
+    '''
+        Formats the date in a given format.
+
+        :param env: an environment.
+        :param date, datetime or string value: the date to format.
+        :param string lang_code: the lang code, if not specified it is extracted from the
+            environment context.
+        :param string date_format: the format or the date (LDML format), if not specified the
+            default format of the lang.
+        :return: date formatted in the specified format.
+        :rtype: string
+    '''
+    if not value:
+        return ''
+    if isinstance(value, datetime.datetime):
+        value = value.date()
+    elif isinstance(value, pycompat.string_types):
+        if len(value) < DATE_LENGTH:
+            return ''
+        value = value[:DATE_LENGTH]
+        value = datetime.datetime.strptime(value, DEFAULT_SERVER_DATE_FORMAT).date()
+
+    lang = env['res.lang']._lang_get(lang_code or env.context.get('lang') or 'en_US')
+    locale = babel.Locale.parse(lang.code)
+    if not date_format:
+        date_format = posix_to_ldml(lang.date_format, locale=locale)
+
+    return babel.dates.format_date(value, format=date_format, locale=locale)
+
 def _consteq(str1, str2):
     """ Constant-time string comparison. Suitable to compare bytestrings of fixed,
         known length only, because length difference is optimized. """
-    return len(str1) == len(str2) and sum(ord(x)^ord(y) for x, y in zip(str1, str2)) == 0
+    return len(str1) == len(str2) and sum(ord(x)^ord(y) for x, y in pycompat.izip(str1, str2)) == 0
 
 consteq = getattr(passlib.utils, 'consteq', _consteq)
 
-class Pickle(object):
-    @classmethod
-    def load(cls, stream, errors=False):
-        unpickler = cPickle.Unpickler(stream)
-        # pickle builtins: str/unicode, int/long, float, bool, tuple, list, dict, None
-        unpickler.find_global = None
-        try:
-            return unpickler.load()
-        except Exception:
-            _logger.warning('Failed unpickling data, returning default: %r', errors, exc_info=True)
-            return errors
-
-    @classmethod
-    def loads(cls, text):
-        return cls.load(StringIO(text))
-
-    dumps = cPickle.dumps
-    dump = cPickle.dump
-
-pickle = Pickle
+# forbid globals entirely: str/unicode, int/long, float, bool, tuple, list, dict, None
+class Unpickler(pickle_.Unpickler, object):
+    find_global = None # Python 2
+    find_class = None # Python 3
+def _pickle_load(stream, errors=False):
+    unpickler = Unpickler(stream)
+    try:
+        return unpickler.load()
+    except Exception:
+        _logger.warning('Failed unpickling data, returning default: %r',
+                        errors, exc_info=True)
+        return errors
+pickle = types.ModuleType(__name__ + '.pickle')
+pickle.load = _pickle_load
+pickle.loads = lambda text: _pickle_load(io.BytesIO(text))
+pickle.dump = pickle_.dump
+pickle.dumps = pickle_.dumps

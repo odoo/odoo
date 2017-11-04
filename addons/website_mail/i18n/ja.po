@@ -3,17 +3,17 @@
 # * website_mail
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Manami Hashi <manami@roomsfor.hk>, 2016
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
+# Manami Hashi <manami@roomsfor.hk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-23 13:28+0000\n"
-"PO-Revision-Date: 2017-06-23 13:28+0000\n"
-"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -133,11 +133,6 @@ msgid "Discussion Group"
 msgstr "ディスカッショングループ"
 
 #. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.message_thread
-msgid "Leave a comment"
-msgstr "コメントを残す"
-
-#. module: website_mail
 #: model:ir.model,name:website_mail.model_mail_message
 msgid "Message"
 msgstr "メッセージ"
@@ -151,27 +146,20 @@ msgid "Message description: either the subject, or the beginning of the body"
 msgstr "メッセージの説明：件名、または本文の先頭"
 
 #. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.message_thread
-msgid "Oops! Something went wrong. Try to reload the page and to log in."
-msgstr "おっと！ 何かが間違っていますよ。 ページをリロードしてログインしてみてください。"
-
-#. module: website_mail
+#. openerp-web
+#: code:addons/website_mail/static/src/xml/website_mail.xml:7
 #: model:ir.model.fields,field_description:website_mail.field_mail_compose_message_website_published
 #: model:ir.model.fields,field_description:website_mail.field_mail_mail_website_published
 #: model:ir.model.fields,field_description:website_mail.field_mail_message_website_published
 #: model:ir.model.fields,field_description:website_mail.field_survey_mail_compose_message_website_published
+#, python-format
 msgid "Published"
 msgstr "公開済"
 
 #. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.message_thread
-msgid "Send"
-msgstr "送信"
-
-#. module: website_mail
 #: model:ir.ui.view,arch_db:website_mail.follow
 msgid "Subscribe"
-msgstr "参加申請する"
+msgstr "購読"
 
 #. module: website_mail
 #: code:addons/website_mail/models/mail_message.py:57
@@ -184,6 +172,13 @@ msgstr ""
 "セキュリティ上の制約のため、要求された操作を完了できません。 システム管理者に連絡してください。\n"
 "\n"
 "(ドキュメントタイプ: %s, 操作: %s)"
+
+#. module: website_mail
+#. openerp-web
+#: code:addons/website_mail/static/src/xml/website_mail.xml:6
+#, python-format
+msgid "Unpublished"
+msgstr "未公開"
 
 #. module: website_mail
 #: model:ir.ui.view,arch_db:website_mail.follow
@@ -199,46 +194,14 @@ msgid "Visible on the website as a comment"
 msgstr "コメントとしてウェブサイトに表示"
 
 #. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.message_thread
-msgid "Write a message..."
-msgstr "メッセージを書く..."
-
-#. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.message_thread
-msgid "You must be"
-msgstr "すべきです"
-
-#. module: website_mail
 #: model:mail.template,subject:website_mail.mail_template_data_module_install_website_mail
 msgid "Your business is reachable from anywhere, anytime !"
 msgstr "いつでもどこからでもあなたのビジネスにアクセスできます！"
 
 #. module: website_mail
-#. openerp-web
-#: code:addons/website_mail/static/src/xml/chatter_message.xml:8
-#, python-format
-msgid "just now"
-msgstr "まさに今"
-
-#. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.message_thread
-msgid "logged in"
-msgstr "ログイン"
-
-#. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.message_thread
-msgid "on"
-msgstr "on"
-
-#. module: website_mail
 #: model:ir.model,name:website_mail.model_publisher_warranty_contract
 msgid "publisher_warranty.contract"
 msgstr "publisher_warranty.contract"
-
-#. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.message_thread
-msgid "to post a comment."
-msgstr "コメントを投稿"
 
 #. module: website_mail
 #: model:ir.ui.view,arch_db:website_mail.follow

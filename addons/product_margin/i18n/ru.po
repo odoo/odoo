@@ -3,22 +3,20 @@
 # * product_margin
 # 
 # Translators:
-# dr&mx <dronmax@gmail.com>, 2016
-# KingOPl Slav <87slava13@gmail.com>, 2016
-# Sergey Vilizhanin <sv@grimmette.ru>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Danil Bochevkin <danil.borchevkin@gmail.com>, 2016
-# Viktor Pogrebniak <vp@aifil.ru>, 2016
-# Denis Trepalin <zekarious@gmail.com>, 2016
-# Andrey Samorukov <andrey.samorukov@me.com>, 2016
-# Alex Puchkov <ap@alteco.co>, 2016
+# Максим Дронь <dronmax@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Viktor Pogrebniak <vp@aifil.ru>, 2017
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
+# SV <sv@grimmette.ru>, 2017
+# Denis Trepalin <zekarious@gmail.com>, 2017
+# Denis Baranov <baranov@itlibertas.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Alex Puchkov <ap@alteco.co>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Denis Baranov <baranov@itlibertas.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,7 +63,7 @@ msgstr "Ср. цена единицы"
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.product_margin_form_view
 msgid "Cancel"
-msgstr "Отмена"
+msgstr "Отменить"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -73,39 +71,19 @@ msgid "Catalog Price"
 msgstr "Цена по каталогу"
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_membership
-msgid "Check if the product is eligible for membership."
-msgstr "Отметьте, если продукт имеет право на членство."
-
-#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_create_uid
 msgid "Created by"
-msgstr "Создал"
+msgstr "Создано"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_create_date
 msgid "Created on"
-msgstr "Создано"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_taxes_id
-msgid "Customer Taxes"
-msgstr "Налоги с покупателя"
-
-#. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_membership_date_from
-msgid "Date from which membership becomes active."
-msgstr "Дата начала членства."
-
-#. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_membership_date_to
-msgid "Date until which membership remains active."
-msgstr "Дата окончания членства."
+msgstr "Создан"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_display_name
 msgid "Display Name"
-msgstr "Показывать имя"
+msgstr "Отображаемое Имя"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
@@ -144,11 +122,6 @@ msgid "Expected margin * 100 / Expected Sale"
 msgstr "Ожидаемая маржа * 100 / Ожидаемые продажи"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_property_account_expense_id
-msgid "Expense Account"
-msgstr "Счет расходов"
-
-#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_from_date
 msgid "From"
 msgstr "От"
@@ -161,12 +134,7 @@ msgstr "Общая информация"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_id
 msgid "ID"
-msgstr "ID"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_property_account_income_id
-msgid "Income Account"
-msgstr "Cчёт доходов и расходов"
+msgstr "Номер"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_invoice_state
@@ -177,7 +145,7 @@ msgstr "Состояние счёта"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin___last_update
 msgid "Last Modified on"
-msgstr "Последний раз изменено"
+msgstr "Последнее изменение"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_write_uid
@@ -187,7 +155,7 @@ msgstr "Последний раз обновил"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_write_date
 msgid "Last Updated on"
-msgstr "Последний раз обновлено"
+msgstr "Последнее обновление"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_date_from
@@ -203,21 +171,6 @@ msgstr "Дата маржи до"
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Margins"
 msgstr "Маржа"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_membership
-msgid "Membership"
-msgstr "Членство"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_membership_date_to
-msgid "Membership End Date"
-msgstr "Дата окончания членства"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_membership_date_from
-msgid "Membership Start Date"
-msgstr "Дата Начала Членства"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_normal_cost
@@ -250,11 +203,6 @@ msgstr "Оплачено"
 #: model:ir.model,name:product_margin.model_product_product
 msgid "Product"
 msgstr "Продукт"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_email_template_id
-msgid "Product Email Template"
-msgstr "Шаблон письма о товаре"
 
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_margin
@@ -338,24 +286,6 @@ msgid "Sum of Quantity in Vendor Bills"
 msgstr "Сумма количеств в счетах поставщика"
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_property_account_expense_id
-msgid ""
-"This account will be used for invoices instead of the default one to value "
-"expenses for the current product."
-msgstr ""
-"Этот счёт будет использоваться для счетов-фактур вместо установленного по-"
-"умолчанию, чтобы оценить значения расходов для текущего продукта."
-
-#. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_property_account_income_id
-msgid ""
-"This account will be used for invoices instead of the default one to value "
-"sales for the current product."
-msgstr ""
-"Этот счет будет использоваться для счетов-фактур вместо установленного по-"
-"умолчанию, чтобы оценить значения продаж для текущего продукта."
-
-#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_to_date
 msgid "To"
 msgstr "До"
@@ -368,6 +298,7 @@ msgstr "Итоговая стоимость"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_total_margin
+#: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Total Margin"
 msgstr "Итоговая маржа"
 
@@ -379,7 +310,7 @@ msgstr "Итоговый коэффициент маржи (%)"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_total_margin_rate
 msgid "Total margin * 100 / Turnover"
-msgstr "Итоговая маржа × 100 ÷ Оборот"
+msgstr "Итоговая маржа × 100 ÷ оборот"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_turnover
@@ -391,19 +322,3 @@ msgstr "Оборот"
 #: model:ir.model.fields,help:product_margin.field_product_product_total_margin
 msgid "Turnover - Standard price"
 msgstr "Оборот - Стандартная цена"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_supplier_taxes_id
-msgid "Vendor Taxes"
-msgstr "Налоги поставщика"
-
-#. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_email_template_id
-msgid ""
-"When validating an invoice, an email will be sent to the customer based on "
-"this template. The customer will receive an email for each product linked to"
-" an email template."
-msgstr ""
-"При проверке счета-фактуры, по электронной почте будет отправлено письмо "
-"заказчику на основе этого шаблона. Клиент получит по электронной почте "
-"письмо для каждого продукта, связанного с шаблоном электронной почты."

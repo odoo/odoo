@@ -22,7 +22,9 @@
                                     <li class="list-group-item">
                                         <input type="checkbox" class="mail_list_checkbox" name="contact_ids"
                                             t-att-value="contact['id']" t-att-checked="'checked' if contact['opt_out'] == False else None"/>
-                                        <t t-esc="contact.list_id.name"/>
+                                        <t t-foreach="contact.list_ids" t-as="contact_list">
+                                            <t t-esc="contact_list.name"/> 
+                                        </t>
                                     </li>
                                 </t>
                             </ul>
@@ -50,7 +52,7 @@
                     <h1 class="page-header">Mailing Subscriptions</h1>
 
                     <div class="alert alert-success text-center">
-                        <p>Your changes have been saved.</p>
+                        <p>You have been successfully <strong>unsubscribed</strong>!</p>
                     </div>
                 </div>
             </div>

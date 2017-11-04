@@ -3,18 +3,18 @@
 # * product
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
-# Cas Vissers <casvissers@brahoo.nl>, 2016
+# Martin Trigaux <mat@odoo.com>, 2017
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
+# Cas Vissers <casvissers@brahoo.nl>, 2017
+# Eric Geens <ericgeens@yahoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-23 13:27+0000\n"
-"PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,19 +39,19 @@ msgid "# Products"
 msgstr "# Producten"
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:438
+#: code:addons/product/models/product_pricelist.py:446
 #, python-format
 msgid "%s %% discount"
 msgstr "%s %% korting"
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:440
+#: code:addons/product/models/product_pricelist.py:448
 #, python-format
 msgid "%s %% discount and %s surcharge"
 msgstr "%s %% korting en %s toeslag"
 
 #. module: product
-#: code:addons/product/models/product_template.py:302
+#: code:addons/product/models/product_template.py:324
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -66,28 +66,20 @@ msgstr "16 GB"
 #: model:product.template,description_sale:product.product_product_3_product_template
 msgid ""
 "17\" LCD Monitor\n"
-"Processor AMD 8-Core\n"
-"512MB RAM\n"
-"HDD SH-1"
+"Processor AMD 8-Core"
 msgstr ""
-"17\" LCD Monitor\n"
-"Processor AMD 8-Core\n"
-"512MB RAM\n"
-"HDD SH-1"
+"17\" LCD scherm\n"
+"Processor AMD 8-Core"
 
 #. module: product
 #: model:product.product,description:product.product_product_25
 #: model:product.template,description:product.product_product_25_product_template
 msgid ""
-"17\" Monitor\n"
-"4GB RAM\n"
-"Standard-1294P Processor\n"
-"QWERTY keyboard"
+"17\" Monitor, 4GB RAM\n"
+"Standard-1294P Processor"
 msgstr ""
-"17\" Monitor\n"
-"4GB RAM\n"
-"Standard-1294P Processor\n"
-"QWERTY toetsenbord"
+"17\" scherm, 4GB RAM\n"
+"Standaard-1294P Processor"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -162,6 +154,11 @@ msgid "<span>kg</span>"
 msgstr "<span>kg</span>"
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "<span>m³</span>"
+msgstr "<span>m³</span>"
+
+#. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Currency</strong>:<br/>"
 msgstr "<strong>Valuta</strong>:<br/>"
@@ -192,32 +189,21 @@ msgstr ""
 "verwijdert bestaande varianten en maakt deze opnieuw aan met als gevolg dat u mogelijk wijzigingen verliest."
 
 #. module: product
-#: code:addons/product/models/product.py:167 sql_constraint:product.product:0
-#, python-format
+#: sql_constraint:product.product:0
 msgid "A barcode can only be assigned to one product !"
 msgstr "Een barcode kan maar aan één product toegewezen worden!"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_category_type
-msgid ""
-"A category of the view type is a virtual category that can be used as the "
-"parent of another category to create a hierarchical structure."
-msgstr ""
-"Een categorie van het type 'weergave' is een virtuele categorie, wat kan "
-"worden gebruikt als een bovenliggende categorie, om zo een hiërarchie "
-"structuur te maken"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description_sale
 #: model:ir.model.fields,help:product.field_product_template_description_sale
 msgid ""
 "A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sale Order, Delivery Order and "
-"Customer Invoice/Refund"
+" This description will be copied to every Sales Order, Delivery Order and "
+"Customer Invoice/Credit Note"
 msgstr ""
 "Een omschrijving van het product die u wilt delen met uw klanten. Deze "
 "omschrijving wordt gekopieerd naar elke verkooporder, leveringsbon en "
-"factuur/creditfactuur."
+"factuur/creditfactuur"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description_purchase
@@ -225,10 +211,10 @@ msgstr ""
 msgid ""
 "A description of the Product that you want to communicate to your vendors. "
 "This description will be copied to every Purchase Order, Receipt and Vendor "
-"Bill/Refund."
+"Bill/Credit Note."
 msgstr ""
 "Een omschrijving van het product die u wilt delen met uw leveranciers. Deze "
-"omschrijving wordt gekopieerd naar elke inkooporder, ontvanstbon en "
+"omschrijving wordt gekopieerd naar elke inkooporder, ontvangstbon en "
 "factuur/creditfactuur."
 
 #. module: product
@@ -250,7 +236,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
 "A price list contains rules to be evaluated in order to compute\n"
-"                the sales price of the products."
+"                the sale price of the products."
 msgstr ""
 "Een prijslijst bevat regels die geëvalueerd moeten worden om de verkoopprijs\n"
 "van producten te berekenen."
@@ -304,7 +290,7 @@ msgid "All"
 msgstr "Alle"
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:433
+#: code:addons/product/models/product_pricelist.py:441
 #, python-format
 msgid "All Products"
 msgstr "Alle Producten"
@@ -313,6 +299,15 @@ msgstr "Alle Producten"
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "All general settings about this product are managed on"
 msgstr "Alle algemene instellingen voor dit product zijn beheerd op"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_res_config_settings_group_sale_pricelist
+msgid ""
+"Allows to manage different prices based on rules per category of customers.\n"
+"                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
+msgstr ""
+"Geeft u de mogelijkheid om verschillende prijzen te beheren op basis van regels per klantcategorie of klant. \n"
+"Bijvoorbeeld: 10% voor kleinhandel, korting van 5 EUR op dit product, etc.."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -412,6 +407,11 @@ msgid "Attributes"
 msgstr "Kenmerken"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings_group_product_variant
+msgid "Attributes and Variants"
+msgstr "Kenmerken en varianten"
+
+#. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Auxiliary input for portable devices"
@@ -427,10 +427,16 @@ msgstr ""
 "speler"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_packaging_barcode
 #: model:ir.model.fields,field_description:product.field_product_product_barcode
 #: model:ir.model.fields,field_description:product.field_product_template_barcode
 msgid "Barcode"
 msgstr "Barcode"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_packaging_barcode
+msgid "Barcode used for packaging identification."
+msgstr "Barcode gebruikt voor verpakkingsidentificatie."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_base
@@ -582,14 +588,9 @@ msgstr "Annuleer"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_category_id
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Category"
 msgstr "Categorie"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_category_type
-#: model:ir.ui.view,arch_db:product.product_category_form_view
-msgid "Category Type"
-msgstr "Soort categorie"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
@@ -597,7 +598,7 @@ msgid "Category name"
 msgstr "Categorienaam"
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:427
+#: code:addons/product/models/product_pricelist.py:435
 #, python-format
 msgid "Category: %s"
 msgstr "Categorie: %s"
@@ -633,6 +634,12 @@ msgstr "Vink dit aan als uw meerdere varianten wil aanmaken voor dit kenmerk."
 #: model:ir.model.fields,field_description:product.field_product_category_child_id
 msgid "Child Categories"
 msgstr "Subcategorieën"
+
+#. module: product
+#: model:product.product,name:product.product_product_11c
+#: model:product.template,name:product.product_product_11c_product_template
+msgid "Cleaning"
+msgstr "Schoonmaken"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_categ_form_action
@@ -695,6 +702,11 @@ msgstr ""
 "iOS7"
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.res_config_settings_view_form
+msgid "Common Product Catalog"
+msgstr "Producten delen tussen bedrijven"
+
+#. module: product
 #: model:ir.model,name:product.model_res_company
 msgid "Companies"
 msgstr "Bedrijven"
@@ -710,13 +722,14 @@ msgid "Company"
 msgstr "Bedrijf"
 
 #. module: product
-#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Compute Price"
-msgstr "Bereken prijs"
+#: model:ir.model.fields,field_description:product.field_product_category_complete_name
+msgid "Complete Name"
+msgstr "Volledige naam"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
-msgid "Compute price"
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Compute Price"
 msgstr "Bereken prijs"
 
 #. module: product
@@ -732,11 +745,16 @@ msgid "Computer SC234"
 msgstr "Computer SC234"
 
 #. module: product
-#: code:addons/product/models/product_template.py:42
+#: code:addons/product/models/product_template.py:50
 #: selection:product.template,type:0
 #, python-format
 msgid "Consumable"
 msgstr "Verbruiksartikel"
+
+#. module: product
+#: model:ir.model,name:product.model_res_partner
+msgid "Contact"
+msgstr "Contact"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_category_id
@@ -748,7 +766,7 @@ msgstr ""
 "dezelfde categorie. De conversie wordt gemaakt op basis van ratio's."
 
 #. module: product
-#: code:addons/product/models/product_uom.py:89
+#: code:addons/product/models/product_uom.py:98
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
@@ -768,19 +786,18 @@ msgstr "Kostprijs"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_standard_price
 msgid ""
-"Cost of the product template used for standard stock valuation in accounting"
-" and used as a base price on purchase orders. Expressed in the default unit "
-"of measure of the product."
+"Cost used for stock valuation in standard price and as a first price to set "
+"in average/fifo. Also used as a base price for pricelists. Expressed in the "
+"default unit of measure of the product."
 msgstr ""
-"Kostprijs van het standaard product, welke wordt gebruikt voor de "
-"voorraadwaarde in de boekhouding en als basis prijs bij inkooporders. De "
-"kostprijs is voor de standaard maateenheid van het product."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_standard_price
-msgid "Cost of the product, in the default unit of measure of the product."
+msgid ""
+"Cost used for stock valuation in standard price and as a first price to set "
+"in average/fifo. Also used as a base price for pricelists. Expressed in the "
+"default unit of measure of the product. "
 msgstr ""
-"Kostprijs van het product, in de standaard maateenheid van het product."
 
 #. module: product
 #: model:product.product,name:product.service_delivery
@@ -800,7 +817,7 @@ msgstr "Land groepen"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_create_variant
-msgid "Create variant"
+msgid "Create Variant"
 msgstr "Maak variant"
 
 #. module: product
@@ -905,6 +922,12 @@ msgid "Day(s)"
 msgstr "Dag(en)"
 
 #. module: product
+#: code:addons/product/models/res_company.py:59
+#, python-format
+msgid "Default %(currency)s pricelist for %(company)s"
+msgstr "Standaard %(currency)s prijslijst voor %(company)s"
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product_uom_id
 #: model:ir.model.fields,help:product.field_product_template_uom_id
 msgid "Default Unit of Measure used for all stock operation."
@@ -933,8 +956,8 @@ msgstr "Omschrijving"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
-msgid "Description for Quotations"
-msgstr "Omschrijving voor offertes"
+msgid "Description for Customers"
+msgstr "Omschrijving voor klanten"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -968,7 +991,7 @@ msgstr "Bepaal de weergave volgorde"
 #: model:ir.model.fields,field_description:product.field_product_uom_display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist_display_name
 msgid "Display Name"
-msgstr "Weergave naam"
+msgstr "Schermnaam"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
@@ -979,11 +1002,11 @@ msgstr "Dozijn(en)"
 #: model:product.product,description_sale:product.consu_delivery_03
 #: model:product.template,description_sale:product.consu_delivery_03_product_template
 msgid ""
-"Dvorak keyboard \n"
-"            left-handed mouse"
+"Dvorak keyboard\n"
+"left-handed mouse"
 msgstr ""
 "Dvorak toetsenbord\n"
-"links-handige muis"
+"links-handige mouse"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
@@ -1019,19 +1042,19 @@ msgid "Ending valid for the pricelist item validation"
 msgstr "Eindigend geldig voor de prijslijst item bevestiging"
 
 #. module: product
-#: code:addons/product/models/product.py:43
+#: code:addons/product/models/product.py:53
 #, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "Fout! het is niet mogelijk recursieve categorieën te maken!"
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:97
+#: code:addons/product/models/product_attribute.py:101
 #, python-format
 msgid "Error ! You cannot use this attribute with the following value."
 msgstr "Fout ! U kunt dit attribuut niet gebruiken met de volgende waarde "
 
 #. module: product
-#: code:addons/product/models/product.py:302
+#: code:addons/product/models/product.py:283
 #, python-format
 msgid ""
 "Error! It is not allowed to choose more than one value for a given "
@@ -1041,13 +1064,13 @@ msgstr ""
 "bepaald kenmerk."
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:419
+#: code:addons/product/models/product_pricelist.py:427
 #, python-format
 msgid "Error! The minimum margin should be lower than the maximum margin."
 msgstr "Fout! De minimale marge moet lager zijn dan de maximale marge."
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:413
+#: code:addons/product/models/product_pricelist.py:421
 #, python-format
 msgid ""
 "Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
@@ -1057,7 +1080,7 @@ msgstr ""
 " prijslijst item."
 
 #. module: product
-#: code:addons/product/models/product_template.py:252
+#: code:addons/product/models/product_template.py:274
 #, python-format
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
@@ -1232,24 +1255,8 @@ msgstr "Geniaal. Uw eigen persoonlijke DJ."
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_packaging_ids
 #: model:ir.model.fields,help:product.field_product_template_packaging_ids
-msgid ""
-"Gives the different ways to package the same product. This has no impact on "
-"the picking order and is mainly used if you use the EDI module."
-msgstr ""
-"Geeft de verschillende manieren om een product te verpakken. Dit heeft geen "
-"invloed op de verzamel volgorde en wordt hoofdzakelijk gebruikt in de EDI "
-"module."
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_item_sequence
-msgid ""
-"Gives the order in which the pricelist items will be checked. The evaluation"
-" gives highest priority to lowest sequence and stops as soon as a matching "
-"item is found."
-msgstr ""
-"Bepaalt de volgorde waarin de prijslijst items worden gecontroleerd. De "
-"evaluatie begint bij het laagste volgnummer en stopt zodra een passend item "
-"is gevonden."
+msgid "Gives the different ways to package the same product."
+msgstr "Geeft de verschillende manieren om hetzelfde product te verpakken."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_sequence
@@ -1261,6 +1268,12 @@ msgstr "Geeft de reeks volgorde wanneer een productlijst getoond wordt"
 #: selection:product.pricelist.item,applied_on:0
 msgid "Global"
 msgstr "Voor alles"
+
+#. module: product
+#: code:addons/product/models/product_template.py:30
+#, python-format
+msgid "Go to Internal Categories"
+msgstr "Ga naar interne categorieën"
 
 #. module: product
 #: model:product.product,name:product.membership_0
@@ -1394,6 +1407,12 @@ msgid "If it's made for iPad, it's made for iPad mini."
 msgstr "Als het gemaakt is voor de iPad, is het gemaakt voor de iPad mini."
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo_product_id
+msgid ""
+"If not set, the vendor price will apply to all variants of this products."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_active
 msgid ""
 "If unchecked, it will allow you to hide the pricelist without removing it."
@@ -1475,12 +1494,10 @@ msgstr "Intern"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_categ_id
 #: model:ir.model.fields,field_description:product.field_product_template_categ_id
-#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Internal Category"
 msgstr "Interne categorie"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_code
 #: model:ir.model.fields,field_description:product.field_product_product_default_code
 #: model:ir.model.fields,field_description:product.field_product_template_default_code
 msgid "Internal Reference"
@@ -1491,6 +1508,11 @@ msgstr "Interne referentie"
 #: model:ir.model.fields,help:product.field_product_template_barcode
 msgid "International Article Number used for product identification."
 msgstr "Internationaal artikelnummer voor product identificatie"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Inventory"
+msgstr "Voorraad"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -1598,7 +1620,7 @@ msgstr "Lengte / Afstand"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_attribute_line_ids
 msgid "Lines"
-msgstr "Regels"
+msgstr "Lijnen"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_litre
@@ -1610,12 +1632,6 @@ msgstr "Liter(s)"
 #: model:product.template,name:product.consu_delivery_02_product_template
 msgid "Little server"
 msgstr "Kleine server"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_packaging_ids
-#: model:ir.model.fields,field_description:product.field_product_template_packaging_ids
-msgid "Logistical Units"
-msgstr "Logistieke eenheden"
 
 #. module: product
 #: model:res.groups,name:product.group_uom
@@ -1636,11 +1652,6 @@ msgstr "Beheer product verpakkingen"
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
 msgstr "Beheer productvarianten"
-
-#. module: product
-#: model:res.groups,name:product.group_mrp_properties
-msgid "Manage Properties of Product"
-msgstr "Beheer eigenschappen van samengesteld product"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1748,19 +1759,9 @@ msgid "New Price ="
 msgstr "Nieuwe prijs ="
 
 #. module: product
-#: selection:base.config.settings,group_product_variant:0
-msgid "No variants on products"
-msgstr "Geen varianten op producten"
-
-#. module: product
-#: selection:product.category,type:0
-msgid "Normal"
-msgstr "Normaal"
-
-#. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Notes"
-msgstr "Opmerkingen"
+msgstr "Notities"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -1780,21 +1781,16 @@ msgid "Over 375,000 apps."
 msgstr "Over 375,000 apps."
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_packaging_name
+msgid "Package Type"
+msgstr "Verpakking soort"
+
+#. module: product
 #: model:ir.model,name:product.model_product_packaging
-#: model:ir.ui.view,arch_db:product.product_packaging_form_view
-#: model:ir.ui.view,arch_db:product.product_packaging_tree_view
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+#: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Packaging"
 msgstr "Verpakking"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_packaging_name
-msgid "Packaging Type"
-msgstr "Verpakkingssoort"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.action_packaging_view
-msgid "Packagings"
-msgstr "Verpakkingen"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_id
@@ -1802,9 +1798,10 @@ msgid "Parent Category"
 msgstr "Hoofdcategorie"
 
 #. module: product
-#: model:ir.model,name:product.model_res_partner
-msgid "Partner"
-msgstr "Relatie"
+#: model:product.product,name:product.product_product_5c
+#: model:product.template,name:product.product_product_5c_product_template
+msgid "Parts Replacement"
+msgstr "Onderdelen vervanging"
 
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
@@ -1920,7 +1917,7 @@ msgid "PriceList"
 msgstr "Prijslijst"
 
 #. module: product
-#: model:ir.actions.report.xml,name:product.action_report_pricelist
+#: model:ir.actions.report,name:product.action_report_pricelist
 #: model:ir.model,name:product.model_product_pricelist
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_pricelist_id
 #: model:ir.model.fields,field_description:product.field_product_product_pricelist_id
@@ -1928,6 +1925,11 @@ msgstr "Prijslijst"
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist"
 msgstr "Prijslijst"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_pricelist_item_ids
+msgid "Pricelist Item"
+msgstr "Prijslijst item"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_applied_on
@@ -1955,11 +1957,6 @@ msgstr "Naam prijslijst"
 #: model:ir.model,name:product.model_product_pricelist_item
 msgid "Pricelist item"
 msgstr "Prijslijst item"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_pricelist_item_ids
-msgid "Pricelist item ids"
-msgstr "Prijslijst item ids"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
@@ -1996,7 +1993,7 @@ msgstr "Processor Core i5 2.70 Ghz"
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
-#: model:ir.model.fields,field_description:product.field_product_packaging_product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_packaging_product_id
 #: model:ir.model.fields,field_description:product.field_product_price_history_product_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_product_id
 #: model:ir.model.fields,field_description:product.field_product_product_product_variant_id
@@ -2055,6 +2052,20 @@ msgid "Product Name"
 msgstr "Productnaam"
 
 #. module: product
+#: model:ir.actions.act_window,name:product.action_packaging_view
+#: model:ir.model.fields,field_description:product.field_product_product_packaging_ids
+#: model:ir.model.fields,field_description:product.field_product_template_packaging_ids
+#: model:ir.model.fields,field_description:product.field_res_config_settings_group_stock_packaging
+#: model:ir.ui.view,arch_db:product.product_packaging_tree_view
+msgid "Product Packages"
+msgstr "Product verpakkingen"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_packaging_form_view
+msgid "Product Packaging"
+msgstr "Product verpakkingen"
+
+#. module: product
 #: model:ir.model,name:product.model_product_template
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_product_tmpl_id
 #: model:ir.model.fields,field_description:product.field_product_attribute_price_product_tmpl_id
@@ -2093,7 +2104,6 @@ msgstr "Productvariant"
 #: model:ir.actions.act_window,name:product.product_normal_action
 #: model:ir.actions.act_window,name:product.product_normal_action_sell
 #: model:ir.actions.act_window,name:product.product_variant_action
-#: model:ir.model.fields,field_description:product.field_base_config_settings_group_product_variant
 #: model:ir.ui.view,arch_db:product.product_product_tree_view
 msgid "Product Variants"
 msgstr "Productvarianten"
@@ -2108,8 +2118,8 @@ msgid "Products"
 msgstr "Producten"
 
 #. module: product
-#: model:ir.actions.report.xml,name:product.report_product_label
-#: model:ir.actions.report.xml,name:product.report_product_template_label
+#: model:ir.actions.report,name:product.report_product_label
+#: model:ir.actions.report,name:product.report_product_template_label
 msgid "Products Labels"
 msgstr "Productlabel"
 
@@ -2130,21 +2140,7 @@ msgid "Products Price Search"
 msgstr "Prijzen van producten zoeken"
 
 #. module: product
-#: selection:base.config.settings,group_product_variant:0
-msgid ""
-"Products can have several attributes, defining variants (Example: size, "
-"color,...)"
-msgstr ""
-"Producten kunnen meerdere kenmerken hebben die als varianten worden "
-"gedefinieerd (Voorbeelden zijn: maat, kleur,...)"
-
-#. module: product
-#: model:ir.ui.view,arch_db:product.product_template_search_view
-msgid "Products your store in the inventory"
-msgstr "Producten die u opslaat in de voorraad"
-
-#. module: product
-#: code:addons/product/models/product.py:466
+#: code:addons/product/models/product.py:448
 #, python-format
 msgid "Products: "
 msgstr "Producten: "
@@ -2209,6 +2205,11 @@ msgid "Ratio"
 msgstr "Ratio"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_code
+msgid "Reference"
+msgstr "Referentie"
+
+#. module: product
 #: selection:product.uom,uom_type:0
 msgid "Reference Unit of Measure for this category"
 msgstr "Referentie maateenheid voor deze categorie"
@@ -2218,6 +2219,12 @@ msgstr "Referentie maateenheid voor deze categorie"
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Remote control for power, volume, track seek"
 msgstr "Afstandsbediening voor kracht, volume, liedjes te zoeken"
+
+#. module: product
+#: model:product.product,name:product.product_product_6c
+#: model:product.template,name:product.product_product_6c_product_template
+msgid "Repair"
+msgstr "Repareer"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_right
@@ -2291,9 +2298,7 @@ msgid "Sale Description"
 msgstr "Omschrijving verkoop"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_list_price
 #: model:ir.model.fields,field_description:product.field_product_product_lst_price
-#: model:ir.model.fields,field_description:product.field_product_template_list_price
 msgid "Sale Price"
 msgstr "Verkoopprijs"
 
@@ -2311,7 +2316,13 @@ msgstr "Verkoopbaar"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Sales"
-msgstr "Verkopen"
+msgstr "Verkoop"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_list_price
+#: model:ir.model.fields,field_description:product.field_product_template_list_price
+msgid "Sales Price"
+msgstr "Verkoopprijs"
 
 #. module: product
 #: model:res.groups,name:product.group_sale_pricelist
@@ -2347,7 +2358,6 @@ msgstr "Selecteer een categorie voor het huidige product"
 #: model:ir.model.fields,field_description:product.field_product_attribute_sequence
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_sequence
 #: model:ir.model.fields,field_description:product.field_product_packaging_sequence
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_sequence
 #: model:ir.model.fields,field_description:product.field_product_pricelist_sequence
 #: model:ir.model.fields,field_description:product.field_product_product_sequence
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_sequence
@@ -2362,7 +2372,7 @@ msgid "Server"
 msgstr "Server"
 
 #. module: product
-#: code:addons/product/models/product_template.py:43
+#: code:addons/product/models/product_template.py:51
 #: selection:product.template,type:0
 #, python-format
 msgid "Service"
@@ -2386,12 +2396,12 @@ msgstr ""
 "Om prijzen te laten eindigen op 9.99, zet de afronding op 10 en de naheffing op -0.01"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_base_config_settings_company_share_product
+#: model:ir.model.fields,field_description:product.field_res_config_settings_company_share_product
 msgid "Share product to all companies"
 msgstr "Deel producten met alle bedrijven"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_base_config_settings_company_share_product
+#: model:ir.model.fields,help:product.field_res_config_settings_company_share_product
 msgid ""
 "Share your product to all companies defined in your instance.\n"
 " * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
@@ -2400,6 +2410,16 @@ msgstr ""
 "Deel al uw relaties met alle bedrijven die binnen uw structuur zijn gedefinieerd.\n"
 " * Aangevinkt : Relaties zijn zichtbaar voor alle bedrijven, zelfs indien het bedrijf bij de relatie aangeduid is.\n"
 " * Niet aangevinkt : Elk bedrijf kan enkel de eigen relaties zien (relaties waarbij het bedrijf werd aangeduid). Relaties waarbij het bedrijf niet werd aangeduid zijn zichtbaar voor alle bedrijven."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings_group_product_pricelist
+msgid "Show pricelists On Products"
+msgstr "Toon prijslijsten op producten"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings_group_pricelist_item
+msgid "Show pricelists to customers"
+msgstr "Toon prijslijsten aan klanten"
 
 #. module: product
 #: model:product.product,name:product.membership_1
@@ -2635,8 +2655,7 @@ msgstr ""
 "voor een maateenheid die niet verder kan worden gesplitst, zoals een stuk."
 
 #. module: product
-#: code:addons/product/models/product_uom.py:43 sql_constraint:product.uom:0
-#, python-format
+#: sql_constraint:product.uom:0
 msgid "The conversion ratio for a unit of measure cannot be 0!"
 msgstr "De conversie ratio voor een maateenheid kan niet 0 zijn !"
 
@@ -2747,8 +2766,7 @@ msgstr ""
 "luisteren terwijl het oplaad. "
 
 #. module: product
-#: code:addons/product/models/product_uom.py:44 sql_constraint:product.uom:0
-#, python-format
+#: sql_constraint:product.uom:0
 msgid "The rounding precision must be greater than 0!"
 msgstr "De afronding precisie moet groter zijn dan 0!"
 
@@ -2873,8 +2891,8 @@ msgstr "Dit is de som van de extra prijs van alle kenmerken"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
-msgid "This note will be displayed on the quotations."
-msgstr "Deze notitie wordt getoond op de offertes."
+msgid "This note will show up on sales orders."
+msgstr "Deze opmerking wordt afgebeeld op verkooporders."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
@@ -2901,8 +2919,8 @@ msgid ""
 "This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
-"Deze Leverancier productnaam wordt gebruikt bij het printen van een offerte "
-"aanvraag. Laat dit leeg om een interne productcode te gebruiken."
+"Deze Leverancier productnaam wordt gebruikt bij het afdrukken van een "
+"offerte aanvraag. Laat dit leeg om een interne productcode te gebruiken."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -2974,6 +2992,7 @@ msgstr "Stuk(s)"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
+#: model:ir.model.fields,field_description:product.field_res_config_settings_group_uom
 #: model:ir.ui.view,arch_db:product.product_uom_form_view
 #: model:ir.ui.view,arch_db:product.product_uom_tree_view
 msgid "Units of Measure"
@@ -3023,6 +3042,11 @@ msgstr ""
 "Zelfs bij het luisteren naar een oude favoriet kan het lijken alsof u dit voor de eerste keer ooit luistert."
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings_group_sale_pricelist
+msgid "Use pricelists to adapt your price per customers"
+msgstr "Gebruik prijslijsten voor klantspecifieke prijzen"
+
+#. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Validity"
 msgstr "Geldig vanaf"
@@ -3038,6 +3062,11 @@ msgstr "Waarde"
 #: model:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Values"
 msgstr "Waarden"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_variant_count
+msgid "Variant Count"
+msgstr "Aantal varianten"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image_variant
@@ -3058,6 +3087,12 @@ msgstr "Variant extra prijs"
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Variant Prices"
 msgstr "Variant prijzen"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_variant_seller_ids
+#: model:ir.model.fields,field_description:product.field_product_template_variant_seller_ids
+msgid "Variant Seller"
+msgstr "Variant verkoper"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_attribute_value_action
@@ -3118,11 +3153,6 @@ msgid "Vendors"
 msgstr "Leveranciers"
 
 #. module: product
-#: selection:product.category,type:0
-msgid "View"
-msgstr "Weergave"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_volume
 #: model:ir.model.fields,field_description:product.field_product_template_volume
 #: model:product.uom.categ,name:product.product_uom_categ_vol
@@ -3144,12 +3174,6 @@ msgstr ""
 "De muuroplader kan ingeplugd worden in de lader of direct in de speaker"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_warranty
-#: model:ir.model.fields,field_description:product.field_product_template_warranty
-msgid "Warranty"
-msgstr "Garantie"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_weight
 #: model:ir.model.fields,field_description:product.field_product_template_weight
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
@@ -3168,15 +3192,6 @@ msgstr "Gewichten"
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "When one playlist isn’t enough."
 msgstr "Wanneer één afspeellijst niet genoeg is."
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_supplierinfo_product_id
-msgid ""
-"When this field is filled in, the vendor data will only apply to the "
-"variant."
-msgstr ""
-"Wanneer dit veld is ingevuld wordt de Leverancier gegevens alleen toegepast "
-"op de variant."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
@@ -3219,16 +3234,6 @@ msgstr ""
 "en het web doorzoeken aan ongelooflijke snelheden."
 
 #. module: product
-#: model:ir.model.fields,help:product.field_base_config_settings_group_product_variant
-msgid ""
-"Work with product variant allows you to define some variant of the same "
-"products, an ease the product management in the ecommerce for example"
-msgstr ""
-"Werken met productvarianten biedt u de mogelijkheid om varianten voor "
-"eenzelfde product te definiëren, en vergemakkelijkt het productbeheer voor "
-"bijv. e-Commerce"
-
-#. module: product
 #: model:product.uom.categ,name:product.uom_categ_wtime
 msgid "Working Time"
 msgstr "Werktijd"
@@ -3242,6 +3247,18 @@ msgid ""
 msgstr ""
 "Fout! Het is niet mogelijk om een decimale nauwkeurigheid van een 'rekening'"
 " groter in te stellen dan de afronding van de bedrijfsvaluta."
+
+#. module: product
+#: code:addons/product/wizard/product_price_list.py:26
+#, python-format
+msgid "You have to set a logo or a layout for your company."
+msgstr "U moet een logo of lay-out instellen voor uw bedrijf."
+
+#. module: product
+#: code:addons/product/wizard/product_price_list.py:28
+#, python-format
+msgid "You have to set your reports's header and footer layout."
+msgstr "U moet uw rapporten hun hoofding en footer lay-out instellen."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
@@ -3276,6 +3293,14 @@ msgstr ""
 "klanten."
 
 #. module: product
+#: code:addons/product/models/product_template.py:29
+#, python-format
+msgid ""
+"You must define at least one product category in order to be able to create "
+"products."
+msgstr ""
+
+#. module: product
 #: model:product.product,website_description:product.product_product_11
 #: model:product.product,website_description:product.product_product_11b
 #: model:product.template,website_description:product.product_product_11_product_template
@@ -3300,11 +3325,6 @@ msgid "Zed+ Antivirus"
 msgstr "Zed+ Antivirus"
 
 #. module: product
-#: model:ir.model,name:product.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
-
-#. module: product
 #: model:product.uom,name:product.product_uom_cm
 msgid "cm"
 msgstr "cm"
@@ -3326,8 +3346,8 @@ msgstr "Bijv. lampen"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
-msgid "e.g. Odoo Enterprise Susbcription"
-msgstr "bijv. Odoo Enterprise abonnement"
+msgid "e.g. Odoo Enterprise Subscription"
+msgstr "bijv. Odoo Enterprise Abonnement"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
@@ -3462,27 +3482,24 @@ msgstr "Hoeveelheid"
 #. module: product
 #: model:product.product,description_sale:product.consu_delivery_02
 #: model:product.template,description_sale:product.consu_delivery_02_product_template
-msgid ""
-"raid 1 \n"
-"            512ECC ram"
-msgstr ""
-"raid 1 \n"
-"            512ECC ram"
+msgid "raid 1, 512ECC ram"
+msgstr "raid 1, 512ECC ram"
 
 #. module: product
 #: model:product.product,description_sale:product.consu_delivery_01
 #: model:product.template,description_sale:product.consu_delivery_01_product_template
-msgid ""
-"raid 10 \n"
-"            2048ECC ram"
-msgstr ""
-"raid 10 \n"
-"            2048ECC ram"
+msgid "raid 10, 2048ECC ram"
+msgstr "raid 10, 2048ECC ram"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_pricelist
 msgid "report.product.report_pricelist"
 msgstr "report.product.report_pricelist"
+
+#. module: product
+#: model:ir.model,name:product.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form
@@ -3497,4 +3514,4 @@ msgstr "het productsjabloon"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "to"
-msgstr "tot"
+msgstr "t/m"

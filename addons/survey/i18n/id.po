@@ -3,24 +3,25 @@
 # * survey
 # 
 # Translators:
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2016
-# Edy Kend <edy@azmall.co.id>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2016
-# Muhammad Herdiansyah <herdiansyah@openmailbox.org>, 2016
-# Febrasari Almania <febrasari.almania@gmail.com>, 2016
-# Deddy Ddr <deddy.ddr@gmail.com>, 2016
-# William Surya Permana <zarambie_game@yahoo.com>, 2016
-# Rachmat Aditiya <raditiya@me.com>, 2016
 # Bonny Useful <bonny.useful@gmail.com>, 2017
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
+# William Surya Permana <zarambie_game@yahoo.com>, 2017
+# Edy Kend <edy@azmall.co.id>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2017
+# Deddy Ddr <deddy.ddr@gmail.com>, 2017
+# Febrasari Almania <febrasari.almania@gmail.com>, 2017
+# Rachmat Aditiya <raditiya@me.com>, 2017
+# Muhammad Herdiansyah <herdiansyah@openmailbox.org>, 2017
 # Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2017
+# Ryanto The <ry.the77@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:44+0000\n"
-"PO-Revision-Date: 2016-10-10 08:44+0000\n"
-"Last-Translator: Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2017\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,10 +48,10 @@ msgid "#Questions"
 msgstr "#Questions"
 
 #. module: survey
-#: code:addons/survey/models/survey.py:124
+#: code:addons/survey/models/survey.py:122
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (copy)"
+msgstr "%s (salinan)"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
@@ -213,7 +214,7 @@ msgid "A process is defined for all enterprise flows"
 msgstr "Sebuah proses didefinisikan untuk semua arus enterprise"
 
 #. module: survey
-#: code:addons/survey/models/survey.py:808
+#: code:addons/survey/models/survey.py:806
 #, python-format
 msgid "A question cannot be unanswered and skipped"
 msgstr "Sebuah pertanyaan tidak bisa terjawab dan melewatkan"
@@ -236,16 +237,14 @@ msgstr "Aktif"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid ""
-"Add list of email of recipients (will not converted in partner), separated "
-"by commas, semicolons or newline..."
+"Add a list of email of recipients (will not be converted into contacts). "
+"Separated by commas, semicolons or newline..."
 msgstr ""
-"Menambahkan daftar email penerima (tidak akan dikonversi di mitra), "
-"dipisahkan dengan koma, titik koma atau baris baru ..."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
-msgid "Add list of existing contacts..."
-msgstr "Tambahkan daftar kontak yang ada ..."
+msgid "Add existing contacts..."
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.fcol_2_1_3
@@ -331,7 +330,7 @@ msgstr "CRM"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Cancel"
-msgstr "Batalkan"
+msgstr "Batal"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
@@ -344,12 +343,7 @@ msgid "Choose..."
 msgstr "Pilih Tahun Buku"
 
 #. module: survey
-#: model:ir.actions.server,name:survey.survey_action_server_clean_test_answers
-msgid "Clean test answers"
-msgstr ""
-
-#. module: survey
-#: code:addons/survey/models/survey.py:112
+#: code:addons/survey/models/survey.py:110
 #, python-format
 msgid "Click here to start survey"
 msgstr "Klik di sini untuk memulai survei"
@@ -370,6 +364,11 @@ msgstr "Tutup"
 #: model:survey.stage,name:survey.stage_closed
 msgid "Closed"
 msgstr "Ditutup"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_kanban
+msgid "Color"
+msgstr "Warna"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_color
@@ -471,14 +470,10 @@ msgid "Creation Date"
 msgstr "Tanggal Pembuatan"
 
 #. module: survey
+#: selection:survey.question,type:0
 #: selection:survey.user_input_line,answer_type:0
 msgid "Date"
 msgstr "Tanggal"
-
-#. module: survey
-#: selection:survey.question,type:0
-msgid "Date and Time"
-msgstr "Tanggal dan Waktu"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_value_date
@@ -518,7 +513,7 @@ msgstr "Hapus"
 #: model:ir.model.fields,field_description:survey.field_survey_question_description
 #: model:ir.model.fields,field_description:survey.field_survey_survey_description
 msgid "Description"
-msgstr "Keterangan"
+msgstr "Deskripsi"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_1
@@ -551,6 +546,11 @@ msgid "Disagree"
 msgstr "Berselisih"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question_display_mode
+msgid "Display Mode"
+msgstr "Mode Tampilan"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_display_name
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_display_name
 #: model:ir.model.fields,field_description:survey.field_survey_page_display_name
@@ -563,7 +563,6 @@ msgid "Display Name"
 msgstr "Nama Tampilan"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_question_display_mode
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Display mode"
 msgstr "Mode tampilan"
@@ -589,7 +588,7 @@ msgstr ""
 #. module: survey
 #: model:survey.stage,name:survey.stage_draft
 msgid "Draft"
-msgstr "Konsep"
+msgstr "Draft"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_email
@@ -769,7 +768,7 @@ msgid "If closed, people won't be able to answer to surveys in this column."
 msgstr "Jika ditutup, orang tidak akan mampu menjawab survei di kolom ini."
 
 #. module: survey
-#: code:addons/survey/models/survey.py:473
+#: code:addons/survey/models/survey.py:471
 #: model:survey.question,comments_message:survey.feedback_1_1
 #: model:survey.question,comments_message:survey.feedback_1_2
 #: model:survey.question,comments_message:survey.feedback_2_1
@@ -803,7 +802,7 @@ msgid "In progress"
 msgstr "Dalam proses"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:66
+#: code:addons/survey/wizard/survey_email_compose_message.py:68
 #, python-format
 msgid "Incorrect Email Address: %s"
 msgstr ""
@@ -903,12 +902,17 @@ msgstr "Terakhir diperbarui oleh"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_write_date
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_write_date
 msgid "Last Updated on"
-msgstr "Terakhir Diperbaharui pada"
+msgstr "Terakhir diperbarui pada"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_last_displayed_page_id
 msgid "Last displayed page"
 msgstr "Terakhir halaman yang ditampilkan"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Late Activities"
+msgstr "Aktifitas terakhir"
 
 #. module: survey
 #: selection:survey.user_input,type:0
@@ -1021,6 +1025,11 @@ msgstr "Pilihan ganda: hanya satu jawaban"
 #: selection:survey.question,matrix_subtype:0
 msgid "Multiple choices per row"
 msgstr "Beberapa pilihan per baris"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "My Activities"
+msgstr "Aktifitas Ku"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_stage_name
@@ -1444,6 +1453,11 @@ msgid "Show Comments Field"
 msgstr "Tampilkan Komentar Lapangan"
 
 #. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Show all records which has next action date is before today"
+msgstr "Tampilkan semua dokumen dengan aksi berikut sebelum hari ini"
+
+#. module: survey
 #: selection:survey.question,type:0
 msgid "Single Line Text Box"
 msgstr ""
@@ -1597,6 +1611,11 @@ msgid "Survey page"
 msgstr "Halaman survei"
 
 #. module: survey
+#: model:ir.actions.server,name:survey.survey_action_server_clean_test_answers
+msgid "Survey: Clean test answers"
+msgstr ""
+
+#. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_form
 #: model:ir.ui.menu,name:survey.menu_survey_form
 #: model:ir.ui.menu,name:survey.menu_surveys
@@ -1610,14 +1629,14 @@ msgid "Test"
 msgstr "Tes"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_user_input_test_entry
+msgid "Test Entry"
+msgstr ""
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_form
 msgid "Test Survey"
 msgstr "Uji Survey"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_user_input_test_entry
-msgid "Test entry"
-msgstr "Tes masuk"
 
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
@@ -1660,13 +1679,13 @@ msgstr ""
 "opsional"
 
 #. module: survey
-#: code:addons/survey/models/survey.py:821
+#: code:addons/survey/models/survey.py:819
 #, python-format
 msgid "The answer must be in the right type"
 msgstr "Jawabannya harus dalam jenis yang tepat"
 
 #. module: survey
-#: code:addons/survey/models/survey.py:487
+#: code:addons/survey/models/survey.py:485
 #: model:survey.question,validation_error_msg:survey.feedback_1_1
 #: model:survey.question,validation_error_msg:survey.feedback_1_2
 #: model:survey.question,validation_error_msg:survey.feedback_2_1
@@ -1685,7 +1704,7 @@ msgid "The answer you entered has an invalid format."
 msgstr "Jawaban Anda memasukkan formatnya tidak sah."
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:138
+#: code:addons/survey/wizard/survey_email_compose_message.py:139
 #, python-format
 msgid ""
 "The content of the text don't contain '__URL__'.                     __URL__"
@@ -1760,21 +1779,21 @@ msgid "They help new users to understand Odoo"
 msgstr "Mereka membantu pengguna baru memahami Odoo"
 
 #. module: survey
-#: code:addons/survey/models/survey.py:546
+#: code:addons/survey/models/survey.py:544
 #: code:addons/survey/tests/test_survey.py:86
 #, python-format
 msgid "This answer must be an email address"
 msgstr "Jawaban ini harus alamat email"
 
 #. module: survey
-#: code:addons/survey/models/survey.py:590
+#: code:addons/survey/models/survey.py:588
 #: code:addons/survey/tests/test_survey.py:107
 #, python-format
-msgid "This is not a date/time"
-msgstr "Ini bukan tanggal / waktu"
+msgid "This is not a date"
+msgstr ""
 
 #. module: survey
-#: code:addons/survey/models/survey.py:567
+#: code:addons/survey/models/survey.py:565
 #: code:addons/survey/tests/test_survey.py:97
 #, python-format
 msgid "This is not a number"
@@ -1793,7 +1812,7 @@ msgid "This message will be displayed when survey is completed"
 msgstr "Pesan ini akan ditampilkan saat survei selesai"
 
 #. module: survey
-#: code:addons/survey/models/survey.py:491
+#: code:addons/survey/models/survey.py:489
 #: model:survey.question,constr_error_msg:survey.feedback_1_1
 #: model:survey.question,constr_error_msg:survey.feedback_1_2
 #: model:survey.question,constr_error_msg:survey.feedback_2_1
@@ -1847,6 +1866,11 @@ msgid "Title"
 msgstr "Judul"
 
 #. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Today Activities"
+msgstr "Aktivitas Hari ini"
+
+#. module: survey
 #: model:survey.label,value:survey.fcol_2_1_4
 #: model:survey.label,value:survey.fcol_2_2_4
 #: model:survey.label,value:survey.fcol_2_5_4
@@ -1881,6 +1905,11 @@ msgstr "Jenis jawaban"
 #: model:ir.model.fields,field_description:survey.field_survey_question_labels_ids
 msgid "Types of answers"
 msgstr "Jenis barcode"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Upcoming Activities"
+msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -2015,14 +2044,9 @@ msgid "Which modules are you using/testing?"
 msgstr "Yang modul yang Anda gunakan / pengujian?"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.datetime
-msgid "YYYY-MM-DD hh:mm:ss"
-msgstr ""
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid ""
-"YYYY-MM-DD hh:mm:ss\n"
+"YYYY-MM-DD\n"
 "                                            <i class=\"fa fa-calendar fa-2x\"/>"
 msgstr ""
 
@@ -2059,7 +2083,7 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/models/survey.py:318
+#: code:addons/survey/models/survey.py:316
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr ""
@@ -2067,7 +2091,7 @@ msgstr ""
 "pertanyaan."
 
 #. module: survey
-#: code:addons/survey/models/survey.py:321
+#: code:addons/survey/models/survey.py:319
 #, python-format
 msgid "You cannot send invitations for closed surveys."
 msgstr "Anda tidak dapat mengirim undangan untuk survei tertutup."

@@ -3,15 +3,15 @@
 # * payment_ogone
 # 
 # Translators:
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,13 +20,13 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment.py:241
+#: code:addons/payment_ogone/models/payment.py:240
 #, python-format
 msgid "; multiple order found"
 msgstr "; 複数の注文が見つかりました"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment.py:239
+#: code:addons/payment_ogone/models/payment.py:238
 #, python-format
 msgid "; no order found"
 msgstr "; 注文が見つかりません"
@@ -58,12 +58,12 @@ msgstr ""
 
 #. module: payment_ogone
 #: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
-msgid "Confirm <span class=\"fa fa-long-arrow-right\"/>"
-msgstr "確認<span class=\"fa fa-long-arrow-right\"/>"
+msgid "Cardholder name"
+msgstr ""
 
 #. module: payment_ogone
 #: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
-msgid "Expires"
+msgid "Expires (MM / YY)"
 msgstr ""
 
 #. module: payment_ogone
@@ -79,29 +79,19 @@ msgid ""
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
-msgid "MM / YY"
-msgstr ""
-
-#. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
-msgid "Name"
-msgstr "名称"
-
-#. module: payment_ogone
-#: code:addons/payment_ogone/models/payment.py:248
+#: code:addons/payment_ogone/models/payment.py:247
 #, python-format
 msgid "Ogone: invalid shasign, received %s, computed %s, for data %s"
 msgstr ""
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment.py:237
+#: code:addons/payment_ogone/models/payment.py:236
 #, python-format
 msgid "Ogone: received data for reference %s"
 msgstr ""
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment.py:230
+#: code:addons/payment_ogone/models/payment.py:229
 #, python-format
 msgid ""
 "Ogone: received data with missing reference (%s) or pay_id (%s) or shasign "

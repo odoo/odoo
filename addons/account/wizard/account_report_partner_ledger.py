@@ -15,4 +15,4 @@ class AccountPartnerLedger(models.TransientModel):
     def _print_report(self, data):
         data = self.pre_print_report(data)
         data['form'].update({'reconciled': self.reconciled, 'amount_currency': self.amount_currency})
-        return self.env['report'].get_action(self, 'account.report_partnerledger', data=data)
+        return self.env.ref('account.action_report_partnerledger').report_action(self, data=data)

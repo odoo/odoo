@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 
-import hr_job
-import hr_applicant
+from . import hr_job
+from . import hr_applicant

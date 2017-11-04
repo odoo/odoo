@@ -2,19 +2,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import json
 import logging
 import psycopg2
 import werkzeug
 
-from operator import itemgetter
 from werkzeug import url_encode
 
 from odoo import api, http, registry, SUPERUSER_ID, _
 from odoo.addons.web.controllers.main import binary_content
 from odoo.exceptions import AccessError
 from odoo.http import request
-from odoo.tools import consteq
+from odoo.tools import consteq, pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -52,7 +50,7 @@ class MailController(http.Controller):
         return comparison, record, redirect
 
     @classmethod
-    def _redirect_to_record(cls, model, res_id):
+    def _redirect_to_record(cls, model, res_id, access_token=None):
         uid = request.session.uid
 
         # no model / res_id, meaning no possible record -> redirect to login
@@ -65,19 +63,6 @@ class MailController(http.Controller):
         if not record_sudo:
             # record does not seem to exist -> redirect to login
             return cls._redirect_to_messaging()
-        record_action = record_sudo.get_access_action()
-        record_target_type = record_action.pop('target_type', 'dummy')
-
-        # the record has a public URL redirection: use it directly
-        if record_action['type'] == 'ir.actions.act_url':
-            if record_target_type == 'public' and not uid:
-                return werkzeug.utils.redirect(record_action['url'])
-            else:
-                # user connected or non-public URL, handled below
-                pass
-        # other choice: act_window (no support of anything else currently)
-        elif not record_action['type'] == 'ir.actions.act_window':
-            return cls._redirect_to_messaging()
 
         # the record has a window redirection: check access rights
         if uid is not None:
@@ -87,9 +72,20 @@ class MailController(http.Controller):
                 record_sudo.sudo(uid).check_access_rule('read')
             except AccessError:
                 return cls._redirect_to_messaging()
+            else:
+                record_action = record_sudo.get_access_action(access_uid=uid)
+        else:
+            record_action = record_sudo.get_access_action()
+            if record_action['type'] == 'ir.actions.act_url' and record_action.get('target_type') != 'public':
+                return cls._redirect_to_messaging()
 
+        record_action.pop('target_type', None)
+        # the record has an URL redirection: use it directly
         if record_action['type'] == 'ir.actions.act_url':
             return werkzeug.utils.redirect(record_action['url'])
+        # other choice: act_window (no support of anything else currently)
+        elif not record_action['type'] == 'ir.actions.act_window':
+            return cls._redirect_to_messaging()
 
         url_params = {
             'view_type': record_action['view_type'],
@@ -107,7 +103,7 @@ class MailController(http.Controller):
         """ End-point to receive mail from an external SMTP server. """
         dbs = req.jsonrequest.get('databases')
         for db in dbs:
-            message = dbs[db].decode('base64')
+            message = base64.b64decode(dbs[db])
             try:
                 db_registry = registry(db)
                 with db_registry.cursor() as cr:
@@ -159,22 +155,24 @@ class MailController(http.Controller):
             'default': subtype.default,
             'internal': subtype.internal,
             'followed': subtype.id in followers.mapped('subtype_ids').ids,
-            'parent_model': subtype.parent_id and subtype.parent_id.res_model or False,
+            'parent_model': subtype.parent_id.res_model,
             'id': subtype.id
         } for subtype in subtypes]
-        subtypes_list = sorted(subtypes_list, key=itemgetter('parent_model', 'res_model', 'internal', 'sequence'))
+        subtypes_list = sorted(subtypes_list, key=lambda it: (it['parent_model'] or '', it['res_model'] or '', it['internal'], it['sequence']))
         return subtypes_list
 
     @http.route('/mail/view', type='http', auth='none')
-    def mail_action_view(self, model=None, res_id=None, message_id=None):
+    def mail_action_view(self, model=None, res_id=None, message_id=None, access_token=None, **kwargs):
         """ Generic access point from notification emails. The heuristic to
-        choose where to redirect the user is the following :
+            choose where to redirect the user is the following :
 
          - find a public URL
          - if none found
           - users with a read access are redirected to the document
           - users without read access are redirected to the Messaging
           - not logged users are redirected to the login page
+
+            models that have an access_token may apply variations on this.
         """
         if message_id:
             try:
@@ -186,10 +184,10 @@ class MailController(http.Controller):
             else:
                 # either a wrong message_id, either someone trying ids -> just go to messaging
                 return self._redirect_to_messaging()
-        elif res_id and isinstance(res_id, basestring):
+        elif res_id and isinstance(res_id, pycompat.string_types):
             res_id = int(res_id)
 
-        return self._redirect_to_record(model, res_id)
+        return self._redirect_to_record(model, res_id, access_token)
 
     @http.route('/mail/follow', type='http', auth='user', methods=['GET'])
     def mail_action_follow(self,  model, res_id, token=None):
@@ -214,6 +212,7 @@ class MailController(http.Controller):
 
     @http.route('/mail/new', type='http', auth='user')
     def mail_action_new(self, model, res_id, action_id):
+        # TDE NOTE: this controller is deprecated and will disappear before v11.
         if model not in request.env:
             return self._redirect_to_messaging()
         params = {'view_type': 'form', 'model': model}
@@ -268,7 +267,7 @@ class MailController(http.Controller):
             'channel_slots': request.env['mail.channel'].channel_fetch_slot(),
             'commands': request.env['mail.channel'].get_mention_commands(),
             'mention_partner_suggestions': request.env['res.partner'].get_static_mention_suggestions(),
-            'shortcodes': request.env['mail.shortcode'].sudo().search_read([], ['shortcode_type', 'source', 'substitution', 'description']),
+            'shortcodes': request.env['mail.shortcode'].sudo().search_read([], ['shortcode_type', 'source', 'unicode_source', 'substitution', 'description']),
             'menu_id': request.env['ir.model.data'].xmlid_to_res_id('mail.mail_channel_menu_root_chat'),
         }
         return values

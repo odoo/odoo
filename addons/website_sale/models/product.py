@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models, tools, _
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
+
+from odoo.tools import pycompat
 from odoo.tools.translate import html_translate
+from odoo.tools import float_is_zero
 
 
 class ProductStyle(models.Model):
@@ -107,11 +110,6 @@ class ProductTemplate(models.Model):
     _name = 'product.template'
     _mail_post_access = 'read'
 
-    website_message_ids = fields.One2many(
-        'mail.message', 'res_id',
-        domain=lambda self: ['&', ('model', '=', self._name), ('message_type', '=', 'comment')],
-        string='Website Comments',
-    )
     website_description = fields.Html('Description for the website', sanitize_attributes=False, translate=html_translate)
     alternative_product_ids = fields.Many2many('product.template', 'product_alternative_rel', 'src_id', 'dest_id',
                                                string='Alternative Products', help='Suggest more expensive alternatives to '
@@ -129,25 +127,21 @@ class ProductTemplate(models.Model):
                                         help="Categories can be published on the Shop page (online catalog grid) to help "
                                         "customers find all the items within a category. To publish them, go to the Shop page, "
                                         "hit Customize and turn *Product Categories* on. A product can belong to several categories.")
-    availability = fields.Selection([
-        ('empty', 'Display Nothing'),
-        ('in_stock', 'In Stock'),
-        ('warning', 'Warning'),
-    ], "Availability", default='empty', help="Adds an availability status on the web product page.")
-    availability_warning = fields.Text("Availability Warning", translate=True)
     product_image_ids = fields.One2many('product.image', 'product_tmpl_id', string='Images')
 
     website_price = fields.Float('Website price', compute='_website_price', digits=dp.get_precision('Product Price'))
     website_public_price = fields.Float('Website public price', compute='_website_price', digits=dp.get_precision('Product Price'))
+    website_price_difference = fields.Boolean('Website price difference', compute='_website_price')
 
     def _website_price(self):
         # First filter out the ones that have no variant:
         # This makes sure that every template below has a corresponding product in the zipped result.
         self = self.filtered('product_variant_id')
         # use mapped who returns a recordset with only itself to prefetch (and don't prefetch every product_variant_ids)
-        for template, product in zip(self, self.mapped('product_variant_id')):
+        for template, product in pycompat.izip(self, self.mapped('product_variant_id')):
             template.website_price = product.website_price
             template.website_public_price = product.website_public_price
+            template.website_price_difference = product.website_price_difference
 
     def _default_website_sequence(self):
         self._cr.execute("SELECT MIN(website_sequence) FROM %s" % self._table)
@@ -188,20 +182,25 @@ class Product(models.Model):
 
     website_price = fields.Float('Website price', compute='_website_price', digits=dp.get_precision('Product Price'))
     website_public_price = fields.Float('Website public price', compute='_website_price', digits=dp.get_precision('Product Price'))
+    website_price_difference = fields.Boolean('Website price difference', compute='_website_price')
 
     def _website_price(self):
         qty = self._context.get('quantity', 1.0)
         partner = self.env.user.partner_id
-        pricelist = self.env['website'].get_current_website().get_current_pricelist()
+        current_website = self.env['website'].get_current_website()
+        pricelist = current_website.get_current_pricelist()
+        company_id = current_website.company_id
 
         context = dict(self._context, pricelist=pricelist.id, partner=partner)
         self2 = self.with_context(context) if self._context != context else self
 
         ret = self.env.user.has_group('sale.group_show_price_subtotal') and 'total_excluded' or 'total_included'
 
-        for p, p2 in zip(self, self2):
-            taxes = partner.property_account_position_id.map_tax(p.taxes_id)
+        for p, p2 in pycompat.izip(self, self2):
+            taxes = partner.property_account_position_id.map_tax(p.taxes_id.filtered(lambda x: x.company_id == company_id))
             p.website_price = taxes.compute_all(p2.price, pricelist.currency_id, quantity=qty, product=p2, partner=partner)[ret]
+            price_without_pricelist = taxes.compute_all(p.list_price, pricelist.currency_id)[ret]
+            p.website_price_difference = False if float_is_zero(price_without_pricelist - p.website_price, precision_rounding=pricelist.currency_id.rounding) else True
             p.website_public_price = taxes.compute_all(p2.lst_price, quantity=qty, product=p2, partner=partner)[ret]
 
     @api.multi
@@ -209,10 +208,11 @@ class Product(models.Model):
         self.ensure_one()
         return self.product_tmpl_id.website_publish_button()
 
+
 class ProductAttribute(models.Model):
     _inherit = "product.attribute"
 
-    type = fields.Selection([('radio', 'Radio'), ('select', 'Select'), ('color', 'Color'), ('hidden', 'Hidden')], default='radio')
+    type = fields.Selection([('radio', 'Radio'), ('select', 'Select'), ('color', 'Color')], default='radio')
 
 
 class ProductAttributeValue(models.Model):

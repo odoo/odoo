@@ -2,27 +2,57 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
+from odoo.tools import float_is_zero
 
 
-class Event(models.Model):
+class EventType(models.Model):
+    _inherit = 'event.type'
 
-    _inherit = 'event.event'
-
-    def _default_tickets(self):
+    @api.model
+    def _get_default_event_ticket_ids(self):
         product = self.env.ref('event_sale.product_product_event', raise_if_not_found=False)
         if not product:
-            return self.env['event.event.ticket']
-        return [{
+            return False
+        return [(0, 0, {
             'name': _('Registration'),
             'product_id': product.id,
             'price': 0,
-        }]
+        })]
 
-    event_ticket_ids = fields.One2many('event.event.ticket', 'event_id', string='Event Ticket',
-        default=lambda self: self._default_tickets(), copy=True)
+    use_ticketing = fields.Boolean('Ticketing')
+    event_ticket_ids = fields.One2many(
+        'event.event.ticket', 'event_type_id',
+        string='Tickets', default=_get_default_event_ticket_ids)
+
+    @api.onchange('name')
+    def _onchange_name(self):
+        if self.name:
+            self.event_ticket_ids.filtered(lambda ticket: ticket.name == _('Registration')).update({
+                'name': _('Registration for %s') % self.name
+            })
+
+
+class Event(models.Model):
+    _inherit = 'event.event'
+
+    event_ticket_ids = fields.One2many(
+        'event.event.ticket', 'event_id', string='Event Ticket',
+        copy=True)
+
+    @api.onchange('event_type_id')
+    def _onchange_type(self):
+        super(Event, self)._onchange_type()
+        if self.event_type_id.use_ticketing:
+            self.event_ticket_ids = [(5, 0, 0)] + [
+                (0, 0, {
+                    'name': self.name and _('Registration for %s') % self.name or ticket.name,
+                    'product_id': ticket.product_id.id,
+                    'price': ticket.price,
+                })
+                for ticket in self.event_type_id.event_ticket_ids]
 
     @api.multi
     def _is_event_registrable(self):
@@ -32,7 +62,6 @@ class Event(models.Model):
         return all(self.event_ticket_ids.with_context(active_test=False).mapped(lambda t: t.product_id.active))
 
 class EventTicket(models.Model):
-
     _name = 'event.event.ticket'
     _description = 'Event Ticket'
 
@@ -40,7 +69,8 @@ class EventTicket(models.Model):
         return self.env.ref('event_sale.product_product_event', raise_if_not_found=False)
 
     name = fields.Char(string='Name', required=True, translate=True)
-    event_id = fields.Many2one('event.event', string="Event", required=True, ondelete='cascade')
+    event_type_id = fields.Many2one('event.type', string='Event Category', ondelete='cascade')
+    event_id = fields.Many2one('event.event', string="Event", ondelete='cascade')
     product_id = fields.Many2one('product.product', string='Product',
         required=True, domain=[("event_ok", "=", True)],
         default=_default_product_id)
@@ -121,6 +151,11 @@ class EventTicket(models.Model):
             if record.seats_max and record.seats_available < 0:
                 raise ValidationError(_('No more available seats for the ticket'))
 
+    @api.constrains('event_type_id', 'event_id')
+    def _constrains_event(self):
+        if any(ticket.event_type_id and ticket.event_id for ticket in self):
+            raise UserError(_('Ticket should belong to either event category or event but not both'))
+
     @api.onchange('product_id')
     def _onchange_product_id(self):
         self.price = self.product_id.list_price or 0
@@ -131,10 +166,10 @@ class EventRegistration(models.Model):
 
     event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket')
     # in addition to origin generic fields, add real relational fields to correctly
-    # handle attendees linked to sale orders and their lines
+    # handle attendees linked to sales orders and their lines
     # TDE FIXME: maybe add an onchange on sale_order_id + origin
-    sale_order_id = fields.Many2one('sale.order', string='Source Sale Order', ondelete='cascade')
-    sale_order_line_id = fields.Many2one('sale.order.line', string='Sale Order Line', ondelete='cascade')
+    sale_order_id = fields.Many2one('sale.order', string='Source Sales Order', ondelete='cascade')
+    sale_order_line_id = fields.Many2one('sale.order.line', string='Sales Order Line', ondelete='cascade')
 
     @api.multi
     @api.constrains('event_ticket_id', 'state')
@@ -178,3 +213,23 @@ class EventRegistration(models.Model):
                 'sale_order_line_id': line_id.id,
             })
         return att_data
+
+    @api.multi
+    def summary(self):
+        res = super(EventRegistration, self).summary()
+        if self.event_ticket_id.product_id.image_medium:
+            res['image'] = '/web/image/product.product/%s/image_medium' % self.event_ticket_id.product_id.id
+        information = res.setdefault('information', {})
+        information.append((_('Name'), self.name))
+        information.append((_('Ticket'), self.event_ticket_id.name or _('None')))
+        order = self.sale_order_id.sudo()
+        order_line = self.sale_order_line_id.sudo()
+        if not order or float_is_zero(order_line.price_total, precision_digits=order.currency_id.rounding):
+            payment_status = _('Free')
+        elif not order.invoice_ids or any(invoice.state != 'paid' for invoice in order.invoice_ids):
+            payment_status = _('To pay')
+            res['alert'] = _('The registration must be paid')
+        else:
+            payment_status = _('Paid')
+        information.append((_('Payment'), payment_status))
+        return res

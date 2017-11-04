@@ -23,7 +23,19 @@
                 <separator/>
                 <filter string="Unscheduled Maintenance" domain="[('schedule_date', '=', False)]" name="unscheduled"/>
                 <separator/>
-                <filter string="My Requests" name="my_requests" domain="[('owner_user_id', '=', uid)]"/>
+                <filter string="My Requests" name="my_requests" domain="[('technician_user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="My Activities" name="activities_my"
+                    domain="[('activity_ids.user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="Late Activities" name="activities_overdue"
+                    domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records which has next action date is before today"/>
+                <filter string="Today Activities" name="activities_today"
+                    domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        ]"/>
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
@@ -46,33 +58,33 @@
                 <header>
                     <button string="Cancel" name="archive_equipment_request" type="object" attrs="{'invisible': [('archive', '=', True)]}"/>
                     <button string="Reopen Request" name="reset_equipment_request" type="object" attrs="{'invisible': [('archive', '=', False)]}"/>
-                    <field name="stage_id" widget="statusbar" clickable="true" readonly="1" attrs="{'invisible': [('archive', '=', True)]}"/>
+                    <field name="stage_id" widget="statusbar" clickable="true" attrs="{'invisible': [('archive', '=', True)]}"/>
                 </header>
                 <sheet>
                     <div attrs="{'invisible': [('archive', '=', False)]}">
                         <span class="label label-warning pull-right">Canceled</span>
                     </div>
                     <div class="oe_right">
-                        <field name="kanban_state" class="oe_inline" widget="kanban_state_selection"/>
+                        <field name="kanban_state" class="oe_inline" widget="state_selection"/>
                     </div>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" string="Subject"/>
+                        <label for="name" class="oe_edit_only" string="Name"/>
                         <h1>
-                            <field name="name" placeholder="Maintenance Subject"/>
+                            <field name="name" placeholder="Maintenance Request"/>
                         </h1>
                     </div>
                     <group>
                         <group>
                             <field name="owner_user_id" string="Requested By"/>
                             <field name="equipment_id"  context="{'default_category_id':category_id}"/>
-                            <field name="category_id" groups="maintenance.group_equipment_manager"/>
-                            <field name="request_date"/>
-                            <field name="close_date" groups="base.group_no_one"/>
+                            <field name="category_id" groups="maintenance.group_equipment_manager" attrs="{'invisible': [('equipment_id', '=', False)]}"/>
+                            <field name="request_date" readonly="True"/>
+                            <field name="close_date" groups="base.group_no_one" readonly="True"/>
                             <field name="archive" invisible="1"/>
                             <field name="maintenance_type" widget="radio"/>
                         </group>
                         <group>
-                            <field name="maintenance_team_id"/>
+                            <field name="maintenance_team_id" options="{'no_create': True, 'no_open': True}"/>
                             <field name="technician_user_id" string="Responsible"/>
                             <label for="schedule_date"/>
                             <div class="o_row">
@@ -87,6 +99,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
             </form>
@@ -107,6 +120,8 @@
                 <field name="category_id"/>
                 <field name="kanban_state"/>
                 <field name="message_needaction_counter"/>
+                <field name="activity_ids" />
+                <field name="activity_state" />
                 <templates>
                     <t t-name="kanban-tooltip">
                        <ul class="oe_kanban_tooltip">
@@ -119,7 +134,7 @@
                             <div class="o_dropdown_kanban dropdown">
 
                                 <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
-                                    <span class="fa fa-bars fa-lg"/>
+                                    <span class="fa fa-ellipsis-v"/>
                                 </a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                     <t t-if="widget.editable"><li><a type="edit">Edit...</a></li></t>
@@ -128,22 +143,28 @@
                                 </ul>
                             </div>
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
-                                <div>
-                                    <b><field name="name"/></b> <br/>
-                                    <span name="owner_user_id" t-if="record.owner_user_id.raw_value"><field name="owner_user_id"/><br/></span>
-                                    <span class="oe_grey" t-if="record.equipment_id.raw_value"><field name="equipment_id"/><br/></span>
+                                <div class="o_kanban_record_top">
+                                    <b class="o_kanban_record_title"><field name="name"/></b>
                                 </div>
-                                <div class="oe_kanban_footer_left" style="margin-top:2px;">
-                                    <t t-if="record.message_needaction_counter.raw_value">
-                                        <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
-                                    </t>
+                                <div class="o_kanban_record_body">
+                                    <span name="owner_user_id" t-if="record.owner_user_id.raw_value">Requested by : <field name="owner_user_id"/><br/></span>
+                                    <span name="technician_user_id" t-if="record.technician_user_id.raw_value">Responsible : <field name="technician_user_id"/><br/></span>
+                                    <span class="oe_grey" t-if="record.equipment_id.raw_value"><field name="equipment_id"/><br/></span>
                                     <span t-if="record.category_id.raw_value"><field name="category_id"/></span>
                                 </div>
-                                <div class="oe_kanban_bottom_right">
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.owner_user_id.raw_value)" t-att-title="record.owner_user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
-                                    <div class="pull-left" groups="base.group_user">
-                                        <field name="kanban_state" widget="kanban_state_selection"/>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
                                         <field name="priority" widget="priority"/>
+                                        <t t-if="record.message_needaction_counter.raw_value">
+                                            <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                        </t>
+                                        <div class="o_kanban_inline_block ml4 mr4">
+                                            <field name="activity_ids" widget="kanban_activity" />
+                                        </div>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="kanban_state" widget="state_selection"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.technician_user_id.raw_value)" t-att-title="record.technician_user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                     </div>
                                 </div>
                             </div>
@@ -198,7 +219,7 @@
         <field name="name">equipment.request.calendar</field>
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
-            <calendar date_start="schedule_date" color="technician_user_id" date_delay="duration">
+            <calendar date_start="schedule_date" date_delay="duration" color="technician_user_id">
                 <field name="name"/>
                 <field name="technician_user_id"/>
             </calendar>
@@ -266,6 +287,17 @@
         <field name="res_model">maintenance.request</field>
         <field name="view_mode">calendar,kanban,tree,form,pivot,graph</field>
         <field name="view_id" ref="hr_equipment_view_calendar"/>
+    </record>
+
+    <record id="maintenance_request_action_reports" model="ir.actions.act_window">
+        <field name="name">Maintenance Requests</field>
+        <field name="res_model">maintenance.request</field>
+        <field name="view_mode">graph,pivot,kanban,tree,form,calendar</field>
+        <field name="help" type="html">
+            <p>
+                No maintenance request.
+            </p>
+        </field>
     </record>
 
     <!-- equiment : views -->
@@ -336,6 +368,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
             </form>
@@ -358,6 +391,8 @@
                 <field name="maintenance_open_count"/>
                 <field name="next_action_date"/>
                 <field name="technician_user_id"/>
+                <field name="activity_ids" />
+                <field name="activity_state" />
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
@@ -370,29 +405,40 @@
                             <div class="o_dropdown_kanban dropdown">
 
                                 <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
-                                    <span class="fa fa-bars fa-lg"/>
+                                    <span class="fa fa-ellipsis-v"/>
                                 </a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                     <t t-if="widget.editable"><li><a type="edit">Edit...</a></li></t>
                                     <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
+                                    <li class="divider"></li>
+                                    <li class="dropdown-header">Record Colour</li>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
                             </div>
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
-                                <div><b><field name="name"/><span t-if="record.model.raw_value"> (<field name="model"/>)</span></b></div>
-                                <div class="mt4">
+                                <div class="o_kanban_record_top">
+                                    <b class="o_kanban_record_title"><field name="name"/><small><span t-if="record.model.raw_value"> (<field name="model"/>)</span></small></b>
+                                </div>
+                                <div class="o_kanban_record_body">
                                     <div t-if="record.serial_no.raw_value"><field name="serial_no"/></div>
                                     <div t-if="!record.owner_user_id.raw_value">Unassigned</div>
                                     <div t-if="record.owner_user_id.raw_value"><field name="owner_user_id"/></div>
                                 </div>
-                                <div class="oe_kanban_bottom_right">
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.owner_user_id.raw_value)" t-att-title="record.owner_user_id.value" width="27" height="27" class="oe_kanban_avatar"/>
-                                </div>
-                                <div class="oe_kanban_footer_left mt4 label label-danger" t-if="record.maintenance_open_count.raw_value" >
-                                    <t t-raw="record.maintenance_open_count.raw_value"/> Request
-                                </div>
-                                <div class="oe_kanban_footer_left mt4 label label-default" t-if="record.next_action_date.raw_value" >
-                                    <t t-raw="moment(record.next_action_date.raw_value).format('MMMM Do')"/>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <div class="label label-danger" t-if="record.maintenance_open_count.raw_value" >
+                                            <t t-raw="record.maintenance_open_count.raw_value"/> Request
+                                        </div>
+                                        <div class="label label-default" t-if="record.next_action_date.raw_value" >
+                                            <t t-raw="moment(record.next_action_date.raw_value).format('MMMM Do')"/>
+                                        </div>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <div class="o_kanban_inline_block">
+                                            <field name="activity_ids" widget="kanban_activity" />
+                                        </div>
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.owner_user_id.raw_value)" t-att-title="record.owner_user_id.value" width="27" height="27" class="oe_kanban_avatar"/>
+                                    </div>
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
@@ -438,6 +484,20 @@
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
+                <filter string="My Activities" name="activities_my"
+                    domain="[('activity_ids.user_id', '=', uid)]"/>
+                <filter string="Today Activities" name="activities_today"
+                    domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Upcoming Activities (7 days)" name="activities_week"
+                    domain="['&amp;', ('activity_ids.date_deadline', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                             ('activity_ids.date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                    ]"/>
+                <filter string="Overdue Activities" name="activities_overdue"
+                    domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records which has next action date is before today"/>
+                <filter string="Upcoming Activities (All)" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        ]"/>
                 <!-- <filter string="Archived" name="inactive" domain="[('active','=',False)]"/> -->
                 <group  expand='0' string='Group by...'>
                     <filter string='Technicians' domain="[]" context="{'group_by': 'technician_user_id'}"/>
@@ -460,7 +520,7 @@
             </p><p>
                 This application helps you to track equipments used by employees.
                 Create some laptop, printer or phone and link each equipment to
-                an employee or departement. You will manage allocations, issues
+                an employee or department. You will manage allocations, issues
                 and maintenance of equipment.
             </p>
         </field>
@@ -482,7 +542,7 @@
                 Click to add a new Engine.
             </p><p>
                 This application helps you to track equipments used by employees.
-                Create some laptop, printer or phone and link each equipment to an employee or departement.
+                Create some laptop, printer or phone and link each equipment to an employee or department.
                 You will manage allocations, issues and maintenance of equipment.
             </p>
         </field>
@@ -563,11 +623,44 @@
         </field>
     </record>
 
+    <record id="view_maintenance_equipment_category_kanban" model="ir.ui.view">
+        <field name="name">maintenance.equipment.category.kanban</field>
+        <field name="model">maintenance.equipment.category</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="technician_user_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="mb4">
+                                <strong><field name="name"/></strong>
+                                <img t-att-src="kanban_image('res.users', 'image_small', record.technician_user_id.raw_value)" t-att-title="record.technician_user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                            </div>
+                            <div class="row mt4">
+                                <div class="col-xs-6">
+                                    <span class="badge">
+                                        <strong>Equipments:</strong> <field name="equipment_count"/>
+                                    </span>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <span class="badge">
+                                        <strong>Maintenance:</strong> <field name="maintenance_count"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <!-- equipment.category : actions -->
     <record id="hr_equipment_category_action" model="ir.actions.act_window">
         <field name="name">Equipment Categories</field>
         <field name="res_model">maintenance.equipment.category</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="view_id" ref="hr_equipment_category_view_tree"/>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
@@ -599,14 +692,30 @@
             </tree>
         </field>
     </record>
+    <record id="hr_equipment_stage_view_kanban" model="ir.ui.view">
+        <field name="name">equipment.stage.kanban</field>
+        <field name="model">maintenance.stage</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div>
+                                <strong><field name="name"/></strong>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
 
     <!-- equipment.stages : actions -->
     <record id="hr_equipment_stage_action" model="ir.actions.act_window">
         <field name="name">Stages</field>
         <field name="res_model">maintenance.stage</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="hr_equipment_stage_view_tree"/>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to add a stage in the maintenance request.
@@ -622,12 +731,16 @@
             <form string="Maintenance Team">
                 <sheet>
                 <div class="oe_title">
-                    <label for="name" class="oe_edit_only" string="Category Name"/>
+                    <label for="name" class="oe_edit_only" string="Team Name"/>
                     <h1>
                         <field name="name"/>
                     </h1>
                 </div>
-                <field name="partner_id"/>
+                <group>
+                    <group>
+                        <field name="member_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    </group>
+                </group>
                 </sheet>
             </form>
         </field>
@@ -637,9 +750,27 @@
         <field name="name">maintenance.team.tree</field>
         <field name="model">maintenance.team</field>
         <field name="arch" type="xml">
-            <tree string="Maintenance Team" editable="top">
+            <tree string="Maintenance Team">
                 <field name="name"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="maintenance_team_view_kanban" model="ir.ui.view">
+        <field name="name">maintenance.team.kanban</field>
+        <field name="model">maintenance.team</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div>
+                                <strong><field name="name"/></strong>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 
@@ -655,28 +786,32 @@
                 <field name="todo_request_count_date"/>
                 <field name="todo_request_count_high_priority"/>
                 <field name="todo_request_count_block"/>
+                <field name="todo_request_count_unscheduled"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="#{kanban_color(record.color.raw_value)}">
-                            <div class="o_kanban_card_header">
+                            <div t-attf-class="o_kanban_card_header">
                                 <div class="o_kanban_card_header_title">
-                                    <div class="o_primary"><field name="name"/></div>
+                                    <div class="o_primary">
+                                        <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action">
+                                            <field name="name"/>
+                                        </a></div>
                                 </div>
                                 <div class="o_kanban_manage_button_section">
-                                    <a class="o_kanban_manage_toggle_button" href="#">More <i class="fa fa-caret-down"/></a>
+                                    <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" /></a>
                                 </div>
                             </div>
-                            <div class="container o_kanban_card_content o_visible">
+                            <div class="container o_kanban_card_content">
                                 <div class="row">
                                     <div class="col-xs-6 o_kanban_primary_left">
-                                        <button class="btn btn-primary" name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action">
+                                        <button class="btn btn-primary" name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_todo': 1}">
                                             <t t-esc="record.todo_request_count.value"/> To Do
                                         </button>
                                     </div>
                                     <div class="col-xs-6 o_kanban_primary_right">
                                         <div class="row">
                                             <div class="col-xs-9">
-                                                <a name="%(hr_equipment_request_action_cal)d" type="action" domain="[('maintenance_team_id', '=', active_id)]">
+                                                <a name="%(hr_equipment_request_action_cal)d" type="action">
                                                     Scheduled
                                                 </a>
                                             </div>
@@ -691,7 +826,7 @@
                                             <div class="col-xs-3">
                                                 <t t-esc="record.todo_request_count_high_priority.value"/>
                                             </div>
-                                             <div class="col-xs-9">
+                                            <div class="col-xs-9">
                                                 <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_kanban_state_block': 1}">
                                                     Blocked
                                                 </a>
@@ -699,10 +834,18 @@
                                             <div class="col-xs-3">
                                                 <t t-esc="record.todo_request_count_block.value"/>
                                             </div>
+                                            <div class="col-xs-9">
+                                                <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_unscheduled': 1}">
+                                                    Unscheduled
+                                                </a>
+                                            </div>
+                                            <div class="col-xs-3">
+                                                <t t-esc="record.todo_request_count_unscheduled.value"/>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div><div class="container o_kanban_card_manage_pane o_invisible">
+                            </div><div class="container o_kanban_card_manage_pane">
                                 <div class="row">
                                     <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">
                                         <div class="o_kanban_card_manage_title">
@@ -731,7 +874,12 @@
                                     </div>
                                     <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_new">
                                         <div class="o_kanban_card_manage_title">
-                                            <span>Reports</span>
+                                            <span>Reporting</span>
+                                        </div>
+                                        <div>
+                                            <a name="%(maintenance_request_action_reports)d" type="action" context="{'search_default_maintenance_team_id': active_id}">
+                                            Maintenance Requests
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -755,9 +903,11 @@
     <record id="maintenance_team_action_settings" model="ir.actions.act_window">
         <field name="name">Teams</field>
         <field name="res_model">maintenance.team</field>
-        <field name="view_mode">tree</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="maintenance_team_view_tree"/>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('maintenance_team_view_tree')}),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('maintenance_team_view_kanban')})]"/>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to add a team in the maintenance request.
@@ -770,6 +920,7 @@
         <field name="res_model">maintenance.team</field>
         <field name="view_mode">kanban,form</field>
         <field name="view_type">form</field>
+        <field name="view_id" ref="maintenance_team_kanban"/>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to add a stage in the maintenance request.
@@ -794,7 +945,7 @@
         sequence="0"/>
 
     <menuitem
-        id="menu_m_request" 
+        id="menu_m_request"
         name="Maintenance"
         parent="menu_maintenance_title"
         groups="group_equipment_manager,base.group_user"
@@ -825,7 +976,7 @@
         sequence="2"/>
 
     <menuitem
-        id="menu_m_reports" 
+        id="menu_m_reports"
         name="Reporting"
         parent="menu_maintenance_title"
         groups="group_equipment_manager,base.group_user"
@@ -844,6 +995,16 @@
         parent="menu_m_reports"
         groups="group_equipment_manager,base.group_user"
         sequence="2"/>
+
+    <menuitem
+        id="maintenance_reporting"
+        name="Reporting"
+        parent="menu_maintenance_title"
+        sequence="20"/>
+    <menuitem
+        id="maintenance_request_reporting"
+        action="maintenance_request_action_reports"
+        parent="maintenance_reporting"/>
 
     <menuitem
         id="menu_maintenance_configuration"
@@ -872,5 +1033,6 @@
         name="Maintenance Stages"
         parent="menu_maintenance_configuration"
         action="hr_equipment_stage_action"
+        groups="base.group_no_one"
         sequence="3" />
 </odoo>

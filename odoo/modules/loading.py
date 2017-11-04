@@ -19,8 +19,7 @@ import odoo.modules.registry
 import odoo.tools as tools
 
 from odoo import api, SUPERUSER_ID
-from odoo.modules.module import adapt_version, initialize_sys_path, \
-                                load_openerp_module, runs_post_install
+from odoo.modules.module import adapt_version, initialize_sys_path, load_openerp_module
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -104,7 +103,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
     module_count = len(graph)
     _logger.info('loading %d modules...', module_count)
 
-    registry.clear_manual_fields()
+    registry.clear_caches()
 
     # register, instantiate and initialize models for each modules
     t0 = time.time()
@@ -132,8 +131,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
         loaded_modules.append(package.name)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
-            registry.setup_models(cr, partial=True)
+            registry.setup_models(cr)
             registry.init_models(cr, model_names, {'module': package.name})
+            cr.commit()
 
         idref = {}
 
@@ -148,7 +148,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             module = env['ir.module.module'].browse(module_id)
 
             if perform_checks:
-                module.check()
+                module._check()
 
             if package.state=='to upgrade':
                 # upgrading the module information
@@ -164,9 +164,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
             # Update translations for all installed languages
             overwrite = odoo.tools.config["overwrite_existing_translations"]
-            module.with_context(overwrite=overwrite).update_translations()
+            module.with_context(overwrite=overwrite)._update_translations()
 
-            registry._init_modules.add(package.name)
+            if package.name is not None:
+                registry._init_modules.add(package.name)
 
             if new_install:
                 post_init = package.info.get('post_init_hook')
@@ -184,6 +185,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     # Python tests
                     env['ir.http']._clear_routing_map()     # force routing map to be rebuilt
                     report.record_result(odoo.modules.module.run_unit_tests(module_name, cr.dbname))
+                    # tests may have reset the environment
+                    env = api.Environment(cr, SUPERUSER_ID, {})
+                    module = env['ir.module.module'].browse(module_id)
 
             processed_modules.append(package.name)
 
@@ -198,12 +202,13 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 if hasattr(package, kind):
                     delattr(package, kind)
 
-        registry._init_modules.add(package.name)
+        if package.name is not None:
+            registry._init_modules.add(package.name)
         cr.commit()
 
     _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
 
-    registry.clear_manual_fields()
+    registry.clear_caches()
 
     cr.commit()
 
@@ -262,7 +267,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # This is a brand new registry, just created in
         # odoo.modules.registry.Registry.new().
         registry = odoo.registry(cr.dbname)
-        env = api.Environment(cr, SUPERUSER_ID, {})
 
         if 'base' in tools.config['update'] or 'all' in tools.config['update']:
             cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
@@ -282,7 +286,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         load_lang = tools.config.pop('load_language')
         if load_lang or update_module:
             # some base models are used below, so make sure they are set up
-            registry.setup_models(cr, partial=True)
+            registry.setup_models(cr)
 
         if load_lang:
             for lang in load_lang.split(','):
@@ -290,12 +294,12 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # STEP 2: Mark other modules to be loaded/updated
         if update_module:
+            env = api.Environment(cr, SUPERUSER_ID, {})
             Module = env['ir.module.module']
-            if ('base' in tools.config['init']) or ('base' in tools.config['update']):
-                _logger.info('updating modules list')
-                Module.update_list()
+            _logger.info('updating modules list')
+            Module.update_list()
 
-            _check_module_names(cr, itertools.chain(tools.config['init'].keys(), tools.config['update'].keys()))
+            _check_module_names(cr, itertools.chain(tools.config['init'], tools.config['update']))
 
             module_names = [k for k, v in tools.config['init'].items() if v]
             if module_names:
@@ -338,6 +342,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                     ['to install'], force, status, report,
                     loaded_modules, update_module)
 
+        registry.loaded = True
         registry.setup_models(cr)
 
         # STEP 3.5: execute migration end-scripts
@@ -347,6 +352,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # STEP 4: Finish and cleanup installations
         if processed_modules:
+            env = api.Environment(cr, SUPERUSER_ID, {})
             cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
                 if model in registry and not registry[model]._abstract and not registry[model]._transient:
@@ -382,6 +388,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             cr.execute("SELECT name, id FROM ir_module_module WHERE state=%s", ('to remove',))
             modules_to_remove = dict(cr.fetchall())
             if modules_to_remove:
+                env = api.Environment(cr, SUPERUSER_ID, {})
                 pkgs = reversed([p for p in graph if p.name in modules_to_remove])
                 for pkg in pkgs:
                     uninstall_hook = pkg.info.get('uninstall_hook')
@@ -400,6 +407,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # STEP 6: verify custom views on every model
         if update_module:
+            env = api.Environment(cr, SUPERUSER_ID, {})
             View = env['ir.ui.view']
             for model in registry:
                 try:
@@ -413,21 +421,13 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             _logger.info('Modules loaded.')
 
         # STEP 8: call _register_hook on every model
+        env = api.Environment(cr, SUPERUSER_ID, {})
         for model in env.values():
             model._register_hook()
 
-        # STEP 9: Run the post-install tests
+        # STEP 9: save installed/updated modules for post-install tests
+        registry.updated_modules += processed_modules
         cr.commit()
 
-        t0 = time.time()
-        t0_sql = odoo.sql_db.sql_counter
-        if odoo.tools.config['test_enable']:
-            if update_module:
-                cr.execute("SELECT name FROM ir_module_module WHERE state='installed' and name = ANY(%s)", (processed_modules,))
-            else:
-                cr.execute("SELECT name FROM ir_module_module WHERE state='installed'")
-            for module_name in cr.fetchall():
-                report.record_result(odoo.modules.module.run_unit_tests(module_name[0], cr.dbname, position=runs_post_install))
-            _logger.log(25, "All post-tested in %.2fs, %s queries", time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
     finally:
         cr.close()

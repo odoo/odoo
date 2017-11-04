@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from xml.etree import ElementTree
+from lxml import etree as ElementTree
 
 from odoo.http import Controller, route, request
 
@@ -29,7 +29,7 @@ class Board(Controller):
                         'domain': str(domain)
                     })
                     column.insert(0, new_action)
-                    arch = ElementTree.tostring(xml, 'utf-8')
+                    arch = ElementTree.tostring(xml, encoding='unicode')
                     request.env['ir.ui.view.custom'].create({
                         'user_id': request.session.uid,
                         'ref_id': view_id,

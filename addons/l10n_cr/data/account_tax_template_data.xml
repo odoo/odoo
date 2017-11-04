@@ -22,6 +22,7 @@
             <field name="account_id" ref="account_account_template_0_212101"/>
             <field name="refund_account_id" ref="account_account_template_0_212101"/>
             <field name="tag_ids" eval="[(6,0,[ref('tag_sale')])]"/>
+            <field name="tax_group_id" ref="tax_group_13"/>
         </record>
         <record id="account_tax_template_IV_1" model="account.tax.template">
             <field name="name">Purchase Tax</field>
@@ -34,6 +35,7 @@
             <field name="account_id" ref="account_account_template_0_212101"/>
             <field name="refund_account_id" ref="account_account_template_0_212101"/>
             <field name="tag_ids" eval="[(6,0,[ref('tag_purchase')])]"/>
+            <field name="tax_group_id" ref="tax_group_13"/>
         </record>
 
         <!-- Default Tax -->

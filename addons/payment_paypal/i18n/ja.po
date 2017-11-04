@@ -3,16 +3,16 @@
 # * payment_paypal
 # 
 # Translators:
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
-# Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2016
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
+# Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2017\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,6 +41,13 @@ msgid "Payment Acquirer"
 msgstr "決済サービス"
 
 #. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_pdt_token
+msgid ""
+"Payment Data Transfer allows you to receive notification of successful "
+"payments as they are made."
+msgstr ""
+
+#. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "決済トランザクション"
@@ -61,12 +68,12 @@ msgid "Paypal Merchant ID"
 msgstr "PayPalマーチャントID"
 
 #. module: payment_paypal
-#: model:ir.ui.view,arch_db:payment_paypal.transaction_form_paypal
-msgid "Paypal TX Details"
-msgstr "Paypal トランザクションの詳細"
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_pdt_token
+msgid "Paypal PDT Token"
+msgstr ""
 
 #. module: payment_paypal
-#: code:addons/payment_paypal/models/payment.py:134
+#: code:addons/payment_paypal/models/payment.py:138
 #, python-format
 msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
 msgstr "Paypal：参照データが欠落している受信データ (%s)またはtxn_id (%s)"

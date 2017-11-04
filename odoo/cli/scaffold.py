@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import argparse
 import os
 import re
@@ -128,9 +129,9 @@ class template(object):
                        .dump(f, encoding='utf-8')
 
 def die(message, code=1):
-    print >>sys.stderr, message
+    print(message, file=sys.stderr)
     sys.exit(code)
 
 def warn(message):
     # ASK: shall we use logger ?
-    print "WARNING: " + message
+    print("WARNING:", message)

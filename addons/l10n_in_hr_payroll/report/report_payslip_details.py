@@ -9,13 +9,12 @@ class PayslipDetailsReportIN(models.AbstractModel):
     _inherit = 'report.hr_payroll.report_payslipdetails'
 
     @api.model
-    def render_html(self, docids, data=None):
+    def get_report_values(self, docids, data=None):
         payslips = self.env['hr.payslip'].browse(docids)
-        docargs = {
+        return {
             'doc_ids': docids,
             'doc_model': 'hr.payslip',
             'docs': payslips,
             'data': data,
             'get_details_by_rule_category': self.get_details_by_rule_category(payslips.mapped('details_by_salary_rule_category'))
         }
-        return self.env['report'].render('l10n_in_hr_payroll.report_payslipdetails', docargs)

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website.quote</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='sale_config_website_quote']" position="after">
+                <div class="content-group" attrs="{'invisible': [('module_website_quote','=',False)]}">
+                    <div class="mt16">
+                        <label for="default_template_id" class="o_light_label"/>
+                        <field name="default_template_id" class="oe_inline"/>
+                    </div>
+                    <div>
+                        <button name="%(website_quote.action_sale_quotation_template)d" icon="fa-arrow-right" type="action" string="Quotation Templates" class="btn-link"/>
+                    </div>
+                 </div>
+             </xpath>
+        </field>
+    </record>
+
+</odoo>

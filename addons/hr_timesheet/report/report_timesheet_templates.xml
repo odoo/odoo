@@ -1,7 +1,7 @@
 <odoo>
     <template id="report_timesheet">
-        <t t-call="report.html_container">
-            <t t-call="report.external_layout">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
                 <t t-set="show_task" t-value="bool(docs.mapped('task_id'))"/>
                 <t t-set="show_project" t-value="len(docs.mapped('project_id')) > 1"/>
                 <div class="page">

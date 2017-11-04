@@ -1,30 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * resource
-# 
+#
 # Translators:
-# Manuela Silva <manuela.silva@sky.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2016
-# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2016
-# Daniel C Santos <dcs@thinkopensolutions.pt>, 2016
-# Ricardo Correia <rcorreiavv@gmail.com>, 2016
+# Ricardo Correia <rcorreiavv@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Ricardo Correia <rcorreiavv@gmail.com>, 2016\n"
-"Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2015-11-25 14:36+0000\n"
+"Last-Translator: Ricardo Correia <rcorreiavv@gmail.com>\n"
+"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
+"pt/)\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:689
+#: code:addons/resource/resource.py:686
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (cópia)"
@@ -72,7 +68,7 @@ msgstr "Criado em"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_dayofweek
 msgid "Day of Week"
-msgstr "Dia da Semana"
+msgstr "Dia da semana"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_calendar_id
@@ -94,7 +90,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_display_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource_display_name
 msgid "Display Name"
-msgstr "Nome a Exibir"
+msgstr "Nome a Mostrar"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
@@ -113,8 +109,7 @@ msgid "End Date"
 msgstr "Data Final"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:738
-#, python-format
+#: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr "Erro! A data de inicio deve ser inferior à data de fim."
 
@@ -145,7 +140,7 @@ msgstr "Humano"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_id
 #: model:ir.model.fields,field_description:resource.field_resource_resource_id
 msgid "ID"
-msgstr "Id."
+msgstr "ID"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves_resource_id
@@ -184,7 +179,7 @@ msgstr "Última Modificação em"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_write_uid
 #: model:ir.model.fields,field_description:resource.field_resource_resource_write_uid
 msgid "Last Updated by"
-msgstr "Última Atualização por"
+msgstr "Última Actualização por"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_write_date
@@ -192,7 +187,7 @@ msgstr "Última Atualização por"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_write_date
 #: model:ir.model.fields,field_description:resource.field_resource_resource_write_date
 msgid "Last Updated on"
-msgstr "Última Atualização em"
+msgstr "Última Actualização em"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
@@ -239,8 +234,7 @@ msgstr "Razão"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_user_id
 msgid "Related user name for the resource to manage its access."
-msgstr ""
-"Nome do utilizador relacionado para o recurso para gerir o seu acesso."
+msgstr "Nome do utilizador relacionado para o recurso para gerir o seu acesso."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_resource_id
@@ -266,7 +260,7 @@ msgstr "Detalhes do Recurso"
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Leaves"
-msgstr "Ausências de Recurso"
+msgstr "Folhas de recursos"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_resource_type
@@ -288,7 +282,7 @@ msgstr "Recursos"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Leaves"
-msgstr "Ausências de Recursos"
+msgstr "Resources Leaves"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -314,7 +308,7 @@ msgstr "Recursos de pesquisa"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Search Working Period Leaves"
-msgstr "Procurar Ausências no Período de Trabalho"
+msgstr "Pesquisar Períodos de Licença em Trabalho"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_search
@@ -334,12 +328,12 @@ msgstr "Horas de início e fim de trabalho"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_date_from
 msgid "Starting Date"
-msgstr "Data de Início"
+msgstr "Data de início"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Leave by Month"
-msgstr "Data de Início das Ausências por Mês"
+msgstr "Data de Início das Ausências por mês"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -347,18 +341,12 @@ msgid "Sunday"
 msgstr "Domingo"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:714
-#, python-format
-msgid "The efficiency factor cannot be equal to 0."
-msgstr ""
-
-#. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
 msgid ""
 "This field depict the efficiency of the resource to complete tasks. e.g  "
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of"
-" 200%, then his load will only be 50%."
+"show a load of 100% for this phase by default, but if we put a efficiency of "
+"200%, then his load will only be 50%."
 msgstr ""
 "Este campo descreve a eficiência do recurso para completar tarefas. por "
 "exemplo, se os recursos forem colocados sozinhosn uma fase de 5 dias com 5 "
@@ -410,7 +398,7 @@ msgstr "Trabalho para"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_manager
 msgid "Workgroup Manager"
-msgstr "Gestor do Grupo de Trabalho"
+msgstr "Gestor do grupo de trabalho"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search

@@ -3,19 +3,19 @@
 # * website_blog
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Manami Hashi <manami@roomsfor.hk>, 2016
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
-# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2016
-# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Manami Hashi <manami@roomsfor.hk>, 2017
+# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2017
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-23 13:28+0000\n"
-"PO-Revision-Date: 2017-06-23 13:28+0000\n"
-"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Last-Translator: 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2017\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -254,7 +254,8 @@ msgid "Blog Name"
 msgstr "ブログ名"
 
 #. module: website_blog
-#: code:addons/website_blog/models/website.py:23
+#: code:addons/website_blog/models/website.py:22
+#: code:addons/website_blog/models/website.py:47
 #: model:ir.model,name:website_blog.model_blog_post
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_form
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
@@ -263,7 +264,13 @@ msgid "Blog Post"
 msgstr "ブログ投稿"
 
 #. module: website_blog
-#: code:addons/website_blog/models/website.py:27
+#: code:addons/website_blog/models/website.py:53
+#, python-format
+msgid "Blog Post <b>%s</b> seems to be calling this file !"
+msgstr ""
+
+#. module: website_blog
+#: code:addons/website_blog/models/website.py:28
 #, python-format
 msgid "Blog Post <b>%s</b> seems to have a link to this page !"
 msgstr "ブログ投稿 <b>%s</b> にはこのページへのリンクがあるようです。"
@@ -276,9 +283,12 @@ msgid "Blog Post Title"
 msgstr "ブログ投稿タイトル"
 
 #. module: website_blog
+#: code:addons/website_blog/models/website.py:24
+#: code:addons/website_blog/models/website.py:49
 #: model:ir.actions.act_window,name:website_blog.action_blog_post
 #: model:ir.ui.menu,name:website_blog.menu_page
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_list
+#, python-format
 msgid "Blog Posts"
 msgstr "ブログ記事"
 
@@ -398,7 +408,7 @@ msgid "Display Name"
 msgstr "表示名"
 
 #. module: website_blog
-#: model:ir.ui.view,arch_db:website_blog.blog_post_complete
+#: model:ir.ui.view,arch_db:website_blog.blog_edit_options
 msgid "Duplicate"
 msgstr "複製"
 
@@ -484,7 +494,7 @@ msgstr ""
 #. module: website_blog
 #: model:blog.blog,subtitle:website_blog.blog_blog_1
 msgid "Get in touch with us"
-msgstr "私たちと連絡をとる"
+msgstr "ニュースを掲載しています"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
@@ -661,7 +671,7 @@ msgstr "狭い"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website_blog.editor.js:21
+#: code:addons/website_blog/static/src/js/website_blog.editor.js:37
 #: model:ir.ui.view,arch_db:website_blog.content_new_blogpost
 #, python-format
 msgid "New Blog Post"
@@ -728,17 +738,17 @@ msgstr "モバイルでコンテンツを確認したら、プレビューを閉
 #. module: website_blog
 #: model:blog.blog,name:website_blog.blog_blog_1
 msgid "Our Blog"
-msgstr "私たちのブログ"
+msgstr "ブログ"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_blogs
 msgid "Our Blogs"
-msgstr "私たちのブログ"
+msgstr "ブログ"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_follow_us
 msgid "Participate on our social stream."
-msgstr "私たちの社会的な流れに参加してください。"
+msgstr "こちらからフォローしてください。"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_post_ids
@@ -759,7 +769,7 @@ msgstr ""
 "                         文書を添付することは超高速です。"
 
 #. module: website_blog
-#: code:addons/website_blog/controllers/main.py:263
+#: code:addons/website_blog/controllers/main.py:270
 #, python-format
 msgid "Public user cannot post comments on blog post."
 msgstr "パブリックユーザはブログ投稿にコメントを投稿できません。"
@@ -781,14 +791,14 @@ msgid "Published Post"
 msgstr "公開済投稿"
 
 #. module: website_blog
-#: model:ir.model.fields,field_description:website_blog.field_blog_post_post_date
-msgid "Published date"
-msgstr "公開日"
-
-#. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Publishing Options"
 msgstr "公開オプション"
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_post_date
+msgid "Publishing date"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
@@ -859,7 +869,7 @@ msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/models/website_blog.py:103
+#: code:addons/website_blog/models/website_blog.py:123
 #: code:addons/website_blog/static/src/js/website.tour.blog.js:52
 #, python-format
 msgid "Start writing here..."
@@ -873,7 +883,7 @@ msgstr "ステータス"
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_follow_us
 msgid "Stay updated :"
-msgstr "更新されたままです："
+msgstr "最新ニュースをお届けします:"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_subtitle
@@ -932,6 +942,13 @@ msgstr "Odooのコミュニケーションメカニズム"
 #: model:blog.post,website_meta_description:website_blog.blog_post_1
 msgid "The Future of Emails"
 msgstr "Eメールの未来"
+
+#. module: website_blog
+#: model:ir.model.fields,help:website_blog.field_blog_post_post_date
+msgid ""
+"The blog post will be visible for your visitors as of this date on the "
+"website if it is set as published."
+msgstr ""
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.latest_blogs
@@ -1115,4 +1132,4 @@ msgstr "ビュー"
 #. module: website_blog
 #: model:blog.tag,name:website_blog.blog_tag_2
 msgid "website"
-msgstr ""
+msgstr "ウェブサイト"

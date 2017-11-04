@@ -40,8 +40,8 @@ class ProductUoM(models.Model):
         default='reference', required=1)
 
     _sql_constraints = [
-        ('factor_gt_zero', 'CHECK (factor!=0)', _('The conversion ratio for a unit of measure cannot be 0!')),
-        ('rounding_gt_zero', 'CHECK (rounding>0)', _('The rounding precision must be greater than 0!'))
+        ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!'),
+        ('rounding_gt_zero', 'CHECK (rounding>0)', 'The rounding precision must be greater than 0!')
     ]
 
     @api.one

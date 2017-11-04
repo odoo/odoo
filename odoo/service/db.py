@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import base64
 import json
 import logging
 import os
@@ -7,32 +7,45 @@ import shutil
 import tempfile
 import threading
 import traceback
-import xml.etree.ElementTree as ET
+from xml.etree import ElementTree as ET
 import zipfile
 
 from functools import wraps
 from contextlib import closing
+from decorator import decorator
 
 import psycopg2
 
 import odoo
 from odoo import SUPERUSER_ID
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessDenied
 import odoo.release
 import odoo.sql_db
 import odoo.tools
+from odoo.sql_db import db_connect
+from odoo.release import version_info
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
 class DatabaseExists(Warning):
     pass
 
+
+def check_db_management_enabled(method):
+    def if_db_mgt_enabled(method, self, *args, **kwargs):
+        if not odoo.tools.config['list_db']:
+            _logger.error('Database management functions blocked, admin disabled database listing')
+            raise AccessDenied()
+        return method(self, *args, **kwargs)
+    return decorator(if_db_mgt_enabled, method)
+
 #----------------------------------------------------------
 # Master password required
 #----------------------------------------------------------
 
 def check_super(passwd):
-    if passwd and passwd == odoo.tools.config['admin_passwd']:
+    if passwd and odoo.tools.config.verify_admin_password(passwd):
         return True
     raise odoo.exceptions.AccessDenied()
 
@@ -53,7 +66,7 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
 
             if lang:
                 modules = env['ir.module.module'].search([('state', '=', 'installed')])
-                modules.update_translations(lang)
+                modules._update_translations(lang)
 
             if country_code:
                 countries = env['res.country'].search([('code', 'ilike', country_code)])
@@ -71,7 +84,7 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
 
             cr.execute('SELECT login, password FROM res_users ORDER BY login')
             cr.commit()
-    except Exception, e:
+    except Exception as e:
         _logger.exception('CREATE DATABASE failed:')
 
 def _create_empty_database(name):
@@ -79,13 +92,14 @@ def _create_empty_database(name):
     with closing(db.cursor()) as cr:
         chosen_template = odoo.tools.config['db_template']
         cr.execute("SELECT datname FROM pg_database WHERE datname = %s",
-                   (name,))
+                   (name,), log_exceptions=False)
         if cr.fetchall():
             raise DatabaseExists("database %r already exists!" % (name,))
         else:
             cr.autocommit(True)     # avoid transaction block
             cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (name, chosen_template))
 
+@check_db_management_enabled
 def exp_create_database(db_name, demo, lang, user_password='admin', login='admin', country_code=None):
     """ Similar to exp_create but blocking."""
     _logger.info('Create database `%s`.', db_name)
@@ -93,6 +107,7 @@ def exp_create_database(db_name, demo, lang, user_password='admin', login='admin
     _initialize_db(id, db_name, demo, lang, user_password, login, country_code)
     return True
 
+@check_db_management_enabled
 def exp_duplicate_database(db_original_name, db_name):
     _logger.info('Duplicate database `%s` to `%s`.', db_original_name, db_name)
     odoo.sql_db.close_db(db_original_name)
@@ -130,6 +145,7 @@ def _drop_conn(cr, db_name):
     except Exception:
         pass
 
+@check_db_management_enabled
 def exp_drop(db_name):
     if db_name not in list_dbs(True):
         return False
@@ -143,7 +159,7 @@ def exp_drop(db_name):
 
         try:
             cr.execute('DROP DATABASE "%s"' % db_name)
-        except Exception, e:
+        except Exception as e:
             _logger.info('DROP DB: %s failed:\n%s', db_name, e)
             raise Exception("Couldn't drop database %s: %s" % (db_name, e))
         else:
@@ -154,12 +170,14 @@ def exp_drop(db_name):
         shutil.rmtree(fs)
     return True
 
+@check_db_management_enabled
 def exp_dump(db_name, format):
-    with tempfile.TemporaryFile() as t:
+    with tempfile.TemporaryFile(mode='w+b') as t:
         dump_db(db_name, t, format)
         t.seek(0)
-        return t.read().encode('base64')
+        return base64.b64encode(t.read()).decode()
 
+@check_db_management_enabled
 def dump_db_manifest(cr):
     pg_version = "%d.%d" % divmod(cr._obj.connection.server_version / 100, 100)
     cr.execute("SELECT name, latest_version FROM ir_module_module WHERE state = 'installed'")
@@ -175,6 +193,7 @@ def dump_db_manifest(cr):
     }
     return manifest
 
+@check_db_management_enabled
 def dump_db(db_name, stream, backup_format='zip'):
     """Dump database `db` into file-like object `stream` if stream is None
     return a file object with the dump """
@@ -210,18 +229,20 @@ def dump_db(db_name, stream, backup_format='zip'):
         else:
             return stdout
 
+@check_db_management_enabled
 def exp_restore(db_name, data, copy=False):
     data_file = tempfile.NamedTemporaryFile(delete=False)
     try:
-        data_file.write(data.decode('base64'))
+        data_file.write(base64.b64decode(data))
         data_file.close()
         restore_db(db_name, data_file.name, copy=copy)
     finally:
         os.unlink(data_file.name)
     return True
 
+@check_db_management_enabled
 def restore_db(db, dump_file, copy=False):
-    assert isinstance(db, basestring)
+    assert isinstance(db, pycompat.string_types)
     if exp_db_exist(db):
         _logger.info('RESTORE DB: %s already exists', db)
         raise Exception("Database already exists")
@@ -274,6 +295,7 @@ def restore_db(db, dump_file, copy=False):
 
     _logger.info('RESTORE DB: %s', db)
 
+@check_db_management_enabled
 def exp_rename(old_name, new_name):
     odoo.modules.registry.Registry.delete(old_name)
     odoo.sql_db.close_db(old_name)
@@ -285,7 +307,7 @@ def exp_rename(old_name, new_name):
         try:
             cr.execute('ALTER DATABASE "%s" RENAME TO "%s"' % (old_name, new_name))
             _logger.info('RENAME DB: %s -> %s', old_name, new_name)
-        except Exception, e:
+        except Exception as e:
             _logger.info('RENAME DB: %s -> %s failed:\n%s', old_name, new_name, e)
             raise Exception("Couldn't rename database %s to %s: %s" % (old_name, new_name, e))
 
@@ -295,11 +317,13 @@ def exp_rename(old_name, new_name):
         shutil.move(old_fs, new_fs)
     return True
 
+@check_db_management_enabled
 def exp_change_admin_password(new_password):
-    odoo.tools.config['admin_passwd'] = new_password
+    odoo.tools.config.set_admin_password(new_password)
     odoo.tools.config.save()
     return True
 
+@check_db_management_enabled
 def exp_migrate_databases(databases):
     for db in databases:
         _logger.info('migrate database %s', db)
@@ -314,7 +338,12 @@ def exp_migrate_databases(databases):
 @odoo.tools.mute_logger('odoo.sql_db')
 def exp_db_exist(db_name):
     ## Not True: in fact, check if connection to database is possible. The database may exists
-    return bool(odoo.sql_db.db_connect(db_name))
+    try:
+        db = odoo.sql_db.db_connect(db_name)
+        with db.cursor():
+            return True
+    except Exception:
+        return False
 
 def list_dbs(force=False):
     if not odoo.tools.config['list_db'] and not force:
@@ -349,6 +378,33 @@ def list_dbs(force=False):
             res = []
     res.sort()
     return res
+
+def list_db_incompatible(databases):
+    """"Check a list of databases if they are compatible with this version of Odoo
+
+        :param databases: A list of existing Postgresql databases
+        :return: A list of databases that are incompatible
+    """
+    incompatible_databases = []
+    server_version = '.'.join(str(v) for v in version_info[:2])
+    for database_name in databases:
+        with closing(db_connect(database_name).cursor()) as cr:
+            if odoo.tools.table_exists(cr, 'ir_module_module'):
+                cr.execute("SELECT latest_version FROM ir_module_module WHERE name=%s", ('base',))
+                base_version = cr.fetchone()
+                if not base_version or not base_version[0]:
+                    incompatible_databases.append(database_name)
+                else:
+                    # e.g. 10.saas~15
+                    local_version = '.'.join(base_version[0].split('.')[:2])
+                    if local_version != server_version:
+                        incompatible_databases.append(database_name)
+            else:
+                incompatible_databases.append(database_name)
+        # release connection
+        odoo.sql_db.close_db(database_name)
+    return incompatible_databases
+
 
 def exp_list(document=False):
     if not odoo.tools.config['list_db']:

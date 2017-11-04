@@ -7,20 +7,21 @@
             model="account.invoice"
             string="Invoices"
             report_type="qweb-pdf"
-            name="account.report_invoice"
-            file="account.report_invoice"
-            attachment_use="True"
+            name="account.report_invoice_with_payments"
+            file="account.report_invoice_with_payments"
             attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+            print_report_name="(object._get_printed_report_name())"
         />
 
-        <report 
-            id="account_invoice_action_report_duplicate"
+        <report
+            id="account_invoices_without_payment"
             model="account.invoice"
-            string="Duplicates"
+            string="Invoices without Payment"
             report_type="qweb-pdf"
-            name="account.account_invoice_report_duplicate_main"
-            file="account.report_invoice_duplicate"
-            attachment_use="False"
+            name="account.report_invoice"
+            file="account.report_invoice"
+            attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+            print_report_name="(object._get_printed_report_name())"
         />
 
         <report 
@@ -30,7 +31,8 @@
             string="Due Payments"
             name="account.report_overdue"
             file="account.report_overdue"
-            />
+            print_report_name="'Due Payments - %s' % (object.name)"
+        />
 
         <report 
             id="action_report_general_ledger"
@@ -71,7 +73,7 @@
 
         <report 
             id="action_report_journal"
-            model="account.report.journal"
+            model="account.common.journal.report"
             string="Sale/Purchase Journal"
             report_type="qweb-pdf"
             name="account.report_journal"
@@ -80,11 +82,30 @@
 
         <report 
             id="action_report_partnerledger"
-            model="account.report_partnerledger"
+            model="account.report.partner.ledger"
             string="Partner Ledger"
             report_type="qweb-pdf"
             name="account.report_partnerledger"
             file="account.report_partnerledger"
+            />
+
+        <report
+            id="action_report_payment_receipt"
+            model="account.payment"
+            string="Payment Receipt"
+            report_type="qweb-pdf"
+            name="account.report_payment_receipt"
+            file="account.report_payment_receipt"
+            menu="True"
+        />
+
+        <report
+            id="action_report_account_tax"
+            model="account.tax.report"
+            string="Tax Report"
+            report_type="qweb-pdf"
+            name="account.report_tax"
+            file="account.report_tax"
             />
 
     </data>

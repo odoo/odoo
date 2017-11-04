@@ -10,23 +10,29 @@
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="auto_delete" eval="True"/>
-            <field name="report_template" ref="report_sale_order"/>
+            <field name="report_template" ref="action_report_saleorder"/>
             <field name="report_name">${(object.name or '').replace('/','_')}${object.state == 'draft' and '_draft' or ''}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html"><![CDATA[
 <p>Dear ${object.partner_id.name}
 % set access_action = object.with_context(force_website=True).get_access_action()
-% set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order confirmation'
 % set is_online = access_action and access_action['type'] == 'ir.actions.act_url'
-% set access_name = is_online and object.template_id and doc_name == 'quotation' and 'Accept and pay %s online' % doc_name or 'View %s' % doc_name
-% set access_url = is_online and access_action['url'] or None
+% set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order confirmation'
+% set pay_sign_name =  object.get_portal_confirmation_action()
+% set access_name = is_online and object.state in ('draft', 'sent') and pay_sign_name in ('pay', 'sign') and 'Accept and %s online' % pay_sign_name or 'View %s' % doc_name
+% set access_url = is_online and object.get_mail_url() or ''
 
 % if object.partner_id.parent_id:
     (<i>${object.partner_id.parent_id.name}</i>)
 % endif
 ,</p>
 <p>
-Here is your ${doc_name} <strong>${object.name}</strong>
+Here is
+% if ctx.get('proforma')
+in attachment, your pro-forma invoice
+% else
+the ${doc_name} <strong>${object.name}</strong>
+% endif
 % if object.origin:
 (with reference: ${object.origin} )
 % endif
@@ -34,11 +40,11 @@ amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.na
 from ${object.company_id.name}.
 </p>
 
+% if is_online and not ctx.get('proforma'):
     <br/><br/>
-% if is_online:
     <center>
         <a href="${access_url}" style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;" class="o_default_snippet_text">${access_name}</a>
-        <br/><br/>
+        <br/><br/><br/>
         <span style="color:#888888">(or view attached PDF)</span>
     </center>
     <br/>
@@ -47,7 +53,7 @@ from ${object.company_id.name}.
 <p>You can reply to this email if you have any questions.</p>
 <p>Thank you,</p>
 
-<p style="color:#eeeeee;">
+<p style="color:#888888;">
 % if object.user_id and object.user_id.signature:
     ${object.user_id.signature | safe}
 % endif
@@ -57,7 +63,7 @@ from ${object.company_id.name}.
 
         <!--Default Notification Email template for invoices-->
         <record id="sale.mail_template_data_notification_email_sale_order" model="mail.template">
-            <field name="name">Sale Order Notification Email</field>
+            <field name="name">Sales Order Notification Email</field>
             <field name="subject">${object.subject}</field>
             <field name="model_id" ref="mail.model_mail_message"/>
             <field name="auto_delete" eval="True"/>
@@ -66,13 +72,13 @@ from ${object.company_id.name}.
                 % set record = ctx.get('record')
                 % set company = record and record.company_id or user.company_id
                 <body style="margin: 0; padding: 0;">
-                <table border="0" width="100%" cellpadding="0" bgcolor="#ededed" style="padding: 20px; background-color: #ededed" summary="o_mail_notification">
+                <table border="0" width="100%" cellpadding="0" bgcolor="#ededed" style="padding: 20px; background-color: #ededed; border-collapse:separate;" summary="o_mail_notification">
                     <tbody>
 
                       <!-- HEADER -->
                       <tr>
                         <td align="center" style="min-width: 590px;">
-                          <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px;">
+                          <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;">
                             <tr>
                               <td valign="middle">
                                   <span style="font-size:20px; color:white; font-weight: bold;">
@@ -90,7 +96,7 @@ from ${object.company_id.name}.
                       <!-- CONTENT -->
                       <tr>
                         <td align="center" style="min-width: 590px;">
-                          <table width="590" border="0" cellpadding="0" bgcolor="#ffffff" style="min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;">
+                          <table width="590" border="0" cellpadding="0" bgcolor="#ffffff" style="min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px; border-collapse:separate;">
                             <tbody>
                               <td valign="top" style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;">
                                 ${object.body | safe}
@@ -103,7 +109,7 @@ from ${object.company_id.name}.
                       <!-- FOOTER -->
                       <tr>
                         <td align="center" style="min-width: 590px;">
-                          <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px;">
+                          <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;">
                             <tr>
                               <td valign="middle" align="left" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
                                 ${company.name}<br/>
@@ -125,7 +131,7 @@ from ${object.company_id.name}.
                       </tr>
                       <tr>
                         <td align="center">
-                            Powered by <a href="https://www.odoo.com">Odoo</a>.
+                            Powered by <a target="_blank" href="https://www.odoo.com">Odoo</a>.
                         </td>
                       </tr>
                     </tbody>

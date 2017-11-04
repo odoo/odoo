@@ -40,7 +40,7 @@
             <field name="sequence">1</field>
             <field name="name">To Do</field>
             <field name="legend_blocked">Not validated</field>
-            <field name="legend_priority">Use the priority for tasks related to gold customers</field>
+            <field name="legend_priority">Use the star for tasks related to gold customers</field>
             <field name="mail_template_id" ref="project.mail_template_data_project_task"/>
         </record>
         <record id="project_stage_1" model="project.task.type">
@@ -66,15 +66,15 @@
             <field name="name">Website for Sales &amp; WMS</field>
             <field name="color">3</field>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="alias_model">project.task</field>
             <field name="type_ids" eval="[(4, ref('project_stage_0')), (4, ref('project_stage_1')), (4, ref('project_stage_2')), (4, ref('project_stage_3'))]"/>
+            <field name="partner_id" ref="base.partner_demo_portal"/>
+            <field name="privacy_visibility">portal</field>
         </record>
 
         <record id="project_project_2" model="project.project">
             <field name="name">Research &amp; Development</field>
             <field name="privacy_visibility">followers</field>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="alias_model">project.task</field>
             <field name="type_ids" eval="[(4, ref('project_stage_0')), (4, ref('project_stage_1')), (4, ref('project_stage_2')), (4, ref('project_stage_3'))]"/>
         </record>
 
@@ -83,7 +83,6 @@
             <field name="name">E-Learning Integration</field>
             <field name="label_tasks">Trainings</field>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="alias_model">project.task</field>
             <field name="type_ids" eval="[(4, ref('project_stage_0')), (4, ref('project_stage_1')), (4, ref('project_stage_2')), (4, ref('project_stage_3'))]"/>
             <field name="privacy_visibility">employees</field>
         </record>
@@ -94,7 +93,6 @@
             <field name="label_tasks">Designs</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="privacy_visibility">followers</field>
-            <field name="alias_model">project.task</field>
             <field name="type_ids" eval="[(4, ref('project_stage_0')), (4, ref('project_stage_1')), (4, ref('project_stage_2')), (4, ref('project_stage_3'))]"/>
             <field name="privacy_visibility">employees</field>
         </record>
@@ -104,7 +102,6 @@
             <field name="partner_id" ref="base.res_partner_4"/>
             <field name="name">Data Import/Export Plugin</field>
             <field name="label_tasks">Databases</field>
-            <field name="alias_model">project.task</field>
             <field name="type_ids" eval="[(4, ref('project_stage_0')), (4, ref('project_stage_1')), (4, ref('project_stage_2')), (4, ref('project_stage_3'))]"/>
             <field name="privacy_visibility">followers</field>
         </record>
@@ -429,6 +426,9 @@ Send it ASAP, its urgent.</field>
             <field name="message_type">comment</field>
             <field name="author_id" ref="base.partner_root"/>
         </record>
+
+        <function model="project.project" name="message_subscribe"
+            eval="[ref('project.project_project_1')], [ref('base.partner_demo_portal')]"/>
 
     </data>
 </odoo>

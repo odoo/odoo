@@ -18,7 +18,7 @@
     </record>
 
     <record id="property_rule_holidays_employee" model="ir.rule">
-        <field name="name">Employee Holidays</field>
+        <field name="name">Employee Leaves</field>
         <field name="model_id" ref="model_hr_holidays"/>
         <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
         <field name="perm_create" eval="False"/>
@@ -28,7 +28,7 @@
     </record>
 
     <record id="property_rule_holidays_employee_write" model="ir.rule">
-        <field name="name">Employee Holidays Create, Write, Unlink</field>
+        <field name="name">Employee Leaves Create, Write, Unlink</field>
         <field name="model_id" ref="model_hr_holidays"/>
         <field name="domain_force">[('employee_id.user_id','=',user.id), ('state', 'in', ['draft', 'confirm', 'cancel', 'refuse'])]</field>
         <field name="perm_read" eval="False"/>
@@ -36,21 +36,21 @@
     </record>
 
     <record id="property_rule_holidays_officer" model="ir.rule">
-        <field name="name">Holidays Officer</field>
+        <field name="name">Leaves Officer</field>
         <field name="model_id" ref="model_hr_holidays"/>
         <field name="domain_force">[(1,'=',1)]</field>
         <field name="groups" eval="[(4,ref('hr_holidays.group_hr_holidays_user'))]"/>
     </record>
 
     <record id="resource_leaves_officer" model="ir.rule">
-        <field name="name">Leaves Officer</field>
+        <field name="name">Leaves Resources Officer</field>
         <field name="model_id" ref="model_resource_calendar_leaves"/>
         <field name="domain_force">[(1,'=',1)]</field>
         <field name="groups" eval="[(4,ref('hr_holidays.group_hr_holidays_user'))]"/>
     </record>
 
     <record id="hr_holidays_status_rule_multi_company" model="ir.rule">
-        <field name="name">HR Holiday multi company rule</field>
+        <field name="name">Leaves multi company rule</field>
         <field name="model_id" ref="model_hr_holidays_status"/>
         <field name="global" eval="True"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id','in',[user.company_id.id])]</field>

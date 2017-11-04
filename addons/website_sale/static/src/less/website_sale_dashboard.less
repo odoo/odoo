@@ -1,0 +1,61 @@
+.o_dashboard_sales {
+    h4 { margin: 3px 0 4px 0 !important; }
+    .o_demo_background {
+        margin-top: 16px;
+        height: 350px;
+        background-size: 100% !important;
+        background: url("/website_sale/static/src/img/website_sale_dashboard_sales_demo.png") no-repeat;
+        position: relative;
+        opacity: 0.2;
+    }
+    .o_demo_message {
+        color: @odoo-main-color-muted;
+        width: 100%;
+        .o-position-absolute(@left: 0, @top: 12%);
+        .o-flex-display();
+        .o-justify-content(center);
+    }
+    .o_link_enable {
+        @media (min-width: @screen-md-min) {
+            border-right: 1px solid #ccc;
+        }
+        height: initial;
+        padding: 5px;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        a {
+            color: darken(@odoo-brand-lightsecondary, 40%);
+        }
+        &:hover {
+            background-color: @odoo-brand-lightsecondary;
+        }
+        .o_highlight {
+            color: @odoo-brand-optional;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    }
+    .o_link_disable {
+        @media (min-width: @screen-md-min) {
+            border-right: 1px solid #ccc;
+        }
+        height: initial;
+        padding: 5px;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 10px 0px;
+        color: darken(@odoo-brand-lightsecondary, 40%);
+        .o_highlight {
+            font-size: 20px;
+            font-weight: bold;
+        }
+    }
+    .o_invisible_border {
+        border-right: 0px;
+    }
+    .o_top_margin {
+        margin-top: 20px;
+    }
+}

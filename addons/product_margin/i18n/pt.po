@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * product_margin
-# 
+#
 # Translators:
-# Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2016
-# Manuela Silva <manuela.silva@sky.com>, 2016
+# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Manuela Silva <manuela.silva@sky.com>, 2016\n"
-"Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2015-09-18 22:13+0000\n"
+"Last-Translator: Ricardo Martins <ricardo.nbs.martins@gmail.com>\n"
+"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
+"pt/)\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product_margin
@@ -33,13 +31,13 @@ msgstr "# Faturado na Venda"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
-msgid "# Purchased"
-msgstr ""
+msgid "#Purchased"
+msgstr "# Comprado"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Analysis Criteria"
-msgstr "Critério de Análise"
+msgstr "Análise de Critérios"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_sale_avg_price
@@ -70,7 +68,7 @@ msgstr "Catálogo de Preço"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_membership
 msgid "Check if the product is eligible for membership."
-msgstr "Selecione se o produto é elegível para filiação."
+msgstr "Dê o visto se o produto é elegível para filiação"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_create_uid
@@ -90,17 +88,17 @@ msgstr "Impostos a Cliente"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_membership_date_from
 msgid "Date from which membership becomes active."
-msgstr "Data a partir da qual a filiação se torna ativa."
+msgstr "Data a partir da qual a filiação se torna activa."
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_membership_date_to
 msgid "Date until which membership remains active."
-msgstr "Data até à qual a filiação se mantém ativa."
+msgstr "Data até à qual a filiação se mantém activa."
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_display_name
 msgid "Display Name"
-msgstr "Nome a Exibir"
+msgstr "Nome a Mostrar"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
@@ -151,12 +149,12 @@ msgstr "De"
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.product_margin_form_view
 msgid "General Information"
-msgstr "Informação geral"
+msgstr "Informação Geral"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_id
 msgid "ID"
-msgstr "Id."
+msgstr "ID"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_property_account_income_id
@@ -177,12 +175,12 @@ msgstr "Última Modificação em"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_write_uid
 msgid "Last Updated by"
-msgstr "Última Atualização por"
+msgstr "Última Actualização por"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_write_date
 msgid "Last Updated on"
-msgstr "Última Atualização em"
+msgstr "Última Actualização em"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_date_from
@@ -244,7 +242,7 @@ msgstr "Pago"
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_product
 msgid "Product"
-msgstr "Produto"
+msgstr "Artigo"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_email_template_id
@@ -257,7 +255,7 @@ msgid "Product Margin"
 msgstr "Margem artigo"
 
 #. module: product_margin
-#: code:addons/product_margin/wizard/product_margin.py:49
+#: code:addons/product_margin/wizard/product_margin.py:66
 #: model:ir.actions.act_window,name:product_margin.product_margin_act_window
 #: model:ir.ui.menu,name:product_margin.menu_action_product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -323,11 +321,10 @@ msgstr ""
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_sale_expected
 msgid ""
-"Sum of Multiplication of Sale Catalog price and quantity of Customer "
-"Invoices"
+"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
 msgstr ""
-"Soma de multiplicação do preço de catálogo de vendas e quantidade de faturas"
-" de clientes"
+"Soma de multiplicação do preço de catálogo de vendas e quantidade de faturas "
+"de clientes"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_sale_num_invoiced
@@ -403,9 +400,9 @@ msgstr "Impostos de Fornecedor"
 #: model:ir.model.fields,help:product_margin.field_product_product_email_template_id
 msgid ""
 "When validating an invoice, an email will be sent to the customer based on "
-"this template. The customer will receive an email for each product linked to"
-" an email template."
+"this template. The customer will receive an email for each product linked to "
+"an email template."
 msgstr ""
 "Ao validar uma fatura, um email será enviado para o cliente baseado no "
-"modelo. O cliente receberá um e-mail para cada produto ligado a um modelo de"
-" e-mail."
+"modelo. O cliente receberá um e-mail para cada produto ligado a um modelo de "
+"e-mail."

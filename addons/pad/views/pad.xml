@@ -6,4 +6,10 @@
             <script type="text/javascript" src="/pad/static/src/js/pad.js" />
         </xpath>
     </template>
+
+    <template id="qunit_suite" name="pad tests" inherit_id="web.qunit_suite">
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/pad/static/tests/pad_tests.js"></script>
+        </xpath>
+    </template>
 </odoo>

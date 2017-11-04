@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from lxml import objectify
-import urlparse
 
 from odoo.addons.payment.tests.common import PaymentAcquirerCommon
 from odoo.addons.payment_adyen.controllers.main import AdyenController
+from werkzeug import urls
 
 
 class AdyenCommon(PaymentAcquirerCommon):
@@ -47,7 +47,7 @@ class AdyenForm(AdyenCommon):
             'skinCode': 'cbqYWvVL',
             'paymentAmount': '1',
             'currencyCode': 'EUR',
-            'resURL': '%s' % urlparse.urljoin(base_url, AdyenController._return_url),
+            'resURL': urls.url_join(base_url, AdyenController._return_url),
         }
 
         # render the button

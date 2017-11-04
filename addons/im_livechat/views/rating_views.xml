@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="rating_rating_view_search_livechat" model="ir.ui.view">
+        <field name="name">rating.rating.search.livechat</field>
+        <field name="model">rating.rating</field>
+        <field name="inherit_id" ref="rating.rating_rating_view_search"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='resource']" position="after">
+                <field name="parent_res_name"/>
+                <filter string="Livechat Channel" name="groupby_livechat_channel" context="{'group_by': 'parent_res_name'}"/>
+            </xpath>
+            <xpath expr="/search" position="inside">
+                <filter string="Last 7 days" name="rating_last_7_days" domain="[('create_date', '>=', (context_today()-datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="rating_rating_action_view_livechat_rating" model="ir.actions.act_window">
+        <field name="name">Ratings for livechat channel</field>
+        <field name="res_model">rating.rating</field>
+        <field name="view_mode">kanban,tree,graph,pivot,form</field>
+        <field name="domain">[('parent_res_model','=','im_livechat.channel'), ('consumed','=',True)]</field>
+        <field name="search_view_id" ref="rating_rating_view_search_livechat"/>
+        <field name="help" type="html">
+            <p>
+                There is no rating for this channel at the moment.
+            </p>
+        </field>
+        <field name="context">{'search_default_rating_last_7_days': 1}</field>
+    </record>
+
+    <record id="rating_rating_action_livechat_report" model="ir.actions.act_window">
+        <field name="name">Customer Ratings</field>
+        <field name="res_model">rating.rating</field>
+        <field name="view_mode">kanban,tree,pivot,graph,form</field>
+        <field name="domain">[('parent_res_model','=','im_livechat.channel'), ('consumed', '=', True)]</field>
+        <field name="search_view_id" ref="rating_rating_view_search_livechat"/>
+        <field name="help" type="html">
+            <p>
+                Customer ratings on livechat session.
+            </p>
+        </field>
+    </record>
+
+</odoo>

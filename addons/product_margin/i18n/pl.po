@@ -3,18 +3,20 @@
 # * product_margin
 # 
 # Translators:
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
-# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2016
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2017
+# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2017
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2017
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2017
+# zbik2607 <darek@krokus.com.pl>, 2017
+# Paweł Michoń <michon.pawel@wp.pl>, 2017
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>, 2017\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,12 +27,12 @@ msgstr ""
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_purchase_num_invoiced
 msgid "# Invoiced in Purchase"
-msgstr "# fakturowanych zakupów"
+msgstr "# Fakturowanych zakupów"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_sale_num_invoiced
 msgid "# Invoiced in Sale"
-msgstr "# fakturowanych sprzedaży"
+msgstr "# Fakturowanych sprzedaży"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
@@ -56,7 +58,7 @@ msgstr "Średnia cena w fakturach dwostawców"
 #: model:ir.model.fields,field_description:product_margin.field_product_product_purchase_avg_price
 #: model:ir.model.fields,field_description:product_margin.field_product_product_sale_avg_price
 msgid "Avg. Unit Price"
-msgstr "Średnia cena jedn."
+msgstr "Średnia cena"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.product_margin_form_view
@@ -69,11 +71,6 @@ msgid "Catalog Price"
 msgstr "Cena katalogowa"
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_membership
-msgid "Check if the product is eligible for membership."
-msgstr "Sprawdź, czy produkt jest dostępny dla członków"
-
-#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_create_uid
 msgid "Created by"
 msgstr "Utworzone przez"
@@ -81,22 +78,7 @@ msgstr "Utworzone przez"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_create_date
 msgid "Created on"
-msgstr "Data utworzenia"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_taxes_id
-msgid "Customer Taxes"
-msgstr "Podatki sprzedażowe"
-
-#. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_membership_date_from
-msgid "Date from which membership becomes active."
-msgstr ""
-
-#. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_membership_date_to
-msgid "Date until which membership remains active."
-msgstr ""
+msgstr "Utworzono"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_display_name
@@ -107,7 +89,7 @@ msgstr "Nazwa wyświetlana"
 #: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Draft, Open and Paid"
-msgstr "Projekty, Otwarte i Zapłacone"
+msgstr "Projekty, otwarte i zapłacone"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_expected_margin
@@ -140,11 +122,6 @@ msgid "Expected margin * 100 / Expected Sale"
 msgstr "Spodziewana marża * 100 / Spodziewana sprzedaż"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_property_account_expense_id
-msgid "Expense Account"
-msgstr "Konto wydatków"
-
-#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_from_date
 msgid "From"
 msgstr "Od"
@@ -158,11 +135,6 @@ msgstr "Informacje ogólne"
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_id
 msgid "ID"
 msgstr "ID"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_property_account_income_id
-msgid "Income Account"
-msgstr "Konto przychodów"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_invoice_state
@@ -183,7 +155,7 @@ msgstr "Ostatnio aktualizowane przez"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_write_date
 msgid "Last Updated on"
-msgstr "Data ostatniej aktualizacji"
+msgstr "Ostatnia aktualizacja"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_date_from
@@ -201,21 +173,6 @@ msgid "Margins"
 msgstr "Marże"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_membership
-msgid "Membership"
-msgstr "Członkostwo"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_membership_date_to
-msgid "Membership End Date"
-msgstr "Data wygaśnięcia członkowstwa"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_membership_date_from
-msgid "Membership Start Date"
-msgstr "Data rozpoczęcia członkostwa"
-
-#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_normal_cost
 msgid "Normal Cost"
 msgstr "Normalny koszt"
@@ -228,7 +185,7 @@ msgstr "Normalny koszt - Suma kosztów"
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.product_margin_form_view
 msgid "Open Margins"
-msgstr "Otwarte Marże"
+msgstr "Otwórz marże"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
@@ -240,17 +197,12 @@ msgstr "Otwarte i zapłacone"
 #: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Paid"
-msgstr "Zapłacono"
+msgstr "Zapłacona"
 
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_product
 msgid "Product"
 msgstr "Produkt"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_email_template_id
-msgid "Product Email Template"
-msgstr "Szablon email dla produktu"
 
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_margin
@@ -333,24 +285,6 @@ msgid "Sum of Quantity in Vendor Bills"
 msgstr ""
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_property_account_expense_id
-msgid ""
-"This account will be used for invoices instead of the default one to value "
-"expenses for the current product."
-msgstr ""
-"To konto będzie stosowane do faktur, zamiast domyślnego, do wyceny kosztów "
-"dla bieżącego produktu."
-
-#. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_property_account_income_id
-msgid ""
-"This account will be used for invoices instead of the default one to value "
-"sales for the current product."
-msgstr ""
-"To konto będzie stosowane do faktur, zamiast domyślnego, do wyceny sprzedaży"
-" dla bieżącego produktu."
-
-#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_to_date
 msgid "To"
 msgstr "Do"
@@ -363,6 +297,7 @@ msgstr "Suma kosztów"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_total_margin
+#: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Total Margin"
 msgstr "Suma marży"
 
@@ -386,19 +321,3 @@ msgstr "Obrót"
 #: model:ir.model.fields,help:product_margin.field_product_product_total_margin
 msgid "Turnover - Standard price"
 msgstr "Obrót - Cena przeciętna"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_supplier_taxes_id
-msgid "Vendor Taxes"
-msgstr "Podatki zakupu"
-
-#. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_email_template_id
-msgid ""
-"When validating an invoice, an email will be sent to the customer based on "
-"this template. The customer will receive an email for each product linked to"
-" an email template."
-msgstr ""
-"E-mail zostanie wysłany do klienta w oparciu o ten szablon, podczas "
-"sprawdzania faktury. Klient otrzyma e-mail dla każdego produktu połączonego "
-"z szablonem e-mail."

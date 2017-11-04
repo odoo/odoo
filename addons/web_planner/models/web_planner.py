@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from urllib import urlencode
+from werkzeug import urls
 
 from odoo import api, models, fields
 
@@ -69,7 +68,7 @@ class Planner(models.Model):
                 params['id'] = module.id
             else:
                 return "#show_enterprise"
-        return "/web#%s" % (urlencode(params),)
+        return "/web#%s" % (urls.url_encode(params),)
 
     @api.model
     def is_module_installed(self, module_name=None):

@@ -3,20 +3,20 @@
 # * base_import
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2016
-# Rolandas <info@paninfo.lt>, 2016
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2016
-# Naglis Jonaitis <naglis@mailbox.org>, 2016
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
-# Aiste Sutkute <digitouchagencyeur@gmail.com>, 2017
+# Naglis Jonaitis <naglis@mailbox.org>, 2017
+# Rolandas <info@paninfo.lt>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-23 13:27+0000\n"
-"PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Aiste Sutkute <digitouchagencyeur@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Rolandas <info@paninfo.lt>, 2017\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,14 +26,14 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:598
+#: code:addons/base_import/static/src/js/import_action.js:535
 #, python-format
 msgid "(%d more)"
 msgstr "(%d more)"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:375
+#: code:addons/base_import/static/src/js/import_action.js:309
 #, python-format
 msgid ""
 "A single column was found in the file, this often means the file separator "
@@ -50,23 +50,23 @@ msgid "Cancel"
 msgstr "Atšaukti"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:599
+#: code:addons/base_import/models/base_import.py:596
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
 msgstr "Stulpelyje %s yra neteisingų reikšmių (reikšmė: %s)"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:619
+#: code:addons/base_import/models/base_import.py:618
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
 msgstr "Stulpelyje %s yra neteisingų reikšmių. Klaida eilutėje %d: %s"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:245
-#: code:addons/base_import/static/src/js/base_import.js:256
-#: code:addons/base_import/static/src/js/base_import.js:263
-#: code:addons/base_import/static/src/js/base_import.js:275
+#: code:addons/base_import/static/src/js/import_action.js:176
+#: code:addons/base_import/static/src/js/import_action.js:187
+#: code:addons/base_import/static/src/js/import_action.js:194
+#: code:addons/base_import/static/src/js/import_action.js:206
 #, python-format
 msgid "Comma"
 msgstr "Kablelis"
@@ -108,29 +108,29 @@ msgid "Created on"
 msgstr "Sukurta"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:152
-#: code:addons/base_import/models/base_import.py:157
+#: code:addons/base_import/models/base_import.py:145
+#: code:addons/base_import/models/base_import.py:150
 #, python-format
 msgid "Database ID"
 msgstr "Duomenų bazės ID"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:125
+#: code:addons/base_import/static/src/js/import_action.js:55
 #, python-format
 msgid "Date Format:"
 msgstr "Datos formatas:"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:126
+#: code:addons/base_import/static/src/js/import_action.js:56
 #, python-format
 msgid "Datetime Format:"
 msgstr "Datos formatas:"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:128
+#: code:addons/base_import/static/src/js/import_action.js:58
 #, python-format
 msgid "Decimal Separator:"
 msgstr "Dešimtainis skyriklis:"
@@ -155,48 +155,48 @@ msgstr "Vaizduojamas pavadinimas"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:419
+#: code:addons/base_import/static/src/js/import_action.js:353
 #, python-format
 msgid "Don't import"
 msgstr "Neimportuoti"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:264
-#: code:addons/base_import/static/src/js/base_import.js:282
+#: code:addons/base_import/static/src/js/import_action.js:195
+#: code:addons/base_import/static/src/js/import_action.js:213
 #, python-format
 msgid "Dot"
 msgstr "Taškas"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:120
+#: code:addons/base_import/static/src/js/import_action.js:50
 #, python-format
 msgid "Encoding:"
 msgstr "Koduotė:"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:621
+#: code:addons/base_import/models/base_import.py:620
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
 msgstr "Klaida analizuojant datą [%s:L%d]: %s"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:234
+#: code:addons/base_import/models/base_import.py:227
 #, python-format
 msgid "Error cell found while reading XLS/XLSX file: %s"
 msgstr "Klaidos langelis rastas skaitant XLS/XLSX failą: %s"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:575
+#: code:addons/base_import/static/src/js/import_action.js:512
 #, python-format
 msgid "Everything seems valid."
 msgstr "Viskas atrodo teisinga."
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:117
-#: code:addons/base_import/models/base_import.py:151
+#: code:addons/base_import/models/base_import.py:110
+#: code:addons/base_import/models/base_import.py:144
 #, python-format
 msgid "External ID"
 msgstr "Išorinis ID"
@@ -231,7 +231,7 @@ msgstr "CSV failų problema gali būti neteisingas kodavimas."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:622
+#: code:addons/base_import/static/src/js/import_action.js:559
 #, python-format
 msgid "Get all possible values"
 msgstr "Gauti visas galimas reikšmes"
@@ -245,7 +245,7 @@ msgstr "Pagalba"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:609
+#: code:addons/base_import/static/src/js/import_action.js:546
 #, python-format
 msgid "Here are the possible values:"
 msgstr "Štai galimos reikšmės:"
@@ -306,7 +306,7 @@ msgstr "Importuoti"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:182
+#: code:addons/base_import/static/src/js/import_action.js:111
 #, python-format
 msgid "Import a File"
 msgstr "Importuoti failą"
@@ -405,7 +405,7 @@ msgstr "Nepasirinktas joks failas..."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:485
+#: code:addons/base_import/static/src/js/import_action.js:418
 #, python-format
 msgid "Normal Fields"
 msgstr "Įprasti laukai"
@@ -424,12 +424,12 @@ msgstr "Kiti kintamieji"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_parent_id
-msgid "Parent id"
-msgstr "Tėvinis id"
+msgid "Parent"
+msgstr "Tėvinis"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:486
+#: code:addons/base_import/static/src/js/import_action.js:419
 #, python-format
 msgid "Relation Fields"
 msgstr "Sąryšio laukai"
@@ -450,14 +450,14 @@ msgstr "Pasirinkite CVS arba Excel failą importavimui."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:246
+#: code:addons/base_import/static/src/js/import_action.js:177
 #, python-format
 msgid "Semicolon"
 msgstr "Kabliataškis"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:121
+#: code:addons/base_import/static/src/js/import_action.js:51
 #, python-format
 msgid "Separator:"
 msgstr "Skyriklis:"
@@ -476,21 +476,28 @@ msgstr "Kai kurios vertės "
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:248
+#: code:addons/base_import/static/src/js/import_action.js:179
 #, python-format
 msgid "Space"
 msgstr "Tarpas"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:247
+#: code:addons/base_import/static/src/js/import_action.js:178
 #, python-format
 msgid "Tab"
 msgstr "Kortelė"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:122
+#: code:addons/base_import/static/src/xml/base_import.xml:86
+#, python-format
+msgid "Test Import"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:52
 #, python-format
 msgid "Text Delimiter:"
 msgstr "Teksto apribojimo ženklas:"
@@ -508,7 +515,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:127
+#: code:addons/base_import/static/src/js/import_action.js:57
 #, python-format
 msgid "Thousands Separator:"
 msgstr "Tūkstančių skyriklis:"
@@ -521,7 +528,7 @@ msgid "Track history during import"
 msgstr "Importuojant stebėkite istoriją"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:199
+#: code:addons/base_import/models/base_import.py:192
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
@@ -529,20 +536,13 @@ msgstr ""
 "\"{modname}\""
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:200
+#: code:addons/base_import/models/base_import.py:193
 #, python-format
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
 msgstr ""
 "Nepalaikomas failo formatas \"{}\", importas palaiko tik CSV, ODS, XLS ir "
 "XLSX"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:86
-#, python-format
-msgid "Validate"
-msgstr "Patikrinti"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_value
@@ -561,14 +561,14 @@ msgid "Value"
 msgstr "Vertė"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:537
+#: code:addons/base_import/models/base_import.py:534
 #, python-format
 msgid "You must configure at least one field to import"
 msgstr "Turite konfigūruoti bent vieną lauką importavimui"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:592
+#: code:addons/base_import/static/src/js/import_action.js:529
 #, python-format
 msgid "at row %d"
 msgstr "eilutėje %d"
@@ -645,7 +645,7 @@ msgstr "base_import.tests.models.preview"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:594
+#: code:addons/base_import/static/src/js/import_action.js:531
 #, python-format
 msgid "between rows %d and %d"
 msgstr "tarp eilučių%d ir %d"

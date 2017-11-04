@@ -33,7 +33,7 @@ class ReportStockForecat(models.Model):
             MIN(sq.id) as id,
             sq.product_id,
             date_trunc('week', to_date(to_char(CURRENT_DATE, 'YYYY/MM/DD'), 'YYYY/MM/DD')) as date,
-            SUM(sq.qty) AS product_qty
+            SUM(sq.quantity) AS product_qty
             FROM
             stock_quant as sq
             LEFT JOIN

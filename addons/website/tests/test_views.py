@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import itertools
+try:
+    from itertools import zip_longest
+except ImportError:
+    from itertools import izip_longest as zip_longest
 
 import unittest
 from lxml import etree as ET, html
@@ -11,7 +14,7 @@ from odoo.tests import common
 
 
 def attrs(**kwargs):
-    return dict(('data-oe-%s' % key, str(value)) for key, value in kwargs.iteritems())
+    return {'data-oe-%s' % key: str(value) for key, value in kwargs.items()}
 
 
 class TestViewSaving(common.TransactionCase):
@@ -21,7 +24,7 @@ class TestViewSaving(common.TransactionCase):
         self.assertEqual(a.attrib, b.attrib)
         self.assertEqual((a.text or '').strip(), (b.text or '').strip())
         self.assertEqual((a.tail or '').strip(), (b.tail or '').strip())
-        for ca, cb in itertools.izip_longest(a, b):
+        for ca, cb in zip_longest(a, b):
             self.eq(ca, cb)
 
     def setUp(self):
@@ -44,7 +47,7 @@ class TestViewSaving(common.TransactionCase):
         self.view_id = self.env['ir.ui.view'].create({
             'name': "Test View",
             'type': 'qweb',
-            'arch': ET.tostring(self.arch, encoding='utf-8').decode('utf-8')
+            'arch': ET.tostring(self.arch, encoding='unicode')
         })
 
     def test_embedded_extraction(self):
@@ -54,7 +57,7 @@ class TestViewSaving(common.TransactionCase):
             h.SPAN("My Company", attrs(model='res.company', id=1, field='name', type='char')),
             h.SPAN("+00 00 000 00 0 000", attrs(model='res.company', id=1, field='phone', type='char')),
         ]
-        for actual, expected in itertools.izip_longest(fields, expect):
+        for actual, expected in zip_longest(fields, expect):
             self.eq(actual, expected)
 
     def test_embedded_save(self):
@@ -139,21 +142,13 @@ class TestViewSaving(common.TransactionCase):
         Company = self.env['res.company']
         View = self.env['ir.ui.view']
 
-        # create a view with an xmlid, like the file import would
-        with self.env.norecompute():
-            self.view_id = View.create({
-                'name': "Test View",
-                'type': 'qweb',
-                'arch': ET.tostring(self.arch, encoding='utf-8').decode('utf-8')
-            })
+        # create an xmlid for the view
         imd = self.env['ir.model.data'].create({
             'module': 'website',
             'name': 'test_view',
-            'model': 'ir.ui.view',
-            'res_id': self.view_id,
+            'model': self.view_id._name,
+            'res_id': self.view_id.id,
         })
-
-        # the xml_id of the view should not be flagged as 'noupdate'
         self.assertEqual(self.view_id.model_data_id, imd)
         self.assertFalse(imd.noupdate)
 
@@ -164,7 +159,7 @@ class TestViewSaving(common.TransactionCase):
                 h.LI(h.SPAN("Acme Corporation", attrs(model='res.company', id=1, field='name', expression="bob", type='char'))),
                 h.LI(h.SPAN("+12 3456789", attrs(model='res.company', id=1, field='phone', expression="edmund", type='char'))),
             )
-        ), encoding='utf-8')
+        ), encoding='unicode')
         self.view_id.save(value=replacement, xpath='/div/div[2]')
 
         # the xml_id of the view should be flagged as 'noupdate'
@@ -174,7 +169,7 @@ class TestViewSaving(common.TransactionCase):
         self.assertEqual(company.name, "Acme Corporation")
         self.assertEqual(company.phone, "+12 3456789")
         self.eq(
-            ET.fromstring(self.view_id.arch.encode('utf-8')),
+            ET.fromstring(self.view_id.arch),
             h.DIV(
                 h.DIV(
                     h.H3("Column 1"),
@@ -195,29 +190,29 @@ class TestViewSaving(common.TransactionCase):
     def test_save_escaped_text(self):
         """ Test saving html special chars in text nodes """
         view = self.env['ir.ui.view'].create({
-            'arch': '<t t-name="dummy"><p><h1>hello world</h1></p></t>',
+            'arch': u'<t t-name="dummy"><p><h1>hello world</h1></p></t>',
             'type': 'qweb'
         })
         # script and style text nodes should not escaped client side
-        replacement = '<script>1 && "hello & world"</script>'
+        replacement = u'<script>1 && "hello & world"</script>'
         view.save(replacement, xpath='/t/p/h1')
         self.assertIn(
-            replacement.replace('&', '&amp;'),
+            replacement.replace(u'&', u'&amp;'),
             view.arch,
             'inline script should be escaped server side'
         )
         self.assertIn(
             replacement,
-            view.render(),
+            view.render().decode('utf-8'),
             'inline script should not be escaped when rendering'
         )
         # common text nodes should be be escaped client side
-        replacement = 'world &amp;amp; &amp;lt;b&amp;gt;cie'
+        replacement = u'world &amp;amp; &amp;lt;b&amp;gt;cie'
         view.save(replacement, xpath='/t/p')
         self.assertIn(replacement, view.arch, 'common text node should not be escaped server side')
         self.assertIn(
             replacement,
-            view.render().replace('&', '&amp;'),
+            view.render().decode('utf-8').replace(u'&', u'&amp;'),
             'text node characters wrongly unescaped when rendering'
         )
 
@@ -229,7 +224,8 @@ class TestViewSaving(common.TransactionCase):
 
         node = html.tostring(h.SPAN(
             "Acme Corporation",
-            attrs(model='res.company', id=company_id, field="name", expression='bob', type='char')))
+            attrs(model='res.company', id=company_id, field="name", expression='bob', type='char')),
+        encoding='unicode')
         View = self.env['ir.ui.view']
         View.browse(company_id).save(value=node)
         self.assertEqual(company.name, "Acme Corporation")

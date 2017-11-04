@@ -1,28 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_crm
-# 
+#
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Belkacem Mohammed <belkacem77@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Belkacem Mohammed <belkacem77@gmail.com>, 2016\n"
-"Language-Team: Kabyle (https://www.transifex.com/odoo/teams/41243/kab/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2015-09-19 08:21+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Kabyle (http://www.transifex.com/odoo/odoo-9/language/kab/)\n"
+"Language: kab\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: kab\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
 msgid "# Issues"
 msgstr "# Uguren"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_count
+msgid "# Tasks"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_count
@@ -42,9 +45,15 @@ msgstr ""
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_associate_member
 msgid ""
-"A member with whom you want to associate your membership. It will consider "
+"A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
 msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
+#, fuzzy
+msgid "Activation"
+msgstr "Asuter n ssuma"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
@@ -57,15 +66,8 @@ msgid "Cancel Membership Date"
 msgstr ""
 
 #. module: sale_crm
-#. openerp-web
-#: code:addons/sale_crm/static/src/js/tour.js:16
-#, python-format
-msgid "Click here to see more options."
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_count
-msgid "Count Payment Token"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_count
+msgid "Count Payment Method"
 msgstr ""
 
 #. module: sale_crm
@@ -99,9 +101,26 @@ msgid "Free Member"
 msgstr ""
 
 #. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_partner_weight
+msgid ""
+"Gives the probability to assign a lead to this partner. (0 means no "
+"assignation.)"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_partner_ids
+msgid "Implementation References"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_assigned_partner_id
+msgid "Implemented by"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_account_invoice
 msgid "Invoice"
-msgstr "Tafaturt"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
@@ -115,9 +134,15 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose "
+"invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review
+msgid "Latest Partner Review"
 msgstr ""
 
 #. module: sale_crm
@@ -126,10 +151,13 @@ msgid "Lead/Opportunity"
 msgstr "Tafuɣalt / Tagwniţ"
 
 #. module: sale_crm
-#. openerp-web
-#: code:addons/sale_crm/static/src/js/tour.js:20
-#, python-format
-msgid "Let's have a look at the quotations of this sales team."
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_id
+msgid "Level"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_weight
+msgid "Level Weight"
 msgstr ""
 
 #. module: sale_crm
@@ -158,18 +186,13 @@ msgid "Membership Start Date"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn_msg
-msgid "Message for Sales Order"
-msgstr "Izen i Tlandan n Uznuzu"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn_msg
-msgid "Message for Stock Picking"
+#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+msgid "New Quotation"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
-msgid "New Quotation"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review_next
+msgid "Next Partner Review"
 msgstr ""
 
 #. module: sale_crm
@@ -188,9 +211,14 @@ msgid "Orders"
 msgstr "Tiludna"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_ids
-msgid "Payment Tokens"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
+msgid "Partnership Date"
 msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
+msgid "Payment Methods"
+msgstr "Tarrayin n ufru"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
@@ -205,27 +233,12 @@ msgstr "Isutar n ssuma"
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_ids
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn
 msgid "Sales Order"
 msgstr "Taladna n uznuzu"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_free_member
 msgid "Select if you want to give free membership."
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_picking_warn
-#: model:ir.model.fields,help:sale_crm.field_res_users_sale_warn
-msgid ""
-"Selecting the \"Warning\" option will notify user with the message, "
-"Selecting \"Blocking Message\" will throw an exception with the message and "
-"block the flow. The Message has to be written in the next field."
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn
-msgid "Stock Picking"
 msgstr ""
 
 #. module: sale_crm
@@ -239,6 +252,11 @@ msgid "Tags"
 msgstr "Tibzimin"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_ids
+msgid "Tasks"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_amount
 msgid "The price negotiated by the partner"
 msgstr ""
@@ -249,8 +267,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
 msgstr ""
-"Cette emplacement de stock sera utilisée au lieu de celui par défaut en tant"
-" que l'emplacement de destination pour les biens que vous envoyez à ce "
+"Cette emplacement de stock sera utilisée au lieu de celui par défaut en tant "
+"que l'emplacement de destination pour les biens que vous envoyez à ce "
 "partenaire."
 
 #. module: sale_crm
@@ -271,3 +289,40 @@ msgstr "Iseqdacen"
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
 msgid "Vendor Location"
 msgstr ""
+
+#~ msgid "# Claims"
+#~ msgstr "# Ismetteren"
+
+#~ msgid "Campaign"
+#~ msgstr "Amzizzel"
+
+#~ msgid "Geo Latitude"
+#~ msgstr "Tarrut n tirakalt"
+
+#~ msgid "Geo Localization Date"
+#~ msgstr "Azemz n usideg n tirakalt"
+
+#~ msgid "Geo Longitude"
+#~ msgstr "Tazegrart n  tirakalt"
+
+#~ msgid "Source"
+#~ msgstr "Aɣbalu"
+
+#~ msgid ""
+#~ "This is a name that helps you keep track of your different campaign "
+#~ "efforts Ex: Fall_Drive, Christmas_Special"
+#~ msgstr ""
+#~ "C'est le nom qui vous permet de conserver la trace de vos campagnes. Par "
+#~ "exemple : Commercialisation_Automne, Spécial_Noël"
+
+#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+#~ msgstr ""
+#~ "Ceci est le mode de transmission. Ex: carte postale, courriel, bannière "
+#~ "publicitaire"
+
+#~ msgid ""
+#~ "This is the source of the link Ex: Search Engine, another domain, or name "
+#~ "of email list"
+#~ msgstr ""
+#~ "Wagi d aɣbalu n useɣwen. Amedya: Amsedday n unadi, aḥric nniḍen, neɣ "
+#~ "isem  n tebdart n yimayl."

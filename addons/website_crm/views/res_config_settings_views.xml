@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website.crm</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="webmaster_settings" position="after">
+                <h2>Communication</h2>
+                <div class="row mt16 o_settings_container" id="communication_settings">
+                    <div class="col-xs-12 col-md-6 o_setting_box" id="contact_form_install_setting" title="New messages are managed as leads or opportunities in your CRM app.">
+                        <div class="o_setting_right_pane">
+                            <label for="id" string="Contact Form"/>
+                            <div class="text-muted" id="msg_contact_form_install_setting">
+                                Add a contact form in the <a href="/contactus">Contact Us</a> page
+                            </div>
+                            <div class="row">
+                                <label class="col-md-3 o_light_label" string="Sales Channel" for="crm_default_team_id"/>
+                                <field name="crm_default_team_id" class="oe_inline"/>
+                            </div>
+                            <div class="row">
+                                <label class="col-md-3 o_light_label" string="Salesperson" for="crm_default_user_id"/>
+                                <field name="crm_default_user_id" class="oe_inline"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

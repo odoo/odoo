@@ -1,12 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, fields, models
 
 
 class Company(models.Model):
-
     _inherit = "res.company"
+
+    # NB: Also defined in mass_mailing
+    social_twitter = fields.Char('Twitter Account')
+    social_facebook = fields.Char('Facebook Account')
+    social_github = fields.Char('GitHub Account')
+    social_linkedin = fields.Char('LinkedIn Account')
+    social_youtube = fields.Char('Youtube Account')
+    social_googleplus = fields.Char('Google+ Account')
 
     @api.multi
     def google_map_img(self, zoom=8, width=298, height=298):

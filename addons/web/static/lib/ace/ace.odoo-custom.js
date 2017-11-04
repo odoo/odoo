@@ -6,10 +6,8 @@
         if (!i.require || !i.require.packaged) r.original = i.require, i.require = r, i.require.packaged = !0
     }
     var ACE_NAMESPACE = "",
-        e = function() {
-            return this
-        }();
-    !e && typeof window != "undefined" && (e = window);
+        e = {};
+    window.ace = e;
     if (!ACE_NAMESPACE && typeof requirejs != "undefined") return;
     var t = function(e, n, r) {
         if (typeof e != "string") {
@@ -76,7 +74,9 @@
             return s
         };
     o(ACE_NAMESPACE)
-})(), define("ace/lib/regexp", ["require", "exports", "module"], function(e, t, n) {
+})();
+(function() {var define = ace.define, require = ace.require;
+define("ace/lib/regexp", ["require", "exports", "module"], function(e, t, n) {
     "use strict";
 
     function o(e) {
@@ -9826,7 +9826,7 @@
     }, t.EditSession = o, t.UndoManager = u
 });
 (function() {
-    window.require(["ace/ace"], function(a) {
+    require(["ace/ace"], function(a) {
         a && a.config.init(true);
         if (!window.ace)
             window.ace = a;
@@ -9834,4 +9834,5 @@
             if (a.hasOwnProperty(key))
                 window.ace[key] = a[key];
     });
+})();
 })();

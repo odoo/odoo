@@ -8,7 +8,7 @@ from dateutil import relativedelta
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 import logging
 
@@ -57,9 +57,9 @@ class Warehouse(models.Model):
     out_type_id = fields.Many2one('stock.picking.type', 'Out Type')
     in_type_id = fields.Many2one('stock.picking.type', 'In Type')
     int_type_id = fields.Many2one('stock.picking.type', 'Internal Type')
-    crossdock_route_id = fields.Many2one('stock.location.route', 'Crossdock Route')
-    reception_route_id = fields.Many2one('stock.location.route', 'Receipt Route')
-    delivery_route_id = fields.Many2one('stock.location.route', 'Delivery Route')
+    crossdock_route_id = fields.Many2one('stock.location.route', 'Crossdock Route', ondelete='restrict')
+    reception_route_id = fields.Many2one('stock.location.route', 'Receipt Route', ondelete='restrict')
+    delivery_route_id = fields.Many2one('stock.location.route', 'Delivery Route', ondelete='restrict')
     resupply_wh_ids = fields.Many2many(
         'stock.warehouse', 'stock_wh_resupply_table', 'supplied_wh_id', 'supplier_wh_id',
         'Resupply Warehouses')
@@ -99,7 +99,7 @@ class Warehouse(models.Model):
             'wh_output_stock_loc_id': {'name': _('Output'), 'active': delivery_steps != 'ship_only', 'usage': 'internal'},
             'wh_pack_stock_loc_id': {'name': _('Packing Zone'), 'active': delivery_steps == 'pick_pack_ship', 'usage': 'internal'},
         }
-        for field_name, values in sub_locations.iteritems():
+        for field_name, values in sub_locations.items():
             values['location_id'] = vals['view_location_id']
             if vals.get('company_id'):
                 values['company_id'] = vals.get('company_id')
@@ -107,7 +107,7 @@ class Warehouse(models.Model):
 
         # actually create WH
         warehouse = super(Warehouse, self).create(vals)
-        # create sequences and picking types
+        # create sequences and operation types
         new_vals = warehouse.create_sequences_and_picking_types()
         warehouse.write(new_vals)  # TDE FIXME: use super ?
         # create routes and push/procurement rules
@@ -118,7 +118,6 @@ class Warehouse(models.Model):
             self._update_partner_data(vals['partner_id'], vals.get('company_id'))
         return warehouse
 
-    @api.multi
     def write(self, vals):
         Route = self.env['stock.location.route']
         warehouses = self.with_context(active_test=False)  # TDE FIXME: check this
@@ -164,7 +163,7 @@ class Warehouse(models.Model):
                 if to_add:
                     warehouse.create_resupply_routes(to_add, warehouse.default_resupply_wh_id)
                 if to_remove:
-                    Route.search([('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', 'in', to_remove.ids)]).unlink()
+                    Route.search([('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', 'in', to_remove.ids)]).write({'active': False})
                     # TDE FIXME: shouldn't we remove procurement rules also ? because this could make them global (not sure)
 
         return res
@@ -186,10 +185,10 @@ class Warehouse(models.Model):
 
         input_loc, output_loc = self._get_input_output_locations(self.reception_steps, self.delivery_steps)
 
-        # choose the next available color for the picking types of this warehouse
+        # choose the next available color for the operation types of this warehouse
         all_used_colors = [res['color'] for res in PickingType.search_read([('warehouse_id', '!=', False), ('color', '!=', False)], ['color'], order='color')]
-        available_colors = [zef for zef in [0, 3, 4, 5, 6, 7, 8, 1, 2] if zef not in all_used_colors]
-        color = available_colors and available_colors[0] or 0
+        available_colors = [zef for zef in range(0, 12) if zef not in all_used_colors]
+        color = available_colors[0] if available_colors else 0
 
         # suit for each warehouse: reception, internal, pick, pack, ship
         max_sequence = PickingType.search_read([('sequence', '!=', False)], ['sequence'], limit=1, order='sequence desc')
@@ -240,10 +239,10 @@ class Warehouse(models.Model):
             },
         }
         data = self._get_picking_type_values(self.reception_steps, self.delivery_steps, self.wh_pack_stock_loc_id)
-        for field_name, values in data.iteritems():
+        for field_name in data:
             data[field_name].update(create_data[field_name])
 
-        for picking_type, values in data.iteritems():
+        for picking_type, values in data.items():
             sequence = IrSequenceSudo.create(sequence_data[picking_type])
             values.update(warehouse_id=self.id, color=color, sequence_id=sequence.id)
             warehouse_data[picking_type] = PickingType.create(values).id
@@ -251,7 +250,6 @@ class Warehouse(models.Model):
         PickingType.browse(warehouse_data['in_type_id']).write({'return_picking_type_id': warehouse_data['out_type_id']})
         return warehouse_data
 
-    @api.multi
     def create_routes(self):
         self.ensure_one()
         routes_data = self.get_routes_dict()
@@ -279,8 +277,8 @@ class Warehouse(models.Model):
             if warehouse.reception_route_id:
                 reception_route = warehouse.reception_route_id
                 reception_route.write({'name':  warehouse._format_routename(route_type=warehouse.reception_steps)})
-                reception_route.pull_ids.unlink()
-                reception_route.push_ids.unlink()
+                reception_route.pull_ids.write({'active': False})
+                reception_route.push_ids.write({'active': False})
             else:
                 reception_route = self.env['stock.location.route'].create(warehouse._get_reception_delivery_route_values(warehouse.reception_steps))
             # push / procurement (pull) rules for reception
@@ -289,9 +287,29 @@ class Warehouse(models.Model):
                 routings, values={'active': True, 'route_id': reception_route.id},
                 push_values=None, pull_values={'procure_method': 'make_to_order'})
             for push_vals in push_rules_list:
-                self.env['stock.location.path'].create(push_vals)
+                existing_push = self.env['stock.location.path'].search([
+                    ('picking_type_id', '=', push_vals['picking_type_id']),
+                    ('location_from_id', '=', push_vals['location_from_id']),
+                    ('location_dest_id', '=', push_vals['location_dest_id']),
+                    ('route_id', '=', push_vals['route_id']),
+                    ('active', '=', False),
+                ])
+                if not existing_push:
+                    self.env['stock.location.path'].create(push_vals)
+                else:
+                    existing_push.write({'active': True})
             for pull_vals in pull_rules_list:
-                self.env['procurement.rule'].create(pull_vals)
+                existing_pull = self.env['procurement.rule'].search([
+                    ('picking_type_id', '=', pull_vals['picking_type_id']),
+                    ('location_src_id', '=', pull_vals['location_src_id']),
+                    ('location_id', '=', pull_vals['location_id']),
+                    ('route_id', '=', pull_vals['route_id']),
+                    ('active', '=', False),
+                ])
+                if not existing_pull:
+                    self.env['procurement.rule'].create(pull_vals)
+                else:
+                    existing_pull.write({'active': True})
         return reception_route
 
     def _create_or_update_delivery_route(self, routes_data):
@@ -301,7 +319,7 @@ class Warehouse(models.Model):
             if warehouse.delivery_route_id:
                 delivery_route = warehouse.delivery_route_id
                 delivery_route.write({'name': warehouse._format_routename(route_type=warehouse.delivery_steps)})
-                delivery_route.pull_ids.unlink()
+                delivery_route.pull_ids.write({'active': False})
             else:
                 delivery_route = self.env['stock.location.route'].create(warehouse._get_reception_delivery_route_values(warehouse.delivery_steps))
             # procurement (pull) rules for delivery
@@ -309,7 +327,17 @@ class Warehouse(models.Model):
             dummy, pull_rules_list = warehouse._get_push_pull_rules_values(
                 routings, values={'active': True, 'route_id': delivery_route.id})
             for pull_vals in pull_rules_list:
-                self.env['procurement.rule'].create(pull_vals)
+                existing_pull = self.env['procurement.rule'].search([
+                    ('picking_type_id', '=', pull_vals['picking_type_id']),
+                    ('location_src_id', '=', pull_vals['location_src_id']),
+                    ('location_id', '=', pull_vals['location_id']),
+                    ('route_id', '=', pull_vals['route_id']),
+                    ('active', '=', False),
+                ])
+                if not existing_pull:
+                    self.env['procurement.rule'].create(pull_vals)
+                else:
+                    existing_pull.write({'active': True})
         return delivery_route
 
     def _create_or_update_mto_pull(self, routes_data):
@@ -429,12 +457,12 @@ class Warehouse(models.Model):
                 self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id)],
         }) for warehouse in self)
 
-    @api.multi
     def _get_reception_delivery_route_values(self, route_type):
         return {
             'name': self._format_routename(route_type=route_type),
             'product_categ_selectable': True,
             'product_selectable': False,
+            'company_id': self.company_id.id,
             'sequence': 10,
         }
 
@@ -455,12 +483,9 @@ class Warehouse(models.Model):
             'product_selectable': True,
             'product_categ_selectable': True,
             'supplied_wh_id': self.id,
-            'supplier_wh_id': supplier_warehouse.id}
-
-    def _get_inter_wh_route(self, supplier_warehouse):
-        # FIXME - remove me in master/saas-14
-        _logger.warning("'_get_inter_wh_route' has been renamed into '_get_inter_warehouse_route_values'... Overrides are ignored")
-        return self._get_inter_warehouse_route_values(supplier_warehouse)
+            'supplier_wh_id': supplier_warehouse.id,
+            'company_id': self.company_id.id,
+        }
 
     def _get_crossdock_route_values(self):
         return {
@@ -469,17 +494,12 @@ class Warehouse(models.Model):
             'product_selectable': True,
             'product_categ_selectable': True,
             'active': self.delivery_steps != 'ship_only' and self.reception_steps != 'one_step',
+            'company_id': self.company_id.id,
             'sequence': 20}
-
-    def _get_crossdock_route(self, route_name):
-        # FIXME - remove me in master/saas-14
-        _logger.warning("'_get_crossdock_route' has been renamed into '_get_crossdock_route_values'... Overrides are ignored")
-        return self._get_crossdock_route_values(route_name)
 
     # Pull / Push tools
     # ------------------------------------------------------------
 
-    @api.multi
     def _get_push_pull_rules_values(self, route_values, values=None, push_values=None, pull_values=None, name_suffix=''):
         first_rule = True
         push_rules_list, pull_rules_list = [], []
@@ -490,8 +510,11 @@ class Warehouse(models.Model):
                 'location_dest_id': routing.dest_loc.id,
                 'auto': 'manual',
                 'picking_type_id': routing.picking_type.id,
-                'warehouse_id': self.id}
-            route_push_values.update((values or {}).items() + (push_values or {}).items())
+                'warehouse_id': self.id,
+                'company_id': self.company_id.id,
+            }
+            route_push_values.update(values or {})
+            route_push_values.update(push_values or {})
             push_rules_list.append(route_push_values)
             route_pull_values = {
                 'name': self._format_rulename(routing.from_loc, routing.dest_loc, name_suffix),
@@ -500,8 +523,12 @@ class Warehouse(models.Model):
                 'action': 'move',
                 'picking_type_id': routing.picking_type.id,
                 'procure_method': first_rule is True and 'make_to_stock' or 'make_to_order',
-                'warehouse_id': self.id}
-            route_pull_values.update((values or {}).items() + (pull_values or {}).items())
+                'warehouse_id': self.id,
+                'company_id': self.company_id.id,
+                'propagate': routing.picking_type != self.pick_type_id,
+            }
+            route_pull_values.update(values or {})
+            route_pull_values.update(pull_values or {})
             pull_rules_list.append(route_pull_values)
             first_rule = False
         return push_rules_list, pull_rules_list
@@ -513,16 +540,6 @@ class Warehouse(models.Model):
             'procure_method': 'make_to_order',
             'active': True}, name_suffix=_('MTO'))
         return pull_rules_list
-
-    def _get_mto_pull_rule(self, route_values):
-        # FIXME - remove me in master/saas-14
-        _logger.warning("'_get_mto_pull_rule' has been renamed into '_get_mto_pull_rules_values'... Overrides are ignored")
-        return self._get_mto_pull_rules_values(route_values)
-
-    def _get_push_pull_rules(self, active, values, new_route_id):
-        # FIXME - remove me in master/saas-14
-        _logger.warning("'_get_push_pull_rules' has been renamed into '_get_push_pull_rules_values'... Overrides are ignored")
-        return self._get_push_pull_rules_values(values, values={'active': active, 'route_id': new_route_id})
 
     def _get_supply_pull_rules_values(self, route_values, values=None):
         dummy, pull_rules_list = self._get_push_pull_rules_values(route_values, values=values, pull_values={'active': True})
@@ -539,11 +556,6 @@ class Warehouse(models.Model):
             if delivery_new and warehouse.delivery_steps != delivery_new and (warehouse.delivery_steps == 'ship_only' or delivery_new == 'ship_only'):
                 change_to_multiple = warehouse.delivery_steps == 'ship_only'
                 warehouse._check_delivery_resupply(output_loc, change_to_multiple)
-
-    def _check_resupply(self, reception_new, delivery_new):
-        # FIXME - remove me in master/saas-14
-        _logger.warning("'_check_resupply' has been renamed into '_update_reception_delivery_resupply'... Overrides are ignored")
-        return self._update_reception_delivery_resupply(reception_new, delivery_new)
 
     def _check_delivery_resupply(self, new_location, change_to_multiple):
         """ Check if the resupply routes from this warehouse follow the changes of number of delivery steps
@@ -565,7 +577,7 @@ class Warehouse(models.Model):
             Pull.search([
                 '&', ('route_id', '=', self._get_mto_route().id),
                 ('location_id.usage', '=', 'transit'),
-                ('location_src_id', '=', self.lot_stock_id.id)]).unlink()
+                ('location_src_id', '=', self.lot_stock_id.id)]).write({'active': False})
 
     def _check_reception_resupply(self, new_location):
         """ Check routes being delivered by the warehouses (resupply routes) and
@@ -575,32 +587,22 @@ class Warehouse(models.Model):
             '&', ('route_id', 'in', routes.ids),
             ('location_src_id.usage', '=', 'transit')]).write({'location_id': new_location.id})
 
-    @api.multi
     def _update_routes(self):
         routes_data = self.get_routes_dict()
-        # change the default source and destination location and (de)activate picking types
+        # change the default source and destination location and (de)activate operation types
         self._update_picking_type()
-        # update delivery route and rules: unlink the existing rules of the warehouse delivery route and recreate it
         self._create_or_update_delivery_route(routes_data)
-        # update receipt route and rules: unlink the existing rules of the warehouse receipt route and recreate it
         self._create_or_update_reception_route(routes_data)
         self._create_or_update_crossdock_route(routes_data)
         self._create_or_update_mto_pull(routes_data)
         return True
 
-    @api.multi
-    def change_route(self):
-        # FIXME - remove me in master/saas-14
-        _logger.warning("'change_route' has been renamed into '_update_routes'... Overrides are ignored")
-        return self._update_routes()
-
     @api.one
     def _update_picking_type(self):
         picking_type_values = self._get_picking_type_values(self.reception_steps, self.delivery_steps, self.wh_pack_stock_loc_id)
-        for field_name, values in picking_type_values.iteritems():
-            getattr(self, field_name).write(values)
+        for field_name, values in picking_type_values.items():
+            self[field_name].write(values)
 
-    @api.multi
     def _update_name_and_code(self, new_name=False, new_code=False):
         if new_code:
             self.mapped('lot_stock_id').mapped('location_id').write({'name': new_code})
@@ -623,12 +625,6 @@ class Warehouse(models.Model):
             warehouse.pack_type_id.sequence_id.write(sequence_data['pack_type_id'])
             warehouse.pick_type_id.sequence_id.write(sequence_data['pick_type_id'])
             warehouse.int_type_id.sequence_id.write(sequence_data['int_type_id'])
-
-    @api.multi
-    def _handle_renaming(self, new_name=False, new_code=False):
-        # FIXME - remove me in master/saas-14
-        _logger.warning("'_handle_renaming' has been renamed into '_update_name_and_code'... Overrides are ignored")
-        return self._update_name_and_code(new_name=new_name, new_code=new_code)
 
     def _update_location_reception(self, new_reception_step):
         switch_warehouses = self.filtered(lambda wh: wh.reception_steps != new_reception_step and not wh._location_used(wh.wh_input_stock_loc_id))
@@ -693,18 +689,15 @@ class Warehouse(models.Model):
             'int_type_id': {'name': self.name + _('Sequence internal'), 'prefix': self.code + '/INT/', 'padding': 5},
         }
 
-    @api.multi
     def _format_rulename(self, from_loc, dest_loc, suffix):
         return '%s: %s -> %s%s' % (self.code, from_loc.name, dest_loc.name, suffix)
 
-    @api.multi
     def _format_routename(self, name=None, route_type=None):
         if route_type:
             name = self._get_route_name(route_type)
         return '%s: %s' % (self.name, name)
 
     @api.returns('self')
-    @api.multi
     def _get_all_routes(self):
         # TDE FIXME: check overrides
         routes = self.mapped('route_ids') | self.mapped('mto_pull_id').mapped('route_id')
@@ -712,7 +705,6 @@ class Warehouse(models.Model):
         return routes
     get_all_routes_for_wh = _get_all_routes
 
-    @api.multi
     def action_view_all_routes(self):
         routes = self._get_all_routes()
         return {
@@ -774,7 +766,6 @@ class Orderpoint(models.Model):
         'Qty Multiple', digits=dp.get_precision('Product Unit of Measure'),
         default=1, required=True,
         help="The procurement quantity will be rounded up to this multiple.  If it is 0, the exact quantity will be used.")
-    procurement_ids = fields.One2many('procurement.order', 'orderpoint_id', 'Created Procurements')
     group_id = fields.Many2one(
         'procurement.group', 'Procurement Group', copy=False,
         help="Moves created through this orderpoint will be put in this procurement group. If none is given, the moves generated by procurement rules will be grouped into one big picking.")
@@ -791,6 +782,11 @@ class Orderpoint(models.Model):
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple >= 0 )', 'Qty Multiple must be greater than or equal to zero.'),
     ]
+
+    def _quantity_in_progress(self):
+        """Return Quantities that are not yet in virtual stock but should be deduced from orderpoint rule
+        (example: purchases created from orderpoints)"""
+        return dict(self.mapped(lambda x: (x.id, 0.0)))
 
     @api.constrains('product_id')
     def _check_product_uom(self):
@@ -811,52 +807,25 @@ class Orderpoint(models.Model):
             return {'domain':  {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}}
         return {'domain': {'product_uom': []}}
 
-    @api.multi
-    def subtract_procurements_from_orderpoints(self):
-        '''This function returns quantity of product that needs to be deducted from the orderpoint computed quantity because there's already a procurement created with aim to fulfill it.
-        '''
-        self._cr.execute("""SELECT orderpoint.id, procurement.id, procurement.product_uom, procurement.product_qty, template.uom_id, move.product_qty
-            FROM stock_warehouse_orderpoint orderpoint
-            JOIN procurement_order AS procurement ON procurement.orderpoint_id = orderpoint.id
-            JOIN product_product AS product ON product.id = procurement.product_id
-            JOIN product_template AS template ON template.id = product.product_tmpl_id
-            LEFT JOIN stock_move AS move ON move.procurement_id = procurement.id
-            WHERE procurement.state not in ('done', 'cancel')
-                AND (move.state IS NULL OR move.state != 'draft')
-                AND orderpoint.id IN %s
-            ORDER BY orderpoint.id, procurement.id
-        """, (tuple(self.ids),))
-        UoM = self.env["product.uom"]
-        procurements_done = set()
-        res = dict.fromkeys(self.ids, 0.0)
-        for orderpoint_id, procurement_id, product_uom_id, procurement_qty, template_uom_id, move_qty in self._cr.fetchall():
-            if procurement_id not in procurements_done:  # count procurement once, if multiple move in this orderpoint/procurement combo
-                procurements_done.add(procurement_id)
-                res[orderpoint_id] += UoM.browse(product_uom_id)._compute_quantity(procurement_qty, UoM.browse(template_uom_id), round=False)
-            if move_qty:
-                res[orderpoint_id] -= move_qty
-        return res
-
-    def _get_date_planned(self, start_date):
+    def _get_date_planned(self, product_qty, start_date):
         days = self.lead_days or 0.0
         if self.lead_type == 'supplier':
             # These days will be substracted when creating the PO
-            days += self.product_id._select_seller().delay or 0.0
+            days += self.product_id._select_seller(
+                quantity=product_qty,
+                date=fields.Date.to_string(start_date),
+                uom_id=self.product_uom).delay or 0.0
         date_planned = start_date + relativedelta.relativedelta(days=days)
-        return date_planned.strftime(DEFAULT_SERVER_DATE_FORMAT)
+        return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
-    @api.multi
     def _prepare_procurement_values(self, product_qty, date=False, group=False):
+        """ Prepare specific key for moves or other components that will be created from a procurement rule
+        comming from an orderpoint. This method could be override in order to add other custom key that could
+        be used in move/po creation.
+        """
         return {
-            'name': self.name,
-            'date_planned': date or self._get_date_planned(datetime.today()),
-            'product_id': self.product_id.id,
-            'product_qty': product_qty,
-            'company_id': self.company_id.id,
-            'product_uom': self.product_uom.id,
-            'location_id': self.location_id.id,
-            'origin': self.name,
-            'warehouse_id': self.warehouse_id.id,
-            'orderpoint_id': self.id,
-            'group_id': group or self.group_id.id,
+            'date_planned': date or self._get_date_planned(product_qty, datetime.today()),
+            'warehouse_id': self.warehouse_id,
+            'orderpoint_id': self,
+            'group_id': group or self.group_id,
         }

@@ -42,6 +42,7 @@ class TimesheetAttendance(models.Model):
                     ts.unit_amount AS timesheet,
                     date_trunc('day', ts.date) AS date
                 FROM account_analytic_line AS ts
+                WHERE ts.project_id IS NOT NULL
             ) AS t
             GROUP BY t.user_id, t.date
             ORDER BY t.date

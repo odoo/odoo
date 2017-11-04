@@ -27,15 +27,7 @@
             <field name="context">{}</field>
             <field name="target">new</field>
             <field name="help">This wizard will validate all journal entries selected. Once journal entries are validated, you can not update them anymore.</field>
-        </record>
-
-        <record model="ir.values" id="validate_account_move_values">
-            <field name="model_id" ref="account.model_account_move" />
-            <field name="name">Post Journal Entries</field>
-            <field name="key2">client_action_multi</field>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_validate_account_move'))" />
-            <field name="key">action</field>
-            <field name="model">account.move</field>
+            <field name="binding_model_id" ref="account.model_account_move" />
         </record>
 
     </data>

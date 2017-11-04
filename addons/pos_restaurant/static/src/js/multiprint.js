@@ -4,10 +4,10 @@ odoo.define('pos_restaurant.multiprint', function (require) {
 var models = require('point_of_sale.models');
 var screens = require('point_of_sale.screens');
 var core = require('web.core');
+var mixins = require('web.mixins');
 var Session = require('web.Session');
 
 var QWeb = core.qweb;
-var mixins = core.mixins;
 
 var Printer = core.Class.extend(mixins.PropertiesMixin,{
     init: function(parent,options){

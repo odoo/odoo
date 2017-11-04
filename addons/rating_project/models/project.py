@@ -3,7 +3,7 @@
 
 from datetime import timedelta
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -11,16 +11,13 @@ class ProjectTaskType(models.Model):
 
     _inherit = 'project.task.type'
 
-    def _default_domain_rating_template_id(self):
-        return [('model', '=', 'project.task')]
-
     rating_template_id = fields.Many2one(
         'mail.template',
         string='Rating Email Template',
-        domain=lambda self: self._default_domain_rating_template_id(),
-        help="Select an email template. An email will be sent to the customer when the task reach this step.")
+        domain=[('model', '=', 'project.task')],
+        help="If set and if the project's rating configuration is 'Rating when changing stage', then an email will be sent to the customer when the task reaches this step.")
     auto_validation_kanban_state = fields.Boolean('Automatic kanban status', default=False,
-        help="Automatically modify the kanban state when the customer reply to the feedback for this stage.\n"
+        help="Automatically modify the kanban state when the customer replies to the feedback request for this stage.\n"
             " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
             " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n")
 
@@ -33,15 +30,14 @@ class Task(models.Model):
     def write(self, values):
         res = super(Task, self).write(values)
         if 'stage_id' in values and values.get('stage_id'):
-            self.filtered(lambda x: x.project_id.rating_status == 'stage')._send_task_rating_mail()
+            self.filtered(lambda x: x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
         return res
 
-    def _send_task_rating_mail(self):
+    def _send_task_rating_mail(self, force_send=False):
         for task in self:
             rating_template = task.stage_id.rating_template_id
             if rating_template:
-                force_send = self.env.context.get('force_send', True)
-                task.rating_send_request(rating_template, reuse_rating=False, force_send=force_send)
+                task.rating_send_request(rating_template, lang=task.partner_id.lang, force_send=force_send)
 
     def rating_get_partner_id(self):
         res = super(Task, self).rating_get_partner_id()
@@ -53,6 +49,13 @@ class Task(models.Model):
     def rating_apply(self, rate, token=None, feedback=None, subtype=None):
         return super(Task, self).rating_apply(rate, token=token, feedback=feedback, subtype="rating_project.mt_task_rating")
 
+    def rating_get_parent_model_name(self, vals):
+        return 'project.project'
+
+    def rating_get_parent_id(self):
+        return self.project_id.id
+
+
 class Project(models.Model):
 
     _inherit = "project.project"
@@ -61,12 +64,8 @@ class Project(models.Model):
     @api.model
     def _send_rating_all(self):
         projects = self.search([('rating_status', '=', 'periodic'), ('rating_request_deadline', '<=', fields.Datetime.now())])
-        projects.with_context(force_send=False)._send_rating_mail()
+        projects.mapped('task_ids')._send_task_rating_mail()
         projects._compute_rating_request_deadline()
-
-    def _send_rating_mail(self):
-        for project in self:
-            project.task_ids._send_task_rating_mail()
 
     @api.depends('percentage_satisfaction_task')
     def _compute_percentage_satisfaction_project(self):
@@ -102,16 +101,11 @@ class Project(models.Model):
             project.rating_request_deadline = fields.datetime.now() + timedelta(days=periods.get(project.rating_status_period, 0))
 
     @api.multi
-    def action_view_task_rating(self):
-        """ return the action to see all the rating about the tasks of the project """
-        action = self.env['ir.actions.act_window'].for_xml_id('rating', 'action_view_rating')
-        action_domain = safe_eval(action['domain']) if action['domain'] else []
-        domain = ['&', ('res_id', 'in', self.tasks.ids), ('res_model', '=', 'project.task')]
-        if action_domain:
-            domain = ['&'] + domain + action_domain
-        return dict(action, domain=domain)
-
-    @api.multi
     def action_view_all_rating(self):
-        """ return the action to see all the rating about the all sort of activity of the project (tasks, issues, ...) """
-        return self.action_view_task_rating()
+        """ return the action to see all the rating of the project, and activate default filters """
+        action = self.env['ir.actions.act_window'].for_xml_id('rating_project', 'rating_rating_action_view_project_rating')
+        action['name'] = _('Ratings of %s') % (self.name,)
+        action_context = safe_eval(action['context']) if action['context'] else {}
+        action_context.update(self._context)
+        action_context['search_default_rating_tasks'] = 1
+        return dict(action, context=action_context)

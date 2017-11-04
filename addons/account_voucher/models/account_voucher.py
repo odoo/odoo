@@ -3,7 +3,7 @@
 
 
 from odoo import fields, models, api, _
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 
 
@@ -134,8 +134,10 @@ class AccountVoucher(models.Model):
                 self.account_id = self.partner_id.property_account_receivable_id \
                     if self.voucher_type == 'sale' else self.partner_id.property_account_payable_id
             else:
-                self.account_id = self.journal_id.default_debit_account_id \
-                    if self.voucher_type == 'sale' else self.journal_id.default_credit_account_id
+                account_type = self.voucher_type == 'purchase' and 'payable' or 'receivable'
+                domain = [('deprecated', '=', False), ('internal_type', '=', account_type)]
+
+                self.account_id = self.env['account.account'].search(domain, limit=1)
 
     @api.multi
     def proforma_voucher(self):
@@ -182,7 +184,8 @@ class AccountVoucher(models.Model):
                 'amount_currency': (sign * abs(self.amount)  # amount < 0 for refunds
                     if company_currency != current_currency else 0.0),
                 'date': self.account_date,
-                'date_maturity': self.date_due
+                'date_maturity': self.date_due,
+                'payment_id': self._context.get('payment_id'),
             }
         return move_line
 
@@ -222,6 +225,24 @@ class AccountVoucher(models.Model):
             return voucher.currency_id.compute(amount, voucher.company_id.currency_id)
 
     @api.multi
+    def voucher_pay_now_payment_create(self):
+        payment_methods = self.journal_id.outbound_payment_method_ids
+        return {
+            'payment_type': 'outbound',
+            'payment_method_id': payment_methods and payment_methods[0].id or False,
+            'partner_type': 'supplier',
+            'partner_id': self.partner_id.id,
+            'amount': self.amount,
+            'currency_id': self.currency_id.id,
+            'payment_date': self.date,
+            'journal_id': self.journal_id.id,
+            'company_id': self.company_id.id,
+            'communication': self.name,
+            'name': self.name,
+            'state': 'reconciled',
+        }
+
+    @api.multi
     def voucher_move_line_create(self, line_total, move_id, company_currency, current_currency):
         '''
         Create one account move line, on the given account move, per voucher line where amount is not 0.0.
@@ -258,8 +279,8 @@ class AccountVoucher(models.Model):
                 'tax_ids': [(4,t.id) for t in line.tax_ids],
                 'amount_currency': line.price_subtotal if current_currency != company_currency else 0.0,
                 'currency_id': company_currency != current_currency and current_currency or False,
+                'payment_id': self._context.get('payment_id'),
             }
-
             self.env['account.move.line'].with_context(apply_taxes=True).create(move_line)
         return line_total
 
@@ -279,6 +300,9 @@ class AccountVoucher(models.Model):
             ctx = local_context.copy()
             ctx['date'] = voucher.account_date
             ctx['check_move_validity'] = False
+            # Create a payment to allow the reconciliation when pay_now = 'pay_now'.
+            if self.pay_now == 'pay_now' and self.amount > 0:
+                ctx['payment_id'] = self.env['account.payment'].create(self.voucher_pay_now_payment_create()).id
             # Create the account move record.
             move = self.env['account.move'].create(voucher.account_move_get())
             # Get the name of the account_move just created
@@ -357,7 +381,7 @@ class AccountVoucherLine(models.Model):
             self.company_id.id,
             self.voucher_id.currency_id.id,
             self.voucher_id.voucher_type)
-        for fname, fvalue in onchange_res['value'].iteritems():
+        for fname, fvalue in onchange_res['value'].items():
             setattr(self, fname, fvalue)
 
     def _get_account(self, product, fpos, type):

@@ -1,26 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sales_team
-# 
+#
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Roy Edvard Ellingsen <roy@royedvard.com>, 2016
-# Aleksander <aleksander@provendo.no>, 2016
-# Mari Løken <mari@tinderbox.no>, 2016
-# Joachim Flottorp <joachimflottorp@gmail.com>, 2016
-# Eirik Halvorsen <eirik386@gmail.com>, 2017
+# Mari Løken <mari@tinderbox.no>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Eirik Halvorsen <eirik386@gmail.com>, 2017\n"
-"Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-04-30 18:51+0000\n"
+"Last-Translator: Mari Løken <mari@tinderbox.no>\n"
+"Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-9/"
+"language/nb/)\n"
+"Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nb\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sales_team
@@ -79,32 +75,6 @@ msgid "Activities Done"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
-msgid "Apply"
-msgstr "Bruk"
-
-#. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
-msgid "Archived"
-msgstr "Arkivert"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_action_res_partner_bank_form
-#: model:ir.ui.menu,name:sales_team.menu_config_bank_accounts
-msgid "Bank Accounts"
-msgstr "Bankkonti"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_action_res_bank_form
-msgid "Banks"
-msgstr "Banker"
-
-#. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
-msgid "Cancel"
-msgstr "Avbryt"
-
-#. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
@@ -125,6 +95,11 @@ msgid "Click to set"
 msgstr ""
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_code
+msgid "Code"
+msgstr "Kode"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_color
 msgid "Color Index"
 msgstr "Fargeindeks"
@@ -136,69 +111,21 @@ msgid "Company"
 msgstr "Firma"
 
 #. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_sale_config
-msgid "Configuration"
-msgstr "Konfigurasjon"
-
-#. module: sales_team
-#: model:ir.actions.act_window,name:sales_team.action_sale_config
-#: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
-msgid "Configure Sales"
-msgstr "Konfigurasjons salgs"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_partner_category_form
-msgid "Contact Tags"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_partner_title_contact
-msgid "Contact Titles"
-msgstr "Kontakttitler"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_config_address_book
-msgid "Contacts"
-msgstr "Kontakter"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_country_partner
-msgid "Countries"
-msgstr "Land"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_country_group
-msgid "Country Group"
-msgstr ""
-
-#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:215
 #, python-format
-msgid "Create a few opportunities in it."
+msgid "Create a few opportunities to activate your dashboard."
 msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_create_uid
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_create_uid
 msgid "Created by"
 msgstr "Opprettet av"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_create_date
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "Opprettet den"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_action_currency_form
-msgid "Currencies"
-msgstr "Valuta"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_partner_form
-msgid "Customers"
-msgstr "Kunder"
 
 #. module: sales_team
 #. openerp-web
@@ -212,18 +139,12 @@ msgstr ""
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
 msgid "Direct Sales"
-msgstr "Direktesalg"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_display_name
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_display_name
 msgid "Display Name"
 msgstr "Visnings navn"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_country_state_partner
-msgid "Fed. States"
-msgstr ""
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -249,21 +170,12 @@ msgstr "Grupper etter..."
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:213
 #, python-format
 msgid "Hi there!"
-msgstr "Heisann!"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_id
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_id
 msgid "ID"
 msgstr "ID"
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_res_partner_team_id
-#: model:ir.model.fields,help:sales_team.field_res_users_team_id
-msgid ""
-"If set, sale team used notably for sales and assignations related to this "
-"partner"
-msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_active
@@ -286,7 +198,6 @@ msgstr "Fakturert"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team___last_update
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings___last_update
 msgid "Last Modified on"
 msgstr "Sist oppdatert "
 
@@ -299,25 +210,13 @@ msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_write_uid
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_write_uid
 msgid "Last Updated by"
 msgstr "Sist oppdatert av"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_write_date
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_write_date
 msgid "Last Updated on"
 msgstr "Sist oppdatert"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_localisation
-msgid "Localization"
-msgstr "Lokalisering"
-
-#. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_manager
-msgid "Manager"
-msgstr "Leder"
 
 #. module: sales_team
 #. openerp-web
@@ -329,12 +228,12 @@ msgstr "Møter"
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr "Mer"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "More Info"
-msgstr "Mer Informasjon"
+msgstr ""
 
 #. module: sales_team
 #. openerp-web
@@ -348,14 +247,14 @@ msgstr ""
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "My Salesteams"
-msgstr "Mine Salgsteam"
+msgstr ""
 
 #. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:50
 #, python-format
 msgid "Next 7 days"
-msgstr "Neste 7 dager"
+msgstr ""
 
 #. module: sales_team
 #. openerp-web
@@ -366,7 +265,7 @@ msgstr "Neste handling."
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr ""
@@ -389,20 +288,9 @@ msgid "Reply-To"
 msgstr "Svar-til"
 
 #. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_sale_report
-msgid "Reports"
-msgstr "Rapporter"
-
-#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users_property_product_pricelist
 msgid "Sale Pricelist"
 msgstr "Salgsprisliste"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_base_partner
-#: model:ir.ui.menu,name:sales_team.menu_sales
-msgid "Sales"
-msgstr "Salg"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
@@ -425,14 +313,13 @@ msgstr ""
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_act
 #: model:ir.actions.act_window,name:sales_team.sales_team_config_action
-#: model:ir.ui.menu,name:sales_team.sales_team_config
 msgid "Sales Teams"
 msgstr "Salgsteam"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Sales team"
-msgstr "Salgsteam"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -445,7 +332,6 @@ msgid "Salesteams Search"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_sale_general_settings
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "Settings"
 msgstr "Innstillinger"
@@ -455,7 +341,7 @@ msgstr "Innstillinger"
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:146
 #, python-format
 msgid "Target"
-msgstr "Mål"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_user_id
@@ -468,6 +354,11 @@ msgstr "Teamleder"
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
 msgstr "Gruppemedlemmer"
+
+#. module: sales_team
+#: sql_constraint:crm.team:0
+msgid "The code of the sales team must be unique !"
+msgstr "Koden for salgsteamet må være unik!"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_color
@@ -570,24 +461,9 @@ msgid ""
 msgstr ""
 
 #. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_salesman_all_leads
-msgid "User: All Documents"
-msgstr ""
-
-#. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_salesman
-msgid "User: Own Documents Only"
-msgstr ""
-
-#. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
 msgid "Users"
 msgstr "Brukere"
-
-#. module: sales_team
-#: model:crm.team,name:sales_team.salesteam_website_sales
-msgid "Website Sales"
-msgstr "Nettsted salg"
 
 #. module: sales_team
 #. openerp-web
@@ -598,10 +474,10 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
 #, python-format
 msgid "Wrong value entered!"
-msgstr "Feil verdier oppgitt!"
+msgstr ""
 
 #. module: sales_team
 #. openerp-web
@@ -611,39 +487,44 @@ msgid "exp. closing"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model,name:sales_team.model_ir_ui_view
-msgid "ir.ui.view"
-msgstr "ir.ui.view"
-
-#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:79
 #, python-format
 msgid "overdue"
 msgstr ""
 
-#. module: sales_team
-#: model:ir.model,name:sales_team.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "Salg.konfigurasjon.innstilling."
+#~ msgid "Action Needed"
+#~ msgstr "Handling"
 
-#. module: sales_team
-#: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
-msgid ""
-"the user will have access to all records of everyone in the sales "
-"application."
-msgstr ""
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Dato for siste melding på denne posten."
 
-#. module: sales_team
-#: model:res.groups,comment:sales_team.group_sale_salesman
-msgid "the user will have access to his own data in the sales application."
-msgstr "brukeren vil ha tilgang til sine egne data i salgsapplikasjonen."
+#~ msgid "Followers"
+#~ msgstr "Følgere."
 
-#. module: sales_team
-#: model:res.groups,comment:sales_team.group_sale_manager
-msgid ""
-"the user will have an access to the sales configuration as well as statistic"
-" reports."
-msgstr ""
-"brukeren vil ha tilgang til salgskonfigurasjonen så vel som "
-"statistikkrapporter."
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Hvis det er merket nye meldinger så krever dette din oppmerksomhet."
+
+#~ msgid "Last Message Date"
+#~ msgstr "Siste meldingsdato"
+
+#~ msgid "Messages"
+#~ msgstr "Meldinger."
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Meldinger og kommunikasjon historie."
+
+#~ msgid "Number of Actions"
+#~ msgstr "Antall handlinger"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Antall meldinger som krever handling"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Antall uleste meldinger"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Uleste meldinger."
+
+#~ msgid "Working Hours"
+#~ msgstr "Arbeidstid"

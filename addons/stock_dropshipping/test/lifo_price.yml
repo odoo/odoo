@@ -23,7 +23,7 @@
     uom_id: product.product_uom_kgm
     uom_po_id: product.product_uom_kgm
     valuation: real_time
-    cost_method: real
+    cost_method: fifo
     property_stock_account_input: o_expense
     property_stock_account_output: o_income
     description: LIFO Ice Cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
@@ -65,13 +65,9 @@
   Process the receipt of purchase order 1
 -
   !python {model: purchase.order, id: purchase_order_lifo1}: |
-    self.picking_ids[0].do_transfer()
-- 
-  Check the standard price of the product (lifo icecream)
-- 
-  !python {model: product.product, id: product_lifo_icecream}: |
-    assert self.standard_price == 70.0, 'Standard price should not have changed!'
-- 
+    self.picking_ids[0].move_lines.quantity_done = self.picking_ids[0].move_lines.product_qty
+    self.picking_ids[0].button_validate()
+-
   I confirm the second purchase order
 - 
   !python {model: purchase.order, id: purchase_order_lifo2}: |
@@ -80,13 +76,9 @@
   Process the receipt of purchase order 2
 - 
   !python {model: purchase.order, id: purchase_order_lifo2}: |
-    self.picking_ids[0].do_transfer()
-- 
-  Check the standard price should not have changed
-- 
-  !python {model: product.product, id: product_lifo_icecream}: |
-    assert self.standard_price == 70.0, 'Standard price as lifo price of second receipt incorrect!'
-- 
+    self.picking_ids[0].move_lines.quantity_done = self.picking_ids[0].move_lines.product_qty
+    self.picking_ids[0].button_validate()
+-
   Let us send some goods
 - 
   !record {model: stock.picking, id: outgoing_lifo_shipment}:
@@ -107,13 +99,14 @@
 - 
   !python {model: stock.picking, id: outgoing_lifo_shipment}: |
     self.action_assign()
+    self.move_lines.quantity_done = self.move_lines.product_qty
 - 
   Process the delivery of the outgoing shipment
 - 
   !python {model: stock.picking, id: outgoing_lifo_shipment}: |
-    self.do_transfer()
+    self.button_validate()
 -
-  Check standard price became 80 euro
+  Check if the move value correctly reflects the fifo costing method
 -
-  !python {model: product.product, id: product_lifo_icecream}: |
-    assert self.standard_price == 80.0, 'Price should have been 80 euro'
+  !python {model: stock.picking, id: outgoing_lifo_shipment}: |
+    assert self.move_lines.value == -1400.0, 'Stock move value should have been 1400 euro'

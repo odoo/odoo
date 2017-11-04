@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+        <record id="project_task_merge_wizard_form" model="ir.ui.view">
+            <field name='name'>project.task.merge.wizard.form</field>
+            <field name='model'>project.task.merge.wizard</field>
+            <field name='arch' type='xml'>
+                <form string='Merge Tasks'>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="task_ids" widget="many2many_tags"/>
+                            </group>
+                            <group>
+                                <field name="create_new_task"/>
+                                <field name="target_task_name" attrs="{'invisible': [('create_new_task', '=', False)], 'required': [('create_new_task', '=', True)]}"/>
+                                <field name="target_project_id" attrs="{'invisible': [('create_new_task', '=', False)], 'required': [('create_new_task', '=', True)]}"/>
+                                <field name="target_task_id" attrs="{'invisible': [('create_new_task', '=', True)], 'required': [('create_new_task', '=', False)]}"/>
+                                <field name="user_id" attrs="{'invisible': [('create_new_task', '=', False)], 'required': [('create_new_task', '=', True)]}"/>
+                            </group>
+                        </group>
+                        <span class="text-muted">NB: This will archive the selected tasks (Except the destination task)</span>
+                    </sheet>
+                    <footer>
+                        <button name='merge_tasks' string='Merge Tasks' class='oe_highlight' type='object'/>
+                        <button special="cancel" string="Cancel" type="object" class="btn btn-default oe_inline"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window
+            id="project_task_actions_act_window_merge_tasks"
+            res_model="project.task.merge.wizard"
+            src_model="project.task"
+            target="new"
+            multi="True"
+            key2="client_action_multi"
+            view_mode="form"
+            name="Merge Selected Tasks"/>
+
+        <act_window
+            id="project_task_actions_act_window_merge_tasks"
+            res_model="project.task.merge.wizard"
+            src_model="project.task"
+            target="new"
+            multi="False"
+            key2="client_action_multi"
+            view_mode="form"
+            name="Merge Selected Tasks"/>
+</odoo>

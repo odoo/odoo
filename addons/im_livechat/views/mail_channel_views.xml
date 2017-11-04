@@ -10,10 +10,10 @@
                     <field name="name"/>
                     <group expand="0" string="Group By...">
                         <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'livechat_channel_id'}"/>
-                        <separator orientation="vertical" />
+                        <separator orientation="vertical"/>
                         <filter name="group_by_day" string="Creation date (day)" domain="[]" context="{'group_by':'create_date:day'}"/>
                         <filter name="group_by_week" string="Creation date (week)" domain="[]" context="{'group_by':'create_date:week'}"/>
-                        <filter name="group_by_month" string="Creation date (month)" domain="[]" context="{'group_by':'create_date:month'}" />
+                        <filter name="group_by_month" string="Creation date (month)" domain="[]" context="{'group_by':'create_date:month'}"/>
                         <filter name="group_by_year" string="Creation date (year)" domain="[]" context="{'group_by':'create_date:year'}"/>
                     </group>
                 </search>
@@ -27,7 +27,7 @@
                 <tree string="History" create="false">
                     <field name="create_date" string="Session Date"/>
                     <field name="name" string="Attendees"/>
-                    <field name="rating_count" string="Has a Rating"/>
+                    <field name="rating_last_value" string="Rating"/>
                 </tree>
             </field>
         </record>
@@ -44,24 +44,13 @@
                                 <field name="create_date" readonly="1" string="Session Date"/>
                             </group>
                             <group>
-                                <field name="rating_ids" mode="kanban" nolabel="1">
-                                    <kanban>
-                                        <field name="rating"/>
-                                        <field name="feedback"/>
-                                        <field name="res_name"/>
-                                        <field name="create_date"/>
-                                        <templates>
-                                            <t t-name="kanban-box">
-                                                <div class="oe_group_details" style="min-height: 40px">
-                                                    <img t-attf-src="rating/static/src/img/rating_#{record.rating.raw_value and record.rating.raw_value or 0}.png" class="oe_kanban_image" style="float:left; margin-right: 10px;"/>
-                                                    <span t-if="record.feedback.raw_value">
-                                                        <t t-esc="record.feedback.raw_value"/>
-                                                    </span>
-                                                </div>
-                                            </t>
-                                        </templates>
-                                    </kanban>
-                                </field>
+                                <group>
+                                    <label for="rating_last_image" string="Rating"/>
+                                    <div>
+                                        <field name="rating_last_image" widget="image" class="oe_avatar" options='{"preview_image": "image_thumb"}' readonly="1" nolabel="1"/>
+                                        <field name="rating_last_feedback" nolabel="1"/>
+                                    </div>
+                                </group>
                             </group>
                         </group>
                         <field name="message_ids" type="tree">

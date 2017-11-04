@@ -15,6 +15,7 @@
             <field name="account_id" ref="vat_payable_0"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_08')])]"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
         <record id="btw_6" model="account.tax.template">
             <field name="sequence">10</field>
@@ -27,6 +28,7 @@
             <field name="account_id" ref="vat_payable_l"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_05'),ref('tag_nl_22')])]"/>
+            <field name="tax_group_id" ref="tax_group_6"/>
         </record>
         <record id="btw_21" model="account.tax.template">
             <field name="sequence">5</field>
@@ -39,6 +41,7 @@
             <field name="account_id" ref="vat_payable_h"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_03'),ref('tag_nl_20')])]"/>
+            <field name="tax_group_id" ref="tax_group_21"/>
         </record>
         <record id="btw_overig" model="account.tax.template">
             <field name="sequence">15</field>
@@ -51,6 +54,7 @@
             <field name="account_id" ref="vat_payable_h"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_04'),ref('tag_nl_06'),ref('tag_nl_21'),ref('tag_nl_23')])]"/>
+            <field name="tax_group_id" ref="tax_group_21"/>
         </record>
 <!-- Verkoop BTW Diensten -->
         <record id="btw_0_d" model="account.tax.template">
@@ -64,6 +68,7 @@
             <field name="account_id" ref="vat_payable_0_d"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_08')])]"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
         <record id="btw_6_d" model="account.tax.template">
             <field name="sequence">10</field>
@@ -76,6 +81,7 @@
             <field name="account_id" ref="vat_payable_l_d"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_05'),ref('tag_nl_22')])]"/>
+            <field name="tax_group_id" ref="tax_group_6"/>
         </record>
         <record id="btw_21_d" model="account.tax.template">
             <field name="sequence">6</field>
@@ -88,6 +94,7 @@
             <field name="account_id" ref="vat_payable_h_d"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_03'),ref('tag_nl_20')])]"/>
+            <field name="tax_group_id" ref="tax_group_21"/>
         </record>
         <record id="btw_overig_d" model="account.tax.template">
             <field name="sequence">15</field>
@@ -100,6 +107,7 @@
             <field name="account_id" ref="vat_payable_h_d"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_04'),ref('tag_nl_06'),ref('tag_nl_21'),ref('tag_nl_23')])]"/>
+            <field name="tax_group_id" ref="tax_group_21"/>
         </record>
 <!--Inkoop BTW -->
         <record id="btw_6_buy" model="account.tax.template">
@@ -113,6 +121,7 @@
             <field name="account_id" ref="vat_refund_l"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+            <field name="tax_group_id" ref="tax_group_6"/>
         </record>
         <record id="btw_6_buy_incl" model="account.tax.template">
             <field name="sequence">10</field>
@@ -126,6 +135,7 @@
             <field name="account_id" ref="vat_refund_l"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+            <field name="tax_group_id" ref="tax_group_6"/>
         </record>
         <record id="btw_21_buy" model="account.tax.template">
             <field name="sequence">5</field>
@@ -138,6 +148,7 @@
             <field name="account_id" ref="vat_refund_h"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+            <field name="tax_group_id" ref="tax_group_21"/>
         </record>
         <record id="btw_21_buy_incl" model="account.tax.template">
             <field name="sequence">7</field>
@@ -151,6 +162,7 @@
             <field name="account_id" ref="vat_refund_h"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+            <field name="tax_group_id" ref="tax_group_21"/>
         </record>
         <record id="btw_overig_buy" model="account.tax.template">
             <field name="sequence">15</field>
@@ -163,6 +175,7 @@
             <field name="account_id" ref="vat_refund_h"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+            <field name="tax_group_id" ref="tax_group_21"/>
         </record>
 <!--Inkoop BTW diensten -->
         <record id="btw_6_buy_d" model="account.tax.template">
@@ -176,6 +189,7 @@
             <field name="account_id" ref="vat_refund_l_d"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+            <field name="tax_group_id" ref="tax_group_6"/>
         </record>
         <record id="btw_21_buy_d" model="account.tax.template">
             <field name="sequence">6</field>
@@ -188,6 +202,7 @@
             <field name="account_id" ref="vat_refund_h_d"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+            <field name="tax_group_id" ref="tax_group_21"/>
         </record>
         <record id="btw_overig_buy_d" model="account.tax.template">
             <field name="sequence">15</field>
@@ -200,6 +215,7 @@
             <field name="account_id" ref="vat_refund_h_d"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+            <field name="tax_group_id" ref="tax_group_21"/>
         </record>
 <!--BTW verlegd-->
         <record id="btw_verk_0" model="account.tax.template">
@@ -213,6 +229,7 @@
             <field name="account_id" ref="vat_payable_v"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_08')])]"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
        <record id="btw_ink_0_1" model="account.tax.template">
             <field name="sequence">98</field>
@@ -225,6 +242,7 @@
             <field name="account_id" ref="vat_payable_v"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_27')])]"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
         <record id="btw_ink_0_2" model="account.tax.template">
             <field name="sequence">99</field>
@@ -237,6 +255,7 @@
             <field name="account_id" ref="vat_payable_v"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_34')])]"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
         <record id="btw_ink_0" model="account.tax.template">
             <field name="sequence">15</field>
@@ -250,6 +269,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_10')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_ink_0_1'), ref('btw_ink_0_2')])]"/>
+            <field name="tax_group_id" ref="tax_group_21"/>
         </record>
 <!-- Binnen de EU -->
 <!-- BTW inkoop -->
@@ -264,6 +284,7 @@
             <field name="account_id" ref="vat_payable_l_eu"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_30')])]"/>
+            <field name="tax_group_id" ref="tax_group_6_eu"/>
         </record>
         <record id="btw_I_6_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -276,6 +297,7 @@
             <field name="account_id" ref="vat_refund_l_eu"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+            <field name="tax_group_id" ref="tax_group_6_eu"/>
         </record>
         <record id="btw_I_6" model="account.tax.template">
             <field name="sequence">20</field>
@@ -287,6 +309,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_17')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_I_6_1'), ref('btw_I_6_2')])]"/>
+            <field name="tax_group_id" ref="tax_group_6_eu"/>
         </record>
         <record id="btw_I_21_1" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -299,6 +322,7 @@
             <field name="account_id" ref="vat_payable_h_eu"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_30')])]"/>
+            <field name="tax_group_id" ref="tax_group_21_eu"/>
         </record>
         <record id="btw_I_21_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -311,6 +335,7 @@
             <field name="account_id" ref="vat_refund_h_eu"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+            <field name="tax_group_id" ref="tax_group_21_eu"/>
         </record>
         <record id="btw_I_21" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -322,6 +347,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_17')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_I_21_1'), ref('btw_I_21_2')])]"/>
+            <field name="tax_group_id" ref="tax_group_21_eu"/>
         </record>
         <record id="btw_I_overig_1" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -334,6 +360,7 @@
             <field name="account_id" ref="vat_payable_h_eu"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_30')])]"/>
+            <field name="tax_group_id" ref="tax_group_0_eu"/>
         </record>
         <record id="btw_I_overig_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -346,6 +373,7 @@
             <field name="sequence">98</field>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+            <field name="tax_group_id" ref="tax_group_0_eu"/>
         </record>
         <record id="btw_I_overig" model="account.tax.template">
             <field name="sequence">20</field>
@@ -357,6 +385,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_17')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_I_overig_1'), ref('btw_I_overig_2')])]"/>
+            <field name="tax_group_id" ref="tax_group_0_eu"/>
         </record>
 <!-- BTW verkoop -->
         <record id="btw_X0" model="account.tax.template">
@@ -370,6 +399,7 @@
             <field name="account_id" ref="vat_payable_0_eu"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_13')])]"/>
+            <field name="tax_group_id" ref="tax_group_0_eu"/>
         </record>
         <record id="btw_X2" model="account.tax.template">
             <field name="sequence">20</field>
@@ -382,6 +412,7 @@
             <field name="account_id" ref="vat_payable_0_eu"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_14')])]"/>
+            <field name="tax_group_id" ref="tax_group_0_eu"/>
         </record>
 <!-- BTW inkoop diensten -->
         <record id="btw_I_6_d_1" model="account.tax.template">
@@ -395,6 +426,7 @@
             <field name="account_id" ref="vat_payable_l_d_eu"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_30')])]"/>
+            <field name="tax_group_id" ref="tax_group_6_eu"/>
         </record>
         <record id="btw_I_6_d_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -407,6 +439,7 @@
             <field name="account_id" ref="vat_refund_l_d_eu"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+            <field name="tax_group_id" ref="tax_group_6_eu"/>
         </record>
         <record id="btw_I_6_d" model="account.tax.template">
             <field name="sequence">20</field>
@@ -418,6 +451,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_17')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_I_6_d_1'), ref('btw_I_6_d_2')])]"/>
+            <field name="tax_group_id" ref="tax_group_6_eu"/>
         </record>
         <record id="btw_I_21_d_1" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -430,6 +464,7 @@
             <field name="account_id" ref="vat_payable_h_d_eu"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_30')])]"/>
+            <field name="tax_group_id" ref="tax_group_21_eu"/>
         </record>
         <record id="btw_I_21_d_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -442,6 +477,7 @@
             <field name="account_id" ref="vat_refund_h_d_eu"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+            <field name="tax_group_id" ref="tax_group_21_eu"/>
         </record>
         <record id="btw_I_21_d" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -453,6 +489,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_17')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_I_21_d_1'), ref('btw_I_21_d_2')])]"/>
+            <field name="tax_group_id" ref="tax_group_21_eu"/>
         </record>
         <record id="btw_I_overig_d_1" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -465,6 +502,7 @@
             <field name="account_id" ref="vat_payable_h_d_eu"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_30')])]"/>
+            <field name="tax_group_id" ref="tax_group_0_eu"/>
         </record>
         <record id="btw_I_overig_d_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -477,6 +515,7 @@
             <field name="sequence">98</field>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+            <field name="tax_group_id" ref="tax_group_0_eu"/>
         </record>
         <record id="btw_I_overig_d" model="account.tax.template">
             <field name="sequence">20</field>
@@ -488,6 +527,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_17')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_I_overig_d_1'), ref('btw_I_overig_d_2')])]"/>
+            <field name="tax_group_id" ref="tax_group_0_eu"/>
         </record>
 
 <!-- Buiten de EU -->
@@ -503,6 +543,7 @@
             <field name="sequence">21</field>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_29')])]"/>
+            <field name="tax_group_id" ref="tax_group_6_niet_eu"/>
         </record>
         <record id="btw_E1_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -515,6 +556,7 @@
             <field name="sequence">22</field>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+            <field name="tax_group_id" ref="tax_group_6_niet_eu"/>
         </record>
         <record id="btw_E1" model="account.tax.template">
             <field name="sequence">20</field>
@@ -526,6 +568,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_16')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_E1_1'), ref('btw_E1_2')])]"/>
+            <field name="tax_group_id" ref="tax_group_6_niet_eu"/>
         </record>
         <record id="btw_E2_1" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -538,6 +581,7 @@
             <field name="account_id" ref="vat_payable_h_non_eu"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_29')])]"/>
+            <field name="tax_group_id" ref="tax_group_21_niet_eu"/>
         </record>
         <record id="btw_E2_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -550,6 +594,7 @@
             <field name="account_id" ref="vat_refund_h_non_eu"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_34')])]"/>
+            <field name="tax_group_id" ref="tax_group_21_niet_eu"/>
         </record>
         <record id="btw_E2" model="account.tax.template">
             <field name="sequence">20</field>
@@ -561,6 +606,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_16')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_E2_1'), ref('btw_E2_2')])]"/>
+            <field name="tax_group_id" ref="tax_group_21_niet_eu"/>
         </record>
         <record id="btw_E_overig_1" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -573,6 +619,7 @@
             <field name="type_tax_use">none</field>
             <field name="sequence">21</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_29')])]"/>
+            <field name="tax_group_id" ref="tax_group_21_niet_eu"/>
         </record>
         <record id="btw_E_overig_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -585,6 +632,7 @@
             <field name="type_tax_use">none</field>
             <field name="sequence">22</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+            <field name="tax_group_id" ref="tax_group_21_niet_eu"/>
         </record>
         <record id="btw_E_overig" model="account.tax.template">
             <field name="sequence">20</field>
@@ -596,6 +644,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_16')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_E_overig_1'), ref('btw_E_overig_2')])]"/>
+            <field name="tax_group_id" ref="tax_group_21_niet_eu"/>
         </record>
 <!-- BTW Verkoop -->
         <record id="btw_X1" model="account.tax.template">
@@ -609,6 +658,7 @@
             <field name="account_id" ref="vat_payable_0_non_eu"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_12')])]"/>
+            <field name="tax_group_id" ref="tax_group_0_niet_eu"/>
         </record>
         <record id="btw_X3" model="account.tax.template">
             <field name="sequence">21</field>
@@ -621,6 +671,7 @@
             <field name="account_id" ref="vat_payable_0_non_eu"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_12')])]"/>
+            <field name="tax_group_id" ref="tax_group_0_niet_eu"/>
         </record>
 <!-- BTW inkoop diensten -->
         <record id="btw_E1_d_1" model="account.tax.template">
@@ -634,6 +685,7 @@
             <field name="sequence">21</field>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_29')])]"/>
+            <field name="tax_group_id" ref="tax_group_6_niet_eu"/>
         </record>
         <record id="btw_E1_d_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -646,6 +698,7 @@
             <field name="sequence">22</field>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+            <field name="tax_group_id" ref="tax_group_6_niet_eu"/>
         </record>
         <record id="btw_E1_d" model="account.tax.template">
             <field name="sequence">20</field>
@@ -657,6 +710,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_16')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_E1_d_1'), ref('btw_E1_d_2')])]"/>
+            <field name="tax_group_id" ref="tax_group_6_niet_eu"/>
         </record>
         <record id="btw_E2_d_1" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -669,6 +723,7 @@
             <field name="account_id" ref="vat_payable_h_d_non_eu"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_29')])]"/>
+            <field name="tax_group_id" ref="tax_group_21_niet_eu"/>
         </record>
         <record id="btw_E2_d_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -681,6 +736,7 @@
             <field name="account_id" ref="vat_refund_h_d_non_eu"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_34')])]"/>
+            <field name="tax_group_id" ref="tax_group_21_niet_eu"/>
         </record>
         <record id="btw_E2_d" model="account.tax.template">
             <field name="sequence">20</field>
@@ -692,6 +748,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_16')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_E2_d_1'), ref('btw_E2_d_2')])]"/>
+            <field name="tax_group_id" ref="tax_group_21_niet_eu"/>
         </record>
         <record id="btw_E_overig_d_1" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -704,6 +761,7 @@
             <field name="type_tax_use">none</field>
             <field name="sequence">21</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_29')])]"/>
+            <field name="tax_group_id" ref="tax_group_21_niet_eu"/>
         </record>
         <record id="btw_E_overig_d_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -716,6 +774,7 @@
             <field name="type_tax_use">none</field>
             <field name="sequence">22</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+            <field name="tax_group_id" ref="tax_group_21_niet_eu"/>
         </record>
         <record id="btw_E_overig_d" model="account.tax.template">
             <field name="sequence">20</field>
@@ -727,6 +786,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_16')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_E_overig_d_1'), ref('btw_E_overig_d_2')])]"/>
+            <field name="tax_group_id" ref="tax_group_21_niet_eu"/>
         </record>
 
     </data>

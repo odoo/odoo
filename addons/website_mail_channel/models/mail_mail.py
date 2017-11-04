@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, tools, _
-from odoo.addons.website.models.website import slug
+from odoo.addons.http_routing.models.ir_http import slug
 
 
 class MailMail(models.Model):
@@ -15,7 +15,7 @@ class MailMail(models.Model):
         if self.model == 'mail.channel' and self.res_id:
             # no super() call on purpose, no private links that could be quoted!
             channel = self.env['mail.channel'].browse(self.res_id)
-            base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
             vals = {
                 'maillist': _('Mailing-List'),
                 'post_to': _('Post to'),

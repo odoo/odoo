@@ -10,8 +10,6 @@
     'summary': 'Simple Discounts in the Point of Sale ',
     'description': """
 
-=======================
-
 This module allows the cashier to quickly give a percentage
 sale discount to a customer.
 

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="hr_expense_sheet_register_payment_view_form" model="ir.ui.view">
+            <field name="name">hr.expense.sheet.register.payment.wizard.form</field>
+            <field name="model">hr.expense.sheet.register.payment.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Register Payment">
+                    <sheet>
+                        <field name="id" invisible="1"/>
+                        <div class="oe_title">
+                            <h1>Draft Payment</h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="partner_id" required="1" context="{'default_is_company': True, 'default_supplier': True}"/>
+                                <field name="journal_id" widget="selection"/>
+                                <field name="hide_payment_method" invisible="1"/>
+                                <field name="payment_method_id" widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)]}"/>
+                                <label for="amount"/>
+                                <div name="amount_div" class="o_row">
+                                    <field name="amount"/>
+                                    <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="payment_date"/>
+                                <field name="communication"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string='Validate' name="expense_post_payment" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Expenses -->
+        <record id="hr_expense_sheet_register_payment_wizard_action" model="ir.actions.act_window">
+            <field name="name">Register Payment</field>
+            <field name="res_model">hr.expense.sheet.register.payment.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr_expense_sheet_register_payment_view_form"/>
+            <field name="target">new</field>
+            <field name="context">{'default_payment_type': 'inbound'}</field>
+            <field name="domain">[('partner_type', '=', 'customer')]</field>
+        </record>
+
+</odoo>

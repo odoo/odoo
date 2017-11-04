@@ -45,4 +45,10 @@
         <field name="perm_create" eval="True"/>
         <field name="perm_unlink" eval="True"/>
     </record>
+    <record id="website_page_rule_public" model="ir.rule">
+        <field name="name">website.page: portal/public: read published pages</field>
+        <field name="model_id" ref="website.model_website_page"/>
+        <field name="domain_force">[('website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_public'))]"/>
+    </record>
 </odoo>

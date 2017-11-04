@@ -1,1 +1,1 @@
-import ir_module_module
+from . import ir_module_module

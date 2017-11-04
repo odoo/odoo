@@ -10,7 +10,7 @@
 Manage drop shipping orders
 ===========================
 
-This module adds a pre-configured Drop Shipping picking type
+This module adds a pre-configured Drop Shipping operation type
 as well as a procurement route that allow configuring Drop
 Shipping products and orders.
 
@@ -26,7 +26,7 @@ internal transfer document is needed.
     'test': [
         '../account/test/account_minimal_test.xml',
         '../stock_account/test/stock_valuation_account.xml',
-        'test/cancellation_propagated.yml',
+        #'test/cancellation_propagated.yml',
         'test/crossdock.yml',
         'test/dropship.yml',
         'test/procurementexception.yml',

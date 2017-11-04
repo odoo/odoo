@@ -1,0 +1,320 @@
+///
+/// This file regroups the general rules for website design. See the website.snippets.less rules for
+/// snippets-specific rules.
+///
+
+// Resize and vertically align navbar’s items relative to @navbar-height
+.o-w-fill-navbar(@ratio: 0.8) {
+    height: round(@navbar-height * @ratio);
+    margin-top: round(@navbar-height * (1 - @ratio) / 2);
+}
+
+#wrapwrap {
+    position: relative;
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    height: 100%;
+
+    > * {
+        display: table-row;
+    }
+    > main {
+        height: 100%;
+    }
+}
+
+// Default Style
+header a.navbar-brand {
+    &.logo {
+        padding: 0 15px;
+
+        img {
+            .o-w-fill-navbar();
+        }
+    }
+}
+footer {
+    background-color: #F8F8F8;
+
+    #footer {
+        padding-top: 32px;
+
+        // TODO This solves a bug that should be solved differently when
+        // possible. When automatic footer option is enabled, <ul/> become non
+        // editable because of <xpath/>. So adding a link does not duplicate the
+        // <li/> elements but the <a/> elements.
+        ul.list-unstyled > li > a {
+            display: block;
+        }
+    }
+}
+
+// Odoo utility classes
+.o_hidden {
+    display: none!important;
+}
+
+.o_text_overflow {
+    .text-overflow()
+}
+
+.o_div_text_overflow * > div {
+    // .text-overflow() we don't want wordwrap
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+// Odoo options classes
+.jumbotron {
+    margin-bottom: 0;
+}
+
+// Odoo image background classes
+.oe_img_bg {
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    &.o_bg_img_opt_contain {
+        background-size: contain;
+        background-position: center center;
+    }
+    &.o_bg_img_opt_custom {
+        background-size: auto;
+    }
+    &.o_bg_img_opt_repeat {
+        background-repeat: repeat;
+    }
+    &.o_bg_img_opt_repeat_x {
+        background-repeat: repeat-x;
+    }
+    &.o_bg_img_opt_repeat_y {
+        background-repeat: repeat-y;
+    }
+}
+
+// Typography
+ul {
+    list-style-type: disc;
+}
+li > ul {
+    list-style-type: circle;
+}
+li > * > li > ul {
+    list-style-type: square;
+}
+li > * > li > * > li > ul {
+    list-style-type: disc;
+}
+li > * > li > * > li > * > li > ul {
+    list-style-type: circle;
+}
+li > * > li > * > li > * > li > * > li > ul {
+    list-style-type: square;
+}
+li > * > li > * > li > * > li > * > li > * > li > ul {
+    list-style-type: disc;
+}
+ol {
+    list-style-type: decimal;
+}
+li > ol {
+    list-style-type: lower-alpha;
+}
+li > * > li > ol {
+    list-style-type: lower-greek;
+}
+li > * > li > * > li > ol {
+    list-style-type: decimal;
+}
+li > * > li > * > li > * > li > ol {
+    list-style-type: lower-alpha;
+}
+li > * > li > * > li > * > li > * > li > ol {
+    list-style-type: lower-greek;
+}
+li > * > li > * > li > * > li > * > li > * > li > ol {
+    list-style-type: decimal;
+}
+li > p {
+    margin: 0;
+}
+
+font[style*='background'], font[class*='bg-'] {
+    padding: 0 2px;
+}
+hr {
+    padding: 4px 0;
+}
+
+// O_UL
+.o_ul_toggle_self, .o_ul_toggle_next {
+    display: none;
+}
+.o_ul_folded {
+    .o_close {
+        display: none!important;
+    }
+    .o_ul_toggle_self, .o_ul_toggle_next {
+        display: inline-block;
+        line-height: inherit;
+        float: left;
+        position: relative;
+        margin-left: -1em;
+        top: -0.15em;
+        left: 0.2em;
+        font-size: 1.4em;
+        text-decoration: none;
+        &.o_open:before {
+            content: "";
+        }
+        &:before {
+            content: "";
+        }
+    }
+}
+
+// Bootstrap hacks
+.container {
+    max-width: 100%;
+}
+.container .container {
+    padding-left: 0;
+    padding-right: 0;
+    width: auto;
+}
+
+// HEADER NAV BAR
+.navbar.navbar-static-top {
+    margin-bottom: 0;
+    ul.nav > li {
+        &.divider {
+            .o-w-fill-navbar();
+            border-right: 1px solid @navbar-default-link-disabled-color;
+            @media (max-width: @screen-xs-max) {
+                display: none;
+            }
+        }
+
+        &.active + .divider {
+            visibility: hidden;
+        }
+    }
+}
+ul.nav-stacked > li > a {
+    padding: 2px 15px;
+}
+
+// Columns min height
+[class^="col-md-"] {
+    min-height: 24px;
+}
+
+// Others
+::-moz-selection {
+    background: rgba(150, 150, 220, 0.3);
+}
+::selection {
+    background: rgba(150, 150, 220, 0.3);
+}
+
+.oe_demo {
+    position: relative;
+    img {
+        width: 100%;
+    }
+    div {
+        .o-position-absolute(@left: 0, @bottom: 0);
+        background-color: rgba(0, 0, 0, 0.4);
+        opacity: 0.85;
+        width: 100%;
+        padding: 7px;
+        color: white;
+        font-weight: bold;
+        a {
+            color: white;
+        }
+    }
+}
+
+.oe_search_box {
+    padding-right: 23px;
+}
+
+// Kept for (up to) saas-12 compatibility
+.para_large {
+    font-size: 120%;
+}
+.jumbotron .para_large p {
+    font-size: 150%;
+}
+
+.readable {
+    font-size: 120%;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+
+    .container {
+        padding-left: 0;
+        padding-right: 0;
+        width: auto;
+    }
+}
+
+//  Background (kept for 8.0 compatibility) (! some are still used by website_blog)
+.oe_dark {
+    background-color: rgba(200, 200, 200, 0.14);
+}
+.oe_black {
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+}
+.oe_green {
+    background-color: #169C78;
+    color: white;
+    .text-muted {
+        color: #ddd;
+    }
+}
+.oe_blue_light {
+    background-color: #41b6ab;
+    color: white;
+    .text-muted {
+        color: #ddd;
+    }
+}
+.oe_blue {
+    background-color: #34495e;
+    color: white;
+}
+.oe_orange {
+    background-color: #f05442;
+    color: white;
+    .text-muted {
+        color: #ddd;
+    }
+}
+.oe_purple {
+    background-color: #b163a3;
+    color: white;
+    .text-muted {
+        color: #ddd;
+    }
+}
+.oe_red {
+    background-color: #9C1b31;
+    color: white;
+    .text-muted {
+        color: #ddd;
+    }
+}
+.oe_none {
+    background-color: #FFFFFF;
+}
+.oe_yellow {
+    background-color: #A2A51B;
+}
+.oe_green {
+    background-color: #149F2C;
+}

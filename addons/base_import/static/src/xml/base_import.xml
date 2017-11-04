@@ -15,7 +15,7 @@
                       <input type="text" class="oe_import_file_show form-control" placeholder="No file chosen..."/>
                       <span class="input-group-btn">
                         <label class="btn btn-primary" for="my-file-selector">
-                        <input accept=".csv, .xls, .xlsx, .ods" id-attf-id="file_#{_id}"
+                        <input accept=".csv, .xls, .xlsx, .xlsm, .ods" id-attf-id="file_#{_id}"
                        name="file" id="my-file-selector" class="oe_import_file" type="file" style="display:none;"/>
                         Load File
                         </label>
@@ -83,7 +83,7 @@
 
     <t t-name="ImportView.buttons">
         <button type="button" class="btn btn-sm btn-primary o_import_button o_import_validate"
-                disabled="disabled">Validate</button>
+                disabled="disabled">Test Import</button>
         <button type="button" class="btn btn-sm btn-default o_import_button o_import_import"
                 disabled="disabled">Import</button>
         <button type="button" class="btn btn-sm btn-default o_import_cancel">Cancel</button>
@@ -144,7 +144,7 @@
         <t t-if="error.moreinfo" t-raw="info(error.moreinfo)"/>
     </t>
     <t t-name="ImportView.import_button">
-        <button t-if='widget.options.import_enabled' type="button" class="btn btn-sm btn-default o_button_import">
+        <button t-if='widget and widget.importEnabled' type="button" class="btn btn-sm btn-default o_button_import">
             Import
         </button>
     </t>

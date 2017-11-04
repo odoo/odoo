@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="website.contentMenu.dialog.submenu">
     <li t-att-data-menu-id="submenu.id">
@@ -7,7 +8,7 @@
                 <span class="js_menu_label">
                     <t t-esc="submenu.name"/>
                 </span>
-                <i class="pull-right fa fa-home" style="margin-top: 3px"/>
+                <i t-if="submenu.is_homepage" class="pull-right fa fa-home" style="margin-top: 3px"/>
             </span>
             <span class="input-group-btn">
                 <button type="button" class="btn btn-primary js_edit_menu fa fa-pencil-square-o"/>
@@ -40,15 +41,26 @@
             <t t-call="website.contentMenu.dialog.submenu"/>
         </t>
     </ul>
-    <div class="mt16">
-        <div class="pull-right text-muted">
+    <div class="mt32">
+        <small class="pull-right text-muted">
             Drag a menu to the right to create a sub-menu
-        </div>
-        <div>
-            <a href="#" class="js_add_menu">
-                <i class="fa fa-plus-circle"/> Add Menu Entry
-            </a>
-        </div>
+        </small>
+        <a href="#" class="js_add_menu">
+            <i class="fa fa-plus-circle"/> Add Menu Entry
+        </a>
     </div>
 </div>
+<t t-name="website.contentMenu.dialog.edit.link_menu_options">
+    <div class="form-group">
+        <label class="control-label col-sm-3">Link</label>
+        <div class="col-sm-9">
+            <div class="radio">
+                <label class="checkbox-inline" for="new_page"><input type="radio" name="link_menu_options" id="new_page" value="new_page" checked="checked"/>New Page</label>
+            </div>
+            <div class="radio">
+                <label class="checkbox-inline" for="url"><input type="radio" name="link_menu_options" id="url" value="url" />Existing Page, URL or Email</label>
+            </div>
+        </div>
+    </div>
+</t>
 </templates>

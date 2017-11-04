@@ -86,24 +86,31 @@ class LivechatController(http.Controller):
             # limit the creation : only ONE rating per session
             values = {
                 'rating': rate,
-                'consumed': True
+                'consumed': True,
+                'feedback': reason,
             }
             if not channel.rating_ids:
+                res_model_id = request.env['ir.model'].sudo().search([('model', '=', channel._name)], limit=1).id
                 values.update({
                     'res_id': channel.id,
-                    'res_model': 'mail.channel',
-                    'rating': rate,
-                    'feedback': reason,
+                    'res_model_id': res_model_id,
                 })
                 # find the partner (operator)
                 if channel.channel_partner_ids:
                     values['rated_partner_id'] = channel.channel_partner_ids[0] and channel.channel_partner_ids[0].id or False
+                # if logged in user, set its partner on rating
+                values['partner_id'] = request.env.user.partner_id.id if request.session.uid else False
                 # create the rating
                 rating = Rating.sudo().create(values)
             else:
-                if reason:
-                    values['feedback'] = reason
                 rating = channel.rating_ids[0]
                 rating.write(values)
             return rating.id
         return False
+
+    @http.route('/im_livechat/history', type="json", auth="public")
+    def history_pages(self, pid, channel_uuid, page_history=None):
+        channel = request.env['mail.channel'].search([('uuid', '=', channel_uuid)])
+        if channel:
+            channel._send_history_message(pid, page_history)
+        return True

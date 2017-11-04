@@ -23,6 +23,7 @@ import odoo
 import odoo.tools as tools
 import odoo.release as release
 from odoo import SUPERUSER_ID, api
+from odoo.tools import pycompat
 
 MANIFEST_NAMES = ('__manifest__.py', '__openerp__.py')
 README = ['README.rst', 'README.md', 'README.txt']
@@ -78,7 +79,7 @@ class AddonsHook(object):
 
         # execute source in context of module *after* putting everything in
         # sys.modules, so recursive import works
-        execfile(modfile, new_mod.__dict__)
+        exec(open(modfile, 'rb').read(), new_mod.__dict__)
 
         # people import openerp.addons and expect openerp.addons.<module> to work
         setattr(odoo.addons, addon_name, new_mod)
@@ -138,18 +139,18 @@ def initialize_sys_path():
 
     # add base module path
     base_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons'))
-    if base_path not in ad_paths:
+    if base_path not in ad_paths and os.path.isdir(base_path):
         ad_paths.append(base_path)
 
     # add odoo.addons.__path__
     for ad in __import__('odoo.addons').addons.__path__:
         ad = os.path.abspath(ad)
-        if ad not in ad_paths:
+        if ad not in ad_paths and os.path.isdir(ad):
             ad_paths.append(ad)
 
     if not hooked:
-        sys.meta_path.append(AddonsHook())
-        sys.meta_path.append(OdooHook())
+        sys.meta_path.insert(0, OdooHook())
+        sys.meta_path.insert(0, AddonsHook())
         hooked = True
 
 def get_module_path(module, downloaded=False, display_warning=True):
@@ -323,13 +324,13 @@ def load_information_from_description_file(module, mod_path=None):
             'sequence': 100,
             'summary': '',
         }
-        info.update(itertools.izip(
+        info.update(pycompat.izip(
             'depends data demo test init_xml update_xml demo_xml'.split(),
             iter(list, None)))
 
-        f = tools.file_open(manifest_file)
+        f = tools.file_open(manifest_file, mode='rb')
         try:
-            info.update(ast.literal_eval(f.read()))
+            info.update(ast.literal_eval(pycompat.to_native(f.read())))
         finally:
             f.close()
 
@@ -373,7 +374,7 @@ def load_openerp_module(module_name):
         if info['post_load']:
             getattr(sys.modules['odoo.addons.' + module_name], info['post_load'])()
 
-    except Exception, e:
+    except Exception as e:
         msg = "Couldn't load module %s" % (module_name)
         _logger.critical(msg)
         _logger.critical(e)
@@ -395,7 +396,11 @@ def get_modules():
             for mname in MANIFEST_NAMES:
                 if os.path.isfile(opj(dir, name, mname)):
                     return True
-        return map(clean, filter(is_really_module, os.listdir(dir)))
+        return [
+            clean(it)
+            for it in os.listdir(dir)
+            if is_really_module(it)
+        ]
 
     plist = []
     initialize_sys_path()
@@ -427,12 +432,19 @@ def get_test_modules(module):
     modpath = 'odoo.addons.' + module
     try:
         mod = importlib.import_module('.tests', modpath)
-    except Exception, e:
-        # If module has no `tests` sub-module, no problem.
-        if str(e) != 'No module named tests':
-            _logger.exception('Can not `import %s`.', module)
+    except ImportError as e:  # will also catch subclass ModuleNotFoundError of P3.6
+        # Hide ImportErrors on `tests` sub-module, but display other exceptions
+        if pycompat.PY2:
+            if e.message.startswith('No module named') and e.message.endswith("tests"):
+                return []
+        else:
+            if e.name == modpath + '.tests' and e.msg.startswith('No module named'):
+                return []
+        _logger.exception('Can not `import %s`.', module)
         return []
-
+    except Exception as e:
+        _logger.exception('Can not `import %s`.', module)
+        return []
     if hasattr(mod, 'fast_suite') or hasattr(mod, 'checks'):
         _logger.warn(
             "Found deprecated fast_suite or checks attribute in test module "
@@ -492,7 +504,7 @@ def run_unit_tests(module_name, dbname, position=runs_at_install):
     r = True
     for m in mods:
         tests = unwrap_suite(unittest.TestLoader().loadTestsFromModule(m))
-        suite = unittest.TestSuite(itertools.ifilter(position, tests))
+        suite = unittest.TestSuite(t for t in tests if position(t))
 
         if suite.countTestCases():
             t0 = time.time()
@@ -532,5 +544,5 @@ def unwrap_suite(test):
         return
 
     for item in itertools.chain.from_iterable(
-            itertools.imap(unwrap_suite, subtests)):
+            unwrap_suite(t) for t in subtests):
         yield item

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="gst_report_picking_inherit" inherit_id="stock.report_picking">
+        <xpath expr="//span[@t-field='move.product_id.description_picking']" position="after">
+            <t t-if="move.product_id and move.product_id.l10n_in_hsn_code and o.company_id.country_id.code == 'IN'"><h6><strong class="ml16">HSN/SAC Code:</strong> <span t-field="move.product_id.l10n_in_hsn_code"/></h6></t>
+        </xpath>
+    </template>
+
+</odoo>

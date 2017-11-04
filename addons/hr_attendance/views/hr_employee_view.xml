@@ -7,17 +7,25 @@
         <field name="priority">10</field>
         <field name="groups_id" eval="[(4,ref('hr_attendance.group_hr_attendance_user'))]"/>
         <field name="arch" type="xml">
-            <field name="name" position="replace">
-            <div id="textbox">
-                    <field name="attendance_state" widget="hr_attendance_form_presence_indicator"/>
-                    <field name="name" placeholder="Employee's Name"/>
-            </div>
-            </field>
-            <field name="user_id" position="after">
-                <field name="barcode" groups="hr_attendance.group_hr_attendance_user"/>
-                <field name="pin" groups="hr_attendance.group_hr_attendance_user,hr_attendance.group_hr_attendance_use_pin"/>
-                <field name="manual_attendance" groups="hr_attendance.group_hr_attendance_user"/>
-            </field>
+            <xpath expr="//button[@name='toggle_active']" position="before">
+                <field name="attendance_state" invisible="1"/>
+                <button name="%(hr_attendance_action_employee)d"
+                    class="oe_stat_button"
+                    type="action" attrs="{'invisible': [('attendance_state', '=', False)]}">
+                    <div id="oe_hr_attendance_status" class="fa fa-fw fa-user o_button_icon oe_hr_attendance_status_green" attrs="{'invisible': [('attendance_state', '=', 'checked_out')]}"/>
+                    <div id="oe_hr_attendance_status" class="fa fa-fw fa-user o_button_icon oe_hr_attendance_status_red" attrs="{'invisible': [('attendance_state', '=', 'checked_in')]}"/>
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Attendance</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//group[@name='active_group']" position="after">
+                <group string='Attendance' groups="hr_attendance.group_hr_attendance_user">
+                    <field name="barcode"/>
+                    <field name="pin" groups="hr_attendance.group_hr_attendance_use_pin"/>
+                    <field name="manual_attendance" attrs="{'invisible': [('user_id', '=', False)]}"/>
+                </group>
+            </xpath>
         </field>
     </record>
 
@@ -28,21 +36,25 @@
         <field name="priority">99</field>
         <field name="arch" type="xml">
             <kanban class="o_hr_employee_attendance_kanban" create="false">
+                <field name="attendance_state"/>
+                <field name="id"/>
                 <templates>
                     <t t-name="kanban-box">
                     <div class="oe_kanban_global_click">
                         <div class="o_kanban_image">
-                            <img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)"/>
+                            <img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.raw_value)"/>
                         </div>
                         <div class="oe_kanban_details">
                             <div id="textbox">
-                                <div class="col-xs-11" style="padding:0px">
-                                    <strong>
-                                        <field name="name"/>
-                                    </strong>
-                                </div><div class="col-xs-1" style="padding:0px">
-                                    <field name="attendance_state" widget="hr_attendance_kanban_presence_indicator"/>
+                                <div class="pull-right" t-if="record.attendance_state.raw_value == 'checked_in'">
+                                    <span id="oe_hr_attendance_status" class="fa fa-user oe_hr_attendance_status_green"></span>
                                 </div>
+                                <div class="pull-right" t-if="record.attendance_state.raw_value == 'checked_out'">
+                                    <span id="oe_hr_attendance_status" class="fa fa-user oe_hr_attendance_status_red"></span>
+                                </div>
+                                <strong>
+                                    <field name="name"/>
+                                </strong>
                             </div>
                             <ul>
                                 <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
@@ -62,16 +74,20 @@
         <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
         <field name="priority">1</field>
         <field name="arch" type="xml">
+            <templates position="before">
+                <field name="attendance_state"/>
+            </templates>
             <field name="name" position="replace">
-                <div id="row">
-                    <div class="col-xs-11" style="padding:0px">
-                        <strong>
-                            <field name="name" placeholder="Employee's Name"/>
-                        </strong>
+                <div>
+                    <div class="pull-right" t-if="record.attendance_state.raw_value == 'checked_in'">
+                        <span id="oe_hr_attendance_status" class="fa fa-user oe_hr_attendance_status_green"></span>
                     </div>
-                    <div class="col-xs-1" style="padding:0px">
-                        <field name="attendance_state" widget="hr_attendance_kanban_presence_indicator"/>
+                    <div class="pull-right" t-if="record.attendance_state.raw_value == 'checked_out'">
+                        <span id="oe_hr_attendance_status" class="fa fa-user oe_hr_attendance_status_red"></span>
                     </div>
+                    <strong>
+                        <field name="name" placeholder="Employee's Name"/>
+                    </strong>
                 </div>
             </field>
         </field>

@@ -50,20 +50,6 @@
                </search>
             </field>
         </record>
-        <record id="action_module_open_categ" model="ir.actions.act_window">
-            <field name="name">Apps</field>
-            <field name="res_model">ir.module.module</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,kanban</field>
-            <field name="domain">[('category_id','=',active_id)]</field>
-        </record>
-        <record id="ir_action_module_category" model="ir.values">
-            <field eval="'tree_but_open'" name="key2"/>
-            <field eval="'ir.module.category'" name="model"/>
-            <field name="name">Categorized Apps</field>
-            <field eval="'ir.actions.act_window,%d'%action_module_open_categ" name="value"/>
-        </record>
-
 
         <!-- Modules -->
         <record id="module_form" model="ir.ui.view">
@@ -82,7 +68,7 @@
                         <div>
                             <button name="button_immediate_install" states="uninstalled" string="Install" type="object" class="btn btn-primary"/>
                             <button name="button_immediate_upgrade" states="installed" string="Upgrade" type="object" class="btn btn-primary"/>
-                            <button name="button_uninstall" states="installed" string="Uninstall" type="object"  class="btn btn-default"/>
+                            <button name="button_uninstall_wizard" states="installed" string="Uninstall" type="object"  class="btn btn-default"/>
                             <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" type="object" class="btn btn-default"/>
                             <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" type="object" class="btn btn-default"/>
                             <button name="button_install_cancel" states="to install" string="Cancel Install" type="object" class="btn btn-default"/>
@@ -117,6 +103,14 @@
                             <p class="oe_grey" attrs="{'invisible': [('dependencies_id','not in',[None,False])]}"> -This module does not depends on any other module.</p>
                             <field name="dependencies_id">
                                 <tree string="Dependencies">
+                                    <field name="name"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                            <group string="Exclusions"/>
+                            <p class="oe_grey" attrs="{'invisible': [('exclusion_ids','not in',[None,False])]}"> -This module does not exclude any other module.</p>
+                            <field name="exclusion_ids">
+                                <tree string="Exclusions">
                                     <field name="name"/>
                                     <field name="state"/>
                                 </tree>
@@ -164,14 +158,16 @@
                       <div class="oe_module_vignette oe_kanban_global_click">
                         <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
                         <img t-attf-src="#{record.icon.value}" class="oe_module_icon"/>
-                        <div class="oe_module_desc">
-                          <h4><field name="shortdesc"/></h4>
+                        <div class="oe_module_desc" t-att-title="record.shortdesc.value">
+                          <h4 class="o_kanban_record_title"><field name="shortdesc"/></h4>
                           <p class="oe_module_name">
                              <t t-if="record.summary.raw_value"><field name="summary"/><br/></t>
-                             <i><field name="name" groups="base.group_no_one"/></i>
                           </p>
-                          <button type="object" class="btn btn-primary pull-right btn-sm" name="button_immediate_install" states="uninstalled">Install</button>
-                          <button type="button" t-if="installed" class="btn btn-default pull-right btn-sm disabled" disabled="disabled">Installed</button>
+                          <div class="oe_module_action">
+                            <code groups="base.group_no_one"><small><field name="name"/></small></code>
+                            <button type="object" class="btn btn-primary pull-right btn-sm" name="button_immediate_install" states="uninstalled">Install</button>
+                            <span t-if="installed" class="pull-right text-muted mr8">Installed</span>
+                          </div>
                         </div>
                       </div>
                     </t>
@@ -206,7 +202,7 @@
             <field name="tag">apps.updates</field>
             <field name="params">{}</field>
         </record>
-        <menuitem id="menu_module_updates" parent="base.menu_management" sequence="20" action="modules_updates_act_cl"/>
+        <menuitem id="menu_module_updates" parent="base.menu_management" sequence="20" action="modules_updates_act_cl" groups="base.group_no_one"/>
 
     </data>
 </odoo>

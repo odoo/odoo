@@ -17,7 +17,6 @@
         <record id="main_partner" model="res.partner" context="{'default_is_company': True}">
             <field name="name">My Company</field>
             <field name="company_id" eval="None"/>
-            <field name="image" type="base64" file="base/static/img/main_partner-image.png"/>
             <field name="customer" eval="False"/>
             <field name="is_company" eval="True"/>
             <field name="street"></field>
@@ -32,7 +31,6 @@
         <record id="main_company" model="res.company">
             <field name="name">My Company</field>
             <field name="partner_id" ref="main_partner"/>
-            <field name="rml_header1">My Company Tagline</field>
             <field name="currency_id" ref="base.EUR"/>
         </record>
 
@@ -53,7 +51,7 @@ Administrator</span>]]></field>
 
         <!-- Default user with full access rights for newly created users -->
         <record id="default_user" model="res.users">
-            <field name="name">default user</field>
+            <field name="name">Default User Template</field>
             <field name="login">default</field>
             <field name="active" eval="False"/>
         </record>
@@ -67,26 +65,6 @@ Administrator</span>]]></field>
             <field name="smtp_host">localhost</field>
             <field eval="25" name="smtp_port"/>
             <field eval="10" name="sequence"/>
-        </record>
-
-        <!-- Basic fonts family included in PDF standart, will always be in the font list -->
-        <record model="res.font" id="base.font_helvetica">
-            <field name="name">Helvetica</field>
-            <field name="family">Helvetica</field>
-            <field name="path">/dev/null</field>
-            <field name="mode">all</field>
-        </record>
-        <record model="res.font" id="base.font_times">
-            <field name="name">Times</field>
-            <field name="family">Times</field>
-            <field name="path">/dev/null</field>
-            <field name="mode">all</field>
-        </record>
-        <record model="res.font" id="base.font_courier">
-            <field name="name">Courier</field>
-            <field name="family">Courier</field>
-            <field name="path">/dev/null</field>
-            <field name="mode">all</field>
         </record>
 
         <record id="public_partner" model="res.partner">
@@ -103,6 +81,54 @@ Administrator</span>]]></field>
             <field name="image" type="base64" file="base/static/img/public_user-image.png"/>
             <field name="partner_id" ref="public_partner"/>
             <field name="active" eval="False"/>
+        </record>
+
+        <record id="paperformat_euro" model="report.paperformat">
+            <field name="name">European A4</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">40</field>
+            <field name="margin_bottom">28</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="paperformat_us" model="report.paperformat">
+            <field name="name">US Letter</field>
+            <field name="default" eval="True" />
+            <field name="format">Letter</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">40</field>
+            <field name="margin_bottom">25</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="paperformat_batch_deposit" model="report.paperformat">
+            <field name="name">US Batch Deposit</field>
+            <field name="default" eval="False" />
+            <field name="format">Letter</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">15</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
         </record>
 
     </data>

@@ -16,7 +16,7 @@ Minimal accounting configuration for Mexico.
 ============================================
 
 This Chart of account is a minimal proposal to be able to use OoB the
-accounting feature of Openerp.
+accounting feature of Odoo.
 
 This doesn't pretend be all the localization for MX it is just the minimal
 data required to start from 0 in mexican localization.
@@ -25,21 +25,21 @@ This modules and its content is updated frequently by openerp-mexico team.
 
 With this module you will have:
 
- - Minimal chart of account tested in production eviroments.
+ - Minimal chart of account tested in production environments.
  - Minimal chart of taxes, to comply with SAT_ requirements.
 
-.. SAT: http://www.sat.gob.mx/
+.. _SAT: http://www.sat.gob.mx/
     """,
     "depends": [
         "account",
-        "base_vat",
-        "account_tax_cash_basis",
     ],
     "data": [
         "data/account_tag_data.xml",
         "data/l10n_mx_chart_data.xml",
         "data/account_data.xml",
         "data/account_tax_data.xml",
+        "data/fiscal_position_data.xml",
         "data/account_chart_template_data.yml",
+        "views/res_config_settings_views.xml",
     ],
 }

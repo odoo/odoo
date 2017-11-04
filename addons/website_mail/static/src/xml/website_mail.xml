@@ -1,0 +1,23 @@
+<templates id="template" xml:space="preserve">
+
+    <t t-name="website_mail.publish_short">
+        <t t-if="is_publisher" t-ignore="true">
+            <div t-attf-class="pull-right js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="res_id" t-att-data-object="res_model" t-att-data-controller="publish_controller">
+                <button class="btn btn-danger js_publish_btn">Unpublished</button>
+                <button class="btn btn-success js_publish_btn">Published</button>
+            </div>
+        </t>
+    </t>
+
+    <t t-extend="portal.chatter_messages">
+        <t t-jquery=".o_portal_chatter_message_title" t-operation="before">
+            <t t-call="website_mail.publish_short">
+                <t t-set="res_model" t-value="'mail.message'"/>
+                <t t-set="res_id" t-value="message.id"/>
+                <t t-set="object" t-value="message"/>
+                <t t-set="is_publisher" t-value="widget.options['is_user_publisher']"/>
+            </t>
+        </t>
+    </t>
+
+</templates>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="event_event_view_form_inherit_mass_mailing" model="ir.ui.view">
+        <field name="name">event.event.view.form.inherit.mass.mailing</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+            <button name="%(event.act_event_registration_from_event)d" position="after">
+                <button class="oe_stat_button" type="object"
+                        name="action_mass_mailing_attendees"
+                        icon="fa-envelope-o"
+                        attrs="{'invisible': [('seats_expected', '=', 0)]}">
+                    Mail Attendees
+                </button>
+            </button>
+        </field>
+    </record>
+</odoo>

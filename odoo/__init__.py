@@ -4,6 +4,12 @@
 """ OpenERP core library."""
 
 #----------------------------------------------------------
+# odoo must be a namespace package for odoo.addons to become one too
+# https://packaging.python.org/guides/packaging-namespace-packages/
+#----------------------------------------------------------
+__path__ = __import__('pkgutil').extend_path(__path__, __name__)
+
+#----------------------------------------------------------
 # Running mode flags (gevent, prefork)
 #----------------------------------------------------------
 # Is the server running with gevent.
@@ -12,9 +18,27 @@ evented = False
 if len(sys.argv) > 1 and sys.argv[1] == 'gevent':
     sys.argv.remove('gevent')
     import gevent.monkey
+    import psycopg2
+    from gevent.socket import wait_read, wait_write
     gevent.monkey.patch_all()
-    import psycogreen.gevent
-    psycogreen.gevent.patch_psycopg()
+
+    def gevent_wait_callback(conn, timeout=None):
+        """A wait callback useful to allow gevent to work with Psycopg."""
+        # Copyright (C) 2010-2012 Daniele Varrazzo <daniele.varrazzo@gmail.com>
+        # This function is borrowed from psycogreen module which is licensed
+        # under the BSD license (see in odoo/debian/copyright)
+        while 1:
+            state = conn.poll()
+            if state == psycopg2.extensions.POLL_OK:
+                break
+            elif state == psycopg2.extensions.POLL_READ:
+                wait_read(conn.fileno(), timeout=timeout)
+            elif state == psycopg2.extensions.POLL_WRITE:
+                wait_write(conn.fileno(), timeout=timeout)
+            else:
+                raise psycopg2.OperationalError(
+                    "Bad result from poll: %r" % state)
+    psycopg2.extensions.set_wait_callback(gevent_wait_callback)
     evented = True
 
 # Is the server running in prefork mode (e.g. behind Gunicorn).
@@ -54,18 +78,16 @@ def registry(database_name=None):
 #----------------------------------------------------------
 # Imports
 #----------------------------------------------------------
-import addons
-import conf
-import loglevels
-import modules
-import netsvc
-import osv
-import release
-import report
-import service
-import sql_db
-import tools
-import workflow
+from . import addons
+from . import conf
+from . import loglevels
+from . import modules
+from . import netsvc
+from . import osv
+from . import release
+from . import service
+from . import sql_db
+from . import tools
 
 #----------------------------------------------------------
 # Model classes, fields, api decorators, and translations
@@ -78,5 +100,5 @@ from odoo.tools.translate import _
 #----------------------------------------------------------
 # Other imports, which may require stuff from above
 #----------------------------------------------------------
-import cli
-import http
+from . import cli
+from . import http

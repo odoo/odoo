@@ -1,5 +1,9 @@
-@o-chat-window-bg: white;
-@o-chat-window-width: 300px;
+@o-chat-window-bg: #FAFAFA;
+@o-chat-window-width: 325px;
+@o-mail-chatter-gap: 10px; // has to be defined here as this file is both in
+                           // backend and other assets (livechat)
+@o-chat-header-height: 46px;
+@o-chat-window-zindex: 1101; // blockUI's z-index is 1100 > @zindex-modal
 
 .o_chat_window {
     .o-flex-display();
@@ -11,13 +15,14 @@
     max-height: 100%;
     font-size: 12px;
     background-color: @o-chat-window-bg;
-    border: 1px solid gray;
-    border-radius: 3px;
-    z-index: 3;
+    border-radius: 6px 6px 0 0;
+    z-index: @o-chat-window-zindex;
+    box-shadow: -5px -5px 10px fade(black, 18%);
 
     @media (max-width: @screen-xs-max) {
         width: 100%;
         height: 100%!important;
+        box-shadow: none;
         &.o_folded {
             display: none;
         }
@@ -31,13 +36,24 @@
         .o-flex-display();
         .o-flex(0, 0, auto);
         color: white;
+        padding: @o-mail-chatter-gap*0.5 @o-mail-chatter-gap;
+        border-radius: 3px 3px 0 0;
+        border-bottom: 1px solid @gray-lighter-dark;
         background-color: @odoo-brand-primary;
-        padding: 5px;
+        padding: 8px;
 
         @media (max-width: @screen-xs-max) {
-            height: @navbar-height;
-            .o_chat_title, .o_chat_window_close {
-                font-size: 22px;
+            height: @o-chat-header-height;
+            padding-top: 12px;
+            border-radius: 0px;
+            .o_chat_title {
+                font-size: 16px;
+                margin-left: 10px;
+            }
+
+            .o_chat_window_close {
+                font-size: 17px;
+                color: white;
             }
         }
 
@@ -47,42 +63,38 @@
             .o-text-overflow();
         }
 
-        .o_chat_window_close {
-            color: white;
-            padding: 3px;
-            margin-left: 5px;
-            &:hover {
-                background-color: darken(@odoo-brand-primary, 10%);
+        .o_chat_window_buttons {
+            .o-flex(0, 0, auto);
+            .o_chat_window_close, .o_chat_window_expand {
+                color: white;
+                padding: 3px;
+                margin-left: 5px;
+                .o-hover-opacity(0.7, 1);
             }
         }
+
     }
 
     .o_mail_thread {
         .o-flex(1, 1, auto);
         overflow: auto;
-
+        -webkit-overflow-scrolling: touch; // smooth scrolling in iOS app (Safari)
         .o_thread_date_separator {
-            margin-top: 0px;
-            margin-bottom: 15px;
-            border-color: lightgray;
+            margin: 0px 0px 15px 0px;
             .o_thread_date {
                 background-color: @o-chat-window-bg;
             }
         }
         .o_thread_message {
+            padding: 4px 5px;
             .o_thread_message_sidebar {
                 margin-right: 5px;
             }
-            padding: 4px 5px;
         }
     }
 
-    .o_chat_composer {
-        .o-flex(0, 0, auto);
-        > input {
-            padding: 5px;
-            width: 100%;
-        }
+    .o_chat_composer input {
+        width: 100%;
     }
 }
 
@@ -90,11 +102,16 @@
     width: auto;
     height: 28px;
     color: white;
-    background-color: @odoo-brand-primary;
+    background-color: @gray-dark;
     cursor: pointer;
+    box-shadow: none;
 
     @media (max-width: @screen-xs-max) {
         display: none;
+    }
+
+    .o_chat_header {
+        border-radius: 0;
     }
 
     .o_chat_window_dropdown_toggler {
@@ -107,7 +124,7 @@
             font-size: smaller;
         }
     }
-    &.open .o_chat_window_dropdown_toggler .o_total_unread_counter {
+    &.open .o_chat_window_dropdown_toggler .o_total_unread_counter, .o_chat_window_expand {
         display: none;
     }
 
@@ -123,15 +140,11 @@
             }
             &:hover {
                 background-color: darken(@odoo-brand-primary, 10%);
-                color: white;
             }
         }
     }
 }
 
-.o_ui_blocked .o_chat_window {
-    z-index: 1101; // blockUI's z-index is 1100
-}
 .o_no_chat_window .o_chat_window {
     display: none;
 }

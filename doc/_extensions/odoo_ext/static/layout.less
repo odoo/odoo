@@ -103,7 +103,7 @@ main.has_code_col{
     > *{
       max-width: 100%;
     }
-    section {
+    > section {
       position: relative;
       display:block;
       float: left;
@@ -116,7 +116,7 @@ main.has_code_col{
       &:before {
         .code-col();
       }
-      section {
+      > section {
         > * {
           width: 54.633333%;
           max-width: 600px;
@@ -151,31 +151,27 @@ main.has_code_col{
   }
 }
 
-main.index .toctree-wrapper{
-  @media screen and(min-width: @screen-md){
+main.index .toctree-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 
-    > .row:first-child { //trigg first section
-      > .col-md-3:nth-child(3), > .col-md-3:nth-child(5) { //trig cards (title + 2, title + 4)
-          margin-right: 50%;
+  > .row {
+    flex: 1 0 100%;
+  }
+  @media screen and(min-width: @screen-md){
+    // display these 2 as 2x2 squares
+    > .row.tutorials, .row.api {
+      flex: 0 0 50%;
+
+      display: flex;
+      flex-wrap: wrap;
+      > div {
+        flex: 0 0 50%;
       }
     }
-    position: relative;
-    .toc-single-entry{
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 50%;
-      padding-right: floor((@grid-gutter-width / 2)); // compensate bootstrap default gutter
-      > .col-md-3 {
-        width: 100%;
-      }
-      > *[class^="col-"] {
-        padding-left: 0;    //remove Bootstrap default gutter
-      }
-      .card {
-        min-height: (@card_min-height * 2 ) + @card_margin-bottom;
-      }
-    }
+
+    // FIXME: reimplement a single big box (.toc-single-entry)
   }
 }
 

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.google.drive</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="msg_module_google_drive" position="replace">
+                <div class="content-group" attrs="{'invisible': [('module_google_drive','=',False)]}">
+                    <div class="mt16 row">
+                        <label for="google_drive_authorization_code" class="col-md-3 o_light_label"/>
+                        <field name="google_drive_authorization_code"/>
+                    </div>
+                    <div>
+                        <span type="button" class="btn-link o_btn-link-as-button fa-arrow-right">
+                            <field name="google_drive_uri" widget="url" text="Get Authorization Code"/>
+                        </span>
+                    </div>
+                    <div>
+                        <button type="action" name="%(action_google_drive_users_config)d" string="Google Drive Templates" icon="fa-arrow-right"  class="btn-link"/>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+
+</odoo>

@@ -57,15 +57,24 @@ fuzzy.match = function(pattern, string, opts) {
   for(var idx = 0; idx < len; idx++) {
     ch = string[idx];
     if(compareString[idx] === pattern[patternIdx]) {
+      if (pattern[patternIdx] === ' ') {
+        // we don't want a space character to accumulate a larger score
+        currScore = 1 - idx/200;
+      } else {
+        // consecutive characters should increase the score more than linearly
+        currScore += 1 + currScore - idx/200;
+      }
+
       ch = pre + ch + post;
       patternIdx += 1;
-
-      // consecutive characters should increase the score more than linearly
-      currScore += 1 + currScore - idx/1000;
     } else {
       currScore = 0;
     }
     totalScore += currScore;
+    if (compareString[idx] === ' ') {
+      // we don't want characters after a space to accumulate a larger score
+      currScore = 0;
+    }
     result[result.length] = ch;
   }
 

@@ -21,4 +21,4 @@ class ReportIntrastatCode(models.Model):
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    intrastat_id = fields.Many2one('report.intrastat.code', string='Intrastat code')
+    intrastat_id = fields.Many2one('report.intrastat.code', string='Intrastat Code')

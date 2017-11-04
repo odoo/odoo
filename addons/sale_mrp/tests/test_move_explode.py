@@ -36,9 +36,9 @@ class TestMoveExplode(common.TransactionCase):
 
 
     def test_00_sale_move_explode(self):
-        """check that when creating a sale order with a product that has a phantom BoM, move explode into content of the
+        """check that when creating a sales order with a product that has a phantom BoM, move explode into content of the
             BoM"""
-        #create sale order with one sale order line containing product with a phantom bom
+        #create sales order with one sales order line containing product with a phantom bom
         so_vals = {
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
@@ -47,7 +47,7 @@ class TestMoveExplode(common.TransactionCase):
             'pricelist_id': self.pricelist.id,
         }
         self.so = self.SaleOrder.create(so_vals)
-        #confirm sale order
+        #confirm sales order
         self.so.action_confirm()
         #get all move associated to that sale_order
         move_ids = self.so.picking_ids.mapped('move_lines').ids

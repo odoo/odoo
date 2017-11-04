@@ -336,23 +336,6 @@ main.index {
     }
   }
 
-  .toc-single-entry .card figcaption {
-    @media screen and(min-width: @screen-md){
-      font-size: 1.5em;
-      padding: 20px 15px;
-    }
-  }
-
-  .col-md-6 .card, .col-md-4 .card{
-    @media screen and(min-width: @screen-md){
-      min-height: 300px;
-      figcaption{
-        font-size: 1.5em;
-        padding: 20px 15px;
-      }
-    }
-  }
-
   &.animating .card {
     .transform(scale3d(1, 1, 1) translate3d(0, 0, 0));
   }
@@ -621,7 +604,7 @@ span.menuselection{
   background:transparent;
 }
 
-dt {  margin: .5em 0 .3em;}
+dt {  margin: .5em 0 .3em; font-weight: normal; }
 
 blockquote {
   font-family: @font-family-serif;
@@ -700,7 +683,7 @@ table, .table {
   font-size: 0.9em;
 }
 
-.code-class,
+.code-namespace, .code-module, .code-class,
 .code-staticmethod, .code-classmethod, .code-method, .code-function,
 .code-attribute, .code-data {
     // indents *all* content

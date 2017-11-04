@@ -18,7 +18,7 @@ class CrmPartnerReportAssign(models.Model):
     date_review = fields.Date('Latest Partner Review')
     date_partnership = fields.Date('Partnership Date')
     country_id = fields.Many2one('res.country', 'Country', readonly=True)
-    team_id = fields.Many2one('crm.team', 'Sales Team', oldname='section_id', readonly=True)
+    team_id = fields.Many2one('crm.team', 'Sales Channel', oldname='section_id', readonly=True)
     nbr_opportunities = fields.Integer('# of Opportunity', readonly=True, oldname='opp')
     turnover = fields.Float('Turnover', readonly=True)
     date = fields.Date('Invoice Account Date', readonly=True)

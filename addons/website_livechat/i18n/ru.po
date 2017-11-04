@@ -3,14 +3,18 @@
 # * website_livechat
 # 
 # Translators:
-# Эдуард Манятовский <manyatovskiy@gmail.com>, 2016
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Masha Koc <mariya.kos.ua@gmail.com>, 2017
+# Gennady Marchenko <gennadym@gmail.com>, 2017
+# Максим Дронь <dronmax@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Эдуард Манятовский <manyatovskiy@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"Last-Translator: Максим Дронь <dronmax@gmail.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,9 +28,24 @@ msgid "<span>Livechat Channel</span>"
 msgstr "<span>Живой чат канал</span>"
 
 #. module: website_livechat
+#: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
+msgid "Channel"
+msgstr "Канал"
+
+#. module: website_livechat
 #: model:ir.model.fields,help:website_livechat.field_im_livechat_channel_website_description
 msgid "Description of the channel displayed on the website page"
 msgstr "Описание канала, отображается на странице веб-сайта"
+
+#. module: website_livechat
+#: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
+msgid "Live Chat"
+msgstr "Живой чат"
+
+#. module: website_livechat
+#: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
+msgid "Live chat channel of your website"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_im_livechat_channel
@@ -51,7 +70,7 @@ msgstr "Статистика"
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "The"
-msgstr "-"
+msgstr "Это"
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
@@ -71,11 +90,15 @@ msgstr "Это не рейтинг для этого канала на данн�
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_website
 msgid "Website"
-msgstr "Сайт"
+msgstr "Веб-сайт"
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings_channel_id
+msgid "Website Live Channel"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website_channel_id
-#: model:ir.model.fields,field_description:website_livechat.field_website_config_settings_channel_id
 msgid "Website Live Chat Channel"
 msgstr "Веб-сайт Живой чат канал"
 
@@ -90,6 +113,6 @@ msgid "last feedbacks"
 msgstr "последние отзывы"
 
 #. module: website_livechat
-#: model:ir.model,name:website_livechat.model_website_config_settings
-msgid "website.config.settings"
-msgstr "website.config.settings"
+#: model:ir.model,name:website_livechat.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"
