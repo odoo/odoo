@@ -67,13 +67,13 @@ def xmlrpc_handle_exception_int(e):
 
 def xmlrpc_handle_exception_string(e):
     if isinstance(e, odoo.exceptions.UserError):
-        fault = xmlrpclib.Fault('warning -- %s\n\n%s' % (e.name, e.value), '')
+        fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, u'%s\n\n%s' % (e.name, e.value))
     elif isinstance(e, odoo.exceptions.RedirectWarning):
-        fault = xmlrpclib.Fault('warning -- Warning\n\n' + str(e), '')
+        fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, u'Warning\n\n%s' % str(e))
     elif isinstance(e, odoo.exceptions.MissingError):
-        fault = xmlrpclib.Fault('warning -- MissingError\n\n' + str(e), '')
+        fault = xmlrpclib.Fault(RPC_FAULT_CODE_APPLICATION_ERROR, u'MissingError\n\n%s' % str(e))
     elif isinstance(e, odoo.exceptions.AccessError):
-        fault = xmlrpclib.Fault('warning -- AccessError\n\n' + str(e), '')
+        fault = xmlrpclib.Fault(RPC_FAULT_CODE_APPLICATION_ERROR, u'AccessError\n\n%s' % str(e))
     elif isinstance(e, odoo.exceptions.AccessDenied):
         fault = xmlrpclib.Fault('AccessDenied', str(e))
     elif isinstance(e, odoo.exceptions.DeferredException):
