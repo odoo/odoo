@@ -181,7 +181,7 @@ msgstr ""
 "                    </h2>\n"
 "                    <p style=\"font-size:16px;\">\n"
 "                        Vær opmærksom på, at arrangementet\n"
-"                        % if 'website_url' in object.event_id og object.event_id.website_url:\n"
+"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
 "                        % else:\n"
 "                            <strong>${object.event_id.name}</strong>\n"
@@ -424,7 +424,7 @@ msgstr ""
 "                <td style=\"padding:15px 20px 0px 20px;\">\n"
 "                    <h2 style=\"font-weight:300;\">\n"
 "                        Hej ${object.name}, her er din ordrebekræftelse på\n"
-"                        % if 'website_url' in object.event_id og object.event_id.website_url:\n"
+"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
 "                        % else:\n"
 "                            <strong>${object.event_id.name}</strong>\n"
@@ -1217,7 +1217,7 @@ msgstr "Slutdato er registreret"
 #: model:ir.ui.view,arch_db:event.view_registration_search
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event"
-msgstr "Begivenhed"
+msgstr "Arrangement"
 
 #. module: event
 #: model:ir.actions.report.xml,name:event.report_event_event_badge
@@ -1817,7 +1817,7 @@ msgstr "Åbne dage i Los Angeles"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_organizer_id
 msgid "Organizer"
-msgstr "Organisator"
+msgstr "Arrangør"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
@@ -2305,7 +2305,7 @@ msgstr "Hvad vil du lære?"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_type
 msgid "When to Run "
-msgstr "Hvornår skal det køre"
+msgstr "Hvornår skal e-mail sendes"
 
 #. module: event
 #: model:event.event,description:event.event_0

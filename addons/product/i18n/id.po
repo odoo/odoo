@@ -14,13 +14,14 @@
 # Febrasari Almania <febrasari.almania@gmail.com>, 2016
 # Dedi Santoso <dedisantoso@yahoo.com>, 2016
 # Bonny Useful <bonny.useful@gmail.com>, 2017
+# Ryanto The <ry.the77@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Bonny Useful <bonny.useful@gmail.com>, 2017\n"
+"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2017\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,24 +38,24 @@ msgstr "Kategori Produk"
 #: model:ir.model.fields,field_description:product.field_product_product_product_variant_count
 #: model:ir.model.fields,field_description:product.field_product_template_product_variant_count
 msgid "# Product Variants"
-msgstr ""
+msgstr "# Varian Produk"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_product_count
 msgid "# Products"
-msgstr ""
+msgstr "# Produk"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:438
 #, python-format
 msgid "%s %% discount"
-msgstr ""
+msgstr "%s%% diskon"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:440
 #, python-format
 msgid "%s %% discount and %s surcharge"
-msgstr ""
+msgstr "%s%% diskon dan %s biaya tambahan"
 
 #. module: product
 #: code:addons/product/models/product_template.py:302
@@ -111,6 +112,11 @@ msgid ""
 "                Intel Iris Pro graphics\n"
 "            "
 msgstr ""
+"2.7GHz quad-core Intel Core i5\n"
+" Turbo Boost up to 3.2GHz\n"
+" 8GB (two 4GB) memory\n"
+" 1TB hard drive\n"
+" Intel Iris Pro graphics"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
@@ -139,7 +145,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "75 percent less reflection."
-msgstr ""
+msgstr "Refleksi 75 persen lebih rendah."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -148,21 +154,24 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Cost  -  </span>\n"
 "                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
+"<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Harga Umum - </span>\n"
+"<span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Modal - </span>\n"
+"<span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Daftar Harga Lain - </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "<span class=\"o_stat_text\"> Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Produk</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>kg</span>"
-msgstr ""
+msgstr "<span>kg</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Currency</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Mata Uang</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
@@ -172,7 +181,7 @@ msgstr "<strong>Deskripsi:</strong>"
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Price List Name</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Nama Daftar Harga</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
@@ -186,12 +195,15 @@ msgid ""
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
 msgstr ""
+"<strong>Peringatan</strong>: menambah atau mengurangi atribut akan menghapus"
+" dan membuat ulang varian yang sudah ada dan membuat hilangnya pilihan "
+"spesifikasi."
 
 #. module: product
 #: code:addons/product/models/product.py:167 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
-msgstr ""
+msgstr "Sebuah barcode hanya dapat ditetapkan untuk satu produk !"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category_type
@@ -227,7 +239,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_9
 #: model:product.template,website_description:product.product_product_9_product_template
 msgid "A great Keyboard. Cordless."
-msgstr ""
+msgstr "Keyboard yang bagus. Tanpa kabel."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description
@@ -249,7 +261,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "A screen worthy of iPad."
-msgstr ""
+msgstr "Layar yang layak untuk iPad."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_type
@@ -260,6 +272,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"Produk stok adalah produk yang Anda kelola stoknya. Aplikasi \"Persediaan\" harus dipasang.\n"
+"Produk konsumsi adalah produk yang tidak dikelola stoknya.\n"
+"Servis adalah produk non-material yang Anda sediakan.\n"
+"Konten digital adalah produk non-material yang Anda jual secara daring. File yang terlampir pada produk adalah barang yang Anda jual seperti ebook, musik, gambar,... Module \"Produk Digital\" harus dipasang."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -271,6 +287,9 @@ msgid ""
 "                                    The 2.5-inch Multi-Touch display is nearly twice as big as the display on the previous iPod nano,\n"
 "                                    so you can see more of the music, photos, and videos you love."
 msgstr ""
+"Seukuran kartu kredit dan tebalnya hanya 5.4 mm. iPod nano adalah iPod tertipis yang pernah dibuat.\n"
+"Layar Multi-Touch 2.5 inchi ini hampir dua kali lebih besar dari layar iPod nano sebelumnya,\n"
+"sehingga Anda dapat melihat lebih banyak musik, gambar, dan video yang Anda sukai."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_active
@@ -295,7 +314,7 @@ msgstr "Semua Produk"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "All general settings about this product are managed on"
-msgstr ""
+msgstr "Semua pengaturan umum mengenai produk ini dikelola pada"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -304,6 +323,8 @@ msgid ""
 "And at the Apple Online Store, you can configure your iMac with an even more"
 " powerful Intel Core i7 processor, up to 3.5GHz."
 msgstr ""
+"Di Apple Online Store, Anda dapat memasang iMac Anda dengan prosesor Intel "
+"Core i7 yang lebih kuat, hingga 3.5GHz."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -315,7 +336,7 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_4c_product_template
 #: model:product.template,website_description:product.product_product_4d_product_template
 msgid "And because it’s so easy to use, it’s easy to love."
-msgstr ""
+msgstr "Dan karena ini sangat mudah digunakan, ini sangat mudah disukai."
 
 #. module: product
 #: model:product.product,name:product.product_product_7
@@ -338,7 +359,7 @@ msgstr "Berlaku pada"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_applied_on
 msgid "Apply On"
-msgstr ""
+msgstr "Terapkan Pada"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
@@ -350,7 +371,7 @@ msgstr "Diarsipkan"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_sequence
 msgid "Assigns the priority to the list of product vendor."
-msgstr ""
+msgstr "Tetapkan prioritas untuk daftar pemasok produk."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_attribute_id
@@ -362,7 +383,7 @@ msgstr "Atribut"
 #: model:ir.ui.view,arch_db:product.product_attribute_line_form
 #: model:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Name"
-msgstr ""
+msgstr "Nama Atribut"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_extra
@@ -394,7 +415,7 @@ msgstr "Atribut"
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Auxiliary input for portable devices"
-msgstr ""
+msgstr "Pembantu masukan untuk alat yang mudah dibawa"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -402,6 +423,8 @@ msgstr ""
 msgid ""
 "Auxiliary port lets you connect other audio sources, like an MP3 player"
 msgstr ""
+"Port tambahan akan memudahkan Anda untuk menyambungkan pemutar musik, "
+"seperti pemutar MP3"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_barcode
@@ -417,6 +440,10 @@ msgid ""
 "Cost Price : The base price will be the cost price.\n"
 "Other Pricelist : Computation of the base price based on another Pricelist."
 msgstr ""
+"Harga dasar untuk perhitungan.\n"
+"Harga Umum: Harga dasar adalah harga jual.\n"
+"Harga Modal: Harga dasar adalah harga modal.\n"
+"Daftar Harga Lain: Perhitungan harga dasar berdasarkan daftar harga lain."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_list_price
@@ -437,7 +464,7 @@ msgstr "Berdasarkan"
 #: model:product.product,name:product.consu_delivery_03
 #: model:product.template,name:product.consu_delivery_03_product_template
 msgid "Basic Computer"
-msgstr ""
+msgstr "Komputer Dasar"
 
 #. module: product
 #: model:product.product,name:product.membership_2
@@ -449,13 +476,13 @@ msgstr "Keanggotaan dasar"
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Beautiful 7.9‑inch display."
-msgstr ""
+msgstr "Layar 7.9 inchi yang indah."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Beautiful widescreen display."
-msgstr ""
+msgstr "Layar lebar yang indah."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image
@@ -481,7 +508,7 @@ msgstr "Hitam"
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Bluetooth connectivity"
-msgstr ""
+msgstr "Sambungan bluetooth"
 
 #. module: product
 #: model:product.product,name:product.product_product_5b
@@ -493,7 +520,7 @@ msgstr "Speaker Bluetooth Bose Mini"
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Bose Mini Bluetooth Speaker."
-msgstr ""
+msgstr "Speaker Bose Bluetooth Mini."
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_5b
@@ -505,7 +532,7 @@ msgstr "Bose terkecil portabel Bluetooth speaker"
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Brilliance onscreen. And behind it."
-msgstr ""
+msgstr "Memukai di depan layar. Dan di belakang juga."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -517,6 +544,8 @@ msgid ""
 "                                    The smooth anodized aluminum design makes iPod nano feel as good as it sounds.\n"
 "                                    And iPod nano wouldn’t be iPod nano without gorgeous, hard-to-choose-from color."
 msgstr ""
+"Tombol memudahkan Anda untuk play, pause, mengganti lagu, atau mengatur volume. Desain aluminium yang mulus membuat iPod nano terasa sebaik suaranya.\n"
+"Dan iPod nano bukanlah iPod nano tanpa warna anggun yang membuat Anda sulit membuat pilihan."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_product_price_list
@@ -562,25 +591,25 @@ msgstr "Jenis Kategori"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "Category name"
-msgstr ""
+msgstr "Nama kategori"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:427
 #, python-format
 msgid "Category: %s"
-msgstr ""
+msgstr "Kategori: %s"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Characteristics"
-msgstr ""
+msgstr "Karakteristik"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Charges iPod/iPhone"
-msgstr ""
+msgstr "Mengisi iPod/iPhone"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -594,6 +623,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_attribute_create_variant
 msgid "Check this if you want to create multiple variants for this attribute."
 msgstr ""
+"Centang di sini jika Anda ingin membuat beberapa varian untuk atribut ini."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_child_id
@@ -603,17 +633,17 @@ msgstr "Kategori Turunan"
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_categ_form_action
 msgid "Click to add a new unit of measure category."
-msgstr ""
+msgstr "Klik untuk membuat kategori satuan baru."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
 msgid "Click to add a new unit of measure."
-msgstr ""
+msgstr "Klik untuk membuat satuan baru."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid "Click to create a pricelist."
-msgstr ""
+msgstr "Klik untuk membuat daftar harga."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -627,7 +657,7 @@ msgstr "Klik untuk menambahkan produk baru."
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Codes"
-msgstr ""
+msgstr "Kode"
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_2
@@ -672,7 +702,7 @@ msgstr "Perusahaan"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Compute Price"
-msgstr ""
+msgstr "Hitung Harga"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
@@ -689,7 +719,7 @@ msgstr "Komputer kasus"
 #: model:product.product,name:product.product_product_3
 #: model:product.template,name:product.product_product_3_product_template
 msgid "Computer SC234"
-msgstr ""
+msgstr "Komputer SC234"
 
 #. module: product
 #: code:addons/product/models/product_template.py:42
@@ -742,7 +772,7 @@ msgstr ""
 #: model:product.product,name:product.service_delivery
 #: model:product.template,name:product.service_delivery_product_template
 msgid "Cost-plus Contract"
-msgstr ""
+msgstr "Modal ditambah Kontrak"
 
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
@@ -752,7 +782,7 @@ msgstr "Kelompok negara"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_country_group_ids
 msgid "Country Groups"
-msgstr ""
+msgstr "Grup Negara"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_create_variant
@@ -806,6 +836,10 @@ msgid ""
 " about iMac from the inside out. The result is an advanced, elegant all-in-"
 "one computer that’s as much a work of art as it is state of the art."
 msgstr ""
+"Untuk membuat desain yang begitu tipis memerlukan inovasi teknologi yang "
+"luar biasa. Kami memperbaiki, membayangkan, dan mendesain ulang segala "
+"sesuatu dari iMac. Hasilnya adalah komputer yang canggih dan elegan, setara "
+"dengan sebuah karya seni."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_currency_id
@@ -820,7 +854,7 @@ msgstr "Mata Uang"
 #: model:product.product,name:product.product_product_5
 #: model:product.template,name:product.product_product_5_product_template
 msgid "Custom Computer (kit)"
-msgstr ""
+msgstr "Komputer Rakit (kit)"
 
 #. module: product
 #: model:product.product,description:product.product_product_27
@@ -832,12 +866,12 @@ msgstr "Laptop kustom berdasarkan kebutuhan pelanggan."
 #: model:product.product,description:product.product_product_5
 #: model:product.template,description:product.product_product_5_product_template
 msgid "Custom computer shipped in kit."
-msgstr ""
+msgstr "Komputer rakitan yang dikirimkan dalam bentuk kit."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "Ref Pelanggan"
 
 #. module: product
 #: model:product.product,name:product.product_delivery_02
@@ -893,7 +927,7 @@ msgstr "Deskripsi untuk kutipan"
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Design. The thinnest iPod ever."
-msgstr ""
+msgstr "Desain. iPod paling tipis yang pernah ada."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_sequence
@@ -941,12 +975,14 @@ msgid ""
 "                product category...) and a computation that easily helps to achieve\n"
 "                any kind of pricing."
 msgstr ""
+"Tiap rumus memiliki kriteria yang dapat diaplikasikan (jangka waktu,\n"
+"kategori produk...) dan cara perhitungan yang mempermudah Anda untuk menentukan segala jenis daftar harga."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Efficient, high-quality audio"
-msgstr ""
+msgstr "Efisien, audio dengan kualitas tinggi"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_end
@@ -957,7 +993,7 @@ msgstr "Tanggal berakhir"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_end
 msgid "End date for this vendor price"
-msgstr ""
+msgstr "Tanggal akhir untuk harga pemasok ini"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_end
@@ -977,6 +1013,7 @@ msgstr ""
 #, python-format
 msgid "Error ! You cannot use this attribute with the following value."
 msgstr ""
+"Eror ! Anda tidak dapat menggunakan atribut ini dengan nilai berikut ini."
 
 #. module: product
 #: code:addons/product/models/product.py:302
@@ -985,6 +1022,8 @@ msgid ""
 "Error! It is not allowed to choose more than one value for a given "
 "attribute."
 msgstr ""
+"Eror! Tidak diijinkan untuk memilih lebih dari satu nilai untuk atribut "
+"tertentu."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:419
@@ -1022,6 +1061,10 @@ msgid ""
 "                                    But what really makes it stand out is its size. At 7.9 inches,\n"
 "                                    it’s perfectly sized to deliver an experience every bit as big as iPad."
 msgstr ""
+"Semua yang Anda sukai dari iPad, layar\n"
+"yang indah, warna yang terang dan tulisan yang tajam pada layar iPad mini.\n"
+"Tetapi yang paling menonjol adalah ukurannya. Hanya 7.9 inchi,\n"
+"ukurannya sempurna untuk kenyamanan yang setara dengan iPad."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -1039,6 +1082,10 @@ msgid ""
 "                                    battery life* — is everything you’ll love about\n"
 "                                    iPad mini, too. And you can hold it in one hand."
 msgstr ""
+"Semua yang Anda sukai dari iPad, layar\n"
+"yang indah, warna yang terang dan tulisan yang tajam pada layar iPad mini.\n"
+"Tetapi yang paling menonjol adalah ukurannya. Hanya 7.9 inchi,\n"
+"ukurannya sempurna untuk kenyamanan yang setara dengan iPad."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -1049,30 +1096,34 @@ msgid ""
 "                                        thousands of amazing apps, 10-hour battery life* — is everything\n"
 "                                        you’ll love about iPad mini, too. And you can hold it in one hand."
 msgstr ""
+"Semua yang Anda sukai dari iPad, layar\n"
+"yang indah, performa yang lancar dan cepat, FaceTime dan kamera iSight,\n"
+"ribuan aplikasi yang luar biasa, ketahanan baterei 10 jam*, adalah semua hal\n"
+" yang Anda sukai dari iPad mini juga.. Dan Anda dapat memegangnya dengan sebelah tangan."
 
 #. module: product
 #: model:product.product,description:product.product_product_2
 #: model:product.template,description:product.product_product_2_product_template
 msgid "Example of product to invoice based on delivery."
-msgstr ""
+msgstr "Contoh produk yang ditagih berdasarkan jumlah yang dikirim."
 
 #. module: product
 #: model:product.product,description:product.service_order_01
 #: model:product.template,description:product.service_order_01_product_template
 msgid "Example of product to invoice on order."
-msgstr ""
+msgstr "Contoh produk yang ditagih berdasarkan jumlah pesanan."
 
 #. module: product
 #: model:product.product,description:product.service_cost_01
 #: model:product.template,description:product.service_cost_01_product_template
 msgid "Example of products to invoice based on cost."
-msgstr ""
+msgstr "Contoh produk yang ditagih berdasarkan modal."
 
 #. module: product
 #: model:product.product,description:product.product_product_1
 #: model:product.template,description:product.product_product_1_product_template
 msgid "Example of products to invoice based on delivery."
-msgstr ""
+msgstr "Contoh produk yang ditagih berdasarkan jumlah yang dikirim."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_name
@@ -1084,18 +1135,18 @@ msgstr "Aturan eksplisit nama untuk baris daftar harga ini."
 #: model:product.product,name:product.service_cost_01
 #: model:product.template,name:product.service_cost_01_product_template
 msgid "External Audit"
-msgstr ""
+msgstr "Audit Eksternal"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Fast connections.The world over."
-msgstr ""
+msgstr "Koneksi cepat. Keliling dunia."
 
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Fix Price"
-msgstr ""
+msgstr "Harga Tetap"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_fixed_price
@@ -1108,11 +1159,13 @@ msgid ""
 "For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
+"Untuk menerapkan aturan, kuantitas yang dibeli/dijual harus lebih besar atau sama dengan kuantitas minimum yang ditentukan pada kolom ini.\n"
+"Dinyatakan dalam satuan standar dari produk."
 
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Formula"
-msgstr ""
+msgstr "Rumus"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_7
@@ -1131,13 +1184,13 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Friendly to the environment."
-msgstr ""
+msgstr "Ramah lingkungan."
 
 #. module: product
 #: model:product.product,name:product.product_product_1
 #: model:product.template,name:product.product_product_1_product_template
 msgid "GAP Analysis Service"
-msgstr ""
+msgstr "Servis Analisa GAP"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -1150,7 +1203,7 @@ msgstr "Informasi Umum"
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Genius. Your own personal DJ."
-msgstr ""
+msgstr "Genius. DJ personal Anda."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_packaging_ids
@@ -1178,7 +1231,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_sequence
 #: model:ir.model.fields,help:product.field_product_template_sequence
 msgid "Gives the sequence order when displaying a product list"
-msgstr ""
+msgstr "Menggunakan urutan ketika menampilkan daftar produk"
 
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
@@ -1214,13 +1267,13 @@ msgstr "HDD SH-1"
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Have Genius call the tunes."
-msgstr ""
+msgstr "Perintah Genius untuk menyalakan nada."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Hear, hear."
-msgstr ""
+msgstr "Dengar, dengar."
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_11
@@ -1233,12 +1286,16 @@ msgid ""
 "Depth:  5.4 mm\n"
 "Weight: 31 grams"
 msgstr ""
+"Tinggi: 76.5 mm\n"
+"Lebar: 39.6 mm\n"
+"Ketebalan: 5.4 mm\n"
+"Berat: 31 gram"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Highly rated designs."
-msgstr ""
+msgstr "Desain yang dinilai tinggi."
 
 #. module: product
 #: model:product.uom,name:product.product_uom_hour
@@ -1261,6 +1318,8 @@ msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
+"Berapa kalinya Satuan ini lebih besar dari Satuan Dasar di kategori ini: 1 *"
+" (satuan ini) = rasio * (satuan dasar)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_factor
@@ -1268,6 +1327,8 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
 msgstr ""
+"Berapa besar atau kecil Satuan ini dibandingkan dengan Satuan Dasar di "
+"kategori ini: 1 * (satuan dasar) = rasio * (satuan ini)"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1359,7 +1420,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
 msgid "Information about a product vendor"
-msgstr ""
+msgstr "Informasi mengenai pemasok produk"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -1528,7 +1589,7 @@ msgstr "Kategori UoM"
 #. module: product
 #: model:res.groups,name:product.group_pricelist_item
 msgid "Manage Pricelist Items"
-msgstr ""
+msgstr "Kelola Daftar Harga"
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -1713,17 +1774,17 @@ msgstr "Rekanan"
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Percentage (discount)"
-msgstr ""
+msgstr "Persentase (diskon)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_percent_price
 msgid "Percentage Price"
-msgstr ""
+msgstr "Harga Persentase"
 
 #. module: product
 #: model:product.category,name:product.product_category_5
 msgid "Physical"
-msgstr ""
+msgstr "Fisik"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1833,7 +1894,7 @@ msgstr "Harga"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_applied_on
 msgid "Pricelist Item applicable on selected option"
-msgstr ""
+msgstr "Daftar harga dapat diterapkan pada opsi yang dipilih"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_ids
@@ -1845,7 +1906,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist Items"
-msgstr ""
+msgstr "Daftar Harga"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_name
@@ -1871,7 +1932,7 @@ msgstr "Daftar harga"
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Pricelists On Product"
-msgstr ""
+msgstr "Daftar Harga Pada Produk"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form
@@ -1928,7 +1989,7 @@ msgstr "Produk Atribut Nilai"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_attribute_line_form
 msgid "Product Attribute and Values"
-msgstr ""
+msgstr "Atribut dan Nilai Produk"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_attribute_line_ids
@@ -1980,7 +2041,7 @@ msgstr "Produk satuan ukuran"
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
 msgid "Product UoM Categories"
-msgstr ""
+msgstr "Kategori Satuan Produk"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_id
@@ -2071,7 +2132,7 @@ msgstr "Unit ukur pembelian"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_qty
 msgid "Quantity per Package"
-msgstr ""
+msgstr "Kuantitas tiap Paket"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty1
@@ -2102,7 +2163,7 @@ msgstr "Kuantitas-5"
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
 msgid "RAM SR5"
-msgstr ""
+msgstr "RAM SR5"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_factor
@@ -2112,7 +2173,7 @@ msgstr "Rasio"
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Reference Unit of Measure for this category"
-msgstr ""
+msgstr "Satuan Dasar untuk kategori ini"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2392,12 +2453,12 @@ msgstr "Tanggal Mulai"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_start
 msgid "Start date for this vendor price"
-msgstr ""
+msgstr "Tanggal mulai untuk harga pemasok ini"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_start
 msgid "Starting date for the pricelist item validation"
-msgstr ""
+msgstr "Tanggal mulai untuk validasi daftar harga"
 
 #. module: product
 #: selection:product.template,type:0
@@ -2442,6 +2503,8 @@ msgstr ""
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
 msgstr ""
+"Kolom teknis. Digunakan untuk pencarian daftar harga, tidak tersimpan di "
+"database."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -2507,7 +2570,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_sequence
 msgid "The first in the sequence is the default one."
-msgstr ""
+msgstr "Urutan pertama adalah yang terstandar."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -2545,7 +2608,7 @@ msgstr ""
 msgid ""
 "The number of products under this category (Does not consider the children "
 "categories)"
-msgstr ""
+msgstr "Jumlah produk di kategori ini (Tidak termasuk sub-kategori)"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:74
@@ -2554,11 +2617,13 @@ msgid ""
 "The operation cannot be completed:\n"
 "You are trying to delete an attribute value with a reference on a product variant."
 msgstr ""
+"Operasi tidak dapat diselesaikan:\n"
+"Anda mencoba untuk menghapus nilai atribut dengan referensi pada varian produk."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_price
 msgid "The price to purchase a product"
-msgstr ""
+msgstr "Harga beli dari sebuah produk"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -2569,6 +2634,9 @@ msgid ""
 "                process: price, notes in the quotation, accounting data,\n"
 "                procurement methods, etc."
 msgstr ""
+"Detail produk mempunyai informasi untuk menyederhanakan proses\n"
+"penjualan: harga, catatan pada penawaran, data akuntansi,\n"
+"metode pengadaan, dll."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
@@ -2576,6 +2644,8 @@ msgid ""
 "The product form contains information to simplify the sale process: price, "
 "notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
+"Detail produk mempunyai informasi untuk menyederhanakan proses penjualan: "
+"harga, catatan pada penawaran, data akuntansi, metode pengadaan, dll."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2590,7 +2660,7 @@ msgstr ""
 #: code:addons/product/models/product_uom.py:44 sql_constraint:product.uom:0
 #, python-format
 msgid "The rounding precision must be greater than 0!"
-msgstr ""
+msgstr "Presisi pembulatan harus lebih besar dari 0!"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_lst_price
@@ -2598,6 +2668,8 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Variant "
 "Prices' button to set the extra attribute prices."
 msgstr ""
+"Harga jual dikelola dari template produk. Klik tombol 'Harga Varian' untuk "
+"menyetel harga atribut tambahan."
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_9
@@ -2621,7 +2693,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
 msgid "The total number of products you can have per pallet or box."
-msgstr ""
+msgstr "Jumlah total produk yang dapat Anda isi tiap palet atau kotak."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_volume
@@ -2633,7 +2705,7 @@ msgstr "Volume m3."
 #: model:ir.model.fields,help:product.field_product_product_weight
 #: model:ir.model.fields,help:product.field_product_template_weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
-msgstr ""
+msgstr "Berat dari isinya dalam Kg, tidak termasuk bungkus, dll."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -2719,6 +2791,8 @@ msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
+"Kode produk vendor akan digunakan ketika mencetak permintaan penawaran. "
+"Kosongkan untuk menggunakan kode internal."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_name
@@ -2726,6 +2800,8 @@ msgid ""
 "This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
+"Nama produk vendor akan digunakan ketika mencetak permintaan penawaran. "
+"Kosongkan untuk menggunakan nama internal."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -2749,7 +2825,7 @@ msgstr ""
 #. module: product
 #: model:product.pricelist,name:product.list0
 msgid "USD"
-msgstr ""
+msgstr "USD"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -2768,6 +2844,8 @@ msgstr ""
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
+"Hapus centang pada kolom aktif untuk menon-aktifkan satuan tanpa "
+"menghapusnya."
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
@@ -2811,6 +2889,10 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
+"Satuan pada kategori yang sama dapat\n"
+"dikonversi satu sama lain. Sebagai contoh, pada kategori ini\n"
+"<i>'Waktu'</i>, Anda memiliki satuan berikut ini:\n"
+"Jam, Hari."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2833,7 +2915,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Validity"
-msgstr ""
+msgstr "Masa Berlaku"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_name
@@ -2855,12 +2937,12 @@ msgstr "Varian gambar"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Variant Information"
-msgstr ""
+msgstr "Informasi Varian"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_price_extra
 msgid "Variant Price Extra"
-msgstr ""
+msgstr "Tambahan Harga Varian"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -2892,7 +2974,7 @@ msgstr "Pemasok"
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 msgid "Vendor Information"
-msgstr ""
+msgstr "Informasi Pemasok"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
@@ -2902,22 +2984,22 @@ msgstr "Daftar Harga Penjual"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
 msgid "Vendor Product Code"
-msgstr ""
+msgstr "Kode Produk Pemasok"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_name
 msgid "Vendor Product Name"
-msgstr ""
+msgstr "Nama Produk Pemasok"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_uom
 msgid "Vendor Unit of Measure"
-msgstr ""
+msgstr "Satuan Pemasok"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_name
 msgid "Vendor of this product"
-msgstr ""
+msgstr "Pemasok produk ini"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_seller_ids
@@ -3040,6 +3122,8 @@ msgid ""
 "You cannot define the decimal precision of 'Account' as greater than the "
 "rounding factor of the company's main currency"
 msgstr ""
+"Anda tidak dapat menetapkan akurasi desimal pada 'Akuntansi' lebih besar "
+"dari faktor pembulatan mata uang perusahaan"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
@@ -3047,6 +3131,8 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
+"Anda harus menetapkan kurs konversi antara beberapa Satuan\n"
+" dalam kategori yang sama."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -3057,6 +3143,8 @@ msgid ""
 "                a physical product, a consumable or a service you offer to\n"
 "                customers."
 msgstr ""
+"Anda harus menetapkan produk untuk semua yang Anda jual, apakah produk fisik"
+" maupun produk konsumsi, maupun servis yang Anda tawarkan untuk pelanggan."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
@@ -3064,6 +3152,8 @@ msgid ""
 "You must define a product for everything you sell, whether it's a physical "
 "product, a consumable or a service you offer to customers."
 msgstr ""
+"Anda harus menetapkan produk untuk semua yang Anda jual, apakah produk fisik"
+" maupun produk konsumsi, maupun servis yang Anda tawarkan untuk pelanggan."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -3220,22 +3310,22 @@ msgstr "ons"
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_line
 msgid "product.attribute.line"
-msgstr ""
+msgstr "product.attribute.line"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_price
 msgid "product.attribute.price"
-msgstr ""
+msgstr "product.attribute.price"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_value
 msgid "product.attribute.value"
-msgstr ""
+msgstr "product.attribute.value"
 
 #. module: product
 #: model:ir.model,name:product.model_product_price_history
 msgid "product.price.history"
-msgstr ""
+msgstr "product.price.history"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_qt
@@ -3261,7 +3351,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_pricelist
 msgid "report.product.report_pricelist"
-msgstr ""
+msgstr "report.product.report_pricelist"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form
@@ -3271,7 +3361,7 @@ msgstr "perusahaan induk"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "the product template"
-msgstr ""
+msgstr "template produk"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view

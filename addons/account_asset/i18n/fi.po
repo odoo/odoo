@@ -12,7 +12,7 @@
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2016
 # Miku Laitinen <miku.laitinen@gmail.com>, 2016
-# Timo Koukkari <timo.koukkari@seamk.fi>, 2016
+# Timo Koukkari <ti.ko@netikka.fi>, 2016
 # Marko Happonen <marko.happonen@sprintit.fi>, 2016
 # Jussi Lehto <jussi@gulfeo.com>, 2016
 # Tommi Rintala <tommi.rintala@gmail.com>, 2017
@@ -145,7 +145,7 @@ msgid "Asset Durations to Modify"
 msgstr ""
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
+#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
 msgid "Asset End Date"
 msgstr "Hyödykkeen päättymispäivä"
 
@@ -160,7 +160,7 @@ msgid "Asset Name"
 msgstr "Omaisuuserän nimi"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
+#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
 msgid "Asset Start Date"
 msgstr "Hyödykkeen alkamispäivä"
 
@@ -969,6 +969,14 @@ msgstr "Kahden poiston välinen aika kuukausissa."
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_method_number
 msgid "The number of depreciations needed to depreciate your asset"
 msgstr "Poistojen määrä tämän omaisuuserän kokonaispoistolle"
+
+#. module: account_asset
+#: code:addons/account_asset/models/account_asset.py:477
+#, python-format
+msgid ""
+"This depreciation is already linked to a journal entry! Please post or "
+"delete it."
+msgstr ""
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
