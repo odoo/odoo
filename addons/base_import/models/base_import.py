@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import chardet
 import datetime
 import io
@@ -10,15 +11,24 @@ import psycopg2
 import operator
 import os
 import re
+import requests
+
+from PIL import Image
 
 from odoo import api, fields, models
+from odoo.exceptions import AccessError
 from odoo.tools.translate import _
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import ustr
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
+from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 
 FIELDS_RECURSION_LIMIT = 2
 ERROR_PREVIEW_BYTES = 200
+DEFAULT_IMAGE_TIMEOUT = 3
+DEFAULT_IMAGE_MAXBYTES = 10 * 1024 * 1024
+DEFAULT_IMAGE_REGEX = r"(?:http|https)://.*(?:png|jpe?g|tiff?|gif|bmp)"
+DEFAULT_IMAGE_CHUNK_SIZE = 32768
+IMAGE_FIELDS = ["icon", "image", "logo", "picture"]
 _logger = logging.getLogger(__name__)
 
 try:
@@ -77,6 +87,19 @@ class ImportMapping(models.Model):
     column_name = fields.Char()
     field_name = fields.Char()
 
+
+class ResUsers(models.Model):
+    _inherit = 'res.users'
+
+    def _can_import_remote_urls(self):
+        """ Hook to decide whether the current user is allowed to import
+        images via URL (as such an import can DOS a worker). By default,
+        allows the administrator group.
+
+        :rtype: bool
+        """
+        self.ensure_one()
+        return self._is_admin()
 
 class Import(models.TransientModel):
 
@@ -695,7 +718,60 @@ class Import(models.TransientModel):
                 # We should be able to manage both case
                 index = import_fields.index(name)
                 self._parse_float_from_data(data, index, name, options)
+            elif field['type'] == 'binary' and field.get('attachment') and any(f in name for f in IMAGE_FIELDS) and name in import_fields:
+                index = import_fields.index(name)
+
+                with requests.Session() as session:
+                    session.stream = True
+
+                    for num, line in enumerate(data):
+                        if re.match(config.get("import_image_regex", DEFAULT_IMAGE_REGEX), line[index]):
+                            if not self.env.user._can_import_remote_urls():
+                                raise AccessError(_("You can not import images via URL, check with your administrator or support for the reason."))
+
+                            line[index] = self._import_image_by_url(line[index], session, name, num)
+
         return data
+
+    def _import_image_by_url(self, url, session, field, line_number):
+        """ Imports an image by URL
+
+        :param str url: the original field value
+        :param requests.Session session:
+        :param str field: name of the field (for logging/debugging)
+        :param int line_number: 0-indexed line number within the imported file (for logging/debugging)
+        :return: the replacement value
+        :rtype: bytes
+        """
+        maxsize = int(config.get("import_image_maxbytes", DEFAULT_IMAGE_MAXBYTES))
+        try:
+            response = session.get(url, timeout=int(config.get("import_image_timeout", DEFAULT_IMAGE_TIMEOUT)))
+            response.raise_for_status()
+
+            if response.headers.get('Content-Length') and int(response.headers['Content-Length']) > maxsize:
+                raise ValueError(_("File size exceeds configured maximum (%s bytes)") % maxsize)
+
+            content = bytearray()
+            for chunk in response.iter_content(DEFAULT_IMAGE_CHUNK_SIZE):
+                content += chunk
+                if len(content) > maxsize:
+                    raise ValueError(_("File size exceeds configured maximum (%s bytes)") % maxsize)
+
+            image = Image.open(io.BytesIO(content))
+            w, h = image.size
+            if w * h > 42e6:  # Nokia Lumia 1020 photo resolution
+                raise ValueError(
+                    u"Image size excessive, imported images must be smaller "
+                    u"than 42 million pixel")
+
+            return base64.b64encode(content)
+        except Exception as e:
+            raise ValueError(_("Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s") % {
+                'url': url,
+                'field_name': field,
+                'line_number': line_number + 1,
+                'error': e
+            })
 
     @api.multi
     def do(self, fields, columns, options, dryrun=False):
