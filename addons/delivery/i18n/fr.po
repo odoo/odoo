@@ -79,6 +79,22 @@ msgid ""
 "<p>Thank you,</p>\n"
 "      </data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Cher/chère ${object.partner_id.name},</p>\n"
+"<p>Nous avons le plaisir de vous informer que votre commande a été expédiée.</p>\n"
+"<p>\n"
+"%if object.carrier_tracking_ref:\n"
+"  Votre référence de suivi :\n"
+"  %if object.carrier_tracking_url:\n"
+"    <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"  %else:\n"
+"    ${object.carrier_tracking_ref}.\n"
+"  %endif\n"
+"%endif\n"
+"</p>\n"
+"<p>Vous trouverez ci-joint votre bon de commande pour plus de détails.</p>\n"
+"<p>Merci,</p>\n"
+"      </data>"
 
 #. module: delivery
 #: model:mail.template,body_html:delivery.mail_template_data_delivery_notification
@@ -136,6 +152,58 @@ msgid ""
 "        </table>\n"
 "      "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"font-family:Arial,Helvetica,sans-serif; padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
+"          <tbody>\n"
+"            <!-- HEADER -->\n"
+"            <tr>\n"
+"              <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table width=\"650\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                  <tr>\n"
+"                    <td valign=\"middle\">\n"
+"                      <span style=\"font-size:20px; color:white; font-weight: bold;\">${object.record_name}</span>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\">\n"
+"                      <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"                    </td>\n"
+"                  </tr>\n"
+"                </table>\n"
+"              </td>\n"
+"            </tr>\n"
+"            <!-- CONTENT -->\n"
+"            <tr>\n"
+"              <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table width=\"650\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\">\n"
+"                  <tbody>\n"
+"                    <td valign=\"top\" style=\"color: #555; font-size: 14px;\">${object.body | safe}</td>\n"
+"                  </tbody>\n"
+"                </table>\n"
+"              </td>\n"
+"            </tr>\n"
+"            <!-- FOOTER -->\n"
+"            <tr>\n"
+"              <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table width=\"650\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                  <tr>\n"
+"                    <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">${user.company_id.name}<br/>${user.company_id.phone or ''}</td>\n"
+"                    <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                      % if user.company_id.email:\n"
+"                      <a href=\"mailto:${user.company_id.email}\" style=\"text-decoration:none; color: white;\">${user.company_id.email}</a><br/>\n"
+"                      % endif\n"
+"                      % if user.company_id.website:\n"
+"                        <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: white;\">${user.company_id.website}</a>\n"
+"                      % endif\n"
+"                    </td>\n"
+"                  </tr>\n"
+"                </table>\n"
+"              </td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"              <td align=\"center\">Fourni par <a href=\"https://www.odoo.com\">Odoo</a>.</td>\n"
+"            </tr>\n"
+"          </tbody>\n"
+"        </table>\n"
+"      "
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:76
@@ -400,7 +468,7 @@ msgstr "Environnement"
 #: code:addons/delivery/models/delivery_grid.py:109
 #, python-format
 msgid "Error: no matching grid."
-msgstr "Erreur : aucun tarif correspondant."
+msgstr "Erreur : aucune grille tarifaire correspondante."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_price
@@ -553,7 +621,7 @@ msgstr "La longueur doit être positive"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_debug_logging
 msgid "Log requests in order to ease debugging"
-msgstr "Demandes d'historique pour faciliter le débogage"
+msgstr "Consigner les demandes pour faciliter le débogage"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -671,6 +739,7 @@ msgstr "Colisage"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_stock_quant_package_id
 msgid "Physical Packages"
 msgstr "Colis physiques"
 
@@ -681,7 +750,7 @@ msgid ""
 "Please use \"Check price\" in order to compute a shipping price for this "
 "quotation."
 msgstr ""
-"Utilisez « Vérifier le prix » pour calculer un prix d'expédition pour ce "
+"Utilisez « Vérifier le prix » pour calculer le prix d'expédition pour ce "
 "devis."
 
 #. module: delivery
@@ -780,8 +849,8 @@ msgstr "Mettre un prix"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_prod_environment
 msgid "Set to True if your credentials are certified for production."
 msgstr ""
-"Définissez la valeur sur Vrai si vos identifiants sont certifiés pour la "
-"production."
+"Définissez la valeur sur True (Vrai) si vos identifiants sont certifiés pour"
+" la production."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:168
@@ -790,7 +859,7 @@ msgid ""
 "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
 "%.2f %s"
 msgstr ""
-"Colisage envoyé au transporteur %s pour expédition avec le numéro de suivi "
+"Colis envoyé au transporteur %s pour expédition avec le numéro de suivi "
 "%s<br/>Coût : %.2f %s"
 
 #. module: delivery
@@ -821,11 +890,6 @@ msgstr "États"
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
 msgstr "Mouvement de stock"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_stock_quant_package_id
-msgid "Stock Quant Package"
-msgstr "Colis de quant de stock"
 
 #. module: delivery
 #: model:product.product,name:delivery.product_product_delivery_poste
