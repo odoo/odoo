@@ -39,6 +39,7 @@ var WebsiteRoot = BodyManager.extend({
         'click .js_change_lang': '_onLangChangeClick',
         'click .js_publish_management .js_publish_btn': '_onPublishBtnClick',
         'submit .js_website_submit_form': '_onWebsiteFormSubmit',
+        'click .js_disable_on_click': '_onDisableOnClick',
     }),
     custom_events: _.extend({}, BodyManager.prototype.custom_events || {}, {
         animation_start_demand: '_onAnimationStartDemand',
@@ -128,7 +129,7 @@ var WebsiteRoot = BodyManager.extend({
         var $wrapwrap = this.$('#wrapwrap');
         var defs = _.map(sAnimation.registry, function (Animation) {
             var selector = Animation.prototype.selector || '';
-            var $target = $initTarget ? $initTarget.filter(selector) : $wrapwrap.find(selector);
+            var $target = $initTarget ? $initTarget.filter(selector) : $wrapwrap.find(selector).addBack(selector);
 
             var defs = _.map($target, function (el) {
                 var $snippet = $(el);
@@ -223,6 +224,16 @@ var WebsiteRoot = BodyManager.extend({
             $btn.attr('data-loading-text', '<i class="fa fa-spinner fa-spin"></i> ' + $(btn).text());
             $btn.button('loading');
         });
+    },
+    /**
+     * Called when the root is notified that the button should be
+     * disabled after the first click.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onDisableOnClick: function (ev) {
+        $(ev.currentTarget).addClass('disabled');
     },
 });
 

@@ -209,12 +209,17 @@
 
             <field name="inherit_id" ref="base.view_view_form"/>
             <field name="arch" type="xml">
-
                 <field name="name" position="after">
                     <field name="website_id" readonly="1"/>
                     <field name="key" readonly="1"/>
+                    <field name="page_ids" invisible="1" />
                 </field>
-
+                <sheet position="before">
+                    <header>
+                        <button name="redirect_to_page_manager" string="Go to Page Manager"
+                            type="object" attrs="{'invisible': [('page_ids', '=', [])]}"/>
+                    </header>
+                </sheet>
             </field>
         </record>
 

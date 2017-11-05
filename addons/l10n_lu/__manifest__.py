@@ -44,4 +44,5 @@ Notes:
         'data/account.chart.template.csv',
         'data/account_chart_template_data.yml',
     ],
+    'post_init_hook': '_preserve_tag_on_taxes',
 }

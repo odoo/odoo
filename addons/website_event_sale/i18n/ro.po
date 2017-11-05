@@ -1,32 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_event_sale
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Dorin Hongu <dhongu@gmail.com>, 2017
+# Cozmin Candea <office@terrabit.ro>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-09-08 10:16+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
-"Language: ro\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2017\n"
+"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
-"2:1));\n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "<span>Free</span>"
-msgstr ""
+msgstr "<span>Free</span>"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "<span>Unlimited</span>"
-msgstr ""
+msgstr "<span>Nelimitat</span>"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.registration_template
@@ -34,19 +36,9 @@ msgid "<span>left</span>"
 msgstr ""
 
 #. module: website_event_sale
-#: model:ir.model.fields,field_description:website_event_sale.field_product_product_intrastat_id
-msgid "Intrastat code"
-msgstr "Cod Intrastat"
-
-#. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
 msgid "Only"
 msgstr "Doar"
-
-#. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "Order Now"
-msgstr "Comandă acum"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
@@ -54,18 +46,23 @@ msgid "Product"
 msgstr "Produs"
 
 #. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_sale_order
+msgid "Quotation"
+msgstr "Ofertă"
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/controllers/main.py:56
+#, python-format
+msgid "Registration"
+msgstr "Inregistrare"
+
+#. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
 msgid "Remaining"
-msgstr "Ramas(a)"
-
-#. module: website_event_sale
-#: model:ir.model,name:website_event_sale.model_sale_order
-msgid "Sales Order"
-msgstr "Comanda de vanzare"
+msgstr "Rămas"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
-#: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "Sold Out"
 msgstr "Epuizat"
 
@@ -79,18 +76,12 @@ msgstr ""
 #: code:addons/website_event_sale/models/sale_order.py:77
 #, python-format
 msgid ""
-"Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s "
-"ticket for the %(event)s event."
+"Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s"
+" ticket for the %(event)s event."
 msgstr ""
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:65
-#, python-format
-msgid "Subscription"
-msgstr "Abonament"
-
-#. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:36
+#: code:addons/website_event_sale/models/sale_order.py:39
 #, python-format
 msgid "The ticket doesn't match with this product."
 msgstr ""
@@ -98,4 +89,4 @@ msgstr ""
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website
 msgid "Website"
-msgstr "Pagina de Internet"
+msgstr "Pagină web"

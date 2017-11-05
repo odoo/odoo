@@ -83,6 +83,24 @@ def get_records_pager(ids, current):
     return {}
 
 
+def _build_url_w_params(url_string, query_params, remove_duplicates=True):
+    """ Rebuild a string url based on url_string and correctly compute query parameters
+    using those present in the url and those given by query_params. Having duplicates in
+    the final url is optional. For example:
+
+     * url_string = '/my?foo=bar&error=pay'
+     * query_params = {'foo': 'bar2', 'alice': 'bob'}
+     * if remove duplicates: result = '/my?foo=bar2&error=pay&alice=bob'
+     * else: result = '/my?foo=bar&foo=bar2&error=pay&alice=bob'
+    """
+    url = urls.url_parse(url_string)
+    url_params = url.decode_query()
+    if remove_duplicates:  # convert to standard dict instead of werkzeug multidict to remove duplicates automatically
+        url_params = url_params.to_dict()
+    url_params.update(query_params)
+    return url.replace(query=urls.url_encode(url_params)).to_url()
+
+
 class CustomerPortal(Controller):
 
     MANDATORY_BILLING_FIELDS = ["name", "phone", "email", "street", "city", "country_id"]

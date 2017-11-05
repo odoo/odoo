@@ -35,11 +35,11 @@
         </li>
         <li t-if="widget.attrs.context || widget.field.context" data-item="context">
             <span class="oe_tooltip_technical_title">Context:</span>
-            <t t-esc="widget.attrs.context || widget.field.context"/>
+            <t t-esc="widget.attrs.context || JSON.stringify(widget.field.context)"/>
         </li>
         <li t-if="widget.attrs.domain || widget.field.domain" data-item="domain">
             <span class="oe_tooltip_technical_title">Domain:</span>
-            <t t-esc="widget.attrs.domain || widget.field.domain"/>
+            <t t-esc="widget.attrs.domain || JSON.stringify(widget.field.domain)"/>
         </li>
         <li t-if="widget.attrs.modifiers and widget.attrs.modifiers != '{}'" data-item="modifiers">
             <span class="oe_tooltip_technical_title">Modifiers:</span>
@@ -334,12 +334,12 @@
                         <t t-if="item.create_uid and item.create_uid[0]" t-set="item.title">
                             <t t-raw="item.title"/><br/>
                             <b>Created by : </b><br/>
-                            <t t-raw="item.create_uid[1] + ' ' + item.create_date"/>
+                            <t t-raw="item.create_uid[1]"/>  <t t-esc="item.create_date_string" />
                         </t>
                         <t t-if="item.create_uid and item.write_uid and item.create_uid[0] != item.write_uid[0]" t-set="item.title">
                             <t t-raw="item.title"/><br/>
                             <b>Modified by : </b><br/>
-                            <t t-raw="item.write_uid[1] + ' ' + item.write_date"/>
+                            <t t-raw="item.write_uid[1]"/>  <t t-esc="item.write_date_string"/>
                         </t>
                     </t>
                     <a t-att-title="item.title or None" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url">
@@ -899,8 +899,8 @@
         t-att-src='url'
         t-att-border="widget.readonly ? 0 : 1"
         t-att-name="widget.name"
-        t-att-width="widget.node.attrs.img_width || widget.node.attrs.width"
-        t-att-height="widget.node.attrs.img_height || widget.node.attrs.height"/>
+        t-att-width="widget.nodeOptions.size ? widget.nodeOptions.size[0] : widget.attrs.img_width || widget.attrs.width"
+        t-att-height="widget.nodeOptions.size ? widget.nodeOptions.size[1] : widget.attrs.img_height || widget.attrs.height"/>
 </t>
 <t t-name="FieldBinaryFile">
     <a t-if="widget.mode === 'readonly'" href="javascript:void(0)" class="o_form_uri"/>

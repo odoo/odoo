@@ -58,6 +58,23 @@ def get_real_ids(ids):
 def real_id2calendar_id(record_id, date):
     return '%s-%s' % (record_id, date.strftime(VIRTUALID_DATETIME_FORMAT))
 
+def any_id2key(record_id):
+    """ Creates a (real_id: int, thing: str) pair which allows ordering mixed
+    collections of real and virtual events.
+
+    The first item of the pair is the event's real id, the second one is
+    either an empty string (for real events) or the datestring (for virtual
+    ones)
+
+    :param record_id:
+    :type record_id: int | str
+    :rtype: (int, str)
+    """
+    if isinstance(record_id, pycompat.integer_types):
+        return record_id, u''
+
+    (real_id, virtual_id) = record_id.split('-')
+    return int(real_id), virtual_id
 
 def is_calendar_id(record_id):
     return len(str(record_id).split('-')) != 1
@@ -670,27 +687,27 @@ class Meeting(models.Model):
                 1) if user add duration for 2 hours, return : August-23-2013 at (04-30 To 06-30) (Europe/Brussels)
                 2) if event all day ,return : AllDay, July-31-2013
         """
-        timezone = self._context.get('tz')
-        if not timezone:
-            timezone = self.env.user.partner_id.tz or 'UTC'
-        timezone = tools.ustr(timezone).encode('utf-8')  # make safe for str{p,f}time()
+        timezone = self._context.get('tz') or self.env.user.partner_id.tz or 'UTC'
+        timezone = pycompat.to_native(timezone)  # make safe for str{p,f}time()
 
         # get date/time format according to context
-        format_date, format_time = self.with_context(tz=timezone)._get_date_formats()
+        format_date, format_time = self._get_date_formats()
 
         # convert date and time into user timezone
-        date = fields.Datetime.context_timestamp(self.with_context(tz=timezone), fields.Datetime.from_string(start))
-        date_deadline = fields.Datetime.context_timestamp(self.with_context(tz=timezone), fields.Datetime.from_string(stop))
+        self_tz = self.with_context(tz=timezone)
+        date = fields.Datetime.context_timestamp(self_tz, fields.Datetime.from_string(start))
+        date_deadline = fields.Datetime.context_timestamp(self_tz, fields.Datetime.from_string(stop))
 
         # convert into string the date and time, using user formats
-        date_str = date.strftime(format_date).decode('utf-8')
-        time_str = date.strftime(format_time).decode('utf-8')
+        to_text = pycompat.to_text
+        date_str = to_text(date.strftime(format_date))
+        time_str = to_text(date.strftime(format_time))
 
         if zallday:
             display_time = _("AllDay , %s") % (date_str)
         elif zduration < 24:
             duration = date + timedelta(hours=zduration)
-            duration_time = duration.strftime(format_time).decode('utf-8')
+            duration_time = to_text(duration.strftime(format_time))
             display_time = _(u"%s at (%s To %s) (%s)") % (
                 date_str,
                 time_str,
@@ -698,8 +715,8 @@ class Meeting(models.Model):
                 timezone,
             )
         else:
-            dd_date = date_deadline.strftime(format_date).decode('utf-8')
-            dd_time = date_deadline.strftime(format_time).decode('utf-8')
+            dd_date = to_text(date_deadline.strftime(format_date))
+            dd_time = to_text(date_deadline.strftime(format_time))
             display_time = _(u"%s at %s To\n %s at %s (%s)") % (
                 date_str,
                 time_str,
@@ -927,7 +944,7 @@ class Meeting(models.Model):
             # FIXME: why isn't this in CalDAV?
             import vobject
         except ImportError:
-            _logger.warning("The `vobject` Python module is not installed, so iCal file generation is unavailable. Use 'pip install vobject' to install it")
+            _logger.warning("The `vobject` Python module is not installed, so iCal file generation is unavailable. Please install the `vobject` Python module")
             return result
 
         for meeting in self:
@@ -1124,9 +1141,15 @@ class Meeting(models.Model):
             for key in (order or self._order).split(',')
         ))
         def key(record):
-            return [
-                tools.Reverse(record[name]) if desc else record[name]
+            # first extract the values for each key column (ids need special treatment)
+            vals_spec = (
+                (any_id2key(record[name]) if name == 'id' else record[name], desc)
                 for name, desc in sort_spec
+            )
+            # then Reverse if the value matches a "desc" column
+            return [
+                (tools.Reverse(v) if desc else v)
+                for v, desc in vals_spec
             ]
         return [r['id'] for r in sorted(result_data, key=key)]
 

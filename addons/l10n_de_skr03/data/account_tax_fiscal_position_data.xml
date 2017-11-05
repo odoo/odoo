@@ -81,7 +81,7 @@
             <field name="amount">0</field>
             <field name="refund_account_id" ref="account_1770"/>
             <field name="account_id" ref="account_1770"/>
-            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_41')])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_41'), ref('l10n_de.tag_de_intracom_community_delivery')])]"/>
             <field name="type_tax_use">sale</field>
             <field name="tax_group_id" ref="tax_group_0"/>
         </record>
@@ -194,9 +194,8 @@
             <field name="amount">19</field>
             <field name="refund_account_id" ref="account_1778"/>
             <field name="account_id" ref="account_1778"/>
-            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_81')])]"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_intracom_community_supplies')])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_81'), ref('l10n_de.tag_de_intracom_community_supplies')])]"/>
             <field name="tax_group_id" ref="tax_group_19"/>
         </record>
         <record id="tax_ust_eu_skr03" model="account.tax.template">
@@ -207,9 +206,8 @@
             <field name="amount">7</field>
             <field name="refund_account_id" ref="account_1777"/>
             <field name="account_id" ref="account_1777"/>
-            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_86')])]"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_intracom_community_supplies')])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_86'), ref('l10n_de.tag_de_intracom_community_supplies')])]"/>
             <field name="tax_group_id" ref="tax_group_7"/>
         </record>
         <record id="tax_free_eu_skr03" model="account.tax.template">

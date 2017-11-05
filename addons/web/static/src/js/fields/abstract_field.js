@@ -43,6 +43,15 @@ var AbstractField = Widget.extend({
     custom_events: {
         navigation_move: '_onNavigationMove',
     },
+
+    /**
+    * An object representing fields to be fetched by the model eventhough not present in the view
+    * This object contains "field name" as key and an object as value.
+    * That value object must contain the key "type"
+    * see FieldBinaryImage for an example.
+    */
+    fieldDependencies: {},
+
     /**
      * If this flag is set to true, the field widget will be reset on every
      * change which is made in the view (if the view supports it). This is
@@ -391,6 +400,8 @@ var AbstractField = Widget.extend({
      *   Please do not use this flag unless you really need it.  Our only use
      *   case is currently the pad widget, which does a _setValue in the
      *   renderEdit method.
+     * @param {boolean} [options.notifyChange=true] if false, the basic model
+     *   will not notify and not trigger the onchange, even though it was changed.
      * @param {boolean} [options.forceChange=false] if true, the change event will be
      *   triggered even if the new value is the same as the old one
      * @returns {Deferred}
@@ -421,6 +432,7 @@ var AbstractField = Widget.extend({
             changes: changes,
             viewType: this.viewType,
             doNotSetDirty: options && options.doNotSetDirty,
+            notifyChange: !options || options.notifyChange !== false,
             onSuccess: def.resolve.bind(def),
             onFailure: def.reject.bind(def),
         });

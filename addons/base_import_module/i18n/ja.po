@@ -1,20 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_import_module
-#
+# 
 # Translators:
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Manami Hashi <manami@roomsfor.hk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-10-22 12:05+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
-"Language: ja\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Last-Translator: Manami Hashi <manami@roomsfor.hk>, 2017\n"
+"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_import_module
@@ -26,6 +30,12 @@ msgstr "取消"
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Close"
 msgstr "閉じる"
+
+#. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:31
+#, python-format
+msgid "Could not select database '%s'"
+msgstr "データベース '%s' を選択できません"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_uid
@@ -43,13 +53,13 @@ msgid "Display Name"
 msgstr "表示名"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:94
+#: code:addons/base_import_module/models/ir_module.py:112
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
-msgstr ""
+msgstr "選択ファイルは最大許容ファイルサイズを超えています '%s'"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:86
+#: code:addons/base_import_module/models/ir_module.py:104
 #, python-format
 msgid "File is not a zip file!"
 msgstr "ファイルがZIP形式でありません。"
@@ -57,12 +67,13 @@ msgstr "ファイルがZIP形式でありません。"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_force
 msgid "Force init"
-msgstr ""
+msgstr "初期化を強制"
 
 #. module: base_import_module
 #: model:ir.model.fields,help:base_import_module.field_base_import_module_force
-msgid "Force init mode even if installed. (will update `noupdate='1'` records)"
-msgstr ""
+msgid ""
+"Force init mode even if installed. (will update `noupdate='1'` records)"
+msgstr "インストールされても強制初期化モード ( `noupdate='1'` とレコードがアップデートされます)"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_id
@@ -72,6 +83,11 @@ msgstr "ID"
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import App"
+msgstr "アプリのインポート"
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
+msgid "Import Message"
 msgstr ""
 
 #. module: base_import_module
@@ -83,11 +99,6 @@ msgid "Import Module"
 msgstr "モジュールインポート"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
-msgid "Import message"
-msgstr ""
-
-#. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import module"
 msgstr "モジュールのインポート"
@@ -95,7 +106,7 @@ msgstr "モジュールのインポート"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module_imported
 msgid "Imported Module"
-msgstr ""
+msgstr "インポート済モジュール"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module___last_update
@@ -123,6 +134,18 @@ msgid "Module .ZIP file"
 msgstr "モジュール .ZIPファイル"
 
 #. module: base_import_module
+#: code:addons/base_import_module/models/ir_module.py:102
+#, python-format
+msgid "No file sent."
+msgstr "ファイルが送られていません"
+
+#. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:25
+#, python-format
+msgid "Only administrators can upload a module"
+msgstr "管理者のみモジュールアップロードが可能です。"
+
+#. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Open Modules"
 msgstr "モジュールを開く"
@@ -138,10 +161,17 @@ msgid "Status"
 msgstr "ステータス"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:33
+#: code:addons/base_import_module/models/ir_module.py:40
+#: code:addons/base_import_module/models/ir_module.py:47
+#, python-format
+msgid "Studio customizations require Studio"
+msgstr ""
+
+#. module: base_import_module
+#: code:addons/base_import_module/models/ir_module.py:42
 #, python-format
 msgid "Unmet module dependencies: %s"
-msgstr ""
+msgstr "モジュールの依存関係が満たされていません: %s"
 
 #. module: base_import_module
 #: selection:base.import.module,state:0
@@ -151,4 +181,9 @@ msgstr "完了"
 #. module: base_import_module
 #: selection:base.import.module,state:0
 msgid "init"
-msgstr ""
+msgstr "初期化"
+
+#. module: base_import_module
+#: model:ir.model,name:base_import_module.model_ir_ui_view
+msgid "ir.ui.view"
+msgstr "ir.ui.view"

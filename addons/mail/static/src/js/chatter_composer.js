@@ -155,7 +155,7 @@ var ChatterComposer = composer.BasicComposer.extend({
                         default_name: parsed_email[0],
                         default_email: parsed_email[1],
                     },
-                    title: _t("Please complete partner's informations"),
+                    title: _t("Please complete customer's informations"),
                     disable_multiple_selection: true,
                 }).open();
                 dialog.on('closed', self, function () {

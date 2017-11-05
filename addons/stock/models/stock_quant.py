@@ -407,7 +407,8 @@ class QuantPackage(models.Model):
 
     def action_view_picking(self):
         action = self.env.ref('stock.action_picking_tree_all').read()[0]
-        pickings = self.env['stock.move.line'].search([('result_package_id', 'in', self.ids)]).mapped('picking_id')
+        domain = ['|', ('result_package_id', 'in', self.ids), ('package_id', 'in', self.ids)]
+        pickings = self.env['stock.move.line'].search(domain).mapped('picking_id')
         action['domain'] = [('id', 'in', pickings.ids)]
         return action
 

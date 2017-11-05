@@ -88,8 +88,6 @@ class ResConfigSettings(models.TransientModel):
                 'chart_template_id': self.chart_template_id.id,
                 'transfer_account_id': self.chart_template_id.transfer_account_id.id,
                 'code_digits': self.code_digits or 6,
-                'sale_tax_id': self.default_sale_tax_id.id,
-                'purchase_tax_id': self.default_purchase_tax_id.id,
                 'sale_tax_rate': 15.0,
                 'purchase_tax_rate': 15.0,
                 'complete_tax_set': self.chart_template_id.complete_tax_set,
@@ -97,6 +95,7 @@ class ResConfigSettings(models.TransientModel):
                 'bank_account_code_prefix': self.chart_template_id.bank_account_code_prefix,
                 'cash_account_code_prefix': self.chart_template_id.cash_account_code_prefix,
             })
+            wizard.onchange_chart_template_id()
             wizard.execute()
 
     @api.depends('company_id')

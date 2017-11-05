@@ -174,7 +174,7 @@ class PyJsParser:
                     break
             else:
                 break
-        return filter(None, comments)
+        return [c for c in comments if c]
 
     def scanHexEscape(self, prefix):
         code = 0

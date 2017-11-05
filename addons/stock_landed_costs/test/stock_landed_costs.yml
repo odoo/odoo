@@ -1,7 +1,7 @@
 -
   In order to test the landed costs feature of stock, I create a landed cost, confirm it and check its account move created
 -
-  I create 2 products with different volume and gross weight and configure them for real_time valuation and real price costing method
+  I create 2 products with different volume and gross weight and configure them for real_time valuation and fifo costing method
 -
   !record {model: product.product, id: product_landed_cost_1}:
     name: "LC product 1"
@@ -34,6 +34,15 @@
         location_id: stock.stock_location_stock
         location_dest_id: stock.stock_location_customers
 -
+  Confirm and assign picking
+-
+  !python {model: stock.picking, id: picking_landed_cost_1}: |
+    self.env.user.company_id.anglo_saxon_accounting = True
+    self.action_confirm()
+    self.action_assign()
+    self.move_lines.quantity_done = 5
+    self.button_validate()
+-
   !record {model: stock.picking, id: picking_landed_cost_2}:
     name: 'LC_pick_2'
     picking_type_id: stock.picking_type_out
@@ -44,6 +53,14 @@
         product_uom: product.product_uom_unit
         location_id: stock.stock_location_stock
         location_dest_id: stock.stock_location_customers
+-
+  Confirm and assign picking
+-
+  !python {model: stock.picking, id: picking_landed_cost_2}: |
+    self.action_confirm()
+    self.action_assign()
+    self.move_lines.quantity_done = 10
+    self.button_validate()
 -
   I create a landed cost for those 2 pickings
 -
@@ -73,7 +90,6 @@
 -
   !python {model: stock.landed.cost, id: stock_landed_cost_1}: |
     self.compute_landed_cost()
-
 -
   I check the valuation adjustment lines
 -
@@ -106,4 +122,4 @@
   !assert {model: stock.landed.cost, id: stock_landed_cost_1}:
     - state == 'done'
     - account_move_id
-    - len(account_move_id.line_ids) == 16
+    - len(account_move_id.line_ids) == 48

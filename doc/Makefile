@@ -6,6 +6,7 @@ SPHINXOPTS    = -q -t solutions
 SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = _build
+LESSC         = lessc
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
@@ -41,7 +42,13 @@ help:
 clean:
 	-rm -rf $(BUILDDIR)/*
 
-html:
+STATICS = _extensions/odoo_ext/static
+# TODO: add bootstrap files
+LESSFILES = $(wildcard $(STATICS)/*.less)
+$(STATICS)/style.css: $(LESSFILES)
+	$(LESSC) $(STATICS)/style.less $(STATICS)/style.css
+
+html: _extensions/odoo_ext/static/style.css
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."

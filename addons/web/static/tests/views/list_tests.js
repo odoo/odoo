@@ -560,7 +560,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('aggregates are computed correctly', function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         var list = createView({
             View: ListView,
@@ -581,6 +581,11 @@ QUnit.module('Views', {
         $thead_selector.click();
         assert.strictEqual(list.$('tfoot td:nth(2)').text(), "32",
                         "total should be 32 as all records are selected");
+
+        // Let's update the view to dislay NO records
+        list.update({domain: ['&', ['bar', '=', false], ['int_field', '>', 0]]});
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), "0", "total should have been recomputed to 0");
+
         list.destroy();
     });
 
@@ -595,20 +600,40 @@ QUnit.module('Views', {
             arch: '<tree editable="bottom"><field name="int_field" sum="Sum"/></tree>',
         });
 
-        var $group_1_header = list.$('.o_group_header').filter(function (index, el) {
+        var $groupHeader1 = list.$('.o_group_header').filter(function (index, el) {
             return $(el).data('group').res_id === 1;
         });
-        var $group_2_header = list.$('.o_group_header').filter(function (index, el) {
+        var $groupHeader2 = list.$('.o_group_header').filter(function (index, el) {
             return $(el).data('group').res_id === 2;
         });
-        assert.strictEqual($group_1_header.find('td:nth(1)').text(), "23", "first group total should be 23");
-        assert.strictEqual($group_2_header.find('td:nth(1)').text(), "9", "second group total should be 9");
+        assert.strictEqual($groupHeader1.find('td:nth(1)').text(), "23", "first group total should be 23");
+        assert.strictEqual($groupHeader2.find('td:nth(1)').text(), "9", "second group total should be 9");
         assert.strictEqual(list.$('tfoot td:nth(2)').text(), "32", "total should be 32");
 
-        $group_1_header.click();
+        $groupHeader1.click();
         list.$('tbody .o_list_record_selector input').first().click();
         assert.strictEqual(list.$('tfoot td:nth(2)').text(), "10",
                         "total should be 10 as first record of first group is selected");
+        list.destroy();
+    });
+
+    QUnit.test('aggregates are updated when a line is edited', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="int_field" sum="Sum"/></tree>',
+        });
+
+        assert.strictEqual(list.$('td[title="Sum"]').text(), "32", "current total should be 32");
+
+        list.$('tr.o_data_row td.o_data_cell').first().click();
+        list.$('td.o_data_cell input').val("15").trigger("input");
+
+        assert.strictEqual(list.$('td[title="Sum"]').text(), "37",
+            "current total should now be 37");
         list.destroy();
     });
 
@@ -2707,7 +2732,7 @@ QUnit.module('Views', {
                         "should write the sequence starting from the lowest current one");
                     assert.strictEqual(args.field, 'int_field',
                         "should write the right field as sequence");
-                    assert.deepEqual(args.ids, [1, 4, 2 , 3],
+                    assert.deepEqual(args.ids, [4, 2 , 3],
                         "should write the sequence in correct order");
                     return $.when();
                 }
@@ -2760,7 +2785,7 @@ QUnit.module('Views', {
                         "should write the sequence starting from the lowest current one");
                     assert.strictEqual(args.field, 'int_field',
                         "should write the right field as sequence");
-                    assert.deepEqual(args.ids, [1, 4, 2, 3],
+                    assert.deepEqual(args.ids, [4, 2, 3],
                         "should write the sequence in correct order");
                     return $.when();
                 }
@@ -2820,7 +2845,7 @@ QUnit.module('Views', {
                         "should write the sequence starting from the lowest current one");
                     assert.strictEqual(args.field, 'int_field',
                         "should write the right field as sequence");
-                    assert.deepEqual(args.ids, [1, 4, 2, 3],
+                    assert.deepEqual(args.ids, [4, 2, 3],
                         "should write the sequence in correct order");
                     return $.when(def);
                 }

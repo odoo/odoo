@@ -53,9 +53,16 @@ class StripeController(http.Controller):
         """ Create a payment transaction
 
         Expects the result from the user input from checkout.js popup"""
-        tx = request.env['payment.transaction'].sudo().browse(
-            int(request.session.get('sale_transaction_id') or request.session.get('website_payment_tx_id', False))
-        )
+        TX = request.env['payment.transaction']
+        tx = None
+        if post.get('tx_ref'):
+            tx = TX.sudo().search([('reference', '=', post['tx_ref'])])
+        if not tx:
+            tx_id = (post.get('tx_id') or request.session.get('sale_transaction_id') or
+                     request.session.get('website_payment_tx_id'))
+            tx = TX.sudo().browse(int(tx_id))
+        if not tx:
+            raise werkzeug.exceptions.NotFound()
         response = tx._create_stripe_charge(tokenid=post['tokenid'], email=post['email'])
         _logger.info('Stripe: entering form_feedback with post data %s', pprint.pformat(response))
         if response:

@@ -5,6 +5,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 
 from odoo.addons import decimal_precision as dp
+from odoo.tools import float_is_zero
 
 
 class EventType(models.Model):
@@ -222,7 +223,8 @@ class EventRegistration(models.Model):
         information.append((_('Name'), self.name))
         information.append((_('Ticket'), self.event_ticket_id.name or _('None')))
         order = self.sale_order_id.sudo()
-        if not order:
+        order_line = self.sale_order_line_id.sudo()
+        if not order or float_is_zero(order_line.price_total, precision_digits=order.currency_id.rounding):
             payment_status = _('Free')
         elif not order.invoice_ids or any(invoice.state != 'paid' for invoice in order.invoice_ids):
             payment_status = _('To pay')

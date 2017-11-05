@@ -500,10 +500,10 @@ class AccountBankStatementLine(models.Model):
         if self.amount_currency and self.currency_id:
             amount = self.amount_currency
             amount_currency = self.amount
-            amount_currency_str = amount_currency > 0 and amount_currency or -amount_currency
-            amount_currency_str = formatLang(self.env, amount_currency_str, currency_obj=statement_currency)
+            amount_currency_str = formatLang(self.env, abs(amount_currency), currency_obj=statement_currency)
         else:
             amount = self.amount
+            amount_currency = amount
             amount_currency_str = ""
         amount_str = formatLang(self.env, abs(amount), currency_obj=self.currency_id or statement_currency)
 
@@ -525,6 +525,7 @@ class AccountBankStatementLine(models.Model):
             'partner_name': self.partner_id.name,
             'communication_partner_name': self.partner_name,
             'amount_currency_str': amount_currency_str,  # Amount in the statement currency
+            'amount_currency': amount_currency,  # Amount in the statement currency
             'has_no_partner': not self.partner_id.id,
         }
         if self.partner_id:
@@ -811,6 +812,7 @@ class AccountBankStatementLine(models.Model):
                 whose value is the same as described in process_reconciliation except that ids are used instead of recordsets.
         """
         AccountMoveLine = self.env['account.move.line']
+        ctx = dict(self._context, force_price_include=False)
         for st_line, datum in pycompat.izip(self, data):
             payment_aml_rec = AccountMoveLine.browse(datum.get('payment_aml_ids', []))
             for aml_dict in datum.get('counterpart_aml_dicts', []):
@@ -818,7 +820,7 @@ class AccountBankStatementLine(models.Model):
                 del aml_dict['counterpart_aml_id']
             if datum.get('partner_id') is not None:
                 st_line.write({'partner_id': datum['partner_id']})
-            st_line.process_reconciliation(datum.get('counterpart_aml_dicts', []), payment_aml_rec, datum.get('new_aml_dicts', []))
+            st_line.with_context(ctx).process_reconciliation(datum.get('counterpart_aml_dicts', []), payment_aml_rec, datum.get('new_aml_dicts', []))
 
     def fast_counterpart_creation(self):
         for st_line in self:
@@ -830,6 +832,9 @@ class AccountBankStatementLine(models.Model):
                 'account_id': st_line.account_id.id,
             }
             st_line.process_reconciliation(new_aml_dicts=[vals])
+
+    def _get_communication(self, payment_method_id):
+        return self.name or ''
 
     def process_reconciliation(self, counterpart_aml_dicts=None, payment_aml_rec=None, new_aml_dicts=None):
         """ Match statement lines with existing payments (eg. checks) and/or payables/receivables (eg. invoices and credit notes) and/or new move lines (eg. write-offs).
@@ -928,7 +933,7 @@ class AccountBankStatementLine(models.Model):
                     'state': 'reconciled',
                     'currency_id': currency.id,
                     'amount': abs(total),
-                    'communication': self.name or '',
+                    'communication': self._get_communication(payment_methods[0] if payment_methods else False),
                     'name': self.statement_id.name,
                 })
 

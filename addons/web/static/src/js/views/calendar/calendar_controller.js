@@ -56,7 +56,6 @@ var CalendarController = AbstractController.extend({
     // Public
     //--------------------------------------------------------------------------
 
-
     /**
      * Render the buttons according to the CalendarView.buttons template and
      * add listeners on it. Set this.$buttons with the produced jQuery element
@@ -116,7 +115,7 @@ var CalendarController = AbstractController.extend({
      */
     _onChangeDate: function (event) {
         var modelData = this.model.get();
-        if (modelData.target_date.isSame(event.data.date)) {
+        if (modelData.target_date.format('YYYY-MM-DD') === event.data.date.format('YYYY-MM-DD')) {
             // When clicking on same date, toggle between the two views
             switch (modelData.scale) {
                 case 'month': this.model.setScale('week'); break;
@@ -160,10 +159,10 @@ var CalendarController = AbstractController.extend({
         }
         this.quickCreating = true;
         this.model.createRecord(event)
-            .then(function (id) {
+            .then(function () {
                 self.quick.destroy();
                 self.quick = null;
-                self.reload(id);
+                self.reload();
             })
             .fail(function (error, errorEvent) {
                 // This will occurs if there are some more fields required
@@ -215,7 +214,6 @@ var CalendarController = AbstractController.extend({
 
         if(!options.disableQuickCreate && !event.data.disableQuickCreate && this.quickAddPop) {
             this.quick = new QuickCreate(this, true, options, data, event.data);
-            this.quick.on('added', this, this.reload.bind(this));
             this.quick.open();
             this.quick.focus();
             return;
@@ -257,13 +255,20 @@ var CalendarController = AbstractController.extend({
         id = id && parseInt(id).toString() === id ? parseInt(id) : id;
 
         if (!this.eventOpenPopup) {
-            this.do_action({
-                type: 'ir.actions.act_window',
-                res_id: id,
-                res_model: this.modelName,
-                views: [[this.formViewId || false, 'form']],
-                target: 'current',
-                context: event.context || self.context,
+            this._rpc({
+                model: self.modelName,
+                method: 'get_formview_id',
+                //The event can be called by a view that can have another context than the default one.
+                args: [[id], event.context || self.context],
+            }).then(function (viewId) {
+                self.do_action({
+                    type:'ir.actions.act_window',
+                    res_id: id,
+                    res_model: self.modelName,
+                    views: [[viewId || false, 'form']],
+                    target: 'current',
+                    context: event.context || self.context,
+                });
             });
             return;
         }

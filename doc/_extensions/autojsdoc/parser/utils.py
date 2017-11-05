@@ -104,7 +104,7 @@ def resolve(obj, store):
     if obj is None:
         return None
 
-    if isinstance(obj, (unicode, bool, int, float)):
+    if isinstance(obj, (type(u''), bool, int, float)):
         return obj
 
     if isinstance(obj, ModuleProxy):
@@ -139,11 +139,11 @@ class Namespace(Resolvable):
         r = super(Namespace, self).resolve(store)
         self.attrs = {
             k: resolve(v, store)
-            for k, v in self.attrs.iteritems()
+            for k, v in self.attrs.items()
         }
         return r
     def __getitem__(self, key):
-        assert isinstance(key, unicode), "%r is not a namespace key" % key
+        assert isinstance(key, type(u'')), "%r is not a namespace key" % key
         try:
             return self.attrs[key]
         except KeyError:

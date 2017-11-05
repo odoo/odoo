@@ -25,6 +25,20 @@ class TestCalendar(TransactionCase):
             'name': 'Technical Presentation'
         })
 
+    def test_calender_simple_event(self):
+        m = self.CalendarEvent.create({
+            'name': "Test compute",
+            'start': '2017-07-12 14:30:00',
+            'allday': False,
+            'stop': '2017-07-12 15:00:00',
+        })
+
+        self.assertEqual(
+            (m.start_datetime, m.stop_datetime),
+            (u'2017-07-12 14:30:00', u'2017-07-12 15:00:00'),
+            "Sanity check"
+        )
+
     def test_calender_event(self):
         # Now I will set recurrence for this event to occur monday and friday of week
         data = {

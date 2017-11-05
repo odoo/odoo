@@ -294,6 +294,7 @@ class Picking(models.Model):
     # Used to search on pickings
     product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id')
     show_operations = fields.Boolean(compute='_compute_show_operations')
+    show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
@@ -312,6 +313,18 @@ class Picking(models.Model):
                     picking.show_operations = False
             else:
                 picking.show_operations = False
+
+    @api.depends('move_line_ids', 'picking_type_id.use_create_lots', 'picking_type_id.use_existing_lots', 'state')
+    def _compute_show_lots_text(self):
+        group_production_lot_enabled = self.user_has_groups('stock.group_production_lot')
+        for picking in self:
+            if not picking.move_line_ids:
+                picking.show_lots_text = False
+            elif group_production_lot_enabled and picking.picking_type_id.use_create_lots \
+                    and not picking.picking_type_id.use_existing_lots and picking.state != 'done':
+                picking.show_lots_text = True
+            else:
+                picking.show_lots_text = False
 
     @api.depends('move_type', 'move_lines.state', 'move_lines.picking_id')
     @api.one
@@ -543,7 +556,7 @@ class Picking(models.Model):
     @api.multi
     def action_cancel(self):
         self.mapped('move_lines')._action_cancel()
-        self.is_locked = True
+        self.write({'is_locked': True})
         return True
 
     @api.multi
@@ -788,11 +801,11 @@ class Picking(models.Model):
             if operations:
                 package = self.env['stock.quant.package'].create({})
                 for operation in operations:
-                    if float_compare(operation.qty_done, operation.product_qty, precision_rounding=operation.product_uom_id.rounding) >= 0:
+                    if float_compare(operation.qty_done, operation.product_uom_qty, precision_rounding=operation.product_uom_id.rounding) >= 0:
                         operation_ids |= operation
                     else:
                         quantity_left_todo = float_round(
-                            operation.product_qty - operation.qty_done,
+                            operation.product_uom_qty - operation.qty_done,
                             precision_rounding=operation.product_uom_id.rounding,
                             rounding_method='UP')
                         new_operation = operation.copy(

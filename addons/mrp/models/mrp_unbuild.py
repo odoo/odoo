@@ -51,10 +51,10 @@ class MrpUnbuild(models.Model):
         required=True, states={'done': [('readonly', True)]})
     consume_line_ids = fields.One2many(
         'stock.move', 'consume_unbuild_id', readonly=True,
-        help='')  # TDE: some string / help ?
+        string='Consumed Disassembly Lines')
     produce_line_ids = fields.One2many(
         'stock.move', 'unbuild_id', readonly=True,
-        help='')  # TDE: some string / help ?
+        string='Processed Disassembly Lines')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Done')], string='Status', default='draft', index=True)

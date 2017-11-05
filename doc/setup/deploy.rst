@@ -214,10 +214,6 @@ Instead you must have a proxy redirecting requests whose URL starts with
 ``/longpolling/`` to the longpolling port. Other request should be proxied to
 the :option:`normal HTTP port <odoo-bin --http-port>`
 
-.. warning:: The livechat worker requires the ``psycogreen`` Python module,
-             which is not always included with all installation packages.
-             It can be manually installed with ``pip install psycogreen``.
-
 Configuration sample
 --------------------
 
@@ -497,7 +493,7 @@ It should be stored securely, and should be generated randomly e.g.
 
 .. code-block:: console
 
-    $ python -c 'import base64, os; print(base64.b64encode(os.urandom(24)))'
+    $ python3 -c 'import base64, os; print(base64.b64encode(os.urandom(24)))'
 
 which will generate a 32 characters pseudorandom printable string.
 
@@ -509,9 +505,8 @@ distinction is made according to the browser version in order to be
 up-to-date. Odoo is supported on the current browser version. The list 
 of the supported browsers by Odoo version is the following:
 
-- **Odoo 8:** IE9, Mozilla Firefox, Google Chrome, Safari, Microsoft Edge
 - **Odoo 9:** IE11, Mozilla Firefox, Google Chrome, Safari, Microsoft Edge
-- **Odoo 10:** Mozilla Firefox, Google Chrome, Safari, Microsoft Edge
+- **Odoo 10+:** Mozilla Firefox, Google Chrome, Safari, Microsoft Edge
 
 .. [#different-machines]
     to have multiple Odoo installations use the same PostgreSQL database,
@@ -528,7 +523,7 @@ of the supported browsers by Odoo version is the following:
     "self-signed" certificates are easier to deploy on a controlled
     environment than over the internet.
 
-.. _regular expression: https://docs.python.org/2/library/re.html
+.. _regular expression: https://docs.python.org/3/library/re.html
 .. _ARP spoofing: http://en.wikipedia.org/wiki/ARP_spoofing
 .. _Nginx termination example:
     http://nginx.com/resources/admin-guide/nginx-ssl-termination/

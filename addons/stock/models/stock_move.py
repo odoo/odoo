@@ -514,25 +514,35 @@ class StockMove(models.Model):
             'origin': origin,
         }
 
+    @api.model
+    def _prepare_merge_moves_distinct_fields(self):
+        return [
+            'product_id', 'price_unit', 'product_packaging', 'procure_method',
+            'product_uom', 'restrict_partner_id', 'scrapped', 'origin_returned_move_id'
+        ]
+
+    @api.model
+    def _prepare_merge_move_sort_method(self, move):
+        move.ensure_one()
+        return [
+            move.product_id.id, move.price_unit, move.product_packaging.id, move.procure_method, 
+            move.product_uom.id, move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id
+        ]
+
     def _merge_moves(self):
         """ This method will, for each move in `self`, go up in their linked picking and try to
         find in their existing moves a candidate into which we can merge the move.
         :return: Recordset of moves passed to this method. If some of the passed moves were merged
         into another existing one, return this one and not the (now unlinked) original.
         """
-        distinct_fields = ['product_id', 'price_unit', 'product_packaging',
-                           'product_uom', 'restrict_partner_id', 'scrapped', 'origin_returned_move_id']
-
-        def _keys_sorted(move):
-            return move.product_id.id, move.price_unit, move.product_packaging.id, move.product_uom.id,\
-                   move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id
+        distinct_fields = self._prepare_merge_moves_distinct_fields()
 
         # Move removed after merge
         moves_to_unlink = self.env['stock.move']
         moves_to_merge = []
         for picking in self.mapped('picking_id'):
             # First step find move to merge.
-            for k, g in groupby(sorted(picking.move_lines, key=_keys_sorted), key=itemgetter(*distinct_fields)):
+            for k, g in groupby(sorted(picking.move_lines, key=self._prepare_merge_move_sort_method), key=itemgetter(*distinct_fields)):
                 moves = self.env['stock.move'].concat(*g).filtered(lambda m: m.state not in ('done', 'cancel', 'draft'))
                 # If we have multiple records we will merge then in a single one.
                 if len(moves) > 1:
@@ -912,6 +922,8 @@ class StockMove(models.Model):
         if any(move.state == 'done' for move in self):
             raise UserError(_('You cannot cancel a stock move that has been set to \'Done\'.'))
         for move in self:
+            if move.state == 'cancel':
+                continue
             move._do_unreserve()
             siblings_states = (move.move_dest_ids.mapped('move_orig_ids') - move).mapped('state')
             if move.propagate:
@@ -1013,6 +1025,13 @@ class StockMove(models.Model):
                 # If you were already putting stock.move.lots on the next one in the work order, transfer those to the new move
                 move.move_line_ids.filtered(lambda x: x.qty_done == 0.0).write({'move_id': new_move})
             move.move_line_ids._action_done()
+        # Check the consistency of the result packages; there should be an unique location across
+        # the contained quants.
+        for result_package in moves_todo\
+                .mapped('move_line_ids.result_package_id')\
+                .filtered(lambda p: p.quant_ids and len(p.quant_ids) > 1):
+            if len(result_package.quant_ids.mapped('location_id')) > 1:
+                raise UserError(_('You should not put the contents of a package in different locations.'))
         picking = self and self[0].picking_id or False
         moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
         moves_todo.mapped('move_dest_ids')._action_assign()

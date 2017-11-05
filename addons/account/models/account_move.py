@@ -421,7 +421,7 @@ class AccountMoveLine(models.Model):
         help="The move of this entry line.", index=True, required=True, auto_join=True)
     narration = fields.Text(related='move_id.narration', string='Narration')
     ref = fields.Char(related='move_id.ref', string='Reference', store=True, copy=False, index=True)
-    payment_id = fields.Many2one('account.payment', string="Originator Payment", help="Payment that created this entry")
+    payment_id = fields.Many2one('account.payment', string="Originator Payment", help="Payment that created this entry", copy=False)
     statement_line_id = fields.Many2one('account.bank.statement.line', index=True, string='Bank statement line reconciled with this entry', copy=False, readonly=True)
     statement_id = fields.Many2one('account.bank.statement', related='statement_line_id.statement_id', string='Statement', store=True,
         help="The bank statement used for bank reconciliation", index=True, copy=False)
@@ -698,19 +698,36 @@ class AccountMoveLine(models.Model):
             '|', ('date_maturity', 'like', str),
             '&', ('name', '!=', '/'), ('name', 'ilike', str)
         ]
-        try:
-            amount = float(str)
-            amount_domain = [
-                '|', ('amount_residual', '=', amount),
-                '|', ('amount_residual_currency', '=', amount),
-                '|', ('amount_residual', '=', -amount),
-                '|', ('amount_residual_currency', '=', -amount),
-                '&', ('account_id.internal_type', '=', 'liquidity'),
-                '|', '|', ('debit', '=', amount), ('credit', '=', amount), ('amount_currency', '=', amount),
-            ]
-            str_domain = expression.OR([str_domain, amount_domain])
-        except:
-            pass
+        if str[0] in ['-', '+']:
+            try:
+                amounts_str = str.split('|')
+                for amount_str in amounts_str:
+                    amount = amount_str[0] == '-' and float(amount_str) or float(amount_str[1:])
+                    amount_domain = [
+                        '|', ('amount_residual', '=', amount),
+                        '|', ('amount_residual_currency', '=', amount),
+                        '|', (amount_str[0] == '-' and 'credit' or 'debit', '=', float(amount_str[1:])),
+                        ('amount_currency', '=', amount),
+                    ]
+                    str_domain = expression.OR([str_domain, amount_domain])
+            except:
+                pass
+        else:
+            try:
+                amount = float(str)
+                amount_domain = [
+                    '|', ('amount_residual', '=', amount),
+                    '|', ('amount_residual_currency', '=', amount),
+                    '|', ('amount_residual', '=', -amount),
+                    '|', ('amount_residual_currency', '=', -amount),
+                    '&', ('account_id.internal_type', '=', 'liquidity'),
+                    '|', '|', '|', ('debit', '=', amount), ('credit', '=', amount),
+                        ('amount_currency', '=', amount),
+                        ('amount_currency', '=', -amount),
+                ]
+                str_domain = expression.OR([str_domain, amount_domain])
+            except:
+                pass
         return str_domain
 
     def _domain_move_lines_for_manual_reconciliation(self, account_id, partner_id=False, excluded_ids=None, str=False):
@@ -753,6 +770,7 @@ class AccountMoveLine(models.Model):
 
         for line in self:
             company_currency = line.account_id.company_id.currency_id
+            line_currency = (line.currency_id and line.amount_currency) and line.currency_id or company_currency
             ret_line = {
                 'id': line.id,
                 'name': line.name and line.name != '/' and line.move_id.name + ': ' + line.name or line.move_id.name,
@@ -769,7 +787,7 @@ class AccountMoveLine(models.Model):
                 'journal_id': [line.journal_id.id, line.journal_id.display_name],
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
-                'currency_id': (line.currency_id and line.amount_currency) and line.currency_id.id or False,
+                'currency_id': line_currency.id,
             }
 
             debit = line.debit
@@ -779,55 +797,63 @@ class AccountMoveLine(models.Model):
 
             # For already reconciled lines, don't use amount_residual(_currency)
             if line.account_id.internal_type == 'liquidity':
-                amount = abs(debit - credit)
-                amount_currency = abs(line.amount_currency)
+                amount = debit - credit
+                amount_currency = line.amount_currency
 
-            # Get right debit / credit:
             target_currency = target_currency or company_currency
-            line_currency = (line.currency_id and line.amount_currency) and line.currency_id or company_currency
-            amount_currency_str = ""
-            total_amount_currency_str = ""
-            if line_currency != company_currency and target_currency == line_currency:
-                # The payment currency is the invoice currency, but they are different than the company currency
-                # We use the `amount_currency` computed during the invoice validation, at the invoice date
-                # to avoid exchange gain/loss
-                # e.g. an invoice of 100€ must be paid with 100€, whatever the company currency and the exchange rates
-                total_amount = line.amount_currency
-                actual_debit = debit > 0 and amount_currency or 0.0
-                actual_credit = credit > 0 and -amount_currency or 0.0
-                currency = line_currency
-            else:
-                # Either:
-                #  - the invoice, payment, company currencies are all the same,
-                #  - the payment currency is the company currency, but the invoice currency is different,
-                #  - the invoice currency is the company currency, but the payment currency is different,
-                #  - the invoice, payment and company currencies are all different.
-                # For the two first cases, we can simply use the debit/credit of the invoice move line, which are always in the company currency,
-                # and this is what the target need.
-                # For the two last cases, we can use the debit/credit which are in the company currency, and then change them to the target currency
-                total_amount = abs(debit - credit)
-                actual_debit = debit > 0 and amount or 0.0
-                actual_credit = credit > 0 and -amount or 0.0
-                currency = company_currency
-            if line_currency != target_currency:
-                target_currency.compute(total_amount, line_currency)
-                amount_currency_str = formatLang(self.env, target_currency.compute(abs(actual_debit or actual_credit), line_currency), currency_obj=line_currency)
-                total_amount_currency_str = formatLang(self.env, target_currency.compute(total_amount, line_currency), currency_obj=line_currency)
-            if currency != target_currency:
-                ctx = context.copy()
-                ctx.update({'date': target_date or line.date})
-                total_amount = currency.with_context(ctx).compute(total_amount, target_currency)
-                actual_debit = currency.with_context(ctx).compute(actual_debit, target_currency)
-                actual_credit = currency.with_context(ctx).compute(actual_credit, target_currency)
-            amount_str = formatLang(self.env, abs(actual_debit or actual_credit), currency_obj=target_currency)
-            total_amount_str = formatLang(self.env, total_amount, currency_obj=target_currency)
+            
+            ctx = context.copy()
+            ctx.update({'date': target_date or line.date})
+            # Use case:
+            # Let's assume that company currency is in USD and that we have the 3 following move lines
+            #      Debit  Credit  Amount currency  Currency
+            # 1)    25      0            0            NULL
+            # 2)    17      0           25             EUR
+            # 3)    33      0           25             YEN
+            # 
+            # If we ask to see the information in the reconciliation widget in company currency, we want to see
+            # The following informations
+            # 1) 25 USD (no currency information)
+            # 2) 17 USD [25 EUR] (show 25 euro in currency information, in the little bill)
+            # 3) 33 USD [25 YEN] (show 25 yen in currencu information)
+            # 
+            # If we ask to see the information in another currency than the company let's say EUR
+            # 1) 35 EUR [25 USD]
+            # 2) 25 EUR (no currency information)
+            # 3) 50 EUR [25 YEN]
+            # In that case, we have to convert the debit-credit to the currency we want and we show next to it
+            # the value of the amount_currency or the debit-credit if no amount currency
+            if target_currency == company_currency:
+                if line_currency == target_currency:
+                    amount = amount
+                    amount_currency = ""
+                    total_amount = debit - credit
+                    total_amount_currency = ""
+                else:
+                    amount = amount
+                    amount_currency = amount_currency
+                    total_amount = debit - credit
+                    total_amount_currency = line.amount_currency
 
-            ret_line['debit'] = abs(actual_debit)
-            ret_line['credit'] = abs(actual_credit)
-            ret_line['amount_str'] = amount_str
-            ret_line['total_amount_str'] = total_amount_str
-            ret_line['amount_currency_str'] = amount_currency_str
-            ret_line['total_amount_currency_str'] = total_amount_currency_str
+            if target_currency != company_currency:
+                if line_currency == target_currency:
+                    amount = amount_currency
+                    amount_currency = ""
+                    total_amount = line.amount_currency
+                    total_amount_currency = ""
+                else:
+                    amount_currency = line.currency_id and amount_currency or amount
+                    amount = company_currency.with_context(ctx).compute(amount, target_currency)
+                    total_amount = company_currency.with_context(ctx).compute((line.debit - line.credit), target_currency)
+                    total_amount_currency = line.currency_id and line.amount_currency or (line.debit - line.credit)
+
+            ret_line['debit'] = amount > 0 and amount or 0
+            ret_line['credit'] = amount < 0 and -amount or 0
+            ret_line['amount_currency'] = amount_currency
+            ret_line['amount_str'] = formatLang(self.env, abs(amount), currency_obj=target_currency)
+            ret_line['total_amount_str'] = formatLang(self.env, abs(total_amount), currency_obj=target_currency)
+            ret_line['amount_currency_str'] = amount_currency and formatLang(self.env, abs(amount_currency), currency_obj=line_currency) or ""
+            ret_line['total_amount_currency_str'] = total_amount_currency and formatLang(self.env, abs(total_amount_currency), currency_obj=line_currency) or ""
             ret.append(ret_line)
         return ret
 
@@ -1218,7 +1244,7 @@ class AccountMoveLine(models.Model):
             taxes = self.env['account.tax'].browse(tax_ids)
             currency = self.env['res.currency'].browse(vals.get('currency_id'))
             partner = self.env['res.partner'].browse(vals.get('partner_id'))
-            res = taxes.with_context(round=True).compute_all(amount,
+            res = taxes.with_context(dict(self._context, round=True)).compute_all(amount,
                 currency, 1, vals.get('product_id'), partner)
             # Adjust line amount if any tax is price_include
             if abs(res['total_excluded']) < abs(amount):
@@ -1598,6 +1624,15 @@ class AccountPartialReconcile(models.Model):
             created_lines |= line_to_rec
         return created_lines, partial_rec
 
+    def _get_tax_cash_basis_base_account(self, line, tax):
+        ''' Get the account of lines that will contain the base amount of taxes.
+
+        :param line: An account.move.line record
+        :param tax: An account.tax record
+        :return: An account record
+        '''
+        return line.account_id
+
     def create_tax_cash_basis_entry(self, percentage_before_rec):
         self.ensure_one()
         move_date = self.debit_move_id.date
@@ -1655,11 +1690,12 @@ class AccountPartialReconcile(models.Model):
                             newly_created_move = self._create_tax_basis_move()
                         #create cash basis entry for the base
                         for tax in line.tax_ids:
+                            account_id = self._get_tax_cash_basis_base_account(line, tax)
                             self.env['account.move.line'].with_context(check_move_validity=False).create({
                                 'name': line.name,
                                 'debit': rounded_amt > 0 and rounded_amt or 0.0,
                                 'credit': rounded_amt < 0 and abs(rounded_amt) or 0.0,
-                                'account_id': line.account_id.id,
+                                'account_id': account_id.id,
                                 'tax_exigible': True,
                                 'tax_ids': [(6, 0, [tax.id])],
                                 'move_id': newly_created_move.id,
@@ -1671,7 +1707,7 @@ class AccountPartialReconcile(models.Model):
                                 'name': line.name,
                                 'credit': rounded_amt > 0 and rounded_amt or 0.0,
                                 'debit': rounded_amt < 0 and abs(rounded_amt) or 0.0,
-                                'account_id': line.account_id.id,
+                                'account_id': account_id.id,
                                 'tax_exigible': True,
                                 'move_id': newly_created_move.id,
                                 'currency_id': line.currency_id.id,

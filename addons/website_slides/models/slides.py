@@ -133,7 +133,7 @@ class Channel(models.Model):
         """
         op = operator == "=" and "inselect" or "not inselect"
         # don't use param named because orm will add other param (test_active, ...)
-        return [('id', op, (req, (self._uid)))]
+        return [('id', op, (req, (self._uid, )))]
 
     @api.one
     @api.depends('visibility', 'group_ids', 'upload_group_ids')

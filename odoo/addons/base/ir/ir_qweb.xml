@@ -22,21 +22,21 @@
         </t>
         <div itemprop="address" itemscope="itemscope" itemtype="http://schema.org/PostalAddress">
             <div t-if="address and 'address' in fields">
-                <i t-if="not options.get('no_marker')" class='fa fa-map-marker'/> <span itemprop="streetAddress" t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or ('&lt;br/&gt;%s' % ('' if options.get('no_marker') else '&amp;nbsp; &amp;nbsp; ')))"/>
+                <i t-if="not options.get('no_marker')" class='fa fa-map-marker fa-fw'/> <span itemprop="streetAddress" t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or ('&lt;br/&gt;%s' % ('' if options.get('no_marker') else '&amp;nbsp; &amp;nbsp; ')))"/>
             </div>
             <div t-if="city and 'city' in fields">
-                <i t-if="not options.get('no_marker')" class='fa fa-map-marker'/>
+                <i t-if="not options.get('no_marker')" class='fa fa-map-marker fa-fw'/>
                 <span itemprop="addressLocality" t-raw="city"/>,
                 <span itemprop="addressCountry" t-raw="country_id"/>
             </div>
-            <div t-if="phone and 'phone' in fields"><i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-phone'/> <span itemprop="telephone" t-esc="phone"/></div>
-            <div t-if="mobile and 'mobile' in fields"><i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-mobile'/> <span itemprop="telephone" t-esc="mobile"/></div>
-            <div t-if="fax and 'fax' in fields"><i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-fax'/> <span itemprop="faxNumber" t-esc="fax"/></div>
+            <div t-if="phone and 'phone' in fields"><i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-phone fa-fw'/> <span itemprop="telephone" t-esc="phone"/></div>
+            <div t-if="mobile and 'mobile' in fields"><i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-mobile fa-fw'/> <span itemprop="telephone" t-esc="mobile"/></div>
+            <div t-if="fax and 'fax' in fields"><i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-fax fa-fw'/> <span itemprop="faxNumber" t-esc="fax"/></div>
             <div t-if="website and 'website' in fields">
                 <i t-if="not options.get('no_marker')" class='fa fa-globe'/>
                 <a t-att-href="website and '%s%s' % ('http://' if '://' not in website else '',website)"><span itemprop="website" t-esc="website"/></a>
             </div>
-            <div t-if="email and 'email' in fields"><i t-if="not options.get('no_marker')" class='fa fa-envelope'/> <span itemprop="email" t-esc="email"/></div>
+            <div t-if="email and 'email' in fields"><i t-if="not options.get('no_marker')" class='fa fa-envelope fa-fw'/> <span itemprop="email" t-esc="email"/></div>
         </div>
         <t t-if="object.country_id and object.country_id.name_position == 'after'">
             <t t-call="base.contact_name"/>

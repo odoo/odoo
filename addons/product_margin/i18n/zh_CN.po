@@ -3,14 +3,21 @@
 # * product_margin
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2017
+# liAnGjiA <liangjia@qq.com>, 2017
+# fausthuang <faust_huang@hotmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
+# 林俊 <54773801@qq.com>, 2017
+# Joray <13637815@qq.com>, 2017
+# waveyeung <waveyeung@qq.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: waveyeung <waveyeung@qq.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,12 +28,12 @@ msgstr ""
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_purchase_num_invoiced
 msgid "# Invoiced in Purchase"
-msgstr "# 采购开票"
+msgstr "# 采购已开票"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_sale_num_invoiced
 msgid "# Invoiced in Sale"
-msgstr "# 销售开票"
+msgstr "# 销售账单"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
@@ -41,12 +48,12 @@ msgstr "分析准则"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_sale_avg_price
 msgid "Avg. Price in Customer Invoices."
-msgstr "客户发票中的平均价格"
+msgstr "客户账单中的平均价格"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_purchase_avg_price
 msgid "Avg. Price in Vendor Bills "
-msgstr "供应商发票的平均价格"
+msgstr "供应商账单的平均价格"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_purchase_avg_price
@@ -65,11 +72,6 @@ msgid "Catalog Price"
 msgstr "目录价格"
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_membership
-msgid "Check if the product is eligible for membership."
-msgstr "检查产品是否适于会员。"
-
-#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_create_uid
 msgid "Created by"
 msgstr "创建人"
@@ -78,21 +80,6 @@ msgstr "创建人"
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_create_date
 msgid "Created on"
 msgstr "创建时间"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_taxes_id
-msgid "Customer Taxes"
-msgstr "客户税"
-
-#. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_membership_date_from
-msgid "Date from which membership becomes active."
-msgstr "会籍开始生效的日期"
-
-#. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_membership_date_to
-msgid "Date until which membership remains active."
-msgstr "会籍到哪一天结束"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_display_name
@@ -108,12 +95,12 @@ msgstr "草稿、开放和已支付"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_expected_margin
 msgid "Expected Margin"
-msgstr "预期毛利"
+msgstr "预计毛利"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_expected_margin_rate
 msgid "Expected Margin (%)"
-msgstr "预期毛利(%)"
+msgstr "预计毛利(%)"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_sale_expected
@@ -123,7 +110,7 @@ msgstr "预计销售"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_expected_margin
 msgid "Expected Sale - Normal Cost"
-msgstr "预计销售 - 标准成本"
+msgstr "预计销售 - 一般成本"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_sales_gap
@@ -133,12 +120,7 @@ msgstr "预计销售 -  营业额"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_expected_margin_rate
 msgid "Expected margin * 100 / Expected Sale"
-msgstr "预期毛利 * 100 / 预期销售"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_property_account_expense_id
-msgid "Expense Account"
-msgstr "费用科目"
+msgstr "预计毛利 * 100 / 预计销售"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_from_date
@@ -156,25 +138,20 @@ msgid "ID"
 msgstr "ID"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_property_account_income_id
-msgid "Income Account"
-msgstr "收入科目"
-
-#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_invoice_state
 #: model:ir.model.fields,field_description:product_margin.field_product_product_invoice_state
 msgid "Invoice State"
-msgstr "发票状态"
+msgstr "账单状态"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin___last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_write_uid
 msgid "Last Updated by"
-msgstr "最后更新人"
+msgstr "最后更新者"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_write_date
@@ -197,29 +174,14 @@ msgid "Margins"
 msgstr "毛利"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_membership
-msgid "Membership"
-msgstr "会员"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_membership_date_to
-msgid "Membership End Date"
-msgstr "会籍终止日期"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_membership_date_from
-msgid "Membership Start Date"
-msgstr "会籍开始日期"
-
-#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_normal_cost
 msgid "Normal Cost"
-msgstr "正常成本"
+msgstr "一般成本"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_purchase_gap
 msgid "Normal Cost - Total Cost"
-msgstr "正常成本 - 总成本"
+msgstr "一般成本 - 总成本"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.product_margin_form_view
@@ -242,11 +204,6 @@ msgstr "已支付"
 #: model:ir.model,name:product_margin.model_product_product
 msgid "Product"
 msgstr "产品"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_email_template_id
-msgid "Product Email Template"
-msgstr "产品 Email 模板"
 
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_margin
@@ -329,20 +286,6 @@ msgid "Sum of Quantity in Vendor Bills"
 msgstr "供应商发票中数量总和"
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_property_account_expense_id
-msgid ""
-"This account will be used for invoices instead of the default one to value "
-"expenses for the current product."
-msgstr "这个科目将代替当前产品的默认费用科目用来开票"
-
-#. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_property_account_income_id
-msgid ""
-"This account will be used for invoices instead of the default one to value "
-"sales for the current product."
-msgstr "这个科目将被用来代替当前产品的默认销售科目用来开票"
-
-#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_to_date
 msgid "To"
 msgstr "至"
@@ -355,6 +298,7 @@ msgstr "总成本"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_total_margin
+#: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Total Margin"
 msgstr "总毛利"
 
@@ -378,16 +322,3 @@ msgstr "营业额"
 #: model:ir.model.fields,help:product_margin.field_product_product_total_margin
 msgid "Turnover - Standard price"
 msgstr "营业额  -  标准价格"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_supplier_taxes_id
-msgid "Vendor Taxes"
-msgstr "供应商税"
-
-#. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_email_template_id
-msgid ""
-"When validating an invoice, an email will be sent to the customer based on "
-"this template. The customer will receive an email for each product linked to"
-" an email template."
-msgstr "当确认发票的时候，根据这个模板生成的邮件自动发送。对于每个产品来说，客户会收到邮件"

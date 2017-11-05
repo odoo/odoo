@@ -1,5 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
+
+<!-- Tooltip Dependencies -->
+
+<t t-name="website.get_tooltip_dependencies">
+    <t t-foreach="dependencies" t-as="dep">
+        <b><t t-esc="dep"/></b>
+        <ul class="popover_dep">
+            <t t-foreach="dep_value" t-as="item">
+                <li><a t-att-href="item_value['link']"><t t-esc="item_value['item']"/></a></li>
+            </t>
+        </ul>
+    </t>
+</t>
+<t t-name="website.show_page_key_dependencies">
+    <div class="col-sm-9 col-sm-offset-3">
+        <span class="text-muted" id="warn_about_call_message">
+            <t t-set="depTooltip">
+                <t t-call="website.get_tooltip_dependencies"/>
+            </t>
+            It looks like your file is being called by
+            <a href="#" data-toggle="popover" t-att-data-content="depTooltip" data-html="true" title="Dependencies"><t t-esc="dep_text" /></a>.
+            Changing its name will break these calls.
+        </span>
+    </div>
+</t>
+<t t-name="website.show_page_dependencies">
+    <t t-set="depTooltip">
+        <t t-call="website.get_tooltip_dependencies"/>
+    </t>
+    (could be used in <a href="#" data-toggle="popover" t-att-data-content="depTooltip" data-html="true" title="Dependencies"><t t-esc="dep_text" /></a>)
+</t>
+
+<!-- Page Properties -->
+
 <div t-name="website.pagesMenu.page_info" class="o_page_management_info">
     <form class="form-horizontal">
         <ul class="nav nav-tabs">
@@ -14,6 +48,7 @@
                         <input type="text" class="form-control input-sm" id="page_name" t-att-value="widget.page.name" />
                     </div>
                 </div>
+                <div class="form-group warn_about_call"></div>
                 <div class="form-group">
                     <label class="control-label col-sm-3" for="page_url">Page URL</label>
                     <div class="col-sm-9">
@@ -24,7 +59,7 @@
                     </div>
                 </div>
                 <div class="form-group ask_for_redirect">
-                    <label class="control-label col-sm-3" for="is_homepage">Redirect Old URL</label>
+                    <label class="control-label col-sm-3" for="create_redirect">Redirect Old URL</label>
                     <div class="col-sm-2">
                         <a>
                             <label class="o_switch" for="create_redirect" >

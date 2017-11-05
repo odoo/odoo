@@ -366,12 +366,12 @@ class MaintenanceTeam(models.Model):
     equipment_ids = fields.One2many('maintenance.equipment', 'maintenance_team_id', copy=False)
 
     # For the dashboard only
-    todo_request_ids = fields.One2many('maintenance.request', copy=False, compute='_compute_todo_requests')
-    todo_request_count = fields.Integer(compute='_compute_todo_requests')
-    todo_request_count_date = fields.Integer(compute='_compute_todo_requests')
-    todo_request_count_high_priority = fields.Integer(compute='_compute_todo_requests')
-    todo_request_count_block = fields.Integer(compute='_compute_todo_requests')
-    todo_request_count_unscheduled = fields.Integer(compute='_compute_todo_requests')
+    todo_request_ids = fields.One2many('maintenance.request', string="Requests", copy=False, compute='_compute_todo_requests')
+    todo_request_count = fields.Integer(string="Number of Requests", compute='_compute_todo_requests')
+    todo_request_count_date = fields.Integer(string="Number of Requests Scheduled", compute='_compute_todo_requests')
+    todo_request_count_high_priority = fields.Integer(string="Number of Requests in High Priority", compute='_compute_todo_requests')
+    todo_request_count_block = fields.Integer(string="Number of Requests Blocked", compute='_compute_todo_requests')
+    todo_request_count_unscheduled = fields.Integer(string="Number of Requests Unscheduled", compute='_compute_todo_requests')
 
     @api.one
     @api.depends('request_ids.stage_id.done')
