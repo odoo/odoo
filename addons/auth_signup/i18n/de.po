@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
 # Rudolf Schnapka <rs@techno-flex.de>, 2017
+# Niki Waibel <niki.waibel@gmail.com>, 2017
 # Magdalena Zimprich <magdalena.zimprich@camadeus.at>, 2017
 # Tina Rittmüller <tr@ife.de>, 2017
 # Anja Funk <anja.funk@afimage.de>, 2017
@@ -156,7 +157,7 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Already have an account?"
-msgstr ""
+msgstr "Existiert schon ein Benutzer?"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:78
@@ -212,7 +213,7 @@ msgstr "Kontakt"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Copy access rights from"
-msgstr ""
+msgstr "Kopier die Berechtigungen von"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:55
@@ -239,7 +240,7 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
-msgstr ""
+msgstr "Existiert kein Benutzer?"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_reset_password
@@ -297,7 +298,7 @@ msgstr "Passwort"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Password Reset"
-msgstr ""
+msgstr "Passwort zurücksetzen"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
@@ -371,6 +372,8 @@ msgstr "Registrierungs URL"
 #, python-format
 msgid "Signup is not allowed for uninvited users"
 msgstr ""
+"Die Registrierung ist, für Benutzer die nicht eingeladen sind, nicht "
+"erlaubt."
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:146
@@ -408,7 +411,7 @@ msgstr "Benutzer"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to ${object.company_id.name}!"
-msgstr ""
+msgstr "Willkommen bei ${object.company_id.name}!"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -424,7 +427,7 @@ msgstr "Ihr Name"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr "z.B. John Doe"
+msgstr "z.B. Max Mustermann"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_config_settings

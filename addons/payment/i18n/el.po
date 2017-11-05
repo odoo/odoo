@@ -2,12 +2,19 @@
 # This file contains the translation of the following modules:
 # * payment
 # 
+# Translators:
+# Kostas Goutoudis <goutoudis@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Sophia Anastasopoulos <sophiaanast1@gmail.com>, 2017
+# Nikos Gkountras <nick@ngsol.net>, 2017
+# Costas Pittalis <cpittalis@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Costas Pittalis <cpittalis@gmail.com>, 2017\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +30,7 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.confirm
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Back to My Account"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-circle-right\"/> Επιστροφή στον Λογαριασμό μου"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -128,7 +135,7 @@ msgstr ""
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_stripe
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_transfer
 msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr ""
+msgstr "<span><i>Άκυρο,</i> Η πληρωμή σας έχει ακυρωθεί.</span>"
 
 #. module: payment
 #: model:payment.acquirer,done_msg:payment.payment_acquirer_adyen
@@ -145,6 +152,8 @@ msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
 msgstr ""
+"<span><i>Ολοκληρώθηκε,</i> Η Online πληρωμή σας έχει διεκπεραιωθεί επιτυχώς."
+" Ευχαριστούμε για την παραγγελία σας.</span>"
 
 #. module: payment
 #: model:payment.acquirer,error_msg:payment.payment_acquirer_adyen
@@ -178,6 +187,8 @@ msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
 msgstr ""
+"<span><i>Εν αναμονή,</i> Η Online πληρωμή σας έχει διεκπεραιωθεί επιτυχώς. "
+"Αλλά η παραγγελία σας δεν έχει επικυρωθεί ακόμη.</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
@@ -189,7 +200,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
 msgid "Acquirer"
-msgstr ""
+msgstr "Αποδέκτης"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_id
@@ -219,12 +230,12 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Activate"
-msgstr ""
+msgstr "Ενεργοποίηση"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_active
 msgid "Active"
-msgstr ""
+msgstr "Ενεργή"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_active
@@ -235,7 +246,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_address
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Address"
-msgstr ""
+msgstr "Διεύθυνση"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_adyen
@@ -246,7 +257,7 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,save_token:0
 msgid "Always"
-msgstr ""
+msgstr "Πάντα"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_amount
@@ -254,7 +265,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.confirm
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "Amount"
-msgstr ""
+msgstr "Ποσό"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_authorize_implemented
@@ -265,7 +276,7 @@ msgstr ""
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
 #: selection:payment.acquirer,provider:0
 msgid "Authorize.Net"
-msgstr ""
+msgstr "Authorize.Net"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -276,7 +287,7 @@ msgstr ""
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_transfer
 msgid "Bank Account"
-msgstr ""
+msgstr "Τραπεζικός Λογαριασμός"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_buckaroo
@@ -309,7 +320,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:323
 #, python-format
 msgid "Cancel"
-msgstr ""
+msgstr "Ακύρωση"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_cancel_msg
@@ -319,7 +330,7 @@ msgstr ""
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Canceled"
-msgstr ""
+msgstr "Ακυρώθηκε"
 
 #. module: payment
 #. openerp-web
@@ -347,7 +358,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_city
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "City"
-msgstr ""
+msgstr "Πόλη"
 
 #. module: payment
 #: model:ir.actions.act_window,help:payment.action_payment_acquirer
@@ -363,22 +374,22 @@ msgstr ""
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_transfer
 msgid "Communication"
-msgstr ""
+msgstr "Επικοινωνία"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_company_id
 msgid "Company"
-msgstr ""
+msgstr "Εταιρία"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Configuration"
-msgstr ""
+msgstr "Διαμόρφωση"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Configure"
-msgstr ""
+msgstr "Παραμετροποίηση"
 
 #. module: payment
 #. openerp-web
@@ -390,7 +401,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Επαφή"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_id
@@ -406,13 +417,13 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_country_ids
 msgid "Countries"
-msgstr ""
+msgstr "Χώρες"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_country_id
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Country"
-msgstr ""
+msgstr "Χώρα"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_create_uid
@@ -420,19 +431,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_token_create_uid
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Δημιουργήθηκε από"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_create_date
 #: model:ir.model.fields,field_description:payment.field_payment_icon_create_date
 #: model:ir.model.fields,field_description:payment.field_payment_token_create_date
 msgid "Created on"
-msgstr ""
+msgstr "Δημιουργήθηκε στις"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_create_date
 msgid "Creation Date"
-msgstr ""
+msgstr "Ημερομηνία Δημιουργίας"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -442,32 +453,32 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "Credit card(s)"
-msgstr ""
+msgstr "Πιστωτική Κάρτα(ες)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Νόμισμα"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_custom
 msgid "Custom"
-msgstr ""
+msgstr "Προσωποποιημένο"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_id
 msgid "Customer"
-msgstr ""
+msgstr "Πελάτης"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_description
 msgid "Description"
-msgstr ""
+msgstr "Περιγραφή"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_sequence
 msgid "Determine the display order"
-msgstr ""
+msgstr "Καθορισμός σειράς εμφάνισης"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_display_name
@@ -475,22 +486,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_token_display_name
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Εμφάνιση Ονόματος"
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Done"
-msgstr ""
+msgstr "Ολοκληρωμένο"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_done_msg
 msgid "Done Message"
-msgstr ""
+msgstr "Ολοκληρωμένο Μήνυμα"
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Πρόχειρο"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
@@ -505,23 +516,23 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_email
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_environment
 #: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Environment"
-msgstr ""
+msgstr "Περιβάλλον"
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Error"
-msgstr ""
+msgstr "Σφάλμα"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_error_msg
 msgid "Error Message"
-msgstr ""
+msgstr "Μήνυμα σφάλματος"
 
 #. module: payment
 #. openerp-web
@@ -533,7 +544,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_fees
 msgid "Fees"
-msgstr ""
+msgstr "Προμήθεια"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_implemented
@@ -544,31 +555,34 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_transaction_fees
 msgid "Fees amount; set by the system because depends on the acquirer"
 msgstr ""
+"Ποσό προμήθειας. Ορίζεται από το σύστημα επειδή εξαρτάται από τον αποδέκτη"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_state_message
 msgid "Field used to store error and/or validation messages for information"
 msgstr ""
+"Το πεδίο χρησιμοποιείται για να αποθηκεύει τα μηνύματα λάθους ή / και "
+"επικύρωσης για πληροφόρηση"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_fixed
 msgid "Fixed domestic fees"
-msgstr ""
+msgstr "Σταθερή εγχώρια προμήθεια"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_fixed
 msgid "Fixed international fees"
-msgstr ""
+msgstr "Σταθερή διεθνής προμήθεια"
 
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Form"
-msgstr ""
+msgstr "Φόρμα"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_view_template_id
 msgid "Form Button Template"
-msgstr ""
+msgstr "Πρότυπο Φόρμας με Κουμπιά"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -578,12 +592,12 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.confirm
 msgid "From"
-msgstr ""
+msgstr "Από"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Group By"
-msgstr ""
+msgstr "Ομαδοποίηση Κατά"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pre_msg
@@ -596,7 +610,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_token_id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_id
 msgid "ID"
-msgstr ""
+msgstr "Κωδικός"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_specific_countries
@@ -609,7 +623,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image
 #: model:ir.model.fields,field_description:payment.field_payment_icon_image
 msgid "Image"
-msgstr ""
+msgstr "Εικόνα"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon_image_payment_form
@@ -625,7 +639,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 #: model:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Install"
-msgstr ""
+msgstr "Εγκατάσταση"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_state
@@ -640,7 +654,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_lang
 msgid "Language"
-msgstr ""
+msgstr "Γλώσσα"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer___last_update
@@ -648,7 +662,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_token___last_update
 #: model:ir.model.fields,field_description:payment.field_payment_transaction___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Τελευταία τροποποίηση στις"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_uid
@@ -656,7 +670,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_token_write_uid
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Τελευταία Ενημέρωση από"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_date
@@ -664,7 +678,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_token_write_date
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: payment
 #: selection:payment.acquirer,save_token:0
@@ -680,6 +694,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
 msgstr ""
+"Μετατροπή της πληρωμής σε διαθέσιμη προς εξαγορά (Τιμολόγια Πελάτη, κ.λπ)"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_methods
@@ -689,7 +704,7 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_meth_link
 msgid "Manage your payment methods"
-msgstr ""
+msgstr "Διαχειριστείτε τους δικούς σας τρόπους πληρωμής"
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
@@ -699,7 +714,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_medium
 msgid "Medium-sized image"
-msgstr ""
+msgstr "Μεσαίου-μεγέθους εικόνα"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_medium
@@ -713,17 +728,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state_message
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Message"
-msgstr ""
+msgstr "Μήνυμα"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_post_msg
 msgid "Message displayed after having done the payment process."
-msgstr ""
+msgstr "Μήνυμα που εμφανίζεται μετά την ολοκλήρωση της διαδικασίας πληρωμής."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_pre_msg
 msgid "Message displayed to explain and help the payment process."
 msgstr ""
+"Μήνυμα που εμφανίζεται για να επεξηγήσει και να βοηθήσει στην διαδικασία "
+"πληρωμής."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_error_msg
@@ -752,7 +769,7 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Messages"
-msgstr ""
+msgstr "Μηνύματα"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:395
@@ -776,7 +793,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.payment_icon_form_view
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Name"
-msgstr ""
+msgstr "Περιγραφή"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token_name
@@ -786,7 +803,7 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,save_token:0
 msgid "Never"
-msgstr ""
+msgstr "Ποτέ"
 
 #. module: payment
 #. openerp-web
@@ -820,7 +837,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:376
 #, python-format
 msgid "Ok"
-msgstr ""
+msgstr "ΟΚ"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:759
@@ -837,18 +854,18 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_partner_id
 msgid "Partner"
-msgstr ""
+msgstr "Συναλλασόμενος"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_name
 msgid "Partner Name"
-msgstr ""
+msgstr "Όνομα Συνεργάτη"
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:39
 #, python-format
 msgid "Pay Now"
-msgstr ""
+msgstr "Εξόφληση Τώρα"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_payu
@@ -860,20 +877,20 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.confirm
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "Payment"
-msgstr ""
+msgstr "Πληρωμή"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Αποδέκτης Πληρωμής"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
 #: model:ir.ui.menu,name:payment.payment_acquirer_menu
 #: model:ir.ui.view,arch_db:payment.acquirer_list
 msgid "Payment Acquirers"
-msgstr ""
+msgstr "Αποδέκτες Πληρωμής"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_icon
@@ -895,7 +912,7 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_methods
 msgid "Payment Methods"
-msgstr ""
+msgstr "Τρόποι Πληρωμής"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_token_id
@@ -915,7 +932,7 @@ msgstr ""
 #: model:ir.model,name:payment.model_payment_transaction
 #: model:ir.model.fields,field_description:payment.field_account_payment_payment_transaction_id
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Συναλλαγή Πληρωμής"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
@@ -925,7 +942,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.transaction_form
 #: model:ir.ui.view,arch_db:payment.transaction_list
 msgid "Payment Transactions"
-msgstr ""
+msgstr "Συναλλαγές Πληρωμής"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_flow
@@ -943,7 +960,7 @@ msgstr ""
 #: model:ir.ui.menu,name:payment.root_payment_menu
 #: model:ir.ui.view,arch_db:payment.payment_token_form_view
 msgid "Payments"
-msgstr ""
+msgstr "Πληρωμές"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_journal_id
@@ -961,12 +978,12 @@ msgstr ""
 #: model:payment.acquirer,name:payment.payment_acquirer_paypal
 #: selection:payment.acquirer,provider:0
 msgid "Paypal"
-msgstr ""
+msgstr "Paypal"
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Pending"
-msgstr ""
+msgstr "Εκρεμμής"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pending_msg
@@ -976,7 +993,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_phone
 msgid "Phone"
-msgstr ""
+msgstr "Τηλέφωνο"
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
@@ -999,26 +1016,26 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,environment:0
 msgid "Production"
-msgstr ""
+msgstr "Παραγωγή"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_provider
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_provider
 #: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Provider"
-msgstr ""
+msgstr "Πάροχος"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_reference
 #: model:ir.ui.view,arch_db:payment.confirm
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "Reference"
-msgstr ""
+msgstr "Σχετικό"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_acquirer_reference
 msgid "Reference of the TX as stored in the acquirer database"
-msgstr ""
+msgstr "Αναφορά του ΤΧ όπως είναι αποθηκευμένη στη βάση δεδομένων αγοραστή"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -1033,7 +1050,7 @@ msgstr ""
 #. module: payment
 #: constraint:payment.acquirer:0
 msgid "Required fields not filled"
-msgstr ""
+msgstr "Τα απαιτούμενα πεδία δεν έχουν συμπληρωθεί"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_registration_view_template_id
@@ -1069,7 +1086,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Ακολουθία"
 
 #. module: payment
 #. openerp-web
@@ -1087,14 +1104,14 @@ msgstr ""
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Server To Server"
-msgstr ""
+msgstr "Διακομιστής προς διακομιστή"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:266
 #, python-format
 msgid "Server error"
-msgstr ""
+msgstr "Σφάλμα διακομιστή"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_short_name
@@ -1110,7 +1127,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
 msgid "Small-sized image"
-msgstr ""
+msgstr "Μικρού μεγέθους εικόνα"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
@@ -1128,7 +1145,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state
 msgid "Status"
-msgstr ""
+msgstr "Κατάσταση"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_stripe
@@ -1149,12 +1166,12 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,environment:0
 msgid "Test"
-msgstr ""
+msgstr "Τεστ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_post_msg
 msgid "Thanks Message"
-msgstr ""
+msgstr "Ευχαριστήριο Μήνυμα"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:570
@@ -1176,7 +1193,7 @@ msgstr ""
 #: code:addons/payment/models/payment_acquirer.py:563
 #, python-format
 msgid "The payment transaction reference must be unique!"
-msgstr ""
+msgstr "Η παραπομπή της συναλλαγής πληρωμής πρέπει να είναι μοναδική!"
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:42
@@ -1231,12 +1248,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_type
 msgid "Type"
-msgstr ""
+msgstr "Τύπος"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_date_validate
 msgid "Validation Date"
-msgstr ""
+msgstr "Ημερομηνία Επιβεβαίωσης"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -1246,12 +1263,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_var
 msgid "Variable domestic fees (in percents)"
-msgstr ""
+msgstr "Μεταβλητή εγχώρια προμήθεια (σε ποσοστό)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_var
 msgid "Variable international fees (in percents)"
-msgstr ""
+msgstr "Μεταβλητή διεθνής προμήθεια (σε ποσοστό)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_verified
@@ -1261,7 +1278,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_website_published
 msgid "Visible in Portal / Website"
-msgstr ""
+msgstr "Ορατό σε Πύλη / Ιστότοπο"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
@@ -1273,13 +1290,13 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:318
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Προειδοποίηση"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
-msgstr ""
+msgstr "Έμβασμα"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_stripe
@@ -1337,22 +1354,22 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "ZIP"
-msgstr ""
+msgstr "ΤΚ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_zip
 msgid "Zip"
-msgstr ""
+msgstr "Τ.Κ."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "acquirer: payment.acquirer browse record"
-msgstr ""
+msgstr "acquirer: payment.acquirer browse record"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "amount: the transaction amount, a float"
-msgstr ""
+msgstr "ποσό: το ποσό συναλλαγής, απόθεμα μετρητών"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -1362,17 +1379,18 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "context: the current context dictionary"
-msgstr ""
+msgstr "περιεχόμενο: το λεξικό τρέχοντος περιεχομένου"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
-msgstr ""
+msgstr "νόμισμα: αναζήτηση αρχείων νομίσματος συναλλαγών"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
 msgstr ""
+"συνεργάτης: αναζήτηση αρχείου συνεργάτη αγορών, όχι απαραίτητα ρυθμισμένο"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -1380,28 +1398,30 @@ msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
 msgstr ""
+"partner_values: συγκεκριμένες αξίες σχετικά με τον αγοραστή, για παράδειγμα "
+"που προέρχονται από φόρμα αποστολής"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
 msgid "payment.token"
-msgstr ""
+msgstr "payment.token"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "reference: the transaction reference number"
-msgstr ""
+msgstr "αναφορά: ο αριθμός αναφοράς της συναλλαγής"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_url: transaction URL to post the form"
-msgstr ""
+msgstr "tx_url: η διεύθυνση (URL) για δημοσίευση της φόρμας"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_values: transaction values"
-msgstr ""
+msgstr "tx_values: αξίες συναλλαγών"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
-msgstr ""
+msgstr "χρήστης: αναζήτηση αρχείων τρέχοντος χρήστη"

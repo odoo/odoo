@@ -2,12 +2,16 @@
 # This file contains the translation of the following modules:
 # * auth_signup
 # 
+# Translators:
+# Kostas Goutoudis <goutoudis@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,7 +87,7 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr ""
+msgstr "Πρόσκληση της ${object.company_id.name} για σύνδεση στο Odoo"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_user_signup_account_created
@@ -129,6 +133,8 @@ msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
 msgstr ""
+"<strong>Έχει ζητηθεί η επαναφορά του κωδικού πρόσβασης γι 'αυτόν τον χρήστη."
+" Ένα email που περιέχει τον παρακάτω σύνδεσμο έχει αποσταλεί:</strong>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -136,6 +142,8 @@ msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
 msgstr ""
+"<strong>Έχει αποσταλεί μία πρόσκληση με email το οποίο περιέχει τον παρακάτω"
+" σύνδεσμο σύνδεσης:</strong>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.signup
@@ -147,49 +155,52 @@ msgstr ""
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr ""
+"Έχει αποσταλεί ένα email με διαπιστευτήρια για να επαναφέρετε τον κωδικό "
+"πρόσβασής σας"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:52
 #, python-format
 msgid "Another user is already registered using this email address."
 msgstr ""
+"Κάποιος άλλος χρήστης έχει ήδη εγγραφεί χρησιμοποιώντας αυτό το email."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:133
 #, python-format
 msgid "Authentication Failed."
-msgstr ""
+msgstr "Ο έλεγχος ταυτότητας απέτυχε."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Back to Login"
-msgstr ""
+msgstr "Πίσω στην σελίδα Σύνδεσης"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:137
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
+msgstr "Αδυναμία αποστολής e-mail: Ο χρήστης %s δεν έχει διεύθυνση e-mail."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Confirm"
-msgstr ""
+msgstr "Επιβεβαίωση"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
-msgstr ""
+msgstr "Επιβεβαίωση Κωδικού Πρόσβασης"
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Επιβεβαιωμένο"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Επαφή"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -200,13 +211,13 @@ msgstr ""
 #: code:addons/auth_signup/controllers/main.py:55
 #, python-format
 msgid "Could not create a new account."
-msgstr ""
+msgstr "Δεν μπορεί να δημιουργηθεί νέος λογαριασμός."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:80
 #, python-format
 msgid "Could not reset your password"
-msgstr ""
+msgstr "Δεν ήταν δυνατή η επαναφορά του κωδικού πρόσβασής σας"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_uninvited
@@ -216,7 +227,7 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr ""
+msgstr "Προεπιλεγμένα δικαιώματα πρόσβασης"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
@@ -227,7 +238,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_reset_password
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Enable password reset from Login page"
-msgstr ""
+msgstr "Ενεργοποίηση επαναφοράς κωδικού πρόσβασης από τη σελίδα σύνδεσης"
 
 #. module: auth_signup
 #: selection:res.config.settings,auth_signup_uninvited:0
@@ -237,28 +248,31 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_http
 msgid "HTTP routing"
-msgstr ""
+msgstr "Δρομολόγηση HTTP"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "If unchecked, only invited users may sign up."
 msgstr ""
+"Εάν δεν είναι επιλεγμένο, μόνο οι προσκεκλημένοι χρήστες μπορούν να "
+"εγγραφούν."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:111
 #, python-format
 msgid "Invalid signup token"
-msgstr ""
+msgstr "Μη έγκυρο διακριτικό σύνδεσης"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
 msgstr ""
+"Επιτρέψτε τους πελάτες σας να συνδεθούν για να δουν τα δικά τους έγγραφα."
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr ""
+msgstr "Ποτέ δεν συνδέθηκε"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:73
@@ -274,7 +288,7 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Password"
-msgstr ""
+msgstr "Κωδικός Πρόσβασης"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -284,7 +298,7 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr ""
+msgstr "Επαναφορά Κωδικού"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:121
@@ -295,58 +309,58 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Reset Password"
-msgstr ""
+msgstr "Επαναφορά Κωδικού"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:110
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr ""
+msgstr "Επαναφορά Κωδικού Πρόσβασης: Λανθασμένο όνομα χρήστη ή email "
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send Reset Password Instructions"
-msgstr ""
+msgstr "Αποστολή Οδηγιών Επαναφοράς Κωδικού Πρόσβασης"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "Στείλτε μια πρόσκληση ηλεκτρονικού ταχυδρομείου"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Sign up"
-msgstr ""
+msgstr "Εγγραφή"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
 msgid "Signup Expiration"
-msgstr ""
+msgstr "Λήξη Εγγραφής"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
 msgid "Signup Token"
-msgstr ""
+msgstr "Διακριτικό Εγγραφής"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_type
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_type
 msgid "Signup Token Type"
-msgstr ""
+msgstr "Τύπος Διακριτικού Εγγραφής"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_valid
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_valid
 msgid "Signup Token is Valid"
-msgstr ""
+msgstr "Το Διακριτικό Εγγραφής είναι Έγκυρο"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_url
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_url
 msgid "Signup URL"
-msgstr ""
+msgstr "Διεύθυνση URL Εγγραφής"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:88
@@ -369,12 +383,12 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
 msgid "Status"
-msgstr ""
+msgstr "Κατάσταση"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_template_user_id
 msgid "Template user for new users created through signup"
-msgstr ""
+msgstr "Πρότυπο χρήστη για νέους χρήστες που δημιουργήθηκαν μέσω Εγγραφής"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:119
@@ -385,7 +399,7 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Χρήστες"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
@@ -396,19 +410,19 @@ msgstr ""
 #: model:ir.ui.view,arch_db:auth_signup.fields
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr ""
+msgstr "Το email σας"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Your Name"
-msgstr ""
+msgstr "Το Όνομά σας"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr ""
+msgstr "π.χ. John Doe"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_config_settings
 msgid "res.config.settings"
-msgstr ""
+msgstr "res.config.settings"

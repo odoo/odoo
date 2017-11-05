@@ -14,13 +14,14 @@
 # Eric Geens <eric.geens@vitabiz.be>, 2017
 # Melroy van den Berg <webmaster1989@gmail.com>, 2017
 # Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
+# Julia van Orsouw <julia@odooexperts.nl>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-24 08:59+0000\n"
 "PO-Revision-Date: 2017-10-24 08:59+0000\n"
-"Last-Translator: Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017\n"
+"Last-Translator: Julia van Orsouw <julia@odooexperts.nl>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7001,7 +7002,7 @@ msgstr "Diversen"
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 #, python-format
 msgid "Miscellaneous Operations"
-msgstr "Memoriaa"
+msgstr "Memoriaal"
 
 #. module: account
 #. openerp-web
@@ -10097,6 +10098,8 @@ msgid ""
 "The cash rounding cannot be computed because the difference must be added on the biggest tax found and no tax are specified.\n"
 "Please set up a tax or change the cash rounding method."
 msgstr ""
+"De afronding kan niet berekend worden omdat het verschil toegevoegd moet worden aan de grootste BTW-grondslag en er is geen BTW-code gespecificeerd.\n"
+"Stel een BTW-code in of verander de afrondingsmethode."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company_chart_template_id
@@ -10158,6 +10161,10 @@ msgid ""
 "expense (Cost of Goods Sold account) is recognized at the customer invoice "
 "validation."
 msgstr ""
+"De inkooprekening wordt gebruikt als een leveranciersfactuur wordt "
+"goedgekeurd, behalve bij Anglo-Saksisch boekhouden met permanente "
+"voorraadwaardering waarbij de inkooprekening (kostprijs van inkopen) wordt "
+"gebruikt bij het boeken van de klantfactuur."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product_property_account_expense_id
@@ -10169,6 +10176,11 @@ msgid ""
 "validation. If the field is empty, it uses the one defined in the product "
 "category."
 msgstr ""
+"De inkooprekening wordt gebruikt als een leveranciersfactuur wordt "
+"goedgekeurd, behalve bij Anglo-Saksisch boekhouden met permanente "
+"voorraadwaardering waarbij de inkooprekening (kostprijs van inkopen) wordt "
+"gebruikt bij het boeken van de klantfactuur. Als het veld leeg is, wordt de "
+"grootboekrekening van de productcategorie gebruikt."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -11264,6 +11276,10 @@ msgid ""
 "                                with the current invoice. A new draft invoice will be created\n"
 "                                so that you can edit it."
 msgstr ""
+"Gebruik deze optie om de factuur te annuleren en een nieuwe aan\n"
+"                                 te maken. De creditfactuur wordt aangemaakt, geboekt en afgeletterd\n"
+"                                met de huidige factuur. Er wordt een nieuwe conceptfactuur gemaakt\n"
+"                                zodat je deze kan bewerken."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
