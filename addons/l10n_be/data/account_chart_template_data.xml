@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="trans" model="account.account.template">
+            <field name="name">Transferts</field>
+            <field name="code">580</field>
+            <field name="reconcile" eval="True"/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        </record>
+        <!-- Chart template -->
+        <record id="l10nbe_chart_template" model="account.chart.template">
+            <field name="name">Belgian PCMN</field>
+            <field name="transfer_account_id" ref="trans"/>
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="spoken_languages" eval="'nl_BE'"/>
+        </record>
+        <record id="trans" model="account.account.template">
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
+        </record>
+</odoo>

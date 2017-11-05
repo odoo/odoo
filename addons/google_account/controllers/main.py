@@ -1,32 +1,28 @@
-import simplejson
-import urllib
-import openerp
-from openerp import http
-from openerp.http import request
-import openerp.addons.web.controllers.main as webmain
-from openerp.addons.web.http import SessionExpiredException
-from werkzeug.exceptions import BadRequest
-import werkzeug.utils
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-class google_auth(http.Controller):
-    
+import json
+from werkzeug.utils import redirect
+
+from odoo import http, registry
+from odoo.http import request
+
+
+class GoogleAuth(http.Controller):
+
     @http.route('/google_account/authentication', type='http', auth="none")
     def oauth2callback(self, **kw):
         """ This route/function is called by Google when user Accept/Refuse the consent of Google """
-        
-        state = simplejson.loads(kw['state'])
+        state = json.loads(kw['state'])
         dbname = state.get('d')
         service = state.get('s')
         url_return = state.get('f')
-        
-        registry = openerp.modules.registry.RegistryManager.get(dbname)
-        with registry.cursor() as cr:
-            if kw.get('code',False):
-                registry.get('google.%s' % service).set_all_tokens(cr,request.session.uid,kw['code'])
-                return werkzeug.utils.redirect(url_return)
-            elif kw.get('error'):
-                return werkzeug.utils.redirect("%s%s%s" % (url_return ,"?error=" , kw.get('error')))
-            else:
-                return werkzeug.utils.redirect("%s%s" % (url_return ,"?error=Unknown_error"))
 
-        
+        with registry(dbname).cursor() as cr:
+            if kw.get('code'):
+                request.env(cr, request.session.uid)['google.%s' % service].set_all_tokens(kw['code'])
+                return redirect(url_return)
+            elif kw.get('error'):
+                return redirect("%s%s%s" % (url_return, "?error=", kw['error']))
+            else:
+                return redirect("%s%s" % (url_return, "?error=Unknown_error"))

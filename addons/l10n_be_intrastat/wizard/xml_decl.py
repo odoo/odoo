@@ -1,122 +1,69 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    Odoo, Open Source Business Applications
-#    Copyright (C) 2014-2015 Odoo S.A. <http://www.odoo.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program. If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import xml.etree.ElementTree as ET
+from xml.etree import ElementTree as ET
 from collections import namedtuple
-from datetime import datetime
 
-from openerp import exceptions, SUPERUSER_ID, tools
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
+from odoo import api, exceptions, fields, models, _
+from odoo.tools.pycompat import text_type
 
 INTRASTAT_XMLNS = 'http://www.onegate.eu/2010-01-01'
 
-class xml_decl(osv.TransientModel):
+
+class XmlDeclaration(models.TransientModel):
     """
     Intrastat XML Declaration
     """
     _name = "l10n_be_intrastat_xml.xml_decl"
     _description = 'Intrastat XML Declaration'
 
-    def _get_tax_code(self, cr, uid, context=None):
-        obj_tax_code = self.pool.get('account.tax.code')
-        obj_user = self.pool.get('res.users')
-        company_id = obj_user.browse(cr, uid, uid, context=context).company_id.id
-        tax_code_ids = obj_tax_code.search(cr, uid, [('company_id', '=', company_id),
-                                                     ('parent_id', '=', False)],
-                                           context=context)
-        return tax_code_ids and tax_code_ids[0] or False
+    def _default_get_month(self):
+        return fields.Date.from_string(fields.Date.context_today(self)).strftime('%m')
 
-    def _get_def_monthyear(self, cr, uid, context=None):
-        td = datetime.strptime(fields.date.context_today(self, cr, uid, context=context),
-                               tools.DEFAULT_SERVER_DATE_FORMAT).date()
-        return td.strftime('%Y'), td.strftime('%m')
+    def _default_get_year(self):
+        return fields.Date.from_string(fields.Date.context_today(self)).strftime('%Y')
 
-    def _get_def_month(self, cr, uid, context=None):
-        return self._get_def_monthyear(cr, uid, context=context)[1]
+    name = fields.Char(string='File Name', default='intrastat.xml')
+    month = fields.Selection([('01', 'January'), ('02', 'February'), ('03', 'March'),
+                               ('04', 'April'), ('05', 'May'), ('06', 'June'), ('07', 'July'),
+                               ('08', 'August'), ('09', 'September'), ('10', 'October'),
+                               ('11', 'November'), ('12', 'December')], string='Month', required=True, default=_default_get_month)
+    year = fields.Char(size=4, required=True, default=_default_get_year)
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
+    arrivals = fields.Selection([('be-exempt', 'Exempt'),
+                                  ('be-standard', 'Standard'),
+                                  ('be-extended', 'Extended')],
+                                 required=True, default='be-standard')
+    dispatches = fields.Selection([('be-exempt', 'Exempt'),
+                                  ('be-standard', 'Standard'),
+                                  ('be-extended', 'Extended')],
+                                   required=True, default='be-standard')
+    file_save = fields.Binary(string='Intrastat Report File', readonly=True)
+    state = fields.Selection([('draft', 'Draft'), ('download', 'Download')], default='draft')
 
-    def _get_def_year(self, cr, uid, context=None):
-        return self._get_def_monthyear(cr, uid, context=context)[0]
-
-    _columns = {
-        'name': fields.char('File Name'),
-        'month': fields.selection([('01','January'), ('02','February'), ('03','March'),
-                                   ('04','April'), ('05','May'), ('06','June'), ('07','July'),
-                                   ('08','August'), ('09','September'), ('10','October'),
-                                   ('11','November'), ('12','December')], 'Month', required=True),
-        'year': fields.char('Year', size=4, required=True),
-        'tax_code_id': fields.many2one('account.tax.code', 'Company Tax Chart',
-                                       domain=[('parent_id', '=', False)], required=True),
-        'arrivals': fields.selection([('be-exempt', 'Exempt'),
-                                      ('be-standard', 'Standard'),
-                                      ('be-extended', 'Extended')],
-                                     'Arrivals', required=True),
-        'dispatches': fields.selection([('be-exempt', 'Exempt'),
-                                      ('be-standard', 'Standard'),
-                                      ('be-extended', 'Extended')],
-                                       'Dispatches', required=True),
-        'file_save': fields.binary('Intrastat Report File', readonly=True),
-        'state': fields.selection([('draft', 'Draft'), ('download', 'Download')], string="State"),
-    }
-
-    _defaults = {
-        'arrivals': 'be-standard',
-        'dispatches': 'be-standard',
-        'name': 'intrastat.xml',
-        'tax_code_id': _get_tax_code,
-        'month': _get_def_month,
-        'year': _get_def_year,
-        'state': 'draft',
-    }
-    
-    def _company_warning(self, cr, uid, translated_msg, context=None):
+    @api.model
+    def _company_warning(self, translated_msg):
         """ Raise a error with custom message, asking user to configure company settings """
-        xmlid_mod = self.pool['ir.model.data']
-        action_id = xmlid_mod.xmlid_to_res_id(cr, uid, 'base.action_res_company_form')
         raise exceptions.RedirectWarning(
-            translated_msg, action_id, _('Go to company configuration screen'))
-            
-    def create_xml(self, cr, uid, ids, context=None):
+            translated_msg, self.env.ref('base.action_res_company_form').id, _('Go to company configuration screen'))
+
+    @api.multi
+    def create_xml(self):
         """Creates xml that is to be exported and sent to estate for partner vat intra.
         :return: Value for next action.
         :rtype: dict
         """
-        decl_datas = self.browse(cr, uid, ids[0])
-        company = decl_datas.tax_code_id.company_id
+        self.ensure_one()
+        company = self.company_id
         if not (company.partner_id and company.partner_id.country_id and
                 company.partner_id.country_id.id):
-            self._company_warning(
-                cr, uid,
-                _('The country of your company is not set, '
-                  'please make sure to configure it first.'),
-                context=context)
-        kbo = company.company_registry
-        if not kbo:
-            self._company_warning(
-                cr, uid,
-                _('The registry number of your company is not set, '
-                  'please make sure to configure it first.'),
-                context=context)
-        if len(decl_datas.year) != 4:
+            self._company_warning(_('The country of your company is not set, '
+                  'please make sure to configure it first.'))
+        if not company.company_registry:
+            self._company_warning(_('The registry number of your company is not set, '
+                  'please make sure to configure it first.'))
+        if len(self.year) != 4:
             raise exceptions.Warning(_('Year must be 4 digits number (YYYY)'))
 
         #Create root declaration
@@ -126,50 +73,40 @@ class xml_decl(osv.TransientModel):
         #Add Administration elements
         admin = ET.SubElement(decl, 'Administration')
         fromtag = ET.SubElement(admin, 'From')
-        fromtag.text = kbo
+        fromtag.text = company.company_registry
         fromtag.set('declarerType', 'KBO')
         ET.SubElement(admin, 'To').text = "NBB"
         ET.SubElement(admin, 'Domain').text = "SXX"
-        if decl_datas.arrivals == 'be-standard':
-            decl.append(self._get_lines(cr, SUPERUSER_ID, ids, decl_datas, company,
-                                        dispatchmode=False, extendedmode=False, context=context))
-        elif decl_datas.arrivals == 'be-extended':
-            decl.append(self._get_lines(cr, SUPERUSER_ID, ids, decl_datas, company,
-                                        dispatchmode=False, extendedmode=True, context=context))
-        if decl_datas.dispatches == 'be-standard':
-            decl.append(self._get_lines(cr, SUPERUSER_ID, ids, decl_datas, company,
-                                        dispatchmode=True, extendedmode=False, context=context))
-        elif decl_datas.dispatches == 'be-extended':
-            decl.append(self._get_lines(cr, SUPERUSER_ID, ids, decl_datas, company,
-                                        dispatchmode=True, extendedmode=True, context=context))
+        if self.arrivals == 'be-standard':
+            decl.append(self.sudo()._get_lines(dispatchmode=False, extendedmode=False))
+        elif self.arrivals == 'be-extended':
+            decl.append(self.sudo()._get_lines(dispatchmode=False, extendedmode=True))
+        if self.dispatches == 'be-standard':
+            decl.append(self.sudo()._get_lines(dispatchmode=True, extendedmode=False))
+        elif self.dispatches == 'be-extended':
+            decl.append(self.sudo()._get_lines(dispatchmode=True, extendedmode=True))
 
         #Get xml string with declaration
         data_file = ET.tostring(decl, encoding='UTF-8', method='xml')
 
         #change state of the wizard
-        self.write(cr, uid, ids,
-                   {'name': 'intrastat_%s%s.xml' % (decl_datas.year, decl_datas.month),
+        self.write({'name': 'intrastat_%s%s.xml' % (self.year, self.month),
                     'file_save': base64.encodestring(data_file),
-                    'state': 'download'},
-                   context=context)
+                    'state': 'download'})
         return {
             'name': _('Save'),
-            'context': context,
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'l10n_be_intrastat_xml.xml_decl',
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'res_id': ids[0],
+            'res_id': self.id,
         }
 
-    def _get_lines(self, cr, uid, ids, decl_datas, company, dispatchmode=False,
-                   extendedmode=False, context=None):
-        intrastatcode_mod = self.pool['report.intrastat.code']
-        invoiceline_mod = self.pool['account.invoice.line']
-        product_mod = self.pool['product.product']
-        region_mod = self.pool['l10n_be_intrastat.region']
-        warehouse_mod = self.pool['stock.warehouse']
+    @api.multi
+    def _get_lines(self, dispatchmode=False, extendedmode=False):
+        company = self.company_id
+        IntrastatRegion = self.env['l10n_be_intrastat.region']
 
         if dispatchmode:
             mode1 = 'out_invoice'
@@ -185,7 +122,7 @@ class xml_decl(osv.TransientModel):
             decl.set('code', 'EX%sS' % declcode)
         else:
             decl.set('code', 'EX%sE' % declcode)
-        decl.set('date', '%s-%s' % (decl_datas.year, decl_datas.month))
+        decl.set('date', '%s-%s' % (self.year, self.month))
         datas = ET.SubElement(decl, 'Data')
         if not extendedmode:
             datas.set('form', 'EXF%sS' % declcode)
@@ -197,43 +134,42 @@ class xml_decl(osv.TransientModel):
                                    'EXGO', 'EXTPC', 'EXDELTRM'])
         entries = {}
 
-        sqlreq = """
-            select
+        query = """
+            SELECT
                 inv_line.id
-            from
+            FROM
                 account_invoice_line inv_line
-                join account_invoice inv on inv_line.invoice_id=inv.id
-                left join res_country on res_country.id = inv.intrastat_country_id
-                left join res_partner on res_partner.id = inv.partner_id
-                left join res_country countrypartner on countrypartner.id = res_partner.country_id
-                join product_product on inv_line.product_id=product_product.id
-                join product_template on product_product.product_tmpl_id=product_template.id
-                left join account_period on account_period.id=inv.period_id
-            where
-                inv.state in ('open','paid')
-                and inv.company_id=%s
-                and not product_template.type='service'
-                and (res_country.intrastat=true or (inv.intrastat_country_id is null
-                                                    and countrypartner.intrastat=true))
-                and ((res_country.code is not null and not res_country.code=%s)
-                     or (res_country.code is null and countrypartner.code is not null
-                     and not countrypartner.code=%s))
-                and inv.type in (%s, %s)
-                and to_char(account_period.date_start, 'YYYY')=%s
-                and to_char(account_period.date_start, 'MM')=%s
+                JOIN account_invoice inv ON inv_line.invoice_id=inv.id
+                LEFT JOIN res_country ON res_country.id = inv.intrastat_country_id
+                LEFT JOIN res_partner ON res_partner.id = inv.partner_id
+                LEFT JOIN res_country countrypartner ON countrypartner.id = res_partner.country_id
+                JOIN product_product ON inv_line.product_id=product_product.id
+                JOIN product_template ON product_product.product_tmpl_id=product_template.id
+            WHERE
+                inv.state IN ('open','paid')
+                AND inv.company_id=%s
+                AND not product_template.type='service'
+                AND (res_country.intrastat=true OR (inv.intrastat_country_id is NULL
+                                                    AND countrypartner.intrastat=true))
+                AND ((res_country.code IS NOT NULL AND not res_country.code=%s)
+                     OR (res_country.code is NULL AND countrypartner.code IS NOT NULL
+                     AND not countrypartner.code=%s))
+                AND inv.type IN (%s, %s)
+                AND to_char(inv.date_invoice, 'YYYY')=%s
+                AND to_char(inv.date_invoice, 'MM')=%s
             """
 
-        cr.execute(sqlreq, (company.id, company.partner_id.country_id.code,
+        self.env.cr.execute(query, (company.id, company.partner_id.country_id.code,
                             company.partner_id.country_id.code, mode1, mode2,
-                            decl_datas.year, decl_datas.month))
-        lines = cr.fetchall()
+                            self.year, self.month))
+        lines = self.env.cr.fetchall()
         invoicelines_ids = [rec[0] for rec in lines]
-        invoicelines = invoiceline_mod.browse(cr, uid, invoicelines_ids, context=context)
+        invoicelines = self.env['account.invoice.line'].browse(invoicelines_ids)
         for inv_line in invoicelines:
 
             #Check type of transaction
-            if inv_line.invoice_id.intrastat_transaction_id:
-                extta = inv_line.invoice_id.intrastat_transaction_id.code
+            if inv_line.intrastat_transaction_id:
+                extta = inv_line.intrastat_transaction_id.code
             else:
                 extta = "1"
             #Check country
@@ -245,52 +181,41 @@ class xml_decl(osv.TransientModel):
             #Check region
             #If purchase, comes from purchase order, linked to a location,
             #which is linked to the warehouse
-            #if sales, the sale order is linked to the warehouse
+            #if sales, the sales order is linked to the warehouse
             #if sales, from a delivery order, linked to a location,
             #which is linked to the warehouse
             #If none found, get the company one.
             exreg = None
             if inv_line.invoice_id.type in ('in_invoice', 'in_refund'):
                 #comes from purchase
-                POL = self.pool['purchase.order.line']
-                poline_ids = POL.search(
-                    cr, uid, [('invoice_lines', 'in', inv_line.id)], context=context)
-                if poline_ids:
-                    purchaseorder = POL.browse(cr, uid, poline_ids[0], context=context).order_id
-                    region_id = warehouse_mod.get_regionid_from_locationid(
-                        cr, uid, purchaseorder.location_id.id, context=context)
+                po_lines = self.env['purchase.order.line'].search([('invoice_lines', 'in', inv_line.id)], limit=1)
+                if po_lines:
+                    location = self.env['stock.location'].browse(po_lines.order_id._get_destination_location())
+                    region_id = self.env['stock.warehouse'].get_regionid_from_locationid(location)
                     if region_id:
-                        exreg = region_mod.browse(cr, uid, region_id).code
+                        exreg = IntrastatRegion.browse(region_id).code
             elif inv_line.invoice_id.type in ('out_invoice', 'out_refund'):
                 #comes from sales
-                soline_ids = self.pool['sale.order.line'].search(
-                    cr, uid, [('invoice_lines', 'in', inv_line.id)], context=context)
-                if soline_ids:
-                    saleorder = self.pool['sale.order.line'].browse(
-                        cr, uid, soline_ids[0], context=context).order_id
+                so_lines = self.env['sale.order.line'].search([('invoice_lines', 'in', inv_line.id)], limit=1)
+                if so_lines:
+                    saleorder = so_lines.order_id
                     if saleorder and saleorder.warehouse_id and saleorder.warehouse_id.region_id:
-                        exreg = region_mod.browse(
-                            cr, uid, saleorder.warehouse_id.region_id.id, context=context).code
+                        exreg = IntrastatRegion.browse(saleorder.warehouse_id.region_id.id).code
 
             if not exreg:
                 if company.region_id:
                     exreg = company.region_id.code
                 else:
-                    self._company_warning(
-                        cr, uid,
-                        _('The Intrastat Region of the selected company is not set, '
-                          'please make sure to configure it first.'),
-                        context=context)
+                    self._company_warning(_('The Intrastat Region of the selected company is not set, '
+                          'please make sure to configure it first.'))
 
             #Check commodity codes
-            intrastat_id = product_mod.get_intrastat_recursively(
-                cr, uid, inv_line.product_id.id, context=context)
+            intrastat_id = inv_line.product_id.get_intrastat_recursively()
             if intrastat_id:
-                exgo = intrastatcode_mod.browse(cr, uid, intrastat_id, context=context).name
+                exgo = self.env['report.intrastat.code'].browse(intrastat_id).name
             else:
                 raise exceptions.Warning(
-                    _('Product "%s" has no intrastat code, please configure it') %
-                        inv_line.product_id.display_name)
+                    _('Product "%s" has no intrastat code, please configure it') % inv_line.product_id.display_name)
 
             #In extended mode, 2 more fields required
             if extendedmode:
@@ -300,11 +225,8 @@ class xml_decl(osv.TransientModel):
                 elif company.transport_mode_id:
                     extpc = company.transport_mode_id.code
                 else:
-                    self._company_warning(
-                        cr, uid,
-                        _('The default Intrastat transport mode of your company '
-                          'is not set, please make sure to configure it first.'),
-                        context=context)
+                    self._company_warning(_('The default Intrastat transport mode of your company '
+                          'is not set, please make sure to configure it first.'))
 
                 #Check incoterm
                 if inv_line.invoice_id.incoterm_id:
@@ -312,11 +234,8 @@ class xml_decl(osv.TransientModel):
                 elif company.incoterm_id:
                     exdeltrm = company.incoterm_id.code
                 else:
-                    self._company_warning(
-                        cr, uid,
-                        _('The default Incoterm of your company is not set, '
-                          'please make sure to configure it first.'),
-                        context=context)
+                    self._company_warning(_('The default Incoterm of your company is not set, '
+                          'please make sure to configure it first.'))
             else:
                 extpc = ""
                 exdeltrm = ""
@@ -329,13 +248,12 @@ class xml_decl(osv.TransientModel):
                 amount = inv_line.price_unit * inv_line.quantity
             else:
                 amount = 0
-            weight = (inv_line.product_id.weight_net or 0.0) * \
-                self.pool.get('product.uom')._compute_qty(cr, uid, inv_line.uos_id.id, inv_line.quantity, inv_line.product_id.uom_id.id)
-            if (not inv_line.uos_id.category_id or not inv_line.product_id.uom_id.category_id
-                    or inv_line.uos_id.category_id.id != inv_line.product_id.uom_id.category_id.id):
+            weight = (inv_line.product_id.weight or 0.0) * \
+                inv_line.uom_id._compute_quantity(inv_line.quantity, inv_line.product_id.uom_id)
+            if not inv_line.product_id.uom_id.category_id:
                 supply_units = inv_line.quantity
             else:
-                supply_units = inv_line.quantity * inv_line.uos_id.factor
+                supply_units = inv_line.quantity * inv_line.uom_id.factor
             amounts = entries.setdefault(linekey, (0, 0, 0))
             amounts = (amounts[0] + amount, amounts[1] + weight, amounts[2] + supply_units)
             entries[linekey] = amounts
@@ -347,18 +265,18 @@ class xml_decl(osv.TransientModel):
                 continue
             numlgn += 1
             item = ET.SubElement(datas, 'Item')
-            self._set_Dim(item, 'EXSEQCODE', unicode(numlgn))
-            self._set_Dim(item, 'EXTRF', unicode(linekey.EXTRF))
-            self._set_Dim(item, 'EXCNT', unicode(linekey.EXCNT))
-            self._set_Dim(item, 'EXTTA', unicode(linekey.EXTTA))
-            self._set_Dim(item, 'EXREG', unicode(linekey.EXREG))
-            self._set_Dim(item, 'EXTGO', unicode(linekey.EXGO))
+            self._set_Dim(item, 'EXSEQCODE', text_type(numlgn))
+            self._set_Dim(item, 'EXTRF', text_type(linekey.EXTRF))
+            self._set_Dim(item, 'EXCNT', text_type(linekey.EXCNT))
+            self._set_Dim(item, 'EXTTA', text_type(linekey.EXTTA))
+            self._set_Dim(item, 'EXREG', text_type(linekey.EXREG))
+            self._set_Dim(item, 'EXTGO', text_type(linekey.EXGO))
             if extendedmode:
-                self._set_Dim(item, 'EXTPC', unicode(linekey.EXTPC))
-                self._set_Dim(item, 'EXDELTRM', unicode(linekey.EXDELTRM))
-            self._set_Dim(item, 'EXTXVAL', unicode(round(amounts[0], 0)).replace(".", ","))
-            self._set_Dim(item, 'EXWEIGHT', unicode(round(amounts[1], 0)).replace(".", ","))
-            self._set_Dim(item, 'EXUNITS', unicode(round(amounts[2], 0)).replace(".", ","))
+                self._set_Dim(item, 'EXTPC', text_type(linekey.EXTPC))
+                self._set_Dim(item, 'EXDELTRM', text_type(linekey.EXDELTRM))
+            self._set_Dim(item, 'EXTXVAL', text_type(round(amounts[0], 0)).replace(".", ","))
+            self._set_Dim(item, 'EXWEIGHT', text_type(round(amounts[1], 0)).replace(".", ","))
+            self._set_Dim(item, 'EXUNITS', text_type(round(amounts[2], 0)).replace(".", ","))
 
         if numlgn == 0:
             #no datas

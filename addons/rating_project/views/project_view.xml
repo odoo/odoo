@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="rating_rating_view_search_project" model="ir.ui.view">
+            <field name="name">rating.rating.search.project</field>
+            <field name="model">rating.rating</field>
+            <field name="inherit_id" ref="rating.rating_rating_view_search"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='rating_unhappy']" position="after">
+                    <separator />
+                    <filter string="Rating for tasks" name="rating_tasks" domain="[('res_model', '=', 'project.task')]" />
+                </xpath>
+                <xpath expr="//filter[@name='resource']" position="after">
+                    <field name="parent_res_name"/>
+                    <filter string="Project" name="groupby_project" context="{'group_by': 'parent_res_name'}"/>
+                </xpath>
+                <xpath expr="/search" position="inside">
+                    <filter string="Last 30 days" name="rating_last_30_days" domain="[('create_date', '>=', (context_today()-datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                    <separator/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="rating_rating_action_view_project_rating" model="ir.actions.act_window">
+            <field name="name">Rating</field>
+            <field name="res_model">rating.rating</field>
+            <field name="view_mode">kanban,tree,graph,pivot,form</field>
+            <field name="domain">[('consumed','=',True), ('parent_res_model','=','project.project'), ('parent_res_id','=',active_id)]</field>
+            <field name="search_view_id" ref="rating_rating_view_search_project"/>
+            <field name="help" type="html">
+                <p>
+                    There is no rating for this object at the moment.
+                </p>
+            </field>
+        </record>
+
+        <record id="rating_rating_action_view_project_rating_task" model="ir.actions.act_window">
+            <field name="name">Ratings on tasks</field>
+            <field name="res_model">rating.rating</field>
+            <field name="view_mode">kanban,tree,graph,pivot,form</field>
+            <field name="domain">[('consumed','=',True), ('parent_res_model','=','project.project'), ('parent_res_id','=',active_id), ('res_model','=','project.task')]</field>
+            <field name="search_view_id" ref="rating_rating_view_search_project"/>
+            <field name="help" type="html">
+                <p>
+                    There is no rating for tasks of this project at the moment.
+                </p>
+            </field>
+        </record>
+
+        <record id="rating_rating_action_task" model="ir.actions.act_window">
+            <field name="name">Customer Ratings on tasks</field>
+            <field name="res_model">rating.rating</field>
+            <field name="view_mode">kanban,tree,pivot,graph,form</field>
+            <field name="domain">[('res_model', '=', 'project.task'), ('res_id', '=', active_id), ('consumed', '=', True)]</field>
+            <field name="search_view_id" ref="rating_rating_view_search_project"/>
+            <field name="help" type="html">
+                <p>
+                    Customer ratings on tasks. If you have no rating, change your project Settings to activate it.
+                </p>
+            </field>
+        </record>
+
+        <record id="project_task_view_form_inherit_rating" model="ir.ui.view">
+            <field name="name">project.task.view.form.inherit.rating</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='toggle_active']" position="before">
+                    <button name="%(rating_rating_action_task)d" type="action"
+                            attrs="{'invisible': [('rating_count', '=', 0)]}"
+                            class="oe_stat_button" icon="fa-smile-o">
+                        <field name="rating_count" string="Rating" widget="statinfo"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project_task_view_search" model="ir.ui.view">
+            <field name="name">project.task.search.inherit</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_search_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//group" position="before">
+                    <separator/>
+                    <filter string="Rated tasks" domain="[('rating_last_value', '!=', 0.0)]" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project_task_view_kanban_inherit_rating" model="ir.ui.view">
+            <field name="name">project.task.view.kanban.inherit.rating</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='color']" position="after">
+                    <field name="rating_last_value"/>
+                    <field name="rating_ids"/>
+                </xpath>
+                <xpath expr="//div[hasclass('oe_kanban_bottom_left')]" position="inside">
+                    <b t-if="record.rating_ids.raw_value.length">
+                        <span style="font-weight:bold;" class="fa fa-fw mt4 fa-smile-o text-success" t-if="record.rating_last_value.value == 10" title="Latest Rating: Satisfied"/>
+                        <span style="font-weight:bold;" class="fa fa-fw mt4 fa-meh-o text-warning" t-if="record.rating_last_value.value == 5" title="Latest Rating: Not Satisfied"/>
+                        <span style="font-weight:bold;" class="fa fa-fw mt4 fa-frown-o text-danger" t-if="record.rating_last_value.value == 1" title="Latest Rating: Higly Dissatisfied"/>
+                    </b>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- project.project form view with rating satisfaction state button -->
+        <record id="view_project_project_rating_form" model="ir.ui.view">
+            <field name="name">project.project.rating.form.view</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button name="%(rating_rating_action_view_project_rating_task)d"
+                        attrs="{'invisible': ['|', '|', ('rating_status', '=', 'no'), ('percentage_satisfaction_task', '=', -1)]}"
+                        class="oe_stat_button oe_percent"
+                        type="action"
+                        icon="fa-smile-o">
+                        <field string="% On tasks" name="percentage_satisfaction_task" widget="statinfo"/>
+                    </button>
+                </div>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <label for="rating_status"/>
+                    <div>
+                        <field name="rating_status" widget="radio"/>
+                        <p attrs="{'invisible': [('rating_status','not in',('periodic','stage'))]}" class="text-muted oe_edit_only">
+                            Edit project's stages and set an email template
+                            on the stages on which you want to activate the rating.
+                        </p>
+                    </div>
+                    <field name="rating_status_period"  class="oe_inline"
+                        attrs="{'required': [('rating_status','=','periodic')], 'invisible': [('rating_status','!=','periodic')]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_project_project_rating_kanban" model="ir.ui.view">
+            <field name="name">rating.project.project.kanban.inherit</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="percentage_satisfaction_project" invisible="1"/>
+                    <field name="rating_status" invisible="1"/>
+                </field>
+                <xpath expr="//div[hasclass('o_kanban_primary_left')]" position="inside">
+                    <div t-if="record.rating_status.raw_value != 'no'" class="mt8 text-primary" title="Percentage of happy ratings over the past 30 days. Get rating details from the More menu.">
+                        <b>
+                            <t t-if="record.percentage_satisfaction_project.value == -1">
+                                <i class="fa fa-smile-o"/> No rating yet
+                            </t>
+                            <t t-if="record.percentage_satisfaction_project.value != -1">
+                                <a name="action_view_all_rating" type="object" context="{'search_default_rating_last_30_days':1}">
+                                    <i class="fa fa-smile-o"/> <t t-esc="record.percentage_satisfaction_project.value"/>%
+                                </a>
+                            </t>
+                        </b>
+                    </div>
+                </xpath>
+                <xpath expr="//div[hasclass('o_kanban_card_manage_section')]" position="inside">
+                    <div t-if="record.rating_status.raw_value != 'no'">
+                        <a name="action_view_all_rating" type="object">
+                            Customer Ratings
+                        </a>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- inherit project.task.type form view to add email template for task -->
+        <record id="view_project_task_type_rating_form" model="ir.ui.view">
+            <field name="name">project.task.type.form.view.inherit</field>
+            <field name="model">project.task.type</field>
+            <field name="inherit_id" ref="project.task_type_edit"/>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='mail_template_id']" position="after">
+                    <field name="rating_template_id"/>
+                    <field name="auto_validation_kanban_state" attrs="{'invisible': [('rating_template_id','=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="rating_rating_action_project_report" model="ir.actions.act_window">
+            <field name="name">Customer Ratings</field>
+            <field name="res_model">rating.rating</field>
+            <field name="view_mode">kanban,tree,pivot,graph,form</field>
+            <field name="domain">[('parent_res_model','=','project.project'), ('consumed', '=', True)]</field>
+            <field name="search_view_id" ref="rating_rating_view_search_project"/>
+            <field name="help" type="html">
+                <p>
+                    Customer ratings on tasks/issues. If you have no rating, change your project Settings to activate it.
+                </p>
+            </field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem id="rating_rating_menu_project"
+            action="rating_rating_action_project_report"
+            parent="project.menu_project_report"
+            sequence="40"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- ust Codes -->
+        <!-- Purchases + Input ust -->
+
+        <record id="tax_eu_19_purchase_ust_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">19% Umsatzsteuer aus innergem. Erwerb</field>
+            <field name="description">19% USt</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">-19</field>
+            <field name="refund_account_id" ref="account_1774"/>
+            <field name="account_id" ref="account_1774"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_89')])]"/>
+            <field name="type_tax_use">none</field>
+            <field name="tax_group_id" ref="tax_group_0"/>
+        </record>
+        <record id="tax_eu_19_purchase_vst_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">19% Vorsteuer aus innergem. Erwerb</field>
+            <field name="description">19% VSt</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">19</field>
+            <field name="refund_account_id" ref="account_1574"/>
+            <field name="account_id" ref="account_1574"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_61')])]"/>
+            <field name="type_tax_use">none</field>
+            <field name="tax_group_id" ref="tax_group_0"/>
+        </record>
+        <record id="tax_eu_19_purchase_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">Innergem. Erwerb 19%USt/19%VSt</field>
+            <field name="description">innergem. Erwerb 19%</field>
+            <field name="amount_type">group</field>
+            <field name="amount">0</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_89')])]"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="children_tax_ids" eval="[(6,0,[ref('tax_eu_19_purchase_ust_skr03'), ref('tax_eu_19_purchase_vst_skr03')])]"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
+        </record>
+        <record id="tax_eu_7_purchase_ust_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">7% Umsatzsteuer aus innergem. Erwerb</field>
+            <field name="description">7% USt</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">-7</field>
+            <field name="refund_account_id" ref="account_1772"/>
+            <field name="account_id" ref="account_1772"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_93')])]"/>
+            <field name="type_tax_use">none</field>
+            <field name="tax_group_id" ref="tax_group_0"/>
+        </record>
+        <record id="tax_eu_7_purchase_vst_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">7% Vorsteuer aus innergem. Erwerb</field>
+            <field name="description">7% VSt</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">7</field>
+            <field name="refund_account_id" ref="account_1572"/>
+            <field name="account_id" ref="account_1572"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_61')])]"/>
+            <field name="type_tax_use">none</field>
+            <field name="tax_group_id" ref="tax_group_0"/>
+        </record>
+        <record id="tax_eu_7_purchase_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">Innergem. Erwerb 7%USt/7%VSt</field>
+            <field name="description">innergem. Erwerb 7%</field>
+            <field name="amount_type">group</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_93')])]"/>
+            <field name="children_tax_ids" eval="[(6,0,[ref('tax_eu_7_purchase_ust_skr03'), ref('tax_eu_7_purchase_vst_skr03')])]"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
+        </record>
+        <record id="tax_eu_sale_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">Steuerfreie innergem. Lieferung (§4 Abs. 1b UStG) </field>
+            <field name="description">steuerfreie innergem. Lieferung</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">0</field>
+            <field name="refund_account_id" ref="account_1770"/>
+            <field name="account_id" ref="account_1770"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_41'), ref('l10n_de.tag_de_intracom_community_delivery')])]"/>
+            <field name="type_tax_use">sale</field>
+            <field name="tax_group_id" ref="tax_group_0"/>
+        </record>
+        <record id="tax_export_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">Steuerfreie Ausfuhr (§4 Nr. 1a UStG)</field>
+            <field name="description">steuerfreie Ausfuhr</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">0</field>
+            <field name="refund_account_id" ref="account_1770"/>
+            <field name="account_id" ref="account_1770"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_43')])]"/>
+            <field name="type_tax_use">sale</field>
+            <field name="tax_group_id" ref="tax_group_0"/>
+        </record>
+        <record id="tax_import_19_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">19% Einfuhrumsatzsteuer</field>
+            <field name="description">19% EUSt</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">19</field>
+            <field name="refund_account_id" ref="account_1588"/>
+            <field name="account_id" ref="account_1588"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_62')])]"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="tax_group_id" ref="tax_group_19"/>
+        </record>
+        <record id="tax_import_7_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">7% Einfuhrumsatzsteuer</field>
+            <field name="description">7% EUSt</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">7</field>
+            <field name="refund_account_id" ref="account_1588"/>
+            <field name="account_id" ref="account_1588"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_62')])]"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="tax_group_id" ref="tax_group_7"/>
+        </record>
+        <record id="tax_not_taxable_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">nicht steuerbar</field>
+            <field name="description">nicht steuerbar</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">0</field>
+            <field name="refund_account_id" ref="account_1770"/>
+            <field name="account_id" ref="account_1770"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_45')])]"/>
+            <field name="l10n_de_datev_code">10</field>
+            <field name="type_tax_use">sale</field>
+            <field name="tax_group_id" ref="tax_group_0"/>
+        </record>
+        <record id="tax_ust_19_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">19% Umsatzsteuer</field>
+            <field name="description">19% USt</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">19</field>
+            <field name="refund_account_id" ref="account_1776"/>
+            <field name="account_id" ref="account_1776"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_81')])]"/>
+            <field name="l10n_de_datev_code">13</field>
+            <field name="type_tax_use">sale</field>
+            <field name="tax_group_id" ref="tax_group_19"/>
+        </record>
+        <record id="tax_ust_7_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">7% Umsatzsteuer</field>
+            <field name="description">7% USt</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">7</field>
+            <field name="refund_account_id" ref="account_1771"/>
+            <field name="account_id" ref="account_1771"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_86')])]"/>
+            <field name="l10n_de_datev_code">12</field>
+            <field name="type_tax_use">sale</field>
+            <field name="tax_group_id" ref="tax_group_7"/>
+        </record>
+        <record id="tax_vst_19_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">19% Vorsteuer</field>
+            <field name="description">19% VSt</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">19</field>
+            <field name="refund_account_id" ref="account_1576"/>
+            <field name="account_id" ref="account_1576"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_66')])]"/>
+            <field name="l10n_de_datev_code">19</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="tax_group_id" ref="tax_group_19"/>
+        </record>
+        <record id="tax_vst_7_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">7% Vorsteuer</field>
+            <field name="description">7% VSt</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">7</field>
+            <field name="refund_account_id" ref="account_1571"/>
+            <field name="account_id" ref="account_1571"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_66')])]"/>
+            <field name="l10n_de_datev_code">18</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="tax_group_id" ref="tax_group_7"/>
+        </record>
+        <record id="tax_ust_19_eu_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">19 % Umsatzsteuer EU Lieferung</field>
+            <field name="description">19% USt EU</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">19</field>
+            <field name="refund_account_id" ref="account_1778"/>
+            <field name="account_id" ref="account_1778"/>
+            <field name="type_tax_use">sale</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_81'), ref('l10n_de.tag_de_intracom_community_supplies')])]"/>
+            <field name="tax_group_id" ref="tax_group_19"/>
+        </record>
+        <record id="tax_ust_eu_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">7% Umsatzsteuer EU Lieferung</field>
+            <field name="description">7% USt EU</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">7</field>
+            <field name="refund_account_id" ref="account_1777"/>
+            <field name="account_id" ref="account_1777"/>
+            <field name="type_tax_use">sale</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_86'), ref('l10n_de.tag_de_intracom_community_supplies')])]"/>
+            <field name="tax_group_id" ref="tax_group_7"/>
+        </record>
+        <record id="tax_free_eu_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">0% Steuerfreie Leistung EU</field>
+            <field name="description">0% USt EU</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_21'), ref('l10n_de.tag_de_intracom_community_supplies')])]"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
+        </record>
+        <record id="tax_free_third_country_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">0% Steuerfreie Leistung Drittland</field>
+            <field name="description">0% USt Drittland</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_45')])]"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
+        </record>
+        <record id="tax_eu_19_purchase_ust_goods_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">19% USt Steuerpflichtige Sonstige Leistungen EU</field>
+            <field name="description">19% USt Steurp. EU</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">-19</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_47')])]"/>
+            <field name="type_tax_use">none</field>
+            <field name="tax_group_id" ref="tax_group_0"/>
+        </record>
+        <record id="tax_eu_19_purchase_vst_goods_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">19% VSt Steuerpflichtige Sonstige Leistungen EU</field>
+            <field name="description">19% VSt Steuerp. EU</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">19</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_67')])]"/>
+            <field name="type_tax_use">none</field>
+            <field name="tax_group_id" ref="tax_group_0"/>
+        </record>
+        <record id="tax_eu_19_purchase_goods_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">Steuerpflichtige sonstige Leistungen EU 19%USt/19%VSt</field>
+            <field name="description">Leistungen EU 19%Ust/19%VSt</field>
+            <field name="amount_type">group</field>
+            <field name="amount">0</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_46')])]"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="children_tax_ids" eval="[(6,0,[ref('tax_eu_19_purchase_ust_goods_skr03'), ref('tax_eu_19_purchase_vst_goods_skr03')])]"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
+        </record>
+
+        <record id="tax_eu_19_purchase_ust_dritland_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">19% USt Steuerpflichtige Sonstige Leistungen Drittland</field>
+            <field name="description">19% USt Steurp. Drittland</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">-19</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_53')])]"/>
+            <field name="type_tax_use">none</field>
+            <field name="tax_group_id" ref="tax_group_0"/>
+        </record>
+        <record id="tax_eu_19_purchase_vst_dritland_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">19% VSt Steuerpflichtige Sonstige Leistungen Drittland</field>
+            <field name="description">19% VSt Steuerp. Drittland</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">19</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_67')])]"/>
+            <field name="type_tax_use">none</field>
+            <field name="tax_group_id" ref="tax_group_0"/>
+        </record>
+        <record id="tax_eu_19_purchase_dritland_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">Steuerpflichtige sonstige Leistungen Drittland 19%USt/19%VSt</field>
+            <field name="description">Leistungen Drittland 19%Ust/19%VSt</field>
+            <field name="amount_type">group</field>
+            <field name="amount">0</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_52')])]"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="children_tax_ids" eval="[(6,0,[ref('tax_eu_19_purchase_ust_dritland_skr03'), ref('tax_eu_19_purchase_vst_dritland_skr03')])]"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
+        </record>
+
+
+        <record id="fiscal_position_eu_no_id_purchase_skr03" model="account.fiscal.position.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">Lieferant EU (ohne Ust-ID)</field>
+        </record>
+        <record id="fiscal_position_non_eu_purchase_skr03" model="account.fiscal.position.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">Lieferant Ausland</field>
+        </record>
+        <record id="fiscal_position_eu_vat_id_sale_skr03" model="account.fiscal.position.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">Kunde EU Unternehmen (mit USt-ID)</field>
+        </record>
+        <record id="fiscal_position_non_eu_sale_skr03" model="account.fiscal.position.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">Kunde Ausland</field>
+        </record>
+        <record id="fiscal_position_eu_vat_id_purchase_skr03" model="account.fiscal.position.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">Lieferant EU Unternehmen (mit USt-ID)</field>
+        </record>
+        <record id="fiscal_position_eu_no_id_sale_skr03" model="account.fiscal.position.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">Kunde EU (ohne USt-ID)</field>
+        </record>
+        <record id="account_fiscal_position_tax_eu_vat_id_sale_19_skr03" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_eu_vat_id_sale_skr03"/>
+            <field name="tax_dest_id" ref="tax_eu_sale_skr03"/>
+            <field name="tax_src_id" ref="tax_ust_19_skr03"/>
+        </record>
+        <record id="account_fiscal_position_tax_eu_vat_id_sale_7_skr03" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_eu_vat_id_sale_skr03"/>
+            <field name="tax_dest_id" ref="tax_eu_sale_skr03"/>
+            <field name="tax_src_id" ref="tax_ust_7_skr03"/>
+        </record>
+        <record id="account_fiscal_position_tax_eu_vat_id_purchase_19_skr03" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_eu_vat_id_purchase_skr03"/>
+            <field name="tax_dest_id" ref="tax_eu_19_purchase_skr03"/>
+            <field name="tax_src_id" ref="tax_vst_19_skr03"/>
+        </record>
+        <record id="account_fiscal_position_tax_eu_vat_id_purchase_7_skr03" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_eu_vat_id_purchase_skr03"/>
+            <field name="tax_dest_id" ref="tax_eu_7_purchase_skr03"/>
+            <field name="tax_src_id" ref="tax_vst_7_skr03"/>
+        </record>
+        <record id="account_fiscal_position_tax_eu_no_id_purchase_19_skr03" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_eu_no_id_purchase_skr03"/>
+            <field name="tax_dest_id" ref="tax_import_19_skr03"/>
+            <field name="tax_src_id" ref="tax_vst_19_skr03"/>
+        </record>
+        <record id="account_fiscal_position_tax_eu_no_id_purchase_7_skr03" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_eu_no_id_purchase_skr03"/>
+            <field name="tax_dest_id" ref="tax_import_7_skr03"/>
+            <field name="tax_src_id" ref="tax_vst_7_skr03"/>
+        </record>
+        <record id="account_fiscal_position_tax_eu_no_id_sale_19_skr03" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_eu_no_id_sale_skr03"/>
+            <field name="tax_dest_id" ref="tax_ust_19_eu_skr03"/>
+            <field name="tax_src_id" ref="tax_ust_19_skr03"/>
+        </record>
+        <record id="account_fiscal_position_tax_eu_no_id_purchase_7_skr03" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_eu_no_id_sale_skr03"/>
+            <field name="tax_dest_id" ref="tax_ust_eu_skr03"/>
+            <field name="tax_src_id" ref="tax_ust_7_skr03"/>
+        </record>
+        <record id="account_fiscal_position_tax_non_eu_sale_19_skr03" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_non_eu_sale_skr03"/>
+            <field name="tax_dest_id" ref="tax_export_skr03"/>
+            <field name="tax_src_id" ref="tax_ust_19_skr03"/>
+        </record>
+        <record id="account_fiscal_position_tax_non_eu_sale_7_skr03" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_non_eu_sale_skr03"/>
+            <field name="tax_dest_id" ref="tax_export_skr03"/>
+            <field name="tax_src_id" ref="tax_ust_7_skr03"/>
+        </record>
+        <record id="account_fiscal_position_tax_non_eu_purchase_19_skr03" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_non_eu_purchase_skr03"/>
+            <field name="tax_dest_id" ref="tax_import_19_skr03"/>
+            <field name="tax_src_id" ref="tax_vst_19_skr03"/>
+        </record>
+        <record id="account_fiscal_position_tax_non_eu_purchase_7_skr03" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_non_eu_purchase_skr03"/>
+            <field name="tax_dest_id" ref="tax_import_7_skr03"/>
+            <field name="tax_src_id" ref="tax_vst_7_skr03"/>
+        </record>
+        <record id="account_fiscal_position_account_eu_vat_id_sale_19_skr03" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="fiscal_position_eu_vat_id_sale_skr03"/>
+            <field name="account_src_id" ref="account_8400" />
+            <field name="account_dest_id" ref="account_8125" />
+        </record>
+        <record id="account_fiscal_position_account_eu_vat_id_sale_7_skr03" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="fiscal_position_eu_vat_id_sale_skr03"/>
+            <field name="account_src_id" ref="account_8300" />
+            <field name="account_dest_id" ref="account_8125" />
+        </record>
+        <record id="account_fiscal_position_account_non_eu_sale_19_skr03" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="fiscal_position_non_eu_sale_skr03"/>
+            <field name="account_src_id" ref="account_8400" />
+            <field name="account_dest_id" ref="account_8120" />
+        </record>
+        <record id="account_fiscal_position_account_non_eu_sale_7_skr03" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="fiscal_position_non_eu_sale_skr03"/>
+            <field name="account_src_id" ref="account_8300" />
+            <field name="account_dest_id" ref="account_8120" />
+        </record>
+        <record id="account_fiscal_position_account_non_eu_purchase_19_skr03" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="fiscal_position_non_eu_purchase_skr03"/>
+            <field name="account_src_id" ref="account_3400" />
+            <field name="account_dest_id" ref="account_3435" />
+        </record>
+        <record id="account_fiscal_position_account_non_eu_purchase_7_skr03" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="fiscal_position_non_eu_purchase_skr03"/>
+            <field name="account_src_id" ref="account_3300" />
+            <field name="account_dest_id" ref="account_3430" />
+        </record>
+        <record id="account_fiscal_position_account_eu_no_id_sale_19_skr03" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="fiscal_position_eu_no_id_sale_skr03"/>
+            <field name="account_src_id" ref="account_8400" />
+            <field name="account_dest_id" ref="account_8315" />
+        </record>
+        <record id="account_fiscal_position_account_no_id_sale_7_skr03" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="fiscal_position_eu_no_id_sale_skr03"/>
+            <field name="account_src_id" ref="account_8300" />
+            <field name="account_dest_id" ref="account_8310" />
+        </record>
+        <record id="account_fiscal_position_account_eu_vat_id_purchase_19_skr03" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="fiscal_position_eu_vat_id_purchase_skr03"/>
+            <field name="account_src_id" ref="account_3400" />
+            <field name="account_dest_id" ref="account_3425" />
+        </record>
+        <record id="account_fiscal_position_account_eu_vat_id_purchase_7_skr03" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="fiscal_position_eu_vat_id_purchase_skr03"/>
+            <field name="account_src_id" ref="account_3300" />
+            <field name="account_dest_id" ref="account_3420" />
+        </record>
+        <record id="account_fiscal_position_account_eu_no_id_purchase_19_skr03" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="fiscal_position_eu_no_id_purchase_skr03"/>
+            <field name="account_src_id" ref="account_3400" />
+            <field name="account_dest_id" ref="account_3435" />
+        </record>
+        <record id="account_fiscal_position_account_no_id_purchase_7_skr03" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="fiscal_position_eu_no_id_purchase_skr03"/>
+            <field name="account_src_id" ref="account_3300" />
+            <field name="account_dest_id" ref="account_3430" />
+        </record>
+</odoo>

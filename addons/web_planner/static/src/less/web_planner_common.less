@@ -1,0 +1,371 @@
+
+/**************** FONTS ****************/
+@font-face {
+    font-family: 'Simple-Line-Icons';
+    src:url('/web_planner/static/src/fonts/Simple-Line-Icons.eot');
+    src:url('/web_planner/static/src/fonts/Simple-Line-Icons.eot?#iefix') format('embedded-opentype'),
+        url('/web_planner/static/src/fonts/Simple-Line-Icons.woff') format('woff'),
+        url('/web_planner/static/src/fonts/Simple-Line-Icons.ttf') format('truetype'),
+        url('/web_planner/static/src/fonts/Simple-Line-Icons.svg#Simple-Line-Icons') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/**************** ICON ****************/
+// use data attributes for inserting  icons
+// http://www.issme.net/india/assets/plugins/line-icons/
+[data-icon]:before {
+    font-family: 'Simple-Line-Icons';
+    content: attr(data-icon);
+    speak: none;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/**************** MENU PROGRESS BAR ****************/
+@planner-height: 13px;
+.o_planner_systray {
+    > .progress {
+        width: 70px;
+        height: @planner-height;
+        margin: floor((@odoo-navbar-height - @planner-height)/2) 10px 0;
+        cursor: pointer;
+
+        > .progress-bar {
+            background-color: @brand-success;
+        }
+    }
+}
+
+.o_planner_dialog {
+
+    > .modal-dialog {
+        height: 100%;
+        padding: 30px 0;
+        margin: 0 auto;
+
+        > .modal-content {
+            height: 100%;
+            .o-flex-display();
+            .o-flex-flow(column, nowrap);
+
+            > .modal-header, > .modal-footer {
+                .o-flex(0, 0, auto);
+                text-align: left;
+                padding: 15px;
+            }
+
+            > .modal-header {
+                background-color: @odoo-brand-primary;
+                color: white;
+
+                > .close {
+                    color: inherit;
+                    opacity: 1;
+
+                    &::after, &::before {
+                        content: none;
+                    }
+                }
+
+                > .modal-title {
+                    font-weight: 700;
+                    color: inherit;
+
+                    > * {
+                        display: inline-block;
+                        vertical-align: middle;
+                    }
+                    > .o_page_name {
+                        width: 25%;
+                        font-size: 22px;
+                    }
+                    > .progress {
+                        width: 120px;
+                        margin: 0 15px;
+
+                        > .progress-bar {
+                            background-color: @brand-success;
+                            box-shadow: none;
+                        }
+                    }
+                }
+            }
+
+            > .modal-footer {
+                padding-left: 25%;
+                > :first-child {
+                    margin-left: 25px;
+                }
+            }
+
+            > .modal-body {
+                .o-flex(1, 1, auto);
+                padding: 0;
+
+                > .o_planner_menu {
+                    float: left;
+                    width: 25%;
+                    height: 100%;
+                    overflow: auto;
+                    border-right: 1px solid #e6e6e6;
+                    margin: 0;
+                    padding-top: 10px;
+                    padding-left: 18px;
+                    padding-right: 18px;
+                    list-style-type: none;
+                    line-height: 1.6;
+
+                    > li {
+                        // align multi lines li
+                        text-indent: -18px;
+                        padding-left: 18px;
+
+                        position: relative;
+
+                        > a {
+                            color: #666666;
+                            padding-left: 18px;
+                            font-weight: 600;
+                            font-size: 14px;
+
+                            &:hover {
+                                color: @odoo-brand-optional;
+                            }
+
+                            > .fa {
+                                .o-position-absolute(@top: 4px, @left: 1px);
+                            }
+                        }
+                        &.active > a {
+                            color: @odoo-brand-optional;
+                        }
+                    }
+
+                    > h4 {
+                        padding-left: 27px;
+                        font-size: 12px;
+                        color: #a8a8a8;
+                        border-top: 1px solid #e6e6e6;
+                        margin-left: -15px;
+                        margin-bottom: 15px;
+                        padding-top: 20px;
+
+                        > i.fa {
+                            margin-right: 10px;
+                            font-size: 14px;
+                        }
+                    }
+                }
+
+                > .o_planner_page {
+                    display: none;
+                    height: 100%;
+                    overflow: auto;
+                    margin-left: 25%;
+                    padding: 0 25px;
+
+                    > h1 {
+                        font-size: 2.5em;
+                        font-weight: 300;
+                    }
+
+                    .o_planner_intro {
+                        font-size: 120%;
+                    }
+
+                    .label > a {
+                        color: inherit;
+                    }
+
+                    .well, .panel, .alert {
+                        box-shadow: none;
+                        border-radius: 0;
+                    }
+
+                    .well {
+                        padding: 30px;
+                        padding: 30px;
+                        .label {
+                            font-size: 12px;
+                        }
+                    }
+
+                    .alert {
+                        padding: 30px;
+                    }
+
+                    .fa-lightbulb-o {
+                        padding-top: 5px;
+                        &:before {
+                            float: left;
+                            font-size: 20px;
+                            padding-right: 10px;
+                        }
+                    }
+
+                    &.marked:after {
+                        .o-display-marked("\f00c", 0, 360px, @brand-success);
+                    }
+
+                    //NOTEBOOK
+                    .o_planner_notebook_container {
+                        margin: 20px 0;
+                        .o_planner_notebook {
+                            color: #555;
+                            padding: 0 !important;
+                            font-family: courier, monospace;
+                            border: 1px solid #faebcc;
+                            color: #8a6d3b;
+                            position: relative;
+                            background-color: #fcf8e3;
+
+                            textarea, input[type="text"] {
+                                background: #fcf8e3;
+                                border: none;
+                                width: 100%;
+                                max-width: 100%;
+                            }
+
+                            input[type="radio"],input[type="checkbox"] {
+                                margin-right: 5px;
+                            }
+
+                            > li {
+                                list-style: none;
+                                border-bottom: 1px dashed #C1D6DA;
+                                padding: 10px 10px 5px 55px;
+                                text-transform: capitalize;
+                                margin: 0;
+
+                                .indented {
+                                    padding-left: 32px;
+                                }
+
+                                span {
+                                    position: absolute;
+                                    left: 9px;
+                                    color: rgb(199, 180, 146);
+                                    font-size: 20px;
+                                    font-weight: bold;
+                                }
+                            }
+
+                            > li.row {
+                                span {
+                                    left: -50px; // make up for the li's left padding
+                                }
+                            }
+
+                            > li:last-child {
+                                border-bottom: 0;
+                            }
+
+                            .o_planner_notebook_header {
+                                div.dropdown {
+                                    display: inline;
+                                    float:right;
+                                }
+                                a {
+                                    color: #C4A87A;
+                                    position: absolute;
+                                    top: 13px;
+                                    right: 13px;
+                                    &:hover {
+                                        text-decoration: none;
+                                        color: #9C855D;
+                                    }
+                                }
+                                select {
+                                    margin-bottom: 10px;
+                                    font-family: sans-serif;
+                                    font-size: 16px;
+                                    border: none;
+                                    background: #F5E7CF;
+                                    padding: 3px;
+                                    width: auto;
+                                }
+                            }
+                            > li:not(.o_planner_notebook_header):hover {
+                                background-color: #F5EFD0;
+                            }
+                            .o_planner_notebook_line_separator {
+                                border-left: 1px solid #ffaa9f;
+                                border-right: 1px solid #ffaa9f;
+                                background: transparent;
+                                position: absolute;
+                                width: 3px;
+                                height: 100%;
+                                top: 0;
+                                left: 42px;
+                                border-bottom: 0;
+                                border-top: 0;
+                            }
+                        }
+                    }
+
+                    // WHITE BOX
+                    .o_planner_white_box{
+                        .panel{
+                            height: 200px;
+                            width: 100%;
+                            font-size: 1.1em;
+                            padding-top: 40px;
+                            a:hover{
+                                text-decoration: none;
+                            }
+                        }
+                    }
+
+                    // TROPHY
+                    .o_planner_trophy {
+                        font-size: 11em;
+                        color: #875A7B;
+                        margin-top: .5em;
+                        -webkit-animation-name: bounceIn;
+                        animation-name: bounceIn;
+                        -webkit-animation-duration: 1.75s;
+                        animation-duration: 1.75s;
+                        -webkit-animation-fill-mode: both;
+                        animation-fill-mode: both;
+                    }
+                    .info_icon {
+                        position: relative;
+                        padding-left: 5em;
+                        min-height: 6em;
+                        .fa {
+                            position: absolute;
+                            font-size: 5em;
+                            left: 0.2em;
+                            opacity: 0.6;
+                        }
+                    }
+
+                    .odoo_purple, a.btn.odoo_purple, .btn.odoo_purple:hover {
+                        background-color: #875A7B;
+                        color: white;
+                    }
+
+                    // PARAGRAPHS
+                    .o_planner_paragraphs .icon {
+                        text-align: center;
+                        font-size: 2em;
+                        color: #21b799;
+                    }
+
+                    // INSTALL APP
+                    .o_planner_row_apps{
+                        .col-md-4{
+                            margin-top: 20px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

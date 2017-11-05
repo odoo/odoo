@@ -3,16 +3,18 @@
 # * base_setup
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Murat Kaplan <muratk@projetgrup.com>, 2015,2017
+# Murat Kaplan <muratk@projetgrup.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2017
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2017-01-11 19:12+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
-"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Last-Translator: Ramiz Deniz Öner <deniz@denizoner.com>, 2017\n"
+"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,354 +22,319 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-msgid "(reload fonts)"
-msgstr "(fontları yeniden yükle)"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<strong>Save</strong> this page and come back here to set up the feature."
+msgstr "Bu sayfayı kaydedin ve özelliği ayarlamak için buraya dönün."
 
 #. module: base_setup
-#: field:base.config.settings,module_portal:0
-msgid "Activate the customer portal"
-msgstr "Müşteri portalını etkinleştir"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Access Rights"
+msgstr "Erişim Hakları"
 
 #. module: base_setup
-#: field:base.config.settings,module_share:0
-msgid "Allow documents sharing"
-msgstr "Belge paylaşımına izin ver"
-
-#. module: base_setup
-#: field:base.config.settings,module_google_calendar:0
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_google_calendar
 msgid "Allow the users to synchronize their calendar  with Google Calendar"
 msgstr "Kullanıcıların takvimlerini Google Takvimle eşlemesine izin ver"
 
 #. module: base_setup
-#: field:base.config.settings,module_base_import:0
-msgid "Allow users to import data from CSV files"
-msgstr "Kullanıcıların CSV dosyalarından veri içe aktarıma izin ver"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_base_import
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
+msgstr ""
+"Kullanıcıların CSV/XLS/XLSX/ODS dosyalarından veri aktarmalarına izin ver"
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-#: view:sale.config.settings:base_setup.view_sale_config_settings
-msgid "Apply"
-msgstr "Uygula"
+#: model:ir.model.fields,help:base_setup.field_res_config_settings_group_multi_currency
+msgid "Allows to work in a multi currency environment"
+msgstr "Çoklu para birimli bir ortamda çalışmaya izin verir"
 
 #. module: base_setup
-#: field:base.config.settings,module_google_drive:0
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_voip
+msgid "Asterisk (VoIP)"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_google_drive
 msgid "Attach Google documents to any record"
-msgstr "Herhangi bir kayıta Google belgesi ekle"
+msgstr "Herhangi bir kayıtta Google belgesi eklenebilsin"
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-msgid "Authentication"
-msgstr "Kimlik doğrulama"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Automate inter-company transactions"
+msgstr ""
 
 #. module: base_setup
-#: field:sale.config.settings,module_crm:0
-msgid "CRM"
-msgstr "CRM"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Business Documents"
+msgstr "Çıktılar"
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-#: view:sale.config.settings:base_setup.view_sale_config_settings
-msgid "Cancel"
-msgstr "İptal"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"By default, new users get highest access rights for all installed apps."
+msgstr ""
+"Varsayılan olarak, yeni kullanıcılar, yüklü tüm uygulamalar için en yüksek "
+"erişim haklarına sahip olurlar."
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Client"
-msgstr "İstemci"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Change Document Template"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_sale_config
-#: view:sale.config.settings:base_setup.view_sale_config_settings
-msgid "Configure Sales"
-msgstr "Satışları Yapılandır"
+#: code:addons/base_setup/models/res_config_settings.py:100
+#, python-format
+msgid "Choose Your Document Layout"
+msgstr ""
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-msgid "Configure outgoing email servers"
-msgstr "Giden eposta sunucusunu yapılandır"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Choose your document's header and footer layout"
+msgstr ""
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-msgid "Configure your company data"
-msgstr "Şirket verilerinizi yapılandırın"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_pad
+msgid "Collaborative Pads"
+msgstr "İşbirliği Bloknotları"
 
 #. module: base_setup
-#: view:sale.config.settings:base_setup.view_sale_config_settings
-msgid "Contacts"
-msgstr "Kişiler"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Common Contact Book"
+msgstr "Ortak Kişiler (Kontaklar)"
 
 #. module: base_setup
-#: field:base.config.settings,create_uid:0
-#: field:base.setup.terminology,create_uid:0
-#: field:sale.config.settings,create_uid:0
-msgid "Created by"
-msgstr "Oluşturan"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Companies"
+msgstr "Şirketler"
 
 #. module: base_setup
-#: field:base.config.settings,create_date:0
-#: field:base.setup.terminology,create_date:0
-#: field:sale.config.settings,create_date:0
-msgid "Created on"
-msgstr "Oluşturma"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_company_id
+msgid "Company"
+msgstr "Firma"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Customer"
-msgstr "Müşteri"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"Configure company rules to automatically create SO/PO when one of your "
+"company sells/buys to another of your company."
+msgstr ""
+"Bir şirketiniz, bir diğer grup şirketinize satış yaptığında veya ondan "
+"satınalma yaptığında; satış siparişleri ve satınalma siparişlerini otomatik "
+"olarak oluşturacak şekilde şirket kurallarını yapılandırın."
 
 #. module: base_setup
-#: view:sale.config.settings:base_setup.view_sale_config_settings
-msgid "Customer Features"
-msgstr "Müşteri Özellikleri"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Create and attach Google Drive documents to any record"
+msgstr ""
+"Herhangi bir kayda Google Drive dokümanları oluşturun ve bunları ekleyin"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Donor"
-msgstr "Bağışçı"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_default_custom_report_footer
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_report_footer
+msgid "Custom Report Footer"
+msgstr "Özel Rapor Altbilgisi"
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-msgid "Email"
-msgstr "Eposta"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_default_user_rights
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Default Access Rights"
+msgstr "Varsayılan Erişim Hakları"
 
 #. module: base_setup
-#: view:sale.config.settings:base_setup.view_sale_config_settings
-msgid "Emails Integration"
-msgstr "Eposta entegrasyonu"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_external_report_layout
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Document Template"
+msgstr "Belge Şablonu"
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-#: model:ir.actions.act_window,name:base_setup.action_general_configuration
-#: model:ir.ui.menu,name:base_setup.menu_general_configuration
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Edit Header"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_default_external_email_server
+msgid "External Email Servers"
+msgstr "Harici Eposta Sunucuları"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Extract and analyze Odoo data from Google Spreadsheet"
+msgstr "Google Spreadsheet'den Odoo verilerini analiz et"
+
+#. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_res_config_settings_report_footer
+msgid "Footer text displayed at the bottom of all reports."
+msgstr "Footer metin tüm çıktıların alt kısmında görüntülenir."
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Format"
+msgstr "Biçim"
+
+#. module: base_setup
+#: model:ir.ui.menu,name:base_setup.menu_config
 msgid "General Settings"
 msgstr "Genel Ayarlar"
 
 #. module: base_setup
-#: help:sale.config.settings,module_mass_mailing:0
-msgid "Get access to statistics with your mass mailing, manage campaigns."
-msgstr "Toplu postalamayla istatistiklere erişin, kampanyalar yönetin."
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Gengo Translations"
+msgstr "Gengo Çeviri Hizmeti"
 
 #. module: base_setup
-#: field:sale.config.settings,module_web_linkedin:0
-msgid "Get contacts automatically from linkedIn"
-msgstr "Linkedin'den kişileri otomatik al"
-
-#. module: base_setup
-#: help:base.config.settings,module_portal:0
-msgid "Give your customers access to their documents."
-msgstr "Müşterilerinize belgelerine erişim verin"
-
-#. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Google Calendar"
 msgstr "Google Takvim"
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Google Drive"
 msgstr "Google Drive"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Guest"
-msgstr "Misafir"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_google_spreadsheet
+msgid "Google Spreadsheet"
+msgstr "Google E-tablo"
 
 #. module: base_setup
-#: field:base.setup.terminology,partner:0
-msgid "How do you call a Customer"
-msgstr "Müşterilerinizi nasıl isimlendiriyorsunuz ?"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Import & Export"
+msgstr "İçe Aktarım / Dışa Aktarım"
 
 #. module: base_setup
-#: field:base.config.settings,id:0 field:base.setup.terminology,id:0
-#: field:sale.config.settings,id:0
-msgid "ID"
-msgstr "ID"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Integrations"
+msgstr "Entegrasyonlar"
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-msgid "Import / Export"
-msgstr "İçeaktar / Dışaaktar"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Inter-Company Transactions"
+msgstr ""
 
 #. module: base_setup
-#: field:base.config.settings,write_uid:0
-#: field:base.setup.terminology,write_uid:0
-#: field:sale.config.settings,write_uid:0
-msgid "Last Updated by"
-msgstr "Son Güncelleyen"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_auth_ldap
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "LDAP Authentication"
+msgstr ""
 
 #. module: base_setup
-#: field:base.config.settings,write_date:0
-#: field:base.setup.terminology,write_date:0
-#: field:sale.config.settings,write_date:0
-msgid "Last Updated on"
-msgstr "Son Güncelleme"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_inter_company_rules
+msgid "Manage Inter Company"
+msgstr "Grup şirket otomatik kayıt transferlerini yönet"
 
 #. module: base_setup
-#: field:sale.config.settings,module_mass_mailing:0
-msgid "Manage mass mailing campaigns"
-msgstr "Toplu postalama kampanyalarını yönet"
-
-#. module: base_setup
-#: field:base.config.settings,module_multi_company:0
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_group_multi_company
 msgid "Manage multiple companies"
-msgstr "Çoklu şirketleri yönet"
+msgstr "Çoklu Şirketleri Yönet"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Member"
-msgstr "Üye"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Manage multiple legal entities with separate accounting"
+msgstr ""
 
 #. module: base_setup
-#: view:sale.config.settings:base_setup.view_sale_config_settings
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_group_multi_currency
+msgid "Multi-Currencies"
+msgstr "Çoklu Para Birimleri"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Multi-company"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "OAuth Authentication"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_paperformat_id
+msgid "Paper format"
+msgstr "Kağıt biçimi"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Preview Document"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Set custom access rights for new users"
+msgstr "Yeni kullanıcılar için varsayılan erişim haklarını düzenle"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Set the paper format of printed documents"
+msgstr "Çıktılar için kağıt biçimini belirleyin"
+
+#. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_general_configuration
+msgid "Settings"
+msgstr "Ayarlar"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_company_share_partner
+msgid "Share partners to all companies"
+msgstr "Tüm şirketlerle paylaşılacak iş ortakları"
+
+#. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_res_config_settings_company_share_partner
 msgid ""
-"Odoo allows to automatically create leads (or others documents)\n"
-"                            from incoming emails. You can automatically synchronize emails with Odoo\n"
-"                            using regular POP/IMAP accounts, using a direct email integration script for your\n"
-"                            email server, or by manually pushing emails to Odoo using specific\n"
-"                            plugins for your preferred email application."
-msgstr "Odoo gelen epostalardan otomatik olarak adaylar (yada başka belgeler)\n                            oluşturulmasını sağlar. Kendi eposta sunucunuz için doğrudan bir eposta\n                            komut dizesi kullanarak, normal POP/IMAP hesapları yolu ile epostalarınızı \n                            otomatik olarak Odoo ile eşleyebilirsiniz yada yada yeğlediğiniz eposta\n                            uygulaması için özel eklentiler kullanarak epostalarınızı elle Odoo ya itekleyebilirsiniz."
+"Share your partners to all companies defined in your instance.\n"
+" * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
+" * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
+msgstr ""
+"İş ortaklarını, tanımlı tüm şirketlerle paylaş.\n"
+" * İşaretlenmiş : Bir firmanızda iş ortağı olarak tanımlı olsa bile tüm şirketlerinizde görünür.\n"
+" * İşaretlenmemiş : Her şirket yalnız kendi tanımlı iş ortaklarını görür. Bir şirketle ilişkilendirilmemiş iş ortakları tüm şirketlere görünür."
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-msgid ""
-"Once installed, you can configure your API credentials for \"Google "
-"calendar\""
-msgstr "Kurulduktan sonra, \"Google takvimi\" için API kimlik yapılandırabilirsiniz"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Synchronize your calendar with Google Calendar"
+msgstr "Kullanıcıların takvimlerini Google Takvimle eşlemesine izin ver"
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-msgid "Options"
-msgstr "Seçenekler"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Template"
+msgstr "Şablon"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Partner"
-msgstr "İş Ortağı"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_base_gengo
+msgid "Translate Your Website with Gengo"
+msgstr "Gengo ile Web Sitenizi Yerel Dilinize Çevirin"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Patient"
-msgstr "Hasta"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Translate your website with Gengo"
+msgstr "Gengo ile Web Sitenizi Yerel Dilinize Çevirin"
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-msgid "Portal access"
-msgstr "Portal erişimi"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Use LDAP credentials to log in"
+msgstr "LDAP Kimlik doğrulama kullanın"
 
 #. module: base_setup
-#: view:sale.config.settings:base_setup.view_sale_config_settings
-msgid "Quotations and Sales Orders"
-msgstr "Teklifler ve Satış Siparişleri"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Use external accounts to log in (Google, Facebook, etc.)"
+msgstr "Giriş yapmak için harici hesaplar kullanın (Google, Facebook vb.)"
 
 #. module: base_setup
-#: field:base.config.settings,font:0
-msgid "Report Font"
-msgstr "Çıktı Fontu"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_auth_oauth
+msgid "Use external authentication providers (OAuth)"
+msgstr "Harici kimlik doğrulama sağlayıcıları (OAuth) kullanın"
 
 #. module: base_setup
-#: field:sale.config.settings,module_sale:0
-msgid "SALE"
-msgstr "SATIŞ"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Use external pads in Odoo Notes"
+msgstr "Odoo Notes'ta harici pad'ler kullanın"
 
 #. module: base_setup
-#: view:sale.config.settings:base_setup.view_sale_config_settings
-msgid "Sale Features"
-msgstr "Satış Özellikleri"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Users"
+msgstr "Kullanıcılar"
 
 #. module: base_setup
-#: help:base.config.settings,font:0
-msgid ""
-"Set the font into the report header, it will be used as default font in the "
-"RML reports of the user company"
-msgstr "Çıktı başlığındaki fontu ayarlayın, firmanın RML raporlarında varsayılan font olarak kullanılacaktır."
-
-#. module: base_setup
-#: help:base.config.settings,module_share:0
-msgid "Share or embbed any screen of Odoo."
-msgstr "Herhangi bir Odoo ekranını paylaş veya embed kodu oluştur."
-
-#. module: base_setup
-#: view:sale.config.settings:base_setup.view_sale_config_settings
-msgid "Social Network Integration"
-msgstr "Sosyal Ağ Entegrasyonu"
-
-#. module: base_setup
-#: view:base.setup.terminology:base_setup.base_setup_terminology_form
-msgid "Specify Your Terminology"
-msgstr "Terminolojinizi Belirtin"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Tenant"
-msgstr "Kiracı"
-
-#. module: base_setup
-#: help:base.config.settings,module_google_calendar:0
-msgid "This installs the module google_calendar."
-msgstr "Bu, google_calender modülünü kurar."
-
-#. module: base_setup
-#: help:base.config.settings,module_google_drive:0
-msgid "This installs the module google_docs."
-msgstr "Bu google_docs modülünü kurar."
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
-msgid "Use another word to say \"Customer\""
-msgstr "\"Müşteri\" yerine başka bir söz seçin"
-
-#. module: base_setup
-#: field:base.config.settings,module_auth_oauth:0
-msgid ""
-"Use external authentication providers, sign in with google, facebook, ..."
-msgstr "Dış doğrulama sağlayıcıları kullan, google, facebook ile giriş..."
-
-#. module: base_setup
-#: help:sale.config.settings,module_web_linkedin:0
-msgid ""
-"When you create a new contact (person or company), you will be able to load "
-"all the data from LinkedIn (photos, address, etc)."
-msgstr "Yeni bir kişi (kişi ya da firma) oluşturduğunuzda Linkedin'den tüm verileri (fotoğraf, adres, v,s,) yükleyebilirsiniz."
-
-#. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-msgid ""
-"When you send a document to a customer\n"
-"                                    (quotation, invoice), your customer will be\n"
-"                                    able to signup to get all his documents,\n"
-"                                    read your company news, check his projects,\n"
-"                                    etc."
-msgstr "Bir müşteriye bir belge gönderdiğinizde\n                                    (teklif, fatura), müşterileriniz bütün bu\n                                    belgeleri alabilmek, şirket haberlerinizi,\n                                    okuyabilmek, projelerini denetlemek, vb. için\n                                    kayıt yapabilecektir."
-
-#. module: base_setup
-#: help:base.config.settings,module_multi_company:0
-msgid ""
-"Work in multi-company environments, with appropriate security access between companies.\n"
-"-This installs the module multi_company."
-msgstr "Çok firmalı ortamda, firmalar arasında uygun güvenli erişim ile çalışın.\n-Bu, multi_company modülünü kurar."
-
-#. module: base_setup
-#: view:base.setup.terminology:base_setup.base_setup_terminology_form
-msgid ""
-"You can use this wizard to change the terminologies for customers in the "
-"whole application."
-msgstr "Bu sihirbazı kullanarak tüm uygulamanın içinde müşteri terminolojilerini değiştirebilirsiniz."
-
-#. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-msgid ""
-"You will find more options in your company details: address for the header "
-"and footer, overdue payments texts, etc."
-msgstr "Şirket ayrıntılarınızda daha çok seçenecek bulacaksınız: altbilgi ve üstbilgi için adres ve vadesi geçmiş ödemeler için metinler, vb."
-
-#. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-#: view:sale.config.settings:base_setup.view_sale_config_settings
-msgid "or"
-msgstr "ya da"
-
-#. module: base_setup
-#: view:base.setup.terminology:base_setup.base_setup_terminology_form
-msgid "res_config_contents"
-msgstr "res_config_contents"
+#: model:ir.model,name:base_setup.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record forcecreate="True" id="default_cost_method" model="ir.property">
+            <field name="name">Cost Method Property</field>
+            <field name="fields_id" ref="field_product_template_property_cost_method"/>
+            <field name="value" eval="False" />
+            <field name="type">selection</field>
+        </record>
+        <record forcecreate="True" id="default_valuation" model="ir.property">
+            <field name="name">Valuation Property</field>
+            <field name="fields_id" ref="field_product_template_property_valuation"/>
+            <field name="value" eval="False" />
+            <field name="type">selection</field>
+        </record>
+
+        <record forcecreate="True" id="default_category_cost_method" model="ir.property">
+            <field name="name">Cost Method Property</field>
+            <field name="fields_id" ref="field_product_category_property_cost_method"/>
+            <field name="value">standard</field>
+            <field name="type">selection</field>
+        </record>
+        <record forcecreate="True" id="default_category_valuation" model="ir.property">
+            <field name="name">Valuation Property</field>
+            <field name="fields_id" ref="field_product_category_property_valuation"/>
+            <field name="value">manual_periodic</field>
+            <field name="type">selection</field>
+        </record>
+        <record id="action_stock_account_valuation_report" model="ir.actions.server">
+            <field name="name">Stock Valuation Report</field>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="model_id" ref="product.model_product_product"></field>
+            <field name="binding_model_id" ref="product.model_product_product"></field>
+            <field name="code">
+env['stock.move']._run_fifo_vacuum()
+action = env.ref('stock_account.product_valuation_action').read()[0]
+            </field>
+        </record>
+    </data>
+</odoo>
+

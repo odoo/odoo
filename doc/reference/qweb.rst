@@ -95,6 +95,16 @@ not have to be ``<t>``::
 
 will give the same results as the previous example.
 
+Extra conditional branching directives ``t-elif`` and ``t-else`` are also
+available::
+
+    <div>
+        <p t-if="user.birthday == today()">Happy bithday!</p>
+        <p t-elif="user.login == 'root'">Welcome master!</p>
+        <p t-else="">Welcome!</p>
+    </div>
+
+
 .. _reference/qweb/loops:
 
 loops
@@ -334,7 +344,7 @@ The ``t-field`` directive can only be used when performing field access
 to automatically format based on field type, and is integrated in the
 website's rich text edition.
 
-``t-field-options`` can be used to customize fields, the most common option
+``t-options`` can be used to customize fields, the most common option
 is ``widget``, other options are field- or widget-dependent.
 
 debugging
@@ -357,7 +367,7 @@ Request-based
 Most Python-side uses of QWeb are in controllers (and during HTTP requests),
 in which case templates stored in the database (as
 :ref:`views <reference/views/qweb>`) can be trivially rendered by calling
-:meth:`openerp.http.HttpRequest.render`:
+:meth:`odoo.http.HttpRequest.render`:
 
 .. code-block:: python
 
@@ -365,7 +375,7 @@ in which case templates stored in the database (as
         'context_value': 42
     })
 
-This automatically creates a :class:`~openerp.http.Response` object which can
+This automatically creates a :class:`~odoo.http.Response` object which can
 be returned from the controller (or further customized to suit).
 
 View-based
@@ -382,7 +392,7 @@ At a deeper level than the previous helper is the ``render`` method on
     Sets up a number of default values in the rendering context:
 
     ``request``
-        the current :class:`~openerp.http.WebRequest` object, if any
+        the current :class:`~odoo.http.WebRequest` object, if any
     ``debug``
         whether the current request (if any) is in ``debug`` mode
     :func:`quote_plus <werkzeug.urls.url_quote_plus>`
@@ -405,14 +415,16 @@ At a deeper level than the previous helper is the ``render`` method on
 
 .. _reference/qweb/javascript:
 
-API
----
+.. todo:: the members below are no longer relevant, section to rewrite
 
-It is also possible to use the ``ir.qweb`` model directly (and extend it, and
-inherit from it):
+.. API
+.. ---
 
-.. automodule:: openerp.addons.base.ir.ir_qweb
-    :members: QWeb, QWebContext, FieldConverter, QwebWidget
+.. It is also possible to use the ``ir.qweb`` model directly (and extend it, and
+.. inherit from it):
+
+.. .. automodule:: odoo.addons.base.ir.ir_qweb
+..     :members: QWeb, QWebContext, FieldConverter, QwebWidget
 
 Javascript
 ==========
@@ -518,13 +530,13 @@ The javascript QWeb implementation provides a few debugging hooks:
 Helpers
 -------
 
-.. js:attribute:: openerp.qweb
+.. js:attribute:: core.qweb
 
-    An instance of :js:class:`QWeb2.Engine` with all module-defined template
+    (core is the ``web.core`` module) An instance of :js:class:`QWeb2.Engine` with all module-defined template
     files loaded, and references to standard helper objects ``_``
     (underscore), ``_t`` (translation function) and JSON_.
 
-    :js:func:`openerp.qweb.render <QWeb2.Engine.render>` can be used to
+    :js:func:`core.qweb.render <QWeb2.Engine.render>` can be used to
     easily render basic module templates
 
 API
@@ -535,9 +547,9 @@ API
     The QWeb "renderer", handles most of QWeb's logic (loading,
     parsing, compiling and rendering templates).
 
-    OpenERP Web instantiates one for the user, and sets it to
-    ``instance.web.qweb``. It also loads all the template files of the
-    various modules into that QWeb instance.
+    OpenERP Web instantiates one for the user in the core module, and 
+    exports it to ``core.qweb``. It also loads all the template files 
+    of the various modules into that QWeb instance.
 
     A :js:class:`QWeb2.Engine` also serves as a "template namespace".
 
@@ -610,7 +622,7 @@ API
 
 .. [#othertemplates] although it uses a few others, either for historical
                      reasons or because they remain better fits for the
-                     use case. Odoo 8.0 still depends on Jinja_ and Mako_.
+                     use case. Odoo 9.0 still depends on Jinja_ and Mako_.
 
 .. _templating:
     http://en.wikipedia.org/wiki/Template_processor

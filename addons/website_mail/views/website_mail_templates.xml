@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="follow">
+        <div class="input-group js_follow" t-att-data-id="object.id"
+                  t-att-data-object="object._name"
+                  t-att-data-follow="object.id and object.message_is_follower and 'on' or 'off'"
+                  t-att-data-unsubscribe="'unsubscribe' if 'unsubscribe' in request.params else None">
+            <input
+                  type="email" name="email"
+                  class="js_follow_email form-control"
+                  placeholder="your email..."
+                  groups="base.group_public"/>
+            <span class="input-group-btn">
+                <button href="#" t-attf-class="btn btn-default js_unfollow_btn">Unsubscribe</button>
+                <button href="#" t-attf-class="btn btn-primary js_follow_btn">Subscribe</button>
+            </span>
+        </div>
+    </template>
+
+    <template id="head" inherit_id="website.assets_frontend" name="Mail customization">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/website_mail/static/src/js/follow.js"></script>
+            <script type="text/javascript" src="/website_mail/static/src/js/website_mail.js"></script>
+            <link rel='stylesheet' href='/website_mail/static/src/css/website_mail.less'/>
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Workcenter Block Dialog -->
+    <record id="mrp_workcenter_block_wizard_form" model="ir.ui.view">
+        <field name="name">mrp.workcenter.productivity.form</field>
+        <field name="model">mrp.workcenter.productivity</field>
+        <field name="arch" type="xml">
+            <form string="Block Workcenter">
+                <group>
+                    <field name="loss_id" class="oe_inline" domain="[('manual','=',True)]"/>
+                    <field name="description" placeholder="Add a description..."/>
+                    <field name="workcenter_id" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="button_block" string="Block" type="object" class="btn-danger text-uppercase"/>
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+    <record id="act_mrp_block_workcenter" model="ir.actions.act_window">
+        <field name="name">Block Workcenter</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.workcenter.productivity</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'default_workcenter_id': active_id}</field>
+        <field name="view_id" eval="mrp_workcenter_block_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+    
+    <record id="act_mrp_block_workcenter_wo" model="ir.actions.act_window">
+        <field name="name">Block Workcenter</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.workcenter.productivity</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" eval="mrp_workcenter_block_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

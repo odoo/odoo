@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- CRM-related subtypes for messaging / Chatter -->
+        <record id="mt_lead_create" model="mail.message.subtype">
+            <field name="name">Lead Created</field>
+            <field name="hidden" eval="True"/>
+            <field name="res_model">crm.lead</field>
+            <field name="default" eval="False"/>
+            <field name="description">Lead created</field>
+        </record>
+        <record id="mt_lead_stage" model="mail.message.subtype">
+            <field name="name">Stage Changed</field>
+            <field name="res_model">crm.lead</field>
+            <field name="default" eval="False"/>
+            <field name="description">Stage changed</field>
+        </record>
+        <record id="mt_lead_won" model="mail.message.subtype">
+            <field name="name">Opportunity Won</field>
+            <field name="res_model">crm.lead</field>
+            <field name="default" eval="False"/>
+            <field name="description">Opportunity won</field>
+        </record>
+        <record id="mt_lead_lost" model="mail.message.subtype">
+            <field name="name">Opportunity Lost</field>
+            <field name="res_model">crm.lead</field>
+            <field name="default" eval="False"/>
+            <field name="description">Opportunity lost</field>
+        </record>
+        <!-- Salesteam-related subtypes for messaging / Chatter -->
+        <record id="mt_salesteam_lead" model="mail.message.subtype">
+            <field name="name">Lead Created</field>
+            <field name="sequence">10</field>
+            <field name="res_model">crm.team</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_lead_create')"/>
+            <field name="relation_field">team_id</field>
+        </record>
+        <record id="mt_salesteam_lead_stage" model="mail.message.subtype">
+            <field name="name">Opportunity Stage Changed</field>
+            <field name="sequence">11</field>
+            <field name="res_model">crm.team</field>
+            <field name="parent_id" eval="ref('mt_lead_stage')"/>
+            <field name="relation_field">team_id</field>
+        </record>
+        <record id="mt_salesteam_lead_won" model="mail.message.subtype">
+            <field name="name">Opportunity Won</field>
+            <field name="sequence">12</field>
+            <field name="res_model">crm.team</field>
+            <field name="parent_id" eval="ref('mt_lead_won')"/>
+            <field name="relation_field">team_id</field>
+        </record>
+        <record id="mt_salesteam_lead_lost" model="mail.message.subtype">
+            <field name="name">Opportunity Lost</field>
+            <field name="sequence">13</field>
+            <field name="res_model">crm.team</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_lead_lost')"/>
+            <field name="relation_field">team_id</field>
+        </record>
+
+        <!--Definition of an email template with an empty body that will be used in opportunity mailing.
+            Used to give a basis for email recipients, name and to ease the definition of a further
+            elaborated template.  -->
+        <record id="email_template_opportunity_mail" model="mail.template">
+            <field name="name">Lead/Opportunity Mass Mail</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="partner_to">${object.partner_id != False and object.partner_id.id}</field>
+            <field name="email_to">${(not object.partner_id and object.email_from)|safe}</field>
+            <field name="body_html"></field>
+        </record>
+        <record id="email_template_opportunity_reminder_mail" model="mail.template">
+            <field name="name">Lead: Reminder</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="email_from">admin@example.com</field>
+            <field name="email_to">${(object.user_id != False and object.user_id.email)|safe}</field>
+            <field name="subject">Reminder: Lead ${object.name} from ${object.partner_id != False and object.partner_id.name or object.contact_name}</field>
+            <field name="body_html"><![CDATA[
+<p>Hello ${object.user_id and object.user_id.name or ''},</p>
+<p>The opportunity <strong>${object.name}</strong> did not have any activity since at least 5 days.</p>
+%if object.description:
+<p>Here is the description about the opportunity : </p><p><i>${object.description}</i>
+%endif
+</p><p>Thank you!</p>
+]]></field>
+        </record>
+
+    </data>
+</odoo>

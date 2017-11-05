@@ -1,0 +1,147 @@
+.o_mail_theme_selector {
+    > a {
+        .o-position-absolute(0, 0, auto, 0);
+        height: 34px;
+        line-height: 31px;
+        border-radius: 0;
+        background-color: @o-we-color-darker;
+        color: @o-we-color-text-normal;
+
+        &:hover, &:focus, &:active {
+            color: @o-we-color-text-light;
+        }
+
+        i {
+            margin-right: 10px;
+        }
+    }
+
+    &.open > a {
+        color: white;
+        background-color: @o-we-color-dark;
+    }
+
+    .dropdown-menu {
+        .o-position-absolute(@odoo-navbar-height - 1, -1px, -1px, -1px);
+        margin: 0;
+        border-radius: 0;
+        overflow: auto;
+        background-color: @o-we-color-dark;
+
+        > li {
+            margin: 0;
+
+            > a {
+                padding: 10px 10px;
+
+                .o_thumb {
+                    display: none;
+                    background-size: cover;
+                    padding-top: 50%;
+                    border: 1px solid @o-we-color-light;
+                    border-top: 1px solid @o-we-color-text-normal;
+
+                    &.logo {
+                        display: block;
+                    }
+                }
+            }
+
+            &:hover > a {
+                background-color: @o-we-color-darker;
+
+                .o_thumb {
+                    border: 1px solid white;
+                }
+            }
+
+            &.selected > a .o_thumb {
+                border: 2px solid @odoo-brand-primary;
+                background-color: @o-we-color-dark;
+            }
+        }
+    }
+}
+
+body.o_force_mail_theme_choice {
+    #oe_snippets {
+        width: 100%;
+
+        .o_mail_theme_selector {
+            .dropdown-toggle {
+                display: none;
+            }
+
+            .dropdown-menu {
+                display: block;
+
+                > li {
+                    margin: 0;
+                    float: left;
+                    width: 100%;
+                    max-width: 25%;
+
+                    > a {
+                        .o-transition(all, 0.3s, ease);
+
+                        .o_thumb {
+                            display: none;
+                            padding-top: 107%;
+                            border: 1px solid @o-we-color-light;
+                            border-top: 1px solid @o-we-color-text-normal;
+                            box-shadow: 0 5px 10px fade(black, 80%);
+                            will-change: transform;
+                            .backface-visibility(hidden);
+                            .o-transition(all, 0.3s);
+
+                            &.small {
+                                display: block;
+                            }
+
+                            @media screen and (min-width: 900px) {
+                                &.small {
+                                    display: none;
+                                }
+                                &.large {
+                                    display: block;
+                                }
+                            }
+                        }
+                    }
+
+                    &:hover > a {
+                        background-color: @o-we-color-dark;
+
+                        .o_thumb {
+                            box-shadow: 0 5px 30px 1px fade(black, 60%);
+                        }
+                    }
+
+                    &.o_mass_mailing_themes_upgrade > a .o_thumb {
+                        position: relative;
+                        display: block;
+                        border: 1px dashed white;
+                        opacity: 0.2;
+
+                        > .fa {
+                            .o-position-absolute(0, 0, 0, 0);
+                            text-align: center;
+                            font-size: 50px;
+                            color: white;
+
+                            &::before {
+                                vertical-align: middle;
+                            }
+                            &::after {
+                                content: "";
+                                display: inline-block;
+                                height: 100%;
+                                vertical-align: middle;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

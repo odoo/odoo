@@ -1,0 +1,68 @@
+.o_background_footer, .o_background_header, .o_report_layout_background {
+    font-family: 'Lato';
+    color: @gray;
+}
+.o_background_header {
+    border-bottom: 1px solid @gray-lighter;
+    .company_address {
+        min-width: 300px;
+    }
+    img {
+        max-height: 96px;
+        max-width: 300px;
+        margin-right: 16px;
+    }
+    h3 {
+        color: @odoo-brand-primary;
+        font-weight: 700;
+        max-width: 300px;
+    }
+}
+.o_background_footer {
+    ul {
+        border-top: 1px solid @odoo-brand-primary;
+        border-bottom: 1px solid @odoo-brand-primary;
+        padding: 4px 0;
+        margin: 0 0 4px 0;
+        li {
+            color: @odoo-brand-primary;
+        }
+    }
+}
+.o_report_layout_background {
+    background-image: url(/base/static/img/bg_background_template.jpg);
+    background-size: cover;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    min-height: 900px;
+    thead tr th, h2 {
+        color: @odoo-brand-primary;
+    }
+    tbody {
+        color: @gray;
+        tr:nth-child(odd) {
+            background-color: rgba(184, 171, 180, 0.2);
+        }
+        tr td {
+            border-top: none;
+        }
+    }
+    /*Total table*/
+    .row > .col-xs-4 > table {
+        tr:nth-child(odd) {
+            background-color: transparent !important;
+        }
+        tr:first-child td {
+            /*we could get rid of this rule if .border-black td would be terminated in report.less*/
+            border-top: none !important;
+        }
+        tr:last-child td {
+            color: @odoo-brand-primary;
+        }
+    }
+    #total {
+        table tr:last-child td {
+            border-bottom: 1px solid black;
+        }
+    }
+}

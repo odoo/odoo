@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <!--
+        Chatter composer
+    -->
+    <t t-name="mail.chatter.ChatComposer" t-extend="mail.ChatComposer">
+        <!-- Insert information before the composer -->
+        <t t-jquery=".o_composer_container" t-operation="before">
+            <!-- New message composer -->
+            <t t-if="!widget.options.is_log">
+                <!-- Text for followers -->
+                <small class="o_chatter_composer_info">
+                    <b class="text-muted">To: </b>
+                    <em class="text-muted">Followers of </em>
+                    <b>
+                        <t t-if="widget.options.record_name">
+                            &#32;&quot;<t t-esc="widget.options.record_name"/>&quot;
+                        </t>
+                        <t t-if="!widget.options.record_name">
+                            this document
+                        </t>
+                    </b>
+                </small>
+                <!-- List of followers -->
+                <div class="o_composer_suggested_partners">
+                    <t t-foreach='widget.suggested_partners' t-as='recipient'>
+                        <div t-attf-title="Add as recipient and follower (reason: #{recipient.reason})">
+                            <div class="o_checkbox">
+                                <input type="checkbox"
+                                       t-att-checked="recipient.checked ? 'checked' : undefined"
+                                       t-att-data-fullname="recipient.full_name"/>
+                                <span/>
+                            </div>
+                            <t t-esc="recipient.name"/>
+                            <t t-if="recipient.email_address">(<t t-esc="recipient.email_address"/>)</t>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </t>
+
+        <!-- Add a button to open the full composer dialog -->
+        <t t-jquery=".o_composer_button_add_attachment" t-operation="after">
+            <button tabindex="6" class="btn btn-sm btn-icon fa fa-expand o_composer_button_full_composer" type="button"/>
+        </t>
+    </t>
+
+    <!--
+        Chatter (mail_thread widget) buttons
+    -->
+    <t t-name="mail.Chatter.Buttons">
+        <button t-if="new_message_btn" type="button" class="btn btn-sm btn-link o_chatter_button_new_message" title="Send a message">
+            Send message
+        </button>
+        <button t-if="log_note_btn" class="btn btn-sm btn-link o_chatter_button_log_note" title="Log a note. Followers will not be notified.">
+            Log note
+        </button>
+        <button t-if="schedule_activity_btn" class="btn btn-sm btn-link o_chatter_button_schedule_activity" title="Log or schedule an activity">
+            <i class="fa fa-clock-o"/> <t t-if="isMobile">Activity</t><t t-else="">Schedule activity</t>
+        </button>
+    </t>
+
+    <!--
+        Chatter main div
+    -->
+    <t t-name="mail.Chatter">
+        <div class="o_chatter">
+            <div class="o_chatter_topbar"/>
+        </div>
+    </t>
+
+</templates>

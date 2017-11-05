@@ -2,18 +2,13 @@
 # This file contains the translation of the following modules:
 # * sale_stock
 # 
-# Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Kostas Goutoudis <goutoudis@gmail.com>, 2015-2016
-# Kostas Goutoudis <goutoudis@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-07-29 08:36+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -21,360 +16,382 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:266
+#: code:addons/sale_stock/models/sale_order.py:170
 #, python-format
-msgid "(n/a)"
-msgstr "(δεν υπάρχει)"
-
-#. module: sale_stock
-#: field:sale.config.settings,module_delivery:0
-msgid "Allow adding shipping costs"
-msgstr "Δυνατότητα προσθήκης κόστους για μεταφορικά"
-
-#. module: sale_stock
-#: help:sale.config.settings,module_delivery:0
 msgid ""
-"Allows you to add delivery methods in sales orders and delivery orders.\n"
-"You can define your own carrier and delivery grids for prices.\n"
-"-This installs the module delivery."
-msgstr "Σας επιτρέπει να προσθέσετε μεθόδους παράδοσης στις παραγγελίες πώλησης και στις παραγγελίες παράδοσης.\nΜπορείτε να καθορίσετε την δική σας μεταφορική και δίκτυο παραδόσεων για τιμές.\n-Εγκαθιστά την εφαρμογή delivery."
+"\n"
+"There are %s %s available accross all warehouses."
+msgstr ""
 
 #. module: sale_stock
-#: help:sale.config.settings,group_route_so_lines:0
-msgid "Allows you to choose a delivery route on sales order lines"
-msgstr "Σας επιτρέπει να επιλέξετε διαδρομή αποστολής στις γραμμές παραγγελίας πώλησης"
+#: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
+msgid "<strong>Customer Reference:</strong>"
+msgstr ""
 
 #. module: sale_stock
-#: help:sale.config.settings,group_mrp_properties:0
-msgid "Allows you to tag sales order lines with properties."
-msgstr "Σας επιτρέπει να επισημάνετε γραμμές παραγγελίας πώλησης με ιδιότητες."
+#: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
+msgid "<strong>Incoterms:</strong>"
+msgstr ""
 
 #. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
-msgid "Cancel Order"
-msgstr "Ακύρωση Εντολής"
+#: model:ir.ui.menu,name:sale_stock.menu_aftersale
+msgid "After-Sale"
+msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:160
-#, python-format
-msgid "Cannot cancel sales order!"
-msgstr "Αδυναμία ακύρωσης της παραγγελίας πώλησης!"
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
+msgstr ""
 
 #. module: sale_stock
-#: field:sale.config.settings,group_route_so_lines:0
-msgid "Choose MTO, drop shipping,... on sales order lines"
-msgstr "Επιλογή 'Παραγωγή κατά Παραγγελία (ΠκΠ)', 'Παράδοση Εμπορευμάτων',...στις γραμμές Παραγγελίας"
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+msgid ""
+"By default Odoo computes the expected delivery date this way: order date + "
+"highest customer lead time of products. With this option, you can set a "
+"specific delivery date on orders rather than setting lead times on products."
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Companies"
-msgstr "Εταιρίες"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:277
-#: code:addons/sale_stock/sale_stock.py:352
-#, python-format
-msgid "Configuration Error!"
-msgstr "Λάθος Διαμόρφωσης!"
-
-#. module: sale_stock
-#: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
-msgid "Contact Details"
-msgstr "Λεπτομέρειες επαφής"
-
-#. module: sale_stock
-#: view:sale.config.settings:sale_stock.view_sales_config_sale_stock
-msgid "Default Options"
-msgstr "Προκαθορισμένες Δυνατότητες"
-
-#. module: sale_stock
-#: field:sale.config.settings,default_picking_policy:0
-msgid "Deliver all at once when all products are available."
-msgstr "Παράδοση όλων άπαξ μόλις τα προϊόντα είναι διαθέσιμα."
+msgstr ""
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr "Παράδοση όλων των προϊόντων ταυτόχρονα"
+msgstr ""
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr "Παράδοση κάθε προϊόντος μόλις είναι διαθέσιμο"
+msgstr ""
 
 #. module: sale_stock
-#: field:sale.order,shipped:0
-msgid "Delivered"
-msgstr "Παραδόθηκε"
+#: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
+msgid "Delivery"
+msgstr ""
 
 #. module: sale_stock
-#: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
-#: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
-msgid "Deliveries to Invoice"
-msgstr "Παραδόσεις προς Τιμολόγηση"
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_module_sale_order_dates
+msgid "Delivery Date"
+msgstr ""
 
 #. module: sale_stock
-#: model:res.groups,name:sale_stock.group_invoice_deli_orders
-msgid "Enable Invoicing Delivery orders"
-msgstr "Ενεργοποίηση Τιμολόγησης των Παραγγελιών Παράδοσης"
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_delivery_count
+msgid "Delivery Orders"
+msgstr ""
+
+#. module: sale_stock
+#: model:res.groups,name:sale_stock.group_display_incoterm
+msgid "Display incoterms on Sales Order and related invoices"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+msgid "Display incoterms on orders &amp; invoices"
+msgstr ""
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
-msgstr "Ενεργοποίηση Διαδρομής στις Γραμμές Παραγγελίας Πώλησης"
+msgstr ""
 
 #. module: sale_stock
-#: field:sale.config.settings,group_invoice_deli_orders:0
-msgid "Generate invoices after and based on delivery orders"
-msgstr "Δημιουργία τιμολογίων μετά και με βάση τις παραγγελίες παράδοσης"
+#: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_group_display_incoterm
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_incoterm
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+msgid "Incoterms"
+msgstr ""
 
 #. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
-msgid "Ignore Exception"
-msgstr "Αγνόησε Εξαίρεση"
+#: model:ir.model.fields,help:sale_stock.field_account_invoice_incoterms_id
+msgid ""
+"Incoterms are series of sales terms. They are used to divide transaction "
+"costs and responsibilities between buyer and seller and reflect state-of-"
+"the-art transportation practices."
+msgstr ""
 
 #. module: sale_stock
-#: field:sale.order,incoterm:0
-msgid "Incoterm"
-msgstr "Incoterm"
-
-#. module: sale_stock
-#: help:sale.order,incoterm:0
+#: model:ir.model.fields,help:sale_stock.field_sale_order_incoterm
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr "Οι Διεθνείς Εμπορικοί Όροι είναι μία σειρά προκαθορισμένων εμπορικών όρων που χρησιμοποιούνται στις διεθνείς συναλλαγές."
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr "Διαδρομές Απογραφής"
+msgstr ""
 
 #. module: sale_stock
-#: selection:sale.config.settings,default_order_policy:0
-msgid "Invoice based on deliveries"
-msgstr "Τιμολόγηση με βάση τις παραδόσεις"
+#: model:ir.model,name:sale_stock.model_account_invoice
+msgid "Invoice"
+msgstr ""
 
 #. module: sale_stock
-#: selection:sale.config.settings,default_order_policy:0
-msgid "Invoice based on sales orders"
-msgstr "Τιμολόγηση με βάση τις παραγγελίες"
+#: model:ir.model,name:sale_stock.model_account_invoice_line
+msgid "Invoice Line"
+msgstr ""
 
 #. module: sale_stock
-#: help:sale.config.settings,task_work:0
+#: model:ir.ui.menu,name:sale_stock.menu_invoiced
+msgid "Invoicing"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_res_config_settings_use_security_lead
 msgid ""
-"Lets you transfer the entries under tasks defined for Project Management to the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways and to automatically creates project tasks from procurement lines.\n"
-"-This installs the modules project_timesheet and sale_service."
-msgstr "Σας επιτρέπει να μεταφέρετε τις καταχωρίσεις σε εργασίες που καθορίζονται για Διαχείριση Έργου σε γραμμές καταχώρισης Χρονοδιαγράμματος για συγκεκριμένη ημερομηνία  και συγκεκριμένο χρήστη με την δυνατότητα αμφίδρομης δημιουργίας, επεξεργασίας και διαγραφής και αυτοματοποιημένης δημιουργίας έργων για γραμμές προμηθειών.\n-Εγκαθιστά τις εφαρμογές project_timesheet και sale_service."
+"Margin of error for dates promised to customers. Products will be scheduled "
+"for delivery that many days earlier than the actual promised date, to cope "
+"with unexpected delays in the supply chain."
+msgstr ""
 
 #. module: sale_stock
-#: help:res.company,security_lead:0
+#: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
+#: model:ir.model.fields,help:sale_stock.field_res_config_settings_security_lead
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
 "for procurement and delivery that many days earlier than the actual promised"
 " date, to cope with unexpected delays in the supply chain."
-msgstr "Περιθώριο σφάλματος για ημερομηνίες που συμφωνήθηκαν με πελάτες. Τα προϊόντα θα προγραμματιστούν για προμήθεια και αποστολή πολλές μέρες πριν την πραγματική ημερομηνία που είχε υποσχεθεί, ώστε να αντιμετωπιστούν τυχόν μη αναμενόμενες καθυστερήσεις στην εφοδιαστική αλυσίδα."
+msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:347
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "Move forward expected delivery dates by"
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:174
 #, python-format
-msgid "Not enough stock ! : "
-msgstr "Ανεπαρκές απόθεμα ! :"
+msgid "Not enough inventory!"
+msgstr ""
 
 #. module: sale_stock
-#: field:sale.order.line,number_packages:0
-msgid "Number Packages"
-msgstr "Αριθμός συσκευασίας"
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_group_route_so_lines
+msgid "Order-Specific Routes"
+msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/res_config.py:78
+#: code:addons/sale_stock/models/sale_order.py:188
 #, python-format
-msgid "Only administrators can change the settings"
-msgstr "Μόνο ο διαχειριστές μπορούν να αλλάξουν τις ρυθμίσεις"
+msgid "Ordered quantity decreased!"
+msgstr ""
 
 #. module: sale_stock
-#: field:sale.order.line,product_packaging:0
-msgid "Packaging"
-msgstr "Συσκευασία"
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
+msgid "Package"
+msgstr ""
 
 #. module: sale_stock
-#: help:sale.order,picking_policy:0
-msgid ""
-"Pick 'Deliver each product when available' if you allow partial delivery."
-msgstr "Επιλέξτε 'Παράδοση κάθε προϊόντος μόλις γίνει διαθέσιμο' εάν επιτρέπετε την μερική παράδοση."
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_ids
+msgid "Pickings"
+msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:275
-#, python-format
-msgid "Picking Information ! : "
-msgstr "Πληροφορίες Παραλαβής ! :"
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_procurement_group_id
+msgid "Procurement Group"
+msgstr ""
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_picking
-msgid "Picking List"
-msgstr "Λίστα Συλλογής"
+#: model:ir.model,name:sale_stock.model_procurement_group
+msgid "Procurement Requisition"
+msgstr ""
 
 #. module: sale_stock
-#: field:sale.order,picking_ids:0
-msgid "Picking associated to this sale"
-msgstr "Παραλαβή σχετιζόμενη με αυτή την πώληση"
-
-#. module: sale_stock
-#: field:sale.config.settings,task_work:0
-msgid "Prepare invoices based on task's activities"
-msgstr "Προετοιμασία τιμολογίων με βάση τις εργασίες του έργου"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_product_product
-msgid "Product"
-msgstr "Προιόν"
-
-#. module: sale_stock
-#: field:sale.order.line,product_tmpl_id:0
-msgid "Product Template"
-msgstr "Πρότυπο Προϊόντος"
-
-#. module: sale_stock
-#: field:sale.config.settings,group_mrp_properties:0
-msgid "Product properties on order lines"
-msgstr "Ιδιότητες προϊόντος στις γραμμές παραγγελίας"
-
-#. module: sale_stock
-#: field:sale.config.settings,module_project_timesheet:0
-msgid "Project Timesheet"
-msgstr "Χρονοδιάγραμμα Έργου"
-
-#. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
-msgid "Recreate Delivery Order"
-msgstr "Επαναδημιουργία Παραγγελίας Παράδοσης"
-
-#. module: sale_stock
-#: field:sale.order.line,route_id:0
-msgid "Route"
-msgstr "Διαδρομή"
-
-#. module: sale_stock
-#: field:stock.picking,sale_id:0
-msgid "Sale Order"
-msgstr "Παραγγελία"
-
-#. module: sale_stock
-#: view:stock.location.route:sale_stock.stock_location_route_form_view_inherit
-msgid "Sale Order Lines"
-msgstr "Γραμμές Παραγγελίας"
-
-#. module: sale_stock
-#: field:sale.config.settings,module_sale_service:0
-msgid "Sale Service"
-msgstr "Εξυπηρέτηση Πωλήσεων"
+#: model:ir.model,name:sale_stock.model_procurement_rule
+msgid "Procurement Rule"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
+msgid "Quotation"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid ""
+"Reserving products manually in delivery orders or by running the scheduler "
+"is advised to better manage priorities in case of long customer lead times "
+"or/and frequent stock-outs. By default, the scheduler runs automatically "
+"every 24 hours."
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
+msgid "Route"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+msgid "Routes for Sales Order Lines"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move_sale_line_id
+msgid "Sale Line"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_procurement_group_sale_id
+msgid "Sale Order"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
+msgid "Sales"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking_sale_id
 msgid "Sales Order"
-msgstr "Παραγγελία Πώλησης"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Γραμμή Παραγγελίας"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
+msgid "Sales Order Lines"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr "Στατιστικά Παραγγελιών"
+msgstr ""
 
 #. module: sale_stock
-#: help:sale.config.settings,default_picking_policy:0
-msgid ""
-"Sales order by default will be configured to deliver all products at once "
-"instead of delivering each product when it is available. This may have an "
-"impact on the shipping price."
-msgstr "Η παραγγελία πώλησης από προεπιλογή θα ρυθμιστεί ώστε να παραδοθούν όλα τα προϊόντα άπαξ αντί να παραδίδεται το κάθε προϊόν όταν είναι διαθέσιμο. Αυτό μπορεί να έχει συνέπειες στο κόστος των μεταφορικών. "
+#: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
+msgid "Sales Safety Days"
+msgstr ""
 
 #. module: sale_stock
-#: field:res.company,security_lead:0
-msgid "Security Days"
-msgstr "Ημέρες Ασφαλείας"
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "Schedule deliveries earlier to avoid delays"
+msgstr ""
 
 #. module: sale_stock
-#: field:stock.location.route,sale_selectable:0
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_security_lead
+msgid "Security Lead Time"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_use_security_lead
+msgid "Security Lead Time for Sales"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
 msgid "Selectable on Sales Order Line"
-msgstr "Επιλέξιμο στις Γραμμές Παραγγελίας"
+msgstr ""
 
 #. module: sale_stock
-#: field:sale.report,shipped:0 field:sale.report,shipped_qty_1:0
-msgid "Shipped"
-msgstr "Απεσταλμένο"
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+msgid "Set a delivery date on orders"
+msgstr ""
 
 #. module: sale_stock
-#: field:sale.order,picking_policy:0
+#: selection:res.config.settings,default_picking_policy:0
+msgid "Ship all products at once"
+msgstr ""
+
+#. module: sale_stock
+#: selection:res.config.settings,default_picking_policy:0
+msgid "Ship products as soon as available, with back orders"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
+msgid "Shipping Information"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_default_picking_policy
+msgid "Shipping Management"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
 msgid "Shipping Policy"
-msgstr "Πολιτική Μεταφορών"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
-msgstr "Κίνηση Αποθέματος"
-
-#. module: sale_stock
-#: field:sale.config.settings,default_order_policy:0
-msgid "The default invoicing method is"
-msgstr "Η προεπιλεγμένη μέθοδος τιμολόγησης είναι"
-
-#. module: sale_stock
-#: view:stock.picking:sale_stock.view_picking_internal_search_inherit
-msgid "To Invoice"
-msgstr "Για Τιμολόγηση"
-
-#. module: sale_stock
-#: help:sale.config.settings,group_invoice_deli_orders:0
-msgid ""
-"To allow your salesman to make invoices for Delivery Orders using the menu "
-"'Deliveries to Invoice'."
-msgstr "Για να επιτρέπεται οι πωλητές σας να ετοιμάζουν τιμολόγια για Εντολές Παράδοσης χρησιμοποιώντας το μενού 'Παραδόσεις προς Τιμολόγηση'."
-
-#. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
-msgid "View Delivery Order"
-msgstr "Προβολή Παραγγελίας Παράδοσης"
-
-#. module: sale_stock
-#: field:sale.order,warehouse_id:0 field:sale.report,warehouse_id:0
-msgid "Warehouse"
-msgstr "Αποθήκη"
-
-#. module: sale_stock
-#: help:sale.config.settings,default_order_policy:0
-msgid "You can generate invoices based on sales orders or based on shippings."
-msgstr "Μπορείτε να δημιουργήσετε τιμολόγια με βάση τις παραγγελίες ή με βάση τις αποστολές."
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:161
-#, python-format
-msgid ""
-"You must first cancel all delivery order(s) attached to this sales order."
-msgstr "Πρέπει πρώτα να ακυρώσετε όλες τις παραγγελίες πώλησης που συνδέονται με αυτή την παραγγελία πώλησης."
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:343
-#, python-format
-msgid ""
-"You plan to sell %.2f %s but you only have %.2f %s available !\n"
-"The real stock is %.2f %s. (without reservations)"
-msgstr "Σχεδιάζετε να πουλήσετε %.2f %s αλλά έχετε διαθέσιμα μόνο %.2f %s !\nΤο πραγματικό σας απόθεμα είναι %.2f %s. (χωρίς κρατήσεις)"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:270
-#, python-format
-msgid ""
-"You selected a quantity of %s %s.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging:\n"
-"EAN: %s Quantity: %s Type of ul: %s"
 msgstr ""
 
 #. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_move_ids
+msgid "Stock Moves"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+msgid ""
+"This allows to apply a special route on sales order lines (e.g. "
+"dropshipping, make-to-order) in case of unusual order scenario. To be "
+"available in sales orders, routes must have 'Sales Order Line' option "
+"checked in their setup form."
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:273
+#, python-format
+msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_picking
+msgid "Transfer"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_warehouse_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_report_warehouse_id
+msgid "Warehouse"
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:272
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "When to reserve sold products"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "When to start shipping"
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:189
+#, python-format
+msgid ""
+"You are decreasing the ordered quantity! Do not forget to manually update "
+"the delivery order if needed."
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:166
+#, python-format
+msgid ""
+"You plan to sell %s %s but you only have %s %s available in %s warehouse."
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "days"
-msgstr "ημέρες"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_res_config_settings
+msgid "res.config.settings"
+msgstr ""

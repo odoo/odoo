@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="category_1" model="slide.category">
+            <field name="name">Featured Presentations</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="sequence">10</field>
+        </record>
+        <record id="category_2" model="slide.category">
+            <field name="name">Odoo Days</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="tag1" model="slide.tag">
+            <field name="name">CMS</field>
+        </record>
+
+        <record id="tag2" model="slide.tag">
+            <field name="name">Marketing</field>
+        </record>
+
+        <record id="tag5" model="slide.tag">
+            <field name="name">Odoo Days</field>
+        </record>
+
+        <record id="slide_0" model="slide.slide">
+            <field name="name">Odoo MRP</field>
+            <field name="url">https://www.youtube.com/watch?v=QtIU0p8daAo</field>
+            <field name="document_id">QtIU0p8daAo</field>
+            <field name="slide_type">video</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="category_id" ref="category_1"/>
+            <field name="website_published" eval="True"/>
+            <field name="tag_ids" eval="[(4, ref('tag2'))]"/>
+            <field name="image" type="base64" file="website_slides/data/demo-thumbnails/QtIU0p8daAo.jpg"/>
+            <field name="description">Discover how you can integrate MRP, PLM, Quality and Maintenance in a single application to maximize the efficiency of your manufacturing operations.
+
+Read more about the features at: https://www.odoo.com/page/manufacturing-features
+
+Discover Odoo MRP: https://www.odoo.com/page/manufacturing</field>
+        </record>
+        <record id="slide_1" model="slide.slide">
+            <field name="name">Odoo CRM</field>
+            <field name="url">https://www.youtube.com/watch?v=fgdz8MH2YHY</field>
+            <field name="document_id">fgdz8MH2YHY</field>
+            <field name="slide_type">video</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="category_id" ref="category_1"/>
+            <field name="website_published" eval="True"/>
+            <field name="tag_ids" eval="[(4, ref('tag1'))]"/>
+            <field name="image" type="base64" file="website_slides/data/demo-thumbnails/fgdz8MH2YHY.jpg"/>
+            <field name="description">Discover the CRM sales people love https://www.odoo.com/page/crm</field>
+        </record>
+        <record id="slide_2" model="slide.slide">
+            <field name="name">Odoo All-in-One Software Demonstration</field>
+            <field name="url">https://www.youtube.com/watch?v=tUx39vAENy0</field>
+            <field name="document_id">tUx39vAENy0</field>
+            <field name="slide_type">video</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="category_id" ref="category_2"/>
+            <field name="website_published" eval="True"/>
+            <field name="tag_ids" eval="[(4, ref('tag1')), (4, ref('tag2'))]"/>
+            <field name="image" type="base64" file="website_slides/data/demo-thumbnails/tUx39vAENy0.jpg"/>
+            <field name="description">Discover the all-in-one business management software solution that fits any business size and use case.
+
+Learn more at https://odoo.com</field>
+        </record>
+        <record id="slide_3" model="slide.slide">
+            <field name="name">Odoo Sign Demonstration</field>
+            <field name="url">https://www.youtube.com/watch?v=8DBabYQ1nUE</field>
+            <field name="document_id">8DBabYQ1nUE</field>
+            <field name="slide_type">video</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="category_id" ref="category_2"/>
+            <field name="website_published" eval="True"/>
+            <field name="tag_ids" eval="[(4, ref('tag2'))]"/>
+            <field name="image" type="base64" file="website_slides/data/demo-thumbnails/8DBabYQ1nUE.jpg"/>
+            <field name="description">Stop doing manual printing and scanning. Move to electronic signature with Odoo Sign!
+
+Discover more at https://www.odoo.com/page/sign</field>
+        </record>
+        <record id="slide_5" model="slide.slide">
+            <field name="name">Awesome Timesheet by Odoo</field>
+            <field name="url">https://www.youtube.com/watch?v=v2O0YZU19ms</field>
+            <field name="document_id">v2O0YZU19ms</field>
+            <field name="slide_type">video</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="category_id" ref="category_1"/>
+            <field name="website_published" eval="True"/>
+            <field name="tag_ids" eval="[(4, ref('tag2'))]"/>
+            <field name="image" type="base64" file="website_slides/data/demo-thumbnails/v2O0YZU19ms.jpg"/>
+            <field name="description">Download Awesome Timesheet by Odoo and discover how easy time tracking and employee management can be!
+
+Chrome: http://bit.ly/2613LcY
+iOS: http://bit.ly/1ZUZsZD</field>
+        </record>
+        <record id="slide_6" model="slide.slide">
+            <field name="name">Odoo Marketing</field>
+            <field name="url">https://www.youtube.com/watch?v=sDxfUTd-gs0</field>
+            <field name="document_id">sDxfUTd-gs0</field>
+            <field name="slide_type">video</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="category_id" ref="category_1"/>
+            <field name="website_published" eval="True"/>
+            <field name="tag_ids" eval="[(4, ref('tag1')), (4, ref('tag2'))]"/>
+            <field name="image" type="base64" file="website_slides/data/demo-thumbnails/sDxfUTd-gs0.jpg"/>
+            <field name="description">Discover how easy marketing your business can be with Odoo</field>
+        </record>
+        <record id="slide_7" model="slide.slide">
+            <field name="name">Odoo Inventory</field>
+            <field name="url">https://www.youtube.com/watch?v=Vp5xqQOWLzE</field>
+            <field name="document_id">Vp5xqQOWLzE</field>
+            <field name="slide_type">video</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="category_id" ref="category_1"/>
+            <field name="website_published" eval="True"/>
+            <field name="tag_ids" eval="[(4, ref('tag1')), (4, ref('tag2'))]"/>
+            <field name="image" type="base64" file="website_slides/data/demo-thumbnails/Vp5xqQOWLzE.jpg"/>
+            <field name="description">Warehouse management software for the 21st century.
+
+Discover Odoo Inventory: https://www.odoo.com/page/warehouse</field>
+        </record>
+        <record id="slide_8" model="slide.slide">
+            <field name="name">Odoo Sales</field>
+            <field name="url">https://www.youtube.com/watch?v=VMuCr5_arsY</field>
+            <field name="document_id">VMuCr5_arsY</field>
+            <field name="slide_type">video</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="category_id" ref="category_1"/>
+            <field name="website_published" eval="True"/>
+            <field name="tag_ids" eval="[(4, ref('tag1')), (4, ref('tag2'))]"/>
+            <field name="image" type="base64" file="website_slides/data/demo-thumbnails/VMuCr5_arsY.jpg"/>
+            <field name="description">Learn more at https://www.odoo.com/page/sales</field>
+        </record>
+
+        <record id="slide_9" model="slide.slide">
+            <field name="name">Open Days 2014 Infographic</field>
+            <field name="datas" type="base64" file="website_slides/static/src/img/Open_Days_2014_Infographic.png"/>
+            <field name="image" type="base64" file="website_slides/static/src/img/Open_Days_2014_Infographic.png"/>
+            <field name="slide_type">infographic</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="category_id" ref="category_2"/>
+            <field name="website_published" eval="True"/>
+            <field name="likes">13</field>
+            <field name="slide_views">7399</field>
+            <field name="tag_ids" eval="[(4, ref('tag5'))]"/>
+        </record>
+        <record id="slide_10" model="slide.slide">
+            <field name="name">Company Culture</field>
+            <field name="datas" type="base64" file="website_slides/static/src/img/keynote.pdf"/>
+            <field name="image" type="base64" file="website_slides/static/src/img/keynote.png"/>
+            <field name="slide_type">presentation</field>
+            <field name="channel_id" ref="channel_partial"/>
+            <field name="category_id" ref="category_2"/>
+            <field name="website_published" eval="True"/>
+            <field name="likes">13</field>
+            <field name="slide_views">6399</field>
+            <field name="index_content">Indexed content, automatically generated.</field>
+            <field name="tag_ids" eval="[(4, ref('tag5'))]"/>
+        </record>
+
+        <record id="slide_11" model="slide.slide">
+            <field name="name">OpenSource CMS, A performance comparison - Mantavya Gajjar</field>
+            <field name="datas" type="base64" file="website_slides/static/src/img/odoo-cms-comparision.pdf"/>
+            <field name="image" type="base64" file="website_slides/static/src/img/odoo-cms-comparision.png"/>
+            <field name="slide_type">presentation</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="category_id" ref="category_2"/>
+            <field name="website_published" eval="True"/>
+            <field name="likes">10</field>
+            <field name="slide_views">4718</field>
+            <field name="index_content">1. Open Source CMS  A performance comparision Mantavya Gajjar – Managining Director, Odoo India
+2. Topics 1 2 3 4 5 o Introduction – Products to Compare – Test Environment o Test Cases (home, catalogue, product pages) – Performance ● Google PageSpeed Inside ● Speed Test using Pingdom – Scalability ● Load Test using Blitz – Maintainability ● Source Code – cloc ● Community to maintain the source code – W3C Markup Validations o Conclusion
+3. Introduction
+4. Introduction Open Source Products, compared with Odoo
+5. Odoo o Version Saas4 o Standard Data / Modules – Demo data with Odoo Website, Commerce, Forum, News, etc
+6. Magento o Version 1.8.1.0 o Custom Data / Module – Home page and widgets – Added some products and their description
+7. Drupal o Version 7.27 o Custom Data / Modules – CK-Editor &amp; CK-Finder – Ubercart for e-commerce, Rules, ctools, views, entity
+8. Prestashop o Version 1.6 o No Custom Data / Modules – Use default demo shop
+9. Performance Google PageSpeed Insight &amp; Pingdom
+10. Google PageSpeed Insights Home page on desktop Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/
+11. Home Page
+12. Odoo vs Drupal Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+13. Odoo vs Magento Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+14. Odoo vs Prestashop Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+15. Summary : Google Page Speed Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+16. Google Page Speed Insights Home page on mobile Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/
+17. Odoo Vs Drupal Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+18. Odoo Vs Magento Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+19. Odoo Vs Prestashop Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+20. Summary : Google Page Speed Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+21. Google PageSpeed Insights Product Catalogue on Desktop Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/
+22. Odoo Vs Drupal Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+23. Odoo Vs Magento Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+24. Odoo Vs Prestashop Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+25. Summary : Google Page Speed Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+26. Google PageSpeed Insights Product Catalogue on Mobile Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/
+27. Odoo Vs Drupal Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+28. Odoo Vs Magento Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+29. Odoo Vs Prestashop Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+30. Summary : Google Page Speed Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+31. Google PageSpeed Insights Product Page on Desktop Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/
+32. Odoo Vs Drupal Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+33. Odoo Vs Magento Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+34. Odoo Vs Prestashop Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+35. Summary : Google Page Speed Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+36. Google PageSpeed Insights Product Page on Mobile Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/
+37. Odoo Vs Drupal Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+38. Odoo Vs Magento Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+39. Odoo Vs Preshashop Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+40. Summary : Google Page Speed Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+41. Speed Test using Pingdom Resources Loads to render page
+42. Resources Load to render page As browser can load only 4 fles in parallal on midsie traffc website, then latency time and number of resources to donwload impact time to load more resources Odoo load faster because concatenate several fles, minify and gzip the content, even all the modules installed
+43. Resources Load to render page
+44. Resources Load to render page
+45. Scaleablity Using Blitz, simulate the 250 users
+46. Load Test using Blitz Region – Virginia | Duration – 60 Seconds | Load – 1 To 250 Users Computed using Blitz: https://www.blitz.io
+47. Software Confgurations Magento, Prestashop, Drupa o Ubuntu 14.04 latest LTS o Apache 2.2 Server o PHP 5 Framework o MySQL Server 5.0 Odoo o Ubuntu 14.04 latest LTS o Nginx 1.4 o Odoo Framework o PostgreSQL 9.1
+48. Hardware Confguration o IBM Server Series X3500 M4, 15 MB L3 Cache o 300 GB GSAS Drive 10K RPMs o Intel(R) Xeon(R) CPU E5-2620 0 @ 2.00GHz, 12 cores o 8 GB Physical RAM o 15 MBPS Dedicated Internet connection line Network : o 15 MBPS dedicated Internet connection
+49. Odoo Region – Virginia | Duration – 60 Seconds | Load – 1 To 250 Users The max hit rate was: 88 hits per second Website and Ecommerce apps installed Confguration  :
+50. Odoo ● Fastest: 530 ms | Slowest: 1655 ms | Average: 829 ms ● First time out happened at 47.4 second at 198 users ● 3646 successful hits in 60 sec, avg 52,45,920 hits/day capacity. Response Time :
+51. Drupal Region – Virginia | Duration – 60 Seconds | Load – 1 To 250 Users The max hit rate was : 37 hits per second Confguration  :
+52. Drupal ● Fastest: 1172 ms | Slowest: 4943 ms | Average: 2141 ms ● First time out happened at 30 second at 125 users ● 1,083 successful hits in 60 sec, avg 15,59,520 hits/day capacity. Response Time :
+53. Magento Region – Virginia | Duration – 60 Seconds | Load – 1 To 250 Users The max hit rate was : 21 hits per second Confguration  :
+54. Magento ● Fastest: 1639 ms | Slowest: 16315 ms | Average: 7813 ms ● First time out happened at 35 second at 146 users ● 528 successful hits in 60 sec, avg 0.7 M hits/day capacity. Response Time :
+55. Prestashop Region – Virginia | Duration – 60 Seconds | Load – 1 To 250 Users The max hit rate was : 16 hits per second Confguration  :
+56. Prestashop ● Fastest: 1678 ms | Slowest: 9228 ms | Average: 5598 ms ● First time out happened at 25 second at 104 users ● 663 successful hits in 60 sec, avg 0.95 M hits/day capacity. Response Time :
+57. Load Test Summary
+58. Summary Speed : o Odoo is 3x times faster than the Drupal o Odoo is 6x times faster than the Magento o Odoo is 2x times faster than the Prestashop Scalability : o Odoo timeout at 198 users o Drupal timeout at 125 users o Magento timeout at 148 users o Prestashop timeout at 104 users
+59. W3C Markup Validation HTML Validation
+60. W3C Check Odoo's main problem o Element meta is missing one or more of the following attributes: content, property. o An img element must have an alt attribute, except under certain conditions o The width attribute on the table element is obsolete. Use CSS instead. Team is working on those issues , will be fxed soon
+61. Maintainability lines of code and contributors
+62. Test 1 : Source Code Comparision between : o Odoo : includes all modules. I.e accounting, wms, mrp, websites, etc... o Drupal, Magento and Prestashop : only core modules Odoo is : o 1.3x times smaller then the drupal o 5.5x times smaller then the magento o 1.9x times smaller then the prestashop
+63. Odoo Statistic provided by ohloh.net available at https://www.ohloh.net/p/odoo
+64. Drupal Statistic provided by ohloh.net available at https://www.ohloh.net/p/drupal
+65. Magento Statistic provided by ohloh.net available at https://www.ohloh.net/p/magento
+66. Prestashop Statistic provided by ohloh.net available at https://www.ohloh.net/p/PrestaShop
+67. Conclusion
+68. Conclusion Performance : o Odoo is 3x times faster than the Drupal o Odoo is 6x times faster than the Magento o Odoo is 2x times faster than the Prestashop Scalability : o Odoo timeout at 198 users o Drupal timeout at 125 users o Magento timeout at 148 users o Prestashop timeout at 104 users Maintainability : o 1.3x times smaller then the drupal o 5.5x times smaller then the magento o 1.9x times smaller then the prestashop
+69. Questions ?
+70. Odoo sales@odoo.com +32 (0) 2 290 34 90 www.odoo.com R&amp;D and services offce Chaussée de Namur 40 B-1367 Grand Rosière Sales offce Avenue Van Nieuwenhuyse 6 B-1160 Brussels Thank You</field>
+        </record>
+
+        <record model="slide.channel" id="channel_public">
+            <field name="promote_strategy">custom</field>
+            <field name="custom_slide_id" ref="slide_0"/>
+        </record>
+
+  </data>
+</odoo>
+

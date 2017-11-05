@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-01-21 14:08+0000\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,13 +16,38 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: payment_buckaroo
-#: model:payment.acquirer,pre_msg:payment_buckaroo.payment_acquirer_buckaroo
-msgid "<p>You will be redirected to the Buckaroo website after clicking on the payment button.</p>"
+#: code:addons/payment_buckaroo/models/payment.py:141
+#, python-format
+msgid "; multiple order found"
 msgstr ""
 
 #. module: payment_buckaroo
-#: view:payment.transaction:payment_buckaroo.transaction_form_buckaroo
-msgid "Buckaroo TX Details"
+#: code:addons/payment_buckaroo/models/payment.py:139
+#, python-format
+msgid "; no order found"
+msgstr ""
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/payment.py:148
+#, python-format
+msgid "Buckaroo: invalid shasign, received %s, computed %s, for data %s"
+msgstr ""
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/payment.py:137
+#, python-format
+msgid "Buckaroo: received data for reference %s"
+msgstr ""
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/payment.py:131
+#, python-format
+msgid "Buckaroo: received data with missing reference (%s) or pay_id (%s) or shasign (%s)"
+msgstr ""
+
+#. module: payment_buckaroo
+#: model:ir.ui.view,arch_db:payment_buckaroo.acquirer_form_buckaroo
+msgid "How to configure your Buckaroo account?"
 msgstr ""
 
 #. module: payment_buckaroo
@@ -36,17 +61,12 @@ msgid "Payment Transaction"
 msgstr ""
 
 #. module: payment_buckaroo
-#: field:payment.acquirer,brq_secretkey:0
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_secretkey
 msgid "SecretKey"
 msgstr ""
 
 #. module: payment_buckaroo
-#: field:payment.transaction,buckaroo_txnid:0
-msgid "Transaction ID"
-msgstr ""
-
-#. module: payment_buckaroo
-#: field:payment.acquirer,brq_websitekey:0
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_websitekey
 msgid "WebsiteKey"
 msgstr ""
 

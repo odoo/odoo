@@ -1,10 +1,10 @@
 # HG changeset patch
 # Parent 643813940cbea07bec792f9e1c60022a9292fa90
 
-Index: addons/openacademy/__openerp__.py
+Index: addons/openacademy/__manifest__.py
 ===================================================================
---- addons.orig/openacademy/__openerp__.py	2014-08-26 17:26:21.535783052 +0200
-+++ addons/openacademy/__openerp__.py	2014-08-26 17:26:21.531783052 +0200
+--- addons.orig/openacademy/__manifest__.py	2014-08-26 17:26:21.535783052 +0200
++++ addons/openacademy/__manifest__.py	2014-08-26 17:26:21.531783052 +0200
 @@ -21,7 +21,7 @@
      'version': '0.1',
  
@@ -14,10 +14,10 @@ Index: addons/openacademy/__openerp__.py
  
      # always loaded
      'data': [
-@@ -31,6 +31,7 @@
+@@ -30,6 +30,7 @@
+         'templates.xml',
          'views/openacademy.xml',
          'views/partner.xml',
-         'views/session_workflow.xml',
 +        'views/session_board.xml',
          'reports.xml',
      ],
@@ -28,8 +28,8 @@ Index: addons/openacademy/views/session_board.xml
 +++ addons/openacademy/views/session_board.xml	2014-08-26 17:26:21.531783052 +0200
 @@ -0,0 +1,66 @@
 +<?xml version="1.0"?>
-+<openerp>
-+    <data>
++<odoo>
++
 +        <record model="ir.actions.act_window" id="act_session_graph">
 +            <field name="name">Attendees by course</field>
 +            <field name="res_model">openacademy.session</field>
@@ -90,6 +90,6 @@ Index: addons/openacademy/views/session_board.xml
 +            name="Session Dashboard" parent="base.menu_reporting_dashboard"
 +            action="open_board_session"
 +            sequence="1"
-+            id="menu_board_session" icon="terp-graph"/>
-+    </data>
-+</openerp>
++            id="menu_board_session"/>
++
++</odoo>

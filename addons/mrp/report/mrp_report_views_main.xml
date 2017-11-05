@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report 
+            string="BOM Structure" 
+            id="action_report_bom_structure" 
+            model="mrp.bom" 
+            name="mrp.mrp_bom_structure_report"
+            file="mrp.report.mrp_bom_templates" 
+            report_type="qweb-pdf"
+            print_report_name="'BOM - %s' % (object.product_id.name or object.product_tmpl_id.name or '')"
+        />
+
+        <report 
+            string="Production Order" 
+            id="action_report_production_order" 
+            model="mrp.production" 
+            name="mrp.report_mrporder"
+            file="mrp.report.mrp_production_templates" 
+            report_type="qweb-pdf"
+            print_report_name="'Production Order - %s' % object.name"
+        />
+
+        <report
+            string="BOM Cost"
+            id="action_report_bom_price"
+            model="mrp.bom"
+            name="mrp.mrp_bom_cost_report"
+            file="mrp.mrp_bom_cost_report"
+            report_type="qweb-html"
+            print_report_name="'BOM Cost - %s' % (object.product_id.name or object.product_tmpl_id.name or '')"
+        />
+    </data>
+</odoo>

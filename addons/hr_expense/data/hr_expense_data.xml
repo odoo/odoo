@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--default alias for leads-->
+        <record id="mail_alias_expense" model="mail.alias">
+            <field name="alias_name">expense</field>
+            <field name="alias_model_id" ref="model_hr_expense"/>
+            <field name="alias_user_id" ref="base.user_root"/>
+            <field name="alias_contact">employees</field>
+        </record>
+
+
+        <!-- Resource: product.uom.categ -->
+        <record id="cat_expense" model="product.category">
+            <field name="parent_id" ref="product.product_category_all"/>
+            <field name="name">Expenses</field>
+        </record>
+
+        <record id="product_product_fixed_cost" model="product.product">
+            <field name="name">Expenses</field>
+            <field name="list_price">0.0</field>
+            <field name="standard_price">1.0</field>
+            <field name="type">service</field>
+            <field name="default_code">EXP</field>
+            <field name="categ_id" ref="hr_expense.cat_expense"/>
+            <field name="can_be_expensed" eval="True"/>
+        </record>
+
+        <!-- Expense-related subtypes for messaging / Chatter -->
+        <record id="mt_expense_approved" model="mail.message.subtype">
+            <field name="name">Approved</field>
+            <field name="res_model">hr.expense.sheet</field>
+            <field name="default" eval="True"/>
+            <field name="description">Expense report approved</field>
+        </record>
+        <record id="mt_expense_refused" model="mail.message.subtype">
+            <field name="name">Refused</field>
+            <field name="res_model">hr.expense.sheet</field>
+            <field name="default" eval="True"/>
+            <field name="description">Expense report refused</field>
+        </record>
+        <record id="mt_expense_confirmed" model="mail.message.subtype">
+            <field name="name">Submitted</field>
+            <field name="res_model">hr.expense.sheet</field>
+            <field name="description">Expense report submitted, waiting approval</field>
+            <field name="default" eval="True"/>
+        </record>
+        <record id="mt_expense_paid" model="mail.message.subtype">
+            <field name="name">Paid</field>
+            <field name="res_model">hr.expense.sheet</field>
+            <field name="description">Expense report paid</field>
+            <field name="default" eval="False"/>
+        </record>
+        <!-- Department (Parent) related subtypes for messaging / Chatter -->
+        <record id="mt_department_expense_confirmed" model="mail.message.subtype">
+            <field name="name">Expenses To Approve</field>
+            <field name="res_model">hr.department</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_expense_confirmed')"/>
+            <field name="relation_field">department_id</field>
+            <field name="sequence" eval="10"/>
+        </record>
+
+    </data>
+</odoo>

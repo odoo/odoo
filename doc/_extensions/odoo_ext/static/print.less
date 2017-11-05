@@ -1,0 +1,58 @@
+
+@media print {
+  body {
+
+    header, footer{
+      display: none;
+    }
+    .fadeInUp, .fadeIn{
+      .opacity(1)!important;
+      .animation(none);
+    }
+
+    #main_navbar{
+      position: relative;
+      display: block;
+      height: 100px!important;
+      #main-back {
+        display: none;
+      }
+      #main_title{
+        position: relative;
+        transform: none;
+      }
+      .navbar-main{
+        display: none!important;
+      }
+    }
+
+    main{
+      .opacity(1);
+      .animation(none);
+      aside{
+        display:none;
+      }
+      article{
+        h1, .h1 {
+          font-size: 2em;
+        }
+        h2, .h2{
+          font-size: 1.642857143em;
+        }
+        h3, .h3{
+          font-size: 1.25em;
+        }
+        p, ul, ol, table, blockquote, .alert, .doc-code, .admonition{
+          margin-top: inherit;
+          margin-bottom: inherit;
+          font-size: inherit;
+        }
+      }
+    }
+
+    .floating_action_container{
+      display: none;
+    }
+
+  } // /body
+}

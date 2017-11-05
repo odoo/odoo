@@ -2,17 +2,13 @@
 # This file contains the translation of the following modules:
 # * mrp_byproduct
 # 
-# Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-05-16 13:40+0000\n"
-"Last-Translator: Mohammed Ibrahim <m.ibrahim@mussder.com>\n"
-"Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,110 +18,119 @@ msgstr ""
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_bom
 msgid "Bill of Material"
-msgstr "فاتورة المواد"
+msgstr ""
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,bom_id:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_bom_id
 msgid "BoM"
-msgstr "فاتورة المواد"
+msgstr ""
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_subproduct
 msgid "Byproduct"
-msgstr "منتج للشراء"
+msgstr ""
 
 #. module: mrp_byproduct
-#: view:mrp.bom:mrp_byproduct.mrp_subproduct_view field:mrp.bom,sub_products:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_bom_sub_products
+#: model:ir.ui.view,arch_db:mrp_byproduct.mrp_subproduct_view
 msgid "Byproducts"
-msgstr "منتجات للشراء"
+msgstr ""
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr "غير كمية المنتجات"
+msgstr ""
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,create_uid:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_create_uid
 msgid "Created by"
-msgstr "أُنشئ بواسطة"
+msgstr ""
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,create_date:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_create_date
 msgid "Created on"
-msgstr "إنشاؤه في"
+msgstr ""
 
 #. module: mrp_byproduct
-#: help:mrp.subproduct,subproduct_type:0
-msgid ""
-"Define how the quantity of byproducts will be set on the production orders "
-"using this BoM.  'Fixed' depicts a situation where the quantity of created "
-"byproduct is always equal to the quantity set on the BoM, regardless of how "
-"many are created in the production order.  By opposition, 'Variable' means "
-"that the quantity will be computed as    '(quantity of byproduct set on the "
-"BoM / quantity of manufactured product set on the BoM * quantity of "
-"manufactured product in the production order.)'"
-msgstr "تحديد الكيفية التي سيتم تعيين كمية من المنتجات الثانوية بناء على أوامر الإنتاج باستخدام فاتوره المواد هذه . 'ثابت' يصور الحالة التي تكون فيها كمية من ثانوية أنشئت دائما مساوية لكمية تعيين على مكتب الإدارة، بغض النظر عن عدد ما تم إنشاؤها في أمر الإنتاج. من قبل المعارضة، \"متغير\" يعني أن كمية سيتم احتساب باسم '(كمية ثانوي تعيين على فاتورد المواد / كمية من المنتجات المصنعة تعيين على فاتوره المواد * كمية من المنتجات المصنعة في أمر الإنتاج). \" "
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Fixed"
-msgstr "ثابت"
-
-#. module: mrp_byproduct
-#: field:mrp.subproduct,id:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_id
 msgid "ID"
-msgstr "المعرّف"
+msgstr ""
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,write_uid:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct___last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_write_uid
 msgid "Last Updated by"
-msgstr "آخر تحديث بواسطة"
+msgstr ""
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,write_date:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_write_date
 msgid "Last Updated on"
-msgstr "آخر تحديث فى"
+msgstr ""
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_operation_id
+msgid "Produced at Operation"
+msgstr ""
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_id
+msgid "Product"
+msgstr ""
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_qty
+msgid "Product Qty"
+msgstr ""
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_production
-msgid "Manufacturing Order"
-msgstr "امر التصنيع"
+msgid "Production"
+msgstr ""
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,product_id:0
-msgid "Product"
-msgstr "المنتج"
+#: model:ir.model,name:mrp_byproduct.model_mrp_product_produce
+msgid "Record Production"
+msgstr ""
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,product_qty:0
-msgid "Product Qty"
-msgstr "كمية المنتج"
+#: model:ir.model,name:mrp_byproduct.model_stock_move
+msgid "Stock Move"
+msgstr ""
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,product_uom:0
-msgid "Product Unit of Measure"
-msgstr "وحدة قياس المنتج"
+#: model:ir.model.fields,field_description:mrp_byproduct.field_stock_move_subproduct_id
+msgid "Subproduct"
+msgstr ""
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,subproduct_type:0
-msgid "Quantity Type"
-msgstr "نوع الكمية"
+#: model:ir.model.fields,help:mrp_byproduct.field_stock_move_subproduct_id
+msgid "Subproduct line that generated the move in a manufacturing order"
+msgstr ""
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:63
+#: code:addons/mrp_byproduct/models/mrp_subproduct.py:32
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr "وحدة قياس المنتج التى اخترتها تمتلك فئة مختلفة مما كانت عليه في شكل المنتج . "
+msgstr ""
 
 #. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Variable"
-msgstr "متغير"
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_uom_id
+msgid "Unit of Measure"
+msgstr ""
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:63
+#: code:addons/mrp_byproduct/models/mrp_subproduct.py:31
 #, python-format
 msgid "Warning"
-msgstr "تحذير"
+msgstr ""

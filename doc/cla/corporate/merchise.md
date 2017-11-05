@@ -8,12 +8,15 @@ declaration.
 
 Signed,
 
-Manuel Vázquez manuel@merchise.org https://github.com/mvaled
-
+Manuel Vázquez Acosta manuel@merchise.org https://github.com/mvaled
 
 List of contributors:
 
-Manuel Vázquez manuel@merchise.org https://github.com/mvaled
-Johanny johanny@merchise.org
+Manuel Vázquez Acosta manuel@merchise.org https://github.com/mvaled
+Johanny Rivera johanny@merchise.org
 Henrik Pestano henrik@merchise.org https://github.com/hpestano
-Oraldo oraldo@merchise.org
+Oraldo Jacinto Simón oraldo@merchise.org
+Sergio Valdés sergiov@merchise.org
+Medardo Rodríguez med@merchise.org https://github.com/med-merchise
+Abel Firvida firvida@merchise.org
+Abel Firvida abel@merchise.org

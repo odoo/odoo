@@ -1,0 +1,81 @@
+///
+/// This file regroups the LESS variables that style odoo components.
+/// They are available in every asset bundle.
+///
+
+// Font sizes
+@odoo-font-size-base: 13px;
+
+// Colors
+@odoo-brand-primary: #7c7bad;
+@odoo-brand-optional: #7c7bad;
+@odoo-brand-secondary: #f0eeee;
+@odoo-brand-lightsecondary: #e2e2e0;
+@odoo-color-silver: #F9F9F9;
+@odoo-color-silver-dark: #E5E5E5;
+@odoo-color-silver-darker: #d9d7d7;
+
+// Define @gray-lighter-dark as a minor bootstrap @gray-lighter variation used
+// for design purposes only (e.g. cards' borders). We avoid to overwrite the
+// default @gray-light because it is deeply used by bootstrap to define muted
+// elements.
+@gray-lighter-dark: @odoo-color-silver-dark;
+@gray-lighter-darker: @odoo-color-silver-darker;
+
+@odoo-color-pink: #875A7B; // Enterprise @odoo-brand-primary
+@odoo-main-color-muted: #a8a8a8;
+@odoo-main-text-color: #4c4c4c;
+
+@odoo-view-background-color: white;
+@odoo-shadow-color: #303030;
+
+@odoo-webclient-background-color: @odoo-color-silver;
+@odoo-control-panel-background-color: @odoo-color-silver;
+@odoo-form-lightsecondary: #ccc;
+
+@odoo-list-footer-color: @odoo-main-text-color;
+@odoo-list-footer-bg-color: #eee;
+@odoo-list-footer-font-weight: bold;
+
+@odoo-tooltip-background-color: black;
+@odoo-tooltip-color: white;
+@odoo-tooltip-arrow-color: black;
+
+// UI custom colors for tags, kanban records' colors, ...)
+@odoo-nb-ui-color: 12;
+@odoo-color-0: @gray-light;
+@odoo-color-1: #F06050;
+@odoo-color-2: #F4A460;
+@odoo-color-3: #F7CD1F;
+@odoo-color-4: #6CC1ED;
+@odoo-color-5: #814968;
+@odoo-color-6: #EB7E7F;
+@odoo-color-7: #2C8397;
+@odoo-color-8: #475577;
+@odoo-color-9: #D6145F;
+@odoo-color-10: #30C381;
+@odoo-color-11: #9365B8;
+
+// Layout
+@screen-xs-min: 475px;
+@screen-xxs-max: (@screen-xs-min - 1);
+
+@odoo-form-group-cols: 12;
+@odoo-form-spacing-unit: 5px;
+@odoo-horizontal-padding: 16px;
+@odoo-innergroup-rpadding: 45px;
+@odoo-dropdown-hpadding: 20px;
+
+@border-radius-base: 3px;
+
+@odoo-sheet-vpadding: 24px;
+
+@odoo-avatar-size: 90px;
+
+@odoo-statusbar-height: 33px;
+@odoo-statusbar-arrow-width: @odoo-statusbar-height/3;
+@odoo-statusbar-disabled-bg: lighten(@odoo-brand-lightsecondary, 7%);
+
+@odoo-label-font-size-factor: 0.8;
+@odoo-navbar-height: 34px;
+@odoo-navbar-inverse-link-hover-bg: @navbar-inverse-link-active-bg;

@@ -1,23 +1,25 @@
 # -*- coding: utf-8 -*-
-import cStringIO
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 import datetime
-from itertools import islice
 import json
-import xml.etree.ElementTree as ET
-
+import os
 import logging
-import re
-
+import requests
 import werkzeug.utils
-import urllib2
 import werkzeug.wrappers
-from PIL import Image
 
-import openerp
-from openerp.addons.web.controllers.main import WebClient
-from openerp.addons.web import http
-from openerp.http import request, STATIC_CACHE
-from openerp.tools import image_save_for_web
+from itertools import islice
+from xml.etree import ElementTree as ET
+
+import odoo
+
+from odoo import http, models, fields, _
+from odoo.http import request
+from odoo.tools import pycompat, OrderedSet
+from odoo.addons.http_routing.models.ir_http import slug, _guess_mimetype
+from odoo.addons.web.controllers.main import WebClient, Binary, Home
+from odoo.addons.portal.controllers.portal import pager as portal_pager
 
 logger = logging.getLogger(__name__)
 
@@ -26,30 +28,77 @@ MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 LOC_PER_SITEMAP = 45000
 SITEMAP_CACHE_TIME = datetime.timedelta(hours=12)
 
-class Website(openerp.addons.web.controllers.main.Home):
-    #------------------------------------------------------
-    # View
-    #------------------------------------------------------
+
+class QueryURL(object):
+    def __init__(self, path='', path_args=None, **args):
+        self.path = path
+        self.args = args
+        self.path_args = OrderedSet(path_args or [])
+
+    def __call__(self, path=None, path_args=None, **kw):
+        path = path or self.path
+        for key, value in self.args.items():
+            kw.setdefault(key, value)
+        path_args = OrderedSet(path_args or []) | self.path_args
+        paths, fragments = {}, []
+        for key, value in kw.items():
+            if value and key in path_args:
+                if isinstance(value, models.BaseModel):
+                    paths[key] = slug(value)
+                else:
+                    paths[key] = u"%s" % value
+            elif value:
+                if isinstance(value, list) or isinstance(value, set):
+                    fragments.append(werkzeug.url_encode([(key, item) for item in value]))
+                else:
+                    fragments.append(werkzeug.url_encode([(key, value)]))
+        for key in path_args:
+            value = paths.get(key)
+            if value is not None:
+                path += '/' + key + '/' + value
+        if fragments:
+            path += '?' + '&'.join(fragments)
+        return path
+
+
+class Website(Home):
+
     @http.route('/', type='http', auth="public", website=True)
     def index(self, **kw):
-        page = 'homepage'
-        try:
-            main_menu = request.registry['ir.model.data'].get_object(request.cr, request.uid, 'website', 'main_menu')
-        except Exception:
-            pass
+        homepage = request.website.homepage_id
+        if homepage and homepage.url != '/':
+            return request.env['ir.http'].reroute(homepage.url)
+
+        website_page = request.env['ir.http']._serve_page()
+        if website_page:
+            return website_page
         else:
-            first_menu = main_menu.child_id and main_menu.child_id[0]
-            if first_menu:
-                if first_menu.url and (not (first_menu.url.startswith(('/page/', '/?', '/#')) or (first_menu.url == '/'))):
-                    return request.redirect(first_menu.url)
-                if first_menu.url and first_menu.url.startswith('/page/'):
-                    return request.registry['ir.http'].reroute(first_menu.url)
-        return self.page(page)
+            top_menu = request.website.sudo().menu_id
+            first_menu = top_menu and top_menu.child_id and top_menu.child_id[0]
+            if first_menu and first_menu.url != '/' and (not (first_menu.url.startswith(('/?', '/#')))):
+                return request.redirect(first_menu.url)
+
+        raise request.not_found()
+
+    #------------------------------------------------------
+    # Login - overwrite of the web login so that regular users are redirected to the backend
+    # while portal users are redirected to the frontend by default
+    #------------------------------------------------------
 
     @http.route(website=True, auth="public")
-    def web_login(self, *args, **kw):
-        # TODO: can't we just put auth=public, ... in web client ?
-        return super(Website, self).web_login(*args, **kw)
+    def web_login(self, redirect=None, *args, **kw):
+        response = super(Website, self).web_login(redirect=redirect, *args, **kw)
+        if not redirect and request.params['login_success']:
+            if request.env['res.users'].browse(request.uid).has_group('base.group_user'):
+                redirect = b'/web?' + request.httprequest.query_string
+            else:
+                redirect = '/'
+            return http.redirect_with_hash(redirect)
+        return response
+
+    #------------------------------------------------------
+    # Business
+    #------------------------------------------------------
 
     @http.route('/website/lang/<lang>', type='http', auth="public", website=True, multilang=False)
     def change_lang(self, lang, r='/', **kwargs):
@@ -57,168 +106,181 @@ class Website(openerp.addons.web.controllers.main.Home):
             lang = request.website.default_lang_code
             r = '/%s%s' % (lang, r or '/')
         redirect = werkzeug.utils.redirect(r or ('/%s' % lang), 303)
-        redirect.set_cookie('website_lang', lang)
+        redirect.set_cookie('frontend_lang', lang)
         return redirect
 
-    @http.route('/page/<page:page>', type='http', auth="public", website=True)
-    def page(self, page, **opt):
-        values = {
-            'path': page,
-        }
-        # /page/website.XXX --> /page/XXX
-        if page.startswith('website.'):
-            return request.redirect('/page/' + page[8:], code=301)
-        elif '.' not in page:
-            page = 'website.%s' % page
-
-        try:
-            request.website.get_template(page)
-        except ValueError, e:
-            # page not found
-            if request.website.is_publisher():
-                page = 'website.page_404'
-            else:
-                return request.registry['ir.http']._handle_exception(e, 404)
-
-        return request.render(page, values)
+    @http.route(['/website/country_infos/<model("res.country"):country>'], type='json', auth="public", methods=['POST'], website=True)
+    def country_infos(self, country, **kw):
+        fields = country.get_address_fields()
+        return dict(fields=fields, states=[(st.id, st.name, st.code) for st in country.state_ids], phone_code=country.phone_code)
 
     @http.route(['/robots.txt'], type='http', auth="public")
     def robots(self):
         return request.render('website.robots', {'url_root': request.httprequest.url_root}, mimetype='text/plain')
 
     @http.route('/sitemap.xml', type='http', auth="public", website=True)
-    def sitemap_xml_index(self):
-        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
-        ira = request.registry['ir.attachment']
-        iuv = request.registry['ir.ui.view']
-        mimetype ='application/xml;charset=utf-8'
+    def sitemap_xml_index(self, **kwargs):
+        current_website = request.website
+        Attachment = request.env['ir.attachment'].sudo()
+        View = request.env['ir.ui.view'].sudo()
+        mimetype = 'application/xml;charset=utf-8'
         content = None
 
         def create_sitemap(url, content):
-            ira.create(cr, uid, dict(
-                datas=content.encode('base64'),
-                mimetype=mimetype,
-                type='binary',
-                name=url,
-                url=url,
-            ), context=context)
-
-        sitemap = ira.search_read(cr, uid, [('url', '=' , '/sitemap.xml'), ('type', '=', 'binary')], ('datas', 'create_date'), context=context)
+            return Attachment.create({
+                'datas': base64.b64encode(content),
+                'mimetype': mimetype,
+                'type': 'binary',
+                'name': url,
+                'url': url,
+            })
+        dom = [('url', '=' , '/sitemap-%d.xml' % current_website.id), ('type', '=', 'binary')]
+        sitemap = Attachment.search(dom, limit=1)
         if sitemap:
             # Check if stored version is still valid
-            server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
-            create_date = datetime.datetime.strptime(sitemap[0]['create_date'], server_format)
+            create_date = fields.Datetime.from_string(sitemap.create_date)
             delta = datetime.datetime.now() - create_date
             if delta < SITEMAP_CACHE_TIME:
-                content = sitemap[0]['datas'].decode('base64')
+                content = base64.b64decode(sitemap.datas)
 
         if not content:
             # Remove all sitemaps in ir.attachments as we're going to regenerated them
-            sitemap_ids = ira.search(cr, uid, [('url', '=like' , '/sitemap%.xml'), ('type', '=', 'binary')], context=context)
-            if sitemap_ids:
-                ira.unlink(cr, uid, sitemap_ids, context=context)
+            dom = [('type', '=', 'binary'), '|', ('url', '=like', '/sitemap-%d-%%.xml' % current_website.id),
+                   ('url', '=', '/sitemap-%d.xml' % current_website.id)]
+            sitemaps = Attachment.search(dom)
+            sitemaps.unlink()
 
             pages = 0
-            first_page = None
             locs = request.website.sudo(user=request.website.user_id.id).enumerate_pages()
             while True:
                 values = {
                     'locs': islice(locs, 0, LOC_PER_SITEMAP),
                     'url_root': request.httprequest.url_root[:-1],
                 }
-                urls = iuv.render(cr, uid, 'website.sitemap_locs', values, context=context)
+                urls = View.render_template('website.sitemap_locs', values)
                 if urls.strip():
-                    page = iuv.render(cr, uid, 'website.sitemap_xml', dict(content=urls), context=context)
-                    if not first_page:
-                        first_page = page
+                    content = View.render_template('website.sitemap_xml', {'content': urls})
                     pages += 1
-                    create_sitemap('/sitemap-%d.xml' % pages, page)
+                    last_sitemap = create_sitemap('/sitemap-%d-%d.xml' % (current_website.id, pages), content)
                 else:
                     break
+
             if not pages:
                 return request.not_found()
             elif pages == 1:
-                content = first_page
+                # rename the -id-page.xml => -id.xml
+                last_sitemap.write({
+                    'url': "/sitemap-%d.xml" % current_website.id,
+                    'name': "/sitemap-%d.xml" % current_website.id,
+                })
             else:
+                # TODO: in master/saas-15, move current_website_id in template directly
+                pages_with_website = ["%d-%d" % (current_website.id, p) for p in range(1, pages + 1)]
+
                 # Sitemaps must be split in several smaller files with a sitemap index
-                content = iuv.render(cr, uid, 'website.sitemap_index_xml', dict(
-                    pages=range(1, pages + 1),
-                    url_root=request.httprequest.url_root,
-                ), context=context)
-            create_sitemap('/sitemap.xml', content)
+                content = View.render_template('website.sitemap_index_xml', {
+                    'pages': pages_with_website,
+                    'url_root': request.httprequest.url_root,
+                })
+                create_sitemap('/sitemap-%d.xml' % current_website.id, content)
 
         return request.make_response(content, [('Content-Type', mimetype)])
 
     @http.route('/website/info', type='http', auth="public", website=True)
     def website_info(self):
         try:
-            request.website.get_template('website.info').name
-        except Exception, e:
-            return request.registry['ir.http']._handle_exception(e, 404)
-        irm = request.env()['ir.module.module'].sudo()
-        apps = irm.search([('state','=','installed'),('application','=',True)])
-        modules = irm.search([('state','=','installed'),('application','=',False)])
+            request.website.get_template('website.website_info').name
+        except Exception as e:
+            return request.env['ir.http']._handle_exception(e, 404)
+        Module = request.env['ir.module.module'].sudo()
+        apps = Module.search([('state', '=', 'installed'), ('application', '=', True)])
+        modules = Module.search([('state', '=', 'installed'), ('application', '=', False)])
         values = {
             'apps': apps,
             'modules': modules,
-            'version': openerp.service.common.exp_version()
+            'version': odoo.service.common.exp_version()
         }
-        return request.render('website.info', values)
+        return request.render('website.website_info', values)
 
     #------------------------------------------------------
     # Edit
     #------------------------------------------------------
-    @http.route('/website/add/<path:path>', type='http', auth="user", website=True)
-    def pagenew(self, path, noredirect=False, add_menu=None):
-        xml_id = request.registry['website'].new_page(request.cr, request.uid, path, context=request.context)
-        if add_menu:
-            model, id  = request.registry["ir.model.data"].get_object_reference(request.cr, request.uid, 'website', 'main_menu')
-            request.registry['website.menu'].create(request.cr, request.uid, {
-                    'name': path,
-                    'url': "/page/" + xml_id[8:],
-                    'parent_id': id,
-                }, context=request.context)
-        # Reverse action in order to allow shortcut for /page/<website_xml_id>
-        url = "/page/" + re.sub(r"^website\.", '', xml_id)
 
+    @http.route(['/website/pages', '/website/pages/page/<int:page>'], type='http', auth="user", website=True)
+    def pages_management(self, page=1, sortby='name', search='', **kw):
+        # only website_designer should access the page Management
+        if not request.env.user.has_group('website.group_website_designer'):
+            raise werkzeug.exceptions.NotFound()
+
+        Page = request.env['website.page']
+        searchbar_sortings = {
+            'url': {'label': _('Sort by Url'), 'order': 'url'},
+            'name': {'label': _('Sort by Name'), 'order': 'name'},
+        }
+        # default sortby order
+        sort_order = searchbar_sortings.get(sortby, 'name')['order']
+
+        domain = ['|', ('website_ids', 'in', request.website.id), ('website_ids', '=', False)]
+        if search:
+            domain += ['|', ('name', 'ilike', search), ('url', 'ilike', search)]
+
+        pages_count = Page.search_count(domain)
+
+        pager = portal_pager(
+            url="/website/pages",
+            url_args={'sortby': sortby},
+            total=pages_count,
+            page=page,
+            step=50
+        )
+        pages = Page.search(domain, order=sort_order, limit=50, offset=pager['offset'])
+
+        values = {
+            'pager': pager,
+            'pages': pages,
+            'search': search,
+            'sortby': sortby,
+            'searchbar_sortings': searchbar_sortings,
+        }
+        return request.render("website.edit_website_pages", values)
+
+    @http.route(['/website/add/', '/website/add/<path:path>'], type='http', auth="user", website=True)
+    def pagenew(self, path="", noredirect=False, add_menu=False, template=False):
+        # for supported mimetype, get correct default template
+        _, ext = os.path.splitext(path)
+        View = request.env['ir.ui.view']
+        ext_special_case = ext and ext in _guess_mimetype() and ext != '.html'
+
+        if not template and ext_special_case:
+            default_templ = 'website.default_%s' % ext.lstrip('.')
+            if request.env.ref(default_templ, False):
+                template = default_templ
+
+        template = template and dict(template=template) or {}
+        page = request.env['website'].new_page(path, add_menu=add_menu, **template)
+        url = page['url']
         if noredirect:
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
-        return werkzeug.utils.redirect(url)
 
-    @http.route('/website/theme_change', type='http', auth="user", website=True)
-    def theme_change(self, theme_id=False, **kwargs):
-        imd = request.registry['ir.model.data']
-        Views = request.registry['ir.ui.view']
+        if ext_special_case: # redirect non html pages to backend to edit
+            return werkzeug.utils.redirect('/web#id=' + str(page.get('view_id')) + '&view_type=form&model=ir.ui.view')
+        return werkzeug.utils.redirect(url + "?enable_editor=1")
 
-        _, theme_template_id = imd.get_object_reference(
-            request.cr, request.uid, 'website', 'theme')
-        views = Views.search(request.cr, request.uid, [
-            ('inherit_id', '=', theme_template_id),
-        ], context=request.context)
-        Views.write(request.cr, request.uid, views, {
-            'active': False,
-        }, context=dict(request.context or {}, active_test=True))
-
-        if theme_id:
-            module, xml_id = theme_id.split('.')
-            _, view_id = imd.get_object_reference(
-                request.cr, request.uid, module, xml_id)
-            Views.write(request.cr, request.uid, [view_id], {
-                'active': True
-            }, context=dict(request.context or {}, active_test=True))
-
-        return request.render('website.themes', {'theme_changed': True})
-
-    @http.route(['/website/snippets'], type='json', auth="public", website=True)
+    @http.route(['/website/snippets'], type='json', auth="user", website=True)
     def snippets(self):
-        return request.website._render('website.snippets')
+        return request.env['ir.ui.view'].render_template('website.snippets')
+
+    @http.route("/website/get_switchable_related_views", type="json", auth="user", website=True)
+    def get_switchable_related_views(self, key):
+        views = request.env["ir.ui.view"].get_related_views(key, bundles=False).filtered(lambda v: v.customize_show)
+        return views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
 
     @http.route('/website/reset_templates', type='http', auth='user', methods=['POST'], website=True)
     def reset_template(self, templates, redirect='/'):
         templates = request.httprequest.form.getlist('templates')
         modules_to_update = []
         for temp_id in templates:
-            view = request.registry['ir.ui.view'].browse(request.cr, request.uid, int(temp_id), context=request.context)
+            view = request.env['ir.ui.view'].browse(int(temp_id))
             if view.page:
                 continue
             view.model_data_id.write({
@@ -228,203 +290,126 @@ class Website(openerp.addons.web.controllers.main.Home):
                 modules_to_update.append(view.model_data_id.module)
 
         if modules_to_update:
-            module_obj = request.registry['ir.module.module']
-            module_ids = module_obj.search(request.cr, request.uid, [('name', 'in', modules_to_update)], context=request.context)
-            if module_ids:
-                module_obj.button_immediate_upgrade(request.cr, request.uid, module_ids, context=request.context)
+            modules = request.env['ir.module.module'].sudo().search([('name', 'in', modules_to_update)])
+            if modules:
+                modules.button_immediate_upgrade()
         return request.redirect(redirect)
 
-    @http.route('/website/customize_template_get', type='json', auth='user', website=True)
-    def customize_template_get(self, xml_id, full=False):
-        return request.registry["ir.ui.view"].customize_template_get(
-            request.cr, request.uid, xml_id, full=full, context=request.context)
-
-    @http.route('/website/get_view_translations', type='json', auth='public', website=True)
-    def get_view_translations(self, xml_id, lang=None):
-        lang = lang or request.context.get('lang')
-        return request.registry["ir.ui.view"].get_view_translations(
-            request.cr, request.uid, xml_id, lang=lang, context=request.context)
-
-    @http.route('/website/set_translations', type='json', auth='public', website=True)
-    def set_translations(self, data, lang):
-        irt = request.registry.get('ir.translation')
-        for view_id, trans in data.items():
-            view_id = int(view_id)
-            for t in trans:
-                initial_content = t['initial_content'].strip()
-                new_content = t['new_content'].strip()
-                tid = t['translation_id']
-                if not tid:
-                    old_trans = irt.search_read(
-                        request.cr, request.uid,
-                        [
-                            ('type', '=', 'view'),
-                            ('res_id', '=', view_id),
-                            ('lang', '=', lang),
-                            ('src', '=', initial_content),
-                        ])
-                    if old_trans:
-                        tid = old_trans[0]['id']
-                if tid:
-                    vals = {'value': new_content}
-                    irt.write(request.cr, request.uid, [tid], vals)
-                else:
-                    new_trans = {
-                        'name': 'website',
-                        'res_id': view_id,
-                        'lang': lang,
-                        'type': 'view',
-                        'source': initial_content,
-                        'value': new_content,
-                    }
-                    if t.get('gengo_translation'):
-                        new_trans['gengo_translation'] = t.get('gengo_translation')
-                        new_trans['gengo_comment'] = t.get('gengo_comment')
-                    irt.create(request.cr, request.uid, new_trans)
-        return True
-
     @http.route('/website/translations', type='json', auth="public", website=True)
-    def get_website_translations(self, lang):
-        module_obj = request.registry['ir.module.module']
-        module_ids = module_obj.search(request.cr, request.uid, [('name', 'ilike', 'website'), ('state', '=', 'installed')], context=request.context)
-        modules = [x['name'] for x in module_obj.read(request.cr, request.uid, module_ids, ['name'], context=request.context)]
+    def get_website_translations(self, lang, mods=None):
+        Modules = request.env['ir.module.module'].sudo()
+        modules = Modules.search([
+            '|', ('name', 'ilike', 'website'), ('name', '=', 'web_editor'),
+            ('state', '=', 'installed')
+        ]).mapped('name')
+        if mods:
+            modules += mods
         return WebClient().translations(mods=modules, lang=lang)
-
-    @http.route('/website/attach', type='http', auth='user', methods=['POST'], website=True)
-    def attach(self, func, upload=None, url=None, disable_optimization=None):
-        Attachments = request.registry['ir.attachment']
-
-        website_url = message = None
-        if not upload:
-            website_url = url
-            name = url.split("/").pop()
-            attachment_id = Attachments.create(request.cr, request.uid, {
-                'name': name,
-                'type': 'url',
-                'url': url,
-                'res_model': 'ir.ui.view',
-            }, request.context)
-        else:
-            try:
-                image_data = upload.read()
-                image = Image.open(cStringIO.StringIO(image_data))
-                w, h = image.size
-                if w*h > 42e6: # Nokia Lumia 1020 photo resolution
-                    raise ValueError(
-                        u"Image size excessive, uploaded images must be smaller "
-                        u"than 42 million pixel")
-
-                if not disable_optimization and image.format in ('PNG', 'JPEG'):
-                    image_data = image_save_for_web(image)
-
-                attachment_id = Attachments.create(request.cr, request.uid, {
-                    'name': upload.filename,
-                    'datas': image_data.encode('base64'),
-                    'datas_fname': upload.filename,
-                    'res_model': 'ir.ui.view',
-                }, request.context)
-
-                [attachment] = Attachments.read(
-                    request.cr, request.uid, [attachment_id], ['website_url'],
-                    context=request.context)
-                website_url = attachment['website_url']
-            except Exception, e:
-                logger.exception("Failed to upload image to attachment")
-                message = unicode(e)
-
-        return """<script type='text/javascript'>
-            window.parent['%s'](%s, %s);
-        </script>""" % (func, json.dumps(website_url), json.dumps(message))
 
     @http.route(['/website/publish'], type='json', auth="public", website=True)
     def publish(self, id, object):
-        _id = int(id)
-        _object = request.registry[object]
-        obj = _object.browse(request.cr, request.uid, _id)
+        Model = request.env[object]
+        record = Model.browse(int(id))
 
         values = {}
-        if 'website_published' in _object._fields:
-            values['website_published'] = not obj.website_published
-        _object.write(request.cr, request.uid, [_id],
-                      values, context=request.context)
+        if 'website_published' in Model._fields:
+            values['website_published'] = not record.website_published
+        record.write(values)
+        return bool(record.website_published)
 
-        obj = _object.browse(request.cr, request.uid, _id)
-        return bool(obj.website_published)
-
-    @http.route(['/website/seo_suggest/<keywords>'], type='http', auth="public", website=True)
-    def seo_suggest(self, keywords):
+    @http.route(['/website/seo_suggest'], type='json', auth="user", website=True)
+    def seo_suggest(self, keywords=None, lang=None):
+        language = lang.split("_")
         url = "http://google.com/complete/search"
         try:
-            req = urllib2.Request("%s?%s" % (url, werkzeug.url_encode({
-                'ie': 'utf8', 'oe': 'utf8', 'output': 'toolbar', 'q': keywords})))
-            request = urllib2.urlopen(req)
-        except (urllib2.HTTPError, urllib2.URLError):
+            req = requests.get(url, params={
+                'ie': 'utf8', 'oe': 'utf8', 'output': 'toolbar', 'q': keywords, 'hl': language[0], 'gl': language[1]})
+            req.raise_for_status()
+            response = req.content
+        except IOError:
             return []
-        xmlroot = ET.fromstring(request.read())
+        xmlroot = ET.fromstring(response)
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
 
     #------------------------------------------------------
-    # Helpers
+    # Themes
     #------------------------------------------------------
-    @http.route(['/website/kanban'], type='http', auth="public", methods=['POST'], website=True)
-    def kanban(self, **post):
-        return request.website.kanban_col(**post)
 
-    def placeholder(self, response):
-        return request.registry['website']._image_placeholder(response)
+    def get_view_ids(self, xml_ids):
+        ids = []
+        View = request.env["ir.ui.view"].with_context(active_test=False)
+        for xml_id in xml_ids:
+            if "." in xml_id:
+                # Get website-specific view if possible
+                record_id = View.search([
+                    ("website_id", "=", request.website.id),
+                    ("key", "=", xml_id),
+                ]).id or request.env.ref(xml_id).id
+            else:
+                record_id = int(xml_id)
+            ids.append(record_id)
+        return ids
 
-    @http.route([
-        '/website/image',
-        '/website/image/<model>/<id>/<field>',
-        '/website/image/<model>/<id>/<field>/<int:max_width>x<int:max_height>'
-        ], auth="public", website=True, multilang=False)
-    def website_image(self, model, id, field, max_width=None, max_height=None):
-        """ Fetches the requested field and ensures it does not go above
-        (max_width, max_height), resizing it if necessary.
+    @http.route(['/website/theme_customize_get'], type='json', auth="public", website=True)
+    def theme_customize_get(self, xml_ids):
+        enable = []
+        disable = []
+        ids = self.get_view_ids(xml_ids)
+        for view in request.env['ir.ui.view'].with_context(active_test=True).browse(ids):
+            if view.active:
+                enable.append(view.xml_id)
+            else:
+                disable.append(view.xml_id)
+        return [enable, disable]
 
-        If the record is not found or does not have the requested field,
-        returns a placeholder image via :meth:`~.placeholder`.
+    @http.route(['/website/theme_customize'], type='json', auth="public", website=True)
+    def theme_customize(self, enable, disable, get_bundle=False):
+        """ enable or Disable lists of ``xml_id`` of the inherit templates """
+        def set_active(ids, active):
+            if ids:
+                real_ids = self.get_view_ids(ids)
+                request.env['ir.ui.view'].with_context(active_test=True).browse(real_ids).write({'active': active})
 
-        Sets and checks conditional response parameters:
-        * :mailheader:`ETag` is always set (and checked)
-        * :mailheader:`Last-Modified is set iif the record has a concurrency
-          field (``__last_update``)
+        set_active(disable, False)
+        set_active(enable, True)
 
-        The requested field is assumed to be base64-encoded image data in
-        all cases.
-        """
-        try:
-            idsha = id.split('_')
-            id = idsha[0]
-            response = werkzeug.wrappers.Response()
-            return request.registry['website']._image(
-                request.cr, request.uid, model, id, field, response, max_width, max_height,
-                cache=STATIC_CACHE if len(idsha) > 1 else None)
-        except Exception:
-            logger.exception("Cannot render image field %r of record %s[%s] at size(%s,%s)",
-                             field, model, id, max_width, max_height)
-            response = werkzeug.wrappers.Response()
-            return self.placeholder(response)
+        if get_bundle:
+            context = dict(request.context, active_test=True)
+            return request.env["ir.qweb"]._get_asset('web.assets_frontend', options=context)
+
+        return True
+
+    @http.route(['/website/theme_customize_reload'], type='http', auth="public", website=True)
+    def theme_customize_reload(self, href, enable, disable):
+        self.theme_customize(enable and enable.split(",") or [], disable and disable.split(",") or [])
+        return request.redirect(href + ("&theme=true" if "#" in href else "#theme=true"))
+
+    @http.route(['/website/multi_render'], type='json', auth="public", website=True)
+    def multi_render(self, ids_or_xml_ids, values=None):
+        View = request.env['ir.ui.view']
+        res = {}
+        for id_or_xml_id in ids_or_xml_ids:
+            res[id_or_xml_id] = View.render_template(id_or_xml_id, values)
+        return res
 
     #------------------------------------------------------
     # Server actions
     #------------------------------------------------------
+
     @http.route([
         '/website/action/<path_or_xml_id_or_id>',
         '/website/action/<path_or_xml_id_or_id>/<path:path>',
-        ], type='http', auth="public", website=True)
+    ], type='http', auth="public", website=True)
     def actions_server(self, path_or_xml_id_or_id, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        res, action_id, action = None, None, None
-        ServerActions = request.registry['ir.actions.server']
+        ServerActions = request.env['ir.actions.server']
+        action = action_id = None
 
         # find the action_id: either an xml_id, the path, or an ID
-        if isinstance(path_or_xml_id_or_id, basestring) and '.' in path_or_xml_id_or_id:
-            action_id = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, request.uid, path_or_xml_id_or_id, raise_if_not_found=False)
-        if not action_id:
-            action_ids = ServerActions.search(cr, uid, [('website_path', '=', path_or_xml_id_or_id), ('website_published', '=', True)], context=context)
-            action_id = action_ids and action_ids[0] or None
-        if not action_id:
+        if isinstance(path_or_xml_id_or_id, pycompat.string_types) and '.' in path_or_xml_id_or_id:
+            action = request.env.ref(path_or_xml_id_or_id, raise_if_not_found=False)
+        if not action:
+            action = ServerActions.search([('website_path', '=', path_or_xml_id_or_id), ('website_published', '=', True)], limit=1)
+        if not action:
             try:
                 action_id = int(path_or_xml_id_or_id)
             except ValueError:
@@ -432,16 +417,39 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         # check it effectively exists
         if action_id:
-            action_ids = ServerActions.exists(cr, uid, [action_id], context=context)
-            action_id = action_ids and action_ids[0] or None
+            action = ServerActions.browse(action_id).exists()
         # run it, return only if we got a Response object
-        if action_id:
-            action = ServerActions.browse(cr, uid, action_id, context=context)
+        if action:
             if action.state == 'code' and action.website_published:
-                action_res = ServerActions.run(cr, uid, [action_id], context=context)
+                action_res = action.run()
                 if isinstance(action_res, werkzeug.wrappers.Response):
-                    res = action_res
-        if res:
-            return res
+                    return action_res
+
         return request.redirect('/')
 
+
+#------------------------------------------------------
+# Retrocompatibility routes
+#------------------------------------------------------
+class WebsiteBinary(http.Controller):
+
+    @http.route([
+        '/website/image',
+        '/website/image/<xmlid>',
+        '/website/image/<xmlid>/<int:width>x<int:height>',
+        '/website/image/<xmlid>/<field>',
+        '/website/image/<xmlid>/<field>/<int:width>x<int:height>',
+        '/website/image/<model>/<id>/<field>',
+        '/website/image/<model>/<id>/<field>/<int:width>x<int:height>'
+    ], type='http', auth="public", website=False, multilang=False)
+    def content_image(self, id=None, max_width=0, max_height=0, **kw):
+        if max_width:
+            kw['width'] = max_width
+        if max_height:
+            kw['height'] = max_height
+        if id:
+            id, _, unique = id.partition('_')
+            kw['id'] = int(id)
+            if unique:
+                kw['unique'] = unique
+        return Binary().content_image(**kw)

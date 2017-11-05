@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="event_type_view_form_inherit_track" model="ir.ui.view">
+        <field name="name">event.type.view.form.inherit.track</field>
+        <field name="model">event.type</field>
+        <field name="inherit_id" ref="website_event.event_type_view_form_inherit_website"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='event_type_visibility_website']/div[hasclass('o_setting_right_pane')]" position='inside'>
+                <div class="row mt16" attrs="{'invisible': [('website_menu', '=', False)]}">
+                    <label class="col-md-4" for="website_track"/> <field name="website_track"/>
+                </div>
+                <div class="row mt16" attrs="{'invisible': [('website_menu', '=', False)]}">
+                    <label class="col-md-4" for="website_track_proposal"/> <field name="website_track_proposal"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+        <!-- Events Organisation/CONFIGURATION/EVENTS -->
+        <record id="view_event_form" model="ir.ui.view">
+            <field name="name">Event Tracks</field>
+            <field name="inherit_id" ref="website_event.event_event_view_form_inherit_website"/>
+            <field name="model">event.event</field>
+            <field name="arch" type="xml">
+                <button name="website_publish_button" position="before">
+                    <button name="%(action_event_track_from_event)d"
+                            type="action"
+                            class="oe_stat_button"
+                            icon="fa-inbox">
+                        <field name="track_count" widget="statinfo"/>
+                    </button>
+                    <button name="%(action_event_sponsor_from_event)d"
+                            type="action"
+                            class="oe_stat_button"
+                            icon="fa-users">
+                        <field name="sponsor_count" widget="statinfo"/>
+                    </button>
+                </button>
+                <label for="website_menu" position="after">
+                    <field name="website_track" attrs="{'invisible': [('website_menu', '=', False)]}"/>
+                    <label for="website_track" string="Tracks on Website" attrs="{'invisible': [('website_menu', '=', False)]}"/>
+                    <field name="website_track_proposal" attrs="{'invisible': [('website_menu', '=', False)]}"/>
+                    <label for="website_track_proposal" string="Track Proposals on Website" attrs="{'invisible': [('website_menu', '=', False)]}"/>
+                </label>
+            </field>
+        </record>
+</odoo>

@@ -1,0 +1,17 @@
+-
+  !record {model: stock.location, id: stock_location_14}:
+    name: Shelf 2
+    posx: 0
+
+-
+  !record {model: stock.location, id: stock_location_components}:
+    name: Shelf 1
+    posx: 0
+
+-
+  !python {model: ir.model.data, id: False}: |
+    main_warehouse = self.env['stock.warehouse'].browse(ref('warehouse0'))
+    self.env['stock.location'].browse([
+      ref('stock_location_14'),
+      ref('stock_location_components')
+    ]).write({'location_id':main_warehouse.lot_stock_id.id})

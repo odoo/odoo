@@ -1,0 +1,286 @@
+.o_dashboards {
+    background-color: #ececec;
+
+    .o_website_dashboard {
+        background-color: #ececec;
+        div.o_box {
+            .clearfix();
+            color: @odoo-main-color-muted;
+            background-color: @odoo-view-background-color;
+            background-size: cover;
+            margin-bottom: @odoo-horizontal-padding;
+            position: static;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+
+            h2, h4 {
+                text-transform: uppercase;
+                margin-top: 0;
+                color: @odoo-brand-primary;
+            }
+
+            h4 { margin: 0 0 0 8px; }
+
+            .col-md-5, .col-md-7, .col-md-12 {
+                padding: 15px;
+
+                .js_field_selection {
+                    width: 30%;
+                    margin: 0 0 20px 0;
+                    float: right;
+                    border-radius: 0;
+                }
+
+                .table-responsive {
+                    border: none;
+                }
+
+                table {
+
+                    tr:nth-child(even) {
+                        background: #f5f6f7;
+                    }
+
+                    th {
+                        text-transform: uppercase;
+                        color: @odoo-main-text-color;
+                        border-top-width: 0px;
+                    }
+                    td, th {
+                        text-align: right;
+                        border-left: none;
+
+                        &:first-child {
+                            text-align: left;
+                        }
+                    }
+                }
+
+                /*------------------------------------------*/
+                /*              Chart design                */
+                /*------------------------------------------*/
+
+                .gapi-analytics-data-chart svg g path, svg [class*="nv-series-"] {
+                    stroke: @odoo-main-color-muted !important;
+                }
+
+                svg {
+                    padding-top: 2px;
+                    float: left;
+
+                    g.nvd3.nv-wrap.nv-lineChart {
+                        .translate(45; 30) !important;
+                    }
+
+                    g.nv-x.nv-axis .tick > line {
+                        opacity: 0 !important;
+                    }
+
+                    [class*="nv-series-"] {
+                        stroke-width: 3 !important;
+                        fill: @odoo-main-color-muted !important;
+                    }
+
+                    .nv-groups .nv-point, g circle {
+                        fill: @odoo-brand-optional;
+                    }
+
+                    .nv-groups .nv-point {
+                        fill-opacity: 1 !important;
+                        stroke-opacity: 1 !important;
+                        stroke: @odoo-brand-optional;
+                    }
+
+                    .nv-groups .nv-point.hover, .nv-group.nv-noninteractive .nv-point.hover {
+                        stroke: darken(@odoo-brand-optional, 10%);
+                    }
+                }
+
+                .nvtooltip {
+                    border-radius: 0;
+                    border: 1px solid @gray-lighter;
+                    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+
+                    .legend-color-guide > div {
+                        border: none;
+                    }
+                    tr:first-child .legend-color-guide > div {
+                        background-color: @odoo-brand-optional !important;
+                    }
+                    tr:last-child .legend-color-guide > div {
+                        background-color: darken(@odoo-brand-lightsecondary, 10%) !important;
+                    }
+                }
+            }
+        }
+
+        .o_dashboard_common {
+            .o_box {
+                display: flex;
+                flex-flow: row wrap;
+                justify-content: flex-start;
+                > .o_box_item {
+                    @media (max-width: @screen-sm-min) {
+                        flex: 1 1 200px;
+                        display: block !important;
+                    }
+                    @media (min-width: @screen-sm-min) {
+                        flex: 0 0 16.6%;
+                    }
+                }
+            }
+            .o_inner_box {
+                padding-top: 10px;
+                text-align: center;
+                border: 1px solid @odoo-view-background-color;
+                height: 80px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                &.o_main {
+                    background-color: @odoo-brand-optional;
+                    &:hover {
+                        background-color: darken(@odoo-brand-optional, 10%);
+                    }
+                    a {
+                        color: white;
+                    }
+                }
+                &.o_primary {
+                    background-color: @odoo-brand-primary;
+                    color: white;
+                    &:hover {
+                        background-color: darken(@odoo-brand-primary, 10%);
+                    }
+                }
+                &.o_apps {
+                    position: relative;
+                    background-color: @odoo-brand-optional;
+                    color: white;
+                    .o_apps_hidden {
+                        display: none;
+                        &.o_dashboard_hide_panel {
+                            position: absolute;
+                            top: 0px;
+                            right: 0px;
+                            background: @brand-danger;
+                            padding: 6px;
+                        }
+                    }
+                    &:hover {
+                        background-color: #45818E;
+                        .o_apps_show {
+                            display: none;
+                        }
+                        .o_apps_hidden {
+                            display: block;
+                        }
+                    }
+                }
+                .o_highlight {
+                    font-size: 27px;
+                }
+            }
+        }
+
+        .o_dashboard_visits {
+
+            h2 {
+                padding: 15px;
+            }
+
+            .o_demo_background {
+
+                margin-top: 16px;
+                height: 300px;
+                background-size: 100% !important;
+                background: url("/website/static/src/img/website_dashboard_visit_demo.png") no-repeat;
+                position: relative;
+
+                .o_buttons {
+                    position: relative;
+                    z-index: 10;
+
+                    > button {
+                        display: block;
+                    }
+                }
+
+                .o_layer {
+                    background-color: rgba(255,255,255,.3);
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+
+            .o_properties_selection {
+
+                @media (min-width: @screen-md-min) {
+                    .o-flex-display();
+                }
+
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+
+            .gapi-analytics-auth-styles-signinbutton {
+                cursor: pointer;
+            }
+
+            .ActiveUsers {
+                position: relative;
+                float: right;
+                top: -60px;
+                right: 10px;
+                border: 1px solid @gray-lighter;
+                font-weight: 300;
+                white-space: nowrap;
+                padding: .5em 1.5em;
+                margin: .5em;
+                text-transform: uppercase;
+            }
+
+            .ActiveUsers-value {
+              font-weight: 300;
+              margin-right: -.25em;
+            }
+
+            .ActiveUsers.is-increasing {
+              animation: increase 3s;
+            }
+
+            .ActiveUsers.is-decreasing {
+              animation: decrease 3s;
+            }
+
+            @keyframes increase {
+              10% {
+                background-color: lighten(@odoo-brand-optional, 30%);
+                border-color: @odoo-brand-optional;
+                color: @odoo-brand-optional;
+              }
+            }
+
+            @keyframes decrease {
+              10% {
+                background-color: lighten(@odoo-brand-optional, 30%);
+                border-color: @odoo-brand-optional;
+                color: @odoo-brand-optional;
+              }
+            }
+        }
+
+        tr.o_product_template {
+            cursor: pointer;
+            color: @odoo-main-text-color;
+        }
+
+        .o_loader {
+            text-align: center;
+            width: 100%;
+            height: 20em;
+        }
+    }
+}

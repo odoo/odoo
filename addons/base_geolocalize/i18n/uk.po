@@ -3,14 +3,17 @@
 # * base_geolocalize
 # 
 # Translators:
+# ТАрас <tratatuta@i.ua>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-06-09 05:18+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-8/language/uk/)\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
+"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,45 +21,64 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/res_partner.py:41
-#, python-format
-msgid ""
-"Cannot contact geolocation servers. Please make sure that your internet "
-"connection is up and running (%s)."
-msgstr "Не вдається з'єднатися з серверами геолокації. Будь ласка, впевніться, що у Вас все гаразд з інтернетом."
+#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "<span class=\"oe_inline\"> ( On  </span>"
+msgstr "<span class=\"oe_inline\"> ( За  </span>"
 
 #. module: base_geolocalize
-#: field:res.partner,partner_latitude:0
+#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "<span> : Lat : </span>"
+msgstr "<span> : Широта : </span>"
+
+#. module: base_geolocalize
+#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "<span> ;  Long:  </span>"
+msgstr "<span> ; Довгота: </span>"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py:18
+#, python-format
+msgid ""
+"Cannot contact geolocation servers. Please make sure that your Internet "
+"connection is up and running (%s)."
+msgstr ""
+"Не вдається зв'язатися з геолокаційними серверами. Переконайтеся, що "
+"підключення до Інтернету працює (%s)."
+
+#. module: base_geolocalize
+#: model:ir.model,name:base_geolocalize.model_res_partner
+msgid "Contact"
+msgstr "Контакт"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_partner_latitude
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_users_partner_latitude
 msgid "Geo Latitude"
 msgstr "Широта"
 
 #. module: base_geolocalize
-#: view:res.partner:base_geolocalize.view_crm_partner_geo_form
-msgid "Geo Localization"
-msgstr ""
-
-#. module: base_geolocalize
-#: field:res.partner,date_localization:0
-msgid "Geo Localization Date"
-msgstr "Дата локалізації"
-
-#. module: base_geolocalize
-#: view:res.partner:base_geolocalize.view_crm_partner_geo_form
-msgid "Geo Localize"
-msgstr "Визначити локацію"
-
-#. module: base_geolocalize
-#: field:res.partner,partner_longitude:0
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_partner_longitude
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_users_partner_longitude
 msgid "Geo Longitude"
 msgstr "Довгота"
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/res_partner.py:40
-#, python-format
-msgid "Network error"
-msgstr ""
+#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Geolocate"
+msgstr "Геолокація"
 
 #. module: base_geolocalize
-#: model:ir.model,name:base_geolocalize.model_res_partner
-msgid "Partner"
-msgstr "Партнер"
+#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Geolocation"
+msgstr "Геолокація"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_date_localization
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_users_date_localization
+msgid "Geolocation Date"
+msgstr "Дата геолокації"
+
+#. module: base_geolocalize
+#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Partner Assignation"
+msgstr "Призначення партнера"

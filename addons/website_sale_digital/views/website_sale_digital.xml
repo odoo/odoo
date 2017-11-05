@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_order_page_downloads" name="Orders Downloads Followup" inherit_id="sale.portal_order_page">
+        <xpath expr="//div[@id='product_name']" position="inside">
+            <t t-set="attachments" t-value="digital_attachments.get(ol.product_id.id)"/>
+            <t t-if="attachments">
+                <span class="dropdown">
+                    <button class="btn btn-xs btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                        Downloads <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                        <t t-foreach="attachments" t-as="a">
+                            <li role="presentation"><a role="menuitem" tabindex="-1" t-att-href="'/my/download?attachment_id=%i' % a['id']"><t t-esc="a['name']"/></a></li>
+                        </t>
+                    </ul>
+                </span>
+            </t>
+        </xpath>
+    </template>
+</odoo>

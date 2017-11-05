@@ -1,0 +1,138 @@
+// ------------------------------------------------------------------
+//  General
+// ------------------------------------------------------------------
+.o_web_client {
+    position: relative; // normally useless but required by bootstrap-datepicker
+    background-color: @odoo-webclient-background-color;
+}
+.o_text_overflow {
+    .o-text-overflow();
+}
+.o_hidden {
+    display: none!important;
+}
+
+// ------------------------------------------------------------------
+// Misc. widgets
+// ------------------------------------------------------------------
+@notification-error-bg-color: #F16567;
+@notification-info-bg-color: #FCFBEA;
+.o_notification_manager {
+    width: 300px;
+    max-width: 100%;
+
+    .o-position-absolute(@navbar-height, 0px);
+    z-index: 1100; // Bootstrap modal z-index is 1050
+
+    .o_notification {
+        padding: 0;
+        margin: 5px 0 0 0;
+
+        opacity: 0;
+
+        background-color: @notification-info-bg-color;
+        box-shadow: 0px 0px 5px 1px @odoo-main-text-color;
+
+        position: relative;
+        .o_close {
+            .o-position-absolute(5px, 5px);
+            color: rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+        }
+
+        .o_notification_title {
+            .o-flex-display();
+            .o-align-items(center);
+
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 10px 10px 10px 20px;
+
+            font-weight: bold;
+
+            .o_icon {
+                display: inline-block;
+                margin-right: 20px;
+                color: rgba(0, 0, 0, 0.3);
+            }
+        }
+
+        .o_notification_content {
+            padding: 10px;
+        }
+
+        &.o_error {
+            color: white;
+            background-color: @notification-error-bg-color;
+        }
+    }
+}
+
+// Buttons
+.o_icon_button {
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+    outline: none;
+}
+
+.oe_highlight {
+    .btn-primary;
+}
+
+// Boolean Toggle widget
+div.o_boolean_toggle {
+    position: relative;
+    display: inline-block;
+    width: 32px !important;
+    height: 18px;
+
+    & > label {
+        & > input {
+            display: none;
+        }
+
+        & > .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #a0a0a0;
+            border-radius: 24px;
+
+            &:before {
+                position: absolute;
+                content: "";
+                height: 12px;
+                width: 12px;
+                left: 3px;
+                bottom: 3px;
+                background-color: white;
+                border-radius: 50%;
+            }
+        }
+
+        & > input:checked + .slider {
+            background-color: @odoo-brand-optional;
+
+            &:before {
+                .translate(14px; 0px);
+            }
+        }
+    }
+}
+
+// Full bg colors (bootstrap extension)
+.bg-success-full {
+    background-color: @brand-success;
+}
+.bg-warning-full {
+    background-color: @brand-warning;
+}
+.bg-danger-full {
+    background-color: @brand-danger;
+}
+.bg-info-full {
+    background-color: @brand-info;
+}

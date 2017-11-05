@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Top menu item -->
+    <menuitem
+        id="menu_point_root"
+        name="Point of Sale"
+        groups="group_pos_manager,group_pos_user"
+        web_icon="point_of_sale,static/description/icon.png"
+        sequence="20"/>
+
+    <!-- Orders menu -->
+    <menuitem id="menu_point_of_sale"
+        name="Orders"
+        parent="menu_point_root"
+        sequence="10"/>
+
+    <!-- Reporting menu -->
+    <menuitem id="menu_point_rep"
+        name="Reporting"
+        parent="menu_point_root"
+        sequence="90"
+        groups="group_pos_manager"/>
+
+    <!-- Config menu and sub menus -->
+    <menuitem id="menu_point_config_product"
+        name="Configuration"
+        parent="menu_point_root"
+        sequence="100"
+        groups="group_pos_manager"/>
+
+    <menuitem id="pos_menu_products_configuration"
+        name="Products"
+        parent="menu_point_config_product"
+        sequence="11"/>
+
+</odoo>

@@ -1,0 +1,98 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_address_extended
+# 
+# Translators:
+# fanha99 <fanha99@hotmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-09-20 09:52+0000\n"
+"PO-Revision-Date: 2017-09-20 09:52+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_address_extended
+#: model:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
+msgid ""
+"Change how the system computes the full street field based on the different "
+"street subfields"
+msgstr ""
+
+#. module: base_address_extended
+#: model:ir.model,name:base_address_extended.model_res_company
+msgid "Companies"
+msgstr "Công ty"
+
+#. module: base_address_extended
+#: model:ir.model,name:base_address_extended.model_res_partner
+msgid "Contact"
+msgstr "Liên hệ"
+
+#. module: base_address_extended
+#: model:ir.model,name:base_address_extended.model_res_country
+msgid "Country"
+msgstr "Quốc gia"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_company_street_number2
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner_street_number2
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users_street_number2
+msgid "Door Number"
+msgstr ""
+
+#. module: base_address_extended
+#: model:ir.model.fields,help:base_address_extended.field_res_country_street_format
+msgid ""
+"Format to use for streets belonging to this country.\n"
+"\n"
+"You can use the python-style string pattern with all the fields of the street (for example, use '%(street_name)s, %(street_number)s' if you want to display the street name, followed by a comma and the house number)\n"
+"%(street_name)s: the name of the street\n"
+"%(street_number)s: the house number\n"
+"%(street_number2)s: the door number"
+msgstr ""
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_company_street_number
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner_street_number
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users_street_number
+msgid "House Number"
+msgstr ""
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country_street_format
+msgid "Street Format"
+msgstr ""
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_company_street_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner_street_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users_street_name
+msgid "Street Name"
+msgstr ""
+
+#. module: base_address_extended
+#: model:ir.ui.view,arch_db:base_address_extended.view_partner_address_structured_form
+#: model:ir.ui.view,arch_db:base_address_extended.view_partner_structured_form
+#: model:ir.ui.view,arch_db:base_address_extended.view_res_company_extended_form
+msgid "Street Name..."
+msgstr ""
+
+#. module: base_address_extended
+#: model:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
+msgid "Street format..."
+msgstr ""
+
+#. module: base_address_extended
+#: code:addons/base_address_extended/models/base_address_extended.py:60
+#: code:addons/base_address_extended/models/base_address_extended.py:126
+#, python-format
+msgid "Unrecognized field %s in street format."
+msgstr ""

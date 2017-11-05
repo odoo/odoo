@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_shop_saleorder_document" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//div[@name='total']" position="after">
+            <t t-if="doc.payment_acquirer_id.name">
+                <table class="table table-condensed mt32 mb32">
+                    <thead>
+                        <tr>
+                            <th>Payment Information</th>
+                            <th class="text-right">Total</th>
+                        </tr>
+                   </thead>
+                   <tbody class="sale_tbody">
+                        <tr>
+                            <td>
+                                <strong>Payment Acquirer:</strong> <t t-esc="doc.payment_acquirer_id.name"/><br />
+                                <strong>Payment Status:</strong>
+                                <t t-if="doc.payment_acquirer_id.journal_id">
+                                    <t t-if="doc.payment_tx_id.state == 'pending'">
+                                        <t t-raw="doc.payment_acquirer_id.pending_msg"/>
+                                    </t>
+                                    <t t-if="doc.payment_tx_id.state in ['done', 'authorized']">
+                                        <t t-raw="doc.payment_acquirer_id.done_msg"/>
+                                    </t>
+                                    <t t-if="doc.payment_tx_id.state == 'cancel'">
+                                        <t t-raw="doc.payment_acquirer_id.cancel_msg"/>
+                                    </t>
+                                    <t t-if="doc.payment_tx_id.state == 'error'">
+                                        <t t-raw="doc.payment_acquirer_id.error_msg"/>
+                                    </t>
+                                </t>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="doc.amount_total"
+                                    t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </t>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="account_reports_hu_statements_menu" name="Hungary" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
+
+    <record id="chart_hu_389" model="account.account.template">
+        <field name="code">389</field>
+        <field name="name">Átvezetési számla</field>
+        <field name="reconcile" eval='True'/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+    </record>
+    <record id="hungarian_chart_template" model="account.chart.template">
+        <field name="name">Magyar főkönyvi kivonat</field>
+        <field name="code_digits">4</field>
+        <field name="cash_account_code_prefix">381</field>
+        <field name="bank_account_code_prefix">384</field>
+        <field name="currency_id" ref="base.HUF"/>
+        <field name="transfer_account_id" ref="chart_hu_389"/>
+    </record>
+    <record id="chart_hu_389" model="account.account.template">
+        <field name="chart_template_id" ref="hungarian_chart_template"/>
+    </record>
+</odoo>

@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="sale_order_form_quote" model="ir.ui.view">
+        <field name="name">sale.order.form.payment</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_confirm'][1]" position="after">
+                <button name="open_quotation" type="object" 
+                    class="o_open_quotation" string="Preview"
+                    attrs="{'invisible': [('template_id', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//page/field[@name='order_line']/.." position="after">
+                <page string="Suggested Products">
+                    <field name="quote_viewed" invisible="1"/>
+                    <field name="options">
+                        <tree string="Sales Quotation Template Lines" editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="product_id"/>
+                                <field name="layout_category_id" groups="sale.group_sale_layout"/>
+                                <field name="name"/>
+                                <field name="quantity"/>
+                                <field name="uom_id" groups="product.group_uom"/>
+                                <field name="price_unit"/>
+                                <field name="discount" groups="sale.group_discount_per_so_line"/>
+                                <button name="button_add_to_order" class="oe_link" icon="fa-shopping-cart" string="Add to order lines" type="object"/>
+                                <field name="website_description" invisible="1"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                <label for="template_id"/>
+                <div>
+                    <field name="template_id" context="{'company_id': company_id}"
+                        options="{'no_create': True, 'no_open': True}"/>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='client_order_ref']" position="after">
+                <field name="require_payment" widget="radio"/>
+                <field name="website_description" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale.action_quotations" model="ir.actions.act_window">
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Create a Quotation, the first step of a new sale.
+          </p><p>
+            Your next actions should flow efficiently: confirm the Quotation
+            to a Sales Order, then create the Invoice and collect the Payment.
+          </p><p>
+            Note that once a Quotation becomes a Sales Order, it will be moved
+            from the Quotations list to the Sales Order list.
+          </p>
+        </field>
+    </record>
+</odoo>

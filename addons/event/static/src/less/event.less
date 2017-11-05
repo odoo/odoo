@@ -1,0 +1,27 @@
+.o_kanban_view.o_event_kanban_view {
+
+    .o_kanban_record {
+        position: relative;
+        padding: 0;
+
+        .o-flex-display();
+
+        .o_event_left {
+            .o-flex(1, 1, 25%);
+            text-align: center;
+            color: white;
+            background-color: @odoo-brand-optional;
+            padding: 8px;
+
+            .o_day {
+                font-size: 26px;
+            }
+        }
+
+        .o_event_right {
+            .o-flex(1, 1, 75%);
+            padding: 8px;
+            margin-left: 8px;
+        }
+    }
+}

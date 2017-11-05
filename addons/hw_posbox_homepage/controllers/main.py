@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import logging
 import os
-import time
-import werkzeug
 import subprocess
-from os import listdir
+import werkzeug
 
-import openerp
-from openerp import http
-from openerp.http import request
-from openerp.tools.translate import _
+import odoo
+from odoo import http
+from odoo.tools import misc
 
 _logger = logging.getLogger(__name__)
 
@@ -63,7 +62,7 @@ index_template = """
         the posbox version number is independent from Odoo. You can upgrade
         the software on the <a href='/hw_proxy/upgrade/'>upgrade page</a>.
         </p>
-        <p>For any other question, please contact the Odoo support at <a href='mailto:support@odoo.com'>support@odoo.com</a>
+        <p>For any other question, please contact the Odoo support at <a href='http://www.odoo.com/help'>www.odoo.com/help</a>
         </p>
     </body>
 </html>
@@ -71,7 +70,7 @@ index_template = """
 """
 
 
-class PosboxHomepage(openerp.addons.web.controllers.main.Home):
+class PosboxHomepage(odoo.addons.web.controllers.main.Home):
 
     def get_hw_screen_message(self):
         return """
@@ -117,7 +116,7 @@ class PosboxHomepage(openerp.addons.web.controllers.main.Home):
             f = open('/tmp/scanned_networks.txt', 'r')
             for line in f:
                 line = line.rstrip()
-                line = werkzeug.utils.escape(line)
+                line = misc.html_escape(line)
                 wifi_template += '<option value="' + line + '">' + line + '</option>\n'
             f.close()
         except IOError:

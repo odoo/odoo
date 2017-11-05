@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--My Dashboard-->
+        <record model="ir.ui.view" id="board_my_dash_view">
+            <field name="name">My Dashboard</field>
+            <field name="model">board.board</field>
+            <field name="arch" type="xml">
+                <form string="My Dashboard">
+                    <board style="2-1">
+                        <column>
+                        </column>
+                    </board>
+                </form>
+            </field>
+        </record>
+
+        <!--My Dashboard Action-->
+        <record model="ir.actions.act_window" id="open_board_my_dash_action">
+            <field name="name">My Dashboard</field>
+            <field name="res_model">board.board</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="usage">menu</field>
+            <field name="view_id" ref="board_my_dash_view"/>
+            <field name="help" type="html">
+              <div class="oe_empty_custom_dashboard">
+                  <p>
+                    <b>Your personal dashboard is empty.</b>
+                  </p><p>
+                    To add your first report into this dashboard, go to any
+                    menu, switch to list or graph view, and click <i>'Add to
+                    Dashboard'</i> in the extended search options.
+                  </p><p>
+                    You can filter and group data before inserting into the
+                    dashboard using the search options.
+                  </p>
+              </div>
+            </field>
+        </record> 
+
+        <!--My Dashboard Menu-->
+        <menuitem 
+            id="menu_board_my_dash"
+            parent="base.menu_board_root"
+            action="open_board_my_dash_action"
+            sequence="5"/>
+    </data>
+</odoo>

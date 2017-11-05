@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <!-- Front-end assets: custom css -->
-        <template id="assets_frontend" inherit_id="website.assets_frontend" name="Shop">
+        <template id="assets_frontend" inherit_id="website.assets_frontend" name="website_forum_doc assets">
             <xpath expr="." position="inside">
                 <link rel='stylesheet' href='/website_forum_doc/static/src/css/website_forum_doc.css'/>
             </xpath>
@@ -54,6 +53,7 @@
 
         <template id="documentation" name="Documentation Index">
             <t t-call="website.layout">
+            <div id="wrap">
                 <section class="container mt16" t-if="toc">
                     <div class="row">
                         <div class="col-sm-8">
@@ -71,7 +71,7 @@
                                 <div class="form-group">
                                     <input type="search" class="form-control"
                                         name="search" placeholder="Search..."
-                                        t-att-value="search or ''"/>
+                                        t-att-value="search or None"/>
                                     <button type="submit" class="btn btn-default">Search</button>
                                 </div>
                             </form>
@@ -87,6 +87,7 @@
                     <t t-call="website_forum_doc.toc"/>
                 </section>
                 <div class="oe_structure"/>
+            </div>
             </t>
         </template>
 
@@ -109,7 +110,7 @@
                                 <div class="form-group">
                                     <input type="search" class="form-control"
                                         name="search" placeholder="Search..."
-                                        t-att-value="search or ''"/>
+                                        t-att-value="search or None"/>
                                     <button type="submit" class="btn btn-default">Search</button>
                                 </div>
                             </form>
@@ -149,7 +150,7 @@
                                         from the Q&amp;A section where you can
                                         discuss it and get feedback.
                                     </div>
-                                    &amp;nbsp; <a t-attf-href="/forum/#{slug(forum)}/question/#{slug(post)}" class="fa fa-arrow-right mt16"> Related question</a>
+                                    <a t-attf-href="/forum/#{slug(forum)}/question/#{slug(post)}" class="fa fa-arrow-right mt16 ml8"> Related question</a>
                                 </div>
                             </div>
                         </div>
@@ -198,6 +199,7 @@
                 <div class="container">
                     <div class="well">
                         <form t-attf-action="/forum/#{ slug(forum) }/promote_ok" method="post" role="form" class="form-horizontal">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <input name="post_id" t-att-value="post.id" type="hidden"/>
                             <div class="form-group">
                                 <label class="col-md-3 control-label" for="reason">Question:</label>
@@ -257,7 +259,7 @@
                         <div class="col-sm-6">
                             <h4>Bad answer structure</h4>
                             <ol>
-                                <li>Explain how to configure in Odoo</li>
+                                <li>Explain how to configure Odoo</li>
                                 <li>No business benefit</li>
                             </ol>
                         </div>
@@ -265,7 +267,4 @@
                 </section>
             </t>
         </template>
-
-
-    </data>
-</openerp>
+</odoo>

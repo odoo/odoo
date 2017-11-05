@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Front-end/Back-end integration -->
+    <template id="user_navbar" inherit_id="website.layout">
+        <xpath expr="//t[@t-set='html_data']" position="after">
+            <t t-set="body_classname" t-value="'o_connected_user' if env['ir.ui.view'].user_has_groups('base.group_user') else None"/>
+        </xpath>
+        <xpath expr="//div[@id='wrapwrap']" position="before">
+            <nav groups="base.group_user" t-if="website and menu_data" id="oe_main_menu_navbar" class="o_main_navbar">
+                <ul id="oe_applications">
+                    <li class="dropdown active">
+                        <a class="dropdown full" data-toggle="dropdown" href="#">
+                            <i class="fa fa-th-large"/> WEBSITE <b class="caret"/>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li t-as="menu" t-foreach="menu_data['children']">
+                                <t t-set="debug_param" t-value="'?&amp;debug=' if debug else ''"/>
+                                <a t-att-class="'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'" t-att-data-action-id="menu['action'] and menu['action'].split(',')[1] or None" t-att-data-action-model="menu['action'] and menu['action'].split(',')[0] or None" t-att-data-menu="menu['id']" t-att-data-menu-xmlid="menu.get('xmlid')" t-att-href="'/web%s#menu_id=%s&amp;action=%s' % (debug_param, menu['id'], menu['action'] and menu['action'].split(',')[1] or '')">
+                                    <i t-attf-class="fa #{menu.get('icon')} fa-lg fa-fw" t-if="menu.get('icon')"/>
+                                    <span class="oe_menu_text">
+                                        <t t-esc="menu['name']"/>
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <button type="button" class="fa fa-bars pull-right visible-xs-block o_mobile_menu_toggle"/>
+
+                <ul class="o_menu_sections" groups="website.group_website_designer">
+                    <!-- Content -->
+                    <li t-if="editable" class="dropdown" id="content-menu">
+                        <a id="content-menu-button" class="dropdown-toggle waves" data-toggle="dropdown" href="#">Content</a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a data-action="edit_menu" href="#" title="Edit Top Menu">Edit Menu</a></li>
+                            <li><a href="/website/pages" title="Manage Your Website Pages">Manage Pages</a></li>
+                            <li t-if="deletable" role="separator" class="divider"></li>
+                            <li t-if="deletable"><a href="#" data-action="page_properties">Page Properties</a></li>
+                        </ul>
+                    </li>
+                    <!-- Customize -->
+                    <li class="dropdown" id="customize-menu">
+                        <a class="dropdown-toggle waves" data-toggle="dropdown" href="#">Customize</a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li id="theme_customize"><a href="#" data-action="customize_theme">Customize Theme</a></li>
+                            <li id="html_editor"><a href="#" data-action="ace">HTML/CSS Editor</a></li>
+                            <li id="install_apps"><a href="/web#action=website.action_website_configuration">Settings</a></li>
+                            <li class="divider"/>
+                        </ul>
+                    </li>
+                    <!-- Promote -->
+                    <li class="dropdown" id="promote-menu">
+                        <a class="dropdown-toggle waves" data-toggle="dropdown" href="#">Promote</a>
+                        <ul class="dropdown-menu oe_promote_menu" role="menu">
+                            <li><a data-action="promote-current-page" href="#" title="Promote page on the web">Optimize SEO</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <ul class="o_menu_systray hidden-xs" groups="website.group_website_publisher">
+                    <li t-if="'website_published' in main_object.fields_get()" t-attf-class="js_publish_management #{main_object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="main_object.id" t-att-data-object="main_object._name" t-att-data-controller="publish_controller">
+                        <a>
+                            <label class="o_switch js_publish_btn" for="id" >
+                                <input type="checkbox" t-att-checked="main_object.website_published" id="id"/>
+                                <span/>
+                                <span class="css_publish">Unpublished</span>
+                                <span class="css_unpublish">Published</span>
+                            </label>
+                        </a>
+                    </li>
+                    <!-- Mobile preview -->
+                    <li class="o_mobile_preview" id="mobile-menu">
+                        <a data-action="show-mobile-preview" href="#"><span title="Mobile preview" class="fa fa-mobile"/></a>
+                    </li>
+                    <!-- Page Edition -->
+                    <li class="o_new_content_menu" id="new-content-menu">
+                        <a href="#"><span class="fa fa-plus"/>New</a>
+                        <div id="o_new_content_menu_choices" class="o_hidden">
+                            <ul>
+                                <li groups="website.group_website_designer"><a href="#" data-action="new_page"><i class="fa fa-file-o"/><p>New Page</p></a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li t-if="not translatable" id="edit-page-menu">
+                        <a data-action="edit" href="#"><span class="fa fa-pencil"/>Edit</a>
+                    </li>
+                    <li t-if="'website_published' in main_object.fields_get() and main_object._name != 'website.page'">
+                        <a class="btn btn-primary btn-xs dropdown-toggle css_edit_dynamic" data-toggle="dropdown">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li id="edit-in-backend">
+                                <a style="text-align: left;" t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{main_object._name}&amp;id=#{main_object.id}&amp;action=#{action}"
+                                   class="btn btn-link btn-xs" title='Edit in backend'>Edit in backend</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li t-if="translatable">
+                        <a data-action="translate" href="#">TRANSLATE</a>
+                    </li>
+                    <li t-if="translatable">
+                        <a data-action="edit_master" href="#">or Edit Master</a>
+                    </li>
+                </ul>
+            </nav>
+        </xpath>
+    </template>
+</odoo>

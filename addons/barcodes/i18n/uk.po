@@ -1,0 +1,438 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * barcodes
+# 
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2017
+# ТАрас <tratatuta@i.ua>, 2017
+# Анатолій Пономаренко <aponomarenko020@gmail.com>, 2017
+# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
+"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:202
+#, python-format
+msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
+msgstr "'*' не є дійсним шаблоном штрих-кода. Ви мали на увазі '.*' ?"
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:200
+#, python-format
+msgid ": a rule can only contain one pair of braces."
+msgstr ": правило може містити тільки одну пару дужок."
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:196
+#, python-format
+msgid ": braces can only contain N's followed by D's."
+msgstr ": в дужках можуть міститися тільки N з подальшими D."
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:198
+#, python-format
+msgid ": empty braces."
+msgstr ": порожні дужки."
+
+#. module: barcodes
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid ""
+"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and categorized.\n"
+"                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
+"                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
+"                                if the regular expression matches a prefix of the barcode."
+msgstr ""
+"<i>Номенклатури штрих-кодів</i> визначте, як штрих-коди будуть зчитуватися та сортуватися.\n"
+"Просканований штрих-код пов'язується з <i>першим</i> правилом відповідним шаблоном.\n"
+"Синтаксис шаблона належить до регулярних виразів, а штрих-коди співпадають, \n"
+"якщо регулярний вираз співпадає з префіксом штрих-кода."
+
+#. module: barcodes
+#: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+msgid ""
+"A barcode nomenclature defines how the point of sale identify and interprets"
+" barcodes"
+msgstr ""
+"Номенклатура штрих-кодів визначає, як POS буде їх ідентифікувати та "
+"зчитувати "
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:183 selection:barcode.rule,type:0
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_alias
+#, python-format
+msgid "Alias"
+msgstr "Псевдонім"
+
+#. module: barcodes
+#: selection:barcode.nomenclature,upc_ean_conv:0
+msgid "Always"
+msgstr "Завжди"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule_name
+msgid "An internal identification for this barcode nomenclature rule"
+msgstr "Внутрішня ідентифікація для правил номенклатури цих штрих-кодів "
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_name
+msgid "An internal identification of the barcode nomenclature"
+msgstr "Внутрішня ідентифікація номенклатури штрих-кодів "
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:177
+#: selection:barcode.rule,encoding:0
+#, python-format
+msgid "Any"
+msgstr "Будь-який"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_barcode_nomenclature_id
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid "Barcode Nomenclature"
+msgstr "Номенклатура штрихкодів"
+
+#. module: barcodes
+#: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
+msgid "Barcode Nomenclatures"
+msgstr "Номенклатура штрихкодів"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_pattern
+msgid "Barcode Pattern"
+msgstr "Шаблон штрихкода"
+
+#. module: barcodes
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
+msgid "Barcode Rule"
+msgstr "Правило штрихкодування"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__barcode_scanned
+msgid "Barcode Scanned"
+msgstr "Штрихкод проскановано"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Cashier"
+msgstr "Касир"
+
+#. module: barcodes
+#: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+msgid "Click to add a Barcode Nomenclature ."
+msgstr "Натисніть, щоб додати номенклатуру штрих-кодів"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Client"
+msgstr "Клієнт"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_create_uid
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_create_uid
+msgid "Created by"
+msgstr "Створив"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_create_date
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_create_date
+msgid "Created on"
+msgstr "Дата створення"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Credit Card"
+msgstr "Кредитна карта"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:359
+#, python-format
+msgid "Discard"
+msgstr "Відмінити"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Discounted Product"
+msgstr "Товар зі знижкою"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_display_name
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_display_name
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin_display_name
+msgid "Display Name"
+msgstr "Назва для відображення"
+
+#. module: barcodes
+#: selection:barcode.rule,encoding:0
+msgid "EAN-13"
+msgstr "EAN-13"
+
+#. module: barcodes
+#: selection:barcode.nomenclature,upc_ean_conv:0
+msgid "EAN-13 to UPC-A"
+msgstr "EAN-13 в UPC-A"
+
+#. module: barcodes
+#: selection:barcode.rule,encoding:0
+msgid "EAN-8"
+msgstr "EAN-8"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_encoding
+msgid "Encoding"
+msgstr "Кодування"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:301
+#, python-format
+msgid "Error : Barcode command is undefined"
+msgstr ""
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:63
+#, python-format
+msgid "Error : Document not editable"
+msgstr "Помилка : Документ не піддається редагуванню"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:332
+#, python-format
+msgid "Error : No last scanned barcode"
+msgstr "Помилка: немає останнього відсканованого штрихкоду"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_id
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_id
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin_id
+msgid "ID"
+msgstr "ІД"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature___last_update
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule___last_update
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___last_update
+msgid "Last Modified on"
+msgstr "Остання модифікація"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_write_uid
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_write_uid
+msgid "Last Updated by"
+msgstr "Востаннє оновив"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_write_date
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_write_date
+msgid "Last Updated on"
+msgstr "Останнє оновлення"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Location"
+msgstr "Розташування"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Lot"
+msgstr "Партія"
+
+#. module: barcodes
+#: selection:barcode.nomenclature,upc_ean_conv:0
+msgid "Never"
+msgstr "Ніколи"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_name
+msgid "Nomenclature Name"
+msgstr "Назва номенклатури"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Package"
+msgstr "Упаковка"
+
+#. module: barcodes
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid ""
+"Patterns can also define how numerical values, such as weight or price, can be\n"
+"                                encoded into the barcode. They are indicated by <code>{NNN}</code> where the N's\n"
+"                                define where the number's digits are encoded. Floats are also supported with the \n"
+"                                decimals indicated with D's, such as <code>{NNNDD}</code>. In these cases, \n"
+"                                the barcode field on the associated records <i>must</i> show these digits as \n"
+"                                zeroes."
+msgstr ""
+"Шаблон також може визначати як числові значення, такі як вага чи ціна, можуть\n"
+"бути зашиті в штрихкод. Вони вказуються як <code>{NNN}</code>, де N\n"
+"визначають місце і кількість цифр. Числа з комою також підтримуються, якщо\n"
+"вказати числа після коми літерами D, наприклад, <code>{NNNDD}</code>. В цьому випадку, штрихкод у відповідних записах <i>повинен</i> вказувати ці числа, як нулі."
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Priced Product"
+msgstr "Цінний товар"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_name
+msgid "Rule Name"
+msgstr "Назва правила"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_rule_ids
+msgid "Rules"
+msgstr "Правила"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:352
+#, python-format
+msgid "Select"
+msgstr "Обрати"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_sequence
+msgid "Sequence"
+msgstr "Послідовність"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:351
+#, python-format
+msgid "Set quantity"
+msgstr "Встановити кількість"
+
+#. module: barcodes
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid "Tables"
+msgstr "Столи"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule_pattern
+msgid "The barcode matching pattern"
+msgstr "Відповідний шаблон штрихкода"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_rule_ids
+msgid "The list of barcode rules"
+msgstr "Список правил штрихкодування"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule_alias
+msgid "The matched pattern will alias to this barcode"
+msgstr "Відповідний шаблон буде призначено як псевдонім для цього штрихкоду."
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:196
+#: code:addons/barcodes/models/barcodes.py:198
+#: code:addons/barcodes/models/barcodes.py:200
+#, python-format
+msgid "There is a syntax error in the barcode pattern "
+msgstr "В шаблоні штрих-кода виявлено синтаксичну помилку"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule_encoding
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
+msgstr ""
+"Дане правило діятиме тільки якщо штрих-код закодовано точно зазначеним "
+"кодуванням"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:64
+#, python-format
+msgid "To modify this document, please first start edition."
+msgstr "Для зміни цього документа, спочатку запустіть редагування."
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:333
+#, python-format
+msgid "To set the quantity please scan a barcode first."
+msgstr "для вказання кількості, будь ласка, спочатку відскануйте штрихкод."
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_type
+msgid "Type"
+msgstr "Тип"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_upc_ean_conv
+msgid ""
+"UPC Codes can be converted to EAN by prefixing them with a zero. This "
+"setting determines if a UPC/EAN barcode should be automatically converted in"
+" one way or another when trying to match a rule with the other encoding."
+msgstr ""
+"UPC коди можна конвертувати у EAN дописуючи нулі спочатку. Це налаштування "
+"вказує, чи конвертувати автоматично UPC/EAN штрихкоди в тому чи іншому "
+"напрямку під час пошуку правила для відповідного кодування."
+
+#. module: barcodes
+#: selection:barcode.rule,encoding:0
+msgid "UPC-A"
+msgstr "UPC-A"
+
+#. module: barcodes
+#: selection:barcode.nomenclature,upc_ean_conv:0
+msgid "UPC-A to EAN-13"
+msgstr "з UPC-A в EAN-13"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_upc_ean_conv
+msgid "UPC/EAN Conversion"
+msgstr "UPC/EAN конвертація"
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:184 selection:barcode.rule,type:0
+#, python-format
+msgid "Unit Product"
+msgstr "Одиничний товар"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule_sequence
+msgid ""
+"Used to order rules such that rules with a smaller sequence match first"
+msgstr ""
+"Використовується для впорядкування правил. Правила з меньшим значенням "
+"будуть відображатися першими."
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin__barcode_scanned
+msgid "Value of the last barcode scanned."
+msgstr "Значення останнього відсканованого штрихкоду."
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Weighted Product"
+msgstr "Зважений товар"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcode_nomenclature
+msgid "barcode.nomenclature"
+msgstr "штрихкод.номенклатура"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcode_rule
+msgid "barcode.rule"
+msgstr "barcode.rule"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
+msgid "barcodes.barcode_events_mixin"
+msgstr "штрих-коди.штрихкод_події_змішаний"

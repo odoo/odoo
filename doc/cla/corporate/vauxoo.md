@@ -29,3 +29,13 @@ Katherine Zaoral kathy@vauxoo.com https://github.com/zaoral
 Hugo Adan hugo@vauxoo.com https://github.com/hugho-ad
 Alan Guzman aguzman@vauxoo.com https://github.com/alan-guzman
 Leonardo Astros leonardo@vauxoo.com https://github.com/Codemaker83
+Jose Angel Fentanez Delfin joseangel@vauxoo.com https://github.com/Angelfentanez
+Osval Reyes osval@vauxoo.com https://github.com/osvalr
+Jose Suniaga josemiguel@vauxoo.com https://github.com/suniagajose
+Luis González lgonzalez@vauxoo.com https://github.com/luisg123v
+Oriana Maita oriana@vauxoo.com https://github.com/maitaoriana
+Gabriela Mogollon gmogollon@vauxoo.com https://github.com/GavyMG
+Jesus Zapata jesus@vauxoo.com https://github.com/JesusZapata
+Germana Oliveira germana@vauxoo.com https://github.com/goliveirab
+Mariano Fernandez mariano@vauxoo.com https://github.com/Batuto
+Edgar Rivero edgar@vauxoo.com https://github.com/egrivero

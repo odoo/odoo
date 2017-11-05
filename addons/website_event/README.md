@@ -10,7 +10,7 @@ Create Awesome Event Pages
 
 ### Get rid of old WYSIWYG editors
 
-Create beautiful event pages by drag & droping well designed *'Building Blocks'*. Publish event photos, speakers, agenda, etc.
+Create beautiful event pages by drag & droping well designed *'Building Blocks'*. Publish event photos, speakers, schedule, etc.
 
 Odoo's unique *'edit inline'* approach makes website creation surprisingly easy. "Want to introduce a speaker? to change the price of a ticket? to update a banner? promote sponsors?" just click and change.
 

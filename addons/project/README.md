@@ -32,7 +32,7 @@ Use open chatter to communicate with your team or customers and share comments
 and documents on tasks and issues. Integrate discussion fast with the email
 integration.
 
-Talk to others users or customers with the live chat feature.
+Talk to others users or customers with the website live chat feature.
 
 Collaborative Writing
 ---------------------

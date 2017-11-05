@@ -12,4 +12,5 @@ Aleš Ferlan alefer89@protonmail.com
 
 List of contributors:
 
+Aleš Ferlan alefer89@gmail.com https://github.com/Alko89
 Aleš Ferlan alefer89@protonmail.com

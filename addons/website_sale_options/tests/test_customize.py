@@ -1,7 +1,11 @@
-import openerp.tests
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-@openerp.tests.common.at_install(False)
-@openerp.tests.common.post_install(True)
-class TestUi(openerp.tests.HttpCase):
-    def test_01_admin_shop_tour(self):
-        self.phantom_js("/", "openerp.Tour.run('shop_customize', 'test')", "openerp.Tour.tours.shop_customize", login="admin")
+import odoo.tests
+
+class TestUi(odoo.tests.HttpCase):
+
+    post_install = True
+    at_install = False
+
+    def test_01_admin_shop_customize_tour(self):
+        self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('shop_customize')", "odoo.__DEBUG__.services['web_tour.tour'].tours.shop_customize.ready", login="admin")

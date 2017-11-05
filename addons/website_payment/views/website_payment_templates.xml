@@ -1,31 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<!-- Page -->
-<data>
-<template id="cc_form" name="Paypal (Test)" page="True">
-    <div class="row">
-        <h3>Paypal payment: server 2 server</h3>
-        <form class="form-horizontal col-sm-4 oe_cc" role="form">
-            <div class="form-group col-sm-8">
-                <label class="control-label" for="cc_number">Card number</label>
-                <input type="tel" id="cc_number" class="form-control"/>
-                <div class="card_placeholder"></div>
-                <div class="visa"></div>
-            </div>
-            <div class="form-group col-sm-4">
-                <label class="control-label" for="cc_cvc">Card code</label>
-                <input type="text" id="cc_cvc" class="form-control" maxlength="4" palceholder="CVC"/>
-            </div>
-            <div class="form-group col-sm-7">
-                <label class="control-label" for="cc_holder_name">Holder Name</label>
-                <input type="text" id="cc_hoder_name" class="form-control"/>
-            </div>
-            <div class="form-group col-sm-5">
-                <label class="control-label" for="cc_expires_mm">Expires</label>
-                <input type="text" id="cc_expiry" class="form-control" maxlength="7" placeholder="MM / YY"/>
-            </div>
-        </form>
-    </div>
-</template>
-</data>
-</openerp>
+<odoo>
+    <template id="header_footer_custom_payment" inherit_id="website.footer_default" customize_show="True" active="False" name="Payment Icons">
+        <xpath expr="//div[@id='info']" position="inside">
+            <h4 class="payment_method_title">Payment Icons</h4>
+            <ul class="payment_method_list list-inline">
+                <t t-foreach="request.website.payment_icons()" t-as="icon">
+                    <li>
+                        <span t-field="icon.image" t-options='{"widget": "image", "alt-field": "name"}' />
+                    </li>
+                </t>
+            </ul>
+        </xpath>
+    </template>
+</odoo>

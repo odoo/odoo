@@ -1,0 +1,1361 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- India - Standard Accounting Chart -->
+        <record id="standard_transfer_account_id" model="account.account.template">
+            <field name="code">1206</field>
+            <field name="name">Transfer Account</field>
+            <field name="reconcile" eval='True'/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        </record>
+        <record id="indian_chart_template_schedule6" model="account.chart.template">
+            <field name="name">Indian Chart of Accounts - Schedule VI</field>
+            <field name="bank_account_code_prefix">12142</field>
+            <field name="cash_account_code_prefix">12141</field>
+            <field name="code_digits">6</field>
+            <field name="currency_id" ref="base.INR"/>
+            <field name="transfer_account_id" ref="standard_transfer_account_id"/>
+        </record>
+        <record id="standard_transfer_account_id" model="account.account.template">
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+
+        <!-- Liabilities -->
+        <!-- Shareholder's Funds -->
+        <record model="account.account.template" id="c11101">
+            <field name="name">Authorised Share Capital</field>
+            <field name="code">11101</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c11102">
+            <field name="name">Issued, Subscribed And Paid Up Capital</field>
+            <field name="code">11102</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c11110">
+            <field name="name">Capital Reserve</field>
+            <field name="code">11110</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c11111">
+            <field name="name">Capital Redemption Reserve</field>
+            <field name="code">11111</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c11112">
+            <field name="name">Securities Premium Reserve</field>
+            <field name="code">11112</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c11113">
+            <field name="name">Debenture Redeemption Reserve</field>
+            <field name="code">11113</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c11114">
+            <field name="name">Revaluation Reserve</field>
+            <field name="code">11114</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c11115">
+            <field name="name">Shares Option Outstanding Account</field>
+            <field name="code">11115</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c11116">
+            <field name="name">Other Reserve</field>
+            <field name="code">11116</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c11117">
+            <field name="name">Surplus (Profit and Loss Account)</field>
+            <field name="code">11117</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c1112">
+            <field name="name">Money Received Against Share Warrants</field>
+            <field name="code">1112</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+
+        <!-- Share application money pending allotment -->
+        <record model="account.account.template" id="c1121">
+            <field name="name">Share Application Money Pending Allotment</field>
+            <field name="code">1121</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!-- Non-Current Liabilities -->
+        <record model="account.account.template" id="c113011">
+            <field name="name">Bank Loan (Long Term)</field>
+            <field name="code">113011</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c113021">
+            <field name="name">From Others</field>
+            <field name="code">113021</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c1131">
+            <field name="name">Deferred Tax Liabilities (Net)</field>
+            <field name="code">1131</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c1132">
+            <field name="name">Other Long Term Liabilities</field>
+            <field name="code">1132</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c1133">
+            <field name="name">Long Term Provisions</field>
+            <field name="code">1133</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!-- Current Liabilities -->
+        <!-- Short Term Borrowings -->
+        <record model="account.account.template" id="c114011">
+            <field name="name">Bank Loan (Short Term)</field>
+            <field name="code">114011</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c11402">
+            <field name="name">Loans And Advances From Related Parties</field>
+            <field name="code">11402</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c11403">
+            <field name="name">Depsoits</field>
+            <field name="code">11403</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c11404">
+            <field name="name">Others</field>
+            <field name="code">11404</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!-- Trade Payables -->
+        <record model="account.account.template" id="c11411">
+            <field name="name">Sundry Creditors For Material/Supplies</field>
+            <field name="code">11411</field>
+            <field name="user_type_id" ref="account.data_account_type_payable"/>
+            <field name="reconcile" eval="True"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c11412">
+            <field name="name">Sundry Creditors For Services</field>
+            <field name="code">11412</field>
+            <field name="user_type_id" ref="account.data_account_type_payable"/>
+            <field name="reconcile" eval="True"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!-- Other current liabilities -->
+        <record model="account.account.template" id="c114210">
+            <field name="name">(schedule6)SGST Payable</field>
+            <field name="code">114210</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c114211">
+            <field name="name">(schedule6)CGST Payable</field>
+            <field name="code">114211</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c114212">
+            <field name="name">(schedule6)IGST Payable</field>
+            <field name="code">114212</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c114213">
+            <field name="name">TDS Paybale</field>
+            <field name="code">114213</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c11422">
+            <field name="name">Out Standing Cheques for Clearance</field>
+            <field name="code">11422</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c11423">
+            <field name="name">Advance From Customers</field>
+            <field name="code">11423</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!-- Short Term Provisions -->
+        <record model="account.account.template" id="c114301">
+            <field name="name">EPF Payable</field>
+            <field name="code">114301</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c114302">
+            <field name="name">Unpaid Remuneration</field>
+            <field name="code">114302</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c114311">
+            <field name="name">Electricity And Power Charges Payable</field>
+            <field name="code">114311</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c114312">
+            <field name="name">Employee Providend Fund Payable</field>
+            <field name="code">114312</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c114313">
+            <field name="name">Internet Expenses Payable</field>
+            <field name="code">114313</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c114314">
+            <field name="name">Mobile Expenses Payable</field>
+            <field name="code">114314</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c114315">
+            <field name="name">Secueity Expenses Payable</field>
+            <field name="code">114315</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c114316">
+            <field name="name">Telephone Expenses Payable</field>
+            <field name="code">114316</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c114317">
+            <field name="name">Wages Payable</field>
+            <field name="code">114317</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c114318">
+            <field name="name">Provision For Taxation</field>
+            <field name="code">114318</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c114319">
+            <field name="name">Provision For Expenses</field>
+            <field name="code">114319</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+
+        <!-- Assets -->
+        <!-- Tangible Assets -->
+        <record model="account.account.template" id="c120101">
+            <field name="name">Land</field>
+            <field name="code">120101</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c120102">
+            <field name="name">Buildings</field>
+            <field name="code">120102</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c120103">
+            <field name="name">Plant And Equipments</field>
+            <field name="code">120103</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c120104">
+            <field name="name">Furnitures And Fixtures</field>
+            <field name="code">120104</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c120105">
+            <field name="name">Vehicles</field>
+            <field name="code">120105</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c120106">
+            <field name="name">Computer/Laptops</field>
+            <field name="code">120106</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c120107">
+            <field name="name">Office Equipments</field>
+            <field name="code">120107</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!-- Intangible Assets -->
+        <record model="account.account.template" id="c120111">
+            <field name="name">Goodwill</field>
+            <field name="code">120111</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!-- Capital Work-in-progress -->
+        <record model="account.account.template" id="c120120">
+            <field name="name">Building Under Construction</field>
+            <field name="code">120120</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!-- Intangible Assets Under Development -->
+        <record model="account.account.template" id="c12013">
+            <field name="name">Intangible Assets Under Development</field>
+            <field name="code">12013</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!--Non-current investments-->
+        <record model="account.account.template" id="c12020">
+            <field name="name">Investment In Property</field>
+            <field name="code">12020</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12021">
+            <field name="name">Investment In Equity Instrument</field>
+            <field name="code">12021</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12022">
+            <field name="name">Investment In Preference Shares</field>
+            <field name="code">12022</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12023">
+            <field name="name">Investment In Government Or Trust Securities</field>
+            <field name="code">12023</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12024">
+            <field name="name">Investment In Debentures And Bonds</field>
+            <field name="code">12024</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12025">
+            <field name="name">Investment In Mutual Fund</field>
+            <field name="code">12025</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12026">
+            <field name="name">Investment In Partnership Firm</field>
+            <field name="code">12026</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c120270">
+            <field name="name">Gold</field>
+            <field name="code">120270</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c120271">
+            <field name="name">Fixed Deposit With Banks-Earmarked</field>
+            <field name="code">120271</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!--Deferred tax assets (net)-->
+        <record model="account.account.template" id="c1203">
+            <field name="name">Deferred Tax Assets (Net)</field>
+            <field name="code">1203</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!--Long Term Loans and Advances-->
+        <record model="account.account.template" id="c120411">
+            <field name="name">Secured, Considered Good</field>
+            <field name="code">120411</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c120412">
+            <field name="name">Unsecured, Considered Good</field>
+            <field name="code">120412</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c120413">
+            <field name="name">Doubtful</field>
+            <field name="code">120413</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c1204211">
+            <field name="name">Earnest Money Deposit</field>
+            <field name="code">1204211</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c1204212">
+            <field name="name">Other Deposit</field>
+            <field name="code">1204212</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c120422">
+            <field name="name">Unsecured, Considered Good</field>
+            <field name="code">120422</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c120423">
+            <field name="name">Doubtful</field>
+            <field name="code">120423</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12043">
+            <field name="name">Loans And Advances To Related Parties</field>
+            <field name="code">12043</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12044">
+            <field name="name">Other Loans And Advances</field>
+            <field name="code">12044</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!--Other Non Current Assets-->
+        <record model="account.account.template" id="c120511">
+            <field name="name">Secured, Considered Good</field>
+            <field name="code">120511</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c120512">
+            <field name="name">Unsecured, Considered Good</field>
+            <field name="code">120512</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c120513">
+            <field name="name">Doubtful</field>
+            <field name="code">120513</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c120521">
+            <field name="name">Preliminery Expense</field>
+            <field name="code">120521</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c120522">
+            <field name="name">Software</field>
+            <field name="code">120522</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12053">
+            <field name="name">Others</field>
+            <field name="code">12053</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!-- Current Assets -->
+        <!--Current Investment-->
+        <record model="account.account.template" id="c12110">
+            <field name="name">Investment In Equity</field>
+            <field name="code">12110</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12111">
+            <field name="name">Investment In Preference Shares</field>
+            <field name="code">12111</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12112">
+            <field name="name">Investment In Government Securities</field>
+            <field name="code">12112</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12113">
+            <field name="name">Investment In Debentures And Bonds</field>
+            <field name="code">12113</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12114">
+            <field name="name">Investment In Mutual Fund</field>
+            <field name="code">12114</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12115">
+            <field name="name">Investment In Partnership Firm</field>
+            <field name="code">12115</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12116">
+            <field name="name">In Short Term Fixed Deposits</field>
+            <field name="code">12116</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!--Inventories-->
+        <record model="account.account.template" id="c12120">
+            <field name="name">Raw Material</field>
+            <field name="code">12120</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12121">
+            <field name="name">Work-In-Progress</field>
+            <field name="code">12121</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12122">
+            <field name="name">Finished Goods</field>
+            <field name="code">12122</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12123">
+            <field name="name">Stock-In-Trade</field>
+            <field name="code">12123</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12124">
+            <field name="name">Stores And Spares</field>
+            <field name="code">12124</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12125">
+            <field name="name">Loose Tools</field>
+            <field name="code">12125</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12126">
+            <field name="name">Other With Job Worker</field>
+            <field name="code">12126</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12127">
+            <field name="name">Goods-In-Transit</field>
+            <field name="code">12127</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!--Trade Recievables-->
+        <record model="account.account.template" id="c121311">
+            <field name="name">Secured, Considered Good</field>
+            <field name="code">121311</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c121312">
+            <field name="name">Unsecured, Considered Good</field>
+            <field name="code">121312</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c121313">
+            <field name="name">Doubtful</field>
+            <field name="code">121313</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c121321">
+            <field name="name">Secured, Considered Good</field>
+            <field name="code">121321</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c121322">
+            <field name="name">Unsecured, Considered Good</field>
+            <field name="code">121322</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c121323">
+            <field name="name">Doubtful</field>
+            <field name="code">121323</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c12133">
+            <field name="name">Sundry Debtors</field>
+            <field name="code">12133</field>
+            <field name="user_type_id" ref="account.data_account_type_receivable"/>
+            <field name="reconcile" eval="True"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+
+        <!--Short Terms Loans and Advances-->
+        <record model="account.account.template" id="c1215111">
+            <field name="name">Advance To Associate Concerns</field>
+            <field name="code">1215111</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c1215121">
+            <field name="name">Unsecured Recoverable in Cash or in Kind or for Value to be Received</field>
+            <field name="code">1215121</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c121513">
+            <field name="name">Doubtful</field>
+            <field name="code">121513</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c121521">
+            <field name="name">Advance To Suppliers</field>
+            <field name="code">121521</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c121522">
+            <field name="name">Advance Income Tax/Refund Due</field>
+            <field name="code">121522</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c121523">
+            <field name="name">Balance With Revenue Authorities (Indirect Taxes)</field>
+            <field name="code">121523</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c121524">
+            <field name="name">Prepaid Expenses</field>
+            <field name="code">121524</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!-- Other current assets -->
+        <record model="account.account.template" id="c121611">
+            <field name="name">(schedule6)SGST Receivable</field>
+            <field name="code">121611</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c121612">
+            <field name="name">(schedule6)CGST Receivable</field>
+            <field name="code">121612</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c121613">
+            <field name="name">(schedule6)IGST Receivable</field>
+            <field name="code">121613</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c121614">
+            <field name="name">TDS Receivable</field>
+            <field name="code">121614</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c121621">
+            <field name="name">Preliminary Expense</field>
+            <field name="code">121621</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!-- Revenue -->
+        <!--Revenue from Operations-->
+        <record model="account.account.template" id="c2011">
+            <field name="name">Central Sales(Exclusive of Excise Duty)</field>
+            <field name="code">2011</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2012">
+            <field name="name">Export Sales</field>
+            <field name="code">2012</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2013">
+            <field name="name">Sales of Services</field>
+            <field name="code">2013</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2014">
+            <field name="name">Job Work Receipts</field>
+            <field name="code">2014</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2015">
+            <field name="name">Product Sales</field>
+            <field name="code">2015</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2016">
+            <field name="name">Other Operating Income</field>
+            <field name="code">2016</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!--Other Income-->
+        <record model="account.account.template" id="c2021">
+            <field name="name">Interest</field>
+            <field name="code">2021</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2022">
+            <field name="name">Other Financial Services</field>
+            <field name="code">2022</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2023">
+            <field name="name">Other Non Operating Income</field>
+            <field name="code">2023</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!--Cost Of Materials Consumed-->
+        <record model="account.account.template" id="c2101">
+            <field name="name">Opening Stock</field>
+            <field name="code">2101</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21021">
+            <field name="name">Raw Material</field>
+            <field name="code">21021</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21022">
+            <field name="name">Stores And Consumables</field>
+            <field name="code">21022</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2103">
+            <field name="name">Closing Stock</field>
+            <field name="code">2103</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!-- Purchase of Stock-in-Trade -->
+        <record model="account.account.template" id="c2111">
+            <field name="name">Purchase of Stock-In-Trade</field>
+            <field name="code">2111</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!--Changes in inventories of finished goods, work-in-progress and Stock-in-Trade-->
+        <record model="account.account.template" id="c212">
+            <field name="name">Changes In Inventories of Finished Goods, Work-In-Progress And Stock-In-Trade</field>
+            <field name="code">212</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!--Employement Benefit Expenses-->
+        <record model="account.account.template" id="c2131">
+            <field name="name">Salaries, Bonus, PF And ESIC</field>
+            <field name="code">2131</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2132">
+            <field name="name">Directors Remuneration</field>
+            <field name="code">2132</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2133">
+            <field name="name">Directors Setting Fees</field>
+            <field name="code">2133</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2134">
+            <field name="name">Staff Welfare Expense</field>
+            <field name="code">2134</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2135">
+            <field name="name">Commision To M.D</field>
+            <field name="code">2135</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2136">
+            <field name="name">Commision To Joint M.D</field>
+            <field name="code">2136</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!--Financial Cost-->
+        <record model="account.account.template" id="c2141">
+            <field name="name">Interest On Cash Credit Facality</field>
+            <field name="code">2141</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2142">
+            <field name="name">Interest On Car Loan</field>
+            <field name="code">2142</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2143">
+            <field name="name">Interest On Other Loans</field>
+            <field name="code">2143</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2144">
+            <field name="name">Bank Charges</field>
+            <field name="code">2144</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2145">
+            <field name="name">Bank Gurantee Charges</field>
+            <field name="code">2145</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!--Depreciation and Amortization Expense-->
+        <record model="account.account.template" id="c2151">
+            <field name="name">Depreciation</field>
+            <field name="code">2151</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2152">
+            <field name="name">Preliminary Expenses</field>
+            <field name="code">2152</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <!--Other Administrative Expenses-->
+        <record model="account.account.template" id="c21601">
+            <field name="name">Jobwork Charges</field>
+            <field name="code">21601</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21602">
+            <field name="name">Stores and Spares</field>
+            <field name="code">21602</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21603">
+            <field name="name">Workshop Expense</field>
+            <field name="code">21603</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21604">
+            <field name="name">Centeral Sales Tax</field>
+            <field name="code">21604</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21605">
+            <field name="name">Machinery Repair and Maintenance</field>
+            <field name="code">21605</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21606">
+            <field name="name">Freight Forwarding and Octroi Expenses (Local)</field>
+            <field name="code">21606</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21607">
+            <field name="name">Electrical Repairing Expense</field>
+            <field name="code">21607</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21608">
+            <field name="name">Material Testing Expense</field>
+            <field name="code">21608</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21609">
+            <field name="name">Power and Fuel Charges</field>
+            <field name="code">21609</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c216091">
+            <field name="name">Packing Material Expense</field>
+            <field name="code">216091</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c216092">
+            <field name="name">Measuring Expense</field>
+            <field name="code">216092</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c216093">
+            <field name="name">Processing Labour Charges</field>
+            <field name="code">216093</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21611">
+            <field name="name">Car Expenses (Including Insurance)</field>
+            <field name="code">21611</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21612">
+            <field name="name">Travelling Expenses (Including Foreign Travelling)</field>
+            <field name="code">21612</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21613">
+            <field name="name">Repair And Maintenance Building</field>
+            <field name="code">21613</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21614">
+            <field name="name">Computer Maintenace</field>
+            <field name="code">21614</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21615">
+            <field name="name">General Expenses</field>
+            <field name="code">21615</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21616">
+            <field name="name">Internet And Website Expenses</field>
+            <field name="code">21616</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21617">
+            <field name="name">Insurance Expenses</field>
+            <field name="code">21617</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21618">
+            <field name="name">Telephone Expense</field>
+            <field name="code">21618</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21619">
+            <field name="name">Labour Welfare Expenses</field>
+            <field name="code">21619</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c216191">
+            <field name="name">Legal Expenses</field>
+            <field name="code">216191</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c216192">
+            <field name="name">Postage And Telegram</field>
+            <field name="code">216192</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c216193">
+            <field name="name">Professional Charges</field>
+            <field name="code">216193</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c216194">
+            <field name="name">Security Expesnes</field>
+            <field name="code">216194</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c216195">
+            <field name="name">Stationery Expenses</field>
+            <field name="code">216195</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c216196">
+            <field name="name">Auditors Remuneration</field>
+            <field name="code">216196</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c216197">
+            <field name="name">Rent Rates And Taxes</field>
+            <field name="code">216197</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c216198">
+            <field name="name">Tender Fee And Testing Charges</field>
+            <field name="code">216198</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c216199">
+            <field name="name">Interest On Delayed Payment of Taxes</field>
+            <field name="code">216199</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2161991">
+            <field name="name">Excise/ Service Tax Expenses</field>
+            <field name="code">2161991</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2161992">
+            <field name="name">Advertisement And Publicity</field>
+            <field name="code">2161992</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2161993">
+            <field name="name">Donation</field>
+            <field name="code">2161993</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2161994">
+            <field name="name">Export Expenses</field>
+            <field name="code">2161994</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2161995">
+            <field name="name">Internal Audit Fee</field>
+            <field name="code">2161995</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2161996">
+            <field name="name">Conveyance Expense</field>
+            <field name="code">2161996</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2161997">
+            <field name="name">Packing and Forwarding Expense</field>
+            <field name="code">2161997</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2161998">
+            <field name="name">Annual Service Fees</field>
+            <field name="code">2161998</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2161999">
+            <field name="name">Loan Processing Fees</field>
+            <field name="code">2161999</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21619991">
+            <field name="name">Office Cleaning Expense</field>
+            <field name="code">21619991</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21619992">
+            <field name="name">Prelimenary Expense W/Off</field>
+            <field name="code">21619992</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21619993">
+            <field name="name">Software Expense W/Off</field>
+            <field name="code">21619993</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21619994">
+            <field name="name">Custom Duty</field>
+            <field name="code">21619994</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21619995">
+            <field name="name">Stamping Charge</field>
+            <field name="code">21619995</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c21619996">
+            <field name="name">Post and Courrier Charges</field>
+            <field name="code">21619996</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+
+
+        <!-- Foreign exchange account -->
+        <record model="account.account.template" id="c2017">
+            <field name="name">Foreign Exchange Profit</field>
+            <field name="code">2017</field>
+            <field name="user_type_id" ref="account.data_account_type_other_income"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+        <record model="account.account.template" id="c2170">
+            <field name="name">Foreign Exchange Loss</field>
+            <field name="code">2170</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
+        </record>
+
+        <!-- Account Chart Template -->
+        <record id="indian_chart_template_schedule6" model="account.chart.template">
+            <field name="property_account_receivable_id" ref="c12133"/>
+            <field name="property_account_payable_id" ref="c11411"/>
+            <field name="property_account_expense_categ_id" ref="c21021"/>
+            <field name="property_account_income_categ_id" ref="c2015"/>
+            <field name="income_currency_exchange_account_id" ref="c2017"/>
+            <field name="expense_currency_exchange_account_id" ref="c2170"/>
+        </record>
+
+</odoo>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Files -->
+    <record model="ir.ui.view" id="view_document_file_kanban_mrp">
+        <field name="name">mrp.document kanban.mrp</field>
+        <field name="model">mrp.document</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="ir_attachment_id"/>
+                <field name="mimetype"/>
+                <field name="type"/>
+                <field name="datas_fname"/>
+                <field name="name"/>
+                <field name="priority"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_vignette">
+                                <div class="oe_attachment">
+                                    <div class="row">
+                                        <div class="col-xs-4 o_kanban_primary_left" t-if="record.type.raw_value == 'binary'">
+                                            <a t-attf-href="/web/content/#{record.ir_attachment_id.raw_value}?download=1">
+                                                <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
+                                                <div t-if="!webimage" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
+                                                <div t-if="webimage" class="o_attachment_image">
+                                                    <img t-attf-src="/web/image/#{record.ir_attachment_id.raw_value}?download=1"/>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <strong><field name="name"/></strong><br/>
+                                            <field name="datas_fname"/><br/>
+                                            <div class="mt8">
+                                                <field name="priority" widget="priority"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_document_form" model="ir.ui.view">
+        <field name="name">mrp.document.form</field>
+        <field name="model">mrp.document</field>
+        <field name="inherit_id" ref="base.view_attachment_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+          <xpath expr="//field[@name='mimetype']" position="after">
+              <field name="priority" widget="priority"/>
+          </xpath>
+        </field>
+    </record>
+</odoo>

@@ -3,15 +3,17 @@
 # * base_import_module
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Cozmin Candea <office@terrabit.ro>, 2017
+# Dorin Hongu <dhongu@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 18:23+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-8/language/ro/)\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,88 +21,106 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: base_import_module
-#: view:base.import.module:base_import_module.view_base_module_import
+#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Cancel"
-msgstr "Renunță"
+msgstr "Anulează"
 
 #. module: base_import_module
-#: view:base.import.module:base_import_module.view_base_module_import
+#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Close"
 msgstr "Închide"
 
 #. module: base_import_module
-#: field:base.import.module,create_uid:0
+#: code:addons/base_import_module/controllers/main.py:31
+#, python-format
+msgid "Could not select database '%s'"
+msgstr ""
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_uid
 msgid "Created by"
 msgstr "Creat de"
 
 #. module: base_import_module
-#: field:base.import.module,create_date:0
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_date
 msgid "Created on"
-msgstr "Creat la"
+msgstr "Creat în"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:30
-#: code:addons/base_import_module/models/ir_module.py:82
-#: code:addons/base_import_module/models/ir_module.py:91
-#, python-format
-msgid "Error !"
-msgstr "Eroare !"
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_display_name
+msgid "Display Name"
+msgstr "Nume afișat"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:90
+#: code:addons/base_import_module/models/ir_module.py:112
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
 msgstr ""
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:82
+#: code:addons/base_import_module/models/ir_module.py:104
 #, python-format
 msgid "File is not a zip file!"
 msgstr "Fisierul nu este un fisier zip!"
 
 #. module: base_import_module
-#: field:base.import.module,force:0
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_force
 msgid "Force init"
 msgstr ""
 
 #. module: base_import_module
-#: help:base.import.module,force:0
+#: model:ir.model.fields,help:base_import_module.field_base_import_module_force
 msgid ""
 "Force init mode even if installed. (will update `noupdate='1'` records)"
 msgstr ""
 
 #. module: base_import_module
-#: field:base.import.module,id:0
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_id
 msgid "ID"
 msgstr "ID"
 
 #. module: base_import_module
-#: view:base.import.module:base_import_module.view_base_module_import
+#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Import App"
+msgstr "Importați App"
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
+msgid "Import Message"
+msgstr ""
+
+#. module: base_import_module
 #: model:ir.actions.act_window,name:base_import_module.action_view_base_module_import
 #: model:ir.model,name:base_import_module.model_base_import_module
 #: model:ir.ui.menu,name:base_import_module.menu_view_base_module_import
+#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import Module"
 msgstr "Importați Modulul"
 
 #. module: base_import_module
-#: field:base.import.module,import_message:0
-msgid "Import message"
-msgstr ""
-
-#. module: base_import_module
-#: view:base.import.module:base_import_module.view_base_module_import
+#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import module"
 msgstr "Importați modulul"
 
 #. module: base_import_module
-#: field:base.import.module,write_uid:0
+#: model:ir.model.fields,field_description:base_import_module.field_ir_module_module_imported
+msgid "Imported Module"
+msgstr ""
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module___last_update
+msgid "Last Modified on"
+msgstr "Ultima modificare la"
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_write_uid
 msgid "Last Updated by"
 msgstr "Ultima actualizare făcută de"
 
 #. module: base_import_module
-#: field:base.import.module,write_date:0
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_write_date
 msgid "Last Updated on"
-msgstr "Ultima actualizare în"
+msgstr "Ultima actualizare pe"
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
@@ -108,27 +128,46 @@ msgid "Module"
 msgstr "Modul"
 
 #. module: base_import_module
-#: field:base.import.module,module_file:0
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_module_file
 msgid "Module .ZIP file"
 msgstr "Modulul pentru fișiere .ZIP"
 
 #. module: base_import_module
-#: view:base.import.module:base_import_module.view_base_module_import
+#: code:addons/base_import_module/models/ir_module.py:102
+#, python-format
+msgid "No file sent."
+msgstr ""
+
+#. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:25
+#, python-format
+msgid "Only administrators can upload a module"
+msgstr ""
+
+#. module: base_import_module
+#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Open Modules"
 msgstr "Deschideți Modulele"
 
 #. module: base_import_module
-#: view:base.import.module:base_import_module.view_base_module_import
+#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Select module package to import (.zip file):"
-msgstr "Selectați modului care va fi importat (fișier .zip):"
+msgstr "Selectați pachetul modulului care va fi importat (fișier .zip):"
 
 #. module: base_import_module
-#: field:base.import.module,state:0
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_state
 msgid "Status"
 msgstr "Stare"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:29
+#: code:addons/base_import_module/models/ir_module.py:40
+#: code:addons/base_import_module/models/ir_module.py:47
+#, python-format
+msgid "Studio customizations require Studio"
+msgstr ""
+
+#. module: base_import_module
+#: code:addons/base_import_module/models/ir_module.py:42
 #, python-format
 msgid "Unmet module dependencies: %s"
 msgstr ""
@@ -144,6 +183,6 @@ msgid "init"
 msgstr "init"
 
 #. module: base_import_module
-#: view:base.import.module:base_import_module.view_base_module_import
-msgid "or"
-msgstr "sau"
+#: model:ir.model,name:base_import_module.model_ir_ui_view
+msgid "ir.ui.view"
+msgstr "ir.ui.view"

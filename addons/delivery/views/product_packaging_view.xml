@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<record model="ir.ui.view" id="product_packaging_delivery_form">
+    <field name="name">product.packaging.form.delivery</field>
+    <field name="model">product.packaging</field>
+    <field name="inherit_id" eval="False"/>
+    <field name="arch" type="xml">
+        <form string="Delivery Packaging">
+            <sheet>
+                <label for="name"/>
+                <h1>
+                    <field name="name"/>
+                </h1>
+                <group name="delivery">
+                    <field name="package_carrier_type"/>
+                    <field name="height"/>
+                    <field name="width"/>
+                    <field name="length"/>
+                    <field name="max_weight"/>
+                    <field name="barcode"/>
+                    <field name="shipper_package_code" groups="base.group_no_one"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+<record model="ir.ui.view" id="product_packaging_delivery_tree">
+    <field name="name">product.packaging.tree.delivery</field>
+    <field name="model">product.packaging</field>
+    <field name="inherit_id" eval="False"/>
+    <field name="arch" type="xml">
+        <tree string="Delivery Packages">
+            <field name="sequence" widget="handle"/>
+            <field name="package_carrier_type"/>
+            <field name="name"/>
+            <field name="height"/>
+            <field name="width"/>
+            <field name="length"/>
+            <field name="max_weight"/>
+            <field name="shipper_package_code" groups="base.group_no_one"/>
+            <field name="barcode" invisible="1"/>
+        </tree>
+    </field>
+</record>
+
+</odoo>

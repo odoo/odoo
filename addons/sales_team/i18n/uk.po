@@ -3,14 +3,20 @@
 # * sales_team
 # 
 # Translators:
+# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2017
+# ТАрас <tratatuta@i.ua>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Kateryna Onyshchenko <Katrona17@gmail.com>, 2017
+# Zoriana Zaiats <sorenabell@quintagroup.com>, 2017
+# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-04-29 14:59+0000\n"
-"Last-Translator: Bohdan Lisnenko\n"
-"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-8/language/uk/)\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
+"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,279 +24,409 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: sales_team
-#: model:ir.actions.act_window,help:sales_team.crm_case_section_act
-#: model:ir.actions.act_window,help:sales_team.crm_case_section_salesteams_act
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Click here to define a new sales team.\n"
-"                </p><p>\n"
-"                    Use sales team to organize your different salespersons or\n"
-"                    departments into separate teams. Each team will work in\n"
-"                    its own list of opportunities.\n"
-"                </p>\n"
-"            "
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+msgid "<span>New</span>"
+msgstr "<span>Створити</span>"
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+msgid "<span>Reporting</span>"
 msgstr ""
 
 #. module: sales_team
-#: field:crm.case.section,active:0
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+msgid "<span>View</span>"
+msgstr "<span>Перегляд</span>"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_active
 msgid "Active"
-msgstr "Активовано"
+msgstr "Активно"
 
 #. module: sales_team
-#: help:sale.config.settings,group_multi_salesteams:0
-msgid "Allows you to use Sales Teams to manage your leads and opportunities."
+#: model:ir.actions.act_window,name:sales_team.mail_activity_type_action_config_sales
+msgid "Activity Types"
 msgstr ""
 
 #. module: sales_team
-#: field:crm.case.section,child_ids:0
-msgid "Child Teams"
+#: model:crm.team,name:sales_team.crm_team_1
+msgid "America"
 msgstr ""
 
 #. module: sales_team
-#: field:crm.case.section,code:0
-msgid "Code"
-msgstr "Код"
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+msgid "Archived"
+msgstr "Заархівовано"
 
 #. module: sales_team
-#: field:crm.case.section,color:0
+#: selection:crm.team,dashboard_graph_type:0
+msgid "Bar"
+msgstr ""
+
+#. module: sales_team
+#: code:addons/sales_team/models/crm_team.py:269
+#, python-format
+msgid "Big Pretty Button :)"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_user_id
+msgid "Channel Leader"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member_ids
+msgid "Channel Members"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_team_type
+msgid "Channel Type"
+msgstr "Тип каналу"
+
+#. module: sales_team
+#: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
+#: model:ir.actions.act_window,help:sales_team.sales_team_config_action
+msgid "Click here to define a new sales channel."
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_color
 msgid "Color Index"
 msgstr "Індекс кольору"
 
 #. module: sales_team
-#: field:crm.case.section,create_uid:0
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_company_id
+msgid "Company"
+msgstr "Компанія"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_sale_config
+msgid "Configuration"
+msgstr "Налаштування"
+
+#. module: sales_team
+#: model:ir.model,name:sales_team.model_res_partner
+msgid "Contact"
+msgstr "Контакт"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_model
+msgid "Content"
+msgstr "Вміст"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_create_uid
 msgid "Created by"
 msgstr "Створив"
 
 #. module: sales_team
-#: field:crm.case.section,create_date:0
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_create_date
 msgid "Created on"
-msgstr "Створено"
+msgstr "Дата створення"
 
 #. module: sales_team
-#: help:crm.case.section,message_last_post:0
-msgid "Date of the last message posted on the record."
-msgstr "Дата останнього повідомлення опублікованного по запису"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_currency_id
+msgid "Currency"
+msgstr "Валюта"
 
 #. module: sales_team
-#: field:res.users,default_section_id:0
-msgid "Default Sales Team"
-msgstr "Типова команда продажу"
+#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Dashboard"
+msgstr "Панель приладів"
 
 #. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_salesteams_view_kanban
-msgid "Delete"
-msgstr "Вилучити"
-
-#. module: sales_team
-#: field:crm.case.section,note:0
-msgid "Description"
-msgstr "Опис"
-
-#. module: sales_team
-#: model:crm.case.section,name:sales_team.section_sales_department
-msgid "Direct Sales"
-msgstr "Прямі продажі"
-
-#. module: sales_team
-#: constraint:crm.case.section:0
-msgid "Error ! You cannot create recursive Sales team."
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_button_name
+msgid "Dashboard Button"
 msgstr ""
 
 #. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_view_form
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_data
+msgid "Dashboard Graph Data"
+msgstr ""
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_group:0
+msgid "Day"
+msgstr "День"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_display_name
+msgid "Display Name"
+msgstr "Назва для відображення"
+
+#. module: sales_team
+#: model:crm.team,name:sales_team.team_sales_department
+msgid "Europe"
+msgstr "Європа"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_favorite_user_ids
+msgid "Favorite Members"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_is_favorite
+msgid ""
+"Favorite teams to display them in the dashboard and access them easily."
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
-msgstr "Підпишіться на цю команду продажу, щоб відслідковувати події пов'язані з членами цієї команди."
+msgstr ""
+"Підпишіться на цю команду продажу, щоб відслідковувати події пов'язані з "
+"членами цієї команди."
 
 #. module: sales_team
-#: field:crm.case.section,message_follower_ids:0
-msgid "Followers"
-msgstr "Хто слідкує"
+#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Graph"
+msgstr "Графік"
 
 #. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_salesteams_search
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Group By..."
-msgstr "Група"
+msgstr "Групувати за..."
 
 #. module: sales_team
-#: help:crm.case.section,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr "Містить загальну інформацію про діалоги в форматі html."
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_group
+msgid "Group by"
+msgstr "Групувати за"
 
 #. module: sales_team
-#: field:crm.case.section,id:0
+#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_group
+msgid "How this channel's dashboard graph will group the results."
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_id
 msgid "ID"
-msgstr "ID"
+msgstr "ІД"
 
 #. module: sales_team
-#: help:crm.case.section,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
-
-#. module: sales_team
-#: help:crm.case.section,active:0
+#: model:ir.model.fields,help:sales_team.field_res_partner_team_id
+#: model:ir.model.fields,help:sales_team.field_res_users_team_id
 msgid ""
-"If the active field is set to true, it will allow you to hide the sales team"
-" without removing it."
+"If set, this sales channel will be used for sales and assignations related "
+"to this partner"
 msgstr ""
 
 #. module: sales_team
-#: model:crm.case.section,name:sales_team.crm_case_section_1
-msgid "Indirect Sales"
-msgstr "Непрямі продажі"
+#: model:ir.model.fields,help:sales_team.field_crm_team_active
+msgid ""
+"If the active field is set to false, it will allow you to hide the sales "
+"channel without removing it."
+msgstr ""
 
 #. module: sales_team
-#: field:crm.case.section,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Стежить"
+#: selection:crm.team,dashboard_graph_model:0
+msgid "Invoices"
+msgstr "Рахунки"
 
 #. module: sales_team
-#: field:crm.case.section,message_last_post:0
-msgid "Last Message Date"
-msgstr "Дата останнього повідомлення"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team___last_update
+msgid "Last Modified on"
+msgstr "Остання модифікація"
 
 #. module: sales_team
-#: field:crm.case.section,write_uid:0
+#: selection:crm.team,dashboard_graph_period:0
+msgid "Last Month"
+msgstr "Попередній місяць"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_write_uid
 msgid "Last Updated by"
-msgstr "Востаннє відредаговано"
+msgstr "Востаннє оновив"
 
 #. module: sales_team
-#: field:crm.case.section,write_date:0
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_write_date
 msgid "Last Updated on"
-msgstr "Дата останньої зміни"
+msgstr "Останнє оновлення"
 
 #. module: sales_team
-#: view:sale.config.settings:sales_team.view_sale_config_settings
-msgid "Manage Sales Teams"
+#: selection:crm.team,dashboard_graph_period:0
+msgid "Last Week"
+msgstr "Останній тиждень"
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_period:0
+msgid "Last Year"
+msgstr "Минулий рік"
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_type:0
+msgid "Line"
+msgstr "Лінія"
+
+#. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_manager
+msgid "Manager"
+msgstr "Керівник"
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_group:0
+msgid "Month"
+msgstr "Місяць"
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+msgid "My Favorites"
 msgstr ""
 
 #. module: sales_team
-#: model:crm.case.section,name:sales_team.crm_case_section_2
-msgid "Marketing"
-msgstr "В очікуванні"
-
-#. module: sales_team
-#: field:crm.case.section,message_ids:0
-msgid "Messages"
-msgstr "Повідомлення"
-
-#. module: sales_team
-#: help:crm.case.section,message_ids:0
-msgid "Messages and communication history"
-msgstr "Повідомлення та історія бесіди"
-
-#. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_salesteams_search
-msgid "My Salesteams"
-msgstr "Мої команди продажу"
-
-#. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_view_form
-msgid "Notes"
-msgstr "Примітки"
-
-#. module: sales_team
-#: field:sale.config.settings,group_multi_salesteams:0
-msgid "Organize Sales activities into multiple Sales Teams"
+#: code:addons/sales_team/models/crm_team.py:255
+#, python-format
+msgid "Not Defined"
 msgstr ""
 
 #. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_salesteams_search
-msgid "Parent Sales Teams"
-msgstr ""
+#: selection:crm.team,dashboard_graph_model:0
+msgid "Pipeline"
+msgstr "Конвеєр"
 
 #. module: sales_team
-#: field:crm.case.section,parent_id:0
-msgid "Parent Team"
-msgstr ""
+#: selection:crm.team,team_type:0
+msgid "Point of Sale"
+msgstr "Касовий термінал"
 
 #. module: sales_team
-#: model:ir.model,name:sales_team.model_res_partner
-msgid "Partner"
-msgstr "Партнер"
-
-#. module: sales_team
-#: field:crm.case.section,change_responsible:0
-msgid "Reassign Escalated"
-msgstr ""
-
-#. module: sales_team
-#: field:crm.case.section,reply_to:0
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_reply_to
 msgid "Reply-To"
-msgstr "Відповісти"
+msgstr "Відповісти до"
 
 #. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_view_form
-#: view:crm.case.section:sales_team.crm_case_section_view_tree
-#: field:crm.case.section,name:0 field:res.partner,section_id:0
-msgid "Sales Team"
-msgstr "Відділ продажу"
+#: selection:crm.team,dashboard_graph_model:0 selection:crm.team,team_type:0
+msgid "Sales"
+msgstr "Продаж"
 
 #. module: sales_team
-#: model:ir.actions.act_window,name:sales_team.crm_case_section_act
-#: model:ir.actions.act_window,name:sales_team.crm_case_section_salesteams_act
-#: model:ir.model,name:sales_team.model_crm_case_section
-#: model:ir.ui.menu,name:sales_team.menu_sales_team_act
-#: view:sale.config.settings:sales_team.view_sale_config_settings
-msgid "Sales Teams"
-msgstr "Команди продажу"
-
-#. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_salesteams_view_kanban
-msgid "Sales Teams Settings"
+#: model:ir.model,name:sales_team.model_crm_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_name
+#: model:ir.model.fields,field_description:sales_team.field_res_partner_team_id
+#: model:ir.model.fields,field_description:sales_team.field_res_users_sale_team_id
+#: model:ir.model.fields,field_description:sales_team.field_res_users_team_id
+#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
+#: model:ir.ui.view,arch_db:sales_team.crm_team_view_tree
+msgid "Sales Channel"
 msgstr ""
 
 #. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_view_form
-msgid "Sales team"
-msgstr "Команда продажу"
-
-#. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_view_form
-msgid "Salesteam"
+#: model:ir.model.fields,help:sales_team.field_res_users_sale_team_id
+msgid ""
+"Sales Channel the user is member of. Used to compute the members of a sales "
+"channel through the inverse one2many"
 msgstr ""
 
 #. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_salesteams_search
+#: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
+#: model:ir.actions.act_window,name:sales_team.sales_team_config_action
+msgid "Sales Channels"
+msgstr ""
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_group:0
+msgid "Salesperson"
+msgstr "Продавець"
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Salesteam name..."
+msgstr "Назва команди..."
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Salesteams Search"
 msgstr "Пошук команди"
 
 #. module: sales_team
-#: field:crm.case.section,message_summary:0
-msgid "Summary"
-msgstr "Підсумок"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_period
+msgid "Scale"
+msgstr "Шкала"
 
 #. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_salesteams_search
-#: field:crm.case.section,user_id:0
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+msgid "Settings"
+msgstr "Налаштування"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_is_favorite
+msgid "Show on dashboard"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Team Leader"
 msgstr "Лідер команди"
 
 #. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_view_form
-#: field:crm.case.section,member_ids:0
+#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
 msgstr "Члени команди"
 
 #. module: sales_team
-#: sql_constraint:crm.case.section:0
-msgid "The code of the sales team must be unique !"
-msgstr "Код команди повинен бути унікальним!"
-
-#. module: sales_team
-#: help:crm.case.section,reply_to:0
-msgid ""
-"The email address put in the 'Reply-To' of all emails sent by Odoo about "
-"cases in this sales team"
+#: model:ir.model.fields,help:sales_team.field_crm_team_color
+msgid "The color of the channel"
 msgstr ""
 
 #. module: sales_team
-#: field:crm.case.section,message_unread:0
-msgid "Unread Messages"
-msgstr "Непрочитані повідомлення"
+#: model:ir.model.fields,help:sales_team.field_crm_team_reply_to
+msgid ""
+"The email address put in the 'Reply-To' of all emails sent by Odoo about "
+"cases in this sales channel"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_model
+msgid "The graph this channel will display in the Dashboard.\n"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_period
+msgid "The time period this channel's dashboard graph will consider."
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_type
+msgid "The type of graph this channel will display in the dashboard."
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_team_type
+msgid ""
+"The type of this channel, it will define the resources this channel uses."
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_type
+msgid "Type"
+msgstr "Тип"
+
+#. module: sales_team
+#: code:addons/sales_team/models/crm_team.py:146
+#: code:addons/sales_team/models/crm_team.py:173
+#, python-format
+msgid "Undefined graph model for Sales Channel: %s"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
+#: model:ir.actions.act_window,help:sales_team.sales_team_config_action
+msgid ""
+"Use sales channels to organize your sales departments. \n"
+"                    Each channel will work with a separate pipeline."
+msgstr ""
+
+#. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_salesman_all_leads
+msgid "User: All Documents"
+msgstr ""
+
+#. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_salesman
+msgid "User: Own Documents Only"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -298,17 +434,31 @@ msgid "Users"
 msgstr "Користувачі"
 
 #. module: sales_team
-#: help:crm.case.section,change_responsible:0
+#: model:crm.team,name:sales_team.salesteam_website_sales
+#: selection:crm.team,team_type:0
+msgid "Website"
+msgstr "Вебсайт"
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_group:0
+msgid "Week"
+msgstr "Тиждень"
+
+#. module: sales_team
+#: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
 msgid ""
-"When escalating to this team override the salesman with the team leader."
+"the user will have access to all records of everyone in the sales "
+"application."
 msgstr ""
 
 #. module: sales_team
-#: field:crm.case.section,working_hours:0
-msgid "Working Hours"
-msgstr "Робочі кодини"
+#: model:res.groups,comment:sales_team.group_sale_salesman
+msgid "the user will have access to his own data in the sales application."
+msgstr ""
 
 #. module: sales_team
-#: field:crm.case.section,complete_name:0
-msgid "unknown"
-msgstr "невідомий"
+#: model:res.groups,comment:sales_team.group_sale_manager
+msgid ""
+"the user will have an access to the sales configuration as well as statistic"
+" reports."
+msgstr ""

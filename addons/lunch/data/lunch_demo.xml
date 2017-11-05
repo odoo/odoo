@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[(4, ref('lunch.group_lunch_user'))]"/>
+        </record>
+
+        <record model="lunch.product.category" id="categ_sandwich">
+            <field name="name">Sandwich</field>
+        </record>
+        <record model="lunch.product.category" id="categ_pizza">
+            <field name="name">Pizza</field>
+        </record>
+        <record model="lunch.product.category" id="categ_pasta">
+            <field name="name">Pasta</field>
+        </record>
+
+        <record model="res.partner" id="partner_coin_gourmand">
+            <field name="name">Coin gourmand</field>
+            <field name="city">Tirana</field>
+            <field name="country_id" ref="base.al"/>
+            <field name="street">Rr. e Durrësit, Pall. M.C. Inerte</field>
+            <field name="street2">Kati.1, Laprakë, Tirana, Shqipëri</field>
+            <field name="email">coin.gourmand@yourcompany.example.com</field>
+        </record>
+
+        <record model="res.partner" id="partner_pizza_inn">
+            <field name="name">Pizza Inn</field>
+            <field name="city">New Delhi TN</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="street">#8, 1 st Floor,iscore complex</field>
+            <field name="street2">Gandhi Gramam,Gandhi Nagar</field>
+            <field name="zip">607308</field>
+            <field name="email">pizza.inn@yourcompany.example.com</field>
+        </record>
+
+        <record model="lunch.product" id="product_cheese_ham">
+            <field name="name">Cheese And Ham</field>
+            <field name="category_id" eval="str(ref('categ_sandwich'))"/>
+            <field name="price">3.30</field>
+            <field name="supplier" eval="str(ref('partner_coin_gourmand'))"/>
+            <field name="description">Cheese, Ham, Salad, Tomatoes, cucumbers, eggs</field>
+        </record>
+
+        <record model="lunch.product" id="product_country">
+            <field name="name">The Country</field>
+            <field name="category_id" eval="str(ref('categ_sandwich'))"/>
+            <field name="price">3.30</field>
+            <field name="supplier" eval="str(ref('partner_coin_gourmand'))"/>
+            <field name="description">Brie, Honey, Walnut Kernels</field>
+        </record>
+
+        <record model="lunch.product" id="product_tuna">
+            <field name="name">Tuna</field>
+            <field name="category_id" eval="str(ref('categ_sandwich'))"/>
+            <field name="price">2.50</field>
+            <field name="supplier" eval="str(ref('partner_coin_gourmand'))"/>
+            <field name="description">Tuna, Mayonnaise</field>
+        </record>
+
+        <record model="lunch.product" id="product_gouda">
+            <field name="name">Gouda Cheese</field>
+            <field name="category_id" eval="str(ref('categ_sandwich'))"/>
+            <field name="price">2.50</field>
+            <field name="supplier" eval="str(ref('partner_coin_gourmand'))"/>
+            <field name="description"></field>
+        </record>
+
+        <record model="lunch.product" id="product_chicken_curry">
+            <field name="name">Chicken Curry</field>
+            <field name="category_id" eval="str(ref('categ_sandwich'))"/>
+            <field name="price">2.60</field>
+            <field name="supplier" eval="str(ref('partner_coin_gourmand'))"/>
+            <field name="description"></field>
+        </record>
+
+        <record model="lunch.product" id="product_margherita">
+            <field name="name">Pizza Margherita</field>
+            <field name="category_id" eval="str(ref('categ_pizza'))"/>
+            <field name="price">6.90</field>
+            <field name="supplier" eval="str(ref('partner_pizza_inn'))"/>
+            <field name="description">Tomatoes, Mozzarella</field>
+        </record>
+
+        <record model="lunch.product" id="product_italiana">
+            <field name="name">Pizza Italiana</field>
+            <field name="category_id" eval="str(ref('categ_pizza'))"/>
+            <field name="price">7.40</field>
+            <field name="supplier" eval="str(ref('partner_pizza_inn'))"/>
+            <field name="description">Fresh Tomatoes, Basil, Mozzarella</field>
+        </record>
+
+        <record model="lunch.product" id="product_Bolognese">
+            <field name="name">Bolognese Pasta</field>
+            <field name="category_id" eval="str(ref('categ_pasta'))"/>
+            <field name="price">7.70</field>
+            <field name="supplier" eval="str(ref('partner_pizza_inn'))"/>
+            <field name="description"></field>
+        </record>
+
+         <record model="lunch.product" id="product_Napoli">
+            <field name="name">Napoli Pasta</field>
+            <field name="category_id" eval="str(ref('categ_pasta'))"/>
+            <field name="price">7.70</field>
+            <field name="supplier" eval="str(ref('partner_pizza_inn'))"/>
+            <field name="description">Tomatoes, Basil</field>
+        </record>
+
+        <record model="lunch.order" id="order_1">
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="date" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d')"/>
+            <field name="order_line_ids" eval="[]"/>
+            <field name="state">new</field>
+        </record>
+
+        <record model="lunch.order" id="order_2">
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="date" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d')"/>
+            <field name="order_line_ids" eval="[]"/>
+            <field name="state">confirmed</field>
+        </record>
+
+        <record model="lunch.order" id="order_3">
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="order_line_ids" eval="[]"/>
+            <field name="state">confirmed</field>
+        </record>
+
+        <record model="lunch.order.line" id="order_line_1">
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="product_id" ref="product_Bolognese"/>
+            <field name="price">7.70</field>
+            <field name="date" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d')"/>
+            <field name="state">new</field>
+            <field name="supplier" ref="partner_pizza_inn"/>
+            <field name="note">+Emmental</field>
+            <field name="order_id" ref="order_1"/>
+        </record>
+
+        <record model="lunch.order.line" id="order_line_2">
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="product_id" ref="product_italiana"/>
+            <field name="price">7.40</field>
+            <field name="date" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d')"/>
+            <field name="state">confirmed</field>
+            <field name="supplier" ref="partner_pizza_inn"/>
+            <field name="note">+Mushrooms</field>
+            <field name="order_id" ref="order_2"/>
+        </record>
+
+        <record model="lunch.order.line" id="order_line_3">
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="product_id" ref="product_gouda"/>
+            <field name="price">2.50</field>
+            <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="state">cancelled</field>
+            <field name="supplier" ref="partner_coin_gourmand"/>
+            <field name="note">+Salad +Tomatoes +Cucumbers</field>
+            <field name="order_id" ref="order_3"/>
+        </record>
+
+        <record model="lunch.order.line" id="order_line_4">
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="product_id" ref="product_chicken_curry"/>
+            <field name="price">2.60</field>
+            <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="state">confirmed</field>
+            <field name="supplier" ref="partner_coin_gourmand"/>
+            <field name="note">+Salad +Tomatoes +Eggs</field>
+            <field name="order_id" ref="order_3"/>
+        </record>
+
+        <record model="lunch.cashmove" id="cashmove_1">
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="date" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d')"/>
+            <field name="description">Pizza Italiana</field>
+            <field name="amount">-7.40</field>
+            <field name="order_id" ref="order_2"/>
+            <field name="state">order</field>
+        </record>
+
+        <record model="lunch.cashmove" id="cashmove_2">
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="description">Chicken curry</field>
+            <field name="amount">-2.60</field>
+            <field name="order_id" ref="order_3"/>
+            <field name="state">order</field>
+        </record>
+
+        <record model="lunch.cashmove" id="cashmove_3">
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="description">Payment: 5 lunch tickets (6€)</field>
+            <field name="amount">30</field>
+            <field name="state">payment</field>
+        </record>
+
+        <record model="lunch.alert" id="alert_1">
+            <field name="alert_type">week</field>
+            <field name="monday" eval="True"/>
+            <field name="tuesday" eval="True"/>
+            <field name="wednesday" eval="True"/>
+            <field name="thursday" eval="True"/>
+            <field name="friday" eval="True"/>
+            <field name="saturday" eval="False"/>
+            <field name="sunday" eval="False"/>
+            <field name="start_hour">7</field>
+            <field name="end_hour">23</field>
+            <field name="message">Lunch must be ordered before 10:30 AM</field>
+        </record>
+    </data>
+</odoo>

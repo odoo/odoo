@@ -1,71 +1,79 @@
+# #-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_crm
-# 
+#
 # Translators:
+# Kaloyan Naumov <kaloyan@lumnus.net>, 2016
+# #-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_crm
+#
+# Translators:
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-07-27 18:34+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-07-17 03:24+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-8/language/bg/)\n"
+"Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/"
+"bg/)\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: bg\n"
+"#-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"#-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_crm
-#: view:website:website_crm.contactus_thanks
-msgid "&times;"
-msgstr "&times;"
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
+msgid "&amp;times;"
+msgstr "&amp;време;"
 
 #. module: website_crm
-#: code:addons/website_crm/controllers/main.py:85
-#, python-format
-msgid "Custom Fields: "
+#: model:ir.ui.view,arch_db:website_crm.contactus_form
+msgid ""
+"<span class=\"btn btn-primary btn-lg o_website_form_send\">Send</span>\n"
+"                                <span id=\"o_website_form_result\"/>"
 msgstr ""
 
 #. module: website_crm
-#: view:website:website.contactus
+#: model:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Email"
 msgstr "Имейл"
 
 #. module: website_crm
-#: code:addons/website_crm/controllers/main.py:94
-#, python-format
-msgid "Environ Fields: "
-msgstr ""
-
-#. module: website_crm
-#: view:website:website_crm.contactus_thanks
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
 msgid "If you have an emergency, do not hesitate to contact us by phone:"
 msgstr "Не се колебайте да ни се обадите по телефона, в случай на спешност:"
 
 #. module: website_crm
-#: view:website:website.contactus
+#: model:ir.model,name:website_crm.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Следа/Възможност"
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Phone Number"
 msgstr "Телефонен Номер"
 
 #. module: website_crm
-#: view:website:website.contactus
-msgid "Send"
-msgstr "Изпрати"
-
-#. module: website_crm
-#: view:website:website.contactus
+#: model:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Subject"
 msgstr "Относно"
 
 #. module: website_crm
-#: view:website:website_crm.contactus_thanks
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
 msgid "Thanks!"
 msgstr "Благодаря!"
 
 #. module: website_crm
-#: view:website:website_crm.contactus_thanks
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
 msgid "We will get back to you shortly."
 msgstr "Скоро ще се свържем с вас."
 
@@ -75,26 +83,27 @@ msgid "Website Contact Form"
 msgstr "Контактна Форма за Уебсайт"
 
 #. module: website_crm
-#: view:website:website.contactus
+#: model:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Your Company"
 msgstr "Фирма"
 
 #. module: website_crm
-#: view:website:website.contactus
+#: model:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Your Name"
 msgstr "Вашето Име"
 
 #. module: website_crm
-#: view:website:website.contactus
+#: model:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Your Question"
 msgstr "Вашият Въпрос"
 
 #. module: website_crm
-#: view:website:website_crm.contactus_thanks
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
 msgid "Your message has been sent successfully."
 msgstr "Вашето съобщение беше изпратено успешно."
 
-#. module: website_crm
-#: view:website:website.contactus
-msgid "e.g. (+32).81.81.37.00"
-msgstr "напр. +359 898 27 89 44"
+#~ msgid "Send"
+#~ msgstr "Изпрати"
+
+#~ msgid "e.g. (+32).81.81.37.00"
+#~ msgstr "напр. +359 898 27 89 44"

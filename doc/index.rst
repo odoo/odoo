@@ -1,4 +1,4 @@
-:main-title: doc
+:main-title: Developer Documentation
 :banner: banners/index.jpg
 
 =====
@@ -14,10 +14,9 @@ Index
     :maxdepth: 2
 
     tutorials
-    api_integration
+    webservices
     setup
     reference
-    business
 
 .. ifconfig:: todo_include_todos
 

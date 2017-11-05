@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="stock_picking_batch_form" model="ir.ui.view">
+        <field name="name">stock.picking.batch.form</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="arch" type="xml">
+            <form string="Stock Batch Picking">
+                <header>
+                    <button name="confirm_picking" states="draft" string="Confirm" type="object" class="oe_highlight"/>
+                    <button name="print_picking" string="Print" type="object" class="oe_highlight"/>
+                    <button name="done" states="in_progress" string="Done" type="object" class="oe_highlight"/>
+                    <button name="cancel_picking" string="Cancel" type="object" states="in_progress"/>
+                    <field name="state" widget="statusbar" statusbar_visible="in_progress,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" class="oe_inline" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <field name="user_id"/>
+                    </group>
+                    <separator string="Pickings"/>
+                    <field name="picking_ids" widget="many2many" domain="[('state', 'not in', ('done', 'cancel'))]" options="{'not_delete': True}">
+                        <tree>
+                            <field name="name"/>
+                            <field name="backorder_id"/>
+                            <field name="origin"/>
+                            <field name="date"/>
+                            <field name="scheduled_date"/>
+                            <field name="state"/>
+                            <button name="action_assign" string="Confirm picking" type="object" icon="fa-check text-success" attrs="{'invisible': [('state', 'in', ('done', 'cancel', 'confirmed', 'assigned'))]}"/>
+                            <button name="action_cancel" string="Cancel picking" type="object" icon="fa-times-circle text-danger" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}"/>
+                        </tree>
+                    </field>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="stock_picking_batch_tree" model="ir.ui.view">
+        <field name="name">stock.picking.batch.tree</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="arch" type="xml">
+            <tree string="Stock Batch Picking" decoration-muted="state=='cancel'">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <record id="stock_picking_batch_kanban" model="ir.ui.view">
+        <field name="name">stock.picking.batch.kanban</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="o_kanban_record_top mb16">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                </div>
+                                <field name="state" widget="kanban_label_selection"/>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left"/>
+                                <div class="oe_kanban_bottom_right">
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="stock_picking_batch_filter" model="ir.ui.view">
+        <field name="name">stock.picking.batch.filter</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="arch" type="xml">
+            <search string="Search Batch Picking">
+                <field name="name" string="Batch Picking"/>
+                <filter name="in_progress" string="In Progress" domain="[('state','=', 'in_progress')]" help="Batch Pickings not finished"/>
+                <field name="user_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="User" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="State" domain="[]" context="{'group_by':'state'}"/>
+                </group>
+           </search>
+        </field>
+    </record>
+    <record id="stock_picking_batch_action" model="ir.actions.act_window">
+        <field name="name">Batch Pickings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.picking.batch</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="context">{"search_default_in_progress" : True,}</field>
+        <field name="search_view_id" ref="stock_picking_batch_filter"/>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a Batch Picking.
+          </p><p>
+            The goal of the batch picking is to group operations that may
+            (needs to) be done together in order to increase their efficiency.
+            It may also be useful to assign jobs (one person = one batch) or
+            help the timing management of operations (tasks to be done at 1pm).
+          </p>
+        </field>
+    </record>
+    <menuitem action="stock_picking_batch_action" id="stock_picking_batch_menu" parent="stock.menu_stock_warehouse_mgmt" sequence="10"/>
+
+    <record id="vpicktree_inherit_stock_picking_batch" model="ir.ui.view">
+        <field name="name">stock.picking.tree</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='picking_type_id']" position="after">
+                <field name="batch_id"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_picking_internal_search_inherit_stock_picking_batch" model="ir.ui.view">
+        <field name="name">stock.picking.search</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='picking_type']" position="after">
+                <filter string="Batch" domain="[]" context="{'group_by':'batch_id'}"/>
+            </xpath>
+            <xpath expr="//field[@name='picking_type_id']" position="after">
+                <field name="batch_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

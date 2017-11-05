@@ -3,15 +3,16 @@
 # * payment_transfer
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015
+# Dorin Hongu <dhongu@gmail.com>, 2017
+# Cozmin Candea <office@terrabit.ro>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-14 14:52+0000\n"
-"PO-Revision-Date: 2017-04-18 19:13+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-8/language/ro/)\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2017\n"
+"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,7 +20,19 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment_acquirer.py:32
+#: code:addons/payment_transfer/models/payment.py:70
+#, python-format
+msgid "; multiple order found"
+msgstr "; s-au găsit mai multe rezultate"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:68
+#, python-format
+msgid "; no order found"
+msgstr "; nu a fost găsit nici un rezultat"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:28
 #, python-format
 msgid ""
 "<div>\n"
@@ -32,20 +45,13 @@ msgid ""
 msgstr ""
 
 #. module: payment_transfer
-#: model:payment.acquirer,pre_msg:payment_transfer.payment_acquirer_transfer
-msgid ""
-"<p>Transfer information will be provided after choosing the payment mode.</p>\n"
-"            "
-msgstr ""
-
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment_acquirer.py:30
+#: code:addons/payment_transfer/models/payment.py:26
 #, python-format
 msgid "Bank Account"
 msgstr "Cont bancar"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment_acquirer.py:30
+#: code:addons/payment_transfer/models/payment.py:26
 #, python-format
 msgid "Bank Accounts"
 msgstr "Conturi Bancare"
@@ -53,7 +59,7 @@ msgstr "Conturi Bancare"
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Beneficiarul Plații"
+msgstr "Colector plată"
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_transaction
@@ -61,8 +67,7 @@ msgid "Payment Transaction"
 msgstr "Tranzacție plată"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment_acquirer.py:19
-#: model:payment.acquirer,name:payment_transfer.payment_acquirer_transfer
+#: code:addons/payment_transfer/models/payment.py:66
 #, python-format
-msgid "Wire Transfer"
-msgstr "Transfer bancar"
+msgid "received data for reference %s"
+msgstr "date primite pentru referința %s"

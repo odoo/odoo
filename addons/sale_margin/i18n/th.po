@@ -1,37 +1,38 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_margin
-# 
+#
 # Translators:
-# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-10-10 00:56+0000\n"
-"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
-"Language-Team: Thai (http://www.transifex.com/odoo/odoo-8/language/th/)\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_margin
-#: field:sale.order.line,purchase_price:0
-msgid "Cost Price"
-msgstr "ราคาต้นทุน"
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line_purchase_price
+msgid "Cost"
+msgstr "ต้นทุน"
 
 #. module: sale_margin
-#: help:sale.order,margin:0
+#: model:ir.model.fields,help:sale_margin.field_sale_order_margin
 msgid ""
 "It gives profitability by calculating the difference between the Unit Price "
-"and the cost price."
-msgstr "ให้การทำกำไรโดยคำนวนจากความแตกต่างระหว่างราคาต่อหน่วยและราคาต้นทุน"
+"and the cost."
+msgstr ""
 
 #. module: sale_margin
-#: field:sale.order,margin:0 field:sale.order.line,margin:0
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line_margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_report_margin
 msgid "Margin"
 msgstr "อัตรากำไรขั้นต้น"
 
@@ -43,4 +44,9 @@ msgstr "ใบสั่งขาย"
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "รายการใบสั่งขาย"
+msgstr "รายการคำสั่งขาย"
+
+#. module: sale_margin
+#: model:ir.model,name:sale_margin.model_sale_report
+msgid "Sales Orders Statistics"
+msgstr "สถิติใบสั่งขาย"

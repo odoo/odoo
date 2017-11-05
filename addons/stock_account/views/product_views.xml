@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_category_property_form" model="ir.ui.view">
+            <field name="name">product.category.stock.property.form.inherit</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="account.view_category_property_form"/>
+            <field name="arch" type="xml">
+                <group name="account_property" position="inside">
+                    <group name="account_stock_property" string="Account Stock Properties" groups="account.group_account_user">
+                        <field name="property_stock_account_input_categ_id" domain="[('deprecated', '=', False)]" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}" />
+                        <field name="property_stock_account_output_categ_id" domain="[('deprecated', '=', False)]" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}" />
+                        <field name="property_stock_valuation_account_id" domain="[('deprecated', '=', False)]" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}"/>
+                        <field name="property_stock_journal"/>
+                    </group>
+                </group>
+                <group name="account_property" position="before">
+                    <group>
+                        <group string="Inventory Valuation">
+                            <field name="property_cost_method"/>
+                            <field name="property_valuation" groups="account.group_account_user"/>
+                        </group>
+                    </group>
+                </group>
+            </field>
+        </record>
+
+        <record id="view_template_property_form" model="ir.ui.view">
+            <field name="name">product.template.stock.property.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="list_price" position="after">
+                        <field name="valuation" invisible="1" readonly="1"/>
+                        <field name="cost_method" invisible="1" readonly="1"/>
+                        <field name="property_cost_method" invisible="1"/>
+                    </field>
+                    <field name="standard_price" position="replace">
+                        <div class="o_row">
+                            <field name="standard_price"
+                                attrs="{'readonly':[('valuation','=','real_time')]}"
+                                widget='monetary' options="{'currency_field': 'currency_id'}" />
+                            <button string="Update Cost" type="action"
+                            name="%(action_view_change_standard_price)d"
+                            attrs="{'invisible':['|', '|', ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['average', 'standard']), ('product_variant_count', '>', 1)]}"
+                            class="oe_link oe_read_only" colspan="2"/>
+                        </div>
+                    </field>
+                    <group name="accounting" position="inside">
+                        <group name="property_inventory_valuation"  string="Stock Valuation" attrs="{'invisible': ['|', ('type','=','service'), ('valuation', '!=', 'real_time')]}" groups="account.group_account_user">
+                            <field name="property_valuation" invisible="1"/>
+                            <field name="property_stock_account_input"
+                                domain="[('deprecated', '=', False)]"/>
+                            <field name="property_stock_account_output"
+                                domain="[('deprecated', '=', False)]"/>
+                        </group>
+                    </group>
+                </data>
+            </field>
+        </record>
+
+        <record id="product_variant_easy_edit_view_inherit" model="ir.ui.view">
+            <field name="name">product.product.product.view.form.easy.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="standard_price" position="after">
+                        <field name="valuation" invisible="1"/>
+                        <field name="cost_method" invisible="1"/>
+                    </field>
+                    <field name="standard_price" position="after">
+                        <button string="Set standard cost" type="action"
+                            name="%(action_view_change_standard_price)d"
+                            attrs="{'invisible':['|',('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard'])]}"
+                            class="oe_link oe_read_only" colspan="2"/>
+                    </field>
+                    <field name="standard_price" position="after">
+                        <button string="Set standard cost" type="action"
+                            name="%(action_view_change_standard_price)d"
+                            attrs="{'invisible':['|',('valuation','!=', 'real_time'), ('cost_method', 'not in', ['average'])]}"
+                            class="oe_link oe_read_only" colspan="2"/>
+                    </field>
+                </data>
+            </field>
+        </record>
+        
+        <record id="product_valuation_tree" model="ir.ui.view">
+            <field name="name">product.valuation.tree</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="display_name" string="Product"/>
+                    <field name="qty_available" context="{'company_owned': True}" string="Quantity on Hand"/>
+                    <field name="uom_id" groups="product.group_uom"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="stock_value" sum="Stock Valuation" widget="monetary" string="Total Value"/>
+                </tree>
+            </field>
+        </record>
+        <record id="product_valuation_action" model="ir.actions.act_window">
+            <field name="name">Product Valuation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="product_valuation_tree"/>
+            <field name="domain">[('type', '=', 'product'), ('qty_available', '!=', 0)]</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    If there are products, you will see its name and valuation. 
+                </p>
+            </field>
+        </record>
+
+        <record id="product_valuation_form_view" model="ir.ui.view">
+             <field name="name">product.product</field>
+             <field name="model">product.product</field>
+             <field name="inherit_id" ref="stock.product_form_view_procurement_button"/>
+             <field name="arch" type="xml">
+                 <xpath expr="//button[@name='action_view_stock_move_lines']" position="after">
+                    <button string="Inventory Valuation" type="object" name="action_open_product_moves" class="oe_stat_button" icon="fa-cubes" attrs="{'invisible': ['|', ('cost_method', '=', 'standard'), ('id', '=', False)]}"/>
+                 </xpath>
+             </field>
+        </record>
+
+        <record id="product_template_valuation_form_view" model="ir.ui.view">
+             <field name="name">product.template</field>
+             <field name="model">product.template</field>
+             <field name="inherit_id" ref="stock.product_template_form_view_procurement_button"/>
+             <field name="arch" type="xml">
+                 <xpath expr="//button[@name='action_view_stock_move_lines']" position="after">
+                    <button string="Inventory Valuation" type="object" name="action_open_product_moves" class="oe_stat_button" icon="fa-cubes" attrs="{'invisible': [('cost_method', '=', 'standard')]}"/>
+                 </xpath>
+             </field>
+        </record>
+
+        <!-- stock move valuation view -->
+        <record id="view_move_tree_valuation" model="ir.ui.view">
+            <field name="name">stock.move.tree.valuation</field>
+            <field name="model">stock.move</field>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done')) and date > current_date" string="Moves" create="0">
+                    <field name="name"/>
+                    <field name="picking_id" string="Reference"/>
+                    <field name="origin"/>
+                    <field name="picking_type_id" invisible="1"/>
+                    <field name="create_date" invisible="1" groups="base.group_no_one"/>
+                    <field name="product_id"/>
+                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="date" groups="base.group_no_one"/>
+                    <field name="state" invisible="1"/>
+                    <field name="product_uom_qty" string="Qty"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="price_unit"/>
+                    <field name="value" sum="Stock Valuation"/>
+                    <field name="remaining_qty" invisible="context.get('is_avg')"/>
+                    <field name="remaining_value" sum="Stock Valuation" invisible="context.get('is_avg')"/>
+                </tree>
+            </field>
+        </record>
+        <record id="stock_move_valuation_action" model="ir.actions.act_window">
+            <field name="name">Stock Moves</field>
+            <field name="res_model">stock.move</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_move_tree_valuation"/>
+            <field name="search_view_id" ref="stock.view_move_search"/>
+            <field name="context">{'search_default_outgoing': 1, 'search_default_incoming': 1, 'search_default_done': 1, 'search_default_group_by_product': 1}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a stock movement.
+              </p>
+            </field>
+        </record>
+    </data>
+</odoo>

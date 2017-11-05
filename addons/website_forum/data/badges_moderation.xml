@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
 
         <!-- Cleanup: answer or question edition -->
@@ -118,110 +118,6 @@
             <field name="target_goal">1</field>
         </record>
 
-
-<!--         <record id="badge_22" model="gamification.badge">
-            <field name="name">Organizer</field>
-            <field name="description">First retag</field>
-            <field name="level">bronze</field>
-        </record>
-        <record model="gamification.goal.definition" id="definition_notable_question">
-            <field name="name">Organizer</field>
-            <field name="description">Your First retag</field>
-            <field name="computation_mode">count</field>
-            <field name="display_mode">boolean</field>
-            <field name="model_id" eval="ref('website_forum.model_website_forum_post_history')" />
-            <field name="condition">higher</field>
-            <field name="domain">[('tags','!=',False)]</field>
-            <field name="batch_mode">True</field>
-            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_create_uid')" />
-            <field name="batch_user_expression">user.id</field>
-        </record>
-        <record model="gamification.challenge" id="challenge_notable_question">
-            <field name="name">Organizer</field>
-            <field name="period">once</field>
-            <field name="visibility_mode">personal</field>
-            <field name="report_message_frequency">never</field>
-            <field name="reward_id" eval="ref('badge_22')" />
-            <field name="reward_realtime">True</field>
-            <field name="autojoin_group_id" eval="ref('base.group_user')" />
-            <field name="state">inprogress</field>
-            <field name="category">forum</field>
-        </record>
-        <record model="gamification.challenge.line" id="line_notable_question">
-            <field name="definition_id" eval="ref('definition_notable_question')" />
-            <field name="target_goal">1</field>
-            <field name="challenge_id" eval="ref('challenge_notable_question')" />
-        </record> -->
-
-
-<!--         <record id="badge_29" model="gamification.badge">
-            <field name="name">Associate Editor</field>
-            <field name="description">Edited 30 entries</field>
-            <field name="level">silver</field>
-        </record>
-        <record model="gamification.goal.definition" id="definition_associate_editor">
-            <field name="name">Associate Editor</field>
-            <field name="description">Edit 30 answer or question</field>
-            <field name="computation_mode">count</field>
-            <field name="display_mode">boolean</field>
-            <field name="model_id" eval="ref('website_forum.model_website_forum_post_history')" />
-            <field name="condition">higher</field>
-            <field name="domain">['|', ('name','!=',False), ('content','!=',False)]</field>
-            <field name="batch_mode">True</field>
-            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_create_uid')" />
-            <field name="batch_user_expression">user.id</field>
-        </record>
-        <record model="gamification.challenge" id="challenge_associate_editor">
-            <field name="name">Associate Editor</field>
-            <field name="period">once</field>
-            <field name="visibility_mode">personal</field>
-            <field name="report_message_frequency">never</field>
-            <field name="reward_id" eval="ref('badge_29')" />
-            <field name="reward_realtime">True</field>
-            <field name="autojoin_group_id" eval="ref('base.group_user')" />
-            <field name="state">inprogress</field>
-            <field name="category">forum</field>
-        </record>
-        <record model="gamification.challenge.line" id="line_associate_editor">
-            <field name="definition_id" eval="ref('definition_associate_editor')" />
-            <field name="target_goal">30</field>
-            <field name="challenge_id" eval="ref('challenge_associate_editor')" />
-        </record> -->
-
-        <!-- Enthusiast: vote for 15 days in a row -->
-<!--         <record id="badge_9" model="gamification.badge">
-            <field name="name">Enthusiast</field>
-            <field name="description">Voted on questions/answers for 15 days in a row</field>
-            <field name="level">silver</field>
-        </record>
-        <record model="gamification.goal.definition" id="definition_enthusiast">
-            <field name="name">Enthusiast</field>
-            <field name="description">Vote on questions/answers for 15 days in a row</field>
-            <field name="computation_mode">python</field>
-            <field name="compute_code">start_date = date.today() - timedelta(days=16)
-end_date = date.today() - timedelta(days=1)
-cr.execute('SELECT COUNT(id), create_date from forum_post_vote where create_date &gt;= %s and create_date &lt;= %s and user_id = %s GROUP BY create_date',(start_date,end_date, object.user_id.id,))
-data = cr.dictfetchall()
-result = int(len(data) >= 15)</field>
-            <field name="display_mode">boolean</field>
-            <field name="condition">higher</field>
-        </record>
-        <record model="gamification.challenge" id="challenge_enthusiast">
-            <field name="name">Enthusiast</field>
-            <field name="period">once</field>
-            <field name="visibility_mode">personal</field>
-            <field name="report_message_frequency">never</field>
-            <field name="reward_id" eval="ref('badge_9')" />
-            <field name="autojoin_group_id" eval="ref('base.group_user')"/>
-            <field name="state">inprogress</field>
-            <field name="category">forum</field>
-        </record>
-        <record model="gamification.challenge.line" id="line_enthusiast">
-            <field name="definition_id" eval="ref('definition_enthusiast')"/>
-            <field name="challenge_id" eval="ref('challenge_enthusiast')"/>
-            <field name="target_goal">1</field>
-        </record> -->
-
         <record id="badge_31" model="gamification.badge">
             <field name="name">Supporter</field>
             <field name="description">First upvote</field>
@@ -294,4 +190,4 @@ result = int(len(data) >= 15)</field>
         </record>
 
     </data>
-</openerp>
+</odoo>

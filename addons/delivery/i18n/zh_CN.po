@@ -3,18 +3,27 @@
 # * delivery
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Jeffery CHEN <jeffery9@gmail.com>, 2015-2016
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
+# Ted Wang <feiyuwang2012@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Jonathon Li <jonathonli@gmail.com>, 2017
+# 苏州远鼎 <tiexinliu@126.com>, 2017
+# 林俊 <54773801@qq.com>, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
+# zpq001 <zpq001@live.com>, 2017
+# THL <wt39181819@gmail.com>, 2017
+# Talway <9010446@qq.com>, 2017
+# Xiaoming Deng <sumandeng@hotmail.com>, 2017
+# Si Ling Lau <happy8645@hotmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2017-04-19 05:00+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Si Ling Lau <happy8645@hotmail.com>, 2017\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,149 +31,241 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: delivery
-#: selection:delivery.grid.line,operator:0
-msgid "<="
-msgstr "<="
+#: model:mail.template,report_name:delivery.mail_template_data_delivery_confirmation
+msgid "${(object.name or '').replace('/','_')}"
+msgstr ""
 
 #. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
+#: model:mail.template,subject:delivery.mail_template_data_delivery_confirmation
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a delivery price list for a specific region.\n"
-"              </p><p>\n"
-"                The delivery price list allows you to compute the cost and\n"
-"                sales price of the delivery according to the weight of the\n"
-"                products and other criteria. You can define several price lists\n"
-"                for each delivery method: per country or a zone in a specific\n"
-"                country defined by a postal code range.\n"
-"              </p>\n"
-"            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                单击 为指定区域创建运输价格表.\n              </p><p>\n                运输价格表允许 根据产品的重量和其他条件，计算运输的成本和销售价格.\n               您能为每种运输方法定义几种价格表:为每个国家，或者在特定国家根据邮政编码的定义的一个区域.\n              </p>\n            "
+"${object.company_id.name} Delivery Order (Ref ${object.name or 'n/a' })"
+msgstr ""
 
 #. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+#: model:mail.template,subject:delivery.mail_template_data_delivery_notification
+msgid "${object.subject}"
+msgstr "${object.subject}"
+
+#. module: delivery
+#: model:mail.template,body_html:delivery.mail_template_data_delivery_confirmation
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new deliver method. \n"
-"              </p><p>\n"
-"                Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
-"                UPS Express, UPS Standard) with a set of pricing rules attached\n"
-"                to each method.\n"
-"              </p><p>\n"
-"                These methods allow to automatically compute the delivery price\n"
-"                according to your settings; on the sales order (based on the\n"
-"                quotation) or the invoice (based on the delivery orders).\n"
-"              </p>\n"
-"            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                单击以定义一个新的运输方式。\n              </p><p>\n                每个承运人 (例如 UPS)可以有几种不同定价方案的运输方式 \n               （例如UPS Express, UPS Standard)。\n                </p><p>\n               这些方法允许您根据您的设置\n               自动计算运输价格：在订单上（基于报价单）\n               或者在发票上（基于发货单）。 \n              </p>\n            "
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Dear ${object.partner_id.name},</p>\n"
+"<p>We are glad to inform you that your order has been shipped.</p>\n"
+"<p>\n"
+"%if object.carrier_tracking_ref:\n"
+"  Your tracking reference:\n"
+"  %if object.carrier_tracking_url:\n"
+"    <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"  %else:\n"
+"    ${object.carrier_tracking_ref}.\n"
+"  %endif\n"
+"%endif\n"
+"</p>\n"
+"<p>Find your delivery order attached for more details.</p>\n"
+"<p>Thank you,</p>\n"
+"      </data>"
+msgstr ""
 
 #. module: delivery
-#: selection:delivery.grid.line,operator:0
-msgid ">="
-msgstr ">="
+#: model:mail.template,body_html:delivery.mail_template_data_delivery_notification
+msgid ""
+"<?xml version=\"1.0\"?>\n"
+"<table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"font-family:Arial,Helvetica,sans-serif; padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
+"          <tbody>\n"
+"            <!-- HEADER -->\n"
+"            <tr>\n"
+"              <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table width=\"650\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                  <tr>\n"
+"                    <td valign=\"middle\">\n"
+"                      <span style=\"font-size:20px; color:white; font-weight: bold;\">${object.record_name}</span>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\">\n"
+"                      <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"                    </td>\n"
+"                  </tr>\n"
+"                </table>\n"
+"              </td>\n"
+"            </tr>\n"
+"            <!-- CONTENT -->\n"
+"            <tr>\n"
+"              <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table width=\"650\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\">\n"
+"                  <tbody>\n"
+"                    <td valign=\"top\" style=\"color: #555; font-size: 14px;\">${object.body | safe}</td>\n"
+"                  </tbody>\n"
+"                </table>\n"
+"              </td>\n"
+"            </tr>\n"
+"            <!-- FOOTER -->\n"
+"            <tr>\n"
+"              <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table width=\"650\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                  <tr>\n"
+"                    <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">${user.company_id.name}<br/>${user.company_id.phone or ''}</td>\n"
+"                    <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                      % if user.company_id.email:\n"
+"                      <a href=\"mailto:${user.company_id.email}\" style=\"text-decoration:none; color: white;\">${user.company_id.email}</a><br/>\n"
+"                      % endif\n"
+"                      % if user.company_id.website:\n"
+"                        <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: white;\">${user.company_id.website}</a>\n"
+"                      % endif\n"
+"                    </td>\n"
+"                  </tr>\n"
+"                </table>\n"
+"              </td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"              <td align=\"center\">Powered by <a href=\"https://www.odoo.com\">Odoo</a>.</td>\n"
+"            </tr>\n"
+"          </tbody>\n"
+"        </table>\n"
+"      "
+msgstr ""
 
 #. module: delivery
-#: field:delivery.carrier,active:0 field:delivery.grid,active:0
+#: code:addons/delivery/models/delivery_carrier.py:76
+#, python-format
+msgid ""
+"<p class=\"oe_view_nocontent\">\n"
+"                    Buy Odoo Enterprise now to get more providers.\n"
+"                </p>"
+msgstr ""
+"<p class=\"oe_view_nocontent\">\n"
+"                    升级到 Odoo企业版可以获取更多的提供商。\n"
+"                </p>"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
+msgid "<span>kg</span>"
+msgstr "<span>kg</span>"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
+#: model:ir.ui.view,arch_db:delivery.report_shipping2
+msgid "<strong>Carrier</strong>"
+msgstr "<strong>承运商</strong>"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
+msgid "<strong>Tracking Number</strong>"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
+#: model:ir.ui.view,arch_db:delivery.report_shipping2
+msgid "<strong>Weight</strong>"
+msgstr "<strong>重量</strong>"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_integration_level
+msgid "Action while validating Delivery Orders"
+msgstr "操作在验证交货的订单"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
 msgid "Active"
-msgstr "生效"
+msgstr "有效"
 
 #. module: delivery
-#: view:sale.order:delivery.view_order_withcarrier_form
-msgid "Add in Quote"
-msgstr "添加到报价"
-
-#. module: delivery
-#: field:delivery.carrier,pricelist_ids:0
-msgid "Advanced Pricing"
-msgstr "固定价格"
-
-#. module: delivery
-#: field:delivery.carrier,use_detailed_pricelist:0
-msgid "Advanced Pricing per Destination"
-msgstr "根据目的地定价"
-
-#. module: delivery
-#: field:delivery.carrier,amount:0
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_amount
 msgid "Amount"
 msgstr "金额"
 
 #. module: delivery
-#: help:delivery.carrier,amount:0
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_amount
 msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr "免费送货的订单金额，以公司本位币显示"
 
 #. module: delivery
-#: field:delivery.carrier,available:0
-msgid "Available"
-msgstr "有效的"
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Archived"
+msgstr "归档"
 
 #. module: delivery
-#: view:delivery.carrier:delivery.view_delivery_carrier_form
-#: view:delivery.carrier:delivery.view_delivery_carrier_tree
-#: field:delivery.grid,carrier_id:0
+#: selection:delivery.carrier,delivery_type:0
+msgid "Based on Rules"
+msgstr "根据规则"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_weight_bulk
+msgid "Bulk Weight"
+msgstr "散重"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_quant_package_shipping_weight
+msgid ""
+"Can be changed during the 'put in pack' to adjust the weight of the "
+"shipping."
+msgstr "可以在“加入包装”时调节航运的重量。"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+msgid "Cancel"
+msgstr "取消"
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_delivery_carrier
-#: field:stock.picking,carrier_id:0 view:website:stock.report_picking
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_carrier_id
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_package_carrier_type
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_id
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
-msgstr "承运方"
+msgstr "承运商"
 
 #. module: delivery
-#: view:stock.picking:delivery.view_picking_withcarrier_out_form
-msgid "Carrier Information"
-msgstr "承运方信息"
+#: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid "Check price"
+msgstr ""
 
 #. module: delivery
-#: field:stock.picking,carrier_tracking_ref:0
-msgid "Carrier Tracking Ref"
-msgstr "承运方跟踪号"
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid "Click to define a new delivery method."
+msgstr "点击创建一个新的运输方式"
 
 #. module: delivery
-#: help:delivery.carrier,use_detailed_pricelist:0
-msgid ""
-"Check this box if you want to manage delivery prices that depends on the "
-"destination, the weight, the total of the order, etc."
-msgstr "如果要根据目的地、重量、订单总价来管理运费，请勾选这里。"
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_company_id
+msgid "Company"
+msgstr "公司"
 
 #. module: delivery
-#: help:sale.order,carrier_id:0
-msgid ""
-"Complete this field if you plan to invoice the shipping based on picking."
-msgstr "完成此字段， 如果您计划基于分拣为送货开票。"
-
-#. module: delivery
-#: view:delivery.grid.line:delivery.view_delivery_grid_line_form
+#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Condition"
 msgstr "条件"
 
 #. module: delivery
-#: field:delivery.grid.line,standard_price:0
-msgid "Cost Price"
-msgstr "成本价"
+#: model:ir.model,name:delivery.model_res_partner
+msgid "Contact"
+msgstr "联系人"
 
 #. module: delivery
-#: view:delivery.grid:delivery.view_delivery_grid_form
-#: field:delivery.grid,country_ids:0
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_country_ids
 msgid "Countries"
 msgstr "国家"
 
 #. module: delivery
-#: field:delivery.carrier,create_uid:0 field:delivery.grid,create_uid:0
-#: field:delivery.grid.line,create_uid:0
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_create_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_create_uid
 msgid "Created by"
 msgstr "创建人"
 
 #. module: delivery
-#: field:delivery.carrier,create_date:0 field:delivery.grid,create_date:0
-#: field:delivery.grid.line,create_date:0
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_create_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_create_date
 msgid "Created on"
 msgstr "创建时间"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:162
-#, python-format
-msgid "Default price"
-msgstr "默认价格"
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_debug_logging
+msgid "Debug logging"
+msgstr ""
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -172,280 +273,446 @@ msgid "Delivery"
 msgstr "交货"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_delivery_grid
-msgid "Delivery Grid"
-msgstr "交货网络"
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Delivery Carrier"
+msgstr "交货承运商"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_delivery_grid_line
-msgid "Delivery Grid Line"
-msgstr "交货网络行"
+#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+msgid "Delivery Cost"
+msgstr ""
 
 #. module: delivery
-#: field:delivery.carrier,grids_id:0
-msgid "Delivery Grids"
-msgstr "交货网络"
+#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+msgid "Delivery Information"
+msgstr "交货信息"
 
 #. module: delivery
-#: field:delivery.carrier,name:0 field:res.partner,property_delivery_carrier:0
-#: field:sale.order,carrier_id:0
+#: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_message
+msgid "Delivery Message"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
+#: model:ir.model.fields,field_description:delivery.field_res_users_property_delivery_carrier_id
+#: model:ir.model.fields,field_description:delivery.field_sale_order_carrier_id
 msgid "Delivery Method"
-msgstr "交货方式"
+msgstr "交货方法"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
+#: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
+#: model:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Delivery Methods"
 msgstr "交货方式"
 
 #. module: delivery
-#: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
-#: model:ir.ui.menu,name:delivery.menu_action_delivery_grid_form
-msgid "Delivery Pricelist"
-msgstr "交货价格表"
+#: model:ir.model,name:delivery.model_choose_delivery_package
+msgid "Delivery Package Selection Wizard"
+msgstr ""
 
 #. module: delivery
-#: field:delivery.carrier,product_id:0
+#: model:ir.actions.act_window,name:delivery.action_delivery_packaging_view
+#: model:ir.ui.menu,name:delivery.menu_delivery_packagings
+#: model:ir.ui.view,arch_db:delivery.product_packaging_delivery_tree
+msgid "Delivery Packages"
+msgstr "交货包裹"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_delivery_packaging_id
+#: model:ir.ui.view,arch_db:delivery.product_packaging_delivery_form
+msgid "Delivery Packaging"
+msgstr "交货包装"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_delivery_price_rule
+msgid "Delivery Price Rules"
+msgstr "运输价格规则"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_id
 msgid "Delivery Product"
 msgstr "交货产品"
 
 #. module: delivery
-#: model:product.template,name:delivery.product_product_delivery_product_template
-msgid "Delivery by Poste"
-msgstr "邮政交货"
+#: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_rating_success
+msgid "Delivery Rating Success"
+msgstr ""
 
 #. module: delivery
-#: view:delivery.carrier:delivery.view_delivery_carrier_form
-#: view:delivery.grid:delivery.view_delivery_grid_form
-#: view:delivery.grid:delivery.view_delivery_grid_tree
-msgid "Delivery grids"
-msgstr "交货网络"
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Destination Availability"
+msgstr ""
 
 #. module: delivery
-#: view:delivery.carrier:delivery.view_delivery_carrier_form
-#: view:delivery.grid:delivery.view_delivery_grid_form
-msgid "Destination"
-msgstr "目的地"
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_sequence
+msgid "Determine the display order"
+msgstr "决定显示顺序"
 
 #. module: delivery
-#: selection:delivery.grid.line,price_type:0
-msgid "Fixed"
-msgstr "固定的"
+#: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
+msgid "Discard"
+msgstr "放弃"
 
 #. module: delivery
-#: field:delivery.carrier,free_if_more_than:0
-msgid "Free If Order Total Amount Is More Than"
-msgstr "免费，如果订单总金额多于"
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_display_name
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_display_name
+msgid "Display Name"
+msgstr "显示名称"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:151
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
+"                UPS Express, UPS Standard) with a set of pricing rules attached\n"
+"                to each method."
+msgstr ""
+"每一个承运人(例如UPS)能有几种不同的运输方式(例如UPS快运, UPS 标准)\n"
+"并且每种方式都相应的一套定价规则"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_prod_environment
+msgid "Environment"
+msgstr "环境"
+
+#. module: delivery
+#: code:addons/delivery/models/delivery_grid.py:50
+#: code:addons/delivery/models/delivery_grid.py:109
 #, python-format
-msgid "Free if more than %.2f"
-msgstr "金额高于 %.2f 时，免费"
+msgid "Error: no matching grid."
+msgstr ""
 
 #. module: delivery
-#: view:delivery.carrier:delivery.view_delivery_carrier_form
-msgid "General Information"
-msgstr "一般信息"
+#: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_price
+msgid "Estimated Delivery Price"
+msgstr "预估运输价格"
 
 #. module: delivery
-#: help:delivery.grid.line,sequence:0
-msgid "Gives the sequence order when calculating delivery grid."
-msgstr "提供序列号用于运输网络列表排序"
+#: model:ir.model.fields,help:delivery.field_sale_order_carrier_id
+msgid "Fill this field if you plan to invoice the shipping based on picking."
+msgstr "如果你打算根据发货的实际数量填写账单的话，就填写这一字段"
 
 #. module: delivery
-#: help:delivery.grid,sequence:0
-msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr "输入序列用于在交货网络列表上排序"
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid ""
+"Filling this form allows you to filter delivery carriers according to the "
+"delivery address of your customer."
+msgstr "填写此表，你可以根据你的客户的送货地址进行过滤。"
 
 #. module: delivery
-#: field:delivery.grid.line,grid_id:0
-msgid "Grid"
-msgstr "网络"
+#: selection:delivery.carrier,delivery_type:0
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_fixed_price
+msgid "Fixed Price"
+msgstr "固定价格"
 
 #. module: delivery
-#: field:delivery.grid,line_ids:0
-msgid "Grid Line"
-msgstr "网络明细"
+#: model:product.product,name:delivery.product_product_delivery
+#: model:product.template,name:delivery.product_product_delivery_product_template
+msgid "Free delivery charges"
+msgstr "免费运输"
 
 #. module: delivery
-#: view:delivery.grid.line:delivery.view_delivery_grid_line_form
-#: view:delivery.grid.line:delivery.view_delivery_grid_line_tree
-msgid "Grid Lines"
-msgstr "网络明细"
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_free_over
+msgid "Free if order amount is above"
+msgstr ""
 
 #. module: delivery
-#: field:delivery.grid,name:0
-msgid "Grid Name"
-msgstr "网络名"
+#: selection:delivery.carrier,integration_level:0
+msgid "Get Rate"
+msgstr ""
 
 #. module: delivery
-#: view:delivery.carrier:delivery.view_delivery_carrier_form
-#: view:delivery.grid:delivery.view_delivery_grid_form
-msgid "Grid definition"
-msgstr "网络定义"
+#: selection:delivery.carrier,integration_level:0
+msgid "Get Rate and Create Shipment"
+msgstr ""
 
 #. module: delivery
-#: field:delivery.carrier,id:0 field:delivery.grid,id:0
-#: field:delivery.grid.line,id:0
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Group By"
+msgstr "分组"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_product_hs_code
+#: model:ir.model.fields,field_description:delivery.field_product_template_hs_code
+msgid "HS Code"
+msgstr "HS编码"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_height
+msgid "Height"
+msgstr "高度"
+
+#. module: delivery
+#: sql_constraint:product.packaging:0
+msgid "Height must be positive"
+msgstr "高度必须是正数。"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_id
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_id
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_id
 msgid "ID"
 msgstr "ID"
 
 #. module: delivery
-#: help:delivery.carrier,active:0
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_free_over
 msgid ""
-"If the active field is set to False, it will allow you to hide the delivery "
-"carrier without removing it."
-msgstr "如果生效设为false，可以不必删除承运方就隐藏它。"
+"If the order total amount (shipping excluded) is above or equal to this "
+"value, the customer benefits from a free shipping"
+msgstr ""
 
 #. module: delivery
-#: help:delivery.grid,active:0
+#: code:addons/delivery/models/delivery_carrier.py:125
+#, python-format
 msgid ""
-"If the active field is set to False, it will allow you to hide the delivery "
-"grid without removing it."
-msgstr "如果生效字段为false，交货网络将隐藏而不是删除。"
+"Info:\n"
+"The shipping is free because the order amount exceeds %.2f.\n"
+"(The actual shipping cost is: %.2f)"
+msgstr ""
 
 #. module: delivery
-#: help:delivery.carrier,free_if_more_than:0
-msgid ""
-"If the order is more expensive than a certain amount, the customer can "
-"benefit from a free shipping"
-msgstr "如果订单金额高于某个特定金额，客户可以享受免费送货"
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Install more Providers"
+msgstr "增加更多供应商"
 
 #. module: delivery
-#: view:sale.order:delivery.view_order_withcarrier_form
-msgid ""
-"If you don't 'Add in Quote', the exact price will be computed when invoicing"
-" based on delivery order(s)."
-msgstr "如果您没有 '添加引用 '，当基于交货单(s)开票时，将计算精确的价格。"
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_integration_level
+msgid "Integration Level"
+msgstr "基础等级"
 
 #. module: delivery
-#: field:sale.order.line,is_delivery:0
+#: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
+msgid "Invoice Shipping on Delivery"
+msgstr "基于交货单填写账单"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line_is_delivery
 msgid "Is a Delivery"
 msgstr "是交货"
 
 #. module: delivery
-#: help:delivery.carrier,available:0
-msgid "Is the carrier method possible with the current order."
-msgstr "对当前订单这种发运方法可行吗。"
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package___last_update
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier___last_update
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule___last_update
+msgid "Last Modified on"
+msgstr "最后修改时间"
 
 #. module: delivery
-#: help:delivery.carrier,normal_price:0
-msgid ""
-"Keep empty if the pricing depends on the advanced pricing per destination"
-msgstr "默认运费的价格，如果根据目的地定价，这里留空。"
-
-#. module: delivery
-#: field:delivery.carrier,write_uid:0 field:delivery.grid,write_uid:0
-#: field:delivery.grid.line,write_uid:0
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_write_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_write_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_write_uid
 msgid "Last Updated by"
-msgstr "最近更新者"
+msgstr "最后更新者"
 
 #. module: delivery
-#: field:delivery.carrier,write_date:0 field:delivery.grid,write_date:0
-#: field:delivery.grid.line,write_date:0
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_write_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_write_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_write_date
 msgid "Last Updated on"
-msgstr "最近更新日期"
+msgstr "最后更新时间"
 
 #. module: delivery
-#: field:delivery.grid.line,max_value:0
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_length
+msgid "Length"
+msgstr "长度"
+
+#. module: delivery
+#: sql_constraint:product.packaging:0
+msgid "Length must be positive"
+msgstr "长度必须大于0"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_debug_logging
+msgid "Log requests in order to ease debugging"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+msgid "Manage Package Type"
+msgstr "管理封装类型"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_margin
+msgid "Margin"
+msgstr "边距"
+
+#. module: delivery
+#: sql_constraint:delivery.carrier:0
+msgid "Margin cannot be lower than -100%"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Margin on Rate"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
+msgid "Max Weight"
+msgstr "最大重量"
+
+#. module: delivery
+#: sql_constraint:product.packaging:0
+msgid "Max Weight must be positive"
+msgstr "最大重量必须是正数"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_max_value
 msgid "Maximum Value"
 msgstr "最大值"
 
 #. module: delivery
-#: field:delivery.grid.line,name:0
+#: model:ir.model.fields,help:delivery.field_product_packaging_max_weight
+msgid "Maximum weight shippable in this packaging"
+msgstr "可交付最大重量包装。"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_name
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Name"
 msgstr "名称"
 
 #. module: delivery
-#: field:stock.picking,weight_net:0
-msgid "Net Weight"
-msgstr "净重"
+#: selection:product.packaging,package_carrier_type:0
+msgid "No carrier integration"
+msgstr "无承运商集成"
 
 #. module: delivery
-#: field:stock.move,weight_net:0
-msgid "Net weight"
-msgstr "净重"
-
-#. module: delivery
-#: code:addons/delivery/sale.py:71
+#: code:addons/delivery/models/sale_order.py:73
 #, python-format
-msgid "No Grid Available!"
-msgstr "没有可用的网络！"
+msgid "No carrier set for this order."
+msgstr "此订单没有设置承运商"
 
 #. module: delivery
-#: code:addons/delivery/sale.py:71
+#: code:addons/delivery/models/delivery_grid.py:100
 #, python-format
-msgid "No grid matching for this carrier!"
-msgstr "此承运者没有可用的网络！"
+msgid "No price rule matching this order; delivery cost cannot be computed."
+msgstr ""
 
 #. module: delivery
-#: field:delivery.carrier,normal_price:0
-msgid "Normal Price"
-msgstr "默认价格"
+#: model:product.product,name:delivery.product_product_delivery_normal
+#: model:product.template,name:delivery.product_product_delivery_normal_product_template
+msgid "Normal Delivery Charges"
+msgstr "正常运输成本"
 
 #. module: delivery
-#: field:stock.picking,number_of_packages:0
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_number_of_packages
 msgid "Number of Packages"
 msgstr "包裹件数"
 
 #. module: delivery
-#: field:delivery.grid.line,operator:0
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_operator
 msgid "Operator"
-msgstr "运算符"
+msgstr "操作员"
 
 #. module: delivery
-#: code:addons/delivery/sale.py:74
+#: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
+msgid "Package"
+msgstr "包裹"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
+msgid "Package Code"
+msgstr "封装代码"
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:34
+#: code:addons/delivery/models/stock_picking.py:124
 #, python-format
-msgid "Order not in Draft State!"
-msgstr "单据不在草稿状态！"
+msgid "Package Details"
+msgstr "包装详情"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_res_partner
-msgid "Partner"
-msgstr "业务伙伴"
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
+msgid "Packages"
+msgstr "包裹"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_stock_picking
-msgid "Picking List"
-msgstr "分拣清单"
+#: model:ir.model,name:delivery.model_product_packaging
+msgid "Packaging"
+msgstr "包装"
 
 #. module: delivery
-#: model:ir.actions.act_window,name:delivery.action_picking_tree
-msgid "Picking to be invoiced"
-msgstr "要开票的装箱单"
+#: model:ir.model,name:delivery.model_stock_move_line
+msgid "Packing Operation"
+msgstr "打包作业"
 
 #. module: delivery
-#: field:delivery.carrier,price:0 selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0
+#: model:ir.model,name:delivery.model_stock_quant_package
+msgid "Physical Packages"
+msgstr "物理包裹"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:75
+#, python-format
+msgid ""
+"Please use \"Check price\" in order to compute a shipping price for this "
+"quotation."
+msgstr ""
+
+#. module: delivery
+#: selection:delivery.price.rule,variable:0
+#: selection:delivery.price.rule,variable_factor:0
 msgid "Price"
 msgstr "价格"
 
 #. module: delivery
-#: field:delivery.grid.line,price_type:0
-msgid "Price Type"
-msgstr "价格类型"
+#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
+msgid "Price Rules"
+msgstr "价格规则"
 
 #. module: delivery
-#: view:delivery.carrier:delivery.view_delivery_carrier_form
-msgid "Pricing Information"
-msgstr "价格信息"
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Pricing"
+msgstr "定价"
 
 #. module: delivery
-#: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_rule_ids
+msgid "Pricing Rules"
+msgstr "定价规则"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_product_template
+msgid "Product Template"
+msgstr "产品模板"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_type
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_delivery_type
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Provider"
+msgstr "服务商"
+
+#. module: delivery
+#: selection:delivery.price.rule,variable:0
+#: selection:delivery.price.rule,variable_factor:0
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line_product_qty
 msgid "Quantity"
 msgstr "数量"
 
 #. module: delivery
-#: field:delivery.grid.line,list_price:0
-msgid "Sale Price"
-msgstr "销售价格"
+#: model:ir.model,name:delivery.model_sale_order
+msgid "Quotation"
+msgstr "报价单"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_sale_order
-msgid "Sales Order"
-msgstr "销售订单"
+#: model:ir.model,name:delivery.model_stock_return_picking
+msgid "Return Picking"
+msgstr "退回拣货"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_list_base_price
+msgid "Sale Base Price"
+msgstr "以销售为基础的价格"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_list_price
+msgid "Sale Price"
+msgstr "销售价格"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
@@ -453,28 +720,65 @@ msgid "Sales Order Line"
 msgstr "销售订单行"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:237
+#: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
+msgid "Save"
+msgstr "保存"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+msgid "Send Confirmation Email"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+msgid "Send to Shipper"
+msgstr "发给托运人"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sequence
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_sequence
+msgid "Sequence"
+msgstr "序列"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid "Set price"
+msgstr "设置价格"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_prod_environment
+msgid "Set to True if your credentials are certified for production."
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:168
 #, python-format
 msgid ""
-"Selected product in the delivery method doesn't fulfill any of the delivery "
-"grid(s) criteria."
-msgstr "在发运方式中选择不属于任何发运标准的产品"
+"Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
+"%.2f %s"
+msgstr ""
 
 #. module: delivery
-#: field:delivery.grid,sequence:0 field:delivery.grid.line,sequence:0
-msgid "Sequence"
-msgstr "序号"
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
+msgid "Shipping Cost"
+msgstr "发货成本"
 
 #. module: delivery
-#: field:delivery.grid,zip_from:0
-msgid "Start Zip"
-msgstr "自 邮编"
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_shipping_weight
+#: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
+msgid "Shipping Weight"
+msgstr "发货重量"
 
 #. module: delivery
-#: view:delivery.grid:delivery.view_delivery_grid_form
-#: field:delivery.grid,state_ids:0
+#: model:ir.model.fields,help:delivery.field_product_product_hs_code
+#: model:ir.model.fields,help:delivery.field_product_template_hs_code
+msgid "Standardized code for international shipping and goods declaration"
+msgstr "国际航运和货物申报代码规范"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
 msgid "States"
-msgstr "省/ 州"
+msgstr "状态"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
@@ -482,106 +786,161 @@ msgid "Stock Move"
 msgstr "库存移动"
 
 #. module: delivery
-#: code:addons/delivery/stock.py:91
-#, python-format
-msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr "承运方 %s (id: %d) 没有交货网络！"
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_stock_quant_package_id
+msgid "Stock Quant Package"
+msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/sale.py:74
-#, python-format
-msgid "The order state have to be draft to add delivery lines."
-msgstr "只能对草稿状态的订单增加交货明细"
+#: model:product.product,name:delivery.product_product_delivery_poste
+#: model:product.template,name:delivery.product_product_delivery_poste_product_template
+msgid "The Poste"
+msgstr "邮政"
 
 #. module: delivery
-#: help:delivery.carrier,partner_id:0
-msgid "The partner that is doing the delivery service."
-msgstr "提供交货服务的业务伙伴"
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"These methods allow to automatically compute the delivery price\n"
+"                according to your settings; on the sales order (based on the\n"
+"                quotation) or the invoice (based on the delivery orders)."
+msgstr ""
+"这些方法能根据你的设定自动的计算运输价格；\n"
+"在销售订单中（基于报价单）或者发票中（基于发货单）"
 
 #. module: delivery
-#: help:res.partner,property_delivery_carrier:0
+#: model:ir.model.fields,help:delivery.field_res_partner_property_delivery_carrier_id
+#: model:ir.model.fields,help:delivery.field_res_users_property_delivery_carrier_id
 msgid "This delivery method will be used when invoicing from picking."
-msgstr "这个交货方式会用在当从分拣开发票时。"
+msgstr "这个交货方式会用在当从拣货开发票时。"
 
 #. module: delivery
-#: field:delivery.grid,zip_to:0
-msgid "To Zip"
-msgstr "至 邮编"
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_margin
+msgid "This percentage will be added to the shipping price."
+msgstr "这个百分比将被添加到航运价格。"
 
 #. module: delivery
-#: field:delivery.carrier,partner_id:0
-msgid "Transport Company"
-msgstr "运输公司"
+#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+msgid "Tracking"
+msgstr "追踪"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:237
-#, python-format
-msgid "Unable to fetch delivery method!"
-msgstr "不能获取发运方式！"
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
+msgid "Tracking Reference"
+msgstr "跟踪参照"
 
 #. module: delivery
-#: field:stock.move,weight_uom_id:0 field:stock.picking,weight_uom_id:0
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_url
+msgid "Tracking URL"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_picking
+msgid "Transfer"
+msgstr "调拨"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_weight_uom_id
 msgid "Unit of Measure"
-msgstr "单位"
+msgstr "计量单位"
 
 #. module: delivery
-#: help:stock.move,weight_uom_id:0
+#: model:ir.model.fields,help:delivery.field_stock_move_weight_uom_id
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
 msgstr "计量单位 是测量重量的单位"
 
 #. module: delivery
-#: help:stock.picking,weight_uom_id:0
+#: model:ir.model.fields,help:delivery.field_stock_picking_weight_uom_id
 msgid "Unit of measurement for Weight"
 msgstr "重量的计量单位"
 
 #. module: delivery
-#: selection:delivery.grid.line,price_type:0 field:delivery.grid.line,type:0
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable
 msgid "Variable"
 msgstr "可变"
 
 #. module: delivery
-#: field:delivery.grid.line,variable_factor:0
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable_factor
 msgid "Variable Factor"
 msgstr "可变系数"
 
 #. module: delivery
-#: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0 field:stock.picking,volume:0
+#: selection:delivery.price.rule,variable:0
+#: selection:delivery.price.rule,variable_factor:0
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_volume
 msgid "Volume"
 msgstr "体积"
 
 #. module: delivery
-#: code:addons/delivery/stock.py:90
-#, python-format
-msgid "Warning!"
-msgstr "警告！"
-
-#. module: delivery
-#: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0 field:stock.move,weight:0
-#: view:stock.picking:delivery.view_picking_withcarrier_out_form
-#: field:stock.picking,weight:0 view:website:stock.report_picking
+#: selection:delivery.price.rule,variable:0
+#: selection:delivery.price.rule,variable_factor:0
+#: model:ir.model.fields,field_description:delivery.field_stock_move_weight
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_weight
+#: model:ir.model.fields,field_description:delivery.field_stock_quant_package_weight
+#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Weight"
 msgstr "重量"
 
 #. module: delivery
-#: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0
+#: selection:delivery.price.rule,variable:0
+#: selection:delivery.price.rule,variable_factor:0
 msgid "Weight * Volume"
 msgstr "重量* 体积"
 
 #. module: delivery
-#: view:website:stock.report_picking
-msgid "Will be invoiced to:"
-msgstr "将会开票给："
+#: model:ir.model.fields,field_description:delivery.field_stock_move_weight_uom_id
+msgid "Weight Unit of Measure"
+msgstr "测量的重量单位"
 
 #. module: delivery
-#: view:delivery.carrier:delivery.view_delivery_carrier_form
-msgid "Zip"
-msgstr "邮政编码"
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
+msgid "Weight for Shipping"
+msgstr "航运重量"
 
 #. module: delivery
-#: view:delivery.grid.line:delivery.view_delivery_grid_line_form
-msgid "in Function of"
-msgstr "使用函数，基于"
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_width
+msgid "Width"
+msgstr "宽度"
+
+#. module: delivery
+#: sql_constraint:product.packaging:0
+msgid "Width must be positive"
+msgstr "宽度必须是正数"
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:206
+#, python-format
+msgid ""
+"You are shipping different packaging types in the same shipment.\n"
+"Packaging Types: %s"
+msgstr ""
+"你在同一批货出货不同的包装类型。\n"
+"包装类型: '%s' "
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:71
+#, python-format
+msgid "You can add delivery price only on unconfirmed quotations."
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:182
+#, python-format
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
+msgstr "快递服务商的网站对你的配送方式没有跟踪此订单的链接。"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_from
+msgid "Zip From"
+msgstr "邮编从"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_to
+msgid "Zip To"
+msgstr "邮编到"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "e.g. UPS Express"
+msgstr "例如，UPS　快递"

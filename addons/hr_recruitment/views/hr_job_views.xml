@@ -1,0 +1,139 @@
+<odoo>
+
+    <record model="ir.actions.act_window" id="action_hr_job_new_application">
+        <field name="name">New Application</field>
+        <field name="res_model">hr.applicant</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
+    </record>
+
+    <record id="view_hr_job_kanban" model="ir.ui.view">
+        <field name="name">hr.job.kanban</field>
+        <field name="model">hr.job</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard o_hr_recruitment_kanban" on_create="hr_recruitment.create_job_simple">
+                <field name="name"/>
+                <field name="alias_name"/>
+                <field name="alias_domain"/>
+                <field name="department_id"/>
+                <field name="no_of_recruitment"/>
+                <field name="color"/>
+                <field name="no_of_hired_employee"/>
+                <field name="manager_id"/>
+                <field name="state"/>
+                <field name="user_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)}">
+                            <div t-attf-class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary"><t t-esc="record.name.value"/></div>
+                                    <div t-if="record.alias_name.value and record.alias_domain.value and record.state.raw_value == 'recruit'" class="o_secondary o_job_alias">
+                                        <small> <i class="fa fa-envelope-o"></i> <field name="alias_id"/> </small>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_manage_button_section">
+                                    <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" /></a>
+                                </div>
+                            </div>
+                            <div class="container o_kanban_card_content">
+                                <t t-if="record.state.raw_value == 'recruit'">
+                                    <div class="row">
+                                        <div class="col-xs-6 o_kanban_primary_left">
+                                            <button class="btn btn-primary" name="%(action_hr_job_applications)d" type="action">Application(s)</button>
+                                        </div>
+                                        <div class="col-xs-6 o_kanban_primary_right">
+                                            <a name="action_get_attachment_tree_view" type="object">
+                                                Documents
+                                            </a>
+                                            <div class="row" name="recruitment">
+                                                <div class="col-xs-12">
+                                                    <a t-if="record.state.raw_value == 'recruit'" name="set_open" type="object">Recruitment Done</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12 o_kanban_primary_bottom bottom_block">
+                                            <field name="no_of_hired_employee" widget="progressbar" title="Hired Employees" options="{'current_value': 'no_of_hired_employee', 'max_value': 'no_of_recruitment', 'editable': true, 'edit_max_value': true}"/>
+                                        </div>
+                                    </div>
+                                </t>
+                                <t t-if="record.state.raw_value == 'open'">
+                                    <div class="row">
+                                        <div class="col-xs-12 o_kanban_primary_left">
+                                            <button class="btn btn-secondary" name="set_recruit" type="object">Start Recruitment</button>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div><div class="container o_kanban_card_manage_pane">
+                                <div class="row">
+                                    <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_view">
+                                        <div class="o_kanban_card_manage_title">
+                                            <span>View</span>
+                                        </div>
+
+                                        <div>
+                                            <a name="%(action_hr_job_applications)d" type="action">Applications</a>
+                                        </div>
+                                        <div name="documents">
+                                            <a name="action_get_attachment_tree_view" type="object">Documents</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_new">
+                                        <div class="o_kanban_card_manage_title">
+                                            <span>New</span>
+                                        </div>
+
+                                        <div>
+                                            <a name="%(action_hr_job_new_application)d" type="action">Application</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_reports">
+                                        <div class="o_kanban_card_manage_title">
+                                            <span>Reporting</span>
+                                        </div>
+
+                                        <div>
+                                            <a name="%(action_hr_recruitment_report_filtered_job)d" type="action">Recruitment</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                                    <div class="col-xs-8">
+                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                    </div>
+                                    <div class="col-xs-4 text-right">
+                                        <a type="edit">Settings</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- hr related job position menu action -->
+    <record model="ir.actions.act_window" id="action_hr_job">
+        <field name="name">Job Positions</field>
+        <field name="res_model">hr.job</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="view_id" ref="hr_recruitment.view_hr_job_kanban"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+              Click here to create a new job position.
+          </p><p>
+              Once a job position is created, you can track related applications
+              and manage the recruitment process.
+          </p>
+        </field>
+    </record>
+
+    <menuitem parent="menu_hr_recruitment_root" id="menu_hr_job_position" action="action_hr_job" sequence="1"/>
+</odoo>

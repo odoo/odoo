@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="product_template_form_view_invoice_policy">
+        <field name="name">product.template.invoice.policy</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="account.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <group name="invoicing" position="attributes">
+                <attribute name="invisible" eval="False"/>
+            </group>
+        </field>
+    </record>
+</odoo>

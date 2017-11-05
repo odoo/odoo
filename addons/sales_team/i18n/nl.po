@@ -3,15 +3,19 @@
 # * sales_team
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Eric Geens <ericgeens@yahoo.com>, 2017
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
+# Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-17 08:02+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-8/language/nl/)\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,279 +23,420 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sales_team
-#: model:ir.actions.act_window,help:sales_team.crm_case_section_act
-#: model:ir.actions.act_window,help:sales_team.crm_case_section_salesteams_act
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Click here to define a new sales team.\n"
-"                </p><p>\n"
-"                    Use sales team to organize your different salespersons or\n"
-"                    departments into separate teams. Each team will work in\n"
-"                    its own list of opportunities.\n"
-"                </p>\n"
-"            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                    Klik hier om een verkoopteam aan te maken.\n                </p><p>\n                    Gebruik verkoopteams voor het onderverdelen van verschillende verkopers\n                    of afdelingen in verschillende teams. Ieder team werkt\n                    met zijn eigen lijst van prospects.\n                </p>\n            "
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+msgid "<span>New</span>"
+msgstr "<span>Nieuw</span>"
 
 #. module: sales_team
-#: field:crm.case.section,active:0
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+msgid "<span>Reporting</span>"
+msgstr "<span>Rapportering</span>"
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+msgid "<span>View</span>"
+msgstr "<span>Bekijk</span>"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_active
 msgid "Active"
 msgstr "Actief"
 
 #. module: sales_team
-#: help:sale.config.settings,group_multi_salesteams:0
-msgid "Allows you to use Sales Teams to manage your leads and opportunities."
-msgstr "Geeft u de mogelijkheid om verkoopteams te gebruiken voor het beheren van leads en prospects"
+#: model:ir.actions.act_window,name:sales_team.mail_activity_type_action_config_sales
+msgid "Activity Types"
+msgstr "Soorten activiteiten"
 
 #. module: sales_team
-#: field:crm.case.section,child_ids:0
-msgid "Child Teams"
-msgstr "Onderliggende teams"
+#: model:crm.team,name:sales_team.crm_team_1
+msgid "America"
+msgstr "Amerika"
 
 #. module: sales_team
-#: field:crm.case.section,code:0
-msgid "Code"
-msgstr "Code"
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+msgid "Archived"
+msgstr "Gearchiveerd"
 
 #. module: sales_team
-#: field:crm.case.section,color:0
+#: selection:crm.team,dashboard_graph_type:0
+msgid "Bar"
+msgstr "Bar"
+
+#. module: sales_team
+#: code:addons/sales_team/models/crm_team.py:269
+#, python-format
+msgid "Big Pretty Button :)"
+msgstr "Grote mooie knop :)"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_user_id
+msgid "Channel Leader"
+msgstr "Kanaalleider"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member_ids
+msgid "Channel Members"
+msgstr "Kanaalleden"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_team_type
+msgid "Channel Type"
+msgstr "Kanaalsoort"
+
+#. module: sales_team
+#: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
+#: model:ir.actions.act_window,help:sales_team.sales_team_config_action
+msgid "Click here to define a new sales channel."
+msgstr "Klik hier om een nieuw verkoopteam te definiëren."
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_color
 msgid "Color Index"
 msgstr "Kleur index"
 
 #. module: sales_team
-#: field:crm.case.section,create_uid:0
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_company_id
+msgid "Company"
+msgstr "Bedrijf"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_sale_config
+msgid "Configuration"
+msgstr "Configuratie"
+
+#. module: sales_team
+#: model:ir.model,name:sales_team.model_res_partner
+msgid "Contact"
+msgstr "Contact"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_model
+msgid "Content"
+msgstr "Inhoud"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_create_uid
 msgid "Created by"
 msgstr "Aangemaakt door"
 
 #. module: sales_team
-#: field:crm.case.section,create_date:0
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_create_date
 msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: sales_team
-#: help:crm.case.section,message_last_post:0
-msgid "Date of the last message posted on the record."
-msgstr "Datum van het laatste bericht verstuurt op deze regel."
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_currency_id
+msgid "Currency"
+msgstr "Valuta"
 
 #. module: sales_team
-#: field:res.users,default_section_id:0
-msgid "Default Sales Team"
-msgstr "Standaard verkoopteam"
+#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Dashboard"
+msgstr "Dashboard"
 
 #. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_salesteams_view_kanban
-msgid "Delete"
-msgstr "Verwijderen"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_button_name
+msgid "Dashboard Button"
+msgstr "Dashboard knop"
 
 #. module: sales_team
-#: field:crm.case.section,note:0
-msgid "Description"
-msgstr "Omschrijving"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_data
+msgid "Dashboard Graph Data"
+msgstr "Dashboard grafiek data"
 
 #. module: sales_team
-#: model:crm.case.section,name:sales_team.section_sales_department
-msgid "Direct Sales"
-msgstr "Directe verkoop"
+#: selection:crm.team,dashboard_graph_group:0
+msgid "Day"
+msgstr "Dag"
 
 #. module: sales_team
-#: constraint:crm.case.section:0
-msgid "Error ! You cannot create recursive Sales team."
-msgstr "Fout ! U kunt geen recursief verkoopteam maken."
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_display_name
+msgid "Display Name"
+msgstr "Schermnaam"
 
 #. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_view_form
+#: model:crm.team,name:sales_team.team_sales_department
+msgid "Europe"
+msgstr "Europa"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_favorite_user_ids
+msgid "Favorite Members"
+msgstr "Favoriete leden"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_is_favorite
+msgid ""
+"Favorite teams to display them in the dashboard and access them easily."
+msgstr ""
+"Favoriete teams om ze te tonen in het dashboard en gemakkelijk toegang tot "
+"deze te krijgen."
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
-msgstr "Volg dit verkoopteam om automatisch de afspraken verbonden aan gebruikers van dit team de volgen."
+msgstr ""
+"Volg dit verkoopteam om automatisch de afspraken verbonden aan gebruikers "
+"van dit team de volgen."
 
 #. module: sales_team
-#: field:crm.case.section,message_follower_ids:0
-msgid "Followers"
-msgstr "Volgers"
+#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Graph"
+msgstr "Diagram"
 
 #. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_salesteams_search
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Group By..."
 msgstr "Groepeer op..."
 
 #. module: sales_team
-#: help:crm.case.section,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr "Bevat de samenvatting van de chatter (aantal berichten,...). Deze samenvatting is direct in html formaat om zo in de kanban weergave te worden ingevoegd."
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_group
+msgid "Group by"
+msgstr "Groepeer op"
 
 #. module: sales_team
-#: field:crm.case.section,id:0
+#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_group
+msgid "How this channel's dashboard graph will group the results."
+msgstr "Hoe dit kanaal zijn dashboard grafieken het resultaat groeperen."
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_id
 msgid "ID"
 msgstr "ID"
 
 #. module: sales_team
-#: help:crm.case.section,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
-
-#. module: sales_team
-#: help:crm.case.section,active:0
+#: model:ir.model.fields,help:sales_team.field_res_partner_team_id
+#: model:ir.model.fields,help:sales_team.field_res_users_team_id
 msgid ""
-"If the active field is set to true, it will allow you to hide the sales team"
-" without removing it."
-msgstr "Als het actief veld is aangevinkt, kunt u het verkoopteam verbergen zonder het te verwijderen."
+"If set, this sales channel will be used for sales and assignations related "
+"to this partner"
+msgstr ""
 
 #. module: sales_team
-#: model:crm.case.section,name:sales_team.crm_case_section_1
-msgid "Indirect Sales"
-msgstr "Indirecte verkoop"
+#: model:ir.model.fields,help:sales_team.field_crm_team_active
+msgid ""
+"If the active field is set to false, it will allow you to hide the sales "
+"channel without removing it."
+msgstr ""
+"Als het actief veld is ingesteld als onwaar, kunt u het verkoopteam "
+"verbergen zonder het te verwijderen."
 
 #. module: sales_team
-#: field:crm.case.section,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Is een volger"
+#: selection:crm.team,dashboard_graph_model:0
+msgid "Invoices"
+msgstr "Facturen"
 
 #. module: sales_team
-#: field:crm.case.section,message_last_post:0
-msgid "Last Message Date"
-msgstr "Laatste bericht datum"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team___last_update
+msgid "Last Modified on"
+msgstr "Laatst gewijzigd op"
 
 #. module: sales_team
-#: field:crm.case.section,write_uid:0
+#: selection:crm.team,dashboard_graph_period:0
+msgid "Last Month"
+msgstr " Vorige maand"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_write_uid
 msgid "Last Updated by"
-msgstr "Laatst aangepast door"
+msgstr "Laatst bijgewerkt door"
 
 #. module: sales_team
-#: field:crm.case.section,write_date:0
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_write_date
 msgid "Last Updated on"
-msgstr "Laatst aangepast op"
+msgstr "Laatst bijgewerkt op"
 
 #. module: sales_team
-#: view:sale.config.settings:sales_team.view_sale_config_settings
-msgid "Manage Sales Teams"
-msgstr "Beheer verkoopteams"
+#: selection:crm.team,dashboard_graph_period:0
+msgid "Last Week"
+msgstr "Vorige week"
 
 #. module: sales_team
-#: model:crm.case.section,name:sales_team.crm_case_section_2
-msgid "Marketing"
-msgstr "Marketing"
+#: selection:crm.team,dashboard_graph_period:0
+msgid "Last Year"
+msgstr "Vorige jaar"
 
 #. module: sales_team
-#: field:crm.case.section,message_ids:0
-msgid "Messages"
-msgstr "Berichten"
+#: selection:crm.team,dashboard_graph_type:0
+msgid "Line"
+msgstr "Regel"
 
 #. module: sales_team
-#: help:crm.case.section,message_ids:0
-msgid "Messages and communication history"
-msgstr "Berichten en communicatie historie"
+#: model:res.groups,name:sales_team.group_sale_manager
+msgid "Manager"
+msgstr "Manager"
 
 #. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_salesteams_search
-msgid "My Salesteams"
-msgstr "Mijn verkoopteams"
+#: selection:crm.team,dashboard_graph_group:0
+msgid "Month"
+msgstr "Maand"
 
 #. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_view_form
-msgid "Notes"
-msgstr "Opmerkingen"
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+msgid "My Favorites"
+msgstr "Mijn favorieten"
 
 #. module: sales_team
-#: field:sale.config.settings,group_multi_salesteams:0
-msgid "Organize Sales activities into multiple Sales Teams"
-msgstr "Organiseer verkoopactiviteiten in meerdere verkoopteams"
+#: code:addons/sales_team/models/crm_team.py:255
+#, python-format
+msgid "Not Defined"
+msgstr "Niet gedefinieerd"
 
 #. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_salesteams_search
-msgid "Parent Sales Teams"
-msgstr "Bovenliggende verkoopteams"
+#: selection:crm.team,dashboard_graph_model:0
+msgid "Pipeline"
+msgstr "Pijplijn"
 
 #. module: sales_team
-#: field:crm.case.section,parent_id:0
-msgid "Parent Team"
-msgstr "Bovenliggende team"
+#: selection:crm.team,team_type:0
+msgid "Point of Sale"
+msgstr "Kassa"
 
 #. module: sales_team
-#: model:ir.model,name:sales_team.model_res_partner
-msgid "Partner"
-msgstr "Relatie"
-
-#. module: sales_team
-#: field:crm.case.section,change_responsible:0
-msgid "Reassign Escalated"
-msgstr "Opnieuw toewijzen bij escalatie"
-
-#. module: sales_team
-#: field:crm.case.section,reply_to:0
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_reply_to
 msgid "Reply-To"
 msgstr "Antwoord aan"
 
 #. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_view_form
-#: view:crm.case.section:sales_team.crm_case_section_view_tree
-#: field:crm.case.section,name:0 field:res.partner,section_id:0
-msgid "Sales Team"
-msgstr "Verkoopteam"
+#: selection:crm.team,dashboard_graph_model:0 selection:crm.team,team_type:0
+msgid "Sales"
+msgstr "Verkoop"
 
 #. module: sales_team
-#: model:ir.actions.act_window,name:sales_team.crm_case_section_act
-#: model:ir.actions.act_window,name:sales_team.crm_case_section_salesteams_act
-#: model:ir.model,name:sales_team.model_crm_case_section
-#: model:ir.ui.menu,name:sales_team.menu_sales_team_act
-#: view:sale.config.settings:sales_team.view_sale_config_settings
-msgid "Sales Teams"
-msgstr "Verkoopteams"
+#: model:ir.model,name:sales_team.model_crm_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_name
+#: model:ir.model.fields,field_description:sales_team.field_res_partner_team_id
+#: model:ir.model.fields,field_description:sales_team.field_res_users_sale_team_id
+#: model:ir.model.fields,field_description:sales_team.field_res_users_team_id
+#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
+#: model:ir.ui.view,arch_db:sales_team.crm_team_view_tree
+msgid "Sales Channel"
+msgstr "Verkoopkanaal"
 
 #. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_salesteams_view_kanban
-msgid "Sales Teams Settings"
-msgstr "Verkoopteams instellingen"
+#: model:ir.model.fields,help:sales_team.field_res_users_sale_team_id
+msgid ""
+"Sales Channel the user is member of. Used to compute the members of a sales "
+"channel through the inverse one2many"
+msgstr ""
+"Verkoopkanaal waarvan de gebruiker lid is. Gebruikt om de leden te berekenen"
+" van een verkoopkanaal via het one2many veld"
 
 #. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_view_form
-msgid "Sales team"
-msgstr "Verkoopteam"
+#: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
+#: model:ir.actions.act_window,name:sales_team.sales_team_config_action
+msgid "Sales Channels"
+msgstr "Verkoopkanalen"
 
 #. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_view_form
-msgid "Salesteam"
-msgstr "Verkoopteam"
+#: selection:crm.team,dashboard_graph_group:0
+msgid "Salesperson"
+msgstr "Verkoper"
 
 #. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_salesteams_search
+#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Salesteam name..."
+msgstr "Naam verkoopteam..."
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Salesteams Search"
 msgstr "Zoek verkoopteams"
 
 #. module: sales_team
-#: field:crm.case.section,message_summary:0
-msgid "Summary"
-msgstr "Samenvatting"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_period
+msgid "Scale"
+msgstr "Schaal"
 
 #. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_salesteams_search
-#: field:crm.case.section,user_id:0
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+msgid "Settings"
+msgstr "Instellingen"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_is_favorite
+msgid "Show on dashboard"
+msgstr "Weergeven op dashboard"
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Team Leader"
 msgstr "Teamleider"
 
 #. module: sales_team
-#: view:crm.case.section:sales_team.crm_case_section_view_form
-#: field:crm.case.section,member_ids:0
+#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
 msgstr "Teamleden"
 
 #. module: sales_team
-#: sql_constraint:crm.case.section:0
-msgid "The code of the sales team must be unique !"
-msgstr "De verkoopteam code moet uniek zijn!"
+#: model:ir.model.fields,help:sales_team.field_crm_team_color
+msgid "The color of the channel"
+msgstr "De kleur van het kanaal"
 
 #. module: sales_team
-#: help:crm.case.section,reply_to:0
+#: model:ir.model.fields,help:sales_team.field_crm_team_reply_to
 msgid ""
 "The email address put in the 'Reply-To' of all emails sent by Odoo about "
-"cases in this sales team"
-msgstr "Het e-mail adres wat in het 'antwoord-aan' veld wordt gezet van alle e-mails die door Odoo worden verstuurt over werkzaamheden van het verkoopteam."
+"cases in this sales channel"
+msgstr ""
 
 #. module: sales_team
-#: field:crm.case.section,message_unread:0
-msgid "Unread Messages"
-msgstr "Ongelezen berichten"
+#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_model
+msgid "The graph this channel will display in the Dashboard.\n"
+msgstr "De grafiek die dit kanaal toont in het dashboard.\n"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_period
+msgid "The time period this channel's dashboard graph will consider."
+msgstr ""
+"De tijdsperiode waar dit kanaal zijn grafieken dashboard rekening mee houdt."
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_type
+msgid "The type of graph this channel will display in the dashboard."
+msgstr "Het type grafiek dat dit kanaal zal tonen in het dashboard."
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_team_type
+msgid ""
+"The type of this channel, it will define the resources this channel uses."
+msgstr ""
+"De soort van dit kanaal, het definieert de resources die dit kanaal "
+"gebruikt."
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_type
+msgid "Type"
+msgstr "Soort"
+
+#. module: sales_team
+#: code:addons/sales_team/models/crm_team.py:146
+#: code:addons/sales_team/models/crm_team.py:173
+#, python-format
+msgid "Undefined graph model for Sales Channel: %s"
+msgstr "ongedefinieerd grafiek model voor verkoopkanaal: %s"
+
+#. module: sales_team
+#: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
+#: model:ir.actions.act_window,help:sales_team.sales_team_config_action
+msgid ""
+"Use sales channels to organize your sales departments. \n"
+"                    Each channel will work with a separate pipeline."
+msgstr ""
+"Gebruik verkoopkanalen om uw verkoopafdelingen te organiseren.\n"
+"Elk kanaal werkt met een apart kanaal."
+
+#. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_salesman_all_leads
+msgid "User: All Documents"
+msgstr "Gebruiker: Alle documenten"
+
+#. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_salesman
+msgid "User: Own Documents Only"
+msgstr "Gebruiker: Alleen eigen documenten"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -299,17 +444,37 @@ msgid "Users"
 msgstr "Gebruikers"
 
 #. module: sales_team
-#: help:crm.case.section,change_responsible:0
+#: model:crm.team,name:sales_team.salesteam_website_sales
+#: selection:crm.team,team_type:0
+msgid "Website"
+msgstr "Website"
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_group:0
+msgid "Week"
+msgstr "Week"
+
+#. module: sales_team
+#: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
 msgid ""
-"When escalating to this team override the salesman with the team leader."
-msgstr "Bij het escaleren naar dit team, vervang de verkoper door de teamleider."
+"the user will have access to all records of everyone in the sales "
+"application."
+msgstr ""
+"de gebruiker heeft toegang tot alle regels van iedereen in de "
+"verkoopapplicatie."
 
 #. module: sales_team
-#: field:crm.case.section,working_hours:0
-msgid "Working Hours"
-msgstr "Werkuren"
+#: model:res.groups,comment:sales_team.group_sale_salesman
+msgid "the user will have access to his own data in the sales application."
+msgstr ""
+"de gebruiker zal toegang hebben tot zijn eigen gegevens in de verkoop "
+"applicatie."
 
 #. module: sales_team
-#: field:crm.case.section,complete_name:0
-msgid "unknown"
-msgstr "onbekend"
+#: model:res.groups,comment:sales_team.group_sale_manager
+msgid ""
+"the user will have an access to the sales configuration as well as statistic"
+" reports."
+msgstr ""
+"De gebruiker krijgt toegang tot de verkoop instellingen en de statistische "
+"rapportages"

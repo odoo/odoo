@@ -1,5 +1,6 @@
 .o_website_quote .bs-sidebar {
-  position: fixed;
+  position: relative;
+  width: 100%;
   z-index : 1;
   background-color: #f7f5fa;
   border-radius: 5px;
@@ -36,22 +37,22 @@
   font-size: 90%;
 }
 
-@media (max-width: 991px) {
-  .o_website_quote .bs-sidebar {
-    position: static;
-  }
+/* Table Styling */
+.wq-table {
+  table-layout: auto !important;
 }
+
+.wq-table th, .wq-table td {
+     border-top: none !important;
+ }
+
+.wq-table:not(:first-of-type) thead {
+  display: none;
+}
+
 @media (min-width: 992px) {
   .o_website_quote .bs-sidebar .nav > .active > ul {
     display: block;
-  }
-  .o_website_quote .bs-sidebar {
-    width: 213px;
-  }
-}
-@media (min-width: 1200px) {
-  .o_website_quote .bs-sidebar {
-    width: 263px;
   }
 }
 @media print {

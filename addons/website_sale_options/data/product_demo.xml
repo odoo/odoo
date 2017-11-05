@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- add Warranty to ipad -->
+
+        <record id="product_attribute_1" model="product.attribute">
+            <field name="name">Duration</field>
+            <field name="type">select</field>
+        </record>
+        <record id="product_attribute_value_1" model="product.attribute.value">
+            <field name="name">1 year</field>
+            <field name="attribute_id" ref="product_attribute_1"/>
+        </record>
+        <record id="product_attribute_value_2" model="product.attribute.value">
+            <field name="name">2 year</field>
+            <field name="attribute_id" ref="product_attribute_1"/>
+        </record>
+
+        <record id="product_product_1" model="product.product">
+            <field name="name">Warranty</field>
+            <field name="list_price">20.0</field>
+            <field name="website_sequence">100</field>
+            <field name="website_published" eval="True"/>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description_sale">Warranty, issued to the purchaser of an article by its manufacturer, promising to repair or replace it if necessary within a specified period of time.</field>
+            <field name="default_code">W0001</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('product_attribute_value_1')])]"/>
+        </record>
+        <record id="service_cost_01" model="product.product">
+            <field name="default_code">W0002</field>
+            <field name="product_tmpl_id" ref="product_product_1_product_template"/>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('product_attribute_value_2')])]"/>
+        </record>
+
+        <record id="product_attribute_line_1" model="product.attribute.line">
+            <field name="product_tmpl_id" ref="product_product_1_product_template"/>
+            <field name="attribute_id" ref="product_attribute_1"/>
+            <field name="value_ids" eval="[(6,0,[ref('product_attribute_value_1'), ref('product_attribute_value_2')])]"/>
+        </record>
+        <record id="product_product_1_product_template" model="product.template">
+            <field name="attribute_line_ids" eval="[(6,0,[ref('product_attribute_line_1')])]"/>
+        </record>
+        <record id="product.product_product_4_product_template" model="product.template">
+            <field name="optional_product_ids" eval="[(6,0,[ref('product_product_1_product_template')])]"/>
+        </record>
+        <record id="product_attribute_price_1" model="product.attribute.price">
+            <field name="product_tmpl_id" ref="product_product_1_product_template"/>
+            <field name="value_id" ref="product_attribute_value_2"/>
+            <field name="price_extra">18.00</field>
+        </record>
+
+        <!-- -->
+
+    </data>
+</odoo>

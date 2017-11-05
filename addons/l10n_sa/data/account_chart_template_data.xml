@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="transfer_account" model="account.account.template">
+            <field name="name">Transfer Account</field>
+            <field name="code">18</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="True"/>
+        </record>
+
+        <record id="account_arabic_coa_general" model="account.chart.template">
+            <field name="name">Saudi Arabia - Chart of Accounts</field>
+            <field name="bank_account_code_prefix">1</field>
+            <field name="cash_account_code_prefix">1</field>
+            <field name="code_digits">6</field>
+            <field name="currency_id" ref="base.SAR"/>
+            <field name="transfer_account_id" ref="transfer_account"/>
+            <field name="spoken_languages" eval="'en_US;ar_EG;ar_SY'"/>
+        </record>
+
+        <record id="transfer_account" model="account.account.template">
+            <field name="chart_template_id" ref="account_arabic_coa_general"/>
+        </record>
+</odoo>

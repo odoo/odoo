@@ -1,1 +1,1 @@
-import hr_timesheet_report
+from . import project_report

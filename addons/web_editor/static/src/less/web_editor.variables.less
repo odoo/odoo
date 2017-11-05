@@ -1,0 +1,257 @@
+///
+/// This files regroups the LESS variables and mixins which are specific to the editor.
+///
+
+@o-we-font-family: Roboto, 'Montserrat', "Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;
+
+@o-we-color-dark: #2c2c36;
+@o-we-color-darker: darken(@o-we-color-dark, 2%);
+@o-we-color-divider: #33363e;
+@o-we-color-light: #4e525b;
+@o-we-color-normal: #50545d;
+@o-we-color-paper: #fcfcfc;
+@o-we-color-text-normal: #999999;
+@o-we-color-text-light: #d4d5d7;
+@o-we-color-danger: #e6586c;
+@o-we-color-warning: #f0ad4e;
+@o-we-color-success: #40ad67;
+@o-we-color-info: #6999a8;
+
+@o-we-sidebar-width: 210px;
+
+@o-we-tab-active-bg: #3D4048;
+
+// Transitions
+@o-we-md-ease: cubic-bezier(0.19, 1, 0.22, 1);
+
+// Animations
+@-webkit-keyframes fadeInDownSmall {
+    0% {
+        opacity: 0;
+        .translate(0, -5px);
+    }
+    100% {
+        opacity: 1;
+        .translate(0, 0);
+    }
+}
+@keyframes fadeInDownSmall {
+    0% {
+        opacity: 0;
+        .translate(0, -5px);
+    }
+    100% {
+        opacity: 1;
+        .translate(0, 0);
+    }
+}
+
+@-webkit-keyframes fadeInOut {
+    0% {
+        opacity: 0;
+    }
+    25% {
+        opacity: 1;
+    }
+    75% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+    }
+    25% {
+        opacity: 1;
+    }
+    75% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes inputHighlighter {
+    from { background: @odoo-brand-optional; }
+    to   { width: 0; background: transparent; }
+}
+@keyframes inputHighlighter {
+    from { background: @odoo-brand-optional; }
+    to   { width: 0; background: transparent; }
+}
+
+
+// ============    'Preview' component Mixins    ===============
+// Create a "preview" work-area to edit/customize specific elements
+
+.o-we-preview-box(@padding: 0px 25px 25px 25px, @color-text: white ) {
+    padding: @padding;
+    border-top: 1px solid black;
+    border-bottom: 1px solid white;
+    .o-linear-gradient(-150deg, @o-we-color-dark, @o-we-color-darker);
+
+    color:  @color-text;
+}
+
+.o-we-preview-content() {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    box-shadow: 0 0 15px 2px #000;
+}
+
+
+// ============    Preservetion mixins    ===============
+// Used to preserve web_editor and website UI from themes customizations
+
+.o-w-preserve-base() {
+    font-family: @o-we-font-family;
+    line-height: 1.42857143;
+    color: @o-we-color-divider;
+
+    .text-muted {
+        color: @o-we-color-text-normal;
+    }
+}
+
+.o-w-preserve-headings() {
+    h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+        font-family: @o-we-font-family;
+        line-height: 1.42857143;
+        color: @o-we-color-dark;
+        font-weight: bold;
+    }
+}
+
+.o-w-preserve-links() {
+    a:not(.o_btn_preview) {
+        color: @odoo-brand-optional;
+
+        &:focus, &:active, &:focus:active {
+            outline: none!important;
+        }
+    }
+
+    .label {
+        &:hover a, a {
+            color: #fff;
+        }
+    }
+}
+
+.o-w-preserve-forms() {
+    .form-control {
+        height: 34px;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        border: 1px solid @o-we-color-text-light;
+        color: #555;
+        background-color: #fff;
+        border-radius: 0;
+    }
+
+    select.form-control {
+        .o-appearance(none);
+        background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1 sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScyNCcgaGVpZ2 h0PScyNCcgdmlld0JveD0nMCAwIDI0IDI0Jz48cGF0aCBpZD0nc3ZnXzEnIGQ9J203LjQwNiw3L jgyOGw0LjU5NCw0LjU5NGw0LjU5NCwtNC41OTRsMC40MDYsMS40MDZsLTUsNC43NjZsLTUsLTQu NzY2bDAuNDA2LC0xLjQwNnonIGZpbGw9JyM4ODgnLz48L3N2Zz4=');
+        background-position: 100% 65%;
+        background-repeat: no-repeat;
+    }
+}
+
+.o-w-preserve-modals() {
+    background: 0;
+
+    .modal-content {
+        border-radius: 0;
+        background-color: @o-we-color-paper;
+
+        .modal-body {
+            background-color: white;
+        }
+        .modal-footer {
+            text-align: left;
+        }
+    }
+}
+
+.o-w-preserve-tabs() {
+    .nav-tabs {
+        border-bottom: 1px solid @gray-lighter;
+
+        > li  {
+            > a {
+                line-height: 1.42857143;
+                color: @o-we-color-light;
+                &:hover {
+                    border-color: @gray-lighter;
+                }
+            }
+
+            &.active > a {
+                &, &:hover, &:focus {
+                    color: @o-we-color-normal;
+                    background-color: @o-we-color-paper;
+                    border-color: @gray-lighter;
+                    border-bottom-color: transparent;
+                }
+            }
+        }
+    }
+}
+
+.o-w-preserve-btn() {
+    .btn:not(.o_btn_preview) {
+        border-width: 1px;
+        border-radius: 0;
+        font-weight: normal;
+        .button-size(6px; 12px; 14px; 1.42857143; 0);
+
+        &.btn-primary {
+            .button-variant(white, @odoo-brand-optional, darken(@odoo-brand-optional,5%));
+        }
+        &.btn-default {
+            .button-variant(@o-we-color-normal, white, @o-we-color-text-light);
+        }
+        &.btn-link {
+            .button-variant(@odoo-brand-optional, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
+        }
+        &.btn-success {
+            .button-variant(white; @o-we-color-success; darken(@o-we-color-success, 5%));
+        }
+        &.btn-info {
+            .button-variant(white; @o-we-color-info; darken(@o-we-color-info, 5%));
+        }
+        &.btn-warning {
+            .button-variant(white; @o-we-color-warning; darken(@o-we-color-warning, 5%));
+        }
+        &.btn-danger {
+            .button-variant(white; @o-we-color-danger; darken(@o-we-color-danger, 5%));
+        }
+
+        &.btn-lg {
+            .button-size(10px; 16px; 18px; 1.3333333; 0);
+        }
+        &.btn-sm {
+            .button-size(5px; 10px; 12px; 1.5; 0);
+        }
+        &.btn-xs {
+            .button-size(1px; 5px; 12px; 1.5; 0);
+        }
+    }
+}
+
+.o-w-preserve-wells() {
+    .well {
+        padding: 19px;
+        margin-bottom: 20px;
+        background-color: @o-we-color-paper;
+        border: 1px solid darken(@o-we-color-paper,5%);
+        border-radius: 0;
+        .box-shadow(none);
+    }
+}

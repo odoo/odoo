@@ -3,15 +3,18 @@
 # * sale_crm
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Iulian Cutui <iulian.cutui@gmail.com>, 2017
+# Cozmin Candea <office@terrabit.ro>, 2017
+# Dorin Hongu <dhongu@gmail.com>, 2017
+# Simonel Criste <simi@erpsystems.ro>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-17 18:23+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-8/language/ro/)\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Simonel Criste <simi@erpsystems.ro>, 2017\n"
+"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,153 +22,103 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: sale_crm
-#: field:sale.order,campaign_id:0
-msgid "Campaign"
-msgstr "Campanie"
+#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+msgid "<span class=\"o_stat_text\"> Orders</span>"
+msgstr "<span class=\"o_stat_text\"> Comenzi</span>"
 
 #. module: sale_crm
-#: view:crm.make.sale:sale_crm.view_crm_make_sale
-msgid "Cancel"
-msgstr "Anuleaza"
-
-#. module: sale_crm
-#: field:sale.order,medium_id:0
-msgid "Channel"
-msgstr "Canal"
-
-#. module: sale_crm
-#: help:crm.make.sale,close:0
-msgid ""
-"Check this to close the opportunity after having created the sales order."
-msgstr "Selectati aici pentru a inchide oportunitatea dupa ce ati creat comanda de vanzare."
-
-#. module: sale_crm
-#: view:crm.lead:sale_crm.crm_case_form_view_oppor
-#: view:crm.make.sale:sale_crm.view_crm_make_sale
-msgid "Convert to Quotation"
-msgstr "Transforma in cotatie"
-
-#. module: sale_crm
-#: view:crm.lead:sale_crm.crm_case_form_view_oppor
-msgid "Create Quotation"
-msgstr "Creeaza Cotatia"
-
-#. module: sale_crm
-#: field:crm.make.sale,create_uid:0
-msgid "Created by"
-msgstr "Creat de"
-
-#. module: sale_crm
-#: field:crm.make.sale,create_date:0
-msgid "Created on"
-msgstr "Creat în"
-
-#. module: sale_crm
-#: field:crm.make.sale,partner_id:0
-msgid "Customer"
-msgstr "Client"
-
-#. module: sale_crm
-#: field:crm.make.sale,id:0
-msgid "ID"
-msgstr "ID"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:91
-#, python-format
-msgid "Insufficient Data!"
-msgstr "Date Insuficiente!"
-
-#. module: sale_crm
-#: field:crm.make.sale,write_uid:0
-msgid "Last Updated by"
-msgstr "Ultima actualizare făcută de"
-
-#. module: sale_crm
-#: field:crm.make.sale,write_date:0
-msgid "Last Updated on"
-msgstr "Ultima actualizare în"
-
-#. module: sale_crm
-#: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
-msgid "Make Quotation"
-msgstr "Creeaza cotatia"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_make_sale
-msgid "Make sales"
-msgstr "Efectueaza vanzarea"
-
-#. module: sale_crm
-#: field:crm.make.sale,close:0
-msgid "Mark Won"
-msgstr "Marcheaza drept Castigat"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:91
-#, python-format
-msgid "No address(es) defined for this customer."
+#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+msgid "<span class=\"o_stat_text\"> Quotation(s) </span>"
 msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:111
-#, python-format
-msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
-msgstr "Oportunitatea a fost <b>transformata</b> in cotatie <em>%s</em>."
+#: model:ir.model,name:sale_crm.model_account_invoice
+msgid "Invoice"
+msgstr "Factură"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:94
-#, python-format
-msgid "Opportunity: %s"
-msgstr "Oportunitate: %s"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
+msgid "Invoiced in Sales Orders Target"
+msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:125
-#: code:addons/sale_crm/wizard/crm_make_sale.py:136
+#: model:ir.model,name:sale_crm.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Pista/Oportunitate"
+
+#. module: sale_crm
+#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
+msgid "Log in the chatter from which opportunity the order originates"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+msgid "New Quotation"
+msgstr "Ofertă nouă"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
+msgid "Number of Quotations"
+msgstr "Număr de oferte"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order_opportunity_id
+msgid "Opportunity"
+msgstr "Oportunitate"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_order_ids
+msgid "Orders"
+msgstr "Comenzi"
+
+#. module: sale_crm
+#: code:addons/sale_crm/models/crm_team.py:12
 #, python-format
+msgid "Pipeline"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
 msgid "Quotation"
-msgstr "Cotatie"
+msgstr "Ofertă"
+
+#. module: sale_crm
+#: model:ir.actions.act_window,name:sale_crm.sale_action_quotations
+#: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
+msgid "Quotations"
+msgstr "Oferte"
+
+#. module: sale_crm
+#: model:ir.actions.act_window,name:sale_crm.sale_action_orders
+msgid "Sale orders"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_team
+msgid "Sales Channel"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
 msgid "Sales Order"
-msgstr "Comanda de vanzare"
+msgstr "Comandă de vânzare"
 
 #. module: sale_crm
-#: field:sale.order,source_id:0
-msgid "Source"
-msgstr "Sursa"
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
+msgid "Sum of Orders"
+msgstr "Suma Comenzilor"
 
 #. module: sale_crm
-#: field:sale.order,categ_ids:0
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids
 msgid "Tags"
 msgstr "Etichete"
 
 #. module: sale_crm
-#: help:sale.order,campaign_id:0
-msgid ""
-"This is a name that helps you keep track of your different campaign efforts "
-"Ex: Fall_Drive, Christmas_Special"
+#: model:ir.model.fields,help:sale_crm.field_crm_lead_sale_amount_total
+msgid "Untaxed Total of Confirmed Orders"
 msgstr ""
 
 #. module: sale_crm
-#: help:sale.order,medium_id:0
-msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr ""
-
-#. module: sale_crm
-#: help:sale.order,source_id:0
-msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of"
-" email list"
-msgstr ""
-
-#. module: sale_crm
-#: view:crm.make.sale:sale_crm.view_crm_make_sale
-msgid "_Create"
-msgstr "_Creeaza"
-
-#. module: sale_crm
-#: view:crm.make.sale:sale_crm.view_crm_make_sale
-msgid "or"
-msgstr "sau"
+#: model:ir.model,name:sale_crm.model_res_users
+msgid "Users"
+msgstr "Utilizatori"

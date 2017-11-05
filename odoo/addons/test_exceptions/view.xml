@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_test_exceptions_model" model="ir.ui.view">
+            <field name="name">Test exceptions</field>
+            <field name="model">test.exceptions.model</field>
+            <field name="arch" type="xml">
+                <form string="Test exceptions">
+                    <label string="Each button generates a specific exception on the server. The text on the right is the expected representation of the exception when displayed on the client. Button marked with a '*' use safe_eval()."/>
+                    <separator/>
+                    <group>
+                        <div>
+                            <button name="generate_except_osv" string="except_osv" type="object" icon="fa-refresh text-primary" />
+                            <label string="Warning-description"/>
+                        </div>
+                        <div>
+                            <button name="generate_except_orm" string="except_orm" type="object" icon="fa-refresh text-primary"/>
+                            <label string="Warning-description"/>
+                        </div>
+                        <div>
+                            <button name="generate_warning" string="Warning" type="object" icon="fa-refresh text-primary"/>
+                            <label string="Warning-description"/>
+                        </div>
+                        <div>
+                            <button name="generate_redirect_warning" string="RedirectWarning" type="object" icon="fa-refresh text-primary"/>
+                            <label string="Warning-description-redirection button"/>
+                        </div>
+                        <div>
+                            <button name="generate_access_denied" string="AccessDenied" type="object" icon="fa-refresh text-primary"/>
+                            <label string="Access denied-traceback"/>
+                        </div>
+                        <div>
+                            <button name="generate_access_error" string="AccessError" type="object" icon="fa-refresh text-primary"/>
+                            <label string="Access rights error-description" class="oe_inline"/>
+                        </div>
+                        <div>
+                            <button name="generate_exc_access_denied" string="Exc AccessDenied" type="object" icon="fa-refresh text-primary"/>
+                            <label string="Access denied-traceback"/>
+                        </div>
+                        <div>
+                            <button name="generate_undefined" string="Undefined" type="object" icon="fa-refresh text-primary"/>
+                            <label string="Server error-traceback"/>
+                        </div>
+                        <div>
+                            <button name="generate_user_error" string="UserError" type="object" icon="fa-refresh text-primary"/>
+                            <label string="Warning-description"/>
+                        </div>
+                        <div>
+                            <button name="generate_missing_error" string="MissingError" type="object" icon="fa-refresh text-primary"/>
+                            <label string="Missing Error-description"/>
+                        </div>
+                        <div>
+                            <button name="generate_validation_error" string="ValidationError" type="object" icon="fa-refresh text-primary"/>
+                            <label string="Validation Error-description"/>
+                        </div>
+
+                        <div>
+                            <button name="generate_except_osv_safe_eval" string="except_osv*" type="object" icon="fa-refresh text-primary"/>
+                            <label string="Warning-description"/>
+                        </div>
+                        <div>
+                            <button name="generate_except_orm_safe_eval" string="except_orm*" type="object" icon="fa-refresh text-primary"/>
+                            <label string="Warning-description"/>
+                        </div>
+                        <div>
+                            <button name="generate_warning_safe_eval" string="Warning*" type="object" icon="fa-refresh text-primary"/>
+                            <label string="Warning-description"/>
+                        </div>
+                        <div>
+                            <button name="generate_redirect_warning_safe_eval" string="RedirectWarning*" type="object" icon="fa-refresh text-primary"/>
+                            <label string="Warning-description-redirection button" class="oe_inline"/>
+                        </div>
+                        <div>
+                            <button name="generate_access_denied_safe_eval" string="AccessDenied*" type="object" icon="fa-refresh text-primary"/>
+                            <label string="Access denied-traceback"/>
+                        </div>
+                        <div>
+                            <button name="generate_access_error_safe_eval" string="AccessError*" type="object" icon="fa-refresh text-primary"/>
+                            <label string="Access rights error-description"/>
+                        </div>
+                        <div>
+                            <button name="generate_exc_access_denied_safe_eval" string="Exc AccessDenied*" type="object" icon="fa-refresh text-primary"/>
+                            <label string="Access denied-traceback"/>
+                        </div>
+                        <div>
+                            <button name="generate_undefined_safe_eval" string="Undefined*" type="object" icon="fa-refresh text-primary"/>
+                            <label string="Server error-traceback"/>
+                        </div>
+                        <div>
+                            <button name="generate_user_error_safe_eval" string="UserError*" type="object" icon="fa-refresh text-primary"/>
+                            <label string="Warning-description"/>
+                        </div>
+                        <div>
+                            <button name="generate_missing_error_safe_eval" string="MissingError*" type="object" icon="fa-refresh text-primary"/>
+                            <label string="Missing Error-description"/>
+                        </div>
+                        <div>
+                            <button name="generate_validation_error_safe_eval" string="ValidationError*" type="object" icon="fa-refresh text-primary"/>
+                            <label string="Validation Error-description"/>
+                        </div>
+                    </group>
+                </form>
+           </field>
+        </record>
+
+        <record id="action_test_exceptions" model="ir.actions.act_window">
+            <field name="name">Test exceptions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">test.exceptions.model</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_test_exceptions" parent="base.menu_tests" name="Test exceptions"/>
+
+        <menuitem id="menu_test_exceptions_leaf"
+            name="Test exceptions"
+            action="action_test_exceptions"
+            parent="menu_test_exceptions"/>
+    </data>
+</odoo>

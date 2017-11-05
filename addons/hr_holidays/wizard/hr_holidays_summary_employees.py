@@ -1,54 +1,32 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import time
 
-from openerp.osv import fields, osv
+from odoo import api, fields, models
 
-class hr_holidays_summary_employee(osv.osv_memory):
+
+class HolidaysSummaryEmployee(models.TransientModel):
+
     _name = 'hr.holidays.summary.employee'
     _description = 'HR Leaves Summary Report By Employee'
-    _columns = {
-        'date_from': fields.date('From', required=True),
-        'emp': fields.many2many('hr.employee', 'summary_emp_rel', 'sum_id', 'emp_id', 'Employee(s)'),
-        'holiday_type': fields.selection([('Approved','Approved'),('Confirmed','Confirmed'),('both','Both Approved and Confirmed')], 'Select Leave Type', required=True)
-    }
 
-    _defaults = {
-         'date_from': lambda *a: time.strftime('%Y-%m-01'),
-         'holiday_type': 'Approved',
-    }
+    date_from = fields.Date(string='From', required=True, default=lambda *a: time.strftime('%Y-%m-01'))
+    emp = fields.Many2many('hr.employee', 'summary_emp_rel', 'sum_id', 'emp_id', string='Employee(s)')
+    holiday_type = fields.Selection([
+        ('Approved', 'Approved'),
+        ('Confirmed', 'Confirmed'),
+        ('both', 'Both Approved and Confirmed')
+    ], string='Select Leave Type', required=True, default='Approved')
 
-    def print_report(self, cr, uid, ids, context=None):
-        data = self.read(cr, uid, ids, context=context)[0]
-        data['emp'] = context['active_ids']
+    @api.multi
+    def print_report(self):
+        self.ensure_one()
+        [data] = self.read()
+        data['emp'] = self.env.context.get('active_ids', [])
+        employees = self.env['hr.employee'].browse(data['emp'])
         datas = {
-             'ids': [],
-             'model': 'hr.employee',
-             'form': data
-            }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'holidays.summary',
-            'datas': datas,
-            }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+            'ids': [],
+            'model': 'hr.employee',
+            'form': data
+        }
+        return self.env.ref('hr_holidays.action_report_holidayssummary').report_action(employees, data=datas)

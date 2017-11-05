@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Carrier -->
+
+        <record id="product_product_delivery_poste" model="product.product">
+            <field name="name">The Poste</field>
+            <field name="default_code">Delivery</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">20.0</field>
+        </record>
+
+        <record id="delivery_carrier" model="delivery.carrier">
+            <field name="name">The Poste</field>
+            <field name="fixed_price">20.0</field>
+            <field name="sequence">2</field>
+            <field name="delivery_type">base_on_rule</field>
+            <field name="product_id" ref="delivery.product_product_delivery_poste"/>
+        </record>
+
+        <record id="product_product_delivery_normal" model="product.product">
+            <field name="name">Normal Delivery Charges</field>
+            <field name="default_code">Delivery</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">10.0</field>
+        </record>
+
+        <record id="normal_delivery_carrier" model="delivery.carrier">
+            <field name="name">Normal Delivery Charges</field>
+            <field name="fixed_price">10.0</field>
+            <field name="sequence">3</field>
+            <field name="delivery_type">fixed</field>
+            <field name="product_id" ref="delivery.product_product_delivery_normal"/>
+        </record>
+
+        <record id="delivery_price_rule1" model="delivery.price.rule">
+            <field name="carrier_id" ref="delivery_carrier"/>
+            <field eval="5" name="max_value"/>
+            <field eval="20" name="list_base_price"/>
+        </record>
+        <!--  delivery charge of product if weight more than 5kg-->
+        <record id="delivery_price_rule2" model="delivery.price.rule">
+            <field name="carrier_id" ref="delivery_carrier"/>
+            <field name="operator">&gt;=</field>
+            <field eval="5" name="max_value"/>
+            <field eval="50" name="list_base_price"/>
+        </record>
+
+        <!--  free delivery charge if price more than 300-->
+        <record id="delivery_price_rule3" model="delivery.price.rule">
+            <field name="carrier_id" ref="delivery_carrier"/>
+            <field eval="300" name="max_value"/>
+            <field name="operator">&gt;=</field>
+            <field name="variable">price</field>
+            <field eval="0" name="list_base_price"/>
+        </record>
+
+        <record forcecreate="True" id="property_delivery_carrier" model="ir.property">
+            <field name="name">property_delivery_carrier_id</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_delivery_carrier_id')]"/>
+            <field name="value" eval="'delivery.carrier,'+str(ref('normal_delivery_carrier'))"/>
+        </record>
+    </data>
+</odoo>

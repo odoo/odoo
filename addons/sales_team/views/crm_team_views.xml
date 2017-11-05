@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Cateamions Search view -->
+        <record id="crm_team_salesteams_search" model="ir.ui.view">
+            <field name="name">Case Teams - Search</field>
+            <field name="model">crm.team</field>
+            <field name="arch" type="xml">
+                <search string="Salesteams Search">
+                   <filter name="my_favorites" string="My Favorites" domain="[('favorite_user_ids', 'in', uid)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <field name="name"/>
+                    <field name="user_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Team Leader" domain="[]" context="{'group_by':'user_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Case Teams Action -->
+        <record id="crm_team_salesteams_act" model="ir.actions.act_window">
+            <field name="name">Sales Channels</field>
+            <field name="res_model">crm.team</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="context">{'search_default_my_favorites': 1}</field>
+            <field name="view_id" ref="crm_team_salesteams_search"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click here to define a new sales channel.
+                </p><p>
+                    Use sales channels to organize your sales departments. 
+                    Each channel will work with a separate pipeline.
+                </p>
+            </field>
+        </record>
+
+        <!-- Case Teams Form View -->
+
+         <record id="crm_team_view_form" model="ir.ui.view">
+            <field name="name">crm.team.form</field>
+            <field name="model">crm.team</field>
+            <field name="arch" type="xml">
+                <form string="Sales Channel">
+                    <sheet>
+                      <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only" string="Sales Channel"/>
+                            <h1>
+                                <field name="name" placeholder="Salesteam name..."/>
+                            </h1>
+                            <div name="options_active" attrs="{'invisible': ['&amp;', ('team_type', '!=', 'sales'), ('team_type', '!=', 'website')]}"/>
+                        </div>
+                        <group>
+                            <group name="left">
+                                <field name="team_type" groups="base.group_no_one"/>
+                                <field name="user_id" domain="[('share', '=', False)]"/>
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            </group>
+                            <group name="right">
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="members" string="Team Members" attrs="{'invisible': [('team_type', 'in', ['pos', 'ebay'])]}">
+                                <field name="member_ids" widget="many2many" options="{'not_delete': True}">
+                                    <kanban quick_create="false" create="true" delete="true">
+                                        <field name="id"/>
+                                        <field name="name"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div class="oe_kanban_global_click" style="max-width: 200px">
+                                                    <div class="o_kanban_record_top">
+                                                        <img t-att-src="kanban_image('res.users', 'image_small', record.id.raw_value)" height="40" width="40" class="oe_avatar oe_kanban_avatar_smallbox mb0"/>
+                                                        <div class="o_kanban_record_headings ml8">
+                                                            <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                                        </div>
+                                                        <a t-if="! read_only_mode" type="delete" class="text-danger">
+                                                            <i class="fa fa-times"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                </field>
+                            </page>
+                            <page string="Dashboard" name="dashboard">
+                                <group string="Graph" name="graph">
+                                    <field name="dashboard_graph_model" attrs="{'readonly': [('team_type', 'in', ['pos', 'ebay'])]}"/>
+                                    <field name="dashboard_graph_period"/>
+                                    <field name="dashboard_graph_group"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" help="Follow this salesteam to automatically track the events associated to users of this team."/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Case Teams Tree View -->
+        <record id="crm_team_view_tree" model="ir.ui.view">
+            <field name="name">crm.team.tree</field>
+            <field name="model">crm.team</field>
+            <field name="field_parent">child_ids</field>
+            <field name="arch" type="xml">
+                <tree string="Sales Channel">
+                    <field name="name"/>
+                    <field name="active" invisible="1"/>
+                    <field name="user_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Case Teams Kanban View -->
+        <record id="crm_team_view_kanban" model="ir.ui.view">
+            <field name="name">crm.team.kanban</field>
+            <field name="model">crm.team</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <span class="pull-right"><field name="user_id"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- add css / js -->
+        <template id="assets_backend" name="sales_team assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/sales_team/static/src/less/sales_team_dashboard.less"/>
+            </xpath>
+        </template>
+
+        <record id="sales_team_config_action" model="ir.actions.act_window">
+            <field name="name">Sales Channels</field>
+            <field name="res_model">crm.team</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="view_id" ref="crm_team_salesteams_search"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click here to define a new sales channel.
+                </p><p>
+                    Use sales channels to organize your sales departments. 
+                    Each channel will work with a separate pipeline.
+                </p>
+            </field>
+        </record>
+
+        <record id="mail_activity_type_action_config_sales" model="ir.actions.act_window">
+            <field name="name">Activity Types</field>
+            <field name="res_model">mail.activity.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|', ('res_model_id', '=', False), ('res_model_id.model', '=', 'res.partner')]</field>
+        </record>
+    </data>
+</odoo>

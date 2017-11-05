@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.tests import common
+from odoo.tests import common
 
 KARMA = {
     'ask': 5, 'ans': 10,
@@ -10,8 +11,10 @@ KARMA = {
     'edit_own': 10, 'edit_all': 20,
     'close_own': 10, 'close_all': 20,
     'unlink_own': 10, 'unlink_all': 20,
+    'post': 100, 'flag': 500, 'moderate': 1000,
     'gen_que_new': 1, 'gen_que_upv': 5, 'gen_que_dwv': -10,
-    'gen_ans_upv': 10, 'gen_ans_dwv': -20,
+    'gen_ans_upv': 10, 'gen_ans_dwv': -20, 'gen_ans_flag': -45,
+    'tag_create': 30,
 }
 
 
@@ -32,7 +35,6 @@ class TestForumCommon(common.SavepointCase):
         cls.user_employee = TestUsersEnv.create({
             'name': 'Armande Employee',
             'login': 'Armande',
-            'alias_name': 'armande',
             'email': 'armande.employee@example.com',
             'karma': 0,
             'groups_id': [(6, 0, [group_employee_id])]
@@ -40,7 +42,6 @@ class TestForumCommon(common.SavepointCase):
         cls.user_portal = TestUsersEnv.create({
             'name': 'Beatrice Portal',
             'login': 'Beatrice',
-            'alias_name': 'beatrice',
             'email': 'beatrice.employee@example.com',
             'karma': 0,
             'groups_id': [(6, 0, [group_portal_id])]
@@ -48,7 +49,6 @@ class TestForumCommon(common.SavepointCase):
         cls.user_public = TestUsersEnv.create({
             'name': 'Cedric Public',
             'login': 'Cedric',
-            'alias_name': 'cedric',
             'email': 'cedric.employee@example.com',
             'karma': 0,
             'groups_id': [(6, 0, [group_public_id])]
@@ -71,6 +71,7 @@ class TestForumCommon(common.SavepointCase):
             'karma_close_all': KARMA['close_all'],
             'karma_unlink_own': KARMA['unlink_own'],
             'karma_unlink_all': KARMA['unlink_all'],
+            'karma_post': KARMA['post'],
             'karma_comment_convert_all': KARMA['com_conv_all'],
             'karma_gen_question_new': KARMA['gen_que_new'],
             'karma_gen_question_upvote': KARMA['gen_que_upv'],
@@ -79,12 +80,13 @@ class TestForumCommon(common.SavepointCase):
             'karma_gen_answer_downvote': KARMA['gen_ans_dwv'],
             'karma_gen_answer_accept': 9999,
             'karma_gen_answer_accepted': 9999,
+            'karma_gen_answer_flagged': KARMA['gen_ans_flag'],
         })
         cls.post = Post.create({
             'name': 'TestQuestion',
             'content': 'I am not a bird.',
             'forum_id': cls.forum.id,
-            'tag_ids': [(0, 0, {'name': 'Tag0', 'forum_id': cls.forum.id})]
+            'tag_ids': [(0, 0, {'name': 'Tag2', 'forum_id': cls.forum.id})]
         })
         cls.answer = Post.create({
             'name': 'TestAnswer',

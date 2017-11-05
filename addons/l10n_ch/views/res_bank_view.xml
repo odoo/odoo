@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="isr_res_bank_form" model="ir.ui.view">
+            <field name="name">l10n_ch.res.bank.form</field>
+            <field name="model">res.bank</field>
+            <field name="inherit_id" ref="base.view_res_bank_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='bic']" position="after">
+                    <field name="l10n_ch_postal_chf"/>
+                    <field name="l10n_ch_postal_eur"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

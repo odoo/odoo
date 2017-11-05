@@ -1,0 +1,78 @@
+/* GRAYS --------------------------------------------------------- */ 
+
+@gray:                   lighten(#000, 50%);
+
+/* COLORS --------------------------------------------------------- */
+
+@color-primary:         @color-red;
+@color-success:         @color-red-dark;
+@color-info:            @color-orange;
+@color-warning:         @color-purple;
+@color-danger:          @color-orange-dark;
+
+/* COLORED BG -------------------------------------------------------- */ 
+
+.bg-primary {
+    background-color: @color-sand;
+}
+.bg-success {
+    background-color: @color-red;
+}
+.bg-info {
+    background-color: @color-red-dark;
+}
+.bg-warning {
+    background-color: @color-orange;
+}
+.bg-danger {
+    background-color: @color-orange-dark;
+}
+
+/* TEXT & LINKS -------------------------------------------------------- */ 
+
+@text-muted:        @gray;
+@link-color:        @color-primary;
+@link-hover-color:  @color-success;
+
+/* BUTTONS --------------------------------------------------------- */
+
+@btn-primary-bg:                 @color-red;
+@btn-success-bg:                 @color-orange;
+@btn-info-bg:                    @color-yellow-dark;
+@btn-warning-bg:                 @color-orange-dark;
+@btn-danger-bg:                  @color-red-dark;
+
+.btn .fa {
+	color: white;}
+
+.btn-default .fa {
+	color: @gray-dark;}
+
+/* TRANSPARENT BG --------------------------------------------------- */
+/* Used in snippets Prx Image Color and Prx Image Shade ------------- */
+
+.bg-transparent-color 		{ background: @color-red-dark; opacity: 0.85;} 
+.bg-transparent-shade		{ background: black; opacity: 0.5;} 
+
+/* Footer ----------------------------------------------------------- */
+
+#wrapwrap footer {
+   background-color: @color-burgundy;
+   color: @gray-lighter;
+    }	
+footer ul li a {
+	color: white;
+	}	
+footer ul li a:hover {
+	color: @color-orange;
+    text-decoration: none;
+	}   
+footer h4 {
+	color: @color-sand;
+    padding-bottom: 12px;
+    text-transform: uppercase;
+    }
+footer .fa {
+    color: @color-red;
+  }	
+

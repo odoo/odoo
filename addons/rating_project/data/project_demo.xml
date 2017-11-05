@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="rating_task_1" model="rating.rating">
+            <field name="res_model_id" ref="project.model_project_task"/>
+            <field name="rated_partner_id" ref="base.partner_root"/>
+            <field name="partner_id" ref="base.partner_demo"/>
+            <field name="res_id" ref="project.project_task_3"/>
+        </record>
+        <record id="rating_task_2" model="rating.rating">
+            <field name="res_model_id" ref="project.model_project_task"/>
+            <field name="rated_partner_id" ref="base.partner_demo"/>
+            <field name="partner_id" ref="base.partner_demo"/>
+            <field name="res_id" ref="project.project_task_8"/>
+        </record>
+        <record id="rating_task_3" model="rating.rating">
+            <field name="res_model_id" ref="project.model_project_task"/>
+            <field name="rated_partner_id" ref="base.partner_root"/>
+            <field name="partner_id" ref="base.partner_root"/>
+            <field name="res_id" ref="project.project_task_15"/>
+        </record>
+        <record id="rating_task_4" model="rating.rating">
+            <field name="res_model_id" ref="project.model_project_task"/>
+            <field name="rated_partner_id" ref="base.partner_root"/>
+            <field name="partner_id" ref="base.partner_root"/>
+            <field name="res_id" ref="project.project_task_18"/>
+        </record>
+        <record id="rating_task_5" model="rating.rating">
+            <field name="res_model_id" ref="project.model_project_task"/>
+            <field name="rated_partner_id" ref="base.partner_root"/>
+            <field name="partner_id" ref="base.res_partner_4"/>
+            <field name="res_id" ref="project.project_task_24"/>
+        </record>
+
+        <!-- add the email template as value for the project stage 2 -->
+        <record id="project.project_stage_2" model="project.task.type">
+            <field name="rating_template_id" ref="rating_project_request_email_template"/>
+        </record>
+        <record id="project.project_project_3" model="project.project">
+            <field name="rating_status">stage</field>
+        </record>
+
+        <function model="project.task" name="rating_apply" eval="([ref('project.project_task_3')], 10)"/>
+        <function model="project.task" name="rating_apply" eval="([ref('project.project_task_18')], 10)"/>
+        <function model="project.task" name="rating_apply" eval="([ref('project.project_task_24')], 10)"/>
+        <function model="project.task" name="rating_apply" eval="([ref('project.project_task_8')], 1)"/>
+        <function model="project.task" name="rating_apply" eval="([ref('project.project_task_15')], 5)"/>
+    </data>
+</odoo>

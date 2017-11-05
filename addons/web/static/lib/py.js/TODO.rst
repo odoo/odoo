@@ -35,7 +35,6 @@ Base methods requirement
 
 * ``__getattr__``
 * ``dict.get``
-* ``__len__``
 
 In datamodel, not implemented in any type, untested
 ***************************************************

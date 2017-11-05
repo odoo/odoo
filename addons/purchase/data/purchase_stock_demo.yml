@@ -1,0 +1,8 @@
+-
+  !python {model: stock.warehouse, id: False}: |
+    pull_obj = self.env['procurement.rule']
+    wh_to_assign = ['stock_warehouse_shop0']
+    for wh_ref in wh_to_assign:
+      warehouse = self.browse(ref('stock.' + wh_ref))
+      #Force the rewriting of route and rule
+      warehouse.write({'buy_to_resupply': True})

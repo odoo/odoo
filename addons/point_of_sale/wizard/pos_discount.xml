@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-        <!--  Add  Product -->
-
+<odoo>
         <record id="view_pos_discount" model="ir.ui.view">
-            <field name="name">Apply Discount</field>
+            <field name="name">pos.discount.form</field>
             <field name="model">pos.discount</field>
             <field name="arch" type="xml">
                 <form string="Apply Discount">
@@ -12,9 +9,8 @@
                         <field name="discount"/>
                     </group>
                     <footer>
-                        <button name="apply_discount" string="Apply Discount" type="object" class="oe_highlight"  />
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
+                        <button name="apply_discount" string="Apply Discount" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
                     </footer>
                 </form>
             </field>
@@ -28,6 +24,4 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-
-    </data>
-</openerp>
+</odoo>

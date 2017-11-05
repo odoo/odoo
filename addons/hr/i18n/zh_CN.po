@@ -3,20 +3,29 @@
 # * hr
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Jeffery CHEN <jeffery9@gmail.com>, 2015-2016
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2015
-# liAnGjiA <liangjia@qq.com>, 2016-2017
-# liAnGjiA <liangjia@qq.com>, 2015
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
+# Jeffery CHEN <jeffery9@gmail.com>, 2017
+# liulixia <liu.lixia@elico-corp.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Xia Fajin <xia.fajin@elico-corp.com>, 2017
+# waveyeung <waveyeung@qq.com>, 2017
+# 苏州远鼎 <tiexinliu@126.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2017
+# fausthuang <faust_huang@hotmail.com>, 2017
+# 卓忆科技 <zhanghao@jointd.com>, 2017
+# xiaobin wu <bd5dml@gmail.com>, 2017
+# liAnGjiA <liangjia@qq.com>, 2017
+# 菜小蛇 <lttlsnk@gmail.com>, 2017
+# Xu Lei <xulei8@qq.com>, 2017
+# 石家庄_老刘 <liuaiqun@sina.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2017-09-23 21:14+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: 石家庄_老刘 <liuaiqun@sina.com>, 2017\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -24,240 +33,337 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr
-#: code:addons/hr/hr.py:158
+#: code:addons/hr/models/hr.py:75
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a new employee.\n"
-"              </p><p>\n"
-"                With just a quick glance on the Odoo employee screen, you\n"
-"                can easily find all the information you need for each person;\n"
-"                contact data, job position, availability, etc.\n"
-"              </p>\n"
-"            "
-msgstr "<p class=\\\"oe_view_nocontent_create\\\">\\n\n                点击添加一个新员工。\\n\n              </p><p>\\n\n                Odoo系统的员工管理界面可让您随意瞄一眼即可轻松地找到每个人的\\n\n                信息，如联系方式、工作岗位、可用性等。\\n\n              </p>\\n\n            "
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "<i>Work in a fun atmosphere</i>"
+msgstr "<i>在一个有趣的氛围中工作</i>"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.open_module_tree_department
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a department.\n"
-"              </p><p>\n"
-"                Odoo's department structure is used to manage all documents\n"
-"                related to employees by departments: expenses, timesheets,\n"
-"                leaves and holidays, recruitments, etc.\n"
-"              </p>\n"
-"            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建一个部门。\n              </p><p>\n                Odoo的部门结构用于按部门管理所有与员工有关的单据：\n                报销单、计工单、请假、准假单、招聘单等单据。\n              </p>\n            "
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "<i>You are passionate</i>"
+msgstr "<i>你充满激情</i>"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new department.\n"
-"              </p><p>\n"
-"                Your departments structure is used to manage all documents\n"
-"                related to employees by departments: expenses and timesheets,\n"
-"                leaves and holidays, recruitments, etc.\n"
-"              </p>\n"
-"            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                点击定义新部门。\n              </p><p>\n                Odoo的部门结构用于按部门管理所有与员工有关的单据：\n                报销单、计工单、请假、准假单、招聘单等单据。\n              </p>\n            "
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_trainee
+msgid "<i>You autonomously and quickly learn</i>"
+msgstr "<i>你能自主快速学习</i>"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.action_hr_job
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new job position.\n"
-"              </p><p>\n"
-"                Job Positions are used to define jobs and their requirements.\n"
-"                You can keep track of the number of employees you have per job\n"
-"                position and follow the evolution according to what you planned\n"
-"                for the future.\n"
-"              </p><p>\n"
-"                You can attach a survey to a job position. It will be used in\n"
-"                the recruitment process to evaluate the applicants for this job\n"
-"                position.\n"
-"              </p>\n"
-"            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                点击定义新工作职位\n              </p><p>\n                工作职位用于定义工作和它们的要求。\n                您能跟踪每个职位的员工数，并且根据您未来的计划变化。\n              </p>\n              <p>\n                您可以在工作职位中附加一个调查表。它将用于在招聘流程\n                中评估此岗位的申请人。\n              </p>\n            "
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid "<i>You easily manage them</i>"
+msgstr "<i>你可以轻松的管理他们</i>"
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
+#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid ""
+"<span class=\"o_unfollow\">Unfollow</span>\n"
+"                                    <span class=\"o_following\">Following</span>"
+msgstr ""
+"<span class=\"o_unfollow\">不关注</span>\n"
+"<span class=\"o_following\">已关注</span>"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "<span>Reporting</span>"
+msgstr "<span>报表</span>"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "<span>To Approve</span>"
+msgstr "<span>审批</span>"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "<span>To Do</span>"
+msgstr "<span>待办</span>"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid ""
+"A full time job, with an attractive salary package in a small team of smart "
+"people. You will start contract with a full technical and functional "
+"training. If you are passionate, motivate and flexible apply for this job, "
+"you will certainly join the best company ever."
+msgstr ""
+"一份全职工作，会与聪明的人在一个团队中和一份有吸引力的薪酬。你会从一份完整的技术和功能培训合同开始。如果你有足够激情、激励和灵活来申请这份工作，你肯定是加入了最好的公司。"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "A good job in a young and dynamic team"
+msgstr "一个好的工作是在一个年轻而充满活力的团队"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_active
+#: model:ir.model.fields,field_description:hr.field_hr_employee_active
 msgid "Active"
 msgstr "有效"
 
 #. module: hr
-#: view:hr.config.settings:hr.view_human_resources_configuration
-msgid "Additional Features"
-msgstr "额外的功能"
+#: model:hr.job,website_description:hr.job_consultant
+msgid "Analyse needs, write specification documents and quotation"
+msgstr "分析需求，编写规范文件和报价单"
 
 #. module: hr
-#: field:hr.config.settings,module_account_analytic_analysis:0
-msgid ""
-"Allow invoicing based on timesheets (the sale application will be installed)"
-msgstr "允许基于计工单开票（销售应用模块将被安装）"
+#: model:ir.ui.view,arch_db:hr.view_department_filter
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Archived"
+msgstr "归档"
 
 #. module: hr
-#: field:hr.config.settings,module_hr_timesheet_sheet:0
-msgid "Allow timesheets validation by managers"
-msgstr "允许管理人员验证计工单"
-
-#. module: hr
-#: view:hr.config.settings:hr.view_human_resources_configuration
-msgid "Apply"
-msgstr "应用"
-
-#. module: hr
-#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
-msgid "Attendance"
-msgstr "考勤"
-
-#. module: hr
-#: field:hr.employee,bank_account_id:0
+#: model:ir.model.fields,field_description:hr.field_hr_employee_bank_account_id
 msgid "Bank Account Number"
 msgstr "银行账户号码"
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
-msgid "Birth"
-msgstr "出生信息"
-
-#. module: hr
-#: help:hr.job,state:0
+#: model:hr.job,website_description:hr.job_cto
 msgid ""
-"By default 'Closed', set it to 'In Recruitment' if recruitment process is "
-"going on for this job position."
-msgstr "默认为 '关闭'，如果该岗位的招聘流程正在进行请设置为'招聘中'。"
+"Because of our constant growth, we're now looking for people to reinforce "
+"our team of enthusiastic chief technical officer. So if working on an open "
+"source project in a friendly and cooperative atmosphere sounds like fun to "
+"you, read on..."
+msgstr ""
+"因为不间断的成长，我们目前在寻找能够加强我们公司的富有热情的CTO，所以如果在一个友好合作的氛围中做开源项目对你来说比较不错的话，读一下……"
 
 #. module: hr
-#: view:hr.config.settings:hr.view_human_resources_configuration
-msgid "Cancel"
-msgstr "取消"
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid ""
+"Because of our constant growth, we're now looking for people to reinforce "
+"our team of enthusiastic developers. So if working on an open source project"
+" in a friendly and cooperative atmosphere sounds like fun to you, read on..."
+msgstr "因为不间断的成长，我们正在寻找富有热情的开发人员来壮大我们的团队，所以如果在一个友好合作的氛围中做开源项目对你来说比较不错的话，读一下……"
 
 #. module: hr
-#: field:hr.employee.category,child_ids:0
-msgid "Child Categories"
-msgstr "下级类别"
+#: model:hr.job,website_description:hr.job_trainee
+msgid ""
+"Because of our constant growth, we're now looking for people to reinforce "
+"our team of enthusiastic trainees. So if working on an open source project "
+"in a friendly and cooperative atmosphere sounds like fun to you, read on..."
+msgstr "因为不间断的成长，我们正在寻找富有热情的学员来壮大我们的团队，所以如果在一个友好合作的氛围中做开源项目对你来说比较不错的话，读一下……"
 
 #. module: hr
-#: field:hr.department,child_ids:0
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Birth"
+msgstr "出生"
+
+#. module: hr
+#: model:hr.job,name:hr.job_ceo
+msgid "Chief Executive Officer"
+msgstr "首席执行官"
+
+#. module: hr
+#: model:hr.job,name:hr.job_cto
+msgid "Chief Technical Officer"
+msgstr "首席技术官"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_child_ids
 msgid "Child Departments"
-msgstr "下级部门"
+msgstr "子部门"
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
-msgid "Citizenship & Other Info"
-msgstr "国籍和其他信息"
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Citizenship & Other Information"
+msgstr "身份和其它信息"
 
 #. module: hr
-#: field:hr.employee,city:0
-msgid "City"
-msgstr "城市"
+#: model:ir.actions.act_window,help:hr.act_employee_from_department
+#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
+msgid "Click to add a new employee."
+msgstr "单击添加一个新的员工"
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_filter field:hr.employee,coach_id:0
+#: model:ir.actions.act_window,help:hr.open_module_tree_department
+msgid "Click to create a department."
+msgstr "单击创建一个部门"
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.action_hr_job
+msgid "Click to define a new job position."
+msgstr "点击定义一个新的工作岗位"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Close to the perfection ..."
+msgstr "接近完美..."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_coach_id
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Coach"
-msgstr "师傅"
+msgstr "教练"
 
 #. module: hr
-#: field:hr.employee,color:0
+#: model:ir.model.fields,field_description:hr.field_hr_department_color
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category_color
+#: model:ir.model.fields,field_description:hr.field_hr_employee_color
 msgid "Color Index"
 msgstr "颜色索引"
 
 #. module: hr
-#: view:hr.department:hr.view_department_tree
+#: model:ir.ui.view,arch_db:hr.view_department_tree
 msgid "Companies"
 msgstr "公司"
 
 #. module: hr
-#: field:hr.department,company_id:0 view:hr.employee:hr.view_employee_filter
-#: view:hr.job:hr.view_job_filter field:hr.job,company_id:0
+#: model:ir.model.fields,field_description:hr.field_hr_department_company_id
+#: model:ir.model.fields,field_description:hr.field_hr_job_company_id
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Company"
 msgstr "公司"
 
 #. module: hr
-#: model:ir.ui.menu,name:hr.menu_hr_configuration
+#: model:ir.model.fields,field_description:hr.field_res_config_settings_resource_calendar_id
+msgid "Company Working Hours"
+msgstr "公司的上班时间"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
+msgid "Complete Name"
+msgstr "完整名称"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_human_resources_configuration
 msgid "Configuration"
 msgstr "配置"
 
 #. module: hr
-#: view:hr.config.settings:hr.view_human_resources_configuration
-#: model:ir.actions.act_window,name:hr.action_human_resources_configuration
-msgid "Configure Human Resources"
-msgstr "配置人力资源"
+#: model:ir.actions.act_window,name:hr.hr_config_settings_action
+msgid "Configure HR"
+msgstr "配置HR"
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
+#: model:hr.job,name:hr.job_consultant
+msgid "Consultant"
+msgstr "顾问"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner
+msgid "Contact"
+msgstr "联系人"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Contact Information"
 msgstr "联系信息"
 
 #. module: hr
-#: view:hr.config.settings:hr.view_human_resources_configuration
-msgid "Contracts"
-msgstr "合同"
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Contributions to open source projects"
+msgstr "贡献到开源项目"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.view_department_form_installer
-msgid "Create Your Departments"
-msgstr "创建您的部门"
-
-#. module: hr
-#: field:hr.config.settings,create_uid:0 field:hr.department,create_uid:0
-#: field:hr.employee,create_uid:0 field:hr.employee.category,create_uid:0
-#: field:hr.job,create_uid:0
+#: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_job_create_uid
 msgid "Created by"
-msgstr "创建者"
+msgstr "创建人"
 
 #. module: hr
-#: field:hr.config.settings,create_date:0 field:hr.department,create_date:0
-#: field:hr.employee,create_date:0 field:hr.employee.category,create_date:0
-#: field:hr.job,create_date:0
+#: model:ir.model.fields,field_description:hr.field_hr_department_create_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_create_date
+#: model:ir.model.fields,field_description:hr.field_hr_job_create_date
 msgid "Created on"
 msgstr "创建时间"
 
 #. module: hr
-#: field:hr.job,no_of_employee:0
+#: model:ir.model.fields,field_description:hr.field_hr_job_no_of_employee
 msgid "Current Number of Employees"
 msgstr "当前员工数量"
 
 #. module: hr
-#: field:hr.employee,birthday:0
+#: model:ir.model.fields,field_description:hr.field_hr_employee_birthday
 msgid "Date of Birth"
 msgstr "出生日期"
 
 #. module: hr
-#: help:hr.employee,message_last_post:0 help:hr.job,message_last_post:0
-msgid "Date of the last message posted on the record."
-msgstr "记录上发布的最后信息的日期"
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid "Define a clear communication strategy"
+msgstr "定义一个清晰的沟通策略"
 
 #. module: hr
-#: view:hr.department:hr.view_department_filter
-#: view:hr.employee:hr.view_employee_filter field:hr.employee,department_id:0
-#: view:hr.job:hr.view_job_filter field:hr.job,department_id:0
+#: model:hr.job,website_description:hr.job_consultant
+msgid "Deliver generic Odoo functional training sessions"
+msgstr "提供通用的Odoo功能培训会议"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
+#: model:ir.model.fields,field_description:hr.field_hr_job_department_id
+#: model:ir.ui.view,arch_db:hr.view_department_filter
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Department"
 msgstr "部门"
 
 #. module: hr
-#: field:hr.department,name:0
+#: model:ir.model.fields,field_description:hr.field_hr_department_name
 msgid "Department Name"
 msgstr "部门名称"
 
 #. module: hr
-#: view:hr.department:hr.view_department_filter
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
+#: model:ir.ui.view,arch_db:hr.view_department_filter
 msgid "Departments"
 msgstr "部门"
 
 #. module: hr
-#: field:res.users,display_employees_suggestions:0
-msgid "Display Employees Suggestions"
-msgstr "显示员工建议"
+#: model:ir.model.fields,field_description:hr.field_hr_department_display_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category_display_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
+#: model:ir.model.fields,field_description:hr.field_hr_job_display_name
+msgid "Display Name"
+msgstr "显示名称"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -265,55 +371,57 @@ msgid "Divorced"
 msgstr "离异"
 
 #. module: hr
-#: field:hr.config.settings,module_hr_gamification:0
-msgid "Drive engagement with challenges and badges"
-msgstr "用挑战和奖章来提高积极性"
+#: model:ir.model,name:hr.model_mail_alias
+msgid "Email Aliases"
+msgstr "Email别名"
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
 #: model:ir.model,name:hr.model_hr_employee
+#: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee"
 msgstr "员工"
 
 #. module: hr
-#: view:hr.employee.category:hr.view_employee_category_form
 #: model:ir.model,name:hr.model_hr_employee_category
 msgid "Employee Category"
 msgstr "员工类别"
 
 #. module: hr
-#: field:hr.employee.category,name:0
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category_name
 msgid "Employee Tag"
 msgstr "员工标签"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+#: model:ir.ui.view,arch_db:hr.view_employee_category_form
 msgid "Employee Tags"
 msgstr "员工标签"
 
 #. module: hr
-#: help:hr.employee,bank_account_id:0
+#: model:ir.model.fields,help:hr.field_hr_employee_bank_account_id
 msgid "Employee bank salary account"
-msgstr "员工的银行工资账户"
+msgstr "员工银行工资账户"
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_filter
-#: view:hr.employee:hr.view_employee_tree
-#: view:hr.employee:hr.view_partner_tree2
-#: field:hr.employee.category,employee_ids:0 field:hr.job,employee_ids:0
-#: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Employee's Name"
+msgstr "员工姓名"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.act_employee_from_department
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category_employee_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job_employee_ids
+#: model:ir.ui.menu,name:hr.menu_hr_root
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
+#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:ir.ui.view,arch_db:hr.view_employee_tree
+#: model:ir.ui.view,arch_db:hr.view_partner_tree2
 msgid "Employees"
 msgstr "员工"
-
-#. module: hr
-#: view:hr.employee.category:hr.view_employee_category_list
-#: view:hr.employee.category:hr.view_employee_category_tree
-msgid "Employees Categories"
-msgstr "员工类别"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
@@ -321,30 +429,44 @@ msgid "Employees Structure"
 msgstr "员工架构"
 
 #. module: hr
-#: constraint:hr.employee.category:0
-msgid "Error! You cannot create recursive Categories."
-msgstr "错误！您不能创建递归的类别。"
+#: model:ir.ui.view,arch_db:hr.view_employee_category_list
+msgid "Employees Tags"
+msgstr "员工标签"
 
 #. module: hr
-#: constraint:hr.department:0
+#: model:ir.model.fields,help:hr.field_hr_employee_address_home_id
+msgid ""
+"Enter here the private address of the employee, not the one linked to your "
+"company."
+msgstr "在此处输入员工的家庭地址，非办公地址"
+
+#. module: hr
+#: code:addons/hr/models/hr.py:303
+#, python-format
 msgid "Error! You cannot create recursive departments."
-msgstr "错误！您不能创建递归的部门。"
+msgstr "错误！你不能创建递归的部门"
 
 #. module: hr
-#: constraint:hr.employee:0
+#: code:addons/hr/models/hr.py:184
+#, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr "错误！您不能创建递归的员工层级。"
+msgstr "错误！你不能创建递归的员工层级。"
 
 #. module: hr
-#: field:hr.job,no_of_recruitment:0
+#: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
 msgid "Expected New Employees"
-msgstr "预期的新员工"
+msgstr "预计的新员工"
 
 #. module: hr
-#: help:hr.job,expected_employees:0
+#: model:ir.model.fields,help:hr.field_hr_job_expected_employees
 msgid ""
 "Expected number of employees for this job position after new recruitment."
-msgstr "新招聘后此职位上预期的员工数量"
+msgstr "新的招聘后这个工作岗位上期望的员工人数"
+
+#. module: hr
+#: model:hr.job,name:hr.job_developer
+msgid "Experienced Developer"
+msgstr "有经验的开发人员"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -352,184 +474,252 @@ msgid "Female"
 msgstr "女性"
 
 #. module: hr
-#. openerp-web
-#: code:addons/hr/static/src/xml/suggestions.xml:29
-#: view:hr.employee:hr.hr_kanban_view_employees
-#, python-format
+#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Follow"
 msgstr "关注"
 
 #. module: hr
-#: field:hr.employee,message_follower_ids:0
-#: field:hr.job,message_follower_ids:0
+#: model:hr.job,website_description:hr.job_consultant
+msgid "Follow and check the development part"
+msgstr "关注和检查开发部分"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Followers"
 msgstr "关注者"
 
 #. module: hr
-#: view:hr.employee:hr.hr_kanban_view_employees
-msgid "Following"
-msgstr "正在关注"
-
-#. module: hr
-#: field:hr.employee,gender:0
+#: model:ir.model.fields,field_description:hr.field_hr_employee_gender
 msgid "Gender"
 msgstr "性别"
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_filter view:hr.job:hr.view_job_filter
+#: model:hr.job,website_description:hr.job_developer
+msgid "Good knowledge of HTML and Javascript"
+msgstr "熟悉 HTML和Javascript "
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Good knowledge of object oriented programming"
+msgstr "熟悉面向对象编程"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Good knowledge of the latest web technologies"
+msgstr "熟悉最新的web技术"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Good knowledge of the programming language"
+msgstr "熟悉编程语言"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Good knowledge of web design"
+msgstr "熟悉web设计"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Good language skills in another language"
+msgstr "熟悉其它语言"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Group By"
 msgstr "分组"
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
-msgid "HR Settings"
-msgstr "人力资源设置"
+#: model:ir.model,name:hr.model_hr_department
+msgid "HR Department"
+msgstr "HR 部门"
 
 #. module: hr
-#: field:hr.job,no_of_hired_employee:0
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "HR Settings"
+msgstr "HR 设置"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "Help with the configuration of the software"
+msgstr "帮助配置软件"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_hrm
+msgid "Hire a team of great Human Resources people"
+msgstr "雇佣一个高效的人力资源团队"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+msgid "Hire a team of great executive people"
+msgstr "雇佣一个高效的执行团队成员"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_marketing
+msgid "Hire a team of great marketing people"
+msgstr "雇佣一个高效的市场团队成员."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job_no_of_hired_employee
 msgid "Hired Employees"
 msgstr "已雇用员工"
 
 #. module: hr
-#: help:hr.employee,message_summary:0 help:hr.job,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr "保存复杂的摘要（消息数量，……等）。为了插入到看板视图，这一摘要直接是是HTML格式。"
-
-#. module: hr
-#: field:hr.employee,address_home_id:0
-msgid "Home Address"
-msgstr "家庭地址"
-
-#. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
-#: model:ir.ui.menu,name:hr.menu_hr_reporting
-#: model:ir.ui.menu,name:hr.menu_hr_root
-#: model:ir.ui.menu,name:hr.menu_human_resources_configuration
 msgid "Human Resources"
 msgstr "人力资源"
 
 #. module: hr
-#: view:hr.config.settings:hr.view_human_resources_configuration
-msgid "Human Resources Management"
-msgstr "人力资源管理"
+#: model:hr.job,name:hr.job_hrm
+msgid "Human Resources Manager"
+msgstr "人力资源管理员"
 
 #. module: hr
-#: field:hr.config.settings,id:0 field:hr.department,id:0
-#: field:hr.employee,id:0 field:hr.employee.category,id:0 field:hr.job,id:0
+#: model:ir.model.fields,field_description:hr.field_hr_department_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_id
+#: model:ir.model.fields,field_description:hr.field_hr_job_id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr
-#: field:hr.employee,identification_id:0
+#: model:ir.model.fields,field_description:hr.field_hr_employee_identification_id
 msgid "Identification No"
-msgstr "身份证号码"
+msgstr "身份证号"
 
 #. module: hr
-#: help:hr.employee,message_unread:0 help:hr.job,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "如果勾选此项，您需要关注新的消息。"
+#: model:ir.model.fields,help:hr.field_hr_employee_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr "如果这有效字段设为否，那么可以隐藏此记录且并不删除它。"
 
 #. module: hr
-#: view:hr.job:hr.view_job_filter
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid "Improve our communication to customers"
+msgstr "提高和客户沟通的能力"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "In Position"
 msgstr "在职"
 
 #. module: hr
-#: view:hr.job:hr.view_job_filter
+#: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "In Recruitment"
-msgstr "招聘中"
+msgstr "正在招聘"
 
 #. module: hr
-#: field:hr.config.settings,module_hr_attendance:0
-msgid "Install attendances feature"
-msgstr "安装考勤管理功能"
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid "Increase opportunities"
+msgstr "增加商机"
 
 #. module: hr
-#: view:hr.config.settings:hr.view_human_resources_configuration
-msgid "Install your country's payroll"
-msgstr "安装您所在国家的工资表"
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid "Increase the visibility of the product"
+msgstr "增加产品的可见性"
 
 #. module: hr
-#: field:hr.employee,message_is_follower:0 field:hr.job,message_is_follower:0
-msgid "Is a Follower"
-msgstr "是一个关注者"
-
-#. module: hr
-#: view:hr.employee:hr.view_employee_filter view:hr.job:hr.view_hr_job_form
-#: view:hr.job:hr.view_hr_job_tree view:hr.job:hr.view_job_filter
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+#: model:ir.ui.view,arch_db:hr.view_hr_job_tree
+#: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Job"
 msgstr "工作"
 
 #. module: hr
-#: field:hr.job,description:0
+#: model:ir.model.fields,field_description:hr.field_hr_job_description
 msgid "Job Description"
 msgstr "工作说明"
 
 #. module: hr
-#: field:hr.job,name:0
-msgid "Job Name"
-msgstr "工作名称"
-
-#. module: hr
 #: model:ir.model,name:hr.model_hr_job
+#: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
+#: model:ir.model.fields,field_description:hr.field_hr_job_name
 msgid "Job Position"
-msgstr "工作职位"
+msgstr "工作岗位"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
-#: model:ir.ui.menu,name:hr.menu_hr_job_position
 msgid "Job Positions"
-msgstr "工作职位"
+msgstr "工作岗位"
 
 #. module: hr
-#: field:hr.employee,job_id:0
-msgid "Job Title"
-msgstr "职位"
+#: model:ir.actions.act_window,help:hr.action_hr_job
+msgid ""
+"Job Positions are used to define jobs and their requirements.\n"
+"                You can keep track of the number of employees you have per job\n"
+"                position and follow the evolution according to what you planned\n"
+"                for the future."
+msgstr ""
+"工作岗位用来定义工作和相关需求\n"
+"你可以根据工作岗位来跟踪雇员并且根据变化计划将来的事情"
 
 #. module: hr
-#: field:hr.department,jobs_ids:0 view:hr.job:hr.view_job_filter
+#: model:ir.model.fields,field_description:hr.field_hr_department_jobs_ids
+#: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Jobs"
 msgstr "工作"
 
 #. module: hr
-#: field:hr.employee,message_last_post:0 field:hr.job,message_last_post:0
-msgid "Last Message Date"
-msgstr "最新消息日期"
+#: model:ir.model.fields,field_description:hr.field_hr_department___last_update
+#: model:ir.model.fields,field_description:hr.field_hr_employee___last_update
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category___last_update
+#: model:ir.model.fields,field_description:hr.field_hr_job___last_update
+msgid "Last Modified on"
+msgstr "最后修改时间"
 
 #. module: hr
-#: field:hr.config.settings,write_uid:0 field:hr.department,write_uid:0
-#: field:hr.employee,write_uid:0 field:hr.employee.category,write_uid:0
-#: field:hr.job,write_uid:0
+#: model:ir.model.fields,field_description:hr.field_hr_department_write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_job_write_uid
 msgid "Last Updated by"
-msgstr "最近更新者"
+msgstr "最后更新者"
 
 #. module: hr
-#: field:hr.config.settings,write_date:0 field:hr.department,write_date:0
-#: field:hr.employee,write_date:0 field:hr.employee.category,write_date:0
+#: model:ir.model.fields,field_description:hr.field_hr_department_write_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_write_date
+#: model:ir.model.fields,field_description:hr.field_hr_job_write_date
 msgid "Last Updated on"
-msgstr "最近更新时间"
+msgstr "最后更新时间"
 
 #. module: hr
-#: field:hr.employee,last_login:0
-msgid "Latest Connection"
-msgstr "最近连接时间"
-
-#. module: hr
-#: view:hr.job:hr.view_hr_job_form
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Launch Recruitment"
 msgstr "启动招聘"
 
 #. module: hr
-#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
-msgid "Leaves"
-msgstr "休假"
+#: model:hr.job,website_description:hr.job_marketing
+msgid "Launch new marketing campaigns and offers"
+msgstr "推出新的营销活动和演出"
 
 #. module: hr
-#: field:hr.employee,login:0
-msgid "Login"
-msgstr "登录名"
+#: model:hr.job,website_description:hr.job_hrm
+msgid "Launch new products, Human Resources campaigns and offers"
+msgstr "推出新的产品,团队活动和演出."
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+msgid "Launch new products, marketing campaigns and offers"
+msgstr "发布新的产品，市场营销和职位"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -537,192 +727,229 @@ msgid "Male"
 msgstr "男性"
 
 #. module: hr
-#: field:hr.config.settings,module_hr_expense:0
-msgid "Manage employees expenses"
-msgstr "管理员工的费用"
-
-#. module: hr
-#: field:hr.config.settings,module_hr_holidays:0
-msgid "Manage holidays, leaves and allocation requests"
-msgstr "管理节日、休假和分配申请"
-
-#. module: hr
-#: field:hr.config.settings,module_hr_payroll:0
-msgid "Manage payroll"
-msgstr "管理工资表"
-
-#. module: hr
-#: field:hr.config.settings,module_hr_recruitment:0
-msgid "Manage the recruitment process"
-msgstr "管理招聘流程"
-
-#. module: hr
-#: field:hr.config.settings,module_hr_timesheet:0
-msgid "Manage timesheets"
-msgstr "管理计工单"
-
-#. module: hr
-#: field:hr.department,manager_id:0 view:hr.employee:hr.view_employee_filter
-#: field:hr.employee,parent_id:0
+#: model:ir.model.fields,field_description:hr.field_hr_department_manager_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_parent_id
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:res.groups,name:hr.group_hr_manager
 msgid "Manager"
-msgstr "主管"
+msgstr "管理员"
 
 #. module: hr
-#: field:hr.employee,marital:0
+#: model:ir.model.fields,field_description:hr.field_hr_employee_marital
 msgid "Marital Status"
 msgstr "婚姻状况"
 
 #. module: hr
-#: selection:hr.employee,marital:0
-msgid "Married"
-msgstr "已婚"
+#: model:hr.job,name:hr.job_marketing
+msgid "Marketing and Community Manager"
+msgstr "市场及社区经理"
 
 #. module: hr
-#: field:hr.employee,image_medium:0
+#: selection:hr.employee,marital:0
+msgid "Married (or similar)"
+msgstr "已婚 (或类似信息)"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Master or engineer in computer science"
+msgstr "计算机科学硕士或工程师"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_image_medium
 msgid "Medium-sized photo"
 msgstr "中等尺寸照片"
 
 #. module: hr
-#: help:hr.employee,image_medium:0
+#: model:ir.model.fields,help:hr.field_hr_employee_image_medium
 msgid ""
 "Medium-sized photo of the employee. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr "员工的中等尺寸照片。自动缩放为128x128px的图片，保持纵横比例。这个字段用在表单视图和某些看板视图。"
+msgstr "员工的中等尺寸照片。保留纵横比例，自动缩放为128x128px的图像。这个字段用在表单视图和某些看板视图。"
 
 #. module: hr
-#: field:hr.department,member_ids:0
+#: model:ir.model.fields,field_description:hr.field_hr_department_member_ids
 msgid "Members"
-msgstr "成员"
+msgstr "会员"
 
 #. module: hr
-#: field:hr.employee,message_ids:0 field:hr.job,message_ids:0
+#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Messages"
 msgstr "消息"
 
 #. module: hr
-#: help:hr.employee,message_ids:0 help:hr.job,message_ids:0
-msgid "Messages and communication history"
-msgstr "信息和通信历史记录"
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Must have ..."
+msgstr "一定有..."
 
 #. module: hr
-#: field:hr.department,complete_name:0 field:hr.employee,name_related:0
-#: field:hr.employee.category,complete_name:0
+#: model:ir.model.fields,field_description:hr.field_hr_employee_name
 msgid "Name"
 msgstr "名称"
 
 #. module: hr
-#: field:hr.employee,country_id:0
-msgid "Nationality"
-msgstr "国籍"
+#: model:ir.model.fields,field_description:hr.field_hr_employee_country_id
+msgid "Nationality (Country)"
+msgstr "国籍(国家)"
 
 #. module: hr
-#: field:hr.department,note:0
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Nice to have"
+msgstr "最好有"
+
+#. module: hr
+#: selection:hr.job,state:0
+msgid "Not Recruiting"
+msgstr "停止招聘"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_note
 msgid "Note"
-msgstr "备注"
+msgstr "便笺"
 
 #. module: hr
-#: field:hr.employee,notes:0
+#: model:ir.model.fields,field_description:hr.field_hr_employee_notes
 msgid "Notes"
 msgstr "备注"
 
 #. module: hr
-#: help:hr.job,no_of_employee:0
+#: model:ir.model.fields,help:hr.field_hr_job_no_of_employee
 msgid "Number of employees currently occupying this job position."
-msgstr "此职位现有的员工人数。"
+msgstr "这个工作岗位上现有的员工人数"
 
 #. module: hr
-#: sql_constraint:hr.job:0
-msgid ""
-"Number of hired employee must be less than expected number of employee in "
-"recruitment."
-msgstr "已雇佣员工数量必须小于正在招聘的预期数量。"
-
-#. module: hr
-#: help:hr.job,no_of_hired_employee:0
+#: model:ir.model.fields,help:hr.field_hr_job_no_of_hired_employee
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
 msgstr "招聘阶段此岗位已经雇佣的员工数量。"
 
 #. module: hr
-#: help:hr.job,no_of_recruitment:0
+#: model:ir.model.fields,help:hr.field_hr_job_no_of_recruitment
 msgid "Number of new employees you expect to recruit."
-msgstr "您计划招聘的新员工数。"
+msgstr "你计划招聘的新员工数。"
 
 #. module: hr
-#: field:hr.employee,work_location:0
-msgid "Office Location"
-msgstr "办公地点"
+#: model:ir.actions.act_window,help:hr.open_module_tree_department
+msgid ""
+"Odoo's department structure is used to manage all documents\n"
+"                related to employees by departments: expenses, timesheets,\n"
+"                leaves, recruitments, etc."
+msgstr ""
+"使用Odoo的部门结构来关于员工相关的文档：\n"
+"                比如 费用、日程安排、考勤、休假、录用"
 
 #. module: hr
-#: model:ir.actions.client,name:hr.action_client_hr_menu
-msgid "Open HR Menu"
-msgstr "打开人力资源菜单"
+#: model:res.groups,name:hr.group_hr_user
+msgid "Officer"
+msgstr "主管"
 
 #. module: hr
-#: field:hr.config.settings,module_hr_evaluation:0
-msgid "Organize employees periodic evaluation"
-msgstr "组织员工定期评估"
+#: selection:hr.employee,gender:0
+msgid "Other"
+msgstr "其他"
 
 #. module: hr
-#: field:hr.employee,otherid:0
-msgid "Other Id"
-msgstr "其它ID"
-
-#. module: hr
-#: view:hr.employee:hr.view_employee_form
+#: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Other Information ..."
 msgstr "其它信息..."
 
 #. module: hr
-#: field:hr.department,parent_id:0
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Our staff at work"
+msgstr "我们的员工在工作中"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_parent_id
 msgid "Parent Department"
 msgstr "上级部门"
 
 #. module: hr
-#: field:hr.employee.category,parent_id:0
-msgid "Parent Employee Tag"
-msgstr "上级员工标签"
+#: model:hr.job,website_description:hr.job_developer
+msgid "Passion for the Internet and its culture"
+msgstr "热爱互联网和它的文化"
 
 #. module: hr
-#: field:hr.employee,passport_id:0
+#: model:ir.model.fields,field_description:hr.field_hr_employee_passport_id
 msgid "Passport No"
-msgstr "护照"
+msgstr "护照号"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_payroll_modules
-msgid "Payroll"
-msgstr "工资表"
-
-#. module: hr
-#: view:hr.employee:hr.view_employee_form
-msgid "Personal Information"
-msgstr "个人信息"
-
-#. module: hr
-#: field:hr.employee,image:0
+#: model:ir.model.fields,field_description:hr.field_hr_employee_image
 msgid "Photo"
 msgstr "照片"
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Pictures of smart and enthusiastic people"
+msgstr "聪明和热情人的照片"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Position"
-msgstr "职位"
+msgstr "岗位"
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
-msgid "Public Information"
-msgstr "公开信息"
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Preferably 1 year of experience"
+msgstr "最好是 1 年的经验"
 
 #. module: hr
-#: field:hr.config.settings,module_hr_contract:0
-msgid "Record contracts per employee"
-msgstr "记录每位员工的合同"
+#: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
+msgid "Private Address"
+msgstr "家庭住址"
 
 #. module: hr
-#: selection:hr.job,state:0
-msgid "Recruitment Closed"
-msgstr "招聘已关闭"
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Private Information"
+msgstr "个人隐私信息"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Prout prout prout"
+msgstr "Prout prout prout"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "Quantify and negotiate the resources required"
+msgstr "量化和协商所需的资源"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_developer
+msgid "Quick and autonomous learner"
+msgstr "快速和自主学习者"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Recruitment"
+msgstr "招聘"
 
 #. module: hr
 #: selection:hr.job,state:0
@@ -730,39 +957,91 @@ msgid "Recruitment in Progress"
 msgstr "正在招聘"
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
+#: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Related User"
-msgstr "关联账户"
+msgstr "相关用户"
 
 #. module: hr
-#: field:res.users,employee_ids:0
+#: model:ir.model.fields,field_description:hr.field_res_users_employee_ids
 msgid "Related employees"
 msgstr "相关的员工"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_user_id
+msgid "Related user name for the resource to manage its access."
+msgstr "用于管理资源访问权限的用户名"
+
+#. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
-msgid "Reports"
+msgid "Reporting"
 msgstr "报告"
 
 #. module: hr
-#: field:hr.job,requirements:0
+#: model:ir.model.fields,field_description:hr.field_hr_job_requirements
 msgid "Requirements"
 msgstr "要求"
 
 #. module: hr
-#: field:hr.employee,resource_id:0
-msgid "Resource"
-msgstr "资源"
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Responsibilities"
+msgstr "责任"
 
 #. module: hr
-#: field:hr.employee,sinid:0
+#: model:ir.model.fields,field_description:hr.field_hr_employee_sinid
 msgid "SIN No"
-msgstr "SIN号码"
+msgstr "社会保险号SIN"
 
 #. module: hr
-#: field:hr.employee,ssnid:0
+#: model:ir.model.fields,field_description:hr.field_hr_employee_ssnid
 msgid "SSN No"
-msgstr "SSN号码"
+msgstr "社会保险号SSN"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid "Scale our events organization all around the world"
+msgstr "在全世界各地扩展我们的组织活动"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid ""
+"Set default calendar used to compute time allocation for leaves, timesheets,"
+" ..."
+msgstr "设置确省的日程，用于在考勤和时间安排中计算时间"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_job_state
+msgid ""
+"Set whether the recruitment process is open or closed for this job position."
+msgstr "可以设置这个岗位的招聘流程是开放的还是关闭"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.hr_menu_configuration
+#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "Settings"
+msgstr "设置"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings_module_hr_org_chart
+msgid "Show Organizational Chart"
+msgstr "显示组织架构图"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Show organizational chart on employee form"
+msgstr "在员工视图上显示组织架构图"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Show organizational chart on employee form."
+msgstr "在员工视图上显示组织架构图"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -770,164 +1049,136 @@ msgid "Single"
 msgstr "单身"
 
 #. module: hr
-#: field:hr.employee,image_small:0
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Skills"
+msgstr "技能"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_image_small
 msgid "Small-sized photo"
 msgstr "小尺寸照片"
 
 #. module: hr
-#: help:hr.employee,image_small:0
+#: model:ir.model.fields,help:hr.field_hr_employee_image_small
 msgid ""
 "Small-sized photo of the employee. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr "小尺寸的员工照片。自动缩放为64x64px，保持纵横比。用于任何需要小图片的场合。"
+msgstr "小尺寸的员工照片。保留纵横比，自动缩放为64x64px。用在任何需要小图像的场合"
 
 #. module: hr
-#: help:hr.employee,sinid:0
+#: model:ir.model.fields,help:hr.field_hr_employee_sinid
 msgid "Social Insurance Number"
-msgstr "社会保险号码"
+msgstr "社会保险号"
 
 #. module: hr
-#: help:hr.employee,ssnid:0
+#: model:ir.model.fields,help:hr.field_hr_employee_ssnid
 msgid "Social Security Number"
-msgstr "社会保障号码"
+msgstr "社会保障号"
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form view:hr.job:hr.view_job_filter
-#: field:hr.job,state:0
+#: model:ir.model.fields,field_description:hr.field_hr_job_state
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Status"
 msgstr "状态"
 
 #. module: hr
-#: view:hr.job:hr.view_hr_job_form
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Stop Recruitment"
 msgstr "停止招聘"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.action2
+#: model:ir.actions.act_window,name:hr.hr_employee_action_subordinate_hierachy
 msgid "Subordinate Hierarchy"
 msgstr "下属层级"
 
 #. module: hr
-#: field:hr.employee,child_ids:0
+#: model:ir.model.fields,field_description:hr.field_hr_employee_child_ids
 msgid "Subordinates"
 msgstr "下属"
 
 #. module: hr
-#. openerp-web
-#: code:addons/hr/static/src/xml/suggestions.xml:15
-#, python-format
-msgid "Suggested Employees"
-msgstr "推荐员工"
+#: sql_constraint:hr.employee.category:0
+msgid "Tag name already exists !"
+msgstr "标签名已存在!"
 
 #. module: hr
-#: field:hr.employee,message_summary:0 field:hr.job,message_summary:0
-msgid "Summary"
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category_ids
+msgid "Tags"
 msgstr "摘要"
 
 #. module: hr
-#: field:hr.employee,category_ids:0
-msgid "Tags"
-msgstr "标签"
+#: model:hr.job,website_description:hr.job_consultant
+msgid "Take part in the consulting services"
+msgstr "参与咨询服务"
 
 #. module: hr
-#: view:hr.config.settings:hr.view_human_resources_configuration
-msgid "Talent Management"
-msgstr "人才管理"
+#: model:hr.job,website_description:hr.job_developer
+msgid "Team spirit and good communication"
+msgstr "团队合作精神和良好的沟通"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_is_address_home_a_company
+msgid "The employee adress has a company linked"
+msgstr "员工地址与公司地址相链接"
 
 #. module: hr
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per department in company!"
-msgstr "公司每个部门内的岗位名称必须唯一！"
+msgstr "公司内部门的工作岗位名称必须唯一！"
 
 #. module: hr
-#: help:hr.employee,image:0
+#: model:ir.model.fields,help:hr.field_hr_employee_image
 msgid ""
 "This field holds the image used as photo for the employee, limited to "
 "1024x1024px."
 msgstr "这个字段保存员工的照片，限制为 1024x1024px"
 
 #. module: hr
-#: help:hr.config.settings,module_account_analytic_analysis:0
-msgid ""
-"This installs the module account_analytic_analysis, which will install sales"
-" management too."
-msgstr "为此要安装模块 account_analytic_analysis，也将安装销售管理"
-
-#. module: hr
-#: help:hr.config.settings,module_hr_attendance:0
-msgid "This installs the module hr_attendance."
-msgstr "为此要安装 hr_attendance 模块。"
-
-#. module: hr
-#: help:hr.config.settings,module_hr_contract:0
-msgid "This installs the module hr_contract."
-msgstr "为此要安装模块 hr_contract。"
-
-#. module: hr
-#: help:hr.config.settings,module_hr_evaluation:0
-msgid "This installs the module hr_evaluation."
-msgstr "为此要安装模块 hr_evaluation。"
-
-#. module: hr
-#: help:hr.config.settings,module_hr_expense:0
-msgid "This installs the module hr_expense."
-msgstr "为此要安装模块 hr_expense。"
-
-#. module: hr
-#: help:hr.config.settings,module_hr_gamification:0
-msgid "This installs the module hr_gamification."
-msgstr "为此将安装模块 hr_gamification。"
-
-#. module: hr
-#: help:hr.config.settings,module_hr_holidays:0
-msgid "This installs the module hr_holidays."
-msgstr "为此要安装模块 hr_holidays。"
-
-#. module: hr
-#: help:hr.config.settings,module_hr_payroll:0
-msgid "This installs the module hr_payroll."
-msgstr "为此要安装模块 hr_payroll。"
-
-#. module: hr
-#: help:hr.config.settings,module_hr_recruitment:0
-msgid "This installs the module hr_recruitment."
-msgstr "为此要安装模块 hr_recruitment。"
-
-#. module: hr
-#: help:hr.config.settings,module_hr_timesheet:0
-msgid "This installs the module hr_timesheet."
-msgstr "为此要安装模块 hr_timesheet。"
-
-#. module: hr
-#: help:hr.config.settings,module_hr_timesheet_sheet:0
-msgid "This installs the module hr_timesheet_sheet."
-msgstr "为此要安装模块 hr_timesheet_sheet。"
-
-#. module: hr
-#: view:hr.config.settings:hr.view_human_resources_configuration
-msgid "Time Tracking"
-msgstr "时间跟踪"
-
-#. module: hr
-#: field:hr.job,expected_employees:0
+#: model:ir.model.fields,field_description:hr.field_hr_job_expected_employees
 msgid "Total Forecasted Employees"
-msgstr "预计员工总数"
+msgstr "预计员工数合计"
 
 #. module: hr
-#: view:hr.employee:hr.hr_kanban_view_employees
-msgid "Unfollow"
-msgstr "取消关注"
+#: model:hr.job,name:hr.job_trainee
+msgid "Trainee"
+msgstr "见习"
 
 #. module: hr
-#: field:hr.employee,message_unread:0 field:hr.job,message_unread:0
+#: model:hr.job,website_description:hr.job_marketing
+msgid "Transform our product into a suite of well positioned business Apps"
+msgstr "将我们的产品转化为一套好的商务应用程序"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+#: model:ir.ui.view,arch_db:hr.view_department_filter
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
-msgstr "未读信息"
+msgstr "未读消息"
 
 #. module: hr
-#: field:hr.job,write_date:0
-msgid "Update Date"
-msgstr "更新日期"
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid ""
+"Use here the home address of the employee.\n"
+"                                            This private address is used in the expense report reimbursement document.\n"
+"                                            It should be different from the work address."
+msgstr ""
+"使用此处的员工家庭地址.\n"
+"此私密地址仅在费用报销报告中使用.\n"
+"不应该是工作地址"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
+msgid "User"
+msgstr "用户"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
@@ -935,52 +1186,382 @@ msgid "Users"
 msgstr "用户"
 
 #. module: hr
-#: code:addons/hr/hr.py:273
-#, python-format
-msgid "Welcome to %s! Please help him/her take the first steps with Odoo!"
-msgstr "欢迎来到 %s！请帮助他/她迈开Odoo的第一步！"
+#: model:ir.ui.view,arch_db:hr.hr_job_view_kanban
+msgid "Vacancies :"
+msgstr "职位空缺"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_visa_expire
+msgid "Visa Expire Date"
+msgstr "签证到期日期"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_visa_no
+msgid "Visa No"
+msgstr "签证号"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid ""
+"We are looking for a motivated and results-driven Functional Consultant! You"
+" will take part in the consulting services we provide to our partners and "
+"customers, on the functional side. Your job start from the quotation to the "
+"customer to the delivery to the customer. You listen the customer and try to"
+" give him the best service. You report to the head of consulting service and"
+" will be coached by a senior consultant."
+msgstr ""
+"我们在寻找以动机和结果为导向的功能顾问，来参与到我们给顾客和业务伙伴提供的咨询服务中。 "
+"在功能方面，你的工作将会从给顾客报价一直到交货为止。倾听并给客户提供最好的服务。回报对象是咨询部门领导。并且由高级顾问对你进行培训"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_hrm
+msgid ""
+"We are looking for a passionated Human Resources Manager to help us make "
+"products people love to use. We need someone who is ambitious, passionated, "
+"and ..... not afraid to start new things, a lot of new things and scale "
+"them."
+msgstr "我们在寻找一个热情的人力资源经理，来帮产品人员喜欢用它，需要有上进心的，热情的，和……，不害怕接触新事物，接触这些新的事物并规划它们"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+msgid ""
+"We are looking for a passionated executive manager to help us make products "
+"people love to use. We need someone who is ambitious, passionated, and ....."
+" not afraid to start new things, a lot of new things and scale them."
+msgstr "我们在寻找一个热情的执行经理，来帮产品人员喜欢用它，需要有上进心的，热情的，和……，不害怕接触新事物，接触这些新的事物并规划它们"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_marketing
+msgid ""
+"We are looking for a passionated marketer manager to help us make products "
+"people love to use. We need someone who is ambitious, passionated, and ....."
+" not afraid to start new things, a lot of new things and scale them."
+msgstr "我们在寻找一个富有热情的市场经理，来帮助产品人员喜欢用它。我们需要有上进心的，热情的，和……，不害怕接触新事物，接触这些新的事物并规划它们"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "What we offer"
+msgstr "我们提供什么"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "What you will do ..."
+msgstr "你会做什么 ..."
 
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Widower"
-msgstr "配偶已去世"
+msgstr "丧偶"
 
 #. module: hr
-#: field:hr.employee,work_email:0
+#: model:hr.job,website_description:hr.job_consultant
+msgid "Will report to the Head of Professional Services"
+msgstr "汇报给服务部主管"
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.act_employee_from_department
+#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
+msgid ""
+"With just a quick glance on the Odoo employee screen, you\n"
+"                can easily find all the information you need for each person;\n"
+"                contact data, job position, availability, etc."
+msgstr "随着Odoo员工的屏幕上只是一个快速浏览，你可以很容易地找到你所需要的每个人的信息;联系人数据，工作岗位，可用性等。"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid ""
+"With our product, which is a suite of 3000 business apps. It is fully open "
+"source, full featured and it’s online offer is 3 times cheaper than "
+"traditional competitors. We have 2.000.000 users, and we're growing fast."
+msgstr ""
+"我们的产品是一个有着3000个APP的商务应用程序，它是全部开源的，非常多的功能并且在线报价比传统的竞争者便宜３倍，我们有超过 "
+"2.000.000用户，并且我们增长很快"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_address_id
+msgid "Work Address"
+msgstr "工作地址"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_work_email
 msgid "Work Email"
-msgstr "工作邮箱"
+msgstr "工作Email"
 
 #. module: hr
-#: field:hr.employee,mobile_phone:0
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Work Information"
+msgstr "工作信息"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_work_location
+msgid "Work Location"
+msgstr "工作地点"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_mobile_phone
 msgid "Work Mobile"
 msgstr "工作手机"
 
 #. module: hr
-#: field:hr.employee,work_phone:0
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Work Organization"
+msgstr "工作组织架构"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Work Permit"
+msgstr "工作许可证"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_permit_no
+msgid "Work Permit No"
+msgstr "工作许可编号"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_work_phone
 msgid "Work Phone"
 msgstr "工作电话"
 
 #. module: hr
-#: field:hr.employee,address_id:0
-msgid "Working Address"
-msgstr "工作地址"
+#: model:hr.job,website_description:hr.job_marketing
+msgid "Write attractive content"
+msgstr "撰写有吸引力的内容"
 
 #. module: hr
-#: view:hr.department:hr.view_department_form
+#: model:hr.job,website_description:hr.job_hrm
+msgid "Write attractive content and build up Human Resources materials"
+msgstr "写有吸引力的内容并且构建人力资源材料"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+msgid "Write attractive content and build up executive materials"
+msgstr "写有吸引力的内容和构建高效的材料"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "You are a quick and autonomous learner"
+msgstr "你是一个快速自主学习者."
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "You are an excellent communicator and negotiator"
+msgstr "你是一个优秀的沟通者和谈判者"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid "You are approachable, honest and fun team player"
+msgstr "你是平易近人，诚实和有趣的团队成员"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "You are available immediately"
+msgstr "你马上就有空了."
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid "You are creative"
+msgstr "你具有创造力"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "You are ready to travel in US"
+msgstr "你准备好了去英国旅游"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid "You are ready to work in a dynamic company"
+msgstr "你准备在一个充满活力的公司工作"
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.action_hr_job
+msgid ""
+"You can attach a survey to a job position. It will be used in\n"
+"                the recruitment process to evaluate the applicants for this job\n"
+"                position."
+msgstr "你可以给一个工作岗位做调查，它被用在招聘流程中，用来评估这个岗位的申请者"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "You have 2 or 3 years of experience"
+msgstr "你有两到三年的经验"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "You have a Master degree in Business Management"
+msgstr "你有一个商业管理硕士学位"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_marketing
+msgid "You have an affinity with the IT world"
+msgstr "你与ＩＴ世界有亲和力"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid "You have an affinity with the product"
+msgstr "你对产品有亲和力"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "You have good knowledge in accounting"
+msgstr "你对会计很熟"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "You speak a third language"
+msgstr "你会第三种语言"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "You speak fluently French and English"
+msgstr "你讲英语和法语很流利"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_trainee
+msgid ""
+"You will be responsible for developing and improving applications. You will "
+"work autonomously as well as                     coordinate and supervise "
+"small distributed development teams for specific projects. You will become a"
+" technical                 expert of the product."
+msgstr "您将负责开发和改进应用程序。您将自主工作，以及协调和监督小型分布式开发团队的具体项目。您将成为该产品的技术专家。"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_developer
+msgid ""
+"You will be responsible for developing and improving applications. You will "
+"work autonomously as well as coordinate and supervise small distributed "
+"development teams for specific projects. You will become a technical expert "
+"of the product."
+msgstr "您将负责开发和改进应用程序。您将自主工作，以及协调和监督小型分布式开发团队的具体项目。您将成为该产品的技术专家。"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid ""
+"You will be responsible for developing and improving product communication. "
+"You will work autonomously as well as coordinate and supervise small "
+"distributed development teams for specific projects. You will become a "
+"techinical expert of the product."
+msgstr "你要负责开发和改进引用产品的交流，某些特定的项目要自主的工作同时协调并领导小型的分散的团队你会是一个技术专家"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_trainee
+msgid "You will become a technical expert of the product."
+msgstr "你将成为产品的技术专家"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_developer
+msgid "You will initially be coached by senior developers"
+msgstr "你将成为高级开发人员的教练"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+msgid "You will initially be coached by senior technical officer"
+msgstr "你将成为高级技术主任的教练"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_trainee
+msgid "You will initially be coached by senior trainees"
+msgstr "你会被高级学员培训"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_trainee
+msgid "You will report to the head of R&amp;D"
+msgstr "你要给研发部门领导报告"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_developer
+msgid "You will work closely with all developers"
+msgstr "你将和所有的开发人员紧密合作"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+msgid "You will work closely with all technical officer"
+msgstr "你将和所有的技术人员紧密合作"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_trainee
+msgid "You will work closely with all trainees"
+msgstr "你将会和所有的学员紧密合作"
+
+#. module: hr
+#: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
+msgid "Your document has not been created"
+msgstr "你的文档尚未创建"
+
+#. module: hr
+#: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
+msgid ""
+"Your document has not been created because your email address is not "
+"recognized. Please send emails with the email address recorded on your "
+"employee information, or contact your HR manager."
+msgstr "您的文档没有被创建，因为您的电子邮件地址未确认。请发送电子邮件与电子邮件地址记录在您的员工信息，或联系您的人力资源经理。"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "部门"
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
+#: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Part Time"
 msgstr "例如： 部分时间"
 
 #. module: hr
-#: view:hr.job:hr.view_hr_job_form
-msgid "new employee(s) expected"
-msgstr "期望新员工"
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "e.g. Sales Manager"
+msgstr "例如：销售经理"
 
 #. module: hr
-#: view:hr.config.settings:hr.view_human_resources_configuration
-msgid "or"
-msgstr "或"
+#: model:ir.model,name:hr.model_mail_alias_mixin
+msgid "mail.alias.mixin"
+msgstr "mail.alias.mixin"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"
+
+#. module: hr
+#: model:res.groups,comment:hr.group_hr_user
+msgid "the user will be able to approve document created by employees."
+msgstr "这个用户能审批员工创建的单据"
+
+#. module: hr
+#: model:res.groups,comment:hr.group_hr_manager
+msgid ""
+"the user will have an access to the human resources configuration as well as"
+" statistic reports."
+msgstr "用户将有权限访问人力资源配置以及统计报表。"

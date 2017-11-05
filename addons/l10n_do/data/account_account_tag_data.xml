@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+    <!-- Account Tags -->
+
+        <record id='account_tag_1' model='account.account.tag'>
+                <field name='name'>1 Activos</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_11' model='account.account.tag'>
+                <field name='name'>11 Activos Corrientes</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_1101' model='account.account.tag'>
+                <field name='name'>1101 Efectivo y Equivalentes de Efectivo</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_110101' model='account.account.tag'>
+                <field name='name'>110101 Caja</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_110102' model='account.account.tag'>
+                <field name='name'>110102 Bancos</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_110103' model='account.account.tag'>
+                <field name='name'>110103 Inversiones Temporales Plazo Menor 90 días</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_1102' model='account.account.tag'>
+                <field name='name'>1102 Inversiones en Valores a Corto Plazo</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_1103' model='account.account.tag'>
+                <field name='name'>1103 Cuentas y Documentos por Cobrar</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_110301' model='account.account.tag'>
+                <field name='name'>110301 Documentos por Cobrar</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_110302' model='account.account.tag'>
+                <field name='name'>110302 Cuentas por Cobrar</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_1104' model='account.account.tag'>
+                <field name='name'>1104 Provisión para Cuentas Incobrables</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_1105' model='account.account.tag'>
+                <field name='name'>1105 Inventarios</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_1106' model='account.account.tag'>
+                <field name='name'>1106 Deterioro Acumulado de Valor de Inventarios</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_1107' model='account.account.tag'>
+                <field name='name'>1107 Estimación por Obsolecencia de Inventario</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_1108' model='account.account.tag'>
+                <field name='name'>1108 Impuestos Adelantados</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_110801' model='account.account.tag'>
+                <field name='name'>110801 ITBIS Pagado en Compras</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_110803' model='account.account.tag'>
+                <field name='name'>110803 Otros Impuestos y Saldos</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_1109' model='account.account.tag'>
+                <field name='name'>1109 Inversiones Temporales</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_1110' model='account.account.tag'>
+                <field name='name'>1110 Pagos Anticipados</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_12' model='account.account.tag'>
+                <field name='name'>12 Activos Fijos</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_1201' model='account.account.tag'>
+                <field name='name'>1201 Propiedades, Planta y Equipo</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_120101' model='account.account.tag'>
+                <field name='name'>120101 Bienes Inmuebles (CAT 1)</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_120102' model='account.account.tag'>
+                <field name='name'>120102 Bienes Muebles (CAT 2)</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_120103' model='account.account.tag'>
+                <field name='name'>120103 Bienes Muebles (CAT 3)</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_1202' model='account.account.tag'>
+                <field name='name'>1202 Depreciación Acumulada de Propiedades, Planta y Equipo</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_1203' model='account.account.tag'>
+                <field name='name'> 1203 Deterioro de Valor Acumulado de Propiedades, Planta y Equipo</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_1204' model='account.account.tag'>
+                <field name='name'>1204 Activos Intangibles</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_1205' model='account.account.tag'>
+                <field name='name'>1205 Bienes en Arrendamiento</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_1206' model='account.account.tag'>
+                <field name='name'>1206 Depreciación Acumulada de Bienes en Arrendamiento</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_1207' model='account.account.tag'>
+                <field name='name'>1207 Deterioro de Valor Acumulado de Bienes en Arrendamiento</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_1208' model='account.account.tag'>
+                <field name='name'>1208 Inversiones Permanentes</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_1209' model='account.account.tag'>
+                <field name='name'>1209 Activos Diferidos</field>
+                <field name='color'>1</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_2' model='account.account.tag'>
+                <field name='name'>2 Pasivos</field>
+                <field name='color'>8</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_21' model='account.account.tag'>
+                <field name='name'>21 Pasivo Corriente</field>
+                <field name='color'>8</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_2101' model='account.account.tag'>
+                <field name='name'>2101 Cuentas y Documentos por Pagar a Corto Plazo</field>
+                <field name='color'>8</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_2102' model='account.account.tag'>
+                <field name='name'>2102 Beneficios por Pagar a Corto Plazo</field>
+                <field name='color'>8</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_2103' model='account.account.tag'>
+                <field name='name'>2103 Impuestos y Retenciones</field>
+                <field name='color'>8</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_210301' model='account.account.tag'>
+                <field name='name'>210301 ITBIS por Pagar</field>
+                <field name='color'>8</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_210302' model='account.account.tag'>
+                <field name='name'>210302 ITBIS Retenido</field>
+                <field name='color'>8</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_210303' model='account.account.tag'>
+                <field name='name'>210303 ISR Retenido</field>
+                <field name='color'>8</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_210304' model='account.account.tag'>
+                <field name='name'>210304 Retenciones en Nómina</field>
+                <field name='color'>8</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_210305' model='account.account.tag'>
+                <field name='name'>210305 Otros Impuestos o Retenciones</field>
+                <field name='color'>8</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_2104' model='account.account.tag'>
+                <field name='name'>2104 Provisiones a Corto Plazo</field>
+                <field name='color'>8</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_2105' model='account.account.tag'>
+                <field name='name'>2105 Tarjetas de Crédito</field>
+                <field name='color'>8</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_22' model='account.account.tag'>
+                <field name='name'>22 Pasivo No Corriente</field>
+                <field name='color'>8</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_2201' model='account.account.tag'>
+                <field name='name'>2201 Cuentas y Documentos por Pagar a Largo Plazo</field>
+                <field name='color'>8</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_2202' model='account.account.tag'>
+                <field name='name'>2202 Provisión para Obligaciones Laborales</field>
+                <field name='color'>8</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_2203' model='account.account.tag'>
+                <field name='name'>2203 Anticipos y Garantías de Clientes</field>
+                <field name='color'>8</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_2204' model='account.account.tag'>
+                <field name='name'>2204 Provisiones a Largo Plazo</field>
+                <field name='color'>8</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_3' model='account.account.tag'>
+                <field name='name'>3 Capital</field>
+                <field name='color'>6</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_31' model='account.account.tag'>
+                <field name='name'>31 Capital Contable</field>
+                <field name='color'>6</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_3101' model='account.account.tag'>
+                <field name='name'>3101 Capital Social</field>
+                <field name='color'>6</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_3102' model='account.account.tag'>
+                <field name='name'>3102 Superávit por Revaluación de Activos</field>
+                <field name='color'>6</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_32' model='account.account.tag'>
+                <field name='name'>32 Utilidades Restringidas</field>
+                <field name='color'>6</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_3201' model='account.account.tag'>
+                <field name='name'>3201 Reserva Legal</field>
+                <field name='color'>6</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_33' model='account.account.tag'>
+                <field name='name'>33 Resultados</field>
+                <field name='color'>6</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_3301' model='account.account.tag'>
+                <field name='name'>3301 Resultados Acumulados</field>
+                <field name='color'>6</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_3302' model='account.account.tag'>
+                <field name='name'>3302 Resultados del Ejercicio</field>
+                <field name='color'>6</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_3304' model='account.account.tag'>
+                <field name='name'>3304 Otras Reservas de Patrimonio</field>
+                <field name='color'>6</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_4' model='account.account.tag'>
+                <field name='name'>4 Ingresos y Ganancias</field>
+                <field name='color'>7</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_41' model='account.account.tag'>
+                <field name='name'>41 Ingresos por Operaciones</field>
+                <field name='color'>7</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_4101' model='account.account.tag'>
+                <field name='name'>4101 Ventas de Bienes</field>
+                <field name='color'>7</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_4102' model='account.account.tag'>
+                <field name='name'>4102 Ventas de Servicios</field>
+                <field name='color'>7</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_4103' model='account.account.tag'>
+                <field name='name'>4103 Devoluciones</field>
+                <field name='color'>7</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_4104' model='account.account.tag'>
+                <field name='name'>4104 Descuentos</field>
+                <field name='color'>7</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_42' model='account.account.tag'>
+                <field name='name'>42 Ingresos No Operacionales</field>
+                <field name='color'>7</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_4201' model='account.account.tag'>
+                <field name='name'>4201 Intereses Ganados</field>
+                <field name='color'>7</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_4202' model='account.account.tag'>
+                <field name='name'>4202 Ventas de Activos</field>
+                <field name='color'>7</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_4203' model='account.account.tag'>
+                <field name='name'>4203 Dividendos Ganados</field>
+                <field name='color'>7</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_4204' model='account.account.tag'>
+                <field name='name'>4204 Ingresos Extraordinarios</field>
+                <field name='color'>7</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_5' model='account.account.tag'>
+                <field name='name'>5 Costos, Gastos y Pérdidas</field>
+                <field name='color'>4</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_51' model='account.account.tag'>
+                <field name='name'>51 Costos y Gastos de Operación</field>
+                <field name='color'>4</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_5101' model='account.account.tag'>
+                <field name='name'>5101 Costos de Ventas</field>
+                <field name='color'>4</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_5102' model='account.account.tag'>
+                <field name='name'>5102 Costos de Producción</field>
+                <field name='color'>4</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_52' model='account.account.tag'>
+                <field name='name'>52 Gastos de Operación</field>
+                <field name='color'>4</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_5201' model='account.account.tag'>
+                <field name='name'>5201 Gastos de Personal</field>
+                <field name='color'>4</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_520101' model='account.account.tag'>
+                <field name='name'>520101 Aportes a la Seguridad Social</field>
+                <field name='color'>4</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_520102' model='account.account.tag'>
+                <field name='name'>520102 Otras Cargas Patronales</field>
+                <field name='color'>4</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_5202' model='account.account.tag'>
+                <field name='name'>5202 Gastos de Administración</field>
+                <field name='color'>4</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_5203' model='account.account.tag'>
+                <field name='name'>5203 Gastos por Trabajo, Suministros y Servicios</field>
+                <field name='color'>4</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_520301' model='account.account.tag'>
+                <field name='name'>520301 Gastos Honorarios por Servicios Profesionales (P. Física)</field>
+                <field name='color'>4</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_520302' model='account.account.tag'>
+                <field name='name'>520302 Gastos Honorarios por Servicios Profesionales (P. Jurídica)</field>
+                <field name='color'>4</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_520303' model='account.account.tag'>
+                <field name='name'>520303 Gastos Honorarios por Servicios Profesionales (P. Jurídica)</field>
+                <field name='color'>4</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_5204' model='account.account.tag'>
+                <field name='name'>5204 Gastos por Depreciación</field>
+                <field name='color'>4</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_5205' model='account.account.tag'>
+                <field name='name'>5205 Gastos por Reparaciones</field>
+                <field name='color'>4</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_5206' model='account.account.tag'>
+                <field name='name'>5206 Gastos de Representación</field>
+                <field name='color'>4</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_5207' model='account.account.tag'>
+                <field name='name'>5207 Gastos Financieros</field>
+                <field name='color'>4</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_5208' model='account.account.tag'>
+                <field name='name'>5208 Gastos Extraordinarios</field>
+                <field name='color'>4</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_6' model='account.account.tag'>
+                <field name='name'>6 Cuentas Liquidadoras de Resultados</field>
+                <field name='color'>5</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_61' model='account.account.tag'>
+                <field name='name'>61 Cuenta Liquidadora</field>
+                <field name='color'>5</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_6101' model='account.account.tag'>
+                <field name='name'>6101 Pérdidas y Ganancias</field>
+                <field name='color'>5</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+        <record id='account_tag_6102' model='account.account.tag'>
+                <field name='name'>6102 Gastos por Impuestos</field>
+                <field name='color'>5</field>
+                <field name='applicability'>accounts</field>
+        </record>
+
+    <!-- Tax Tags -->
+
+        <record id="tag_R_ISR_10" model="account.account.tag">
+            <field name="name">R-ISR 10%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_C_EXENTA" model="account.account.tag">
+            <field name="name">C-EXENTA</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_V_ITBIS_8" model="account.account.tag">
+            <field name="name">V-ITBIS 8%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_C_ITBIS_8" model="account.account.tag">
+            <field name="name">C-ITBIS 8%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_V_ITBIS_11" model="account.account.tag">
+            <field name="name">V-ITBIS 11%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_C_ITBIS_11" model="account.account.tag">
+            <field name="name">C-ITBIS 11%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_V_EXENTA" model="account.account.tag">
+            <field name="name">V-EXENTA</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_V_ITBIS_18" model="account.account.tag">
+            <field name="name">V-ITBIS 18%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_C_ITBIS_18_Incluido" model="account.account.tag">
+            <field name="name">C-ITBIS 18% Incluido</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_C_ITBIS_18" model="account.account.tag">
+            <field name="name">C-ITBIS 18%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_CS_ITBIS_18_Incluido" model="account.account.tag">
+            <field name="name">CS-ITBIS 18% Incluido</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_CS_ITBIS_18" model="account.account.tag">
+            <field name="name">CS-ITBIS 18%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_IMP_ITBIS_18" model="account.account.tag">
+            <field name="name">IMP-ITBIS 18%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_R_ITBIS_18" model="account.account.tag">
+            <field name="name">R-ITBIS 18%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_R_ISR_2" model="account.account.tag">
+            <field name="name">R-ISR 2%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_TELE_ISC" model="account.account.tag">
+            <field name="name">TELE-ISC</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_TELE_CDT" model="account.account.tag">
+            <field name="name">TELE-CDT</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_R_Alquileres_10" model="account.account.tag">
+            <field name="name">R-Alquileres 10%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+    </data>
+</odoo>

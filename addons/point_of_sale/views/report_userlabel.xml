@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_userlabel">
+    <t t-call="web.basic_layout">
+        <div class="page">
+            <t t-foreach="docs" t-as="user">
+                <div class="col-xs-6 mb92">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="col-xs-4 danger"/>
+                                <th class="active"/>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><img t-if="user.barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', user.barcode, 300, 50)" style="width:100%;height:35%;"/></td>
+                                <td><strong t-field="user.name"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </div>
+    </t>
+</template>
+</odoo>

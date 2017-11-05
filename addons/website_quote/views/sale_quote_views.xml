@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_sale_quote_template_search" model="ir.ui.view">
+        <field name="name">sale.quote.template.search</field>
+        <field name="model">sale.quote.template</field>
+        <field name="arch" type="xml">
+            <search string="Search Quotation Template">
+               <filter string="Archived" name="inactive" domain="[('active','=', False)]"/>
+            </search>
+        </field>
+        </record>
+        <record model="ir.ui.view" id="view_sale_quote_template_form">
+            <field name="name">sale.quote.template.form</field>
+            <field name="model">sale.quote.template</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Sale Quotation Template">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                            <button string="Edit Template" type="object" name="open_template" class="oe_stat_button" icon="fa-pencil"/>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="Quotation Template"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                               <label for="number_of_days" string="Quotation expires after"/>
+                               <div id="number_of_days">
+                                   <field name="number_of_days" class="oe_inline"/> days
+                               </div>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Lines">
+                            <field name="quote_line">
+                                <form string="Sales Quotation Template Lines">
+                                    <group>
+                                        <group>
+                                            <field name="product_id"/>
+                                            <field name="layout_category_id" groups="sale.group_sale_layout"/>
+                                            <label for="product_uom_qty"/>
+                                            <div>
+                                                <field
+                                                    name="product_uom_qty" class="oe_inline"/>
+                                            </div>
+                                            <field name="price_unit" invisible="1"/>
+                                            <label for="discount" groups="sale.group_discount_per_so_line"/>
+                                            <div groups="sale.group_discount_per_so_line">
+                                                <field name="discount" class="oe_inline"/> %%
+                                            </div>
+                                        </group>
+                                    </group>
+                                    <notebook colspan="4">
+                                        <page string="Description">
+                                            <field name="name" />
+                                        </page>
+                                        <page string="Website Description">
+                                            <field name="website_description" />
+                                        </page>
+                                    </notebook>
+                                </form>
+                                <tree string="Sales Quotation Template Lines" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id"/>
+                                    <field name="layout_category_id" groups="sale.group_sale_layout"/>
+                                    <field name="name"/>
+                                    <field name="product_uom_qty"/>
+                                    <field name="product_uom_id" groups="product.group_uom"/>
+                                    <field name="discount" groups="sale.group_discount_per_so_line"/>
+                                    <field name="price_unit" invisible="1"/>
+                                    <field name="website_description" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Suggested Products">
+                            <field name="options">
+                              <tree string="Sales Quotation Template Lines" editable="bottom">
+                                <field name="product_id"/>
+                                <field name="layout_category_id" groups="sale.group_sale_layout"/>
+                                <field name="name"/>
+                                <field name="quantity"/>
+                                <field name="uom_id" groups="product.group_uom"/>
+                                <field name="price_unit" invisible="1"/>
+                                <field name="discount" groups="sale.group_discount_per_so_line"/>
+                                <field name="website_description" invisible="1"/>
+                              </tree>
+                            </field>
+                        </page>
+                        <page string="Confirmation">
+                            <group>
+                                <field name="require_payment" widget="radio"/>
+                                <field name="mail_template_id"/>
+                            </group>
+                        </page>
+                        </notebook>
+                        <field name="website_description" invisible="1"/>
+                        <field name="note" nolabel="1"
+                            placeholder="The Administrator can set default Terms &amp; Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_sale_quote_template_tree" model="ir.ui.view">
+            <field name="name">sale.quote.template.tree</field>
+            <field name="model">sale.quote.template</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Sale Quotation Template">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_sale_quotation_template" model="ir.actions.act_window">
+            <field name="name">Quotation Templates</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.quote.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click here to create your template.
+                </p><p>
+                    Use templates to create polished, professional quotes in minutes.
+                    Send these quotes by email and let your customers sign online.
+                    Use cross-selling and discounts to push and boost your sales.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_sale_quote_template" action="action_sale_quotation_template" parent="sale.menu_sales_config" sequence="1" name="Quotation Templates" groups="sales_team.group_sale_salesman,sales_team.group_sale_manager"/>
+
+        <menuitem id='payment_acquirer_menu_sale' action='payment.action_payment_acquirer' parent='sale.menu_sales_config' sequence='3' name='Payment Acquirers' groups="sales_team.group_sale_salesman"/>
+</odoo>

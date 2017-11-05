@@ -1,0 +1,274 @@
+///
+/// This file regroups the odoo LESS mixins. They are available in every asset bundle.
+///
+
+// ------------------------------------------------------------------
+// Padding
+// ------------------------------------------------------------------
+.o-webclient-padding(@top: 0px, @right: @odoo-horizontal-padding, @bottom: 0px, @left: @odoo-horizontal-padding) {
+    padding-top: @top;
+    padding-right: @right;
+    padding-bottom: @bottom;
+    padding-left: @left;
+}
+
+// ------------------------------------------------------------------
+// Caret
+// ------------------------------------------------------------------
+.utils-caret-boilerplate() {
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 0;
+    vertical-align: middle;
+}
+.o-caret-down(@caret-width: @caret-width-base) {
+    .utils-caret-boilerplate;
+    border-bottom: 0;
+    border-left: @caret-width solid transparent;
+    border-right: @caret-width solid transparent;
+    border-top: @caret-width solid;
+    -moz-transform: scale(0.9999); // Smooth the caret on firefox
+}
+.o-caret-up(@caret-width: @caret-width-base) {
+    .utils-caret-boilerplate;
+    border-bottom: @caret-width solid;
+    border-left: @caret-width solid transparent;
+    border-right: @caret-width solid transparent;
+    border-top: 0;
+    -moz-transform: scale(0.9999); // Smooth the caret on firefox
+}
+.o-caret-left(@caret-width: @caret-width-base) {
+    .utils-caret-boilerplate;
+    border-bottom: @caret-width solid transparent;
+    border-left: 0;
+    border-right: @caret-width solid;
+    border-top: @caret-width solid transparent;
+    -moz-transform: scale(0.9999); // Smooth the caret on firefox
+}
+.o-caret-right(@caret-width: @caret-width-base) {
+    .utils-caret-boilerplate;
+    border-bottom: @caret-width solid transparent;
+    border-left: @caret-width solid;
+    border-right: 0;
+    border-top: @caret-width solid transparent;
+    -moz-transform: scale(0.9999); // Smooth the caret on firefox
+}
+
+// ------------------------------------------------------------------
+// Vendor prefixes
+// ------------------------------------------------------------------
+// Flex
+.o-flex-display() {
+    display: -ms-flexbox;
+    display: -moz-box;
+    display: -webkit-box;
+    display: -webkit-flex;
+
+    display: flex;
+}
+.o-inline-flex-display() {
+    display: -ms-inline-flexbox;
+    display: -moz-inline-box;
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+
+    display: inline-flex;
+}
+.o-flex-flow(@direction, @wrap) {
+    -ms-flex-flow: @direction @wrap;
+    -moz-flex-flow: @direction @wrap;
+    -webkit-flex-flow: @direction @wrap;
+
+    flex-flow: @direction @wrap;
+}
+.o-flex(@grow, @schrink, @basis) {
+    -ms-flex: @grow @schrink @basis;
+    -moz-flex: @grow @schrink @basis;
+    -webkit-box-flex: @grow;
+    -webkit-flex: @grow @schrink @basis;
+
+    flex: @grow @schrink @basis;
+}
+.o-justify-content(@justify) {
+    -moz-justify-content: @justify;
+    -webkit-justify-content: @justify;
+
+    justify-content: @justify;
+}
+.o-align-content(@align) {
+    -webkit-align-content: @align;
+
+    align-content: @align;
+}
+.o-align-items(@align) {
+    -webkit-align-items: @align;
+
+    align-items: @align;
+}
+.o-align-self(@align) {
+    -webkit-align-self: @align;
+
+    align-self: @align;
+}
+
+// Background-size
+.o-background-size(@size) {
+    -webkit-background-size: @size;
+    -moz-background-size: @size;
+    -o-background-size: @size;
+    background-size: @size;
+}
+
+// ------------------------------------------------------------------
+// Dropdowns
+// ------------------------------------------------------------------
+.o-selected-li() {
+    li {
+        position: relative;
+        > a {
+            color: @odoo-main-text-color;
+            &:hover {
+                color: darken(@odoo-main-text-color, 10%);
+            }
+        }
+        &.selected {
+            > a {
+                color: darken(@odoo-main-text-color, 10%);
+                font-weight: bold;
+                &:before {
+                    font-family: FontAwesome;
+                    position: absolute;
+                    left: 6px;
+                    content: "\f00c";
+                }
+            }
+        }
+    }
+}
+
+// ------------------------------------------------------------------
+// Select Appearance
+// ------------------------------------------------------------------
+.o-appearance(@value) {
+    -webkit-appearance: @value;
+    -moz-appearance: @value;
+    appearance: @value;
+}
+
+// ------------------------------------------------------------------
+// Transform
+// ------------------------------------------------------------------
+.o-transform-origin(@x: 50%, @y: 50%, @z: 0) {
+    -ms-transform-origin: @x @y @z;
+    -webkit-transform-origin: @x @y @z;
+    -moz-transform-origin: @x @y @z;
+    transform-origin: @x @y @z;
+}
+
+// ------------------------------------------------------------------
+// Animation
+// ------------------------------------------------------------------
+.o-animation(@name: none, @duration: 0s, @timing-function: ease, @delay: 0s, @iteration-count: 1, @direction: normal, @fill-mode: none, @play-state: running) {
+    -webkit-animation: @name @duration @timing-function @delay @iteration-count @direction @fill-mode @play-state;
+    -moz-animation: @name @duration @timing-function @delay @iteration-count @direction @fill-mode @play-state;
+    -o-animation: @name @duration @timing-function @delay @iteration-count @direction @fill-mode @play-state;
+    animation: @name @duration @timing-function @delay @iteration-count @direction @fill-mode @play-state;
+}
+
+// ------------------------------------------------------------------
+// Transition
+// ------------------------------------------------------------------
+.o-transition(@property: all, @duration: 0s, @timing-function: ease, @transition-delay: 0s) {
+    -webkit-transition: @property @duration @timing-function @transition-delay;
+    -moz-transition: @property @duration @timing-function @transition-delay;
+    -o-transition: @property @duration @timing-function @transition-delay;
+    transition: @property @duration @timing-function @transition-delay;
+}
+
+// ------------------------------------------------------------------
+// Columns
+// ------------------------------------------------------------------
+.o-columns(@width: auto, @col: auto) {
+    -webkit-columns: @width @col;
+    -moz-columns: @width @col;
+    columns: @width @col;
+}
+
+// ------------------------------------------------------------------
+// Position absolute
+// ------------------------------------------------------------------
+.o-position-absolute(@top: auto, @right: auto, @bottom: auto, @left: auto) {
+    position: absolute;
+    top: @top;
+    left: @left;
+    bottom: @bottom;
+    right: @right;
+}
+
+// ------------------------------------------------------------------
+// Text overflow
+// ------------------------------------------------------------------
+.o-text-overflow(@display: inline-block, @max-width: 100%) {
+    display: @display;
+    max-width: @max-width;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top; // To update display context changed by overflow:hidden
+}
+
+// ------------------------------------------------------------------
+// Gradients
+// ------------------------------------------------------------------
+.o-linear-gradient(@deg: 45deg, @start-color: #555, @end-color: #333) {
+    background-repeat: repeat-x;
+    background-image: -webkit-linear-gradient(@deg, @start-color, @end-color);
+    background-image: -o-linear-gradient(@deg, @start-color, @end-color);
+    background-image: linear-gradient(@deg, @start-color, @end-color);
+}
+.o-vertical-gradient(@startColor: #555, @endColor: #333) {
+    background-color: mix(@startColor, @endColor);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(@startColor), to(@endColor));
+    background-image: -webkit-linear-gradient(top, @startColor, @endColor);
+    background-image: -moz-linear-gradient(top, @startColor, @endColor);
+    background-image: -ms-linear-gradient(top, @startColor, @endColor);
+    background-image: -o-linear-gradient(top, @startColor, @endColor);
+    background-image: linear-gradient(to bottom, @startColor, @endColor);
+}
+.o-skew-gradient(@startColor: #555, @endColor: #333) {
+    background-color: @endColor;
+    background: -moz-linear-gradient(135deg, @endColor, @startColor);
+    background: -o-linear-gradient(135deg, @startColor, @endColor);
+    background: -webkit-gradient(linear, left top, right bottom, from(@startColor), to(@endColor));
+    background: -ms-linear-gradient(top, @startColor, @endColor);
+}
+
+// ------------------------------------------------------------------
+// Transform
+// ------------------------------------------------------------------
+.o-transform(@transform) {
+    -webkit-transform: @transform;
+    -moz-transform: @transform;
+    -ms-transform: @transform;
+    -o-transform: @transform;
+    transform: @transform;
+}
+
+// ------------------------------------------------------------------
+// Hovering effects
+// ------------------------------------------------------------------
+.o-hover-opacity(@default-opacity: 0.5, @hover-opacity: 1) {
+    opacity: @default-opacity;
+
+    &:hover, &:focus, &.focus {
+        opacity: @hover-opacity;
+    }
+}
+.o-hover-text-color(@default-color: @text-color, @hover-color: @link-color) {
+    color: @default-color;
+
+    &:hover, &:focus, &.focus {
+        color: @hover-color;
+    }
+}

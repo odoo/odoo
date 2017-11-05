@@ -3,21 +3,27 @@
 # * event
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2015
-# liAnGjiA <liangjia@qq.com>, 2015-2017
-# mrshelly <mrshelly@hotmail.com>, 2015
-# SHOM <shanmuxin@yeah.net>, 2015
-# liAnGjiA <liangjia@qq.com>, 2015
+# Jeffery CHEN <jeffery9@gmail.com>, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
+# Rona Lin <ssauapw@qq.com>, 2017
+# Talway <9010446@qq.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2017
+# liAnGjiA <liangjia@qq.com>, 2017
+# 卓忆科技 <zhanghao@jointd.com>, 2017
+# waveyeung <waveyeung@qq.com>, 2017
+# 钟小华 <mackz@sina.com>, 2017
+# Michael Chong <michaelchong2005@gmail.com>, 2017
+# SHOM <shanmuxin@yeah.net>, 2017
+# fausthuang <faust_huang@hotmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2017-04-19 04:15+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: fausthuang <faust_huang@hotmail.com>, 2017\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -25,1018 +31,1148 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: event
-#: model:email.template,body_html:event.confirmation_event
+#: model:mail.template,body_html:event.event_subscription
 msgid ""
 "\n"
-"        <p>Hello ${object.name},</p>\n"
-"        <p>The event ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} to ${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}.\n"
-"        For any further information please contact our event department.</p>\n"
-"        <p>Thank you for your participation!</p>\n"
-"        <p>Best regards</p>"
-msgstr "\n        <p> ${object.name},您好。</p>\n        <p>您报名参加的活动 ${object.event_id.name} 已确认。活动开始时间为 ${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} ，结束时间为 ${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}。\n        若您想了解本次活动的详细信息，烦请联系我们有关部门。</p>\n        <p>感谢您的参与!</p>\n        <p>敬祝安好</p>"
+"<div style=\"background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td>\n"
+"                    <a href=\"/\">\n"
+"                        <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
+"                    </a>\n"
+"                </td>\n"
+"                <td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                        <a href=\"${object.event_id.website_url}\" style=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">View Event</a>\n"
+"                    % endif\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td style=\"padding:15px 20px 0px 20px; font-size:16px; font-weight:300;\">\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Hi,\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        We are happy to confirm your registration to the event:\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li>Event: \n"
+"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
+"                        % else:\n"
+"                            <strong>${object.event_id.name}</strong>\n"
+"                        % endif\n"
+"                        </li>\n"
+"                        <li>Attendee: ${object.name}</li>\n"
+"                    </ul>\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        See you soon,\n"
+"                    </p>\n"
+"                    <p style=\"font-size:16px; margin-bottom: 30px\">\n"
+"                        <i>\n"
+"                           -- <br/>\n"
+"                        % if object.event_id.organizer_id:\n"
+"                            ${object.event_id.organizer_id.name}\n"
+"                        % else:\n"
+"                            The organizers.\n"
+"                        % endif\n"
+"                        </i>\n"
+"                    </p>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"                <td style=\"padding:15px 20px 0px 20px;\">\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding:25px 0px; text-align:center;\">\n"
+"                                <p>\n"
+"                                    Don't forget to <strong>add it to your calendar</strong>:\n"
+"                                </p>\n"
+"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
+"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Outlook</a>\n"
+"                                <a href=\"https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Yahoo</a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                            </td>\n"
+"                            <td style=\"padding:25px 10px 25px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><strong>From</strong> ${object.event_id.date_begin_located}</div>\n"
+"                                <div><strong>To</strong> ${object.event_id.date_end_located}</div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>TZ</strong> ${object.event_id.date_tz}</i></div>\n"
+"                            </td>\n"
+"                            % if object.event_id.address_id.country_id.name:\n"
+"                                <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                    <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                                </td>\n"
+"                                <td style=\"padding:30px 10px 25px 10px;width:50%;vertical-align:top;\">\n"
+"                                    % set location = ''\n"
+"                                    % if object.event_id.address_id.name:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.name}</p>\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.street:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street}</p>\n"
+"                                        % set location = object.event_id.address_id.street\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.street2:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street2}</p>\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.street2)\n"
+"                                    % endif\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">\n"
+"                                    % if object.event_id.address_id.city:\n"
+"                                        ${object.event_id.address_id.city},\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.city)\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.state_id.name:\n"
+"                                        ${object.event_id.address_id.state_id.name},\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.state_id.name)\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.zip:\n"
+"                                        ${object.event_id.address_id.zip}\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.zip)\n"
+"                                    % endif\n"
+"                                    </p>\n"
+"                                    % if object.event_id.address_id.country_id.name:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.country_id.name}</p>\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.country_id.name)\n"
+"                                    % endif\n"
+"                                </td>\n"
+"                            % endif\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    % if object.event_id.organizer_id:\n"
+"                        <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                            <tr>\n"
+"                                <td style=\"padding:10px 0px 25px 0px;\">\n"
+"                                    <h2 style=\"font-weight:300;margin:10px 0px\">Questions about this event?</h2>\n"
+"                                    <p>Please contact the organizer:</p>\n"
+"                                    <ul>\n"
+"                                        <li>${object.event_id.organizer_id.name}</li>\n"
+"                                        % if object.event_id.organizer_id.email\n"
+"                                            <li>Mail: <a href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></li>\n"
+"                                        % endif\n"
+"                                        % if object.event_id.organizer_id.phone\n"
+"                                            <li>Phone: ${object.event_id.organizer_id.phone}</li>\n"
+"                                        % endif\n"
+"                                    </ul>\n"
+"\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    % endif\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    % if object.event_id.address_id:\n"
+"    <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
+"        <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"            <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\" />\n"
+"        </a>\n"
+"    </div>\n"
+"    % endif\n"
+"    <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td style=\"padding-top:10px;font-size: 12px;\">\n"
+"                    <div>Sent by ${object.company_id.name}</div>\n"
+"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                    <div>\n"
+"                        Discover <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">all our events</a>.\n"
+"                    </div>\n"
+"                    % endif\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
+msgstr ""
 
 #. module: event
-#: model:email.template,body_html:event.confirmation_registration
+#: model:mail.template,body_html:event.event_reminder
 msgid ""
 "\n"
-"        <p>Hello ${object.name},</p>\n"
-"        <p>We confirm that your registration to the event ${object.event_id.name} has been recorded.\n"
-"        You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
-"        <p>Thank you for your participation!</p>\n"
-"        <p>Best regards</p>"
-msgstr "\n        <p>您好 ${object.name},</p>\n        <p>您注册的活动 ${object.event_id.name} 已经被正式记录了.\n        一旦活动确认\n您将自动接收电子邮件提供您更多的实用信息(如进度、议程…)。</p>\n        <p>谢谢参与!</p>\n        <p>此致敬礼</p>"
+"<div style=\"background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td>\n"
+"                    <a href=\"/\">\n"
+"                        <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
+"                    </a>\n"
+"                </td>\n"
+"                <td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                        <a href=\"${object.event_id.website_url}\" style=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">View Event</a>\n"
+"                    % endif\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td style=\"padding:15px 20px 0px 20px; font-size:16px;\">\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Hello,\n"
+"                    </p>\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        We are excited to remind you that the event\n"
+"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
+"                        % else:\n"
+"                            ${object.event_id.name}\n"
+"                        % endif\n"
+"                        is starting\n"
+"                        <strong>${object.get_date_range_str()}</strong>.\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        We confirm your registration and hope to meet you there,\n"
+"                    </p><p style=\"font-size:16px; margin-bottom: 30px\">\n"
+"                        <i>\n"
+"                           -- <br/>\n"
+"                        % if object.event_id.organizer_id:\n"
+"                            ${object.event_id.organizer_id.name}\n"
+"                        % else:\n"
+"                            The organizers.\n"
+"                        % endif\n"
+"                        </i>\n"
+"                    </p>\n"
+"\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"                <td style=\"padding:15px 20px 0px 20px;\">\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                            </td>\n"
+"                            <td style=\"padding:25px 10px 25px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><strong>From</strong> ${object.event_id.date_begin_located}</div>\n"
+"                                <div><strong>To</strong> ${object.event_id.date_end_located}</div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>TZ</strong> ${object.event_id.date_tz}</i></div>\n"
+"                            </td>\n"
+"                            % if object.event_id.address_id:\n"
+"                                <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                    <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                                </td>\n"
+"                                <td style=\"padding:30px 10px 25px 10px;width:50%;vertical-align:top;\">\n"
+"                                    % set location = ''\n"
+"                                    % if object.event_id.address_id.name:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.name}</p>\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.street:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street}</p>\n"
+"                                        % set location = object.event_id.address_id.street\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.street2:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street2}</p>\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.street2)\n"
+"                                    % endif\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">\n"
+"                                    % if object.event_id.address_id.city:\n"
+"                                        ${object.event_id.address_id.city},\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.city)\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.state_id.name:\n"
+"                                        ${object.event_id.address_id.state_id.name},\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.state_id.name)\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.zip:\n"
+"                                        ${object.event_id.address_id.zip}\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.zip)\n"
+"                                    % endif\n"
+"                                    </p>\n"
+"                                    % if object.event_id.address_id.country_id.name:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.country_id.name}</p>\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.country_id.name)\n"
+"                                    % endif\n"
+"                                </td>\n"
+"                            % endif\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    % if object.event_id.organizer_id.email:\n"
+"                        <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                            <tr>\n"
+"                                <td style=\"padding:10px 0px 25px 0px;\">\n"
+"                                    <h2 style=\"font-weight:300;margin:10px 0px\">Questions about this event?</h2>\n"
+"                                    <p>Please contact the organizer:</p>\n"
+"                                    <ul>\n"
+"                                        <li>${object.event_id.organizer_id.name}</li>\n"
+"                                        % if object.event_id.organizer_id.email\n"
+"                                            <li>Mail: <a href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></li>\n"
+"                                        % endif\n"
+"                                        % if object.event_id.organizer_id.phone\n"
+"                                            <li>Phone: ${object.event_id.organizer_id.phone}</li>\n"
+"                                        % endif\n"
+"                                    </ul>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    % endif\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding:25px 0px;\">\n"
+"                                <strong>Add this event to your calendar</strong>\n"
+"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
+"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Outlook</a>\n"
+"                                <a href=\"https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Yahoo</a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    % if object.event_id.address_id:\n"
+"    <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
+"        <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"            <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\" />\n"
+"        </a>\n"
+"    </div>\n"
+"    % endif\n"
+"    <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td style=\"padding-top:10px;font-size: 12px;\">\n"
+"                    <p style=\"margin:0px 0px 9px 0px;padding-top:10px;\">Sent by ${object.company_id.name}</p>\n"
+"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                    <div>\n"
+"                        Discover <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">all our events</a>.\n"
+"                    </div>\n"
+"                    % endif\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
+msgstr ""
 
 #. module: event
-#: field:report.event.registration,confirm_state:0
-msgid " # No of Confirmed Registrations"
-msgstr " # 没确认登记记录"
+#: model:mail.template,body_html:event.event_registration_mail_template_badge
+msgid ""
+"\n"
+"<p>Dear ${object.name},</p>\n"
+"<p>Thank you for your inquiry.</p>\n"
+"<p>Here is your badge for the event ${object.event_id.name}.</p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
 
 #. module: event
-#: field:report.event.registration,draft_state:0
-msgid " # No of Draft Registrations"
-msgstr " # 没草稿状态的登记记录"
-
-#. module: event
-#: view:event.event:event.view_event_form
-msgid "(confirmed:"
-msgstr "（已确认："
+#: model:mail.template,subject:event.event_reminder
+msgid "${object.event_id.name}: ${object.get_date_range_str()}"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
-msgid ""
-"<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-snippet-id=\"carousel\" id=\"myCarousel3\">\n"
-"    <div class=\"carousel-inner\">\n"
-"        <div class=\"item oe_img_bg active\" style=\"background-image: url(/website/static/src/img/banner/orange_red.jpg);\">\n"
-"            <div class=\"container\">\n"
-"                <div class=\"row content\">\n"
-"                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-md-5 col-md-offset-1 mt16\">\n"
-"                        <img alt=\"Banner Odoo Image\" class=\"img-responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" style=\"\">\n"
-"                    </div>\n"
-"                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" style=\"text-align: center; color: white;\">\n"
-"                        <h2>5 Intensive Days</h2>\n"
-"                        <h4>to learn .JS development</h4>\n"
-"                    </div>\n"
-"                </div>\n"
-"            </div>\n"
-"        </div>\n"
-"    </div>\n"
-"</div>\n"
-"\n"
-"<div class=\"container\">\n"
-"<div class=\"row\">\n"
-"<div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n"
-"<h2>Course Summary</h2>\n"
-"</div>\n"
-"\n"
-"<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n"
-"<p><span style=\"text-align: -webkit-center; \">This course is dedicated to developers who need to grasp knowledge of the <strong>business applications development </strong>process. This course is for new developers or for IT professionals eager to learn more about technical aspects.</span></p>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-"\n"
-"<div class=\"container\">\n"
-"<div class=\"row\">\n"
-"<div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n"
-"<h2>What you will learn?</h2>\n"
-"</div>\n"
-"\n"
-"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
-"<div class=\"panel panel-info\">\n"
-"<div class=\"panel-heading text-center\">\n"
-"<h2 style=\"margin: 0\">Day 1</h2>\n"
-"\n"
-"<p class=\"text-muted\" style=\"margin: 0\">Introduction to Javascript</p>\n"
-"</div>\n"
-"\n"
-"<ul class=\"list-group\"><li class=\"list-group-item\">Hello World</li>\n"
-"\t<li class=\"list-group-item\">Variables &amp; Operators</li>\n"
-"\t<li class=\"list-group-item\">Dive into Strings</li>\n"
-"\t<li class=\"list-group-item\">Functions</li>\n"
-"\t<li class=\"list-group-item\">Loops</li>\n"
-"\t<li class=\"list-group-item\">Arrays</li>\n"
-"</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to develop simple dynamic compenents in HTML pages.</i></p>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-"\n"
-"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
-"<div class=\"panel panel-info\">\n"
-"<div class=\"panel-heading text-center\">\n"
-"<h2 style=\"margin: 0\">Day 2</h2>\n"
-"\n"
-"<p class=\"text-muted\" style=\"margin: 0\">Odoo Web Client</p>\n"
-"</div>\n"
-"\n"
-"<ul class=\"list-group\"><li class=\"list-group-item\">Introduction to JQuery</li>\n"
-"\t<li class=\"list-group-item\">Advanced JQuery</li>\n"
-"\t<li class=\"list-group-item\">Underscore</li>\n"
-"\t<li class=\"list-group-item\">Introduction to QWeb</li>\n"
-"\t<li class=\"list-group-item\">Controlers and Views</li>\n"
-"\t<li class=\"list-group-item\">Bootstrap CSS</li>\n"
-"\t<li class=\"list-group-item\">Calling the ORM</li>\n"
-"</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to create dynamic page interacting with the ORM.</i></p>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-"\n"
-"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
-"<div class=\"panel panel-info\">\n"
-"<div class=\"panel-heading text-center\">\n"
-"<h2 style=\"margin: 0\">Day 3</h2>\n"
-"\n"
-"<p class=\"text-muted\" style=\"margin: 0\">Building a Full Application</p>\n"
-"</div>\n"
-"\n"
-"<ul class=\"list-group\"><li class=\"list-group-item\">Modules</li>\n"
-"\t<li class=\"list-group-item\">Python Objects</li>\n"
-"\t<li class=\"list-group-item\">Report Engine</li>\n"
-"\t<li class=\"list-group-item\">Workflows</li>\n"
-"\t<li class=\"list-group-item\">Training Center Module</li>\n"
-"\t<li class=\"list-group-item\">Integrated Help</li>\n"
-"\t<li class=\"list-group-item\">How to Debug</li>\n"
-"</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to develop a full application with backend and user interface.</i></p>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-"\n"
-"<div class=\"container\">\n"
-"<div class=\"row\">\n"
-"<div class=\"col-md-12 text-center mb16 mt0\" data-snippet-id=\"colmd\">\n"
-"<h2>Requirements</h2>\n"
-"</div>\n"
-"\n"
-"<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n"
-"<p><strong>Objectives:</strong></p>\n"
-"\n"
-"<p><strong>Having attended this course, participants should be able to:</strong></p>\n"
-"\n"
-"<ul><li>Understand the development concepts and architecture;</li>\n"
-"\t<li>Install and administer your own server;</li>\n"
-"\t<li>Develop a new module for a particular application.</li>\n"
-"</ul><p></p>\n"
-"\n"
-"<p><strong>Our prices include:</strong></p>\n"
-"\n"
-"<ul><li>drinks and lunch;</li>\n"
-"\t<li>training material.</li>\n"
-"</ul><p></p>\n"
-"\n"
-"<p><strong>Requirements:</strong></p>\n"
-"\n"
-"<ul><li>Bring your own laptop.</li>\n"
-"\t<li>Participants are expected to have some knowledge in programming. A basic knowledge of the Python programming is recommended.</li>\n"
-"\t<li>Participants preferably have a functional knowledge of our software (see Functional Training).</li>\n"
-"</ul><p></p>\n"
-"\n"
-"<p>To get more information, visit the <a href=\"http://openerp.com/\">Odoo Official Website</a>.</p>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-"\n"
-"\n"
-"\n"
-"<div class=\"container oe_dark\">\n"
-"<div class=\"row\">\n"
-"<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n"
-"<h1 class=\"text-center\">Read Great Contents</h1>\n"
-"\n"
-"<h3 class=\"text-muted text-center\">What do people say about this course?</h3>\n"
-"</div>\n"
-"\n"
-"<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
-"<blockquote data-snippet-id=\"quote\">\n"
-"<p>I did not expect such a great learning experience. I feel like I can develop anything now.</p>\n"
-"<small>John Doe, CEO</small></blockquote>\n"
-"</div>\n"
-"\n"
-"<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
-"<blockquote data-snippet-id=\"quote\">\n"
-"<p>This course help me build my first application within a month. Definetly worth its price.</p>\n"
-"<small>John Doe, CEO</small></blockquote>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-msgstr "<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-snippet-id=\"carousel\" id=\"myCarousel3\">\n    <div class=\"carousel-inner\">\n        <div class=\"item oe_img_bg active\" style=\"background-image: url(/website/static/src/img/banner/orange_red.jpg);\">\n            <div class=\"container\">\n                <div class=\"row content\">\n                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-md-5 col-md-offset-1 mt16\">\n                        <img alt=\"Banner Odoo Image\" class=\"img-responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" style=\"\">\n                    </div>\n                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" style=\"text-align: center; color: white;\">\n                        <h2>5天强化训练</h2>\n                        <h4>为了学习.JS开发</h4>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n<h2>课程摘要</h2>\n</div>\n\n<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n<p><span style=\"text-align: -webkit-center; \">这门课程面向需要掌握 <strong>商业应用程序开发</strong>流程知识的开发者。这门课程同时也面向渴望学习更多关于技术方面的开发新手或者IT专业人士。</span></p>\n</div>\n</div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n<h2>您将能学到什么？</h2>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">第一天</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">Javascript介绍</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">Hello World</li>\n\t<li class=\"list-group-item\">Variables &amp; Operators</li>\n\t<li class=\"list-group-item\">Dive into Strings</li>\n\t<li class=\"list-group-item\">Functions</li>\n\t<li class=\"list-group-item\">Loops</li>\n\t<li class=\"list-group-item\">Arrays</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>您将能开发出用于HTML页面的动态组件。</i></p>\n</div>\n</div>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">第2天</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">Odoo Web客户端</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">JQuery介绍</li>\n\t<li class=\"list-group-item\">JQuery高阶篇</li>\n\t<li class=\"list-group-item\">强调</li>\n\t<li class=\"list-group-item\">QWeb介绍</li>\n\t<li class=\"list-group-item\">控制器和视图</li>\n\t<li class=\"list-group-item\">Bootstrap CSS</li>\n\t<li class=\"list-group-item\">调用ORM</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>您将能通过使用ORM配合创建动态页面 。</i></p>\n</div>\n</div>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">第3天</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">开发一个完整的应用程序</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">模块</li>\n\t<li class=\"list-group-item\">Python对象</li>\n\t<li class=\"list-group-item\">报表引擎</li>\n\t<li class=\"list-group-item\">工作流</li>\n\t<li class=\"list-group-item\">培训中心模块</li>\n\t<li class=\"list-group-item\">集成的帮助</li>\n\t<li class=\"list-group-item\">怎样调试</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>使用后台和用户界面您能开发一个完整的应用程序。</i></p>\n</div>\n</div>\n</div>\n</div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mb16 mt0\" data-snippet-id=\"colmd\">\n<h2>要求</h2>\n</div>\n\n<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n<p><strong>目标：</strong></p>\n\n<p><strong>参加这门课程后， 参加者将能：</strong></p>\n\n<ul><li>理解开发的观念和架构；</li>\n\t<li>安装和管理您自己的服务器；</li>\n\t<li>为特殊的应用开发一个新模块。</li>\n</ul><p></p>\n\n<p><strong>我们的价格包括：</strong></p>\n\n<ul><li>饮料和午餐；</li>\n\t<li>培训材料</li>\n</ul><p></p>\n\n<p><strong>要求：</strong></p>\n\n<ul><li>带上自己的笔记本电脑。</li>\n\t<li>参与者需要有一定的程序设计基础。建议了解一些Python程序设计的基础知识。</li>\n\t<li>参与者最好具备了解我们软件函数的知识(查看函数培训)。</li>\n</ul><p></p>\n\n<p>需要得到更多信息，请浏览<a href=\"http://openerp.com/\">Odoo官方网站</a>。</p>\n</div>\n</div>\n</div>\n\n\n\n<div class=\"container oe_dark\">\n<div class=\"row\">\n<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n<h1 class=\"text-center\">阅读杰出的内容</h1>\n\n<h3 class=\"text-muted text-center\">关于这个课程用户说了些什么？</h3>\n</div>\n\n<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n<blockquote data-snippet-id=\"quote\">\n<p>我不期望通过这个优秀的课程经历能够让我现在开发出任何东西。</p>\n<small>总裁John Doe</small></blockquote>\n</div>\n\n<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n<blockquote data-snippet-id=\"quote\">\n<p>这门课程帮助我在一个月内开发了我的第一个应用程序。花费的比较值得。</p>\n<small>总裁John Doe</small></blockquote>\n</div>\n</div>\n</div>\n"
-
-#. module: event
-#: model:event.event,description:event.event_3
-msgid ""
-"<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-snippet-id=\"carousel\" id=\"myCarousel3\">\n"
-"    <div class=\"carousel-inner\">\n"
-"        <div class=\"item oe_img_bg active\" style=\"background-image: url(/website/static/src/img/banner/orange_red.jpg);\">\n"
-"            <div class=\"container\">\n"
-"                <div class=\"row content\">\n"
-"                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-md-5 col-md-offset-1 mt16\">\n"
-"                        <img alt=\"Banner Odoo Image\" class=\"img-responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" style=\"\">\n"
-"                    </div>\n"
-"                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" style=\"text-align: center; color: white;\">\n"
-"                        <h2>5 Intensive Days</h2>\n"
-"                        <h4>to learn <i>business applications development</i></h4>\n"
-"                    </div>\n"
-"                </div>\n"
-"            </div>\n"
-"        </div>\n"
-"    </div>\n"
-"</div>\n"
-"\n"
-"<div class=\"container\">\n"
-"<div class=\"row\">\n"
-"<div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n"
-"<h2>Course Summary</h2>\n"
-"</div>\n"
-"\n"
-"<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n"
-"<p><span style=\"text-align: -webkit-center; \">This course is dedicated to developers who need to grasp knowledge of the <strong>business applications development </strong>process. This course is for new developers or for IT professionals eager to learn more about technical aspects.</span></p>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-"\n"
-"<div class=\"container\">\n"
-"<div class=\"row\">\n"
-"<div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n"
-"<h2>What you will learn?</h2>\n"
-"</div>\n"
-"\n"
-"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
-"<div class=\"panel panel-info\">\n"
-"<div class=\"panel-heading text-center\">\n"
-"<h2 style=\"margin: 0\">Day 1</h2>\n"
-"\n"
-"<p class=\"text-muted\" style=\"margin: 0\">Introduction to Javascript</p>\n"
-"</div>\n"
-"\n"
-"<ul class=\"list-group\"><li class=\"list-group-item\">Hello World</li>\n"
-"\t<li class=\"list-group-item\">Variables &amp; Operators</li>\n"
-"\t<li class=\"list-group-item\">Dive into Strings</li>\n"
-"\t<li class=\"list-group-item\">Functions</li>\n"
-"\t<li class=\"list-group-item\">Loops</li>\n"
-"\t<li class=\"list-group-item\">Arrays</li>\n"
-"</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to develop simple dynamic compenents in HTML pages.</i></p>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-"\n"
-"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
-"<div class=\"panel panel-info\">\n"
-"<div class=\"panel-heading text-center\">\n"
-"<h2 style=\"margin: 0\">Day 2</h2>\n"
-"\n"
-"<p class=\"text-muted\" style=\"margin: 0\">Odoo Web Client</p>\n"
-"</div>\n"
-"\n"
-"<ul class=\"list-group\"><li class=\"list-group-item\">Introduction to JQuery</li>\n"
-"\t<li class=\"list-group-item\">Advanced JQuery</li>\n"
-"\t<li class=\"list-group-item\">Underscore</li>\n"
-"\t<li class=\"list-group-item\">Introduction to QWeb</li>\n"
-"\t<li class=\"list-group-item\">Controlers and Views</li>\n"
-"\t<li class=\"list-group-item\">Bootstrap CSS</li>\n"
-"\t<li class=\"list-group-item\">Calling the ORM</li>\n"
-"</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to create dynamic page interacting with the ORM.</i></p>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-"\n"
-"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
-"<div class=\"panel panel-info\">\n"
-"<div class=\"panel-heading text-center\">\n"
-"<h2 style=\"margin: 0\">Day 3</h2>\n"
-"\n"
-"<p class=\"text-muted\" style=\"margin: 0\">Building a Full Application</p>\n"
-"</div>\n"
-"\n"
-"<ul class=\"list-group\"><li class=\"list-group-item\">Modules</li>\n"
-"\t<li class=\"list-group-item\">Python Objects</li>\n"
-"\t<li class=\"list-group-item\">Report Engine</li>\n"
-"\t<li class=\"list-group-item\">Workflows</li>\n"
-"\t<li class=\"list-group-item\">Training Center Module</li>\n"
-"\t<li class=\"list-group-item\">Integrated Help</li>\n"
-"\t<li class=\"list-group-item\">How to Debug</li>\n"
-"</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to develop a full application with backend and user interface.</i></p>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-"\n"
-"<div class=\"container\">\n"
-"<div class=\"row\">\n"
-"<div class=\"col-md-12 text-center mb16 mt0\" data-snippet-id=\"colmd\">\n"
-"<h2>Requirements</h2>\n"
-"</div>\n"
-"\n"
-"<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n"
-"<p><strong>Objectives:</strong></p>\n"
-"\n"
-"<p><strong>Having attended this course, participants should be able to:</strong></p>\n"
-"\n"
-"<ul><li>Understand the development concepts and architecture;</li>\n"
-"\t<li>Install and administer your own server;</li>\n"
-"\t<li>Develop a new module for a particular application.</li>\n"
-"</ul><p></p>\n"
-"\n"
-"<p><strong>Our prices include:</strong></p>\n"
-"\n"
-"<ul><li>drinks and lunch;</li>\n"
-"\t<li>training material.</li>\n"
-"</ul><p></p>\n"
-"\n"
-"<p><strong>Requirements:</strong></p>\n"
-"\n"
-"<ul><li>Bring your own laptop.</li>\n"
-"\t<li>Participants are expected to have some knowledge in programming. A basic knowledge of the Python programming is recommended.</li>\n"
-"\t<li>Participants preferably have a functional knowledge of our software (see Functional Training).</li>\n"
-"</ul><p></p>\n"
-"\n"
-"<p>To get more information, visit the <a href=\"http://openerp.com/\">Odoo Official Website</a>.</p>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-"\n"
-"\n"
-"\n"
-"<div class=\"container oe_dark\">\n"
-"<div class=\"row\">\n"
-"<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n"
-"<h1 class=\"text-center\">Read Great Contents</h1>\n"
-"\n"
-"<h3 class=\"text-muted text-center\">What do people say about this course?</h3>\n"
-"</div>\n"
-"\n"
-"<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
-"<blockquote data-snippet-id=\"quote\">\n"
-"<p>I did not expect such a great learning experience. I feel like I can develop anything now.</p>\n"
-"<small>John Doe, CEO</small></blockquote>\n"
-"</div>\n"
-"\n"
-"<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
-"<blockquote data-snippet-id=\"quote\">\n"
-"<p>This course help me build my first application within a month. Definetly worth its price.</p>\n"
-"<small>John Doe, CEO</small></blockquote>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-msgstr "<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-snippet-id=\"carousel\" id=\"myCarousel3\">\n    <div class=\"carousel-inner\">\n        <div class=\"item oe_img_bg active\" style=\"background-image: url(/website/static/src/img/banner/orange_red.jpg);\">\n            <div class=\"container\">\n                <div class=\"row content\">\n                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-md-5 col-md-offset-1 mt16\">\n                        <img alt=\"Banner Odoo Image\" class=\"img-responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" style=\"\">\n                    </div>\n                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" style=\"text-align: center; color: white;\">\n                        <h2>5 日速成大法</h2>\n                        <h4>学习 <i>商业应用开滑</i></h4>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n<h2>课程总纲</h2>\n</div>\n\n<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n<p><span style=\"text-align: -webkit-center; \">本课程是专门针对那些想要<strong>开发商业应用</strong>的人士而开设的。 其对象可以是IT从业新手或者解决老鸟技术上遇到的难题等都是可以听听课的。</span></p>\n</div>\n</div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n<h2>您能学到什么？</h2>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">第1天</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">介绍JavaScript</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">Hello World</li>\n\t<li class=\"list-group-item\">变量和运算符</li>\n\t<li class=\"list-group-item\">深入了解Strings</li>\n\t<li class=\"list-group-item\">Functions</li>\n\t<li class=\"list-group-item\">Loops</li>\n\t<li class=\"list-group-item\">Arrays</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>You will be able to develop simple dynamic compenents in HTML pages.</i></p>\n</div>\n</div>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">第 2天</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">Odoo Web客户端</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">介绍 JQuery</li>\n\t<li class=\"list-group-item\">深入了解 JQuery</li>\n\t<li class=\"list-group-item\">Underscore</li>\n\t<li class=\"list-group-item\">介绍 QWeb</li>\n\t<li class=\"list-group-item\">控制器和视图</li>\n\t<li class=\"list-group-item\">Bootstrap CSS</li>\n\t<li class=\"list-group-item\">调用ORM</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>至此您将能够开发设计出动态网页以及 ORM互动功能。</i></p>\n</div>\n</div>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">第3天</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">创建一个完整的应用</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">模块</li>\n\t<li class=\"list-group-item\">Python项目</li>\n\t<li class=\"list-group-item\">报表引擎</li>\n\t<li class=\"list-group-item\">Workflows工作流</li>\n\t<li class=\"list-group-item\">Training Center Module</li>\n\t<li class=\"list-group-item\">Integrated Help</li>\n\t<li class=\"list-group-item\">如何调试</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>至此您将能够开发完整的包括前端与后端的应用模块了。</i></p>\n</div>\n</div>\n</div>\n</div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mb16 mt0\" data-snippet-id=\"colmd\">\n<h2>要求与目标</h2>\n</div>\n\n<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n<p><strong>目标：</strong></p>\n\n<p><strong>参加本课程的学员应掌握：</strong></p>\n\n<ul><li>理解发展的概念和体系结构；</li>\n\t<li>安装和管理自己的服务器；</li>\n\t<li>开发一个特定的应用程序的一个新的模块。</li>\n</ul><p></p>\n\n<p><strong>我们的价格包括</strong></p>\n\n<ul><li>饮料和午餐；</li>\n\t<li>培训教材。</li>\n</ul><p></p>\n\n<p><strong>要求：</strong></p>\n\n<ul><li>自带笔记本电脑。</li>\n\t<li>参加课程的学员最好有一定的编程基础。 叵能有一些Python基础更佳。</li>\n\t<li>参加课程的学员最好有我们的软件的功能性知识(见功能训练)。</li>\n</ul><p></p>\n\n<p>更多信息请访问 <a href=\"http://openerp.com/\">Odoo 官方网站</a>。</p>\n</div>\n</div>\n</div>\n\n\n\n<div class=\"container oe_dark\">\n<div class=\"row\">\n<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n<h1 class=\"text-center\">Read Great Contents</h1>\n\n<h3 class=\"text-muted text-center\">讲师是谁呢？</h3>\n</div>\n\n<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n<blockquote data-snippet-id=\"quote\">\n<p>我没曾想过有这样好的机会可以讲授课程。我个人觉得我能胜任开始任何开发事宜。</p>\n<small>John Doe, CEO</small></blockquote>\n</div>\n\n<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n<blockquote data-snippet-id=\"quote\">\n<p>这些课程帮助并完成一个月内应用模块开发。绝对物有所值。</p>\n<small>John Doe, CEO</small></blockquote>\n</div>\n</div>\n</div>\n"
-
-#. module: event
 #: model:event.event,description:event.event_1
-msgid ""
-"<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-snippet-id=\"carousel\" id=\"myCarousel3\">\n"
-"    <div class=\"carousel-inner\">\n"
-"        <div class=\"item oe_img_bg active\" style=\"background-image: url(/website/static/src/img/banner/orange_red.jpg);\">\n"
-"            <div class=\"container\">\n"
-"                <div class=\"row content\">\n"
-"                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-md-5 col-md-offset-1 mt16\">\n"
-"                        <img alt=\"Banner Odoo Image\" class=\"img-responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" style=\"\">\n"
-"                    </div>\n"
-"                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" style=\"text-align: center; color: white;\">\n"
-"                        <h2>5 Intensive Days</h2>\n"
-"                        <h4>to learn technical aspects</h4>\n"
-"                    </div>\n"
-"                </div>\n"
-"            </div>\n"
-"        </div>\n"
-"    </div>\n"
-"</div>\n"
-"\n"
-"<div class=\"container\">\n"
-"<div class=\"row\">\n"
-"<div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n"
-"<h2>Course Summary</h2>\n"
-"</div>\n"
-"\n"
-"<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n"
-"<p><span style=\"text-align: -webkit-center; \">This course is dedicated to developers who need to grasp knowledge of the <strong>business applications development </strong>process. This course is for new developers or for IT professionals eager to learn more about technical aspects.</span></p>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-"\n"
-"<div class=\"container\">\n"
-"<div class=\"row\">\n"
-"<div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n"
-"<h2>What you will learn?</h2>\n"
-"</div>\n"
-"\n"
-"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
-"<div class=\"panel panel-info\">\n"
-"<div class=\"panel-heading text-center\">\n"
-"<h2 style=\"margin: 0\">Day 1</h2>\n"
-"\n"
-"<p class=\"text-muted\" style=\"margin: 0\">Introduction to Javascript</p>\n"
-"</div>\n"
-"\n"
-"<ul class=\"list-group\"><li class=\"list-group-item\">Hello World</li>\n"
-"\t<li class=\"list-group-item\">Variables &amp; Operators</li>\n"
-"\t<li class=\"list-group-item\">Dive into Strings</li>\n"
-"\t<li class=\"list-group-item\">Functions</li>\n"
-"\t<li class=\"list-group-item\">Loops</li>\n"
-"\t<li class=\"list-group-item\">Arrays</li>\n"
-"</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to develop simple dynamic compenents in HTML pages.</i></p>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-"\n"
-"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
-"<div class=\"panel panel-info\">\n"
-"<div class=\"panel-heading text-center\">\n"
-"<h2 style=\"margin: 0\">Day 2</h2>\n"
-"\n"
-"<p class=\"text-muted\" style=\"margin: 0\">Odoo Web Client</p>\n"
-"</div>\n"
-"\n"
-"<ul class=\"list-group\"><li class=\"list-group-item\">Introduction to JQuery</li>\n"
-"\t<li class=\"list-group-item\">Advanced JQuery</li>\n"
-"\t<li class=\"list-group-item\">Underscore</li>\n"
-"\t<li class=\"list-group-item\">Introduction to QWeb</li>\n"
-"\t<li class=\"list-group-item\">Controlers and Views</li>\n"
-"\t<li class=\"list-group-item\">Bootstrap CSS</li>\n"
-"\t<li class=\"list-group-item\">Calling the ORM</li>\n"
-"</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to create dynamic page interacting with the ORM.</i></p>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-"\n"
-"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
-"<div class=\"panel panel-info\">\n"
-"<div class=\"panel-heading text-center\">\n"
-"<h2 style=\"margin: 0\">Day 3</h2>\n"
-"\n"
-"<p class=\"text-muted\" style=\"margin: 0\">Building a Full Application</p>\n"
-"</div>\n"
-"\n"
-"<ul class=\"list-group\"><li class=\"list-group-item\">Modules</li>\n"
-"\t<li class=\"list-group-item\">Python Objects</li>\n"
-"\t<li class=\"list-group-item\">Report Engine</li>\n"
-"\t<li class=\"list-group-item\">Workflows</li>\n"
-"\t<li class=\"list-group-item\">Training Center Module</li>\n"
-"\t<li class=\"list-group-item\">Integrated Help</li>\n"
-"\t<li class=\"list-group-item\">How to Debug</li>\n"
-"</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to develop a full application with backend and user interface.</i></p>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-"\n"
-"<div class=\"container\">\n"
-"<div class=\"row\">\n"
-"<div class=\"col-md-12 text-center mb16 mt0\" data-snippet-id=\"colmd\">\n"
-"<h2>Requirements</h2>\n"
-"</div>\n"
-"\n"
-"<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n"
-"<p><strong>Objectives:</strong></p>\n"
-"\n"
-"<p><strong>Having attended this course, participants should be able to:</strong></p>\n"
-"\n"
-"<ul><li>Understand the development concepts and architecture;</li>\n"
-"\t<li>Install and administer your own server;</li>\n"
-"\t<li>Develop a new module for a particular application.</li>\n"
-"</ul><p></p>\n"
-"\n"
-"<p><strong>Our prices include:</strong></p>\n"
-"\n"
-"<ul><li>drinks and lunch;</li>\n"
-"\t<li>training material.</li>\n"
-"</ul><p></p>\n"
-"\n"
-"<p><strong>Requirements:</strong></p>\n"
-"\n"
-"<ul><li>Bring your own laptop.</li>\n"
-"\t<li>Participants are expected to have some knowledge in programming. A basic knowledge of the Python programming is recommended.</li>\n"
-"\t<li>Participants preferably have a functional knowledge of our software (see Functional Training).</li>\n"
-"</ul><p></p>\n"
-"\n"
-"<p>To get more information, visit the <a href=\"http://openerp.com/\">Odoo Official Website</a>.</p>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-"\n"
-"\n"
-"\n"
-"<div class=\"container oe_dark\">\n"
-"<div class=\"row\">\n"
-"<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n"
-"<h1 class=\"text-center\">Read Great Contents</h1>\n"
-"\n"
-"<h3 class=\"text-muted text-center\">What do people say about this course?</h3>\n"
-"</div>\n"
-"\n"
-"<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
-"<blockquote data-snippet-id=\"quote\">\n"
-"<p>I did not expect such a great learning experience. I feel like I can develop anything now.</p>\n"
-"<small>John Doe, CEO</small></blockquote>\n"
-"</div>\n"
-"\n"
-"<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
-"<blockquote data-snippet-id=\"quote\">\n"
-"<p>This course help me build my first application within a month. Definetly worth its price.</p>\n"
-"<small>John Doe, CEO</small></blockquote>\n"
-"</div>\n"
-"</div>\n"
-"</div>\n"
-msgstr "<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-snippet-id=\"carousel\" id=\"myCarousel3\">\n    <div class=\"carousel-inner\">\n        <div class=\"item oe_img_bg active\" style=\"background-image: url(/website/static/src/img/banner/orange_red.jpg);\">\n            <div class=\"container\">\n                <div class=\"row content\">\n                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-md-5 col-md-offset-1 mt16\">\n                        <img alt=\"Banner Odoo Image\" class=\"img-responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" style=\"\">\n                    </div>\n                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" style=\"text-align: center; color: white;\">\n                        <h2>5日速成大法</h2>\n                        <h4>技术层面学习</h4>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n<h2>课程总纲</h2>\n</div>\n\n<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n<p><span style=\"text-align: -webkit-center; \">本课程是专门针对那些想要<strong>开发商业应用</strong>的人士而开设的。其对象可以是IT从业新手或者解决老鸟技术上遇到的难题等都是可以听听课的。</span></p>\n</div>\n</div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n<h2>您能学到什么？</h2>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">第 1天</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">介绍 Javascript</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">Hello World</li>\n\t<li class=\"list-group-item\">变量 &amp; 运算符</li>\n\t<li class=\"list-group-item\">深入了解Strings</li>\n\t<li class=\"list-group-item\">Functions</li>\n\t<li class=\"list-group-item\">Loops</li>\n\t<li class=\"list-group-item\">Arrays</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>You will be able to develop simple dynamic compenents in HTML pages.</i></p>\n</div>\n</div>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">第 2天</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">Odoo Web 客户端</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">介绍 JQuery</li>\n\t<li class=\"list-group-item\">深入JQuery</li>\n\t<li class=\"list-group-item\">Underscore</li>\n\t<li class=\"list-group-item\">介绍 QWeb</li>\n\t<li class=\"list-group-item\">控制器和视图</li>\n\t<li class=\"list-group-item\">Bootstrap CSS</li>\n\t<li class=\"list-group-item\">调用ORM</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>至此您将能够开发设计出动态网页以及 ORM互动功能。</i></p>\n</div>\n</div>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">第 3天</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">创建一个完整的应用</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">模块</li>\n\t<li class=\"list-group-item\">Python项目</li>\n\t<li class=\"list-group-item\">报表引擎</li>\n\t<li class=\"list-group-item\">Workflows工作流</li>\n\t<li class=\"list-group-item\">Training Center Module</li>\n\t<li class=\"list-group-item\">Integrated Help</li>\n\t<li class=\"list-group-item\">如何调试</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>至此您将能够开发完整的包括前端与后端的应用模块了。</i></p>\n</div>\n</div>\n</div>\n</div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mb16 mt0\" data-snippet-id=\"colmd\">\n<h2>要求与目标</h2>\n</div>\n\n<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n<p><strong>目标：</strong></p>\n\n<p><strong>参加本课程的学员应掌握：</strong></p>\n\n<ul><li>理解发展的概念和体系结构；</li>\n\t<li>安装和管理自己的服务器；</li>\n\t<li>开发一个特定的应用程序的一个新的模块。</li>\n</ul><p></p>\n\n<p><strong>我们的价格包括</strong></p>\n\n<ul><li>饮料和午餐；</li>\n\t<li>培训教材。</li>\n</ul><p></p>\n\n<p><strong>要求：</strong></p>\n\n<ul><li>自带笔记本电脑。</li>\n\t<li>参加课程的学员最好有一定的编程基础。 叵能有一些Python基础更佳。.</li>\n\t<li>参加课程的学员最好有我们的软件的功能性知识（见功能训练）。</li>\n</ul><p></p>\n\n<p>更多信息请访问 <a href=\"http://openerp.com/\">Odoo 官方网站</a>.</p>\n</div>\n</div>\n</div>\n\n\n\n<div class=\"container oe_dark\">\n<div class=\"row\">\n<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n<h1 class=\"text-center\">Read Great Contents</h1>\n\n<h3 class=\"text-muted text-center\">讲师是谁呢？</h3>\n</div>\n\n<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n<blockquote data-snippet-id=\"quote\">\n<p>我没曾想过有这样好的机会可以讲授课程。我个人觉得我能胜任开始任何开发事宜</p>\n<small>John Doe, CEO</small></blockquote>\n</div>\n\n<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n<blockquote data-snippet-id=\"quote\">\n<p>这些课程帮助并完成一个月内应用模块开发。绝对物有所值。</p>\n<small>John Doe, CEO</small></blockquote>\n</div>\n</div>\n</div>\n"
+#: model:event.event,description:event.event_3
+msgid "5 Intensive Days"
+msgstr "连续5天"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid ""
-"<div class=\"oe_structure\">\n"
-"    <center><strong>Conference on Business Applications</strong></center>\n"
-"    <p> </p>\n"
-"    <p> During this conference, our team will give a detailed overview of our business applications. You’ll know all the benefits of using it.</p>\n"
-"    <p> </p>\n"
-"    <p><strong>Objectives:</strong></p>\n"
-"    <p>Having attended this conference, participants should be able to:</p>\n"
-"    <ul>\n"
-"    <li>Understand the various modules;</li>\n"
-"    <li>Functional flow of the main applications;</li>\n"
-"    </ul>\n"
-"    <p> </p>\n"
-"    <p><strong>Program:</strong></p>\n"
-"    <ul>\n"
-"    <li>Introduction, CRM, Sales Management</li>\n"
-"    <li>Purchase, Sales &amp; Purchase management, Financial accounting.</li>\n"
-"    <li>Project management, Human resources, Contract management.</li>\n"
-"    <li>Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export.</li>\n"
-"    <li>Point of Sale (POS), Introduction to report customization.</li>\n"
-"    </ul>\n"
-"    <p> </p>\n"
-"    <p><strong>Where to find us:</strong></p>\n"
-"    <p>Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)</p>\n"
-"    <p>For any additional information, please contact us at <a href=\"mailto:events@openerp.com\">events@openerp.com</a>.</p>\n"
-"    <p> </p>\n"
-"    <p>Best regards,</p>\n"
-"    <p>Luigi Roni, Senior Event Manager</p>\n"
-"    <p> </p>\n"
-"    <p align=\"RIGHT\"><em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the event or change the dates on which it is held.)</em></p>\n"
-"</div>\n"
-msgstr "<div class=\"oe_structure\">\n    <center><strong>商务应用会议</strong></center>\n    <p> </p>\n    <p> 我们团队将在此次会议中详细为您介绍我们业务的细节。有啥好处您都将会在此次会议了解到。</p>\n    <p> </p>\n    <p><strong>目标：</strong></p>\n    <p>与会者应：</p>\n    <ul>\n    <li>了解各种模块；</li>\n    <li>主要的模块的功能；</li>\n    </ul>\n    <p> </p>\n    <p><strong>排程：</strong></p>\n    <ul>\n    <li>I介绍, CRM客户关系管理系统, 销售管理系统</li>\n    <li>采购, 销售 &amp; 采购管理, 财务管理.</li>\n    <li>项目管理, 人力资源, 合同管理.</li>\n    <li>仓库管理, 生产制造 (MRP) &amp; 销售, 导入/导出.</li>\n    <li>零售 (POS), 介绍报表定制.</li>\n    </ul>\n    <p> </p>\n    <p><strong>哪里能找到我们：</strong></p>\n    <p>Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)</p>\n    <p>欲知详情,请发Email和我们联络 <a href=\"mailto:events@openerp.com\">events@openerp.com</a>.</p>\n    <p> </p>\n    <p>敬祝安好,</p>\n    <p>Luigi Roni, 高级企划经理</p>\n    <p> </p>\n    <p align=\"RIGHT\"><em>(Chamber Works 有权取消, 重新命名或重新定主题<br>或变更此活动的举行日期。)</em></p>\n</div>\n"
+"<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the"
+" event or change the dates on which it is held.)</em>"
+msgstr ""
 
 #. module: event
-#: model:event.event,badge_innerright:event.event_1
+#: model:event.event,description:event.event_0
 msgid ""
-"<div>\n"
-"                <h2>Exhibition Hall</h2>\n"
-"            </div>\n"
-"            <div>\n"
-"                Picture of the exhibition hall\n"
-"            </div>\n"
-"        "
-msgstr "<div>\n                <h2>展厅</h2>\n            </div>\n            <div>\n                展厅图片\n            </div>\n        "
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn <i>Odoo"
+" Programming</i></font>"
+msgstr ""
 
 #. module: event
-#: model:event.event,badge_innerleft:event.event_1
+#: model:event.event,description:event.event_1
 msgid ""
-"<h2>Premium Tickets</h2>\n"
-"            <table class=\"text-center\">\n"
-"                <tr>\n"
-"                    <td width=\"10%\"></td>\n"
-"                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Full</div><div> Catering</div></td>\n"
-"                    <td width=\"5%\"></td>\n"
-"                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>BBQ &amp;</div><div>Beer Event</div></td>\n"
-"                    <td width=\"5%\"></td>\n"
-"                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Awards &amp;</div> <div>Walking</div><div> Dinner</div></td>\n"
-"                    <td width=\"10%\"></td>\n"
-"                </tr>\n"
-"                <tr style=\"background:lightgrey; height: 15px;\">\n"
-"                    <td colspan=\"7\"></td>\n"
-"                </tr>\n"
-"                <tr style=\"background:lightgrey; height: 35px;\">\n"
-"                    <td></td>\n"
-"                    <td>Every Day</td>\n"
-"                    <td colspan=\"3\">June 4th</td>\n"
-"                    <td>June 5th</td>\n"
-"                    <td></td>\n"
-"                </tr>\n"
-"            </table>\n"
-"            <br><br>\n"
-"            <h2>Free Tickets</h2>\n"
-"            <table class=\"text-center\">\n"
-"                <tr>\n"
-"                    <td width=\"10%\"></td>\n"
-"                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Drinks</div></td>\n"
-"                    <td width=\"5%\"></td>\n"
-"                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Premium</div><div>Ticket</div><div>onsite</div></td>\n"
-"                    <td width=\"25%\"></td>\n"
-"                </tr>\n"
-"                <tr style=\"background:lightgrey; height: 15px;\">\n"
-"                    <td colspan=\"5\"></td>\n"
-"                </tr>\n"
-"                <tr style=\"background:lightgrey; height: 35px;\">\n"
-"                    <td></td>\n"
-"                    <td>Every Day</td>\n"
-"                    <td></td>\n"
-"                    <td>60 €/day<div>30 €/Friday</div></td>\n"
-"                    <td></td>\n"
-"                </tr>\n"
-"            </table>\n"
-"        "
-msgstr "<h2>优惠卷</h2>\n            <table class=\"text-center\">\n                <tr>\n                    <td width=\"10%\"></td>\n                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>全</div><div> 餐</div></td>\n                    <td width=\"5%\"></td>\n                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>BBQ烧烤 &amp;</div><div>饮啤</div></td>\n                    <td width=\"5%\"></td>\n                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>抽奖 &amp;</div> <div>散步</div><div> 饮胜</div></td>\n                    <td width=\"10%\"></td>\n                </tr>\n                <tr style=\"background:lightgrey; height: 15px;\">\n                    <td colspan=\"7\"></td>\n                </tr>\n                <tr style=\"background:lightgrey; height: 35px;\">\n                    <td></td>\n                    <td>每天</td>\n                    <td colspan=\"3\">六月四日</td>\n                    <td>六月五日</td>\n                    <td></td>\n                </tr>\n            </table>\n            <br><br>\n            <h2>不要钱</h2>\n            <table class=\"text-center\">\n                <tr>\n                    <td width=\"10%\"></td>\n                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>饮料</div></td>\n                    <td width=\"5%\"></td>\n                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>优惠</div><div>卷</div><div>现场</div></td>\n                    <td width=\"25%\"></td>\n                </tr>\n                <tr style=\"background:lightgrey; height: 15px;\">\n                    <td colspan=\"5\"></td>\n                </tr>\n                <tr style=\"background:lightgrey; height: 35px;\">\n                    <td></td>\n                    <td>每天</td>\n                    <td></td>\n                    <td>60 €/天<div>30 €/星期五</div></td>\n                    <td></td>\n                </tr>\n            </table>\n        "
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn "
+"<i>technical aspects</i></font>"
+msgstr ""
 
 #. module: event
-#: model:event.event,badge_back:event.event_1
+#: model:event.event,description:event.event_3
 msgid ""
-"<h2>Program</h2>\n"
-"            <div><strong>Registrations</strong><small> are from 8:30 am, except on Friday from 9:00 am</small></div>\n"
-"            <div>\n"
-"                <strong>Lunch</strong><small> is served between 1:00 pm and 2:00 pm.</small>\n"
-"            </div>\n"
-"            <h2>Special Events</h2>\n"
-"            <table style=\"border: 1px solid black;\">\n"
-"                <tr style=\"border: 1px solid black;\">\n"
-"                    <td class=\"text-center\" width=\"15%\"><strong>4/6</strong></td>\n"
-"                    <td class=\"text-center\" width=\"25%\"><strong>19h00</strong></td>\n"
-"                    <td><small>Barbecue Beer Event</small></td>\n"
-"                </tr>\n"
-"                <tr>\n"
-"                    <td class=\"text-center\"><strong>5/6</strong></td>\n"
-"                    <td class=\"text-center\"><strong>18h30</strong></td>\n"
-"                    <td><small>Odoo Awards Ceremony</small></td>\n"
-"                </tr>\n"
-"            </table>\n"
-"            <br>\n"
-"            <div class=\"row\">\n"
-"                <div class=\"col-xs-5\">\n"
-"                <p>\n"
-"                    <i class=\"fa fa-twitter\"></i> #OpenDays\n"
-"                </p>\n"
-"                </div>\n"
-"                <div class=\"col-xs-6\">\n"
-"                <div class=\"small\">Wifi network: opendays</div>\n"
-"                <div class=\"small\">Wifi password: odoo2014</div>\n"
-"                </div>\n"
-"            </div>\n"
-"            <div class=\"row\">\n"
-"                <small class=\"col-xs-3\" style=\"float: left; padding-right: 0px; padding-left: 0px;\">sponsored by</small>\n"
-"                <div class=\"col-xs-2\" style=\"padding-right: 0px; padding-left: 0px;\">\n"
-"                <span>\n"
-"                    <img class=\"img img-responsive\" src=\"https://www.odoo.com/openerp_website/static/src/img/logo_white.png\">\n"
-"                </span>\n"
-"                </div>\n"
-"            </div>\n"
-"        "
-msgstr "<h2>程序</h2>\n            <div><strong>签名报到</strong><small> 自星期五上午8:30起，至上午9:00止</small></div>\n            <div>\n                <strong>午餐时间</strong><small> 下午 1:00 至 2:00 。</small>\n            </div>\n            <h2>特别节目</h2>\n            <table style=\"border: 1px solid black;\">\n                <tr style=\"border: 1px solid black;\">\n                    <td class=\"text-center\" width=\"15%\"><strong>4/6</strong></td>\n                    <td class=\"text-center\" width=\"25%\"><strong>19h00</strong></td>\n                    <td><small>烧烤啤酒等</small></td>\n                </tr>\n                <tr>\n                    <td class=\"text-center\"><strong>5/6</strong></td>\n                    <td class=\"text-center\"><strong>18h30</strong></td>\n                    <td><small>Odoo抽奖环节</small></td>\n                </tr>\n            </table>\n            <br>\n            <div class=\"row\">\n                <div class=\"col-xs-5\">\n                <p>\n                    <i class=\"fa fa-twitter\"></i> #OpenDays\n                </p>\n                </div>\n                <div class=\"col-xs-6\">\n                <div class=\"small\">Wifi 网络名称: opendays</div>\n                <div class=\"small\">Wifi 密码: odoo2014</div>\n                </div>\n            </div>\n            <div class=\"row\">\n                <small class=\"col-xs-3\" style=\"float: left; padding-right: 0px; padding-left: 0px;\">赞助</small>\n                <div class=\"col-xs-2\" style=\"padding-right: 0px; padding-left: 0px;\">\n                <span>\n                    <img class=\"img img-responsive\" src=\"https://www.odoo.com/openerp_website/static/src/img/logo_white.png\">\n                </span>\n                </div>\n            </div>\n        "
+"<font style=\"font-size: 24px;\">to learn <i>business applications "
+"development</i></font>"
+msgstr ""
 
 #. module: event
-#: model:ir.actions.act_window,help:event.action_event_view
+#: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"               Click to add a new event.\n"
-"             </p><p>\n"
-"               Odoo helps you schedule and efficiently organize your events:\n"
-"               track subscriptions and participations, automate the confirmation emails,\n"
-"               sell tickets, etc.\n"
-"             </p>\n"
-"           "
-msgstr "<p class=\"oe_view_nocontent_create\">\n               单击新建一个活动\n             </p><p>\n               Odoo能帮您安排日程并有效地组织活动，如跟踪订阅和参与、自动确认邮件、卖票等等。\n             </p>\n           "
+"<i class=\"fa fa-clock-o\"/>\n"
+"                                        <b>To</b>"
+msgstr ""
+"<i class=\"fa fa-clock-o\"/>\n"
+"<b>至</b>"
 
 #. module: event
-#: view:event.registration:event.view_event_registration_form
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid ""
+"<i>You will be able to create dynamic page interacting with the ORM.</i>"
+msgstr "<i>你将能创建和ORM相互作用的动态页面</i>"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid ""
+"<i>You will be able to develop a full application with backend and user "
+"interface.</i>"
+msgstr "<i>你将能开发出一个完整的带有后台和前端界面的应用</i>"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid ""
+"<i>You will be able to develop simple dynamic components in HTML pages.</i>"
+msgstr "<i>你将能在Html页面开发出简单的动态组件.</i>"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.event_event_report_template_badge
+#: model:ir.ui.view,arch_db:event.event_registration_report_template_badge
+msgid "<i>to</i>"
+msgstr "<i>至</i>"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "<small>John Doe, CEO</small>"
+msgstr "<small>CEO, John Doe</small>"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_form
+msgid ""
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
+"                                        to \n"
+"                                    </span>"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid ""
+"<span style=\"text-align: -webkit-center; \">This course is dedicated to "
+"developers who need to grasp knowledge of the <strong>business applications "
+"development </strong>process. This course is for new developers or for IT "
+"professionals eager to learn more about technical aspects.</span>"
+msgstr ""
+"<span style=\"text-align: -webkit-center; \">本课程是专门为那些需要掌握 <strong>业务应用开发 "
+"</strong>的开发者。本课程是针对新的开发人员，或者是专为专业人士，希望更多地了解技术方面的内容。</span>"
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "<strong>Conference on Business Apps</strong>"
+msgstr "<strong>商务应用会议</strong>"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid ""
+"<strong>Having attended this course, participants should be able "
+"to:</strong>"
+msgstr "<STRONG>参加这门课程，学员应具备：</STRONG>"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_2
+#: model:event.event,description:event.event_3
+msgid "<strong>Objectives:</strong>"
+msgstr "<strong>目标:</strong>"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "<strong>Our prices include:</strong>"
+msgstr "<strong>我们的价格包含了:</strong>"
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "<strong>Program:</strong>"
+msgstr "<strong>程序:</strong>"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "<strong>Requirements:</strong>"
+msgstr "<strong>需求:</strong>"
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "<strong>Where to find us:</strong>"
+msgstr "<strong>可以在这里找到我们:</strong>"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_active
+msgid "Active"
+msgstr "有效"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid ""
+"Add a navigation menu to your event web pages with schedule, tracks, a track"
+" proposal form, etc."
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Advanced JQuery"
+msgstr "高级JQuery"
+
+#. module: event
+#: selection:event.mail,interval_type:0
+#: selection:event.type.mail,interval_type:0
+msgid "After each registration"
+msgstr "登记之后"
+
+#. module: event
+#: selection:event.mail,interval_type:0
+#: selection:event.type.mail,interval_type:0
+msgid "After the event"
+msgstr "活动之后"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_search
+msgid "Archived"
+msgstr "归档"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_form
+msgid ""
+"Are you sure you want to cancel this event? All the linked attendees will be"
+" cancelled as well."
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Arrays"
+msgstr "阵列"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Attendance"
+msgstr "考勤"
+
+#. module: event
 #: selection:event.registration,state:0
-#: selection:report.event.registration,registration_state:0
+#: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Attended"
 msgstr "参加"
 
 #. module: event
-#: field:event.registration,date_closed:0
+#: model:ir.model.fields,field_description:event.field_event_registration_date_closed
 msgid "Attended Date"
 msgstr "参加日期"
 
 #. module: event
-#: view:event.event:event.view_event_form
-#: view:event.registration:event.view_event_registration_tree
+#: model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Attended the Event"
 msgstr "参加活动"
 
 #. module: event
-#: field:event.event,seats_available:0
+#: model:ir.model,name:event.model_event_registration
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_registration_id
+#: model:ir.ui.view,arch_db:event.view_event_registration_form
+msgid "Attendee"
+msgstr "与会者"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_registration_name
+#: model:ir.ui.view,arch_db:event.event_event_report_template_badge
+msgid "Attendee Name"
+msgstr "与会者姓名"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.act_event_registration_from_event
+#: model:ir.actions.act_window,name:event.action_registration
+#: model:ir.model.fields,field_description:event.field_event_event_registration_ids
+#: model:ir.ui.menu,name:event.menu_action_registration
+#: model:ir.ui.view,arch_db:event.view_event_form
+#: model:ir.ui.view,arch_db:event.view_event_type_form
+msgid "Attendees"
+msgstr "与会者"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_auto_confirm
+msgid "Autoconfirm Registrations"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_type_auto_confirm
+msgid "Automatically Confirm Registrations"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_type_use_mail_schedule
+msgid "Automatically Send Emails"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_seats_available
 msgid "Available Seats"
 msgstr "可用席位"
 
 #. module: event
-#: view:event.confirm:event.view_event_confirm
+#: model:ir.model.fields,field_description:event.field_event_event_badge_back
+msgid "Badge Back"
+msgstr "徽章背面"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_badge_front
+msgid "Badge Front"
+msgstr "徽章正面"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
+msgid "Badge Inner Left"
+msgstr "徽章内部左边"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_badge_innerright
+msgid "Badge Inner Right"
+msgstr "徽章内部右边"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_res_config_settings_module_event_barcode
+msgid "Barcode"
+msgstr "条码"
+
+#. module: event
+#: selection:event.mail,interval_type:0
+#: selection:event.type.mail,interval_type:0
+msgid "Before the event"
+msgstr "此事件之前"
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "Best regards,"
+msgstr "致以最诚挚的问候，"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Bootstrap CSS"
+msgstr "Bootstrap CSS"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Bring your own laptop."
+msgstr "带上你自己的笔记本电脑"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Building a Full Application"
+msgstr "构建一个完整的应用"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Calling the ORM"
+msgstr "调用ORM"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Cancel"
 msgstr "取消"
 
 #. module: event
-#: view:event.event:event.view_event_form
+#: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Cancel Event"
 msgstr "取消活动"
 
 #. module: event
-#: view:event.event:event.view_event_form
-#: view:event.registration:event.view_event_registration_form
-#: view:event.registration:event.view_event_registration_tree
+#: model:ir.ui.view,arch_db:event.view_event_registration_form
+#: model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Cancel Registration"
-msgstr "取消登记记录"
+msgstr "取消注册"
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
-#: selection:report.event.registration,event_state:0
-#: selection:report.event.registration,registration_state:0
 msgid "Cancelled"
 msgstr "已取消"
 
 #. module: event
-#: help:res.partner,speaker:0
-msgid "Check this box if this contact is a speaker."
-msgstr "如果联系人是演讲者，选中此项"
+#: model:ir.model.fields,field_description:event.field_event_event_event_type_id
+msgid "Category"
+msgstr "类别"
 
 #. module: event
-#: code:addons/event/event.py:219
+#: model:event.event,description:event.event_2
+msgid "Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)"
+msgstr "Chamber Works 60, Rosewood Court 底特律, 密歇根 48212 (美国)"
+
+#. module: event
+#: model:ir.actions.act_window,help:event.act_event_registration_from_event
+msgid "Click to add a new attendee."
+msgstr ""
+
+#. module: event
+#: model:ir.actions.act_window,help:event.action_event_view
+msgid "Click to add a new event."
+msgstr "点击创建一个新的事件"
+
+#. module: event
+#: code:addons/event/models/event.py:264
 #, python-format
 msgid "Closing Date cannot be set before Beginning Date."
 msgstr "结束日期不能在开始日期前。"
 
 #. module: event
-#: field:event.event,company_id:0 field:event.registration,company_id:0
-#: view:report.event.registration:event.view_report_event_registration_search
-#: field:report.event.registration,company_id:0
+#: model:ir.ui.view,arch_db:event.view_event_type_form
+msgid "Communication"
+msgstr "沟通"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_company_id
+#: model:ir.model.fields,field_description:event.field_event_registration_company_id
 msgid "Company"
 msgstr "公司"
 
 #. module: event
+#: code:addons/event/models/event.py:475
+#, python-format
+msgid "Compose Email"
+msgstr "撰写电子邮件"
+
+#. module: event
+#: model:event.type,name:event.event_type_2
+msgid "Conference"
+msgstr "会议"
+
+#. module: event
 #: model:event.event,name:event.event_2
-msgid "Conference on Business Applications"
-msgstr "商务应用会议"
+msgid "Conference on Business Apps"
+msgstr "商务应用的会议"
 
 #. module: event
-#: view:event.registration:event.view_event_registration_form
-#: view:report.event.registration:event.view_report_event_registration_search
+#: model:ir.ui.menu,name:event.menu_event_configuration
+msgid "Configuration"
+msgstr "配置"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_configuration
+msgid "Configure Event"
+msgstr "配置事件"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Confirm"
-msgstr "确定"
+msgstr "确认"
 
 #. module: event
-#: view:event.confirm:event.view_event_confirm
+#: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Confirm Anyway"
 msgstr "总是确认"
 
 #. module: event
-#: view:event.event:event.view_event_form
+#: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Confirm Event"
 msgstr "确认活动"
 
 #. module: event
-#: view:event.event:event.view_event_form
-#: view:event.registration:event.view_event_registration_tree
+#: model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Confirm Registration"
-msgstr "确认登记记录"
+msgstr "确认登记"
 
 #. module: event
-#: view:event.event:event.view_event_search selection:event.event,state:0
-#: view:event.registration:event.view_registration_search
-#: selection:event.registration,state:0
-#: selection:report.event.registration,event_state:0
-#: selection:report.event.registration,registration_state:0
+#: selection:event.event,state:0 selection:event.registration,state:0
+#: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Confirmed"
 msgstr "已确认"
 
 #. module: event
-#: view:event.event:event.view_event_search
+#: model:ir.ui.view,arch_db:event.view_event_kanban
+msgid "Confirmed attendees"
+msgstr "确认出席者"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Confirmed events"
 msgstr "已确认的活动"
 
 #. module: event
-#: view:event.registration:event.view_registration_search
-msgid "Confirmed registrations"
-msgstr "确认报名者"
+#: model:ir.model,name:event.model_res_partner
+#: model:ir.model.fields,field_description:event.field_event_registration_partner_id
+msgid "Contact"
+msgstr "联系人"
 
 #. module: event
-#: field:event.event,country_id:0
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Controllers and Views"
+msgstr "控制器及视图"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_country_id
 msgid "Country"
 msgstr "国家"
 
 #. module: event
-#: field:event.confirm,create_uid:0 field:event.event,create_uid:0
-#: field:event.registration,create_uid:0 field:event.type,create_uid:0
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Course Summary"
+msgstr "课程总结"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_confirm_create_uid
+#: model:ir.model.fields,field_description:event.field_event_event_create_uid
+#: model:ir.model.fields,field_description:event.field_event_mail_create_uid
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_create_uid
+#: model:ir.model.fields,field_description:event.field_event_registration_create_uid
+#: model:ir.model.fields,field_description:event.field_event_type_create_uid
+#: model:ir.model.fields,field_description:event.field_event_type_mail_create_uid
 msgid "Created by"
 msgstr "创建人"
 
 #. module: event
-#: field:event.confirm,create_date:0 field:event.event,create_date:0
-#: field:event.registration,create_date:0 field:event.type,create_date:0
+#: model:ir.model.fields,field_description:event.field_event_confirm_create_date
+#: model:ir.model.fields,field_description:event.field_event_event_create_date
+#: model:ir.model.fields,field_description:event.field_event_mail_create_date
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_create_date
+#: model:ir.model.fields,field_description:event.field_event_registration_create_date
+#: model:ir.model.fields,field_description:event.field_event_type_create_date
+#: model:ir.model.fields,field_description:event.field_event_type_mail_create_date
 msgid "Created on"
-msgstr "创建"
+msgstr "创建时间"
 
 #. module: event
-#: view:event.event:event.view_event_form
-msgid "Current Registrations"
-msgstr "当前登记"
+#: code:addons/event/models/event.py:438
+#, python-format
+msgid "Customer"
+msgstr "客户"
 
 #. module: event
-#: help:event.event,message_last_post:0
-#: help:event.registration,message_last_post:0
-msgid "Date of the last message posted on the record."
-msgstr "发布到记录上的最后信息的日期"
+#: code:addons/event/models/event.py:440
+#, python-format
+msgid "Customer Email"
+msgstr "客户邮件"
 
 #. module: event
-#: field:event.type,default_registration_max:0
-msgid "Default Maximum Registration"
-msgstr "默认最多的注册者"
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Day 1"
+msgstr "第1天"
 
 #. module: event
-#: field:event.type,default_registration_min:0
-msgid "Default Minimum Registration"
-msgstr "默认最小登记数"
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Day 2"
+msgstr "第2天"
 
 #. module: event
-#: field:event.type,default_reply_to:0
-msgid "Default Reply-To"
-msgstr "默认回复给"
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Day 3"
+msgstr "第3天"
 
 #. module: event
-#: view:event.event:event.view_event_form field:event.event,description:0
+#: selection:event.mail,interval_unit:0
+#: selection:event.type.mail,interval_unit:0
+msgid "Day(s)"
+msgstr "天"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_kanban
+msgid "Delete"
+msgstr "刪除"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_description
 msgid "Description"
 msgstr "说明"
 
 #. module: event
-#: view:report.event.registration:event.view_report_event_registration_search
-msgid "Display"
-msgstr "显示"
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Develop a new module for a particular application."
+msgstr "为特定应用开发新模块。"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_confirm_display_name
+#: model:ir.model.fields,field_description:event.field_event_event_display_name
+#: model:ir.model.fields,field_description:event.field_event_mail_display_name
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_display_name
+#: model:ir.model.fields,field_description:event.field_event_registration_display_name
+#: model:ir.model.fields,field_description:event.field_event_type_display_name
+#: model:ir.model.fields,field_description:event.field_event_type_mail_display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail_sequence
+msgid "Display order"
+msgstr "显示顺序"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Dive into Strings"
+msgstr "深入到琴弦中"
 
 #. module: event
 #: selection:event.event,state:0
-#: selection:report.event.registration,event_state:0
 msgid "Done"
 msgstr "完成"
 
 #. module: event
-#: selection:report.event.registration,event_state:0
-#: selection:report.event.registration,registration_state:0
-msgid "Draft"
-msgstr "草稿"
+#: model:event.event,description:event.event_2
+msgid ""
+"During this conference, our team will give a detailed overview of our "
+"business applications. You’ll know all the benefits of using it."
+msgstr "在该会议中，我们的团队将会非常详细的介绍该应用，你也会了解到该应用的优点"
 
 #. module: event
-#: field:event.registration,email:0
+#: model:ir.model.fields,field_description:event.field_event_registration_email
 msgid "Email"
-msgstr "电子邮件"
+msgstr "电子邮箱"
 
 #. module: event
-#: field:event.event,date_end:0
+#: model:ir.ui.view,arch_db:event.view_event_form
+#: model:ir.ui.view,arch_db:event.view_event_type_form
+msgid "Email Schedule"
+msgstr "电子邮件排徎"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail_template_id
+#: model:ir.model.fields,field_description:event.field_event_type_mail_template_id
+msgid "Email Template"
+msgstr "Email模板"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_date_end
 msgid "End Date"
 msgstr "结束日期"
 
 #. module: event
-#: view:event.registration:event.view_registration_search
-#: field:event.registration,event_id:0
+#: model:ir.model.fields,field_description:event.field_event_event_date_end_located
+msgid "End Date Located"
+msgstr "定位最后日期"
+
+#. module: event
 #: model:ir.model,name:event.model_event_event
-#: view:report.event.registration:event.view_report_event_registration_search
-#: field:report.event.registration,event_id:0
+#: model:ir.model.fields,field_description:event.field_event_mail_event_id
+#: model:ir.model.fields,field_description:event.field_event_registration_event_id
+#: model:ir.ui.view,arch_db:event.event_event_view_pivot
+#: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event"
 msgstr "活动"
 
 #. module: event
-#: view:report.event.registration:event.view_report_event_registration_search
-msgid "Event Beginning Date"
-msgstr "活动开始日期"
+#: model:ir.model,name:event.model_event_mail
+msgid "Event Automated Mailing"
+msgstr ""
 
 #. module: event
-#: view:event.event:event.view_event_tree
+#: model:ir.actions.report,name:event.report_event_event_badge
+msgid "Event Badge"
+msgstr "事件徽章"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_type
+#: model:ir.ui.menu,name:event.menu_event_type
+msgid "Event Categories"
+msgstr "活动类别"
+
+#. module: event
+#: model:ir.model,name:event.model_event_type
+#: model:ir.model.fields,field_description:event.field_event_type_name
+#: model:ir.ui.view,arch_db:event.view_event_search
+#: model:ir.ui.view,arch_db:event.view_event_type_form
+#: model:ir.ui.view,arch_db:event.view_event_type_tree
 msgid "Event Category"
 msgstr "活动类别"
 
 #. module: event
-#: view:event.confirm:event.view_event_confirm
 #: model:ir.actions.act_window,name:event.action_event_confirm
+#: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Event Confirmation"
 msgstr "活动确认"
 
 #. module: event
-#: field:event.event,email_confirmation_id:0
-#: field:event.type,default_email_event:0
-msgid "Event Confirmation Email"
-msgstr "活动确认邮件"
+#: model:ir.model.fields,field_description:event.field_event_registration_event_end_date
+msgid "Event End Date"
+msgstr "活动结束日期"
 
 #. module: event
-#: field:report.event.registration,event_date:0
-msgid "Event Date"
-msgstr "事件日期"
+#: model:ir.ui.view,arch_db:event.view_event_registration_form
+msgid "Event Information"
+msgstr "事件信息"
 
 #. module: event
-#: view:event.event:event.view_event_form
-msgid "Event Description..."
-msgstr "活动说明..."
+#: model:ir.model.fields,field_description:event.field_event_event_event_logo
+msgid "Event Logo"
+msgstr "事件图标"
 
 #. module: event
-#: view:event.event:event.view_event_form
-msgid "Event Details"
-msgstr "事件详情"
+#: model:ir.ui.view,arch_db:event.view_event_mail_form
+msgid "Event Mail Scheduler"
+msgstr "事件邮件发送排定器"
 
 #. module: event
-#: view:report.event.registration:event.view_report_event_registration_search
-msgid "Event Month"
-msgstr "活动月份"
+#: model:ir.ui.view,arch_db:event.view_event_mail_tree
+msgid "Event Mail Schedulers"
+msgstr "事件邮件发送排定器"
 
 #. module: event
-#: field:event.event,name:0
+#: model:ir.model.fields,field_description:event.field_event_event_name
+#: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Event Name"
 msgstr "活动名称"
 
 #. module: event
-#: view:event.event:event.view_event_calendar
+#: model:ir.ui.view,arch_db:event.view_event_calendar
 msgid "Event Organization"
 msgstr "活动组织机构"
 
 #. module: event
-#: view:event.registration:event.view_event_registration_calendar
-#: view:event.registration:event.view_event_registration_form
-#: view:event.registration:event.view_registration_search
-#: model:ir.model,name:event.model_event_registration
+#: model:ir.ui.view,arch_db:event.view_event_registration_calendar
+#: model:ir.ui.view,arch_db:event.view_event_registration_form
+#: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Registration"
-msgstr "活动登记记录"
+msgstr "活动登记"
 
 #. module: event
-#: code:addons/event/event.py:348
-#, python-format
-msgid "Event Registration confirmed."
-msgstr "事件登记已确认。"
+#: model:ir.model.fields,field_description:event.field_event_registration_event_begin_date
+msgid "Event Start Date"
+msgstr "活动开始日期"
 
 #. module: event
-#: field:report.event.registration,user_id:0
-msgid "Event Responsible"
-msgstr "活动负责人"
-
-#. module: event
-#: view:report.event.registration:event.view_report_event_registration_search
-#: field:report.event.registration,event_state:0
-msgid "Event State"
-msgstr "活动状态"
-
-#. module: event
-#: view:event.event:event.view_event_search
-#: view:event.type:event.view_event_type_form
-#: view:event.type:event.view_event_type_tree field:event.type,name:0
-#: model:ir.model,name:event.model_event_type
-#: view:report.event.registration:event.view_report_event_registration_search
-#: field:report.event.registration,event_type:0
+#: model:ir.model.fields,field_description:event.field_event_type_mail_event_type_id
 msgid "Event Type"
 msgstr "活动类型"
 
 #. module: event
-#: view:report.event.registration:event.report_event_registration_graph
-#: view:report.event.registration:event.view_report_event_registration_search
-msgid "Event on Registration"
-msgstr "登记记录的活动"
+#: model:ir.actions.server,name:event.event_mail_scheduler_ir_actions_server
+#: model:ir.cron,cron_name:event.event_mail_scheduler
+#: model:ir.cron,name:event.event_mail_scheduler
+msgid "Event: Mail Scheduler"
+msgstr ""
 
 #. module: event
-#: view:event.event:event.view_event_form
-#: view:event.event:event.view_event_search
-#: view:event.event:event.view_event_tree
 #: model:ir.actions.act_window,name:event.action_event_view
-#: model:ir.module.category,name:event.module_category_event_management
-#: model:ir.ui.menu,name:event.event_configuration
+#: model:ir.model.fields,field_description:event.field_res_partner_event_count
+#: model:ir.model.fields,field_description:event.field_res_users_event_count
+#: model:ir.ui.menu,name:event.event_event_menu_pivot_report
 #: model:ir.ui.menu,name:event.event_main_menu
 #: model:ir.ui.menu,name:event.menu_event_event
-#: model:ir.ui.menu,name:event.menu_reporting_events
+#: model:ir.ui.view,arch_db:event.res_config_settings_view_form
+#: model:ir.ui.view,arch_db:event.res_partner_view_tree
+#: model:ir.ui.view,arch_db:event.view_event_form
+#: model:ir.ui.view,arch_db:event.view_event_search
+#: model:ir.ui.view,arch_db:event.view_event_tree
 msgid "Events"
 msgstr "活动"
 
 #. module: event
-#: model:ir.actions.act_window,name:event.action_report_event_registration
-#: model:ir.ui.menu,name:event.menu_report_event_registration
+#: model:ir.actions.act_window,name:event.event_event_action_pivot
 msgid "Events Analysis"
 msgstr "活动分析"
 
 #. module: event
-#: view:event.event:event.view_event_search
+#: model:ir.actions.act_window,name:event.action_event_mail
+msgid "Events Mail Schedulers"
+msgstr "事件邮件发送排定器"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_type_form
+msgid ""
+"Events and registrations will automatically be confirmed\n"
+"                                            upon creation, easing the flow for simple events."
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_type_auto_confirm
+msgid ""
+"Events and registrations will automatically be confirmedupon creation, "
+"easing the flow for simple events."
+msgstr ""
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Events in New state"
 msgstr "在新建状态的活动"
 
 #. module: event
-#: view:report.event.registration:event.view_report_event_registration_search
-msgid "Events which are in New state"
-msgstr "新建状态的活动"
+#: model:event.type,name:event.event_type_1
+msgid "Exhibition"
+msgstr "展示"
 
 #. module: event
-#: view:report.event.registration:event.view_report_event_registration_search
-msgid "Events which are in confirm state"
-msgstr "已确认状态的活动"
+#: model:ir.ui.view,arch_db:event.view_registration_search
+msgid "Expected"
+msgstr "预期"
 
 #. module: event
-#: view:report.event.registration:event.view_report_event_registration_search
-msgid "Extended Filters..."
-msgstr "增加筛选条件"
+#: model:ir.ui.view,arch_db:event.view_event_kanban
+msgid "Expected attendees"
+msgstr "预计的与会者"
 
 #. module: event
-#: view:event.event:event.view_event_form
+#: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Finish Event"
 msgstr "结束活动"
 
 #. module: event
-#: field:event.event,message_follower_ids:0
-#: field:event.registration,message_follower_ids:0
-msgid "Followers"
-msgstr "关注者"
+#: model:event.event,description:event.event_2
+msgid "For any additional information, please contact us at"
+msgstr "对于任何额外的信息，请和我们取得联系"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event_seats_max
+msgid ""
+"For each event you can define a maximum registration of seats(number of "
+"attendees), above this numbers the registrations are not accepted."
+msgstr "对于每一个事件，你可以定义一个注册人数的最大值（与会者的人数），高于这个数字的注册将不被接受。"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event_seats_min
+msgid ""
+"For each event you can define a minimum reserved seats (number of "
+"attendees), if it does not reach the mentioned registrations the event can "
+"not be confirmed (keep 0 to ignore this rule)"
+msgstr "对于每一个事件你都可以定义一个最小的座位数（与会者）如果注册的人数没有达到这个数目，该时间讲不被确认（最小值设为0将不受该条件限制）"
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -1044,209 +1180,382 @@ msgid "Functional Webinar"
 msgstr "泛函网络研讨会"
 
 #. module: event
-#: view:event.event:event.view_event_search
-#: view:event.registration:event.view_registration_search
-#: view:report.event.registration:event.view_report_event_registration_search
+#: model:event.event,description:event.event_2
+msgid "Functional flow of the main applications;"
+msgstr "主要应用的业务流程"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Functions"
+msgstr "功能"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_search
+#: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Group By"
 msgstr "分组"
 
 #. module: event
-#: model:ir.module.category,description:event.module_category_event_management
-msgid "Helps you manage your Events."
-msgstr "帮您管理您的活动"
+#: model:event.event,description:event.event_2
+msgid "Having attended this conference, participants should be able to:"
+msgstr "已出席本次会议的参加者应能："
 
 #. module: event
-#: help:event.event,message_summary:0
-#: help:event.registration,message_summary:0
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Hello World"
+msgstr "Hello World"
+
+#. module: event
+#: selection:event.mail,interval_unit:0
+#: selection:event.type.mail,interval_unit:0
+msgid "Hour(s)"
+msgstr "小时"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "How to Debug"
+msgstr "怎样Debug"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
 msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr "保存复杂的摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是是HTML格式。"
+"I did not expect such a great learning experience. I feel like I can develop"
+" anything now."
+msgstr "过去我没有预计到会有如此美妙的学习经验，现在我觉得我可以开发所有的东西"
 
 #. module: event
-#: field:event.confirm,id:0 field:event.event,id:0
-#: field:event.registration,id:0 field:event.type,id:0
-#: field:report.event.registration,id:0
+#: model:ir.model.fields,field_description:event.field_event_confirm_id
+#: model:ir.model.fields,field_description:event.field_event_event_id
+#: model:ir.model.fields,field_description:event.field_event_mail_id
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_id
+#: model:ir.model.fields,field_description:event.field_event_registration_id
+#: model:ir.model.fields,field_description:event.field_event_type_id
+#: model:ir.model.fields,field_description:event.field_event_type_mail_id
 msgid "ID"
-msgstr "标识"
+msgstr "ID"
 
 #. module: event
-#: help:event.event,message_unread:0 help:event.registration,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "如果要求您关注新消息，勾选此项"
-
-#. module: event
-#: help:event.event,state:0
+#: model:ir.model.fields,help:event.field_event_event_state
 msgid ""
 "If event is created, the status is 'Draft'. If event is confirmed for the "
 "particular dates the status is set to 'Confirmed'. If the event is over, the"
 " status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
-msgstr "如果活动被创建，则状态变为“草稿”。如果活动日期确定，则状态变为为“已确认”。如果活动结束，则状态变为“完成”。如果活动被取消，则状态变为“已取消”。"
+msgstr ""
+"如果活动被创建，则状态变为“草稿”。如果活动日期确定，则状态变为为“已确认”。如果活动结束，则状态变为“完成”。如果活动被取消，则状态变为“已取消”。"
 
 #. module: event
-#: help:event.event,email_confirmation_id:0
-msgid ""
-"If you set an email template, each participant will receive this email "
-"announcing the confirmation of the event."
-msgstr "如果您设定了邮件模板，每个参与者将收到邮件公告确认次次活动。"
+#: selection:event.mail,interval_unit:0
+#: selection:event.type.mail,interval_unit:0
+msgid "Immediately"
+msgstr "马上"
 
 #. module: event
-#: field:event.event,message_is_follower:0
-#: field:event.registration,message_is_follower:0
-msgid "Is a Follower"
-msgstr "是一个关注者"
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Install and administer your own server;"
+msgstr "安装并管理自己的服务器"
 
 #. module: event
-#: help:event.type,default_email_event:0
-msgid ""
-"It will select this default confirmation event mail value when you choose "
-"this event"
-msgstr "当您选择了这个活动，它将选择这个默认确认事件邮件价值"
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Integrated Help"
+msgstr "集成的帮助"
 
 #. module: event
-#: help:event.type,default_email_registration:0
-msgid ""
-"It will select this default confirmation registration mail value when you "
-"choose this event"
-msgstr "当您选择这个活动，将选择确认登记邮件值"
+#: model:ir.model.fields,field_description:event.field_event_mail_interval_nbr
+#: model:ir.model.fields,field_description:event.field_event_type_mail_interval_nbr
+msgid "Interval"
+msgstr "间隔"
 
 #. module: event
-#: help:event.type,default_registration_max:0
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Introduction to JQuery"
+msgstr "JQuery介绍"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Introduction to Javascript"
+msgstr "Javascript介绍"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Introduction to QWeb"
+msgstr "Qweb介绍"
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "Introduction, CRM, Sales Management"
+msgstr "简介，CRM，销售管理"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_type_default_registration_max
 msgid "It will select this default maximum value when you choose this event"
-msgstr "当您选择这个活动，将选择默认最大值"
+msgstr "当你选择这个活动，将选择默认最大值"
 
 #. module: event
-#: help:event.type,default_registration_min:0
+#: model:ir.model.fields,help:event.field_event_type_default_registration_min
 msgid "It will select this default minimum value when you choose this event"
-msgstr "当您选择这个活动，将选择默认最小值"
+msgstr "当你选择这个活动，将选择默认最小值"
 
 #. module: event
-#: field:event.event,message_last_post:0
-#: field:event.registration,message_last_post:0
-msgid "Last Message Date"
-msgstr "最后信息日期"
+#: model:ir.model.fields,field_description:event.field_event_event_color
+msgid "Kanban Color Index"
+msgstr "看板颜色索引"
 
 #. module: event
-#: field:event.confirm,write_uid:0 field:event.event,write_uid:0
-#: field:event.registration,write_uid:0 field:event.type,write_uid:0
+#: model:ir.model.fields,field_description:event.field_event_confirm___last_update
+#: model:ir.model.fields,field_description:event.field_event_event___last_update
+#: model:ir.model.fields,field_description:event.field_event_mail___last_update
+#: model:ir.model.fields,field_description:event.field_event_mail_registration___last_update
+#: model:ir.model.fields,field_description:event.field_event_registration___last_update
+#: model:ir.model.fields,field_description:event.field_event_type___last_update
+#: model:ir.model.fields,field_description:event.field_event_type_mail___last_update
+msgid "Last Modified on"
+msgstr "最后修改时间"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_confirm_write_uid
+#: model:ir.model.fields,field_description:event.field_event_event_write_uid
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_write_uid
+#: model:ir.model.fields,field_description:event.field_event_mail_write_uid
+#: model:ir.model.fields,field_description:event.field_event_registration_write_uid
+#: model:ir.model.fields,field_description:event.field_event_type_mail_write_uid
+#: model:ir.model.fields,field_description:event.field_event_type_write_uid
 msgid "Last Updated by"
-msgstr "最后更新"
+msgstr "最后更新者"
 
 #. module: event
-#: field:event.confirm,write_date:0 field:event.event,write_date:0
-#: field:event.registration,write_date:0 field:event.type,write_date:0
+#: model:ir.model.fields,field_description:event.field_event_confirm_write_date
+#: model:ir.model.fields,field_description:event.field_event_event_write_date
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_write_date
+#: model:ir.model.fields,field_description:event.field_event_mail_write_date
+#: model:ir.model.fields,field_description:event.field_event_registration_write_date
+#: model:ir.model.fields,field_description:event.field_event_type_mail_write_date
+#: model:ir.model.fields,field_description:event.field_event_type_write_date
 msgid "Last Updated on"
-msgstr "最后一次更新"
+msgstr "最后更新时间"
 
 #. module: event
-#: field:event.event,address_id:0
+#: selection:event.event,seats_availability:0
+msgid "Limited"
+msgstr "限制的"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_type_has_seats_limitation
+msgid "Limited Seats"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_address_id
+#: model:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Location"
 msgstr "位置"
 
 #. module: event
-#: field:event.registration,log_ids:0
-msgid "Logs"
-msgstr "日志"
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Loops"
+msgstr "循环"
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "Luigi Roni, Senior Event Manager"
+msgstr "Luigi Roni， 高级经理"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail_mail_registration_ids
+msgid "Mail Registration"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_event_mail_ids
+#: model:ir.model.fields,field_description:event.field_event_type_event_type_mail_ids
+msgid "Mail Schedule"
+msgstr "邮件排程"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_scheduler_id
+msgid "Mail Scheduler"
+msgstr "邮件调度"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_event_mail_schedulers
+msgid "Mail Schedulers"
+msgstr "邮件调度"
+
+#. module: event
+#: model:ir.model,name:event.model_event_type_mail
+msgid "Mail Scheduling on Event Type"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_mail_sent
+msgid "Mail Sent"
+msgstr "电子邮件发送"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail_mail_sent
+msgid "Mail Sent on Event"
+msgstr "在事件上发送电子邮件"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Manage &amp; publish a schedule with tracks"
+msgstr ""
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
 msgid "Manager"
-msgstr "管理者"
+msgstr "管理员"
 
 #. module: event
-#: field:report.event.registration,seats_max:0
-msgid "Max Seats"
-msgstr "最多席位"
+#: model:ir.model.fields,field_description:event.field_event_event_seats_availability
+msgid "Maximum Attendees"
+msgstr "与会者最多人数"
 
 #. module: event
-#: field:event.event,seats_max:0
-msgid "Maximum Available Seats"
-msgstr "最多可用席位"
+#: model:ir.model.fields,field_description:event.field_event_event_seats_max
+msgid "Maximum Attendees Number"
+msgstr "与会者最多人数"
 
 #. module: event
-#: field:event.event,message_ids:0 field:event.registration,message_ids:0
-msgid "Messages"
-msgstr "消息"
+#: model:ir.model.fields,field_description:event.field_event_type_default_registration_max
+msgid "Maximum Registrations"
+msgstr ""
 
 #. module: event
-#: help:event.event,message_ids:0 help:event.registration,message_ids:0
-msgid "Messages and communication history"
-msgstr "信息和通信历史记录"
+#: code:addons/event/models/event.py:253
+#, python-format
+msgid ""
+"Maximum attendees number should be greater than minimum attendees number."
+msgstr ""
 
 #. module: event
-#: field:event.event,seats_min:0
-msgid "Minimum Reserved Seats"
-msgstr "最低预订席位"
+#: model:ir.model.fields,field_description:event.field_event_event_seats_min
+msgid "Minimum Attendees"
+msgstr "与会者最少数量"
 
 #. module: event
-#: view:event.event:event.view_event_search
-#: view:report.event.registration:event.view_report_event_registration_search
+#: model:ir.model.fields,field_description:event.field_event_type_default_registration_min
+msgid "Minimum Registrations"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Modules"
+msgstr "模块"
+
+#. module: event
+#: selection:event.mail,interval_unit:0
+#: selection:event.type.mail,interval_unit:0
+msgid "Month(s)"
+msgstr "月"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_search
 msgid "My Events"
 msgstr "我的活动"
 
 #. module: event
-#: view:event.registration:event.view_registration_search
-msgid "My Registrations"
-msgstr "我的登记记录"
-
-#. module: event
-#: view:event.event:event.view_event_tree field:event.registration,name:0
-msgid "Name"
-msgstr "名称"
-
-#. module: event
-#: view:event.registration:event.view_registration_search
-#: view:report.event.registration:event.view_report_event_registration_search
-msgid "New"
-msgstr "新建"
-
-#. module: event
-#: model:mail.message.subtype,name:event.mt_event_registration
-msgid "New Registration"
-msgstr "新的登记"
-
-#. module: event
-#: code:addons/event/event.py:346
-#, python-format
-msgid "New registration confirmed: %s."
-msgstr "已确认的登记: %s."
-
-#. module: event
-#: code:addons/event/event.py:213 code:addons/event/event.py:337
+#: code:addons/event/models/event.py:258
 #, python-format
 msgid "No more available seats."
 msgstr "没有更多可用的席位"
 
 #. module: event
-#: view:event.event:event.view_event_kanban
-msgid "No ticket available."
-msgstr "没有可用的入场券"
+#: code:addons/event/models/event.py:357
+#, python-format
+msgid "No more seats available for this event."
+msgstr "该时间没有更多可用座位"
 
 #. module: event
-#: field:report.event.registration,nbevent:0
-msgid "Number of Events"
-msgstr "活动数量"
+#: model:ir.model.fields,field_description:event.field_event_event_seats_expected
+msgid "Number of Expected Attendees"
+msgstr "预期的与会人员数量"
 
 #. module: event
-#: field:event.registration,nb_register:0
+#: model:ir.model.fields,field_description:event.field_event_event_seats_used
 msgid "Number of Participants"
 msgstr "参与者数目"
 
 #. module: event
-#: field:event.event,seats_used:0
-msgid "Number of Participations"
-msgstr "参与者人数"
+#: model:ir.model.fields,help:event.field_res_partner_event_count
+#: model:ir.model.fields,help:event.field_res_users_event_count
+msgid "Number of events the partner has participated."
+msgstr ""
 
 #. module: event
-#: field:report.event.registration,nbregistration:0
-msgid "Number of Registrations"
-msgstr "登记数量"
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Odoo Official Website"
+msgstr "Odoo官方网站"
 
 #. module: event
-#: view:event.event:event.view_event_kanban
-msgid "Only"
-msgstr "仅"
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Odoo Web Client"
+msgstr "ODoo 的Web客户端"
+
+#. module: event
+#: model:ir.actions.act_window,help:event.action_event_view
+msgid ""
+"Odoo helps you schedule and efficiently organize your events:\n"
+"    track registrations and participations, automate the confirmation emails,\n"
+"    sell tickets, etc."
+msgstr ""
+
+#. module: event
+#: model:event.type,name:event.event_type_data_online
+#: model:ir.ui.view,arch_db:event.view_event_form
+msgid "Online"
+msgstr "在线"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_is_online
+#: model:ir.model.fields,field_description:event.field_event_type_is_online
+msgid "Online Event"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_res_config_settings_module_website_event_sale
+msgid "Online Ticketing"
+msgstr ""
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_type_form
+msgid ""
+"Online events like webinars do not require a specific location\n"
+"                                            and are hosted online."
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_type_is_online
+msgid ""
+"Online events like webinars do not require a specific location and are "
+"hosted online."
+msgstr ""
 
 #. module: event
 #: model:event.event,name:event.event_0
@@ -1254,343 +1563,562 @@ msgid "Open Days in Los Angeles"
 msgstr "洛杉矶的开源大会"
 
 #. module: event
-#: model:ir.actions.client,name:event.action_client_event_menu
-msgid "Open Event Menu"
-msgstr "打开活动菜单"
-
-#. module: event
-#: view:event.event:event.view_event_kanban
-msgid "Organized by"
-msgstr "组织"
-
-#. module: event
-#: field:event.event,organizer_id:0
+#: model:ir.model.fields,field_description:event.field_event_event_organizer_id
 msgid "Organizer"
-msgstr "个人助理"
+msgstr "组织者"
 
 #. module: event
-#: view:event.registration:event.view_registration_search
-#: view:report.event.registration:event.view_report_event_registration_search
+#: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Participant"
 msgstr "参与者"
 
 #. module: event
-#: field:report.event.registration,name_registration:0
-msgid "Participant / Contact Name"
-msgstr "参与者/联系人名字"
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid ""
+"Participants are expected to have some knowledge in programming. A basic "
+"knowledge of the Python programming is recommended."
+msgstr "参与者需要有一定的变成知识，最好懂Python"
 
 #. module: event
-#: view:event.registration:event.view_registration_search
-#: field:event.registration,partner_id:0
-#: model:ir.model,name:event.model_res_partner
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid ""
+"Participants preferably have a functional knowledge of our software (see "
+"Functional Training)."
+msgstr "参与者最好最我们的系统的业务流程比较了解（参照功能培训）"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Partner"
 msgstr "业务伙伴"
 
 #. module: event
-#: field:event.registration,phone:0
+#: model:ir.model.fields,field_description:event.field_event_registration_phone
 msgid "Phone"
 msgstr "电话"
 
 #. module: event
-#: help:event.registration,origin:0
-msgid "Reference of the sales order which created the registration"
-msgstr "创建该项注册的销售订单的参考值"
+#: model:event.type,name:event.event_type_data_physical
+msgid "Physical Event"
+msgstr ""
 
 #. module: event
-#: field:report.event.registration,user_id_registration:0
-msgid "Register"
-msgstr "发起者"
+#: model:event.event,description:event.event_2
+msgid "Point of Sale (POS), Introduction to report customization."
+msgstr "销售点（POS），报告定制介绍"
 
 #. module: event
-#: view:event.event:event.view_event_form
+#: model:event.event,description:event.event_2
+msgid "Project management, Human resources, Contract management."
+msgstr "项目管理，人力资源，合同管理"
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
+msgstr "采购，销售和采购管理，财务会计"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Python Objects"
+msgstr "Python的对象"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Read Great Contents"
+msgstr "阅读伟大的内容"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_registration_origin
+msgid ""
+"Reference of the document that created the registration, for example a sales"
+" order"
+msgstr ""
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Register with this event"
 msgstr "注册这次活动"
 
 #. module: event
-#: view:event.event:event.view_event_form
-#: view:event.registration:event.view_event_registration_form
-#: view:event.registration:event.view_event_registration_graph
-#: view:event.registration:event.view_event_registration_tree
+#: model:ir.ui.view,arch_db:event.res_config_settings_view_form
+#: model:ir.ui.view,arch_db:event.view_event_registration_form
+#: model:ir.ui.view,arch_db:event.view_event_registration_graph
+#: model:ir.ui.view,arch_db:event.view_event_registration_pivot
+#: model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Registration"
-msgstr "登记记录"
+msgstr "登记"
 
 #. module: event
-#: field:event.event,email_registration_id:0
-#: field:event.type,default_email_registration:0
-msgid "Registration Confirmation Email"
-msgstr "登记确认电子邮箱"
+#: model:ir.actions.report,name:event.report_event_registration_badge
+msgid "Registration Badge"
+msgstr "注册徽章"
 
 #. module: event
-#: field:event.registration,date_open:0
+#: model:ir.model.fields,field_description:event.field_event_registration_date_open
 msgid "Registration Date"
 msgstr "活动日期"
 
 #. module: event
-#: view:event.registration:event.view_registration_search
+#: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration Day"
 msgstr "登记日期"
 
 #. module: event
-#: view:event.registration:event.view_registration_search
+#: model:ir.ui.view,arch_db:event.view_registration_search
+msgid "Registration ID"
+msgstr "登记ID"
+
+#. module: event
+#: model:ir.model,name:event.model_event_mail_registration
+msgid "Registration Mail Scheduler"
+msgstr "登记邮件调度"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_mail_form
+msgid "Registration Mails"
+msgstr "登记的邮件"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration Month"
 msgstr "登记月份"
 
 #. module: event
-#: field:report.event.registration,registration_state:0
-msgid "Registration State"
-msgstr "等级状态"
+#: model:ir.model.fields,field_description:event.field_res_config_settings_module_website_event_questions
+msgid "Registration Survey"
+msgstr "调查登记"
 
 #. module: event
-#: view:report.event.registration:event.view_report_event_registration_search
-msgid "Registration contact"
-msgstr "登记联系人"
+#: model:ir.ui.view,arch_db:event.view_event_mail_form
+msgid "Registration mail"
+msgstr "登记的邮件"
 
 #. module: event
-#: view:event.event:event.view_event_form field:event.event,registration_ids:0
-#: model:ir.actions.act_window,name:event.act_event_list_register_event
-#: model:ir.actions.act_window,name:event.action_registration
-#: model:ir.ui.menu,name:event.menu_action_registration
-msgid "Registrations"
-msgstr "登记记录"
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Report Engine"
+msgstr "报表引擎"
 
 #. module: event
-#: view:report.event.registration:event.view_report_event_registration_search
-msgid "Registrations in confirmed or done state"
-msgstr "在已确认或已完成状态的报名者"
+#: model:ir.ui.menu,name:event.menu_reporting_events
+msgid "Reporting"
+msgstr "报告"
 
 #. module: event
-#: view:event.registration:event.view_registration_search
-msgid "Registrations in unconfirmed state"
-msgstr "未确认状态的报名者"
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Requirements"
+msgstr "要求"
 
 #. module: event
-#: field:event.event,reply_to:0
-msgid "Reply-To Email"
-msgstr "回复电子邮件"
-
-#. module: event
-#: field:event.event,seats_reserved:0
+#: model:ir.model.fields,field_description:event.field_event_event_seats_reserved
 msgid "Reserved Seats"
-msgstr "预订席位"
+msgstr "预订的席位"
 
 #. module: event
-#: view:event.event:event.view_event_search
-#: view:event.registration:event.view_registration_search
+#: model:ir.model.fields,field_description:event.field_event_event_user_id
+#: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Responsible"
 msgstr "负责人"
 
 #. module: event
-#: field:event.event,user_id:0
-msgid "Responsible User"
-msgstr "责任用户"
+#: model:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Scan badges to confirm attendances"
+msgstr "扫描工牌确认出勤"
 
 #. module: event
-#: view:event.registration:event.view_event_registration_form
-msgid "Send Email"
-msgstr "发送邮件"
+#: model:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Schedule & Tracks"
+msgstr ""
 
 #. module: event
-#: view:event.event:event.view_event_form
+#: model:ir.model.fields,field_description:event.field_event_mail_scheduled_date
+msgid "Scheduled Sent Mail"
+msgstr "计划发出的邮件"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_scheduled_date
+msgid "Scheduled Time"
+msgstr "定期时间"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Sell tickets on your website"
+msgstr ""
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Sell tickets with sales orders"
+msgstr ""
+
+#. module: event
+#: model:event.type,name:event.event_type_0
+msgid "Seminar"
+msgstr "研讨会"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_registration_form
+msgid "Send by Email"
+msgstr "以邮件发送"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail_done
+msgid "Sent"
+msgstr "送出"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Set To Draft"
 msgstr "设为草稿"
 
 #. module: event
-#: view:event.registration:event.view_event_registration_form
+#: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Set To Unconfirmed"
 msgstr "设置为未确认"
 
 #. module: event
-#: view:report.event.registration:event.view_report_event_registration_search
-msgid "Show Confirmed Registrations"
-msgstr "显示确认的登记"
+#: model:ir.ui.menu,name:event.menu_event_global_settings
+msgid "Settings"
+msgstr "设置"
 
 #. module: event
-#: field:event.registration,origin:0
+#: model:event.type,name:event.event_type_3
+msgid "Show"
+msgstr "显示"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_registration_origin
 msgid "Source Document"
 msgstr "源单据"
 
 #. module: event
-#: field:res.partner,speaker:0
-msgid "Speaker"
-msgstr "关注者"
-
-#. module: event
-#: field:event.event,date_begin:0
+#: model:ir.model.fields,field_description:event.field_event_event_date_begin
 msgid "Start Date"
 msgstr "开始日期"
 
 #. module: event
-#: view:event.event:event.view_event_search
+#: model:ir.model.fields,field_description:event.field_event_event_date_begin_located
+msgid "Start Date Located"
+msgstr "定位开始日期"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Start Month"
 msgstr "开始月份"
 
 #. module: event
-#: view:event.event:event.view_event_search field:event.event,state:0
-#: view:event.registration:event.view_registration_search
-#: field:event.registration,state:0
+#: model:ir.model.fields,field_description:event.field_event_event_state
+#: model:ir.model.fields,field_description:event.field_event_registration_state
+#: model:ir.ui.view,arch_db:event.view_event_search
+#: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Status"
 msgstr "状态"
 
 #. module: event
-#: view:event.event:event.view_event_kanban
 #: model:ir.actions.act_window,name:event.act_register_event_partner
 msgid "Subscribe"
 msgstr "订阅"
 
 #. module: event
-#: view:event.event:event.view_event_kanban
-msgid "Subscribed"
-msgstr "已订阅"
-
-#. module: event
-#: field:event.event,message_summary:0
-#: field:event.registration,message_summary:0
-msgid "Summary"
-msgstr "概要"
-
-#. module: event
 #: model:event.event,name:event.event_3
 msgid "Technical Training"
-msgstr "技术训练"
+msgstr "技术培训"
 
 #. module: event
-#: help:event.event,reply_to:0
+#: code:addons/event/models/event.py:301
+#, python-format
 msgid ""
-"The email address of the organizer is likely to be put here, with the effect"
-" to be in the 'Reply-To' of the mails sent automatically at event or "
-"registrations confirmation. You can also put the email address of your mail "
-"gateway if you use one."
-msgstr "在这里添写组织者的邮件地址,当活动或注册确认时，它会自动出现在在邮件的‘回复给’一栏里。如果您电子邮件地址使用的不是默认网关的话，则需要添写邮件网关。"
+"There are already attendees who attended this event. Please reset it to "
+"draft if you want to cancel this event."
+msgstr ""
 
 #. module: event
-#: help:event.type,default_reply_to:0
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
 msgid ""
-"The email address of the organizer which is put in the 'Reply-To' of all "
-"emails sent automatically at event or registrations confirmation. You can "
-"also put your email address of your mail gateway if you use one."
-msgstr "在自动发送的活动或者登记确认的电子邮件中，组织者的email地址放在'回复' 。您也能放您用的邮件网关的电子邮箱地址"
+"This course help me build my first application within a month. Definetly "
+"worth its price."
+msgstr "该课程帮助我们在一个月内创建第一个应用，肯定值这个价格"
 
 #. module: event
-#: help:event.event,seats_max:0
-msgid ""
-"The maximum registration level is equal to the sum of the maximum "
-"registration of event ticket. If you have too much registrations you are not"
-" able to confirm your event. (0 to ignore this rule )"
-msgstr "每个活动定义的最多登记水平等同于活动票证的最多数量。如果您有太多的登记，您不能确认您的活动。（输入0则忽略这个规则）"
-
-#. module: event
-#: help:event.event,email_registration_id:0
+#: model:ir.model.fields,help:event.field_event_mail_template_id
+#: model:ir.model.fields,help:event.field_event_type_mail_template_id
 msgid ""
 "This field contains the template of the mail that will be automatically sent"
-" each time a registration for this event is confirmed."
-msgstr "活动一旦被确认，这个字段包含的模板会自动发送的邮件。"
+msgstr "这个字段包含自动发送的邮件模板"
 
 #. module: event
-#: field:event.event,date_tz:0
+#: model:ir.model.fields,field_description:event.field_res_config_settings_module_event_sale
+msgid "Tickets"
+msgstr "入场券"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_date_tz
+#: model:ir.model.fields,field_description:event.field_event_type_default_timezone
 msgid "Timezone"
 msgstr "时区"
 
 #. module: event
-#: field:event.event,type:0
-msgid "Type of Event"
-msgstr "活动类型"
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "To get more information, visit the"
+msgstr "要看更多信息，请前往"
 
 #. module: event
-#: model:ir.actions.act_window,name:event.action_event_type
-#: model:ir.ui.menu,name:event.menu_event_type
-msgid "Types of Events"
-msgstr "活动类型"
+#: model:ir.model.fields,field_description:event.field_res_config_settings_module_website_event_track
+msgid "Tracks and Agenda"
+msgstr "耿宗并计划"
 
 #. module: event
-#: view:event.event:event.view_event_search selection:event.event,state:0
-#: selection:event.registration,state:0
+#: model:event.type,name:event.event_type_4
+msgid "Training"
+msgstr "培训"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Training Center Module"
+msgstr "培训中心模块"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_type_mail_interval_type
+msgid "Trigger"
+msgstr "触发器"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail_interval_type
+msgid "Trigger "
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_twitter_hashtag
+#: model:ir.model.fields,field_description:event.field_event_type_default_hashtag
+msgid "Twitter Hashtag"
+msgstr "Twitter主题标签"
+
+#. module: event
+#: selection:event.event,state:0 selection:event.registration,state:0
+#: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Unconfirmed"
 msgstr "未确认"
 
 #. module: event
-#: field:event.event,seats_unconfirmed:0
+#: model:ir.model.fields,field_description:event.field_event_event_seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
-msgstr "未最后确认的预订席位"
+msgstr "未确认的席位预订"
 
 #. module: event
-#: view:event.event:event.view_event_search field:event.event,message_unread:0
-#: view:event.registration:event.view_registration_search
-#: field:event.registration,message_unread:0
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Underscore"
+msgstr "强调"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Understand the development concepts and architecture;"
+msgstr "了解开发概念和结构"
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "Understand the various modules;"
+msgstr "了解不同的模块"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail_interval_unit
+#: model:ir.model.fields,field_description:event.field_event_type_mail_interval_unit
+msgid "Unit"
+msgstr "单位"
+
+#. module: event
+#: selection:event.event,seats_availability:0
+msgid "Unlimited"
+msgstr "无限制的"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_search
+#: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unread Messages"
 msgstr "未读消息"
 
 #. module: event
-#: view:event.event:event.view_event_kanban
-msgid "Unsubscribe"
-msgstr "退订"
-
-#. module: event
-#: view:event.event:event.view_event_search
+#: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming"
 msgstr "即将"
 
 #. module: event
-#: view:event.event:event.view_event_search
+#: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming events from today"
 msgstr "今天将开始的活动"
 
 #. module: event
-#: field:event.registration,user_id:0
+#: model:ir.model.fields,field_description:event.field_event_type_use_hashtag
+msgid "Use Default Hashtag"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_type_use_timezone
+msgid "Use Default Timezone"
+msgstr ""
+
+#. module: event
 #: model:res.groups,name:event.group_event_user
 msgid "User"
 msgstr "用户"
 
 #. module: event
-#: view:event.confirm:event.view_event_confirm
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Variables &amp; Operators"
+msgstr "变量和操作"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_type_form
+msgid "Visibility"
+msgstr "可见性"
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
+msgstr "仓库管理，制造（MRP）& 销售。导入/导出"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
 "sure you want to confirm it?"
-msgstr "警告：这活动没有达到最低登记记录的规定，您确定要确认它？"
+msgstr "警告：这活动没有达到最低登记记录的规定，你肯定要确认它？"
 
 #. module: event
-#: help:event.event,seats_min:0
-msgid ""
-"You can for each event define a minimum registration level. If you do not "
-"enough registrations you are not able to confirm your event. (put 0 to "
-"ignore this rule )"
-msgstr "您能为每个活动定义一个最小的注册量。如果没有足够的注册量，您不能确认此项活动（使用0将忽略此规则）"
+#: selection:event.mail,interval_unit:0
+#: selection:event.type.mail,interval_unit:0
+msgid "Week(s)"
+msgstr "周"
 
 #. module: event
-#: code:addons/event/event.py:229
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "What do people say about this course?"
+msgstr "人们怎么评价这个课程"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "What you will learn?"
+msgstr "你要学些什么"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Workflows"
+msgstr "工作流"
+
+#. module: event
+#: code:addons/event/models/event.py:414
 #, python-format
-msgid ""
-"You have already set a registration for this event as 'Attended'. Please "
-"reset it to draft if you want to cancel this event."
-msgstr "鉴于您已经注册该事件为“参加”。如果您想取消这次活动。请首先将其状态改为草稿。"
+msgid "You must wait the event confirmation before doing this action."
+msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:364
+#: code:addons/event/models/event.py:416
 #, python-format
-msgid "You must wait for the starting day of the event to do this action."
-msgstr "您必须等待活动开始才能做这些动作"
+msgid "You must wait the event starting day before doing this action."
+msgstr ""
 
 #. module: event
-#: model:email.template,subject:event.confirmation_event
-#: model:email.template,subject:event.confirmation_registration
+#: model:mail.template,subject:event.event_registration_mail_template_badge
+msgid "Your badge for ${object.event_id.name}"
+msgstr "你 ${object.event_id.name}的徽章"
+
+#. module: event
+#: model:mail.template,subject:event.event_subscription
 msgid "Your registration at ${object.event_id.name}"
-msgstr "您的登记在${object.event_id.name}"
+msgstr "你的登记在${object.event_id.name}"
 
 #. module: event
-#: view:event.event:event.view_event_kanban
-msgid "available."
-msgstr "可用."
+#: model:mail.template,report_name:event.event_registration_mail_template_badge
+msgid "badge_of_${(object.event_id.name or '').replace('/','_')}"
+msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
 
 #. module: event
-#: view:event.confirm:event.view_event_confirm
-msgid "or"
-msgstr "或"
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "drinks and lunch;"
+msgstr "饮料和午餐"
 
 #. module: event
-#: view:event.event:event.view_event_kanban
-msgid "ticket"
-msgstr "入场券"
+#: model:ir.model,name:event.model_event_confirm
+msgid "event.confirm"
+msgstr "event.confirm"
 
 #. module: event
-#: view:event.event:event.view_event_kanban
-msgid "tickets"
-msgstr "门票"
+#: model:event.event,description:event.event_2
+msgid "events@odoo.com"
+msgstr ""
+
+#. module: event
+#: code:addons/event/models/event.py:497
+#, python-format
+msgid "in %d days"
+msgstr ""
+
+#. module: event
+#: code:addons/event/models/event.py:501
+#, python-format
+msgid "next month"
+msgstr ""
+
+#. module: event
+#: code:addons/event/models/event.py:499
+#, python-format
+msgid "next week"
+msgstr ""
+
+#. module: event
+#: code:addons/event/models/event.py:503
+#, python-format
+msgid "on "
+msgstr ""
+
+#. module: event
+#: model:ir.model,name:event.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"
+
+#. module: event
+#: code:addons/event/models/event.py:493
+#, python-format
+msgid "today"
+msgstr ""
+
+#. module: event
+#: code:addons/event/models/event.py:495
+#, python-format
+msgid "tomorrow"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "training material."
+msgstr "培训资料"

@@ -1,484 +1,580 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Business Applications
-#    Copyright (c) 2013-TODAY OpenERP S.A. <http://www.openerp.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
+import babel.dates
+
+from datetime import datetime, timedelta, date, time
+
+from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 
-from openerp.addons.resource.tests.common import TestResourceCommon
+from odoo.fields import Date, Datetime
+from odoo.addons.resource.models.resource import to_naive_utc, to_naive_user_tz
+from odoo.addons.resource.tests.common import TestResourceCommon
 
 
-class TestResource(TestResourceCommon):
+class TestIntervals(TestResourceCommon):
 
-    def test_00_intervals(self):
-        intervals = [
-            (
-                datetime.strptime('2013-02-04 09:00:00', '%Y-%m-%d %H:%M:%S'),
-                datetime.strptime('2013-02-04 11:00:00', '%Y-%m-%d %H:%M:%S')
-            ), (
-                datetime.strptime('2013-02-04 08:00:00', '%Y-%m-%d %H:%M:%S'),
-                datetime.strptime('2013-02-04 12:00:00', '%Y-%m-%d %H:%M:%S')
-            ), (
-                datetime.strptime('2013-02-04 11:00:00', '%Y-%m-%d %H:%M:%S'),
-                datetime.strptime('2013-02-04 14:00:00', '%Y-%m-%d %H:%M:%S')
-            ), (
-                datetime.strptime('2013-02-04 17:00:00', '%Y-%m-%d %H:%M:%S'),
-                datetime.strptime('2013-02-04 21:00:00', '%Y-%m-%d %H:%M:%S')
-            ), (
-                datetime.strptime('2013-02-03 08:00:00', '%Y-%m-%d %H:%M:%S'),
-                datetime.strptime('2013-02-03 10:00:00', '%Y-%m-%d %H:%M:%S')
-            ), (
-                datetime.strptime('2013-02-04 18:00:00', '%Y-%m-%d %H:%M:%S'),
-                datetime.strptime('2013-02-04 19:00:00', '%Y-%m-%d %H:%M:%S')
+    def setUp(self):
+        super(TestIntervals, self).setUp()
+        # Some data intervals
+        #  - first one is included in second one
+        #  - second one is extended by third one
+        #  - sixth one is included in fourth one
+        #  - fifth one is prior to other one
+        # Once cleaned: 1 interval 03/02 8-10), 2 intervals 04/02 (8-14 + 17-21)
+        self.intervals = [
+            self.calendar._interval_new(
+                Datetime.from_string('2013-02-04 09:00:00'),
+                Datetime.from_string('2013-02-04 11:00:00')
+            ), self.calendar._interval_new(
+                Datetime.from_string('2013-02-04 08:00:00'),
+                Datetime.from_string('2013-02-04 12:00:00')
+            ), self.calendar._interval_new(
+                Datetime.from_string('2013-02-04 11:00:00'),
+                Datetime.from_string('2013-02-04 14:00:00')
+            ), self.calendar._interval_new(
+                Datetime.from_string('2013-02-04 17:00:00'),
+                Datetime.from_string('2013-02-04 21:00:00')
+            ), self.calendar._interval_new(
+                Datetime.from_string('2013-02-03 08:00:00'),
+                Datetime.from_string('2013-02-03 10:00:00')
+            ), self.calendar._interval_new(
+                Datetime.from_string('2013-02-04 18:00:00'),
+                Datetime.from_string('2013-02-04 19:00:00')
             )
         ]
 
-        # Test: interval cleaning
-        cleaned_intervals = self.resource_calendar.interval_clean(intervals)
-        self.assertEqual(len(cleaned_intervals), 3, 'resource_calendar: wrong interval cleaning')
+    def test_interval_merge(self):
+        cleaned_intervals = self.env['resource.calendar']._interval_merge(self.intervals)
+        self.assertEqual(len(cleaned_intervals), 3)
         # First interval: 03, unchanged
-        self.assertEqual(cleaned_intervals[0][0], datetime.strptime('2013-02-03 08:00:00', '%Y-%m-%d %H:%M:%S'), 'resource_calendar: wrong interval cleaning')
-        self.assertEqual(cleaned_intervals[0][1], datetime.strptime('2013-02-03 10:00:00', '%Y-%m-%d %H:%M:%S'), 'resource_calendar: wrong interval cleaning')
-        # Second intreval: 04, 08-14, combining 08-12 and 11-14, 09-11 being inside 08-12
-        self.assertEqual(cleaned_intervals[1][0], datetime.strptime('2013-02-04 08:00:00', '%Y-%m-%d %H:%M:%S'), 'resource_calendar: wrong interval cleaning')
-        self.assertEqual(cleaned_intervals[1][1], datetime.strptime('2013-02-04 14:00:00', '%Y-%m-%d %H:%M:%S'), 'resource_calendar: wrong interval cleaning')
+        self.assertEqual(cleaned_intervals[0][:2], (Datetime.from_string('2013-02-03 08:00:00'), Datetime.from_string('2013-02-03 10:00:00')))
+        # Second interval: 04, 08-14, combining 08-12 and 11-14, 09-11 being inside 08-12
+        self.assertEqual(cleaned_intervals[1][:2], (Datetime.from_string('2013-02-04 08:00:00'), Datetime.from_string('2013-02-04 14:00:00')))
         # Third interval: 04, 17-21, 18-19 being inside 17-21
-        self.assertEqual(cleaned_intervals[2][0], datetime.strptime('2013-02-04 17:00:00', '%Y-%m-%d %H:%M:%S'), 'resource_calendar: wrong interval cleaning')
-        self.assertEqual(cleaned_intervals[2][1], datetime.strptime('2013-02-04 21:00:00', '%Y-%m-%d %H:%M:%S'), 'resource_calendar: wrong interval cleaning')
+        self.assertEqual(cleaned_intervals[2][:2], (Datetime.from_string('2013-02-04 17:00:00'), Datetime.from_string('2013-02-04 21:00:00')))
 
-        # Test: disjoint removal
-        working_interval = (datetime.strptime('2013-02-04 08:00:00', '%Y-%m-%d %H:%M:%S'), datetime.strptime('2013-02-04 18:00:00', '%Y-%m-%d %H:%M:%S'))
-        result = self.resource_calendar.interval_remove_leaves(working_interval, intervals)
-        self.assertEqual(len(result), 1, 'resource_calendar: wrong leave removal from interval')
+    def test_interval_remove(self):
+        working_interval = self.calendar._interval_new(Datetime.from_string('2013-02-04 08:00:00'), Datetime.from_string('2013-02-04 18:00:00'))
+        result = self.env['resource.calendar']._interval_remove_leaves(working_interval, self.intervals)
+        self.assertEqual(len(result), 1)
         # First interval: 04, 14-17
-        self.assertEqual(result[0][0], datetime.strptime('2013-02-04 14:00:00', '%Y-%m-%d %H:%M:%S'), 'resource_calendar: wrong leave removal from interval')
-        self.assertEqual(result[0][1], datetime.strptime('2013-02-04 17:00:00', '%Y-%m-%d %H:%M:%S'), 'resource_calendar: wrong leave removal from interval')
+        self.assertEqual(result[0][:2], (Datetime.from_string('2013-02-04 14:00:00'), Datetime.from_string('2013-02-04 17:00:00')))
 
-        # Test: schedule hours on intervals
-        result = self.resource_calendar.interval_schedule_hours(cleaned_intervals, 5.5)
-        self.assertEqual(len(result), 2, 'resource_calendar: wrong hours scheduling in interval')
-        # First interval: 03, 8-10 untouches
-        self.assertEqual(result[0][0], datetime.strptime('2013-02-03 08:00:00', '%Y-%m-%d %H:%M:%S'), 'resource_calendar: wrong leave removal from interval')
-        self.assertEqual(result[0][1], datetime.strptime('2013-02-03 10:00:00', '%Y-%m-%d %H:%M:%S'), 'resource_calendar: wrong leave removal from interval')
+    def test_interval_schedule_hours(self):
+        cleaned_intervals = self.env['resource.calendar']._interval_merge(self.intervals)
+        result = self.env['resource.calendar']._interval_schedule_hours(cleaned_intervals, 5.5)
+        self.assertEqual(len(result), 2)
+        # First interval: 03, 8-10 untouched
+        self.assertEqual(result[0][:2], (Datetime.from_string('2013-02-03 08:00:00'), Datetime.from_string('2013-02-03 10:00:00')))
         # First interval: 04, 08-11:30
-        self.assertEqual(result[1][0], datetime.strptime('2013-02-04 08:00:00', '%Y-%m-%d %H:%M:%S'), 'resource_calendar: wrong leave removal from interval')
-        self.assertEqual(result[1][1], datetime.strptime('2013-02-04 11:30:00', '%Y-%m-%d %H:%M:%S'), 'resource_calendar: wrong leave removal from interval')
+        self.assertEqual(result[1][:2], (Datetime.from_string('2013-02-04 08:00:00'), Datetime.from_string('2013-02-04 11:30:00')))
 
-        # Test: schedule hours on intervals, backwards
-        cleaned_intervals.reverse()
-        result = self.resource_calendar.interval_schedule_hours(cleaned_intervals, 5.5, remove_at_end=False)
-        self.assertEqual(len(result), 2, 'resource_calendar: wrong hours scheduling in interval')
-        # First interval: 03, 8-10 untouches
-        self.assertEqual(result[0][0], datetime.strptime('2013-02-04 17:00:00', '%Y-%m-%d %H:%M:%S'), 'resource_calendar: wrong leave removal from interval')
-        self.assertEqual(result[0][1], datetime.strptime('2013-02-04 21:00:00', '%Y-%m-%d %H:%M:%S'), 'resource_calendar: wrong leave removal from interval')
+    def test_interval_schedule_hours_backwards(self):
+        cleaned_intervals = self.env['resource.calendar']._interval_merge(self.intervals)
+        result = self.env['resource.calendar']._interval_schedule_hours(cleaned_intervals, 5.5, backwards=True)
+        self.assertEqual(len(result), 2)
+        # First interval: 03, 8-10 untouched
+        self.assertEqual(result[1][:2], (Datetime.from_string('2013-02-04 17:00:00'), Datetime.from_string('2013-02-04 21:00:00')))
         # First interval: 04, 08-11:30
-        self.assertEqual(result[1][0], datetime.strptime('2013-02-04 12:30:00', '%Y-%m-%d %H:%M:%S'), 'resource_calendar: wrong leave removal from interval')
-        self.assertEqual(result[1][1], datetime.strptime('2013-02-04 14:00:00', '%Y-%m-%d %H:%M:%S'), 'resource_calendar: wrong leave removal from interval')
+        self.assertEqual(result[0][:2], (Datetime.from_string('2013-02-04 12:30:00'), Datetime.from_string('2013-02-04 14:00:00')))
 
-    def test_10_calendar_basics(self):
-        """ Testing basic method of resource.calendar """
-        cr, uid = self.cr, self.uid
 
-        # --------------------------------------------------
-        # Test1: get_next_day
-        # --------------------------------------------------
+class TestCalendarBasics(TestResourceCommon):
 
+    def test_calendar_weekdays(self):
+        weekdays = self.calendar._get_weekdays()
+        self.assertEqual(weekdays, [1, 4])
+
+    def test_calendar_next_day(self):
         # Test: next day: next day after day1 is day4
-        date = self.resource_calendar.get_next_day(cr, uid, self.calendar_id, day_date=self.date1.date())
-        self.assertEqual(date, self.date2.date(), 'resource_calendar: wrong next day computing')
+        date = self.calendar._get_next_work_day(day_date=Date.from_string('2013-02-12'))
+        self.assertEqual(date, self.date2.date())
 
         # Test: next day: next day after day4 is (day1+7)
-        date = self.resource_calendar.get_next_day(cr, uid, self.calendar_id, day_date=self.date2.date())
-        self.assertEqual(date, self.date1.date() + relativedelta(days=7), 'resource_calendar: wrong next day computing')
+        date = self.calendar._get_next_work_day(day_date=Date.from_string('2013-02-15'))
+        self.assertEqual(date, self.date1.date() + relativedelta(days=7))
 
         # Test: next day: next day after day4+1 is (day1+7)
-        date = self.resource_calendar.get_next_day(cr, uid, self.calendar_id, day_date=self.date2.date() + relativedelta(days=1))
-        self.assertEqual(date, self.date1.date() + relativedelta(days=7), 'resource_calendar: wrong next day computing')
+        date = self.calendar._get_next_work_day(day_date=Date.from_string('2013-02-15') + relativedelta(days=1))
+        self.assertEqual(date, self.date1.date() + relativedelta(days=7))
 
         # Test: next day: next day after day1-1 is day1
-        date = self.resource_calendar.get_next_day(cr, uid, self.calendar_id, day_date=self.date1.date() + relativedelta(days=-1))
-        self.assertEqual(date, self.date1.date(), 'resource_calendar: wrong next day computing')
+        date = self.calendar._get_next_work_day(day_date=Date.from_string('2013-02-12') + relativedelta(days=-1))
+        self.assertEqual(date, self.date1.date())
 
-        # --------------------------------------------------
-        # Test2: get_previous_day
-        # --------------------------------------------------
-
+    def test_calendar_previous_day(self):
         # Test: previous day: previous day before day1 is (day4-7)
-        date = self.resource_calendar.get_previous_day(cr, uid, self.calendar_id, day_date=self.date1.date())
-        self.assertEqual(date, self.date2.date() + relativedelta(days=-7), 'resource_calendar: wrong previous day computing')
+        date = self.calendar._get_previous_work_day(day_date=Date.from_string('2013-02-12'))
+        self.assertEqual(date, self.date2.date() + relativedelta(days=-7))
 
         # Test: previous day: previous day before day4 is day1
-        date = self.resource_calendar.get_previous_day(cr, uid, self.calendar_id, day_date=self.date2.date())
-        self.assertEqual(date, self.date1.date(), 'resource_calendar: wrong previous day computing')
+        date = self.calendar._get_previous_work_day(day_date=Date.from_string('2013-02-15'))
+        self.assertEqual(date, self.date1.date())
 
         # Test: previous day: previous day before day4+1 is day4
-        date = self.resource_calendar.get_previous_day(cr, uid, self.calendar_id, day_date=self.date2.date() + relativedelta(days=1))
-        self.assertEqual(date, self.date2.date(), 'resource_calendar: wrong previous day computing')
+        date = self.calendar._get_previous_work_day(day_date=Date.from_string('2013-02-15') + relativedelta(days=1))
+        self.assertEqual(date, self.date2.date())
 
         # Test: previous day: previous day before day1-1 is (day4-7)
-        date = self.resource_calendar.get_previous_day(cr, uid, self.calendar_id, day_date=self.date1.date() + relativedelta(days=-1))
-        self.assertEqual(date, self.date2.date() + relativedelta(days=-7), 'resource_calendar: wrong previous day computing')
+        date = self.calendar._get_previous_work_day(day_date=Date.from_string('2013-02-12') + relativedelta(days=-1))
+        self.assertEqual(date, self.date2.date() + relativedelta(days=-7))
 
-        # --------------------------------------------------
-        # Test3: misc
-        # --------------------------------------------------
-
-        weekdays = self.resource_calendar.get_weekdays(cr, uid, self.calendar_id)
-        self.assertEqual(weekdays, [1, 4], 'resource_calendar: wrong weekdays computing')
-
-        attendances = self.resource_calendar.get_attendances_for_weekdays(cr, uid, self.calendar_id, [2, 3, 4, 5])
-        self.assertEqual(set([att.id for att in attendances]), set([self.att2_id, self.att3_id]),
-                         'resource_calendar: wrong attendances filtering by weekdays computing')
-
-    def test_20_calendar_working_intervals(self):
-        """ Testing working intervals computing method of resource.calendar """
-        cr, uid = self.cr, self.uid
-        context = self.context
-        _format = '%Y-%m-%d %H:%M:%S'
-
+    def test_calendar_working_day_intervals_no_leaves(self):
         # Test: day0 without leaves: 1 interval
-        intervals = self.resource_calendar.get_working_intervals_of_day(cr, uid, self.calendar_id, start_dt=self.date1, context=context)
-        self.assertEqual(len(intervals), 1, 'resource_calendar: wrong working intervals')
-        self.assertEqual(intervals[0][0], datetime.strptime('2013-02-12 09:08:07', _format), 'resource_calendar: wrong working intervals')
-        self.assertEqual(intervals[0][1], datetime.strptime('2013-02-12 16:00:00', _format), 'resource_calendar: wrong working intervals')
-
-        # Test: day3 without leaves: 2 interval
-        intervals = self.resource_calendar.get_working_intervals_of_day(cr, uid, self.calendar_id, start_dt=self.date2, context=context)
-        self.assertEqual(len(intervals), 2, 'resource_calendar: wrong working intervals')
-        self.assertEqual(intervals[0][0], datetime.strptime('2013-02-15 10:11:12', _format), 'resource_calendar: wrong working intervals')
-        self.assertEqual(intervals[0][1], datetime.strptime('2013-02-15 13:00:00', _format), 'resource_calendar: wrong working intervals')
-        self.assertEqual(intervals[1][0], datetime.strptime('2013-02-15 16:00:00', _format), 'resource_calendar: wrong working intervals')
-        self.assertEqual(intervals[1][1], datetime.strptime('2013-02-15 23:00:00', _format), 'resource_calendar: wrong working intervals')
-
-        # Test: day0 with leaves outside range: 1 interval
-        intervals = self.resource_calendar.get_working_intervals_of_day(cr, uid, self.calendar_id, start_dt=self.date1.replace(hour=0), compute_leaves=True, context=context)
-        self.assertEqual(len(intervals), 1, 'resource_calendar: wrong working intervals')
-        self.assertEqual(intervals[0][0], datetime.strptime('2013-02-12 08:00:00', _format), 'resource_calendar: wrong working intervals')
-        self.assertEqual(intervals[0][1], datetime.strptime('2013-02-12 16:00:00', _format), 'resource_calendar: wrong working intervals')
-
-        # Test: day0 with leaves: 2 intervals because of leave between 9 ans 12, ending at 15:45:30
-        intervals = self.resource_calendar.get_working_intervals_of_day(cr, uid, self.calendar_id,
-                                                                        start_dt=self.date1.replace(hour=8) + relativedelta(days=7),
-                                                                        end_dt=self.date1.replace(hour=15, minute=45, second=30) + relativedelta(days=7),
-                                                                        compute_leaves=True, context=context)
-        self.assertEqual(len(intervals), 2, 'resource_calendar: wrong working intervals')
-        self.assertEqual(intervals[0][0], datetime.strptime('2013-02-19 08:08:07', _format), 'resource_calendar: wrong working intervals')
-        self.assertEqual(intervals[0][1], datetime.strptime('2013-02-19 09:00:00', _format), 'resource_calendar: wrong working intervals')
-        self.assertEqual(intervals[1][0], datetime.strptime('2013-02-19 12:00:00', _format), 'resource_calendar: wrong working intervals')
-        self.assertEqual(intervals[1][1], datetime.strptime('2013-02-19 15:45:30', _format), 'resource_calendar: wrong working intervals')
-
-    def test_30_calendar_working_days(self):
-        """ Testing calendar hours computation on a working day """
-        cr, uid = self.cr, self.uid
-        context = self.context
-        _format = '%Y-%m-%d %H:%M:%S'
+        intervals = self.calendar._get_day_work_intervals(Date.from_string('2013-02-12'), start_time=time(9, 8, 7))
+        self.assertEqual(len(intervals), 1)
+        self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-12 09:08:07'), Datetime.from_string('2013-02-12 16:00:00')))
+        self.assertEqual(intervals[0][2]['attendances'], self.att_1)
 
         # Test: day1, beginning at 10:30 -> work from 10:30 (arrival) until 16:00
-        intervals = self.resource_calendar.get_working_intervals_of_day(cr, uid, self.calendar_id, start_dt=self.date1.replace(hour=10, minute=30, second=0), context=context)
-        self.assertEqual(len(intervals), 1, 'resource_calendar: wrong working interval / day computing')
-        self.assertEqual(intervals[0][0], datetime.strptime('2013-02-12 10:30:00', _format), 'resource_calendar: wrong working interval / day computing')
-        self.assertEqual(intervals[0][1], datetime.strptime('2013-02-12 16:00:00', _format), 'resource_calendar: wrong working interval / day computing')
-        # Test: hour computation for same interval, should give 5.5
-        wh = self.resource_calendar.get_working_hours_of_date(cr, uid, self.calendar_id, start_dt=self.date1.replace(hour=10, minute=30, second=0), context=context)
-        self.assertEqual(wh, 5.5, 'resource_calendar: wrong working interval / day time computing')
+        intervals = self.calendar._get_day_work_intervals(Date.from_string('2013-02-19'), start_time=time(10, 30, 0))
+        self.assertEqual(len(intervals), 1)
+        self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-19 10:30:00'), Datetime.from_string('2013-02-19 16:00:00')))
+        self.assertEqual(intervals[0][2]['attendances'], self.att_1)
 
-        # Test: day1+7 on leave, without leave computation
-        intervals = self.resource_calendar.get_working_intervals_of_day(
-            cr, uid, self.calendar_id,
-            start_dt=self.date1.replace(hour=7, minute=0, second=0) + relativedelta(days=7), context=context
-        )
-        # Result: day1 (08->16)
-        self.assertEqual(len(intervals), 1, 'resource_calendar: wrong working interval/day computing')
-        self.assertEqual(intervals[0][0], datetime.strptime('2013-02-19 08:00:00', _format), 'resource_calendar: wrong working interval / day computing')
-        self.assertEqual(intervals[0][1], datetime.strptime('2013-02-19 16:00:00', _format), 'resource_calendar: wrong working interval / day computing')
+        # Test: day3 without leaves: 2 interval
+        intervals = self.calendar._get_day_work_intervals(Date.from_string('2013-02-15'), start_time=time(10, 11, 12))
+        self.assertEqual(len(intervals), 2)
+        self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00')))
+        self.assertEqual(intervals[1][:2], (Datetime.from_string('2013-02-15 16:00:00'), Datetime.from_string('2013-02-15 23:00:00')))
+        self.assertEqual(intervals[0][2]['attendances'], self.att_2)
+        self.assertEqual(intervals[1][2]['attendances'], self.att_3)
 
-        # Test: day1+7 on leave, with generic leave computation
-        intervals = self.resource_calendar.get_working_intervals_of_day(
-            cr, uid, self.calendar_id,
-            start_dt=self.date1.replace(hour=7, minute=0, second=0) + relativedelta(days=7),
-            compute_leaves=True, context=context
-        )
-        # Result: day1 (08->09 + 12->16)
-        self.assertEqual(len(intervals), 2, 'resource_calendar: wrong working interval/day computing')
-        self.assertEqual(intervals[0][0], datetime.strptime('2013-02-19 08:00:00', _format), 'resource_calendar: wrong working interval / day computing')
-        self.assertEqual(intervals[0][1], datetime.strptime('2013-02-19 09:00:00', _format), 'resource_calendar: wrong working interval / day computing')
-        self.assertEqual(intervals[1][0], datetime.strptime('2013-02-19 12:00:00', _format), 'resource_calendar: wrong working interval / day computing')
-        self.assertEqual(intervals[1][1], datetime.strptime('2013-02-19 16:00:00', _format), 'resource_calendar: wrong working interval / day computing')
+    def test_calendar_working_day_intervals_leaves_generic(self):
+        # Test: day0 with leaves outside range: 1 interval
+        intervals = self.calendar._get_day_work_intervals(Date.from_string('2013-02-12'), start_time=time(7, 0, 0), compute_leaves=True)
+        self.assertEqual(len(intervals), 1)
+        self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-12 08:00:00'), Datetime.from_string('2013-02-12 16:00:00')))
 
-        # Test: day1+14 on leave, with generic leave computation
-        intervals = self.resource_calendar.get_working_intervals_of_day(
-            cr, uid, self.calendar_id,
-            start_dt=self.date1.replace(hour=7, minute=0, second=0) + relativedelta(days=14),
-            compute_leaves=True, context=context
-        )
-        # Result: day1 (08->16)
-        self.assertEqual(len(intervals), 1, 'resource_calendar: wrong working interval/day computing')
-        self.assertEqual(intervals[0][0], datetime.strptime('2013-02-26 08:00:00', _format), 'resource_calendar: wrong working interval / day computing')
-        self.assertEqual(intervals[0][1], datetime.strptime('2013-02-26 16:00:00', _format), 'resource_calendar: wrong working interval / day computing')
+        # Test: day0 with leaves: 2 intervals because of leave between 9 and 12, ending at 15:45:30
+        intervals = self.calendar._get_day_work_intervals(Date.from_string('2013-02-19'),
+                                                          start_time=time(8, 15, 0),
+                                                          end_time=time(15, 45, 30),
+                                                          compute_leaves=True)
+        self.assertEqual(len(intervals), 2)
+        self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-19 08:15:00'), Datetime.from_string('2013-02-19 09:00:00')))
+        self.assertEqual(intervals[1][:2], (Datetime.from_string('2013-02-19 12:00:00'), Datetime.from_string('2013-02-19 15:45:30')))
+        self.assertEqual(intervals[0][2]['attendances'], self.att_1)
+        self.assertEqual(intervals[0][2]['leaves'], self.leave1)
+        self.assertEqual(intervals[1][2]['attendances'], self.att_1)
+        self.assertEqual(intervals[0][2]['leaves'], self.leave1)
 
+    def test_calendar_working_day_intervals_leaves_resource(self):
         # Test: day1+14 on leave, with resource leave computation
-        intervals = self.resource_calendar.get_working_intervals_of_day(
-            cr, uid, self.calendar_id,
-            start_dt=self.date1.replace(hour=7, minute=0, second=0) + relativedelta(days=14),
+        intervals = self.calendar._get_day_work_intervals(
+            Date.from_string('2013-02-26'),
+            start_time=time(7, 0, 0),
             compute_leaves=True,
-            resource_id=self.resource1_id, context=context
+            resource_id=self.resource1_id
         )
         # Result: nothing, because on leave
-        self.assertEqual(len(intervals), 0, 'resource_calendar: wrong working interval/day computing')
+        self.assertEqual(len(intervals), 0)
 
-    def test_40_calendar_hours_scheduling(self):
-        """ Testing calendar hours scheduling """
-        cr, uid = self.cr, self.uid
-        context = self.context
-        _format = '%Y-%m-%d %H:%M:%S'
+    def test_calendar_working_day_intervals_limited_attendances(self):
+        """ Test attendances limited in time. """
+        attendance = self.env['resource.calendar.attendance'].search(
+            [('name', '=', 'Att3')])
+        attendance.write({
+            'date_from': self.date2 + relativedelta(days=7),
+            'date_to': False,
+        })
+        intervals = self.calendar._get_day_work_intervals(self.date2.date(), start_time=self.date2.time())
+        self.assertEqual(len(intervals), 1)
+        self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00')))
 
-        # --------------------------------------------------
-        # Test0: schedule hours backwards (old interval_min_get)
-        #   Done without calendar
-        # --------------------------------------------------
+        attendance.write({
+            'date_from': False,
+            'date_to': self.date2 - relativedelta(days=7),
+        })
+        intervals = self.calendar._get_day_work_intervals(self.date2.date(), start_time=self.date2.time())
+        self.assertEqual(len(intervals), 1)
+        self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00')))
 
-        # Done without calendar
-        # res = self.resource_calendar.interval_min_get(cr, uid, None, self.date1, 40, resource=False)
-        # res: (datetime.datetime(2013, 2, 7, 9, 8, 7), datetime.datetime(2013, 2, 12, 9, 8, 7))
+        attendance.write({
+            'date_from': self.date2 + relativedelta(days=7),
+            'date_to': self.date2 - relativedelta(days=7),
+        })
+        intervals = self.calendar._get_day_work_intervals(self.date2.date(), start_time=self.date2.time())
+        self.assertEqual(len(intervals), 1)
+        self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00')))
 
-        # --------------------------------------------------
-        # Test1: schedule hours backwards (old interval_min_get)
-        # --------------------------------------------------
+        attendance.write({
+            'date_from': self.date2,
+            'date_to': self.date2,
+        })
+        intervals = self.calendar._get_day_work_intervals(self.date2.date(), start_time=self.date2.time())
+        self.assertEqual(len(intervals), 2)
+        self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00')))
+        self.assertEqual(intervals[1][:2], (Datetime.from_string('2013-02-15 16:00:00'), Datetime.from_string('2013-02-15 23:00:00')))
 
-        # res = self.resource_calendar.interval_min_get(cr, uid, self.calendar_id, self.date1, 40, resource=False)
-        #   (datetime.datetime(2013, 1, 29, 9, 0), datetime.datetime(2013, 1, 29, 16, 0))
-        #   (datetime.datetime(2013, 2, 1, 8, 0), datetime.datetime(2013, 2, 1, 13, 0))
-        #   (datetime.datetime(2013, 2, 1, 16, 0), datetime.datetime(2013, 2, 1, 23, 0))
-        #   (datetime.datetime(2013, 2, 5, 8, 0), datetime.datetime(2013, 2, 5, 16, 0))
-        #   (datetime.datetime(2013, 2, 8, 8, 0), datetime.datetime(2013, 2, 8, 13, 0))
-        #   (datetime.datetime(2013, 2, 8, 16, 0), datetime.datetime(2013, 2, 8, 23, 0))
-        #   (datetime.datetime(2013, 2, 12, 8, 0), datetime.datetime(2013, 2, 12, 9, 0))
+    def test_calendar_working_hours_of_date(self):
+        # Test: day1, beginning at 10:30 -> work from 10:30 (arrival) until 16:00
+        wh = self.calendar.get_work_hours_count(Datetime.from_string('2013-02-19 10:30:00'), Datetime.from_string('2013-02-19 18:00:00'), self.resource1_id, compute_leaves=False)
+        self.assertEqual(wh, 5.5)
 
-        res = self.resource_calendar.schedule_hours(cr, uid, self.calendar_id, -40, day_dt=self.date1.replace(minute=0, second=0), context=context)
+
+class ResourceWorkingHours(TestResourceCommon):
+
+    def test_calendar_working_hours(self):
+        # new API: resource without leaves
+        # res: 2 weeks -> 40 hours
+        res = self.calendar.get_work_hours_count(
+            Datetime.from_string('2013-02-12 06:00:00'),
+            Datetime.from_string('2013-02-22 23:00:00'),
+            self.resource1_id,
+            compute_leaves=False)
+        self.assertEqual(res, 40.0)
+
+    def test_calendar_working_hours_leaves(self):
+        # new API: resource and leaves
+        # res: 2 weeks -> 40 hours - (3+4) leave hours
+        res = self.calendar.get_work_hours_count(
+            Datetime.from_string('2013-02-12 06:00:00'),
+            Datetime.from_string('2013-02-22 23:00:00'),
+            self.resource1_id,
+            compute_leaves=True)
+        self.assertEqual(res, 33.0)
+
+    def test_calendar_timezone(self):
+        # user in timezone UTC-9 asks for work hours
+        #  Limits: between 2013-02-19 10:00:00 and 2013-02-26 15:30:00 (User TZ)
+        #          between 2013-02-19 19:00:00 and 2013-02-27 00:30:00 (UTC)
+        # Leaves:  between 2013-02-21 10:00:00 and 2013-02-26 12:00:00 (User TZ)
+        # res: 19/02 (10-16 (beginning)) + 22/02 (0 (leave)) + 26/02 (12-15.30 (leave+ending))
+        self.env.user.tz = 'US/Alaska'
+        (self.leave1 | self.leave2 | self.leave3).unlink()
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'Timezoned Leaves',
+            'calendar_id': self.calendar.id,
+            'resource_id': self.resource1_id,
+            'date_from': to_naive_utc(Datetime.from_string('2013-02-21 10:00:00'), self.env.user),
+            'date_to': to_naive_utc(Datetime.from_string('2013-02-26 12:00:00'), self.env.user)
+        })
+        res = self.calendar.get_work_hours_count(
+            to_naive_utc(Datetime.from_string('2013-02-19 10:00:00'), self.env.user),
+            to_naive_utc(Datetime.from_string('2013-02-26 15:30:00'), self.env.user),
+            self.resource1_id,
+            compute_leaves=True)
+        self.assertEqual(res, 9.5)
+
+    def test_calendar_hours_scheduling_backward(self):
+        res = self.calendar._schedule_hours(-40, day_dt=Datetime.from_string('2013-02-12 09:00:00'))
         # current day, limited at 09:00 because of day_dt specified -> 1 hour
-        self.assertEqual(res[-1][0], datetime.strptime('2013-02-12 08:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[-1][1], datetime.strptime('2013-02-12 09:00:00', _format), 'resource_calendar: wrong hours scheduling')
+        self.assertEqual(res[-1][:2], (Datetime.from_string('2013-02-12 08:00:00'), Datetime.from_string('2013-02-12 09:00:00')))
         # previous days: 5+7 hours / 8 hours / 5+7 hours -> 32 hours
-        self.assertEqual(res[-2][0], datetime.strptime('2013-02-08 16:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[-2][1], datetime.strptime('2013-02-08 23:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[-3][0], datetime.strptime('2013-02-08 08:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[-3][1], datetime.strptime('2013-02-08 13:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[-4][0], datetime.strptime('2013-02-05 08:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[-4][1], datetime.strptime('2013-02-05 16:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[-5][0], datetime.strptime('2013-02-01 16:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[-5][1], datetime.strptime('2013-02-01 23:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[-6][0], datetime.strptime('2013-02-01 08:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[-6][1], datetime.strptime('2013-02-01 13:00:00', _format), 'resource_calendar: wrong hours scheduling')
+        self.assertEqual(res[-2][:2], (Datetime.from_string('2013-02-08 16:00:00'), Datetime.from_string('2013-02-08 23:00:00')))
+        self.assertEqual(res[-3][:2], (Datetime.from_string('2013-02-08 08:00:00'), Datetime.from_string('2013-02-08 13:00:00')))
+        self.assertEqual(res[-4][:2], (Datetime.from_string('2013-02-05 08:00:00'), Datetime.from_string('2013-02-05 16:00:00')))
+        self.assertEqual(res[-5][:2], (Datetime.from_string('2013-02-01 16:00:00'), Datetime.from_string('2013-02-01 23:00:00')))
+        self.assertEqual(res[-6][:2], (Datetime.from_string('2013-02-01 08:00:00'), Datetime.from_string('2013-02-01 13:00:00')))
         # 7 hours remaining
-        self.assertEqual(res[-7][0], datetime.strptime('2013-01-29 09:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[-7][1], datetime.strptime('2013-01-29 16:00:00', _format), 'resource_calendar: wrong hours scheduling')
+        self.assertEqual(res[-7][:2], (Datetime.from_string('2013-01-29 09:00:00'), Datetime.from_string('2013-01-29 16:00:00')))
+
         # Compute scheduled hours
         td = timedelta()
         for item in res:
             td += item[1] - item[0]
-        self.assertEqual(seconds(td) / 3600.0, 40.0, 'resource_calendar: wrong hours scheduling')
+        self.assertEqual(td.total_seconds() / 3600.0, 40.0)
 
-        # --------------------------------------------------
-        # Test2: schedule hours forward (old interval_get)
-        # --------------------------------------------------
+        res = self.calendar.plan_hours(-40, day_dt=Datetime.from_string('2013-02-12 09:00:00'))
+        self.assertEqual(res, Datetime.from_string('2013-01-29 09:00:00'))
 
-        # res = self.resource_calendar.interval_get(cr, uid, self.calendar_id, self.date1, 40, resource=False, byday=True)
-        #   (datetime.datetime(2013, 2, 12, 9, 0), datetime.datetime(2013, 2, 12, 16, 0))
-        #   (datetime.datetime(2013, 2, 15, 8, 0), datetime.datetime(2013, 2, 15, 13, 0))
-        #   (datetime.datetime(2013, 2, 15, 16, 0), datetime.datetime(2013, 2, 15, 23, 0))
-        #   (datetime.datetime(2013, 2, 22, 8, 0), datetime.datetime(2013, 2, 22, 13, 0))
-        #   (datetime.datetime(2013, 2, 22, 16, 0), datetime.datetime(2013, 2, 22, 23, 0))
-        #   (datetime.datetime(2013, 2, 26, 8, 0), datetime.datetime(2013, 2, 26, 16, 0))
-        #   (datetime.datetime(2013, 3, 1, 8, 0), datetime.datetime(2013, 3, 1, 9, 0))
+    def test_calendar_hours_scheduling_forward(self):
+        res = self.calendar._schedule_hours(40, day_dt=Datetime.from_string('2013-02-12 09:00:00'))
+        self.assertEqual(res[0][:2], (Datetime.from_string('2013-02-12 09:00:00'), Datetime.from_string('2013-02-12 16:00:00')))
+        self.assertEqual(res[1][:2], (Datetime.from_string('2013-02-15 08:00:00'), Datetime.from_string('2013-02-15 13:00:00')))
+        self.assertEqual(res[2][:2], (Datetime.from_string('2013-02-15 16:00:00'), Datetime.from_string('2013-02-15 23:00:00')))
+        self.assertEqual(res[3][:2], (Datetime.from_string('2013-02-19 08:00:00'), Datetime.from_string('2013-02-19 16:00:00')))
+        self.assertEqual(res[4][:2], (Datetime.from_string('2013-02-22 08:00:00'), Datetime.from_string('2013-02-22 13:00:00')))
+        self.assertEqual(res[5][:2], (Datetime.from_string('2013-02-22 16:00:00'), Datetime.from_string('2013-02-22 23:00:00')))
+        self.assertEqual(res[6][:2], (Datetime.from_string('2013-02-26 08:00:00'), Datetime.from_string('2013-02-26 09:00:00')))
 
-        res = self.resource_calendar.schedule_hours(
-            cr, uid, self.calendar_id, 40,
-            day_dt=self.date1.replace(minute=0, second=0), context=context
-        )
-        self.assertEqual(res[0][0], datetime.strptime('2013-02-12 09:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[0][1], datetime.strptime('2013-02-12 16:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[1][0], datetime.strptime('2013-02-15 08:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[1][1], datetime.strptime('2013-02-15 13:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[2][0], datetime.strptime('2013-02-15 16:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[2][1], datetime.strptime('2013-02-15 23:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[3][0], datetime.strptime('2013-02-19 08:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[3][1], datetime.strptime('2013-02-19 16:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[4][0], datetime.strptime('2013-02-22 08:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[4][1], datetime.strptime('2013-02-22 13:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[5][0], datetime.strptime('2013-02-22 16:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[5][1], datetime.strptime('2013-02-22 23:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[6][0], datetime.strptime('2013-02-26 08:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[6][1], datetime.strptime('2013-02-26 09:00:00', _format), 'resource_calendar: wrong hours scheduling')
         td = timedelta()
         for item in res:
             td += item[1] - item[0]
-        self.assertEqual(seconds(td) / 3600.0, 40.0, 'resource_calendar: wrong hours scheduling')
+        self.assertEqual(td.total_seconds() / 3600.0, 40.0)
 
-        # res = self.resource_calendar.interval_get(cr, uid, self.calendar_id, self.date1, 40, resource=self.resource1_id, byday=True)
-        #   (datetime.datetime(2013, 2, 12, 9, 0), datetime.datetime(2013, 2, 12, 16, 0))
-        #   (datetime.datetime(2013, 2, 15, 8, 0), datetime.datetime(2013, 2, 15, 13, 0))
-        #   (datetime.datetime(2013, 2, 15, 16, 0), datetime.datetime(2013, 2, 15, 23, 0))
-        #   (datetime.datetime(2013, 3, 1, 8, 0), datetime.datetime(2013, 3, 1, 13, 0))
-        #   (datetime.datetime(2013, 3, 1, 16, 0), datetime.datetime(2013, 3, 1, 23, 0))
-        #   (datetime.datetime(2013, 3, 5, 8, 0), datetime.datetime(2013, 3, 5, 16, 0))
-        #   (datetime.datetime(2013, 3, 8, 8, 0), datetime.datetime(2013, 3, 8, 9, 0))
+        res = self.calendar.plan_hours(40, day_dt=Datetime.from_string('2013-02-12 09:00:00'))
+        self.assertEqual(res, Datetime.from_string('2013-02-26 09:00:00'))
 
-        res = self.resource_calendar.schedule_hours(
-            cr, uid, self.calendar_id, 40,
-            day_dt=self.date1.replace(minute=0, second=0),
-            compute_leaves=True,
-            resource_id=self.resource1_id, context=context
+    def test_calendar_hours_scheduling_timezone(self):
+        # user in timezone UTC-9 asks for work hours
+        self.env.user.tz = 'US/Alaska'
+        res = self.calendar.plan_hours(
+            42,
+            to_naive_utc(Datetime.from_string('2013-02-12 09:25:00'), self.env.user))
+        self.assertEqual(res, to_naive_utc(Datetime.from_string('2013-02-26 11:25:00'), self.env.user))
+
+    def test_calendar_hours_scheduling_timezone_2(self):
+        # Call schedule_hours for a user in Autralia, Sydney (GMT+10)
+        # Two cases:
+        # - start at 2013-02-15 08:00:00 => 2013-02-14 21:00:00 in UTC
+        # - start at 2013-02-15 11:00:00 => 2013-02-15 00:00:00 in UTC
+        self.env.user.tz = 'Australia/Sydney'
+        self.env['resource.calendar.attendance'].create({
+            'name': 'Day3 - 1',
+            'dayofweek': '3',
+            'hour_from': 8,
+            'hour_to': 12,
+            'calendar_id': self.calendar.id,
+        })
+        self.env['resource.calendar.attendance'].create({
+            'name': 'Day3 - 2',
+            'dayofweek': '3',
+            'hour_from': 13,
+            'hour_to': 17,
+            'calendar_id': self.calendar.id,
+        })
+        hours = 1.0/60.0
+        for test_date in ['2013-02-15 08:00:00', '2013-02-15 11:00:00']:
+            start_dt = Datetime.from_string(test_date)
+            start_dt_utc = to_naive_utc(start_dt, self.env.user)
+            res = self.calendar._schedule_hours(hours, start_dt_utc)
+            self.assertEqual(
+                [(start_dt_utc, start_dt_utc.replace(minute=1))], res,
+                'resource_calendar: wrong schedule_hours computation')
+
+    def test_calendar_hours_scheduling_forward_leaves_resource(self):
+        res = self.calendar._schedule_hours(
+            40, day_dt=Datetime.from_string('2013-02-12 09:00:00'),
+            compute_leaves=True, resource_id=self.resource1_id
         )
-        self.assertEqual(res[0][0], datetime.strptime('2013-02-12 09:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[0][1], datetime.strptime('2013-02-12 16:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[1][0], datetime.strptime('2013-02-15 08:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[1][1], datetime.strptime('2013-02-15 13:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[2][0], datetime.strptime('2013-02-15 16:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[2][1], datetime.strptime('2013-02-15 23:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[3][0], datetime.strptime('2013-02-19 08:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[3][1], datetime.strptime('2013-02-19 09:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[4][0], datetime.strptime('2013-02-19 12:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[4][1], datetime.strptime('2013-02-19 16:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[5][0], datetime.strptime('2013-02-22 08:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[5][1], datetime.strptime('2013-02-22 09:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[6][0], datetime.strptime('2013-02-22 16:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[6][1], datetime.strptime('2013-02-22 23:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[7][0], datetime.strptime('2013-03-01 11:30:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[7][1], datetime.strptime('2013-03-01 13:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[8][0], datetime.strptime('2013-03-01 16:00:00', _format), 'resource_calendar: wrong hours scheduling')
-        self.assertEqual(res[8][1], datetime.strptime('2013-03-01 22:30:00', _format), 'resource_calendar: wrong hours scheduling')
+        self.assertEqual(res[0][:2], (Datetime.from_string('2013-02-12 09:00:00'), Datetime.from_string('2013-02-12 16:00:00')))
+        self.assertEqual(res[1][:2], (Datetime.from_string('2013-02-15 08:00:00'), Datetime.from_string('2013-02-15 13:00:00')))
+        self.assertEqual(res[2][:2], (Datetime.from_string('2013-02-15 16:00:00'), Datetime.from_string('2013-02-15 23:00:00')))
+        self.assertEqual(res[3][:2], (Datetime.from_string('2013-02-19 08:00:00'), Datetime.from_string('2013-02-19 09:00:00')))
+        self.assertEqual(res[4][:2], (Datetime.from_string('2013-02-19 12:00:00'), Datetime.from_string('2013-02-19 16:00:00')))
+        self.assertEqual(res[5][:2], (Datetime.from_string('2013-02-22 08:00:00'), Datetime.from_string('2013-02-22 09:00:00')))
+        self.assertEqual(res[6][:2], (Datetime.from_string('2013-02-22 16:00:00'), Datetime.from_string('2013-02-22 23:00:00')))
+        self.assertEqual(res[7][:2], (Datetime.from_string('2013-03-01 11:30:00'), Datetime.from_string('2013-03-01 13:00:00')))
+        self.assertEqual(res[8][:2], (Datetime.from_string('2013-03-01 16:00:00'), Datetime.from_string('2013-03-01 22:30:00')))
+
         td = timedelta()
         for item in res:
             td += item[1] - item[0]
-        self.assertEqual(seconds(td) / 3600.0, 40.0, 'resource_calendar: wrong hours scheduling')
+        self.assertEqual(td.total_seconds() / 3600.0, 40.0)
 
-        # --------------------------------------------------
-        # Test3: working hours (old _interval_hours_get)
-        # --------------------------------------------------
+    def test_calendar_days_scheduling(self):
+        res = self.calendar.plan_days(5, Datetime.from_string('2013-02-12 09:08:07') )
+        self.assertEqual(res.date(), Datetime.from_string('2013-02-26 00:00:00').date(), 'resource_calendar: wrong days scheduling')
+        res = self.calendar.plan_days(-2, Datetime.from_string('2013-02-12 09:08:07') )
+        self.assertEqual(res.date(), Datetime.from_string('2013-02-08 00:00:00').date(), 'resource_calendar: wrong days scheduling')
 
-        # old API: resource without leaves
-        # res: 2 weeks -> 40 hours
-        res = self.resource_calendar._interval_hours_get(
-            cr, uid, self.calendar_id,
-            self.date1.replace(hour=6, minute=0),
-            self.date2.replace(hour=23, minute=0) + relativedelta(days=7),
-            resource_id=self.resource1_id, exclude_leaves=True, context=context)
-        self.assertEqual(res, 40.0, 'resource_calendar: wrong _interval_hours_get compatibility computation')
+        res = self.calendar.plan_days(
+            5, Datetime.from_string('2013-02-12 09:08:07'),
+            compute_leaves=True, resource_id=self.resource1_id)
+        self.assertEqual(res.date(), Datetime.from_string('2013-03-01 00:00:00').date(), 'resource_calendar: wrong days scheduling')
 
-        # new API: resource without leaves
-        # res: 2 weeks -> 40 hours
-        res = self.resource_calendar.get_working_hours(
-            cr, uid, self.calendar_id,
-            self.date1.replace(hour=6, minute=0),
-            self.date2.replace(hour=23, minute=0) + relativedelta(days=7),
-            compute_leaves=False, resource_id=self.resource1_id, context=context)
-        self.assertEqual(res, 40.0, 'resource_calendar: wrong get_working_hours computation')
+    def test_calendar_days_scheduling_timezone(self):
+        self.env.user.tz = 'US/Alaska'
+        res = self.calendar.plan_days(5, to_naive_utc(Datetime.from_string('2013-02-12 09:08:07'), self.env.user))
+        self.assertEqual(to_naive_user_tz(res, self.env.user).date(), Datetime.from_string('2013-02-26 00:00:00').date())
 
-        # old API: resource and leaves
-        # res: 2 weeks -> 40 hours - (3+4) leave hours
-        res = self.resource_calendar._interval_hours_get(
-            cr, uid, self.calendar_id,
-            self.date1.replace(hour=6, minute=0),
-            self.date2.replace(hour=23, minute=0) + relativedelta(days=7),
-            resource_id=self.resource1_id, exclude_leaves=False, context=context)
-        self.assertEqual(res, 33.0, 'resource_calendar: wrong _interval_hours_get compatibility computation')
 
-        # new API: resource and leaves
-        # res: 2 weeks -> 40 hours - (3+4) leave hours
-        res = self.resource_calendar.get_working_hours(
-            cr, uid, self.calendar_id,
-            self.date1.replace(hour=6, minute=0),
-            self.date2.replace(hour=23, minute=0) + relativedelta(days=7),
-            compute_leaves=True, resource_id=self.resource1_id, context=context)
-        self.assertEqual(res, 33.0, 'resource_calendar: wrong get_working_hours computation')
+WAR_START = date(1932, 11, 2)
+WAR_END = date(1932, 12, 10)
 
-        # --------------------------------------------------
-        # Test4: misc
-        # --------------------------------------------------
 
-        # Test without calendar and default_interval
-        res = self.resource_calendar.get_working_hours(
-            cr, uid, None,
-            self.date1.replace(hour=6, minute=0),
-            self.date2.replace(hour=23, minute=0),
-            compute_leaves=True, resource_id=self.resource1_id,
-            default_interval=(8, 16), context=context)
-        self.assertEqual(res, 32.0, 'resource_calendar: wrong get_working_hours computation')
+class TestWorkDays(TestResourceCommon):
 
-        self.att0_0_id = self.resource_attendance.create(
-            cr, uid, {
-                'name': 'Att0',
-                'dayofweek': '0',
-                'hour_from': 7.5,
-                'hour_to': 12.5,
-                'calendar_id': self.calendar_id,
-            }, context=context
+    def _make_attendance(self, weekday, **kw):
+        data = {
+            'name': babel.dates.get_day_names()[weekday],
+            'dayofweek': str(weekday),
+            'hour_from': 9,
+            'hour_to': 17,
+        }
+        data.update(kw)
+        return data
+
+    def setUp(self):
+        super(TestWorkDays, self).setUp()
+        # trivial 5/7 9-17 resource calendar
+        self.calendar.write({
+            'attendance_ids': [
+                (0, 0, self._make_attendance(i))
+                for i in range(5)
+            ]
+        })
+
+        self._days = [dt.date() for dt in rrule.rrule(rrule.DAILY, dtstart=WAR_START, until=WAR_END)]
+
+    def test_trivial_calendar_no_leaves(self):
+        """ If leaves are not involved, only calendar attendances (basic
+        company configuration) are taken in account
+        """
+        r = self.env['resource.resource'].create({
+            'name': "Trivial Calendar",
+            'calendar_id': self.calendar.id
+        })
+
+        # with the trivial calendar, all days are work days except for
+        # saturday and sunday
+        self.assertEqual(
+            [d for d in self._days if d.weekday() not in (5, 6)],
+            list(r.calendar_id._iter_work_days(WAR_START, WAR_END, r.id))
         )
-        self.att0_1_id = self.resource_attendance.create(
-            cr, uid, {
-                'name': 'Att0',
-                'dayofweek': '0',
-                'hour_from': 13,
-                'hour_to': 14,
-                'calendar_id': self.calendar_id,
-            }, context=context
+
+    def test_global_leaves(self):
+        self.env['resource.calendar.leaves'].create({
+            'calendar_id': self.calendar.id,
+            'date_from': '1932-11-09 00:00:00',
+            'date_to': '1932-11-12 23:59:59',
+        })
+
+        r1 = self.env['resource.resource'].create({
+            'name': "Resource 1",
+            'calendar_id': self.calendar.id
+        })
+        r2 = self.env['resource.resource'].create({
+            'name': "Resource 2",
+            'calendar_id': self.calendar.id
+        })
+
+        days = [
+            d for d in self._days
+            if d.weekday() not in (5, 6)
+            if d < date(1932, 11, 9) or d > date(1932, 11, 12)
+        ]
+        self.assertEqual(days, list(r1.calendar_id._iter_work_days(WAR_START, WAR_END, r1.id)))
+        self.assertEqual(days, list(r2.calendar_id._iter_work_days(WAR_START, WAR_END, r2.id)))
+
+    def test_personal_leaves(self):
+        """ Leaves with a resource_id apply only to that resource
+        """
+        r1 = self.env['resource.resource'].create({
+            'name': "Resource 1",
+            'calendar_id': self.calendar.id
+        })
+        r2 = self.env['resource.resource'].create({
+            'name': "Resource 2",
+            'calendar_id': self.calendar.id
+        })
+        self.env['resource.calendar.leaves'].create({
+            'calendar_id': self.calendar.id,
+            'date_from': '1932-11-09 00:00:00',
+            'date_to': '1932-11-12 23:59:59',
+            'resource_id': r2.id
+        })
+
+        weekdays = [d for d in self._days if d.weekday() not in (5, 6)]
+        self.assertEqual(weekdays, list(r1.calendar_id._iter_work_days(WAR_START, WAR_END, r1.id)))
+        self.assertEqual([
+            d for d in weekdays if d < date(1932, 11, 9) or d > date(1932, 11, 12)],
+            list(r2.calendar_id._iter_work_days(WAR_START, WAR_END, r2.id))
         )
-        date1 = datetime.strptime('2013-02-11 07:30:00', '%Y-%m-%d %H:%M:%S')
-        date2 = datetime.strptime('2013-02-11 14:00:00', '%Y-%m-%d %H:%M:%S')
-        res = self.resource_calendar.get_working_hours(
-            cr, uid, self.calendar_id,
-            date1,
-            date2,
-            compute_leaves=False, resource_id=self.resource1_id, context=context)
-        # 7h30 -> 12h30 = 5 / 13h -> 14h = 1 / -> 6h
-        self.assertEqual(res, 6, 'resource_calendar: wrong get_working_hours computation')
+
+    def test_mixed_leaves(self):
+        r = self.env['resource.resource'].create({
+            'name': "Resource 1",
+            'calendar_id': self.calendar.id
+        })
+        self.env['resource.calendar.leaves'].create({
+            'calendar_id': self.calendar.id,
+            'date_from': '1932-11-09 00:00:00',
+            'date_to': '1932-11-12 23:59:59',
+        })
+        self.env['resource.calendar.leaves'].create({
+            'calendar_id': self.calendar.id,
+            'date_from': '1932-12-02 00:00:00',
+            'date_to': '1932-12-31 23:59:59',
+            'resource_id': r.id
+        })
+
+        self.assertEqual([
+            d for d in self._days
+            if d.weekday() not in (5, 6)
+            if d < date(1932, 11, 9) or d > date(1932, 11, 12)
+            if d < date(1932, 12, 2)],
+            list(r.calendar_id._iter_work_days(WAR_START, WAR_END, r.id))
+        )
+
+        # _is_work_day is built on _iter_work_days, but it's probably a good
+        # idea to ensure it does do what it should
+        self.assertTrue(r.calendar_id._is_work_day(date(1932, 11, 8), r.id))
+        self.assertTrue(r.calendar_id._is_work_day(date(1932, 11, 14), r.id))
+        self.assertTrue(r.calendar_id._is_work_day(date(1932, 12, 1), r.id))
+
+        self.assertFalse(r.calendar_id._is_work_day(date(1932, 11, 11), r.id))  # global leave
+        self.assertFalse(r.calendar_id._is_work_day(date(1932, 11, 13), r.id))  # sun
+        self.assertFalse(r.calendar_id._is_work_day(date(1932, 11, 19), r.id))  # sat
+        self.assertFalse(r.calendar_id._is_work_day(date(1932, 11, 20), r.id))  # sun
+        self.assertFalse(r.calendar_id._is_work_day(date(1932, 12, 6), r.id))  # personal leave
 
 
-    def test_50_calendar_schedule_days(self):
-        """ Testing calendar days scheduling """
-        cr, uid = self.cr, self.uid
-        _format = '%Y-%m-%d %H:%M:%S'
+class TestResourceMixin(TestResourceCommon):
 
-        # --------------------------------------------------
-        # Test1: with calendar
-        # --------------------------------------------------
+    def setUp(self):
+        super(TestResourceMixin, self).setUp()
+        self.lost_user = self.env['res.users'].with_context(
+            no_reset_password=True,
+            mail_create_nosubscribe=True
+        ).create({
+            'name': 'Désiré Boideladodo',
+            'login': 'desire',
+            'tz': 'Indian/Reunion',
+            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])]
+        })
+        self.test = self.env['resource.test'].with_context(default_resource_calendar_id=self.calendar.id).create({'name': 'Test'})
 
-        res = self.resource_calendar.schedule_days_get_date(cr, uid, self.calendar_id, 5, day_date=self.date1, context={'tz': 'UTC'})
-        self.assertEqual(res.date(), datetime.strptime('2013-02-26 00:0:00', _format).date(), 'resource_calendar: wrong days scheduling')
-        res = self.resource_calendar.schedule_days_get_date(cr, uid, self.calendar_id, -2, day_date=self.date1, context={'tz': 'UTC'})
-        self.assertEqual(res.date(), datetime.strptime('2013-02-08 00:00:00', _format).date(), 'resource_calendar: wrong days scheduling')
+    def test_basics(self):
+        self.assertEqual(self.env['resource.test'].create({'name': 'Test'}).resource_calendar_id, self.env.user.company_id.resource_calendar_id)
+        self.assertEqual(self.test.resource_calendar_id, self.calendar)
 
-        res = self.resource_calendar.schedule_days_get_date(
-            cr, uid, self.calendar_id, 5, day_date=self.date1,
-            compute_leaves=True, resource_id=self.resource1_id, context={'tz': 'UTC'})
-        self.assertEqual(res.date(), datetime.strptime('2013-03-01 00:0:00', _format).date(), 'resource_calendar: wrong days scheduling')
+    def test_work_days_count(self):
+        # user in timezone UTC-9 asks for work hours
+        self.env.user.tz = 'US/Alaska'
 
-        # --------------------------------------------------
-        # Test2: misc
-        # --------------------------------------------------
+        res = self.test.get_work_days_count(
+            to_naive_utc(Datetime.from_string('2013-02-12 06:00:00'), self.env.user),
+            to_naive_utc(Datetime.from_string('2013-02-22 23:00:00'), self.env.user))
+        self.assertEqual(res, 3.75)  # generic leaves, 3 hours
 
-        # Without calendar, should only count days -> 12 -> 16, 5 days with default intervals
-        res = self.resource_calendar.schedule_days_get_date(cr, uid, None, 5, day_date=self.date1, default_interval=(8, 16), context={'tz': 'UTC'})
-        self.assertEqual(res, datetime.strptime('2013-02-16 16:00:00', _format), 'resource_calendar: wrong days scheduling')
+        res = self.test.get_work_days_count(
+            to_naive_utc(Datetime.from_string('2013-02-12 06:00:00'), self.env.user),
+            to_naive_utc(Datetime.from_string('2013-02-22 20:00:00'), self.env.user))
+        self.assertEqual(res, 3.5)  # last day is truncated of 3 hours on 12)
 
-def seconds(td):
-    assert isinstance(td, timedelta)
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Timezoned Leaves',
+            'calendar_id': self.test.resource_calendar_id.id,
+            'resource_id': self.test.resource_id.id,
+            'date_from': to_naive_utc(Datetime.from_string('2013-02-13 10:00:00'), self.env.user),
+            'date_to': to_naive_utc(Datetime.from_string('2013-02-17 12:00:00'), self.env.user)
+        })
 
-    return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 10.**6
+        res = self.test.get_work_days_count(
+            to_naive_utc(Datetime.from_string('2013-02-12 06:00:00'), self.env.user),
+            to_naive_utc(Datetime.from_string('2013-02-22 20:00:00'), self.env.user))
+        self.assertEqual(res, 2.5)  # one day is on leave and last day is truncated of 3 hours on 12)
+
+    def test_work_days_count_timezones_ultra(self):
+        # user in timezone UTC+4 is attached to the resource and create leaves
+        self.test.resource_id.write({
+            'user_id': self.lost_user.id,
+        })
+        reunion_leave = self.env['resource.calendar.leaves'].sudo(self.lost_user).create({
+            'name': 'Timezoned Leaves',
+            'calendar_id': self.test.resource_calendar_id.id,
+            'resource_id': self.test.resource_id.id,
+            'date_from': to_naive_utc(Datetime.from_string('2013-02-12 10:00:00'), self.lost_user),
+            'date_to': to_naive_utc(Datetime.from_string('2013-02-12 12:00:00'), self.lost_user)
+        })
+        self.assertEqual(reunion_leave.tz, 'Indian/Reunion')
+
+        # user in timezone UTC-9 read and manipulate leaves
+        self.env.user.tz = 'US/Alaska'
+        res = self.test.get_work_days_data(
+            to_naive_utc(Datetime.from_string('2013-02-12 06:00:00'), self.env.user),
+            to_naive_utc(Datetime.from_string('2013-02-12 20:00:00'), self.env.user))
+        self.assertEqual(res['days'], 0.75)
+        self.assertEqual(res['hours'], 6.0)
+
+        # user in timezone UTC+4 read and manipulate leaves
+        res = self.test.sudo(self.lost_user).get_work_days_data(
+            to_naive_utc(Datetime.from_string('2013-02-12 06:00:00'), self.env.user),
+            to_naive_utc(Datetime.from_string('2013-02-12 20:00:00'), self.env.user))
+        self.assertEqual(res['days'], 0.75)
+        self.assertEqual(res['hours'], 6.0)

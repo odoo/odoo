@@ -1,0 +1,56 @@
+/**
+ * This file regroups the rules which apply on elements which are shared between
+ * all renderers. For field default rules, see the fields.less file.
+ */
+
+// No content helper
+.o_view_manager_content > div {
+    height: 100%;
+}
+.oe_view_nocontent {
+    a {
+        cursor: pointer;
+    }
+    span, a {
+        display: inline!important;
+    }
+}
+.o_field_widget .oe_view_nocontent,
+.o_cannot_create .oe_view_nocontent_create {
+    display: none;
+}
+
+// Invisible modifier (can be inside the view, the button area, ...)
+.o_invisible_modifier {
+    display: none!important;
+}
+
+// Status
+// This should normally be put in fields.less but these classes are used outside
+// of `.o_field_widget` so it needs to be placed at an upper level.
+.o_status {
+    display: inline-block;
+    height: 12px;
+    width: 12px;
+    border-radius: 6px;
+    vertical-align: middle;
+
+    background-color: @gray-lighter-dark;
+
+    &.o_status_green {
+        background-color: @brand-success;
+    }
+    &.o_status_red {
+        background-color: @brand-danger;
+    }
+}
+
+.o_btn-link-as-button {
+    padding: 2px;
+    font-size:12px;
+
+    & > a {
+        margin-bottom: -4px !important;
+        margin-left: 3px;
+    }
+}

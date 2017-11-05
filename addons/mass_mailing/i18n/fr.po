@@ -3,21 +3,46 @@
 # * mass_mailing
 # 
 # Translators:
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2015
-# cyril vt <contact@invitu.com>, 2016
-# Florian Hatat, 2015
-# lucasdeliege <deliegelucas@gmail.com>, 2015
-# Martin Trigaux, 2016
-# Saad Thaifa <saad.thaifa@gmail.com>, 2015
-# Victor BAHL <bahl.victor@gmail.com>, 2015
+# Fabien Bourgeois <fabien@yaltik.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Melanie Bernard <mbe@odoo.com>, 2017
+# Eloïse Stilmant <est@odoo.com>, 2017
+# Quentin THEURET <odoo@kerpeo.com>, 2017
+# Micky Jault <micky037@hotmail.fr>, 2017
+# Frédéric LIETART <stuff@tifred.fr>, 2017
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
+# Xavier Belmere <Info@cartmeleon.com>, 2017
+# Xavier Symons <xsy@openerp.com>, 2017
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
+# Nicolas JEUDY <njeudy@panda-chi.io>, 2017
+# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
+# Olivier Dony <odo@odoo.com>, 2017
+# Daniel & Delphine <dd2013@leschoupinous.net>, 2017
+# Kévin R. <realrom@hotmail.fr>, 2017
+# Florian Hatat <mininet@wanadoo.fr>, 2017
+# Fabien Pinckaers <fp@openerp.com>, 2017
+# Vincent Regouby <v.regouby@inetshore.com>, 2017
+# Jean-Marc Dupont <jmd@6it.fr>, 2017
+# Lucas Deliege <lud@odoo.com>, 2017
+# Lixon Jean-Yves <jy.lixon@ls-development.net>, 2017
+# Richard Mathot <rim@odoo.com>, 2017
+# Fabri Yohann <psn@fabri.pw>, 2017
+# Clo <clo@odoo.com>, 2017
+# Saad Thaifa <saad.thaifa@gmail.com>, 2017
+# Alexis de Lattre <alexis@via.ecp.fr>, 2017
+# françois futhazar <francois.futhazar@tco.re>, 2017
+# Victor BAHL <bahl.victor@gmail.com>, 2017
+# fr rev <e2ffr02@hotmail.com>, 2017
+# fr trans <e2ftrans1@yahoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-07-22 08:30+0000\n"
-"Last-Translator: cyril vt <contact@invitu.com>\n"
-"Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: fr trans <e2ftrans1@yahoo.com>, 2017\n"
+"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -25,349 +50,644 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:473
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
+msgid "$18"
+msgstr "$18"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
+msgid "$20"
+msgstr "20$"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_kanban
+msgid ""
+"% <br/>\n"
+"                                                <strong>Clicks</strong>"
+msgstr ""
+"% <br/>\n"
+"                                                <strong>Clics</strong>"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_kanban
+msgid ""
+"%<br/>\n"
+"                                                <strong>Replied</strong>"
+msgstr ""
+"%<br/>\n"
+"                                                <strong>Répondu</strong>"
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:466
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
 
 #. module: mass_mailing
-#: model:email.template,body_html:mass_mailing.newsletter_template
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_tag_line
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_social
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_text_social
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
 msgid ""
-"<div data-snippet-id=\"big-picture\" style=\"padding:0px; margin:0px\">\n"
-"<table cellpadding=\"0\" cellspacing=\"0\" style=\"margin:10px 0px 0px;vertical-align:top;padding:0px;font-family:arial;font-size:12px;color:rgb(51,51,51)\">\n"
-"    <tbody>\n"
-"        <tr>\n"
-"            <td style=\"width:600px\" valign=\"top\">\n"
-"            <h2 style=\"text-align: center; padding:0px 5px\">A Punchy Headline</h2>\n"
-"            </td>\n"
-"        </tr>\n"
-"        <tr>\n"
-"            <td style=\"width:600px\" valign=\"top\"><img src=\"/website/static/src/img/big_picture.png\" style=\"display:block;border:none;min-height:250px;margin:0 auto;\" width=\"500\"></td>\n"
-"        </tr>\n"
-"        <tr>\n"
-"            <td style=\"width:600px\" valign=\"top\">\n"
-"            <p style=\"text-align: center; overflow:hidden\"></p>\n"
-"\n"
-"            <h3 style=\"text-align: center; padding:0px 5px\">A Small Subtitle for ${object.name}</h3>\n"
-"\n"
-"            <p></p>\n"
-"\n"
-"            <p style=\"text-align: center; overflow:hidden\">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</p>\n"
-"            </td>\n"
-"        </tr>\n"
-"    </tbody>\n"
-"</table>\n"
-"</div>\n"
-"<div data-snippet-id=\"three-columns\" style=\"padding:0px; margin:0px\">\n"
-"<table cellpadding=\"0\" cellspacing=\"0\" style=\"margin:10px 0px 0px;vertical-align:top;padding:0px;font-family:arial;font-size:12px;color:rgb(51,51,51)\">\n"
-"    <tbody>\n"
-"        <tr>\n"
-"            <td style=\"width:300px\" valign=\"top\"><img src=\"/website/static/src/img/desert_thumb.jpg\" style=\"display:block;border:none;min-height:50px\" width=\"275\"></td>\n"
-"            <td style=\"width:300px\" valign=\"top\"><img src=\"/website/static/src/img/deers_thumb.jpg\" style=\"display:block;border:none;min-height:50px\" width=\"275\"></td>\n"
-"        </tr>\n"
-"        <tr>\n"
-"            <td style=\"width:300px\" valign=\"top\">\n"
-"            <h3 style=\"text-align: center; padding:0px 5px\">Feature One</h3>\n"
-"\n"
-"            <p style=\"overflow:hidden\">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</p>\n"
-"            </td>\n"
-"            <td style=\"width:300px\" valign=\"top\">\n"
-"            <h3 style=\"text-align: center; padding:0px 5px\">Feature Two</h3>\n"
-"\n"
-"            <p style=\"overflow:hidden\">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</p>\n"
-"            </td>\n"
-"        </tr>\n"
-"    </tbody>\n"
-"</table>\n"
-"</div>"
-msgstr ""
+"&amp;nbsp;\n"
+"                                        <span class=\"fa fa-compass fa-2x text-delta\"/>\n"
+"                                        &amp;nbsp;"
+msgstr " &amp;nbsp; <span class=\"fa fa-compass fa-2x text-delta\"/> &amp;nbsp; "
 
 #. module: mass_mailing
-#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts_from_list
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a recipient.\n"
-"              </p>\n"
-"            "
+"&amp;nbsp;\n"
+"                                        <span class=\"fa fa-credit-card fa-2x text-delta\"/>\n"
+"                                        &amp;nbsp;"
 msgstr ""
+"&amp;nbsp;\n"
+"                                        <span class=\"fa fa-credit-card fa-2x text-delta\"/>\n"
+"                                        &amp;nbsp;"
 
 #. module: mass_mailing
-#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_campaigns
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new mass mailing campaign.\n"
-"              </p><p>\n"
-"                Create a campaign to structure mass mailing and get analysis from email status.\n"
-"              </p>\n"
-"            "
-msgstr ""
+"&amp;nbsp;\n"
+"                                        <span class=\"fa fa-smile-o fa-2x text-delta\"/>\n"
+"                                        &amp;nbsp;"
+msgstr " &amp;nbsp; <span class=\"fa fa-smile-o fa-2x text-delta\"/> &amp;nbsp; "
 
 #. module: mass_mailing
-#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
+msgid "20%"
+msgstr "20 %"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_event
+msgid "21 Jul"
+msgstr "21 juillet"
+
+#. module: mass_mailing
+#: model:mail.template,body_html:mass_mailing.newsletter_template
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"    Click here to create a new mailing list.\n"
-"</p><p>\n"
-"    Mailing lists allows you to to manage customers and\n"
-"    contacts easily and to send to mailings in a single click.\n"
-"</p>"
+"<div class=\"snippet_row bg-color\" style=\"padding:0px;width:600px;margin:auto;background: #ffffff repeat top /100%\">\n"
+"                <table cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:collapse\" width=\"100%\"><tbody><tr><td style=\"padding:10px 10px 10px 5px\" valign=\"center\" width=\"270\"> <a style=\"text-decoration:none\" href=\"http://www.example.com\"><strong>My Company</strong></a> </td><td style=\"padding:10px 15px 10px 10px;vertical-align:middle\" valign=\"center\" width=\"270\"><table align=\"right\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:collapse\"><tbody><tr><td align=\"right\"><a target=\"_blank\" href=\"https://www.facebook.com/Odoo\"><span class=\"fa fa-facebook-square fa-2x\" style=\"color:#44B7B7;\"></span></a></td><td align=\"right\" style=\"padding-left:5px\"><a target=\"_blank\" href=\"https://www.facebook.com/Odoo\"><span class=\"fa fa-google-plus-square fa-2x\" style=\"color:#44B7B7;\"></span></a></td><td align=\"right\" style=\"padding-left:5px\"><a target=\"_blank\" href=\"https://www.facebook.com/Odoo\"><span class=\"fa fa-linkedin-square fa-2x\" style=\"color:#44B7B7;\"></span></a></td><td align=\"right\" style=\"padding-left:5px\"><a target=\"_blank\" href=\"https://www.facebook.com/Odoo\"><span class=\"fa fa-twitter-square fa-2x\" style=\"color:#44B7B7;\"></span></a></td></tr></tbody></table></td></tr></tbody></table></div><div style=\"padding:0px;width:600px;margin:auto;background-color:#44B7B7;color:#168484\"><table cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%;background-color:inherit;border-collapse:collapse;color:inherit\"><tbody><tr><td class=\"col_mv bg-color\" style=\"text-align:left; padding-left:20px;vertical-align:middle;font-size:14px\"><p style=\"margin:0;font-size:20px;color:#fff\">You get a 20% discount for signing up!</p><p style=\"margin:0\">Discount Code: <strong>45A9E77DGW8455</strong></p></td><td class=\"col_mv bg-color\" style=\"padding:20px;text-align:center;vertical-align:middle\">  <span class=\"fa fa-6x fa-ticket\"></span>  </td></tr></tbody></table></div><div class=\"snippet_row bg-color\" style=\"padding:0;width:600px;max-width:600px;margin:0 auto;background: #fff repeat top /100%;color:#168484\"><table style=\"width:100%;text-align:justify;margin:0 auto;inherit;border-collapse:collapse;color:inherit\"><tbody><tr><td style=\"padding:10px 30px;font-size:14px;line-height:20px\"><p style=\"margin:0\">Dear ${object.name}</p><p style=\"margin:0\">Great stories have personality. Consider telling a great story that provides personality. Writing a story with personality for potential clients will assist with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.<br></p><p style=\"margin:0\">Great stories are for everyone even when only written for just one person. If you try to write with a wide general audience in mind, your story will ring false and be bland. No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.</p><p style=\"margin:0\">Kind Regards,</p><p style=\"margin:0\">Michael Fletcher</p></td></tr></tbody></table></div><div style=\"padding:0;width:600px;max-width:600px;margin:0 auto\"><table style=\"width:100%;text-align:justify;margin:0 auto;background-color:inherit;border-collapse:collapse\"><tbody><tr><td class=\"col_mv bg-color\" style=\"padding:10px 0;background-color:#168484;color:#fff\"><table style=\"border-collapse:collapse;background-color:inherit\"><tbody><tr><td rowspan=\"2\" style=\"padding-left:10px\">  <span class=\"fa fa-check fa-3x\"></span>  </td><td style=\"padding-left:10px;color:#fff;font-size:14px\"><p style=\"font-weight:bold;font-size:18px;margin:0 0 3px 0\">Step 1:</p><p style=\"margin:0\">Place Order</p></td></tr></tbody></table></td><td class=\"col_mv bg-color\" style=\"padding:10px 0;background-color:#FFFFFF;color:#808080\"><table style=\"border-collapse:collapse;background-color:inherit\"><tbody><tr><td rowspan=\"2\" style=\"padding-left:10px\">  <span class=\"fa fa-truck fa-3x\"></span>  </td><td style=\"padding-left:10px;color:#808080;font-size:14px\"><p style=\"font-weight:bold;font-size:18px;margin:0 0 3px 0\">Step 2:</p><p style=\"margin:0\">Shipping</p></td></tr></tbody></table></td><td class=\"col_mv bg-color\" style=\"padding:10px 0;background-color:#FFFFFF;color:#808080\"><table style=\"border-collapse:collapse;background-color:inherit\"><tbody><tr><td rowspan=\"2\" style=\"padding-left:10px\">  <span class=\"fa fa-dollar fa-3x\"></span>  </td><td style=\"padding-left:10px;color:#808080;font-size:14px\"><p style=\"font-weight:bold;font-size:18px;margin:0 0 3px 0\">Step 3:</p><p style=\"margin:0\">Payment</p></td></tr></tbody></table></td></tr></tbody></table></div><div class=\"snippet_row bg-color\" style=\"padding:0px;width:600px;margin:auto;background: #414141 repeat top /100%;color:#44B7B7\"><div style=\"padding:10px\"><table cellpadding=\"0\" cellspacing=\"0\" style=\"margin: 0 auto;width:100%;border-collapse:collapse;color:inherit;color:inherit\"><tbody><tr><td style=\"text-align:center\"> <a target=\"_blank\" style=\"text-decoration: none;\" href=\"https://www.facebook.com/Odoo\"><span class=\"fa fa-facebook-square fa-2x\"></span></a><a target=\"_blank\" style=\"text-decoration: none;\" href=\"https://plus.google.com/+Odooapps\"><span class=\"fa fa-google-plus-square fa-2x\"></span></a><a target=\"_blank\" style=\"text-decoration: none;\" href=\"https://www.linkedin.com/company/odoo\"><span class=\"fa fa-linkedin-square fa-2x\"></span></a><a target=\"_blank\" style=\"text-decoration: none;\" href=\"https://twitter.com/Odoo\"><span class=\"fa fa-twitter-square fa-2x\"></span></a> </td></tr><tr><td style=\"font-size:12px;text-align:center;padding-top:10px;padding-bottom:5px\"> <a href=\"/unsubscribe_from_list\" style=\"color:#44B7B7\">Unsubscribe</a>|<a href=\"/page/contactus\" style=\"color:#44B7B7\">Contact</a> </td></tr></tbody></table></div>\n"
+"            </div>"
 msgstr ""
+"<div class=\"snippet_row bg-color\" style=\"padding:0px;width:600px;margin:auto;background: #ffffff repeat top /100%\">\n"
+"                <table cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:collapse\" width=\"100%\"><tbody><tr><td style=\"padding:10px 10px 10px 5px\" valign=\"center\" width=\"270\"> <a style=\"text-decoration:none\" href=\"http://www.example.com\"><strong>Mon entreprise</strong></a> </td><td style=\"padding:10px 15px 10px 10px;vertical-align:middle\" valign=\"center\" width=\"270\"><table align=\"right\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:collapse\"><tbody><tr><td align=\"right\"><a target=\"_blank\" href=\"https://www.facebook.com/Odoo\"><span class=\"fa fa-facebook-square fa-2x\" style=\"color:#44B7B7;\"></span></a></td><td align=\"right\" style=\"padding-left:5px\"><a target=\"_blank\" href=\"https://www.facebook.com/Odoo\"><span class=\"fa fa-google-plus-square fa-2x\" style=\"color:#44B7B7;\"></span></a></td><td align=\"right\" style=\"padding-left:5px\"><a target=\"_blank\" href=\"https://www.facebook.com/Odoo\"><span class=\"fa fa-linkedin-square fa-2x\" style=\"color:#44B7B7;\"></span></a></td><td align=\"right\" style=\"padding-left:5px\"><a target=\"_blank\" href=\"https://www.facebook.com/Odoo\"><span class=\"fa fa-twitter-square fa-2x\" style=\"color:#44B7B7;\"></span></a></td></tr></tbody></table></td></tr></tbody></table></div><div style=\"padding:0px;width:600px;margin:auto;background-color:#44B7B7;color:#168484\"><table cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%;background-color:inherit;border-collapse:collapse;color:inherit\"><tbody><tr><td class=\"col_mv bg-color\" style=\"text-align:left; padding-left:20px;vertical-align:middle;font-size:14px\"><p style=\"margin:0;font-size:20px;color:#fff\">Bénéficiez d'une réduction de 20 % lors de votre inscription !</p><p style=\"margin:0\">Code de réduction : <strong>45A9E77DGW8455</strong></p></td><td class=\"col_mv bg-color\" style=\"padding:20px;text-align:center;vertical-align:middle\">  <span class=\"fa fa-6x fa-ticket\"></span>  </td></tr></tbody></table></div><div class=\"snippet_row bg-color\" style=\"padding:0;width:600px;max-width:600px;margin:0 auto;background: #fff repeat top /100%;color:#168484\"><table style=\"width:100%;text-align:justify;margin:0 auto;inherit;border-collapse:collapse;color:inherit\"><tbody><tr><td style=\"padding:10px 30px;font-size:14px;line-height:20px\"><p style=\"margin:0\">Cher ${object.name},</p><p style=\"margin:0\">Les belles histoires ont du caractère. Pensez à raconter une histoire qui se démarque par son originalité. Écrire une histoire avec du caractère pour vos clients potentiels contribuera à créer un lien. Cela passe par de petits détails comme le choix des mots ou des phrases. Écrivez de votre point de vue, ne racontez pas l'expérience d'un tiers.<br></p><p style=\"margin:0\">Les meilleures histoires parlent à tous même si elles ne sont écrites que pour une personne. Si vous essayez d'écrire pour un vaste public, votre histoire sonnera faux et paraîtra fade. Personne ne s'y intéressera. Écrivez-la pour une personne. Si elle semble authentique pour une personne, ce sera également le cas pour d'autres.</p><p style=\"margin:0\">Cordialement,</p><p style=\"margin:0\">Michael Fletcher</p></td></tr></tbody></table></div><div style=\"padding:0;width:600px;max-width:600px;margin:0 auto\"><table style=\"width:100%;text-align:justify;margin:0 auto;background-color:inherit;border-collapse:collapse\"><tbody><tr><td class=\"col_mv bg-color\" style=\"padding:10px 0;background-color:#168484;color:#fff\"><table style=\"border-collapse:collapse;background-color:inherit\"><tbody><tr><td rowspan=\"2\" style=\"padding-left:10px\">  <span class=\"fa fa-check fa-3x\"></span>  </td><td style=\"padding-left:10px;color:#fff;font-size:14px\"><p style=\"font-weight:bold;font-size:18px;margin:0 0 3px 0\">Étape 1 :</p><p style=\"margin:0\">Effectuer une commande</p></td></tr></tbody></table></td><td class=\"col_mv bg-color\" style=\"padding:10px 0;background-color:#FFFFFF;color:#808080\"><table style=\"border-collapse:collapse;background-color:inherit\"><tbody><tr><td rowspan=\"2\" style=\"padding-left:10px\">  <span class=\"fa fa-truck fa-3x\"></span>  </td><td style=\"padding-left:10px;color:#808080;font-size:14px\"><p style=\"font-weight:bold;font-size:18px;margin:0 0 3px 0\">Étape 2 :</p><p style=\"margin:0\">Expédition</p></td></tr></tbody></table></td><td class=\"col_mv bg-color\" style=\"padding:10px 0;background-color:#FFFFFF;color:#808080\"><table style=\"border-collapse:collapse;background-color:inherit\"><tbody><tr><td rowspan=\"2\" style=\"padding-left:10px\">  <span class=\"fa fa-dollar fa-3x\"></span>  </td><td style=\"padding-left:10px;color:#808080;font-size:14px\"><p style=\"font-weight:bold;font-size:18px;margin:0 0 3px 0\">Étape 3 :</p><p style=\"margin:0\">Paiement</p></td></tr></tbody></table></td></tr></tbody></table></div><div class=\"snippet_row bg-color\" style=\"padding:0px;width:600px;margin:auto;background: #414141 repeat top /100%;color:#44B7B7\"><div style=\"padding:10px\"><table cellpadding=\"0\" cellspacing=\"0\" style=\"margin: 0 auto;width:100%;border-collapse:collapse;color:inherit;color:inherit\"><tbody><tr><td style=\"text-align:center\"> <a target=\"_blank\" style=\"text-decoration: none;\" href=\"https://www.facebook.com/Odoo\"><span class=\"fa fa-facebook-square fa-2x\"></span></a><a target=\"_blank\" style=\"text-decoration: none;\" href=\"https://plus.google.com/+Odooapps\"><span class=\"fa fa-google-plus-square fa-2x\"></span></a><a target=\"_blank\" style=\"text-decoration: none;\" href=\"https://www.linkedin.com/company/odoo\"><span class=\"fa fa-linkedin-square fa-2x\"></span></a><a target=\"_blank\" style=\"text-decoration: none;\" href=\"https://twitter.com/Odoo\"><span class=\"fa fa-twitter-square fa-2x\"></span></a> </td></tr><tr><td style=\"font-size:12px;text-align:center;padding-top:10px;padding-bottom:5px\"> <a href=\"/unsubscribe_from_list\" style=\"color:#44B7B7\">Se désabonner</a>|<a href=\"/page/contactus\" style=\"color:#44B7B7\">Contactez-nous</a> </td></tr></tbody></table></div>\n"
+"            </div>"
 
 #. module: mass_mailing
-#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings
-#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings_from_campaign
+#: model:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_1
+#: model:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_2
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"    Click here to create a new mailing.\n"
-"</p><p>\n"
-"    Mass mailing allows you to to easily design and send mass mailings to your contacts, customers or leads using mailing lists.\n"
-"</p>"
+"<font>7</font>\n"
+"    <strong>Business Hacks</strong>\n"
+"    <span> to<br>boost your marketing</span>"
 msgstr ""
+" <font>7</font> <strong>Trucs business</strong> <span> pour<br>booster votre"
+" marketing</span> "
 
 #. module: mass_mailing
-#: field:mail.mass_mailing.campaign,unique_ab_testing:0
-msgid "AB Testing"
-msgstr "AB Testing"
+#: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "<i class=\"fa fa-angle-double-down\"/> Footers"
+msgstr "Pieds de page"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing,contact_ab_pc:0
-msgid "AB Testing percentage"
+#: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "<i class=\"fa fa-angle-double-up\"/> Headers"
+msgstr "Entêtes"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "<i class=\"fa fa-clone\"/> Body"
+msgstr "Corps"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.snippet_options
+msgid "<i class=\"fa fa-eyedropper\"/>Background Color"
+msgstr "<i class=\"fa fa-eyedropper\"/>Couleur d'arrière-plan"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "<i class=\"fa fa-plus\"/> Marketing Content"
+msgstr "Contenu marketing"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_text
+msgid ""
+"<small>\n"
+"                                    <strong>Michael Fletcher</strong><br/>\n"
+"                                    <small>Community Manager</small>\n"
+"                                </small>"
 msgstr ""
+"<small>\n"
+"                                    <strong>Michael Fletcher</strong><br/>\n"
+"                                    <small>Community Manager</small>\n"
+"                                </small>"
 
 #. module: mass_mailing
-#. openerp-web
-#: code:addons/mass_mailing/static/src/js/website_mass_mailing.editor.js:12
-#, python-format
-msgid "Add a Newsletter Subscribe Button"
-msgstr "Ajouter un bouton pour souscrire à la Newsletter"
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
+msgid "<small>CODE</small>:   <strong class=\"o_code h3\">45A9E77DGW8455</strong>"
+msgstr ""
+"<small>CODE</small>:   <strong class=\"o_code h3\">45A9E77DGW8455</strong>"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
+msgid "<small>Step 1:</small>"
+msgstr "<small>Étape 1 :</small>"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
+msgid "<small>Step 2:</small>"
+msgstr "<small>Étape 2 :</small>"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
+msgid "<small>Step 3:</small>"
+msgstr "<small>Étape 3 :</small>"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
+msgid "<small>user / month (billed annually)</small>"
+msgstr "<small>utilisateur / mois (payé à l'année)</small>"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social_left
+msgid "<span class=\"fa fa-copyright\"/> 2016 All Rights Reserved"
+msgstr "<span class=\"fa fa-copyright\"/> 2016 Tous Droits Réservés"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_form
+msgid "<span> times</span>"
+msgstr "<span> fois</span>"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
+msgid "<strong>24/7 Support</strong>"
+msgstr "<strong>24/7 Support</strong>"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
+msgid "<strong>Advanced</strong> features"
+msgstr "Fonctionnalités <strong>Avancées</strong>"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
+msgid "<strong>Fully customizable</strong>"
+msgstr "<strong>Complètement personnalisable</strong>"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_kanban
+msgid "<strong>Opened</strong>"
+msgstr "<strong>Ouvert</strong>"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
+msgid "<strong>Total</strong> management"
+msgstr "Gestion <strong>complète</strong> "
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_three_cols
+msgid "A short description"
+msgstr "Une courte description"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_text_image
+msgid "A unique value"
+msgstr "Une valeur unique"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_ab_pc
+msgid "A/B Testing percentage"
+msgstr "Pourcentage du test A/B"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_event
+msgid "ALL DAY"
+msgstr "TOUTE LA JOURNEE"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_active
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_active
+msgid "Active"
+msgstr "Actif/ve"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_unique_ab_testing
+msgid "Allow A/B Testing"
+msgstr "Autoriser l'A/B Testing"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_tag_line
+msgid "Apps That Help You Grow Your Business"
+msgstr "Applications vous aidant à faire grandir vos affaires"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_sub
+msgid "Apps That Help You Grow Your Business!"
+msgstr "Des Apps qui vous aident à faire grandir votre business"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
+msgid "Archived"
+msgstr "Archivé/s"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Attach a file"
 msgstr "Joindre un fichier"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing,attachment_ids:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_attachment_ids
 msgid "Attachments"
 msgstr "Pièces jointes"
 
 #. module: mass_mailing
-#: view:email.template:mass_mailing.email_template_form_minimal
-#: field:mail.mass_mailing,body_html:0
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
+msgid "Basic features"
+msgstr "Fonctionnalités basiques"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
+msgid "Basic management"
+msgstr "Gestion de base"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_body_html
 msgid "Body"
 msgstr "Corps"
 
 #. module: mass_mailing
-#: field:mail.mail.statistics,bounced:0 field:mail.mass_mailing,bounced:0
-#: field:mail.mass_mailing.campaign,bounced:0
-#: field:mail.statistics.report,bounced:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_bounced
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_bounced
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_bounced
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_message_bounce
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_bounced
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+#: selection:mail.mail.statistics,state:0
 msgid "Bounced"
-msgstr "Rebonds"
+msgstr "Rebondi"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_search
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_bounced_ratio
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_bounced_ratio
+msgid "Bounced Ratio"
+msgstr "Taux de Rebonds"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id_3643
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Campaign"
 msgstr "Campagne"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_name
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
+msgid "Campaign Name"
+msgstr "Nom de la campagne"
+
+#. module: mass_mailing
 #: model:ir.ui.menu,name:mass_mailing.menu_view_mass_mailing_stages
+#: model:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Campaign Stages"
 msgstr "Étapes de la campagne"
 
 #. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.mass_mailing_tag_action
+#: model:ir.ui.menu,name:mass_mailing.mass_mailing_tag_menu
+#: model:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_tag_view_form
+msgid "Campaign Tags"
+msgstr "Etiquettes de campagne"
+
+#. module: mass_mailing
 #: model:ir.ui.menu,name:mass_mailing.menu_email_campaigns
-#: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_search
 msgid "Campaigns"
 msgstr "Campagnes"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing.test:mass_mailing.view_mail_mass_mailing_test_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Cancel"
 msgstr "Annuler"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing.campaign,category_ids:0
-msgid "Categories"
-msgstr "Catégories"
+#. openerp-web
+#: code:addons/mass_mailing/static/src/xml/mass_mailing.xml:5
+#, python-format
+msgid "Change Style"
+msgstr "Changer le style"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
-msgid "Change Email Design"
-msgstr "Changer la conception du courriel"
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_sub
+msgid "Check this out!"
+msgstr "Regardez ça!"
 
 #. module: mass_mailing
-#: view:website:website.snippets
-msgid "Change Newsletter"
-msgstr "Changer de bulletin de nouvelles"
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
+msgid "Choose"
+msgstr "Choisir"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
-msgid "Click to design your email."
-msgstr "Cliquer pour concevoir votre courriel."
+#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
+msgid "Click here to create a new mailing list."
+msgstr "Cliquez ici pour créer un nouvelle mailing list"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing,color:0 field:mail.mass_mailing.campaign,color:0
+#: model:ir.actions.act_window,help:mass_mailing.action_create_ab_mass_mailings_from_campaign
+#: model:ir.actions.act_window,help:mass_mailing.action_create_mass_mailings_from_campaign
+#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings
+#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings_from_campaign
+msgid "Click here to create a new mailing."
+msgstr "Cliquez ici pour créer un nouvelle mailing list"
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.mass_mailing_tag_action
+msgid "Click to add a new tag."
+msgstr "Cliquez sur pour ajouter une nouvelle étiquette."
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts_from_list
+msgid "Click to create a recipient."
+msgstr "Cliquez ici pour créer un destinataire"
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_campaigns
+msgid "Click to define a new mass mailing campaign."
+msgstr "Cliquer pour définir une nouvelle campagne de mass mailing"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_clicked
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
+msgid "Clicked"
+msgstr "Cliqué"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid "Clicks"
+msgstr "clics"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_color
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_color
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag_color
 msgid "Color Index"
+msgstr "Index de la couleur"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_kanban
+msgid "Colour"
 msgstr "Couleur"
 
 #. module: mass_mailing
-#: help:mail.mass_mailing.test,email_to:0
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_three_cols
+msgid "Column Title"
+msgstr "Titre de la colonne"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_two_cols
+msgid "Column title"
+msgstr "Titre de la colonne"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_test_email_to
 msgid "Comma-separated list of email addresses."
 msgstr "Adresses des destinataires, séparées par des virgules."
 
 #. module: mass_mailing
-#: model:ir.ui.menu,name:mass_mailing.marketing_configuration
+#: model:ir.model,name:mass_mailing.model_res_company
+msgid "Companies"
+msgstr "Sociétés"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_company_name
+msgid "Company Name"
+msgstr "Nom de la société"
+
+#. module: mass_mailing
+#: model:ir.ui.menu,name:mass_mailing.mass_mailing_configuration
+#: model:ir.ui.menu,name:mass_mailing.menu_mass_mailing_configuration
 msgid "Configuration"
 msgstr "Configuration"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing.list:mass_mailing.view_mail_mass_mailing_list_form
+#: model:ir.actions.act_window,name:mass_mailing.action_mass_mailing_configuration
+msgid "Configure Mass Mailing"
+msgstr "Configurer le mass mailing"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_form
 msgid "Contact List"
 msgstr "Liste de contacts"
 
 #. module: mass_mailing
-#: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_lists
-msgid "Contact Lists"
-msgstr "Listes de contacts"
-
-#. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_contacts
+#: model:ir.ui.menu,name:mass_mailing.mass_mailing_contact_menu
 #: model:ir.ui.menu,name:mass_mailing.menu_email_mass_mailing_contacts
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_graph
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_pivot
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_tree
 msgid "Contacts"
 msgstr "Contacts"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing.contact,create_date:0
-msgid "Create Date"
-msgstr "Date de Création"
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_message_bounce
+msgid "Counter of the number of bounced emails for this contact."
+msgstr "Nombre de mails rejetés pour ce contact"
 
 #. module: mass_mailing
-#: field:mail.mail.statistics,create_uid:0
-#: field:mail.mass_mailing,create_uid:0
-#: field:mail.mass_mailing.campaign,create_uid:0
-#: field:mail.mass_mailing.category,create_uid:0
-#: field:mail.mass_mailing.contact,create_uid:0
-#: field:mail.mass_mailing.list,create_uid:0
-#: field:mail.mass_mailing.stage,create_uid:0
-#: field:mail.mass_mailing.test,create_uid:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_country_id
+msgid "Country"
+msgstr "Pays"
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_campaigns
+msgid ""
+"Create a campaign to structure mass mailing and get analysis from email "
+"status."
+msgstr ""
+"Créez une campagne pour structurer l'envoi de masse et recevez l'analyse par"
+" le statut de l'email "
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_create_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_create_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_create_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_create_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_create_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage_create_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag_create_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_create_uid
 msgid "Created by"
 msgstr "Créé par"
 
 #. module: mass_mailing
-#: field:mail.mail.statistics,create_date:0
-#: field:mail.mass_mailing.campaign,create_date:0
-#: field:mail.mass_mailing.category,create_date:0
-#: field:mail.mass_mailing.list,create_date:0
-#: field:mail.mass_mailing.stage,create_date:0
-#: field:mail.mass_mailing.test,create_date:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_create_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_create_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage_create_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag_create_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_create_date
 msgid "Created on"
 msgstr "Créé le"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing,create_date:0
-#: view:mail.mass_mailing.contact:mass_mailing.view_mail_mass_mailing_contact_search
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_create_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_create_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_create_date
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Creation Date"
 msgstr "Date de création"
 
 #. module: mass_mailing
-#: help:mail.mail.statistics,exception:0
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_search
+msgid "Creation Month"
+msgstr "Mois de création"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_event
+msgid ""
+"Cyber-threats continue to increase.<br/>\n"
+"                                The discussion will examine how to develop new norms and integrate them into EU"
+msgstr ""
+"Les cyber-mances continuent de s'accroître.<br/>\n"
+"                                La discussion examinera comment développer de nouvelles normes et les intégrer dans l'UE"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_event
+msgid "Cybersecurity"
+msgstr "Cyber-sécurité"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
+msgid "DEFAULT"
+msgstr "PAR DÉFAUT"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics_exception
 msgid "Date of technical error leading to the email not being sent"
-msgstr "Date à de l'erreur technique ayant empêché l'email d'être envoyé"
+msgstr "Date de l'erreur technique ayant empêché l'email d'être envoyé"
 
 #. module: mass_mailing
-#: help:mail.mass_mailing.contact,message_last_post:0
-msgid "Date of the last message posted on the record."
-msgstr "Date du dernier message enregistré sur cet enregistrement"
+#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics_clicked
+msgid "Date when customer clicked on at least one tracked link"
+msgstr "La date à laquelle le client a cliqué sur au moins un lien suivi"
 
 #. module: mass_mailing
-#: help:mail.mail.statistics,scheduled:0
+#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics_scheduled
 msgid "Date when the email has been created"
-msgstr "Date à laquelle le courriel a été créé"
+msgstr "Date à laquelle l'email a été créé"
 
 #. module: mass_mailing
-#: help:mail.mail.statistics,opened:0
+#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics_opened
 msgid "Date when the email has been opened the first time"
 msgstr "Date à laquelle le courriel a été ouvert pour la première fois"
 
 #. module: mass_mailing
-#: help:mail.mail.statistics,sent:0
+#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics_sent
 msgid "Date when the email has been sent"
 msgstr "Date à laquelle le courriel a été envoyé"
 
 #. module: mass_mailing
-#: help:mail.mail.statistics,replied:0
+#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics_replied
 msgid "Date when this email has been replied for the first time."
-msgstr "Date à laquelle le destinataire a répondu au courriel pour la première fois."
+msgstr ""
+"Date à laquelle le destinataire a répondu au courriel pour la première fois."
 
 #. module: mass_mailing
-#: help:mail.mail.statistics,bounced:0
+#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics_bounced
 msgid "Date when this email has bounced."
-msgstr "Date à laquelle le courriel a été refusé"
+msgstr "Date à laquelle le courriel a été refusé."
 
 #. module: mass_mailing
-#: view:email.template:mass_mailing.view_email_template_kanban
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_kanban
-#: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_kanban
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_kanban
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Delete"
 msgstr "Supprimer"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing,delivered:0
-#: field:mail.mass_mailing.campaign,delivered:0
-#: field:mail.statistics.report,delivered:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_delivered
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_delivered
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_delivered
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Delivered"
 msgstr "Livré"
 
 #. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_text
+msgid "Demo Signature"
+msgstr "Signature de démo"
+
+#. module: mass_mailing
 #: model:mail.mass_mailing.stage,name:mass_mailing.campaign_stage_2
 msgid "Design"
-msgstr "Concevoir"
+msgstr "Conception"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
-msgid "Design Email"
-msgstr "Concevoir le courriel"
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage_display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag_display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_display_name
+msgid "Display Name"
+msgstr "Nom à afficher"
 
 #. module: mass_mailing
-#: field:mail.mail.statistics,res_id:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_res_id
 msgid "Document ID"
 msgstr "Référence du document"
 
 #. module: mass_mailing
-#: field:mail.mail.statistics,model:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_model
 msgid "Document model"
 msgstr "Modèle de document"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing,mailing_domain:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_mailing_domain
 msgid "Domain"
 msgstr "Domaine"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:474
 #: selection:mail.mass_mailing,state:0
 #: selection:mail.statistics.report,state:0
+#, python-format
 msgid "Draft"
 msgstr "Brouillon"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
 msgid "Duplicate"
 msgstr "Dupliquer"
 
 #. module: mass_mailing
-#: view:email.template:mass_mailing.view_email_template_kanban
-msgid "Edit"
-msgstr "Modifier"
+#: model:ir.actions.act_window,name:mass_mailing.action_view_mail_mail_statistics_mailing_list
+msgid "EMails Sent"
+msgstr "E-mails envoyés"
 
 #. module: mass_mailing
-#: view:email.template:mass_mailing.email_template_form_minimal
-msgid "Edit Template"
-msgstr "Modifier le modèle"
-
-#. module: mass_mailing
-#: field:mail.mass_mailing.contact,email:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_email
 msgid "Email"
 msgstr "Courriel"
+
+#. module: mass_mailing
+#: model:ir.ui.menu,name:mass_mailing.mass_mailing_menu_root
+#: model:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
+msgid "Email Marketing"
+msgstr "Marketing par e-mail"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mail_statistics
@@ -385,260 +705,394 @@ msgid "Email composition wizard"
 msgstr "Assistant de composition de courriel"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
-msgid "Emails"
-msgstr "Courriels"
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "Emails Sent"
+msgstr "Courriel envoyé"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing,statistics_ids:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_statistics_ids
 msgid "Emails Statistics"
 msgstr "Statistiques de courriels"
 
 #. module: mass_mailing
-#: field:mail.mail.statistics,exception:0
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
+msgid "Enjoy!"
+msgstr "Profitez-en!"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_text
+msgid "Enjoy,"
+msgstr "Profitez."
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_exception
+#: selection:mail.mail.statistics,state:0
 msgid "Exception"
 msgstr "Exception"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing.contact:mass_mailing.view_mail_mass_mailing_contact_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
+msgid "Exclude Bounced"
+msgstr "Exclure les erreurs de remise"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Exclude Opt Out"
 msgstr "Exclure les désinscrits"
 
 #. module: mass_mailing
-#: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_statistics_report_search
 msgid "Extended Filters..."
 msgstr "Filtres étendus..."
 
 #. module: mass_mailing
-#: field:mail.mass_mailing,failed:0 field:mail.mass_mailing.campaign,failed:0
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
+msgid "FROM YOUR NEXT ORDER!"
+msgstr "DE VOTRE PROCHAINE COMMANDE!"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_res_company_social_facebook
+msgid "Facebook Account"
+msgstr "Compte Facebook"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_failed
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_failed
 msgid "Failed"
 msgstr "Échec"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing.contact,message_follower_ids:0
-msgid "Followers"
-msgstr "Abonnés"
+#: model:mail.mass_mailing,name:mass_mailing.mass_mail_1
+#: model:utm.source,name:mass_mailing.mass_mail_1_utm_source
+msgid "First Newsletter"
+msgstr "Première infolettre"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing,email_from:0
-#: field:mail.statistics.report,email_from:0
+#: selection:mail.mass_mailing,reply_to_mode:0
+msgid "Followers of leads/applicants"
+msgstr "Abonnés des pistes/candidats"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_email_from
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_email_from
 msgid "From"
 msgstr "De"
 
 #. module: mass_mailing
-#: view:mail.mail.statistics:mass_mailing.view_mail_mail_statistics_search
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_search
-#: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_search
-#: view:mail.mass_mailing.contact:mass_mailing.view_mail_mass_mailing_contact_search
-msgid "Group By"
-msgstr "Regrouper par"
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_image_text
+msgid ""
+"Get your inside sales (CRM) fully integrated with online sales (eCommerce), "
+"in-store sales (Point of Sale) and marketplaces like eBay and Amazon."
+msgstr ""
+"Obtenez des ventes internes (CRM) pleinement intégrées avec vos ventes en "
+"ligne (eCommerce), vos ventes en boutique (caisse) et sur les places de "
+"marchés comme eBay et Amazon."
 
 #. module: mass_mailing
-#: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_search
+#: model:ir.model.fields,field_description:mass_mailing.field_res_company_social_github
+msgid "GitHub Account"
+msgstr "Compte GitHub"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_res_company_social_googleplus
+msgid "Google+ Account"
+msgstr "Compte Google+"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
+msgid "Group By"
+msgstr "Regroupé par"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_statistics_report_search
 msgid "Group By..."
 msgstr "Regrouper par..."
 
 #. module: mass_mailing
-#: help:mail.mass_mailing.contact,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr "Contient le résumé de la discussion (nombre de messages, ...). Ce résumé est au format HTML pour permettre son utilisation dans les vues kanban."
-
-#. module: mass_mailing
-#: field:mail.mail.statistics,id:0 field:mail.mass_mailing,id:0
-#: field:mail.mass_mailing.campaign,id:0 field:mail.mass_mailing.category,id:0
-#: field:mail.mass_mailing.contact,id:0 field:mail.mass_mailing.list,id:0
-#: field:mail.mass_mailing.stage,id:0 field:mail.mass_mailing.test,id:0
-#: field:mail.statistics.report,id:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_id
 msgid "ID"
 msgstr "ID"
 
 #. module: mass_mailing
-#: help:mail.mail.statistics,mail_mail_id_int:0
+#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics_mail_mail_id_int
 msgid ""
-"ID of the related mail_mail. This field is an integer field becausethe "
-"related mail_mail can be deleted separately from its statistics.However the "
-"ID is needed for several action and controllers."
-msgstr "ID de l'apparenté mail_mail.Ce champ est un champ entier parce que le mail_mail lié peut être supprimé séparément des statistiques.However l'ID est nécessaire pour plusieurs action et contrôleurs."
-
-#. module: mass_mailing
-#: help:mail.mass_mailing.contact,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Si coché, de nouveaux messages demandent votre attention."
-
-#. module: mass_mailing
-#: help:mail.mass_mailing.campaign,unique_ab_testing:0
-msgid ""
-"If checked, recipients will be mailed only once, allowing to sendvarious "
-"mailings in a single campaign to test the effectivenessof the mailings."
-msgstr "Si elle est cochée, les bénéficiaires seront envoyés une seule fois, ce qui permet d'envoyer plusieurs envois en une seule campagne pour tester l'efficacité des envois."
-
-#. module: mass_mailing
-#: selection:mail.mass_mailing,reply_to_mode:0
-msgid "In Document"
+"ID of the related mail_mail. This field is an integer field because the "
+"related mail_mail can be deleted separately from its statistics. However the"
+" ID is needed for several action and controllers."
 msgstr ""
+"ID du mail_mail lié. Ce champ est un entier car le mail_mail lié peut être "
+"supprimé séparément depuis les statistiques. Cependant cet ID est requis "
+"pour plusieurs actions et contrôleurs."
 
 #. module: mass_mailing
-#: field:mail.mass_mailing.contact,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Est abonné"
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_unique_ab_testing
+msgid ""
+"If checked, recipients will be mailed only once for the whole campaign. This"
+" lets you send different mailings to randomly selected recipients and test "
+"the effectiveness of the mailings, without causing duplicate messages."
+msgstr ""
+"Si cette option est cochée, les destinataires seront informés par e-mail une"
+" seule fois pour l'ensemble de la campagne. Vous pouvez ainsi envoyer "
+"différents e-mails en publipostage à des destinataires sélectionnés au "
+"hasard et tester l'efficacité de la fonction de publipostage, sans créer de "
+"messages en double."
 
 #. module: mass_mailing
-#: field:mail.mass_mailing.contact,message_last_post:0
-msgid "Last Message Date"
-msgstr "Date du dernier message"
+#: code:addons/mass_mailing/models/mass_mailing.py:474
+#: selection:mail.mass_mailing,state:0
+#, python-format
+msgid "In Queue"
+msgstr "Dans la queue"
 
 #. module: mass_mailing
-#: field:mail.mail.statistics,write_uid:0 field:mail.mass_mailing,write_uid:0
-#: field:mail.mass_mailing.campaign,write_uid:0
-#: field:mail.mass_mailing.category,write_uid:0
-#: field:mail.mass_mailing.contact,write_uid:0
-#: field:mail.mass_mailing.list,write_uid:0
-#: field:mail.mass_mailing.stage,write_uid:0
-#: field:mail.mass_mailing.test,write_uid:0
+#: model:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_1
+#: model:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_2
+msgid ""
+"Join our Marketing newsletter and get <strong>this white paper "
+"instantly</strong>"
+msgstr ""
+"Rejoignez notre newsletter marketing et obtenez <strong>ce livre blanc "
+"instantanément</strong>"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_keep_archives
+msgid "Keep Archives"
+msgstr "Conserver les archives"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_text
+msgid "LOGIN"
+msgstr "S'IDENTIFIER"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics___last_update
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing___last_update
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign___last_update
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact___last_update
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list___last_update
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage___last_update
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag___last_update
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test___last_update
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report___last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
+msgid "Last State Update"
+msgstr "Dernière mise à jour"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_write_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_write_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_write_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_write_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage_write_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag_write_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_write_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_write_uid
 msgid "Last Updated by"
-msgstr "Dernière modification par"
+msgstr "Dernière mise à jour par"
 
 #. module: mass_mailing
-#: field:mail.mail.statistics,write_date:0
-#: field:mail.mass_mailing,write_date:0
-#: field:mail.mass_mailing.campaign,write_date:0
-#: field:mail.mass_mailing.category,write_date:0
-#: field:mail.mass_mailing.contact,write_date:0
-#: field:mail.mass_mailing.list,write_date:0
-#: field:mail.mass_mailing.stage,write_date:0
-#: field:mail.mass_mailing.test,write_date:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_write_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_write_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_write_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_write_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage_write_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag_write_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_write_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_write_date
 msgid "Last Updated on"
 msgstr "Dernière mise à jour le"
 
 #. module: mass_mailing
-#: field:mail.mail.statistics,mail_mail_id:0
+#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics_state_update
+msgid "Last state update of the mail"
+msgstr "Dernière mise à jour de l'état du courriel"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_res_company_social_linkedin
+msgid "LinkedIn Account"
+msgstr "Compte LinkedIn"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_links_click_ids
+msgid "Links click"
+msgstr "Nombre de clics sur les liens"
+
+#. module: mass_mailing
+#: model:ir.filters,name:mass_mailing.filter_contact_subscription
+msgid "List Subscription"
+msgstr "Abonnement à la liste"
+
+#. module: mass_mailing
+#: model:ir.filters,name:mass_mailing.filter_contact_unsubscription
+msgid "List Unsubscription"
+msgstr "Liste de désabonnements"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.theme_basic_template
+msgid ""
+"Lorem ipsum dolor sit amet, <br/><br/>consectetur adipisicing elit, sed do "
+"eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim"
+" veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea "
+"commodo consequat."
+msgstr ""
+"Lorem ipsum dolor sit amet, <br/><br/>consectetur adipisicing elit, sed do "
+"eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim"
+" veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea "
+"commodo consequat."
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_mail_mail_id
 msgid "Mail"
 msgstr "Courriel"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Mail Body"
 msgstr "Corps du courriel"
 
 #. module: mass_mailing
-#: field:mail.mail.statistics,mail_mail_id_int:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_mail_mail_id_int
 msgid "Mail ID (tech)"
-msgstr "Mail ID (tech)"
+msgstr "Identifiant du courriel (tech)"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mail_mail_statistics
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mail_mail_statistics_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_click_mail_stat_id
 #: model:ir.ui.menu,name:mass_mailing.menu_email_statistics
-#: view:mail.mail.statistics:mass_mailing.view_mail_mail_statistics_form
-#: view:mail.mail.statistics:mass_mailing.view_mail_mail_statistics_search
-#: view:mail.mail.statistics:mass_mailing.view_mail_mail_statistics_tree
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_graph
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_tree
 msgid "Mail Statistics"
 msgstr "Statistiques de courriels"
 
 #. module: mass_mailing
-#: model:ir.ui.menu,name:mass_mailing.menu_email_template
-msgid "Mail Templates"
-msgstr "Modèles de courriels"
-
-#. module: mass_mailing
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
-#: field:mail.mass_mailing.test,mass_mailing_id:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_mass_mailing_id
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Mailing"
 msgstr "Mailing"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:344
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_list
-#: field:mail.compose.message,mailing_list_ids:0
-#: field:mail.mass_mailing.contact,list_id:0
-#: field:mail.mass_mailing.list,name:0
-#, python-format
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message_mailing_list_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_name
+#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message_mailing_list_ids
 msgid "Mailing List"
 msgstr "Liste de diffusion"
 
 #. module: mass_mailing
-#: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_contacts
-msgid "Mailing List Subscribers"
-msgstr "Inscrits à la mailing list"
-
-#. module: mass_mailing
-#: model:ir.ui.menu,name:mass_mailing.mass_mailing_list
+#: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_lists
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_list_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_list_ids_3655
 #: model:ir.ui.menu,name:mass_mailing.menu_email_mass_mailing_lists
-#: field:mail.mass_mailing,contact_list_ids:0
-#: view:mail.mass_mailing.contact:mass_mailing.view_mail_mass_mailing_contact_search
-#: view:mail.mass_mailing.list:mass_mailing.view_mail_mass_mailing_list_search
-#: view:mail.mass_mailing.list:mass_mailing.view_mail_mass_mailing_list_tree
+#: model:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_tree
 msgid "Mailing Lists"
 msgstr "Listes de diffusion"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing.contact:mass_mailing.view_mail_mass_mailing_contact_search
-#: view:mail.mass_mailing.contact:mass_mailing.view_mail_mass_mailing_contact_tree
-msgid "Mailing Lists Subscribers"
-msgstr "Inscrits à la mailing list"
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_links_tree
+msgid "Mailing Statistics of Clicks"
+msgstr "Statistiques des clics du mailing"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_mail_mass_mailing_test
 msgid "Mailing Test"
-msgstr "Mailing Test"
+msgstr "Test de mailing"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_search
-#: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_kanban
+#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
+msgid ""
+"Mailing lists allows you to to manage customers and\n"
+"                    contacts easily and to send to mailings in a single click."
+msgstr ""
+"Les listes de diffusion vous permette de gérer facilement\n"
+"vos client et vos contacts et d'envoyer des courriels en un seul clic."
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_total_mailings
+#: model:ir.ui.menu,name:mass_mailing.mass_mailing_menu
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_kanban
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Mailings"
 msgstr "Publipostages"
 
 #. module: mass_mailing
 #: model:res.groups,name:mass_mailing.group_mass_mailing_campaign
 msgid "Manage Mass Mailing Campaigns"
-msgstr "Gérer les campagnes de mailings."
+msgstr "Gérer les campagnes d'envoi de masse"
 
 #. module: mass_mailing
-#: field:marketing.config.settings,group_mass_mailing_campaign:0
-msgid "Manage Mass Mailing using Campaign"
-msgstr ""
+#: model:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
+msgid "Manage campaigns of mass emails with process stages"
+msgstr "Gérez les campagnes de publipostage avec un processus par étapes"
 
 #. module: mass_mailing
-#: help:marketing.config.settings,group_mass_mailing_campaign:0
-msgid "Manage mass mailign using Campaigns"
-msgstr "Gérez les envois de masse en utilisant les campagnes"
+#: model:mail.mass_mailing.tag,name:mass_mailing.mass_mail_tag_1
+msgid "Marketing"
+msgstr "Marketing"
 
 #. module: mass_mailing
-#: field:mail.statistics.report,name:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_name
 msgid "Mass Mail"
-msgstr ""
+msgstr "Courriel de masse"
 
 #. module: mass_mailing
-#: field:mail.statistics.report,campaign:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_campaign
 msgid "Mass Mail Campaign"
 msgstr "Campagne de courriel de masse"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing
-#: model:ir.ui.menu,name:mass_mailing.mass_mailing_campaign
-#: field:mail.compose.message,mass_mailing_id:0
-#: field:mail.compose.message,mass_mailing_name:0 field:mail.mail,mailing_id:0
-#: field:mail.mail.statistics,mass_mailing_id:0
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_graph
+#: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_click_mass_mailing_id
+#: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_mass_mailing_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message_mass_mailing_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message_mass_mailing_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_mailing_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_mass_mailing_id
+#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message_mass_mailing_id
+#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message_mass_mailing_name
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_graph
 msgid "Mass Mailing"
 msgstr "Publipostage"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_mail_statistics_report
-#: model:ir.ui.menu,name:mass_mailing.menu_mass_mailing_report
 msgid "Mass Mailing Analysis"
 msgstr "Analyse du courriel de masse"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_campaign
-#: field:mail.compose.message,mass_mailing_campaign_id:0
-#: field:mail.mail.statistics,mass_mailing_campaign_id:0
-#: field:mail.mass_mailing,mass_mailing_campaign_id:0
-#: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_form
-#: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_search
+#: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_click_mass_mailing_campaign_id
+#: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_mass_mailing_campaign_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message_mass_mailing_campaign_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_mass_mailing_campaign_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_mass_mailing_campaign_id
+#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message_mass_mailing_campaign_id
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_statistics_report_search
 msgid "Mass Mailing Campaign"
 msgstr "Campagne de courriel de masse"
 
@@ -649,15 +1103,11 @@ msgstr "Etape de la campagne de courriel de masse"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_campaigns
-#: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_search
-#: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_tree
+#: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings_group_mass_mailing_campaign
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_tree
 msgid "Mass Mailing Campaigns"
-msgstr "Campagnes de courrier de masse"
-
-#. module: mass_mailing
-#: model:ir.model,name:mass_mailing.model_mail_mass_mailing_category
-msgid "Mass Mailing Category"
-msgstr ""
+msgstr "Campagnes de Publipostage"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_contact
@@ -671,8 +1121,9 @@ msgstr "Etapes du courriel de masse"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_statistics_report
-#: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_graph
-#: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_statistics_report_graph
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_statistics_report_pivot
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_statistics_report_search
 msgid "Mass Mailing Statistics"
 msgstr "Statistiques du courriel de masse"
 
@@ -683,203 +1134,348 @@ msgid ""
 "information like number of bounced mails, opened mails, replied mails. You "
 "can sort out your analysis by different groups to get accurate grained "
 "analysis."
-msgstr "L'analyse des Courriels de masse vous permet de vérifier différentes informations relatives aux courriels comme le nombre de courriels refusés, de courriels ouverts, de courriels auquel on a répondu. Vous pouvez répartir vos analyses en différents groupes afin d'obtenir une analyse plus précise."
+msgstr ""
+"L'analyse des Courriels de masse vous permet de vérifier différentes "
+"informations relatives aux courriels comme le nombre de courriels refusés, "
+"de courriels ouverts, de courriels auquel on a répondu. Vous pouvez répartir"
+" vos analyses en différents groupes afin d'obtenir une analyse plus précise."
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_mail_mass_mailing_tag
+msgid "Mass Mailing Tag"
+msgstr "Tag du Courriel de Masse"
+
+#. module: mass_mailing
+#: model:ir.actions.server,name:mass_mailing.ir_cron_mass_mailing_queue_ir_actions_server
+#: model:ir.cron,cron_name:mass_mailing.ir_cron_mass_mailing_queue
+#: model:ir.cron,name:mass_mailing.ir_cron_mass_mailing_queue
+msgid "Mass Mailing: Process queue"
+msgstr "Publipostage : traiter la file d'attente"
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.action_create_ab_mass_mailings_from_campaign
+#: model:ir.actions.act_window,name:mass_mailing.action_create_mass_mailings_from_campaign
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailings
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailings_from_campaign
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_mass_mailing_ids
 #: model:ir.ui.menu,name:mass_mailing.menu_email_mass_mailings
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_search
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_tree
-#: field:mail.mass_mailing.campaign,mass_mailing_ids:0
-#: view:mail.mass_mailing.stage:mass_mailing.view_mail_mass_mailing_stage_search
-#: view:mail.mass_mailing.stage:mass_mailing.view_mail_mass_mailing_stage_tree
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_stage_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_stage_tree
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
 msgid "Mass Mailings"
 msgstr "Publipostages"
 
 #. module: mass_mailing
-#: field:mail.mail.statistics,message_id:0
+#: model:ir.actions.act_window,help:mass_mailing.action_create_ab_mass_mailings_from_campaign
+#: model:ir.actions.act_window,help:mass_mailing.action_create_mass_mailings_from_campaign
+#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings
+#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings_from_campaign
+msgid ""
+"Mass mailing allows you to to easily design and send mass mailings to your "
+"contacts, customers or leads using mailing lists."
+msgstr ""
+"L'application Mass Mailing vous permet de créer et envoyer des emails en "
+"masse à vos contacts, pistes ou listes de diffusion."
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_medium_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_medium_id
+msgid "Medium"
+msgstr "Moyen"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_message_id
 msgid "Message-ID"
 msgstr "ID du message"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing.contact,message_ids:0
-msgid "Messages"
-msgstr "Messages"
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
+msgid "More"
+msgstr "Plus"
 
 #. module: mass_mailing
-#: help:mail.mass_mailing.contact,message_ids:0
-msgid "Messages and communication history"
-msgstr "Historique des messages et communications"
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_event
+msgid "More Info"
+msgstr "Plus d'infos"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing.campaign,name:0
-#: field:mail.mass_mailing.category,name:0
-#: field:mail.mass_mailing.contact,name:0 field:mail.mass_mailing.stage,name:0
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_tag_line
+msgid "My Account"
+msgstr "Mon compte"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_text_social
+msgid "My Company"
+msgstr "Ma société"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag_name
 msgid "Name"
 msgstr "Nom"
 
 #. module: mass_mailing
-#. openerp-web
-#: code:addons/mass_mailing/static/src/js/website_mass_mailing.editor.js:13
-#: model:email.template,subject:mass_mailing.newsletter_template
-#: view:website:website.snippets
-#, python-format
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
+msgid "Name / Email"
+msgstr "Nom / Courriel"
+
+#. module: mass_mailing
+#: model:mail.mass_mailing.campaign,name:mass_mailing.mass_mail_campaign_1
+#: model:mail.template,subject:mass_mailing.newsletter_template
+#: model:utm.campaign,name:mass_mailing.mass_mail_campaign_1_utm_campaign
 msgid "Newsletter"
 msgstr "Lettre d'information"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing.list,contact_nbr:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_next_departure
+msgid "Next Departure"
+msgstr "Prochain envoi"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
+msgid "No customization"
+msgstr "Pas de customisation"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
+msgid "No support"
+msgstr "Pas de support"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_clicks_ratio
+msgid "Number of Clicks"
+msgstr "Nombre de clics"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_contact_nbr
 msgid "Number of Contacts"
 msgstr "Nombre de contacts"
 
 #. module: mass_mailing
-#: view:mail.mail.statistics:mass_mailing.view_mail_mail_statistics_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_kanban
+msgid "Number of bounced email."
+msgstr "Nombre d'e-mails rejetés."
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_clicks_ratio
+msgid "Number of clicks"
+msgstr "Nombre de clics"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
+msgid "OFF"
+msgstr "EN MOINS"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
+msgid "OFF YOUR NEXT ORDER!"
+msgstr "EN MOINS SUR VOTRE PROCHAINE COMMANDE"
+
+#. module: mass_mailing
+#: model:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_1
+#: model:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_2
+msgid "Odoo Presents"
+msgstr "Odoo Présente"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_image_text
+msgid "Omnichannel sales"
+msgstr "Ventes multicanal"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
 msgid "Open Date"
 msgstr "Date d’ouverture"
 
 #. module: mass_mailing
-#: model:ir.actions.client,name:mass_mailing.action_client_marketing_menu
-msgid "Open Marketing Menu"
-msgstr "Ouvrir le menu de marketing"
-
-#. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:555
-#, python-format
-msgid "Open with Visual Editor"
-msgstr ""
-
-#. module: mass_mailing
-#: view:mail.mail.statistics:mass_mailing.view_mail_mail_statistics_search
-#: field:mail.mail.statistics,opened:0
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_kanban
-#: field:mail.mass_mailing,opened:0 field:mail.mass_mailing,opened_daily:0
-#: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_form
-#: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_kanban
-#: field:mail.mass_mailing.campaign,opened:0
-#: field:mail.statistics.report,opened:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_opened
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_opened
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_opened
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_opened
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+#: selection:mail.mail.statistics,state:0
 msgid "Opened"
 msgstr "Ouvert"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
-msgid "Opened Daily"
-msgstr ""
-
-#. module: mass_mailing
-#: field:mail.mass_mailing,opened_ratio:0
-#: field:mail.mass_mailing.campaign,opened_ratio:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_opened_ratio
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_opened_ratio
 msgid "Opened Ratio"
 msgstr "Ratio d'ouverture"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing.contact,opt_out:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_opt_out
 msgid "Opt Out"
-msgstr "Désinscrption"
+msgstr "Désinscription"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Options"
-msgstr "Réglages"
+msgstr "Options"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
+msgid "Order"
+msgstr "Commande"
+
+#. module: mass_mailing
+#: selection:mail.mail.statistics,state:0
+msgid "Outgoing"
+msgstr "Sortants"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mail
 msgid "Outgoing Mails"
-msgstr "Courriels sortants"
+msgstr "Courriels à envoyer"
 
 #. module: mass_mailing
-#: help:mail.mass_mailing,contact_ab_pc:0
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
+msgid "PRO"
+msgstr "PRO"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_ab_pc
 msgid ""
 "Percentage of the contacts that will be mailed. Recipients will be taken "
 "randomly."
-msgstr "Pourcentage des contacts qui recevront un email. Les contacts seront sélectionnés au hasard."
+msgstr ""
+"Pourcentage des contacts qui recevront un email. Les contacts seront "
+"sélectionnés au hasard."
 
 #. module: mass_mailing
-#: help:mail.mass_mailing,reply_to:0
+#: code:addons/mass_mailing/models/mass_mailing.py:656
+#, python-format
+msgid "Please select recipients."
+msgstr "Choisissez s'il vous plait les destinataires"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_reply_to
 msgid "Preferred Reply-To Address"
-msgstr "Adresse \"Répondre à :\" préférée"
+msgstr "Adresse Répondre à : préférée"
 
 #. module: mass_mailing
-#: view:email.template:mass_mailing.email_template_form_minimal
-msgid "Preview"
-msgstr "Aperçu"
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_image_text
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_text_image
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_three_cols
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_two_cols
+msgid "Read More..."
+msgstr "Voir plus..."
 
 #. module: mass_mailing
-#: view:mail.mail.statistics:mass_mailing.view_mail_mail_statistics_search
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
-#: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Received"
 msgstr "Reçu"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing,received_ratio:0
-#: field:mail.mass_mailing.campaign,received_ratio:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_received_ratio
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_received_ratio
 msgid "Received Ratio"
 msgstr "Ratio réception"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_recipient
+msgid "Recipient"
+msgstr "Destinataire"
+
+#. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_contacts_from_list
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
-#: view:mail.mass_mailing.list:mass_mailing.view_mail_mass_mailing_list_form
-#: field:mail.mass_mailing.test,email_to:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_email_to
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_form
 msgid "Recipients"
 msgstr "Destinataires"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing,mailing_model:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_mailing_model_id
 msgid "Recipients Model"
 msgstr "Modèle de destinaire"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_form
-msgid "Related Mailing(s)"
-msgstr "Courriel(s) de masse correspondant"
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_mailing_model_name
+msgid "Recipients Model Name"
+msgstr "Nom de modèle de destinataires"
 
 #. module: mass_mailing
-#: view:mail.mail.statistics:mass_mailing.view_mail_mail_statistics_search
-#: field:mail.mail.statistics,replied:0
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_kanban
-#: field:mail.mass_mailing,replied:0 field:mail.mass_mailing,replied_daily:0
-#: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_form
-#: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_kanban
-#: field:mail.mass_mailing.campaign,replied:0
-#: field:mail.statistics.report,replied:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_mailing_model_real
+msgid "Recipients Real Model"
+msgstr "Modèle réel de destinataires"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
+msgid "Redeem Discount!"
+msgstr "Remise sauvegardée! "
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_event
+msgid "Registration"
+msgstr "Inscription"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
+msgid "Related Mailing(s)"
+msgstr "Courriel(s) correspondant"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
+msgid "Related Mailings"
+msgstr "Courriel correspondant"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_replied
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_replied
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_replied
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_replied
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+#: selection:mail.mail.statistics,state:0
 msgid "Replied"
 msgstr "Répondu"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
-msgid "Replied Daily"
-msgstr ""
-
-#. module: mass_mailing
-#: field:mail.mass_mailing,replied_ratio:0
-#: field:mail.mass_mailing.campaign,replied_ratio:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_replied_ratio
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_replied_ratio
 msgid "Replied Ratio"
 msgstr "Ratio de répondu"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing,reply_to:0
-msgid "Reply To"
-msgstr "Répondre à"
-
-#. module: mass_mailing
-#: view:mail.mail.statistics:mass_mailing.view_mail_mail_statistics_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
 msgid "Reply Date"
 msgstr "Date de réponse"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing,reply_to_mode:0
-msgid "Reply-To Mode"
-msgstr "Mode Répondre- à"
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_reply_to
+msgid "Reply To"
+msgstr "Répondre à"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_search
-#: field:mail.mass_mailing.campaign,user_id:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_reply_to_mode
+msgid "Reply-To Mode"
+msgstr "Mode Répondre-à"
+
+#. module: mass_mailing
+#: model:ir.ui.menu,name:mass_mailing.menu_mass_mailing_report
+msgid "Reporting"
+msgstr "Rapport"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_user_id
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_search
 msgid "Responsible"
 msgstr "Responsable"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "Retry"
+msgstr "Réessayer"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_test
@@ -889,100 +1485,150 @@ msgstr "Assistant de courriel d'exemple"
 #. module: mass_mailing
 #: model:mail.mass_mailing.stage,name:mass_mailing.campaign_stage_1
 msgid "Schedule"
-msgstr "Agenda"
+msgstr "Planifier"
 
 #. module: mass_mailing
-#: field:mail.mail.statistics,scheduled:0 field:mail.mass_mailing,scheduled:0
-#: field:mail.mass_mailing.campaign,scheduled:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_schedule_date
+msgid "Schedule in the Future"
+msgstr "Planifier pour plus tard"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_scheduled
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_scheduled
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_scheduled
 msgid "Scheduled"
 msgstr "Planifié"
 
 #. module: mass_mailing
-#: field:mail.statistics.report,scheduled_date:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_scheduled_date
 msgid "Scheduled Date"
 msgstr "Date prévue"
 
 #. module: mass_mailing
-#: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_statistics_report_search
 msgid "Scheduled Month"
 msgstr "Mois planifié"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
+#: model:mail.mass_mailing,name:mass_mailing.mass_mail_2
+#: model:utm.source,name:mass_mailing.mass_mail_2_utm_source
+msgid "Second Newsletter"
+msgstr "Seconde infolettre"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Select a template"
+msgstr "Sélectionnez un modèle"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Select mailing lists..."
 msgstr "Sélectionnez une liste de diffusion"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Select mailing lists:"
 msgstr "Sélectionnez une liste de diffusion"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
-msgid "Select recipients"
-msgstr "Sélectionnez les destinataires"
-
-#. module: mass_mailing
-#: view:mail.mass_mailing.test:mass_mailing.view_mail_mass_mailing_test_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Send Sample Mail"
-msgstr "Envoyer un exemple de courriel"
+msgstr "Envoyez un exemple de courriel"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing.test:mass_mailing.view_mail_mass_mailing_test_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Send a Sample Mail"
-msgstr "Envoyer un exemple de courriel"
+msgstr "Envoyez un exemple de courriel"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing.test:mass_mailing.view_mail_mass_mailing_test_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid ""
 "Send a sample of this mailing to the above of email addresses for test "
 "purpose."
-msgstr "Envoie un exemple de cette campagne aux adresses courriel ci-dessus pour test."
+msgstr ""
+"Envoie un exemple de cette campagne aux adresses courriel ci-dessus pour "
+"test."
 
 #. module: mass_mailing
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
+msgid "Send new A/B Testing Mass Mailing"
+msgstr "Envoyer un nouveau courriel de masse pour l'A/B Testing"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
+msgid "Send new Mass Mailing"
+msgstr "Envoyez un Courriel de masse"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Send to All"
-msgstr "Envoyer à tous"
+msgstr "Envoyez à tous"
 
 #. module: mass_mailing
-#: field:mail.mail.statistics,sent:0 field:mail.mass_mailing,sent:0
+#: code:addons/mass_mailing/models/mass_mailing.py:474
 #: selection:mail.mass_mailing,state:0
+#, python-format
+msgid "Sending"
+msgstr "En train d'être envoyé"
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:474
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_sent
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_sent
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_sent
+#: selection:mail.mail.statistics,state:0 selection:mail.mass_mailing,state:0
 #: model:mail.mass_mailing.stage,name:mass_mailing.campaign_stage_3
-#: field:mail.statistics.report,sent:0
 #: selection:mail.statistics.report,state:0
+#, python-format
 msgid "Sent"
 msgstr "Envoyé"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_search
-#: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_statistics_report_search
 msgid "Sent By"
 msgstr "Envoyé par"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing,sent_date:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_sent_date
 msgid "Sent Date"
 msgstr "Envoyez une Date"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing.campaign,sent:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_sent
 msgid "Sent Emails"
 msgstr "Envoyez des courriels"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Sent Month"
 msgstr "Envoyez le mois"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing.stage,sequence:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage_sequence
 msgid "Sequence"
 msgstr "Séquence"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_kanban
+#: model:ir.ui.menu,name:mass_mailing.menu_mass_mailing_global_settings
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_kanban
 msgid "Settings"
 msgstr "Configuration"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_company_form_inherit_mass_mailing
+msgid "Social Media"
+msgstr "Médias sociaux"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_source_id
+msgid "Source"
+msgstr "Origine"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_name
+msgid "Source Name"
+msgstr "Nom de l'origine"
 
 #. module: mass_mailing
 #: selection:mail.mass_mailing,reply_to_mode:0
@@ -990,120 +1636,378 @@ msgid "Specified Email Address"
 msgstr "Adresse de Courriel spécifiée"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_search
-#: field:mail.mass_mailing.campaign,stage_id:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_stage_id
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_search
 msgid "Stage"
 msgstr "Étape"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_search
-#: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_search
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_state
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_statistics_report_search
 msgid "State"
-msgstr "État"
+msgstr "Statut"
 
 #. module: mass_mailing
-#: field:mail.mail,statistics_ids:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_state_update
+msgid "State Update"
+msgstr "Changement de status"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_ids
 msgid "Statistics"
 msgstr "Statistiques"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing,state:0 field:mail.statistics.report,state:0
+#: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_links_statistics
+#: model:ir.actions.act_window,name:mass_mailing.dropdb snipp
+msgid "Statistics of Clicks"
+msgstr "Statistiques des clics"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_state
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_state
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Status"
 msgstr "État"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing,name:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_source_id
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Subject"
-msgstr "Objet"
+msgstr "Sujet"
 
 #. module: mass_mailing
-#: view:website:website.snippets
-msgid "Subscribe"
-msgstr "S'inscrire"
+#: sql_constraint:mail.mass_mailing.tag:0
+msgid "Tag name already exists !"
+msgstr "Ce nom d'étiquette existe déjà !"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing.contact,message_summary:0
-msgid "Summary"
-msgstr "Résumé"
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_tag_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_tag_ids
+msgid "Tags"
+msgstr "Étiquettes"
 
 #. module: mass_mailing
-#: view:email.template:mass_mailing.email_template_form_minimal
-#: model:ir.actions.act_window,name:mass_mailing.action_email_template_marketing
-msgid "Templates"
-msgstr "Modèles"
-
-#. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:541
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
+#: code:addons/mass_mailing/models/mass_mailing.py:529
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #, python-format
 msgid "Test Mailing"
 msgstr "Courriel test"
 
 #. module: mass_mailing
-#: selection:mail.mass_mailing,state:0
 #: selection:mail.statistics.report,state:0
 msgid "Tested"
-msgstr "Test"
+msgstr "Testé"
 
 #. module: mass_mailing
-#: view:website:website.snippets
-msgid "Thanks"
-msgstr "Merci"
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_text
+msgid "Thank you for joining us!"
+msgstr "Merci de vous joindre à nous! "
 
 #. module: mass_mailing
-#: view:website:website.snippets
-msgid "Thanks for your subscription!"
-msgstr "Merci pour votre abonnement!"
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_paragraph
+msgid "That way, Odoo evolves much faster than any other solution."
+msgstr ""
+"De cette manière, Odoo évolue bien plus vite que toutes les autres "
+"solutions."
 
 #. module: mass_mailing
-#: help:mail.mass_mailing.contact,opt_out:0
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_opt_out
 msgid "The contact has chosen not to receive mails anymore from this list"
 msgstr "Le contact a décidé de ne plus recevoir de courriels de cette liste"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_paragraph
 msgid ""
-"This option is not available for the recipients you selected.\n"
-"                                                Please use a specific reply-to email address."
+"The open source model of Odoo has allowed us to leverage thousands of developers and\n"
+"                                business experts to build hundreds of apps in just a few years."
 msgstr ""
+"Le modèle open source d'Odoo nous a permis de mobiliser des milliers de développeurs et\n"
+" d'experts commerciaux pour créer des centaines d'applis en quelques années seulement."
 
 #. module: mass_mailing
-#: field:mail.mass_mailing,total:0 field:mail.mass_mailing.campaign,total:0
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_text_image
+msgid ""
+"The open source model of Odoo has allowed us to leverage thousands of "
+"developers and business experts to build hundreds of apps in just a few "
+"years."
+msgstr ""
+"Le modèle open source d'Odoo nous a permis de mobiliser des milliers de "
+"développeurs et d'experts commerciaux pour créer des centaines d'applis en "
+"quelques années seulement."
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_medium_id
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_medium_id
+msgid "This is the delivery method, e.g. Postcard, Email, or Banner Ad"
+msgstr ""
+"C'est le mode de livraison, par exemple par lettre, email, bannière "
+"publicitaire"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_source_id
+msgid ""
+"This is the link source, e.g. Search Engine, another domain, or name of "
+"email list"
+msgstr ""
+"C'est le lien source, par exemple un moteur de recherche, un autre site, le "
+"nom d'une liste de discussion par email"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_source_id
+msgid ""
+"This is the link source, e.g. Search Engine, another domain,or name of email"
+" list"
+msgstr ""
+"C'est le lien source, par exemple un moteur de recherche, un autre site, le "
+"nom d'une liste de discussion par email"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_res_config_settings_group_mass_mailing_campaign
+msgid ""
+"This is useful if your marketing campaigns are composed of several emails"
+msgstr ""
+"Ceci est utile si votre campagne marketing est composée de plusieurs "
+"courriels."
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
+msgid ""
+"This is useful if your marketing campaigns are composed of several emails."
+msgstr ""
+"Ceci est utile si votre campagne marketing est composée de plusieurs "
+"courriels."
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "This mass mailing is scheduled for"
+msgstr "Cet envoi massif de mails est prévu pour"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_campaign_id
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_id_3643
+msgid ""
+"This name helps you tracking your different campaign efforts, e.g. "
+"Fall_Drive, Christmas_Special"
+msgstr ""
+"Ce nom vous aide à tracer les efforts de vos différentes campagnes, par "
+"exemple spécial Noël, campagne automnale"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
+msgid ""
+"This tool is advised if your marketing campaign is composed of several "
+"emails."
+msgstr ""
+"Cet outil est conseillé si votre campagne Marketing est composée de nombreux"
+" courriels. "
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid ""
+"This will send the email to all recipients. Do you still want to proceed ?"
+msgstr ""
+"Ceci va envoyer le courriel à tous les destinataires. Êtes-vous sûr de le "
+"vouloir ?"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_title_id
+msgid "Title"
+msgstr "Civilité"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_total
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_total
 msgid "Total"
 msgstr "Total"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing.contact,message_unread:0
-msgid "Unread Messages"
-msgstr "Messages non lus"
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_links_search
+msgid "Tracked Link"
+msgstr "Lien suivi"
 
 #. module: mass_mailing
-#: field:mail.mass_mailing.contact,website_message_ids:0
-msgid "Website Messages"
-msgstr "Messages du site web"
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
+msgid "Tracking"
+msgstr "Suivi"
 
 #. module: mass_mailing
-#: help:mail.mass_mailing.contact,website_message_ids:0
-msgid "Website communication history"
-msgstr "Historique de communication du site web"
+#: model:ir.model.fields,field_description:mass_mailing.field_res_company_social_twitter
+msgid "Twitter Account"
+msgstr "Compte Twitter"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
-msgid "emails are in queue and will be sent soon."
-msgstr "Les courriels sont dans la file et seront bientôt envoyés"
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social_left
+msgid "Unsubscribe"
+msgstr "Se désabonner"
 
 #. module: mass_mailing
-#: view:mail.mass_mailing.test:mass_mailing.view_mail_mass_mailing_test_form
-msgid "or"
-msgstr "ou"
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_unsubscription_date
+msgid "Unsubscription Date"
+msgstr "Date de décinscription"
 
 #. module: mass_mailing
-#: view:website:website.snippets
-msgid "your email..."
-msgstr "Votre adresse courriel..."
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_paragraph
+msgid ""
+"Usability improvements made on Odoo will automatically apply to all\n"
+"                                of our fully integrated apps."
+msgstr ""
+"Les améliorations d'ergonomie réalisées par Odoo seront automatiquement "
+"appliquées à toutes les applications intégrées."
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mail_mail.py:72
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
+msgid "Use This Promo Code BEFORE 1st of August"
+msgstr "Utilisez ce code promo AVANT le 1er août"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
+msgid "Use now"
+msgstr "Utiliser maintenant"
+
+#. module: mass_mailing
+#: model:res.groups,name:mass_mailing.group_mass_mailing_user
+msgid "User"
+msgstr "Utilisateur"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
+msgid ""
+"We are continuing to grow and we miss seeing you be a part of it! We've "
+"increased store hours and have lot's of new brands available. To welcome you"
+" back please accept this 20% discount on you next purchase by clicking the "
+"button."
+msgstr ""
+"Nous continuons de croître et vous nous manquez ! Nous avons amélioré la "
+"boutique et de nouvelles marques sont disponibles. Pour fêter votre retour "
+"nous vous offrons une réduction de 20% sur votre prochaine commande. Il vous"
+" suffit de cliquer sur le bouton."
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_text
+msgid ""
+"We want to take this opportunity to welcome you to our ever-growing "
+"community!<br/>"
+msgstr ""
+"Nous en profitons pour vous accueillir dans notre communauté "
+"grandissante!<br/>"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_paragraph
+msgid ""
+"With strong technical foundations, Odoo's framework is unique.\n"
+"                                It provides top notch usability that scales across all apps."
+msgstr ""
+"Avec ses fondations techniques fortes, le framework de Odoo est unique.\n"
+"                                Il fournit la meilleure ergonomie qui s'applique à travers toutes les applications."
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_image
+msgid ""
+"With strong technical foundations, Odoo's framework is unique. It provides "
+"<strong>top notch usability that scales across all apps</strong>."
+msgstr ""
+"Avec ses fondations techniques fortes, le framework de Odoo est unique.. Il "
+"offre <strong>la meilleure ergonomie qui s'applique à travers toutes les "
+"applications.</strong>."
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_two_cols
+msgid ""
+"Write one paragraph describing your product,\n"
+"                                    services or a specific feature. To be successful\n"
+"                                    your content needs to be useful to your readers."
+msgstr ""
+"Ecrivez un paragraphe décrivant votre article,\n"
+"                                    services ou fonctionnalité spécifique. Pour être efficace,\n"
+"                                    votre contenu doit être utile pour vos lecteurs."
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/controllers/main.py:33
 #, python-format
-msgid "Click to unsubscribe"
-msgstr "Cliquez pour vous désabonner"
+msgid "You have been unsubscribed successfully"
+msgstr "Vous avez été désabonné avec succès"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_banner
+msgid "Your Banner Image"
+msgstr "Votre Image de Bannière "
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_logo
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_social
+#: model:ir.ui.view,arch_db:mass_mailing.theme_default_template
+msgid "Your Logo"
+msgstr "Votre logo"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_event
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_image
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_image_text
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_text_image
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_three_cols
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_two_cols
+msgid "Your Picture"
+msgstr "Votre photo"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_text
+msgid ""
+"Your platform is ready for work. It will help you reduce the costs of "
+"digital signage, attract new customers and increase sales."
+msgstr ""
+"Votre espace est prêt à fonctionner. Il vous aidera à réduire vos coûts de "
+"présence électronique, à attirer de nouveaux clients et à augmenter vos "
+"ventes."
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_res_company_social_youtube
+msgid "Youtube Account"
+msgstr "Compte Youtube"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
+msgid "and save $20 on your next order!"
+msgstr "et économisez $20 sur votre prochaine commande! "
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_campaign_id
+msgid "campaign_id"
+msgstr "campaign_id"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_form
+msgid "e.g. Consumer Newsletter"
+msgstr "exemple de Newsletter de client"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_form
+msgid "e.g. John Smith"
+msgstr "e.g. John Smith"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "emails are in queue and will be sent soon."
+msgstr "Les emails sont en file d'attente et vont bientôt être envoyés."
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "emails could not be sent."
+msgstr "Les courriels  n'ont pas pu être envoyés"
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_link_tracker
+msgid "link.tracker"
+msgstr "link.tracker"
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_link_tracker_click
+msgid "link.tracker.click"
+msgstr "link.tracker.click"
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

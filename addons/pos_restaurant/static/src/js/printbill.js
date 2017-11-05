@@ -1,28 +1,59 @@
-function openerp_restaurant_printbill(instance,module){
-    var QWeb = instance.web.qweb;
-	var _t = instance.web._t;
+odoo.define('pos_restaurant.printbill', function (require) {
+"use strict";
 
-    module.PosWidget.include({
-        build_widgets: function(){
-            var self = this;
-            this._super();
+var core = require('web.core');
+var screens = require('point_of_sale.screens');
+var gui = require('point_of_sale.gui');
 
-            if(this.pos.config.iface_printbill){
-                var printbill = $(QWeb.render('PrintBillButton'));
+var QWeb = core.qweb;
 
-                printbill.click(function(){
-                    var order = self.pos.get('selectedOrder');
-                    if(order.get('orderLines').models.length > 0){
-                        var receipt = order.export_for_printing();
-                        self.pos.proxy.print_receipt(QWeb.render('BillReceipt',{
-                            receipt: receipt, widget: self,
-                        }));
-                    }
-                });
+var BillScreenWidget = screens.ReceiptScreenWidget.extend({
+    template: 'BillScreenWidget',
+    click_next: function(){
+        this.gui.show_screen('products');
+    },
+    click_back: function(){
+        this.gui.show_screen('products');
+    },
+    render_receipt: function(){
+        this._super();
+        this.$('.receipt-paymentlines').remove();
+        this.$('.receipt-change').remove();
+    },
+    print_web: function(){
+        window.print();
+    },
+});
 
-                printbill.appendTo(this.$('.control-buttons'));
-                this.$('.control-buttons').removeClass('oe_hidden');
-            }
-        },
-    });
-}
+gui.define_screen({name:'bill', widget: BillScreenWidget});
+
+var PrintBillButton = screens.ActionButtonWidget.extend({
+    template: 'PrintBillButton',
+    print_xml: function(){
+        var order = this.pos.get('selectedOrder');
+        if(order.get_orderlines().length > 0){
+            var receipt = order.export_for_printing();
+            receipt.bill = true;
+            this.pos.proxy.print_receipt(QWeb.render('BillReceipt',{
+                receipt: receipt, widget: this, pos: this.pos, order: order,
+            }));
+        }
+    },
+    button_click: function(){
+        if (!this.pos.config.iface_print_via_proxy) {
+            this.gui.show_screen('bill');
+        } else {
+            this.print_xml();
+        }
+    },
+});
+
+screens.define_action_button({
+    'name': 'print_bill',
+    'widget': PrintBillButton,
+    'condition': function(){ 
+        return this.pos.config.iface_printbill;
+    },
+});
+
+});

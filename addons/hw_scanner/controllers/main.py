@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import logging
-import os
 import time
 from os import listdir
 from os.path import join
-from threading import Thread, Lock
+try:
+    from queue import Queue, Empty
+except ImportError:
+    from Queue import Queue, Empty # pylint: disable=deprecated-module
 from select import select
-from Queue import Queue, Empty
+from threading import Thread, Lock
 
-import openerp
-import openerp.addons.hw_proxy.controllers.main as hw_proxy
-from openerp import http
-from openerp.http import request
-from openerp.tools.translate import _
+from odoo import http
+
+from odoo.addons.hw_proxy.controllers import main as hw_proxy
 
 _logger = logging.getLogger(__name__)
 

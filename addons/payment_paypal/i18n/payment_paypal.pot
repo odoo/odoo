@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-01-21 14:08+0000\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,28 +16,18 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: payment_paypal
-#: model:payment.acquirer,pre_msg:payment_paypal.payment_acquirer_paypal
-msgid "<p>You will be redirected to the Paypal website after clicking on the payment button.</p>"
-msgstr ""
-
-#. module: payment_paypal
-#: field:payment.acquirer,paypal_api_access_token:0
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token
 msgid "Access Token"
 msgstr ""
 
 #. module: payment_paypal
-#: field:payment.acquirer,paypal_api_access_token_validity:0
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token_validity
 msgid "Access Token Validity"
 msgstr ""
 
 #. module: payment_paypal
-#: model:ir.model,name:payment_paypal.model_res_company
-msgid "Companies"
-msgstr ""
-
-#. module: payment_paypal
-#: view:account.config.settings:payment_paypal.payment_paypal_option_config
-msgid "Configure payment acquiring methods"
+#: model:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
+msgid "How to configure your paypal account?"
 msgstr ""
 
 #. module: payment_paypal
@@ -46,62 +36,68 @@ msgid "Payment Acquirer"
 msgstr ""
 
 #. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_pdt_token
+msgid "Payment Data Transfer allows you to receive notification of successful payments as they are made."
+msgstr ""
+
+#. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_transaction
 msgid "Payment Transaction"
 msgstr ""
 
 #. module: payment_paypal
-#: field:payment.acquirer,paypal_email_account:0
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_email_account
 msgid "Paypal Email ID"
 msgstr ""
 
 #. module: payment_paypal
-#: help:payment.acquirer,paypal_use_ipn:0
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_use_ipn
 msgid "Paypal Instant Payment Notification"
 msgstr ""
 
 #. module: payment_paypal
-#: field:payment.acquirer,paypal_seller_account:0
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_seller_account
 msgid "Paypal Merchant ID"
 msgstr ""
 
 #. module: payment_paypal
-#: view:payment.transaction:payment_paypal.transaction_form_paypal
-msgid "Paypal TX Details"
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_pdt_token
+msgid "Paypal PDT Token"
 msgstr ""
 
 #. module: payment_paypal
-#: field:payment.acquirer,paypal_api_password:0
+#: code:addons/payment_paypal/models/payment.py:138
+#, python-format
+msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_password
 msgid "Rest API Password"
 msgstr ""
 
 #. module: payment_paypal
-#: field:payment.acquirer,paypal_api_username:0
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_username
 msgid "Rest API Username"
 msgstr ""
 
 #. module: payment_paypal
-#: help:payment.acquirer,paypal_seller_account:0
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_seller_account
 msgid "The Merchant ID is used to ensure communications coming from Paypal are valid and secured."
 msgstr ""
 
 #. module: payment_paypal
-#: field:payment.transaction,paypal_txn_id:0
-msgid "Transaction ID"
-msgstr ""
-
-#. module: payment_paypal
-#: field:payment.transaction,paypal_txn_type:0
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction_paypal_txn_type
 msgid "Transaction type"
 msgstr ""
 
 #. module: payment_paypal
-#: field:payment.acquirer,paypal_use_ipn:0
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_use_ipn
 msgid "Use IPN"
 msgstr ""
 
 #. module: payment_paypal
-#: field:payment.acquirer,paypal_api_enabled:0
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_enabled
 msgid "Use Rest API"
 msgstr ""
 

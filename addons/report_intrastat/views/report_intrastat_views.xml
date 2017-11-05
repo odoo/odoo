@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Country -->
+        <record id="view_country_tree" model="ir.ui.view">
+            <field name="name">res.country.tree.inherit</field>
+            <field name="model">res.country</field>
+            <field name="inherit_id" ref="base.view_country_tree"/>
+            <field name="arch" type="xml">
+                <field name="code" position="after">
+                    <field name="intrastat"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_country_form" model="ir.ui.view">
+            <field name="name">res.country.form.inherit</field>
+            <field name="model">res.country</field>
+            <field name="inherit_id" ref="base.view_country_form"/>
+            <field name="arch" type="xml">
+                <field name="code" position="after">
+                    <field name="intrastat"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- Product -->
+        <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.template.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock.view_template_property_form"/>
+            <field name="arch" type="xml">
+                <group name="group_lots_and_weight" position="inside">
+                    <field name="intrastat_id"/>
+                </group>
+            </field>
+        </record>
+
+        <!-- Intrastat code -->
+        <record id="view_report_intrastat_code_tree" model="ir.ui.view">
+            <field name="name">report.intrastat.code.tree</field>
+            <field name="model">report.intrastat.code</field>
+            <field name="arch" type="xml">
+                <tree string="Intrastat code">
+                    <field name="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_report_intrastat_code_form" model="ir.ui.view">
+            <field name="name">report.intrastat.code.form</field>
+            <field name="model">report.intrastat.code</field>
+            <field name="arch" type="xml">
+                <form string="Intrastat Code">
+                    <group>
+                        <field name="name"/>
+                        <field name="description"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="action_report_intrastat_code_tree" model="ir.actions.act_window">
+            <field name="name">Intrastat Code</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">report.intrastat.code</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="action_report_intrastat_code_tree" id="menu_report_intrastat_code" 
+                parent="account.account_account_menu" sequence="10" groups="account.group_account_manager"/>
+
+
+        <record id="view_report_intrastat_tree" model="ir.ui.view">
+            <field name="name">report.intrastat.tree</field>
+            <field name="model">report.intrastat</field>
+            <field name="arch" type="xml">
+                <tree string="Intrastat Data" create="false" delete="false">
+                    <field name="name" />
+                    <field name="month"/>
+                    <field name="code"/>
+                    <field name="ref"/>
+                    <field name="intrastat_id"/>
+                    <field name="weight"/>
+                    <field name="value" widget="monetary"/>
+                    <field name="supply_units"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="type"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_report_intrastat_kanban" model="ir.ui.view">
+            <field name="name">report.intrastat.kanban</field>
+            <field name="model">report.intrastat</field>
+            <field name="arch" type="xml">
+               <kanban class="o_kanban_mobile" create="false">
+                   <field name="name" />
+                    <field name="month"/>
+                    <field name="code"/>
+                    <field name="ref"/>
+                    <field name="intrastat_id"/>
+                    <field name="supply_units"/>
+                    <field name="type"/>
+                   <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <div class="text-center">
+                                   <strong><span><field name="ref"/></span></strong>
+                                </div>
+                                <hr class="mt4 mb4"/>
+                                <div class="row">
+                                    <div class="col-xs-4 text-center">
+                                        <field name="value" widget="monetary"/>
+                                    </div>
+                                    <div class="col-xs-offset-4 text-center">
+                                        <field name="type"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_report_intrastat_search" model="ir.ui.view">
+            <field name="name">report.intrastat.search</field>
+            <field name="model">report.intrastat</field>
+            <field name="arch" type="xml">
+                <search string="Intrastat Data">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Intrastat Data"/>
+                    <field name="month"/>
+                    <field name="type"/>
+                    <field name="intrastat_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_report_intrastat_tree_all" model="ir.actions.act_window">
+            <field name="name">Intrastat</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">report.intrastat</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban</field>
+            <field name="search_view_id" ref="view_report_intrastat_search"/>
+        </record>
+
+        <menuitem action="action_report_intrastat_tree_all" id="menu_report_intrastat_all" 
+                parent="account.account_reports_management_menu" sequence="19"/>
+</odoo>

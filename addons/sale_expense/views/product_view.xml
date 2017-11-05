@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="product_template_form_view_expense_policy">
+        <field name="name">product.template.expense.policy</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="sale.product_template_form_view_invoice_policy"/>
+        <field name="arch" type="xml">
+            <field name="service_type" position="after">
+                <field name="expense_policy" widget="radio"
+                       attrs="{'invisible': [('can_be_expensed','=',False)]}"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_product_view_form_inherit_sale_expense" model="ir.ui.view">
+        <field name="name">product.template.expense</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="hr_expense.product_product_expense_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='product_details']" position="inside">
+                <group string="Invoicing">
+                    <field name="invoice_policy"/>
+                    <field name="expense_policy"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
-import base64
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import SUPERUSER_ID
-from openerp import http
-from openerp.tools.translate import _
-from openerp.http import request
+from odoo import http, _
+from odoo.addons.http_routing.models.ir_http import slug
+from odoo.http import request
 
-from openerp.addons.website.models.website import slug
 
-class website_hr_recruitment(http.Controller):
+class WebsiteHrRecruitment(http.Controller):
+    def sitemap_jobs(env, rule, qs):
+        if not qs or qs.lower() in '/jobs':
+            yield {'loc': '/jobs'}
+
     @http.route([
         '/jobs',
         '/jobs/country/<model("res.country"):country>',
@@ -18,7 +20,7 @@ class website_hr_recruitment(http.Controller):
         '/jobs/country/<model("res.country"):country>/office/<int:office_id>',
         '/jobs/department/<model("hr.department"):department>/office/<int:office_id>',
         '/jobs/country/<model("res.country"):country>/department/<model("hr.department"):department>/office/<int:office_id>',
-    ], type='http', auth="public", website=True)
+    ], type='http', auth="public", website=True, sitemap=sitemap_jobs)
     def jobs(self, country=None, department=None, office_id=None, **kwargs):
         env = request.env(context=dict(request.env.context, show_address=True, no_tag_br=True))
 
@@ -30,11 +32,6 @@ class website_hr_recruitment(http.Controller):
         # Browse jobs as superuser, because address is restricted
         jobs = Jobs.sudo().browse(job_ids)
 
-        # Deduce departments and offices of those jobs
-        departments = set(j.department_id for j in jobs if j.department_id)
-        offices = set(j.address_id for j in jobs if j.address_id)
-        countries = set(o.country_id for o in offices if o.country_id)
-
         # Default search by user country
         if not (country or department or office_id or kwargs.get('all_countries')):
             country_code = request.session['geoip'].get('country_code')
@@ -44,16 +41,26 @@ class website_hr_recruitment(http.Controller):
                 if not any(j for j in jobs if j.address_id and j.address_id.country_id == country):
                     country = False
 
-        # Filter the matching one
+        # Filter job / office for country
         if country and not kwargs.get('all_countries'):
-            jobs = (j for j in jobs if j.address_id is None or j.address_id.country_id and j.address_id.country_id.id == country.id)
+            jobs = [j for j in jobs if j.address_id is None or j.address_id.country_id and j.address_id.country_id.id == country.id]
+            offices = set(j.address_id for j in jobs if j.address_id is None or j.address_id.country_id and j.address_id.country_id.id == country.id)
+        else:
+            offices = set(j.address_id for j in jobs if j.address_id)
+
+        # Deduce departments and countries offices of those jobs
+        departments = set(j.department_id for j in jobs if j.department_id)
+        countries = set(o.country_id for o in offices if o.country_id)
+
         if department:
-            jobs = (j for j in jobs if j.department_id and j.department_id.id == department.id)
-        if office_id:
-            jobs = (j for j in jobs if j.address_id and j.address_id.id == office_id)
+            jobs = [j for j in jobs if j.department_id and j.department_id.id == department.id]
+        if office_id and office_id in [x.id for x in offices]:
+            jobs = [j for j in jobs if j.address_id and j.address_id.id == office_id]
+        else:
+            office_id = False
 
         # Render page
-        return request.website.render("website_hr_recruitment.index", {
+        return request.render("website_hr_recruitment.index", {
             'jobs': jobs,
             'countries': countries,
             'departments': departments,
@@ -66,7 +73,7 @@ class website_hr_recruitment(http.Controller):
     @http.route('/jobs/add', type='http', auth="user", website=True)
     def jobs_add(self, **kwargs):
         job = request.env['hr.job'].create({
-            'name': _('New Job Offer'),
+            'name': _('Job Title'),
         })
         return request.redirect("/jobs/detail/%s?enable_editor=1" % slug(job))
 
@@ -78,7 +85,7 @@ class website_hr_recruitment(http.Controller):
         })
 
     @http.route('/jobs/apply/<model("hr.job"):job>', type='http', auth="public", website=True)
-    def jobs_apply(self, job):
+    def jobs_apply(self, job, **kwargs):
         error = {}
         default = {}
         if 'website_hr_recruitment_error' in request.session:
@@ -89,59 +96,3 @@ class website_hr_recruitment(http.Controller):
             'error': error,
             'default': default,
         })
-
-    def _get_applicant_char_fields(self):
-        return ['email_from', 'partner_name', 'description']
-
-    def _get_applicant_relational_fields(self):
-        return ['department_id', 'job_id']
-
-    def _get_applicant_files_fields(self):
-        return ['ufile']
-
-    def _get_applicant_required_fields(self):
-        return ["partner_name", "phone", "email_from"]
-
-    @http.route('/jobs/thankyou', methods=['POST'], type='http', auth="public", website=True)
-    def jobs_thankyou(self, **post):
-        error = {}
-        for field_name in self._get_applicant_required_fields():
-            if not post.get(field_name):
-                error[field_name] = 'missing'
-        if error:
-            request.session['website_hr_recruitment_error'] = error
-            for field_name in self._get_applicant_files_fields():
-                f = field_name in post and post.pop(field_name)
-                if f:
-                    error[field_name] = 'reset'
-            request.session['website_hr_recruitment_default'] = post
-            return request.redirect('/jobs/apply/%s' % post.get("job_id"))
-
-        # public user can't create applicants (duh)
-        env = request.env(user=SUPERUSER_ID)
-        value = {
-            'source_id' : env.ref('hr_recruitment.source_website_company').id,
-            'name': '%s\'s Application' % post.get('partner_name'), 
-        }
-        for f in self._get_applicant_char_fields():
-            value[f] = post.get(f)
-        for f in self._get_applicant_relational_fields():
-            value[f] = int(post.get(f) or 0)
-        # Retro-compatibility for saas-3. "phone" field should be replace by "partner_phone" in the template in trunk.
-        value['partner_phone'] = post.pop('phone', False)
-
-        applicant_id = env['hr.applicant'].create(value).id
-        for field_name in self._get_applicant_files_fields():
-            if post[field_name]:
-                attachment_value = {
-                    'name': post[field_name].filename,
-                    'res_name': value['partner_name'],
-                    'res_model': 'hr.applicant',
-                    'res_id': applicant_id,
-                    'datas': base64.encodestring(post[field_name].read()),
-                    'datas_fname': post[field_name].filename,
-                }
-                env['ir.attachment'].create(attachment_value)
-        return request.render("website_hr_recruitment.thankyou", {})
-
-# vim :et:

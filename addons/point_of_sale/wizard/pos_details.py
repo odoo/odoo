@@ -1,59 +1,52 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-from openerp.osv import osv, fields
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
-class pos_details(osv.osv_memory):
-    _name = 'pos.details'
-    _description = 'Sales Details'
+class PosDetails(models.TransientModel):
+    _name = 'pos.details.wizard'
+    _description = 'Open Sales Details Report'
 
-    _columns = {
-        'date_start': fields.date('Date Start', required=True),
-        'date_end': fields.date('Date End', required=True),
-        'user_ids': fields.many2many('res.users', 'pos_details_report_user_rel', 'user_id', 'wizard_id', 'Salespeople'),
-    }
-    _defaults = {
-        'date_start': fields.date.context_today,
-        'date_end': fields.date.context_today,
-    }
+    def _default_start_date(self):
+        """ Find the earliest start_date of the latests sessions """
+        # restrict to configs available to the user
+        config_ids = self.env['pos.config'].search([]).ids
+        # exclude configs has not been opened for 2 days
+        self.env.cr.execute("""
+            SELECT
+            max(start_at) as start,
+            config_id
+            FROM pos_session
+            WHERE config_id = ANY(%s)
+            AND start_at > (NOW() - INTERVAL '2 DAYS')
+            GROUP BY config_id
+        """, (config_ids,))
+        latest_start_dates = [res['start'] for res in self.env.cr.dictfetchall()]
+        # earliest of the latest sessions
+        return latest_start_dates and min(latest_start_dates) or fields.Datetime.now()
 
-    def print_report(self, cr, uid, ids, context=None):
-        """
-         To get the date and print the report
-         @param self: The object pointer.
-         @param cr: A database cursor
-         @param uid: ID of the user currently logged in
-         @param context: A standard dictionary
-         @return : retrun report
-        """
-        if context is None:
-            context = {}
-        datas = {'ids': context.get('active_ids', [])}
-        res = self.read(cr, uid, ids, ['date_start', 'date_end', 'user_ids'], context=context)
-        res = res and res[0] or {}
-        datas['form'] = res
-        if res.get('id',False):
-            datas['ids']=[res['id']]
-        return self.pool['report'].get_action(cr, uid, [], 'point_of_sale.report_detailsofsales', data=datas, context=context)
+    start_date = fields.Datetime(required=True, default=_default_start_date)
+    end_date = fields.Datetime(required=True, default=fields.Datetime.now)
+    pos_config_ids = fields.Many2many('pos.config', 'pos_detail_configs',
+        default=lambda s: s.env['pos.config'].search([]))
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    @api.onchange('start_date')
+    def _onchange_start_date(self):
+        if self.start_date and self.end_date and self.end_date < self.start_date:
+            self.end_date = self.start_date
+
+    @api.onchange('end_date')
+    def _onchange_end_date(self):
+        if self.end_date and self.end_date < self.start_date:
+            self.start_date = self.end_date
+
+    @api.multi
+    def generate_report(self):
+        if (not self.env.user.company_id.logo):
+            raise UserError(_("You have to set a logo or a layout for your company."))
+        elif (not self.env.user.company_id.external_report_layout):
+            raise UserError(_("You have to set your reports's header and footer layout."))
+        data = {'date_start': self.start_date, 'date_stop': self.end_date, 'config_ids': self.pos_config_ids.ids}
+        return self.env.ref('point_of_sale.sale_details_report').report_action([], data=data)

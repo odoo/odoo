@@ -3,15 +3,17 @@
 # * mrp_byproduct
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Martin Trigaux <mat@odoo.com>, 2017
+# Boško Stojaković <bluesoft83@gmail.com>, 2017
+# Bole <bole@dajmi5.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-10-11 16:53+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Bosnian (http://www.transifex.com/odoo/odoo-8/language/bs/)\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2017\n"
+"Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -24,9 +26,9 @@ msgid "Bill of Material"
 msgstr "Sastavnica"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,bom_id:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_bom_id
 msgid "BoM"
-msgstr "BoM"
+msgstr "Sastavnica"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_subproduct
@@ -34,97 +36,108 @@ msgid "Byproduct"
 msgstr "Nusproizvod"
 
 #. module: mrp_byproduct
-#: view:mrp.bom:mrp_byproduct.mrp_subproduct_view field:mrp.bom,sub_products:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_bom_sub_products
+#: model:ir.ui.view,arch_db:mrp_byproduct.mrp_subproduct_view
 msgid "Byproducts"
 msgstr "Nusproizvodi"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr "Promijeni količine proizvoda"
+msgstr "Promijeni količinu proizvoda"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,create_uid:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_create_uid
 msgid "Created by"
 msgstr "Kreirao"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,create_date:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_create_date
 msgid "Created on"
 msgstr "Kreirano"
 
 #. module: mrp_byproduct
-#: help:mrp.subproduct,subproduct_type:0
-msgid ""
-"Define how the quantity of byproducts will be set on the production orders "
-"using this BoM.  'Fixed' depicts a situation where the quantity of created "
-"byproduct is always equal to the quantity set on the BoM, regardless of how "
-"many are created in the production order.  By opposition, 'Variable' means "
-"that the quantity will be computed as    '(quantity of byproduct set on the "
-"BoM / quantity of manufactured product set on the BoM * quantity of "
-"manufactured product in the production order.)'"
-msgstr ""
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_display_name
+msgid "Display Name"
+msgstr "Prikazani naziv"
 
 #. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Fixed"
-msgstr "Fiksno"
-
-#. module: mrp_byproduct
-#: field:mrp.subproduct,id:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_id
 msgid "ID"
 msgstr "ID"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,write_uid:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct___last_update
+msgid "Last Modified on"
+msgstr "Zadnje mijenjano"
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_write_uid
 msgid "Last Updated by"
 msgstr "Zadnji ažurirao"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,write_date:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_write_date
 msgid "Last Updated on"
 msgstr "Zadnje ažurirano"
 
 #. module: mrp_byproduct
-#: model:ir.model,name:mrp_byproduct.model_mrp_production
-msgid "Manufacturing Order"
-msgstr "Radni nalog proizvodnje"
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_operation_id
+msgid "Produced at Operation"
+msgstr ""
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,product_id:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_id
 msgid "Product"
 msgstr "Proizvod"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,product_qty:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_qty
 msgid "Product Qty"
-msgstr "Proizvod Kol."
+msgstr "Kol. Proizvoda"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,product_uom:0
-msgid "Product Unit of Measure"
-msgstr "JM proizvoda"
+#: model:ir.model,name:mrp_byproduct.model_mrp_production
+msgid "Production"
+msgstr "Proizvodnja"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,subproduct_type:0
-msgid "Quantity Type"
-msgstr "Vrsta Količine"
+#: model:ir.model,name:mrp_byproduct.model_mrp_product_produce
+msgid "Record Production"
+msgstr "Zabilježi proizvodnju"
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:63
+#: model:ir.model,name:mrp_byproduct.model_stock_move
+msgid "Stock Move"
+msgstr "Kretanje zalihe"
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_stock_move_subproduct_id
+msgid "Subproduct"
+msgstr ""
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,help:mrp_byproduct.field_stock_move_subproduct_id
+msgid "Subproduct line that generated the move in a manufacturing order"
+msgstr ""
+
+#. module: mrp_byproduct
+#: code:addons/mrp_byproduct/models/mrp_subproduct.py:32
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr "Jedinica mjere proizvoda koju ste izabrali ima drugačiju kategoriju nego u formi proizvoda."
+msgstr ""
+"Jedinica mjere proizvoda koju ste izabrali ima drugačiju kategoriju nego u "
+"formi proizvoda."
 
 #. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Variable"
-msgstr "Promjenljivo"
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_uom_id
+msgid "Unit of Measure"
+msgstr "Jedinica mjere"
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:63
+#: code:addons/mrp_byproduct/models/mrp_subproduct.py:31
 #, python-format
 msgid "Warning"
 msgstr "Upozorenje"

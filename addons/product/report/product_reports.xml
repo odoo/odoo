@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+            id="report_product_label"
+            string="Products Labels"
+            model="product.product"
+            report_type="qweb-pdf"
+            name="product.report_productlabel"
+            file="product.report_productlabel"
+            print_report_name="'Products Labels - %s' % (object.name)"
+        />
+
+        <report
+            id="report_product_template_label"
+            string="Products Labels"
+            model="product.template"
+            report_type="qweb-pdf"
+            name="product.report_producttemplatelabel"
+            file="product.report_producttemplatelabel"
+            print_report_name="'Products Labels - %s' % (object.name)"
+        />
+
+        <report 
+            id="action_report_pricelist" 
+            string="Pricelist" 
+            model="product.product" 
+            report_type="qweb-pdf" 
+            name="product.report_pricelist" 
+            file="product.report_pricelist"
+            menu="False"/>
+    </data>
+</odoo>

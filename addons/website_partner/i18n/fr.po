@@ -3,16 +3,18 @@
 # * website_partner
 # 
 # Translators:
-# Francis Ndong <francissimel@hotmail.com>, 2015
-# Friderici Claude, 2015
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
+# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
+# leemannd <denis.leemann@camptocamp.com>, 2017
+# Eloïse Stilmant <est@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:09+0000\n"
-"PO-Revision-Date: 2015-11-18 16:39+0000\n"
-"Last-Translator: Florian Hatat\n"
-"Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2017\n"
+"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -21,50 +23,52 @@ msgstr ""
 
 #. module: website_partner
 #: model:ir.model,name:website_partner.model_res_partner
-msgid "Partner"
-msgstr "Partenaire"
+msgid "Contact"
+msgstr "Contact"
 
 #. module: website_partner
-#: field:res.partner,website_published:0
-msgid "Publish"
-msgstr "Publier"
-
-#. module: website_partner
-#: help:res.partner,website_published:0
-msgid "Publish on the website"
-msgstr "Publier sur le site web"
-
-#. module: website_partner
-#: view:website:website_partner.partner_detail
+#: model:ir.ui.view,arch_db:website_partner.partner_detail
 msgid "Short Description for List View"
-msgstr "Courte description pour la Vue en Liste"
+msgstr "Courte description pour la vue liste"
 
 #. module: website_partner
-#: field:res.partner,website_description:0
+#: model:ir.model.fields,help:website_partner.field_res_users_website_url
+msgid "The full URL to access the document through the website."
+msgstr "Adresse complète d'accès au document via le site."
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_users_website_published
+msgid "Visible in Website"
+msgstr "Visible sur le site web."
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner_website_description
+#: model:ir.model.fields,field_description:website_partner.field_res_users_website_description
 msgid "Website Partner Full Description"
 msgstr "Description complète du site web partenaire"
 
 #. module: website_partner
-#: field:res.partner,website_short_description:0
+#: model:ir.model.fields,field_description:website_partner.field_res_partner_website_short_description
+#: model:ir.model.fields,field_description:website_partner.field_res_users_website_short_description
 msgid "Website Partner Short Description"
-msgstr "Petite description du site web partenaire"
+msgstr "Description courte du site web partenaire"
 
 #. module: website_partner
-#: field:res.partner,website_meta_description:0
+#: model:ir.model.fields,field_description:website_partner.field_res_users_website_url
+msgid "Website URL"
+msgstr "Adresse du site"
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_users_website_meta_description
 msgid "Website meta description"
-msgstr "Méta description du site web"
+msgstr "Description du site"
 
 #. module: website_partner
-#: field:res.partner,website_meta_keywords:0
+#: model:ir.model.fields,field_description:website_partner.field_res_users_website_meta_keywords
 msgid "Website meta keywords"
-msgstr "Mots clefs du site web"
+msgstr "Mots-clés du site"
 
 #. module: website_partner
-#: field:res.partner,website_meta_title:0
+#: model:ir.model.fields,field_description:website_partner.field_res_users_website_meta_title
 msgid "Website meta title"
-msgstr "Titre du site web"
-
-#. module: website_partner
-#: field:res.partner,self:0
-msgid "unknown"
-msgstr "inconnu"
+msgstr "Titre du site"

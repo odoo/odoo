@@ -1,0 +1,97 @@
+.o_web_settings_dashboard {
+
+    @bg-dashboard-col: #FFF;
+
+    .o_web_settings_dashboard_card() {
+        box-shadow: 0 1px 2px 0 rgba(0,0,0,.14);
+        background: @bg-dashboard-col;
+        border-radius: 2px;
+    }
+
+    .o_web_settings_dashboard_container {
+        padding: 5px 0px;
+    }
+
+    background: #F7F7F7;
+    height: 100%;
+
+    .o_web_settings_dashboard_col {
+        padding: 10px 8px;
+
+        @media (max-width: @screen-sm-max) {
+            padding: 5px 8px;
+        }
+
+        > div > hr {
+            margin: 12px -18px 15px -18px;
+            border-color: #CBCBCB;
+        }
+
+        > div {
+            .o_web_settings_dashboard_card();
+            padding: 25px 18px 18px 18px;
+                .o_web_settings_dashboard_header {
+                    font-size: 22px;
+                    margin-bottom: 8px;
+                }
+        }
+        .o_web_settings_dashboard_pills {
+            margin-top: 10px;
+
+            > a {
+                padding: 10px;
+
+                > i.fa {
+                    vertical-align: middle;
+                    font-size: 1.5em;
+                }
+            }
+            @media (max-width: 1200px) {
+                > li {
+                    width: 100%;
+                    margin-bottom: 5px;
+                }
+            }
+        }
+        .btn.o_browse_apps, .btn.o_web_settings_dashboard_invitations {
+            margin-top: 12px;
+        }
+        .o_web_settings_dashboard_compact_subtitle {
+            line-height: 12px;
+            display: block;
+        }
+        .o_web_settings_dashboard_invitations {
+            .o_web_settings_dashboard_invitation_form {
+                text-align: left;
+                > textarea {
+                    resize: vertical;
+                    width: 100%;
+                }
+            }
+            a.o_web_settings_dashboard_user {
+              line-height: 24px;
+            }
+        }
+        .o_web_settings_dashboard_planner {
+            .progress {
+                height: 10px;
+                background-color: darken(@bg-dashboard-col, 15%);
+                cursor: pointer;
+                margin-bottom: 30px;
+            }
+            .o_web_settings_dashboard_planner_progress_text {
+                font-size: 18px;
+                padding-right: 0px;
+                padding-top: 3px;
+            }
+            .o_web_settings_dashboard_planner_progress_bar {
+                padding-left: 10px;
+            }
+            .o_web_settings_dashboard_progress_title {
+                font-weight: bold;
+                cursor: pointer;
+                color: @odoo-brand-optional;
+            }
+        }
+    }
+}

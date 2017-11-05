@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
-import test_js
-import test_menu
-import test_serving_base
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from . import test_js
+from . import test_menu
+from . import test_serving_base

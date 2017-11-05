@@ -1,29 +1,18 @@
 # -*- coding: utf-8 -*-
 
-from openerp.osv import osv, fields
+from odoo import api, fields, models
+from odoo.addons.http_routing.models.ir_http import slug
 
 
-class WebsiteResPartner(osv.Model):
+class WebsiteResPartner(models.Model):
     _name = 'res.partner'
-    _inherit = ['res.partner', 'website.seo.metadata']
+    _inherit = ['res.partner', 'website.seo.metadata', 'website.published.mixin']
 
-    def _get_ids(self, cr, uid, ids, flds, args, context=None):
-        return {i: i for i in ids}
+    website_description = fields.Html('Website Partner Full Description', strip_style=True)
+    website_short_description = fields.Text('Website Partner Short Description')
 
-    _columns = {
-        'website_published': fields.boolean(
-            'Publish', help="Publish on the website", copy=False),
-        'website_description': fields.html(
-            'Website Partner Full Description',
-            strip_style=True
-        ),
-        'website_short_description': fields.text(
-            'Website Partner Short Description'
-        ),
-        # hack to allow using plain browse record in qweb views
-        'self': fields.function(_get_ids, type='many2one', relation=_name),
-    }
-
-    _defaults = {
-        'website_published': True
-    }
+    @api.multi
+    def _compute_website_url(self):
+        super(WebsiteResPartner, self)._compute_website_url()
+        for partner in self:
+            partner.website_url = "/partners/%s" % slug(partner)

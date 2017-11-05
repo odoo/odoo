@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="Shop Product Options">
+  <xpath expr="." position="inside">
+      <script type="text/javascript" src="/website_sale_options/static/src/js/website_sale.test.js"></script>
+      <script type="text/javascript" src="/website_sale_options/static/src/js/website_sale.js"></script>
+      <link rel='stylesheet' href='/website_sale_options/static/src/css/website_sale.css'/>
+  </xpath>
+</template>
+
+<template id="optional_products" inherit_id="website_sale.cart_lines" name="Optional products">
+  <xpath expr="//table[@id='cart_products']/tbody//td[hasclass('td-qty')]/div" position="attributes">
+    <attribute name="t-if">not line.linked_line_id</attribute>
+  </xpath>
+  <xpath expr="//table[@id='cart_products']/tbody//tr" position="attributes">
+    <attribute name="t-att-class">'optional_product info' if line.linked_line_id else None</attribute>
+  </xpath>
+  <xpath expr="//table[@id='cart_products']/tbody//td[hasclass('td-qty')]" position="inside">
+    <t t-if="line.linked_line_id">
+      <span class="js_quantity text-muted" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-esc="int(line.product_uom_qty)"/>
+    </t>
+  </xpath>
+</template>
+
+<template id="modal" name="Optional Products">
+<div id="modal_optional_products" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+        <h4 class="modal-title" id="myModalLabel">Add to Cart</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped table-condensed">
+          <thead>
+              <tr>
+                  <th class="td-img">Product</th>
+                  <th></th>
+                  <th class="text-center td-qty">Quantity</th>
+                  <th class="text-center td-price">Price</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr id="product_confirmation" class="js_product">
+                <td class='td-img'>
+                  <span t-field="product.image_medium" t-options='{"widget": "image" }'/>
+                </td>
+                <td class='td-product_name'>
+                  <strong t-field="product.display_name"/>
+                  <div class="text-muted small">
+                    <div t-field="product.description_sale"/>
+                    <div class="js_attributes"/>
+                  </div>
+                </td>
+                <td class="text-center td-qty">
+                  <div class="css_quantity input-group oe_website_spinner">
+                      <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json hidden-xs">
+                          <i class="fa fa-minus"></i>
+                      </a>
+                      <input type="text" class="js_quantity form-control quantity" data-min="1" name="add_qty" value="1"/>
+                      <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json hidden-xs">
+                          <i class="fa fa-plus"></i>
+                      </a>
+                  </div>
+                </td>
+                <td class="text-center td-price" name="price">
+                  <ul class="hidden js_add_cart_variants" t-att-data-attribute_value_ids="main_product_attr_ids"></ul>
+                  <div class="hidden oe_unchanged_value_ids" t-att-data-unchanged_value_ids="main_product_attr_ids[0][1]" ></div>
+                  <span t-attf-class="text-danger oe_default_price oe_striked_price {{ (compute_currency(product.lst_price) - product.website_price) &lt; 0.01 and 'hidden' }}"
+                    t-field="product.lst_price"
+                    t-options='{
+                      "widget": "monetary",
+                      "from_currency": product.currency_id,
+                      "display_currency": website.currency_id
+                   }'/>
+                  <span class="oe_price product_id" style="white-space: nowrap;"
+                    t-att-data-product-id="product.id"
+                    t-esc="product.website_price / quantity"
+                    t-options='{
+                       "widget": "monetary",
+                       "display_currency": website.currency_id
+                   }'/>
+                </td>
+              </tr>
+
+              <tr t-if="product.optional_product_ids"><td colspan="2"><h4>Select Your Options:</h4></td></tr>
+              <tr class="js_product" t-foreach="product.optional_product_ids" t-as="product">
+                <td class="td-img">
+                  <input type="hidden" class="product_id" t-attf-name="optional-product-#{product_index}" t-att-value="product.product_variant_id.id if len(product.product_variant_ids) == 1 else '0'"/>
+                  <span t-field="product.image_small" t-options='{"widget": "image"}'/>
+                </td>
+                <td class='td-product_name'>
+                  <div class="pull-left">
+                    <strong class="media-heading" t-field="product.name"/>
+                    <div class="text-muted small" t-field="product.description_sale"/>
+                  </div>
+                </td>
+                <td class="td-qty">
+                  <div class="pull-right">
+                    <t t-call="website_sale.variants"/>
+                  </div>
+                </td>
+                <td class="td-price">
+                  <span class="text-danger oe_default_price oe_optional"
+                    t-field="product.lst_price"
+                    t-options='{
+                      "widget": "monetary",
+                      "from_currency": product.currency_id,
+                      "display_currency": website.currency_id
+                   }'/>
+                  <span class="oe_price" style="white-space: nowrap;"
+                    t-field="product.website_price"
+                    t-options='{
+                       "widget": "monetary",
+                       "display_currency": website.currency_id
+                   }'/>
+                  <p class="css_not_available_msg bg-danger" style="padding: 5px;">Product not available</p>
+
+                  <div class='mt8'>
+                    <input type="hidden" class="js_optional_same_quantity" t-attf-name="optional-add-#{product_index}" value="0"/>
+                    <a href="#" class="js_add btn btn-sm btn-info"><strong>Add<span class='hidden-xs'> to Cart</span></strong></a>
+                    <span class="js_remove hidden">
+                      <span class="js_item">1 </span><span class="js_items hidden">5 </span> <span t-field="product.uom_id.sudo().name"/><br/>
+                      <a href="#" class="js_remove btn btn-xs btn-info"><small>Remove <span class='hidden-xs'> from Cart</span></small></a>
+                    </span>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <a class="btn btn-default a-submit js_goto_shop"><i class="fa fa-chevron-left"></i> <span class="hidden-xs">Continue Shopping</span><span class="visible-xs-inline">Continue</span></a>
+          <a class="btn btn-primary pull-right a-submit"><i class="fa fa-shopping-cart fa-fw"></i> <span class="hidden-xs">Proceed to Checkout</span><span class="visible-xs-inline">Checkout</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template id="products_add_to_cart" inherit_id="website_sale.products_add_to_cart">
+  <xpath expr="//div[hasclass('product_price')]/t[1]" position="attributes">
+    <attribute name="t-if">len(product.product_variant_ids) == 1 and not len(product.optional_product_ids) &gt;= 1</attribute>
+  </xpath>
+  <xpath expr="//div[hasclass('product_price')]/t[2]" position="attributes">
+    <attribute name="t-if">len(product.product_variant_ids) &gt; 1 or len(product.optional_product_ids) &gt;= 1</attribute>
+  </xpath>
+</template>
+
+</odoo>

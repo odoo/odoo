@@ -1,0 +1,89 @@
+<odoo>
+    <!-- Case Teams Salesteams dashboard view -->
+   <record id="crm_team_salesteams_view_kanban" model="ir.ui.view" >
+        <field name="name">crm.team.dashboard</field>
+        <field name="model">crm.team</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard o_salesteam_kanban" create="0">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="member_ids"/>
+                <field name="color"/>
+                <field name="dashboard_graph_type"/>
+                <field name="currency_id"/>
+                <field name="is_favorite"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)}">
+                            <div t-attf-class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary"><field name="name"/></div>
+                                </div>
+                                <div class="o_kanban_manage_button_section">
+                                    <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" /></a>
+                                </div>
+                            </div>
+                            <div class="container o_kanban_card_content">
+                                <div class="row o_kanban_card_upper_content">
+                                    <div class="col-xs-6 o_kanban_primary_left" name="to_replace_in_sale_crm">
+                                        <button type="object" class="btn btn-primary" name="action_primary_channel_button"><field name="dashboard_button_name"/></button>
+                                    </div>
+                                    <div class="col-xs-6 o_kanban_primary_right" style="padding-bottom:0;">
+                                        <t name="first_options"/>
+                                        <t name="second_options"/>
+                                        <t name="third_options"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 o_kanban_primary_bottom">
+                                        <t t-call="SalesTeamDashboardGraph"/>
+                                    </div>
+                                    <div class="col-xs-12 o_kanban_primary_bottom bottom_block">
+                                    </div>
+                                </div>
+                            </div><div class="container o_kanban_card_manage_pane">
+                                <div class="row">
+                                    <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_view">
+                                        <div class="o_kanban_card_manage_title">
+                                            <span>View</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_new">
+                                        <div class="o_kanban_card_manage_title">
+                                            <span>New</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_reports">
+                                        <div class="o_kanban_card_manage_title">
+                                            <span>Reporting</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div t-if="widget.editable" class="o_kanban_card_manage_settings row" groups="sales_team.group_sale_manager">
+                                    <div class="col-xs-8">
+                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                    </div>
+                                    <div class="col-xs-4 text-right">
+                                        <a type="edit">Settings</a>
+                                    </div>
+                                </div>
+                                <div class="row mb16">
+                                    <div class="col-xs-6">
+                                        <field name="is_favorite" widget="boolean_favorite" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-name="SalesTeamDashboardGraph">
+                        <div t-if="record.dashboard_graph_data.raw_value" class="o_sales_team_kanban_graph_section">
+                            <field name="dashboard_graph_data" widget="dashboard_graph" t-att-graph_type="record.dashboard_graph_type.raw_value"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+</odoo>

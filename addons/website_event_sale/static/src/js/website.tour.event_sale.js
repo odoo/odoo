@@ -1,78 +1,99 @@
-(function () {
-    'use strict';
-    var website = openerp.website;
-    website.ready().done(function() {
-    openerp.Tour.register({
-        id:   'event_buy_tickets',
-        name: "Try to buy tickets for event",
-        path: '/event',
-        mode: 'test',
-        steps: [
-            {
-                title:     "select event",
-                element:   'a[href*="/event"]:contains("Conference on Business Applications"):first',
-            },
-            {
-                waitNot:   'a[href*="/event"]:contains("Conference on Business Applications")',
-                title:     "select 2 Standard tickets",
-                element:   'select:eq(0)',
-                sampleText: '2',
-            },
-            {
-                title:     "select 3 VIP tickets",
-                waitFor:   'select:eq(0) option:contains(2):selected',
-                element:   'select:eq(1)',
-                sampleText: '3',
-            },
-            {
-                title:     "Order Now",
-                waitFor:   'select:eq(1) option:contains(3):selected',
-                element:   '.btn-primary:contains("Order Now")',
-            },
-            {
-                title:     "Check the cart",
-                element:   'a:has(.my_cart_quantity):contains(5)'
-            },
-            {
-                title:     "Check if the cart have 2 order lines and add one VIP ticket",
-                waitFor:   "#cart_products:contains(Standard):contains(VIP)",
-                element:   "#cart_products tr:contains(VIP) .fa-plus",
-            },
-            {
-                title:     "Process Checkout",
-                waitFor:   'a:has(.my_cart_quantity):contains(6)',
-                element:   '.btn-primary:contains("Process Checkout")'
-            },
-            {
-                title:     "Complete checkout",
-                element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
-                autoComplete: function (tour) {
-                    if ($("input[name='name']").val() === "")
-                        $("input[name='name']").val("website_sale-test-shoptest");
-                    if ($("input[name='email']").val() === "")
-                        $("input[name='email']").val("website_event_sale_test_shoptest@websiteeventsaletest.odoo.com");
-                    $("input[name='phone']").val("123");
-                    $("input[name='street2']").val("123");
-                    $("input[name='city']").val("123");
-                    $("input[name='zip']").val("123");
-                    $("select[name='country_id']").val("21");
-                },
-            },
-            {
-                title:     "select payment",
-                element:   '#payment_method label:has(img[title="Wire Transfer"]) input',
-            },
-            {
-                title:     "Pay Now",
-                waitFor:   '#payment_method label:has(input:checked):has(img[title="Wire Transfer"])',
-                element:   '.oe_sale_acquirer_button .btn[type="submit"]:visible',
-            },
-            {
-                title:     "finish",
-                waitFor:   '.oe_website_sale:contains("Thank you for your order")',
-            }
-        ]
-    });
-    });
+odoo.define('website_event_sale.tour', function (require) {
+'use strict';
 
-}());
+var tour = require('web_tour.tour');
+var base = require("web_editor.base");
+
+tour.register('event_buy_tickets', {
+    test: true,
+    url: '/event',
+    wait_for: base.ready()
+},
+    [
+        {
+            content: "Go to the `Events` page",
+            trigger: 'a[href*="/event"]:contains("Conference on Business Apps"):first',
+        },
+        {
+            content: "Select 1 unit of `Standard` ticket type",
+            extra_trigger: '#wrap:not(:has(a[href*="/event"]:contains("Conference on Business Apps")))',
+            trigger: 'select:eq(0)',
+            run: 'text 1',
+        },
+        {
+            content: "Select 2 units of `VIP` ticket type",
+            extra_trigger: 'select:eq(0):has(option:contains(1):propSelected)',
+            trigger: 'select:eq(1)',
+            run: 'text 2',
+        },
+        {
+            content: "Click on `Order Now` button",
+            extra_trigger: 'select:eq(1):has(option:contains(2):propSelected)',
+            trigger: '.btn-primary:contains("Register Now")',
+        },
+        {
+            content: "Fill attendees details",
+            trigger: 'form[id="attendee_registration"] .btn:contains("Continue")',
+            run: function () {
+                $("input[name='1-name']").val("Att1");
+                $("input[name='1-phone']").val("111 111");
+                $("input[name='1-email']").val("att1@example.com");
+                $("input[name='2-name']").val("Att2");
+                $("input[name='2-phone']").val("222 222");
+                $("input[name='2-email']").val("att2@example.com");
+                $("input[name='3-name']").val("Att3");
+                $("input[name='3-phone']").val("333 333");
+                $("input[name='3-email']").val("att3@example.com");
+            },
+        },
+        {
+            content: "Validate attendees details",
+            extra_trigger: "input[name='1-name'], input[name='2-name'], input[name='3-name']",
+            trigger: 'button:contains("Continue")',
+        },
+        {
+            content: "Check that the cart contains exactly 3 triggers",
+            trigger: 'a:has(.my_cart_quantity:containsExact(3))',
+            run: function () {}, // it's a check
+        },
+        {
+            content: "go to cart",
+            trigger: 'a:contains(Return to Cart)',
+        },
+        {
+            content: "Modify the cart to add 1 unit of `VIP` ticket type",
+            extra_trigger: "#cart_products:contains(Standard):contains(VIP)",
+            trigger: "#cart_products tr:contains(VIP) .fa-plus",
+        },
+        {
+            content: "Now click on `Process Checkout`",
+            extra_trigger: 'a:has(.my_cart_quantity):contains(4)',
+            trigger: '.btn-primary:contains("Process Checkout")'
+        },
+        {
+            content: "Complete the checkout",
+            trigger: 'a[href="/shop/confirm_order"]:contains("Confirm")',
+        },
+        {
+            content: "Check that the subtotal is 5,500.00 USD", // this test will fail if the currency of the main company is not USD
+            trigger: '#order_total_untaxed .oe_currency_value:contains("5,500.00")',
+            run: function () {}, // it's a check
+        },
+        {
+            content: "Select `Wire Transfer` payment method",
+            trigger: '#payment_method label:contains("Wire Transfer")',
+        },
+        {
+            content: "Pay",
+            //Either there are multiple payment methods, and one is checked, either there is only one, and therefore there are no radio inputs
+            extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
+            trigger: 'button[id="o_payment_form_pay"]:visible',
+        },
+        {
+            content: "Last step",
+            trigger: '.oe_website_sale:contains("Thank you for your order")',
+        }
+    ]
+);
+
+});

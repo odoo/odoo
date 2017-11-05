@@ -1,0 +1,58 @@
+//
+// This file regroups all the rules which apply to field widgets wherever they
+// are in the DOM, in the community version.
+//
+
+// Required
+.o_required_modifier {
+    &.o_input, .o_input {
+        background-color: #D2D2FF!important;
+    }
+}
+
+//------------------------------------------------------------------------------
+// Fields
+//------------------------------------------------------------------------------
+
+.o_field_widget {
+    // Dropdowns input carret
+    .o_input_dropdown .o_dropdown_button {
+        .o-position-absolute(2px, 4px);
+    }
+
+    // Many2one
+    &.o_field_many2one .o_external_button {
+        padding: 0;
+        margin-left: 2px;
+        font-size: 19px;
+        color: #7C7BAD;
+        border: none;
+        &:hover {
+            background-color: transparent;
+        }
+    }
+
+    // Percent pie field
+    &.o_field_percent_pie {
+        @pie-dimension: 34px;
+        @pie-ring-width: 4px;
+
+        .o_pie {
+            width: @pie-dimension;
+            height: @pie-dimension;
+            margin-left: 5px;
+
+            &:after { // Outside pie border to go over border-radius irregularities
+                border: 1px solid @odoo-brand-primary;
+            }
+
+            .o_pie_value {
+                .o-position-absolute(@pie-ring-width, @pie-ring-width);
+                width: @pie-dimension - 2 * @pie-ring-width;
+                height: @pie-dimension - 2 * @pie-ring-width;
+                border: 1px solid white;
+                background-color: white;
+            }
+        }
+    }
+}

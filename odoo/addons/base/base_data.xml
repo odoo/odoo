@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="view_menu" model="ir.ui.view">
+            <field name="name">ir.ui.menu.tree</field>
+            <field name="model">ir.ui.menu</field>
+            <field name="arch" type="xml">
+                <tree string="Menu" toolbar="1">
+                    <field icon="icon" name="name"/>
+                </tree>
+            </field>
+            <field name="field_parent">child_id</field>
+        </record>
+
+        <function name="install_lang" model="res.lang"/>
+
+        <record id="main_partner" model="res.partner" context="{'default_is_company': True}">
+            <field name="name">My Company</field>
+            <field name="company_id" eval="None"/>
+            <field name="customer" eval="False"/>
+            <field name="is_company" eval="True"/>
+            <field name="street"></field>
+            <field name="city"></field>
+            <field name="zip"></field>
+            <field name="phone"></field>
+            <field name="email">info@yourcompany.com</field>
+            <field name="website">www.yourcompany.com</field>
+        </record>
+
+        <!-- Basic Company  -->
+        <record id="main_company" model="res.company">
+            <field name="name">My Company</field>
+            <field name="partner_id" ref="main_partner"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+
+        <record model="res.partner" id="base.partner_root">
+            <field name="name">Administrator</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="customer" eval="False"/>
+            <field name="email">admin@example.com</field>
+        </record>
+
+        <record model="res.users" id="base.user_root">
+            <field name="partner_id" ref="base.partner_root"/>
+            <field name="company_id" ref="main_company"/>
+            <field name="company_ids" eval="[(4, ref('main_company'))]"/>
+            <field name="signature"><![CDATA[<span>-- <br/>
+Administrator</span>]]></field>
+        </record>
+
+        <!-- Default user with full access rights for newly created users -->
+        <record id="default_user" model="res.users">
+            <field name="name">Default User Template</field>
+            <field name="login">default</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="main_partner" model="res.partner">
+            <field name="company_id" ref="main_company"/>
+        </record>
+
+        <record id="ir_mail_server_localhost0" model="ir.mail_server">
+            <field name="name">localhost</field>
+            <field name="smtp_host">localhost</field>
+            <field eval="25" name="smtp_port"/>
+            <field eval="10" name="sequence"/>
+        </record>
+
+        <record id="public_partner" model="res.partner">
+            <field name="name">Public user</field>
+            <field name="active" eval="False"/>
+        </record>
+        
+        <record id="public_user" model="res.users">
+            <field name="name">Public user</field>
+            <field name="login">public</field>
+            <field name="password"></field>
+            <!-- Avoid auto-including this demo user in any default group -->
+            <field name="groups_id" eval="[(6,0,[])]"/>
+            <field name="image" type="base64" file="base/static/img/public_user-image.png"/>
+            <field name="partner_id" ref="public_partner"/>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="paperformat_euro" model="report.paperformat">
+            <field name="name">European A4</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">40</field>
+            <field name="margin_bottom">28</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="paperformat_us" model="report.paperformat">
+            <field name="name">US Letter</field>
+            <field name="default" eval="True" />
+            <field name="format">Letter</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">40</field>
+            <field name="margin_bottom">25</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="paperformat_batch_deposit" model="report.paperformat">
+            <field name="name">US Batch Deposit</field>
+            <field name="default" eval="False" />
+            <field name="format">Letter</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">15</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+        </record>
+
+    </data>
+</odoo>

@@ -3,17 +3,19 @@
 # * website_quote
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2015
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
+# Cas Vissers <casvissers@brahoo.nl>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
+# Eric Geens <ericgeens@yahoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-25 13:43+0000\n"
-"PO-Revision-Date: 2016-11-24 10:11+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
-"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-8/language/nl/)\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2017\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -21,605 +23,394 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_quote
-#: model:email.template,body_html:website_quote.email_template_edi_sale
+#: model:mail.template,body_html:website_quote.confirmation_mail
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
-"\n"
-"    <p>Hello ${object.partner_id.name},</p>\n"
-"\n"
-"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} from ${object.company_id.name}: </p>\n"
-"\n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
-"       % if object.origin:\n"
-"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
-"       % endif\n"
-"       % if object.client_order_ref:\n"
-"       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
-"       % endif\n"
-"       % if object.user_id:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"    <p>\n"
-"        You can view your quotation online:\n"
-"    </p>\n"
-"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
-"        href=\"/quote/${object.id}/${object.access_token}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
-"\n"
-"    % if object.paypal_url:\n"
-"    <br/>\n"
-"    <p>It is also possible to directly pay with Paypal:</p>\n"
-"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n"
-"        </a>\n"
-"    % endif\n"
-"\n"
-"    <br/>\n"
-"    <p>If you have any question, do not hesitate to contact us.</p>\n"
-"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
-"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
-"        % endif\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
-"                Phone:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        % endif\n"
-"        <p></p>\n"
-"    </div>\n"
+"<div summary=\"o_mail_template\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\">\n"
+"                <div>\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0\">\n"
+"                </div>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
 "</div>\n"
-"            "
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                <p>Dear ${object.partner_id.name},</p><br/>\n"
+"                <p>Your order <a href=\"/quote/${object.id}/${object.access_token}\">${object.name}</a> has been validated!</p><br/>\n"
+"                \n"
+"                % if object.partner_id.user_ids\n"
+"                <p>You can view your quotes, sales orders and invoices online by going to our <a style=\"text-decoration:none; color: #875A7B;\" href=\"/my/home\">Online Portal</a>.</p><br/>\n"
+"                % endif\n"
+"\n"
+"                <p>If you have any question, do not hesitate to contact us.</p><br/>\n"
+"                <p>Thank you for choosing ${object.company_id.name or \"us\"}!</p>\n"
+"            </td>\n"
+"        </tr><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                % if user.signature\n"
+"                <p style=\"font-size: 14px;\">${user.signature | safe}\n"
+"                </p>\n"
+"                % endif\n"
+"                <p style=\"font-size: 11px;\"><strong>Sent by\n"
+"                <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: #875A7B;\">\n"
+"                    <strong>${user.company_id.name}</strong>\n"
+"                </a> using <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\"><strong>Odoo</strong></a>\n"
+"                </strong></p>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>"
 msgstr ""
+"\n"
+"<div summary=\"o_mail_template\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\">\n"
+"                <div>\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0\">\n"
+"                </div>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                <p>Beste ${object.partner_id.name},</p><br/>\n"
+"                <p>Uw order <a href=\"/quote/${object.id}/${object.access_token}\">${object.name}</a> is gevalideerd!</p><br/>\n"
+"                \n"
+"                % if object.partner_id.user_ids\n"
+"                <p>You can view your quotes, sales orders and invoices online by going to our <a style=\"text-decoration:none; color: #875A7B;\" href=\"/my/home\">Online Portal</a>.</p><br/>\n"
+"                % endif\n"
+"\n"
+"                <p>Als u nog vragen heeft, aarzel dan niet om contact met ons op.</p><br/>\n"
+"                <p>Bedankt voor het kiezen van ${object.company_id.name or \"us\"}!</p>\n"
+"            </td>\n"
+"        </tr><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                % if user.signature\n"
+"                <p style=\"font-size: 14px;\">${user.signature | safe}\n"
+"                </p>\n"
+"                % endif\n"
+"                <p style=\"font-size: 11px;\"><strong>Sent by\n"
+"                <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: #875A7B;\">\n"
+"                    <strong>${user.company_id.name}</strong>\n"
+"                </a> using <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\"><strong>Odoo</strong></a>\n"
+"                </strong></p>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "! You can"
 msgstr "! U kan"
 
 #. module: website_quote
-#: model:email.template,report_name:website_quote.email_template_edi_sale
-msgid ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-"'draft' or ''}"
-msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
-
-#. module: website_quote
-#: model:email.template,subject:website_quote.email_template_edi_sale
-msgid ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Offerte' or 'Verkooporder'} (Referentie ${object.name or 'n/a' })"
-
-#. module: website_quote
-#: view:website:website_quote.optional_products
-#: view:website:website_quote.pricing
+#: model:ir.ui.view,arch_db:website_quote.optional_products
+#: model:ir.ui.view,arch_db:website_quote.pricing
+#: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
 msgid "% discount"
 msgstr "% korting"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
-#: view:website:website_quote.so_template
-msgid "&times;"
-msgstr "&times;"
+#: model:ir.ui.view,arch_db:website_quote.pricing
+msgid "&amp;bull;"
+msgstr "&amp;bull;"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
-msgid ""
-",\n"
-"                                  for an amount of"
-msgstr ",\n                          voor het totaalbedrag van"
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
 
 #. module: website_quote
-#: view:website:website_quote.so_template
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.so_template
+msgid "&amp;times;"
+msgstr "&amp;times;"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_template
 msgid ""
 ":\n"
 "                                this content will appear on the quotation only if this\n"
 "                                product is put on the quote."
-msgstr ":\nDeze inhoud zal zichtbaar worden op de offerte alleen als dit\nproduct in de offerte wordt opgenomen."
+msgstr ""
+":\n"
+"Deze inhoud zal zichtbaar worden op de offerte alleen als dit\n"
+"product in de offerte wordt opgenomen."
 
 #. module: website_quote
-#: view:website:website_quote.so_template
+#: model:ir.ui.view,arch_db:website_quote.so_template
 msgid ""
 ":\n"
 "                                this content will appear on the quotation only if this\n"
 "                                product is used in the quote."
-msgstr ":\n                                deze inhoud wordt alleen getoond op de offerte wanneer dit\n                                product is gebruikt op deze offerte."
+msgstr ""
+":\n"
+"                                deze inhoud wordt alleen getoond op de offerte wanneer dit\n"
+"                                product is gebruikt op deze offerte."
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "<i class=\"fa fa-check\"/> Accept"
+msgstr "<i class=\"fa fa-check\"/> Accepteer"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "<i class=\"fa fa-check\"/> Accept &amp; Pay"
+msgstr "<i class=\"fa fa-check\"/> Accepteer &amp; Betaal"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "<i class=\"fa fa-check\"/> Accept Order"
+msgstr "<i class=\"fa fa-check\"/> Accepteer order"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "<i class=\"fa fa-check\"/> Pay Now"
+msgstr "<i class=\"fa fa-check\"/> Betaal nu"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.chatter
+msgid "<i class=\"fa fa-comment\"/> Feedback"
+msgstr "<i class=\"fa fa-comment\"/> Feedback"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "<i class=\"fa fa-times\"/> Reject"
+msgstr "<i class=\"fa fa-times\"/> Weiger"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid ""
+"<i>You will be able to create dynamic page interacting with the ORM.</i>"
+msgstr ""
+"<i>U zal dynamische pagina's kunnen bouwen door middel van interactie met de"
+" ORM.</i>"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid ""
+"<i>You will be able to develop a full application with backend and user "
+"interface.</i>"
+msgstr ""
+"<i>U zal een volledige applicatie kunnen ontwikkelend met een backend en een"
+" gebruikersinterface.</i>"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid ""
+"<i>You will be able to develop simple dynamic compenents in HTML pages.</i>"
+msgstr ""
+"<i>U zal simpele dynamische componenten kunnen bouwen in HTML pagina's.</i>"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid ""
+"<span style=\"text-align: -webkit-center; \">This course is dedicated to "
+"developers who need to grasp knowledge of the <strong>business applications "
+"development </strong>process. This course is for new developers or for IT "
+"professionals eager to learn more about technical aspects.</span>"
+msgstr ""
+"<span style=\"text-align: -webkit-center; \">Deze cursus is toegewijd aan "
+"ontwikkelaars die kennis moeten krijgen van het <strong>bedrijfsapplicatie "
+"ontwikkeling</strong> proces. Deze cursis is voor nieuwe ontwikkelaars of "
+"voor IT professionals die graag meer willen leren over de technische "
+"aspecten.</span>"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "<span>, for an amount of </span>"
+msgstr "<span>, voor een aantal van </span>"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid ""
+"<span>I agree that by paying this proposal, I\n"
+"                                accept it on the behalf of </span>"
+msgstr ""
+"<span>Ik ga akkoord met deze offerte door ondertekening. Ik\n"
+"accepteer deze namens</span>"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid ""
+"<span>I agree that by signing this proposal, I\n"
+"                                    accept it on the behalf of </span>"
+msgstr ""
+"<span>Ik ga akkoord dat door deze offerte te tekenen, ik\n"
+"deze accepteer in de naam van </span>"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
+msgid "<span>Suggested Products</span>"
+msgstr "<span>Gesuggereerde producten</span>"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "<span>with payment terms: </span>"
+msgstr "<span>met betalingscondities: </span>"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
+msgid "<strong>Expiration Date:</strong>"
+msgstr "<strong>Vervaldatum:</strong>"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid ""
+"<strong>Having attended this course, participants should be able "
+"to:</strong>"
+msgstr ""
+"<strong>Na het beëindigen van deze cursus zouden de deelnemers in staat "
+"moeten zijn om het volgende te kunnen:</strong>"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "<strong>Objectives:</strong>"
+msgstr "<strong>Objectieven:</strong>"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "<strong>Our prices include:</strong>"
+msgstr "<strong>In onze prijzen inbegrepen:</strong>"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "<strong>Requirements:</strong>"
+msgstr "<strong>Vereisten:</strong>"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.pricing
+msgid "<strong>Subtotal:</strong>"
+msgstr "<strong>Subtotaal:</strong>"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_template
+msgid ""
+"<strong>Template Header:</strong> this content\n"
+"                                will appear on all quotations using this\n"
+"                                template."
+msgstr ""
+"<strong>Sjabloonkop:</strong> deze inhoud\n"
+"verschijnt op alle offertes die het sjabloon\n"
+"gebruiken."
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
+msgid "<strong>There are three components to the training</strong>"
+msgstr "<strong>Er zijn drie componenten in de training</strong>"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid ""
+"<strong>This offer expired!</strong><br/>\n"
+"                                  Contact us for new quote."
+msgstr ""
+"<strong>Dit voorstel is verlopen!</strong><br/>\n"
+"Neem contact met ons op voor een nieuwe offerte."
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "<strong>This offer expires in</strong>"
+msgstr "<strong>Dit aanbod vervalt in</strong>"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid ""
+"<strong>This quotation has been canceled.</strong> Contact us to get a new "
+"quote."
+msgstr ""
+"<strong>Deze offerte is geannuleerd.</strong> Neem contact met ons op voor "
+"een nieuwe offerte."
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.pricing
+msgid "<strong>Total:</strong>"
+msgstr "<strong>Totaal:</strong>"
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_default
+msgid "About us"
+msgstr "Over ons"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
-"<section data-snippet-id=\"title\">\n"
-"                    <h1 class=\"page-header\">Our Partnership Offer</h1>\n"
-"                </section>\n"
-"                <section data-snippet-id=\"text-block\">\n"
-"                    <div class=\"row\">\n"
-"                        <div class=\"col-md-12\">\n"
-"                            <p>\n"
-"                                Our partnership offer includes all you need to\n"
-"                                grow your business and deliver quality services\n"
-"                                with the Odoo Partner Program.\n"
-"                            </p><p>\n"
-"                                It includes <strong>discounts on Odoo\n"
-"                                Enterprise</strong>, technical and/or functional\n"
-"                                <strong>trainings</strong>,\n"
-"                                <strong>support</strong> services,\n"
-"                                <strong>marketing documents</strong>, access to\n"
-"                                the <strong>partner portal</strong>, rights to\n"
-"                                <strong>use the trademark</strong>, sales support\n"
-"                                from a <strong>dedicated account manager</strong>.\n"
-"                            </p>\n"
-"                        </div>\n"
-"                    </div>\n"
-"                </section>\n"
-"\n"
-"                <section data-snippet-id=\"pricing\">\n"
-"                    <div class=\"row mt32\">\n"
-"                        <div class=\"col-md-4\">\n"
-"                            <div class=\"panel panel-info\">\n"
-"                                <div class=\"panel-heading\">\n"
-"                                   <h3 class=\"panel-title\">A Valuable Product</h3>\n"
-"                                </div>\n"
-"                                <div class=\"panel-body\">\n"
-"                                   <p>\n"
-"                                       Deliver <strong>strong value added services</strong> as you can\n"
-"                                       rely on a leading open source software, with\n"
-"                                       the support of the publisher.\n"
-"                                   </p><p></p>\n"
-"                                       <strong>Grow with your existing customer base</strong>\n"
-"                                       by continuously proposing new modules.\n"
-"                                   \n"
-"                                </div>\n"
-"                            </div>\n"
-"                        </div>\n"
-"                        <div class=\"col-md-4\">\n"
-"                            <div class=\"panel panel-info\">\n"
-"                                <div class=\"panel-heading\">\n"
-"                                   <h3 class=\"panel-title\">A Strong Demand</h3>\n"
-"                                </div>\n"
-"                                <div class=\"panel-body\">\n"
-"                                   <p>\n"
-"                                    Enjoy the traction of the <strong>fastest growing\n"
-"                                    management software</strong> in the world.\n"
-"                                   </p><p>\n"
-"                                    Benefit from the growing customer demand\n"
-"                                    and our Odoo brand.\n"
-"                                   </p>\n"
-"                                </div>\n"
-"                            </div>\n"
-"                        </div>\n"
-"                        <div class=\"col-md-4\">\n"
-"                            <div class=\"panel panel-info\">\n"
-"                                <div class=\"panel-heading\">\n"
-"                                   <h3 class=\"panel-title\">High Margins</h3>\n"
-"                                </div>\n"
-"                                <div class=\"panel-body\">\n"
-"                                   <p>\n"
-"                                     <strong>Get high billing rates</strong> as you deliver a\n"
-"                                     highly valuable software.\n"
-"                                   </p><p>\n"
-"                                     Grow by developing a <strong>recurring\n"
-"                                     revenue flow</strong> from Odoo\n"
-"                                     Enterprise's commission system. \n"
-"                                   </p>\n"
-"                                </div>\n"
-"                            </div>\n"
-"                        </div>\n"
-"                    </div>\n"
-"                </section>\n"
-"\n"
-"                <section data-snippet-id=\"text-block\">\n"
-"                    <h2>A Dedicated Account Manager</h2>\n"
-"                    <p>\n"
-"                        We will assign you a dedicated account manager, an\n"
-"                        experienced sales person, to help you develop your\n"
-"                        Odoo business. The account manager helps you get\n"
-"                        leads, close deals, gives you feedback and best\n"
-"                        practices, delivers sales training and is your direct\n"
-"                        point of contact for any request you may have.\n"
-"                    </p>\n"
-"                </section>\n"
-"\n"
-"                <section data-snippet-id=\"text-block\">\n"
-"                    <div class=\"row\">\n"
-"                        <div class=\"col-md-12\">\n"
-"                            <h2>Get access to our experts</h2>\n"
-"                        </div>\n"
-"                        <div class=\"col-md-7\">\n"
-"                            <p>\n"
-"                                For an extra fee, partners can get access to Odoo's\n"
-"                                core developers and functional experts. This can help\n"
-"                                you succeed in delivering more complex or bigger\n"
-"                                projects by getting the support of highly experienced\n"
-"                                consultants on demand.\n"
-"                            </p>\n"
-"                        </div>\n"
-"                        <div class=\"col-md-5\">\n"
-"                            <img src=\"/website_quote/static/src/img/partner_icon_01.png\">\n"
-"                        </div>\n"
-"                    </div>\n"
-"                </section>\n"
-"\n"
-"                <section data-snippet-id=\"text-block\">\n"
-"                    <div class=\"row\">\n"
-"                        <div class=\"col-md-12\">\n"
-"                            <h2>Official certified partner</h2>\n"
-"                        </div>\n"
-"                        <div class=\"col-md-7\">\n"
-"                            <p>\n"
-"                                Odoo promotes its partners through various ways:\n"
-"                                publication on our website, official communication,\n"
-"                                publication of your success stories, etc. As soon as\n"
-"                                you become an Odoo partner and have followed the\n"
-"                                official trainings, you will be visible on the partner\n"
-"                                directory listing.\n"
-"                            </p>\n"
-"                        </div>\n"
-"                        <div class=\"col-md-5\">\n"
-"                            <img src=\"/website_quote/static/src/img/openerp_gold_partner.png\">\n"
-"                        </div>\n"
-"                    </div>\n"
-"                </section>\n"
-"\n"
-"                <section data-snippet-id=\"text-block\">\n"
-"                    <div class=\"row\">\n"
-"                        <div class=\"col-md-12\">\n"
-"                            <h2>Access to the Lead</h2>\n"
-"                        </div>\n"
-"                        <div class=\"col-md-7\">\n"
-"                            <p>\n"
-"                                Every year, we redirect more than 100,000 customer\n"
-"                                requests to our official partners. These are prospects\n"
-"                                that filled a form on the Odoo website and wanted to\n"
-"                                use Odoo. The right partner to fulfill the customer\n"
-"                                request is selected based on the customer localization\n"
-"                                (nearest partner) and the grade of the partner.\n"
-"                            </p>\n"
-"                        </div>\n"
-"                        <div class=\"col-md-5\">\n"
-"                            <img src=\"/website_quote/static/src/img/partner_icon_02.png\" class=\"img\">\n"
-"                        </div>\n"
-"                    </div>\n"
-"                </section>\n"
-"\n"
-"                <section data-snippet-id=\"text-block\">\n"
-"                    <h2>Benefit from the Odoo branding</h2>\n"
-"                    <p>\n"
-"                        Every year, we redirect more than 100,000 customer\n"
-"                        requests to our official partners. These are prospects\n"
-"                        that filled a form on the Odoo website and wanted to\n"
-"                        use Odoo. The right partner to fulfill the customer\n"
-"                        request is selected based on the customer localization\n"
-"                        (nearest partner) and the grade of the partner.\n"
-"                    </p>\n"
-"                </section>\n"
-"\n"
-"                <section class=\"mb32\" data-snippet-id=\"text-block\">\n"
-"                    <h2>Test developments automatically</h2>\n"
-"                    <div class=\"row\">\n"
-"                        <div class=\"col-md-5\">\n"
-"                            <img src=\"/website_quote/static/src/img/partner_sc_01.png\" class=\"img shadow\">\n"
-"                        </div>\n"
-"                        <div class=\"col-md-7\">\n"
-"                            <p class=\"mt23\">\n"
-"                                Save time in your implementation project by having your\n"
-"                                developments tested automatically by our automated test\n"
-"                                servers. At every code commit, you get a full Odoo\n"
-"                                instance that you can try out online. When this\n"
-"                                instance is deployed, your code is automatically put\n"
-"                                through our 2000+ automated unit tests.\n"
-"                            </p><p>\n"
-"                                Our automated testing server software is called Runbot,\n"
-"                                and you can try it out here: http://runbot.openerp.com.\n"
-"                                A dedicated runbot server is available for every\n"
-"                                partner.\n"
-"                            </p>\n"
-"                        </div>\n"
-"                    </div>\n"
-"                </section>\n"
-"            "
-msgstr "<section data-snippet-id=\"title\">\n                    <h1 class=\"page-header\">Ons vennootschap aanbod</h1>\n                </section>\n                <section data-snippet-id=\"text-block\">\n                    <div class=\"row\">\n                        <div class=\"col-md-12\">\n                            <p>\n                                Ons vennootschap aanbod bevat alles dat u nodig heeft \n                                om uw zaak te doen groeien en levert kwaliteit services\n                                met het Odoo Partner Programma.\n                            </p><p>\n                                Het bevat <strong>kortingen op Odoo\n                                Enterprise</strong>, technische en/of functionele\n                                <strong>trainingen</strong>,\n                                <strong>ondersteuning</strong> services,\n                                <strong>marketing documenten</strong>, toegang tot\n                                het <strong>partner portaal</strong>, rechten om\n                                <strong>handelsmerk</strong>te gebruiken, verkoopondersteuning\n                                van een<strong>toegewijde account managerr</strong>.\n                            </p>\n                        </div>\n                    </div>\n                </section>\n\n                <section data-snippet-id=\"pricing\">\n                    <div class=\"row mt32\">\n                        <div class=\"col-md-4\">\n                            <div class=\"panel panel-info\">\n                                <div class=\"panel-heading\">\n                                   <h3 class=\"panel-title\">Een kostbaar product</h3>\n                                </div>\n                                <div class=\"panel-body\">\n                                   <p>\n                                       Bezorg<strong>sterke diensten met toegevoegde waarde</strong> zodat u kan\n                                       vertrouwen op een leidende open source software, met\n                                       de ondersteuning van de uitgever.\n                                   </p><p></p>\n                                       <strong>Groei met uw bestaande klantenbasis</strong>\n                                       door constant nieuwe modules voor te stellen.\n                                   \n                                </div>\n                            </div>\n                        </div>\n                        <div class=\"col-md-4\">\n                            <div class=\"panel panel-info\">\n                                <div class=\"panel-heading\">\n                                   <h3 class=\"panel-title\">Een sterke vraag</h3>\n                                </div>\n                                <div class=\"panel-body\">\n                                   <p>\n                                   Geniet van de tractie van de<strong>sterkst groeiende\n                                    management software</strong> in de wereld.\n                                   </p><p>\n                                    Profiteer van de groeiende vraag van de klanten\n                                    en ons Odoo merk.\n                                   </p>\n                                </div>\n                            </div>\n                        </div>\n                        <div class=\"col-md-4\">\n                            <div class=\"panel panel-info\">\n                                <div class=\"panel-heading\">\n                                   <h3 class=\"panel-title\">Hoge marges</h3>\n                                </div>\n                                <div class=\"panel-body\">\n                                   <p>\n                                     <strong>Krijg hoge factuurtarieven</strong> terwijl u een\n                                    zeer waardevolle software uitbrengt.\n                                   </p><p>\n                                     Groei door het ontwikkelen van een <strong>terugkerende\n                                     inkomsten flow</strong> van Odoo\n                                     Enterprise's commissie systeem. \n                                   </p>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </section>\n\n                <section data-snippet-id=\"text-block\">\n                    <h2>Een toegewijde account beheerderr</h2>\n                    <p>\n                        We wijzen u een toegewijde account manager toe, een\n                        ervaren verkoopspersoons om uw te helpen bij het ontwikkelen van uw\n                        Odoo bedrijf. De account manager helpt uw met\n                        leads, bijna deals, geeft u feedback en de beste\n                        werkwijzes, verzorgt verkooptrainingen en is uw directe\n                        aanspreekpunt voor elke vraag die uw heeft.\n                    </p>\n                </section>\n\n                <section data-snippet-id=\"text-block\">\n                    <div class=\"row\">\n                        <div class=\"col-md-12\">\n                            <h2>Krijg toegang tot onze experts</h2>\n                        </div>\n                        <div class=\"col-md-7\">\n                            <p>\n                                Voor een extra vergoeding krijgen partners toegang tot Odoo's\n                                ontwikkelaars en functionele experts. Dit kan uw helpen\n                                slagen in het leveren van complexere of grotere\n                                projecten door ondersteuning te krijgen van  zeer ervaren\n                                consultants op aanvraag.\n                            </p>\n                        </div>\n                        <div class=\"col-md-5\">\n                            <img src=\"/website_quote/static/src/img/partner_icon_01.png\">\n                        </div>\n                    </div>\n                </section>\n\n                <section data-snippet-id=\"text-block\">\n                    <div class=\"row\">\n                        <div class=\"col-md-12\">\n                            <h2>Officiële gecertificeerde partner</h2>\n                        </div>\n                        <div class=\"col-md-7\">\n                            <p>\n                                Odoo promoot zijn partners via meerdere manieren:\n                                publicatie op onze website, officiële communicatie,\n                                publicatie van uw succesverhalen, etc. Zodra u een\n                                Odoo partner bent en de officiële trainingen\n                                heeft gevolgd, bent u zichtbaar op de officiële\n                                lijst.\n                            </p>\n                        </div>\n                        <div class=\"col-md-5\">\n                            <img src=\"/website_quote/static/src/img/openerp_gold_partner.png\">\n                        </div>\n                    </div>\n                </section>\n\n                <section data-snippet-id=\"text-block\">\n                    <div class=\"row\">\n                        <div class=\"col-md-12\">\n                            <h2>Toegang tot de lead</h2>\n                        </div>\n                        <div class=\"col-md-7\">\n                            <p>\n                                Ieder jaar, sturen we meer dan 100.000 klantverzoeken door naar\n                                onze officiële partners. Dit zijn prospects\n                                die een formulier hebben ingevuld op de Odoo website en die Odoo\n                                willen gebruiken. De juiste partner voor de klant zijn verzoek\n                                wordt gekozen op de klant zijn locatie \n                                (dichtstbijzijnde partner) en de graad van onze partner.\n                            </p>\n                        </div>\n                        <div class=\"col-md-5\">\n                            <img src=\"/website_quote/static/src/img/partner_icon_02.png\" class=\"img\">\n                        </div>\n                    </div>\n                </section>\n\n                <section data-snippet-id=\"text-block\">\n                    <h2>Profiteer van de Odoo branding</h2>\n                    <p>\n                                Ieder jaar, sturen we meer dan 100.000 klantverzoeken door naar\n                                onze officiële partners. Dit zijn prospects\n                                die een formulier hebben ingevuld op de Odoo website en die Odoo\n                                willen gebruiken. De juiste partner voor de klant zijn verzoek\n                                wordt gekozen op de klant zijn locatie \n                                en de graad van de partner.\n                    </p>\n                </section>\n\n                <section class=\"mb32\" data-snippet-id=\"text-block\">\n                    <h2>Test ontwikkelingen automatisch</h2>\n                    <div class=\"row\">\n                        <div class=\"col-md-5\">\n                            <img src=\"/website_quote/static/src/img/partner_sc_01.png\" class=\"img shadow\">\n                        </div>\n                        <div class=\"col-md-7\">\n                            <p class=\"mt23\">\n                                Win tijd in uw implementatie van uw project door uw ontwikkeling\n                                automatisch te testen met onze geautomatiseerde test\n                                servers. Bij elke code wijziging, krijgt uw een volledige  Odoo\n                                instancie die uw online kan uitproberen. Wanneer deze\n                                instance is ingezet, wordt uw code automatisch getest\n                               door onze 2000+ geautomatiseerde unit tests.\n                            </p><p>\n                                Onze geautomatiseerde server software noemt Runbot,\n                                en u kan ze hier proberen: http://runbot.openerp.com.\n                               Een runbot server, enkel voor uw, is toegewezen voor elke\n                                partner.\n                            </p>\n                        </div>\n                    </div>\n                </section>\n            "
-
-#. module: website_quote
-#: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
-msgid ""
-"<section data-snippet-id=\"title\">\n"
-"                    <h1>Advanced CRM Functional</h1>\n"
-"                </section>\n"
-"                <section data-snippet-id=\"text-image\">\n"
-"                    <div class=\"container\">\n"
-"                        <div class=\"row\">\n"
-"                            <div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n"
-"                                <h2>Objectives</h2>\n"
-"                            </div>\n"
-"                            <div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n"
-"                                <p><span style=\"text-align: -webkit-center; \">Upon completion of the training, the participant will be able to:</span></p>\n"
-"                                <ul class=\"list-group\">\n"
-"                                    <li class=\"list-group-item\"> Install and administer Odoo.</li>\n"
-"                                    <li class=\"list-group-item\"> Become an Odoo Consultant.</li>\n"
-"                                    <li class=\"list-group-item\"> Do the GAP analysis of any Business Process.</li>\n"
-"                                    <li class=\"list-group-item\"> Understand the functional concepts, business processes byOdoo.</li>\n"
-"                                    <li class=\"list-group-item\"> Operate/Work with Odoo Smoothly on regular basis.</li>\n"
-"                                    <li class=\"list-group-item\"> Configure Odoo using the standard modules.</li>\n"
-"                                    <li class=\"list-group-item\"> Change the look and feel from the front-end(GUI) rather than aneed of technical knowledge.</li>\n"
-"                                </ul>\n"
-"\n"
-"                            </div>\n"
-"                        </div>\n"
-"                    </div>\n"
-"                    <div class=\"container\">\n"
-"                        <div class=\"row\">\n"
-"                            <div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n"
-"                                <h2>What you will learn?</h2>\n"
-"                            </div>\n"
-"                            <div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
-"                                <div class=\"panel panel-info\">\n"
-"                                    <div class=\"panel-heading text-center\">\n"
-"                                        <h3 style=\"margin: 0\">Day 1</h3>\n"
-"                                    </div>\n"
-"                                    <ul class=\"list-group\">\n"
-"                                        <li class=\"list-group-item\">Introduction</li>\n"
-"                                        <li class=\"list-group-item\">Installation and Configuration</li>\n"
-"                                        <li class=\"list-group-item\">Database management</li>\n"
-"                                        <li class=\"list-group-item\">Module Installation</li>\n"
-"                                        <li class=\"list-group-item\">Company Configuration and Multi Company Management</li>\n"
-"                                        <li class=\"list-group-item\">Multi Language Management</li>\n"
-"                                        <li class=\"list-group-item\">Fetchmail Configuration</li>\n"
-"                                    </ul>\n"
-"                                </div>\n"
-"                            </div>\n"
-"                            <div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
-"                                <div class=\"panel panel-info\">\n"
-"                                    <div class=\"panel-heading text-center\">\n"
-"                                        <h3 style=\"margin: 0\">Day 2</h3>\n"
-"                                    </div>\n"
-"                                    <ul class=\"list-group\">\n"
-"                                        <li class=\"list-group-item\">Product Category &amp; product Configuration with Order point</li>\n"
-"                                        <li class=\"list-group-item\">Customers/Suppliers</li>\n"
-"                                        <li class=\"list-group-item\">Pricelist and auto Segmentation</li>\n"
-"                                        <li class=\"list-group-item\">Convert Lead to Opportunity &amp; Customer management</li>\n"
-"                                        <li class=\"list-group-item\">Schedule Phone Calls and Meetings</li>\n"
-"                                        <li class=\"list-group-item\">Negotiation and Quotation Revisions</li>\n"
-"                                        <li class=\"list-group-item\">Generate Sale Order &amp; direct mail to customer</li>\n"
-"                                    </ul>\n"
-"                                </div>\n"
-"                            </div>\n"
-"                            <div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
-"                                <div class=\"panel panel-info\">\n"
-"                                    <div class=\"panel-heading text-center\">\n"
-"                                        <h3 style=\"margin: 0\">Day 3</h3>\n"
-"                                    </div>\n"
-"                                    <ul class=\"list-group\">\n"
-"                                        <li class=\"list-group-item\">Warehouse Management Introduction</li>\n"
-"                                        <li class=\"list-group-item\">Shop, Location &amp; Warehouse Configuration</li>\n"
-"                                        <li class=\"list-group-item\">Opening Stock and Physical Inventory</li>\n"
-"                                        <li class=\"list-group-item\">Purchase Requisition and Purchase Order Management</li>\n"
-"                                        <li class=\"list-group-item\">Partial and Full Shipment / Delivery</li>\n"
-"                                        <li class=\"list-group-item\">Product Expiry and Warranty</li>\n"
-"                                        <li class=\"list-group-item\">After Sales Service (Helpdesk)</li>\n"
-"                                    </ul>\n"
-"                                </div>\n"
-"                            </div>\n"
-"                        </div>\n"
-"                    </div>\n"
-"                    <div class=\"container\">\n"
-"                        <div class=\"row\">\n"
-"                            <div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n"
-"                                <h2>Requirements</h2>\n"
-"\n"
-"                                <ul><li>Bring your own laptop.</li>\n"
-"                                    <li>Participants are expected to have some knowledge in programming. A basic knowledge of the Python programming is recommended.</li>\n"
-"                                    <li>Participants preferably have a functional knowledge of our software (see Functional Training).</li>\n"
-"                                </ul><p></p>\n"
-"\n"
-"                                <p>To get more information, visit the <a href=\"http://openerp.com/\">Odoo Official Website</a>.</p>\n"
-"                            </div>\n"
-"                        </div>\n"
-"                    </div>\n"
-"                </section>\n"
-"            "
-msgstr "<section data-snippet-id=\"title\">\n                    <h1>Geavanceerde functionele CRM</h1>\n                </section>\n                <section data-snippet-id=\"text-image\">\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n                                <h2>Objectives</h2>\n                            </div>\n                            <div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n                                <p><span style=\"text-align: -webkit-center; \">Na voltooiing van de training, zal de deelnemer volgende dingen kunnen:</span></p>\n                                <ul class=\"list-group\">\n                                    <li class=\"list-group-item\"> Installeren en beheren van Odoo.</li>\n                                    <li class=\"list-group-item\"> Een Odoo consultant worden.</li>\n                                    <li class=\"list-group-item\"> GAP analyse doen van bedrijfsprocessen.</li>\n                                    <li class=\"list-group-item\"> Functionele concepten  en bedrijfsprocessen met Odoo verstaan.</li>\n                                    <li class=\"list-group-item\"> Opereren/werken met Odoo op regelmatige basis.</li>\n                                    <li class=\"list-group-item\"> Configureren van Odoo met gebruik van de standaard modules.</li>\n                                    <li class=\"list-group-item\"> De look en feel wijzigen van de front-end(GUI) in plaats van technische kennis nodig te hebben.</li>\n                                </ul>\n\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n                                <h2>Wat leert u?</h2>\n                            </div>\n                            <div class=\"col-md-4\" data-snippet-id=\"colmd\">\n                                <div class=\"panel panel-info\">\n                                    <div class=\"panel-heading text-center\">\n                                        <h3 style=\"margin: 0\">Day 1</h3>\n                                    </div>\n                                    <ul class=\"list-group\">\n                                        <li class=\"list-group-item\">Introductie</li>\n                                        <li class=\"list-group-item\">Installatie en Configuratie</li>\n                                        <li class=\"list-group-item\">Database beheer</li>\n                                        <li class=\"list-group-item\">Module installatie</li>\n                                        <li class=\"list-group-item\">Bedrijfsconfiguratie en multi-bedrijf beheer</li>\n                                        <li class=\"list-group-item\">Meerdere talen beheren</li>\n                                        <li class=\"list-group-item\">Fetchmail configuratie</li>\n                                    </ul>\n                                </div>\n                            </div>\n                            <div class=\"col-md-4\" data-snippet-id=\"colmd\">\n                                <div class=\"panel panel-info\">\n                                    <div class=\"panel-heading text-center\">\n                                        <h3 style=\"margin: 0\">Day 2</h3>\n                                    </div>\n                                    <ul class=\"list-group\">\n                                        <li class=\"list-group-item\">Product Categorie &amp; product Configuratie met het bestellingspunt</li>\n                                        <li class=\"list-group-item\">Klanten/Leveranciers</li>\n                                        <li class=\"list-group-item\">Prijslijsten en automatische segmentatie</li>\n                                        <li class=\"list-group-item\">Omzetten van Lead naar Opportunity &amp; klantbeheer</li>\n                                        <li class=\"list-group-item\">Inplannen van telefoongesprekken en meetings</li>\n                                        <li class=\"list-group-item\">Onderhandelen and offerte wijzigingen</li>\n                                        <li class=\"list-group-item\">Genereren van verkooporder &amp; directe mails naar klanten</li>\n                                    </ul>\n                                </div>\n                            </div>\n                            <div class=\"col-md-4\" data-snippet-id=\"colmd\">\n                                <div class=\"panel panel-info\">\n                                    <div class=\"panel-heading text-center\">\n                                        <h3 style=\"margin: 0\">Day 3</h3>\n                                    </div>\n                                    <ul class=\"list-group\">\n                                        <li class=\"list-group-item\">Magazijnbeheer introductie</li>\n                                        <li class=\"list-group-item\">Winkel, Locatie &amp; Magazijnbeheer configuratie</li>\n                                        <li class=\"list-group-item\">Openingsstock en inventarisatie</li>\n                                        <li class=\"list-group-item\">Aanvraag tot bestellen en aankoopbeheer</li>\n                                        <li class=\"list-group-item\">Deels en volledige leveringen</li>\n                                        <li class=\"list-group-item\">Productgarantie en producthoudbaarheid</li>\n                                        <li class=\"list-group-item\">Na verkoop (Helpdesk)</li>\n                                    </ul>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n                                <h2>Vereisten</h2>\n\n                                <ul><li>Breng uw eigen laptop mee.</li>\n                                    <li>Van deelnemers wordt verwacht dat ze een basiskennis in programmeren hebben. Een basiskennis van de programmeertaal Python is aanbevolen.</li>\n                                    <li>Deelnemers hebben bij voorkeur een functionele kennis van onze software (zie Functionele Training).</li>\n                                </ul><p></p>\n\n                                <p>Bezoek voor meer informatie de <a href=\"http://openerp.com/\">offiële Odoo website</a>.</p>\n                            </div>\n                        </div>\n                    </div>\n                </section>\n            "
-
-#. module: website_quote
-#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
-msgid ""
-"<section data-snippet-id=\"title\">\n"
-"                    <h1>Online Training + Certification</h1>\n"
-"                </section>\n"
-"                <section data-snippet-id=\"text-image\">\n"
-"                    <div class=\"row\">\n"
-"                        <div class=\"col-md-12 mb32\">\n"
-"                            <p>These courses feature the same high quality course content found in our traditional classroom trainings, supplemented with modular sessions and cloud-based labs. Many of our online learning courses also include dozens of recorded webinars and live sessions by our senior instructors. At the end of the training, you can pass the Odoo Certification exam in one of the 5000+ Pearson VUE test centers worldwide.</p>\n"
-"                        </div>\n"
-"                        <div class=\"col-md-offset-1\">\n"
-"                            <h3>Your advantages</h3>\n"
-"                            <ul>\n"
-"                                <li>Modular approach applied to the learning method</li>\n"
-"                                <li>New interactive learning experience</li>\n"
-"                                <li>Lower training budget for the same quality courses</li>\n"
-"                                <li>Better comfort to facilitate your learning process</li>\n"
-"                            </ul>\n"
-"                        </div>\n"
-"                        <div class=\"col-md-12\">\n"
-"                            <h2>Structure of the Training</h2>\n"
-"                        </div>\n"
-"                        <div class=\"col-md-5 col-md-offset-1 mt16 mb16\">\n"
-"                            <img class=\"img img-responsive\" src=\"/website_quote/static/src/img/online_training.png\">\n"
-"                        </div>\n"
-"                        <div class=\"col-md-6 mt32\">\n"
-"                            <h4><strong>There are three components to the training</strong></h4>\n"
-"                            <ul>\n"
-"                                <li>Videos with detailed demos</li>\n"
-"                                <li>Hands-on exercises and their solutions</li>\n"
-"                                <li>Live Q&amp;A sessions with a trainer</li>\n"
-"                            </ul>\n"
-"                        </div>\n"
-"                    </div>\n"
-"                </section>\n"
-"            "
+"Access to an Account Manager at Odoo SA to discuss strategic, sales and "
+"service issues"
 msgstr ""
 
 #. module: website_quote
-#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
-msgid ""
-"<section data-snippet-id=\"title\">\n"
-"                    <h1>Technical Training</h1>\n"
-"                </section>\n"
-"                <section id=\"whatsuit\" data-snippet-id=\"text-block\">\n"
-"                    <div class=\"container\">\n"
-"                        <div class=\"row\">\n"
-"                            <div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n"
-"                                <h2>Course Summary</h2>\n"
-"                            </div>\n"
-"                            <div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n"
-"                                <p><span style=\"text-align: -webkit-center; \">This course is dedicated to developers who need to grasp knowledge of the <strong>business applications development </strong>process. This course is for new developers or for IT professionals eager to learn more about technical aspects.</span></p>\n"
-"                            </div>\n"
-"                        </div>\n"
-"                    </div>\n"
-"                    <div class=\"container\">\n"
-"                        <div class=\"row\">\n"
-"                            <div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n"
-"                                <h2>What you will learn?</h2>\n"
-"                            </div>\n"
-"                            <div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
-"                                <div class=\"panel panel-info\">\n"
-"                                    <div class=\"panel-heading text-center\">\n"
-"                                        <h3 style=\"margin: 0\">Day 1</h3>\n"
-"                                        <p class=\"text-muted\" style=\"margin: 0\">Introduction to Javascript</p>\n"
-"                                    </div>\n"
-"                                    <ul class=\"list-group\">\n"
-"                                        <li class=\"list-group-item\">Hello World</li>\n"
-"                                        <li class=\"list-group-item\">Variables &amp; Operators</li>\n"
-"                                        <li class=\"list-group-item\">Dive into Strings</li>\n"
-"                                        <li class=\"list-group-item\">Functions</li>\n"
-"                                        <li class=\"list-group-item\">Loops</li>\n"
-"                                        <li class=\"list-group-item\">Arrays</li>\n"
-"                                    </ul>\n"
-"                                    <div class=\"panel-footer text-center\">\n"
-"                                        <p class=\"text-muted\"><i>You will be able to develop simple dynamic compenents in HTML pages.</i></p>\n"
-"                                    </div>\n"
-"                                </div>\n"
-"                            </div>\n"
-"                            <div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
-"                                <div class=\"panel panel-info\">\n"
-"                                    <div class=\"panel-heading text-center\">\n"
-"                                        <h3 style=\"margin: 0\">Day 2</h3>\n"
-"\n"
-"                                        <p class=\"text-muted\" style=\"margin: 0\">Odoo Web Client</p>\n"
-"                                    </div>\n"
-"                                    <ul class=\"list-group\">\n"
-"                                        <li class=\"list-group-item\">Introduction to JQuery</li>\n"
-"                                        <li class=\"list-group-item\">Advanced JQuery</li>\n"
-"                                        <li class=\"list-group-item\">Underscore</li>\n"
-"                                        <li class=\"list-group-item\">Introduction to QWeb</li>\n"
-"                                        <li class=\"list-group-item\">Controlers and Views</li>\n"
-"                                        <li class=\"list-group-item\">Bootstrap CSS</li>\n"
-"                                        <li class=\"list-group-item\">Calling the ORM</li>\n"
-"                                    </ul>\n"
-"                                    <div class=\"panel-footer text-center\">\n"
-"                                        <p class=\"text-muted\"><i>You will be able to create dynamic page interacting with the ORM.</i></p>\n"
-"                                    </div>\n"
-"                                </div>\n"
-"                            </div>\n"
-"                            <div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
-"                                <div class=\"panel panel-info\">\n"
-"                                    <div class=\"panel-heading text-center\">\n"
-"                                        <h3 style=\"margin: 0\">Day 3</h3>\n"
-"\n"
-"                                        <p class=\"text-muted\" style=\"margin: 0\">Building a Full Application</p>\n"
-"                                    </div>\n"
-"\n"
-"                                    <ul class=\"list-group\">\n"
-"                                        <li class=\"list-group-item\">Modules</li>\n"
-"                                        <li class=\"list-group-item\">Python Objects</li>\n"
-"                                        <li class=\"list-group-item\">Report Engine</li>\n"
-"                                        <li class=\"list-group-item\">Workflows</li>\n"
-"                                        <li class=\"list-group-item\">Training Center Module</li>\n"
-"                                        <li class=\"list-group-item\">Integrated Help</li>\n"
-"                                        <li class=\"list-group-item\">How to Debug</li>\n"
-"                                    </ul>\n"
-"                                    <div class=\"panel-footer text-center\">\n"
-"                                        <p class=\"text-muted\"><i>You will be able to develop a full application with backend and user interface.</i></p>\n"
-"                                    </div>\n"
-"                                </div>\n"
-"                            </div>\n"
-"                        </div>\n"
-"                    </div>\n"
-"                    <div class=\"container\">\n"
-"                        <div class=\"row\">\n"
-"                            <div class=\"col-md-12 text-center mb16 mt0\" data-snippet-id=\"colmd\">\n"
-"                                <h2>Requirements</h2>\n"
-"                            </div>\n"
-"\n"
-"                            <div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n"
-"                                <p><strong>Objectives:</strong></p>\n"
-"\n"
-"                                <p><strong>Having attended this course, participants should be able to:</strong></p>\n"
-"\n"
-"                                <ul><li>Understand the development concepts and architecture;</li>\n"
-"                                    <li>Install and administer your own server;</li>\n"
-"                                    <li>Develop a new module for a particular application.</li>\n"
-"                                </ul><p></p>\n"
-"\n"
-"                                <p><strong>Our prices include:</strong></p>\n"
-"\n"
-"                                <ul><li>drinks and lunch;</li>\n"
-"                                    <li>training material.</li>\n"
-"                                </ul><p></p>\n"
-"\n"
-"                                <p><strong>Requirements:</strong></p>\n"
-"\n"
-"                                <ul><li>Bring your own laptop.</li>\n"
-"                                    <li>Participants are expected to have some knowledge in programming. A basic knowledge of the Python programming is recommended.</li>\n"
-"                                    <li>Participants preferably have a functional knowledge of our software (see Functional Training).</li>\n"
-"                                </ul><p></p>\n"
-"\n"
-"                                <p>To get more information, visit the <a href=\"https://www.odoo.com/\">Odoo Official Website</a>.</p>\n"
-"                            </div>\n"
-"                        </div>\n"
-"                    </div>\n"
-"                </section>\n"
-"            "
-msgstr "<section data-snippet-id=\"title\">\n                    <h1>Technische Training</h1>\n                </section>\n                <section id=\"whatsuit\" data-snippet-id=\"text-block\">\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n                                <h2>Samenvatting cursus</h2>\n                            </div>\n                            <div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n                                <p><span style=\"text-align: -webkit-center; \">Deze cursus richt zich op ontwikkelaars die behoefte hebben aan kennis van de <strong> ontwikkeling van zakelijke toepassingen </strong>. Deze cursus is voor nieuwe ontwikkelaars of voor IT-professionals die staan te popelen om meer over de technische aspecten te leren. </span></p>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n                                <h2>Wat leert u?</h2>\n                            </div>\n                            <div class=\"col-md-4\" data-snippet-id=\"colmd\">\n                                <div class=\"panel panel-info\">\n                                    <div class=\"panel-heading text-center\">\n                                        <h3 style=\"margin: 0\">Dag 1</h3>\n                                        <p class=\"text-muted\" style=\"margin: 0\">Introductie tot Javascript</p>\n                                    </div>\n                                    <ul class=\"list-group\">\n                                        <li class=\"list-group-item\">Hello World</li>\n                                        <li class=\"list-group-item\">Variabelen &amp; Operators</li>\n                                        <li class=\"list-group-item\">Duik in Strings</li>\n                                        <li class=\"list-group-item\">Functies</li>\n                                        <li class=\"list-group-item\">Loops</li>\n                                        <li class=\"list-group-item\">Arrays</li>\n                                    </ul>\n                                    <div class=\"panel-footer text-center\">\n                                        <p class=\"text-muted\"><i>U zal in staat zijn om eenvoudige dynamische compenenten in HTML-pagina's te maken.</i></p>\n                                    </div>\n                                </div>\n                            </div>\n                            <div class=\"col-md-4\" data-snippet-id=\"colmd\">\n                                <div class=\"panel panel-info\">\n                                    <div class=\"panel-heading text-center\">\n                                        <h3 style=\"margin: 0\">Dag 2</h3>\n\n                                        <p class=\"text-muted\" style=\"margin: 0\">Odoo Web Client</p>\n                                    </div>\n                                    <ul class=\"list-group\">\n                                        <li class=\"list-group-item\">Introductie tot JQuery</li>\n                                        <li class=\"list-group-item\">Geavanceerde JQuery</li>\n                                        <li class=\"list-group-item\">Underscore</li>\n                                        <li class=\"list-group-item\">Introductie tot QWeb</li>\n                                        <li class=\"list-group-item\">Controllers en Views</li>\n                                        <li class=\"list-group-item\">Bootstrap CSS</li>\n                                        <li class=\"list-group-item\">Aanspreken van de ORM</li>\n                                    </ul>\n                                    <div class=\"panel-footer text-center\">\n                                        <p class=\"text-muted\"><i>U zal in staat zijn om simpele pagina interacties te maken met de ORM.</i></p>\n                                    </div>\n                                </div>\n                            </div>\n                            <div class=\"col-md-4\" data-snippet-id=\"colmd\">\n                                <div class=\"panel panel-info\">\n                                    <div class=\"panel-heading text-center\">\n                                        <h3 style=\"margin: 0\">Dag 3</h3>\n\n                                        <p class=\"text-muted\" style=\"margin: 0\">Bouwen van een volledige applicatie</p>\n                                    </div>\n\n                                    <ul class=\"list-group\">\n                                        <li class=\"list-group-item\">Modules</li>\n                                        <li class=\"list-group-item\">Python Objecten</li>\n                                        <li class=\"list-group-item\">Rapport Engine</li>\n                                        <li class=\"list-group-item\">Workflows</li>\n                                        <li class=\"list-group-item\">Training Center Module</li>\n                                        <li class=\"list-group-item\">Geïntegreerde Help</li>\n                                        <li class=\"list-group-item\">Hoe te debuggen</li>\n                                    </ul>\n                                    <div class=\"panel-footer text-center\">\n                                        <p class=\"text-muted\"><i>U zal in staat zijn om een ​​volledige toepassing met backend en user interface te ontwikkelen.</i></p>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-12 text-center mb16 mt0\" data-snippet-id=\"colmd\">\n                                <h2>Vereisten</h2>\n                            </div>\n\n                            <div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n                                <p><strong>Objectieven:</strong></p>\n\n                                <p><strong>Het volgen van deze cursus moet de deelnemers in staat stellen om</strong></p>\n\n                                <ul><li>Begrijpen van ontwikkelingsconcepten en architectuur;</li>\n                                    <li>Installeren en beheren van uw eigen server;</li>\n                                    <li>Ontwikkel een nieuwe module voor een specifieke applicatie.</li>\n                                </ul><p></p>\n\n                                <p><strong>Onze prijzen bevatten:</strong></p>\n\n                                <ul><li>drinken en eten;</li>\n                                    <li>trainingsmateriaal.</li>\n                                </ul><p></p>\n\n                                <p><strong>Vereisten:</strong></p>\n\n                                <ul><li>Breng uw eigen laptop mee.</li>\n                                    <li>Van deelnemers wordt verwacht een basiskennis in programmeren te hebben. Een basiskennis van de programmeertaal Python is aanbevolen.</li>\n                                    <li>Deelnemers hebben liefst een functionele kennis van onze software (zie Functionele Training).</li>\n                                </ul><p></p>\n\n                                <p>Bezoek voor meer informatie onze <a href=\"https://www.odoo.com/\">officiële Odoo website</a>.</p>\n                            </div>\n                        </div>\n                    </div>\n                </section>\n            "
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid "Access to the Partners Portal"
+msgstr "Toegang tot het partner portaal"
 
 #. module: website_quote
-#: view:website:website_quote.quotation_toolbar
-msgid "Accept"
-msgstr "Accepteren"
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_active
+msgid "Active"
+msgstr "Actief"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
-msgid "Accept Order"
-msgstr "Accepteer order"
+#: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
+msgid "Add to order lines"
+msgstr "Toevoegen aan orderregels"
 
 #. module: website_quote
+#: model:product.product,name:website_quote.product_product_quote_3
 #: model:product.template,name:website_quote.product_product_quote_3_product_template
 #: model:product.template,name:website_quote.product_template_quote_3
 #: model:sale.quote.option,name:website_quote.website_sale_option_line_1
@@ -627,114 +418,327 @@ msgid "Advanced CRM Functional"
 msgstr "Geavanceerde CRM functtionaliteiten"
 
 #. module: website_quote
-#: field:sale.order,amount_undiscounted:0
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Advanced JQuery"
+msgstr "Geavanceerde JQuery"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.pricing
+msgid "Amount"
+msgstr "Bedrag"
+
+#. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_amount_undiscounted
 msgid "Amount Before Discount"
 msgstr "Totaal voor korting"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid "An Odoo official partner commits to:"
+msgstr "Een officiële Odoo partner verbind zich tot:"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_search
+msgid "Archived"
+msgstr "Gearchiveerd"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Arrays"
+msgstr "Arrays"
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_default
+msgid ""
+"As a leading professional services firm,\n"
+"                                       we know that success is all about the\n"
+"                                       commitment we put on strong services."
+msgstr ""
+"Als een toonaangevend professionele services bedrijf,\n"
+"weten we dat het succes sterk afhangt van de\n"
+"toeweiding die we hebben voor onze sterk services."
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.chatter
 msgid "Ask Changes"
 msgstr "Vraag wijziging aan"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.so_template
+msgid "Back"
+msgstr "Terug"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation_content
+msgid "Back to Sales Order"
+msgstr "Terug naar verkooporder"
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid "Be available for periodic review meeting with Odoo SA account managers"
+msgstr ""
+"Wees beschikbaar voor periode meetings met de account managers van Odoo SA"
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid ""
+"Be the first level of support for his Odoo customers and use Odoo SA for the"
+" second level of support (mostly for bug fixes)"
+msgstr ""
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid "Become a Certified Odoo Partner"
+msgstr "Wordt een Odoo certified partner"
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid "Benefits for a partner"
+msgstr "Voordelen voor een partner"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
+msgid "Better comfort to facilitate your learning process"
+msgstr "Beter comfort om uw leerproces te faciliteren"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Bill To:"
 msgstr "Factureren aan:"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Bootstrap CSS"
+msgstr "Bootstrap CSS"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Bring your own laptop."
+msgstr "Breng uw eigen laptop mee."
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Building a Full Application"
+msgstr "Bouw een volledige applicatie"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Calling the ORM"
+msgstr "Het ORM aanroepen."
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Cancel"
-msgstr "Annuleren"
+msgstr "Annuleer"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
-msgid "Clear"
-msgstr "Wissen"
+#: model:ir.model.fields,help:website_quote.field_sale_order_require_payment
+#: model:ir.model.fields,help:website_quote.field_sale_quote_template_require_payment
+msgid ""
+"Choose how you want to confirm an order to launch the delivery process. You "
+"can either request a digital signature or an upfront payment. With a digital"
+" signature, you can request the payment when issuing the invoice."
+msgstr ""
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:ir.actions.act_window,help:website_quote.action_sale_quotation_template
+msgid "Click here to create your template."
+msgstr "Klik hier om uw sjabloon aan te maken."
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
+msgid "Confirmation"
+msgstr "Bevestiging"
+
+#. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_mail_template_id
+msgid "Confirmation Mail"
+msgstr "Bevestiging e-mail"
+
+#. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_require_payment
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_require_payment
+msgid "Confirmation Mode"
+msgstr "Bevestig modus"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Contact us"
-msgstr "Contact met ons op te nemen"
+msgstr "Contacteer ons"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
-msgid "Contact us for new quote."
-msgstr "Neem contact met ons op voor een nieuwe offerte."
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Controllers and Views"
+msgstr "Controllers en weergaves"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
-msgid "Contact us to get a new quote."
-msgstr "Neem contact met ons op om een nieuwe offerte te ontvangen."
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Course Summary"
+msgstr "Cursussamenvatting"
 
 #. module: website_quote
-#: field:sale.order.option,create_uid:0 field:sale.quote.line,create_uid:0
-#: field:sale.quote.option,create_uid:0 field:sale.quote.template,create_uid:0
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_create_uid
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_create_uid
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_create_uid
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_create_uid
 msgid "Created by"
 msgstr "Aangemaakt door"
 
 #. module: website_quote
-#: field:sale.order.option,create_date:0 field:sale.quote.line,create_date:0
-#: field:sale.quote.option,create_date:0
-#: field:sale.quote.template,create_date:0
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_create_date
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_create_date
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_create_date
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_create_date
 msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Customer:"
 msgstr "Klant:"
 
 #. module: website_quote
-#: field:sale.order,website_description:0 field:sale.order.option,name:0
-#: field:sale.quote.line,name:0 field:sale.quote.option,name:0
-#: view:sale.quote.template:website_quote.view_sale_quote_template_form
-#: field:sale.quote.template,website_description:0
-#: view:website:website_quote.optional_products
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Day 1"
+msgstr "Dag 1"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Day 2"
+msgstr "Dag 2"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Day 3"
+msgstr "Dag 3"
+
+#. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_res_config_settings_default_template_id
+msgid "Default Template"
+msgstr "Standaard sjabloon"
+
+#. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_name
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_website_description
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_name
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_name
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_website_description
+#: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
+#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Description"
 msgstr "Omschrijving"
 
 #. module: website_quote
-#: field:product.template,quote_description:0
+#: model:ir.model.fields,field_description:website_quote.field_product_product_quote_description
+#: model:ir.model.fields,field_description:website_quote.field_product_template_quote_description
 msgid "Description for the quote"
 msgstr "Omschrijving voor de quote"
 
 #. module: website_quote
-#: field:product.template,website_description:0
+#: model:ir.model.fields,field_description:website_quote.field_product_product_website_description
+#: model:ir.model.fields,field_description:website_quote.field_product_template_website_description
 msgid "Description for the website"
 msgstr "Omschrijving voor de website"
 
 #. module: website_quote
-#: field:sale.order.option,discount:0 field:sale.quote.line,discount:0
-#: field:sale.quote.option,discount:0
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Develop a new module for a particular application."
+msgstr "Ontwikkel een nieuwe module voor een specifieke toepassing."
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.pricing
+msgid "Discount"
+msgstr "Korting"
+
+#. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_discount
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_discount
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_discount
 msgid "Discount (%)"
-msgstr "Korting (%)"
+msgstr "Krt. (%)"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
-msgid "Draw your signature"
-msgstr "Plaats uw handtekening"
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_display_name
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_display_name
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_display_name
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_display_name
+msgid "Display Name"
+msgstr "Schermnaam"
 
 #. module: website_quote
-#: view:sale.quote.template:website_quote.view_sale_quote_template_form
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Dive into Strings"
+msgstr "Duik in strings"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation_content
+msgid "Edit Quote"
+msgstr "Wijzig offerte"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Edit Template"
 msgstr "Sjabloon bewerken"
 
 #. module: website_quote
-#: field:sale.order,validity_date:0
-msgid "Expiry Date"
-msgstr "Vervaldatum"
-
-#. module: website_quote
-#: view:website:sale.report_saleorder_document
-msgid "Expiry Date:"
+#: model:ir.ui.view,arch_db:website_quote.so_quotation_content
+msgid "Expiration Date:"
 msgstr "Vervaldatum:"
 
 #. module: website_quote
-#: view:website:website_quote.quotation_toolbar
-msgid "Feedback"
-msgstr "Feedback"
+#: model:ir.model,name:website_quote.model_ir_model_fields
+msgid "Fields"
+msgstr "Velden"
 
 #. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid "Follows a tranceparent ranking systemReady - Silver - Gold"
+msgstr ""
+
+#. module: website_quote
+#: model:product.product,name:website_quote.product_product_quote_1
 #: model:product.template,name:website_quote.product_product_quote_1_product_template
 #: model:product.template,name:website_quote.product_template_quote_1
 #: model:sale.quote.line,name:website_quote.website_sale_order_line_1
@@ -742,56 +746,214 @@ msgid "Functional Training"
 msgstr "Functionele training"
 
 #. module: website_quote
-#: view:website:website_quote.so_template
-msgid "Heading 1"
-msgstr "Koptekst 1"
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Functions"
+msgstr "Functies"
 
 #. module: website_quote
-#: view:website:website_quote.so_template
-msgid "Heading 2"
-msgstr "Koptekst 2"
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid "Gets access to training sessions (updated weekly)"
+msgstr "Krijg toegang tot trainingssessies (wekelijks geüpdatet) "
 
 #. module: website_quote
-#: view:website:website_quote.chatter
+#: model:ir.model.fields,help:website_quote.field_sale_quote_line_sequence
+msgid "Gives the sequence order when displaying a list of sale quote lines."
+msgstr ""
+"Geeft de volgorde weer bij het weergeven van een lijst met "
+"verkoopofferteregels."
+
+#. module: website_quote
+#: model:ir.model.fields,help:website_quote.field_sale_order_option_sequence
+msgid "Gives the sequence order when displaying a list of suggested product."
+msgstr ""
+"Bepaald de volgorde van weergeven van een lijst van voorgestelde producten."
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_default
+msgid ""
+"Great quotation templates will significantly\n"
+"                                <strong>boost your success rate</strong>. The\n"
+"                                first section is usually about your company,\n"
+"                                your references, your methodology or\n"
+"                                guarantees, your team, SLA, terms and conditions, etc."
+msgstr ""
+"Geweldige offerte sjablonen zullen significant helpen\n"
+"bij het<strong>vergroten van uw succes</strong>. Het \n"
+"eerste deel is meestal over uw bedrijf,\n"
+"uw referenties, uw methode/garanties, \n"
+"uw team, SLA, voorwaarden, etc."
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
+msgid "Hands-on exercises and their solutions"
+msgstr "Hands-on oefeningen met hun oplossingen"
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid "Has a direct relationship with Odoo SA to escalate issues"
+msgstr "Heeft een directe relatie met Odoo SA om issues te escaleren"
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid ""
+"Has access to Odoo Enterprise source code on Github and latest bug fixes"
+msgstr ""
+"Heeft toegang tot de Odoo enterprise broncode op Github en de laatste "
+"bugfixes"
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid "Have dedicated resources assigned to Odoo projects"
+msgstr "Krijg eigen resources toegewezen aan Odoo projecten"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Hello World"
+msgstr "Hallo wereld"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.chatter
 msgid "History"
 msgstr "Geschiedenis"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
-msgid ""
-"I agree that by signing this proposal, I\n"
-"                                  accept it on the behalf of"
-msgstr "Ik ga akkoord met deze offerte door ondertekening. Ik\n                                  accepteer deze namens"
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "How to Debug"
+msgstr "Hoe te debuggen"
 
 #. module: website_quote
-#: field:sale.order.option,id:0 field:sale.quote.line,id:0
-#: field:sale.quote.option,id:0 field:sale.quote.template,id:0
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_id
 msgid "ID"
 msgstr "ID"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
-msgid "Incl. tax)"
-msgstr "Incl. belastingen)"
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_default
+msgid ""
+"If edit a quotation from the 'Preview' of a quotation, you will\n"
+"                        update the quotation for this customer only. If you edit the quotation\n"
+"                        template (from the Configuration menu), all future quotations will\n"
+"                        use this modified template."
+msgstr ""
+"Wanneer een offerte wordt bewerkt in de 'Preview' van een offerte, kunt u\n"
+"de offerte bijwerken voor alleen deze klant. Wanneer u een offerte sjabloon\n"
+"bewerkt (vanuit het Configuratie menu), zullen alle toekomstige offerte \n"
+"het aangepaste sjabloon gebruiken."
 
 #. module: website_quote
-#: view:website:website_quote.navigation_menu
+#: model:ir.model.fields,help:website_quote.field_sale_quote_template_active
+msgid ""
+"If unchecked, it will allow you to hide the quotation template without "
+"removing it."
+msgstr ""
+
+#. module: website_quote
+#: code:addons/website_quote/controllers/main.py:103
+#: code:addons/website_quote/controllers/main.py:199
+#, python-format
+msgid ""
+"If we store your payment information on our server, subscription payments "
+"will be made automatically."
+msgstr ""
+"Als we uw betalingsinformatie opslaan op onze server worden "
+"abonnementsbetalingen automatisch gemaakt."
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "Incl. tax)"
+msgstr "Incl. BTW)"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Install and administer your own server;"
+msgstr "Installeer en beheer uw eigen server;"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Integrated Help"
+msgstr "Geïntegreerde hulp"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.navigation_menu
 msgid "Introduction"
 msgstr "Introductie"
 
 #. module: website_quote
-#: field:sale.order.option,write_uid:0 field:sale.quote.line,write_uid:0
-#: field:sale.quote.option,write_uid:0 field:sale.quote.template,write_uid:0
-msgid "Last Updated by"
-msgstr "Laatste bijgewerkt door"
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Introduction to JQuery"
+msgstr "Introductie tot JQuery"
 
 #. module: website_quote
-#: field:sale.order.option,write_date:0 field:sale.quote.line,write_date:0
-#: field:sale.quote.option,write_date:0 field:sale.quote.template,write_date:0
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Introduction to Javascript"
+msgstr "Introductie tot Javascript"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Introduction to QWeb"
+msgstr "Introductie tot QWeb"
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid "Is fully trained on Odoo"
+msgstr "Is volledig getraind in Odoo"
+
+#. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option___last_update
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line___last_update
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option___last_update
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_template___last_update
+msgid "Last Modified on"
+msgstr "Laatst gewijzigd op"
+
+#. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_write_uid
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_write_uid
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_write_uid
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_write_uid
+msgid "Last Updated by"
+msgstr "Laatst bijgewerkt door"
+
+#. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_write_date
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_write_date
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_write_date
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_write_date
 msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: website_quote
+#: model:product.product,description_sale:website_quote.product_product_quote_1
+#: model:product.product,description_sale:website_quote.product_product_quote_3
 #: model:product.template,description_sale:website_quote.product_product_quote_1_product_template
 #: model:product.template,description_sale:website_quote.product_product_quote_3_product_template
 #: model:product.template,description_sale:website_quote.product_template_quote_1
@@ -799,166 +961,399 @@ msgstr "Laatst bijgewerkt op"
 msgid ""
 "Learn directly from our team and network of Odoo experts. Choose from the "
 "available training sessions for a better functional understanding of Odoo"
-msgstr "Leer direct van ons team en netwerk van Odoo experts. Kies uit de beschikbare trainingsessies voor een betere functionele kennis van Odoo."
+msgstr ""
+"Leer direct van ons team en netwerk van Odoo experts. Kies uit de "
+"beschikbare trainingsessies voor een betere functionele kennis van Odoo."
 
 #. module: website_quote
+#: model:product.product,description_sale:website_quote.product_product_quote_2
 #: model:product.template,description_sale:website_quote.product_product_quote_2_product_template
 #: model:product.template,description_sale:website_quote.product_template_quote_2
 msgid ""
 "Learn directly from our team and network of Odoo experts. Choose from the "
 "available training sessions for a better technical understanding of Odoo"
-msgstr "Leer direct van ons team en netwerk van Odoo experts. Kies uit de beschikbare trainingsessies voor een betere functionele kennis van Odoo."
+msgstr ""
+"Leer direct van ons team en netwerk van Odoo experts. Kies uit de "
+"beschikbare trainingsessies voor een betere functionele kennis van Odoo."
 
 #. module: website_quote
-#: field:sale.order.line,website_description:0
-#: field:sale.order.option,website_description:0
-#: field:sale.quote.line,website_description:0
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_line_id
+msgid "Line"
+msgstr "Regel"
+
+#. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_line_website_description
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_website_description
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_website_description
 msgid "Line Description"
 msgstr "Orderregel omschrijving"
 
 #. module: website_quote
-#: view:sale.quote.template:website_quote.view_sale_quote_template_form
+#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Lines"
-msgstr "Regels"
+msgstr "Lijnen"
 
 #. module: website_quote
-#: help:sale.quote.template,number_of_days:0
-msgid "Number of days for the validaty date computation of the quotation"
-msgstr "Aantal dagen om de datum berekening te valideren van deze offerte"
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
+msgid "Live Q&amp;A sessions with a trainer"
+msgstr "Live V&amp;A sessies met een trainer"
 
 #. module: website_quote
-#: field:sale.quote.option,website_description:0
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Loops"
+msgstr "Loops"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
+msgid "Lower training budget for the same quality courses"
+msgstr "Lager trainingsbudget voor dezelfde kwaliteit opleidingen"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
+msgid "Modular approach applied to the learning method"
+msgstr "Modulaire aanpak toegepaste op de leermethode"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Modules"
+msgstr "Modules"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
+msgid "New interactive learning experience"
+msgstr "Nieuwe interactieve leerervaring"
+
+#. module: website_quote
+#: model:ir.model.fields,help:website_quote.field_sale_quote_template_number_of_days
+msgid "Number of days for the validity date computation of the quotation"
+msgstr "Aantal dagen van de validiteitsdatum berekening voor de offerte"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Odoo Official Website"
+msgstr "Odoo officiële website"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Odoo Web Client"
+msgstr "Odoo web client"
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid "Odoo official partners will benefit from:"
+msgstr "Officiële Odoo partners hebben voordeel van:"
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid "Odoo sales training session"
+msgstr "Odoo verkopers trainingssessie"
+
+#. module: website_quote
+#: selection:sale.order,require_payment:0
+#: selection:sale.quote.template,require_payment:0
+msgid "Online Payment"
+msgstr "Online betaling"
+
+#. module: website_quote
+#: selection:sale.order,require_payment:0
+#: selection:sale.quote.template,require_payment:0
+msgid "Online Signature"
+msgstr "On,ine handtekening"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
+msgid "Online Training"
+msgstr "Online training"
+
+#. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_website_description
 msgid "Option Description"
 msgstr "Optie omschrijving"
 
 #. module: website_quote
-#: view:website:website_quote.so_template
+#: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "Optional Product:"
 msgstr "Optioneel product:"
 
 #. module: website_quote
-#: view:sale.order:website_quote.sale_order_form_quote
-msgid "Optional Products & Services"
-msgstr "Optionele producten & diensten"
-
-#. module: website_quote
-#: field:sale.order,options:0 field:sale.order.line,option_line_id:0
-#: field:sale.quote.template,options:0
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_line_option_line_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_options
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_options
 msgid "Optional Products Lines"
 msgstr "Optionele producten regels"
 
 #. module: website_quote
-#: view:website:website_quote.optional_products
-msgid "Options"
-msgstr "Opties"
-
-#. module: website_quote
-#: code:addons/website_quote/controllers/main.py:69
+#: code:addons/website_quote/models/sale_order.py:210
 #, python-format
-msgid "Order signed by %s"
-msgstr "Order ondertekend door %s"
+msgid "Order paid by %s. Transaction: %s. Amount: %s."
+msgstr "Order betaald door %s. Transactie: %s. Bedrag: %s."
 
 #. module: website_quote
-#: view:website:website_quote.optional_products
-#: view:website:website_quote.pricing
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_default
+msgid "Our Offer"
+msgstr "Ons aanbod"
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_default
+msgid "Our Quality"
+msgstr "Onze kwaliteit"
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_default
+msgid "Our Service"
+msgstr "Onze diensten"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid ""
+"Participants are expected to have some knowledge in programming. A basic "
+"knowledge of the Python programming is recommended."
+msgstr ""
+"Deelnemers worden verondersteld enige kennis over programmeren te hebben. "
+"Een basiskennis van de programmeertaal Python is aanbevolen."
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid ""
+"Participants preferably have a functional knowledge of our software (see "
+"Functional Training)."
+msgstr ""
+"Deelnemers hebben bij voorkeur een functionele kennis van onze software (zie"
+" ook onze Functionele Training)"
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid "Partner Program"
+msgstr "Partner programma"
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid "Partners Commitment"
+msgstr "Partner betrokkenheid"
+
+#. module: website_quote
+#: code:addons/website_quote/controllers/main.py:197
+#, python-format
+msgid "Pay & Confirm"
+msgstr "Betaal & Bevestig"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "Pay with"
+msgstr "Betaal met"
+
+#. module: website_quote
+#: model:ir.ui.menu,name:website_quote.payment_acquirer_menu_sale
+msgid "Payment Acquirers"
+msgstr "Betaling verwervers"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation_content
+msgid "Payment Terms:"
+msgstr "Betalingscondities:"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
+msgid "Preview"
+msgstr "Voorbeeld"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.optional_products
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Price"
-msgstr "Bedrag"
+msgstr "Prijs"
 
 #. module: website_quote
-#: view:website:website_quote.pricing
+#: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "Pricing"
 msgstr "Prijzen"
 
 #. module: website_quote
-#: field:sale.order.option,product_id:0 field:sale.quote.line,product_id:0
-#: field:sale.quote.option,product_id:0
+#: model:ir.ui.view,arch_db:website_quote.so_quotation_content
+msgid "Print"
+msgstr "Afdrukken"
+
+#. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_product_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_product_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_product_id
+#: model:ir.ui.view,arch_db:website_quote.optional_products
+#: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
 msgid "Product"
 msgstr "Product"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_product_template
 msgid "Product Template"
-msgstr "Product sjabloon"
+msgstr "Productsjabloon"
 
 #. module: website_quote
-#: view:website:website_quote.so_template
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_default
+msgid ""
+"Product quality is the foundation we\n"
+"                                       stand on; we build it with a relentless\n"
+"                                       focus on fabric, performance and craftsmanship."
+msgstr ""
+"Productkwaliteit is het fundament waar wij\n"
+"op staan; we bouwen het met een genadeloze\n"
+"focus op stof, performantie en vakmanschap."
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "Product:"
 msgstr "Product:"
 
 #. module: website_quote
-#: view:website:website_quote.optional_products
-#: view:website:website_quote.pricing
+#: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "Products"
 msgstr "Producten"
 
 #. module: website_quote
-#: field:sale.order.option,quantity:0 field:sale.quote.line,product_uom_qty:0
-#: field:sale.quote.option,quantity:0 view:website:website_quote.pricing
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid "Promote Odoo Enterprise to its customers"
+msgstr "Promote Odoo Enterprise bij haar klanten"
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid "Publishes references directly on Odoo.com"
+msgstr "Publiceer referenties rechtstreeks op Odoo.com"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Python Objects"
+msgstr "Python objecten"
+
+#. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_quantity
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_product_uom_qty
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_quantity
+#: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "Quantity"
 msgstr "Hoeveelheid"
 
 #. module: website_quote
-#: field:sale.quote.template,name:0
+#: model:ir.model,name:website_quote.model_sale_order
+msgid "Quotation"
+msgstr "Offerte"
+
+#. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_number_of_days
+msgid "Quotation Duration"
+msgstr "Offerte duur"
+
+#. module: website_quote
+#: model:ir.model,name:website_quote.model_sale_quote_option
+msgid "Quotation Option"
+msgstr "Offerte optie"
+
+#. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_template_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_name
+#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Quotation Template"
 msgstr "Offerte sjabloon"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_line
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_quote_line
 msgid "Quotation Template Lines"
 msgstr "Offerte sjabloon regels"
 
 #. module: website_quote
-#: field:sale.quote.line,quote_id:0 field:sale.quote.option,template_id:0
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_quote_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_template_id
 msgid "Quotation Template Reference"
 msgstr "Offerte sjabloon referentie"
 
 #. module: website_quote
 #: model:ir.actions.act_window,name:website_quote.action_sale_quotation_template
 #: model:ir.ui.menu,name:website_quote.menu_sale_quote_template
+#: model:ir.ui.view,arch_db:website_quote.res_config_settings_view_form
 msgid "Quotation Templates"
 msgstr "Offerte sjablonen"
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:47
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_quote_viewed
+msgid "Quotation Viewed"
+msgstr "Offerte bekeken"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
+msgid "Quotation expires after"
+msgstr "Offerte vervalt na"
+
+#. module: website_quote
+#: code:addons/website_quote/controllers/main.py:50
 #, python-format
 msgid "Quotation viewed by customer"
 msgstr "Offerte bekeken door klant"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Quote Date:"
 msgstr "Offerte datum:"
 
 #. module: website_quote
-#: field:sale.quote.template,number_of_days:0
-msgid "Quote Duration"
-msgstr "Offerte geldigheid"
-
-#. module: website_quote
-#: model:ir.model,name:website_quote.model_sale_quote_option
-msgid "Quote Option"
-msgstr "Offerte optie"
-
-#. module: website_quote
-#: field:sale.order,template_id:0
-msgid "Quote Template"
-msgstr "Offerte sjabloon"
-
-#. module: website_quote
-#: field:sale.quote.template,quote_line:0
-msgid "Quote Template Lines"
-msgstr "Offerte sjabloon regels"
-
-#. module: website_quote
-#: view:website:website_quote.quotation_toolbar
-#: view:website:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Reject"
 msgstr "Afwijzen"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Reject This Quote"
 msgstr "Deze offerte afwijzen"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Report Engine"
+msgstr "Rapportgenerator"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Requirements"
+msgstr "Vereisten"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order_option
@@ -966,25 +1361,11 @@ msgid "Sale Options"
 msgstr "Verkoop opties"
 
 #. module: website_quote
-#: field:sale.order.option,order_id:0
-msgid "Sale Order Reference"
-msgstr "Verkooporder referentie"
-
-#. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_template
-#: view:sale.quote.template:website_quote.view_sale_quote_template_form
+#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
+#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_tree
 msgid "Sale Quotation Template"
-msgstr "Verkoop offerte sjabloon"
-
-#. module: website_quote
-#: view:sale.quote.template:website_quote.view_sale_quote_template_tree
-msgid "Sale Quote Template"
-msgstr "Verkoop offerte sjabloon"
-
-#. module: website_quote
-#: model:ir.model,name:website_quote.model_sale_order
-msgid "Sales Order"
-msgstr "Verkooporder"
+msgstr "Verkoop offertesjabloon"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order_line
@@ -992,285 +1373,486 @@ msgid "Sales Order Line"
 msgstr "Verkooporderregel"
 
 #. module: website_quote
-#: view:sale.order:website_quote.sale_order_form_quote
-#: view:sale.quote.template:website_quote.view_sale_quote_template_form
-msgid "Sales Quote Template Lines"
-msgstr "Verkoop offerte sjabloon regels"
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_order_id
+msgid "Sales Order Reference"
+msgstr "Verkooporder referentie"
 
 #. module: website_quote
-#: field:sale.order,access_token:0
-msgid "Security Token"
-msgstr "Veiligheidstoken"
+#: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
+#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
+msgid "Sales Quotation Template Lines"
+msgstr "Verkoopofferte sjabloonregels"
 
 #. module: website_quote
-#: view:website:website_quote.chatter
-msgid "Send"
-msgstr "Versturen"
+#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_search
+msgid "Search Quotation Template"
+msgstr "Zoek offertesjabloon"
 
 #. module: website_quote
-#: view:website:website_quote.chatter
-msgid "Send us a note..."
-msgstr "Stuur ons een bericht..."
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_layout_category_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_layout_category_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_layout_category_id
+msgid "Section"
+msgstr "Sectie"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_sequence
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_sequence
+msgid "Sequence"
+msgstr "Reeks"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Ship To:"
 msgstr "Verzenden naar:"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
-msgid "Sign Order"
-msgstr "Onderteken order"
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
+msgid "Structure of the Training"
+msgstr "Structuur van de training"
 
 #. module: website_quote
-#: view:website:website_quote.pricing
-msgid "Subtotal:"
-msgstr "Subtotaal:"
-
-#. module: website_quote
-#: view:sale.order:website_quote.sale_order_form_quote
-#: view:sale.quote.template:website_quote.view_sale_quote_template_form
+#: model:ir.ui.view,arch_db:website_quote.optional_products
+#: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
+#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Suggested Products"
 msgstr "Voorgestelde producten"
 
 #. module: website_quote
-#: view:website:website_quote.pricing
+#: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "Taxes"
 msgstr "BTW"
 
 #. module: website_quote
-#: view:website:website_quote.pricing
+#: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "Taxes:"
 msgstr "BTW:"
 
 #. module: website_quote
+#: model:product.product,name:website_quote.product_product_quote_2
+#: model:product.product,quote_description:website_quote.product_product_quote_2
 #: model:product.template,name:website_quote.product_product_quote_2_product_template
 #: model:product.template,name:website_quote.product_template_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,name:website_quote.website_sale_order_line_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Technical Training"
-msgstr "Technisch training"
+msgstr "Technische training"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
-msgstr "Vertel ons waarom u deze offerte afwijst, dit helpt ons bij het verbeteren van onze dienstverlening."
+msgstr ""
+"Vertel ons waarom u deze offerte afwijst, dit helpt ons bij het verbeteren "
+"van onze dienstverlening."
 
 #. module: website_quote
-#: view:website:website_quote.so_template
-msgid "Template Header:"
-msgstr "Sjabloon header:"
-
-#. module: website_quote
-#: view:website:website_quote.pricing view:website:website_quote.so_template
-msgid "Terms & Conditions"
+#: model:ir.ui.view,arch_db:website_quote.pricing
+#: model:ir.ui.view,arch_db:website_quote.so_template
+msgid "Terms &amp; Conditions"
 msgstr "Algemene Voorwaarden"
 
 #. module: website_quote
-#: field:sale.quote.template,note:0
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_note
 msgid "Terms and conditions"
-msgstr "Algemene verkoopvoorwaarden"
+msgstr "Voorwaarden"
 
 #. module: website_quote
-#: view:sale.quote.template:website_quote.view_sale_quote_template_form
-msgid "Terms and conditions..."
-msgstr "Algemene verkoopvoorwaarden..."
+#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
+msgid ""
+"The Administrator can set default Terms & Conditions in Sales Settings. "
+"Terms set here will show up instead if you select this quotation template."
+msgstr ""
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
-msgid "This offer expired!"
-msgstr "Deze offerte is vervallen!"
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid "The Odoo Enterprise GitHub repositories for all his developers"
+msgstr "De Odoo Enterprise repositories voor al zijn ontwikkelaars"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
-msgid "This offer expires in"
-msgstr "Deze offerte verloopt over"
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid ""
+"The Odoo eco system is designed to offer the best customer experience to "
+"Odoo users, from the product to implementation services. In order to "
+"guarantee that, the Odoo Partner Program ensures that official partners have"
+" the resources and knowledge required to offer Odoo implementation services."
+msgstr ""
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
-msgid "This order has already been"
-msgstr "Dit order is al"
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid ""
+"The ability to report bugs to be fixed by Odoo on behalf of his customer "
+"(Enterprise contracts only)"
+msgstr ""
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
+msgid ""
+"These courses feature the same high quality course content found in our "
+"traditional classroom trainings, supplemented with modular sessions and "
+"cloud-based labs. Many of our online learning courses also include dozens of"
+" recorded webinars and live sessions by our senior instructors."
+msgstr ""
+"Deze trainingen bieden dezelfde hoge inhoud kwaliteit zoals in onze "
+"traditionele klastrainingen, aangevuld met modulaire sessies en cloud-"
+"gebaseerde labs. Veel van onze online trainingen bevatten ook dozijnen "
+"opgenomen webinars en live sessies van onze senior instructoren."
+
+#. module: website_quote
+#: model:ir.model.fields,help:website_quote.field_sale_quote_template_mail_template_id
+msgid ""
+"This e-mail template will be sent on confirmation. Leave empty to send "
+"nothing."
+msgstr ""
+"Dit e-mailsjabloon wordt verstuurd bij bevestiging. Laat leeg om niets te "
+"versturen."
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_default
+msgid ""
+"This is a <strong>sample quotation template</strong>. You should\n"
+"                                customize it to fit your own needs from the <i>Sale</i>\n"
+"                                application, using the menu: Configuration /\n"
+"                                Quotation Templates."
+msgstr ""
+"Dit is een <strong>voorbeeld offertesjabloon</strong>. U zou het moeten\n"
+"personaliseren naar uw eigen nodig vanuit de <i>Verkoopbeheer</i>\n"
+"installatie, door het menu Configuratie /\n"
+"Offertesjablonen te gebruiken."
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "This order"
+msgstr "Deze order"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid ""
 "This order has been validated. Thanks for your trust\n"
 "                          and do not hesitate to"
-msgstr "Deze order is gecontroleerd. Dank voor uw vertrouwen\n                          en aarzel niet om"
+msgstr ""
+"Deze order is gecontroleerd. Dank voor uw vertrouwen\n"
+"                          en aarzel niet om"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
-msgid "This quotation has been canceled."
-msgstr "Deze offerte is geannuleerd."
-
-#. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "This quotation has been rejected."
 msgstr "Deze offerte is afgewezen."
 
 #. module: website_quote
-#: view:website:website_quote.so_template
-msgid "Titles with style"
-msgstr "Titels met stijl"
+#: model:ir.ui.view,arch_db:website_quote.so_template
+msgid ""
+"Titles with style <i>Heading 1</i> and\n"
+"                                <i>Heading 2</i> will be used to generate the\n"
+"                                table of content automatically."
+msgstr ""
+"Titels met stijl <i>Kop 1</i> en\n"
+"<i>Kop 2</i> worden gebruikt om de\n"
+"inhoudsopgave automatisch te genereren."
 
 #. module: website_quote
-#: view:website:website_quote.pricing
-msgid "Total:"
-msgstr "Totaal:"
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "To get more information, visit the"
+msgstr "Om meer informatie te krijgen, bezoek het"
 
 #. module: website_quote
-#: field:sale.order.option,price_unit:0 field:sale.quote.line,price_unit:0
-#: field:sale.quote.option,price_unit:0 view:website:website_quote.pricing
+#: model:ir.ui.view,arch_db:website_quote.pricing
+msgid "Total Price"
+msgstr "Bedrag Incl. BTW"
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid "Train their staff by following Odoo training sessions"
+msgstr ""
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Training Center Module"
+msgstr "Traincentrum module"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Underscore"
+msgstr "Onderscore"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Understand the development concepts and architecture;"
+msgstr "Begrijp de ontwikkelconcepten en architectuur;"
+
+#. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_price_unit
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_price_unit
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_price_unit
+#: model:ir.ui.view,arch_db:website_quote.pricing
+#: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
 msgid "Unit Price"
 msgstr "Prijs"
 
 #. module: website_quote
-#: field:sale.order.option,uom_id:0 field:sale.quote.line,product_uom_id:0
-#: field:sale.quote.option,uom_id:0
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_uom_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_product_uom_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_uom_id
 msgid "Unit of Measure "
 msgstr "Maateenheid "
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
-msgid "Update Quote"
-msgstr "Offerte bijwerken"
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid ""
+"Up to 20% commission on Odoo Enterprise sales, depending on the partnership "
+"level"
+msgstr ""
+"Tot 20% commissie op de Odoo Enterprise verkoop, afhankelijk van uw "
+"partnership niveau."
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:ir.actions.act_window,help:website_quote.action_sale_quotation_template
+msgid ""
+"Use templates to create polished, professional quotes in minutes.\n"
+"                    Send these quotes by email and let your customers sign online.\n"
+"                    Use cross-selling and discounts to push and boost your sales."
+msgstr ""
+"Gebruik sjablonen om gepolijste, professionele offertes te maken in minuten.\n"
+"Verzend deze offertes via e-mail en laat uw klanten online tekenen.\n"
+"Gebruik kruisverkoop en kortingen om uw verkoop te boosten."
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Validate Order"
 msgstr "Order controleren"
 
 #. module: website_quote
-#: view:sale.order:website_quote.sale_order_form_quote
-msgid "View Quotation"
-msgstr "Offerte bekijken"
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Variables &amp; Operators"
+msgstr "Variabelen &amp; Operatoren"
 
 #. module: website_quote
-#: view:sale.quote.template:website_quote.view_sale_quote_template_form
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
+msgid "Videos with detailed demos"
+msgstr "Video's met gedetailleerde demo's"
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid ""
+"Visibility and recognition, by being listed as an official partner on "
+"Odoo.com Partners page"
+msgstr ""
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_default
+msgid ""
+"We always ensure that our products are\n"
+"                                       set at a fair price so that you will be\n"
+"                                       happy to buy them."
+msgstr ""
+"We verzekeren ons er altijd van dat onze producten\n"
+"een eerlijke prijs hebben zodat u\n"
+"ze met plezier koopt."
+
+#. module: website_quote
+#: model:ir.actions.report,name:website_quote.report_web_quote
+msgid "Web Quotation"
+msgstr "Web offerte"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Website Description"
 msgstr "Website omschrijving"
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:148
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "What you will learn?"
+msgstr "Wat zal u leren?"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Workflows"
+msgstr "Workflows"
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_1
+msgid "Yearly upgrade training sessions when a new version is released"
+msgstr ""
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_default
+msgid ""
+"You can <strong>set a description per product</strong>. Odoo will\n"
+"                        automatically create a quotation using the descriptions\n"
+"                        of all products in the proposal. The table of content\n"
+"                        on the left is generated automatically using the styles you\n"
+"                        used in your description (heading 1, heading 2, ...)"
+msgstr ""
+"U kunt <strong>een omschrijving instellen per product</strong>. Odoo zal\n"
+"automatisch een offerte te maken met behulp van de omschrijvingen\n"
+"van alle producten in het voorstel. De inhoudsopgave\n"
+"aan de linkerkant wordt automatisch gegenereerd met behulp van de stijlen die u\n"
+"gebruikt in uw beschrijving (rubriek 1, rubriek 2, ...)"
+
+#. module: website_quote
+#: code:addons/website_quote/controllers/main.py:150
 #, python-format
 msgid "You cannot add options to a confirmed order."
 msgstr "U kan geen opties toevoegen aan een bevestigd order."
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Your Contact:"
 msgstr "Uw contact:"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
-msgid "Your Name:"
-msgstr "Uw naam:"
-
-#. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Your Order"
 msgstr "Uw order"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Your Quotation"
 msgstr "Uw offerte"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Your Reference:"
 msgstr "Uw referentie:"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Your advantage:"
 msgstr "Uw voordeel:"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
+msgid "Your advantages"
+msgstr "Uw voordelen"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Your feedback....."
 msgstr "Uw feedback....."
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Your message has been successfully sent!"
 msgstr "Uw bericht is succesvol verzonden!"
 
 #. module: website_quote
-#: view:website:website_quote.so_template
-msgid "and"
-msgstr "en"
+#: model:mail.template,subject:website_quote.confirmation_mail
+msgid "Your order ${object.name} is confirmed"
+msgstr "Uw order ${object.name} is bevestigd"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
-msgid "cancelled"
-msgstr "geannuleerd"
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "Your payment has been authorized."
+msgstr "Uw betaling is geauthoriseerd."
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "Your payment has been received, thank you for your trust."
+msgstr "Uw betaling is ontvangen, bedankt voor uw vertrouwen."
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "Your transaction is waiting confirmation."
+msgstr "Je transactie is in behandeling."
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "contact us"
 msgstr "contact"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "day"
 msgstr "dag"
 
 #. module: website_quote
-#: view:sale.quote.template:website_quote.view_sale_quote_template_form
-#: view:website:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "days"
 msgstr "dagen"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "drinks and lunch;"
+msgstr "drank en lunch;"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid ""
 "for\n"
 "                          any question."
-msgstr "mocht u\nvragen hebben."
+msgstr ""
+"mocht u\n"
+"vragen hebben."
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "has already been cancelled"
+msgstr "is al geannuleerd"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "has already been validated"
+msgstr "is al bevestigd"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "has not yet been sent"
+msgstr "is nog niet verzonden"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "if you want a new one."
 msgstr "Als u een nieuwe wilt."
 
 #. module: website_quote
-#: view:website:website_quote.chatter
-msgid "on"
-msgstr "op"
+#: model:ir.model,name:website_quote.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"
 
 #. module: website_quote
-#: view:website:website_quote.so_quotation
-msgid "or"
-msgstr "of"
-
-#. module: website_quote
-#: view:website:website_quote.so_template
-msgid ""
-"this content\n"
-"                                will appear on all quotations using this\n"
-"                                template."
-msgstr "deze inhoud\n                          zal op alle offertes verschijnen bij het gebruik van dit\n                          sjabloon"
-
-#. module: website_quote
-#: field:sale.order.option,line_id:0
-msgid "unknown"
-msgstr "onbekend"
-
-#. module: website_quote
-#: view:website:website_quote.so_quotation
-msgid "validated"
-msgstr "gevalideerd"
-
-#. module: website_quote
-#: view:website:website_quote.so_template
-msgid ""
-"will be used to generate the\n"
-"                                table of content automatically."
-msgstr "zal worden gebruikt om de \n                          inhoudsopgave automatisch te genereren."
-
-#. module: website_quote
-#: view:website:website_quote.so_quotation
-msgid "with payment terms:"
-msgstr "met betalingsvoorwaarden:"
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "training material."
+msgstr "trainingsmateriaal."

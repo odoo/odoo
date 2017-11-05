@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Client Action -->
+    <t t-name="mail.client_action">
+        <div class="o_mail_chat">
+            <div class="o_mail_chat_sidebar"/>
+            <div class="o_mail_chat_content">
+                <t t-if="widget.notification_bar">
+                    <div class="o_mail_annoying_notification_bar">
+                        <span class="o_mail_request_permission">Odoo needs your permission to <a href="#"> enable desktop notifications</a>.</span>
+                        <span class="fa fa-close"></span>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+    <t t-name="mail.chat.Sidebar">
+        <div class="o_mail_chat_sidebar">
+            <div t-attf-class="o_mail_chat_title_main o_mail_chat_channel_item #{(active_channel_id === 'channel_inbox') ? 'o_active': ''}"
+                 data-channel-id="channel_inbox">
+                <span class="o_channel_name"><i class="fa fa-inbox mr8"/>Inbox</span>
+                <t t-set="counter" t-value="needaction_counter"/>
+                <t t-call="mail.chat.SidebarNeedaction"/>
+            </div>
+            <div t-attf-class="o_mail_chat_title_main o_mail_chat_title_starred o_mail_chat_channel_item #{(active_channel_id === 'channel_starred') ? 'o_active': ''}"
+                 data-channel-id="channel_starred">
+                <span class="o_channel_name"><i class="fa fa-star-o mr8"/>Starred</span>
+                <t t-set="counter" t-value="starred_counter"/>
+                <t t-call="mail.chat.SidebarNeedaction"/>
+            </div>
+            <hr class="mb8"/>
+
+            <t t-set="channel_type" t-value="'public'"/>
+            <t t-call="mail.chat.SidebarTitle">
+                <t t-set="channel_title">Channels</t>
+                <t t-set="channel_icon" t-value="fa-users"/>
+            </t>
+            <t t-call="mail.chat.SidebarItems">
+                <t t-set="display_hash" t-value="true"/>
+                <t t-set="input_placeholder">Add a channel</t>
+            </t>
+
+            <t t-set="channel_type" t-value="'dm'"/>
+            <t t-call="mail.chat.SidebarTitle">
+                <t t-set="channel_title">Direct Messages</t>
+                <t t-set="channel_icon" t-value="fa-user"/>
+            </t>
+            <t t-call="mail.chat.SidebarItems">
+                <t t-set="display_status" t-value="true"/>
+                <t t-set="input_placeholder">User name</t>
+            </t>
+
+            <t t-set="channel_type" t-value="'private'"/>
+            <t t-call="mail.chat.SidebarTitle">
+                <t t-set="channel_title">Private Channels</t>
+                <t t-set="channel_icon" t-value="fa-eye-slash"/>
+            </t>
+            <t t-call="mail.chat.SidebarItems">
+                <t t-set="input_placeholder">Add a private channel</t>
+                <t t-set="display_hash" t-value="true"/>
+            </t>
+        </div>
+    </t>
+    <t t-name="mail.chat.SidebarNeedaction">
+        <span t-attf-class="o_mail_sidebar_needaction badge #{(!counter ? 'hide' : '')}">
+            <t t-esc="counter"/>
+        </span>
+    </t>
+    <t t-name="mail.chat.SidebarTitle">
+        <!-- Don't display the channel type if there is no channel of such type
+             and the 'add a channel' option is disabled for this type -->
+        <t t-if="disable_add_channel">
+            <t t-set="empty" t-value="true"/>
+            <t t-foreach="channels" t-as="channel">
+                <t t-if="channel.type === channel_type">
+                    <t t-set="empty" t-value="false"/>
+                </t>
+            </t>
+        </t>
+        <t t-if="!disable_add_channel || !empty">
+            <div class="o_mail_sidebar_title">
+                <h4 t-att-class="channel_type == 'public' ? 'o_mail_open_channels' : ''">
+                    <i t-if="channel_icon" t-attf-class="mr4 fa-fw fa #{channel_icon}"></i>
+                    <b><t t-esc="channel_title"/></b>
+                </h4>
+                <span t-if="!disable_add_channel" class="fa fa-plus o_add" title="Add" t-attf-data-type="#{channel_type}"/>
+            </div>
+        </t>
+    </t>
+    <t t-name="mail.chat.SidebarItems">
+        <div t-if="!disable_add_channel" class="o_mail_add_channel" t-attf-data-type="#{channel_type}">
+            <span t-if="display_hash">#</span>
+            <input type="text" class="o_input" t-attf-placeholder="#{input_placeholder}"/>
+        </div>
+        <t t-foreach="channels" t-as="channel">
+            <t t-set="counter" t-value="channel.is_chat ? channel.unread_counter : channel.needaction_counter"/>
+            <div t-if="channel.type === channel_type" t-att-data-channel-id="channel.id" t-att-title="channel.name"
+                 t-attf-class="o_mail_chat_channel_item #{channel.unread_counter ? ' o_unread_message' : ''} #{(active_channel_id == channel.id) ? 'o_active': ''}">
+                <span class="o_channel_name">
+                    <span t-if="display_status">
+                        <t t-call="mail.chat.UserStatus">
+                            <t t-set="status" t-value="channel.status"/>
+                        </t>
+                    </span>
+                    <span t-if="display_hash" class="o_mail_hash">#</span>
+                    <t t-esc="channel.name"/>
+                    <i t-if="channel.mass_mailing" class="fa fa-envelope-o" title="Sends messages by email"/>
+                </span>
+                <t t-call="mail.chat.SidebarNeedaction"/>
+                <span t-if="! channel.group_based_subscription" t-attf-class="fa fa-times o_mail_partner_unpin #{counter ? 'hide' : ''}"
+                      title="Leave this channel" t-att-data-channel-id="channel.id"/>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="mail.chat.UserStatus">
+        <i t-if="status == 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online"/>
+        <i t-if="status == 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle"/>
+        <i t-if="status == 'offline'" class="o_mail_user_status fa fa-circle-o" title="Offline"/>
+    </t>
+
+    <t t-name="mail.chat.MessageSentSnackbar">
+        <div class="alert o_mail_snackbar" data-dismiss="alert" role="alert">
+            Message sent in "<t t-esc="record_name"/>".
+        </div>
+    </t>
+
+
+    <!-- Buttons of the Control Panel -->
+    <t t-name="mail.chat.ControlButtons">
+        <div>
+            <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_invite hidden-xs" title="Invite people">Invite</button>
+            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_mark_read" title="Mark all as read">Mark all read</button>
+            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_unstar_all" title="Unstar all messages">Unstar all</button>
+            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_unsubscribe hidden-xs" title="Unsubscribe from channel">Unsubscribe</button>
+            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_dm visible-xs" title="New Message">New Message</button>
+            <button t-if="!disable_add_channel" type="button" class="btn btn-default btn-sm o_mail_chat_button_public o_mail_chat_button_private visible-xs" title="New Channel">New Channel</button>
+            <button t-if="debug" type="button" class="btn btn-default btn-sm o_mail_chat_button_settings" title="Open channel settings">Settings</button>
+        </div>
+    </t>
+
+    <!-- Invite dialog's content -->
+    <div t-name="mail.PartnerInviteDialog">
+        <input type="text" class="o_input o_mail_chat_partner_invite_input" id="mail_search_partners"/>
+    </div>
+
+
+    <!-- Mobile templates -->
+    <t t-name="mail.client_action_mobile">
+        <div class="o_mail_chat">
+            <div class="o_mail_chat_mobile_control_panel"/>
+            <div class="o_mail_chat_mobile_inbox_buttons">
+               <button type="button" class="btn btn-primary btn-sm visible-xs-inline o_channel_inbox_item" title="Inbox" data-type="channel_inbox">
+                    Inbox
+                </button><button type="button" class="btn btn-default btn-sm visible-xs-inline o_channel_inbox_item" title="Starred" data-type="channel_starred">
+                    Starred
+                </button>
+            </div>
+            <div class="o_mail_chat_content"/>
+            <div class="o_mail_mobile_tabs">
+                <div class="o_mail_mobile_tab" data-type="channel_inbox">
+                    <span class="fa fa-inbox"/>
+                    <span class="o_tab_title">Inbox</span>
+                </div>
+                <div class="o_mail_mobile_tab" data-type="dm">
+                    <span class="fa fa-user"/>
+                    <span class="o_tab_title">Chat</span>
+                </div>
+                <div class="o_mail_mobile_tab" data-type="public">
+                    <span class="fa fa-users"/>
+                    <span class="o_tab_title">Channels</span>
+                </div>
+                <div class="o_mail_mobile_tab" data-type="private">
+                    <span class="fa fa-eye-slash"/>
+                    <span class="o_tab_title">Private Channels</span>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mail.chat.MobileTabPane">
+        <div class="o_mail_chat_tab_pane" t-att-data-type="type">
+            <div t-if="!disable_add_channel" class="o_mail_add_channel" t-att-data-type="type">
+                <span t-if="type == 'private' || type == 'public'">#</span>
+                <t t-set="input_placeholder" t-if="type == 'private' || type == 'public'">Add a channel</t>
+                <t t-set="input_placeholder" t-if="type == 'dm'">Open chat</t>
+                <input type="text" t-attf-placeholder="#{input_placeholder}"/>
+            </div>
+            <t t-foreach="channels" t-as="channel">
+                <t t-call="mail.chat.ChannelPreview"/>
+            </t>
+        </div>
+    </t>
+
+    <!-- The ChannelPreview template is used by the client action in mobile, and by the systray menu -->
+    <t t-name="mail.chat.ChannelPreview">
+        <div t-attf-class="o_mail_channel_preview #{channel.unread_counter ? 'o_channel_unread' : ''}"
+             t-att-data-channel_id="channel.id" t-att-data-res_id="channel.res_id" t-att-data-res_model="channel.model">
+            <div t-attf-class="o_mail_channel_image #{channel.model? 'o_mail_channel_app' : ''}">
+                <img class="o_mail_channel_image" t-att-src="channel.image_src"/>
+                <i t-if="channel.status === 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online"/>
+                <i t-if="channel.status === 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle"/>
+            </div>
+            <div class="o_channel_info">
+                <div class="o_channel_title">
+                    <span class="o_channel_name">
+                        <t t-esc="channel.name"/>
+                    </span>
+                    <span class="o_channel_counter">
+                        <t t-if="channel.unread_counter">&amp;nbsp;(<t t-esc="channel.unread_counter"/>)</t>
+                    </span>
+                    <span class="o_last_message_date"> <t t-esc="channel.last_message_date"/> </span>
+                </div>
+                <div t-if="channel.last_message" class="o_last_message_preview">
+                    <t t-if="channel.last_message.is_author">
+                        <span class="fa fa-mail-reply"/> You:
+                    </t>
+                    <t t-else="">
+                        <t t-esc="channel.last_message.displayed_author"/>:
+                    </t>
+                    <t t-raw="channel.last_message_preview"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

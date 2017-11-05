@@ -3,15 +3,17 @@
 # * mrp_byproduct
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# gezza <geza.nagy@oregional.hu>, 2017
+# krnkris <krnkris@freemail.hu>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-17 07:40+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-8/language/hu/)\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -24,7 +26,7 @@ msgid "Bill of Material"
 msgstr "Anyagjegyzék"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,bom_id:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_bom_id
 msgid "BoM"
 msgstr "Anyagjegyzék"
 
@@ -34,7 +36,8 @@ msgid "Byproduct"
 msgstr "Melléktermék"
 
 #. module: mrp_byproduct
-#: view:mrp.bom:mrp_byproduct.mrp_subproduct_view field:mrp.bom,sub_products:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_bom_sub_products
+#: model:ir.ui.view,arch_db:mrp_byproduct.mrp_subproduct_view
 msgid "Byproducts"
 msgstr "Melléktermékek"
 
@@ -44,87 +47,98 @@ msgid "Change Quantity of Products"
 msgstr "Termékek mennyiségének megváltoztatása"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,create_uid:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_create_uid
 msgid "Created by"
-msgstr "Készítette"
+msgstr "Létrehozta"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,create_date:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_create_date
 msgid "Created on"
-msgstr "Létrehozás dátuma"
+msgstr "Létrehozva"
 
 #. module: mrp_byproduct
-#: help:mrp.subproduct,subproduct_type:0
-msgid ""
-"Define how the quantity of byproducts will be set on the production orders "
-"using this BoM.  'Fixed' depicts a situation where the quantity of created "
-"byproduct is always equal to the quantity set on the BoM, regardless of how "
-"many are created in the production order.  By opposition, 'Variable' means "
-"that the quantity will be computed as    '(quantity of byproduct set on the "
-"BoM / quantity of manufactured product set on the BoM * quantity of "
-"manufactured product in the production order.)'"
-msgstr "Annak meghatározása, hogyan lesz beállítva a melléktermék mennyiség ehhez a darabjegyzékhez a termelési megbízáson. 'Fix' azt a szituációt írja le ahol a végtermék mennyiség mindig egyenlő a darabjegyzéken lévő  mennyiséggel, függetlenül attól, mennyi készül a termelési megbízáskor.  Ellenben, 'Variálható' azt jelenti, hogy a mennyiség ki lesz számítva ezzel a függvénnyel  '(a darabjegyzéken beállított melléktermék mennyiség / a darabjegyzéken beállított gyártott termék mennyiség * a termelési megbízáson található gyártott mennyiség.)'"
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_display_name
+msgid "Display Name"
+msgstr "Megjelenített név"
 
 #. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Fixed"
-msgstr "Állandó"
-
-#. module: mrp_byproduct
-#: field:mrp.subproduct,id:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_id
 msgid "ID"
-msgstr "Azonosító ID"
+msgstr "Azonosító"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,write_uid:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct___last_update
+msgid "Last Modified on"
+msgstr "Utoljára módosítva"
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítve, által"
+msgstr "Utoljára frissítette"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,write_date:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve ekkor"
+msgstr "Utoljára frissítve "
 
 #. module: mrp_byproduct
-#: model:ir.model,name:mrp_byproduct.model_mrp_production
-msgid "Manufacturing Order"
-msgstr "Gyártási rendelés"
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_operation_id
+msgid "Produced at Operation"
+msgstr "Művelet közben termelt"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,product_id:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_id
 msgid "Product"
 msgstr "Termék"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,product_qty:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_qty
 msgid "Product Qty"
-msgstr "Termékmennyiség"
+msgstr "Termékmenny."
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,product_uom:0
-msgid "Product Unit of Measure"
-msgstr "Termék mértékegysége"
+#: model:ir.model,name:mrp_byproduct.model_mrp_production
+msgid "Production"
+msgstr "Éles"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,subproduct_type:0
-msgid "Quantity Type"
-msgstr "Mennyiség típusa"
+#: model:ir.model,name:mrp_byproduct.model_mrp_product_produce
+msgid "Record Production"
+msgstr ""
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:63
+#: model:ir.model,name:mrp_byproduct.model_stock_move
+msgid "Stock Move"
+msgstr "Készletmozgás"
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_stock_move_subproduct_id
+msgid "Subproduct"
+msgstr "Köztes művelet"
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,help:mrp_byproduct.field_stock_move_subproduct_id
+msgid "Subproduct line that generated the move in a manufacturing order"
+msgstr ""
+"Köztes műveleti sor, mely az átmozgatást végzi a a gyártási utasításon belül"
+
+#. module: mrp_byproduct
+#: code:addons/mrp_byproduct/models/mrp_subproduct.py:32
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr "A kiválasztott mértékegység különbözik attól a kategóriától, ami a termék űrlapján van."
+msgstr ""
+"A kiválasztott mértékegység különbözik attól a kategóriától, ami a termék "
+"űrlapján van."
 
 #. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Variable"
-msgstr "Változó"
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_uom_id
+msgid "Unit of Measure"
+msgstr "Mértékegység"
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:63
+#: code:addons/mrp_byproduct/models/mrp_subproduct.py:31
 #, python-format
 msgid "Warning"
 msgstr "Figyelmeztetés"

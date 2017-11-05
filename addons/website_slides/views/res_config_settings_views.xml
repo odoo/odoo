@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website.slides</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="languages_setting" position="after">
+                <div class="col-xs-12 col-md-6 o_setting_box" id="slides_install_setting">
+                    <div class="o_setting_right_pane">
+                        <label string="Slides"/>
+                        <div class="text-muted">
+                            Google Drive API Key
+                        </div>
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label class="col-md-3 o_light_label" string="API Key"/>
+                                <field name="website_slide_google_app_key" class="oe_inline"/>
+                            </div>
+                            <div class="oe_link">
+                                <span class="fa fa-arrow-right"/>
+                                <a href="https://console.developers.google.com/flows/enableapi?apiid=drive,youtube">
+                                    Create a Google Project and Get a Key
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

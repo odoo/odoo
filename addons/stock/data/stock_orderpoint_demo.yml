@@ -1,0 +1,6 @@
+-
+  !python {model: stock.location, id: False}: |
+    main_warehouse = self.env['stock.warehouse'].browse(ref('warehouse0'))
+    main_stock = main_warehouse.lot_stock_id.id
+    stowar_ops = self.env['stock.warehouse.orderpoint'].search([])
+    stowar_ops.write({'location_id':main_stock})

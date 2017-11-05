@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
         <record id="menu_jobs" model="website.menu">
             <field name="name">Jobs</field>
@@ -16,6 +16,23 @@
             <field name="action_id" ref="action_open_website"/>
             <field name="state">open</field>
         </record>
-
     </data>
-</openerp>
+    <data>
+        <record id="hr_recruitment.model_hr_applicant" model="ir.model">
+            <field name="website_form_default_field_id" ref="hr_recruitment.field_hr_applicant_description" />
+            <field name="website_form_access">True</field>
+            <field name="website_form_label">Apply for a Job</field>
+        </record>
+        <function model="ir.model.fields" name="formbuilder_whitelist">
+            <value>hr.applicant</value>
+            <value eval="[
+                'description',
+                'email_from',
+                'partner_name',
+                'partner_phone',
+                'job_id',
+                'department_id',
+            ]"/>
+        </function>
+    </data>
+</odoo>

@@ -3,24 +3,26 @@
 # * base_setup
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Jeffery CHEN <jeffery9@gmail.com>, 2015-2016
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016-2017
-# 智源软件 <likaiyuan2006@gmail.com>, 2015
-# mrshelly <mrshelly@hotmail.com>, 2015
-# Xor3 <xor3@outlook.com>, 2015
-# 卓忆科技 <zhanghao@jointd.com>, 2015
-# 卓忆科技 <zhanghao@jointd.com>, 2015
-# 智源软件 <likaiyuan2006@gmail.com>, 2015
+# Jeffery CHEN <jeffery9@gmail.com>, 2017
+# 苏州远鼎 <tiexinliu@126.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
+# 卓忆科技 <zhanghao@jointd.com>, 2017
+# Rona Lin <ssauapw@qq.com>, 2017
+# waveyeung <waveyeung@qq.com>, 2017
+# Siyuan Gu <siyuancn@hotmail.com>, 2017
+# Xu Lei <xulei8@qq.com>, 2017
+# Talway <9010446@qq.com>, 2017
+# Oliver Yuan <oliver.yuan@openstone.cn>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2017-08-19 06:07+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -28,354 +30,312 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-msgid "(reload fonts)"
-msgstr "（重新加载字体）"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<strong>Save</strong> this page and come back here to set up the feature."
+msgstr ""
 
 #. module: base_setup
-#: field:base.config.settings,module_portal:0
-msgid "Activate the customer portal"
-msgstr "激活客户门户"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Access Rights"
+msgstr "访问权"
 
 #. module: base_setup
-#: field:base.config.settings,module_share:0
-msgid "Allow documents sharing"
-msgstr "允许单据分享"
-
-#. module: base_setup
-#: field:base.config.settings,module_google_calendar:0
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_google_calendar
 msgid "Allow the users to synchronize their calendar  with Google Calendar"
-msgstr "允许用户同步谷歌日历"
+msgstr "允许用户同步Google日历"
 
 #. module: base_setup
-#: field:base.config.settings,module_base_import:0
-msgid "Allow users to import data from CSV files"
-msgstr "允许用户导入CSV数据"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_base_import
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
+msgstr "允许用过通过 CSV/XLS/XLSX/ODS文档导入数据"
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-#: view:sale.config.settings:base_setup.view_sale_config_settings
-msgid "Apply"
-msgstr "应用"
+#: model:ir.model.fields,help:base_setup.field_res_config_settings_group_multi_currency
+msgid "Allows to work in a multi currency environment"
+msgstr "允许在多货币环境中使用"
 
 #. module: base_setup
-#: field:base.config.settings,module_google_drive:0
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_voip
+msgid "Asterisk (VoIP)"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_google_drive
 msgid "Attach Google documents to any record"
-msgstr "附加谷歌文档到任何记录"
+msgstr "附加Google文档到记录"
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-msgid "Authentication"
-msgstr "身份验证"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Automate inter-company transactions"
+msgstr ""
 
 #. module: base_setup
-#: field:sale.config.settings,module_crm:0
-msgid "CRM"
-msgstr "CRM"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Business Documents"
+msgstr ""
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-#: view:sale.config.settings:base_setup.view_sale_config_settings
-msgid "Cancel"
-msgstr "取消"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"By default, new users get highest access rights for all installed apps."
+msgstr ""
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Client"
-msgstr "客户端"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Change Document Template"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_sale_config
-#: view:sale.config.settings:base_setup.view_sale_config_settings
-msgid "Configure Sales"
-msgstr "配置销售"
+#: code:addons/base_setup/models/res_config_settings.py:100
+#, python-format
+msgid "Choose Your Document Layout"
+msgstr ""
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-msgid "Configure outgoing email servers"
-msgstr "配置发件服务器"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Choose your document's header and footer layout"
+msgstr ""
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-msgid "Configure your company data"
-msgstr "配置公司数据"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_pad
+msgid "Collaborative Pads"
+msgstr "协作pad"
 
 #. module: base_setup
-#: view:sale.config.settings:base_setup.view_sale_config_settings
-msgid "Contacts"
-msgstr "联系人"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Common Contact Book"
+msgstr ""
 
 #. module: base_setup
-#: field:base.config.settings,create_uid:0
-#: field:base.setup.terminology,create_uid:0
-#: field:sale.config.settings,create_uid:0
-msgid "Created by"
-msgstr "创建者"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Companies"
+msgstr "公司"
 
 #. module: base_setup
-#: field:base.config.settings,create_date:0
-#: field:base.setup.terminology,create_date:0
-#: field:sale.config.settings,create_date:0
-msgid "Created on"
-msgstr "创建时间"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_company_id
+msgid "Company"
+msgstr "公司"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Customer"
-msgstr "客户"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"Configure company rules to automatically create SO/PO when one of your "
+"company sells/buys to another of your company."
+msgstr ""
 
 #. module: base_setup
-#: view:sale.config.settings:base_setup.view_sale_config_settings
-msgid "Customer Features"
-msgstr "客户功能"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Create and attach Google Drive documents to any record"
+msgstr ""
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Donor"
-msgstr "捐助者"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_default_custom_report_footer
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_report_footer
+msgid "Custom Report Footer"
+msgstr "自定义报表页脚"
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-msgid "Email"
-msgstr "电子邮箱"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_default_user_rights
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Default Access Rights"
+msgstr ""
 
 #. module: base_setup
-#: view:sale.config.settings:base_setup.view_sale_config_settings
-msgid "Emails Integration"
-msgstr "集成电子邮箱"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_external_report_layout
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Document Template"
+msgstr "文档模板"
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-#: model:ir.actions.act_window,name:base_setup.action_general_configuration
-#: model:ir.ui.menu,name:base_setup.menu_general_configuration
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Edit Header"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_default_external_email_server
+msgid "External Email Servers"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Extract and analyze Odoo data from Google Spreadsheet"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_res_config_settings_report_footer
+msgid "Footer text displayed at the bottom of all reports."
+msgstr "显示在所有报告下方的页脚文字。"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Format"
+msgstr "格式"
+
+#. module: base_setup
+#: model:ir.ui.menu,name:base_setup.menu_config
 msgid "General Settings"
 msgstr "常规设置"
 
 #. module: base_setup
-#: help:sale.config.settings,module_mass_mailing:0
-msgid "Get access to statistics with your mass mailing, manage campaigns."
-msgstr "获取统计，使用邮件群发，管理营销。"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Gengo Translations"
+msgstr ""
 
 #. module: base_setup
-#: field:sale.config.settings,module_web_linkedin:0
-msgid "Get contacts automatically from linkedIn"
-msgstr "自动获取LinkedIn联系人"
-
-#. module: base_setup
-#: help:base.config.settings,module_portal:0
-msgid "Give your customers access to their documents."
-msgstr "让您的客户访问他们的单据"
-
-#. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Google Calendar"
 msgstr "Google日历"
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Google Drive"
 msgstr "Google网盘"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Guest"
-msgstr "客人"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_google_spreadsheet
+msgid "Google Spreadsheet"
+msgstr "谷歌电子表格"
 
 #. module: base_setup
-#: field:base.setup.terminology,partner:0
-msgid "How do you call a Customer"
-msgstr "您如何称呼您的客户"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Import & Export"
+msgstr ""
 
 #. module: base_setup
-#: field:base.config.settings,id:0 field:base.setup.terminology,id:0
-#: field:sale.config.settings,id:0
-msgid "ID"
-msgstr "ID"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Integrations"
+msgstr "集成"
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-msgid "Import / Export"
-msgstr "导入/导出"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Inter-Company Transactions"
+msgstr ""
 
 #. module: base_setup
-#: field:base.config.settings,write_uid:0
-#: field:base.setup.terminology,write_uid:0
-#: field:sale.config.settings,write_uid:0
-msgid "Last Updated by"
-msgstr "最后更新人"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_auth_ldap
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "LDAP Authentication"
+msgstr ""
 
 #. module: base_setup
-#: field:base.config.settings,write_date:0
-#: field:base.setup.terminology,write_date:0
-#: field:sale.config.settings,write_date:0
-msgid "Last Updated on"
-msgstr "最后更新时间"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_inter_company_rules
+msgid "Manage Inter Company"
+msgstr "管理公司间交易"
 
 #. module: base_setup
-#: field:sale.config.settings,module_mass_mailing:0
-msgid "Manage mass mailing campaigns"
-msgstr "管理群发邮件营销"
-
-#. module: base_setup
-#: field:base.config.settings,module_multi_company:0
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_group_multi_company
 msgid "Manage multiple companies"
 msgstr "管理多公司"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Member"
-msgstr "会员"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Manage multiple legal entities with separate accounting"
+msgstr ""
 
 #. module: base_setup
-#: view:sale.config.settings:base_setup.view_sale_config_settings
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_group_multi_currency
+msgid "Multi-Currencies"
+msgstr "多币种"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Multi-company"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "OAuth Authentication"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_paperformat_id
+msgid "Paper format"
+msgstr "纸张格式"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Preview Document"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Set custom access rights for new users"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Set the paper format of printed documents"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_general_configuration
+msgid "Settings"
+msgstr "设置"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_company_share_partner
+msgid "Share partners to all companies"
+msgstr "多公司间所有公司的公共用户"
+
+#. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_res_config_settings_company_share_partner
 msgid ""
-"Odoo allows to automatically create leads (or others documents)\n"
-"                            from incoming emails. You can automatically synchronize emails with Odoo\n"
-"                            using regular POP/IMAP accounts, using a direct email integration script for your\n"
-"                            email server, or by manually pushing emails to Odoo using specific\n"
-"                            plugins for your preferred email application."
-msgstr "Odoo 允许从收到的电子邮件自动创建线索(或者其他单据)\n    您能自动通过 Odoo 使用 POP/IMAP 账户同\n    步电子邮箱，为您的服务器直接集成电子邮件脚本，\n    或者通过插件，为您首选的电子邮箱程序手动推送\n     电子邮件到Odoo。"
+"Share your partners to all companies defined in your instance.\n"
+" * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
+" * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
+msgstr ""
+"在你实例中把产品定义为公司间分享选择：产品队每个公司可见，即便是某个\n"
+"公司只针对某一个业务伙伴不选择：每个公司只能看到自己的产品（定义产品的\n"
+"公司）。但是没有关联到某一公司的产品对全部的公司都是可见的"
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-msgid ""
-"Once installed, you can configure your API credentials for \"Google "
-"calendar\""
-msgstr "一旦安装。您可以为\"谷歌日历\"设置您的API证书"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Synchronize your calendar with Google Calendar"
+msgstr ""
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-msgid "Options"
-msgstr "选项"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Template"
+msgstr "模板"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Partner"
-msgstr "业务伙伴"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_base_gengo
+msgid "Translate Your Website with Gengo"
+msgstr ""
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Patient"
-msgstr "病人"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Translate your website with Gengo"
+msgstr ""
 
 #. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-msgid "Portal access"
-msgstr "门户访问"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Use LDAP credentials to log in"
+msgstr ""
 
 #. module: base_setup
-#: view:sale.config.settings:base_setup.view_sale_config_settings
-msgid "Quotations and Sales Orders"
-msgstr "报价单和销售订单"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Use external accounts to log in (Google, Facebook, etc.)"
+msgstr ""
 
 #. module: base_setup
-#: field:base.config.settings,font:0
-msgid "Report Font"
-msgstr "报表字体"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_auth_oauth
+msgid "Use external authentication providers (OAuth)"
+msgstr "使用外部验证提供者 (OAuth)"
 
 #. module: base_setup
-#: field:sale.config.settings,module_sale:0
-msgid "SALE"
-msgstr "销售"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Use external pads in Odoo Notes"
+msgstr ""
 
 #. module: base_setup
-#: view:sale.config.settings:base_setup.view_sale_config_settings
-msgid "Sale Features"
-msgstr "销售功能"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Users"
+msgstr "用户"
 
 #. module: base_setup
-#: help:base.config.settings,font:0
-msgid ""
-"Set the font into the report header, it will be used as default font in the "
-"RML reports of the user company"
-msgstr "将字体设置到报表头，它将作为默认字体用于用户公司的RML报表中"
-
-#. module: base_setup
-#: help:base.config.settings,module_share:0
-msgid "Share or embbed any screen of Odoo."
-msgstr "共享或嵌入odoo页面"
-
-#. module: base_setup
-#: view:sale.config.settings:base_setup.view_sale_config_settings
-msgid "Social Network Integration"
-msgstr "集成社交网络功能"
-
-#. module: base_setup
-#: view:base.setup.terminology:base_setup.base_setup_terminology_form
-msgid "Specify Your Terminology"
-msgstr "指定您的术语"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Tenant"
-msgstr "承租人"
-
-#. module: base_setup
-#: help:base.config.settings,module_google_calendar:0
-msgid "This installs the module google_calendar."
-msgstr "安装google_calendar模块"
-
-#. module: base_setup
-#: help:base.config.settings,module_google_drive:0
-msgid "This installs the module google_docs."
-msgstr "安装google_docs 模块"
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
-msgid "Use another word to say \"Customer\""
-msgstr "称呼“客户”的另一种方式"
-
-#. module: base_setup
-#: field:base.config.settings,module_auth_oauth:0
-msgid ""
-"Use external authentication providers, sign in with google, facebook, ..."
-msgstr "使用OpenID登录(Google, Facebook...)"
-
-#. module: base_setup
-#: help:sale.config.settings,module_web_linkedin:0
-msgid ""
-"When you create a new contact (person or company), you will be able to load "
-"all the data from LinkedIn (photos, address, etc)."
-msgstr "创建联系人或者公司时,允许自动从LinkedIn载入相关信息(照片,地址等等)."
-
-#. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-msgid ""
-"When you send a document to a customer\n"
-"                                    (quotation, invoice), your customer will be\n"
-"                                    able to signup to get all his documents,\n"
-"                                    read your company news, check his projects,\n"
-"                                    etc."
-msgstr "当您发送单据给客户(报价单，发票)，您的可登录并获取他的单据以及阅读您的公司内部新闻，兼且能检查他的项目等。。"
-
-#. module: base_setup
-#: help:base.config.settings,module_multi_company:0
-msgid ""
-"Work in multi-company environments, with appropriate security access between companies.\n"
-"-This installs the module multi_company."
-msgstr "工作在多公司环境，公司之间适当地安全访问为此安装模块 multi_company 。"
-
-#. module: base_setup
-#: view:base.setup.terminology:base_setup.base_setup_terminology_form
-msgid ""
-"You can use this wizard to change the terminologies for customers in the "
-"whole application."
-msgstr "您用这个向导能在整个系统中用其他称谓来标识客户"
-
-#. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-msgid ""
-"You will find more options in your company details: address for the header "
-"and footer, overdue payments texts, etc."
-msgstr "您能在您的公司详述里找到多个选项：用于页首和页脚的地址，逾期支付文本等"
-
-#. module: base_setup
-#: view:base.config.settings:base_setup.view_general_configuration
-#: view:sale.config.settings:base_setup.view_sale_config_settings
-msgid "or"
-msgstr "或"
-
-#. module: base_setup
-#: view:base.setup.terminology:base_setup.base_setup_terminology_form
-msgid "res_config_contents"
-msgstr "res_config_contents"
+#: model:ir.model,name:base_setup.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

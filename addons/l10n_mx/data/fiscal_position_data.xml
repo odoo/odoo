@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="account_fiscal_position_601_fr" model="account.fiscal.position.template">
+            <field name="name">601 - General de Ley Personas Morales</field>
+            <field name="chart_template_id" ref="mx_coa"/>
+        </record>
+
+        <record id="account_fiscal_position_603_fr" model="account.fiscal.position.template">
+            <field name="name">603 - Personas Morales con Fines no Lucrativos</field>
+            <field name="chart_template_id" ref="mx_coa"/>
+        </record>
+
+        <record id="account_fiscal_position_605_fr" model="account.fiscal.position.template">
+            <field name="name">605 - Sueldos y Salarios e Ingresos Asimilados a Salarios</field>
+            <field name="chart_template_id" ref="mx_coa"/>
+        </record>
+
+        <record id="account_fiscal_position_606_fr" model="account.fiscal.position.template">
+            <field name="name">606 - Arrendamiento</field>
+            <field name="chart_template_id" ref="mx_coa"/>
+        </record>
+
+        <record id="account_fiscal_position_607_fr" model="account.fiscal.position.template">
+            <field name="name">607 - Régimen de Enajenación o Adquisición de Bienes</field>
+            <field name="chart_template_id" ref="mx_coa"/>
+        </record>
+
+        <record id="account_fiscal_position_608_fr" model="account.fiscal.position.template">
+            <field name="name">608 - Demás ingresos</field>
+            <field name="chart_template_id" ref="mx_coa"/>
+        </record>
+
+        <record id="account_fiscal_position_609_fr" model="account.fiscal.position.template">
+            <field name="name">609 - Consolidación</field>
+            <field name="chart_template_id" ref="mx_coa"/>
+        </record>
+
+        <record id="account_fiscal_position_610_fr" model="account.fiscal.position.template">
+            <field name="name">610 - Residentes en el Extranjero sin Establecimiento Permanente en México</field>
+            <field name="chart_template_id" ref="mx_coa"/>
+        </record>
+
+        <record id="account_fiscal_position_611_fr" model="account.fiscal.position.template">
+            <field name="name">611 - Ingresos por Dividendos (socios y accionistas)</field>
+            <field name="chart_template_id" ref="mx_coa"/>
+        </record>
+
+        <record id="account_fiscal_position_612_fr" model="account.fiscal.position.template">
+            <field name="name">612 - Personas Físicas con Actividades Empresariales y Profesionales</field>
+            <field name="chart_template_id" ref="mx_coa"/>
+        </record>
+
+        <record id="account_fiscal_position_614_fr" model="account.fiscal.position.template">
+            <field name="name">614 - Ingresos por intereses</field>
+            <field name="chart_template_id" ref="mx_coa"/>
+        </record>
+
+        <record id="account_fiscal_position_615_fr" model="account.fiscal.position.template">
+            <field name="name">615 - Régimen de los ingresos por obtención de premios</field>
+            <field name="chart_template_id" ref="mx_coa"/>
+        </record>
+
+        <record id="account_fiscal_position_616_fr" model="account.fiscal.position.template">
+            <field name="name">616 - Sin obligaciones fiscales</field>
+            <field name="chart_template_id" ref="mx_coa"/>
+        </record>
+
+        <record id="account_fiscal_position_620_fr" model="account.fiscal.position.template">
+            <field name="name">620 - Sociedades Cooperativas de Producción que optan por diferir sus ingresos</field>
+            <field name="chart_template_id" ref="mx_coa"/>
+        </record>
+
+        <record id="account_fiscal_position_621_fr" model="account.fiscal.position.template">
+            <field name="name">621 - Incorporación Fiscal</field>
+            <field name="chart_template_id" ref="mx_coa"/>
+        </record>
+
+        <record id="account_fiscal_position_622_fr" model="account.fiscal.position.template">
+            <field name="name">622 - Actividades Agrícolas, Ganaderas, Silvícolas y Pesqueras</field>
+            <field name="chart_template_id" ref="mx_coa"/>
+        </record>
+
+        <record id="account_fiscal_position_623_fr" model="account.fiscal.position.template">
+            <field name="name">623 - Opcional para Grupos de Sociedades</field>
+            <field name="chart_template_id" ref="mx_coa"/>
+        </record>
+
+        <record id="account_fiscal_position_624_fr" model="account.fiscal.position.template">
+            <field name="name">624 - Coordinados</field>
+            <field name="chart_template_id" ref="mx_coa"/>
+        </record>
+
+        <record id="account_fiscal_position_628_fr" model="account.fiscal.position.template">
+            <field name="name">628 - Hidrocarburos</field>
+            <field name="chart_template_id" ref="mx_coa"/>
+        </record>
+
+        <record id="account_fiscal_position_629_fr" model="account.fiscal.position.template">
+            <field name="name">629 - De los Regímenes Fiscales Preferentes y de las Empresas Multinacionales</field>
+            <field name="chart_template_id" ref="mx_coa"/>
+        </record>
+
+        <record id="account_fiscal_position_630_fr" model="account.fiscal.position.template">
+            <field name="name">630 - Enajenación de acciones en bolsa de valores</field>
+            <field name="chart_template_id" ref="mx_coa"/>
+        </record>
+
+        <record id="account_fiscal_position_foreign" model="account.fiscal.position.template">
+            <field name="name">Foreign Customer</field>
+            <field name="chart_template_id" ref="mx_coa"/>
+        </record>
+
+        <record id="account_fiscal_position0_purchase" model="account.fiscal.position.tax.template">
+            <field name="tax_src_id" ref="l10n_mx.tax14"/>
+            <field name="tax_dest_id" ref="l10n_mx.tax13"/>
+            <field name="position_id" ref="account_fiscal_position_foreign"/>
+        </record>
+
+        <record id="account_fiscal_position0_sale" model="account.fiscal.position.tax.template">
+            <field name="tax_src_id" ref="l10n_mx.tax12"/>
+            <field name="tax_dest_id" ref="l10n_mx.tax9"/>
+            <field name="position_id" ref="account_fiscal_position_foreign"/>
+        </record>
+
+    </data>
+</odoo>

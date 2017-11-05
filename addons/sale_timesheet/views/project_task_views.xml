@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_project_view_kanban_inherit_sale_timesheet" model="ir.ui.view">
+        <field name="name">project.project.kanban.inherit.sale.timesheet</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="hr_timesheet.view_project_kanban_inherited"/>
+        <field name="arch" type="xml">
+            <xpath expr="//a[@t-if='record.allow_timesheets.raw_value']" position="replace">
+                <a t-if="record.allow_timesheets.raw_value" name="action_view_timesheet" type="object" class="o_project_kanban_box" groups="hr_timesheet.group_hr_timesheet_user">
+                    <div>
+                        <span class="o_label">Overview</span>
+                    </div>
+                </a>
+            </xpath>
+        </field>
+    </record>
+
+        <record id="view_sale_service_inherit_form2" model="ir.ui.view">
+            <field name="name">sale.service.form.view.inherit</field>
+            <field name="model">project.task</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='toggle_active']" position="before">
+                    <button type="object" name="action_view_so"
+                            class="oe_stat_button" icon="fa-dollar"
+                            attrs="{'invisible': [('sale_line_id', '=', False)]}"
+                            string="Sales Order"/>
+                </xpath>
+                <field name="user_id" position="after">
+                    <field name="sale_line_id" string="Sales Order Item" attrs="{'invisible': [('partner_id', '=', False)], 'readonly': [('parent_id', '!=', False)]}" options='{"no_open": True, "no_create": True}' context="{'sale_show_order_product_name': True}"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="project_task_view_form_inherit_sale_timesheet" model="ir.ui.view">
+            <field name="name">project.task.form.inherit.timesheet</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='timesheet_ids']/tree" position="attributes">
+                    <attribute name="decoration-muted">timesheet_invoice_id != False</attribute>
+                </xpath>
+                <xpath expr="//field[@name='timesheet_ids']/tree" position="inside">
+                    <field name="timesheet_invoice_id" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+</odoo>

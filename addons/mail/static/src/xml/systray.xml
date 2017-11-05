@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="mail.chat.MessagingMenu">
+        <li class="o_mail_navbar_item">
+            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Conversations" href="#">
+                <i class="fa fa-comments"/> <span class="o_notification_counter badge"/>
+            </a>
+            <ul class="o_mail_navbar_dropdown dropdown-menu" role="menu">
+                <li t-if="widget.isMobile">
+                    <div class="o_mail_navbar_mobile_header">
+                        <button type="button" class="btn btn-default btn-sm o_new_message"> New message </button>
+                    </div>
+                </li>
+                <li t-if="!widget.isMobile" class="o_mail_navbar_dropdown_top">
+                    <div>
+                        <button type="button" class="btn btn-sm o_filter_button active"> All </button>
+                        <button type="button" class="btn btn-sm o_filter_button" data-filter='chat'> Chat </button>
+                        <button type="button" class="btn btn-sm o_filter_button" data-filter='channels'> Channels </button>
+                    </div>
+                    <button type="button" class="btn btn-sm o_new_message"> New message </button>
+                </li>
+                <li class="o_mail_navbar_dropdown_channels"/>
+                <li t-if="widget.isMobile">
+                    <div class="o_mail_mobile_tabs">
+                        <div class="o_mail_mobile_tab o_filter_button active">
+                            <span class="fa fa-envelope"/>
+                            <span class="o_tab_title">All</span>
+                        </div>
+                        <div class="o_mail_mobile_tab o_filter_button" data-filter='chat'>
+                            <span class="fa fa-user"/>
+                            <span class="o_tab_title">Chat</span>
+                        </div>
+                        <div class="o_mail_mobile_tab o_filter_button" data-filter='channels'>
+                            <span class="fa fa-users"/>
+                            <span class="o_tab_title">Channels</span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </li>
+    </t>
+
+    <t t-name="mail.chat.ChannelsPreview">
+         <t t-if="_.isEmpty(channels)">
+            <li class="text-center o_no_activity mt16">
+                <span>No discussion yet...</span>
+            </li>
+        </t>
+        <t t-foreach="channels" t-as="channel">
+            <t t-call="mail.chat.ChannelPreview"/>
+        </t>
+    </t>
+
+    <t t-name="mail.chat.ActivityMenuPreview">
+        <t t-if="_.isEmpty(activities)">
+            <li class="text-center o_no_activity">
+                <span>No activities planned.</span>
+            </li>
+        </t>
+        <t t-foreach="activities" t-as="activity">
+            <div class="o_mail_channel_preview" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='my'>
+                <div class="o_mail_channel_image o_mail_channel_app">
+                    <img t-att-src="activity.icon"/>
+                </div>
+                <div class="o_channel_info">
+                    <div class="o_channel_title">
+                        <span class="o_channel_name">
+                            <t t-esc="activity.name"/>
+                        </span>
+                    </div>
+                    <div>
+                        <button t-if="activity.overdue_count" type="button" class="btn btn-link o_activity_filter_button mr16" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='overdue'><t t-esc="activity.overdue_count"/> Late </button>
+                        <span t-if="!activity.overdue_count" class="o_no_activity mr16">0 Late </span>
+                        <button t-if="activity.today_count" type="button" class="btn btn-link o_activity_filter_button mr16" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='today'> <t t-esc="activity.today_count"/> Today </button>
+                        <span t-if="!activity.today_count" class="o_no_activity mr16">0 Today </span>
+                        <button t-if="activity.planned_count" type="button" class="btn btn-link o_activity_filter_button pull-right" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='upcoming_all'> <t t-esc="activity.planned_count"/> Future </button>
+                        <span t-if="!activity.planned_count" class="o_no_activity pull-right">0 Future</span>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="mail.chat.ActivityMenu">
+        <li class="o_mail_navbar_item">
+            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Activities" href="#">
+                <i class="fa fa-clock-o"/> <span class="o_notification_counter badge"/>
+            </a>
+            <ul class="o_mail_navbar_dropdown dropdown-menu" role="menu">
+                <li class="o_mail_navbar_dropdown_channels"/>
+            </ul>
+        </li>
+    </t>
+</templates>
+

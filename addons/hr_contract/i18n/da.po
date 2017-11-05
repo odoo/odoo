@@ -3,16 +3,21 @@
 # * hr_contract
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# jonas jensen <j.jensen@tcomp.dk>, 2015
+# Sanne Kristensen <sanne@vkdata.dk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Morten Schou <ms@msteknik.dk>, 2017
+# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
+# jonas jensen <j.jensen@tcomp.dk>, 2017
+# Ejner Sønniksen <ejner@vkdata.dk>, 2017
+# Jesper Carstensen <jc@danodoo.dk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2017-08-17 12:16+0000\n"
-"Last-Translator: Hans Henrik Gabelgaard <hhg@gabelgaard.org>\n"
-"Language-Team: Danish (http://www.transifex.com/odoo/odoo-8/language/da/)\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Jesper Carstensen <jc@danodoo.dk>, 2017\n"
+"Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,52 +25,64 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_base_action_rule
-msgid "Action Rules"
-msgstr "Aktion regel"
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "<span class=\"text-muted\">(If fixed-term contract)</span>"
+msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,advantages:0
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "<span>/ month</span>"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_advantages
 msgid "Advantages"
 msgstr "Fordele"
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_form
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Advantages..."
 msgstr "Fordele..."
 
 #. module: hr_contract
-#: help:hr.contract,wage:0
-msgid "Basic Salary of the employee"
-msgstr "Grundløn medarbejderen"
+#: selection:hr.contract,state:0
+msgid "Cancelled"
+msgstr "Annulleret"
 
 #. module: hr_contract
-#: field:hr.employee,vehicle:0
+#: model:ir.actions.act_window,help:hr_contract.action_hr_contract
+msgid "Click here to create new contracts."
+msgstr "Klik her for at oprette nye kontrakter."
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_company_id
+msgid "Company"
+msgstr "Virksomhed"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle
 msgid "Company Vehicle"
 msgstr "Firmabil"
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_form
-#: view:hr.employee:hr_contract.hr_hr_employee_view_form2
-#: field:hr.employee,contract_id:0
-#: model:ir.model,name:hr_contract.model_hr_contract
-#: model:ir.ui.menu,name:hr_contract.next_id_56
-msgid "Contract"
-msgstr "Kontrakt"
-
-#. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_form field:hr.contract,name:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_name
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Contract Reference"
-msgstr "Kontrakt reference"
+msgstr "Kontraktreference"
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_search
-#: field:hr.contract,type_id:0
-#: view:hr.contract.type:hr_contract.hr_contract_type_view_form
-#: view:hr.contract.type:hr_contract.hr_contract_type_view_search
-#: view:hr.contract.type:hr_contract.hr_contract_type_view_tree
-#: field:hr.contract.type,name:0
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Contract Terms"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5898
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_tree
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Contract Type"
 msgstr "Kontrakt type"
 
@@ -76,206 +93,333 @@ msgid "Contract Types"
 msgstr "Kontrakt typer"
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_search
-#: view:hr.contract:hr_contract.hr_contract_view_tree
-#: view:hr.employee:hr_contract.hr_hr_employee_view_form2
-#: field:hr.employee,contract_ids:0 field:hr.employee,contracts_count:0
+#: model:mail.message.subtype,description:hr_contract.mt_contract_pending
+#: model:mail.message.subtype,description:hr_contract.mt_department_contract_pending
+msgid "Contract about to expire"
+msgstr "Kontrakt udløber snart"
+
+#. module: hr_contract
+#: model:mail.message.subtype,description:hr_contract.mt_contract_close
+msgid "Contract expired"
+msgstr "Kontrakt udløbet"
+
+#. module: hr_contract
+#: code:addons/hr_contract/models/hr_contract.py:100
+#, python-format
+msgid "Contract start date must be less than contract end date."
+msgstr "Kontraktens startdato skal være mindre end kontraktens udløbsdato."
+
+#. module: hr_contract
+#: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
+msgid "Contract to Renew"
+msgstr "Kontrakt der skal fornys"
+
+#. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_contract_ids
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_contracts_count
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_tree
+#: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Contracts"
 msgstr "Kontrakter"
 
 #. module: hr_contract
-#: field:hr.contract,create_uid:0 field:hr.contract.type,create_uid:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_create_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_create_uid
 msgid "Created by"
 msgstr "Oprettet af"
 
 #. module: hr_contract
-#: field:hr.contract,create_date:0 field:hr.contract.type,create_date:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_create_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_create_date
 msgid "Created on"
 msgstr "Oprettet den"
 
 #. module: hr_contract
-#: field:hr.contract,department_id:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_currency_id
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_contract_id
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+#: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+msgid "Current Contract"
+msgstr "Nuværende kontrakt"
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Current Employee"
+msgstr "Nuværende ansat"
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
+msgid "Delete"
+msgstr "Slet"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_department_id
 msgid "Department"
 msgstr "Afdeling"
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_form
-msgid "Duration"
-msgstr "Varighed"
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_display_name
+msgid "Display Name"
+msgstr "Vis navn"
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_search
-#: field:hr.contract,employee_id:0
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
+msgid "Edit Contract"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_employee
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_employee_id
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Employee"
-msgstr "Ansat"
+msgstr "Medarbejder"
 
 #. module: hr_contract
-#: field:hr.contract,date_end:0
+#: model:ir.model,name:hr_contract.model_hr_contract
+msgid "Employee Contract"
+msgstr "Ansættelseskontrakt"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_wage
+msgid "Employee's monthly gross wage."
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_resource_calendar_id
+msgid "Employee's working schedule."
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_end
 msgid "End Date"
 msgstr "Slut dato"
 
 #. module: hr_contract
-#: constraint:hr.contract:0
-msgid "Error! Contract start-date must be less than contract end-date."
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_date_end
+msgid "End date of the contract (if it's a fixed-term contract)."
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_search
-msgid "Group By"
-msgstr "Gruppér efter"
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_trial_date_end
+msgid "End date of the trial period (if there is one)."
+msgstr ""
 
 #. module: hr_contract
-#: field:hr.employee,vehicle_distance:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_trial_date_end
+msgid "End of Trial Period"
+msgstr ""
+
+#. module: hr_contract
+#: selection:hr.contract,state:0
+#: model:mail.message.subtype,name:hr_contract.mt_contract_close
+msgid "Expired"
+msgstr "Udløbet"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_type_sequence
+msgid "Gives the sequence when displaying a list of Contract."
+msgstr "Sekvensen vises, når der vises en liste over kontrakter."
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Group By"
+msgstr "Sortér efter"
+
+#. module: hr_contract
+#: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_state_ir_actions_server
+#: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_state
+#: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_state
+msgid "HR Contract: update state"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle_distance
 msgid "Home-Work Dist."
 msgstr "Afstand hjem-arbejde"
 
 #. module: hr_contract
-#: field:hr.contract,id:0 field:hr.contract.type,id:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id
 msgid "ID"
-msgstr "Id"
+msgstr "ID"
 
 #. module: hr_contract
-#: help:hr.employee,vehicle_distance:0
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Important Messages"
+msgstr "Vigtige beskeder"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
 msgid "In kilometers"
 msgstr "I kilometer"
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_form
-msgid "Information"
-msgstr "Information"
-
-#. module: hr_contract
-#: field:hr.employee,manager:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_manager
 msgid "Is a Manager"
 msgstr "Er manager"
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_search
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Job"
 msgstr "Job"
 
 #. module: hr_contract
-#: field:hr.contract,job_id:0
-msgid "Job Title"
-msgstr "Titler"
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_job_id
+msgid "Job Position"
+msgstr "Stilling"
 
 #. module: hr_contract
-#: field:hr.contract,write_uid:0 field:hr.contract.type,write_uid:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract___last_update
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type___last_update
+msgid "Last Modified on"
+msgstr "Sidst ændret den"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_write_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_write_uid
 msgid "Last Updated by"
 msgstr "Sidst opdateret af"
 
 #. module: hr_contract
-#: field:hr.contract,write_date:0 field:hr.contract.type,write_date:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_write_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_write_date
 msgid "Last Updated on"
 msgstr "Sidst opdateret den"
 
 #. module: hr_contract
-#: help:hr.employee,contract_id:0
+#: model:ir.model.fields,help:hr_contract.field_hr_employee_contract_id
 msgid "Latest contract of the employee"
 msgstr "Senest kontrakt for den ansatte"
 
 #. module: hr_contract
-#: view:hr.employee:hr_contract.hr_hr_employee_view_form2
+#: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Medical Exam"
 msgstr "Lægeundersøgelse"
 
 #. module: hr_contract
-#: field:hr.employee,medic_exam:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_medic_exam
 msgid "Medical Examination Date"
 msgstr "Dato for lægeundersøgelse"
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_form
-#: field:hr.contract,notes:0
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Monthly Advantages in Cash"
+msgstr ""
+
+#. module: hr_contract
+#: selection:hr.contract,state:0
+msgid "New"
+msgstr "Ny"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_notes
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Notes"
 msgstr "Noter"
 
 #. module: hr_contract
-#: field:hr.employee,children:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_children
 msgid "Number of Children"
 msgstr "Antal børn"
 
 #. module: hr_contract
-#: field:hr.employee,place_of_birth:0
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Other Information"
+msgstr "Anden information"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_place_of_birth
 msgid "Place of Birth"
 msgstr "Fødselssted"
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_form
-msgid "Salary and Advantages"
-msgstr "Løn og fordele"
+#: selection:hr.contract,state:0
+msgid "Running"
+msgstr "Kører"
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_search
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Salary Information"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Search Contract"
 msgstr "Søg efter kontrakt"
 
 #. module: hr_contract
-#: view:hr.contract.type:hr_contract.hr_contract_type_view_search
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
 msgid "Search Contract Type"
 msgstr "Søg efter kontrakttype"
 
 #. module: hr_contract
-#: field:hr.contract,date_start:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_sequence
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
+msgid "Sequence"
+msgstr "Rækkefølge"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_start
 msgid "Start Date"
 msgstr "Start dato"
 
 #. module: hr_contract
-#: field:hr.contract,trial_date_end:0
-msgid "Trial End Date"
-msgstr "Slutdato på prøveperiode"
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_date_start
+msgid "Start date of the contract."
+msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_form
-msgid "Trial Period Duration"
-msgstr "Varighed af prøveperiode"
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "State"
+msgstr "Status"
 
 #. module: hr_contract
-#: field:hr.contract,trial_date_start:0
-msgid "Trial Start Date"
-msgstr "Startdato for prøveperiode"
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_state
+msgid "Status"
+msgstr "Status"
 
 #. module: hr_contract
-#: field:base.action.rule,trg_date_resource_field_id:0
-msgid "Use employee work schedule"
-msgstr "Brug den ansattes arbejdsplan"
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_state
+msgid "Status of the contract"
+msgstr "Status på kontrakten"
 
 #. module: hr_contract
-#: help:base.action.rule,trg_date_resource_field_id:0
-msgid "Use the user's working schedule."
-msgstr "Brug brugerens arbejdsplan"
+#: selection:hr.contract,state:0
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model:mail.message.subtype,name:hr_contract.mt_contract_pending
+msgid "To Renew"
+msgstr "Til fornyelse"
 
 #. module: hr_contract
-#: field:hr.contract,visa_expire:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_expire
 msgid "Visa Expire Date"
 msgstr "Udløbsdato for Visa"
 
 #. module: hr_contract
-#: field:hr.contract,visa_no:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_no
 msgid "Visa No"
 msgstr "Visa nr"
 
 #. module: hr_contract
-#: field:hr.contract,wage:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_wage
 msgid "Wage"
 msgstr "Løn"
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_form
-msgid "Work Permit"
-msgstr "Arbejdstilladelse"
-
-#. module: hr_contract
-#: field:hr.contract,permit_no:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_permit_no
 msgid "Work Permit No"
 msgstr "Nr. på arbejdstilladelse"
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_search
-#: field:hr.contract,working_hours:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_resource_calendar_id
 msgid "Working Schedule"
 msgstr "Arbejdsplan"

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import payment_acquirer
-import res_config
+from . import payment_acquirer
+from . import res_partner
+from . import account_payment

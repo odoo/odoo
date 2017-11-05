@@ -1,0 +1,354 @@
+-
+  !python {model: ir.model.data, id: False}: |
+    chicago_warehouse = self.env['stock.warehouse'].browse(ref('stock_warehouse_shop0'))
+
+    #create xml ids for demo data that are widely used in tests or in other codes, for more convenience
+    xml_references = [
+        {'name':'chi_picking_type_in','module':'stock', 'model':'stock.picking.type','res_id': chicago_warehouse.in_type_id.id},
+        {'name':'chi_picking_type_out','module':'stock', 'model':'stock.picking.type','res_id': chicago_warehouse.out_type_id.id},
+        {'name':'stock_location_shop0','module':'stock', 'model':'stock.location','res_id': chicago_warehouse.lot_stock_id.id},
+    ]
+    for xml_record in xml_references:
+        xml_ids = self.search([('module', '=', xml_record['module']), ('model', '=', xml_record['model']), ('name', '=', xml_record['name'])]).ids
+        if not xml_ids:
+            self.create(xml_record)
+        #avoid the xml id and the associated resource being dropped by the orm by manually making a hit on it
+        self._update_dummy(xml_record['model'], xml_record['module'], xml_record['name'])
+-
+ !record {model: stock.location, id: location_refrigerator_small}:
+    name: Small Refrigerator
+    usage: internal
+    location_id: stock_location_14
+-
+ !record {model: product.product, id: product_icecream}:
+    default_code: 001
+    name: Ice Cream
+    type: product
+    categ_id: product.product_category_1
+    lst_price: 100.0
+    standard_price: 70.0
+    weight: 1.0
+    uom_id: product.product_uom_kgm
+    property_stock_inventory: location_inventory
+    description: Ice cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
+-
+ !record {model: stock.production.lot, id: lot_icecream_0}:
+    name: '0000000000017'
+    product_id: product_icecream
+-
+ !record {model: stock.production.lot, id: lot_icecream_1}:
+    name: '0000000000024'
+    product_id: product_icecream
+-
+ !record {model: stock.inventory, id: stock_inventory_icecream}:
+    name: Inventory for icecream
+    filter: 'product'
+    product_id: product_icecream
+-
+ !record {model: stock.inventory.line, id: stock_inventory_line_icecream_lot0}:
+    product_id: product_icecream
+    product_uom_id: product.product_uom_kgm
+    inventory_id: stock_inventory_icecream
+    product_qty: 50.0
+    prod_lot_id: lot_icecream_0
+    location_id: stock_location_14
+-
+ !record {model: stock.inventory.line, id: stock_inventory_line_icecream_lot1}:
+    product_id: product_icecream
+    product_uom_id: product.product_uom_kgm
+    inventory_id: stock_inventory_icecream
+    product_qty: 40.0
+    prod_lot_id: lot_icecream_1
+    location_id: stock_location_14
+-
+    Create STOCK_MOVE for OUT
+-
+ !record {model: stock.picking, id: outgoing_shipment_main_warehouse}:
+    picking_type_id: stock.picking_type_out
+    origin: 'outgoing shipment main_warehouse'
+    partner_id: base.res_partner_1
+    location_id: stock.stock_location_stock
+    location_dest_id: stock.stock_location_customers
+    move_lines:
+      - product_id: product.product_product_27
+        product_uom: product.product_uom_unit
+        product_uom_qty: 15.0
+        picking_type_id: stock.picking_type_out
+        location_id: stock.stock_location_stock
+        location_dest_id: stock.stock_location_customers
+-
+ !record {model: stock.picking, id: outgoing_shipment_main_warehouse1}:
+    picking_type_id: stock.picking_type_out
+    origin: 'outgoing shipment'
+    partner_id: base.res_partner_1
+    date: !eval "'%s-%s-15' %((datetime.now()-timedelta(days=60)).year, (datetime.now()-timedelta(days=60)).month)"
+    location_id: stock.stock_location_stock
+    location_dest_id: stock.stock_location_customers
+    move_lines:
+      - product_id: product.product_product_6
+        product_uom: product.product_uom_unit
+        product_uom_qty: 180.0
+        picking_type_id: stock.picking_type_out
+        location_id: stock.stock_location_stock
+        location_dest_id: stock.stock_location_customers
+        move_line_ids:
+          - product_id: product.product_product_6
+            qty_done: 100
+            product_uom_id: product.product_uom_unit
+            location_id: stock.stock_location_stock
+            location_dest_id: stock.stock_location_customers
+-
+ !record {model: stock.picking, id: outgoing_shipment_main_warehouse2}:
+    picking_type_id: stock.picking_type_out
+    origin: 'outgoing shipment your_company warehouse'
+    partner_id: base.res_partner_1
+    date: !eval "'%s-%s-15' % ((datetime.now()-timedelta(days=30)).month,(datetime.now()-timedelta(days=30)).month)"
+    location_id: stock.stock_location_stock
+    location_dest_id: stock.stock_location_customers
+    move_lines:
+      - product_id: product.product_delivery_02
+        product_uom: product.product_uom_unit
+        product_uom_qty: 45.0
+        picking_type_id: stock.picking_type_out
+        location_id: stock.stock_location_stock
+        location_dest_id: stock.stock_location_customers
+-
+ !record {model: stock.picking, id: outgoing_shipment_main_warehouse3}:
+    picking_type_id: stock.picking_type_out
+    origin: 'your company warehouse'
+    partner_id: base.res_partner_1
+    location_id: stock.stock_location_stock
+    location_dest_id: stock.stock_location_customers
+    move_lines:
+      - product_id: product.product_product_5
+        product_uom: product.product_uom_unit
+        product_uom_qty: 75.0
+        picking_type_id: stock.picking_type_out
+        location_id: stock.stock_location_stock
+        location_dest_id: stock.stock_location_customers
+-
+    Create STOCK_PICKING for IN
+-
+ !record {model: stock.picking, id: incomming_shipment}:
+    picking_type_id: stock.picking_type_in
+    location_id: stock_location_suppliers
+    location_dest_id: stock_location_stock
+-
+ !record {model: stock.move, id: incomming_shipment_icecream}:
+    product_id: product_icecream
+    product_uom: product.product_uom_kgm
+    product_uom_qty: 50.0
+    picking_type_id: stock.picking_type_in
+    location_id: stock_location_suppliers
+    location_dest_id: stock_location_stock
+    picking_id: incomming_shipment
+-
+ !record {model: stock.picking, id: incomming_shipment1}:
+    picking_type_id: stock.picking_type_in
+    partner_id: base.res_partner_1
+    location_id: stock.stock_location_suppliers
+    location_dest_id: stock.stock_location_stock
+    move_lines:
+      - product_id: product.product_delivery_01
+        product_uom: product.product_uom_unit
+        product_uom_qty: 35.0
+        picking_type_id: stock.picking_type_in
+        location_id: stock.stock_location_suppliers
+        location_dest_id: stock.stock_location_stock
+-
+ !record {model: stock.picking, id: incomming_shipment2}:
+    picking_type_id: stock.picking_type_in
+    partner_id: base.res_partner_1
+    location_id: stock.stock_location_suppliers
+    location_dest_id: stock.stock_location_stock
+    move_lines:
+      - product_id: product.product_product_22
+        product_uom: product.product_uom_unit
+        product_uom_qty: 125.0
+        picking_type_id: stock.picking_type_in
+        location_id: stock.stock_location_suppliers
+        location_dest_id: stock.stock_location_stock
+-
+ !record {model: stock.picking, id: incomming_shipment3}:
+    picking_type_id: stock.picking_type_in
+    partner_id: base.res_partner_1
+    location_id: stock.stock_location_suppliers
+    location_dest_id: stock.stock_location_stock
+    move_lines:
+      - product_id: product.product_product_10
+        product_uom: product.product_uom_unit
+        product_uom_qty: 120.0
+        picking_type_id: stock.picking_type_in
+        location_id: stock.stock_location_suppliers
+        location_dest_id: stock.stock_location_stock
+-
+ !record {model: stock.picking, id: incomming_shipment4}:
+   picking_type_id: stock.picking_type_in
+   partner_id: base.res_partner_1
+   location_id: stock.stock_location_suppliers
+   location_dest_id: stock.stock_location_stock
+   move_lines:
+     - product_id: product.product_delivery_02
+       product_uom: product.product_uom_unit
+       product_uom_qty: 50.0
+       picking_type_id: stock.picking_type_in
+       location_id: stock.stock_location_suppliers
+       location_dest_id: stock.stock_location_stock
+-
+   Create STOCK_PICKING_IN for Chicago Warehouse
+-
+ !record {model: stock.picking, id: incomming_chicago_warehouse}:
+    picking_type_id: chi_picking_type_in
+    origin: 'incoming_chicago_warehouse'
+    partner_id: base.res_partner_1
+    location_id: stock.stock_location_suppliers
+    location_dest_id: stock.stock_location_shop0
+    move_lines:
+      - product_id: product.product_product_9
+        product_uom: product.product_uom_unit
+        product_uom_qty: 25.0
+        picking_type_id: chi_picking_type_in
+        location_id: stock.stock_location_suppliers
+        location_dest_id: stock.stock_location_shop0
+
+-
+ !record {model: stock.picking, id: incomming_chicago_warehouse1}:
+    picking_type_id: chi_picking_type_in
+    partner_id: base.res_partner_1
+    location_id: stock.stock_location_suppliers
+    location_dest_id: stock.stock_location_shop0
+    move_lines:
+      - product_id: product.product_delivery_01
+        product_uom: product.product_uom_unit
+        product_uom_qty: 180.0
+        picking_type_id: chi_picking_type_in
+        location_id: stock.stock_location_suppliers
+        location_dest_id: stock.stock_location_shop0
+        state: done
+        move_line_ids:
+          - product_id: product.product_delivery_01
+            qty_done: 100
+            product_uom_id: product.product_uom_unit
+            location_id: stock.stock_location_suppliers
+            location_dest_id: stock.stock_location_shop0
+-
+ !record {model: stock.picking, id: incomming_chicago_warehouse2}:
+    picking_type_id: chi_picking_type_in
+    partner_id: base.res_partner_1
+    location_id: stock.stock_location_suppliers
+    location_dest_id: stock.stock_location_shop0
+    move_lines:
+      - product_id: product.product_delivery_01
+        product_uom: product.product_uom_unit
+        product_uom_qty: 45.0
+        picking_type_id: chi_picking_type_in
+        location_id: stock.stock_location_suppliers
+        location_dest_id: stock.stock_location_shop0
+-
+ !record {model: stock.picking, id: incomming_chicago_warehouse3}:
+    picking_type_id: chi_picking_type_in
+    origin: 'chicago_warehouse'
+    partner_id: base.res_partner_1
+    date: !eval "'%s-%s-2' % ((datetime.now()-timedelta(days=30)).month,(datetime.now()-timedelta(days=30)).month)"
+    location_id: stock.stock_location_suppliers
+    location_dest_id: stock.stock_location_shop0
+    move_lines:
+      - product_id: product.product_product_22
+        product_uom: product.product_uom_unit
+        product_uom_qty: 75.0
+        picking_type_id: chi_picking_type_in
+        location_id: stock.stock_location_suppliers
+        location_dest_id: stock.stock_location_shop0
+-
+   Create STOCK_PICKING_OUT for Chicago Warehouse
+-
+ !record {model: stock.picking, id: outgoing_chicago_warehouse}:
+    picking_type_id: chi_picking_type_out
+    origin: 'outgoing_chicago_warehouse'
+    partner_id: base.res_partner_1
+    location_id: stock.stock_location_shop0
+    location_dest_id: stock.stock_location_customers
+    move_lines:
+      - product_id: product.product_product_27
+        product_uom: product.product_uom_unit
+        product_uom_qty: 15.0
+        picking_type_id: chi_picking_type_out
+        location_id: stock.stock_location_shop0
+        location_dest_id: stock.stock_location_customers
+-
+ !record {model: stock.picking, id: outgoing_chicago_warehouse1}:
+    picking_type_id: chi_picking_type_out
+    origin: 'outgoing_shipment_chicago_warehouse'
+    partner_id: base.res_partner_1
+    location_id: stock.stock_location_shop0
+    location_dest_id: stock.stock_location_customers
+    move_lines:
+      - product_id: product.product_product_6
+        product_uom: product.product_uom_unit
+        product_uom_qty: 180.0
+        picking_type_id: chi_picking_type_out
+        location_id: stock.stock_location_shop0
+        location_dest_id: stock.stock_location_customers
+        move_line_ids:
+          - product_id: product.product_product_6
+            qty_done: 100
+            product_uom_id: product.product_uom_unit
+            location_id: stock.stock_location_shop0
+            location_dest_id: stock.stock_location_customers
+-
+ !record {model: stock.picking, id: outgoing_chicago_warehouse2}:
+    picking_type_id: chi_picking_type_out
+    origin: 'chicago_warehouse'
+    partner_id: base.res_partner_1
+    location_id: stock.stock_location_shop0
+    location_dest_id: stock.stock_location_customers
+    move_lines:
+      - product_id: product.product_delivery_02
+        product_uom: product.product_uom_unit
+        product_uom_qty: 45.0
+        picking_type_id: chi_picking_type_out
+        location_id: stock.stock_location_shop0
+        location_dest_id: stock.stock_location_customers
+-
+ !record {model: stock.picking, id: outgoing_chicago_warehouse3}:
+    picking_type_id: chi_picking_type_out
+    origin: 'outgoing chicago warehouse'
+    location_id: stock.stock_location_shop0
+    location_dest_id: stock.stock_location_customers
+    partner_id: base.res_partner_1
+    move_lines:
+      - product_id: product.product_product_5
+        product_uom: product.product_uom_unit
+        product_uom_qty: 75.0
+        picking_type_id: chi_picking_type_out
+        location_id: stock.stock_location_shop0
+        location_dest_id: stock.stock_location_customers
+-
+ !python {model: stock.picking, id: False}: |
+    self.browse([
+        ref('outgoing_shipment_main_warehouse'),
+        ref('outgoing_shipment_main_warehouse1'),
+        ref('incomming_shipment2'),
+        ref('incomming_shipment1'),
+        ref('incomming_shipment3'),
+        ref('outgoing_chicago_warehouse3'),
+        ref('outgoing_chicago_warehouse2'),
+        ref('outgoing_chicago_warehouse1'),
+        ref('incomming_chicago_warehouse1'),
+        ref('incomming_chicago_warehouse2'),
+        ref('incomming_chicago_warehouse3')
+    ]).action_confirm()
+    record = self.browse(ref('outgoing_shipment_main_warehouse1'))
+    record_chi_in = self.browse(ref('incomming_chicago_warehouse1'))
+    record_chi_out = self.browse(ref('outgoing_chicago_warehouse1'))
+    if record.state != 'done' and record_chi_in.state != 'done' and record_chi_out.state != 'done':
+        self.browse([
+            ref('outgoing_shipment_main_warehouse'),
+            ref('outgoing_chicago_warehouse3'),
+            ref('outgoing_shipment_main_warehouse2')
+        ]).force_assign()
+        self.browse([
+            ref('outgoing_shipment_main_warehouse1'),
+            ref('incomming_chicago_warehouse1'),
+            ref('outgoing_chicago_warehouse1')
+        ]).do_transfer()

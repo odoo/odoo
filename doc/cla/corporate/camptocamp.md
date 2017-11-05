@@ -27,4 +27,8 @@ Romain Deheele romain.deheele@camptocamp.com https://github.com/rdeheele
 Maxime Wiot maxime.wiot@camptocamp.com https://github.com/maxime-c2c
 Ferdinand Gassauer ferdinand.gassauer@camptocamp.com https://github.com/ferdiga
 Jean-Baptiste Aubort jean-baptiste.aubort@camptocamp.com
-
+Cyril Gaudin cyril.gaudin@camptocamp.com https://github.com/cyrilgdn
+Denis Leemann denis.leemann@camptocamp.com https://github.com/leemannd
+Akim Juillerat akim.juillerat@camptocamp.com https://github.com/grindtildeath
+Damien Crier damien.crier@camptocamp.com https://github.com/damdam-s
+Simone Orsi simahawk@gmail.com https://github.com/simahawk

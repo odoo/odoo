@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import logging
 import os
 import re
@@ -8,8 +10,9 @@ from collections import namedtuple
 from os import listdir
 from threading import Thread, Lock
 
-import openerp.addons.hw_proxy.controllers.main as hw_proxy
-from openerp import http
+from odoo import http
+
+from odoo.addons.hw_proxy.controllers import main as hw_proxy
 
 _logger = logging.getLogger(__name__)
 
@@ -153,7 +156,7 @@ class Scale(Thread):
             if status == 'error' and message:
                 _logger.error('Scale Error: '+ message)
             elif status == 'disconnected' and message:
-                _logger.warning('Disconnected Scale: '+message)
+                _logger.info('Disconnected Scale: %s', message)
 
     def _get_raw_response(self, connection):
         answer = []

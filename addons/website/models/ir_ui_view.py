@@ -1,262 +1,159 @@
-# -*- coding: utf-8 -*-
-import copy
+# -*- coding: ascii -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from lxml import etree, html
+import logging
+from itertools import groupby
 
-from openerp import SUPERUSER_ID, api
-from openerp.addons.website.models import website
-from openerp.http import request
-from openerp.osv import osv, fields
+from odoo import api, fields, models
+from odoo import tools
+from odoo.addons.http_routing.models.ir_http import url_for
+from odoo.http import request
+from odoo.tools import pycompat
 
-class view(osv.osv):
-    _inherit = "ir.ui.view"
-    _columns = {
-        'page': fields.boolean("Whether this view is a web page template (complete)"),
-        'website_meta_title': fields.char("Website meta title", size=70, translate=True),
-        'website_meta_description': fields.text("Website meta description", size=160, translate=True),
-        'website_meta_keywords': fields.char("Website meta keywords", translate=True),
-        'customize_show': fields.boolean("Show As Optional Inherit"),
-    }
-    _defaults = {
-        'page': False,
-        'customize_show': False,
-    }
+_logger = logging.getLogger(__name__)
 
 
-    def _view_obj(self, cr, uid, view_id, context=None):
-        if isinstance(view_id, basestring):
-            return self.pool['ir.model.data'].xmlid_to_object(
-                cr, uid, view_id, raise_if_not_found=True, context=context
-            )
-        elif isinstance(view_id, (int, long)):
-            return self.browse(cr, uid, view_id, context=context)
+class View(models.Model):
+
+    _name = "ir.ui.view"
+    _inherit = ["ir.ui.view", "website.seo.metadata"]
+
+    customize_show = fields.Boolean("Show As Optional Inherit", default=False)
+    website_id = fields.Many2one('website', ondelete='cascade', string="Website")
+    page_ids = fields.One2many('website.page', compute='_compute_page_ids', store=False)
+
+    @api.one
+    def _compute_page_ids(self):
+        self.page_ids = self.env['website.page'].search(
+            [('view_id', '=', self.id)]
+        )
+
+    @api.multi
+    def unlink(self):
+        result = super(View, self).unlink()
+        self.clear_caches()
+        return result
+
+    @api.multi
+    def _sort_suitability_key(self):
+        """ Key function to sort views by descending suitability
+            Suitability of a view is defined as follow:
+                * if the view and request website_id are matched
+                * then if the view has no set website
+        """
+        self.ensure_one()
+        context_website_id = self.env.context.get('website_id', 1)
+        website_id = self.website_id.id or 0
+        different_website = context_website_id != website_id
+        return (different_website, website_id)
+
+    def filter_duplicate(self):
+        """ Filter current recordset only keeping the most suitable view per distinct key """
+        filtered = self.env['ir.ui.view']
+        for dummy, group in groupby(self, key=lambda record: record.key):
+            filtered += sorted(group, key=lambda record: record._sort_suitability_key())[0]
+        return filtered
+
+    @api.model
+    def _view_obj(self, view_id):
+        if isinstance(view_id, pycompat.string_types):
+            if 'website_id' in self._context:
+                domain = [('key', '=', view_id), '|', ('website_id', '=', False), ('website_id', '=', self._context.get('website_id'))]
+                order = 'website_id'
+            else:
+                domain = [('key', '=', view_id)]
+                order = self._order
+            views = self.search(domain, order=order)
+            if views:
+                return views.filter_duplicate()
+            else:
+                return self.env.ref(view_id)
+        elif isinstance(view_id, pycompat.integer_types):
+            return self.browse(view_id)
 
         # assume it's already a view object (WTF?)
         return view_id
 
-    # Returns all views (called and inherited) related to a view
-    # Used by translation mechanism, SEO and optional templates
-    def _views_get(self, cr, uid, view_id, options=True, context=None, root=True):
-        """ For a given view ``view_id``, should return:
+    @api.model
+    def _get_inheriting_views_arch_domain(self, view_id, model):
+        domain = super(View, self)._get_inheriting_views_arch_domain(view_id, model)
+        return ['|', ('website_id', '=', False), ('website_id', '=', self.env.context.get('website_id'))] + domain
 
-        * the view itself
-        * all views inheriting from it, enabled or not
-          - but not the optional children of a non-enabled child
-        * all views called from it (via t-call)
-        """
-        try:
-            view = self._view_obj(cr, uid, view_id, context=context)
-        except ValueError:
-            # Shall we log that ?
-            return []
+    @api.model
+    @tools.ormcache_context('self._uid', 'xml_id', keys=('website_id',))
+    def get_view_id(self, xml_id):
+        if 'website_id' in self._context and not isinstance(xml_id, pycompat.integer_types):
+            domain = [('key', '=', xml_id), '|', ('website_id', '=', self._context['website_id']), ('website_id', '=', False)]
+            view = self.search(domain, order='website_id', limit=1)
+            if not view:
+                _logger.warning("Could not find view object with xml_id '%s'", xml_id)
+                raise ValueError('View %r in website %r not found' % (xml_id, self._context['website_id']))
+            return view.id
+        return super(View, self).get_view_id(xml_id)
 
-        while root and view.inherit_id:
-            view = view.inherit_id
+    @api.multi
+    def render(self, values=None, engine='ir.qweb'):
+        """ Render the template. If website is enabled on request, then extend rendering context with website values. """
+        new_context = dict(self._context)
+        if request and getattr(request, 'is_frontend', False):
 
-        result = [view]
-
-        node = etree.fromstring(view.arch)
-        for child in node.xpath("//t[@t-call]"):
-            try:
-                called_view = self._view_obj(cr, uid, child.get('t-call'), context=context)
-            except ValueError:
-                continue
-            if called_view not in result:
-                result += self._views_get(cr, uid, called_view, options=options, context=context)
-
-        extensions = view.inherit_children_ids
-        if not options:
-            # only active children
-            extensions = (v for v in view.inherit_children_ids if v.active)
-
-        # Keep options in a deterministic order regardless of their applicability
-        for extension in sorted(extensions, key=lambda v: v.id):
-            for r in self._views_get(
-                    cr, uid, extension,
-                    # only return optional grandchildren if this child is enabled
-                    options=extension.active,
-                    context=context, root=False):
-                if r not in result:
-                    result.append(r)
-        return result
-
-    def extract_embedded_fields(self, cr, uid, arch, context=None):
-        return arch.xpath('//*[@data-oe-model != "ir.ui.view"]')
-
-    def save_embedded_field(self, cr, uid, el, context=None):
-        Model = self.pool[el.get('data-oe-model')]
-        field = el.get('data-oe-field')
-
-        converter = self.pool['website.qweb'].get_converter_for(el.get('data-oe-type'))
-        value = converter.from_html(cr, uid, Model, Model._fields[field], el)
-
-        if value is not None:
-            # TODO: batch writes?
-            Model.write(cr, uid, [int(el.get('data-oe-id'))], {
-                field: value
-            }, context=context)
-
-    def to_field_ref(self, cr, uid, el, context=None):
-        # filter out meta-information inserted in the document
-        attributes = dict((k, v) for k, v in el.items()
-                          if not k.startswith('data-oe-'))
-        attributes['t-field'] = el.get('data-oe-expression')
-
-        out = html.html_parser.makeelement(el.tag, attrib=attributes)
-        out.tail = el.tail
-        return out
-
-    def replace_arch_section(self, cr, uid, view_id, section_xpath, replacement, context=None):
-        # the root of the arch section shouldn't actually be replaced as it's
-        # not really editable itself, only the content truly is editable.
-
-        [view] = self.browse(cr, uid, [view_id], context=context)
-        arch = etree.fromstring(view.arch.encode('utf-8'))
-        # => get the replacement root
-        if not section_xpath:
-            root = arch
-        else:
-            # ensure there's only one match
-            [root] = arch.xpath(section_xpath)
-
-        root.text = replacement.text
-        root.tail = replacement.tail
-        # replace all children
-        del root[:]
-        for child in replacement:
-            root.append(copy.deepcopy(child))
-
-        return arch
-
-    @api.cr_uid_ids_context
-    def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
-        if request and getattr(request, 'website_enabled', False):
-            engine='website.qweb'
-
-            if isinstance(id_or_xml_id, list):
-                id_or_xml_id = id_or_xml_id[0]
-
-            if not context:
-                context = {}
-
-            company = self.pool['res.company'].browse(cr, SUPERUSER_ID, request.website.company_id.id, context=context)
-
-            qcontext = dict(
-                context.copy(),
-                website=request.website,
-                url_for=website.url_for,
-                slug=website.slug,
-                res_company=company,
-                user_id=self.pool.get("res.users").browse(cr, uid, uid),
-                translatable=context.get('lang') != request.website.default_lang_code,
-                editable=request.website.is_publisher(),
-                menu_data=self.pool['ir.ui.menu'].load_menus_root(cr, uid, context=context) if request.website.is_user() else None,
-            )
-
-            # add some values
-            if values:
-                qcontext.update(values)
+            editable = request.website.is_publisher()
+            translatable = editable and self._context.get('lang') != request.website.default_lang_code
+            editable = not translatable and editable
 
             # in edit mode ir.ui.view will tag nodes
-            if not qcontext.get('rendering_bundle'):
-                if qcontext.get('editable'):
-                    context = dict(context, inherit_branding=True)
-                elif request.registry['res.users'].has_group(cr, uid, 'base.group_website_publisher'):
-                    context = dict(context, inherit_branding_auto=True)
+            if not translatable and not self.env.context.get('rendering_bundle'):
+                if editable:
+                    new_context = dict(self._context, inherit_branding=True)
+                elif request.env.user.has_group('website.group_website_publisher'):
+                    new_context = dict(self._context, inherit_branding_auto=True)
 
-            view_obj = request.website.get_template(id_or_xml_id)
+        if self._context != new_context:
+            self = self.with_context(new_context)
+        return super(View, self).render(values, engine=engine)
+
+    @api.model
+    def _prepare_qcontext(self):
+        """ Returns the qcontext : rendering context with website specific value (required
+            to render website layout template)
+        """
+        qcontext = super(View, self)._prepare_qcontext()
+
+        if request and getattr(request, 'is_frontend', False):
+            editable = request.website.is_publisher()
+            translatable = editable and self._context.get('lang') != request.env['ir.http']._get_default_lang().code
+            editable = not translatable and editable
+
             if 'main_object' not in qcontext:
-                qcontext['main_object'] = view_obj
+                qcontext['main_object'] = self
 
-            values = qcontext
+            qcontext.update(dict(
+                self._context.copy(),
+                website=request.website,
+                url_for=url_for,
+                res_company=request.website.company_id.sudo(),
+                default_lang_code=request.env['ir.http']._get_default_lang().code,
+                languages=request.env['ir.http']._get_language_codes(),
+                translatable=translatable,
+                editable=editable,
+                menu_data=self.env['ir.ui.menu'].load_menus_root() if request.website.is_user() else None,
+            ))
 
-        return super(view, self).render(cr, uid, id_or_xml_id, values=values, engine=engine, context=context)
+        return qcontext
 
-    def _pretty_arch(self, arch):
-        # remove_blank_string does not seem to work on HTMLParser, and
-        # pretty-printing with lxml more or less requires stripping
-        # whitespace: http://lxml.de/FAQ.html#why-doesn-t-the-pretty-print-option-reformat-my-xml-output
-        # so serialize to XML, parse as XML (remove whitespace) then serialize
-        # as XML (pretty print)
-        arch_no_whitespace = etree.fromstring(
-            etree.tostring(arch, encoding='utf-8'),
-            parser=etree.XMLParser(encoding='utf-8', remove_blank_text=True))
-        return etree.tostring(
-            arch_no_whitespace, encoding='unicode', pretty_print=True)
+    @api.model
+    def get_default_lang_code(self):
+        website_id = self.env.context.get('website_id')
+        if website_id:
+            lang_code = self.env['website'].browse(website_id).default_lang_code
+            return lang_code
+        else:
+            return super(View, self).get_default_lang_code()
 
-    def save(self, cr, uid, res_id, value, xpath=None, context=None):
-        """ Update a view section. The view section may embed fields to write
-
-        :param str model:
-        :param int res_id:
-        :param str xpath: valid xpath to the tag to replace
-        """
-        res_id = int(res_id)
-
-        arch_section = html.fromstring(
-            value, parser=html.HTMLParser(encoding='utf-8'))
-
-        if xpath is None:
-            # value is an embedded field on its own, not a view section
-            self.save_embedded_field(cr, uid, arch_section, context=context)
-            return
-
-        for el in self.extract_embedded_fields(cr, uid, arch_section, context=context):
-            self.save_embedded_field(cr, uid, el, context=context)
-
-            # transform embedded field back to t-field
-            el.getparent().replace(el, self.to_field_ref(cr, uid, el, context=context))
-
-        arch = self.replace_arch_section(cr, uid, res_id, xpath, arch_section, context=context)
-        self.write(cr, uid, res_id, {
-            'arch': self._pretty_arch(arch)
-        }, context=context)
-
-        view = self.browse(cr, SUPERUSER_ID, res_id, context=context)
-        if view.model_data_id:
-            view.model_data_id.write({'noupdate': True})
-
-    def customize_template_get(self, cr, uid, xml_id, full=False, bundles=False , context=None):
-        """ Get inherit view's informations of the template ``key``. By default, only
-        returns ``customize_show`` templates (which can be active or not), if
-        ``full=True`` returns inherit view's informations of the template ``key``.
-        ``bundles=True`` returns also the asset bundles
-        """
-        imd = request.registry['ir.model.data']
-        view_model, view_theme_id = imd.get_object_reference(cr, uid, 'website', 'theme')
-        user = request.registry['res.users'].browse(cr, uid, uid, context)
-        user_groups = set(user.groups_id)
-        views = self._views_get(cr, uid, xml_id, context=dict(context or {}, active_test=False))
-        done = set()
-        result = []
-        for v in views:
-            if not user_groups.issuperset(v.groups_id):
-                continue
-            if full or (v.customize_show and v.inherit_id.id != view_theme_id):
-                if v.inherit_id not in done:
-                    result.append({
-                        'name': v.inherit_id.name,
-                        'id': v.id,
-                        'xml_id': v.xml_id,
-                        'inherit_id': v.inherit_id.id,
-                        'header': True,
-                        'active': False
-                    })
-                    done.add(v.inherit_id)
-                result.append({
-                    'name': v.name,
-                    'id': v.id,
-                    'xml_id': v.xml_id,
-                    'inherit_id': v.inherit_id.id,
-                    'header': False,
-                    'active': v.active,
-                })
-        return result
-
-    def get_view_translations(self, cr, uid, xml_id, lang, field=['id', 'res_id', 'value', 'state', 'gengo_translation'], context=None):
-        views = self.customize_template_get(cr, uid, xml_id, full=True, context=context)
-        views_ids = [view.get('id') for view in views if view.get('active')]
-        domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
-        irt = request.registry.get('ir.translation')
-        return irt.search_read(cr, uid, domain, field, context=context)
-
+    @api.multi
+    def redirect_to_page_manager(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/website/pages',
+            'target': 'self',
+        }

@@ -3,31 +3,33 @@
 import hashlib
 import hmac
 import time
-import urlparse
+import unittest
 from lxml import objectify
+from werkzeug import urls
 
-import openerp
-from openerp.addons.payment.models.payment_acquirer import ValidationError
-from openerp.addons.payment.tests.common import PaymentAcquirerCommon
-from openerp.addons.payment_authorize.controllers.main import AuthorizeController
-from openerp.tools import mute_logger
+import odoo
+from odoo.addons.payment.models.payment_acquirer import ValidationError
+from odoo.addons.payment.tests.common import PaymentAcquirerCommon
+from odoo.addons.payment_authorize.controllers.main import AuthorizeController
+from odoo.tools import mute_logger
 
 
-@openerp.tests.common.at_install(True)
-@openerp.tests.common.post_install(True)
+@odoo.tests.common.at_install(True)
+@odoo.tests.common.post_install(True)
 class AuthorizeCommon(PaymentAcquirerCommon):
 
     def setUp(self):
         super(AuthorizeCommon, self).setUp()
-        self.base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         # authorize only support USD in test environment
         self.currency_usd = self.env['res.currency'].search([('name', '=', 'USD')], limit=1)[0]
         # get the authorize account
-        model, self.authorize_id = self.env['ir.model.data'].get_object_reference('payment_authorize', 'payment_acquirer_authorize')
+        self.authorize = self.env.ref('payment.payment_acquirer_authorize')
+        # Be sure to be in 'capture' mode
+        # self.authorize.auto_confirm = 'confirm_so'
 
 
-@openerp.tests.common.at_install(True)
-@openerp.tests.common.post_install(True)
+@odoo.tests.common.at_install(True)
+@odoo.tests.common.post_install(True)
 class AuthorizeForm(AuthorizeCommon):
 
     def _authorize_generate_hashing(self, values):
@@ -37,28 +39,28 @@ class AuthorizeForm(AuthorizeCommon):
             values['x_fp_timestamp'],
             values['x_amount'],
         ]) + '^'
-        return hmac.new(str(values['x_trans_key']), data, hashlib.md5).hexdigest()
+        return hmac.new(values['x_trans_key'].encode('utf-8'), data.encode('utf-8'), hashlib.md5).hexdigest()
 
     def test_10_Authorize_form_render(self):
-        authorize = self.env['payment.acquirer'].browse(self.authorize_id)
-        self.assertEqual(authorize.environment, 'test', 'test without test environment')
+        self.assertEqual(self.authorize.environment, 'test', 'test without test environment')
 
         # ----------------------------------------
         # Test: button direct rendering
         # ----------------------------------------
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         form_values = {
-            'x_login': authorize.authorize_login,
-            'x_trans_key': authorize.authorize_transaction_key,
+            'x_login': self.authorize.authorize_login,
+            'x_trans_key': self.authorize.authorize_transaction_key,
             'x_amount': '320.0',
             'x_show_form': 'PAYMENT_FORM',
             'x_type': 'AUTH_CAPTURE',
             'x_method': 'CC',
-            'x_fp_sequence': '%s%s' % (authorize.id, int(time.time())),
+            'x_fp_sequence': '%s%s' % (self.authorize.id, int(time.time())),
             'x_version': '3.1',
             'x_relay_response': 'TRUE',
             'x_fp_timestamp': str(int(time.time())),
-            'x_relay_url': '%s' % urlparse.urljoin(self.base_url, AuthorizeController._return_url),
-            'x_cancel_url': '%s' % urlparse.urljoin(self.base_url, AuthorizeController._cancel_url),
+            'x_relay_url': urls.url_join(base_url, AuthorizeController._return_url),
+            'x_cancel_url': urls.url_join(base_url, AuthorizeController._cancel_url),
             'return_url': None,
             'x_currency_code': 'USD',
             'x_invoice_num': 'SO004',
@@ -71,33 +73,40 @@ class AuthorizeForm(AuthorizeCommon):
             'x_phone': '0032 12 34 56 78',
             'x_email': 'norbert.buyer@example.com',
             'x_state': None,
+            'x_ship_to_first_name': 'Norbert',
+            'x_ship_to_last_name': 'Buyer',
+            'x_ship_to_address': 'Huge Street 2/543',
+            'x_ship_to_city': 'Sin City',
+            'x_ship_to_zip': '1000',
+            'x_ship_to_country': 'Belgium',
+            'x_ship_to_phone': '0032 12 34 56 78',
+            'x_ship_to_email': 'norbert.buyer@example.com',
+            'x_ship_to_state': None,
         }
 
         form_values['x_fp_hash'] = self._authorize_generate_hashing(form_values)
         # render the button
-        cr, uid, context = self.env.cr, self.env.uid, {}
-        res = self.payment_acquirer.render(
-            cr, uid, self.authorize_id, 'SO004', 320.0, self.currency_usd.id,
-            partner_id=None, partner_values=self.buyer_values, context=context)
+        res = self.authorize.render('SO004', 320.0, self.currency_usd.id, values=self.buyer_values)
         # check form result
         tree = objectify.fromstring(res)
-        self.assertEqual(tree.get('action'), 'https://test.authorize.net/gateway/transact.dll', 'Authorize: wrong form POST url')
-        for form_input in tree.input:
-            # Generated and received 'x_fp_hash' are always different so skeep it.
-            if form_input.get('name') in ['submit', 'x_fp_hash']:
+
+        data_set = tree.xpath("//input[@name='data_set']")
+        self.assertEqual(len(data_set), 1, 'Authorize: Found %d "data_set" input instead of 1' % len(data_set))
+        self.assertEqual(data_set[0].get('data-action-url'), 'https://test.authorize.net/gateway/transact.dll', 'Authorize: wrong data-action-url POST url')
+        for el in tree.iterfind('input'):
+            values = list(el.attrib.values())
+            if values[1] in ['submit', 'x_fp_hash', 'return_url', 'x_state', 'x_ship_to_state', 'data_set']:
                 continue
             self.assertEqual(
-                form_input.get('value'),
-                form_values[form_input.get('name')],
-                'Authorize: wrong value for input %s: received %s instead of %s' % (form_input.get('name'), form_input.get('value'), form_values[form_input.get('name')])
+                values[2],
+                form_values[values[1]],
+                'Authorize: wrong value for input %s: received %s instead of %s' % (values[1], values[2], form_values[values[1]])
             )
 
-    @mute_logger('openerp.addons.payment_authorize.models.authorize', 'ValidationError')
+    @mute_logger('odoo.addons.payment_authorize.models.payment', 'ValidationError')
     def test_20_authorize_form_management(self):
-        cr, uid, context = self.env.cr, self.env.uid, {}
         # be sure not to do stupid thing
-        authorize = self.env['payment.acquirer'].browse(self.authorize_id)
-        self.assertEqual(authorize.environment, 'test', 'test without test environment')
+        self.assertEqual(self.authorize.environment, 'test', 'test without test environment')
 
         # typical data posted by authorize after client has successfully paid
         authorize_post_data = {
@@ -117,7 +126,7 @@ class AuthorizeForm(AuthorizeCommon):
             'x_cvv2_resp_code': u'',
             'x_description': u'',
             'x_duty': u'0.00',
-            'x_email': u'norbert.buyer@exampl',
+            'x_email': u'norbert.buyer@example.com',
             'x_fax': u'',
             'x_first_name': u'Norbert',
             'x_freight': u'0.00',
@@ -148,26 +157,100 @@ class AuthorizeForm(AuthorizeCommon):
 
         # should raise error about unknown tx
         with self.assertRaises(ValidationError):
-            self.payment_transaction.form_feedback(cr, uid, authorize_post_data, 'authorize', context=context)
+            self.env['payment.transaction'].form_feedback(authorize_post_data, 'authorize')
 
         tx = self.env['payment.transaction'].create({
             'amount': 320.0,
-            'acquirer_id': self.authorize_id,
+            'acquirer_id': self.authorize.id,
             'currency_id': self.currency_usd.id,
             'reference': 'SO004',
             'partner_name': 'Norbert Buyer',
-            'partner_country_id': self.country_france_id})
+            'partner_country_id': self.country_france.id})
         # validate it
-        self.payment_transaction.form_feedback(cr, uid, authorize_post_data, 'authorize', context=context)
+        self.env['payment.transaction'].form_feedback(authorize_post_data, 'authorize')
         # check state
         self.assertEqual(tx.state, 'done', 'Authorize: validation did not put tx into done state')
-        self.assertEqual(tx.authorize_txnid, authorize_post_data.get('x_trans_id'), 'Authorize: validation did not update tx payid')
+        self.assertEqual(tx.acquirer_reference, authorize_post_data.get('x_trans_id'), 'Authorize: validation did not update tx payid')
 
         # reset tx
-        tx.write({'state': 'draft', 'date_validate': False, 'authorize_txnid': False})
+        tx.write({'state': 'draft', 'date_validate': False, 'acquirer_reference': False})
 
         # simulate an error
         authorize_post_data['x_response_code'] = u'3'
-        self.payment_transaction.form_feedback(cr, uid, authorize_post_data, 'authorize', context=context)
+        self.env['payment.transaction'].form_feedback(authorize_post_data, 'authorize')
         # check state
         self.assertEqual(tx.state, 'error', 'Authorize: erroneous validation did not put tx into error state')
+
+    @unittest.skip("Authorize s2s test disabled: We do not want to overload Authorize.net with runbot's requests")
+    def test_30_authorize_s2s(self):
+        # be sure not to do stupid thing
+        authorize = self.authorize
+        self.assertEqual(authorize.environment, 'test', 'test without test environment')
+
+        # add credential
+        # FIXME: put this test in master-nightly on odoo/odoo + create sandbox account
+        authorize.write({
+            'authorize_transaction_key': '',
+            'authorize_login': '',
+        })
+        self.assertTrue(authorize.authorize_test_credentials, 'Authorize.net: s2s authentication failed')
+
+        # create payment meethod
+        payment_token = self.env['payment.token'].create({
+            'acquirer_id': authorize.id,
+            'partner_id': self.buyer_id,
+            'cc_number': '4111 1111 1111 1111',
+            'cc_expiry': '02 / 26',
+            'cc_brand': 'visa',
+            'cc_cvc': '111',
+            'cc_holder_name': 'test',
+        })
+
+        # create normal s2s transaction
+        transaction = self.env['payment.transaction'].create({
+            'amount': 500,
+            'acquirer_id': authorize.id,
+            'type': 'server2server',
+            'currency_id': self.currency_usd.id,
+            'reference': 'test_ref_%s' % odoo.fields.Date.today(),
+            'payment_token_id': payment_token.id,
+            'partner_id': self.buyer_id,
+
+        })
+        transaction.authorize_s2s_do_transaction()
+        self.assertEqual(transaction.state, 'done',)
+
+        # switch to 'authorize only'
+        # create authorize only s2s transaction & capture it
+        self.authorize.capture_manually = True
+        transaction = self.env['payment.transaction'].create({
+            'amount': 500,
+            'acquirer_id': authorize.id,
+            'type': 'server2server',
+            'currency_id': self.currency_usd.id,
+            'reference': 'test_%s' % int(time.time()),
+            'payment_token_id': payment_token.id,
+            'partner_id': self.buyer_id,
+
+        })
+        transaction.authorize_s2s_do_transaction()
+        self.assertEqual(transaction.state, 'authorized')
+        transaction.action_capture()
+        self.assertEqual(transaction.state, 'done')
+
+        # create authorize only s2s transaction & void it
+        self.authorize.capture_manually = True
+        transaction = self.env['payment.transaction'].create({
+            'amount': 500,
+            'acquirer_id': authorize.id,
+            'type': 'server2server',
+            'currency_id': self.currency_usd.id,
+            'reference': 'test_%s' % int(time.time()),
+            'payment_token_id': payment_token.id,
+            'partner_id': self.buyer_id,
+
+        })
+        transaction.authorize_s2s_do_transaction()
+        self.assertEqual(transaction.state, 'authorized')
+        transaction.action_void()
+        self.assertEqual(transaction.state, 'cancel')

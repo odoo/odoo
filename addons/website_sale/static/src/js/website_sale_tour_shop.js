@@ -1,117 +1,72 @@
-(function () {
-    'use strict';
+odoo.define("website_sale.tour_shop", function (require) {
+    "use strict";
 
-    var _t = openerp._t;
-    var website = openerp.website;
-    website.ready().done(function() {
-    openerp.Tour.register({
-        id: 'shop',
-        name: _t("Create a product"),
-        steps: [
-            {
-                title:     _t("Welcome to your shop"),
-                content:   _t("You successfully installed the e-commerce. This guide will help you to create your product and promote your sales."),
-                popover:   { next: _t("Start Tutorial"), end: _t("Skip It") },
-            },
-            {
-                element:   '#content-menu-button',
-                placement: 'left',
-                title:     _t("Create your first product"),
-                content:   _t("Click here to add a new product."),
-                popover:   { fixed: true },
-            },
-            {
-                element:   'a[data-action=new_product]',
-                placement: 'left',
-                title:     _t("Create a new product"),
-                content:   _t("Select 'New Product' to create it and manage its properties to boost your sales."),
-                popover:   { fixed: true },
-            },
-            {
-                element:   '.modal #editor_new_product input[type=text]',
-                sampleText: 'New Product',
-                placement: 'right',
-                title:     _t("Choose name"),
-                content:   _t("Enter a name for your new product then click 'Continue'."),
-            },
-            {
-                waitNot:   '.modal input[type=text]:not([value!=""])',
-                element:   '.modal button.btn-primary',
-                placement: 'right',
-                title:     _t("Create Product"),
-                content:   _t("Click <em>Continue</em> to create the product."),
-            },
-            {
-                waitFor:   'body:has(button[data-action=save]:visible):has(.js_sale)',
-                title:     _t("New product created"),
-                content:   _t("This page contains all the information related to the new product."),
-                popover:   { next: _t("Continue") },
-            },
-            {
-                element:   '.product_price .oe_currency_value:visible',
-                sampleText: '20.50',
-                placement: 'left',
-                title:     _t("Change the price"),
-                content:   _t("Edit the price of this product by clicking on the amount."),
-            },
-            {
-                waitNot:   '.product_price .oe_currency_value:visible:containsExact(1.00)',
-                waitFor:   '#snippet_structure',
-                element:   '#wrap img.product_detail_img',
-                placement: 'top',
-                title:     _t("Update image"),
-                content:   _t("Click here to set an image describing your product."),
-            },
-            {
-                element:   '.existing-attachment-cell:eq(4) > img',
-                placement: 'top',
-                title:     _t("Select an Image"),
-                content:   _t("Let's select this image."),
-            },
-            {
-                waitFor:   '.existing-attachment-cell:eq(4).media_selected > img',
-                element:   '.modal-content button.save',
-                placement: 'top',
-                title:     _t("Save this Image"),
-                content:   _t("Click on save to add the image to the product decsription."),
-            },
-            {
-                waitNot:   '.modal-content:visible',
-                element:   'button[data-action=snippet]',
-                placement: 'bottom',
-                title:     _t("Describe the Product"),
-                content:   _t("Insert blocks like text-image, or gallery to fully describe the product."),
-                popover:   { fixed: true },
-            },
-            {
-                snippet:   '#snippet_structure .oe_snippet:eq(7)',
-                placement: 'bottom',
-                title:     _t("Drag & Drop a block"),
-                content:   _t("Drag the 'Big Picture' block and drop it in your page."),
-                popover:   { fixed: true },
-            },
-            {
-                element:   'button[data-action=save]',
-                placement: 'right',
-                title:     _t("Save your modifications"),
-                content:   _t("Once you click on save, your product is updated."),
-                popover:   { fixed: true },
-            },
-            {
-                waitFor:   '#website-top-navbar:hidden',
-                element:   '.js_publish_management button.js_publish_btn.btn-danger',
-                placement: 'top',
-                title:     _t("Publish your product"),
-                content:   _t("Click to publish your product so your customers can see it."),
-            },
-            {
-                waitFor:   '.js_publish_management button.js_publish_btn.btn-success:visible',
-                title:     _t("Congratulations"),
-                content:   _t("Congratulations! You just created and published your first product."),
-                popover:   { next: _t("Close Tutorial") },
-            },
-        ]
-    });
-    });
+    var core = require("web.core");
+    var tour = require("web_tour.tour");
+    var base = require("web_editor.base");
 
-}());
+    var _t = core._t;
+
+    tour.register("shop", {
+        url: "/shop",
+        wait_for: base.ready(),
+    }, [{
+        trigger: "#new-content-menu > a",
+        content: _t("Let's create your first product."),
+        extra_trigger: ".js_sale",
+        position: "bottom",
+    }, {
+        trigger: "a[data-action=new_product]",
+        content: _t("Select <b>New Product</b> to create it and manage its properties to boost your sales."),
+        position: "bottom",
+    }, {
+        trigger: ".modal-dialog #editor_new_product input[type=text]",
+        content: _t("Enter a name for your new product"),
+        position: "right",
+    }, {
+        trigger: ".modal-dialog button.btn-primary.btn-continue",
+        content: _t("Click on <em>Continue</em> to create the product."),
+        position: "right",
+    }, {
+        trigger: ".product_price .o_is_inline_editable .oe_currency_value",
+        content: _t("Edit the price of this product by clicking on the amount."),
+        position: "bottom",
+        run: "text 1.99",
+    }, {
+        trigger: "#wrap img.product_detail_img",
+        extra_trigger: ".product_price .o_is_inline_editable .oe_currency_value:not(:containsExact(1.00))",
+        content: _t("Click here to set an image describing your product."),
+        position: "top",
+    }, {
+        trigger: ".o_select_media_dialog .btn.filepicker",
+        content: _t("Upload an image from your local library."),
+        position: "bottom",
+        run: function (actions) {
+            actions.auto(".modal-footer .btn-default");
+        },
+    }, {
+        trigger: "#snippet_structure .oe_snippet:eq(8) .oe_snippet_thumbnail",
+        extra_trigger: "body:not(.modal-open)",
+        content: _t("Drag this website block and drop it in your page."),
+        position: "bottom",
+        run: "drag_and_drop",
+    }, {
+        trigger: "button[data-action=save]",
+        content: _t("Once you click on <b>Save</b>, your product is updated."),
+        position: "bottom",
+    }, {
+        trigger: ".js_publish_management .js_publish_btn .css_publish",
+        extra_trigger: "body:not(.editor_enable)",
+        content: _t("Click on this button so your customers can see it."),
+        position: "bottom",
+    }, {
+        trigger: ".o_main_navbar .o_menu_toggle, #oe_applications .dropdown.full",
+        content: _t("Let's now take a look at your administration dashboard to get your eCommerce website ready in no time."),
+        position: "bottom",
+    }, {
+        trigger: '.o_apps > a[data-menu-xmlid="website.menu_website_configuration"], #oe_main_menu_navbar a[data-menu-xmlid="website.menu_website_configuration"]',
+        content: _t("Open your website app here."),
+        extra_trigger: ".o_apps,#oe_applications",
+        position: "bottom",
+    }]);
+});

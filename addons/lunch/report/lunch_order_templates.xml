@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_lunch_order">
+        <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="oe_structure"/>
+
+                        <div class="row">
+                            <div class="col-xs-5 col-xs-offset-7">
+                                <div t-field="user.partner_id"
+                                    t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                            </div>
+                        </div>
+
+                        <h2>Lunch Order</h2>
+
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Name/Date</th>
+                                    <th>Order</th>
+                                    <th>Description</th>
+                                    <th class="text-right">Unit Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="docs.read_group([('id', 'in', docs.ids)],['user_id'],['user_id'])" t-as="o">
+                                    <t t-set="user" t-value="user.browse(o['user_id'][0])"/>
+                                    <t t-set="lines" t-value="docs.search([('user_id', '=', user.id), ('id', 'in', docs.ids)])"/>
+                                    <tr>
+                                        <td colspan="2">
+                                            <strong t-field="user.name"/>
+                                        </td>
+                                        <td class="text-right" colspan="2">
+                                            <strong>
+                                                <span t-esc="sum(line.price for line in lines)"/>
+                                                <span t-field="user.company_id.currency_id.symbol"/>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                    <tr t-foreach="lines" t-as="line">
+                                        <td>
+                                            <span t-field="line.date"></span>
+                                        </td>
+                                        <td>
+                                            <span t-field="line.product_id.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="line.note"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="line.price"
+                                                t-options='{"widget": "monetary", "display_currency": user.company_id.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <div class="row">
+                            <div class="col-xs-4 pull-right">
+                                <table class="table table-condensed">
+                                    <tr class="border-black">
+                                        <td><strong>Total</strong></td>
+                                        <td class="text-right">
+                                            <span t-esc="sum([line.price for line in docs]) or 0.0"/>
+                                            <span t-field="user.company_id.currency_id.symbol"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="oe_structure"/>
+                    </div>
+                </t>
+        </t>
+    </template>
+</odoo>

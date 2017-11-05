@@ -1,0 +1,79 @@
+.o_calendar_invitation {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+
+    &.accepted {
+        background-color: @brand-success;
+    }
+
+    &.needsAction {
+        background-color: @odoo-brand-secondary;
+    }
+
+    &.declined {
+        background-color: @brand-danger;
+    }
+}
+
+.o_calendar_filter {
+    .o_calendar_filter_item {
+        margin-top: 10px;
+    }
+
+    .o_remove {
+        display: none;
+        cursor: pointer;
+    }
+    &:hover .o_remove {
+        display: inline-block;
+    }
+}
+
+.o_cal_avatar {
+    height: 24px;
+    width: 24px;
+}
+
+.o_add_favorite_calendar {
+    margin-top: 10px;
+    position: relative;
+}
+
+.o_calendar_invitation_page {
+    .o-flex(0, 0, auto);
+    width: 50%;
+    margin: 30px auto 0;
+    .o-webclient-padding(@top: 10px, @bottom: 10px);
+    background-color: @odoo-view-background-color;
+
+    .o_logo {
+        width: 15%;
+    }
+    .o_event_title {
+        margin-left: 20%;
+
+        h2 {
+            margin-top: 0;
+        }
+    }
+    .o_event_table {
+        clear: both;
+        margin: 15px 0 0;
+
+        th {
+            padding-right: 15px;
+        }
+        ul {
+            padding-left: 0;
+        }
+    }
+
+    .o_accepted {
+        color: @brand-success;
+    }
+    .o_declined {
+        color: @brand-danger;
+    }
+}

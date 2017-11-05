@@ -1,28 +1,4 @@
-#####################################################################################
-#
-# Copyright (c) 2004-TODAY OpenERP S.A. (http://www.openerp.com) All Rights Reserved.
-#
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
-#
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 3
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-#####################################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # TODO: Avoid to uninstall the database
 # TODO: We can update the server or the clients without to uninstall the all-in-one
@@ -32,7 +8,7 @@
 !include 'FileFunc.nsh'
 !include 'LogicLib.nsh'
 !include 'Sections.nsh'
-!include 'LogicLib.nsh'
+!include 'x64.nsh'
 
 !macro IfKeyExists ROOT MAIN_KEY KEY
     # This macro comes from http://nsis.sourceforge.net/Check_for_a_Registry_Key
@@ -62,10 +38,10 @@
     Exch $R2
 !macroend
 
-!define PUBLISHER 'OpenERP S.A.'
+!define PUBLISHER 'Odoo S.A.'
 
 !ifndef MAJOR_VERSION
-    !define MAJOR_VERSION '8'
+    !define MAJOR_VERSION '11'
 !endif
 
 !ifndef MINOR_VERSION
@@ -73,7 +49,7 @@
 !endif
 
 !ifndef REVISION_VERSION
-    !define REVISION_VERSION '0'
+    !define REVISION_VERSION 'alpha1'
 !endif
 
 !ifndef VERSION
@@ -100,11 +76,11 @@
 Name '${DISPLAY_NAME}'
 Caption "${PRODUCT_NAME} ${VERSION} Setup"
 OutFile "openerp-allinone-setup-${VERSION}.exe"
-#SetCompressor /final /solid lzma
+SetCompressor /FINAL lzma
 #SetCompress auto
 ShowInstDetails show
 
-XPStyle on
+#XPStyle on
 
 InstallDir "$PROGRAMFILES\Odoo ${VERSION}"
 InstallDirRegKey HKCU "${REGISTRY_KEY}" ""
@@ -140,7 +116,7 @@ Var HWNDPostgreSQLPassword
 
 !define STATIC_PATH "static"
 !define PIXMAPS_PATH "${STATIC_PATH}\pixmaps"
-!define POSTGRESQL_EXE_FILENAME "postgresql-9.3.5-1-windows.exe"
+!define POSTGRESQL_EXE_FILENAME "postgresql-9.5.8-1-windows.exe"
 !define POSTGRESQL_EXE "${STATIC_PATH}\${POSTGRESQL_EXE_FILENAME}"
 
 !define MUI_ABORTWARNING
@@ -203,23 +179,23 @@ LangString DESC_FinishPageText ${LANG_ENGLISH} "Start Odoo"
 
 ; French
 LangString DESC_OpenERP_Server ${LANG_FRENCH} "Installation du Serveur Odoo avec tous les modules Odoo standards."
-LangString DESC_PostgreSQL ${LANG_FRENCH} "Installation de la base de donn?es PostgreSQL utilis?e par Odoo."
+LangString DESC_PostgreSQL ${LANG_FRENCH} "Installation de la base de données PostgreSQL utilisée par Odoo."
 LangString DESC_FinishPage_Link ${LANG_FRENCH} "Contactez Odoo pour un Partenariat et/ou du Support"
 LangString DESC_AtLeastOneComponent ${LANG_FRENCH} "Vous devez choisir au moins un composant"
-LangString DESC_CanNotInstallPostgreSQL ${LANG_FRENCH} "Vous ne pouvez pas installer la base de donn?es PostgreSQL sans le serveur Odoo"
+LangString DESC_CanNotInstallPostgreSQL ${LANG_FRENCH} "Vous ne pouvez pas installer la base de données PostgreSQL sans le serveur Odoo"
 LangString WARNING_HostNameIsEmpty ${LANG_FRENCH} "L'adresse pour la connection au serveur PostgreSQL est vide"
 LangString WARNING_UserNameIsEmpty ${LANG_FRENCH} "Le nom d'utilisateur pour la connection au serveur PostgreSQL est vide"
 LangString WARNING_PasswordIsEmpty ${LANG_FRENCH} "Le mot de passe pour la connection au serveur PostgreSQL est vide"
-LangString WARNING_PortIsWrong ${LANG_FRENCH} "Le port pour la connection au serveur PostgreSQL est erron? (d?faut: 5432)"
+LangString WARNING_PortIsWrong ${LANG_FRENCH} "Le port pour la connection au serveur PostgreSQL est erroné (défaut: 5432)"
 LangString DESC_PostgreSQLPage ${LANG_FRENCH} "Configurez les informations de connection pour le serveur PostgreSQL"
-LangString DESC_PostgreSQL_Hostname ${LANG_FRENCH} "H?te"
+LangString DESC_PostgreSQL_Hostname ${LANG_FRENCH} "Hôte"
 LangString DESC_PostgreSQL_Port ${LANG_FRENCH} "Port"
 LangString DESC_PostgreSQL_Username ${LANG_FRENCH} "Utilisateur"
 LangString DESC_PostgreSQL_Password ${LANG_FRENCH} "Mot de passe"
 LangString Profile_AllInOne ${LANG_FRENCH} "All In One"
 LangString Profile_Server ${LANG_FRENCH} "Seulement le serveur"
 LangString TITLE_OpenERP_Server ${LANG_FRENCH} "Serveur Odoo"
-LangString TITLE_PostgreSQL ${LANG_FRENCH} "Installation du serveur de base de donn?es PostgreSQL"
+LangString TITLE_PostgreSQL ${LANG_FRENCH} "Installation du serveur de base de données PostgreSQL"
 LangString DESC_FinishPageText ${LANG_FRENCH} "Démarrer Odoo"
 
 InstType $(Profile_AllInOne)
@@ -229,42 +205,61 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
     SectionIn 1 2
 
     # TODO: install in a temp dir before
+    
+    # Installing winpython
+    SetOutPath "$INSTDIR\python"
+    File /r /x "__pycache__" "..\..\..\WinPython\python-3.6.2\*"
+
+    SetOutPath "$INSTDIR\nssm"
+    File /r /x "src" "..\..\..\nssm-2.24\*"
 
     SetOutPath "$INSTDIR\server"
-    File /r "..\..\dist\*"
+    File /r /x "${POSTGRESQL_EXE_FILENAME}" /x "wkhtmltopdf" "..\..\*"
 
-    SetOutPath "$INSTDIR\service"
-    File /r "dist\*"
-    File "start.bat"
-    File "stop.bat"
+    SetOutPath "$INSTDIR\vcredist"
+    File /r "..\..\..\vcredist\*.exe"
+    
+    # Install Visual C redistribuable files
+    DetailPrint "Installing Visual C++ redistributable files"
+    ${If} ${RunningX64}
+        nsExec::Exec '"$INSTDIR\vcredist\vc_redist.x64.exe" /q'
+    ${Else}
+        nsExec::Exec '"$INSTDIR\vcredist\vc_redist.x86.exe" /q'
+    ${EndIf}
 
     SetOutPath "$INSTDIR\thirdparty"
     File /r "${STATIC_PATH}\wkhtmltopdf\*"
     File /r "${STATIC_PATH}\less\*"
 
 # If there is a previous install of the OpenERP Server, keep the login/password from the config file
-    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "db_host" $TextPostgreSQLHostname
-    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "db_user" $TextPostgreSQLUsername
-    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "db_password" $TextPostgreSQLPassword
-    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "db_port" $TextPostgreSQLPort
+    WriteIniStr "$INSTDIR\server\odoo.conf" "options" "db_host" $TextPostgreSQLHostname
+    WriteIniStr "$INSTDIR\server\odoo.conf" "options" "db_user" $TextPostgreSQLUsername
+    WriteIniStr "$INSTDIR\server\odoo.conf" "options" "db_password" $TextPostgreSQLPassword
+    WriteIniStr "$INSTDIR\server\odoo.conf" "options" "db_port" $TextPostgreSQLPort
     # Fix the addons path
-    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "addons_path" "$INSTDIR\server\openerp\addons"
-    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "bin_path" "$INSTDIR\thirdparty"
+    WriteIniStr "$INSTDIR\server\odoo.conf" "options" "addons_path" "$INSTDIR\server\odoo\addons"
+    WriteIniStr "$INSTDIR\server\odoo.conf" "options" "bin_path" "$INSTDIR\thirdparty"
 
     # if we're going to install postgresql force it's path,
     # otherwise we consider it's always done and/or correctly tune by users
     ${If} $HasPostgreSQL == 0
-        WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "pg_path" "$INSTDIR\PostgreSQL\bin"
+        WriteIniStr "$INSTDIR\server\odoo.conf" "options" "pg_path" "$INSTDIR\PostgreSQL\bin"
     ${EndIf}
 
-    nsExec::Exec '"$INSTDIR\server\openerp-server.exe" --stop-after-init --logfile "$INSTDIR\server\openerp-server.log" -s'
-    nsExec::Exec '"$INSTDIR\service\win32_service.exe" -auto -install'
-
-    # TODO: don't hardcode the service name
-    nsExec::Exec "net stop odoo-server-8.0"
+    DetailPrint "Installing Windows service"
+    nsExec::ExecTOLog '"$INSTDIR\python\python.exe" "$INSTDIR\server\odoo-bin" --stop-after-init --logfile "$INSTDIR\server\odoo.log" -s'
+    ${If} ${RunningX64}
+      nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" install ${SERVICENAME} "$INSTDIR\python\python.exe" "\"$INSTDIR\server\odoo-bin\""'
+      nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppDirectory "$\"$INSTDIR\server$\""'
+    ${Else}
+      nsExec::ExecToLog '"$INSTDIR\nssm\win32\nssm.exe" install ${SERVICENAME} "$INSTDIR\python\python.exe" "\"$INSTDIR\server\odoo-bin\""'
+      nsExec::ExecToLog '"$INSTDIR\nssm\win32\nssm.exe" set ${SERVICENAME} AppDirectory "$\"$INSTDIR\server$\""'
+    ${EndIf}
+    
+    nsExec::Exec "net stop ${SERVICENAME}"
     sleep 2
 
-    nsExec::Exec "net start odoo-server-8.0"
+    nsExec::Exec "net start ${SERVICENAME}"
     sleep 2
 
 SectionEnd
@@ -323,13 +318,14 @@ Section "Uninstall"
     ReadRegStr $0 HKLM "${UNINSTALL_REGISTRY_KEY_SERVER}" "UninstallString"
     ExecWait '"$0" /S'
 
-    nsExec::Exec "net stop odoo-server-8.0"
-    nsExec::Exec "sc delete odoo-server-8.0"
+    nsExec::Exec "net stop ${SERVICENAME}"
+    nsExec::Exec "sc delete ${SERVICENAME}"
     sleep 2
 
     Rmdir /r "$INSTDIR\server"
-    Rmdir /r "$INSTDIR\service"
     Rmdir /r "$INSTDIR\thirdparty"
+    Rmdir /r "$INSTDIR\python"
+    Rmdir /r "$INSTDIR\nssm"
     DeleteRegKey HKLM "${UNINSTALL_REGISTRY_KEY}"
 SectionEnd
 

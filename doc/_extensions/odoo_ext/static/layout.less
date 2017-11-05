@@ -1,0 +1,210 @@
+.pseudo-col(){
+  position: relative;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+  float: left;
+  width: 100%;
+}
+
+.code-col(){
+  content: "";
+  background: @doc_code-bg;
+  .box-shadow(inset 40px 0 40px -18px rgba(22, 24, 29, 0.3));
+  position: absolute;
+  width: 43%;
+  height: 100%;
+  top: 0;
+  right: 0;
+}
+
+
+body, header {
+  position: relative;
+}
+
+// Index layout
+#wrap {
+  > .container.index {
+    background-color: @gray-lightest;
+    width: 100%;
+    position: relative;
+
+    > .index {
+      .container;
+    }
+  }
+}
+
+#main_title {
+  margin: 10px;
+  @media (min-width:@screen-md-min) {
+    margin: 0 0 9px 0;
+  }
+}
+
+
+.container .container {
+  max-width: 100%;
+  padding:0;
+  margin:0;
+}
+
+article.doc-content *[class^="col-"] {
+  padding:0;
+}
+
+main{
+
+  aside, article.doc-body, .doc-content, .doc-aside {
+    .pseudo-col();
+  }
+  .doc-content, .doc-aside {
+    position:relative;
+  }
+  aside {
+    width: 25%;
+    max-width: 300px;
+    position:static;
+    padding:0;
+    display:block;
+    float:left;
+    @media (max-width:@screen-md-min) {
+      display: none;
+    }
+  }
+  article.doc-body {
+    background: @doc_paper;
+    border-left: 1px solid @gray-lighter;
+    padding: 15px 30px;
+    @media (min-width: @screen-md-min) {
+      width: 75%;
+      &.doc-toc {
+        width: 100%;
+      }
+    }
+    > *{
+      max-width: 100%;
+    }
+  }
+
+}
+
+main.has_code_col{
+  .container;
+
+  aside {
+    display: none;
+  }
+
+  article.doc-body {
+    width: 100%;
+
+    > *{
+      max-width: 100%;
+    }
+    > section {
+      position: relative;
+      display:block;
+      float: left;
+      width: 100%;
+    }
+
+    @media (min-width: @screen-lg-min) {
+      width: 100%;
+      padding-right: 0;
+      &:before {
+        .code-col();
+      }
+      > section {
+        > * {
+          width: 54.633333%;
+          max-width: 600px;
+          float: left;
+          clear: left;
+        }
+        > h1, > h2, > h3, > h4, > h5, > h6 {
+          width: 100%;
+          float: none;
+          clear: none;
+        }
+        .doc-aside {
+          width: 41%;
+          float: none;
+          clear: none;
+          margin-right: 15px;
+          margin-left: 57%;
+
+          .content-switcher{
+            margin-top:0;
+            > ul {
+              margin-bottom: 0;
+            }
+
+            > ul > li {
+               color: @gray-light;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+main.index .toctree-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  > .row {
+    flex: 1 0 100%;
+  }
+  @media screen and(min-width: @screen-md){
+    // display these 2 as 2x2 squares
+    > .row.tutorials, .row.api {
+      flex: 0 0 50%;
+
+      display: flex;
+      flex-wrap: wrap;
+      > div {
+        flex: 0 0 50%;
+      }
+    }
+
+    // FIXME: reimplement a single big box (.toc-single-entry)
+  }
+}
+
+article.doc-toc .toctree-wrapper > ul > li > span {
+  display: block;
+  font-size: 28px;
+}
+
+.code-fields{
+  display: table;
+  width: 100%;
+  .code-field{
+    display: table-row;
+  }
+  .code-field-body{
+    display: block;
+    padding-left:  15px;
+    @media screen and (min-width: @screen-md-min){
+      display: table-cell;
+      padding-left:  0;
+    }
+  }
+  .code-field-name{
+    width:auto;
+    display:block;
+    @media screen and (min-width: @screen-md-min){
+      width:20%;
+      padding-right: 20px;
+      display: table-cell;
+    }
+  }
+  ul {
+    margin: .2em 0;
+    padding: 0;
+  }
+}

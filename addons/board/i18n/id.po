@@ -3,16 +3,19 @@
 # * board
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# oon arfiandwi <oon.arfiandwi@gmail.com>, 2015
+# Bonny Useful <bonny.useful@gmail.com>, 2017
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# William Surya Permana <zarambie_game@yahoo.com>, 2017
+# Gusti Rini <gustirini@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-12-02 11:33+0000\n"
-"Last-Translator: Wahyu Setiawan <wahyusetiaaa@gmail.com>\n"
-"Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-8/language/id/)\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Gusti Rini <gustirini@gmail.com>, 2017\n"
+"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -21,49 +24,43 @@ msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:28
+#: code:addons/board/static/src/xml/board.xml:25
 #, python-format
 msgid "&nbsp;"
-msgstr "&nbsp"
-
-#. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
-msgid ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"                  <p>\n"
-"                    <b>Your personal dashboard is empty.</b>\n"
-"                  </p><p>\n"
-"                    To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add to\n"
-"                    Dashboard'</i> in the extended search options.\n"
-"                  </p><p>\n"
-"                    You can filter and group data before inserting into the\n"
-"                    dashboard using the search options.\n"
-"                  </p>\n"
-"              </div>\n"
-"            "
-msgstr "<div class = \"oe_empty_custom_dashboard\">\n                  <p>\n                    <b> dashboard pribadi Anda kosong. </b>\n                  < p><p>\n                    Untuk menambahkan laporan pertama Anda ke dashboard ini, pergi ke\n                    menu, beralih ke daftar atau tampilan grafik, dan klik <i> Tambahkan ke\n                    Dashboard '</i> di pencarian diperpanjang.\n                  </p><p>\n                    Anda dapat menyaring dan data kelompok sebelum memasukkan ke dalam\n                    dashboard menggunakan pencarian.\n                  </p>\n              </ div>\n            "
+msgstr "&nbsp;"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:70
+#: code:addons/board/static/src/js/favorite_menu.js:97
+#, python-format
+msgid "'%s' added to dashboard"
+msgstr "'%s' ditambahkan ke dashboard"
+
+#. module: board
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid "<b>Your personal dashboard is empty.</b>"
+msgstr ""
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:69
 #, python-format
 msgid "Add"
 msgstr "Tambahkan"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:67
+#: code:addons/board/static/src/xml/board.xml:63
 #, python-format
-msgid "Add to Dashboard"
-msgstr "Tambahkan ke Dasbor"
+msgid "Add to my Dashboard"
+msgstr "Tambahkan ke Dashboard saya"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:136
+#: code:addons/board/static/src/js/dashboard.js:335
 #, python-format
-msgid "Are you sure you want to remove this item ?"
-msgstr "Apakah Anda yakin ingin menghapus item ini?"
+msgid "Are you sure you want to remove this item?"
+msgstr "Apakah anda yakin menghapuskan butir ini?"
 
 #. module: board
 #: model:ir.model,name:board.model_board_board
@@ -71,144 +68,76 @@ msgid "Board"
 msgstr "Papan"
 
 #. module: board
-#: model:ir.model,name:board.model_board_create
-msgid "Board Creation"
-msgstr "Penciptaan Dewan"
-
-#. module: board
-#: field:board.create,name:0
-msgid "Board Name"
-msgstr "Nama Dewan"
-
-#. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:374
-#, python-format
-msgid "Can't find dashboard action"
-msgstr "Tidak dapat menemukan tindakan dashboard"
-
-#. module: board
-#: view:board.create:board.view_board_create
-msgid "Cancel"
-msgstr "Batal"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:10
+#: code:addons/board/static/src/xml/board.xml:7
 #, python-format
 msgid "Change Layout"
-msgstr "Rubah Tata Letak"
+msgstr "Ubah Tata Letak"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:8
+#: code:addons/board/static/src/xml/board.xml:5
 #, python-format
 msgid "Change Layout.."
-msgstr "Rubah Tata Letak"
+msgstr "Ubah Tata Letak"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:40
+#: code:addons/board/static/src/xml/board.xml:36
 #, python-format
 msgid "Choose dashboard layout"
 msgstr "Pilih tata letak dashboard"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:406
+#: code:addons/board/static/src/js/favorite_menu.js:99
 #, python-format
 msgid "Could not add filter to dashboard"
 msgstr "Tidak bisa menambahkan filter untuk dashboard"
 
 #. module: board
-#: view:board.create:board.view_board_create
-msgid "Create"
-msgstr "Membuat"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_create
-#: model:ir.ui.menu,name:board.menu_board_create
-msgid "Create Board"
-msgstr "Buat Dewan"
-
-#. module: board
-#: view:board.create:board.view_board_create
-msgid "Create New Dashboard"
-msgstr "Buat Dashboard Baru"
-
-#. module: board
-#: field:board.create,create_uid:0
-msgid "Created by"
-msgstr "Dibuat oleh"
-
-#. module: board
-#: field:board.create,create_date:0
-msgid "Created on"
-msgstr "Dibuat pada"
+#: model:ir.model.fields,field_description:board.field_board_board_display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:92
+#: code:addons/board/static/src/js/dashboard.js:85
 #, python-format
 msgid "Edit Layout"
 msgstr "Mengedit Tata Letak"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:409
-#, python-format
-msgid "Filter added to dashboard"
-msgstr "Filter ditambahkan dashboard"
-
-#. module: board
-#: field:board.board,id:0 field:board.create,id:0
+#: model:ir.model.fields,field_description:board.field_board_board_id
 msgid "ID"
 msgstr "ID"
 
 #. module: board
-#: field:board.create,write_uid:0
-msgid "Last Updated by"
-msgstr "Diperbaharui oleh"
+#: model:ir.model.fields,field_description:board.field_board_board___last_update
+msgid "Last Modified on"
+msgstr "Terakhir diubah pada"
 
 #. module: board
-#: field:board.create,write_date:0
-msgid "Last Updated on"
-msgstr "Diperbaharui pada"
-
-#. module: board
-#: view:board.board:board.board_my_dash_view
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:48
 #: model:ir.actions.act_window,name:board.open_board_my_dash_action
 #: model:ir.ui.menu,name:board.menu_board_my_dash
+#: model:ir.ui.view,arch_db:board.board_my_dash_view
+#, python-format
 msgid "My Dashboard"
 msgstr "Dashboard Saya"
 
 #. module: board
-#: field:board.create,menu_parent_id:0
-msgid "Parent Menu"
-msgstr "Menu Induk"
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"To add your first report into this dashboard, go to any\n"
+"                    menu, switch to list or graph view, and click <i>'Add to\n"
+"                    Dashboard'</i> in the extended search options."
+msgstr ""
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:6
-#, python-format
-msgid "Reset"
-msgstr "Ubah ke status Baru"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:4
-#, python-format
-msgid "Reset Layout.."
-msgstr "Atur ulang Tata Letak .."
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:69
-#, python-format
-msgid "Title of new dashboard item"
-msgstr "Judul item dashboard baru"
-
-#. module: board
-#: view:board.create:board.view_board_create
-msgid "or"
-msgstr "atau"
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"You can filter and group data before inserting into the\n"
+"                    dashboard using the search options."
+msgstr ""

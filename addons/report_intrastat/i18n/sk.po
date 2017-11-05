@@ -1,24 +1,65 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * report_intrastat
-# 
+#
 # Translators:
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-10-14 07:29+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2015-10-14 12:11+0000\n"
+"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
+"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Comment:</strong>"
+msgstr "<strong>Komentár:</strong>"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Document:</strong>"
+msgstr "<strong>Dokument:</strong>"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Fiscal Position:</strong>"
+msgstr "<strong>Fiškálna pozícia:</strong>"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Invoice Date:</strong>"
+msgstr "<strong>Dátum vystavenia faktúry:</strong>"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Partner Ref.:</strong>"
+msgstr "<strong>Ref. Partnera:</strong>"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Payment Term:</strong>"
+msgstr "<strong>Platobná lehota:</strong>"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Total Without Taxes</strong>"
+msgstr "<strong>Celkom bez dane</strong>"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Total</strong>"
+msgstr "<strong>Celkom</strong>"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Amount"
 msgstr "Suma"
 
@@ -33,19 +74,14 @@ msgid "August"
 msgstr "August"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
-msgid "Base"
-msgstr "Základ"
-
-#. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Cancelled Invoice"
 msgstr "Zrušená faktúra"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
-msgid "Comment:"
-msgstr ""
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_company_id
+msgid "Company"
+msgstr "Spoločnost"
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_res_country
@@ -53,22 +89,12 @@ msgid "Country"
 msgstr "Krajina"
 
 #. module: report_intrastat
-#: field:report.intrastat,code:0
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_code
 msgid "Country code"
 msgstr "Kód krajiny"
 
 #. module: report_intrastat
-#: field:report.intrastat.code,create_uid:0
-msgid "Created by"
-msgstr "Vytvoril"
-
-#. module: report_intrastat
-#: field:report.intrastat.code,create_date:0
-msgid "Created on"
-msgstr "Vytvorené"
-
-#. module: report_intrastat
-#: field:report.intrastat,currency_id:0
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_currency_id
 msgid "Currency"
 msgstr "Mena"
 
@@ -78,23 +104,22 @@ msgid "December"
 msgstr "December"
 
 #. module: report_intrastat
-#: field:report.intrastat.code,description:0
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Description"
 msgstr "Popis"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Discount (%)"
 msgstr "Zľava (%)"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
-msgid "Document:"
-msgstr ""
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_display_name
+msgid "Display Name"
+msgstr "Zobraziť meno"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Draft Invoice"
 msgstr "Návrh faktúry"
 
@@ -109,12 +134,7 @@ msgid "February"
 msgstr "Február"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
-msgid "Fiscal Position:"
-msgstr ""
-
-#. module: report_intrastat
-#: field:report.intrastat,id:0 field:report.intrastat.code,id:0
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_id
 msgid "ID"
 msgstr "ID"
 
@@ -126,21 +146,20 @@ msgstr "Import"
 #. module: report_intrastat
 #: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_tree_all
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_all
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Intrastat"
 msgstr "Intrastat"
 
 #. module: report_intrastat
 #: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_code
-#: view:report.intrastat.code:report_intrastat.view_report_intrastat_code_form
-#: field:report.intrastat.code,name:0
+#: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_code_form
 msgid "Intrastat Code"
 msgstr "Intrastat kód"
 
 #. module: report_intrastat
-#: view:report.intrastat:report_intrastat.view_report_intrastat_search
-#: view:report.intrastat:report_intrastat.view_report_intrastat_tree
+#: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_search
+#: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_tree
 msgid "Intrastat Data"
 msgstr "Intrastat dáta"
 
@@ -151,13 +170,14 @@ msgstr "Intrastat faktúry"
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_report_intrastat_code
-#: field:product.template,intrastat_id:0 field:report.intrastat,intrastat_id:0
-#: view:report.intrastat.code:report_intrastat.view_report_intrastat_code_tree
+#: model:ir.model.fields,field_description:report_intrastat.field_product_template_intrastat_id
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_intrastat_id
+#: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_code_tree
 msgid "Intrastat code"
 msgstr "Intrastat kód"
 
 #. module: report_intrastat
-#: field:res.country,intrastat:0
+#: model:ir.model.fields,field_description:report_intrastat.field_res_country_intrastat
 msgid "Intrastat member"
 msgstr "Intrastat člen"
 
@@ -167,14 +187,9 @@ msgid "Intrastat report"
 msgstr "Intrastat správa"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Invoice"
 msgstr "Faktúra"
-
-#. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
-msgid "Invoice Date:"
-msgstr ""
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -192,14 +207,9 @@ msgid "June"
 msgstr "Jún"
 
 #. module: report_intrastat
-#: field:report.intrastat.code,write_uid:0
-msgid "Last Updated by"
-msgstr "Naposledy upravoval"
-
-#. module: report_intrastat
-#: field:report.intrastat.code,write_date:0
-msgid "Last Updated on"
-msgstr "Naposledy upravované"
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat___last_update
+msgid "Last Modified on"
+msgstr "Posledná modifikácia"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -212,14 +222,14 @@ msgid "May"
 msgstr "Máj"
 
 #. module: report_intrastat
-#: field:report.intrastat,month:0
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_month
 msgid "Month"
 msgstr "Mesiac"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "November"
-msgstr "Číslo"
+msgstr "November"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -227,19 +237,9 @@ msgid "October"
 msgstr "Október"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "PRO-FORMA"
 msgstr "PRO-FORMA"
-
-#. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
-msgid "Partner Ref.:"
-msgstr ""
-
-#. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
-msgid "Payment Term:"
-msgstr ""
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_product_template
@@ -247,12 +247,12 @@ msgid "Product Template"
 msgstr "šablona produktu"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Quantity"
 msgstr "Množstvo"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Refund"
 msgstr "Refundácia"
 
@@ -262,72 +262,62 @@ msgid "September"
 msgstr "September"
 
 #. module: report_intrastat
-#: field:report.intrastat,ref:0
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_ref
 msgid "Source document"
 msgstr "Zdrojový dokument"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
-msgid "Supplier Invoice"
-msgstr ""
-
-#. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
-msgid "Supplier Refund"
-msgstr ""
-
-#. module: report_intrastat
-#: field:report.intrastat,supply_units:0
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_supply_units
 msgid "Supply Units"
 msgstr "Obstarať jednotky"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Tax"
 msgstr "Daň"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Taxes"
 msgstr "Dane"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
-msgid "Total"
-msgstr "Celkom"
-
-#. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
-msgid "Total Without Taxes"
-msgstr ""
-
-#. module: report_intrastat
-#: field:report.intrastat,type:0
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_type
 msgid "Type"
 msgstr "Typ"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Unit Price"
-msgstr "Cena za kus"
+msgstr "Jednotková cena"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Unit of measure"
 msgstr "Merná jednotka"
 
 #. module: report_intrastat
-#: field:report.intrastat,value:0
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_value
 msgid "Value"
 msgstr "Hodnota"
 
 #. module: report_intrastat
-#: field:report.intrastat,weight:0
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Vendor Bill"
+msgstr "Účet predajcu"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Vendor Refund"
+msgstr "Refundácia predajcu"
+
+#. module: report_intrastat
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_weight
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Weight"
 msgstr "Hmotnosť"
 
 #. module: report_intrastat
-#: field:report.intrastat,name:0
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_name
 msgid "Year"
 msgstr "Rok"

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  MAIL MAIL STATISTICS !-->
+    <record model="ir.ui.view" id="view_mail_mail_statistics_search">
+        <field name="name">mail.mail.statistics.search</field>
+        <field name="model">mail.mail.statistics</field>
+        <field name="arch" type="xml">
+           <search string="Mail Statistics">
+                <field name="mail_mail_id_int"/>
+                <field name="message_id"/>
+                <field name="mass_mailing_id"/>
+                <filter string="Received" name="filter_received" domain="[('sent', '!=', False), ('bounced', '=', False)]"/>
+                <filter string="Opened" name="filter_opened" domain="[('opened', '!=', False)]"/>
+                <filter string="Clicked" name="filter_clicked" domain="[('clicked', '!=', False)]"/>
+                <filter string="Replied" name="filter_replied" domain="[('replied', '!=', False)]"/>
+                <filter string="Bounced" name="filter_bounced" domain="[('bounced', '!=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="State" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Open Date" name="group_open_date" context="{'group_by': 'opened:day'}"/>
+                    <filter string="Reply Date" name="group_reply_date" context="{'group_by': 'replied:day'}"/>
+                    <filter string="Last State Update" domain="[]" context="{'group_by':'state_update'}"/>
+                    <filter string="Mass Mailing" domain="[]" context="{'group_by':'mass_mailing_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_mail_mail_statistics_tree">
+        <field name="name">mail.mail.statistics.tree</field>
+        <field name="model">mail.mail.statistics</field>
+        <field name="arch" type="xml">
+            <tree string="Mail Statistics">
+                <field name="recipient"/>
+                <field name="message_id"/>
+                <field name="sent"/>
+                <field name="exception"/>
+                <field name="opened"/>
+                <field name="clicked"/>
+                <field name="replied"/>
+                <field name="bounced"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_mail_mail_statistics_form">
+        <field name="name">mail.mail.statistics.form</field>
+        <field name="model">mail.mail.statistics</field>
+        <field name="arch" type="xml">
+            <form string="Mail Statistics">
+                <group>
+                    <group>
+                        <field name="recipient"/>
+                        <field name="mail_mail_id"/>
+                        <field name="mail_mail_id_int"/>
+                        <field name="message_id"/>
+                        <field name="exception"/>
+                        <field name="sent"/>
+                        <field name="opened"/>
+                        <field name="clicked"/>
+                        <field name="replied"/>
+                        <field name="bounced"/>
+                    </group>
+                    <group>
+                        <field name="mass_mailing_id"/>
+                        <field name="mass_mailing_campaign_id"/>
+                        <field name="model"/>
+                        <field name="res_id"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_view_mail_mail_statistics" model="ir.actions.act_window">
+        <field name="name">Mail Statistics</field>
+        <field name="res_model">mail.mail.statistics</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_view_mail_mail_statistics_mailing" model="ir.actions.act_window">
+        <field name="name">Mail Statistics</field>
+        <field name="res_model">mail.mail.statistics</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph,tree,form,pivot</field>
+        <field name="domain">[]</field>
+        <field name="context">{'search_default_mass_mailing_id': active_id}</field>
+    </record>
+
+    <record id="action_view_mail_mail_statistics_mailing_list" model="ir.actions.act_window">
+        <field name="name">EMails Sent</field>
+        <field name="res_model">mail.mail.statistics</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph,form,pivot</field>
+        <field name="domain">[]</field>
+        <field name="context">{'search_default_mass_mailing_id': active_id}</field>
+    </record>
+
+    <record id="view_mail_mail_statistics_graph" model="ir.ui.view">
+        <field name="name">Mail Statistics Graph</field>
+        <field name="model">mail.mail.statistics</field>
+        <field name="arch" type="xml">
+            <graph string="Mail Statistics" type="bar" stacked="True" interval="day">
+                <field name="state_update" type="row" interval="day"/>
+                <field name="state" type="row"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Add in Technical/Email -->
+    <menuitem name="Mail Statistics" id="menu_email_statistics"
+        parent="base.menu_email" sequence="50"
+        action="action_view_mail_mail_statistics"/>
+</odoo>

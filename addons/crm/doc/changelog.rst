@@ -8,7 +8,6 @@ Changelog
 
 - Stage/state update
 
-  - ``crm.phonecall``: removed inheritance towards ``base_state``.
   - ``crm.lead``: removed ``state`` field. Added ``date_last_stage_update`` field
     holding last stage_id modification. Updated reports.
   - ``crm.case.stage``: removed ``state`` field.

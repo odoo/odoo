@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_message_view_form" model="ir.ui.view">
+        <field name="name">mrp.message.view.form</field>
+        <field name="model">mrp.message</field>
+        <field name="arch" type="xml">
+            <form string="Inventory Message">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="product_id" required="True"/>
+                            <field name="valid_until"/>
+                        </group>
+                        <group>
+                            <field name="bom_id"/>
+                            <field name="workcenter_id"/>
+                        </group>
+                    </group>
+                    <field name="message" widget="html" editor_height="450px"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mrp_message_view_form_embedded_product" model="ir.ui.view">
+        <field name="name">mrp.message.view.form.embedded.product</field>
+        <field name="model">mrp.message</field>
+        <field name="arch" type="xml">
+            <form string="Inventory Message">
+                <group>
+                    <group>
+                        <field name="product_tmpl_id" required="True"/>
+                        <field name="product_id" groups="product.group_product_variant" string="Variant"/>
+                    </group>
+                    <group>
+                        <field name="valid_until"/>
+                        <field name="workcenter_id"/>
+                    </group>
+                </group>
+                <field name="message" widget="html" editor_height="450px"/>
+                <footer class="oe_edit_only">
+                    <button special="save" type="object" string="Save" class="oe_highlight"/>
+                    <button string="Discard" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="mrp_message_view_form_embedded_bom" model="ir.ui.view">
+        <field name="name">mrp.message.view.form.embedded.bom</field>
+        <field name="model">mrp.message</field>
+        <field name="arch" type="xml">
+            <form string="Inventory Message">
+                <group>
+                    <group>
+                        <field name="product_id" invisible="1"/>
+                        <field name="bom_id"/>
+                        <field name="routing_id"/>
+                    </group>
+                    <group>
+                        <field name="valid_until"/>
+                        <field name="workcenter_id"/>
+                    </group>
+                </group>
+                <field name="message" widget="html" editor_height="450px"/>
+                <footer class="oe_edit_only">
+                    <button special="save" type="object" string="Save" class="oe_highlight"/>
+                    <button string="Discard" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="mrp_message_view_tree" model="ir.ui.view">
+        <field name="name">mrp.message.view.tree</field>
+        <field name="model">mrp.message</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="valid_until" string="Validity Date"/>
+                <field name="create_uid" string="Author"/>
+                <field name="product_id"/>
+                <field name="name" string="Message"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_mrp_message_kanban" model="ir.ui.view">
+        <field name="name">mrp.message.kanban</field>
+        <field name="model">mrp.message</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="valid_until"/>
+                <field name="create_uid"/>
+                <field name="product_id"/>
+                <field name="name"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div t-if="record.product_id.value">
+                                <strong class="o_kanban_record_title">Product: <t t-esc="record.name.value"/></strong>
+                            </div>
+                            <hr class="mt4 mb4"/>
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    <div t-if="record.name.value">
+                                        <t t-esc="record.name.value"/>
+                                    </div>
+                                </div>
+                                <div class="col-xs-4">
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.create_uid.raw_value)" t-att-title="record.create_uid.value" width="40" height="40" class="oe_kanban_avatar pull-right"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="mrp_message_view_search" model="ir.ui.view">
+        <field name="name">mrp.message.view.search</field>
+        <field name="model">mrp.message</field>
+        <field name="arch" type="xml">
+            <search string="Search">
+                <filter string="Active" name="active_message" domain="[('valid_until', '&gt;=', current_date)]"/>
+                <filter string="My Messages" name="my_messages" domain="[('create_uid', '=', uid)]"/>
+           </search>
+       </field>
+    </record>
+
+    <record id="mrp_message_action_main" model="ir.actions.act_window">
+        <field name="name">Work Order Messages</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.message</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="context">{'search_default_active_message': True}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click here to create a new Work Order Message.
+            </p><p>
+                Work Order Messages are used to warn users about any change in the product,
+                process, etc. These messages will appear on the involved Work Orders. 
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="mrp_message_menu"
+          parent="menu_mrp_bom"
+          action="mrp_message_action_main"
+          groups="group_mrp_routings"
+          sequence="99"/>
+</odoo>

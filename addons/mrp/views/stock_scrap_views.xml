@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_scrap_view_form2_mrp_inherit_mrp" model="ir.ui.view">
+        <field name="name">stock.scrap.view.form2.inherit.mrp</field>
+        <field name="model">stock.scrap</field>
+        <field name="inherit_id" ref="stock.stock_scrap_form_view2"/>
+        <field name="arch" type="xml">
+            <field name="owner_id" position="after">
+                <field name="workorder_id" attrs="{'invisible': [('workorder_id', '=', False)]}"/>
+                <field name="production_id" attrs="{'invisible': [('production_id', '=', False)]}"/>
+            </field>
+        </field>
+    </record>
+    <record id="stock_scrap_view_form_mrp_inherit_mrp" model="ir.ui.view">
+        <field name="name">stock.scrap.view.form.inherit.mrp</field>
+        <field name="model">stock.scrap</field>
+        <field name="inherit_id" ref="stock.stock_scrap_form_view"/>
+        <field name="arch" type="xml">
+            <field name="owner_id" position="after">
+                <field name="workorder_id" attrs="{'invisible': [('workorder_id', '=', False)]}"/>
+                <field name="production_id" attrs="{'invisible': [('production_id', '=', False)]}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

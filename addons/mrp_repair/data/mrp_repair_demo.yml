@@ -1,0 +1,81 @@
+-
+  !record {model: mrp.repair, id: mrp_repair_rmrp1}:
+    address_id: base.res_partner_address_1
+    guarantee_limit: !eval datetime.today().strftime("%Y-%m-%d")
+    invoice_method: 'none'
+    product_id: product.product_product_3
+    product_uom: product.product_uom_unit
+    partner_invoice_id: base.res_partner_address_1
+    location_dest_id: stock.stock_location_14
+    location_id: stock.stock_location_stock
+    operations:
+      - location_dest_id: stock.location_production
+        location_id: stock.stock_location_stock
+        name: '[M-Las] Mouse, Laser'
+        price_unit: 50.0
+        product_id: product.product_product_11
+        product_uom: product.product_uom_unit
+        product_uom_qty: 1.0
+        state: draft
+        type: add
+    fees_lines:
+      - name: 'Laptop formatting fees'
+        product_id: product.product_product_11c
+        product_uom_qty: 1.0
+        product_uom: product.product_uom_unit
+        price_unit: 50.0
+    partner_id: base.res_partner_12
+-
+  !record {model: mrp.repair, id: mrp_repair_rmrp0}:
+    product_id: product.product_product_5
+    product_uom: product.product_uom_unit
+    address_id: base.res_partner_address_1
+    guarantee_limit: !eval datetime.today().strftime("%Y-%m-%d")
+    invoice_method: 'after_repair'
+    partner_invoice_id: base.res_partner_address_1
+    location_dest_id: stock.stock_location_14
+    location_id: stock.stock_location_stock
+    operations:
+      - location_dest_id: stock.location_production
+        location_id: stock.stock_location_stock
+        name: '[M-Wir] Mouse, Wireless'
+        price_unit: 50.0
+        product_id: product.product_product_12
+        product_uom: product.product_uom_unit
+        product_uom_qty: 1.0
+        state: draft
+        type: add
+    fees_lines:
+      - name: 'Monitor screen repair'
+        product_id: product.product_product_5c
+        product_uom_qty: 1.0
+        product_uom: product.product_uom_unit
+        price_unit: 50.0
+    partner_id: base.res_partner_12
+-
+  !record {model: mrp.repair, id: mrp_repair_rmrp2}:
+    product_id: product.product_product_6
+    product_uom: product.product_uom_unit
+    address_id: base.res_partner_address_1
+    guarantee_limit: !eval datetime.today().strftime("%Y-%m-%d")
+    invoice_method: 'b4repair'
+    partner_invoice_id: base.res_partner_address_1
+    location_dest_id: stock.stock_location_stock
+    location_id: stock.stock_location_14
+    operations:
+      - location_dest_id: stock.location_production
+        location_id: stock.stock_location_stock
+        name: '[RAM-SR5] RAM DDR SR5'
+        price_unit: 50.0
+        product_id: product.product_product_13
+        product_uom: product.product_uom_unit
+        product_uom_qty: 1.0
+        state: draft
+        type: add
+    fees_lines:
+      - name: 'SIM card holder repair'
+        product_id: product.product_product_6c
+        product_uom_qty: 1.0
+        product_uom: product.product_uom_unit
+        price_unit: 50.0
+    partner_id: base.res_partner_12

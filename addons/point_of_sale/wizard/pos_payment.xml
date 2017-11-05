@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-
+<odoo>
         <record id="view_pos_payment" model="ir.ui.view">
-            <field name="name">Pay Order</field>
+            <field name="name">pos.make.payment.form</field>
             <field name="model">pos.make.payment</field>
             <field name="arch" type="xml">
             <form string="Pay Order">
                 <group>
-                    <field name="journal_id" />
+                    <field name="session_id" invisible="True"/>
+                    <field name="journal_id" domain="[('journal_user', '=', True)]"/>
                     <field name="amount" />
                     <field name="payment_name"/>
                 </group>
                 <footer>
-                    <button name="check" string="Make Payment" type="object" class="oe_highlight"/>
-                    or 
-                    <button special="cancel" string="Cancel" class="oe_link"/>
+                    <button name="check" string="Make Payment" type="object" class="btn-primary"/>
+                    <button special="cancel" string="Cancel" class="btn-default"/>
                 </footer>
             </form>
             </field>
@@ -28,6 +26,4 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-    </data>
-</openerp>
-
+</odoo>

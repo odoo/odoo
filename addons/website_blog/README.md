@@ -33,7 +33,7 @@ Translated versions are updated automatically once translated by professionals
 Engage With Your Visitors
 -------------------------
 
-The integrated live chat feature allows you to start chatting in real time with
+The integrated website live chat feature allows you to start chatting in real time with
 your visitors to get feedback on your recent posts or get ideas to write new
 posts.
 

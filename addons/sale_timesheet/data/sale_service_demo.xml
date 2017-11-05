@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="product.service_order_01" model="product.product">
+            <field name="service_type">timesheet</field>
+            <field name="service_tracking">project_only</field>
+        </record>
+        <record id="product.product_product_2" model="product.product">
+            <field name="name">Support Contract (on timesheet)</field>
+            <field name="service_type">timesheet</field>
+            <field name="service_tracking">project_only</field>
+        </record>
+
+        <record id="line_services" model="sale.order.line">
+            <field name="order_id" ref="sale.sale_order_3"/>
+            <field name="name">Advance</field>
+            <field name="product_id" ref="sale.advance_product_0"/>
+            <field name="product_uom" ref="product.product_uom_day"/>
+            <field name="price_unit">150.0</field>
+            <field name="product_uom_qty">5.0</field>
+        </record>
+
+        <record id="project_GAP" model="project.project">
+            <field name="date_start" eval="time.strftime('%Y-%m-01 10:00:00')"/>
+            <field name="name">Internal - GAP Analysis</field>
+            <field name="color">2</field>
+            <field name="privacy_visibility">employees</field>
+            <field name="type_ids" eval="[(4, ref('project.project_stage_0')) ,(4,ref('project.project_stage_1')) ,(4,ref('project.project_stage_2')) ,(4,ref('project.project_stage_3'))]"/>
+        </record>
+
+        <record id="product.product_product_1" model="product.product">
+            <field name="service_type">timesheet</field>
+            <field name="service_tracking">task_global_project</field>
+            <field name="project_id" ref="project_GAP"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Success status -->
+    <t t-name="website_form.status_success">
+        <span id="o_website_form_result" class="text-success ml8">
+            <i class="fa fa-check mr4"/>The form has been sent successfully.
+        </span>
+    </t>
+
+    <!-- Missing field status -->
+    <t t-name="website_form.status_invalid">
+        <span id="o_website_form_result" class="text-danger ml8">
+            <i class="fa fa-close mr4"/>Please fill in the form correctly.
+        </span>
+    </t>
+
+    <!-- Error status -->
+    <t t-name="website_form.status_error">
+        <span id="o_website_form_result" class="text-danger ml8">
+            <i class="fa fa-close mr4"/>An error has occured, the form has not been sent.
+        </span>
+    </t>
+
+</templates>

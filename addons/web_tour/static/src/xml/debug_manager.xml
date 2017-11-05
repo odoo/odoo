@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-extend="WebClient.DebugManager.Global">
+    <t t-jquery="li > a[data-action='select_view']" t-operation="after">
+        <t t-if="manager._is_admin">
+            <li t-if="manager.consume_tours_enabled">
+                <a href="#" data-action="consume_tours">Disable Tours</a>
+            </li>
+            <li>
+                <a href="#" data-action="start_tour">Start Tour</a>
+            </li>
+        </t>
+    </t>
+</t>
+
+<t t-name="WebClient.DebugManager.ToursDialog">
+    <div>
+        <table class="table table-condensed table-striped table-responsive">
+            <tr>
+                <th>Name</th>
+                <th>Path</th>
+                <th/>
+            </tr>
+
+            <tr t-foreach="tours" t-as="tour">
+                <td><t t-esc="tour"/></td>
+                <td><t t-esc="tours[tour].url"/></td>
+                <td><button type="button" class="btn btn-sm btn-primary fa fa-play o_start_tour" t-att-data-name="tour"/></td>
+            </tr>
+        </table>
+    </div>
+</t>
+
+</templates>

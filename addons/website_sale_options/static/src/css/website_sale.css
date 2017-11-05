@@ -1,3 +1,22 @@
 .css_not_available.js_product > *:nth-child(5) > * {
   display: none;
 }
+
+table.js_cart_lines .optional_product .js_delete_product {
+  display: none;
+}
+
+div#modal_optional_products table tr td {
+  border: 0px;
+}
+
+@media (max-width: 767px) {
+  div#modal_optional_products .td-qty {
+    display: none;
+  }
+}
+
+.oe_striked_price {
+    text-decoration: line-through;
+    white-space: nowrap;
+}

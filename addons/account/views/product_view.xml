@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.template.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="priority">5</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <page name="inventory" position="after">
+                    <page string="Invoicing" name="invoicing">
+                        <group name="properties">
+                            <group string="Receivables">
+                                <field name="taxes_id" widget="many2many_tags"/>
+                                <field name="property_account_income_id"
+                                    domain="[('internal_type','=','other'),('deprecated','=',False)]"
+                                    groups="account.group_account_user"/>
+                            </group>
+                            <group string="Payables" name="payables">
+                                <field name="supplier_taxes_id" widget="many2many_tags"/>
+                                <field name="property_account_expense_id"
+                                    domain="[('internal_type','=','other'),('deprecated','=',False)]"
+                                    groups="account.group_account_user"/>
+                            </group>
+                        </group>
+                        <group name="accounting"/>
+                        <group name="invoicing" invisible="1"/>
+                    </page>
+                </page>
+            </field>
+        </record>
+
+        <record id="view_category_property_form" model="ir.ui.view">
+            <field name="name">product.category.property.form.inherit</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <group name="first" position="after">
+                    <group name="account_property" >
+                        <group string="Account Properties" groups="account.group_account_user">
+                            <field name="property_account_income_categ_id" domain="[('internal_type','=','other'),('deprecated', '=', False)]"/>
+                            <field name="property_account_expense_categ_id" domain="[('internal_type','=','other'),('deprecated', '=', False)]"/>
+                        </group>
+                    </group>
+                </group>
+            </field>
+        </record>
+    </data>
+</odoo>

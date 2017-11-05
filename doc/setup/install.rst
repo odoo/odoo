@@ -12,23 +12,23 @@ on the intended use case.
 This documents attempts to describe most of the installation options.
 
 :ref:`setup/install/demo`
-    the simplest "installation", only suitable for getting a quick feel for
+    The simplest "installation", only suitable for getting a quick feel for
     Odoo or trying something out
 :ref:`setup/install/saas`
-    trivial to start with and fully managed and migrated by Odoo S.A., can be
-    used to both test Odoo and use it for your business, but restricts the
-    flexibility of the system somewhat (check: no custom modules? what else?).
+    Trivial to start with and fully managed and migrated by Odoo S.A., can be
+    used to both test Odoo and use it for your business, prevents complex
+    customization (i.e. incompatible with custom modules or the Odoo Apps Store).
 
-    Can be used for both testing Odoo and long-term "production" use.
+    Can be used for both testing Odoo and long-term production use.
 :ref:`setup/install/packaged`
-    simple to get started, allows more flexibility in hosting and deploying
+    Simple to get started, allows more flexibility in hosting and deploying
     the system and greater control over where data is stored. The maintenance
     burden is shifted to the user.
 
     Suitable for testing Odoo, developing modules and can be used for
     long-term production use with additional deployment and maintenance work.
 :ref:`setup/install/source`
-    harder to get started than :ref:`setup/install/packaged`, provides
+    Harder to get started than :ref:`setup/install/packaged`, provides
     even greater flexibility: packaged installers don't generally allow
     multiple running Odoo versions on the same system, and don't provide easy
     source access to Odoo itself.
@@ -37,12 +37,39 @@ This documents attempts to describe most of the installation options.
     deployment.
 
     The source code can be obtained by downloading a tarball or using git.
-    Using git makes it easier to update, switch between multiple versions
-    (including the current development version) or contribute.
+    Using git is strongly advised, as it makes it easier to update, switch
+    between multiple versions (including the current development version)
+    or contribute.
 `docker image <https://registry.hub.docker.com/_/odoo/>`_
-    if you usually use docker_ for development or deployment, an official
+    If you usually use docker_ for development or deployment, an official
     docker_ base image is available, see the image's help document for more
-    information
+    information.
+
+.. _setup/install/editions:
+
+Editions
+========
+
+There are two different Editions_ of Odoo: the Community and Enterprise versions.
+Using the Enterprise version is possible on our SaaS_ and accessing the code is
+restricted to Enterprise customers and partners. The Community version is freely
+available to anyone.
+
+If you already use the Community version and wish to upgrade to Enterprise, please
+refer to :ref:`setup/enterprise` (except for :ref:`setup/install/source`).
+
+If you wish to access the Enterprise installers/source code, you can:
+
+* Go to the Download_ page and log in with your customer credentials
+* Download the source on GitHub using git_(available to partners only)
+
+.. note:: If you do not have access to our Enterprise repository, you can request
+    it be e-mailing your sales representative or our online support with
+    your subscription number and GitHub username. (available to partners only)
+
+.. warning:: Enterprise deb and rpm packages do not have repositories, so automatic
+    update will not work. Reinstalling the latest package version will be needed
+    to update manually an installation.
 
 .. _setup/install/demo:
 
@@ -73,19 +100,23 @@ Packaged installers
 ===================
 
 Odoo provides packaged installers for Windows, deb-based distributions
-(Debian, Ubuntu, …) and RPM-based distributions (Fedora, CentOS, RHEL, …).
+(Debian, Ubuntu, …) and RPM-based distributions (Fedora, CentOS, RHEL, …) for
+both the Community and Enterprise versions.
 
-These packages automatically set up all dependencies, but may be difficult to
-keep up-to-date.
+These packages automatically set up all dependencies (for the Community version),
+but may be difficult to keep up-to-date.
 
-Official packages with all relevant dependency requirements are available on
-https://nightly.odoo.com.
+Official Community packages with all relevant dependency requirements are
+available on our nightly_ server. Both Communtiy and Enterprise packages can
+be downloaded from our Download_ page (you must to be logged in as a paying
+customer or partner to download the Enterprise packages).
 
 Windows
 -------
 
-* download https://nightly.odoo.com/8.0/nightly/exe/odoo_8.0.latest.exe
-* run the downloaded file
+* Download the installer from our nightly_ server (Community only)
+  or the Windows installer from the Download_ page (any edition)
+* Run the downloaded file
 
   .. warning:: on Windows 8, you may see a warning titled "Windows protected
                your PC". Click :guilabel:`More Info` then
@@ -100,7 +131,7 @@ Configuration
 '''''''''''''
 
 The :ref:`configuration file <reference/cmdline/config>` can be found at
-:file:`{%PROGRAMFILES%}\\Odoo 8.0-{id}\\server\\openerp-server.conf`.
+:file:`{%PROGRAMFILES%}\\Odoo 11.0-{id}\\server\\odoo.conf`.
 
 The configuration file can be edited to connect to a remote Postgresql, edit
 file locations or set a dbfilter.
@@ -111,31 +142,73 @@ To reload the configuration file, restart the Odoo service via
 Deb
 ---
 
-To install Odoo 8.0 on Debian-based distribution, execute the following
+Community
+'''''''''
+
+To install Odoo 11.0 Community on Debian-based distribution, execute the following
 commands as root:
 
 .. code-block:: console
 
     # wget -O - https://nightly.odoo.com/odoo.key | apt-key add -
-    # echo "deb http://nightly.odoo.com/8.0/nightly/deb/ ./" >> /etc/apt/sources.list
+    # echo "deb http://nightly.odoo.com/11.0/nightly/deb/ ./" >> /etc/apt/sources.list.d/odoo.list
     # apt-get update && apt-get install odoo
 
-This will automatically install all dependencies, install Odoo itself as a
-daemon and automatically start it.
+You can then use the usual ``apt-get upgrade`` command to keep your installation up-to-date.
+
+Enterprise
+''''''''''
+
+For Odoo 11.0 Enterprise, get the package from the Download_ page. You can then
+use ``gdebi``:
+
+.. code-block:: console
+
+    # apt-get install postgresql -y
+    # gdebi <path_to_installation_package>
+
+Or ``dpkg`` (handles less dependencies automatically):
+
+.. code-block:: console
+
+    # apt-get install postgresql -y
+    # dpkg -i <path_to_installation_package> # this probably fails with missing dependencies
+    # apt-get install -f # should install the missing dependencies
+    # dpkg -i <path_to_installation_package>
+
+
+.. warning:: The 3 following python packages are only suggested by the Debian package.
+             Those packages are not available in Ubuntu Xenial (16.04).
+
+* python3-vobject: Used in calendars to produce ical files.
+* python3-pyldap: Used to authenticat users with LDAP.
+* python3-qrcode: Used by the hardware driver for ESC/POS
+
+If you need one or all of the packages mentioned in the above warning, you can install them manually.
+One way to do it, is simply using pip3 like this:
+
+.. code-block:: console
+
+    $ sudo pip3 install vobject qrcode
+    $ sudo apt install libldap2-dev libsasl2-dev
+    $ sudo pip3 install pyldap
+
+This will install Odoo as a service, create the necessary PostgreSQL_ user
+and automatically start the server.
 
 .. danger:: to print PDF reports, you must install wkhtmltopdf_ yourself:
             the version of wkhtmltopdf_ available in debian repositories does
             not support headers and footers so it can not be installed
             automatically. The recommended version is 0.12.1 and is available on
             `the wkhtmltopdf download page`_, in the archive section. As there
-            is no official release for Debian Jessie, you can find ours on
-            http://nightly.odoo.com/extra/.
+            is no official release for Debian Jessie, you can find ours on the
+            extra_ section of our nightly server.
 
 Configuration
 '''''''''''''
 
 The :ref:`configuration file <reference/cmdline/config>` can be found at
-:file:`/etc/odoo/openerp-server.conf`
+:file:`/etc/odoo/odoo.conf`
 
 When the configuration file is edited, Odoo must be restarted using
 ``service``:
@@ -150,9 +223,14 @@ RPM
 
 .. warning::
 
-    with RHEL-based distributions (RHEL, CenOS, Scientific Linux), EPEL_ must
+    As of 2017, Fedora 26 is recommended. CentOS does not have the minimum
+    Python requirements (3.5) for Odoo 11.0.
+
+.. warning::
+
+    with RHEL-based distributions (RHEL, CentOS, Scientific Linux), EPEL_ must
     be added to the distribution's repositories for all of Odoo's
-    dependencies to be available. For CenOS:
+    dependencies to be available. For CentOS:
 
     .. code-block:: console
 
@@ -160,16 +238,38 @@ RPM
 
     For other RHEL-based distribution, see the EPEL_ documentation.
 
+Community
+'''''''''
+
+Execute the following commands to install Odoo 11.0 Community on your server:
+
 .. code-block:: console
 
     $ sudo yum install -y postgresql-server
     $ sudo postgresql-setup initdb
     $ sudo systemctl enable postgresql
     $ sudo systemctl start postgresql
-    $ sudo yum-config-manager --add-repo=https://nightly.odoo.com/8.0/nightly/rpm/odoo.repo
+    $ sudo yum install yum-utils
+    $ sudo yum-config-manager --add-repo=https://nightly.odoo.com/11.0/nightly/rpm/odoo.repo
     $ sudo yum install -y odoo
     $ sudo systemctl enable odoo
     $ sudo systemctl start odoo
+
+Enterprise
+''''''''''
+
+For Odoo 11.0 Enterprise, get the package from the Download_ page. Then run:
+
+.. code-block:: console
+
+    $ sudo yum install -y postgresql-server
+    $ sudo postgresql-setup initdb
+    $ sudo systemctl enable postgresql
+    $ sudo systemctl start postgresql
+    $ sudo yum localinstall odoo_11.0.latest.noarch.rpm
+    $ sudo systemctl enable odoo
+    $ sudo systemctl start odoo
+
 
 .. danger:: to print PDF reports, you must install wkhtmltopdf_ yourself:
             the version of wkhtmltopdf_ available in Fedora/CentOS
@@ -181,7 +281,7 @@ Configuration
 '''''''''''''
 
 The :ref:`configuration file <reference/cmdline/config>` can be found at
-:file:`/etc/odoo/openerp-server.conf`
+:file:`/etc/odoo/odoo.conf`
 
 When the configuration file is edited, Odoo must be restarted via SystemD:
 
@@ -210,18 +310,21 @@ edit a configuration file.
 Finally it provides greater control over the system's set up, and allows more
 easily keeping (and running) multiple versions of Odoo side-by-side.
 
+Community
+---------
+
 There are two way to get the odoo source source zip or git.
 
-* Odoo zip can be downloaded from
-  https://nightly.odoo.com/8.0/nightly/src/odoo_8.0.latest.zip, the zip file
-  then needs to be uncompressed to use its content
+* Odoo zip can be downloaded from  our nightly_ server or our Download_  page,
+  the zip file then needs to be uncompressed to use its content
 
-* git allows simpler update and easier switching between differents versions
+* git allows simpler update and easier switching between different versions
   of Odoo. It also simplifies maintaining non-module patches and
   contributions.  The primary drawback of git is that it is significantly
   larger than a tarball as it contains the entire history of the Odoo project.
 
-  The git repository is https://github.com/odoo/odoo.git.
+  The git repository is https://github.com/odoo/odoo.git for the Community
+  version.
 
   Downloading it requires a `git client <http://git-scm.com/download/>`_
   (which may be available via your distribution on linux) and can be performed
@@ -231,23 +334,61 @@ There are two way to get the odoo source source zip or git.
 
       $ git clone https://github.com/odoo/odoo.git
 
+Enterprise
+----------
+
+If you have access to the Enterprise repository (see :ref:`setup/install/editions`
+if you wish to get access), you can use this command to fetch the addons:
+
+.. code-block:: console
+
+  $ git clone https://github.com/odoo/enterprise.git
+
+If you use git_, you must modify the :option:`--addons-path <odoo-bin --addons-path>`
+parameter of your launch command (``init.d``, custom script, configuration file,
+etc.). The Enterprise addons folder should be included **before** the default
+addons folder.
+
+For example:
+
+.. code-block:: console
+
+  $ odoo-bin --addons-path=~/src/custom_modules,~/src/enterprise,~/src/odoo/addons
+
+.. warning:: The Enterprise git repository **does not contain the full Odoo
+    source code**. It is only a collection of extra add-ons. The main server
+    code is in the Community version.  Running the Enterprise version actually
+    means running the server from the Community version with the addons-path option
+    set to the folder with the Enterprise version.
+    
+    You need to clone both the Community and Enterprise repository to have a working
+    Odoo installation. The Download_ page contains the entire source code but is not
+    updateable as easily.
+
+
+
 Installing dependencies
 -----------------------
 
 Source installation requires manually installing dependencies:
 
-* Python 2.7.
+* Python 3.5+.
 
-  - on Linux and OS X, included by default
-  - on Windows, use `the official Python 2.7.9 installer
+  - on Linux and OS X, using your package manager if not installed by default
+
+    .. note:: on some system, ``python`` command refers to Python 2 (outdated)
+              or to Python 3 (supported). Make sure you are using the right
+              version and that the alias ``python3`` is present in your
+              :envvar:`PATH`
+
+  - on Windows, use `the official Python 3 installer
     <https://www.python.org/downloads/windows/>`_.
 
     .. warning:: select "add python.exe to Path" during installation, and
                  reboot afterwards to ensure the :envvar:`PATH` is updated
 
-    .. note:: if Python is already installed, make sure it is 2.7.9, previous
-              versions are less convenient and 3.x versions are not compatible
-              with Odoo
+    .. note:: if Python is already installed, make sure it is 3.5 or above,
+              previous versions are not compatible with Odoo.
 
 * PostgreSQL, to use a local database
 
@@ -279,7 +420,7 @@ Source installation requires manually installing dependencies:
       then click :guilabel:`OK`.
 
       The user and password must be passed to Odoo using either the
-      :option:`-w <odoo.py -w>` and :option:`-r <odoo.py -r>` options or
+      :option:`-w <odoo-bin -w>` and :option:`-r <odoo-bin -r>` options or
       :ref:`the configuration file <reference/cmdline/config>`
 
 * Python dependencies listed in the :file:`requirements.txt` file.
@@ -296,7 +437,7 @@ Source installation requires manually installing dependencies:
 
     .. code-block:: console
 
-        $ pip install -r requirements.txt
+        $ pip3 install -r requirements.txt
 
   - on OS X, you will need to install the Command Line Tools
     (``xcode-select --install``) then download and install a package manager
@@ -305,7 +446,7 @@ Source installation requires manually installing dependencies:
 
     .. code-block:: console
 
-        $ pip install -r requirements.txt
+        $ pip3 install -r requirements.txt
 
   - on Windows you need to install some of the dependencies manually, tweak the
     requirements.txt file, then run pip to install the remaning ones.
@@ -324,10 +465,10 @@ Source installation requires manually installing dependencies:
     command from a cmd.exe prompt (replace ``\YourOdooPath`` by the actual
     path where you downloaded Odoo):
 
-    .. code-block:: ps1
+    .. code-block:: doscon
 
         C:\> cd \YourOdooPath
-        C:\YourOdooPath> C:\Python27\Scripts\pip.exe install -r requirements.txt
+        C:\YourOdooPath> C:\Python35\Scripts\pip.exe install -r requirements.txt
 
 * *Less CSS* via nodejs
 
@@ -353,30 +494,36 @@ Source installation requires manually installing dependencies:
             $ apt-get install -y npm
             $ sudo ln -s /usr/bin/nodejs /usr/bin/node
 
-    Once npm is installed, use it to install less and less-plugin-clean-css:
+    Once npm is installed, use it to install less:
 
     .. code-block:: console
 
-        $ sudo npm install -g less less-plugin-clean-css
+        $ sudo npm install -g less
 
   - on OS X, install nodejs via your preferred package manager (homebrew_,
-    macports_) then install less and less-plugin-clean-css:
+    macports_) then install less:
 
     .. code-block:: console
 
-        $ sudo npm install -g less less-plugin-clean-css
+        $ sudo npm install -g less
 
   - on Windows, `install nodejs <http://nodejs.org/download/>`_, reboot (to
-    update the :envvar:`PATH`) and install less and less-plugin-clean-css:
+    update the :envvar:`PATH`) and install less:
 
-    .. code-block:: ps1
+    .. code-block:: doscon
 
-        C:\> npm install -g less less-plugin-clean-css
+        C:\> npm install -g less
 
 Running Odoo
 ------------
 
-Once all dependencies are set up, Odoo can be launched by running ``odoo.py``.
+Once all dependencies are set up, Odoo can be launched by running ``odoo-bin``.
+
+.. warning:: For the Enterprise edition, you must specify the :file:`enterprise`
+    addons folder when starting your server. You can do so by providing the path
+    to your :file:`enterprise` folder in the ``addons-path`` parameter. Please
+    note that the :file:`enterprise` folder must come before the default
+    :file:`addons` folder in the  list for the addons to be loaded correctly.
 
 :ref:`Configuration <reference/cmdline>` can be provided either through
 :ref:`command-line arguments <reference/cmdline>` or through a
@@ -396,9 +543,9 @@ Common necessary configurations are:
 
 Under Windows a typical way to execute odoo would be:
 
-.. code-block:: ps1
+.. code-block:: doscon
 
-    C:\YourOdooPath> python odoo.py -w odoo -r odoo --addons-path=addons,../mymodules --db-filter=mydb$
+    C:\YourOdooPath> python3 odoo-bin -w odoo -r odoo --addons-path=addons,../mymodules --db-filter=mydb$
 
 Where ``odoo``, ``odoo`` are the postgresql login and password,
 ``../mymodules`` a directory with additional addons and ``mydb`` the default
@@ -408,13 +555,14 @@ Under Unix a typical way to execute odoo would be:
 
 .. code-block:: console
 
-    $ ./odoo.py --addons-path=addons,../mymodules --db-filter=mydb$
+    $ ./odoo-bin --addons-path=addons,../mymodules --db-filter=mydb$
 
 Where ``../mymodules`` is a directory with additional addons and ``mydb`` the
 default db to serve on localhost:8069
 
 .. _demo: https://demo.odoo.com
 .. _docker: https://www.docker.com
+.. _Download: https://www.odoo.com/page/download
 .. _EPEL: https://fedoraproject.org/wiki/EPEL
 .. _PostgreSQL: http://www.postgresql.org
 .. _the official installer:
@@ -424,16 +572,17 @@ default db to serve on localhost:8069
     http://www.enterprisedb.com/products-services-training/pgdownload
 .. _Quilt: http://en.wikipedia.org/wiki/Quilt_(software)
 .. _saas: https://www.odoo.com/page/start
-.. _the wkhtmltopdf download page: http://wkhtmltopdf.org/downloads.html
+.. _the wkhtmltopdf download page: https://github.com/wkhtmltopdf/wkhtmltopdf/releases/tag/0.12.1
 .. _UAC: http://en.wikipedia.org/wiki/User_Account_Control
 .. _wkhtmltopdf: http://wkhtmltopdf.org
 .. _pip: https://pip.pypa.io
 .. _macports: https://www.macports.org
 .. _homebrew: http://brew.sh
-.. _Visual C++ Compiler for Python 2.7:
-    http://www.microsoft.com/en-us/download/details.aspx?id=44266
 .. _wheels: https://wheel.readthedocs.org/en/latest/
 .. _virtual environment: http://docs.python-guide.org/en/latest/dev/virtualenvs/
 .. _pywin32: http://sourceforge.net/projects/pywin32/files/pywin32/
 .. _the repository: https://github.com/odoo/odoo
 .. _git: http://git-scm.com
+.. _Editions: https://www.odoo.com/pricing#pricing_table_features
+.. _nightly: https://nightly.odoo.com/11.0/nightly/
+.. _extra: https://nightly.odoo.com/extra/

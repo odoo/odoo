@@ -1,4 +1,4 @@
-Italy, 2017-02-03
+Italy, 2016-11-25
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.

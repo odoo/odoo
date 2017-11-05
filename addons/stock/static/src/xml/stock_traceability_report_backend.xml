@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+    <t t-name="stockReports.buttons">
+        <button type="button" class='btn btn-primary btn-sm o_stock-widget-pdf'>PRINT</button>
+    </t>
+
+    <div t-name='stockReports.errorModal' class="modal" id="editable_error" tabindex="-1" data-backdrop="static" role="dialog" aria-hidden="true" style="z-index:9999;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="modal-title">Error</h3>
+                </div>
+                <div class="modal-body">
+                    <p id='insert_error' class='text-center'></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</templates>

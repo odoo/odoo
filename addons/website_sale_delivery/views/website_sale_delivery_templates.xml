@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="cart_delivery" name="Delivery Costs" inherit_id="website_sale.total">
+        <xpath expr="//div[@id='order_total_untaxed']" position="before">
+            <div class="row" id="order_delivery" t-if="website_sale_order and website_sale_order.has_delivery">
+                  <span class="col-xs-6 text-right text-muted" title="Delivery will be updated after choosing a new delivery method"> Delivery:</span>
+                  <span class="col-xs-6 text-right-not-xs text-left-xs text-muted">
+                      <span t-field="website_sale_order.amount_delivery" style="white-space: nowrap;" t-options='{
+                              "widget": "monetary",
+                              "display_currency": website_sale_order.currency_id,
+                          }'/>
+                  </span>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Shop">
+      <xpath expr="." position="inside">
+        <script type="text/javascript" src="/website_sale_delivery/static/src/js/website_sale_delivery.js"></script>
+        <link rel='stylesheet' href='/website_sale_delivery/static/src/less/website_sale_delivery.less'/>
+      </xpath>
+    </template>
+
+    <template id="payment_delivery" name="Delivery Costs" inherit_id="website_sale.payment">
+        <xpath expr="//div[@id='payment_method']" position="before">
+            <div t-if="deliveries" class="col-md-12 o_website_sale_rightfit" id="delivery_carrier">
+                <h3 class="mb24">Choose a delivery method</h3>
+                <div class="panel panel-default" id="delivery_method">
+                    <ul class="list-group">
+                    <t t-set="delivery_nb" t-value="len(deliveries)" />
+                    <t t-foreach="deliveries" t-as="delivery">
+                        <li class="list-group-item">
+                            <input t-att-value="delivery.id" t-att-id="'delivery_%i' % delivery.id" type="radio" name="delivery_type" t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False" t-att-class="'hidden' if delivery_nb == 1 else ''"/>
+                            <label class="label-optional" t-field="delivery.name" t-att-for="'delivery_%i' % delivery.id"/>
+                            <t t-if="delivery.delivery_type == 'fixed'">
+                                <span t-if="delivery.fixed_price > 0.0" class="badge pull-right"
+                                      t-field="delivery.fixed_price" t-options='{"widget": "monetary", "display_currency": website_sale_order.currency_id}'/>
+                                <span t-else="" class="badge pull-right">Free</span>
+                            </t>
+                            <t t-else="">
+                                <span class="badge pull-right hidden" t-field="delivery.fixed_price" t-options='{"widget": "monetary",
+                                                                                                          "display_currency": website_sale_order.currency_id}'/>
+                                <span class="badge pull-right o_delivery_compute">Select to compute delivery rate</span>
+                            </t>
+                            <t t-if="delivery.website_description">
+                                <div t-field="delivery.website_description" class="text-muted mt8"/>
+                            </t>
+                        </li>
+                    </t>
+                    </ul>
+                </div>
+                <a class="btn-link"
+                        groups="base.group_system"
+                        t-attf-href="/web#return_label=Website&amp;action=#{delivery_action_id}">
+                    <i class="fa fa-arrow-right" aria-hidden="true"></i> Add delivery methods
+                </a>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="portal_order_page_shipping_tracking" name="Shipping tracking on orders followup" inherit_id="website_sale_stock.portal_order_page_shipping">
+        <xpath expr="//div[@id='picking_info']" position="after">
+            <div t-if="i.carrier_tracking_ref">
+                Tracking: <span t-field="i.carrier_id.name"/>
+                <t t-if="i.carrier_tracking_url">
+                    <a t-att-href="i.carrier_tracking_url" target="_blank"><span t-field="i.carrier_tracking_ref"/></a>
+                </t>
+                <t t-else="">
+                    <span t-field="i.carrier_tracking_ref"/>
+                </t>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

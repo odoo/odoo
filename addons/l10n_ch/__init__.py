@@ -1,27 +1,31 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    Author: Nicolas Bessi. Copyright Camptocamp SA
-#    Financial contributors: Hasa SA, Open Net SA,
-#                            Prisme Solutions Informatique SA, Quod SA
-#
-#    Translation contributors: brain-tec AG, Agile Business Group
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import account_wizard
+from . import models
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+from odoo import api, SUPERUSER_ID
+
+
+def load_translations(env):
+    env.ref('l10n_ch.l10nch_chart_template').process_coa_translations()
+
+
+def init_settings(env):
+    '''If the company is localized in Switzerland, activate the cash rounding by default.
+    '''
+    # The cash rounding is activated by default only if the company is localized in Switzerland.
+    for company in env['res.company'].search([]):
+        if company.country_id != env.ref('base.ch'):
+            continue
+        res_config_id = env['res.config.settings'].create({
+            'company_id': company.id,
+            'group_cash_rounding': True
+        })
+        # We need to call execute, otherwise the "implied_group" in fields are not processed.
+        res_config_id.execute()
+
+
+def post_init(cr, registry):
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    load_translations(env)
+    init_settings(env)

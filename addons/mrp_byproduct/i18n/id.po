@@ -3,14 +3,19 @@
 # * mrp_byproduct
 # 
 # Translators:
+# Bonny Useful <bonny.useful@gmail.com>, 2017
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
+# Hendro Yulianto <hyulianto@gmail.com>, 2017
+# William Surya Permana <zarambie_game@yahoo.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-12-02 00:11+0000\n"
-"Last-Translator: Wahyu Setiawan <wahyusetiaaa@gmail.com>\n"
-"Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-8/language/id/)\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -23,7 +28,7 @@ msgid "Bill of Material"
 msgstr "bahan baku"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,bom_id:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_bom_id
 msgid "BoM"
 msgstr "BOM"
 
@@ -33,7 +38,8 @@ msgid "Byproduct"
 msgstr "Byproduct"
 
 #. module: mrp_byproduct
-#: view:mrp.bom:mrp_byproduct.mrp_subproduct_view field:mrp.bom,sub_products:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_bom_sub_products
+#: model:ir.ui.view,arch_db:mrp_byproduct.mrp_subproduct_view
 msgid "Byproducts"
 msgstr "Byproducts"
 
@@ -43,87 +49,97 @@ msgid "Change Quantity of Products"
 msgstr "Perubahan Jumlah Produk"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,create_uid:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_create_uid
 msgid "Created by"
 msgstr "Dibuat oleh"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,create_date:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_create_date
 msgid "Created on"
 msgstr "Dibuat pada"
 
 #. module: mrp_byproduct
-#: help:mrp.subproduct,subproduct_type:0
-msgid ""
-"Define how the quantity of byproducts will be set on the production orders "
-"using this BoM.  'Fixed' depicts a situation where the quantity of created "
-"byproduct is always equal to the quantity set on the BoM, regardless of how "
-"many are created in the production order.  By opposition, 'Variable' means "
-"that the quantity will be computed as    '(quantity of byproduct set on the "
-"BoM / quantity of manufactured product set on the BoM * quantity of "
-"manufactured product in the production order.)'"
-msgstr "Mendefinisikan bagaimana kuantitas produk sampingan akan diatur atas perintah produksi menggunakan BoM ini.  'Tetap' menggambarkan situasi di mana jumlah produk sampingan diciptakan selalu sama dengan jumlah yang terletak di BoM, terlepas dari berapa banyak dibuat di urutan produksi.  Oleh oposisi, 'Variabel' berarti bahwa jumlah akan dihitung sebagai ' (jumlah produk sampingan set pada BoM/jumlah diproduksi produk yang terletak di BoM * jumlah produk yang diproduksi di urutan produksi.)'"
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
 
 #. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Fixed"
-msgstr "Baku"
-
-#. module: mrp_byproduct
-#: field:mrp.subproduct,id:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_id
 msgid "ID"
 msgstr "ID"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,write_uid:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct___last_update
+msgid "Last Modified on"
+msgstr "Terakhir diubah pada"
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_write_uid
 msgid "Last Updated by"
-msgstr "Diperbaharui oleh"
+msgstr "Terakhir diperbarui oleh"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,write_date:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_write_date
 msgid "Last Updated on"
-msgstr "Diperbaharui pada"
+msgstr "Terakhir diperbarui pada"
 
 #. module: mrp_byproduct
-#: model:ir.model,name:mrp_byproduct.model_mrp_production
-msgid "Manufacturing Order"
-msgstr "Pesanan  Pabrikan"
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_operation_id
+msgid "Produced at Operation"
+msgstr ""
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,product_id:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_id
 msgid "Product"
 msgstr "Produk"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,product_qty:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_qty
 msgid "Product Qty"
 msgstr "Produk Qty"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,product_uom:0
-msgid "Product Unit of Measure"
-msgstr "Ukuran unit produk"
+#: model:ir.model,name:mrp_byproduct.model_mrp_production
+msgid "Production"
+msgstr "Produksi"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,subproduct_type:0
-msgid "Quantity Type"
-msgstr "Jumlah jenis"
+#: model:ir.model,name:mrp_byproduct.model_mrp_product_produce
+msgid "Record Production"
+msgstr ""
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:63
+#: model:ir.model,name:mrp_byproduct.model_stock_move
+msgid "Stock Move"
+msgstr "Pergerakan Stock"
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_stock_move_subproduct_id
+msgid "Subproduct"
+msgstr ""
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,help:mrp_byproduct.field_stock_move_subproduct_id
+msgid "Subproduct line that generated the move in a manufacturing order"
+msgstr ""
+
+#. module: mrp_byproduct
+#: code:addons/mrp_byproduct/models/mrp_subproduct.py:32
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr "Unit Produk Ukur Anda memilih memiliki kategori yang berbeda dari dalam bentuk produk."
+msgstr ""
+"Unit Produk Ukur Anda memilih memiliki kategori yang berbeda dari dalam "
+"bentuk produk."
 
 #. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Variable"
-msgstr "Variabel"
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_uom_id
+msgid "Unit of Measure"
+msgstr "Satuan Ukuran"
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:63
+#: code:addons/mrp_byproduct/models/mrp_subproduct.py:31
 #, python-format
 msgid "Warning"
 msgstr "Peringatan"

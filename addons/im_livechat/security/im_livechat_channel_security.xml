@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<odoo>
+
+        <record id="module_category_im_livechat" model="ir.module.category">
+            <field name="name">Live Support</field>
+            <field name="sequence" eval="20" />
+        </record>
+
+        <record id="im_livechat_group_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="category_id" ref="module_category_im_livechat"/>
+            <field name="comment">The user will be able to join support channels.</field>
+        </record>
+
+        <record id="im_livechat_group_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="comment">The user will be able to delete support channels.</field>
+            <field name="category_id" ref="module_category_im_livechat"/>
+            <field name="implied_ids" eval="[(4, ref('im_livechat.im_livechat_group_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+
+    <data noupdate="1">
+        <record id="base.default_user" model="res.users">
+            <field name="groups_id" eval="[(4,ref('im_livechat.im_livechat_group_manager'))]"/>
+        </record>
+    </data>
+</odoo>

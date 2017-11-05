@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="account_reports_do_statements_menu" name="Dominican Republic" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
+
+    <data noupdate="1">
+        <!-- Chart of Accounts Template -->
+        <record id="cash_transfer_account" model="account.account.template">
+            <field name="name">Transferencias de Efectivo</field>
+            <field name="code">11010100</field>
+            <field eval="True" name="reconcile"/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        </record>
+        <record id="do_chart_template" model="account.chart.template">
+            <field name="name">Catálogo de Cuentas Dominicano (NIIF)</field>
+            <field name="code_digits">8</field>
+            <field name="cash_account_code_prefix">110101</field>
+            <field name="bank_account_code_prefix">110102</field>
+            <field name="transfer_account_id" ref="cash_transfer_account"/>
+            <field name="currency_id" ref="base.DOP"/>
+        </record>
+        <record id="cash_transfer_account" model="account.account.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+        </record>
+    </data>
+</odoo>

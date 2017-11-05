@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_server_action_form_template">
+            <field name="name">ir.actions.server.form</field>
+            <field name="model">ir.actions.server</field>
+            <field name="inherit_id" ref="base.view_server_action_form"/>
+            <field name="arch" type="xml">
+                <field name="link_field_id" position="after">
+                    <field name="partner_ids" widget="many2many_tags"
+                        attrs="{'invisible': [('state', '!=', 'followers')]}"/>
+                    <field name="channel_ids" widget="many2many_tags"
+                        attrs="{'invisible': [('state', '!=', 'followers')]}"/>
+                    <field name="template_id"
+                        attrs="{'invisible': [('state', '!=', 'email')],
+                                'required': [('state', '=', 'email')]}"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

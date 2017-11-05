@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <!-- mail.message tree: short view !-->
+        <record model="ir.ui.view" id="view_message_tree">
+            <field name="name">mail.message.tree</field>
+            <field name="model">mail.message</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <tree string="Messages">
+                    <field name="date"/>
+                    <field name="subject"/>
+                    <field name="author_id"/>
+                    <field name="model"/>
+                    <field name="res_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- mail.message form: short view !-->
+        <record model="ir.ui.view" id="view_message_form">
+            <field name="name">mail.message.form</field>
+            <field name="model">mail.message</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <form string="Message">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="subject"/>
+                                <field name="date"/>
+                                <field name="email_from"/>
+                                <field name="author_id"/>
+                                <field name="record_name"/>
+                            </group>
+                            <group>
+                                <field name="parent_id"/>
+                                <field name="model"/>
+                                <field name="res_id"/>
+                                <field name="message_type"/>
+                                <field name="subtype_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Body">
+                                <field name="body" options="{'style-inline': true}"/>
+                            </page>
+                            <page string="Gateway">
+                                <group>
+                                    <group>
+                                        <field name="reply_to"/>
+                                        <field name="no_auto_thread"/>
+                                    </group>
+                                    <group>
+                                        <field name="message_id"/>
+                                        <field name="mail_server_id"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Recipients">
+                                <group>
+                                    <group>
+                                        <field name="partner_ids" widget="many2many_tags"/>
+                                        <field name="channel_ids" widget="many2many_tags"/>
+                                    </group>
+                                    <group>
+                                        <field name="needaction_partner_ids" widget="many2many_tags"/>
+                                        <field name="starred_partner_ids" widget="many2many_tags"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <field name="notification_ids">
+                                        <tree>
+                                            <field name="res_partner_id"/>
+                                            <field name="is_read"/>
+                                            <field name="is_email"/>
+                                            <field name="email_status"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+                            <page string="Tracking">
+                                <field name="tracking_value_ids"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- mail.message search: wall view !-->
+        <record model="ir.ui.view" id="view_message_search">
+            <field name="name">mail.message.search</field>
+            <field name="model">mail.message</field>
+            <field name="priority">25</field>
+            <field name="arch" type="xml">
+                <search string="Messages Search">
+                    <field name="body" string="Content" filter_domain="['|', ('subject', 'ilike', self), ('body', 'ilike', self)]" />
+                    <field name="subject"/>
+                    <field name="message_type"/>
+                    <field name="author_id"/>
+                    <field name="partner_ids"/>
+                    <field name="model"/>
+                    <field name="res_id"/>
+                    <field name="parent_id"/>
+                    <filter string="Has Mentions"
+                            name="filter_has_mentions"
+                            domain="[('partner_ids.user_ids', 'in', [uid])]"/>
+                    <separator/>
+                    <filter string="Need Action"
+                            name="message_needaction" help="Unread messages"
+                            domain="[('needaction', '=', True)]"/>
+                    <separator/>
+                    <filter string="Has attachments"
+                            name="attachments"
+                            domain="[('attachment_ids', '!=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_view_mail_message" model="ir.actions.act_window">
+            <field name="name">Messages</field>
+            <field name="res_model">mail.message</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_message_search"/>
+        </record>
+        
+        <!-- Add menu entry in Settings/Email -->
+        <menuitem name="Messages" id="menu_mail_message" parent="base.menu_email" action="action_view_mail_message"/>
+
+        <record model="ir.ui.view" id="view_document_file_kanban">
+            <field name="name">ir.attachment kanban</field>
+            <field name="model">ir.attachment</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="id"/>
+                    <field name="mimetype"/>
+                    <field name="type"/>
+                    <field name="datas_fname"/>
+                    <field name="name"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="oe_kanban_vignette">
+                                    <div class="oe_attachment">
+                                        <div class="oe_name">
+                                            <field name="name"/>
+                                        </div>
+                                        <div t-if="record.type.raw_value == 'binary'">
+                                            <a t-attf-href="/web/content/#{record.id.raw_value}?download=1">
+                                                <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
+                                                <div t-if="!webimage" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
+                                                <div t-if="webimage" class="o_attachment_image">
+                                                    <img t-attf-src="/web/image/#{record.id.raw_value}?download=1"/>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <record id="base.action_attachment" model="ir.actions.act_window">
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click here to attach a new document.
+              </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

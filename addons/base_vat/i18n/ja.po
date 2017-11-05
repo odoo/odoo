@@ -3,15 +3,17 @@
 # * base_vat
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-12-03 07:10+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Japanese (http://www.transifex.com/odoo/odoo-8/language/ja/)\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017\n"
+"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,49 +21,34 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_vat
-#: view:res.partner:base_vat.view_partner_form
-msgid "Check Validity"
-msgstr ""
-
-#. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Companies"
 msgstr "会社"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:114
-#, python-format
-msgid "Error!"
-msgstr "エラー"
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Contact"
+msgstr "連絡先"
 
 #. module: base_vat
-#: help:res.company,vat_check_vies:0
+#: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid ""
-"If checked, Partners VAT numbers will be fully validated against EU's VIES "
-"service rather than via a simple format validation (checksum)."
-msgstr "これをチェックすると，パートナの付加価値税番号が，単なるフォーマットの検証（チェックサム）ではなく，EUのVIEAサービスに対して検証されます。"
-
-#. module: base_vat
-#: code:addons/base_vat/base_vat.py:130
-#, python-format
-msgid "Importing VAT Number [%s] is not valid !"
+"If this checkbox is ticked, you will not be able to save a contact if its "
+"VAT number cannot be verified by the European VIES service."
 msgstr ""
 
 #. module: base_vat
-#: model:ir.model,name:base_vat.model_res_partner
-msgid "Partner"
-msgstr "パートナ"
-
-#. module: base_vat
-#: code:addons/base_vat/base_vat.py:153
+#: code:addons/base_vat/models/res_partner.py:134
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
-msgstr "パートナー[%s]のVAT番号[%s]は有効ではないようです。\n注：期待される形式は%sです"
+msgstr ""
+"VAT番号[%s]パートナー[%s]は有効ではないようです。\n"
+"注：期待される形式は%sです"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:152
+#: code:addons/base_vat/models/res_partner.py:133
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
@@ -69,11 +56,23 @@ msgid ""
 msgstr "VAT番号[%s]パートナー[%s]がVIES VATの妥当性チェックに失敗したか、または予想されるフォーマット%sを遵守していません。"
 
 #. module: base_vat
-#: field:res.company,vat_check_vies:0
-msgid "VIES VAT Check"
-msgstr "VIES付加価値税のチェック"
+#: model:ir.ui.view,arch_db:base_vat.view_partner_form
+#: model:ir.ui.view,arch_db:base_vat.view_partner_short_form
+msgid "VAT"
+msgstr "VAT（Value Added Tax）"
 
 #. module: base_vat
-#: view:res.partner:base_vat.view_partner_form
-msgid "e.g. BE0477472701"
-msgstr "例 BE0477472701"
+#: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings_vat_check_vies
+msgid "Verify VAT Numbers"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid "Verify VAT numbers using the European VIES service"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Bill of Materials -->
+        <record id="mrp_bom_form_view" model="ir.ui.view">
+            <field name="name">mrp.bom.form</field>
+            <field name="model">mrp.bom</field>
+            <field name="arch" type="xml">
+                <form string="Bill of Material">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object"
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                    options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                    <group>
+                        <group>
+                            <field name="product_tmpl_id" context="{'default_type': 'product'}"/>
+                            <field name="product_id" groups="product.group_product_variant" context="{'default_type': 'product'}"/>
+                            <label for="product_qty" string="Quantity"/>
+                            <div class="o_row">
+                                <field name="product_qty"/>
+                                <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
+                            </div>
+                            <field name="routing_id" groups="mrp.group_mrp_routings"/>
+                        </group>
+                        <group>
+                            <field name="code"/>
+                            <field name="type" widget="radio"/>
+                            <p colspan="2" class="oe_grey oe_edit_only" attrs="{'invisible': [('type','=','normal')]}">
+                            <ul>
+                                <li>
+                                    If the product is a finished product: When processing a sales
+                                    order for this product, the delivery order will contain the raw
+                                    materials, instead of the finished product.
+                                </li>
+                                <li>
+                                    If the product is a semi-finished product: When processing a
+                                    manufacturing order that contains that product as component,
+                                    the raw materials of that product will be added to the
+                                    manufacturing order of the final product.
+                                </li>
+                            </ul>
+                            </p>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Components">
+                            <field name="bom_line_ids" widget="one2many_list">
+                                <tree string="Components" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id" context="{'default_type': 'product'}"/>
+                                    <field name="has_attachments" invisible="1"/>
+                                    <button name="action_see_attachments" type="object" icon="fa-files-o" attrs="{'invisible': [('has_attachments', '=', False)]}"/>
+                                    <button name="action_see_attachments" type="object" icon="fa-file" attrs="{'invisible': [('has_attachments', '=', True)]}"/>
+                                    <field name="product_qty"/>
+                                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
+                                    <field name="attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" domain="[('product_ids.product_tmpl_id', '=', parent.product_tmpl_id)]" groups="product.group_product_variant"/>
+                                    <field name="operation_id" groups="mrp.group_mrp_routings" domain="[('routing_id', '=', parent.routing_id)]" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Miscellaneous">
+                            <group>
+                                <group>
+                                    <field name="sequence"/>
+                                </group>
+                                <group>
+                                    <field name="ready_to_produce" string="Manufacturing Readiness"/>
+                                    <field name="picking_type_id" string="Operation"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                         <field name="message_follower_ids" widget="mail_followers"/>
+                         <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+       <record id="mrp_bom_tree_view" model="ir.ui.view">
+            <field name="name">mrp.bom.tree</field>
+            <field name="model">mrp.bom</field>
+            <field name="arch" type="xml">
+                <tree string="Bill of Materials" default_order="product_tmpl_id">
+                    <field name="active" invisible="1"/>
+                    <field name="sequence" invisible="1"/>
+                    <field name="product_tmpl_id"/>
+                    <field name="code"/>
+                    <field name="product_id" groups="product.group_product_variant"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom_id" groups="product.group_uom"/>
+                    <field name="routing_id" groups="mrp.group_mrp_routings"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="mrp_bom_kanban_view" model="ir.ui.view">
+            <field name="name">mrp.bom.kanban</field>
+            <field name="model">mrp.bom</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="product_tmpl_id"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings mt4">
+                                        <strong class="o_kanban_record_title"><span clatt="mt4"><field name="product_tmpl_id"/></span></strong>
+                                    </div>
+                                    <span class="pull-right badge"><t t-esc="record.product_qty.value"/> <small><t t-esc="record.product_uom_id.value"/></small></span>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_mrp_bom_filter" model="ir.ui.view">
+            <field name="name">mrp.bom.select</field>
+            <field name="model">mrp.bom</field>
+            <field name="arch" type="xml">
+                <search string="Search Bill Of Material">
+                    <field name="code" filter_domain="['|',('code','ilike',self),('product_tmpl_id','ilike',self)]"/>
+                    <field name="bom_line_ids" string="Components"/>
+                    <field name="product_tmpl_id" string="Product"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <separator/>
+                    <filter string="Kit" name="phantom" domain="[('type', '=', 'phantom')]"/>
+                    <filter string="Normal" name="normal" domain="[('type', '=', 'normal')]"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Product" domain="[]" context="{'group_by':'product_tmpl_id'}"/>
+                        <filter string='Default Unit of Measure' domain="[]" context="{'group_by' : 'product_uom_id'}"/>
+                        <filter string="Routings" domain="[]" context="{'group_by':'routing_id'}"/>
+                   </group>
+                </search>
+            </field>
+        </record>
+        <record id="mrp_bom_form_action" model="ir.actions.act_window">
+            <field name="name">Bills of Materials</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.bom</field>
+            <field name="domain">[]</field> <!-- force empty -->
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="search_view_id" ref="view_mrp_bom_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a bill of material.
+              </p><p>
+                Bills of Materials allow you to define the list of required raw
+                materials used to make a finished product; through a manufacturing
+                order or a pack of products.
+              </p><p>
+                Odoo uses these BoMs to automatically propose manufacturing
+                orders according to procurement needs.
+              </p>
+            </field>
+        </record>
+        <menuitem id="menu_mrp_bom_form_action"
+            action="mrp_bom_form_action"
+            parent="menu_mrp_bom"
+            sequence="13"/>
+
+        <!-- BOM Line -->
+        <record id="mrp_bom_line_view_form" model="ir.ui.view">
+            <field name="name">mrp.bom.line.view.form</field>
+            <field name="model">mrp.bom.line</field>
+            <field name="arch" type="xml">
+                <form string="Bill of Material line">
+                    <group>
+                        <group string="Product">
+                            <field name="product_id"/>
+                            <label for="product_qty" string="Quantity"/>
+                            <div class="o_row">
+                                <field name="product_qty"/>
+                                <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
+                            </div>
+                        </group>
+                        <group string="BoM details">
+                            <field name="sequence"/>
+                            <field name="operation_id" groups="mrp.group_mrp_routings"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="mrp_bom_component_tree_view" model="ir.ui.view">
+            <field name="name">mrp.bom.component.tree</field>
+            <field name="model">mrp.bom.line</field>
+            <field name="arch" type="xml">
+                <tree string="Components" editable="top">
+                    <field name="sequence" widget="handle"/>
+                    <field name="bom_id"/>
+                    <field name="product_id"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
+                    <field name="routing_id"/>
+                    <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_mrp_bom_line_filter" model="ir.ui.view">
+            <field name="name">mrp.bom.line.select</field>
+            <field name="model">mrp.bom.line</field>
+            <field name="arch" type="xml">
+                <search string="Search Bill Of Material Components">
+                    <field name="bom_id"/>
+                    <field name="product_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Bill Of Material" domain="[]" context="{'group_by':'bom_id'}"/>
+                        <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string='Default Unit of Measure' domain="[]" context="{'group_by' : 'product_uom_id'}"/>
+                        <filter string="Routings" domain="[]" context="{'group_by':'routing_id'}"/>
+                   </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="template_open_bom" model="ir.actions.act_window">
+            <field name="context">{'default_product_tmpl_id': active_id, 'search_default_product_tmpl_id': active_id}</field>
+            <field name="name">Bill of Materials</field>
+            <field name="res_model">mrp.bom</field>
+            <field name="view_type">form</field>
+        </record>
+
+        <record id="product_open_bom" model="ir.actions.act_window">
+            <field name="context">{'default_product_id': active_id, 'search_default_product_id': active_id}</field>
+            <field name="name">Bill of Materials</field>
+            <field name="res_model">mrp.bom</field>
+            <field name="domain">[]</field> <!-- Force empty -->
+            <field name="view_type">form</field>
+        </record>
+    </data>
+</odoo>

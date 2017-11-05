@@ -3,16 +3,17 @@
 # * website_event_sale
 # 
 # Translators:
-# grazziano <g.negocios@outlook.com.br>, 2016
-# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2015
+# Martin Trigaux <mat@odoo.com>, 2017
+# grazziano <gra.negocia@gmail.com>, 2017
+# Mateus Lopes <mateus1@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-07-09 16:18+0000\n"
-"Last-Translator: grazziano <g.negocios@outlook.com.br>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Mateus Lopes <mateus1@gmail.com>, 2017\n"
+"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,35 +21,24 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_event_sale
-#: view:website:website_event.event_description_full
-msgid "&nbsp;"
-msgstr "&nbsp;"
+#: model:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "<span>Free</span>"
+msgstr "<span>Gratuito</span>"
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:39
-#, python-format
-msgid "Error!"
-msgstr "Erro!"
+#: model:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "<span>Unlimited</span>"
+msgstr "<span>Ilimitado</span>"
 
 #. module: website_event_sale
-#: view:website:website_event.event_description_full
-msgid "Free"
-msgstr "Gratuito"
+#: model:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "<span>left</span>"
+msgstr "<span>esquerda</span>"
 
 #. module: website_event_sale
-#: view:website:website_event.index
+#: model:ir.ui.view,arch_db:website_event_sale.index
 msgid "Only"
 msgstr "Apenas"
-
-#. module: website_event_sale
-#: view:website:website_event.event_description_full
-msgid "Order Now"
-msgstr "Peça Agora"
-
-#. module: website_event_sale
-#: view:website:website_event.event_description_full
-msgid "Price"
-msgstr "Preço"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
@@ -56,36 +46,41 @@ msgid "Product"
 msgstr "Produto"
 
 #. module: website_event_sale
-#: view:website:website_event.event_description_full
-msgid "Quantity"
-msgstr "Quantidade"
+#: model:ir.model,name:website_event_sale.model_sale_order
+msgid "Quotation"
+msgstr "Cotação"
 
 #. module: website_event_sale
-#: view:website:website_event.index
+#: code:addons/website_event_sale/controllers/main.py:56
+#, python-format
+msgid "Registration"
+msgstr "Inscrição"
+
+#. module: website_event_sale
+#: model:ir.ui.view,arch_db:website_event_sale.index
 msgid "Remaining"
 msgstr "Restante"
 
 #. module: website_event_sale
-#: view:website:website_event.event_description_full
-msgid "Sales End"
-msgstr "Vendas Encerradas"
-
-#. module: website_event_sale
-#: model:ir.model,name:website_event_sale.model_sale_order
-msgid "Sales Order"
-msgstr "Pedido de Venda"
-
-#. module: website_event_sale
-#: view:website:website_event.event_description_full
-#: view:website:website_event.index
+#: model:ir.ui.view,arch_db:website_event_sale.index
 msgid "Sold Out"
 msgstr "Esgotado"
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:66
+#: code:addons/website_event_sale/models/sale_order.py:71
 #, python-format
-msgid "Subscription"
-msgstr "Inscrição"
+msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
+msgstr "Desculpe, O %(ticket)s tickets para o %(event)s evento já acabaram."
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/sale_order.py:77
+#, python-format
+msgid ""
+"Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s"
+" ticket for the %(event)s event."
+msgstr ""
+"Desculpe, somente %(remaining_seats)d vagas estão disponíveis para "
+"%(ticket)s ticket para o %(event)s evento."
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:39
@@ -94,16 +89,6 @@ msgid "The ticket doesn't match with this product."
 msgstr "O ticket não corresponde com este produto."
 
 #. module: website_event_sale
-#: view:website:website_event.event_description_full
-msgid "Ticket Type"
-msgstr "Tipo de Ticket"
-
-#. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website
 msgid "Website"
 msgstr "Site"
-
-#. module: website_event_sale
-#: view:website:website_event.event_description_full
-msgid "left"
-msgstr "esquerda"

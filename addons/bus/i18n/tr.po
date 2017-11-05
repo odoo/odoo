@@ -3,15 +3,20 @@
 # * bus
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Murat Kaplan <muratk@projetgrup.com>, 2017
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2017
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 06:54+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
-"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2017\n"
+"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,36 +24,107 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: bus
-#: field:bus.bus,channel:0
+#: sql_constraint:bus.presence:0
+msgid "A user can only have one IM status."
+msgstr "Bir kullanıcı yalnozca bir IM durumunda olabilir."
+
+#. module: bus
+#: selection:bus.presence,status:0
+msgid "Away"
+msgstr "Dışarıda"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus_channel
 msgid "Channel"
 msgstr "Kanal"
 
 #. module: bus
-#: field:bus.bus,create_date:0
+#: model:ir.model,name:bus.model_res_partner
+msgid "Contact"
+msgstr "Kontak"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus_create_date
 msgid "Create date"
 msgstr "Tarihi oluştur"
 
 #. module: bus
-#: field:bus.bus,create_uid:0
+#: model:ir.model.fields,field_description:bus.field_bus_bus_create_uid
 msgid "Created by"
 msgstr "Oluşturan"
 
 #. module: bus
-#: field:bus.bus,id:0
+#: model:ir.model.fields,field_description:bus.field_bus_bus_display_name
+#: model:ir.model.fields,field_description:bus.field_bus_presence_display_name
+msgid "Display Name"
+msgstr "Görünüm Adı"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus_id
+#: model:ir.model.fields,field_description:bus.field_bus_presence_id
 msgid "ID"
 msgstr "ID"
 
 #. module: bus
-#: field:bus.bus,write_uid:0
+#: model:ir.model.fields,field_description:bus.field_bus_presence_status
+#: model:ir.model.fields,field_description:bus.field_res_partner_im_status
+#: model:ir.model.fields,field_description:bus.field_res_users_im_status
+msgid "IM Status"
+msgstr "Anlık İleti Durumu"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus___last_update
+#: model:ir.model.fields,field_description:bus.field_bus_presence___last_update
+msgid "Last Modified on"
+msgstr "Son Güncelleme"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_presence_last_poll
+msgid "Last Poll"
+msgstr "Son Anket"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_presence_last_presence
+msgid "Last Presence"
+msgstr "Son Durum"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus_write_uid
 msgid "Last Updated by"
 msgstr "Son Güncelleyen"
 
 #. module: bus
-#: field:bus.bus,write_date:0
+#: model:ir.model.fields,field_description:bus.field_bus_bus_write_date
 msgid "Last Updated on"
 msgstr "Son Güncelleme"
 
 #. module: bus
-#: field:bus.bus,message:0
+#: model:ir.model.fields,field_description:bus.field_bus_bus_message
 msgid "Message"
 msgstr "Mesaj"
+
+#. module: bus
+#: selection:bus.presence,status:0
+msgid "Offline"
+msgstr "Çevrimdışı"
+
+#. module: bus
+#: selection:bus.presence,status:0
+msgid "Online"
+msgstr "Online"
+
+#. module: bus
+#: model:ir.model,name:bus.model_bus_presence
+msgid "User Presence"
+msgstr "Kullanıcı Durumu"
+
+#. module: bus
+#: model:ir.model,name:bus.model_res_users
+#: model:ir.model.fields,field_description:bus.field_bus_presence_user_id
+msgid "Users"
+msgstr "Kullanıcılar"
+
+#. module: bus
+#: model:ir.model,name:bus.model_bus_bus
+msgid "bus.bus"
+msgstr "bus.bus"

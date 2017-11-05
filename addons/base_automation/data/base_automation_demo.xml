@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="test_rule_on_create" model="base.automation">
+            <field name="name">Base Automation: test rule on create</field>
+            <field name="model_id" ref="base_automation.model_base_automation_lead_test"/>
+            <field name="state">code</field>
+            <field name="code" eval="'records.write({\'user_id\': %s})' % ref('base.user_demo')"/>
+            <field name="trigger">on_create</field>
+            <field name="active" eval="True"/>
+            <field name="model_id" ref="base_automation.model_base_automation_lead_test"/>
+            <field name="filter_domain">[('state', '=', 'draft')]</field>
+        </record>
+
+        <record id="test_rule_on_write" model="base.automation">
+            <field name="name">Base Automation: test rule on write</field>
+            <field name="model_id" ref="base_automation.model_base_automation_lead_test"/>
+            <field name="state">code</field>
+            <field name="code" eval="'records.write({\'user_id\': %s})' % ref('base.user_demo')"/>
+            <field name="trigger">on_write</field>
+            <field name="active" eval="True"/>
+            <field name="model_id" ref="base_automation.model_base_automation_lead_test"/>
+            <field name="filter_domain">[('state', '=', 'done')]</field>
+            <field name="filter_pre_domain">[('state', '=', 'open')]</field>
+        </record>
+
+        <record id="test_rule_on_recompute" model="base.automation">
+            <field name="name">Base Automation: test rule on recompute</field>
+            <field name="model_id" ref="base_automation.model_base_automation_lead_test"/>
+            <field name="state">code</field>
+            <field name="code" eval="'records.write({\'user_id\': %s})' % ref('base.user_demo')"/>
+            <field name="trigger">on_write</field>
+            <field name="active" eval="True"/>
+            <field name="model_id" ref="base_automation.model_base_automation_lead_test"/>
+            <field name="filter_domain">[('customer', '=', True)]</field>
+        </record>
+
+        <record id="test_rule_recursive" model="base.automation">
+            <field name="name">Base Automation: test recursive rule</field>
+            <field name="model_id" ref="base_automation.model_base_automation_lead_test"/>
+            <field name="trigger">on_write</field>
+            <field name="active" eval="True"/>
+            <field name="state">code</field>
+            <field name="code">
+record = model.browse(env.context['active_id'])
+if 'partner_id' in env.context['old_values'][record.id]:
+    record.write({'state': 'draft'})
+            </field>
+        </record>
+
+        <record id="test_rule_on_line" model="base.automation">
+            <field name="name">Base Automation: test rule on secondary model</field>
+            <field name="model_id" ref="base_automation.model_base_automation_line_test"/>
+            <field name="state">code</field>
+            <field name="code" eval="'records.write({\'user_id\': %s})' % ref('base.user_demo')"/>
+            <field name="trigger">on_create</field>
+            <field name="active" eval="True"/>
+            <field name="model_id" ref="base_automation.model_base_automation_line_test"/>
+        </record>
+
+        <record id="test_rule_on_write_check_context" model="base.automation">
+            <field name="name">Base Automation: test rule on write check context</field>
+            <field name="model_id" ref="base_automation.model_base_automation_lead_test"/>
+            <field name="trigger">on_write</field>
+            <field name="active" eval="True"/>
+            <field name="state">code</field>
+            <field name="code">
+record = model.browse(env.context['active_id'])
+if 'user_id' in env.context['old_values'][record.id]:
+    record.write({'is_assigned_to_admin': (record.user_id.id == 1)})
+            </field>
+        </record>
+
+</odoo>

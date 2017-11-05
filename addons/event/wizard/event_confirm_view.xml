@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
 
         <record id="view_event_confirm" model="ir.ui.view">
@@ -9,9 +9,8 @@
               <form string="Event Confirmation">
                   <label string="Warning: This Event has not reached its Minimum Registration Limit. Are you sure you want to confirm it?"/>
                   <footer>
-                      <button name="confirm" string="Confirm Anyway" type="object" class="oe_highlight"/>
-                      or
-                      <button string="Cancel" class="oe_link" special="cancel" />
+                      <button name="confirm" string="Confirm Anyway" type="object" class="btn-primary"/>
+                      <button string="Cancel" class="btn-default" special="cancel" />
                   </footer>
             </form>
             </field>
@@ -29,4 +28,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

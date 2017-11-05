@@ -1,4 +1,6 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 ##############################################################################
 #
 #    __init__.py
@@ -31,6 +33,3 @@
 #    or implied, of ClearCorp S.A..
 #    
 ##############################################################################
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

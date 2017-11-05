@@ -1,0 +1,79 @@
+.o_livechat_button {
+    position: fixed;
+    bottom: 0px;
+    right: 6px;
+    min-width: 100px;
+    cursor: pointer;
+    white-space: nowrap;
+    background-color: rgba(60, 60, 60, 0.6);
+    font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Verdana, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 10px;
+    color: white;
+    text-shadow: rgb(59, 76, 88) 1px 1px 0px;
+    border: 1px solid rgb(80, 80, 80);
+    border-bottom: 0px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    z-index: 5;
+}
+
+.o_chat_window {
+    z-index: 1002; // to go over the navbar
+    .o_thread_date_separator {
+        display: none;
+    }
+
+    .o_livechat_rating {
+        /* Livechat Rating : feedback smiley */
+        .o-flex(1, 1, auto);
+        overflow: auto;
+        padding: 15px;
+
+        .o_livechat_no_feedback {
+            padding-top: 20px;
+            text-align: right;
+            font-size: 12px;
+
+            > em {
+                cursor: pointer;
+            }
+        }
+
+        .o_livechat_rating_feedback_text {
+            text-align: justify;
+        }
+
+        .o_livechat_rating_choices {
+            margin: 10px 0;
+            text-align: center;
+
+            > img {
+                width: 50px;
+                opacity: 0.60;
+                cursor: pointer;
+                margin: 5px;
+                &:hover, &.selected {
+                    opacity: 1;
+                }
+            }
+        }
+
+        /* feedback reason */
+        .o_livechat_rating_reason {
+            margin: 10px 0;
+            display: none; /* hidden by default */
+
+            > textarea {
+                width: 100%;
+                height: 70px;
+                resize: none;
+            }
+        }
+
+        .o_livechat_rating_reason_button > input {
+            float: right;
+        }
+    }
+}

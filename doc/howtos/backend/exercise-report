@@ -1,14 +1,14 @@
 # HG changeset patch
 # Parent c140f0a861a08881d8737bca0ffb83904a2059a3
 
-Index: addons/openacademy/__openerp__.py
+Index: addons/openacademy/__manifest__.py
 ===================================================================
---- addons.orig/openacademy/__openerp__.py	2014-08-29 08:39:43.975536806 +0200
-+++ addons/openacademy/__openerp__.py	2014-08-29 08:39:52.000000000 +0200
-@@ -31,6 +31,7 @@
+--- addons.orig/openacademy/__manifest__.py	2014-08-29 08:39:43.975536806 +0200
++++ addons/openacademy/__manifest__.py	2014-08-29 08:39:52.000000000 +0200
+@@ -30,6 +30,7 @@
+         'templates.xml',
          'views/openacademy.xml',
          'views/partner.xml',
-         'views/session_workflow.xml',
 +        'reports.xml',
      ],
      # only loaded in demonstration mode
@@ -18,8 +18,8 @@ Index: addons/openacademy/reports.xml
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
 +++ addons/openacademy/reports.xml	2014-08-29 08:41:12.663540061 +0200
 @@ -0,0 +1,30 @@
-+<openerp>
-+<data>
++<odoo>
++
 +    <report
 +        id="report_session"
 +        model="openacademy.session"
@@ -29,9 +29,9 @@ Index: addons/openacademy/reports.xml
 +        report_type="qweb-pdf" />
 +
 +    <template id="report_session_view">
-+        <t t-call="report.html_container">
++        <t t-call="web.html_container">
 +            <t t-foreach="docs" t-as="doc">
-+                <t t-call="report.external_layout">
++                <t t-call="web.external_layout">
 +                    <div class="page">
 +                        <h2 t-field="doc.name"/>
 +                        <p>From <span t-field="doc.start_date"/> to <span t-field="doc.end_date"/></p>
@@ -46,5 +46,5 @@ Index: addons/openacademy/reports.xml
 +            </t>
 +        </t>
 +    </template>
-+</data>
-+</openerp>
++
++</odoo>

@@ -1,47 +1,114 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_event_track
-# 
+#
 # Translators:
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-04-24 17:31+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
+"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
+"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: website_event_track
-#: view:website:website_event_track.event_track_proposal
-msgid ""
-". These are 30 minutes talks on many\n"
-"                                    different topics. Most topics are accepted in lightning talks."
+#: model:ir.model.fields,field_description:website_event_track.field_event_event_count_sponsor
+msgid "# Sponsors"
+msgstr "# Sponzorov"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.track_view
+msgid "<b>Date</b><br/>"
+msgstr "<b>Dátum</b><br/>"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Mail</b>:"
 msgstr ""
 
 #. module: website_event_track
-#: view:website:website_event_track.event_track_proposal
+#: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Phone</b>:"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
+#, fuzzy
+msgid "<b>Proposed By</b>:"
+msgstr "Navrhol"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
+#, fuzzy
+msgid "<b>Speakers Biography</b>:"
+msgstr "Biografia hovorcov"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
+#, fuzzy
+msgid "<b>Talk Introduction</b>:"
+msgstr "Úvod reči"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
+#, fuzzy
+msgid "<b>Title</b>:"
+msgstr "<b>Dátum</b><br/>"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.track_view
 msgid ""
-". These are standard talks with slides,\n"
+"<br/>\n"
+"                            <b>Duration</b><br/>"
+msgstr ""
+"<br/>\n"
+"<b>Trvanie</b><br/>"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.track_view
+msgid ""
+"<br/>\n"
+"                            <b>Location</b><br/>"
+msgstr ""
+"<br/>\n"
+"<b>Lokácia</b><br/>"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.agenda
+msgid "<span id=\"search_number\">0</span> Found"
+msgstr "<span id=\"search_number\">0</span> Nájdené"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<strong>Lightning Talks</strong>. These are 30 minutes talks on many\n"
+"                                    different topics. Most topics are "
+"accepted in lightning talks."
+msgstr ""
+"<strong>Bleskové rozhovory</strong>. Toto sú 30 minútove rozhovory na mnohé\n"
+"rôzne témy. Väčšina tém je akceptovaných v bleskových rozhovoroch."
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.event_track_social
+msgid "<strong>Participate on Twitter</strong>"
+msgstr "<strong>Zúčastniť sa na Twitter-i</strong>"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<strong>Regular Talks</strong>. These are standard talks with slides,\n"
 "                                    alocated in slots of 60 minutes."
 msgstr ""
-
-#. module: website_event_track
-#: model:ir.actions.act_window,help:website_event_track.act_event_list_tracks
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                  Click to add a track.\n"
-"              </p><p>\n"
-"                  Tracks define the agenda of your event. These can be\n"
-"                  a talk, a round table, a meeting, etc.\n"
-"              </p>\n"
-"            "
-msgstr ""
+"<strong>Regulérne rozhovory</strong>. Toto sú štandardné rozhovory s "
+"prezentáciami,\n"
+"s pridelenými 60 minútovym priestorom. "
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track7
@@ -51,9 +118,9 @@ msgid ""
 msgstr "Technická vysvetlenie Odoo ako CMS a eCommerce platformy pre verziu 8."
 
 #. module: website_event_track
-#: field:event.event,allowed_track_tag_ids:0
-msgid "Accepted Tags"
-msgstr ""
+#: model:ir.ui.view,arch_db:website_event_track.track_view
+msgid "About The Author"
+msgstr "O autorovi"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
@@ -66,37 +133,40 @@ msgid "Advanced reporting with Google Spreadsheets integration."
 msgstr "Pokročilé vykazovanie s Google Tabuľky integráciou."
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:168
+#: code:addons/website_event_track/models/event.py:160
 #, python-format
 msgid "Agenda"
 msgstr "Agenda"
 
 #. module: website_event_track
-#: view:website:website_event_track.tracks
+#: model:ir.ui.view,arch_db:website_event_track.tracks_filter
 msgid "All Tags"
 msgstr "Všetky menovky"
 
 #. module: website_event_track
-#: view:website:website_event_track.event_track_proposal
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "Allow video and audio recording of their\n"
-"                                    presentation, for publishing on our website."
-msgstr "Povoliť video a audo nahrávky ich\nprezentácií, pre zverejnenie na našej stránke."
+"                                    presentation, for publishing on our "
+"website."
+msgstr ""
+"Povoliť video a audo nahrávky ich\n"
+"prezentácií, pre zverejnenie na našej stránke."
 
 #. module: website_event_track
-#: model:event.track.stage,name:website_event_track.event_track_stage4
+#: selection:event.track,state:0
 msgid "Announced"
 msgstr "Oznámené"
 
 #. module: website_event_track
-#: view:website:website_event_track.event_track_proposal
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Application"
 msgstr "Aplikácia"
 
 #. module: website_event_track
-#: field:event.track,website_published:0
-msgid "Available in the website"
-msgstr ""
+#: model:ir.model.fields,field_description:website_event_track.field_event_event_allowed_track_tag_ids
+msgid "Available Track Tags"
+msgstr "Dostupné sledovacie menovky"
 
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type1
@@ -104,64 +174,57 @@ msgid "Bronze"
 msgstr "Bronzový"
 
 #. module: website_event_track
-#: model:event.track.tag,name:website_event_track.event_track_tag2
-msgid "Business"
-msgstr ""
-
-#. module: website_event_track
-#: view:website:website_event_track.event_track_proposal
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Call for Proposals"
 msgstr "Výzva na Návrhy"
 
 #. module: website_event_track
-#: field:event.track,color:0
+#: selection:event.track,state:0
+msgid "Cancelled"
+msgstr "Zrušené"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,help:website_event_track.action_event_track
+#: model:ir.actions.act_window,help:website_event_track.action_event_track_from_event
+msgid "Click to add a track."
+msgstr "Kliknutím pridajte sledovanie."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_color
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_color
 msgid "Color Index"
 msgstr "Farebný index"
 
 #. module: website_event_track
-#: model:event.track.stage,name:website_event_track.event_track_stage5
-msgid "Completed"
-msgstr "Dokončené"
-
-#. module: website_event_track
-#: model:event.track.tag,name:website_event_track.event_tag3
-msgid "Conference"
-msgstr "Konferencia"
-
-#. module: website_event_track
-#: model:event.track.stage,name:website_event_track.event_track_stage2
+#: selection:event.track,state:0
 msgid "Confirmed"
 msgstr "Potvrdené"
 
 #. module: website_event_track
-#: field:event.sponsor,create_uid:0 field:event.sponsor.type,create_uid:0
-#: field:event.tag,create_uid:0 field:event.track,create_uid:0
-#: field:event.track.location,create_uid:0
-#: field:event.track.stage,create_uid:0 field:event.track.tag,create_uid:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type_create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_create_uid
 msgid "Created by"
 msgstr "Vytvoril"
 
 #. module: website_event_track
-#: field:event.sponsor,create_date:0 field:event.sponsor.type,create_date:0
-#: field:event.tag,create_date:0 field:event.track,create_date:0
-#: field:event.track.location,create_date:0
-#: field:event.track.stage,create_date:0 field:event.track.tag,create_date:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type_create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_create_date
 msgid "Created on"
 msgstr "Vytvorené"
 
 #. module: website_event_track
-#: view:event.track:website_event_track.view_event_track_search
-#: view:website:website_event_track.track_view
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Date"
 msgstr "Dátum"
 
 #. module: website_event_track
-#: help:event.track,message_last_post:0
-msgid "Date of the last message posted on the record."
-msgstr "Dátum poslednej správy zaslanej záznamu."
-
-#. module: website_event_track
-#: view:event.track:website_event_track.view_event_track_kanban
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "Delete"
 msgstr "Zmazať"
 
@@ -175,147 +238,115 @@ msgstr "Podrobný plán účtovných nových modulov a vylepšenia vo verzii 8."
 #: model:event.track,name:website_event_track.event_track8
 msgid ""
 "Discover Odoo CRM: How to optimize your sales, from leads to sales orders."
-msgstr "Objavte Odoo CRM: Ako optimalizovať vašee predaje, od iniciatív k predajným objednávkam."
+msgstr ""
+"Objavte Odoo CRM: Ako optimalizovať vašee predaje, od iniciatív k predajným "
+"objednávkam."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track11
 msgid "Discover Odoo Point-of-Sale: Your shop ready to use in 30 minutes."
-msgstr "Objavte Odoo Miesto Predaja: Váš obchod pripravený na použitie za 30 minút."
+msgstr ""
+"Objavte Odoo Miesto Predaja: Váš obchod pripravený na použitie za 30 minút."
 
 #. module: website_event_track
-#: view:website:website_event_track.track_view
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type_display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_display_name
+msgid "Display Name"
+msgstr "Zobraziť meno"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.track_view
 msgid "Documents"
 msgstr "Dokumenty"
 
 #. module: website_event_track
-#: field:event.track,duration:0 view:website:website_event_track.track_view
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_duration
 msgid "Duration"
 msgstr "Trvanie"
 
 #. module: website_event_track
-#: view:event.track:website_event_track.view_event_track_kanban
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "Edit Track"
 msgstr "Upraviť sledovanie"
 
 #. module: website_event_track
-#: field:event.sponsor,event_id:0
-#: view:event.track:website_event_track.view_event_track_search
-#: field:event.track,event_id:0
 #: model:ir.model,name:website_event_track.model_event_event
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_event_id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_event_id
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Event"
 msgstr "Udalosť"
 
 #. module: website_event_track
-#: field:event.event,blog_id:0
-msgid "Event Blog"
-msgstr "Blog udalosti"
-
-#. module: website_event_track
-#: view:event.track.location:website_event_track.view_event_location_form
-#: view:event.track.location:website_event_track.view_event_location_tree
+#: model:ir.ui.view,arch_db:website_event_track.view_event_location_form
+#: model:ir.ui.view,arch_db:website_event_track.view_event_location_tree
 msgid "Event Location"
 msgstr "Lokácia udalosti"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track_location
-#: model:ir.ui.menu,name:website_event_track.menu_event_track_location
 msgid "Event Locations"
 msgstr "Lokácie udalostí"
 
 #. module: website_event_track
-#: view:event.sponsor.type:website_event_track.view_event_sponsor_type_tree
+#: model:ir.ui.view,arch_db:website_event_track.view_event_sponsor_type_tree
 msgid "Event Sponsor Type"
 msgstr "Typ sponzora udalosti"
 
 #. module: website_event_track
-#: view:event.sponsor.type:website_event_track.view_event_sponsor_type_form
+#: model:ir.ui.view,arch_db:website_event_track.view_event_sponsor_type_form
 msgid "Event Sponsor Types"
 msgstr "Typy sponzorov udalosti"
 
 #. module: website_event_track
-#: view:event.track.stage:website_event_track.view_event_track_stage_form
-#: view:event.track.stage:website_event_track.view_event_track_stage_tree
-msgid "Event Stage"
-msgstr ""
+#: model:ir.ui.view,arch_db:website_event_track.view_event_sponsor_search
+msgid "Event Sponsors"
+msgstr "Sponzori udalosti"
 
 #. module: website_event_track
-#: model:ir.actions.act_window,name:website_event_track.action_event_track_stage
-#: model:ir.ui.menu,name:website_event_track.menu_event_track_stage
-msgid "Event Stages"
-msgstr ""
-
-#. module: website_event_track
-#: view:event.tag:website_event_track.view_event_tag_form
-#: view:event.tag:website_event_track.view_event_tag_tree
-#: field:event.tag,name:0
-msgid "Event Tag"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.actions.act_window,name:website_event_track.action_event_tag
-#: model:ir.ui.menu,name:website_event_track.menu_event_tag
-msgid "Event Tags"
-msgstr ""
-
-#. module: website_event_track
-#: field:event.event,timezone_of_event:0
-msgid "Event Timezone"
-msgstr ""
-
-#. module: website_event_track
-#: view:event.track:website_event_track.view_event_track_form
-#: view:event.track:website_event_track.view_event_track_tree
+#: model:ir.model,name:website_event_track.model_event_track
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_tree
 msgid "Event Track"
 msgstr "Sledovanie udalosti"
 
 #. module: website_event_track
-#: view:event.track.tag:website_event_track.view_event_track_tag_form
-#: view:event.track.tag:website_event_track.view_event_track_tag_tree
-#: field:event.track.tag,name:0
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_tag_form
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_tag_tree
 msgid "Event Track Tag"
 msgstr "Menovka sledovania udalosti"
 
 #. module: website_event_track
-#: view:event.track:website_event_track.view_event_track_calendar
-#: view:event.track:website_event_track.view_event_track_search
-#: model:ir.actions.act_window,name:website_event_track.act_event_list_tracks
+#: model:ir.actions.act_window,name:website_event_track.action_event_sponsor_from_event
 #: model:ir.actions.act_window,name:website_event_track.action_event_track
-#: model:ir.model,name:website_event_track.model_event_track
+#: model:ir.actions.act_window,name:website_event_track.action_event_track_from_event
 #: model:ir.ui.menu,name:website_event_track.menu_event_track
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_calendar
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Event Tracks"
 msgstr "Sledovania udalosti"
 
 #. module: website_event_track
-#: model:event.track.tag,name:website_event_track.event_tag2
-msgid "Exhibition"
-msgstr "Výstava"
-
-#. module: website_event_track
-#: view:website:website_event_track.event_track_proposal
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Fill this form to propose your talk."
 msgstr "Vyplňte tento formulár pre navrhnutie svojej reči."
 
 #. module: website_event_track
-#: view:website:website_event_track.agenda
+#: model:ir.ui.view,arch_db:website_event_track.agenda
 msgid "Filter Tracks..."
 msgstr "Filtrovať sledovania..."
 
 #. module: website_event_track
-#: view:website:website_event_track.track_view
+#: model:ir.ui.view,arch_db:website_event_track.event_track_social
 msgid ""
 "Find out what people see and say about this event, \n"
 "                        and join the conversation."
-msgstr "Zistite čo ľudia hovoria o tejto udalosti,\na zapojte sa do konverzácie."
-
-#. module: website_event_track
-#: field:event.track,message_follower_ids:0
-msgid "Followers"
-msgstr "Odberatelia"
-
-#. module: website_event_track
-#: view:website:website_event_track.agenda
-msgid "Found"
 msgstr ""
+"Zistite čo ľudia hovoria o tejto udalosti,\n"
+"a zapojte sa do konverzácie."
 
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type3
@@ -323,33 +354,28 @@ msgid "Gold"
 msgstr "Alebo"
 
 #. module: website_event_track
-#: view:event.track:website_event_track.view_event_track_search
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Group By"
 msgstr "Zoskupiť podľa"
 
 #. module: website_event_track
 #: selection:event.track,priority:0
-msgid "High (**)"
-msgstr ""
+msgid "High"
+msgstr "Vysoká"
 
 #. module: website_event_track
 #: selection:event.track,priority:0
-msgid "Highest (***)"
-msgstr ""
-
-#. module: website_event_track
-#: help:event.track,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgid "Highest"
+msgstr "Najvyššia"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track18
 msgid ""
 "How to build your marketing strategy for the purpose of generating leads "
 "with Odoo."
-msgstr "Ako postaviť svoju marketingovú stratégiu za účelom vytvárania iniciatív s Odoo."
+msgstr ""
+"Ako postaviť svoju marketingovú stratégiu za účelom vytvárania iniciatív s "
+"Odoo."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track1
@@ -363,8 +389,9 @@ msgstr "Ako vytvoriť automatizované testy v Odoo web klientovi."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track3
-msgid "How to develop real time apps, the live chat module explained."
+msgid "How to develop real time apps, the website live chat module explained."
 msgstr ""
+"Ako vyvinúť realtime-ové aplikácie, modul live chat-u webstránky vysvetlený."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track2
@@ -376,29 +403,28 @@ msgstr "Ako integrovať hardvérové materiály s Odoo miesotm predaja."
 msgid ""
 "How to use Odoo for your HR process: recruitment, leaves management, "
 "appraisals, expenses, etc."
-msgstr "Ako použiť Odoo pre váš HR proces: prijímanie, spravovanie voľna, ocenenia, výdaje, atď."
+msgstr ""
+"Ako použiť Odoo pre váš HR proces: prijímanie, spravovanie voľna, ocenenia, "
+"výdaje, atď."
 
 #. module: website_event_track
-#: field:event.sponsor,id:0 field:event.sponsor.type,id:0 field:event.tag,id:0
-#: field:event.track,id:0 field:event.track.location,id:0
-#: field:event.track.stage,id:0 field:event.track.tag,id:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_id
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type_id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_id
 msgid "ID"
 msgstr "ID"
 
 #. module: website_event_track
-#: help:event.track,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_image
+msgid "Image"
+msgstr "Obrázok"
 
 #. module: website_event_track
-#: view:website:website_event_track.event_track_proposal
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Introduction"
 msgstr "Úvod"
-
-#. module: website_event_track
-#: field:event.track,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Je sledujúci"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track23
@@ -406,44 +432,39 @@ msgid "Key Success factors selling Odoo."
 msgstr "Kľúčové faktory úspechu predaja Odoo."
 
 #. module: website_event_track
-#: field:event.track,message_last_post:0
-msgid "Last Message Date"
-msgstr "Dátum poslednej správy"
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor___last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type___last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track___last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location___last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag___last_update
+msgid "Last Modified on"
+msgstr "Posledná modifikácia"
 
 #. module: website_event_track
-#: field:event.sponsor,write_uid:0 field:event.sponsor.type,write_uid:0
-#: field:event.tag,write_uid:0 field:event.track,write_uid:0
-#: field:event.track.location,write_uid:0 field:event.track.stage,write_uid:0
-#: field:event.track.tag,write_uid:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type_write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_write_uid
 msgid "Last Updated by"
 msgstr "Naposledy upravoval"
 
 #. module: website_event_track
-#: field:event.sponsor,write_date:0 field:event.sponsor.type,write_date:0
-#: field:event.tag,write_date:0 field:event.track,write_date:0
-#: field:event.track.location,write_date:0
-#: field:event.track.stage,write_date:0 field:event.track.tag,write_date:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type_write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_write_date
 msgid "Last Updated on"
 msgstr "Naposledy upravované"
 
 #. module: website_event_track
-#: model:event.track.tag,name:website_event_track.event_track_tag3
-#: view:website:website_event_track.event_track_proposal
-msgid "Lightning Talks"
-msgstr ""
+#: model:ir.ui.menu,name:website_event_track.menu_event_track_location
+msgid "Locations"
+msgstr "Lokácie"
 
 #. module: website_event_track
-#: help:event.event,allowed_track_tag_ids:0
-msgid "List of available tags for track proposals."
-msgstr ""
-
-#. module: website_event_track
-#: field:event.track,location_id:0 view:website:website_event_track.track_view
-msgid "Location"
-msgstr "Umiestnenie"
-
-#. module: website_event_track
-#: field:event.sponsor,image_medium:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_image_medium
 msgid "Logo"
 msgstr "Logo"
 
@@ -469,8 +490,20 @@ msgstr "Spravujte vaše udalosti s Odoo, nové tréningové moduly."
 
 #. module: website_event_track
 #: selection:event.track,priority:0
-msgid "Medium (*)"
+msgid "Medium"
+msgstr "Stredné"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor_image_medium
+#: model:ir.model.fields,help:website_event_track.field_event_track_image
+msgid ""
+"Medium-sized image of this contact. It is automatically resized as a "
+"128x128px image, with aspect ratio preserved. Use this field in form views "
+"or some kanban views."
 msgstr ""
+"Stredne veľký obrázok tohto kontaktu. Veľkosť je automaticky zmenená na "
+"128x128px obrázok, so zachovaním pomeru strán. Použite toto pole v "
+"zobrazeniach formulárov alebo niektorých kanban zobrazeniach. "
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track25
@@ -483,24 +516,14 @@ msgid "Merge proposals review, code sprint (entire day)."
 msgstr "Prehľad zlúčenia návrhov, kód šprint (celý deň)"
 
 #. module: website_event_track
-#: field:event.track,message_ids:0
-msgid "Messages"
-msgstr "Správy"
-
-#. module: website_event_track
-#: help:event.track,message_ids:0
-msgid "Messages and communication history"
-msgstr "Správa a história komunikácie"
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "More"
+msgstr "Viac"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track30
 msgid "Morning break"
 msgstr "Ranná prestávka"
-
-#. module: website_event_track
-#: field:event.event,show_tracks:0
-msgid "Multiple Tracks"
-msgstr ""
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track20
@@ -513,14 +536,23 @@ msgid "New Paypal modules (portal, handling, installments)."
 msgstr "Nové Paypal moduly (portál, spracovanie, inštalácie)."
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:170
-#: field:event.event,show_blog:0
-#, python-format
-msgid "News"
-msgstr "Novinky"
+#: model:mail.message.subtype,name:website_event_track.mt_event_track
+msgid "New Track"
+msgstr "Nové sledovanie"
 
 #. module: website_event_track
-#: view:website:website_event_track.tracks
+#: model:mail.message.subtype,description:website_event_track.mt_event_track
+msgid "New Track Created"
+msgstr "Nové sledovanie vytvorené"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
+#, fuzzy
+msgid "New track proposal"
+msgstr "Návrh nového sledovania"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.tracks
 msgid "No tracks found!"
 msgstr "Žiadne sledovania neboli nájdené!"
 
@@ -545,47 +577,71 @@ msgid "Odoo in 2014"
 msgstr "Odoo v 2014"
 
 #. module: website_event_track
-#: view:website:website_event.layout
+#: model:ir.ui.view,arch_db:website_event_track.event_sponsor
 msgid "Our Sponsors"
 msgstr "Naši sponzori"
 
 #. module: website_event_track
-#: view:website:website_event_track.track_view
-msgid "Participate on Twitter"
-msgstr ""
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_partner_biography
+msgid "Partner Biography"
+msgstr "Biografia partnera"
 
 #. module: website_event_track
-#: view:website:website_event_track.track_view
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_partner_email
+msgid "Partner Email"
+msgstr "Email partnera"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_partner_name
+msgid "Partner Name"
+msgstr "Názov partnera"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_partner_phone
+msgid "Partner Phone"
+msgstr "Telefón partnera"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.track_view
 msgid "Practical Info"
 msgstr "Praktické informácie"
 
 #. module: website_event_track
-#: field:event.track,priority:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_priority
 msgid "Priority"
 msgstr "Priorita"
 
 #. module: website_event_track
-#: model:event.track.stage,name:website_event_track.event_track_stage1
-msgid "Proposals"
-msgstr ""
+#: selection:event.track,state:0
+msgid "Proposal"
+msgstr "Návrh"
 
 #. module: website_event_track
-#: view:website:website_event_track.event_track_proposal
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Proposals are closed!"
 msgstr "Návrhy sú uzavreté!"
 
 #. module: website_event_track
-#: model:event.track.stage,name:website_event_track.event_track_stage3
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_partner_id
+#: model:ir.ui.view,arch_db:website_event_track.track_view
+msgid "Proposed by"
+msgstr "Navrhol"
+
+#. module: website_event_track
+#: selection:event.track,state:0
 msgid "Published"
 msgstr "Publikovaný"
 
 #. module: website_event_track
-#: view:website:website_event_track.track_view
+#: model:ir.ui.view,arch_db:website_event_track.track_view
 msgid ""
 "Put here the list of documents, like slides of\n"
 "                            the presentations. Remove the above t-if when\n"
 "                            it's implemented."
-msgstr "Sem vložte zoznam dokumentov, ako sú obrázky\nprezentácií. Odstránte horné keď\nto bude implementované. "
+msgstr ""
+"Sem vložte zoznam dokumentov, ako sú obrázky\n"
+"prezentácií. Odstránte horné keď\n"
+"to bude implementované. "
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track10
@@ -598,26 +654,32 @@ msgid "Recruiting high skilled talents with Odoo HR apps"
 msgstr "Nábor vysoko kvalifikovaných talentov s Odoo HR aplikáciami"
 
 #. module: website_event_track
-#: view:website:website_event_track.event_track_proposal
-msgid "Regular Talks"
-msgstr ""
+#: selection:event.track,state:0
+msgid "Refused"
+msgstr "Zamietnuté"
 
 #. module: website_event_track
-#: view:event.track:website_event_track.view_event_track_search
-#: field:event.track,user_id:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_user_id
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Responsible"
 msgstr "Zodpovedná osoba"
 
 #. module: website_event_track
-#: model:event.track.tag,name:website_event_track.event_track_tag4
-msgid "Round Table"
-msgstr ""
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8478
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_name
+msgid "Room"
+msgstr "Miestnosť"
 
 #. module: website_event_track
-#: field:event.sponsor,sequence:0 field:event.sponsor.type,sequence:0
-#: field:event.track.stage,sequence:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type_sequence
 msgid "Sequence"
 msgstr "Postupnosť"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event_show_tracks
+msgid "Show Tracks on Website"
+msgstr "Zobraziť sledovania na webstránke"
 
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type2
@@ -625,22 +687,24 @@ msgid "Silver"
 msgstr "Striebro"
 
 #. module: website_event_track
-#: view:website:website_event_track.track_view
+#: model:ir.ui.view,arch_db:website_event_track.event_track_social
 msgid "Social Stream"
 msgstr "Sociálny prúd"
 
 #. module: website_event_track
-#: view:website:website_event_track.event_track_proposal
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Speaker Biography"
 msgstr "Biografia hovorcu"
 
 #. module: website_event_track
-#: field:event.track,speaker_ids:0
+#: code:addons/website_event_track/models/event.py:116
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_speaker_ids
+#, python-format
 msgid "Speakers"
 msgstr "Hovorcovia"
 
 #. module: website_event_track
-#: field:event.sponsor.type,name:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type_name
 msgid "Sponsor Type"
 msgstr "Typ sponzora"
 
@@ -651,102 +715,93 @@ msgid "Sponsor Types"
 msgstr "Typy sponzora"
 
 #. module: website_event_track
-#: field:event.sponsor,url:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_url
 msgid "Sponsor Website"
 msgstr "Webstránka sponzora"
 
 #. module: website_event_track
-#: field:event.sponsor,partner_id:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_partner_id
 msgid "Sponsor/Customer"
 msgstr "Sponzor/Zákazník"
 
 #. module: website_event_track
-#: view:event.event:website_event_track.view_event_form
-msgid "Sponsoring"
-msgstr ""
-
-#. module: website_event_track
-#: field:event.sponsor,sponsor_type_id:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_sponsor_type_id
 msgid "Sponsoring Type"
 msgstr "Typ sponzorovania"
 
 #. module: website_event_track
-#: view:event.event:website_event_track.view_event_form
-#: field:event.event,sponsor_ids:0
-msgid "Sponsorships"
-msgstr ""
+#: model:ir.model.fields,field_description:website_event_track.field_event_event_sponsor_ids
+#: model:ir.ui.view,arch_db:website_event_track.view_event_form
+msgid "Sponsors"
+msgstr "Sponzori"
 
 #. module: website_event_track
-#: view:event.track:website_event_track.view_event_track_search
-#: field:event.track,stage_id:0
-msgid "Stage"
-msgstr "Etapa"
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_state
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Status"
+msgstr "Stav"
 
 #. module: website_event_track
-#: view:website:website_event_track.event_track_proposal
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Submission Agreement"
 msgstr "Podacia dohoda"
 
 #. module: website_event_track
-#: view:website:website_event_track.event_track_proposal
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Submit Proposal"
 msgstr "Predložit návrh"
 
 #. module: website_event_track
-#: field:event.track,message_summary:0
-msgid "Summary"
-msgstr "Zhrnutie"
+#: model:web.tip,description:website_event_track.event_track_tip_1
+msgid "Switch to the calendar view to see the availability of each room."
+msgstr ""
+"Prepnúť na zobrazenie kalendára pre zobrazenie dostupnosti každej miestnosti."
 
 #. module: website_event_track
-#: field:event.event,tag_ids:0 field:event.track,tag_ids:0
-#: view:website:website_event_track.event_track_proposal
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_name
+msgid "Tag"
+msgstr "Menovka"
+
+#. module: website_event_track
+#: sql_constraint:event.track.tag:0
+msgid "Tag name already exists !"
+msgstr "Názov visačky už existuje !"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_ids
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Tags"
 msgstr "Popisky"
 
 #. module: website_event_track
-#: field:event.event,tracks_tag_ids:0
-msgid "Tags of Tracks"
-msgstr ""
-
-#. module: website_event_track
-#: view:website:website_event_track.event_track_proposal
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Talk Introduction"
 msgstr "Úvod reči"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:172
+#: code:addons/website_event_track/models/event.py:162
 #, python-format
 msgid "Talk Proposals"
 msgstr "Návrhy reči"
 
 #. module: website_event_track
-#: view:website:website_event_track.event_track_proposal
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Talk Title"
 msgstr "Nadpis reči"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:167
+#: code:addons/website_event_track/models/event.py:159
 #, python-format
 msgid "Talks"
 msgstr "Hovory"
 
 #. module: website_event_track
-#: field:event.event,show_track_proposal:0
-msgid "Talks Proposals"
-msgstr ""
-
-#. module: website_event_track
-#: view:website:website_event_track.event_track_proposal
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Talks Types"
 msgstr "Typy hovorov"
 
 #. module: website_event_track
-#: model:event.track.tag,name:website_event_track.event_track_tag1
-msgid "Technical"
-msgstr "Technické"
-
-#. module: website_event_track
-#: view:website:website_event_track.event_track_proposal_success
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal_success
 msgid "Thank you for your proposal."
 msgstr "Ďakujeme sa váš návrh."
 
@@ -764,85 +819,113 @@ msgstr "Nová marketingová stratégia."
 #: model:event.track,name:website_event_track.event_track5
 msgid ""
 "The new way to promote your modules in the Apps platform and Odoo website."
-msgstr "Nový spôsob, ako propagovať svoje moduly na platforme aplikácií a Odoo webe."
+msgstr ""
+"Nový spôsob, ako propagovať svoje moduly na platforme aplikácií a Odoo webe."
 
 #. module: website_event_track
-#: view:website:website_event_track.event_track_proposal
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "This event does not accept proposals."
 msgstr "Táto udalosť neakceptuje návrhy."
 
 #. module: website_event_track
-#: view:website:website_event_track.event_track_proposal
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "Timely release of presentation material (slides),\n"
 "                                    for publishing on our website."
-msgstr "Včasné vydanie prezentačných materiálov (prezentácií),\npre zverejnenie na našej stránke."
+msgstr ""
+"Včasné vydanie prezentačných materiálov (prezentácií),\n"
+"pre zverejnenie na našej stránke."
 
 #. module: website_event_track
-#: view:event.track:website_event_track.view_event_track_form
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_name
+msgid "Title"
+msgstr "Titul"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Track"
 msgstr "Sledovať"
 
 #. module: website_event_track
-#: field:event.track,date:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_date
 msgid "Track Date"
 msgstr "Sledovať dátum"
 
 #. module: website_event_track
-#: field:event.track,description:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_description
 msgid "Track Description"
 msgstr "Sledovať popis"
 
 #. module: website_event_track
-#: field:event.track.location,name:0
-msgid "Track Rooms"
-msgstr ""
+#: model:ir.model,name:website_event_track.model_event_track_location
+msgid "Track Location"
+msgstr "Sledovať lokáciu"
 
 #. module: website_event_track
-#: field:event.track.stage,name:0
-msgid "Track Stage"
-msgstr ""
+#: model:ir.model,name:website_event_track.model_event_track_tag
+msgid "Track Tag"
+msgstr "Sledovať menovku"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track_tag
+#: model:ir.model.fields,field_description:website_event_track.field_event_event_tracks_tag_ids
 #: model:ir.ui.menu,name:website_event_track.menu_event_track_tag
 msgid "Track Tags"
 msgstr "Sledovať menovky"
 
 #. module: website_event_track
-#: field:event.track,name:0
-msgid "Track Title"
-msgstr ""
-
-#. module: website_event_track
-#: view:event.event:website_event_track.view_event_form
-#: field:event.event,count_tracks:0 field:event.event,track_ids:0
-#: view:event.track:website_event_track.view_event_track_graph
+#: model:ir.model.fields,field_description:website_event_track.field_event_event_count_tracks
+#: model:ir.model.fields,field_description:website_event_track.field_event_event_track_ids
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_track_ids
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_graph
 msgid "Tracks"
 msgstr "Sledovania"
 
 #. module: website_event_track
-#: field:event.track,message_unread:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_event_show_track_proposal
+msgid "Tracks Proposals"
+msgstr "Návrhy sledovaní"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,help:website_event_track.action_event_track_from_event
+msgid ""
+"Tracks define the agenda of your event. These can be a talk, a round table, "
+"a meeting, etc."
+msgstr ""
+"Sledovania definujú agendu vašej akcie. Tie môžu byť reč, okrúhly stôl, "
+"stretnutia, atď. "
+
+#. module: website_event_track
+#: model:ir.actions.act_window,help:website_event_track.action_event_track
+msgid ""
+"Tracks define the agenda of your event. These can bea talk, a round table, a "
+"meeting, etc."
+msgstr ""
+"Sledovania definujú agendu vašej akcie. Tie môžu byť reč, okrúhly stôl, "
+"stretnutia, atď. "
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Unread Messages"
 msgstr "Neprečítané správy"
 
 #. module: website_event_track
-#: view:website:website_event_track.track_view
+#: model:ir.ui.view,arch_db:website_event_track.event_track_social
 msgid "Use this tag:"
 msgstr "Použite tento štítok:"
 
 #. module: website_event_track
-#: view:event.track:website_event_track.view_event_track_kanban
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "View Track"
 msgstr "Zobraziť sledovanie"
 
 #. module: website_event_track
-#: view:website:website_event_track.event_track_proposal
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "We require speakers to accept an agreement in which they commit to:"
 msgstr "Požadujeme od rečníkov aby prijali dohodu, v ktorej sa zaväzujú:"
 
 #. module: website_event_track
-#: view:website:website_event_track.event_track_proposal
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "We will accept a broad range of\n"
 "                                presentations, from reports on academic and\n"
@@ -851,85 +934,143 @@ msgid ""
 "                                interesting and potentially useful to the\n"
 "                                audience, it will be considered for\n"
 "                                inclusion in the programme."
-msgstr "Budeme akceptovať širokú škálu\nprezentácií, od výkazoch o akademických a\nkomerčných projektoch po konzultácie a prípadové\nštúdie. Pokiaľ  je prezentácia\nzaujímavá a potenciálne užitočná pre\npublikum, bude zvažované jej\nzaradenie do programu."
+msgstr ""
+"Budeme akceptovať širokú škálu\n"
+"prezentácií, od výkazoch o akademických a\n"
+"komerčných projektoch po konzultácie a prípadové\n"
+"štúdie. Pokiaľ  je prezentácia\n"
+"zaujímavá a potenciálne užitočná pre\n"
+"publikum, bude zvažované jej\n"
+"zaradenie do programu."
 
 #. module: website_event_track
-#: view:website:website_event_track.event_track_proposal_success
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal_success
 msgid "We will evaluate your proposition and get back to you shortly."
 msgstr "Budeme hodnotiť váš návrh a ozveme sa vám v blízkej dobe."
 
 #. module: website_event_track
-#: model:event.track.tag,name:website_event_track.event_tag1
-msgid "Webinar"
-msgstr ""
-
-#. module: website_event_track
-#: field:event.track,website_message_ids:0
-msgid "Website Messages"
-msgstr "Správy webovej stránky"
-
-#. module: website_event_track
-#: help:event.track,website_message_ids:0
-msgid "Website communication history"
-msgstr "História komunikácie webovej stránky"
-
-#. module: website_event_track
-#: field:event.track,website_meta_description:0
-msgid "Website meta description"
-msgstr "Website meta popis"
-
-#. module: website_event_track
-#: field:event.track,website_meta_keywords:0
-msgid "Website meta keywords"
-msgstr "Website meta kľúčové slová"
-
-#. module: website_event_track
-#: field:event.track,website_meta_title:0
-msgid "Website meta title"
-msgstr "Website meta názov"
-
-#. module: website_event_track
-#: field:event.track,website_url:0
-msgid "Website url"
-msgstr ""
-
-#. module: website_event_track
-#: view:website:website_event_track.event_track_proposal
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Your Email"
 msgstr "Váš email"
 
 #. module: website_event_track
-#: view:website:website_event_track.event_track_proposal
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Your Name"
 msgstr "Vaše meno"
 
 #. module: website_event_track
-#: view:website:website_event_track.event_track_proposal
+#: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Your Phone"
 msgstr "Váš telefón"
 
 #. module: website_event_track
-#: view:website:website_event_track.tracks
-msgid "col-md-3 css_no_print"
-msgstr ""
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. Inspiring Business Talk"
+msgstr "napr. Inšpiratívna obchodná reč"
 
 #. module: website_event_track
-#: view:event.track:website_event_track.view_event_track_form
-#: view:event.track:website_event_track.view_event_track_kanban
+#: model:ir.model,name:website_event_track.model_event_sponsor
+msgid "event.sponsor"
+msgstr "event.sponsor"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_sponsor_type
+msgid "event.sponsor.type"
+msgstr "event.sponsor.type"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "hours"
 msgstr "hodiny"
 
 #. module: website_event_track
-#: view:website:website_event_track.tracks
+#: model:ir.ui.view,arch_db:website_event_track.tracks
 msgid "not published"
 msgstr "nepublikované"
 
 #. module: website_event_track
-#: view:website:website_event_track.agenda
+#: model:ir.ui.view,arch_db:website_event_track.agenda
 msgid "talks"
 msgstr "hovory"
 
-#. module: website_event_track
-#: field:event.track,image:0
-msgid "unknown"
-msgstr "neznámy"
+#~ msgid "Action Needed"
+#~ msgstr "Potrebná akcia"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Dátum poslednej správy zaslanej záznamu."
+
+#~ msgid "Event Blog"
+#~ msgstr "Blog udalosti"
+
+#~ msgid "Followers"
+#~ msgstr "Odberatelia"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Odberatelia (Kanály)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Odberatelia (Partneri)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+
+#~ msgid "Is Follower"
+#~ msgstr "Je odberateľ"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Dátum poslednej správy"
+
+#~ msgid "Mail"
+#~ msgstr "Správa"
+
+#~ msgid "Messages"
+#~ msgstr "Správy"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Správa a história komunikácie"
+
+#~ msgid "News"
+#~ msgstr "Novinky"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Počet akcií"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Počet správ ktoré vyžadujú akciu"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Počet neprečítaných správ"
+
+#~ msgid "Phone"
+#~ msgstr "Telefón"
+
+#~ msgid "The full URL to access the document through the website."
+#~ msgstr "Plné URL pre prístup do dokumentu cez webstránku."
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Počítadlo neprečítaných správ"
+
+#~ msgid "Visible in Website"
+#~ msgstr "Viditeľné na webstránke"
+
+#~ msgid "Website Messages"
+#~ msgstr "Správy webovej stránky"
+
+#~ msgid "Website URL"
+#~ msgstr "URL webstránky"
+
+#~ msgid "Website communication history"
+#~ msgstr "História komunikácie webovej stránky"
+
+#~ msgid "Website meta description"
+#~ msgstr "Website meta popis"
+
+#~ msgid "Website meta keywords"
+#~ msgstr "Website meta kľúčové slová"
+
+#~ msgid "Website meta title"
+#~ msgstr "Website meta názov"

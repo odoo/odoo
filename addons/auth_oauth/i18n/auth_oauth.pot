@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-01-21 14:07+0000\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,28 +16,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: auth_oauth
-#: view:base.config.settings:auth_oauth.view_general_configuration
-msgid "- Ceate a new project"
-msgstr ""
-
-#. module: auth_oauth
-#: view:base.config.settings:auth_oauth.view_general_configuration
-msgid "- Create an oauth client_id"
-msgstr ""
-
-#. module: auth_oauth
-#: view:base.config.settings:auth_oauth.view_general_configuration
-msgid "- Edit settings and set both Authorized Redirect URIs and Authorized JavaScript Origins to your hostname."
-msgstr ""
-
-#. module: auth_oauth
-#: view:base.config.settings:auth_oauth.view_general_configuration
-msgid "- Go to Api Access"
-msgstr ""
-
-#. module: auth_oauth
-#: view:base.config.settings:auth_oauth.view_general_configuration
-msgid "- Go to the"
+#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Tutorial"
 msgstr ""
 
 #. module: auth_oauth
@@ -47,94 +27,104 @@ msgid "Access Denied"
 msgstr ""
 
 #. module: auth_oauth
-#: field:base.config.settings,auth_oauth_facebook_enabled:0
-msgid "Allow users to sign in with Facebook"
-msgstr ""
-
-#. module: auth_oauth
-#: field:base.config.settings,auth_oauth_google_enabled:0
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings_auth_oauth_google_enabled
 msgid "Allow users to sign in with Google"
 msgstr ""
 
 #. module: auth_oauth
-#: field:auth.oauth.provider,enabled:0
+#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+msgid "Allow users to sign in with their Google account"
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_enabled
 msgid "Allowed"
 msgstr ""
 
 #. module: auth_oauth
-#: field:auth.oauth.provider,auth_endpoint:0
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_auth_endpoint
 msgid "Authentication URL"
 msgstr ""
 
 #. module: auth_oauth
-#: field:auth.oauth.provider,body:0
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_body
 msgid "Body"
 msgstr ""
 
 #. module: auth_oauth
-#: field:auth.oauth.provider,css_class:0
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_css_class
 msgid "CSS class"
 msgstr ""
 
 #. module: auth_oauth
-#: field:auth.oauth.provider,client_id:0
-#: field:base.config.settings,auth_oauth_facebook_client_id:0
-#: field:base.config.settings,auth_oauth_google_client_id:0
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_client_id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings_auth_oauth_google_client_id
 msgid "Client ID"
 msgstr ""
 
 #. module: auth_oauth
-#: field:auth.oauth.provider,create_uid:0
+#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+msgid "Client ID:"
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: auth_oauth
-#: field:auth.oauth.provider,create_date:0
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_create_date
 msgid "Created on"
 msgstr ""
 
 #. module: auth_oauth
-#: field:auth.oauth.provider,data_endpoint:0
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_data_endpoint
 msgid "Data URL"
 msgstr ""
 
 #. module: auth_oauth
-#: view:base.config.settings:auth_oauth.view_general_configuration
-msgid "Google APIs console"
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: auth_oauth
-#: field:auth.oauth.provider,id:0
+#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+msgid "Google Authentication"
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_id
 msgid "ID"
 msgstr ""
 
 #. module: auth_oauth
-#: field:auth.oauth.provider,write_uid:0
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider___last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: auth_oauth
-#: field:auth.oauth.provider,write_date:0
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_write_date
 msgid "Last Updated on"
 msgstr ""
 
 #. module: auth_oauth
-#: view:base.config.settings:auth_oauth.view_general_configuration
-msgid "Now copy paste the client_id here:"
-msgstr ""
-
-#. module: auth_oauth
-#: field:res.users,oauth_access_token:0
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_access_token
 msgid "OAuth Access Token"
 msgstr ""
 
 #. module: auth_oauth
-#: field:res.users,oauth_provider_id:0
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_provider_id
 msgid "OAuth Provider"
 msgstr ""
 
 #. module: auth_oauth
 #: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
+#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "OAuth Providers"
 msgstr ""
 
@@ -144,7 +134,7 @@ msgid "OAuth UID must be unique per provider"
 msgstr ""
 
 #. module: auth_oauth
-#: field:res.users,oauth_uid:0
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_uid
 msgid "OAuth User ID"
 msgstr ""
 
@@ -154,17 +144,17 @@ msgid "OAuth2 provider"
 msgstr ""
 
 #. module: auth_oauth
-#: view:res.users:auth_oauth.view_users_form
+#: model:ir.ui.view,arch_db:auth_oauth.view_users_form
 msgid "Oauth"
 msgstr ""
 
 #. module: auth_oauth
-#: help:res.users,oauth_uid:0
+#: model:ir.model.fields,help:auth_oauth.field_res_users_oauth_uid
 msgid "Oauth Provider user_id"
 msgstr ""
 
 #. module: auth_oauth
-#: field:auth.oauth.provider,name:0
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_name
 msgid "Provider name"
 msgstr ""
 
@@ -174,8 +164,18 @@ msgid "Providers"
 msgstr ""
 
 #. module: auth_oauth
-#: field:auth.oauth.provider,scope:0
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_scope
 msgid "Scope"
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings_server_uri_google
+msgid "Server uri"
 msgstr ""
 
 #. module: auth_oauth
@@ -185,17 +185,12 @@ msgid "Sign up is not allowed on this database."
 msgstr ""
 
 #. module: auth_oauth
-#: view:base.config.settings:auth_oauth.view_general_configuration
-msgid "To setup the signin process with Google, first you have to perform the following steps:"
-msgstr ""
-
-#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
 msgid "Users"
 msgstr ""
 
 #. module: auth_oauth
-#: field:auth.oauth.provider,validation_endpoint:0
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_validation_endpoint
 msgid "Validation URL"
 msgstr ""
 
@@ -206,18 +201,23 @@ msgid "You do not have access to this database or your invitation has expired. P
 msgstr ""
 
 #. module: auth_oauth
-#: view:auth.oauth.provider:auth_oauth.view_oauth_provider_form
-#: view:auth.oauth.provider:auth_oauth.view_oauth_provider_list
+#: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
+#: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_tree
 msgid "arch"
 msgstr ""
 
 #. module: auth_oauth
-#: view:base.config.settings:auth_oauth.view_general_configuration
+#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "e.g. 1234-xyz.apps.googleusercontent.com"
 msgstr ""
 
 #. module: auth_oauth
-#: field:auth.oauth.provider,sequence:0
-msgid "unknown"
+#: model:ir.model,name:auth_oauth.model_ir_config_parameter
+msgid "ir.config_parameter"
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.model,name:auth_oauth.model_res_config_settings
+msgid "res.config.settings"
 msgstr ""
 

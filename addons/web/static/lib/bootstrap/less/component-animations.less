@@ -27,5 +27,7 @@
   position: relative;
   height: 0;
   overflow: hidden;
-  .transition(height .35s ease);
+  .transition-property(~"height, visibility");
+  .transition-duration(.35s);
+  .transition-timing-function(ease);
 }

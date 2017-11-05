@@ -1,22 +1,27 @@
-import openerp
-from openerp.tools.safe_eval import safe_eval as eval
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-class DiagramView(openerp.http.Controller):
+import odoo.http as http
 
-    @openerp.http.route('/web_diagram/diagram/get_diagram_info', type='json', auth='user')
-    def get_diagram_info(self, req, id, model, node, connector,
+from odoo.tools.safe_eval import safe_eval
+
+
+class DiagramView(http.Controller):
+
+    @http.route('/web_diagram/diagram/get_diagram_info', type='json', auth='user')
+    def get_diagram_info(self, id, model, node, connector,
                          src_node, des_node, label, **kw):
 
-        visible_node_fields = kw.get('visible_node_fields',[])
-        invisible_node_fields = kw.get('invisible_node_fields',[])
-        node_fields_string = kw.get('node_fields_string',[])
-        connector_fields = kw.get('connector_fields',[])
-        connector_fields_string = kw.get('connector_fields_string',[])
+        visible_node_fields = kw.get('visible_node_fields', [])
+        invisible_node_fields = kw.get('invisible_node_fields', [])
+        node_fields_string = kw.get('node_fields_string', [])
+        connector_fields = kw.get('connector_fields', [])
+        connector_fields_string = kw.get('connector_fields_string', [])
 
         bgcolors = {}
         shapes = {}
-        bgcolor = kw.get('bgcolor','')
-        shape = kw.get('shape','')
+        bgcolor = kw.get('bgcolor', '')
+        shape = kw.get('shape', '')
 
         if bgcolor:
             for color_spec in bgcolor.split(';'):
@@ -30,18 +35,21 @@ class DiagramView(openerp.http.Controller):
                     shape_colour, shape_color_state = shape_spec.split(':')
                     shapes[shape_colour] = shape_color_state
 
-        ir_view = req.session.model('ir.ui.view')
-        graphs = ir_view.graph_get(
-            int(id), model, node, connector, src_node, des_node, label,
-            (140, 180), req.session.context)
+        ir_view = http.request.env['ir.ui.view']
+        graphs = ir_view.graph_get(int(id), model, node, connector, src_node,
+                                   des_node, label, (140, 180))
         nodes = graphs['nodes']
         transitions = graphs['transitions']
         isolate_nodes = {}
         for blnk_node in graphs['blank_nodes']:
             isolate_nodes[blnk_node['id']] = blnk_node
-        else:
-            y = map(lambda t: t['y'],filter(lambda x: x['y'] if x['x']==20 else None, nodes.values()))
-            y_max = (y and max(y)) or 120
+        y = [
+            t['y']
+            for t in nodes.values()
+            if t['x'] == 20
+            if t['y']
+        ]
+        y_max = (y and max(y)) or 120
 
         connectors = {}
         list_tr = []
@@ -53,10 +61,9 @@ class DiagramView(openerp.http.Controller):
                 's_id': transitions[tr][0],
                 'd_id': transitions[tr][1]
             })
-        connector_tr = req.session.model(connector)
-        connector_ids = connector_tr.search([('id', 'in', list_tr)], 0, 0, 0, req.session.context)
 
-        data_connectors =connector_tr.read(connector_ids, connector_fields, req.session.context)
+        connector_model = http.request.env[connector]
+        data_connectors = connector_model.search([('id', 'in', list_tr)]).read(connector_fields)
 
         for tr in data_connectors:
             transition_id = str(tr['id'])
@@ -72,12 +79,11 @@ class DiagramView(openerp.http.Controller):
             for i, fld in enumerate(connector_fields):
                 t['options'][connector_fields_string[i]] = tr[fld]
 
-        fields = req.session.model('ir.model.fields')
-        field_ids = fields.search([('model', '=', model), ('relation', '=', node)], 0, 0, 0, req.session.context)
-        field_data = fields.read(field_ids, ['relation_field'], req.session.context)
-        node_act = req.session.model(node)
-        search_acts = node_act.search([(field_data[0]['relation_field'], '=', id)], 0, 0, 0, req.session.context)
-        data_acts = node_act.read(search_acts, invisible_node_fields + visible_node_fields, req.session.context)
+        fields = http.request.env['ir.model.fields']
+        field = fields.search([('model', '=', model), ('relation', '=', node)])
+        node_act = http.request.env[node]
+        search_acts = node_act.search([(field.relation_field, '=', id)])
+        data_acts = search_acts.read(invisible_node_fields + visible_node_fields)
 
         for act in data_acts:
             n = nodes.get(str(act['id']))
@@ -93,18 +99,18 @@ class DiagramView(openerp.http.Controller):
                 options={}
             )
             for color, expr in bgcolors.items():
-                if eval(expr, act):
+                if safe_eval(expr, act):
                     n['color'] = color
 
             for shape, expr in shapes.items():
-                if eval(expr, act):
+                if safe_eval(expr, act):
                     n['shape'] = shape
 
             for i, fld in enumerate(visible_node_fields):
                 n['options'][node_fields_string[i]] = act[fld]
 
-        _id, name = req.session.model(model).name_get([id], req.session.context)[0]
+        _id, name = http.request.env[model].browse([id]).name_get()[0]
         return dict(nodes=nodes,
                     conn=connectors,
-                    name=name,
+                    display_name=name,
                     parent_field=graphs['node_parent_field'])

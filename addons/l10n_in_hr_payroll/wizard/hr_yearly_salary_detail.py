@@ -1,60 +1,34 @@
-#-*- coding:utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011 OpenERP SA (<http://openerp.com>). All Rights Reserved
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding:utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
+from odoo import api, fields, models
 
-from openerp.osv import fields, osv
 
-class yearly_salary_detail(osv.osv_memory):
+class YearlySalaryDetail(models.TransientModel):
+    _name = 'yearly.salary.detail'
+    _description = 'Hr Salary Employee By Category Report'
 
-   _name ='yearly.salary.detail'
-   _description = 'Hr Salary Employee By Category Report'
-   _columns = {
-        'employee_ids': fields.many2many('hr.employee', 'payroll_emp_rel', 'payroll_id', 'employee_id', 'Employees', required=True),
-        'date_from': fields.date('Start Date', required=True),
-        'date_to': fields.date('End Date', required=True),
-    }
+    def _get_default_date_from(self):
+        year = fields.Date.from_string(fields.Date.today()).strftime('%Y')
+        return '{}-01-01'.format(year)
 
-   _defaults = {
-        'date_from': lambda *a: time.strftime('%Y-01-01'),
-        'date_to': lambda *a: time.strftime('%Y-%m-%d'),
+    def _get_default_date_to(self):
+        date = fields.Date.from_string(fields.Date.today())
+        return date.strftime('%Y') + '-' + date.strftime('%m') + '-' + date.strftime('%d')
 
-    }
+    employee_ids = fields.Many2many('hr.employee', 'payroll_emp_rel', 'payroll_id', 'employee_id', string='Employees', required=True)
+    date_from = fields.Date(string='Start Date', required=True, default=_get_default_date_from)
+    date_to = fields.Date(string='End Date', required=True, default=_get_default_date_to)
 
-   def print_report(self, cr, uid, ids, context=None):
+    @api.multi
+    def print_report(self):
         """
          To get the date and print the report
-         @param self: The object pointer.
-         @param cr: A database cursor
-         @param uid: ID of the user currently logged in
-         @param context: A standard dictionary
          @return: return report
         """
-        if context is None:
-            context = {}
-        datas = {'ids': context.get('active_ids', [])}
-
-        res = self.read(cr, uid, ids, context=context)
+        self.ensure_one()
+        data = {'ids': self.env.context.get('active_ids', [])}
+        res = self.read()
         res = res and res[0] or {}
-        datas.update({'form':res})
-        return self.pool['report'].get_action(cr, uid, ids, 'l10n_in_hr_payroll.report_hryearlysalary', data=datas, context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+        data.update({'form': res})
+        return self.env.ref('l10n_in_hr_payroll.action_report_hryearlysalary').report_action(self, data=data)

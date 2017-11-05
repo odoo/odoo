@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- equiment.request : views -->
+    <record id="maintenance_request_view_search_inherit_hr" model="ir.ui.view">
+        <field name="name">maintenance.request.view.search.inherit.hr</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="field[@name='technician_user_id']" position="after">
+                <field name="employee_id"/>
+            </xpath>
+            <xpath expr="//filter[@name='my_requests']" position="replace">
+                <filter string="My Requests" name="my_requests" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
+            </xpath>
+            <xpath expr="//filter[@name='created_by']" position="replace">
+                <filter string='Created By' name='created_by' domain="[]" context="{'group_by': 'employee_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="maintenance_request_view_form_inherit_hr" model="ir.ui.view">
+        <field name="name">maintenance.request.view.form.inherit.hr</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='owner_user_id']" position="replace">
+                <field name="employee_id" string="Created By"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="maintenance_request_view_kanban_inherit_hr" model="ir.ui.view">
+        <field name="name">maintenance.request.view.kanban.inherit.hr</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//span[@name='owner_user_id']" position="replace">
+                <span t-if="record.employee_id.raw_value"><field name="employee_id"/><br/></span>
+                <span t-if="record.department_id.raw_value"><field name="department_id"/><br/></span>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="maintenance_request_view_tree_inherit_hr" model="ir.ui.view">
+        <field name="name">maintenance.request.view.tree.inherit.hr</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='owner_user_id']" position="replace">
+                <field name="employee_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- equiment : views -->
+    <record id="maintenance_equipment_view_search_inherit_hr" model='ir.ui.view'>
+      <field name="name">maintenance.equipment.view.search.inherit.hr</field>
+      <field name="model">maintenance.equipment</field>
+      <field name="inherit_id" ref="maintenance.hr_equipment_view_search"/>
+      <field name="arch" type="xml">
+        <filter name="assigned" position="attributes">
+          <attribute name="domain">['|', ('employee_id', '!=', False), ('department_id', '!=', False)]</attribute>
+        </filter>
+        <filter name="available" position="attributes">
+          <attribute name="domain">[('employee_id', '=', False), ('department_id', '=', False)]</attribute>
+        </filter>
+        <field name="owner_user_id" position="after">
+          <field name="employee_id"/>
+          <field name="department_id"/>
+        </field>
+        <group position="inside">
+          <filter string="Employee" domain="[]" context="{'group_by': 'employee_id'}"/>
+          <filter string="Department" domain="[]" context="{'group_by': 'department_id'}"/>
+        </group>
+      </field>
+    </record>
+
+    <record id="maintenance_equipment_view_form_inherit_hr" model="ir.ui.view">
+        <field name="name">maintenance.equipment.view.form.inherit.hr</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='owner_user_id']" position="replace">
+                <field name="equipment_assign_to" widget="radio"/>
+                <field name="employee_id" string="Employee" attrs="{'invisible': ['|', ('equipment_assign_to', '=', 'department'), ('equipment_assign_to', '=', False)]}"/>
+                <field name="department_id" string="Department" attrs="{'invisible': ['|', ('equipment_assign_to', '=', 'employee'), ('equipment_assign_to', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="maintenance_equipment_view_kanban_inherit_hr" model="ir.ui.view">
+        <field name="name">maintenance.equipment.view.kanban.inherit.hr</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='technician_user_id']" position="after">
+                <field name="employee_id"/>
+                <field name="department_id"/>
+            </xpath>
+            <xpath expr="//img[@t-att-title='record.owner_user_id.value']" position='replace'>
+                <img t-att-src="kanban_image('hr.employee', 'image_small', record.employee_id.raw_value)" t-att-title="record.employee_id.value" width="27" height="27" class="oe_kanban_avatar"/>
+            </xpath>
+            <div t-if="!record.owner_user_id.raw_value" position='replace'/>
+            <div t-if="record.owner_user_id.raw_value" position='replace'>
+                <div t-if="record.employee_id.value"><field name="employee_id"/></div>
+                <div t-if="record.department_id.value"><field name="department_id"/>
+            </div>
+            </div>
+        </field>
+    </record>
+
+    <record id="maintenance_equipment_view_tree_inherit_hr" model="ir.ui.view">
+        <field name="name">maintenance.equipment.view.tree.inherit.hr</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='owner_user_id']" position="replace">
+                <field name="employee_id" string="Employee"/>
+                <field name="department_id" string="Department"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

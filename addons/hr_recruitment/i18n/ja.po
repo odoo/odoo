@@ -3,15 +3,22 @@
 # * hr_recruitment
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Martin Trigaux <mat@odoo.com>, 2017
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
+# Manami Hashi <manami@roomsfor.hk>, 2017
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2017
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
+# Kohji Katayama <kohji.katayama@dreamyard.co.jp>, 2017
+# kent_ocean <ke.tanabe@gmail.com>, 2017
+# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-12-12 07:01+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
-"Language-Team: Japanese (http://www.transifex.com/odoo/odoo-8/language/ja/)\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: NOKA Shigekazu <shigekazu.noka@gmail.com>, 2017\n"
+"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,217 +26,491 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_recruitment
-#: view:hr.job:hr_recruitment.hr_job_survey
-msgid "(empty = remote work)"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.job:hr_recruitment.view_hr_job_kanban
-msgid ", To start the recruitment"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.recruitment_1_3_1
-msgid "0-15"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.recruitment_1_3_2
-msgid "16-20"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.recruitment_1_3_3
-msgid "21-30"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.recruitment_1_3_4
-msgid "31-40"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.recruitment_1_3_5
-msgid "41-50"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.recruitment_1_3_6
-msgid "51-60"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.recruitment_1_3_7
-msgid "61-70"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.recruitment_1_3_8
-msgid "71+"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_refuse
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                 Click here to create a new job or remove the filter on \"In Recruitment\" to recruit for an on hold job.\n"
-"              </p>\n"
-"              <p>\n"
-"                Define job position profile and manage recruitment in a context of a particular job: print interview survey, define number of expected new employees, and manage its recruitment pipe\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Click to add a new stage in the recruitment process.\n"
-"          </p><p>\n"
-"            Define here your stages of the recruitment process, for example:\n"
-"            qualification call, first interview, second interview, refused,\n"
-"            hired.\n"
-"          </p>\n"
+"\n"
+"          <div style=\"background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"            <table style=\"width:600px;margin:10px auto;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td>\n"
+"                            <a href=\"/\">\n"
+"                                <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
+"                            </a>\n"
+"                        </td>\n"
+"                        <td style=\"text-align:right;vertical-align:middle;\">\n"
+"                            % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                                <a href=\"${object.job_id.website_url}\" style=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">Job Description</a>\n"
+"                            % endif\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:600px;margin:0px auto;background-color:white;padding:8px; border:1px solid #e1e1e1;\">\n"
+"            <tr>\n"
+"                <td style=\"font-size:16px; font-weight:300;\">\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Hi,\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        Thank you for your interest in joining the\n"
+"                        <b>${object.company_id.name}</b> team.  We wanted to\n"
+"                        let you know that, although your resume is competitive,\n"
+"                        our hiring team reviewed your application and <b>did not\n"
+"                        select it for further consideration</b>.\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        Please note that recruiting is hard, and we can do\n"
+"                        mistake. Do not hesitate to reply to this email if you\n"
+"                        think we did a mistake, or if you want more information\n"
+"                        about our decision.\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        We will, however, keep your resume on record and get in\n"
+"                        touch with you about future opportunities that may be a\n"
+"                        better fit for your skills and experience.\n"
+"                    </p>\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        We wish you all the best in your job search and hope we\n"
+"                        will have the chance to consider you for another role\n"
+"                        in the future.\n"
+"                    </p>\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Regards,\n"
+"                    </p>\n"
+"\n"
+"                    <p style=\"color:grey;\">-- <br/>\n"
+"                    % if object.user_id:\n"
+"                        <strong>${object.user_id.name}</strong><br/>\n"
+"                        Email: ${object.user_id.email or ''}<br/>\n"
+"                        Phone: ${object.user_id.phone or ''}\n"
+"                    % else:\n"
+"                        ${object.company_id.name}<br/>\n"
+"                        The HR Team\n"
+"                    % endif\n"
+"                    </p>\n"
+"\n"
+"                </td>\n"
+"            </tr>\n"
+"            </table>\n"
+"            <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding-top:10px;font-size: 12px;\">\n"
+"                            <div>Sent by ${object.company_id.name}</div>\n"
+"                            % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                            <div>\n"
+"                                Discover <a href=\"/jobs\" style=\"text-decoration:none;color:#717188;\">our others jobs</a>.\n"
+"                            </div>\n"
+"                            % endif\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"\n"
+"          </div>\n"
 "        "
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Click to add a new stage in the recruitment process.\n"
-"          </p><p>\n"
-"            Don't forget to specify the department if your recruitment process\n"
-"            is different according to the job position.\n"
-"          </p>\n"
+"\n"
+"          <div style=\"background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"            <table style=\"width:600px;margin:10px auto;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td>\n"
+"                            <a href=\"/\">\n"
+"                                <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
+"                            </a>\n"
+"                        </td>\n"
+"                        <td style=\"text-align:right;vertical-align:middle;\">\n"
+"                            % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                                <a href=\"${object.job_id.website_url}\" style=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">Job Description</a>\n"
+"                            % endif\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:600px;margin:0px auto;background-color:white;padding:8px;border:1px solid #e1e1e1;\">\n"
+"            <tr>\n"
+"                <td style=\"font-size:16px; font-weight:300;\">\n"
+"                    <div style=\"text-align: center\">\n"
+"                        <h2>Congratulations!</h2>\n"
+"                        <div style=\"color:grey;\">Your resume has been positively reviewed.</div>\n"
+"                        <img src=\"/hr_recruitment/static/src/img/congratulations.png\" alt=\"Congratulations!\" style=\"width:175px;margin:20px 0;\"/>\n"
+"                    </div>\n"
+"\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        We just reviewed your resume, and it caught our\n"
+"                        attention. As we think you might be great for the\n"
+"                        position, your application has been short listed for a\n"
+"                        call or an interview.\n"
+"                    </p>\n"
+"\n"
+"                    % if object.user_id:\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        You will soon be contacted by:\n"
+"                    </p>\n"
+"                    <table style=\"width:100%; border:0px solid white;\">\n"
+"                    <tr>\n"
+"                        <td width=\"75\">\n"
+"                            <img src=\"/web/image/res.users/${object.user_id.id}/image_small\" alt=\"Avatar\" style=\"vertical-align:baseline;max-width:64px;\" />\n"
+"                        </td><td style=\"font-size:15px;\">\n"
+"                            <strong>${object.user_id.name}</strong><br/>\n"
+"                            <span>Email: ${object.user_id.email or ''}</span><br/>\n"
+"                            <span>Phone: ${object.user_id.phone or ''}</span>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    </table>\n"
+"                    % endif\n"
+"                    <p style=\"font-size:16px;margin:24px 0;\">\n"
+"                        See you soon,\n"
+"                    </p><p style=\"font-size:16px;color: grey;\">\n"
+"                        -- <br/>\n"
+"                        Odoo HR Team\n"
+"                    </p>\n"
+"\n"
+"                    <hr style=\"margin: 30px 0\"/>\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>What is the next step?</strong></h3>\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        We usually <strong>answer applications within 3 days</strong>.\n"
+"                        The next step is either a call or a meeting in our offices.\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        Feel free to <strong>contact us if you want a faster\n"
+"                        feedback</strong> or if you don't get news from us\n"
+"                        quickly enough (just reply to this email).\n"
+"                    </p>\n"
+"                    <hr style=\"margin: 30px 0\"/>\n"
+"\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>Want to learn about us?</strong></h3>\n"
+"                    <ol>\n"
+"                        <li><a style=\"color:#1CC5A9\" href=\"https://www.odoo.com/blog/odoo-news-5/post/the-odoo-story-56\">Founders' story</a></li>\n"
+"                        <li><a style=\"color:#1CC5A9\" href=\"https://www.slideshare.net/openobject/the-odoo-culture\">The Odoo Culture</a></li>\n"
+"                        <li><a style=\"color:#1CC5A9\" href=\"https://www.odoo.com/page/about-us\">About us</a></li>\n"
+"                    </ol>\n"
+"\n"
+"                    <hr style=\"margin: 30px 0\"/>\n"
+"\n"
+"                    % set location = ''\n"
+"                    % if object.job_id.address_id.name:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\"><strong>${object.job_id.address_id.name}</strong></p>\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.street:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\">${object.job_id.address_id.street}</p>\n"
+"                        % set location = object.job_id.address_id.street\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.street2:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\">${object.job_id.address_id.street2}</p>\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.street2)\n"
+"                    % endif\n"
+"                    <p style=\"margin:0px 0px 0px 0px;\">\n"
+"                    % if object.job_id.address_id.city:\n"
+"                        ${object.job_id.address_id.city},\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.city)\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.state_id.name:\n"
+"                        ${object.job_id.address_id.state_id.name},\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.state_id.name)\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.zip:\n"
+"                        ${object.job_id.address_id.zip}\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.zip)\n"
+"                    % endif\n"
+"                    </p>\n"
+"                    % if object.job_id.address_id.country_id.name:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\">${object.job_id.address_id.country_id.name}</p>\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)\n"
+"                    % endif\n"
+"\n"
+"                </td>\n"
+"            </tr>\n"
+"            </table>\n"
+"\n"
+"            % if object.job_id.address_id:\n"
+"            <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
+"                <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"                    <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\"/>\n"
+"                </a>\n"
+"            </div>\n"
+"            % endif\n"
+"            <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding-top:10px;font-size: 12px;\">\n"
+"                            <div>Sent by ${object.company_id.name}</div>\n"
+"                            % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                            <div>\n"
+"                                Discover <a href=\"/jobs\" style=\"text-decoration:none;color:#717188;\">all our jobs</a>.\n"
+"                            </div>\n"
+"                            % endif\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"\n"
+"\n"
+"          </div>\n"
 "        "
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_congratulations
 msgid ""
-"<p>\n"
-"                Odoo helps you track applicants in the recruitment\n"
-"                process and follow up all operations: meetings, interviews, etc.\n"
-"              </p><p>\n"
-"                Applicants and their attached CV are created automatically when an email is sent.\n"
-"                If you install the document management modules, all resumes are indexed automatically,\n"
-"                so that you can easily search through their content.\n"
-"              </p>\n"
-"         "
+"\n"
+"          <div style=\"background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"            <table style=\"width:600px;margin:10px auto;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td>\n"
+"                            <a href=\"/\">\n"
+"                                <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
+"                            </a>\n"
+"                        </td>\n"
+"                        <td style=\"text-align:right;vertical-align:middle;\">\n"
+"                            % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                                <a href=\"${object.job_id.website_url}\" style=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">Job Description</a>\n"
+"                            % endif\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:600px;margin:0px auto;background-color:white;padding:8px;border:1px solid #e1e1e1;\">\n"
+"            <tr>\n"
+"                <td style=\"font-size:16px; font-weight:300;\">\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Hi,\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        We confirm we successfully received your application to the job\n"
+"\n"
+"                        \"<a href=\"${object.job_id.website_url or ''}\" style=\"color:#9A6C8E;\"><strong>${object.job_id.name}</strong></a>\"\n"
+"                        at <strong>${object.company_id.name}</strong>.\n"
+"                    </p>\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        We will come back to you shortly.\n"
+"                    </p>\n"
+"\n"
+"                    <hr style=\"margin: 30px 0\"/>\n"
+"                    % if object.user_id:\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>Your Contact:</strong></h3>\n"
+"                    <table style=\"width:100%; border:0px solid white;\">\n"
+"                    <tr>\n"
+"                        <td width=\"75\">\n"
+"                            <img src=\"/web/image/res.users/${object.user_id.id}/image_small\" alt=\"Avatar\" style=\"vertical-align:baseline;max-width:64px;\" />\n"
+"                        </td><td style=\"font-size:15px;\">\n"
+"                            <strong>${object.user_id.name}</strong><br/>\n"
+"                            <span>Email: ${object.user_id.email or ''}</span><br/>\n"
+"                            <span>Phone: ${object.user_id.phone or ''}</span>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    </table>\n"
+"                    % endif\n"
+"\n"
+"                    <hr style=\"margin: 30px 0\"/>\n"
+"\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>What is the next step?</strong></h3>\n"
+"                    <p>We usually <strong>answer applications within 3 days.</strong></p>\n"
+"                    <p>\n"
+"                        Feel free to <strong>contact us if you want a faster\n"
+"                        feedback</strong> or if you don't get news from us\n"
+"                        quickly enough (just reply to this email).\n"
+"                    </p>\n"
+"                    <hr style=\"margin: 30px 0\"/>\n"
+"\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>Want to learn more?</strong></h3>\n"
+"                    <ol>\n"
+"                        <li><a style=\"color:#1CC5A9\" href=\"https://www.odoo.com/blog/odoo-news-5/post/the-odoo-story-56\">Founders' story</a></li>\n"
+"                        <li><a style=\"color:#1CC5A9\" href=\"https://www.slideshare.net/openobject/the-odoo-culture\">The Odoo Culture</a></li>\n"
+"                        <li><a style=\"color:#1CC5A9\" href=\"https://www.odoo.com/page/about-us\">About us</a></li>\n"
+"                    </ol>\n"
+"\n"
+"                    <hr style=\"margin: 30px 0\"/>\n"
+"\n"
+"                    % set location = ''\n"
+"                    % if object.job_id.address_id.name:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\"><strong>${object.job_id.address_id.name}</strong></p>\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.street:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\">${object.job_id.address_id.street}</p>\n"
+"                        % set location = object.job_id.address_id.street\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.street2:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\">${object.job_id.address_id.street2}</p>\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.street2)\n"
+"                    % endif\n"
+"                    <p style=\"margin:0px 0px 0px 0px;\">\n"
+"                    % if object.job_id.address_id.city:\n"
+"                        ${object.job_id.address_id.city},\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.city)\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.state_id.name:\n"
+"                        ${object.job_id.address_id.state_id.name},\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.state_id.name)\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.zip:\n"
+"                        ${object.job_id.address_id.zip}\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.zip)\n"
+"                    % endif\n"
+"                    </p>\n"
+"                    % if object.job_id.address_id.country_id.name:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\">${object.job_id.address_id.country_id.name}</p>\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)\n"
+"                    % endif\n"
+"\n"
+"                </td>\n"
+"            </tr>\n"
+"            </table>\n"
+"\n"
+"            % if object.job_id.address_id:\n"
+"            <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
+"                <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"                    <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\"/>\n"
+"                </a>\n"
+"            </div>\n"
+"            % endif\n"
+"            <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding-top:10px;font-size: 12px;\">\n"
+"                            <div>Sent by ${object.company_id.name}</div>\n"
+"                            % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                            <div>\n"
+"                                Discover <a href=\"/jobs\" style=\"text-decoration:none;color:#717188;\">all our jobs</a>.\n"
+"                            </div>\n"
+"                            % endif\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"\n"
+"\n"
+"          </div>\n"
+"        "
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_employee
 msgid ""
-"<p>\n"
-"                Odoo helps you track applicants in the recruitment\n"
-"                process and follow up all operations: meetings, interviews, etc.\n"
-"              </p><p>\n"
-"                Applicants and their attached CV are created automatically when an email is sent.\n"
-"                If you install the document management modules, all resumes are indexed automatically, \n"
-"                so that you can easily search through their content.\n"
-"              </p>\n"
-"            "
+"\n"
+"<p>Dear all,</p>\n"
+"<p>I’m very pleased to announce that <strong> ${object.name} </strong> will be\n"
+"joining us as a ${object.job_id.name}\n"
+"%if object.department_id:\n"
+"    in ${object.department_id.name}.\n"
+"%endif\n"
+".</p>\n"
+"<p>Please welcome him/her and help him/her finding his/her marks.</p>"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:survey.page,description:hr_recruitment.recruitment_1
-#: model:survey.page,description:hr_recruitment.recruitment_2
-#: model:survey.page,description:hr_recruitment.recruitment_3
-#: model:survey.survey,thank_you_message:hr_recruitment.recruitment_form
-msgid "<p></p>"
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+msgid "<b>Contact:</b>"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:email.template,body_html:hr_recruitment.applicant_interest
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+msgid "<b>Degree:</b>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+msgid "<b>Departement:</b>"
+msgstr "<b>部門:</b>"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+msgid "<span class=\"o_stat_text\">Meetings</span>"
+msgstr "<span class=\"o_stat_text\">打ち合わせ</span>"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+msgid "<span class=\"o_stat_text\">Trackers</span>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
+msgid "<span>Folded in Recruitment Pipe: </span>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "<span>New</span>"
+msgstr "<span>新規</span>"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "<span>Reporting</span>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "<span>View</span>"
+msgstr "<span>ビュー</span>"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_defaults
 msgid ""
-"<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-"        <p>Congrats! Your resume's got our interest!\n"
-"        I will call you as soon as possible to make a 10 minutes phone interview and  plan a first meeting.</p>\n"
-"        <p>If we can’t reach you or if you miss our call, feel free to reach me back on the number 001 312 349 3030\n"
-"        If I do not answer, please let me a message with some schedules to call you back.</p>\n"
-"        <p>Kind regards,</p>\n"
-"        <br/>\n"
-"         ${object.user_id.signature | safe}"
-msgstr ""
+"A Python dictionary that will be evaluated to provide default values when "
+"creating new records for this alias."
+msgstr "このエイリアスの新しいレコードを作成する時にデフォルト値を与えるためのPython辞書です。"
 
 #. module: hr_recruitment
-#: model:email.template,body_html:hr_recruitment.applicant_refuse
-msgid ""
-"<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-"        <p>We thank you for your interest in our company and for your application.\n"
-"        Unfortunately, your profile does not match with our needs or our recruitment\n"
-"        campaign has reached its term.</p>\n"
-"        <p>If you want more details, feel free to contact us by phone.</p>\n"
-"        <p>Kind regards,</p>\n"
-"        <br/>\n"
-"         ${object.user_id and object.user_id.signature | safe or ''}"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:survey.survey,description:hr_recruitment.recruitment_form
-msgid ""
-"<p>This form is intended to help the responsible of a recruitment "
-"interview.</p>"
-msgstr ""
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:39
-#, python-format
-msgid "A contact is already defined on this job request."
-msgstr ""
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:56
-#, python-format
-msgid "A contact is already existing with the same name."
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,active:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_active
 msgid "Active"
 msgstr "有効"
 
 #. module: hr_recruitment
-#: model:survey.question,question:hr_recruitment.recruitment_2_4
-msgid "Activities"
-msgstr "活動"
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:20
+#, python-format
+msgid ""
+"Add columns to define the <b>interview stages</b>.<br/><i>e.g. New &gt; "
+"Qualified &gt; First Interview &gt; Recruited</i>"
+msgstr ""
 
 #. module: hr_recruitment
-#: help:hr.job,address_id:0
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_address_id
 msgid "Address where employees are working"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.job,alias_id:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_id
 msgid "Alias"
 msgstr "エイリアス"
 
 #. module: hr_recruitment
-#: field:hr.config.settings,alias_domain:0
-msgid "Alias Domain"
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_contact
+msgid "Alias Contact Security"
+msgstr "エイリアス連絡先セキュリティ"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_alias_id
+msgid "Alias ID"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_name
+msgid "Alias Name"
+msgstr "エイリアス名"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_domain
+msgid "Alias domain"
 msgstr "エイリアスドメイン"
 
 #. module: hr_recruitment
-#: field:hr.config.settings,module_document:0
-msgid "Allow the automatic indexation of resumes"
-msgstr "レジュメの自動整理を許可する"
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_model_id
+msgid "Aliased Model"
+msgstr "エイリアス対象モデル"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
-msgid "Answer related job question"
+#: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ_all_app
+msgid "All Applications"
 msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant
+#: model:ir.model.fields,field_description:hr_recruitment.field_calendar_event_applicant_id
 msgid "Applicant"
 msgstr "応募者"
-
-#. module: hr_recruitment
-#: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_new
-msgid "Applicant Created"
-msgstr ""
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
@@ -253,89 +534,94 @@ msgid "Applicant hired"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,partner_name:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_name
 msgid "Applicant's Name"
 msgstr "応募者の氏名"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:93
-#: view:hr.applicant:hr_recruitment.crm_case_tree_view_job
-#: view:hr.applicant:hr_recruitment.hr_applicant_calendar_view
-#, python-format
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_calendar_view
 msgid "Applicants"
 msgstr "応募者"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
+msgid ""
+"Applicants and their attached CV are created automatically when an email is sent.\n"
+"                If you install the document management modules, all resumes are indexed automatically,\n"
+"                so that you can easily search through their content."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
+msgid ""
+"Applicants and their attached CV are created automatically when an email is sent.\n"
+"            If you install the document management modules, all resumes are indexed automatically,\n"
+"            so that you can easily search through their content."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "Application"
+msgstr "アプリケーション"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Application Summary"
 msgstr "応募内容のサマリー（概要）"
 
 #. module: hr_recruitment
-#: model:email.template,subject:hr_recruitment.applicant_interest
-msgid "Application approved"
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "Application(s)"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:email.template,subject:hr_recruitment.applicant_refuse
-msgid "Application refused"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.job:hr_recruitment.hr_job_survey
-#: view:hr.job:hr_recruitment.view_hr_job_kanban
-#: field:hr.job,application_count:0 field:hr.job,application_ids:0
-#: field:hr.job,document_ids:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_applications
 #: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_application_count
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_application_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_document_ids
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Applications"
 msgstr "応募"
 
 #. module: hr_recruitment
-#: field:hr.applicant,job_id:0 field:hr.recruitment.report,job_id:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_job_id
 msgid "Applied Job"
 msgstr "応募した仕事"
 
 #. module: hr_recruitment
-#: field:hr.applicant,priority:0 field:hr.recruitment.report,priority:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_priority
 msgid "Appreciation"
 msgstr "好意的な評価"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.partner.create:hr_recruitment.view_hr_recruitment_partner_create
-msgid "Are you sure you want to create a contact based on this job request ?"
-msgstr ""
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "Archived"
+msgstr "アーカイブ済"
 
 #. module: hr_recruitment
-#: field:hr.applicant,date_open:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_open
 msgid "Assigned"
 msgstr "割当済"
 
 #. module: hr_recruitment
-#: field:hr.applicant,availability:0 field:hr.recruitment.report,available:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_attachment_ids
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "Attachments"
+msgstr "添付"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_template_id
+msgid "Automated Email"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_availability
 msgid "Availability"
-msgstr "可能性"
-
-#. module: hr_recruitment
-#: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
-msgid "Average"
-msgstr "平均"
-
-#. module: hr_recruitment
-#: field:hr.recruitment.report,delay_close:0
-msgid "Avg. Delay to Close"
-msgstr "決定に至るまでの平均期間"
-
-#. module: hr_recruitment
-#: field:hr.recruitment.report,salary_exp_avg:0
-msgid "Avg. Expected Salary"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.recruitment.report,salary_prop_avg:0
-msgid "Avg. Proposed Salary"
-msgstr ""
+msgstr "利用可能"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bachelor
@@ -343,44 +629,22 @@ msgid "Bachelor Degree"
 msgstr "学士"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
-msgid "Bad"
-msgstr "悪い"
-
-#. module: hr_recruitment
-#: model:survey.page,title:hr_recruitment.recruitment_1
-msgid "Basic information"
-msgstr ""
-
-#. module: hr_recruitment
-#: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
-msgid "Below Average"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.filters,name:hr_recruitment.filter_recruitment_report_departmnet
+#: model:ir.filters,name:hr_recruitment.hr_applicant_filter_department
 msgid "By Department"
 msgstr "部門別"
 
 #. module: hr_recruitment
-#: model:ir.filters,name:hr_recruitment.filter_recruitment_report_job
+#: model:ir.filters,name:hr_recruitment.hr_applicant_filter_job
 msgid "By Job"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.filters,name:hr_recruitment.filter_recruitment_report_recruiter
+#: model:ir.filters,name:hr_recruitment.hr_applicant_filter_recruiter
 msgid "By Recruiter"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.partner.create:hr_recruitment.view_hr_recruitment_partner_create
-msgid "Cancel"
-msgstr "キャンセル"
-
-#. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_graph_view_job
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_graph_view_job
 msgid "Cases By Stage and Estimates"
 msgstr "段階と見積りの事例"
 
@@ -390,74 +654,82 @@ msgid "Category of applicant"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_form_installer
-msgid ""
-"Check if the following stages are matching your recruitment process. Don't "
-"forget to specify the department if your recruitment process is different "
-"according to the job position."
-msgstr "次の段階が採用プロセスに合致するのであれば、チェックしてください。もし職種によって採用プロセスが異なる場合には、部門を指定してください。"
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
+msgid "Click here to create a new job position."
+msgstr ""
 
 #. module: hr_recruitment
-#: help:hr.job,survey_id:0
-msgid ""
-"Choose an interview form for this job position and you will be able to "
-"print/answer this interview from all applicants who apply for this job"
-msgstr "この職種の面接用紙を選ぶと、この職種に応募した全ての面接用紙を印刷できます。"
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
+msgid "Click to add a new employee."
+msgstr "クリックで新しい従業員が追加されます。"
 
 #. module: hr_recruitment
-#: field:hr.recruitment.partner.create,close:0
-msgid "Close job request"
-msgstr "仕事の要求を締め切る。"
+#: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
+#: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
+msgid "Click to add a new stage in the recruitment process."
+msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,date_closed:0 field:hr.recruitment.report,date_closed:0
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
+msgid "Click to add a new tag."
+msgstr "クリックで新しいタグを追加。"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_closed
 msgid "Closed"
-msgstr "既決"
+msgstr "クローズ"
 
 #. module: hr_recruitment
-#: field:hr.applicant,color:0 field:hr.job,color:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_color
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_color
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_color
 msgid "Color Index"
-msgstr "カラーインデックス"
+msgstr "カラーインデクス"
 
 #. module: hr_recruitment
-#: field:hr.applicant,company_id:0
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
-#: field:hr.recruitment.report,company_id:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_company_id
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Company"
 msgstr "会社"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.source,name:hr_recruitment.source_website_company
-msgid "Company Website"
-msgstr "会社のウェブサイト"
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_configuration
+msgid "Configuration"
+msgstr "設定"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:381
-#: field:hr.applicant,partner_id:0
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_configuration
+msgid "Configure Recruitment"
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:350
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_id
 #, python-format
 msgid "Contact"
-msgstr "コンタクト"
+msgstr "連絡先"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:383
+#: code:addons/hr_recruitment/models/hr_recruitment.py:352
 #, python-format
 msgid "Contact Email"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
-msgid "Contact:"
-msgstr ""
+#: model:ir.ui.view,arch_db:hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment
+msgid "Content"
+msgstr "内容"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Contract"
 msgstr "契約"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
-msgid "Contract Proposed"
-msgstr "提案された契約"
+msgid "Contract Proposal"
+msgstr "オファー面談"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
@@ -465,92 +737,88 @@ msgid "Contract Signed"
 msgstr "署名済みの契約"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.partner.create:hr_recruitment.view_hr_recruitment_partner_create
-msgid "Convert To Partner"
-msgstr "パートナに転向"
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "Create"
+msgstr "作成"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.partner.create:hr_recruitment.view_hr_recruitment_partner_create
-#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_partner_create
-msgid "Create Contact"
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "Create & Edit"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.recruitment.report,date_create:0
-msgid "Create Date"
-msgstr "作成日"
-
-#. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Create Employee"
 msgstr "従業員を作成"
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_partner_create
-msgid "Create Partner from job application"
-msgstr "応募の中からパートナを作る"
+#: model:ir.actions.act_window,name:hr_recruitment.create_job_simple
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "Create a Job Position"
+msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,create_uid:0 field:hr.applicant_category,create_uid:0
-#: field:hr.recruitment.degree,create_uid:0
-#: field:hr.recruitment.partner.create,create_uid:0
-#: field:hr.recruitment.source,create_uid:0
-#: field:hr.recruitment.stage,create_uid:0
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
+msgid "Create alias"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
+msgid ""
+"Create some aliases that will allow you to track where applicants come from."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_create_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_create_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_create_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_create_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_create_uid
 msgid "Created by"
 msgstr "作成者"
 
 #. module: hr_recruitment
-#: field:hr.applicant_category,create_date:0
-#: field:hr.recruitment.degree,create_date:0
-#: field:hr.recruitment.partner.create,create_date:0
-#: field:hr.recruitment.source,create_date:0
-#: field:hr.recruitment.stage,create_date:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_create_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_create_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_create_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_create_date
 msgid "Created on"
 msgstr "作成日"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
-#: field:hr.applicant,create_date:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_create_date
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Creation Date"
 msgstr "作成日"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Creation Week"
 msgstr ""
 
 #. module: hr_recruitment
-#: help:hr.applicant,message_last_post:0
-msgid "Date of the last message posted on the record."
-msgstr "記録上の最後のメッセージが投稿された日"
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_action_activity
+msgid "Currently there are not any activity scheduled."
+msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
-msgid "Day(s)"
-msgstr "日"
-
-#. module: hr_recruitment
-#: field:hr.applicant,day_close:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_day_close
 msgid "Days to Close"
-msgstr "決定日"
+msgstr "完了所要日数"
 
 #. module: hr_recruitment
-#: field:hr.applicant,day_open:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_day_open
 msgid "Days to Open"
 msgstr "開始日"
 
 #. module: hr_recruitment
-#: field:hr.config.settings,alias_prefix:0
-msgid "Default Alias Name for Jobs"
-msgstr ""
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_defaults
+msgid "Default Values"
+msgstr "デフォルト値"
 
 #. module: hr_recruitment
-#: view:hr.config.settings:hr_recruitment.view_hr_apll_config_settings
-msgid "Default job email address"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.job:hr_recruitment.hr_job_survey
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid ""
 "Define a specific contact address for this job position. If you keep it "
 "empty, the default email address will be used which is in human resources "
@@ -558,13 +826,21 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
-#: field:hr.applicant,type_id:0
-#: view:hr.recruitment.degree:hr_recruitment.hr_recruitment_degree_form
-#: view:hr.recruitment.degree:hr_recruitment.hr_recruitment_degree_tree
-#: field:hr.recruitment.report,type_id:0
+#: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
+msgid ""
+"Define here your stages of the recruitment process, for example:\n"
+"            qualification call, first interview, second interview, refused,\n"
+"            hired."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_type_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_name
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_degree_form
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_degree_tree
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Degree"
 msgstr "学位"
 
@@ -574,47 +850,55 @@ msgid "Degree of Recruitment"
 msgstr "採用の度合い"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
-msgid "Degree:"
-msgstr ""
-
-#. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
 msgid "Degrees"
 msgstr "学位"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
-#: view:hr.job:hr_recruitment.view_hr_job_kanban
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_delay_close
+msgid "Delay to Close"
+msgstr "完了遅延"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Delete"
 msgstr "削除"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
-msgid "Departement:"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,department_id:0
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
-#: field:hr.recruitment.report,department_id:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_department_id
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Department"
-msgstr "部署"
+msgstr "部門"
 
 #. module: hr_recruitment
-#: field:hr.job,manager_id:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_manager_id
 msgid "Department Manager"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,description:0
-msgid "Description"
-msgstr "詳細"
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_department
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_department
+msgid "Departments"
+msgstr "部門"
 
 #. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.rrow_2_1_4
-msgid "Desk space"
-msgstr ""
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_description
+msgid "Description"
+msgstr "説明"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "Discard"
+msgstr "破棄"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_display_name
+msgid "Display Name"
+msgstr "表示名"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
@@ -622,118 +906,107 @@ msgid "Doctoral Degree"
 msgstr "博士号"
 
 #. module: hr_recruitment
-#: view:hr.job:hr_recruitment.view_hr_job_kanban
-msgid "Document"
-msgstr "文書"
-
-#. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
-#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
-#: view:hr.job:hr_recruitment.hr_job_survey
-#: view:hr.job:hr_recruitment.view_hr_job_kanban
-#: field:hr.job,documents_count:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_documents_count
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Documents"
-msgstr "文書"
+msgstr "ドキュメント"
 
 #. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.rrow_2_1_11
-msgid "Dress code"
+#: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
+msgid ""
+"Don't forget to specify the department if your recruitment process\n"
+"            is different according to the job position."
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.job:hr_recruitment.view_hr_job_kanban
-msgid "Edit..."
-msgstr "編集"
-
-#. module: hr_recruitment
-#: model:survey.question,question:hr_recruitment.recruitment_2_2
-msgid "Education"
-msgstr "学歴"
-
-#. module: hr_recruitment
-#: model:survey.page,title:hr_recruitment.recruitment_2
-msgid "Education and Activities"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,email_from:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_email_from
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_email
 msgid "Email"
 msgstr "Eメール"
 
 #. module: hr_recruitment
-#: view:hr.job:hr_recruitment.hr_job_survey
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Email Alias"
 msgstr "Eメールエイリアス"
 
 #. module: hr_recruitment
-#: help:hr.job,alias_id:0
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+msgid "Email alias"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_id
 msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,emp_id:0
+#: model:ir.model,name:hr_recruitment.model_hr_employee
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_emp_id
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Employee"
 msgstr "従業員"
 
 #. module: hr_recruitment
-#: help:hr.applicant,emp_id:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_employee_name
+msgid "Employee Name"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_emp_id
 msgid "Employee linked to the applicant."
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:38
-#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:56
-#, python-format
-msgid "Error!"
-msgstr "エラー"
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_no_employee
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+msgid "Employees"
+msgstr "従業員"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_calendar_event
+msgid "Event"
+msgstr "イベント"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
 msgid "Excellent"
 msgstr "優良"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_expected:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_department_expected_employee
+msgid "Expected Employee"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_salary_expected
 msgid "Expected Salary"
 msgstr "期待する給与"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_expected_extra:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_salary_expected_extra
 msgid "Expected Salary Extra"
 msgstr "追加給与の期待値"
 
 #. module: hr_recruitment
-#: model:survey.question,question:hr_recruitment.recruitment_2_3
-msgid "Experience"
-msgstr "職務経歴"
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Extended Filters"
 msgstr "拡張フィルタ"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Extra advantages..."
-msgstr "その他の利点"
+msgstr "その他条件"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Feedback of interviews..."
 msgstr ""
-
-#. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.recruitment_1_2_2
-msgid "Female"
-msgstr "女"
-
-#. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
-msgid "Filter and view on next actions and date"
-msgstr "次のアクションと日付で検索する。"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
@@ -741,60 +1014,29 @@ msgid "First Interview"
 msgstr "最初の面接"
 
 #. module: hr_recruitment
-#: field:hr.recruitment.stage,fold:0
-msgid "Folded in Kanban View"
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
+msgid "Folded in Recruitment Pipe"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,message_follower_ids:0
-msgid "Followers"
-msgstr "フォロワー"
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "Future Activities"
+msgstr "将来の活動"
 
 #. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.rrow_2_1_8
-msgid "Freebies such as tea, coffee and stationery"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:survey.question,question:hr_recruitment.recruitment_1_1
-msgid "From which university will you graduate?"
-msgstr "卒業（予定）大学名"
-
-#. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.rrow_2_1_2
-msgid "Getting on with colleagues"
-msgstr ""
-
-#. module: hr_recruitment
-#: help:hr.recruitment.degree,sequence:0
+#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_degree_sequence
 msgid "Gives the sequence order when displaying a list of degrees."
 msgstr "学位の一覧が表示されたら、順番を指定してください。"
 
 #. module: hr_recruitment
-#: help:hr.recruitment.stage,sequence:0
+#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_sequence
 msgid "Gives the sequence order when displaying a list of stages."
 msgstr "段階の一覧が表示されていたら順序を指定してください。"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
 msgid "Good"
 msgstr "良"
-
-#. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.rrow_2_1_7
-msgid "Good management"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.rrow_2_1_1
-msgid "Good pay"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.rrow_2_1_13
-msgid "Good social life"
-msgstr ""
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_graduate
@@ -802,76 +1044,55 @@ msgid "Graduate"
 msgstr "卒業"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Group By"
 msgstr "グループ化"
 
 #. module: hr_recruitment
-#: view:hr.job:hr_recruitment.view_hr_job_kanban
+#: model:ir.model,name:hr_recruitment.model_hr_department
+msgid "HR Department"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_hr_responsible_id
+msgid "HR Responsible"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Hired Employees"
 msgstr "採用実績数"
 
 #. module: hr_recruitment
-#: help:hr.applicant,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,id:0 field:hr.applicant_category,id:0
-#: field:hr.recruitment.degree,id:0 field:hr.recruitment.partner.create,id:0
-#: field:hr.recruitment.report,id:0 field:hr.recruitment.source,id:0
-#: field:hr.recruitment.stage,id:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_recruitment
-#: model:hr.applicant_category,name:hr_recruitment.tag_applicant_it
-msgid "IT"
-msgstr ""
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_parent_thread_id
+msgid ""
+"ID of the parent record holding the alias (example: project holding the task"
+" creation alias)"
+msgstr "エイリアスを保持する親レコードのID(例：プロジェクトは、タスク作成エイリアスを保持)"
 
 #. module: hr_recruitment
-#: help:hr.applicant,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "チェックされている場合は、新しいメッセージに注意が必要です。"
-
-#. module: hr_recruitment
-#: model:survey.question,comments_message:hr_recruitment.recruitment_1_1
-#: model:survey.question,comments_message:hr_recruitment.recruitment_1_2
-#: model:survey.question,comments_message:hr_recruitment.recruitment_1_3
-#: model:survey.question,comments_message:hr_recruitment.recruitment_2_1
-#: model:survey.question,comments_message:hr_recruitment.recruitment_2_2
-#: model:survey.question,comments_message:hr_recruitment.recruitment_2_3
-#: model:survey.question,comments_message:hr_recruitment.recruitment_2_4
-#: model:survey.question,comments_message:hr_recruitment.recruitment_3_1
-msgid "If other, precise:"
-msgstr ""
-
-#. module: hr_recruitment
-#: help:hr.recruitment.stage,template_id:0
+#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_template_id
 msgid ""
 "If set, a message is posted on the applicant using the template when the "
 "applicant is set to the stage."
 msgstr ""
 
 #. module: hr_recruitment
-#: help:hr.applicant,active:0
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_active
 msgid ""
 "If the active field is set to false, it will allow you to hide the case "
 "without removing it."
 msgstr "もしこの項目が誤りならば、この事例を削除しないでも隠すことができます。"
-
-#. module: hr_recruitment
-#: model:survey.page,title:hr_recruitment.recruitment_3
-msgid "Importance"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.rcol_3_1_3
-msgid "Important"
-msgstr "重要"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
@@ -879,29 +1100,46 @@ msgid "Initial Qualification"
 msgstr "当初の資格"
 
 #. module: hr_recruitment
-#: model:calendar.event.type,name:hr_recruitment.categ_meet_interview
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
-msgid "Interview"
-msgstr "面接"
-
-#. module: hr_recruitment
-#: field:hr.job,survey_id:0
-msgid "Interview Form"
-msgstr "面接用紙"
-
-#. module: hr_recruitment
-#: field:hr.applicant,message_is_follower:0
-msgid "Is a Follower"
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings_module_hr_recruitment_survey
+#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+msgid "Interview Forms"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+#: code:addons/hr_recruitment/models/hr_job.py:94
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#, python-format
 msgid "Job"
 msgstr "職務"
 
 #. module: hr_recruitment
-#: field:hr.job,address_id:0
+#: model:mail.template,subject:hr_recruitment.email_template_data_applicant_congratulations
+msgid "Job Application Confirmation: ${object.job_id.name | safe}"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_pivot_view_job
+msgid "Job Applications"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:utm.campaign,name:hr_recruitment.utm_campaign_job
+msgid "Job Campaign"
+msgstr "募集キャンペーン"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "Job Email"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_job_id
+msgid "Job ID"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_address_id
 msgid "Job Location"
 msgstr "勤務地"
 
@@ -911,87 +1149,102 @@ msgid "Job Position"
 msgstr "職位"
 
 #. module: hr_recruitment
+#: model:mail.message.subtype,name:hr_recruitment.mt_department_new
+msgid "Job Position Created"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,name:hr_recruitment.mt_job_new
+msgid "Job Position created"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_config
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_position
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_position_config
 msgid "Job Positions"
 msgstr "職位"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+msgid "Job Posting"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_job_id
+msgid "Job Specific"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Jobs"
 msgstr "業務"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Jobs - Recruitment Form"
 msgstr "仕事 - 採用用紙"
 
 #. module: hr_recruitment
-#: model:survey.question,question:hr_recruitment.recruitment_2_1
-msgid "Knowledge"
-msgstr "ナレッジ"
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_sources
+msgid "Jobs Sources"
+msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,message_last_post:0
-msgid "Last Message Date"
-msgstr "最終メッセージ日"
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant___last_update
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category___last_update
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree___last_update
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source___last_update
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage___last_update
+msgid "Last Modified on"
+msgstr "最終更新日"
 
 #. module: hr_recruitment
-#: field:hr.applicant,last_stage_id:0
-#: field:hr.recruitment.report,last_stage_id:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_last_stage_id
 msgid "Last Stage"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
-#: field:hr.applicant,date_last_stage_update:0
-#: field:hr.recruitment.report,date_last_stage_update:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_last_stage_update
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Last Stage Update"
 msgstr "最終ステージ更新日"
 
 #. module: hr_recruitment
-#: field:hr.applicant,write_uid:0 field:hr.applicant_category,write_uid:0
-#: field:hr.recruitment.degree,write_uid:0
-#: field:hr.recruitment.partner.create,write_uid:0
-#: field:hr.recruitment.source,write_uid:0
-#: field:hr.recruitment.stage,write_uid:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_write_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_write_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_write_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_write_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_write_uid
 msgid "Last Updated by"
 msgstr "最終更新者"
 
 #. module: hr_recruitment
-#: field:hr.applicant_category,write_date:0
-#: field:hr.recruitment.degree,write_date:0
-#: field:hr.recruitment.partner.create,write_date:0
-#: field:hr.recruitment.source,write_date:0
-#: field:hr.recruitment.stage,write_date:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_write_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_write_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_write_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_write_date
 msgid "Last Updated on"
 msgstr "最終更新日"
 
 #. module: hr_recruitment
-#: view:hr.job:hr_recruitment.view_hr_job_kanban
-msgid "Launch Recruitment"
-msgstr "募集を開始"
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "Late Activities"
+msgstr "遅れた活動"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.source,name:hr_recruitment.source_linkedin
-msgid "LinkedIn"
-msgstr "LinkedIn"
-
-#. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.recruitment_1_2_1
-msgid "Male"
-msgstr "男"
-
-#. module: hr_recruitment
-#: help:hr.config.settings,module_document:0
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:16
+#, python-format
 msgid ""
-"Manage your CV's and motivation letter related to all applicants.\n"
-"-This installs the module document_ftp. This will install the knowledge management  module in order to allow you to search using specific keywords through  the content of all documents (PDF, .DOCx...)"
+"Let's have a look at the <b>applications pipeline</b> for this job position."
 msgstr ""
 
 #. module: hr_recruitment
-#: model:hr.applicant_category,name:hr_recruitment.tag_applicant_manager
+#: model:res.groups,name:hr_recruitment.group_hr_recruitment_manager
 msgid "Manager"
-msgstr "マネジャ"
+msgstr "マネジャー"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
@@ -999,183 +1252,247 @@ msgid "Master Degree"
 msgstr "修士号"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
-msgid "Meeting"
-msgstr "ミーティング"
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.act_hr_applicant_to_meeting
-msgid "Meetings"
-msgstr "ミーティング"
-
-#. module: hr_recruitment
-#: field:hr.applicant,message_ids:0
-msgid "Messages"
-msgstr "メッセージ"
-
-#. module: hr_recruitment
-#: help:hr.applicant,message_ids:0
-msgid "Messages and communication history"
-msgstr "メッセージと通信履歴"
-
-#. module: hr_recruitment
-#: field:hr.applicant,partner_mobile:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_mobile
 msgid "Mobile"
-msgstr "モバイル"
+msgstr "携帯電話"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
-msgid "Mobile:"
-msgstr "携帯電話:"
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "My Activities"
+msgstr "自分の活動"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.source,name:hr_recruitment.source_monster
-msgid "Monster"
-msgstr "強力な候補"
-
-#. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.rcol_3_1_5
-msgid "Most important"
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "My Applications"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant_category,name:0 field:hr.recruitment.degree,name:0
-#: field:hr.recruitment.stage,name:0
-msgid "Name"
-msgstr "名前"
+#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_action_activity
+msgid "My Next Activities"
+msgstr "自分の次の活動"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_name
+msgid "Name"
+msgstr "名称"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "New"
 msgstr "新規"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_department_new_applicant_count
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_new
 msgid "New Applicant"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:508
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
+msgid "New Applicants"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_new_application
+msgid "New Application"
+msgstr "新規応募者"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_action_from_department
+msgid "New Applications"
+msgstr "新規応募者"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:426
 #, python-format
 msgid "New Employee %s Hired"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
-msgid "New Mail"
-msgstr "新規メール"
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:425
-#: code:addons/hr_recruitment/hr_recruitment.py:453
-#, python-format
-msgid "New application from %s"
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_employee_view_search
+msgid "New Hired"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,title_action:0
-msgid "Next Action"
-msgstr "次のアクション"
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_department_new_hired_employee
+msgid "New Hired Employee"
+msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,date_action:0
-msgid "Next Action Date"
-msgstr "次の活動の日付"
+#: model:ir.actions.act_window,name:hr_recruitment.hr_employee_action_from_department
+msgid "Newly Hired Employees"
+msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
-msgid "Next Actions"
-msgstr "次のアクション"
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee_newly_hired_employee
+msgid "Newly hired employee"
+msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:395
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_nmenu_activity
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_tree_activity
+msgid "Next Activities"
+msgstr "次の活動"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:368
 #, python-format
 msgid "No Subject"
 msgstr "件名なし"
 
 #. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.rrow_2_1_10
-msgid "No out of hours working"
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
+msgid "No document yet."
 msgstr ""
 
 #. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.rcol_3_1_1
-msgid "Not important"
-msgstr ""
+#: selection:hr.applicant,priority:0
+msgid "Normal"
+msgstr "通常"
 
 #. module: hr_recruitment
-#: field:hr.applicant,attachment_number:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_attachment_number
 msgid "Number of Attachments"
 msgstr "添付の数"
 
 #. module: hr_recruitment
-#: help:hr.recruitment.report,delay_close:0
-msgid "Number of Days to close the project issue"
-msgstr "プロジェクトが終了するまでの日数"
-
-#. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.rrow_2_1_3
-msgid "Office environment"
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_delay_close
+msgid "Number of days to close"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.rrow_2_1_6
-msgid "Office location"
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
+msgid ""
+"Odoo helps you track applicants in the recruitment\n"
+"                process and follow up all operations: meetings, interviews, etc."
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.recruitment.report,partner_id:0
-msgid "Partner"
-msgstr "パートナ"
-
-#. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.rrow_2_1_9
-msgid "Perks such as free parking, gym passes"
+#: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
+msgid ""
+"Odoo helps you track applicants in the recruitment\n"
+"            process and follow up all operations: meetings, interviews, etc."
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,partner_phone:0
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+msgid "Offer"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
+msgid "Officer"
+msgstr "オフィサー"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
+msgid ""
+"Once a job position is created, you can track related applications\n"
+"              and manage the recruitment process."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
+msgid ""
+"Once a job position is created, you can track the applicants\n"
+"                  and manage the recruitment process related to the job\n"
+"                  position."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
+msgid "Ongoing"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings_module_website_hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+msgid "Online Posting"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_force_thread_id
+msgid ""
+"Optional ID of a thread (record) to which all incoming messages will be "
+"attached, even if they did not reply to it. If set, this will disable the "
+"creation of new records completely."
+msgstr "すべての受信メッセージに添付されるスレッド(レコード)のオプションIDです。設定した場合は新しいレコードの作成を無効にします。"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_user_id
+msgid "Owner"
+msgstr "オーナー"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_parent_model_id
+msgid "Parent Model"
+msgstr "親モデル"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_parent_thread_id
+msgid "Parent Record Thread ID"
+msgstr "親レコードスレッドID"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_parent_model_id
+msgid ""
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
+"(parent_model) and task (model))"
+msgstr ""
+"エイリアスを保持する親モデル。エイリアスの参照を保持しているモデルは、必ずしもalias_model_idによって与えられたモデルではありません(例：プロジェクト(parent_model)とタスク(model))"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_hr_responsible_id
+msgid "Person responsible of validating the employee's contracts."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_phone
 msgid "Phone"
 msgstr "電話"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
-msgid "Print"
-msgstr "印刷"
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_contact
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr ""
+"メールゲートウェイを使用したメッセージドキュメント投稿のポリシー\n"
+"- everyone: 誰にでも投稿可能\n"
+"- partners: 許可されたパートナーのみ\n"
+"- followers: 関連ドキュメントのフォロワーか、フォローしているチャンネルのメンバーのみ\n"
 
 #. module: hr_recruitment
-#: view:hr.job:hr_recruitment.hr_job_survey
-#: view:hr.job:hr_recruitment.view_hr_job_kanban
-msgid "Print Interview"
-msgstr "面接結果の印刷"
-
-#. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
-msgid "Print interview report"
-msgstr "面接報告書の印刷"
-
-#. module: hr_recruitment
-#: field:hr.applicant,probability:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_probability
 msgid "Probability"
-msgstr "確信度"
+msgstr "確度"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_proposed:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_salary_proposed
 msgid "Proposed Salary"
 msgstr "提案された給与"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_proposed_extra:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_salary_proposed_extra
 msgid "Proposed Salary Extra"
 msgstr "提案された追加給与"
 
 #. module: hr_recruitment
-#: model:survey.question,question:hr_recruitment.recruitment_3_1
-msgid "Rate the Importance"
+#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+msgid "Publish available jobs on your website"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_force_thread_id
+msgid "Record Thread ID"
+msgstr "レコードのスレッドID"
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_root
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Recruitment"
 msgstr "採用"
 
@@ -1185,128 +1502,111 @@ msgid "Recruitment / Applicants Stages"
 msgstr "採用 / 応募者の段階"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_graph
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
-#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_report_all
-#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_report_all
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_report_filtered_department
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_report_filtered_job
+#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_action_analysis
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_graph
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_pivot
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Recruitment Analysis"
 msgstr "採用分析"
 
 #. module: hr_recruitment
-#: view:hr.job:hr_recruitment.view_hr_job_kanban
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Recruitment Done"
 msgstr "採用完了"
 
 #. module: hr_recruitment
-#: model:survey.survey,title:hr_recruitment.recruitment_form
-msgid "Recruitment Form"
-msgstr ""
+#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+msgid "Recruitment Process"
+msgstr "採用プロセス"
 
 #. module: hr_recruitment
-#: field:hr.job,user_id:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_user_id
 msgid "Recruitment Responsible"
 msgstr "採用責任者"
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_report
-msgid "Recruitments Statistics"
-msgstr "採用統計"
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
+msgid "Recruitments"
+msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,reference:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_reference
 msgid "Referred By"
 msgstr "紹介者"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job6
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+msgid "Refuse"
+msgstr "却下"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Refused"
-msgstr "不採用"
+msgstr "却下済"
 
 #. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.rrow_2_1_12
-msgid "Regular meetings"
-msgstr "定期打ち合わせ"
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+msgid "Reopen Application"
+msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.stage:hr_recruitment.hr_recruitment_stage_form
-#: field:hr.recruitment.stage,requirements:0
+#: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
+msgid "Reports"
+msgstr "レポート"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_requirements
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Requirements"
 msgstr "必要事項"
 
 #. module: hr_recruitment
-#: model:hr.applicant_category,name:hr_recruitment.tag_applicant_reserve
-msgid "Reserve"
-msgstr "準備金"
-
-#. module: hr_recruitment
-#: field:hr.applicant,response_id:0
-msgid "Response"
-msgstr "応答"
-
-#. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
-#: field:hr.applicant,user_id:0
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_user_id
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Responsible"
-msgstr "責任担当"
+msgstr "担当者"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_form_installer
-msgid "Review Recruitment Stages"
-msgstr "採用段階のレビュー"
+#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_resumes
+#: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job02
+msgid "Resumes and Letters"
+msgstr "レジュメ"
 
 #. module: hr_recruitment
-#: field:hr.recruitment.report,salary_exp:0
-msgid "Salary Expected"
-msgstr "期待する給与"
-
-#. module: hr_recruitment
-#: help:hr.applicant,salary_expected:0
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_salary_expected
 msgid "Salary Expected by Applicant"
 msgstr "応募者が希望する給与"
 
 #. module: hr_recruitment
-#: help:hr.applicant,salary_expected_extra:0
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_salary_expected_extra
 msgid "Salary Expected by Applicant, extra advantages"
 msgstr "応募者が期待する給与、その他の利点"
 
 #. module: hr_recruitment
-#: field:hr.recruitment.report,salary_prop:0
-msgid "Salary Proposed"
-msgstr "提示した 給与"
-
-#. module: hr_recruitment
-#: help:hr.applicant,salary_proposed:0
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_salary_proposed
 msgid "Salary Proposed by the Organisation"
 msgstr "雇用側が提案する給与"
 
 #. module: hr_recruitment
-#: help:hr.applicant,salary_proposed_extra:0
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_salary_proposed_extra
 msgid "Salary Proposed by the Organisation, extra advantages"
 msgstr "会社が希望の給与、追加の利点"
 
 #. module: hr_recruitment
-#: model:hr.applicant_category,name:hr_recruitment.tag_applicant_sales
-msgid "Sales"
-msgstr "販売"
-
-#. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
-msgid "Schedule"
-msgstr "スケジュール"
-
-#. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Schedule Interview"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Schedule interview with this applicant"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Search Applicants"
 msgstr ""
 
@@ -1316,25 +1616,31 @@ msgid "Second Interview"
 msgstr "2回目の面接"
 
 #. module: hr_recruitment
-#: field:hr.recruitment.degree,sequence:0
-#: field:hr.recruitment.stage,sequence:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_sequence
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_sequence
 msgid "Sequence"
-msgstr "順序"
+msgstr "付番"
 
 #. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.rcol_3_1_2
-msgid "Somewhat important"
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_global_settings
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "Settings"
+msgstr "管理設定"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "Show all records which has next action date is before today"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,source_id:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_source_id
 msgid "Source"
-msgstr "ソース"
+msgstr "要求元"
 
 #. module: hr_recruitment
-#: field:hr.recruitment.source,name:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_name
 msgid "Source Name"
-msgstr "情報源の名前"
+msgstr "ソース名"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
@@ -1342,31 +1648,24 @@ msgid "Source of Applicants"
 msgstr "応募者の情報源"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.source:hr_recruitment.hr_recruitment_source_form
-#: view:hr.recruitment.source:hr_recruitment.hr_recruitment_source_tree
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Sources of Applicants"
 msgstr "応募者の情報源"
 
 #. module: hr_recruitment
-#: view:hr.job:hr_recruitment.hr_job_survey
-msgid "Specific Email Address"
+#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_job_id
+msgid "Specific job that uses this stage. Other jobs will not use this stage."
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.recruitment.stage,department_id:0
-msgid "Specific to a Department"
-msgstr "部署に特有"
-
-#. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
-#: field:hr.applicant,stage_id:0
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
-#: field:hr.recruitment.report,stage_id:0
-#: view:hr.recruitment.stage:hr_recruitment.hr_recruitment_stage_form
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_stage_id
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Stage"
-msgstr "段階"
+msgstr "ステージ"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_stage_changed
@@ -1374,7 +1673,7 @@ msgid "Stage Changed"
 msgstr "ステージ変更"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.stage:hr_recruitment.hr_recruitment_stage_form
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Stage Definition"
 msgstr "段階の定義"
 
@@ -1384,77 +1683,70 @@ msgid "Stage changed"
 msgstr "ステージ変更"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_name
+msgid "Stage name"
+msgstr "ステージ名"
+
+#. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
 msgid "Stage of Recruitment"
 msgstr "採用の段階"
 
 #. module: hr_recruitment
-#: help:hr.applicant,last_stage_id:0
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_last_stage_id
 msgid ""
 "Stage of the applicant before being in the current stage. Used for lost "
 "cases analysis."
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.stage:hr_recruitment.hr_recruitment_stage_tree
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_stage
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_tree
 msgid "Stages"
-msgstr "段階"
+msgstr "ステージ"
 
 #. module: hr_recruitment
-#: help:hr.recruitment.stage,department_id:0
-msgid ""
-"Stages of the recruitment process may be different per department. If this "
-"stage is common to all departments, keep this field empty."
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "Start Recruitment"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
-msgid "Start"
-msgstr "開始"
-
-#. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.rrow_2_1_5
-msgid "State of the art technology"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Subject / Applicant"
 msgstr "主題 / 応募者"
 
 #. module: hr_recruitment
-#: field:hr.applicant,name:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_name
 msgid "Subject / Application Name"
 msgstr "件名 / 応募名"
 
 #. module: hr_recruitment
-#: field:hr.applicant,message_summary:0
-msgid "Summary"
-msgstr "要約"
+#: sql_constraint:hr.applicant.category:0
+msgid "Tag name already exists !"
+msgstr "そのタグ名は既に使われています！"
 
 #. module: hr_recruitment
-#: field:hr.applicant,survey:0
-msgid "Survey"
-msgstr "調査"
-
-#. module: hr_recruitment
-#: field:hr.applicant,categ_ids:0
+#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_category_action
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_categ_ids
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_category_menu
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_form
 msgid "Tags"
 msgstr "タグ"
 
 #. module: hr_recruitment
-#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_1_1
-#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_1_2
-#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_1_3
-#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_2_1
-#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_2_2
-#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_2_3
-#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_2_4
-#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_3_1
-msgid "The answer you entered has an invalid format."
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_availability
+msgid "The date at which the applicant will be available to start working"
 msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_model_id
+msgid ""
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
+" email that does not reply to an existing record will cause the creation of "
+"a new record of this model (e.g. a Project Task)"
+msgstr ""
+"このエイリアスに対応した(Odooドキュメント種別)モデル。既存のレコードに返信しない任意の受信メールは、このモデルの新しいレコード(例えば、プロジェクトタスク)の作成を引き起こします"
 
 #. module: hr_recruitment
 #: sql_constraint:hr.recruitment.degree:0
@@ -1462,13 +1754,31 @@ msgid "The name of the Degree of Recruitment must be unique!"
 msgstr "採用の度合いの名前はユニークでなければいけません。"
 
 #. module: hr_recruitment
-#: help:hr.applicant,availability:0
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_name
 msgid ""
-"The number of days in which the applicant will be available to start working"
+"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
+"<jobs@example.odoo.com>"
+msgstr "eメールのエイリアス.例えば<jobs@example.odoo.com>のメールを受け取りたい場合'jobs’を選択"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_user_id
+msgid ""
+"The owner of records created upon receiving emails on this alias. If this "
+"field is not set the system will attempt to find the right owner based on "
+"the sender (From) address, or will use the Administrator account if no "
+"system user is found for that address."
+msgstr ""
+"このエイリアスに電子メールを受信した時に作成されるレコードのオーナー。このフィールドが設定されない場合、システムは送信者(From)アドレスに基づいた適切なオーナーを見つけるか、見つからなければ管理者アカウントを使用します。"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
+msgid ""
+"These aliases can be emails or urls for every source. When the applicant "
+"arrives here through one of these you'll know where he came from."
 msgstr ""
 
 #. module: hr_recruitment
-#: help:hr.applicant,email_cc:0
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_cc
 msgid ""
 "These email addresses will be added to the CC field of all inbound and "
 "outbound emails for this record before being sent. Separate multiple email "
@@ -1476,135 +1786,146 @@ msgid ""
 msgstr "これらのEメールアドレスは送受信するEメールの CC 欄に追加されます。複数のEメールアドレスの間にはコンマを入れてください。"
 
 #. module: hr_recruitment
-#: help:hr.applicant,email_from:0
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_from
 msgid "These people will receive email."
 msgstr "これらの人がEメールを受け取ります。"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "This Year"
 msgstr "今年"
 
 #. module: hr_recruitment
-#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_1_1
-#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_1_2
-#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_1_3
-#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_2_1
-#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_2_2
-#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_2_3
-#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_2_4
-#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_3_1
-msgid "This question requires an answer."
-msgstr ""
-
-#. module: hr_recruitment
-#: help:hr.recruitment.stage,fold:0
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
 msgid ""
-"This stage is folded in the kanban view whenthere are no records in that "
-"stage to display."
+"This menu helps you search through resumes and motivation\n"
+"                letters. Odoo automatically indexes .PDF, .DOC, DOCX, .TXT\n"
+"                files so that you can search keywords from the content of these\n"
+"                files."
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_fold
+msgid ""
+"This stage is folded in the kanban view when there are no records in that "
+"stage to display."
+msgstr "このステージは、そのステージにレコードが表示されていないときに、かんばんのビューで折り畳まれます。"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "Today Activities"
+msgstr "本日の活動"
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:30
+#, python-format
+msgid ""
+"Try to send an email to this address, it will create an application "
+"automatically."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Unassigned"
 msgstr "未割当"
 
 #. module: hr_recruitment
-#: field:hr.applicant,message_unread:0
-#: view:hr.job:hr_recruitment.view_job_filter_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
 msgid "Unread Messages"
 msgstr "未読メッセージ"
 
 #. module: hr_recruitment
-#: field:hr.applicant,write_date:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_write_date
 msgid "Update Date"
-msgstr "日付の更新"
+msgstr "更新日"
 
 #. module: hr_recruitment
-#: field:hr.recruitment.stage,template_id:0
-msgid "Use template"
-msgstr "テンプレートを使用"
+#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+msgid "Use interview forms during recruitment process"
+msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.recruitment.report,user_id:0
-msgid "User"
-msgstr "ユーザ"
+#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+msgid ""
+"Use interview forms tailored to each job position during the recruitment "
+"process. Select the form to use in the job position detail form. This relies"
+" on Survey app."
+msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,user_email:0
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:25
+#, python-format
+msgid "Use the breadcrumbs to <b>go back to the dashboard</b>."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_user_email
 msgid "User Email"
 msgstr "ユーザのEメール"
 
 #. module: hr_recruitment
-#: model:survey.label,value:hr_recruitment.rcol_3_1_4
-msgid "Very important"
-msgstr "非常に重要"
+#: selection:hr.applicant,priority:0
+msgid "Very Good"
+msgstr "良好"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:511
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:11
 #, python-format
-msgid "Warning!"
-msgstr "警告"
+msgid "Want to <b>start recruiting</b> like a pro? <i>Start here.</i>"
+msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,email_cc:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_email_cc
 msgid "Watchers Emails"
-msgstr "担当者のEメール"
+msgstr "傍観者のEメール"
 
 #. module: hr_recruitment
-#: field:hr.applicant,website_message_ids:0
-msgid "Website Messages"
-msgstr "ウェブサイトメッセージ"
+#: model:mail.template,subject:hr_recruitment.email_template_data_applicant_employee
+msgid "Welcome ${object.name} "
+msgstr ""
 
 #. module: hr_recruitment
-#: help:hr.applicant,website_message_ids:0
-msgid "Website communication history"
-msgstr "ウェブサイトコミュニケーション履歴"
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
+msgid ""
+"With just a quick glance on the Odoo employee screen, you\n"
+"                can easily find all the information you need for each person;\n"
+"                contact data, job position, availability, etc."
+msgstr ""
 
 #. module: hr_recruitment
-#: model:survey.question,question:hr_recruitment.recruitment_1_3
-msgid "What age group do you belong to?"
-msgstr "年齢（下記から選択してください）"
-
-#. module: hr_recruitment
-#: model:survey.question,question:hr_recruitment.recruitment_1_2
-msgid "What is your gender?"
-msgstr "性別"
-
-#. module: hr_recruitment
-#: model:hr.recruitment.source,name:hr_recruitment.source_word
-msgid "Word of Mouth"
-msgstr "口コミ"
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:511
+#: code:addons/hr_recruitment/models/hr_recruitment.py:430
 #, python-format
 msgid "You must define an Applied Job and a Contact Name for this applicant."
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.job:hr_recruitment.view_hr_job_kanban
-msgid "click here"
-msgstr "ここをクリック"
+#: model:mail.template,subject:hr_recruitment.email_template_data_applicant_interest
+msgid "Your Application: ${object.job_id.name | safe}"
+msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
-msgid "e.g. Call for interview"
-msgstr "例 ： 面接日程の連絡"
+#: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
+msgid "Your Job Application: ${object.job_id.name | safe}"
+msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:524
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "e.g. Sales Manager"
+msgstr "例: 販売マネジャー"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:281
 #, python-format
 msgid "job applicants"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
-msgid "oe_kanban_text_red"
-msgstr "oe_kanban_text_red"
-
-#. module: hr_recruitment
-#: view:hr.recruitment.partner.create:hr_recruitment.view_hr_recruitment_partner_create
-msgid "or"
-msgstr "または"
+#: model:ir.model,name:hr_recruitment.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

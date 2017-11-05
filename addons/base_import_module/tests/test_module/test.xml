@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
     <!-- TODO: make test suite -->
     <record id="base.main_company" model="res.company">
         <field name="name">The base company is noupdate=1</field>
@@ -8,11 +7,11 @@
 
     <record id="main_company2" model="res.company">
         <field name="name">Hagrid</field>
-        <field name="rml_header1">Your Company Tagline</field>
+        <field name="report_header">My Company Tagline</field>
         <field name="currency_id" ref="base.EUR"/>
     </record>
 
-    <template id="test_page" name="Test Page" page="True">
+    <template id="test_page" name="Test Page">
         <t t-call="website.layout">
             <h1>
                 This page comes from an imported module!
@@ -47,5 +46,4 @@
         </xpath>
     </template>
 
-</data>
-</openerp>
+</odoo>

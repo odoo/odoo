@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template">
+    <t t-name="PlannerLauncher">
+        <li class="o_planner_systray hidden-xs">
+            <div class="progress o_hidden"><div class="progress-bar"/></div>
+        </li>
+    </t>
+
+    <div t-name="PlannerDialog">
+        <ul class="o_planner_menu" role="menu" aria-labelledby="dLabel"/>
+    </div>
+
+    <t t-name="PlannerDialog.Title">
+        <div class="o_page_name"><t t-esc="title"/></div>
+        <div class="progress">
+            <div class="progress-bar" t-attf-style="width: #{percent}%;"/>
+        </div>
+        <div class="o_progress_text"><t t-esc="percent"/>%</div>
+    </t>
+
+    <t t-name="PlannerMenu">
+        <li t-foreach="orphan_pages" t-as="orphan_page">
+            <a t-att-href="'#' + menu_item_page_map[orphan_page]"><span class="fa fa-fw"/><t t-esc="orphan_page"/></a>
+        </li>
+        <t t-foreach="menu_categories" t-as="menu_category">
+            <h4><i t-att-class="'fa ' + menu_category.classes"/><t t-esc="menu_category.name"/></h4>
+            <li t-foreach="menu_category.menu_items" t-as="menu_item">
+                <a t-att-href="'#' + menu_item_page_map[menu_item]" disable_anchor="true"><span class="fa fa-fw"/><t t-esc="menu_item"/></a>
+            </li>
+        </t>
+    </t>
+</templates>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_account_payment_form_inherited" model="ir.ui.view">
+            <field name="name">account.payment.form.inherited</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='post']" position="before">
+                    <button name="print_checks" class="oe_highlight" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('state', '!=', 'posted')]}" string="Print Check" type="object"/>
+                    <button name="unmark_sent" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('state', '!=', 'sent')]}" string="Unmark Sent" type="object"/>
+                </xpath>
+                <xpath expr="//div[@name='amount_div']" position="after">
+                    <field name="check_amount_in_words" attrs="{'invisible': [('payment_method_code', '!=', 'check_printing')], 'readonly': [('state', '!=', 'draft')]}" groups="base.group_no_one"/>
+                </xpath>
+                <xpath expr="//field[@name='communication']" position="after">
+                    <field name="check_manual_sequencing" invisible="1" readonly="1"/>
+                    <field name="check_number" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('check_number', '=', 0)]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_payment_invoice_form_inherited" model="ir.ui.view">
+            <field name="name">account.payment.invoice.form.inherited</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_invoice_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='amount_div']" position="after">
+                    <field name="check_amount_in_words" attrs="{'invisible': [('payment_method_code', '!=', 'check_printing')]}" groups="base.group_no_one"/>
+                </xpath>
+                <xpath expr="//field[@name='communication']" position="after">
+                    <field name="check_manual_sequencing" invisible="1" readonly="1"/>
+                    <field name="check_number" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('check_manual_sequencing', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_payment_from_invoices_inherited" model="ir.ui.view">
+            <field name="name">account.register.payments.wizard.inherited</field>
+            <field name="model">account.register.payments</field>
+            <field name="inherit_id" ref="account.view_account_payment_from_invoices" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='amount']" position="after">
+                    <field name="check_amount_in_words" attrs="{'invisible': [('payment_method_code', '!=', 'check_printing')]}" groups="base.group_no_one"/>
+                </xpath>
+                <xpath expr="//field[@name='communication']" position="after">
+                    <field name="check_manual_sequencing" invisible="1" readonly="1"/>
+                    <field name="check_number" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('check_manual_sequencing', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_payment_check_printing_search" model="ir.ui.view">
+            <field name="name">account.payment.check.printing.search</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='state_sent']" position="before">
+                    <filter string="Checks To Print" domain="[('payment_method_id.code', '=', 'check_printing'), ('state','=','posted')]" name="checks_to_send"/>
+                </xpath>
+            </field>
+        </record>
+
+</odoo>

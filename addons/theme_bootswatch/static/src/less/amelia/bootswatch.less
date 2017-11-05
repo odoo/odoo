@@ -1,0 +1,195 @@
+// Amelia 3.2.0
+// Bootswatch
+// -----------------------------------------------------
+
+@import url("//fonts.googleapis.com/css?family=Lobster|Cabin:400,700");
+
+// Navbar =====================================================================
+
+.navbar {
+
+  &-brand {
+    font-family: 'Lobster', cursive;
+  }
+
+  &-default {
+    .badge {
+      background-color: #fff;
+      color: @navbar-default-bg;
+    }
+  }
+}
+
+// Buttons ====================================================================
+
+.btn {
+  
+  .caret {
+    border-top-color: #fff;
+  }
+}
+
+.btn-default {
+
+  &:hover {
+    color: @btn-default-color;
+  }
+
+  .caret {
+    border-top-color: @btn-default-color;
+  }
+}
+
+// Typography =================================================================
+
+.text-primary,
+.text-primary:hover {
+  color: lighten(@brand-primary, 40%);
+}
+
+.text-success,
+.text-success:hover {
+  color: lighten(@brand-success, 20%);
+}
+
+.text-danger,
+.text-danger:hover {
+  color: lighten(@brand-danger, 20%);
+}
+
+.text-warning,
+.text-warning:hover {
+  color: lighten(@brand-warning, 20%);
+}
+
+.text-info,
+.text-info:hover {
+  color: lighten(@brand-info, 40%);
+}
+
+// Tables =====================================================================
+
+.table-responsive > .table {
+  background-color: @table-bg;
+}
+
+table,
+.table {
+
+  a:not(.btn) {
+    color: #fff;
+    text-decoration: underline;
+  }
+
+  .text-muted {
+    color: @text-muted;
+  }
+}
+
+// Forms ======================================================================
+
+input,
+textarea {
+  color: @input-color;
+}
+
+legend {
+  font-family: 'Lobster', cursive;
+  color: #fff;
+}
+
+.input-group-addon {
+  color: @btn-default-color;
+}
+
+.has-warning {
+  .help-block,
+  .control-label,
+  .form-control-feedback {
+    color: lighten(@brand-warning, 20%);
+  }
+
+  .form-control,
+  .form-control:focus {
+    border-color: lighten(@brand-warning, 20%);
+  }
+
+  .input-group-addon {
+    border: none;
+  }
+}
+
+.has-error {
+  .help-block,
+  .control-label,
+  .form-control-feedback {
+    color: lighten(@brand-primary, 40%);
+  }
+
+  .form-control,
+  .form-control:focus {
+    border-color: lighten(@brand-primary, 40%);
+  }
+
+  .input-group-addon {
+    border: none;
+  }
+}
+
+.has-success {
+  .help-block,
+  .control-label,
+  .form-control-feedback {
+    color: lighten(@brand-success, 20%);
+  }
+
+  .form-control,
+  .form-control:focus {
+    border-color: lighten(@brand-success, 20%);
+  }
+
+  .input-group-addon {
+    border: none;
+  }
+}
+
+// Navs =======================================================================
+
+.pagination {
+
+  a:hover {
+    color: #fff;
+  }
+}
+
+.pager {
+
+  a:hover {
+    color: #fff;
+  }
+}
+
+// Indicators =================================================================
+
+.close {
+  opacity: 0.4;
+
+  &:hover,
+  &:focus {
+    opacity: 1;
+  }
+}
+
+// Progress bars ==============================================================
+
+// Containers =================================================================
+
+a.thumbnail:hover,
+a.thumbnail:focus,
+a.thumbnail.active {
+  border-color: @thumbnail-border;
+}
+
+.popover {
+  color: @gray-dark;
+}

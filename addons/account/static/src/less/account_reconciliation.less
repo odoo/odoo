@@ -1,0 +1,320 @@
+@actionColWidth: 15px;
+@mainTableBordersPadding: 3px;
+@lightBorder: 1px solid #bbb;
+@accountingBorder: 1px solid #000;
+@initialLineBackground: #f0f0f0;
+@infoColor: #44c;
+
+
+.o_reconciliation {
+    h1 {
+        width: 48%;
+        padding: 0 0 0 15px;
+        margin: 0 0 25px 0;
+        float: left;
+        font-size: 2em;
+        height: 1.5em;
+        &.statement_name_edition input {
+            width: 85%;
+        }
+    }
+
+    .progress {
+        width: 49%;
+        margin: 10px 15px 0 0;
+        float: right;
+        position: relative;
+        display: inline-block;
+        .progress-bar {
+            background-color: #7c7bad;
+        }
+        .progress-text {
+            text-align: center;
+            position: absolute;
+            width: 100%;
+        }
+    }
+
+    .notification_area {
+        clear: both;
+    }
+
+    .o_view_nocontent {
+        max-width: none;
+        padding: 0 10%;
+        color: @odoo-main-color-muted;
+        font-size: 125%;
+    }
+
+    .accounting_view {
+        width: 100%;
+
+        .cell_left {
+            border-right: 1px solid #333;
+            padding-right: 5px;
+        }
+        .do_partial_reconcile_true {
+            color: #7c7bad;
+            padding-right: 5px;
+        }
+        .do_partial_reconcile_false {
+            color: #f0eeee;
+            padding-right: 5px;
+        }
+    }
+
+    .o_multi_currency {
+        margin-right: 5px;
+        &.o_multi_currency_color_0 {
+            color: #dd6666;
+        }
+        &.o_multi_currency_color_1 {
+            color: #aaaaaa;
+        }
+        &.o_multi_currency_color_2 {
+            color: #66dd66;
+        }
+        &.o_multi_currency_color_3 {
+            color: #6666dd;
+        }
+        &.o_multi_currency_color_4 {
+            color: #dddd66;
+        }
+        &.o_multi_currency_color_5 {
+            color: #dd66dd;
+        }
+        &.o_multi_currency_color_6 {
+            color: #66dddd;
+        }
+        &.o_multi_currency_color_7 {
+            color: #aaa333;
+        }
+    }
+
+    .o_reconciliation_line {
+        margin-bottom: 30px;
+        table {
+            width: 100%;
+            vertical-align: top;
+        }
+        tr {
+            cursor: pointer;
+        }
+        tr.already_reconciled {
+            color: @infoColor;
+        }
+        tr.invalid {
+            text-decoration: line-through;
+        }
+        thead td {
+            border-top: @lightBorder;
+            padding-top: 4px;
+            padding-bottom: 5px;
+            background-color: @initialLineBackground;
+        }
+        tfoot td {
+            color: #bbb;
+        }
+
+        /* columns */
+
+        .cell_action {
+            width: 15px;
+            color: @gray;
+            background: #fff;
+            border: 0;
+            .fa-add-remove:before {
+                content: "";
+            }
+        }
+        tr:hover .cell_action .fa-add-remove:before {
+            content: "\f068";
+        }
+        .is_tax .cell_action .fa-add-remove:before {
+            position: relative;
+            top: -18px;
+        }
+        .cell_account_code {
+            width: 80px;
+        }
+        .cell_due_date {
+            width: 100px;
+        }
+        .cell_label {
+            width: auto;
+        }
+        .cell_left {
+            padding-right: 5px;
+        }
+        .cell_right, .cell_left {
+            text-align: right;
+            width: 120px;
+        }
+        .cell_info_popover {
+            text-align: right;
+            width: 15px;
+            color: #ccc;
+            background: #fff;
+            border: 0;
+        }
+
+        /* info popover */
+
+        table.details {
+            vertical-align: top;
+            td:first-child {
+                vertical-align: top;
+                padding-right: 10px;
+                font-weight: bold;
+            }
+        }
+
+        tr.one_line_info {
+            td {
+                padding-top: 10px;
+                text-align: center;
+                color: @infoColor;
+            }
+        }
+
+        /* Icons */
+
+        .toggle_match, .toggle_create {
+            .o-transform(rotate(0deg));
+            .o-transition(transform, 300ms);
+        }
+        .visible_toggle {
+            visibility: visible !important;
+            .o-transform(rotate(90deg));
+        }
+        &[data-mode="match"] {
+            .toggle_match {
+                .visible_toggle;
+            }
+        }
+        &[data-mode="create"] {
+            .toggle_create {
+                .visible_toggle;
+            }
+        }
+
+        /* Match view & Create view */
+
+        > .match, > .create {
+            max-height: 0px;
+            overflow: hidden;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            .o-transition(max-height, 250ms);
+        }
+        &[data-mode="match"] > .match {
+            max-height: none;
+            .o-transition(max-height, 400ms);
+        }
+        &[data-mode="create"] > .create {
+            max-height: 210px;
+            .o-transition(max-height, 400ms);
+        }
+    }
+        
+    /* Match view */
+
+    .match {
+        > div {
+            padding: 1px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+        .cell_action .fa-add-remove:before {
+            content: "";
+        }
+        tr:hover .cell_action .fa-add-remove:before {
+            content: "\f067";
+        }
+        .match_controls {
+            padding: 0 0 5px (@actionColWidth+@mainTableBordersPadding);
+
+            .filter {
+                width: 240px;
+                display: inline-block;
+            }
+
+            .fa-chevron-left, .fa-chevron-right {
+                display: inline-block;
+                cursor: pointer;
+            }
+
+            .fa-chevron-left {
+                margin-right: 10px;
+            }
+
+            .fa-chevron-left.disabled, .fa-chevron-right.disabled {
+                color: #ddd;
+                cursor: default;
+            }
+        }
+        .show_more {
+            display: inline-block;
+            margin-left: (@actionColWidth+@mainTableBordersPadding);
+            margin-top: 5px;
+        }
+    }
+
+    /* Create view */
+    .create {
+        > div {
+            margin: 0 @actionColWidth;
+            padding: 10px;
+            overflow: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        table {
+            width: 49%;
+            margin: 0;
+            vertical-align: top;
+        }
+        td {
+            width: 99%;
+            padding-left: 8px;
+        }
+        tr .o_td_label {
+            vertical-align: top;
+            line-height: 26px;
+            font-weight: bold;
+            padding-right: 8px;
+            min-width: 100px;
+            border-right: 1px solid #ddd;
+            white-space: nowrap;
+            width: 1%;
+        }
+        .btn {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+        .add_line_container {
+            text-align: center;
+            clear: both;
+            color: @infoColor;
+            cursor: pointer;
+        }
+    }
+}
+
+/*Manual Reconciliation*/
+.o_manual_statement {
+    .accounting_view {
+        td[colspan="3"] span:first-child {
+            width: 50%;
+            display: inline-block;
+        }
+        td[colspan="2"] {
+            border-bottom: 1px solid #333;
+            text-align: center;
+            width: 240px;
+        }
+        .do_partial_reconcile_true {
+            display: none;
+        }
+    }
+}

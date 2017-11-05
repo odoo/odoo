@@ -13,10 +13,6 @@ Ready to create your own theme? Great. Here are some things you should know befo
 
 .. image:: theme_tutorial_assets/img/Intro.jpg
 
-.. warning::
-
-  This tutorial requires having installed Odoo v8.0 and the Theme Support Engine (website_less) module. https://www.odoo.com/apps/8.0/website_less/
-
 
 An introduction for web designers
 =================================
@@ -148,17 +144,17 @@ Odoo's XML files, an overview
 -----------------------------
 
 Any Odoo XML file starts with encoding specifications.
-After that, you have to write your code inside a ``<data>`` tag, placed into an ``</openerp>`` tag.
+After that, you have to write your code inside a ``<odoo>`` tag.
 
 .. code-block:: xml
 
    [XML]
    <?xml version="1.0" encoding="utf-8" ?>
-   <openerp>
-     <data>
+   <odoo>
+     
        ## YOUR CODE HERE
-     </data>
-   </openerp>
+     
+   </odoo>
 
 Almost every element and option that you create has to be placed inside a ``<template>`` tag, like in this example.
 
@@ -179,8 +175,7 @@ Almost every element and option that you create has to be placed inside a ``<tem
 The previous code defines a title, but it will not be displayed
 anywhere because that *template* is not associated with any part of
 the **Odoo default structure**.  In order to do that you can use
-**xpath**, **qWeb** or a combination of both.  Keep reading the
-tutorial to learn to how properly extend it with your own code.
+**xpath**, **qWeb** or a combination of both.
 
 Keep reading the tutorial to learn to how properly extend it with your own code.
 
@@ -210,9 +205,9 @@ Odoo’s themes are packaged like modules. Even if you are designing a very simp
   Create a folder and name it like this: ``theme_`` followed by your
   theme's name.
 
-``__openerp__.py``
+``__manifest__.py``
   Create an empty document and save it to your folder as
-  ``__openerp__.py``. This will contain the configuration info for
+  ``__manifest__.py``. This will contain the configuration info for
   your theme.
 
 ``__init__.py``
@@ -228,16 +223,16 @@ Odoo’s themes are packaged like modules. Even if you are designing a very simp
 .. important::
 
   Use two underscore characters at the beginning
-  and two at the end of openerp and init file names.
+  and two at the end of odoo and init file names.
 
 The final result should be something like this:
 
 .. image:: theme_tutorial_assets/img/folder.jpg
 
-Edit ``__openerp__.py``
------------------------
+Edit ``__manifest__.py``
+------------------------
 
-Open the ``__openerp__.py`` you created and copy/paste the following:
+Open the ``__manifest__.py`` you created and copy/paste the following:
 
 .. code-block:: python
 
@@ -250,7 +245,7 @@ Open the ``__openerp__.py`` you created and copy/paste the following:
     'data': [
     ],
     'category': 'Theme/Creative',
-    'depends': ['website', 'website_less'],
+    'depends': ['website'],
   }
 
 Replace the first four property’s values with anything you like.
@@ -258,12 +253,10 @@ These values will be used to identify your new theme in Odoo’s backend.
 
 The ``data`` property will contain the xml files list. Right now it’s empty, but we will add any new files created.
 
-``application: True`` is mandatory.
-
 ``category`` defines your module category (always “Theme”) and, after a slash, the subcategory. You can use one subcategory from the Odoo Apps categories list. (https://www.odoo.com/apps/themes)
 
 
-``depends`` specifies the modules needed by our theme to work properly. For our tutorial theme, we only need website and website_less. If you need blogging or eCommerce features as well, you have to add those modules too.
+``depends`` specifies the modules needed by our theme to work properly. For our tutorial theme, we only need website. If you need blogging or eCommerce features as well, you have to add those modules too.
 
 .. code-block:: python
 
@@ -314,13 +307,13 @@ To do so, create a **layout.xml** file in your **views** folder and add the defa
 .. code-block:: xml
 
    <?xml version="1.0" encoding="utf-8" ?>
-   <openerp>
-     <data>
+   <odoo>
 
-     </data>
-   </openerp>
 
-Create a new template into the ``<data>`` tag, copy-pasting the following
+
+   </odoo>
+
+Create a new template into the ``<odoo>`` tag, copy-pasting the following
 code.
 
 .. code-block:: xml
@@ -354,7 +347,7 @@ target css rules to that element and avoid these affecting other content on the 
 The second xpath will add a welcome message just after the navigation menu.
 
 The last step is to add layout.xml to the list of xml files used by
-the theme. To do that, edit your ``__openerp__.py`` file like this
+the theme. To do that, edit your ``__manifest__.py`` file like this
 
 .. code-block:: python
 
@@ -378,14 +371,14 @@ Imagine that we want to create a specific layout for a Services page.
 For this page, we need to add a list of services to the top and give the client the possibility of setting the rest of the page’s layout using snippets.
 
 Inside your *views* folder, create a **pages.xml** file and add the
-default Odoo markup.  Inside ``<data>`` create a ``<template>`` tag, set the
+default Odoo markup.  Inside ``<odoo>`` create a ``<template>`` tag, set the
 ``page`` attribute to ``True`` and add your code into it.
 
 .. code-block:: xml
 
    <?xml version="1.0" encoding="utf-8" ?>
-   <openerp>
-     <data>
+   <odoo>
+
        <!-- === Services Page === -->
        <template name="Services page" id="website.services" page="True">
          <h1>Our Services</h1>
@@ -395,8 +388,8 @@ default Odoo markup.  Inside ``<data>`` create a ``<template>`` tag, set the
              <li>Unlimited space</li>
            </ul>
          </template>
-       </data>
-     </openerp>
+
+     </odoo>
 
 The page title will be the template ID. In our case *Services* (from ``website.services``)
 
@@ -434,8 +427,7 @@ can fill with snippets. To achieve this, just create a ``div`` with
 .. code-block:: xml
 
    <?xml version="1.0" encoding="utf-8" ?>
-   <openerp>
-   <data>
+   <odoo>
 
    <!-- === Services Page === -->
    <template name="Services page" id="website.services" page="True">
@@ -455,14 +447,13 @@ can fill with snippets. To achieve this, just create a ``div`` with
      </t>
    </template>
 
-   </data>
-   </openerp>
+   </odoo>
 
 .. tip::
 
    You can create as many snippet areas as you like and place them anywhere in your pages.
 
-Our page is almost ready. Now all we have to do is add **pages.xml** in our **__openerp__.py** file
+Our page is almost ready. Now all we have to do is add **pages.xml** in our **__manifest__.py** file
 
 .. code-block:: python
 
@@ -517,7 +508,11 @@ The final result won't be pretty, but will provide you with enough information t
 Let’s start by creating an empty file called **style.less** and place it in a folder called **less** in your static folder.
 The following rules will style our *Services* page. Copy and paste it, then save the file.
 
-.. code-block:: css
+.. as of Pygments 2.2, the Less lexer can't handle inline comments or nested
+   rules so use scss instead, it's not quite perfect but it doesn't trigger
+   warnings/errors
+
+.. code-block:: scss
 
    .services {
        background: #EAEAEA;
@@ -565,7 +560,7 @@ assets*".
 Placing it after the last one, we ensure that our file will
 be loaded at the end and take priority.
 
-Finally add **assets.xml** in your **__openerp__.py** file.
+Finally add **assets.xml** in your **__manifest__.py** file.
 
 Update your theme
 
@@ -619,7 +614,7 @@ The previous code will create the snippet’s content, but we still need to plac
 .. code-block:: xml
 
    <template id="place_into_bar" inherit_id="website.snippets" name="Place into bar">
-     <xpath expr="//div[@id='snippet_structure']" position="inside">
+     <xpath expr="//div[@id='snippet_content']/div[@class='o_panel_body']" position="inside">
        <t t-snippet="theme_tutorial.snippet_testimonial"
           t-thumbnail="/theme_tutorial/static/src/img/ui/snippet_thumb.jpg"/>
      </xpath>
@@ -678,11 +673,11 @@ Default option methods
 
 Options apply standard CSS classes to the snippet. Depending on the method that you choose, the UI will behave differently.
 
-``data-select_class=" class name "``
-  More data-select_class in the same group defines a list of classes that the user can choose to apply. Only one option can be enabled at a time.
+``data-select-class=" class name "``
+  More data-select-class in the same group defines a list of classes that the user can choose to apply. Only one option can be enabled at a time.
 
-``data-toggle_class=" class name "``
-  The data-toggle_class is used to apply one or more CSS classes from the list to a snippet. Multiple selections can be applied at once.
+``data-toggle-class=" class name "``
+  The data-toggle-class is used to apply one or more CSS classes from the list to a snippet. Multiple selections can be applied at once.
 
 Let's demonstrate how default options work with a basic example.
 
@@ -691,15 +686,15 @@ We start by adding a new file in our views folder - name it **options.xml** and 
 
 .. code-block:: xml
 
-  <template id="snippet_testimonial_opt" name="Snippet Testimonial Options" inherit_id="website_less.snippet_options">
+  <template id="snippet_testimonial_opt" name="Snippet Testimonial Options" inherit_id="website.snippet_options">
     <xpath expr="//div[@data-js='background']" position="after">
       <div data-selector=".snippet_testimonial"> <!-- Options group -->
         <li class="dropdown-submenu">
           <a href="#">Your Option</a>
           <ul class="dropdown-menu"> <!-- Options list -->
-            <li data-select_class="opt_shadow"><a>Shadow Images</a></li>
-            <li data-select_class="opt_grey_bg"><a>Grey Bg</a></li>
-            <li data-select_class=""><a>None</a></li>
+            <li data-select-class="opt_shadow"><a>Shadow Images</a></li>
+            <li data-select-class="opt_grey_bg"><a>Grey Bg</a></li>
+            <li data-select-class=""><a>None</a></li>
           </ul>
         </li>
       </div>
@@ -715,14 +710,14 @@ As you can see, we wrapped all our options inside a DIV tag that will
 group our options and that will target them to the right selector
 (``data-selector=".snippet_testimonial"``).
 
-To define our options we applied ``data-select_class`` attributes to the
+To define our options we applied ``data-select-class`` attributes to the
 ``li`` elements. When the user selects an option, the class contained in
 the attribute will automatically be applied to the element.
 
-Since ``select_class`` method avoids multiple selections, the last "empty"
+Since ``selectClass`` method avoids multiple selections, the last "empty"
 option will reset the snippet to default.
 
-Add **options.xml** to ``__openerp__.py`` and update your theme.
+Add **options.xml** to ``__manifest__.py`` and update your theme.
 
 .. image:: theme_tutorial_assets/img/restart.png
 
@@ -732,7 +727,7 @@ Dropping our snippet onto the page, you will notice that our new options are aut
 
 Let’s create some css rules in order to provide a visual feedback for our options. Open our **style.less** file and add the following
 
-.. code-block:: css
+.. code-block:: scss
 
    .snippet_testimonial {
      border: 1px solid #EAEAEA;
@@ -760,16 +755,16 @@ Let’s create some css rules in order to provide a visual feedback for our opti
 
 Great! We successfully created options for our snippet.
 
-Any time the publisher clicks on an option, the system will add the class specified in the data-select_class attribute.
+Any time the publisher clicks on an option, the system will add the class specified in the data-select-class attribute.
 
-By replacing ``data-select_class`` with ``data-toggle_class`` you will be able to select
+By replacing ``data-select-class`` with ``data-toggle-class`` you will be able to select
 more classes at the same time.
 
 
 Javascript Options
 ------------------
 
-``data-select_class`` and ``data-toggle_class`` are great if you need to perform
+``data-select-class`` and ``data-toggle-class`` are great if you need to perform
 simple class change operations. But what if your snippet’s customization needs something more?
 
 As we said before, ``data-js`` propriety can be assigned to an options group in order to define a custom method. Let’s create one for our *testimonials snippet* by adding a ``data-js`` attribute to the option’s group div that we created earlier.
@@ -792,8 +787,8 @@ the following code
 
     (function() {
         'use strict';
-        var website = openerp.website;
-        website.openerp_website = {};
+        var website = odoo.website;
+        website.odoo_website = {};
     })();
 
 Great, we successfully created our javascript editor file. This file will contain all the javascript functions used by our snippets in edit mode. Let’s create a new function for our testimonial snippet using the ``snippet_testimonial_options`` method that we created before.
@@ -802,28 +797,28 @@ Great, we successfully created our javascript editor file. This file will contai
 
    (function() {
        'use strict';
-       var website = openerp.website;
-       website.openerp_website = {};
+       var website = odoo.website;
+       website.odoo_website = {};
 
        website.snippet.options.snippet_testimonial_options = website.snippet.Option.extend({
-           on_focus: function() {
+           onFocus: function() {
                alert("On focus!");
            }
        })
    })();
 
-As you will notice, we used a method called ``on_focus`` to trigger our function. The Website Builder provides several events you can use to trigger your custom functions.
+As you will notice, we used a method called ``onFocus`` to trigger our function. The Website Builder provides several events you can use to trigger your custom functions.
 
 ===========================  ==================================
 Event                        Description
 ===========================  ==================================
 ``start``                    Fires when the publisher selects the snippet for the first time in an editing session or when the snippet is drag-dropped into the page
-``on_focus``                 Fires each time the snippet is selected by the user or when the snippet is drag-dropped into the page.
-``on_blur``                  This event occurs when a snippet loses focus.
-``on_clone``                 Fires just after a snippet is duplicated. A new js variable is created ($clone) containing the cloned element.
-``on_remove``                It occurs just before that the snippet is removed.
-``drop_and_build_snippet``   Fires just after that the snippet is drag and dropped into a drop zone. When this event is triggered, the content is already inserted in the page.
-``clean_for_save``           It trigger before the publisher save the page.
+``onFocus``                  Fires each time the snippet is selected by the user or when the snippet is drag-dropped into the page.
+``onBlur``                   This event occurs when a snippet loses focus.
+``onClone``                  Fires just after a snippet is duplicated.
+``onRemove``                 It occurs just before that the snippet is removed.
+``onBuilt``                  Fires just after that the snippet is drag and dropped into a drop zone. When this event is triggered, the content is already inserted in the page.
+``cleanForSave``             It trigger before the publisher save the page.
 ===========================  ==================================
 
 Let’s add our new javascript files to the editor assets list.
@@ -832,7 +827,7 @@ This time we have to inherit ``assets_editor`` instead of ``assets_frontend``.
 
 .. code-block:: xml
 
-  <template id="my_js" inherit_id="website_less.assets_editor" name="My Js">
+  <template id="my_js" inherit_id="website.assets_editor" name="My Js">
     <xpath expr="script[last()]" position="after">
       <script type="text/javascript" src="/theme_tutorial/static/src/js/tutorial_editor.js" />
     </xpath>
@@ -844,7 +839,7 @@ Update your theme
 
 
 Let’s test our new javascript function. Enter in Edit mode and drop into the page.
-You should now see the javascript alert that we bound on the ``on_focus`` event.
+You should now see the javascript alert that we bound on the ``onFocus`` event.
 If you close it, then click outside of your snippet and then click in it again, the event will trigger again.
 
 .. image:: theme_tutorial_assets/img/snippet_custom_method.png

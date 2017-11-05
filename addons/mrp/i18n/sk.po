@@ -1,200 +1,192 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp
-# 
+#
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2015-2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-12-08 11:53+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-07-06 08:35+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
+"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:262
+#: code:addons/mrp/stock.py:231
 #, python-format
 msgid " Manufacture"
 msgstr "Výroba"
 
 #. module: mrp
-#: field:product.template,bom_count:0
+#: model:ir.model.fields,field_description:mrp.field_product_product_bom_count
+#: model:ir.model.fields,field_description:mrp.field_product_template_bom_count
 msgid "# Bill of Material"
 msgstr "# Kusovník"
 
 #. module: mrp
-#: field:product.product,mo_count:0 field:product.template,mo_count:0
+#: model:ir.model.fields,field_description:mrp.field_product_product_mo_count
+#: model:ir.model.fields,field_description:mrp.field_product_template_mo_count
 msgid "# Manufacturing Orders"
 msgstr "# Výrobných objednávok"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:323
+#: code:addons/mrp/mrp.py:341
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kópia)"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:977
+#: code:addons/mrp/mrp.py:1052
 #, python-format
 msgid "%s produced"
 msgstr "%s vyprodukované"
 
 #. module: mrp
-#: help:mrp.product.produce,mode:0
+#: model:ir.model.fields,help:mrp.field_mrp_product_produce_mode
 msgid ""
-"'Consume only' mode will only consume the products with the quantity selected.\n"
-"'Consume & Produce' mode will consume as well as produce the products with the quantity selected and it will finish the production order when total ordered quantities are produced."
-msgstr "Režim 'Len spotrebovať'  spotrebuje iba produkty s vybraným množstvom.\nRežim 'Spotrebovať & Vyrobiť' spotrebuje a vyrobí produkty s vybraným množstvom, a a ukončí výrobnú objednávku keď celkové objednané množstvá budú vyrobené. "
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action2
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a component to a bill of material.\n"
-"              </p><p>\n"
-"                Bills of materials components are components and by-products\n"
-"                used to create master bills of materials.  Use this menu to\n"
-"                search in which BoM a specific component is used.\n"
-"              </p>\n"
-"            "
+"'Consume only' mode will only consume the products with the quantity "
+"selected.\n"
+"'Consume & Produce' mode will consume as well as produce the products with "
+"the quantity selected and it will finish the production order when total "
+"ordered quantities are produced."
 msgstr ""
+"Režim 'Len spotrebovať'  spotrebuje iba produkty s vybraným množstvom.\n"
+"Režim 'Spotrebovať & Vyrobiť' spotrebuje a vyrobí produkty s vybraným "
+"množstvom, a a ukončí výrobnú objednávku keď celkové objednané množstvá budú "
+"vyrobené. "
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a work center.\n"
-"              </p><p>\n"
-"                Work Centers allow you to create and manage manufacturing\n"
-"                units. They consist of workers and/or machines, which are\n"
-"                considered as units for task assignation as well as capacity\n"
-"                and planning forecast.\n"
-"              </p>\n"
-"            "
-msgstr ""
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Consumed Products</strong>"
+msgstr "<strong>Spotrebované produkty</strong>"
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a bill of material. \n"
-"              </p><p>\n"
-"                Bills of Materials allow you to define the list of required raw\n"
-"                materials used to make a finished product; through a manufacturing\n"
-"                order or a pack of products.\n"
-"              </p><p>\n"
-"                Odoo uses these BoMs to automatically propose manufacturing\n"
-"                orders according to procurement needs.\n"
-"              </p>\n"
-"            "
-msgstr ""
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Destination Location</strong>"
+msgstr "<strong>Cieľová lokácia</strong>"
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a group of properties.\n"
-"              </p><p>\n"
-"                Define specific property groups that can be assigned to your\n"
-"                bill of materials and sales orders. Properties allows Odoo\n"
-"                to automatically select the right bill of materials according\n"
-"                to properties selected in the sales order by salesperson.\n"
-"              </p><p>\n"
-"                For instance, in the property group \"Warranty\", you an have\n"
-"                two properties: 1 year warranty, 3 years warranty. Depending\n"
-"                on the propoerties selected in the sales order, Odoo will\n"
-"                schedule a production using the matching bill of materials.\n"
-"              </p>\n"
-"            "
-msgstr ""
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Name</strong>"
+msgstr "<strong>Name</strong> "
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_production_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a manufacturing order. \n"
-"              </p><p>\n"
-"                A manufacturing order, based on a bill of materials, will\n"
-"                consume raw materials and produce finished products.\n"
-"              </p><p>\n"
-"                Manufacturing orders are usually proposed automatically based\n"
-"                on customer requirements or automated rules like the minimum\n"
-"                stock rule.\n"
-"              </p>\n"
-"            "
-msgstr ""
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>No. Of Cycles</strong>"
+msgstr "<strong>Počet cyklov</strong>"
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new property.\n"
-"              </p><p>\n"
-"                The Properties in Odoo are used to select the right bill of\n"
-"                materials for manufacturing a product when you have different\n"
-"                ways of building the same product.  You can assign several\n"
-"                properties to each bill of materials.  When a salesperson\n"
-"                creates a sales order, they can relate it to several properties\n"
-"                and Odoo will automatically select the BoM to use according\n"
-"                the needs.\n"
-"              </p>\n"
-"            "
-msgstr ""
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>No. Of Hours</strong>"
+msgstr "<strong>Počet hodín</strong>"
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_routing_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a routing.\n"
-"              </p><p>\n"
-"                Routings allow you to create and manage the manufacturing\n"
-"                operations that should be followed within your work centers in\n"
-"                order to produce a product.  They are attached to bills of\n"
-"                materials that will define the required raw materials.\n"
-"              </p>\n"
-"            "
-msgstr ""
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Partner Ref:</strong><br/>"
+msgstr "<strong>Ref. Partnera:</strong><br/>"
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to start a new manufacturing order. \n"
-"              </p><p>\n"
-"                A manufacturing order, based on a bill of materials, will\n"
-"                consume raw materials and produce finished products.\n"
-"              </p><p>\n"
-"                Manufacturing orders are usually proposed automatically based\n"
-"                on customer requirements or automated rules like the minimum\n"
-"                stock rule.\n"
-"              </p>\n"
-"            "
-msgstr ""
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Printing date:</strong><br/>"
+msgstr "<strong>Dátum tlače:</strong><br/>"
 
 #. module: mrp
-#: help:mrp.bom,product_efficiency:0
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Product:</strong><br/>"
+msgstr "<strong>Produkt:</strong><br/>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Product</strong>"
+msgstr "<strong>Produkt</strong>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Products to Consume</strong>"
+msgstr "<strong>Produkty na spotrebu</strong>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Quantity:</strong><br/>"
+msgstr "<strong>Množstvo:</strong><br/>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Quantity</strong>"
+msgstr "<strong>Množstvo</strong>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>SO Number:</strong><br/>"
+msgstr "<strong>SO číslo:</strong><br/>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Scheduled Date:</strong><br/>"
+msgstr "<strong>Plánovaný dátum:</strong><br/>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Sequence</strong>"
+msgstr "<strong>Sekvencia</strong>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Source Document:</strong><br/>"
+msgstr "<strong>Zdrojový dokument:</strong><br/>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Source Location</strong>"
+msgstr "<strong>Zdrojová lokácia</strong>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Work Orders</strong>"
+msgstr "<strong>Pracovné objednávky</strong>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>WorkCenter</strong>"
+msgstr "<strong>Pracovné centrum</strong>"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_product_efficiency
 msgid "A factor of 0.9 means a loss of 10% during the production process."
 msgstr "Faktor 0.9 znamená stratu 10% počas výrobného procesu."
 
 #. module: mrp
-#: help:mrp.bom.line,product_efficiency:0
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_product_efficiency
 msgid "A factor of 0.9 means a loss of 10% within the production process."
 msgstr "Faktor 0.9 znamená stratu 10% vo výrobnom procese."
 
 #. module: mrp
-#: field:mrp.bom,active:0 field:mrp.routing,active:0
+#: model:ir.actions.act_window,help:mrp.mrp_production_action
+#: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
+msgid ""
+"A manufacturing order, based on a bill of materials, will\n"
+"                consume raw materials and produce finished products."
+msgstr ""
+"Výrobná objednávka, založená na kusovníku, spotrebuje\n"
+"surové materiály a vyprodukuje hotový produkt."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_active
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_active
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_active
 msgid "Active"
 msgstr "Aktívny"
 
 #. module: mrp
-#: code:addons/mrp/wizard/change_production_qty.py:68
+#: code:addons/mrp/wizard/change_production_qty.py:51
 #, python-format
 msgid "Active Id not found"
 msgstr "Aktívne id nebolo nájdené"
@@ -203,68 +195,47 @@ msgstr "Aktívne id nebolo nájdené"
 #: sql_constraint:mrp.bom.line:0
 msgid ""
 "All product quantities must be greater than 0.\n"
-"You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
-msgstr "Všetky množstvá produktov musia byť vyššie ako 0.\nMali by ste nainštalovať modul mrp_byproduct ak chcete spravovať extra produkty na kusovníkoch!"
-
-#. module: mrp
-#: field:mrp.config.settings,module_mrp_operations:0
-msgid "Allow detailed planning of work order"
+"You should install the mrp_byproduct module if you want to manage extra "
+"products on BoMs !"
 msgstr ""
+"Všetky množstvá produktov musia byť vyššie ako 0.\n"
+"Mali by ste nainštalovať modul mrp_byproduct ak chcete spravovať extra "
+"produkty na kusovníkoch!"
 
 #. module: mrp
-#: field:mrp.config.settings,group_mrp_properties:0
-msgid "Allow several bill of materials per products using properties"
-msgstr ""
+#: selection:mrp.config.settings,module_mrp_operations:0
+msgid "Allow detailed planning of work orders"
+msgstr "Povoliť detailné plánovanie výrobných objednávok"
 
 #. module: mrp
-#: help:mrp.config.settings,module_mrp_repair:0
+#: model:ir.model.fields,help:mrp.field_mrp_config_settings_group_rounding_efficiency
 msgid ""
-"Allows to manage all product repairs.\n"
-"* Add/remove products in the reparation\n"
-"* Impact for stocks\n"
-"* Invoicing (products and/or services)\n"
-"* Warranty concept\n"
-"* Repair quotation report\n"
-"* Notes for the technician and for the final customer.\n"
-"-This installs the module mrp_repair."
+"Allow to manage product rounding on quantity and product efficiency during "
+"production process"
 msgstr ""
+"Povoliť spravovanie produktov na zaokrúhlenie na kvantitu a efektivitu "
+"výrobku počas výrobného procesu"
 
 #. module: mrp
-#: selection:mrp.workcenter.load,measure_unit:0
-msgid "Amount in cycles"
-msgstr ""
-
-#. module: mrp
-#: selection:mrp.workcenter.load,measure_unit:0
-msgid "Amount in hours"
-msgstr ""
-
-#. module: mrp
-#: field:mrp.workcenter.load,measure_unit:0
-msgid "Amount measuring unit"
-msgstr ""
-
-#. module: mrp
-#: field:mrp.workcenter,costs_journal_id:0
-msgid "Analytic Journal"
-msgstr ""
-
-#. module: mrp
-#: view:mrp.config.settings:mrp.view_mrp_config
+#: model:ir.ui.view,arch_db:mrp.view_mrp_config
 msgid "Apply"
 msgstr "Použiť"
 
 #. module: mrp
-#: view:change.production.qty:mrp.view_change_production_qty_wizard
+#: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
 msgid "Approve"
 msgstr "Schváliť"
 
 #. module: mrp
-#: help:product.template,produce_delay:0
+#: model:ir.model.fields,help:mrp.field_product_product_produce_delay
+#: model:ir.model.fields,help:mrp.field_product_template_produce_delay
 msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
-msgstr "Priemerné oneskorenie v dňoch na výrobu tohto produktu. V prípade viacúrovňového  kusovníka, výrobné dodacie lehoty jednotlivých komponentov  budú pridané."
+msgstr ""
+"Priemerné oneskorenie v dňoch na výrobu tohto produktu. V prípade "
+"viacúrovňového  kusovníka, výrobné dodacie lehoty jednotlivých komponentov  "
+"budú pridané."
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -272,68 +243,73 @@ msgid "Awaiting Raw Materials"
 msgstr "Čaká na surové materály"
 
 #. module: mrp
-#: view:website:mrp.report_mrpbomstructure
+#: model:ir.actions.report.xml,name:mrp.action_report_bom_price
+msgid "BOM Cost"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
 msgid "BOM Name"
 msgstr "Názov kusovníka"
 
 #. module: mrp
-#: help:mrp.bom.line,attribute_value_ids:0
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_attribute_value_ids
 msgid "BOM Product Variants needed form apply this line."
-msgstr "Produktové varianty  kusovníka použiť tento riadok potrebého formulára."
+msgstr ""
+"Produktové varianty  kusovníka použiť tento riadok potrebého formulára."
 
 #. module: mrp
-#: view:website:mrp.report_mrpbomstructure
+#: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
 msgid "BOM Ref"
 msgstr "Ref. kusovníka"
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.action_report_bom_structure
-#: view:website:mrp.report_mrpbomstructure
+#: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
 msgid "BOM Structure"
 msgstr "Štruktúra kusovníka"
 
 #. module: mrp
-#: field:mrp.bom.line,child_line_ids:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_child_line_ids
 msgid "BOM lines of the referred bom"
 msgstr "Riadku Kusovníka referovaného kusovníka"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:44
+#: code:addons/mrp/stock.py:25
 #, python-format
 msgid ""
 "Because the product %s requires it, you must assign a serial number to your "
 "raw material %s to proceed further in your production. Please use the "
 "'Produce' button to do so."
-msgstr "Pretože to produkt %s vyžaduje, musíte prideliť sériové číslo surovému materíalu %s pre postúpenie vo vašej výrobe. Prosím použite na to tlačidlo 'Vyprodukovať'."
+msgstr ""
+"Pretože to produkt %s vyžaduje, musíte prideliť sériové číslo surovému "
+"materíalu %s pre postúpenie vo vašej výrobe. Prosím použite na to tlačidlo "
+"'Vyprodukovať'."
 
 #. module: mrp
-#: view:mrp.bom:mrp.view_mrp_bom_filter
-#: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
-#: view:website:mrp.report_mrporder
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Bill Of Material"
 msgstr "Kusovník materiálu"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_bom view:mrp.bom:mrp.mrp_bom_form_view
-#: field:mrp.production,bom_id:0
+#: model:ir.model,name:mrp.model_mrp_bom
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_bom_id
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Bill of Material"
-msgstr "Zoznam materiálu"
-
-#. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_bom_form_action2
-#: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action2
-msgid "Bill of Material Components"
-msgstr ""
+msgstr "Kusovník materiálu"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
 #: model:ir.actions.act_window,name:mrp.product_open_bom
 #: model:ir.actions.act_window,name:mrp.template_open_bom
+#: model:ir.model.fields,field_description:mrp.field_product_product_bom_ids
+#: model:ir.model.fields,field_description:mrp.field_product_template_bom_ids
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
-#: view:mrp.bom.line:mrp.mrp_bom_tree_view
-#: view:product.product:mrp.product_product_form_view_bom_button
-#: view:product.template:mrp.product_template_form_view_bom_button
-#: field:product.template,bom_ids:0
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_line_tree_view
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_tree_view
+#: model:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
+#: model:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 msgid "Bill of Materials"
 msgstr "Kusovník materiálov"
 
@@ -343,64 +319,84 @@ msgid "Bill of Materials Structure"
 msgstr "Štruktúra kusovníka"
 
 #. module: mrp
-#: help:mrp.production,bom_id:0
+#: model:ir.model.fields,help:mrp.field_mrp_production_bom_id
 msgid ""
 "Bill of Materials allow you to define the list of required raw materials to "
 "make a finished product."
-msgstr "Kusovník vám umožňuje definovať zoznam potrebných surových materiálov potrebných na výrobu konečného produktu."
+msgstr ""
+"Kusovník vám umožňuje definovať zoznam potrebných surových materiálov "
+"použitých na výrobu konečného produktu."
 
 #. module: mrp
-#: field:procurement.order,bom_id:0
+#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
+msgid ""
+"Bills of Materials allow you to define the list of required raw\n"
+"                materials used to make a finished product; through a "
+"manufacturing\n"
+"                order or a pack of products."
+msgstr ""
+"Kusovníky vám umožňujú definovať zoznam potrebných surových\n"
+"materiálov použitých na výrobu konečného produktu, cez výrobnú\n"
+"objednávku alebo balík produktov."
+
+#. module: mrp
+#: selection:mrp.config.settings,module_mrp_byproduct:0
+msgid "Bills of materials may produce residual products (A + B --> C + D)"
+msgstr "Kusovníky môžu vytvoriť reziduálne produkty (A + B --> C + D)"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_procurement_order_bom_id
 msgid "BoM"
 msgstr "BoM (zoznam materiálu)"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:289
+#: code:addons/mrp/mrp.py:316
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
-msgstr "Kusovník \"%s\" obsahuje riadok kusovníka s rekurziou produktu: \"%s\"."
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:315
-#, python-format
-msgid ""
-"BoM \"%s\" contains a phantom BoM line but the product \"%s\" does not have "
-"any BoM defined."
 msgstr ""
+"Kusovník \"%s\" obsahuje riadok kusovníka s rekurziou produktu: \"%s\"."
 
 #. module: mrp
-#: field:mrp.bom.line,type:0
-msgid "BoM Line Type"
-msgstr ""
-
-#. module: mrp
-#: field:mrp.bom,bom_line_ids:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_bom_line_ids
 msgid "BoM Lines"
 msgstr "Riadky kusovníka"
 
 #. module: mrp
-#: field:mrp.bom,type:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_type
 msgid "BoM Type"
 msgstr "Typ kusovníka"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:259
+#: selection:mrp.product.produce,tracking:0
+msgid "By Lots"
+msgstr "Podľa Šarží"
+
+#. module: mrp
+#: selection:mrp.product.produce,tracking:0
+msgid "By Unique Serial Number"
+msgstr "Podľa Unikátneho seriálového čísla"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_byproduct
+msgid "By-Products"
+msgstr "Vedľajšie produkty"
+
+#. module: mrp
+#: code:addons/mrp/stock.py:228
 #, python-format
 msgid "Can't find any generic Manufacture route."
 msgstr "Nemožno nájsť žiadnu generickú Výrobnú trasu."
 
 #. module: mrp
-#: view:change.production.qty:mrp.view_change_production_qty_wizard
-#: view:mrp.config.settings:mrp.view_mrp_config
-#: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
-#: view:mrp.product_price:mrp.view_mrp_product_price_wizard
-#: view:mrp.workcenter.load:mrp.view_mrp_workcenter_load_wizard
-#: view:stock.move.consume:mrp.view_stock_move_consume_wizard
+#: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
+#: model:ir.ui.view,arch_db:mrp.view_mrp_config
+#: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
+#: model:ir.ui.view,arch_db:mrp.view_stock_move_consume_wizard
 msgid "Cancel"
 msgstr "Zrušiť"
 
 #. module: mrp
-#: view:mrp.production:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Cancel Production"
 msgstr "Zrušiť výrobu"
 
@@ -410,50 +406,45 @@ msgid "Cancelled"
 msgstr "Zrušené"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:183
+#: code:addons/mrp/stock.py:150
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
 msgstr "Nemožno spotrebovať pohyb so záporným alebo nulovým množstvom."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:605
+#: code:addons/mrp/mrp.py:649
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr "Nemožno zmazať výrobnú objednávku vo fáze '%s'."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:679
+#: code:addons/mrp/mrp.py:719
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr "Nemožno nájsť kusovník pre tento produkt."
 
 #. module: mrp
-#: code:addons/mrp/wizard/change_production_qty.py:83
-#: code:addons/mrp/wizard/change_production_qty.py:88
+#: code:addons/mrp/wizard/change_production_qty.py:67
+#: code:addons/mrp/wizard/change_production_qty.py:72
 #, python-format
 msgid "Cannot find bill of material for this product."
 msgstr "Nemožno nájsť kusovník pre tento produkt."
 
 #. module: mrp
-#: view:mrp.workcenter:mrp.mrp_workcenter_view
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Capacity Information"
 msgstr "Informácie o kapacite"
 
 #. module: mrp
-#: field:mrp.workcenter,capacity_per_cycle:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity_per_cycle
 msgid "Capacity per Cycle"
 msgstr "Kapacita za cyklus"
 
 #. module: mrp
-#: view:change.production.qty:mrp.view_change_production_qty_wizard
 #: model:ir.actions.act_window,name:mrp.action_change_production_qty
+#: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
 msgid "Change Product Qty"
 msgstr "Zmeniť množ. produktu"
-
-#. module: mrp
-#: view:change.production.qty:mrp.view_change_production_qty_wizard
-msgid "Change Quantity"
-msgstr "Zmeniť množstvo"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_change_production_qty
@@ -461,12 +452,43 @@ msgid "Change Quantity of Products"
 msgstr "Zmeniť množstvo produktov"
 
 #. module: mrp
-#: view:mrp.production:mrp.mrp_production_form_view
-msgid "Check Availability"
-msgstr ""
+#: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
+msgid "Click to add a work center."
+msgstr "Kliknite pre pridanie pracovného centra."
 
 #. module: mrp
-#: field:mrp.routing,code:0
+#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
+msgid "Click to create a bill of material."
+msgstr "Kliknite pre pridanie kusovníka."
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
+msgid "Click to create a group of properties."
+msgstr "Kliknite pre vytvorenie skupiny vlastností."
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_production_action
+msgid "Click to create a manufacturing order."
+msgstr "Kliknite pre vytvorenie výrobnej objednávky."
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_action
+msgid "Click to create a new property."
+msgstr "Kliknite pre vytvorenie novej vlastnosti."
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_routing_action
+msgid "Click to create a new routing."
+msgstr "Kliknite pre vytvorenie nového smerovania."
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
+msgid "Click to start a new manufacturing order."
+msgstr "Kliknite pre začatie novej výrobnej objednávky."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_code
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_code
 msgid "Code"
 msgstr "Kód"
 
@@ -476,57 +498,47 @@ msgid "Companies"
 msgstr "Spoločnosti"
 
 #. module: mrp
-#: field:mrp.bom,company_id:0 field:mrp.production,company_id:0
-#: field:mrp.routing,company_id:0 field:mrp.routing.workcenter,company_id:0
-#: view:mrp.workcenter:mrp.view_mrp_workcenter_search
-#: field:report.mrp.inout,company_id:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_company_id
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_company_id
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Company"
 msgstr "Spoločnost"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:141 view:mrp.bom:mrp.mrp_bom_form_view
-#: view:mrp.bom:mrp.view_mrp_bom_filter
-#: view:mrp.bom.line:mrp.mrp_bom_component_tree_view
-#: view:product.template:mrp.product_template_search_view_procurment
-#, python-format
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_component_tree_view
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+#: model:ir.ui.view,arch_db:mrp.product_template_search_view_procurment
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Components"
 msgstr "Komponenty"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:189
-#, python-format
-msgid "Components Cost of %s %s"
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/report/price.py:141
-#, python-format
-msgid "Components suppliers"
-msgstr ""
-
-#. module: mrp
-#: view:mrp.production:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Compute Data"
 msgstr "Vypočítať dáta"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
 msgid "Configuration"
-msgstr "Konfigurácia"
+msgstr "Nastavenie"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
-#: view:mrp.config.settings:mrp.view_mrp_config
+#: model:ir.ui.view,arch_db:mrp.view_mrp_config
 msgid "Configure Manufacturing"
 msgstr "Konfigurovať výrobu"
 
 #. module: mrp
-#: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
+#: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "Confirm"
 msgstr "Potvrdiť"
 
 #. module: mrp
-#: view:mrp.production:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Confirm Production"
 msgstr "Potvrdiť výrobu"
 
@@ -536,153 +548,180 @@ msgid "Consume & Produce"
 msgstr "Spotrebovať & Vyrobiť"
 
 #. module: mrp
-#: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
+#: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "Consume Lines"
 msgstr "Riadky spotreby"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.move_consume
-#: view:stock.move.consume:mrp.view_stock_move_consume_wizard
+#: model:ir.ui.view,arch_db:mrp.view_stock_move_consume_wizard
 msgid "Consume Move"
 msgstr "Spotrebný pohyb"
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
 msgid "Consume Only"
-msgstr "Len spotrebovať"
+msgstr "Len spotreba"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_consume
-#: view:mrp.production:mrp.mrp_production_form_view
-#: view:stock.move.consume:mrp.view_stock_move_consume_wizard
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.view_stock_move_consume_wizard
 msgid "Consume Products"
 msgstr "Spotrebné produkty"
 
 #. module: mrp
-#: view:mrp.production:mrp.mrp_production_form_view
-#: field:mrp.production,move_lines2:0 view:website:mrp.report_mrporder
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_lines2
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Consumed Products"
 msgstr "Spotrebované produkty"
 
 #. module: mrp
-#: field:stock.move,consumed_for:0
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consumed_for
 msgid "Consumed for"
 msgstr "Spotrebované pre"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:141
-#, python-format
-msgid "Cost Price per Unit of Measure"
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Cost Structure"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:148
-#: model:ir.actions.report.xml,name:mrp.report_cost_structure
-#, python-format
-msgid "Cost Structure"
-msgstr "Štruktúra Nákladov"
-
-#. module: mrp
-#: field:mrp.workcenter,costs_cycle:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
 msgid "Cost per cycle"
 msgstr "Cena za cyklus"
 
 #. module: mrp
-#: field:mrp.workcenter,costs_hour:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_hour
 msgid "Cost per hour"
 msgstr "Cena za hodinu"
 
 #. module: mrp
-#: view:mrp.workcenter:mrp.mrp_workcenter_view
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Costing Information"
 msgstr "Cenová informácia"
 
 #. module: mrp
-#: field:change.production.qty,create_uid:0 field:mrp.bom,create_uid:0
-#: field:mrp.bom.line,create_uid:0 field:mrp.config.settings,create_uid:0
-#: field:mrp.product.produce,create_uid:0
-#: field:mrp.product.produce.line,create_uid:0
-#: field:mrp.product_price,create_uid:0 field:mrp.production,create_uid:0
-#: field:mrp.production.product.line,create_uid:0
-#: field:mrp.production.workcenter.line,create_uid:0
-#: field:mrp.property,create_uid:0 field:mrp.property.group,create_uid:0
-#: field:mrp.routing,create_uid:0 field:mrp.routing.workcenter,create_uid:0
-#: field:mrp.workcenter,create_uid:0 field:mrp.workcenter.load,create_uid:0
-#: field:stock.move.consume,create_uid:0
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_create_uid
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_create_uid
 msgid "Created by"
 msgstr "Vytvoril"
 
 #. module: mrp
-#: field:change.production.qty,create_date:0 field:mrp.bom,create_date:0
-#: field:mrp.bom.line,create_date:0 field:mrp.config.settings,create_date:0
-#: field:mrp.product.produce,create_date:0
-#: field:mrp.product.produce.line,create_date:0
-#: field:mrp.product_price,create_date:0 field:mrp.production,create_date:0
-#: field:mrp.production.product.line,create_date:0
-#: field:mrp.production.workcenter.line,create_date:0
-#: field:mrp.property,create_date:0 field:mrp.property.group,create_date:0
-#: field:mrp.routing,create_date:0 field:mrp.routing.workcenter,create_date:0
-#: field:mrp.workcenter,create_date:0 field:mrp.workcenter.load,create_date:0
-#: field:stock.move.consume,create_date:0
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_create_date
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_create_date
 msgid "Created on"
 msgstr "Vytvorené"
 
 #. module: mrp
-#: field:mrp.workcenter,costs_cycle_account_id:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle_account_id
 msgid "Cycle Account"
 msgstr "Účet cyklu"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:132
-#, python-format
-msgid "Cycles Cost"
-msgstr ""
-
-#. module: mrp
-#: help:mrp.bom,message_last_post:0 help:mrp.production,message_last_post:0
-#: help:mrp.production.workcenter.line,message_last_post:0
-msgid "Date of the last message posted on the record."
-msgstr "Dátum poslednej správy zaslanej záznamu."
-
-#. module: mrp
-#: selection:mrp.workcenter.load,time_unit:0
-msgid "Day by day"
-msgstr ""
-
-#. module: mrp
-#: view:mrp.bom:mrp.view_mrp_bom_filter
-#: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Default Unit of Measure"
 msgstr "Predvolená merná jednotka"
 
 #. module: mrp
-#: field:mrp.config.settings,module_product_manufacturer:0
-msgid "Define manufacturers on products "
+#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
+msgid ""
+"Define specific property groups that can be assigned to your\n"
+"                bill of materials and sales orders. Properties allows Odoo\n"
+"                to automatically select the right bill of materials "
+"according\n"
+"                to properties selected in the sales order by salesperson."
 msgstr ""
+"Definujte špecifickú skupinu vlastností ktorá môže byť pridelená vášmu\n"
+"kusovníku a predajným objednávkam. Vlastnosti umožňuju Odoo\n"
+"automaticky vybrať správny kusovník podľa\n"
+"vlastností zvolených predajcom v predajnej objednávke."
 
 #. module: mrp
-#: field:mrp.property,description:0 field:mrp.property.group,description:0
-#: field:mrp.routing,note:0 field:mrp.routing.workcenter,note:0
-#: field:mrp.workcenter,note:0
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_calendar_id
+msgid "Define the schedule of resource"
+msgstr "Definujte harmonogram zdroja"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_description
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_description
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_note
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_note
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_note
+#: model:ir.ui.view,arch_db:mrp.mrp_property_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_property_group_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Description"
 msgstr "Popis"
 
 #. module: mrp
-#: help:mrp.workcenter,note:0
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_note
 msgid ""
 "Description of the Work Center. Explain here what's a cycle according to "
 "this Work Center."
-msgstr "Popis Pracovného centra. Vysvetlite tu, čo je cyklus podľa tohto pracovného centra."
+msgstr ""
+"Popis Pracovného centra. Vysvetlite tu, čo je cyklus podľa tohto pracovného "
+"centra."
 
 #. module: mrp
-#: view:mrp.production:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Destination Loc."
 msgstr "Cieľová lok."
 
 #. module: mrp
-#: view:website:mrp.report_mrporder
-msgid "Destination Location"
-msgstr "Cieľová lokácia"
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_display_name
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost_display_name
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_display_name
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure_display_name
+#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_display_name
+msgid "Display Name"
+msgstr "Zobraziť meno"
+
+#. module: mrp
+#: selection:mrp.config.settings,module_mrp_operations:0
+msgid "Do not use a planning for the work orders "
+msgstr "Nepoužívajte plánovanie pre pracovné objednávky"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -690,286 +729,317 @@ msgid "Done"
 msgstr "Dokončiť"
 
 #. module: mrp
-#: field:mrp.production,date_finished:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_efficiency
+msgid "Efficiency Factor"
+msgstr "Faktor efektívnosti"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_date_finished
 msgid "End Date"
 msgstr "Dátum ukončenia"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:679 code:addons/mrp/stock.py:183
-#: code:addons/mrp/stock.py:259
-#: code:addons/mrp/wizard/change_production_qty.py:83
-#: code:addons/mrp/wizard/change_production_qty.py:88
-#, python-format
-msgid "Error!"
-msgstr "Chyba!"
-
-#. module: mrp
-#: view:mrp.production:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Extra Information"
 msgstr "Extra informácie"
 
 #. module: mrp
-#: help:mrp.workcenter,costs_cycle_account_id:0
-#: help:mrp.workcenter,costs_hour_account_id:0
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_cycle_account_id
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_hour_account_id
 msgid ""
 "Fill this only if you want automatic analytic accounting entries on "
 "production orders."
-msgstr "Toto vyplňte len ak chcete automatické účtovné analytické vstupy na výrobných objednávkach."
+msgstr ""
+"Toto vyplňte len ak chcete automatické účtovné analytické vstupy na "
+"výrobných objednávkach."
 
 #. module: mrp
-#: help:mrp.workcenter,product_id:0
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_product_id
 msgid ""
 "Fill this product to easily track your production costs in the analytic "
 "accounting."
-msgstr "Vyplňte tento produkt pre jednoduché sledovanie vašich výrobných nákladov v analytickom účtovníctve."
+msgstr ""
+"Vyplňte tento produkt pre jednoduché sledovanie vašich výrobných nákladov v "
+"analytickom účtovníctve."
 
 #. module: mrp
-#: view:mrp.production:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Finished Products"
 msgstr "Hotové výrobky"
 
 #. module: mrp
-#: field:mrp.production,location_dest_id:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_location_dest_id
 msgid "Finished Products Location"
 msgstr "Lokácia hotových produkov"
 
 #. module: mrp
-#: field:mrp.bom,message_follower_ids:0
-#: field:mrp.production,message_follower_ids:0
-#: field:mrp.production.workcenter.line,message_follower_ids:0
-msgid "Followers"
-msgstr "Odberatelia"
+#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
+msgid ""
+"For instance, in the property group \"Warranty\", you an have\n"
+"                two properties: 1 year warranty, 3 years warranty. "
+"Depending\n"
+"                on the propoerties selected in the sales order, Odoo will\n"
+"                schedule a production using the matching bill of materials."
+msgstr ""
+"Napríklad v skupine vlastností \"Záruka\" máte\n"
+"dve vlastnosti: 1 rok záruka, 3 roky záruka. V závislosti\n"
+"od vlastností vybraných v predajnej objednávke, bude Odoo\n"
+"plánovať výrobu pomocou zodpovedajúceho kusovníka."
 
 #. module: mrp
-#: view:mrp.production:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Force Reservation"
 msgstr "Vynútená rezervácia"
 
 #. module: mrp
-#: help:product.template,track_production:0
-msgid ""
-"Forces to specify a Serial Number for all moves containing this product and "
-"generated by a Manufacturing Order"
-msgstr ""
-
-#. module: mrp
-#: field:mrp.workcenter,costs_general_account_id:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_general_account_id
 msgid "General Account"
 msgstr "Všeobecný účet"
 
 #. module: mrp
-#: view:mrp.workcenter:mrp.mrp_workcenter_view
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "General Information"
 msgstr "Všeobecné informácie"
 
 #. module: mrp
-#: help:mrp.bom,sequence:0
+#: model:ir.model.fields,help:mrp.field_mrp_bom_sequence
 msgid "Gives the sequence order when displaying a list of bills of material."
 msgstr "Dáva sekvenčné poradie pri zobrazovaní zoznamu kusovníkov."
 
 #. module: mrp
-#: help:mrp.routing.workcenter,sequence:0
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_sequence
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
-msgstr "Dáva sekvenčné poradie pri zobrazovaní zoznamu trás pracovných centier."
+msgstr ""
+"Dáva sekvenčné poradie pri zobrazovaní zoznamu trás pracovných centier."
 
 #. module: mrp
-#: help:mrp.production.workcenter.line,sequence:0
+#: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_sequence
 msgid "Gives the sequence order when displaying a list of work orders."
 msgstr "Dáva sekvenčné poradie pri zobrazovaní zoznamu pracovných objednávok."
 
 #. module: mrp
-#: help:mrp.bom.line,sequence:0
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_sequence
 msgid "Gives the sequence order when displaying."
 msgstr "Dáva sekvenčné poradie pri zobrazovaní."
 
 #. module: mrp
-#: view:mrp.property:mrp.view_mrp_property_search
+#: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Group By"
 msgstr "Zoskupiť podľa"
 
 #. module: mrp
-#: view:mrp.bom:mrp.view_mrp_bom_filter
-#: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
-#: view:mrp.production:mrp.view_mrp_production_filter
-#: view:mrp.routing:mrp.mrp_routing_search_view
-#: view:mrp.workcenter:mrp.view_mrp_workcenter_search
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Group By..."
 msgstr "Zoskupiť podľa..."
 
 #. module: mrp
-#: help:mrp.bom,message_summary:0 help:mrp.production,message_summary:0
-#: help:mrp.production.workcenter.line,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-
-#. module: mrp
-#: field:mrp.workcenter,costs_hour_account_id:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_hour_account_id
 msgid "Hour Account"
 msgstr "Hodinový účet"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:132
-#, python-format
-msgid "Hourly Cost"
-msgstr ""
-
-#. module: mrp
-#: field:change.production.qty,id:0 field:mrp.bom,id:0 field:mrp.bom.line,id:0
-#: field:mrp.config.settings,id:0 field:mrp.product.produce,id:0
-#: field:mrp.product.produce.line,id:0 field:mrp.product_price,id:0
-#: field:mrp.production,id:0 field:mrp.production.product.line,id:0
-#: field:mrp.production.workcenter.line,id:0 field:mrp.property,id:0
-#: field:mrp.property.group,id:0 field:mrp.routing,id:0
-#: field:mrp.routing.workcenter,id:0 field:mrp.workcenter,id:0
-#: field:mrp.workcenter.load,id:0 field:report.mrp.inout,id:0
-#: field:report.mrp.report_mrpbomstructure,id:0
-#: field:report.workcenter.load,id:0 field:stock.move.consume,id:0
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost_id
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_id
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure_id
+#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_id
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_id
 msgid "ID"
 msgstr "ID"
 
 #. module: mrp
-#: help:mrp.bom,product_id:0
+#: model:ir.model.fields,help:mrp.field_mrp_bom_product_id
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
-msgstr "Ak je definovaná produktová varianta, kusovník je dostupný ibe pre tento produkt."
+msgstr ""
+"Ak je definovaná produktová varianta, kusovník je dostupný ibe pre tento "
+"produkt."
 
 #. module: mrp
-#: help:mrp.bom,message_unread:0 help:mrp.production,message_unread:0
-#: help:mrp.production.workcenter.line,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#. module: mrp
-#: help:mrp.bom,active:0
+#: model:ir.model.fields,help:mrp.field_mrp_bom_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the bills of "
 "material without removing it."
-msgstr "Ak je aktívne pole nastavené na False, umožní Vám schovať kusovník bez jeho odtránenia."
+msgstr ""
+"Ak je aktívne pole nastavené na False, umožní Vám schovať kusovník bez jeho "
+"odtránenia."
 
 #. module: mrp
-#: help:mrp.routing,active:0
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr ""
+"Ak je aktívne pole nastavené na Nepravda, umožní vám skryť záznam zdroja bez "
+"jeho odstránenia."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
 "without removing it."
-msgstr "Ak je aktívne pole nastavené na False, umožní vám schovať smerovanie bez jeho odstránenia."
+msgstr ""
+"Ak je aktívne pole nastavené na False, umožní vám schovať smerovanie bez "
+"jeho odstránenia."
 
 #. module: mrp
-#: view:mrp.production:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "In Production"
 msgstr "Vo výrobe"
 
 #. module: mrp
-#: view:mrp.routing:mrp.mrp_routing_search_view
-#: view:mrp.workcenter:mrp.view_mrp_workcenter_search
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Inactive"
 msgstr "Neaktívne"
 
 #. module: mrp
-#: field:mrp.bom,position:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_position
 msgid "Internal Reference"
 msgstr "Vnútorná referencia"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:289 code:addons/mrp/mrp.py:315
-#: code:addons/mrp/mrp.py:605
-#, python-format
-msgid "Invalid Action!"
-msgstr ""
-
-#. module: mrp
-#: field:mrp.bom,message_is_follower:0
-#: field:mrp.production,message_is_follower:0
-#: field:mrp.production.workcenter.line,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Je sledujúci"
-
-#. module: mrp
-#: help:mrp.routing,location_id:0
+#: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
 msgid ""
 "Keep empty if you produce at the location where the finished products are "
 "needed.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
-msgstr "Nechajte prázdne ak je výroba n alokácií kde je potrebný hotový produkt. Nastavte\nlokáciu ak vyrábate na fixnej lokácii. To môže byť partnerska lokácia ak máte vedľajšiu zmluvu s výrobnými operáciami."
+msgstr ""
+"Nechajte prázdne ak je výroba n alokácií kde je potrebný hotový produkt. "
+"Nastavte\n"
+"lokáciu ak vyrábate na fixnej lokácii. To môže byť partnerska lokácia ak "
+"máte vedľajšiu zmluvu s výrobnými operáciami."
 
 #. module: mrp
-#: field:mrp.bom,message_last_post:0 field:mrp.production,message_last_post:0
-#: field:mrp.production.workcenter.line,message_last_post:0
-msgid "Last Message Date"
-msgstr "Dátum poslednej správy"
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_production___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_property___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter___last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter___last_update
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost___last_update
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout___last_update
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure___last_update
+#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load___last_update
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume___last_update
+msgid "Last Modified on"
+msgstr "Posledná modifikácia"
 
 #. module: mrp
-#: field:change.production.qty,write_uid:0 field:mrp.bom,write_uid:0
-#: field:mrp.bom.line,write_uid:0 field:mrp.config.settings,write_uid:0
-#: field:mrp.product.produce,write_uid:0
-#: field:mrp.product.produce.line,write_uid:0
-#: field:mrp.product_price,write_uid:0 field:mrp.production,write_uid:0
-#: field:mrp.production.product.line,write_uid:0
-#: field:mrp.production.workcenter.line,write_uid:0
-#: field:mrp.property,write_uid:0 field:mrp.property.group,write_uid:0
-#: field:mrp.routing,write_uid:0 field:mrp.routing.workcenter,write_uid:0
-#: field:mrp.workcenter,write_uid:0 field:mrp.workcenter.load,write_uid:0
-#: field:stock.move.consume,write_uid:0
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_write_uid
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_write_uid
 msgid "Last Updated by"
 msgstr "Naposledy upravoval"
 
 #. module: mrp
-#: field:change.production.qty,write_date:0 field:mrp.bom,write_date:0
-#: field:mrp.bom.line,write_date:0 field:mrp.config.settings,write_date:0
-#: field:mrp.product.produce,write_date:0
-#: field:mrp.product.produce.line,write_date:0
-#: field:mrp.product_price,write_date:0 field:mrp.production,write_date:0
-#: field:mrp.production.product.line,write_date:0
-#: field:mrp.production.workcenter.line,write_date:0
-#: field:mrp.property,write_date:0 field:mrp.property.group,write_date:0
-#: field:mrp.routing,write_date:0 field:mrp.routing.workcenter,write_date:0
-#: field:mrp.workcenter,write_date:0 field:mrp.workcenter.load,write_date:0
-#: field:stock.move.consume,write_date:0
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_write_date
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_write_date
 msgid "Last Updated on"
 msgstr "Naposledy upravované"
 
 #. module: mrp
-#: view:mrp.production:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Late"
 msgstr "Mešká"
 
 #. module: mrp
-#: field:stock.move.consume,location_id:0
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_location_id
 msgid "Location"
 msgstr "Umiestnenie"
 
 #. module: mrp
-#: help:mrp.production,location_src_id:0
+#: model:ir.model.fields,help:mrp.field_mrp_production_location_src_id
 msgid "Location where the system will look for components."
 msgstr "Lokácia kde bude systém hľadať komponenty. "
 
 #. module: mrp
-#: help:mrp.production,location_dest_id:0
+#: model:ir.model.fields,help:mrp.field_mrp_production_location_dest_id
 msgid "Location where the system will stock the finished products."
 msgstr "Lokácie kde systém uskladní hotové výrobky."
 
 #. module: mrp
-#: field:mrp.product.produce,lot_id:0 field:mrp.product.produce.line,lot_id:0
-#: field:stock.move.consume,restrict_lot_id:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_lot_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_lot_id
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_restrict_lot_id
 msgid "Lot"
 msgstr "Šarža"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
-msgid "Manage Routings"
-msgstr ""
+msgid "Manage Work Order Operations"
+msgstr "Spravujte operácie výrobných objednávok"
 
 #. module: mrp
-#: field:mrp.config.settings,module_mrp_repair:0
-msgid "Manage repairs of products "
-msgstr ""
+#: selection:mrp.config.settings,group_mrp_routings:0
+msgid "Manage production by manufacturing orders"
+msgstr "Spravovať výrobu podľa výrobných objednávok"
 
 #. module: mrp
-#: field:mrp.config.settings,group_mrp_routings:0
-msgid "Manage routings and work orders "
-msgstr ""
+#: selection:mrp.config.settings,group_mrp_routings:0
+msgid "Manage production by work orders"
+msgstr "Spravovať produkciu podľa pracovných objednávok"
+
+#. module: mrp
+#: model:res.groups,name:mrp.group_rounding_efficiency
+msgid "Manage rounding and efficiency of BoM components"
+msgstr "Spravovať zaokrúhľovanie a efektivitu komponentov kusovníka"
+
+#. module: mrp
+#: selection:mrp.config.settings,group_rounding_efficiency:0
+msgid "Manage rounding and efficiency of bills of materials components"
+msgstr "Spravovať zaokrúhľovanie a efektivitu komponentov kusovníka"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
@@ -977,51 +1047,56 @@ msgid "Manager"
 msgstr "Manažér"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:33 code:addons/mrp/stock.py:256
+#: code:addons/mrp/procurement.py:15 code:addons/mrp/stock.py:225
+#: model:stock.location.route,name:mrp.route_warehouse0_manufacture
 #, python-format
 msgid "Manufacture"
 msgstr "Výroba"
 
 #. module: mrp
-#: field:stock.warehouse,manufacture_pull_id:0
+#: model:ir.model.fields,field_description:mrp.field_stock_warehouse_manufacture_pull_id
 msgid "Manufacture Rule"
 msgstr "Pravidlo výroby"
 
 #. module: mrp
-#: field:stock.warehouse,manufacture_to_resupply:0
+#: model:ir.model.fields,field_description:mrp.field_stock_warehouse_manufacture_to_resupply
 msgid "Manufacture in this Warehouse"
 msgstr "Výroba v tomto skladisku"
 
 #. module: mrp
+#: selection:mrp.bom,type:0
+msgid "Manufacture this product"
+msgstr "Vyrobiť tento produkt"
+
+#. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
-#: model:ir.ui.menu,name:mrp.next_id_77
-#: view:product.product:mrp.product_product_form_view_bom_button
-#: view:product.template:mrp.product_template_form_view_bom_button
+#: model:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
+#: model:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 msgid "Manufacturing"
 msgstr "Výroba"
 
 #. module: mrp
-#: field:mrp.bom,product_efficiency:0 field:mrp.bom.line,product_efficiency:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_efficiency
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_efficiency
 msgid "Manufacturing Efficiency"
 msgstr "Spravovanie efektivity"
 
 #. module: mrp
-#: field:product.template,produce_delay:0
-#: field:res.company,manufacturing_lead:0
+#: model:ir.model.fields,field_description:mrp.field_product_product_produce_delay
+#: model:ir.model.fields,field_description:mrp.field_product_template_produce_delay
+#: model:ir.model.fields,field_description:mrp.field_res_company_manufacturing_lead
 msgid "Manufacturing Lead Time"
 msgstr "Výrobná dodacia lehota"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_production
-#: view:mrp.config.settings:mrp.view_mrp_config
-#: view:mrp.production:mrp.mrp_production_form_view
-#: field:mrp.production.workcenter.line,production_id:0
-#: field:procurement.order,production_id:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_production_id
+#: model:ir.model.fields,field_description:mrp.field_procurement_order_production_id
+#: model:ir.ui.view,arch_db:mrp.view_mrp_config
 msgid "Manufacturing Order"
 msgstr "Výrobná objednávka"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:131
+#: code:addons/mrp/procurement.py:112
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr "Výrobná objednávka <em>%s</em> vytvorená."
@@ -1031,85 +1106,80 @@ msgstr "Výrobná objednávka <em>%s</em> vytvorená."
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_planning
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_action
-#: view:mrp.production:mrp.mrp_production_form_view
-#: view:mrp.production:mrp.mrp_production_tree_view
-#: view:mrp.production:mrp.view_production_calendar
-#: view:mrp.production:mrp.view_production_graph
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
+#: model:ir.ui.view,arch_db:mrp.view_production_calendar
+#: model:ir.ui.view,arch_db:mrp.view_production_graph
+#: model:ir.ui.view,arch_db:mrp.view_production_pivot
 msgid "Manufacturing Orders"
 msgstr "Výrobné objednávky"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_production_action2
-msgid "Manufacturing Orders To Start"
-msgstr ""
-
-#. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_production_action4
-msgid "Manufacturing Orders Waiting Products"
-msgstr ""
-
-#. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_production_action3
-msgid "Manufacturing Orders in Progress"
-msgstr ""
-
-#. module: mrp
-#: view:mrp.production:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are currently in production."
 msgstr "Výrobné objednávky ktoré sú momentálne v produkcii."
 
 #. module: mrp
-#: view:mrp.production:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are ready to start production."
 msgstr "Výrobné objednávky pripravené začať produkciu-"
 
 #. module: mrp
-#: view:mrp.production:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are waiting for raw materials."
 msgstr "Výrobné objednávky čakajúce na surové materiály."
 
 #. module: mrp
-#: view:mrp.production:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Manufacturing Reference"
+msgstr "Výrobná referencia"
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:784
+#, python-format
+msgid "Manufacturing order cancelled."
+msgstr "Výrobná objednávka zrušená."
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_production_action
+#: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
+msgid ""
+"Manufacturing orders are usually proposed automatically based\n"
+"                on customer requirements or automated rules like the "
+"minimum\n"
+"                stock rule."
+msgstr ""
+"Výrobné objednávky sú zvyčajne navrhnuté automaticky na základe\n"
+"požiadaviek zákazníka alebo automatických pravidiel ako pravidlo\n"
+"minimálneho skladu."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Mark as Started"
 msgstr "Označiť ako Začaté"
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_mrp_property
-msgid "Master Bill of Materials"
-msgstr ""
-
-#. module: mrp
-#: view:mrp.config.settings:mrp.view_mrp_config
+#: model:ir.ui.view,arch_db:mrp.view_mrp_config
 msgid "Master Data"
 msgstr "Hlavné dáta"
 
 #. module: mrp
-#: field:mrp.bom,message_ids:0 field:mrp.production,message_ids:0
-#: field:mrp.production.workcenter.line,message_ids:0
-msgid "Messages"
-msgstr "Správy"
-
-#. module: mrp
-#: help:mrp.bom,message_ids:0 help:mrp.production,message_ids:0
-#: help:mrp.production.workcenter.line,message_ids:0
-msgid "Messages and communication history"
-msgstr "Správa a história komunikácie"
-
-#. module: mrp
-#: field:mrp.product.produce,mode:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_mode
 msgid "Mode"
 msgstr "Model"
 
 #. module: mrp
-#: view:mrp.workcenter:mrp.view_mrp_workcenter_search
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Mrp Workcenter"
 msgstr "Mrp pracovné centrum"
 
 #. module: mrp
-#: field:mrp.bom,name:0 field:mrp.production.product.line,name:0
-#: view:mrp.property:mrp.view_mrp_property_search field:mrp.property,name:0
-#: field:mrp.routing,name:0 field:mrp.routing.workcenter,name:0
-#: view:website:mrp.report_mrporder
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_name
+#: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Name"
 msgstr "Meno"
 
@@ -1119,26 +1189,35 @@ msgid "New"
 msgstr "Nové"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:127
+#: code:addons/mrp/procurement.py:108
 #, python-format
 msgid "No BoM exists for this product!"
 msgstr "Neexistuje žiadny kusovník pre tento produkt!"
 
 #. module: mrp
-#: view:website:mrp.report_mrporder
-msgid "No. Of Cycles"
-msgstr ""
+#: selection:mrp.product.produce,tracking:0
+msgid "No Tracking"
+msgstr "Žiadne sledovanie"
 
 #. module: mrp
-#: view:website:mrp.report_mrporder
-msgid "No. Of Hours"
-msgstr ""
+#: selection:mrp.config.settings,module_mrp_byproduct:0
+msgid "No by-products in bills of materials (A + B --> C)"
+msgstr "Žiadne vedľajšie produkty v kusovníkoch (A + B --> C)"
 
 #. module: mrp
-#: selection:mrp.bom,type:0 selection:mrp.bom.line,type:0
+#: selection:mrp.config.settings,group_rounding_efficiency:0
+msgid "No rounding and efficiency on bills of materials"
+msgstr "Žiadne zaokrúhľovanie a efektivita na kusovníkoch"
+
+#. module: mrp
+#: selection:mrp.config.settings,group_product_variant:0
+msgid "No variants on products"
+msgstr "Žiadne varianty pre produkty"
+
+#. module: mrp
 #: selection:mrp.production,priority:0
 msgid "Normal"
-msgstr "Bežná"
+msgstr "Normálna"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -1146,56 +1225,65 @@ msgid "Not urgent"
 msgstr "Nie je naliehavé"
 
 #. module: mrp
-#: help:mrp.property,composition:0
+#: model:ir.model.fields,help:mrp.field_mrp_property_composition
 msgid "Not used in computations, for information purpose only."
 msgstr "Nepoužíva sa vo výpočtoch, len pre informačné účely."
 
 #. module: mrp
-#: view:mrp.routing:mrp.mrp_routing_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 msgid "Notes"
 msgstr "Poznámky"
 
 #. module: mrp
-#: field:mrp.production.workcenter.line,cycle:0
-#: field:mrp.routing.workcenter,cycle_nbr:0
-#: field:report.workcenter.load,cycle:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_cycle
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_cycle_nbr
+#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_cycle
 msgid "Number of Cycles"
 msgstr "Počet cyklov"
 
 #. module: mrp
-#: field:mrp.production.workcenter.line,hour:0
-#: field:mrp.routing.workcenter,hour_nbr:0 field:report.workcenter.load,hour:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_hour
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_hour_nbr
+#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_hour
 msgid "Number of Hours"
 msgstr "Počet hodín"
 
 #. module: mrp
-#: help:mrp.routing.workcenter,cycle_nbr:0
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_cycle_nbr
 msgid ""
 "Number of iterations this work center has to do in the specified operation "
 "of the routing."
-msgstr "Počet iterácií tohoto pracovného strediska ktoré má čo dočinenia v uvedenej prevádzke smerovania."
+msgstr ""
+"Počet iterácií tohoto pracovného strediska ktoré má čo dočinenia v uvedenej "
+"prevádzke smerovania."
 
 #. module: mrp
-#: help:mrp.workcenter,capacity_per_cycle:0
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity_per_cycle
 msgid ""
 "Number of operations this Work Center can do in parallel. If this Work "
 "Center represents a team of 5 workers, the capacity per cycle is 5."
-msgstr "Počet operácií ktoré može toto praovné centrum robiť paralelne. Ak toto pracovné centrum predstavuje tím 5 pracovníkov, kapacita za cyklus je 5."
+msgstr ""
+"Počet operácií ktoré može toto praovné centrum robiť paralelne. Ak toto "
+"pracovné centrum predstavuje tím 5 pracovníkov, kapacita za cyklus je 5."
 
 #. module: mrp
-#: model:ir.actions.client,name:mrp.action_client_mrp_menu
-msgid "Open MRP Menu"
-msgstr "Otvoriť MRP menu"
+#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
+msgid ""
+"Odoo uses these BoMs to automatically propose manufacturing\n"
+"                orders according to procurement needs."
+msgstr ""
+"Odoo používa tieto kusovníky na automatické navrhnutie výrobných\n"
+"objednávok podľa potreby obstarávania. "
 
 #. module: mrp
-#: view:mrp.routing:mrp.mrp_routing_form_view
+#: model:ir.ui.view,arch_db:mrp.view_stock_move_consume_wizard
+msgid "Ok"
+msgstr "Ok"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 msgid "Operation"
 msgstr "Operácia"
-
-#. module: mrp
-#: view:mrp.config.settings:mrp.view_mrp_config
-msgid "Order"
-msgstr "Poradie"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
@@ -1208,78 +1296,33 @@ msgid "Order quantity cannot be negative or zero!"
 msgstr "Množstvo objednávky nemôže byť záporné alebo nula!"
 
 #. module: mrp
-#: field:mrp.bom.line,bom_id:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_bom_id
 msgid "Parent BoM"
 msgstr "Nadradený kusovník"
 
 #. module: mrp
-#: field:mrp.routing.workcenter,routing_id:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_routing_id
 msgid "Parent Routing"
 msgstr "Nadradené smerovanie"
 
 #. module: mrp
-#: view:website:mrp.report_mrporder
-msgid "Partner Ref:"
-msgstr ""
-
-#. module: mrp
-#: view:mrp.production:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Pending"
 msgstr "Čaká sa"
 
 #. module: mrp
-#: selection:mrp.workcenter.load,time_unit:0
-msgid "Per month"
-msgstr ""
-
-#. module: mrp
-#: selection:mrp.workcenter.load,time_unit:0
-msgid "Per week"
-msgstr ""
-
-#. module: mrp
-#: selection:mrp.bom.line,type:0
-msgid "Phantom"
-msgstr ""
-
-#. module: mrp
-#: help:mrp.bom.line,type:0
-msgid ""
-"Phantom: this product line will not appear in the raw materials of "
-"manufacturing orders,it will be directly replaced by the raw materials of "
-"its own BoM, without triggeringan extra manufacturing order."
-msgstr ""
-
-#. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_planning
-#: view:mrp.config.settings:mrp.view_mrp_config
 msgid "Planning"
 msgstr "Plánovaná"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:169
+#: code:addons/mrp/stock.py:136
 #, python-format
 msgid "Please provide proper quantity."
 msgstr "Prosím poskytnite správne množstvo"
 
 #. module: mrp
-#: view:mrp.product_price:mrp.view_mrp_product_price_wizard
-#: view:mrp.workcenter.load:mrp.view_mrp_workcenter_load_wizard
-msgid "Print"
-msgstr "Tlač"
-
-#. module: mrp
-#: view:mrp.product_price:mrp.view_mrp_product_price_wizard
-msgid "Print Cost Structure of Product."
-msgstr ""
-
-#. module: mrp
-#: view:website:mrp.report_mrporder
-msgid "Printing date:"
-msgstr ""
-
-#. module: mrp
-#: field:mrp.production,priority:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_priority
 msgid "Priority"
 msgstr "Priorita"
 
@@ -1295,49 +1338,37 @@ msgstr "Pravidlo obstarávania"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
-#: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
-#: view:mrp.production:mrp.mrp_production_form_view
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_produce_id
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "Produce"
 msgstr "Vyprodukovať"
 
 #. module: mrp
-#: field:mrp.config.settings,module_mrp_byproduct:0
-msgid "Produce several products from one manufacturing order"
-msgstr ""
-
-#. module: mrp
-#: view:mrp.production:mrp.mrp_production_form_view
-#: field:mrp.production,move_created_ids2:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_created_ids2
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Produced Products"
-msgstr "Vypordukované výrobky"
+msgstr "Vyrobené produkty"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
-#: view:mrp.bom:mrp.view_mrp_bom_filter field:mrp.bom,product_tmpl_id:0
-#: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
-#: field:mrp.bom.line,product_id:0 field:mrp.product.produce.line,product_id:0
-#: view:mrp.production:mrp.view_mrp_production_filter
-#: field:mrp.production,product_id:0
-#: field:mrp.production.product.line,product_id:0
-#: field:stock.move.consume,product_id:0 view:website:mrp.report_mrporder
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_tmpl_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_product_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_product_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_tmpl_id
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_product_id
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Product"
 msgstr "Produkt"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.action_view_mrp_product_price_wizard
-#: view:mrp.product_price:mrp.view_mrp_product_price_wizard
-msgid "Product Cost Structure"
-msgstr ""
-
-#. module: mrp
-#: field:mrp.production,move_prod_id:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_prod_id
 msgid "Product Move"
 msgstr "Pohyb produktu"
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_mrp_product_price
-msgid "Product Price"
-msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
@@ -1350,19 +1381,21 @@ msgid "Product Produce Consume lines"
 msgstr "Riadok spotreby výroby produktu"
 
 #. module: mrp
-#: field:change.production.qty,product_qty:0
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_product_qty
 msgid "Product Qty"
 msgstr "Množstvo produktu"
 
 #. module: mrp
-#: field:mrp.bom,product_qty:0 field:mrp.bom.line,product_qty:0
-#: field:mrp.production,product_qty:0
-#: field:mrp.production.product.line,product_qty:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_qty
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_qty
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_product_qty
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_qty
 msgid "Product Quantity"
 msgstr "Množstvo produktu"
 
 #. module: mrp
-#: field:mrp.bom,product_rounding:0 field:mrp.bom.line,product_rounding:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_rounding
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_rounding
 msgid "Product Rounding"
 msgstr "Zaokrúhľovanie produktu"
 
@@ -1372,85 +1405,54 @@ msgid "Product Template"
 msgstr "šablona produktu"
 
 #. module: mrp
-#: field:mrp.bom.line,product_uos:0
-#: field:mrp.production.product.line,product_uos:0
-msgid "Product UOS"
-msgstr ""
-
-#. module: mrp
-#: help:mrp.bom.line,product_uos:0
-msgid ""
-"Product UOS (Unit of Sale) is the unit of measurement for the invoicing and "
-"promotion of stock."
-msgstr ""
-
-#. module: mrp
-#: field:mrp.bom.line,product_uos_qty:0
-msgid "Product UOS Qty"
-msgstr ""
-
-#. module: mrp
-#: field:mrp.production.product.line,product_uos_qty:0
-msgid "Product UOS Quantity"
-msgstr ""
-
-#. module: mrp
-#: field:mrp.bom,product_uom:0 field:mrp.bom.line,product_uom:0
-#: field:mrp.production,product_uom:0
-#: field:mrp.production.product.line,product_uom:0
-#: field:stock.move.consume,product_uom:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_uom
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_uom
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_product_uom
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_uom
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_product_uom
 msgid "Product Unit of Measure"
 msgstr "Merná jednotka produktu"
 
 #. module: mrp
-#: field:mrp.production,product_uos:0
-msgid "Product UoS"
-msgstr ""
-
-#. module: mrp
-#: field:mrp.production,product_uos_qty:0
-msgid "Product UoS Quantity"
-msgstr ""
-
-#. module: mrp
-#: field:mrp.bom,product_id:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_id
 msgid "Product Variant"
 msgstr "Varianta produktu"
 
 #. module: mrp
-#: view:website:mrp.report_mrporder
-msgid "Product:"
-msgstr "Produkt:"
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_group_product_variant
+msgid "Product Variants"
+msgstr "Varianty produktu"
 
 #. module: mrp
-#: view:mrp.production:mrp.view_mrp_production_filter
+#: model:ir.model,name:mrp.model_mrp_production
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Production"
 msgstr "Výroba"
 
 #. module: mrp
-#: view:mrp.routing:mrp.mrp_routing_search_view
-#: field:mrp.routing,location_id:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_location_id
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
 msgid "Production Location"
 msgstr "Lokácia produktu"
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.action_report_production_order
-#: field:mrp.production.product.line,production_id:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_production_id
 msgid "Production Order"
 msgstr "Výrobná objednávka"
 
 #. module: mrp
-#: view:website:mrp.report_mrporder
-msgid "Production Order N° :"
-msgstr ""
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "Production Order # :"
+msgstr "Výrobná objednávka # :"
 
 #. module: mrp
-#: field:stock.move,production_id:0
+#: model:ir.model.fields,field_description:mrp.field_stock_move_production_id
 msgid "Production Order for Produced Products"
 msgstr "Výrobná objednávka pre vypordukované výrobky"
 
 #. module: mrp
-#: field:stock.move,raw_material_production_id:0
+#: model:ir.model.fields,field_description:mrp.field_stock_move_raw_material_production_id
 msgid "Production Order for Raw Materials"
 msgstr "Výrobná objednávka pre surové materiály"
 
@@ -1465,22 +1467,22 @@ msgid "Production Started"
 msgstr "Výroba začatá"
 
 #. module: mrp
-#: view:mrp.production:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Production Work Centers"
 msgstr "Výrobné pracovné centrá"
 
 #. module: mrp
-#: field:mrp.production,progress:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_progress
 msgid "Production progress"
 msgstr "Progres výroby"
 
 #. module: mrp
-#: view:mrp.production:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Production started late"
 msgstr "Výroba začala neskoro"
 
 #. module: mrp
-#: view:mrp.production:mrp.view_production_gantt
+#: model:ir.ui.view,arch_db:mrp.view_production_gantt
 msgid "Productions"
 msgstr "Výroby"
 
@@ -1488,50 +1490,59 @@ msgstr "Výroby"
 #: model:ir.actions.act_window,name:mrp.product_template_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom
 #: model:ir.ui.menu,name:mrp.menu_mrp_product_form
-#: view:mrp.config.settings:mrp.view_mrp_config
 msgid "Products"
 msgstr "Produkty"
 
 #. module: mrp
-#: field:mrp.product.produce,consume_lines:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_consume_lines
 msgid "Products Consumed"
 msgstr "Spotrebované produkty"
 
 #. module: mrp
-#: view:mrp.production:mrp.mrp_production_form_view
-#: field:mrp.production,move_lines:0 view:website:mrp.report_mrporder
+#: selection:mrp.config.settings,group_product_variant:0
+msgid ""
+"Products can have several attributes, defining variants (Example: size, "
+"color,...)"
+msgstr ""
+"Produkty môžu mať niekoľko atribútov, definujúce varianty (Príklad: veľkosť, "
+"farba, ...)"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_lines
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Products to Consume"
 msgstr "Produkty na spotrebovanie"
 
 #. module: mrp
-#: view:mrp.production:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Products to Finish"
 msgstr "Produkty na dokončenie"
 
 #. module: mrp
-#: view:mrp.production:mrp.mrp_production_form_view
-#: field:mrp.production,move_created_ids:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_move_created_ids
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Products to Produce"
 msgstr "Produkty na vyrobenie"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_property_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_property_ids
+#: model:ir.model.fields,field_description:mrp.field_procurement_order_property_ids
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_action
-#: view:mrp.bom:mrp.mrp_bom_form_view field:mrp.bom,property_ids:0
-#: field:mrp.bom.line,property_ids:0
-#: view:mrp.property:mrp.mrp_property_form_view
-#: view:mrp.property:mrp.mrp_property_tree_view
-#: field:procurement.order,property_ids:0
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_property_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_property_tree_view
 msgid "Properties"
 msgstr "Vlastnosti"
 
 #. module: mrp
-#: view:mrp.property.group:mrp.mrp_property_group_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_property_group_form_view
 msgid "Properties categories"
 msgstr "Kategórie vlastností"
 
 #. module: mrp
-#: field:mrp.property,composition:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_composition
 msgid "Properties composition"
 msgstr "Zloženie vlastností"
 
@@ -1542,8 +1553,9 @@ msgstr "Vlastnosť"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: view:mrp.property:mrp.view_mrp_property_search
-#: field:mrp.property,group_id:0 field:mrp.property.group,name:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
+#: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
 msgstr "Skupina vlastnosti"
 
@@ -1554,34 +1566,38 @@ msgid "Property Groups"
 msgstr "Skupiny vlastnosti"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:141 view:mrp.bom:mrp.mrp_bom_form_view
-#: field:mrp.product_price,number:0
-#: view:mrp.production:mrp.mrp_production_form_view
-#: field:stock.move.consume,product_qty:0
-#: view:website:mrp.report_mrpbomstructure view:website:mrp.report_mrporder
-#, python-format
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_product_qty
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
 msgid "Quantity"
 msgstr "Množstvo"
 
 #. module: mrp
-#: field:mrp.product.produce.line,product_qty:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_product_qty
 msgid "Quantity (in default UoM)"
 msgstr "Množstvo (v prednastavenej mernej jednotke)"
 
 #. module: mrp
-#: view:website:mrp.report_mrporder
-msgid "Quantity:"
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Raw Materials"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.production,location_src_id:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_location_src_id
 msgid "Raw Materials Location"
 msgstr "Umiestnenie surových materiálov"
 
 #. module: mrp
-#: view:mrp.production:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Ready"
 msgstr "Pripravené"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_ready_production
+msgid "Ready for production"
+msgstr "Pripravené na výrobu"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -1589,10 +1605,10 @@ msgid "Ready to Produce"
 msgstr "Pripravené vyrobiť"
 
 #. module: mrp
-#: view:mrp.bom:mrp.mrp_bom_form_view field:mrp.bom,code:0
-#: field:mrp.production,name:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_code
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_name
 msgid "Reference"
-msgstr "Referencie"
+msgstr "Odkaz"
 
 #. module: mrp
 #: sql_constraint:mrp.production:0
@@ -1600,18 +1616,27 @@ msgid "Reference must be unique per Company!"
 msgstr "Referencia musí byť jedinečná pre spoločnosť!"
 
 #. module: mrp
-#: help:mrp.production,origin:0
-msgid ""
-"Reference of the document that generated this production order request."
+#: model:ir.model.fields,help:mrp.field_mrp_production_origin
+msgid "Reference of the document that generated this production order request."
 msgstr "Odkaz na dokument, ktorý vytvoril túto požiadavku výrobnej objednávky."
 
 #. module: mrp
-#: help:mrp.bom,position:0
+#: model:ir.model.fields,help:mrp.field_mrp_bom_position
 msgid "Reference to a position in an external plan."
 msgstr "Referencia na pozíciu v externom pláne."
 
 #. module: mrp
-#: field:mrp.workcenter,resource_id:0
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_user_id
+msgid "Related user name for the resource to manage its access."
+msgstr "Súvisiace užívateľské meno pre zdroj na spravovanie jeho prístupu."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Reserve"
+msgstr "Rezerva"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_resource_id
 msgid "Resource"
 msgstr "Prostriedok"
 
@@ -1621,205 +1646,197 @@ msgid "Resource Leaves"
 msgstr "Odchody zdrojov"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_resource_type
+msgid "Resource Type"
+msgstr "Typ zdroja"
+
+#. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_pm_resources_config
 msgid "Resources"
 msgstr "Zdroje"
 
 #. module: mrp
-#: field:mrp.production,user_id:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_user_id
 msgid "Responsible"
 msgstr "Zodpovedná osoba"
 
 #. module: mrp
-#: help:mrp.bom,product_rounding:0 help:mrp.bom.line,product_rounding:0
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_product_rounding
+#: model:ir.model.fields,help:mrp.field_mrp_bom_product_rounding
 msgid "Rounding applied on the product quantity."
 msgstr "Zaokrúhľovanie aplikované na množstvo produktu."
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_routing
-#: view:mrp.bom:mrp.view_mrp_bom_filter field:mrp.bom,routing_id:0
-#: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
-#: field:mrp.bom.line,routing_id:0
-#: view:mrp.production:mrp.view_mrp_production_filter
-#: field:mrp.production,routing_id:0
-#: view:mrp.routing:mrp.mrp_routing_form_view
-#: view:mrp.routing:mrp.mrp_routing_search_view
-#: view:mrp.routing:mrp.mrp_routing_tree_view
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_group_rounding_efficiency
+msgid "Rounding efficiency"
+msgstr "Efektivita zaokrúhľovania "
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_routing_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_routing_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_routing_id
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_tree_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Routing"
 msgstr "Smerovanie"
 
 #. module: mrp
-#: view:mrp.routing.workcenter:mrp.mrp_routing_workcenter_form_view
-#: view:mrp.routing.workcenter:mrp.mrp_routing_workcenter_tree_view
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 msgid "Routing Work Centers"
 msgstr "Smerovanie pracovných centier"
 
 #. module: mrp
-#: help:mrp.routing.workcenter,routing_id:0
-msgid ""
-"Routing indicates all the Work Centers used, for how long and/or cycles.If "
-"Routing is indicated then,the third tab of a production order (Work Centers)"
-" will be automatically pre-completed."
-msgstr ""
-
-#. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
+#: model:ir.model,name:mrp.model_mrp_routing
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_group_mrp_routings
 #: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Routings"
 msgstr "Smerovania"
 
 #. module: mrp
-#: help:mrp.config.settings,group_mrp_routings:0
+#: model:ir.actions.act_window,help:mrp.mrp_routing_action
 msgid ""
-"Routings allow you to create and manage the manufacturing operations that "
-"should be followed within your work centers in order to produce a product. "
-"They are attached to bills of materials that will define the required raw "
-"materials."
+"Routings allow you to create and manage the manufacturing\n"
+"                operations that should be followed within your work centers "
+"in\n"
+"                order to produce a product.  They are attached to bills of\n"
+"                materials that will define the required raw materials."
 msgstr ""
+"Smerovania vám umožňujú vytvárať a spravovať výrobné\n"
+"operácie, ktoré by mali byť dodržiavané v rámci vašich pracovných centier \n"
+"k výrobe produktu. Sú pripojené ku kusovníkom,\n"
+"ktoré budú definovať požadované suroviny."
 
 #. module: mrp
-#: view:website:mrp.report_mrporder
-msgid "SO Number:"
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_routing_id
+msgid ""
+"Routings indicates all the Work Centers used, for how long and/or cycles.If "
+"Routings is set then,the third tab of a production order (Work Centers) will "
+"be automatically pre-completed."
 msgstr ""
+"Smerovanie indikuje všetky použité pracoviská, na ako dlho a/alebo cykly. Ak "
+"potom nastavené smerovanie, tretia záložka z výrobnej objednávky "
+"(pracovísk), bude automaticky vopred dokončená."
 
 #. module: mrp
-#: field:mrp.production,date_planned:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned
 msgid "Scheduled Date"
 msgstr "Naplánovaný dátum"
 
 #. module: mrp
-#: view:mrp.production:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Scheduled Date by Month"
 msgstr "Naplánovaný dátum podľa mesiaca"
 
 #. module: mrp
-#: view:website:mrp.report_mrporder
-msgid "Scheduled Date:"
-msgstr "Naplánovaný dátum:"
-
-#. module: mrp
-#: view:mrp.production:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Scheduled Month"
 msgstr "Naplánovaný mesiac"
 
 #. module: mrp
-#: view:mrp.production:mrp.mrp_production_form_view
-#: view:mrp.production.product.line:mrp.mrp_production_product_form_view
-#: view:mrp.production.product.line:mrp.mrp_production_product_tree_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_product_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_product_tree_view
 msgid "Scheduled Products"
 msgstr "Naplánované produkty"
 
 #. module: mrp
-#: field:mrp.production,product_lines:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_lines
 msgid "Scheduled goods"
 msgstr "Naplánovaný tovar"
 
 #. module: mrp
-#: view:mrp.production:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Scrap Products"
 msgstr "Vyradené produkty"
 
 #. module: mrp
-#: view:mrp.property:mrp.view_mrp_property_search
+#: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Search"
 msgstr "Hľadanie"
 
 #. module: mrp
-#: view:mrp.bom:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Search Bill Of Material"
 msgstr "Vyhľadať kusovník"
 
 #. module: mrp
-#: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Search Bill Of Material Components"
 msgstr "Vyhľadať komponenty kusovníka"
 
 #. module: mrp
-#: view:mrp.production:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Search Production"
 msgstr "Vyhľadať výrobu"
 
 #. module: mrp
-#: view:mrp.workcenter:mrp.view_mrp_workcenter_search
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Search for mrp workcenter"
 msgstr "Vyhľadať mrp pracovisko"
 
 #. module: mrp
-#: help:res.company,manufacturing_lead:0
+#: model:ir.model.fields,help:mrp.field_res_company_manufacturing_lead
 msgid "Security days for each manufacturing operation."
 msgstr "Bezpoečnostné dni pre každú výrobnú operáciu."
 
 #. module: mrp
-#: field:mrp.product.produce,product_qty:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_qty
 msgid "Select Quantity"
 msgstr "Zvoliť množstvo"
 
 #. module: mrp
-#: view:mrp.workcenter.load:mrp.view_mrp_workcenter_load_wizard
-msgid "Select time unit"
-msgstr ""
-
-#. module: mrp
-#: field:mrp.bom,sequence:0 field:mrp.bom.line,sequence:0
-#: field:mrp.production.workcenter.line,sequence:0
-#: field:mrp.routing.workcenter,sequence:0 view:website:mrp.report_mrporder
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_sequence
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_sequence
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_sequence
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_sequence
 msgid "Sequence"
 msgstr "Postupnosť"
 
 #. module: mrp
-#: selection:mrp.bom,type:0
-msgid "Set"
-msgstr ""
-
-#. module: mrp
-#: help:mrp.bom,type:0
+#: model:ir.model.fields,help:mrp.field_mrp_bom_type
 msgid ""
-"Set: When processing a sales order for this product, the delivery order will"
-" contain the raw materials, instead of the finished product."
-msgstr "Nastaviť: Pri spracovaní predajnej objednávky pre tento produkt, bude dodacia objednávka obsahovať suroviny, miesto hotového produktu."
+"Set: When processing a sales order for this product, the delivery order will "
+"contain the raw materials, instead of the finished product."
+msgstr ""
+"Nastaviť: Pri spracovaní predajnej objednávky pre tento produkt, bude "
+"dodacia objednávka obsahovať suroviny, miesto hotového produktu."
 
 #. module: mrp
-#: field:mrp.production,origin:0
+#: selection:mrp.bom,type:0
+msgid "Ship this product as a set of components (kit)"
+msgstr "Dopraviť tento produkt ako set komponentov (súprava)"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_origin
 msgid "Source Document"
 msgstr "Zdrojový dokument"
 
 #. module: mrp
-#: view:website:mrp.report_mrporder
-msgid "Source Document:"
-msgstr ""
-
-#. module: mrp
-#: view:website:mrp.report_mrporder
-msgid "Source Location"
-msgstr "Zdrojová lokácia"
-
-#. module: mrp
-#: help:mrp.workcenter,costs_cycle:0
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_cycle
 msgid "Specify Cost of Work Center per cycle."
 msgstr "Určite náklady npracoviska na cyklus."
 
 #. module: mrp
-#: help:mrp.workcenter,costs_hour:0
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_hour
 msgid "Specify Cost of Work Center per hour."
 msgstr "Určite náklady pracoviska na hodinu."
 
 #. module: mrp
-#: help:mrp.product_price,number:0
-msgid ""
-"Specify quantity of products to produce or buy. Report of Cost structure "
-"will be displayed base on this quantity."
-msgstr ""
-
-#. module: mrp
-#: field:mrp.production,date_start:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_date_start
 msgid "Start Date"
 msgstr "Počiatočný dátum"
 
 #. module: mrp
-#: view:mrp.production:mrp.view_mrp_production_filter
-#: field:mrp.production,state:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_state
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Status"
-msgstr "Status"
+msgstr "Stav"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move
@@ -1827,193 +1844,205 @@ msgid "Stock Move"
 msgstr "Pohyb na sklade"
 
 #. module: mrp
-#: field:report.mrp.inout,value:0
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_value
 msgid "Stock value"
 msgstr "Hodnota zásob"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_inout
-#: view:report.mrp.inout:mrp.view_report_in_out_picking_form
-#: view:report.mrp.inout:mrp.view_report_in_out_picking_graph
-#: view:report.mrp.inout:mrp.view_report_in_out_picking_tree
+#: model:ir.ui.view,arch_db:mrp.view_report_in_out_picking_form
+#: model:ir.ui.view,arch_db:mrp.view_report_in_out_picking_graph
+#: model:ir.ui.view,arch_db:mrp.view_report_in_out_picking_tree
 msgid "Stock value variation"
 msgstr "Variácia hodnoty zásob"
 
 #. module: mrp
-#: field:mrp.bom,message_summary:0 field:mrp.production,message_summary:0
-#: field:mrp.production.workcenter.line,message_summary:0
-msgid "Summary"
-msgstr "Zhrnutie"
-
-#. module: mrp
-#: code:addons/mrp/report/price.py:141
-#, python-format
-msgid "Supplier Price per Unit of Measure"
-msgstr ""
-
-#. module: mrp
-#: help:stock.move,consumed_for:0
+#: model:ir.model.fields,help:mrp.field_stock_move_consumed_for
 msgid "Technical field used to make the traceability of produced products"
-msgstr "Technické pole používané na vytvorenie sledovateľnosti vyrobených produktov."
+msgstr ""
+"Technické pole používané na vytvorenie sledovateľnosti vyrobených produktov."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:333 code:addons/mrp/mrp.py:421
+#: code:addons/mrp/mrp.py:351 code:addons/mrp/mrp.py:450
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr "Jednotka merania produku korú ste vybrali má inú kategíu ako v produktovom formulári."
+msgstr ""
+"Jednotka merania produku korú ste vybrali má inú kategíu ako v produktovom "
+"formulári."
 
 #. module: mrp
-#: help:mrp.production,routing_id:0
+#: model:ir.actions.act_window,help:mrp.mrp_property_action
+msgid ""
+"The Properties in Odoo are used to select the right bill of\n"
+"                materials for manufacturing a product when you have "
+"different\n"
+"                ways of building the same product.  You can assign several\n"
+"                properties to each bill of materials.  When a salesperson\n"
+"                creates a sales order, they can relate it to several "
+"properties\n"
+"                and Odoo will automatically select the BoM to use according\n"
+"                the needs."
+msgstr ""
+"Vlastnosti v Odoo sú používané pre výber správneho kusovníka\n"
+"pre výrobu produktu keď máte viacero rôznych\n"
+"spôsobov výroby rovnakého produktu. Môžete prideliť viaceré\n"
+"vlastnosti každému kusovníku. Keď predajca \n"
+"vytvorí predajnú objednávku, môže ju pridružiť k viacerúm vlastnostiam\n"
+"a Odoo automaticky zvolí kusovník na použitie podľa\n"
+"potrieb."
+
+#. module: mrp
+#: constraint:mrp.workcenter:0
+msgid "The capacity per cycle must be strictly positive."
+msgstr "Kapacita na cyklus musí byť striktne kladná."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production_routing_id
 msgid ""
 "The list of operations (list of work centers) to produce the finished "
 "product. The routing is mainly used to compute work center costs during "
 "operations and to plan future loads on work centers based on production "
 "plannification."
-msgstr "Zoznam operácií (zoznam pracovísk) na výrobu hotového produktu. Smerovanie je používané najmä na výpočet nákladov pracovných centier počas operácií, a pre plánovanie budúcej záťaže pracovísk, na základe plánovania produkcie."
+msgstr ""
+"Zoznam operácií (zoznam pracovísk) na výrobu hotového produktu. Smerovanie "
+"je používané najmä na výpočet nákladov pracovných centier počas operácií, a "
+"pre plánovanie budúcej záťaže pracovísk, na základe plánovania produkcie."
 
 #. module: mrp
-#: help:mrp.bom,routing_id:0 help:mrp.bom.line,routing_id:0
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_routing_id
+#: model:ir.model.fields,help:mrp.field_mrp_bom_routing_id
 msgid ""
 "The list of operations (list of work centers) to produce the finished "
 "product. The routing is mainly used to compute work center costs during "
 "operations and to plan future loads on work centers based on production "
 "planning."
-msgstr "Zoznam operácií (zoznam pracovísk) na výrobu hotového produktu. Smerovanie je používané najmä na výpočet nákladov pracovných centier počas operácií, a pre plánovanie budúcej záťaže pracovísk, na základe plánovania produkcie."
-
-#. module: mrp
-#: help:mrp.config.settings,group_mrp_properties:0
-msgid ""
-"The selection of the right Bill of Material to use will depend on the "
-"properties specified on the sales order and the Bill of Material."
 msgstr ""
+"Zoznam operácií (zoznam pracovísk) na výrobu hotového produktu. Smerovanie "
+"je používané najmä na výpočet nákladov pracovných centier počas operácií, a "
+"pre plánovanie budúcej záťaže pracovísk, na základe plánovania produkcie."
 
 #. module: mrp
-#: help:mrp.config.settings,module_mrp_operations:0
+#: model:ir.model.fields,help:mrp.field_mrp_config_settings_module_mrp_operations
 msgid ""
-"This allows to add state, date_start,date_stop in production order operation lines (in the \"Work Centers\" tab).\n"
+"This allows to add state, date_start,date_stop in production order operation "
+"lines (in the \"Work Centers\" tab).\n"
 "-This installs the module mrp_operations."
-msgstr "Toto umožňuje pridať stav, date_start,date_stop v riadkoch operácií výrobnej objednávky (v  záložke \"Pracovné centrá\").\n-Toto nainštaluje modul mrp_operations."
-
-#. module: mrp
-#: help:mrp.config.settings,module_product_manufacturer:0
-msgid ""
-"This allows you to define the following for a product:\n"
-"* Manufacturer\n"
-"* Manufacturer Product Name\n"
-"* Manufacturer Product Code\n"
-"* Product Attributes.\n"
-"-This installs the module product_manufacturer."
 msgstr ""
+"Toto umožňuje pridať stav, date_start,date_stop v riadkoch operácií výrobnej "
+"objednávky (v  záložke \"Pracovné centrá\").\n"
+"-Toto nainštaluje modul mrp_operations."
 
 #. module: mrp
-#: field:mrp.workcenter,time_stop:0
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_efficiency
+msgid ""
+"This field depict the efficiency of the resource to complete tasks. e.g  "
+"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
+"show a load of 100% for this phase by default, but if we put a efficiency of "
+"200%, then his load will only be 50%."
+msgstr ""
+"Toto pole zobrazuje účinnosť zdroja pri plnení úloh. napr zdroj pridaný sám "
+"na fázu 5 dní s 5 úlohami, ktoré mu ukáže zaťaženie 100% pre túto fázu v "
+"predvolenom nastavení, ale ak dáme účinnosť 200%, potom jeho zaťaženie bude "
+"iba 50%."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_stop
 msgid "Time after prod."
 msgstr "Čas po prod."
 
 #. module: mrp
-#: field:mrp.workcenter,time_start:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_start
 msgid "Time before prod."
 msgstr "Čas pred prod."
 
 #. module: mrp
-#: field:mrp.workcenter,time_cycle:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_cycle
 msgid "Time for 1 cycle (hour)"
 msgstr "Čas na 1 cyklus (hodina)"
 
 #. module: mrp
-#: help:mrp.workcenter,time_cycle:0
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_cycle
 msgid "Time in hours for doing one cycle."
 msgstr "Čas trvania jedného cyklu v hodinách."
 
 #. module: mrp
-#: help:mrp.workcenter,time_stop:0
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_stop
 msgid "Time in hours for the cleaning."
 msgstr "Čas v hodinách na čistenie."
 
 #. module: mrp
-#: help:mrp.workcenter,time_start:0
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_start
 msgid "Time in hours for the setup."
 msgstr "Čas v hodinách na nastavenie."
 
 #. module: mrp
-#: help:mrp.routing.workcenter,hour_nbr:0
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_hour_nbr
 msgid ""
-"Time in hours for this Work Center to achieve the operation of the specified"
-" routing."
-msgstr "Čas v hodinách pre toto pracovisko na dosiahnutie operácie špecifikovaného smerovania."
+"Time in hours for this Work Center to achieve the operation of the specified "
+"routing."
+msgstr ""
+"Čas v hodinách pre toto pracovisko na dosiahnutie operácie špecifikovaného "
+"smerovania."
 
 #. module: mrp
-#: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
+#: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "To Consume"
 msgstr "Na spotrebovanie"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:162 code:addons/mrp/report/price.py:213
-#, python-format
-msgid "Total Cost of %s %s"
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Total Cost"
 msgstr ""
 
 #. module: mrp
-#: view:mrp.production:mrp.mrp_production_tree_view
-#: field:mrp.production,cycle_total:0
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Total Cost of Raw Materials"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_cycle_total
+#: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Total Cycles"
 msgstr "Cykly celkovo"
 
 #. module: mrp
-#: view:mrp.production:mrp.mrp_production_tree_view
-#: field:mrp.production,hour_total:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_hour_total
+#: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Total Hours"
 msgstr "Celkovo hodín"
 
 #. module: mrp
-#: view:mrp.production:mrp.mrp_production_tree_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Total Qty"
 msgstr "Množ. celkom"
 
 #. module: mrp
-#: field:product.template,track_production:0
-msgid "Track Manufacturing Lots"
-msgstr ""
-
-#. module: mrp
-#: field:mrp.product.produce,track_production:0
-msgid "Track production"
-msgstr ""
-
-#. module: mrp
-#: view:mrp.bom:mrp.view_mrp_bom_filter
-#: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
-#: view:mrp.workcenter:mrp.view_mrp_workcenter_search
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Type"
 msgstr "Typ"
 
 #. module: mrp
-#: field:mrp.workcenter.load,time_unit:0
-msgid "Type of period"
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Unit Cost"
 msgstr ""
 
 #. module: mrp
-#: view:mrp.production:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Unit of Measure"
 msgstr "Merná jednotka"
 
 #. module: mrp
-#: help:mrp.bom,product_uom:0 help:mrp.bom.line,product_uom:0
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_product_uom
+#: model:ir.model.fields,help:mrp.field_mrp_bom_product_uom
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
 msgstr "Merná jednotka (Merná jednotka) je jednotka merania pre inventarizáciu"
 
 #. module: mrp
-#: field:mrp.bom,message_unread:0 field:mrp.production,message_unread:0
-#: field:mrp.production.workcenter.line,message_unread:0
-msgid "Unread Messages"
-msgstr "Neprečítané správy"
-
-#. module: mrp
-#: view:mrp.production:mrp.mrp_production_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Update"
 msgstr "Aktualizovať"
 
@@ -2023,49 +2052,49 @@ msgid "Urgent"
 msgstr "Súrne"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_user_id
 #: model:res.groups,name:mrp.group_mrp_user
 msgid "User"
 msgstr "Používateľ"
 
 #. module: mrp
-#: field:mrp.bom,date_start:0 field:mrp.bom.line,date_start:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_date_start
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_date_start
 msgid "Valid From"
 msgstr "Platné od"
 
 #. module: mrp
-#: view:mrp.bom:mrp.view_mrp_bom_filter
-#: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Valid From Date by Month"
 msgstr "Platné od podľa mesiaca"
 
 #. module: mrp
-#: view:mrp.bom:mrp.view_mrp_bom_filter
-#: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Valid From Month"
 msgstr "Platné od mesiaca"
 
 #. module: mrp
-#: field:mrp.bom,date_stop:0 field:mrp.bom.line,date_stop:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_date_stop
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_date_stop
 msgid "Valid Until"
 msgstr "Platné do"
 
 #. module: mrp
-#: help:mrp.bom.line,date_start:0 help:mrp.bom.line,date_stop:0
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_date_start
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line_date_stop
 msgid "Validity of component. Keep empty if it's always valid."
-msgstr "Platnosť komponentu. Nehcajte prázdne ak je platný vždy."
+msgstr "Platnosť komponentu. Nechajte prázdne ak je platný vždy."
 
 #. module: mrp
-#: help:mrp.bom,date_start:0 help:mrp.bom,date_stop:0
+#: model:ir.model.fields,help:mrp.field_mrp_bom_date_start
+#: model:ir.model.fields,help:mrp.field_mrp_bom_date_stop
 msgid "Validity of this BoM. Keep empty if it's always valid."
 msgstr "Platnosť tohoto kusovníka. Nechajte prázdne ak je platný vždy."
 
 #. module: mrp
-#: view:mrp.bom:mrp.view_mrp_bom_filter
-msgid "Variant"
-msgstr ""
-
-#. module: mrp
-#: field:mrp.bom.line,attribute_value_ids:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_attribute_value_ids
 msgid "Variants"
 msgstr "Varianty"
 
@@ -2080,36 +2109,15 @@ msgid "Warehouse"
 msgstr "Sklad"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:333 code:addons/mrp/mrp.py:421
+#: code:addons/mrp/mrp.py:351 code:addons/mrp/mrp.py:450
 #, python-format
 msgid "Warning"
 msgstr "Varovanie"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:339 code:addons/mrp/stock.py:42
-#: code:addons/mrp/stock.py:44 code:addons/mrp/stock.py:169
-#, python-format
-msgid "Warning!"
-msgstr "Varovanie !"
-
-#. module: mrp
-#: field:mrp.bom,website_message_ids:0
-#: field:mrp.production,website_message_ids:0
-#: field:mrp.production.workcenter.line,website_message_ids:0
-msgid "Website Messages"
-msgstr "Správy webovej stránky"
-
-#. module: mrp
-#: help:mrp.bom,website_message_ids:0
-#: help:mrp.production,website_message_ids:0
-#: help:mrp.production.workcenter.line,website_message_ids:0
-msgid "Website communication history"
-msgstr "História komunikácie webovej stránky"
-
-#. module: mrp
-#: field:report.mrp.inout,date:0
-#: view:report.workcenter.load:mrp.view_workcenter_load_search
-#: field:report.workcenter.load,name:0
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_date
+#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_name
+#: model:ir.ui.view,arch_db:mrp.view_workcenter_load_search
 msgid "Week"
 msgstr "Týždeň"
 
@@ -2122,63 +2130,61 @@ msgstr "Týždenná variácia hodnoty skladu"
 #: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
 msgid ""
 "Weekly Stock Value Variation enables you to track the stock value evolution "
-"linked to manufacturing activities, receipts of products and delivery "
-"orders."
-msgstr "Týždenná variácia hodnoty skladu vám umožňuje sledovať vývoj hodnoty skladu prepojeného na výrobne aktivity, príjem výrobkov a dodacie objednávky."
-
-#. module: mrp
-#: view:mrp.bom:mrp.mrp_bom_form_view
-msgid ""
-"When processing a sales order for this product, the delivery order\n"
-"                                will contain the raw materials, instead of the finished product."
+"linked to manufacturing activities, receipts of products and delivery orders."
 msgstr ""
+"Týždenná variácia hodnoty skladu vám umožňuje sledovať vývoj hodnoty skladu "
+"prepojeného na výrobne aktivity, príjem výrobkov a dodacie objednávky."
 
 #. module: mrp
-#: help:stock.warehouse,manufacture_to_resupply:0
+#: model:ir.model.fields,help:mrp.field_stock_warehouse_manufacture_to_resupply
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
 msgstr "Ak sú výrobky vyrobené,  môžu byť vyrábané v tomto skladisku."
 
 #. module: mrp
-#: help:mrp.production,state:0
+#: model:ir.model.fields,help:mrp.field_mrp_production_state
 msgid ""
 "When the production order is created the status is set to 'Draft'.\n"
-"                If the order is confirmed the status is set to 'Waiting Goods'.\n"
-"                If any exceptions are there, the status is set to 'Picking Exception'.\n"
-"                If the stock is available then the status is set to 'Ready to Produce'.\n"
-"                When the production gets started then the status is set to 'In Production'.\n"
-"                When the production is over, the status is set to 'Done'."
+"If the order is confirmed the status is set to 'Waiting Goods.\n"
+"If any exceptions are there, the status is set to 'Picking Exception.\n"
+"If the stock is available then the status is set to 'Ready to Produce.\n"
+"When the production gets started then the status is set to 'In Production.\n"
+"When the production is over, the status is set to 'Done'."
 msgstr ""
+"Keď je vytvorená výrobná objednávka, stav je nastavený na 'Koncept'.\n"
+"Keď je objednávka potvrdená, stav je nastavený na 'Čaká tovar'.\n"
+"Ak sú tam výnimky, stav je nastavený na 'Výnimky odberu'.\n"
+"Ak je sklad dostupný, stav je nastavený na 'Pripravené na výrobu'.\n"
+"Keď výroba začne, stav je nastavený na 'Vo výrobe'.\n"
+"Keď je výroba ukončená, stav je nastavený na 'Hotoo'."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
-#: field:mrp.production.workcenter.line,workcenter_id:0
-#: field:mrp.routing.workcenter,workcenter_id:0
-#: view:mrp.workcenter:mrp.mrp_workcenter_tree_view
-#: view:mrp.workcenter:mrp.mrp_workcenter_view
-#: field:report.workcenter.load,workcenter_id:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_workcenter_id
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_tree_view
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Work Center"
 msgstr "Pracovisko"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.action_mrp_workcenter_load_wizard
-#: model:ir.model,name:mrp.model_mrp_workcenter_load
 #: model:ir.model,name:mrp.model_report_workcenter_load
 msgid "Work Center Load"
 msgstr "Zaťaž pracoviska"
 
 #. module: mrp
-#: view:report.workcenter.load:mrp.view_workcenter_load_tree
+#: model:ir.ui.view,arch_db:mrp.view_workcenter_load_tree
 msgid "Work Center Loads"
 msgstr "Záťaže pracoviska"
 
 #. module: mrp
-#: view:mrp.routing:mrp.mrp_routing_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 msgid "Work Center Operations"
 msgstr "Operácie pracoviska"
 
 #. module: mrp
-#: field:mrp.workcenter,product_id:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_product_id
 msgid "Work Center Product"
 msgstr "Produkt pracoviska"
 
@@ -2188,88 +2194,106 @@ msgid "Work Center Usage"
 msgstr "Užívanie pracoviska"
 
 #. module: mrp
-#: view:report.workcenter.load:mrp.view_workcenter_load_graph
-#: view:report.workcenter.load:mrp.view_workcenter_load_search
+#: model:ir.ui.view,arch_db:mrp.view_workcenter_load_graph
+#: model:ir.ui.view,arch_db:mrp.view_workcenter_load_search
 msgid "Work Center load"
 msgstr "Záťaž pracoviska"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:132
-#, python-format
-msgid "Work Center name"
-msgstr ""
-
-#. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_lines
 #: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
-#: field:mrp.routing,workcenter_lines:0
 msgid "Work Centers"
 msgstr "Pracoviská"
 
 #. module: mrp
-#: field:mrp.production,workcenter_lines:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_lines
 msgid "Work Centers Utilisation"
 msgstr "Použitie pracovísk"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:132
-#, python-format
-msgid "Work Cost"
+#: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
+msgid ""
+"Work Centers allow you to create and manage manufacturing\n"
+"                units. They consist of workers and/or machines, which are\n"
+"                considered as units for task assignation as well as "
+"capacity\n"
+"                and planning forecast."
 msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/report/price.py:206
-#, python-format
-msgid "Work Cost of %s %s"
-msgstr ""
+"Pracovné centrá vám umožňujú vytvoriť a spravovať výrobné\n"
+"jednotky. Pozostávajú z pracovníkov a/alebo strojov, ktoré sú\n"
+"pokladané za jdnotky pre prideľovanie úloh ako aj odhad \n"
+"kapacity a plánovania."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
-#: field:mrp.production.workcenter.line,name:0
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_name
 msgid "Work Order"
 msgstr "Pracovná objednávka"
 
 #. module: mrp
-#: view:mrp.production:mrp.mrp_production_form_view
-#: view:website:mrp.report_mrporder
+#: model:ir.model.fields,help:mrp.field_mrp_config_settings_group_mrp_routings
+msgid ""
+"Work Order Operations allow you to create and manage the manufacturing "
+"operations that should be followed within your work centers in order to "
+"produce a product. They are attached to bills of materials that will define "
+"the required raw materials."
+msgstr ""
+"Operácie pracovných objednávok vám umožňujú vytvárať a spravovať výrobné\n"
+"operácie, ktoré by mali byť dodržiavané v rámci vašich pracovných centier \n"
+"k výrobe produktu. Sú pripojené ku kusovníkom,\n"
+"ktoré budú definovať požadované suroviny."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_operations
+msgid "Work Order Planning"
+msgstr "Plánovanie pracovnej objednávky"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Work Orders"
 msgstr "Pracovné objednávky"
 
 #. module: mrp
-#: view:website:mrp.report_mrporder
-msgid "WorkCenter"
+#: model:ir.model.fields,help:mrp.field_mrp_config_settings_group_product_variant
+msgid ""
+"Work with product variant allows you to define some variant of the same "
+"products, an ease the product management in the ecommerce for example"
 msgstr ""
+"Práca s variantou produktu vám umožňuje určovať variantu tých istých "
+"produktov, napríklad ľahkosťou spravovania produktu v e-commerce "
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_calendar_id
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
 msgid "Working Time"
 msgstr "Pracovný čas"
 
 #. module: mrp
-#: help:mrp.config.settings,module_mrp_byproduct:0
+#: model:ir.model.fields,help:mrp.field_mrp_config_settings_module_mrp_byproduct
 msgid ""
 "You can configure by-products in the bill of material.\n"
 "Without this module: A + B + C -> D.\n"
 "With this module: A + B + C -> D + E.\n"
 "-This installs the module mrp_byproduct."
-msgstr "Môžete nakonfigurovať vedľajšie produkty v kusovníku.\nBez tohto modulu: A + B + C -> D.\nS týmto modulom: A + B + C -> D + E.\n-Toto nainštaluje modul mrp_byproduct."
+msgstr ""
+"Môžete nakonfigurovať vedľajšie produkty v kusovníku.\n"
+"Bez tohto modulu: A + B + C -> D.\n"
+"S týmto modulom: A + B + C -> D + E.\n"
+"-Toto nainštaluje modul mrp_byproduct."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:339
+#: code:addons/mrp/mrp.py:357
 #, python-format
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
-msgstr "Nemôžete zmazať kusovník s prebiehajúcimi výrobnými objednávkami.\nNajskôr ju zavrite alebo zrušte."
-
-#. module: mrp
-#: code:addons/mrp/stock.py:42
-#, python-format
-msgid "You must assign a serial number for the product %s"
 msgstr ""
+"Nemôžete zmazať kusovník s prebiehajúcimi výrobnými objednávkami.\n"
+"Najskôr ju zavrite alebo zrušte."
 
 #. module: mrp
-#: view:product.template:mrp.view_mrp_product_template_form_inherited
+#: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr "dni"
 
@@ -2284,14 +2308,14 @@ msgid "min"
 msgstr "min"
 
 #. module: mrp
-#: view:change.production.qty:mrp.view_change_production_qty_wizard
-#: view:mrp.config.settings:mrp.view_mrp_config
-#: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
-#: view:mrp.product_price:mrp.view_mrp_product_price_wizard
-#: view:mrp.workcenter.load:mrp.view_mrp_workcenter_load_wizard
-#: view:stock.move.consume:mrp.view_stock_move_consume_wizard
-msgid "or"
-msgstr "alebo"
+#: model:ir.model,name:mrp.model_mrp_bom_line
+msgid "mrp.bom.line"
+msgstr "mrp.bom.line"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_config_settings
+msgid "mrp.config.settings"
+msgstr "mrp.config.settings"
 
 #. module: mrp
 #: selection:mrp.property,composition:0
@@ -2299,9 +2323,78 @@ msgid "plus"
 msgstr "plus"
 
 #. module: mrp
-#: field:mrp.product.produce,product_id:0
-#: field:mrp.product.produce.line,produce_id:0
-#: field:mrp.product.produce.line,track_production:0
-#: field:mrp.production,ready_production:0
+#: model:ir.model,name:mrp.model_report_mrp_report_mrpbomstructure
+msgid "report.mrp.report_mrpbomstructure"
+msgstr "report.mrp.report_mrpbomstructure"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_report_mrp_bom_cost
+#, fuzzy
+msgid "report.mrp_bom_cost"
+msgstr "report.mrp.report_mrpbomstructure"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr "neznámy"
+
+#~ msgid "Action Needed"
+#~ msgstr "Potrebná akcia"
+
+#~ msgid "Change Quantity"
+#~ msgstr "Zmeniť množstvo"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Dátum poslednej správy zaslanej záznamu."
+
+#~ msgid "Followers"
+#~ msgstr "Odberatelia"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Odberatelia (Kanály)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Odberatelia (Partneri)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+
+#~ msgid "Is Follower"
+#~ msgstr "Je odberateľ"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Dátum poslednej správy"
+
+#~ msgid "Messages"
+#~ msgstr "Správy"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Správa a história komunikácie"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Počet akcií"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Počet správ ktoré vyžadujú akciu"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Počet neprečítaných správ"
+
+#~ msgid "Open MRP Menu"
+#~ msgstr "Otvoriť MRP menu"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Neprečítané správy"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Počítadlo neprečítaných správ"
+
+#~ msgid "Website Messages"
+#~ msgstr "Správy webovej stránky"
+
+#~ msgid "Website communication history"
+#~ msgstr "História komunikácie webovej stránky"

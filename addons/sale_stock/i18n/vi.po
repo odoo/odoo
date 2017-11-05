@@ -3,15 +3,18 @@
 # * sale_stock
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# fanha99 <fanha99@hotmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Duy Pham <phamduy1812@gmail.com>, 2017
+# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-07-29 08:49+0000\n"
-"Last-Translator: fanha99 <fanha99@hotmail.com>\n"
-"Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-8/language/vi/)\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: thanh nguyen <thanhnguyen.icsc@gmail.com>, 2017\n"
+"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,76 +22,46 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:266
+#: code:addons/sale_stock/models/sale_order.py:170
 #, python-format
-msgid "(n/a)"
+msgid ""
+"\n"
+"There are %s %s available accross all warehouses."
 msgstr ""
 
 #. module: sale_stock
-#: field:sale.config.settings,module_delivery:0
-msgid "Allow adding shipping costs"
-msgstr "Cho phép thêm chi phí vận chuyển"
+#: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
+msgid "<strong>Customer Reference:</strong>"
+msgstr ""
 
 #. module: sale_stock
-#: help:sale.config.settings,module_delivery:0
+#: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
+msgid "<strong>Incoterms:</strong>"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.menu,name:sale_stock.menu_aftersale
+msgid "After-Sale"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid ""
-"Allows you to add delivery methods in sales orders and delivery orders.\n"
-"You can define your own carrier and delivery grids for prices.\n"
-"-This installs the module delivery."
-msgstr "Cho phép bạn thêm phương thức vận chuyển vào đơn hàng và phiếu xuất kho.\nBạn có thể định nghĩa nhà vận chuyển và hệ thống vân chuyển cho giá .\n-Việc này sẽ cài đặt phân hệ delivery."
-
-#. module: sale_stock
-#: help:sale.config.settings,group_route_so_lines:0
-msgid "Allows you to choose a delivery route on sales order lines"
-msgstr "Cho phép bạn lựa chọn một tuyến đường vận chuyển trên chi tiết của đơn hàng"
-
-#. module: sale_stock
-#: help:sale.config.settings,group_mrp_properties:0
-msgid "Allows you to tag sales order lines with properties."
-msgstr "Cho phép bạn tag chi tiết đơn hàng với các thuộc tính."
-
-#. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
-msgid "Cancel Order"
-msgstr "Hủy Đơn hàng"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:160
-#, python-format
-msgid "Cannot cancel sales order!"
-msgstr "Không thể hủy đơn hàng!"
-
-#. module: sale_stock
-#: field:sale.config.settings,group_route_so_lines:0
-msgid "Choose MTO, drop shipping,... on sales order lines"
+"By default Odoo computes the expected delivery date this way: order date + "
+"highest customer lead time of products. With this option, you can set a "
+"specific delivery date on orders rather than setting lead times on products."
 msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Companies"
-msgstr "Các công ty"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:277
-#: code:addons/sale_stock/sale_stock.py:352
-#, python-format
-msgid "Configuration Error!"
-msgstr "Lỗi cấu hình!"
-
-#. module: sale_stock
-#: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
-msgid "Contact Details"
-msgstr "Chi tiết liên hệ"
-
-#. module: sale_stock
-#: view:sale.config.settings:sale_stock.view_sales_config_sale_stock
-msgid "Default Options"
-msgstr "Tùy chọn mặc định"
-
-#. module: sale_stock
-#: field:sale.config.settings,default_picking_policy:0
-msgid "Deliver all at once when all products are available."
-msgstr "Giao tất cả hàng hóa khi sản phẩm sẵn sàng."
+msgstr "Công ty"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
@@ -101,20 +74,29 @@ msgid "Deliver each product when available"
 msgstr "Giao từng sản phẩm mỗi khi sẵn sàng"
 
 #. module: sale_stock
-#: field:sale.order,shipped:0
-msgid "Delivered"
-msgstr "Đã giao hàng"
+#: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
+msgid "Delivery"
+msgstr "Giao hàng"
 
 #. module: sale_stock
-#: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
-#: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
-msgid "Deliveries to Invoice"
-msgstr "Giao hàng cần xuất hóa đơn"
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_module_sale_order_dates
+msgid "Delivery Date"
+msgstr "Ngày giao hàng"
 
 #. module: sale_stock
-#: model:res.groups,name:sale_stock.group_invoice_deli_orders
-msgid "Enable Invoicing Delivery orders"
-msgstr "Kích hoạt xuất hóa đơn cho phiếu xuất kho"
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_delivery_count
+msgid "Delivery Orders"
+msgstr "Phiếu giao hàng"
+
+#. module: sale_stock
+#: model:res.groups,name:sale_stock.group_display_incoterm
+msgid "Display incoterms on Sales Order and related invoices"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+msgid "Display incoterms on orders &amp; invoices"
+msgstr ""
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
@@ -122,26 +104,29 @@ msgid "Enable Route on Sales Order Line"
 msgstr "Kích hoạt định tuyến trên Chi tiết đơn hàng"
 
 #. module: sale_stock
-#: field:sale.config.settings,group_invoice_deli_orders:0
-msgid "Generate invoices after and based on delivery orders"
-msgstr "Tạo hóa đơn sau và dựa trên phiếu xuất kho"
+#: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_group_display_incoterm
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_incoterm
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+msgid "Incoterms"
+msgstr "Incoterms"
 
 #. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
-msgid "Ignore Exception"
-msgstr "Bỏ qua ngoại lệ"
-
-#. module: sale_stock
-#: field:sale.order,incoterm:0
-msgid "Incoterm"
+#: model:ir.model.fields,help:sale_stock.field_account_invoice_incoterms_id
+msgid ""
+"Incoterms are series of sales terms. They are used to divide transaction "
+"costs and responsibilities between buyer and seller and reflect state-of-"
+"the-art transportation practices."
 msgstr ""
 
 #. module: sale_stock
-#: help:sale.order,incoterm:0
+#: model:ir.model.fields,help:sale_stock.field_sale_order_incoterm
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr "Điều khoản thương mại quốc tế là một chuỗi các điều khoản được định nghĩa sẵn được sử dụng trong các giao dịch thương mại quốc tế."
+msgstr ""
+"Điều khoản thương mại quốc tế mà một chuỗi các điều khoản xây dựng sẵn được "
+"sử dụng trong các giao dịch thương mại quốc tế."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
@@ -149,24 +134,32 @@ msgid "Inventory Routes"
 msgstr ""
 
 #. module: sale_stock
-#: selection:sale.config.settings,default_order_policy:0
-msgid "Invoice based on deliveries"
-msgstr "Hóa đơn dựa trên giao hàng"
+#: model:ir.model,name:sale_stock.model_account_invoice
+msgid "Invoice"
+msgstr "Hóa đơn"
 
 #. module: sale_stock
-#: selection:sale.config.settings,default_order_policy:0
-msgid "Invoice based on sales orders"
-msgstr "Hóa đơn dựa trên đơn hàng"
+#: model:ir.model,name:sale_stock.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Chi tiết hóa đơn"
 
 #. module: sale_stock
-#: help:sale.config.settings,task_work:0
+#: model:ir.ui.menu,name:sale_stock.menu_invoiced
+msgid "Invoicing"
+msgstr "Xuất hóa đơn"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_res_config_settings_use_security_lead
 msgid ""
-"Lets you transfer the entries under tasks defined for Project Management to the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways and to automatically creates project tasks from procurement lines.\n"
-"-This installs the modules project_timesheet and sale_service."
+"Margin of error for dates promised to customers. Products will be scheduled "
+"for delivery that many days earlier than the actual promised date, to cope "
+"with unexpected delays in the supply chain."
 msgstr ""
 
 #. module: sale_stock
-#: help:res.company,security_lead:0
+#: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
+#: model:ir.model.fields,help:sale_stock.field_res_config_settings_security_lead
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
 "for procurement and delivery that many days earlier than the actual promised"
@@ -174,139 +167,163 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:347
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "Move forward expected delivery dates by"
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:174
 #, python-format
-msgid "Not enough stock ! : "
-msgstr "Không đủ số lượng ! : "
+msgid "Not enough inventory!"
+msgstr "Không đủ hàng trong kho"
 
 #. module: sale_stock
-#: field:sale.order.line,number_packages:0
-msgid "Number Packages"
-msgstr "Số lượng gói hàng"
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_group_route_so_lines
+msgid "Order-Specific Routes"
+msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/res_config.py:78
+#: code:addons/sale_stock/models/sale_order.py:188
 #, python-format
-msgid "Only administrators can change the settings"
-msgstr "Chỉ Quản trị viên mới có thể thay đổi thiết lập"
+msgid "Ordered quantity decreased!"
+msgstr "Số lượng đặt hàng đã giảm"
 
 #. module: sale_stock
-#: field:sale.order.line,product_packaging:0
-msgid "Packaging"
-msgstr "Đóng gói"
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
+msgid "Package"
+msgstr ""
 
 #. module: sale_stock
-#: help:sale.order,picking_policy:0
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_ids
+msgid "Pickings"
+msgstr "Pickings"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_procurement_group_id
+msgid "Procurement Group"
+msgstr "Nhóm Thu mua"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_procurement_group
+msgid "Procurement Requisition"
+msgstr "Yêu cầu thu mua"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_procurement_rule
+msgid "Procurement Rule"
+msgstr "Quy tắc mua sắm"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order
+msgid "Quotation"
+msgstr "Báo giá"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
-"Pick 'Deliver each product when available' if you allow partial delivery."
-msgstr "Chọn 'Giao hàng mỗi khi sản phẩm sẵn sàng' Nếu bạn cho phép giao hàng từng phần."
+"Reserving products manually in delivery orders or by running the scheduler "
+"is advised to better manage priorities in case of long customer lead times "
+"or/and frequent stock-outs. By default, the scheduler runs automatically "
+"every 24 hours."
+msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:275
-#, python-format
-msgid "Picking Information ! : "
-msgstr "Thông tin lô hàng xuất kho ! : "
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_picking
-msgid "Picking List"
-msgstr "Bảng kê hàng xuất kho"
-
-#. module: sale_stock
-#: field:sale.order,picking_ids:0
-msgid "Picking associated to this sale"
-msgstr "Hàng xuất kho liên quan tới đơn hàng này"
-
-#. module: sale_stock
-#: field:sale.config.settings,task_work:0
-msgid "Prepare invoices based on task's activities"
-msgstr "Chuẩn bị hóa đơn dựa trên các hoạt động của tác vụ"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_product_product
-msgid "Product"
-msgstr "Sản phẩm"
-
-#. module: sale_stock
-#: field:sale.order.line,product_tmpl_id:0
-msgid "Product Template"
-msgstr "Product Template"
-
-#. module: sale_stock
-#: field:sale.config.settings,group_mrp_properties:0
-msgid "Product properties on order lines"
-msgstr "Thuộc tính sản phẩm trên chi tiết đơn hàng"
-
-#. module: sale_stock
-#: field:sale.config.settings,module_project_timesheet:0
-msgid "Project Timesheet"
-msgstr "Bảng chấm công dự án"
-
-#. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
-msgid "Recreate Delivery Order"
-msgstr "Tạo lại Phiếu giao hàng"
-
-#. module: sale_stock
-#: field:sale.order.line,route_id:0
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
 msgid "Route"
 msgstr "Tuyến đường"
 
 #. module: sale_stock
-#: field:stock.picking,sale_id:0
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+msgid "Routes for Sales Order Lines"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move_sale_line_id
+msgid "Sale Line"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_procurement_group_sale_id
 msgid "Sale Order"
 msgstr "Đơn hàng"
 
 #. module: sale_stock
-#: view:stock.location.route:sale_stock.stock_location_route_form_view_inherit
-msgid "Sale Order Lines"
-msgstr "Chi tiết đơn hàng"
+#: model:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
+msgid "Sales"
+msgstr "Bán hàng"
 
 #. module: sale_stock
-#: field:sale.config.settings,module_sale_service:0
-msgid "Sale Service"
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_order
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking_sale_id
 msgid "Sales Order"
 msgstr "Đơn hàng"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
+msgstr "Chi tiết Đơn hàng Bán"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
+msgid "Sales Order Lines"
 msgstr "Chi tiết đơn hàng"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr "Thống kê đơn bán hàng"
+msgstr "Thống kê đơn hàng"
 
 #. module: sale_stock
-#: help:sale.config.settings,default_picking_policy:0
-msgid ""
-"Sales order by default will be configured to deliver all products at once "
-"instead of delivering each product when it is available. This may have an "
-"impact on the shipping price."
-msgstr "Đơn hàng mặc định sẽ được cấu hình để giao tất cả sản phẩm cùng lức thay vì giao từng sản phẩm khi sẵn sàng. Điều này có thể ảnh hưởng đến giá vận chuyển."
-
-#. module: sale_stock
-#: field:res.company,security_lead:0
-msgid "Security Days"
+#: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
+msgid "Sales Safety Days"
 msgstr ""
 
 #. module: sale_stock
-#: field:stock.location.route,sale_selectable:0
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "Schedule deliveries earlier to avoid delays"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_security_lead
+msgid "Security Lead Time"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_use_security_lead
+msgid "Security Lead Time for Sales"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
 msgid "Selectable on Sales Order Line"
 msgstr "Có thể chọn trên Chi tiết đơn hàng"
 
 #. module: sale_stock
-#: field:sale.report,shipped:0 field:sale.report,shipped_qty_1:0
-msgid "Shipped"
-msgstr "Đã chuyển"
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+msgid "Set a delivery date on orders"
+msgstr ""
 
 #. module: sale_stock
-#: field:sale.order,picking_policy:0
+#: selection:res.config.settings,default_picking_policy:0
+msgid "Ship all products at once"
+msgstr ""
+
+#. module: sale_stock
+#: selection:res.config.settings,default_picking_policy:0
+msgid "Ship products as soon as available, with back orders"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
+msgid "Shipping Information"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_default_picking_policy
+msgid "Shipping Management"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
 msgid "Shipping Policy"
 msgstr "Chính sách vận chuyển"
 
@@ -316,63 +333,73 @@ msgid "Stock Move"
 msgstr "Dịch chuyển kho"
 
 #. module: sale_stock
-#: field:sale.config.settings,default_order_policy:0
-msgid "The default invoicing method is"
-msgstr "Phương thức xuất hóa đơn mặc định là"
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_move_ids
+msgid "Stock Moves"
+msgstr "Dịch chuyển kho"
 
 #. module: sale_stock
-#: view:stock.picking:sale_stock.view_picking_internal_search_inherit
-msgid "To Invoice"
-msgstr "Chờ hóa đơn"
-
-#. module: sale_stock
-#: help:sale.config.settings,group_invoice_deli_orders:0
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid ""
-"To allow your salesman to make invoices for Delivery Orders using the menu "
-"'Deliveries to Invoice'."
-msgstr "Để cho phép nhân viên bán hàng tạo hóa đơn từ Phiếu xuất kho sử dụng trình đơn 'Giao hàng cần xuất hóa đơn'."
-
-#. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
-msgid "View Delivery Order"
-msgstr "Xem Phiếu xuất kho"
-
-#. module: sale_stock
-#: field:sale.order,warehouse_id:0 field:sale.report,warehouse_id:0
-msgid "Warehouse"
-msgstr "Nhà kho"
-
-#. module: sale_stock
-#: help:sale.config.settings,default_order_policy:0
-msgid "You can generate invoices based on sales orders or based on shippings."
-msgstr "Bạn có thể tạo hóa đơn dựa trên đơn hàng hoặc dựa trên giao hàng."
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:161
-#, python-format
-msgid ""
-"You must first cancel all delivery order(s) attached to this sales order."
-msgstr "Trước tiên bạn phải hủy tất cả phiếu xuất kho liên quan tới đơn hàng này."
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:343
-#, python-format
-msgid ""
-"You plan to sell %.2f %s but you only have %.2f %s available !\n"
-"The real stock is %.2f %s. (without reservations)"
-msgstr "Bạn dự kiến sẽ bán %.2f %s nhưng bạn chỉ có %.2f %s có thể bán !\nTồn kho thực tế là %.2f %s."
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:270
-#, python-format
-msgid ""
-"You selected a quantity of %s %s.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging:\n"
-"EAN: %s Quantity: %s Type of ul: %s"
+"This allows to apply a special route on sales order lines (e.g. "
+"dropshipping, make-to-order) in case of unusual order scenario. To be "
+"available in sales orders, routes must have 'Sales Order Line' option "
+"checked in their setup form."
 msgstr ""
 
 #. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
+#: code:addons/sale_stock/models/sale_order.py:273
+#, python-format
+msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_picking
+msgid "Transfer"
+msgstr "Chuyển hàng"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_warehouse_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_report_warehouse_id
+msgid "Warehouse"
+msgstr "Kho hàng"
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:272
+#, python-format
+msgid "Warning"
+msgstr "Cảnh báo"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "When to reserve sold products"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "When to start shipping"
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:189
+#, python-format
+msgid ""
+"You are decreasing the ordered quantity! Do not forget to manually update "
+"the delivery order if needed."
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:166
+#, python-format
+msgid ""
+"You plan to sell %s %s but you only have %s %s available in %s warehouse."
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "days"
 msgstr "ngày"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_res_config_settings
+msgid "res.config.settings"
+msgstr ""

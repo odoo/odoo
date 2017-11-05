@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--
+        Procurement
+        -->
+
+        <record id="procurement_group_form_view" model="ir.ui.view">
+            <field name="name">procurement.group.form</field>
+            <field name="model">procurement.group</field>
+            <field name="arch" type="xml">
+                <form string="Procurement group">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="%(do_view_pickings)d" string="Pickings" type="action" class="oe_stat_button" icon="fa-truck"/>
+                        </div>
+                        <group>
+                            <field name="name"/>
+                            <field name="move_type"/>
+                        </group>                        
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Procurement Rules -->
+
+        <record id="view_procurement_rule_filter" model="ir.ui.view">
+            <field name="name">procurement.rule.select</field>
+            <field name="model">procurement.rule</field>
+            <field name="arch" type="xml">
+                <search string="Search Procurement">
+                    <filter string="Global" name="route_false" domain="[('route_id','=',False)]" help="If the route is global"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_procurement_rule_tree">
+            <field name="name">procurement.rule.tree</field>
+            <field name="model">procurement.rule</field>
+            <field eval="10" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Procurement Rules">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="active" invisible="1"/>
+                    <field name="action"/>
+                    <field name="picking_type_id"/>
+                    <field name='company_id' groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_procurement_rule_form">
+            <field name="name">procurement.rule.form</field>
+            <field name="model">procurement.rule</field>
+            <field eval="10" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Procurement Rule">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="e.g. Buy"/></h1>
+                    </div>
+                    <group name="general">
+                        <group>
+                            <field name="action"/>
+                        </group>
+                        <group>
+                            <field name="sequence" groups="base.group_no_one"/>
+                        </group>
+                        <group string="Applied On">
+                            <field name="location_id"/>
+                            <field name="warehouse_id" groups="base.group_no_one"/>
+                        </group>
+                        <group string="Creates">
+                            <field name="location_src_id" attrs="{'required': [('action', '=', 'move')], 'invisible':[('action', '!=', 'move')]}"  domain="[('usage','!=','view')]"/>
+                            <field name="procure_method" groups="stock.group_adv_location" attrs="{'invisible': [('action', '!=', 'move')]}"/>
+                            <field name="picking_type_id" attrs="{'required': [('action', '!=', 'manufacture')]}"/>
+                            <field name="partner_address_id" groups="stock.group_adv_location" context="{'show_address': 1}" options="{'always_reload': 1}" attrs="{'invisible': [('action', '!=', 'move')]}"/>
+                            <label for="delay" string="Delay"  groups="stock.group_adv_location" attrs="{'invisible': [('action', '!=', 'move')]}"/>
+                            <div groups="stock.group_adv_location" attrs="{'invisible': [('action', '!=', 'move')]}">
+                               <field name="delay" class="oe_inline"/>days
+                            </div>
+                        </group>
+                    </group>
+                    <group name="propagation_group" string="Propagation Options" groups="base.group_no_one">
+                        <field name="group_propagation_option"/>
+                        <field name="group_id" attrs="{'invisible': [('group_propagation_option', '!=', 'fixed')], 'required': [('group_propagation_option', '=', 'fixed')]}"/>
+                        <field name="propagate"/>
+                        <field name="propagate_warehouse_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

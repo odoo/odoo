@@ -53,7 +53,7 @@ Builtins
     Same as tuple (``list`` is currently an alias for ``tuple``)
 
 ``dict``
-    Implements trivial getting and setting, nothing beyond that.
+    Implements trivial getting, setting and len, nothing beyond that.
 
 Note that most methods are probably missing from all of these.
 

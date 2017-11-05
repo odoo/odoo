@@ -1,0 +1,1501 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+     <record model="account.account.template" id="transfer_account_id">
+         <field name="name">Transfer account</field>
+         <field name="code">100</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="True" />
+     </record>
+
+     <record id="uae_chart_template_standard" model="account.chart.template">
+         <field name="name">U.A.E Chart of Accounts - Standard</field>
+         <field name="code_digits">6</field>
+         <field name="bank_account_code_prefix">101</field>
+         <field name="currency_id" ref="base.AED" />
+         <field name="transfer_account_id" ref="transfer_account_id"/>
+         <field name="complete_tax_set" eval="False"/>
+     </record>
+
+     <record model="account.account.template" id="transfer_account_id">
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3681">
+         <field name="name">Accounts Receivable</field>
+         <field name="code">102</field>
+         <field name="user_type_id" ref="account.data_account_type_receivable" />
+         <field name="reconcile" eval="True" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3665">
+         <field name="name">Main Safe</field>
+         <field name="code">101111</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3666">
+         <field name="name">Main Safe - Foreign Currency</field>
+         <field name="code">101112</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3677">
+         <field name="name">Visa &amp; Master Credit Cards</field>
+         <field name="code">101311</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3678">
+         <field name="name">Gateway Credit Cards</field>
+         <field name="code">101312</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3679">
+         <field name="name">Manual Visa &amp; Master Cards</field>
+         <field name="code">101313</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3680">
+         <field name="name">PayPal Account</field>
+         <field name="code">101314</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3684">
+         <field name="name">Trade in Opening Fees</field>
+         <field name="code">102112</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3685">
+         <field name="name">Post Dated Cheques Received</field>
+         <field name="code">102113</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3686">
+         <field name="name">Corporate Credit Cards</field>
+         <field name="code">102114</field>
+         <field name="reconcile" eval="False" />
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3687">
+         <field name="name">Other Receivable</field>
+         <field name="code">1022</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3688">
+         <field name="name">Other Debtors</field>
+         <field name="code">10221</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3689">
+         <field name="name">Accrued Rebates Due from Suppliers</field>
+         <field name="code">102220</field>
+         <field name="user_type_id" ref="account.data_account_type_receivable" />
+         <field name="reconcile" eval="True" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3690">
+         <field name="name">Accured Income from Suppliers</field>
+         <field name="code">102221</field>
+         <field name="user_type_id" ref="account.data_account_type_receivable" />
+         <field name="reconcile" eval="True" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3693">
+         <field name="name">Supplier Cost</field>
+         <field name="code">103110</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3694">
+         <field name="name">Customs Duty</field>
+         <field name="code">103111</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3695">
+         <field name="name">Freight and Transport</field>
+         <field name="code">103112</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3696">
+         <field name="name">Shipment Insurance</field>
+         <field name="code">103113</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3697">
+         <field name="name">Shipments Documentation Charges</field>
+         <field name="code">103114</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3698">
+         <field name="name">Shipment Other Charges</field>
+         <field name="code">103115</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3700">
+         <field name="name">Handling Difference in Inventory</field>
+         <field name="code">103210</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3701">
+         <field name="name">Items Delivered to Customs on temprary Base</field>
+         <field name="code">103211</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3704">
+         <field name="name">Prepaid Medical Insurance</field>
+         <field name="code">104110</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3705">
+         <field name="name">Prepaid Life Insurance</field>
+         <field name="code">104111</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3706">
+         <field name="name">Prepaid Office Rent</field>
+         <field name="code">104112</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3707">
+         <field name="name">Prepaid Other Insurance</field>
+         <field name="code">104113</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3708">
+         <field name="name">Prepaid License Fees</field>
+         <field name="code">104114</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3709">
+         <field name="name">Prepaid Maintenance</field>
+         <field name="code">104115</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3710">
+         <field name="name">Prepaid Site Hosting Fees</field>
+         <field name="code">104116</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3711">
+         <field name="name">Prepaid Employees Housing</field>
+         <field name="code">104117</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3712">
+         <field name="name">Prepaid Schooling Fees</field>
+         <field name="code">104118</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3713">
+         <field name="name">Prepaid Consultancy Fees</field>
+         <field name="code">104119</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3714">
+         <field name="name">Prepaid Legal Fees</field>
+         <field name="code">104120</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3715">
+         <field name="name">Prepaid Sponsorship Fees</field>
+         <field name="code">104121</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3716">
+         <field name="name">PrePaid Advertisement Expenses</field>
+         <field name="code">104122</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3717">
+         <field name="name">Prepaid Bank Guarantee</field>
+         <field name="code">104123</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3718">
+         <field name="name">Other Prepayments</field>
+         <field name="code">104124</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3719">
+         <field name="name">Prepaid Finance charge for Loans</field>
+         <field name="code">104125</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3721">
+         <field name="name">Deposit - Office Rent</field>
+         <field name="code">104201</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3722">
+         <field name="name">Deposits - Customs</field>
+         <field name="code">104202</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3723">
+         <field name="name">Deposit to Immigration (Visa)</field>
+         <field name="code">104203</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3724">
+         <field name="name">Deposit Others</field>
+         <field name="code">104204</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3726">
+         <field name="name">Taxes Paid</field>
+         <field name="code">104301</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3727">
+         <field name="name">Withholding Tax Receivables</field>
+         <field name="code">104302</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3734">
+         <field name="name">Leasehold Improvement</field>
+         <field name="code">152101</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3735">
+         <field name="name">Furniture and Equipment</field>
+         <field name="code">152102</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3736">
+         <field name="name">Computer Hardware &amp; Software</field>
+         <field name="code">152103</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3737">
+         <field name="name">Motor Vehicules</field>
+         <field name="code">152104</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3738">
+         <field name="name">Work In Progrees</field>
+         <field name="code">152105</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3740">
+         <field name="name">Amortisation on Leasehold Improvement</field>
+         <field name="code">152201</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3741">
+         <field name="name">Acc.Deprn.of Furniture &amp; Office Equipment</field>
+         <field name="code">152202</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3742">
+         <field name="name">Acc. Deprn.Computer Hardware &amp; Software</field>
+         <field name="code">152203</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3743">
+         <field name="name">Acc. Depreciation of Motor Vehicles</field>
+         <field name="code">152204</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3747">
+         <field name="name">Registration of Trademarks</field>
+         <field name="code">154001</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3748">
+         <field name="name">Computer Card Renewal</field>
+         <field name="code">154002</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3749">
+         <field name="name">Dispoal of Outlets</field>
+         <field name="code">154003</field>
+         <field name="user_type_id" ref="account.data_account_type_current_assets" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3753">
+         <field name="name">Payables</field>
+         <field name="code">2021</field>
+         <field name="user_type_id" ref="account.data_account_type_payable" />
+         <field name="reconcile" eval="True" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3763">
+         <field name="name">Reservations</field>
+         <field name="code">203101</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3764">
+         <field name="name">Credit Notes to Customers</field>
+         <field name="code">203102</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3768">
+         <field name="name">Accrued - Salaries</field>
+         <field name="code">204111</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3769">
+         <field name="name">Accrued - Leave Tickets</field>
+         <field name="code">204112</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3770">
+         <field name="name">Accrued - Leave Salary</field>
+         <field name="code">204113</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3771">
+         <field name="name">Accrued - Commissions</field>
+         <field name="code">204114</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3772">
+         <field name="name">Accrued Salaries Increment</field>
+         <field name="code">204115</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3773">
+         <field name="name">Accrued-Staff Bonus</field>
+         <field name="code">204116</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3774">
+         <field name="name">Accrued Other Personnel Cost</field>
+         <field name="code">204120</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3777">
+         <field name="name">Accrued - Utilities</field>
+         <field name="code">204211</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3778">
+         <field name="name">Accrued - Telephone</field>
+         <field name="code">204212</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3779">
+         <field name="name">Accrued - Sponsorship</field>
+         <field name="code">204213</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3780">
+         <field name="name">Accrued - Audit Fees</field>
+         <field name="code">204214</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3781">
+         <field name="name">Accrued - Office Rent</field>
+         <field name="code">204215</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3782">
+         <field name="name">Accrued Others</field>
+         <field name="code">204220</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3785">
+         <field name="name">Taxes Received</field>
+         <field name="code">204311</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3786">
+         <field name="name">Withholding Tax Payable</field>
+         <field name="code">204312</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3787">
+         <field name="name">Income Tax Payable</field>
+         <field name="code">204313</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3789">
+         <field name="name">Deferred income</field>
+         <field name="code">204410</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3790">
+         <field name="name">Accrued Dubai Customs</field>
+         <field name="code">204411</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3791">
+         <field name="name">Shipping &amp; Handling</field>
+         <field name="code">204412</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3798">
+         <field name="name">Share Capital</field>
+         <field name="code">310001</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3799">
+         <field name="name">Contributed Capital</field>
+         <field name="code">310002</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3800">
+         <field name="name">Treasury Stocks</field>
+         <field name="code">310003</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3801">
+         <field name="name">Shareholders Current A/c</field>
+         <field name="code">310004</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3802">
+         <field name="name">Sub Ordinated Loan</field>
+         <field name="code">310005</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3804">
+         <field name="name">Previous Years Results</field>
+         <field name="code">320001</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3805">
+         <field name="name">Current Year Results</field>
+         <field name="code">320002</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3806">
+         <field name="name">Dividends Paid</field>
+         <field name="code">320003</field>
+         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3810">
+         <field name="name">Sales Account</field>
+         <field name="code">401100</field>
+         <field name="user_type_id" ref="account.data_account_type_revenue" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3811">
+         <field name="name">Sales of I/C</field>
+         <field name="code">401101</field>
+         <field name="user_type_id" ref="account.data_account_type_revenue" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3812">
+         <field name="name">Management Consultancy Fees</field>
+         <field name="code">401102</field>
+         <field name="user_type_id" ref="account.data_account_type_revenue" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3814">
+         <field name="name">Sales from Other Region</field>
+         <field name="code">402100</field>
+         <field name="user_type_id" ref="account.data_account_type_revenue" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3818">
+         <field name="name">Advertising Income</field>
+         <field name="code">411101</field>
+         <field name="user_type_id" ref="account.data_account_type_revenue" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3819">
+         <field name="name">Branding Income</field>
+         <field name="code">411102</field>
+         <field name="user_type_id" ref="account.data_account_type_revenue" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3820">
+         <field name="name">Space Rental Income</field>
+         <field name="code">411103</field>
+         <field name="user_type_id" ref="account.data_account_type_revenue" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3821">
+         <field name="name">Early Setmt Margin from Suppliers</field>
+         <field name="code">411104</field>
+         <field name="user_type_id" ref="account.data_account_type_revenue" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3822">
+         <field name="name">Service Income</field>
+         <field name="code">411105</field>
+         <field name="user_type_id" ref="account.data_account_type_revenue" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3823">
+         <field name="name">Rebate from Suppliers</field>
+         <field name="code">411106</field>
+         <field name="user_type_id" ref="account.data_account_type_revenue" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3824">
+         <field name="name">Marketing Rebate from Suppliers</field>
+         <field name="code">411107</field>
+         <field name="user_type_id" ref="account.data_account_type_revenue" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3827">
+         <field name="name">Interest Revenue</field>
+         <field name="code">421101</field>
+         <field name="user_type_id" ref="account.data_account_type_revenue" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3828">
+         <field name="name">Interest from FD</field>
+         <field name="code">421102</field>
+         <field name="user_type_id" ref="account.data_account_type_revenue" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3829">
+         <field name="name">Trade Opening Fees from suppliers</field>
+         <field name="code">421103</field>
+         <field name="user_type_id" ref="account.data_account_type_revenue" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3830">
+         <field name="name">Products Listing Fees from Suppliers</field>
+         <field name="code">421104</field>
+         <field name="user_type_id" ref="account.data_account_type_revenue" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3832">
+         <field name="name">Capital Gain</field>
+         <field name="code">422101</field>
+         <field name="user_type_id" ref="account.data_account_type_revenue" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3833">
+         <field name="name">Gain On Difference Of Exchange</field>
+         <field name="code">422102</field>
+         <field name="user_type_id" ref="account.data_account_type_revenue" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3834">
+         <field name="name">Excess In Till</field>
+         <field name="code">422103</field>
+         <field name="user_type_id" ref="account.data_account_type_revenue" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3835">
+         <field name="name">Other Income</field>
+         <field name="code">422104</field>
+         <field name="user_type_id" ref="account.data_account_type_revenue" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3836">
+         <field name="name">Management Consultancy Fees</field>
+         <field name="code">422105</field>
+         <field name="user_type_id" ref="account.data_account_type_revenue" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3840">
+         <field name="name">Cost of Goods Sold in Trading</field>
+         <field name="code">5011</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3841">
+         <field name="name">Cost Of Goods Sold I/C Sales</field>
+         <field name="code">5012</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3843">
+         <field name="name">Share Resource Expenses Account</field>
+         <field name="code">511001</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3847">
+         <field name="name">Basic Salary</field>
+         <field name="code">521001</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3848">
+         <field name="name">Housing Allowance</field>
+         <field name="code">521002</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3849">
+         <field name="name">Transportation Allowance</field>
+         <field name="code">521003</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3850">
+         <field name="name">Leave Ticket</field>
+         <field name="code">521004</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3851">
+         <field name="name">Leave Salary</field>
+         <field name="code">521005</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3852">
+         <field name="name">End Of Service Indemnity</field>
+         <field name="code">521006</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3853">
+         <field name="name">Medical Insurance</field>
+         <field name="code">521007</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3854">
+         <field name="name">Life Insurance</field>
+         <field name="code">521008</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3855">
+         <field name="name">Sales Commission</field>
+         <field name="code">521009</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3856">
+         <field name="name">Staff School Allowances</field>
+         <field name="code">521010</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3857">
+         <field name="name">Uniform</field>
+         <field name="code">521011</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3858">
+         <field name="name">Visa Expenses</field>
+         <field name="code">521012</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3859">
+         <field name="name">Personnel Cost Others</field>
+         <field name="code">521013</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3861">
+         <field name="name">Office Rent</field>
+         <field name="code">521101</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3862">
+         <field name="name">Warehouse Rent</field>
+         <field name="code">521102</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3864">
+         <field name="name">Water &amp; Electricity</field>
+         <field name="code">521201</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3865">
+         <field name="name">Other Utility Cahrges</field>
+         <field name="code">521202</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3867">
+         <field name="name">Telephone</field>
+         <field name="code">521301</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3868">
+         <field name="name">Courrier</field>
+         <field name="code">521302</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3869">
+         <field name="name">Web Site Hosting Fees</field>
+         <field name="code">521303</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3870">
+         <field name="name">Others - Communication</field>
+         <field name="code">521304</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3872">
+         <field name="name">Air tickets</field>
+         <field name="code">521401</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3873">
+         <field name="name">Hotel</field>
+         <field name="code">521402</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3874">
+         <field name="name">Meals</field>
+         <field name="code">521403</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3875">
+         <field name="name">Per Diem</field>
+         <field name="code">521404</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3876">
+         <field name="name">Others</field>
+         <field name="code">521405</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3878">
+         <field name="name">Audit Fees</field>
+         <field name="code">521601</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3879">
+         <field name="name">Sponsorship Fees</field>
+         <field name="code">521602</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3880">
+         <field name="name">Legal fees</field>
+         <field name="code">521603</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3881">
+         <field name="name">Trade License Fees</field>
+         <field name="code">521604</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3882">
+         <field name="name">Others - Professional Fees</field>
+         <field name="code">521606</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3884">
+         <field name="name">Other - Advertising Expenses</field>
+         <field name="code">521701</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3886">
+         <field name="name">Write Off Receivables &amp; Payables</field>
+         <field name="code">521801</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3887">
+         <field name="name">Write Off Inventory</field>
+         <field name="code">521802</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3888">
+         <field name="name">Amortisation of Preoperating Expenses</field>
+         <field name="code">521803</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3889">
+         <field name="name">Cash Shortage</field>
+         <field name="code">521804</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3890">
+         <field name="name">Others - Provision &amp; Write off</field>
+         <field name="code">521805</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3892">
+         <field name="name">Insurance</field>
+         <field name="code">521901</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3893">
+         <field name="name">Training</field>
+         <field name="code">521902</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3894">
+         <field name="name">Maintenance</field>
+         <field name="code">521903</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3895">
+         <field name="name">Security &amp; Guard</field>
+         <field name="code">521904</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3896">
+         <field name="name">Cleaning</field>
+         <field name="code">521905</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3897">
+         <field name="name">Subscriptions</field>
+         <field name="code">521906</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3898">
+         <field name="name">Gifts &amp; Donations</field>
+         <field name="code">521907</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3899">
+         <field name="name">Stationary Out Of Stock</field>
+         <field name="code">521908</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3900">
+         <field name="name">Stationary From Suppliers</field>
+         <field name="code">521909</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3901">
+         <field name="name">Kitchen and Buffet Expenses</field>
+         <field name="code">521910</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3902">
+         <field name="name">Vehicle Expenses</field>
+         <field name="code">521911</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3903">
+         <field name="name">Convoyance Expenses</field>
+         <field name="code">521912</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3904">
+         <field name="name">Others - Office Various Expenses</field>
+         <field name="code">521919</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3906">
+         <field name="name">Other Bank Charges</field>
+         <field name="code">522001</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3910">
+         <field name="name">Loss On Fixed Assets Disposal</field>
+         <field name="code">531101</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3911">
+         <field name="name">Loss on Difference on Exchange</field>
+         <field name="code">531102</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3912">
+         <field name="name">Disposal of Business Branch</field>
+         <field name="code">531103</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3914">
+         <field name="name">Royalty to Parent Co.</field>
+         <field name="code">531201</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3916">
+         <field name="name">Income Tax</field>
+         <field name="code">531301</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3917">
+         <field name="name">Zakat</field>
+         <field name="code">531302</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3919">
+         <field name="name">Previous Year Adjustments Account</field>
+         <field name="code">531411</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3921">
+         <field name="name">Other Non Operating Expenses</field>
+         <field name="code">531511</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3924">
+         <field name="name">Credit Card Charges</field>
+         <field name="code">541001</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3925">
+         <field name="name">Amex Credit Cards Charges</field>
+         <field name="code">541002</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3926">
+         <field name="name">Bank Finance &amp; Loan Charges</field>
+         <field name="code">541003</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3927">
+         <field name="name">Air Miles Card Charges</field>
+         <field name="code">541004</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3928">
+         <field name="name">Credit Card Swipe Charges</field>
+         <field name="code">541005</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3929">
+         <field name="name">PayPal Charges</field>
+         <field name="code">541006</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3932">
+         <field name="name">Amortization on Leasehold Improvement</field>
+         <field name="code">551001</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3933">
+         <field name="name">Depreciation Of Furniture &amp; Office Equipment
+         </field>
+         <field name="code">551002</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3934">
+         <field name="name">Depreciation Of Computer Hard &amp; Soft</field>
+         <field name="code">551003</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3935">
+         <field name="name">Depreciation Of Motor Vehicles</field>
+         <field name="code">551004</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3937">
+         <field name="name">Consultancy Fees</field>
+         <field name="code">560001</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3938">
+         <field name="name">Provision for Doubtful Debts</field>
+         <field name="code">560004</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record model="account.account.template" id="uae_account_3941">
+         <field name="name">Closing Account</field>
+         <field name="code">611001</field>
+         <field name="user_type_id" ref="account.data_account_type_expenses" />
+         <field name="reconcile" eval="False" />
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+     </record>
+
+     <record id="uae_chart_template_standard" model="account.chart.template">
+         <field name="property_account_receivable_id" ref="uae_account_3681" />
+         <field name="property_account_payable_id" ref="uae_account_3753" />
+         <field name="property_account_expense_categ_id" ref="uae_account_3840" />
+         <field name="property_account_income_categ_id" ref="uae_account_3810" />
+         <field name="expense_currency_exchange_account_id" ref="uae_account_3911"/>
+         <field name="income_currency_exchange_account_id" ref="uae_account_3833"/>
+     </record>
+
+     <!-- Tax template for sale and purchase -->
+     <record id="sale_tax_template" model="account.tax.template">
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+         <field name="name">Tax 10%</field>
+         <field name="amount">10</field>
+         <field name="type_tax_use">sale</field>
+         <field name="account_id" ref="uae_account_3785"/>
+         <field name="refund_account_id" ref="uae_account_3785"/>
+         <field name="tax_group_id" ref="tax_group_15"/>
+     </record>
+
+     <record id="purchase_tax_template" model="account.tax.template">
+         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+         <field name="name">Purchase Tax 10%</field>
+         <field name="amount">10</field>
+         <field name="type_tax_use">purchase</field>
+         <field name="account_id" ref="uae_account_3726"/>
+         <field name="refund_account_id" ref="uae_account_3726"/>
+         <field name="tax_group_id" ref="tax_group_15"/>
+     </record>
+</odoo>

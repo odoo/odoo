@@ -3,14 +3,19 @@
 # * purchase_requisition
 # 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
+# S Butko <silvija.butko@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2017-06-16 11:41+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-8/language/lt/)\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: S Butko <silvija.butko@gmail.com>, 2017\n"
+"Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,40 +23,92 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: purchase_requisition
-#: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Click to start a new Call for Bids process. \n"
-"          </p><p>\n"
-"            A Call for Bids is a procedure for generating competing offers from\n"
-"            different bidders. In the call for bids, you can record the\n"
-"            products you need to buy and generate the creation of RfQs to\n"
-"            suppliers. Once the bids have been registered, you can review and\n"
-"            compare them and you can validate some and cancel others.\n"
-"          </p>\n"
-"        "
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Call for Tender Reference:</strong><br/>"
+msgstr "<strong>Pirkimo užklausos numeris:</strong><br/>"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Date</strong>"
+msgstr "<strong>Data</strong>"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Description</strong>"
+msgstr "<strong>Aprašymas</strong>"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Product UoM</strong>"
+msgstr "<strong>Produkto matavimo vienetas</strong>"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Qty</strong>"
+msgstr "<strong>Kiekis</strong>"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Reference </strong>"
+msgstr "<strong>Numeris </strong>"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Scheduled Date</strong>"
+msgstr "<strong>Suplanuota data</strong>"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Scheduled Ordering Date:</strong><br/>"
+msgstr "<strong>Suplanuota užsakymo data:</strong><br/>"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Selection Type:</strong><br/>"
+msgstr "<strong>Pasirinkimo tipas:</strong><br/>"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Source:</strong><br/>"
+msgstr "<strong>Šaltinis:</strong><br/>"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Vendor </strong>"
+msgstr "<strong>Tiekėjas </strong>"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_date_end
+msgid "Agreement Deadline"
+msgstr "Galutinis susitarimo terminas"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_name
+msgid "Agreement Reference"
+msgstr "Susitarimo numeris"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_exclusive
+msgid "Agreement Selection Type"
+msgstr "Susitarimo pasirinkimo tipas"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10513
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_name
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
+msgid "Agreement Type"
+msgstr "Susitarimo tipas"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.res_config_settings_view_form
+msgid "Agreement Types"
 msgstr ""
 
 #. module: purchase_requisition
-#: field:purchase.requisition,account_analytic_id:0
-#: field:purchase.requisition.line,account_analytic_id:0
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_account_analytic_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_account_analytic_id
 msgid "Analytic Account"
 msgstr "Analitinė sąskaita"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
-msgid "Approved by Supplier"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.actions.act_window,name:purchase_requisition.action_bid_line_qty
-msgid "Bid Line Qty"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.actions.act_window,name:purchase_requisition.purchase_line_tree
-msgid "Bid Lines"
-msgstr ""
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
@@ -59,73 +116,20 @@ msgid "Bid Selection"
 msgstr "Kainos pasiūlymo pasirinkimas"
 
 #. module: purchase_requisition
-#: field:purchase.requisition,exclusive:0
-msgid "Bid Selection Type"
+#: model:purchase.requisition.type,name:purchase_requisition.type_single
+msgid "Blanket Order"
+msgstr "Tuščias užsakymas "
+
+#. module: purchase_requisition
+#: model:ir.actions.report,name:purchase_requisition.action_report_purchase_requisitions
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "Call for Tenders"
 msgstr ""
 
 #. module: purchase_requisition
-#: field:purchase.requisition,date_end:0
-msgid "Bid Submission Deadline"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.actions.report.xml,name:purchase_requisition.action_report_purchase_requisitions
-#: field:product.template,purchase_requisition:0
-#: field:purchase.order,requisition_id:0
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_tree
-#: field:purchase.requisition.line,requisition_id:0
-#: view:website:purchase_requisition.report_purchaserequisitions
-msgid "Call for Bids"
-msgstr ""
-
-#. module: purchase_requisition
-#: field:purchase.requisition,name:0
-msgid "Call for Bids Reference"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
-msgid "Call for Bids in negotiation"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
-msgid "Call for Bids where bids are closed"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:website:purchase_requisition.report_purchaserequisitions
-msgid "Call for Bif Reference:"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
-#: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
-msgid "Calls for Bids"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:bid.line.qty:purchase_requisition.view_bid_line_qty
-#: view:purchase.requisition.partner:purchase_requisition.view_purchase_requisition_partner
-msgid "Cancel"
-msgstr "Atšaukti"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Cancel Call"
 msgstr "Atšaukti skambutį"
-
-#. module: purchase_requisition
-#: view:purchase.order.line:purchase_requisition.purchase_order_line_tree_tender
-msgid "Cancel Choice"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
-msgid "Cancel Purchase Order"
-msgstr ""
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
@@ -133,267 +137,217 @@ msgid "Cancelled"
 msgstr "Atšauktas"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:293
+#: code:addons/purchase_requisition/models/purchase_requisition.py:82
 #, python-format
-msgid ""
-"Cancelled by the call for bids associated to this request for quotation."
+msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:85
-#, python-format
-msgid "Cancelled by the tender associated to this quotation."
-msgstr ""
+#: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
+msgid "Click to start a new purchase agreement."
+msgstr "Paspauskite, norėdami pradėti naują pirkimo susitarimą"
 
 #. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_bid_line_qty
-msgid "Change Bid line quantity"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:bid.line.qty:purchase_requisition.view_bid_line_qty
-#: view:purchase.order.line:purchase_requisition.purchase_order_line_tree_tender
-msgid "Change Quantity"
-msgstr "Pakeisti kiekį"
-
-#. module: purchase_requisition
-#: help:product.template,purchase_requisition:0
-msgid ""
-"Check this box to generate Call for Bids instead of generating requests for "
-"quotation from procurement."
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
-#: view:purchase.requisition.partner:purchase_requisition.view_purchase_requisition_partner
-msgid "Choose Supplier"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
-msgid "Choose product lines"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
-msgid "Close Call for Bids"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
-msgid "Closed Bids"
-msgstr ""
-
-#. module: purchase_requisition
-#: field:purchase.requisition,company_id:0
-#: field:purchase.requisition.line,company_id:0
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_company_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_company_id
 msgid "Company"
 msgstr "Įmonė"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
-msgid "Confirm Call"
-msgstr ""
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Confirm"
+msgstr "Patvirtinti"
 
 #. module: purchase_requisition
-#: view:purchase.order.line:purchase_requisition.purchase_order_line_tree_tender
-msgid "Confirm Order"
-msgstr "Patvirtinti užsakymą"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
-msgid "Confirm Purchase Order"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 #: selection:purchase.requisition,state:0
 msgid "Confirmed"
 msgstr "Patvirtinta"
 
 #. module: purchase_requisition
-#: view:purchase.requisition.partner:purchase_requisition.view_purchase_requisition_partner
-msgid "Create Request for Quotation"
-msgstr ""
+#: selection:product.template,purchase_requisition:0
+msgid "Create a draft purchase order"
+msgstr "Sukurti pirkimo užsakymo juodraštį "
 
 #. module: purchase_requisition
-#: field:bid.line.qty,create_uid:0 field:purchase.requisition,create_uid:0
-#: field:purchase.requisition.line,create_uid:0
-#: field:purchase.requisition.partner,create_uid:0
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_uid
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_create_uid
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_create_uid
 msgid "Created by"
 msgstr "Sukūrė"
 
 #. module: purchase_requisition
-#: field:bid.line.qty,create_date:0 field:purchase.requisition,create_date:0
-#: field:purchase.requisition.line,create_date:0
-#: field:purchase.requisition.partner,create_date:0
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_date
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_create_date
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_create_date
 msgid "Created on"
 msgstr "Sukurta"
 
 #. module: purchase_requisition
-#: view:website:purchase_requisition.report_purchaserequisitions
-msgid "Date"
-msgstr "Data"
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
+msgid "Data for new quotations"
+msgstr "Naujų pasiūlymų data"
 
 #. module: purchase_requisition
-#: help:purchase.requisition,message_last_post:0
-msgid "Date of the last message posted on the record."
-msgstr "Paskutinės žinutės publikavimo data po šiuo įrašu."
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_schedule_date
+msgid "Delivery Date"
+msgstr "Pristatymo data"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:39
-#, python-format
-msgid "Define product(s) you want to include in the call for bids."
-msgstr ""
-
-#. module: purchase_requisition
-#: field:purchase.requisition,description:0
-#: view:website:purchase_requisition.report_purchaserequisitions
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_description
 msgid "Description"
 msgstr "Aprašymas"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
-msgid "Done"
-msgstr "Atlikta"
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_display_name
+msgid "Display Name"
+msgstr "Vaizduojamas pavadinimas"
 
 #. module: purchase_requisition
+#: selection:purchase.requisition.type,line_copy:0
+msgid "Do not create RfQ lines automatically"
+msgstr "Nekurkite pirkimo užklausų eilučių automatiškai"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+#: selection:purchase.requisition,state:0
+msgid "Done"
+msgstr "Atlikti"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_move_dest_id
+msgid "Downstream Move"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 #: selection:purchase.requisition,state:0
 msgid "Draft"
 msgstr "Juodraštis"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "End Month"
 msgstr "Mėnesio pabaiga"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:39
-#, python-format
-msgid "Error!"
-msgstr "Klaida!"
+#: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
+msgid ""
+"Example of purchase agreements include call for tenders and blanket orders."
+msgstr ""
 
 #. module: purchase_requisition
-#: field:purchase.requisition,message_follower_ids:0
-msgid "Followers"
-msgstr "Prenumeratoriai"
+#: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
+msgid ""
+"For a blanket order, you can record an agreement for a specifc period\n"
+"            (e.g. a year) and you order products within this agreement, benefiting\n"
+"            from the negociated prices."
+msgstr ""
 
 #. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Group By"
 msgstr "Grupuoti pagal"
 
 #. module: purchase_requisition
-#: help:purchase.requisition,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr "Saugo pokalbių suvestinę (žinučių skaičius, ...). Ši apžvalga saugoma html formatu, kad būtų galima įterpti į kanban rodinius."
-
-#. module: purchase_requisition
-#: field:bid.line.qty,id:0 field:purchase.requisition,id:0
-#: field:purchase.requisition.line,id:0
-#: field:purchase.requisition.partner,id:0
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id
 msgid "ID"
 msgstr "ID"
 
 #. module: purchase_requisition
-#: help:purchase.requisition,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Jeigu pažymėta, naujos žinutės reikalaus jūsų dėmesio."
+#: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
+msgid ""
+"In a call for tenders, you can record the products you need to buy\n"
+"            and generate the creation of RfQs to vendors. Once the tenders have\n"
+"            been registered, you can review and compare them and you can\n"
+"            validate some and cancel others."
+msgstr ""
 
 #. module: purchase_requisition
-#: field:purchase.requisition,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Ar prenumeratorius"
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "In negotiation"
+msgstr "Derybose"
 
 #. module: purchase_requisition
-#: field:purchase.requisition,message_last_post:0
-msgid "Last Message Date"
-msgstr "Paskutinės žinutės data"
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition___last_update
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line___last_update
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type___last_update
+msgid "Last Modified on"
+msgstr "Paskutinį kartą keista"
 
 #. module: purchase_requisition
-#: field:bid.line.qty,write_uid:0 field:purchase.requisition,write_uid:0
-#: field:purchase.requisition.line,write_uid:0
-#: field:purchase.requisition.partner,write_uid:0
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_write_uid
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_write_uid
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_write_uid
 msgid "Last Updated by"
-msgstr "Paskutini kartą atnaujino"
+msgstr "Paskutinį kartą atnaujino"
 
 #. module: purchase_requisition
-#: field:bid.line.qty,write_date:0 field:purchase.requisition,write_date:0
-#: field:purchase.requisition.line,write_date:0
-#: field:purchase.requisition.partner,write_date:0
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_write_date
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_write_date
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_write_date
 msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
 #. module: purchase_requisition
-#: field:procurement.order,requisition_id:0
-msgid "Latest Requisition"
-msgstr "Vėliausa paraiška"
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_line_copy
+msgid "Lines"
+msgstr "Eilutės"
 
 #. module: purchase_requisition
-#: model:res.groups,name:purchase_requisition.group_purchase_requisition_manager
-msgid "Manager"
-msgstr "Vadovas"
-
-#. module: purchase_requisition
-#: field:purchase.requisition,message_ids:0
-msgid "Messages"
-msgstr "Pranešimai"
-
-#. module: purchase_requisition
-#: help:purchase.requisition,message_ids:0
-msgid "Messages and communication history"
-msgstr "Žinučių ir pranešimų istorija"
-
-#. module: purchase_requisition
-#: field:purchase.requisition,multiple_rfq_per_supplier:0
-msgid "Multiple RFQ per supplier"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:website:purchase_requisition.report_purchaserequisitions
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Multiple Requisitions"
 msgstr "Kelios paraiškos"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
-msgid "New"
-msgstr "Naujas"
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "New Agreements"
+msgstr "Naujas susitarimas"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
-msgid "New Call for Bids"
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "New Quotation"
+msgstr "Naujas pasiūlymas "
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_order_count
+msgid "Number of Orders"
+msgstr "Užsakymų skaičius"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_picking_type_id
+msgid "Operation Type"
 msgstr ""
 
 #. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
-msgid "Order Date"
-msgstr "Užsakymo data"
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_qty_ordered
+msgid "Ordered Quantities"
+msgstr "Užsakyti kiekiai"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_ordering_date
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Ordering Date"
 msgstr "Užsakymo data"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition,state:0
-msgid "PO Created"
-msgstr ""
-
-#. module: purchase_requisition
-#: field:purchase.requisition,picking_type_id:0
-msgid "Picking Type"
-msgstr "Siuntos gavimo būdas"
-
-#. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_procurement_order
-#: field:purchase.requisition,procurement_id:0
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_product_purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_template_purchase_requisition
 msgid "Procurement"
 msgstr "Planinis užsakymas"
 
 #. module: purchase_requisition
-#: field:purchase.requisition.line,product_id:0
+#: model:ir.model,name:purchase_requisition.model_procurement_rule
+msgid "Procurement Rule"
+msgstr "Planinio užsakymo taisyklė"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_product_id
 msgid "Product"
 msgstr "Produktas"
 
@@ -403,82 +357,87 @@ msgid "Product Template"
 msgstr "Produkto šablonas"
 
 #. module: purchase_requisition
-#: field:purchase.requisition.line,product_uom_id:0
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_product_uom_id
 msgid "Product Unit of Measure"
 msgstr "Matavimo vienetas"
 
 #. module: purchase_requisition
-#: view:website:purchase_requisition.report_purchaserequisitions
-msgid "Product UoM"
-msgstr "Produkto UoM"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
-#: view:website:purchase_requisition.report_purchaserequisitions
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Products"
 msgstr "Produktai"
 
 #. module: purchase_requisition
-#: field:purchase.requisition,po_line_ids:0
-msgid "Products by supplier"
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_ids
+msgid "Products to Purchase"
+msgstr "Produktai pardavimui"
+
+#. module: purchase_requisition
+#: selection:product.template,purchase_requisition:0
+msgid "Propose a call for tenders"
 msgstr ""
 
 #. module: purchase_requisition
-#: field:purchase.requisition,line_ids:0
-msgid "Products to Purchase"
-msgstr " "
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_requisition_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_requisition_id
+msgid "Purchase Agreement"
+msgstr "Pirkimo susitarimas"
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
+msgid "Purchase Agreement Type"
+msgstr "Pirkimo susitarimo tipas"
+
+#. module: purchase_requisition
+#: model:ir.actions.act_window,name:purchase_requisition.tender_type_action
+#: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_type
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_tree
+msgid "Purchase Agreement Types"
+msgstr "Pirkimo susitarimo tipai"
+
+#. module: purchase_requisition
+#: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
+#: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_tree
+msgid "Purchase Agreements"
+msgstr "Pirkimo susitarimai"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Purchase Order"
 msgstr "Pirkimo užsakymas"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr "Pirkimo užsakymo eilutė"
+msgstr "Pardavimo užsakymo eilutė "
 
 #. module: purchase_requisition
-#: view:purchase.order.line:purchase_requisition.purchase_order_line_tree_tender
-msgid "Purchase Order Lines"
-msgstr "Pirkimo užsakymo eilutės"
-
-#. module: purchase_requisition
-#: field:purchase.requisition,purchase_ids:0
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_purchase_ids
 msgid "Purchase Orders"
 msgstr "Pirkimų užsakymai"
 
 #. module: purchase_requisition
-#: view:purchase.order:purchase_requisition.purchase_order_search_inherit
+#: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
 msgid "Purchase Orders with requisition"
 msgstr "Pirkimo užsakymai su paraiška"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
-#: model:ir.module.category,name:purchase_requisition.module_category_purchase_requisition
 msgid "Purchase Requisition"
 msgstr "Pirkimo paraiška"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
 msgid "Purchase Requisition Line"
-msgstr "Pirkimo paraiškos eilutė"
+msgstr "Pirkimo paraiškos eilutė "
 
 #. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_purchase_requisition_partner
-msgid "Purchase Requisition Partner"
-msgstr ""
-
-#. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:416
-#, python-format
-msgid "Purchase Requisition created"
-msgstr "Pirkimo paraiška sukurta"
-
-#. module: purchase_requisition
-#: view:website:purchase_requisition.report_purchaserequisitions
-msgid "Purchase Requisitions (exclusive)"
+#: model:purchase.requisition.type,name:purchase_requisition.type_multi
+msgid "Purchase Tender"
 msgstr ""
 
 #. module: purchase_requisition
@@ -487,248 +446,178 @@ msgid "Purchase orders"
 msgstr "Pirkimo užsakymas"
 
 #. module: purchase_requisition
-#: view:website:purchase_requisition.report_purchaserequisitions
-msgid "Qty"
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_quantity_copy
+msgid "Quantities"
 msgstr "Kiekis"
 
 #. module: purchase_requisition
-#: view:bid.line.qty:purchase_requisition.view_bid_line_qty
-#: field:bid.line.qty,qty:0 field:purchase.requisition.line,product_qty:0
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_product_qty
 msgid "Quantity"
 msgstr "Kiekis"
 
 #. module: purchase_requisition
-#: field:purchase.order.line,quantity_bid:0
-msgid "Quantity Bid"
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "RFQs/Orders"
+msgstr "Pirkimo užklausos / Užsakymai"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.product_template_form_view_inherit
+msgid "Reordering"
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:192
-#, python-format
-msgid "RFQ created"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
-#: view:website:purchase_requisition.report_purchaserequisitions
-msgid "Reference"
-msgstr "Numeris"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
-msgid "Request a Quotation"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
-msgid "Requests for Quotation"
+#: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
+msgid "Request for Quotation"
 msgstr "Kainos paklausimas"
 
 #. module: purchase_requisition
-#: view:website:purchase_requisition.report_purchaserequisitions
-msgid "Requests for Quotation Details"
-msgstr "Paklausimas dėl kainos detalių"
+#: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_list
+msgid "Request for Quotations"
+msgstr "Kainos paklausimas"
 
 #. module: purchase_requisition
-#: view:purchase.order:purchase_requisition.purchase_order_search_inherit
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "Requests for Quotation Details"
+msgstr "Paklausimas dėl kainos detalių "
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
 msgid "Requisition"
 msgstr "Paraiška"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Reset to Draft"
 msgstr "Atkurti kaip juodraštį"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
-#: field:purchase.requisition,user_id:0
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_user_id
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Responsible"
-msgstr "Atsakingas asmuo"
+msgstr "Atsakingas"
 
 #. module: purchase_requisition
-#: field:purchase.requisition,schedule_date:0
-#: field:purchase.requisition.line,schedule_date:0
-#: view:website:purchase_requisition.report_purchaserequisitions
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_schedule_date
 msgid "Scheduled Date"
 msgstr "Suplanuota data"
 
 #. module: purchase_requisition
-#: field:purchase.requisition,ordering_date:0
-msgid "Scheduled Ordering Date"
-msgstr ""
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Search Purchase Agreements"
+msgstr "Ieškoti pirkimo susitarimų"
 
 #. module: purchase_requisition
-#: view:website:purchase_requisition.report_purchaserequisitions
-msgid "Scheduled Ordering Date:"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
-msgid "Search Call for Bids"
-msgstr ""
-
-#. module: purchase_requisition
-#: selection:purchase.requisition,exclusive:0
+#: selection:purchase.requisition.type,exclusive:0
 msgid "Select multiple RFQ"
 msgstr "Pasirinkti kelias pirkimo užklausas"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition,exclusive:0
+#: selection:purchase.requisition.type,exclusive:0
 msgid "Select only one RFQ (exclusive)"
 msgstr "Pasirinkti tik vieną pirkimo užklausą"
 
 #. module: purchase_requisition
-#: help:purchase.requisition,exclusive:0
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type_exclusive
 msgid ""
-"Select only one RFQ (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\n"
-"Select multiple RFQ:  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"
+"Select only one RFQ (exclusive):  when a purchase order is confirmed, cancel the remaining purchase order.\n"
+"\n"
+"                    Select multiple RFQ: allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
 
 #. module: purchase_requisition
-#: view:website:purchase_requisition.report_purchaserequisitions
-msgid "Selection Type:"
-msgstr ""
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_sequence
+msgid "Sequence"
+msgstr "Seka"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
-msgid "Send RFQ by Email"
-msgstr "Siųsti RFQ el. paštu"
+#: selection:purchase.requisition.type,quantity_copy:0
+msgid "Set quantities manually"
+msgstr "Kiekius nustatyti rankiniu būdu"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Source"
-msgstr "Terminas"
+msgstr "Šaltinis"
 
 #. module: purchase_requisition
-#: field:purchase.requisition,origin:0
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_origin
 msgid "Source Document"
 msgstr "Susijęs dokumentas"
 
 #. module: purchase_requisition
-#: view:website:purchase_requisition.report_purchaserequisitions
-msgid "Source:"
-msgstr "Šaltinis:"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
-#: field:purchase.requisition,state:0
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_state
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Status"
 msgstr "Būsena"
 
 #. module: purchase_requisition
-#: field:purchase.requisition,message_summary:0
-msgid "Summary"
-msgstr "Santrauka"
-
-#. module: purchase_requisition
-#: view:purchase.order.line:purchase_requisition.purchase_order_line_tree_tender
-#: field:purchase.requisition.partner,partner_id:0
-#: view:website:purchase_requisition.report_purchaserequisitions
-msgid "Supplier"
-msgstr "Tiekėjas"
-
-#. module: purchase_requisition
-#: help:purchase.order.line,quantity_bid:0
-msgid ""
-"Technical field for not loosing the initial information about the quantity "
-"proposed in the bid"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Terms and Conditions"
 msgstr "Sąlygos"
 
 #. module: purchase_requisition
-#: help:purchase.requisition,schedule_date:0
-msgid "The expected and scheduled date where all the products are received"
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_schedule_date
+msgid ""
+"The expected and scheduled delivery date where all the products are received"
 msgstr ""
 
 #. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Unassigned"
 msgstr "Nepriskirta"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Unassigned  Requisition"
 msgstr "Nepriskirta paraiška"
 
 #. module: purchase_requisition
-#: field:purchase.requisition,message_unread:0
-msgid "Unread Messages"
-msgstr "Neperžiūrėtos žinutės"
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_price_unit
+msgid "Unit Price"
+msgstr "Kaina"
 
 #. module: purchase_requisition
-#: model:res.groups,name:purchase_requisition.group_purchase_requisition_user
-msgid "User"
-msgstr "Naudotojas"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
-msgid "View Products Lines"
+#: selection:purchase.requisition.type,line_copy:0
+msgid "Use lines of agreement"
 msgstr ""
 
 #. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
-msgid "View RFQs/Bids"
+#: selection:purchase.requisition.type,quantity_copy:0
+msgid "Use quantities of agreement"
 msgstr ""
 
 #. module: purchase_requisition
-#: field:purchase.requisition,warehouse_id:0
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Validate"
+msgstr "Patikrinti"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_vendor_id
+msgid "Vendor"
+msgstr "Pardavėjas"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_warehouse_id
 msgid "Warehouse"
 msgstr "Sandėlis"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:189
-#: code:addons/purchase_requisition/purchase_requisition.py:240
-#: code:addons/purchase_requisition/purchase_requisition.py:249
+#: code:addons/purchase_requisition/models/purchase_requisition.py:88
 #, python-format
-msgid "Warning!"
-msgstr "Įspėjimas!"
-
-#. module: purchase_requisition
-#: field:purchase.requisition,website_message_ids:0
-msgid "Website Messages"
-msgstr "Interneto svetainės pranešimai"
-
-#. module: purchase_requisition
-#: help:purchase.requisition,website_message_ids:0
-msgid "Website communication history"
-msgstr "Interneto svetainės komunikacijos istorija"
-
-#. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:240
-#, python-format
-msgid "You have already generate the purchase order(s)."
+msgid "You cannot confirm call because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:189
+#: code:addons/purchase_requisition/models/purchase_requisition.py:105
 #, python-format
 msgid ""
-"You have already one %s purchase order for this partner, you must cancel "
-"this purchase order to create a new quotation."
+"You have to cancel or validate every RfQ before closing the purchase "
+"requisition."
 msgstr ""
+"Jūs turite atšaukti arba patvirtinti kiekvieną pirkimo užklausą prieš "
+"uždarant pirkimo paraišką. "
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:249
-#, python-format
-msgid "You have no line selected for buying."
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
-msgid "e.g. OP0025"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "e.g. PO0025"
 msgstr "pvz. PO0025"
-
-#. module: purchase_requisition
-#: view:bid.line.qty:purchase_requisition.view_bid_line_qty
-#: view:purchase.requisition.partner:purchase_requisition.view_purchase_requisition_partner
-msgid "or"
-msgstr "arba"

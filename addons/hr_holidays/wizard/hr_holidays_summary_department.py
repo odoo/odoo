@@ -1,57 +1,34 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#    $Id: account.py 1005 2005-07-25 08:41:42Z nicoe $
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import time
 
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
-class hr_holidays_summary_dept(osv.osv_memory):
+
+class HolidaysSummaryDept(models.TransientModel):
+
     _name = 'hr.holidays.summary.dept'
     _description = 'HR Leaves Summary Report By Department'
-    _columns = {
-        'date_from': fields.date('From', required=True),
-        'depts': fields.many2many('hr.department', 'summary_dept_rel', 'sum_id', 'dept_id', 'Department(s)'),
-        'holiday_type': fields.selection([('Approved','Approved'),('Confirmed','Confirmed'),('both','Both Approved and Confirmed')], 'Leave Type', required=True)
-    }
 
-    _defaults = {
-         'date_from': lambda *a: time.strftime('%Y-%m-01'),
-         'holiday_type': 'Approved'
-    }
+    date_from = fields.Date(string='From', required=True, default=lambda *a: time.strftime('%Y-%m-01'))
+    depts = fields.Many2many('hr.department', 'summary_dept_rel', 'sum_id', 'dept_id', string='Department(s)')
+    holiday_type = fields.Selection([
+        ('Approved', 'Approved'),
+        ('Confirmed', 'Confirmed'),
+        ('both', 'Both Approved and Confirmed')
+    ], string='Leave Type', required=True, default='Approved')
 
-    def print_report(self, cr, uid, ids, context=None):
-        data = self.read(cr, uid, ids, context=context)[0]
-        if not data['depts']:
-            raise osv.except_osv(_('Error!'), _('You have to select at least one Department. And try again.'))
+    @api.multi
+    def print_report(self):
+        self.ensure_one()
+        [data] = self.read()
+        if not data.get('depts'):
+            raise UserError(_('You have to select at least one Department. And try again.'))
+        departments = self.env['hr.department'].browse(data['depts'])
         datas = {
-             'ids': [],
-             'model': 'ir.ui.menu',
-             'form': data
-            }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'holidays.summary',
-            'datas': datas,
-            }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+            'ids': [],
+            'model': 'hr.department',
+            'form': data
+        }
+        return self.env.ref('hr_holidays.action_report_holidayssummary').report_action(departments, data=datas)

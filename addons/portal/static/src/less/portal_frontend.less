@@ -1,0 +1,78 @@
+.o_portal {
+    .breadcrumb {
+        margin-bottom: 0px;
+        display: inline-block;
+    }
+
+    > tbody.o_portal_report_tbody {
+        vertical-align: middle;
+    }
+}
+
+.o_portal_wrap {
+    .o_portal_my_home > .page-header > a:hover {
+        text-decoration: none;
+    }
+
+    .o_portal_my_doc_table {
+        td, th {
+            text-align: right;
+        }
+        tr > :first-child {
+            text-align: left;
+        }
+    }
+
+    .o_portal_search_panel_fixed_width {
+        overflow: hidden;
+        max-width: 125px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    table.table tr {
+        word-wrap: break-word;
+    }
+}
+
+.oe_attachments .o_image_small {
+    height: 40px;
+    width: 50px;
+}
+
+.o_portal_chatter {
+    padding: 10px;
+
+    .o_portal_chatter_avatar{
+        width: 45px;
+        height: 45px;
+    }
+
+    .o_portal_chatter_header {
+        margin-bottom: 15px;
+    }
+
+    .o_portal_chatter_composer {
+        margin-bottom: 15px;
+    }
+
+    .o_portal_chatter_messages {
+        margin-bottom: 15px;
+
+        .o_portal_chatter_message_title {
+            p {
+                font-size:85%;
+                color:@odoo-main-color-muted;
+                margin: 0px;
+            }
+        }
+    }
+
+    .o_portal_chatter_pager {
+        text-align: center;
+    }
+}
+
+.label-optional {
+    font-weight: normal;
+}

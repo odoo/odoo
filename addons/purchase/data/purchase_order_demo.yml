@@ -1,0 +1,141 @@
+-
+  Give access rights of Purchase user to create purchase order
+-
+  !record {model: purchase.order, id: purchase_order_1}:
+    partner_id: base.res_partner_1
+-
+  !record {model: purchase.order.line, id: purchase_order_line_1}:
+    order_id: purchase.purchase_order_1
+    product_id: product.product_delivery_01
+    name: RAM SR3
+    price_unit: 79.80
+    product_qty: 15.0
+    product_uom: product.product_uom_unit
+    date_planned: !eval time.strftime('%Y-%m-%d')
+-
+  !record {model: purchase.order.line, id: purchase_order_line_2}:
+    order_id: purchase_order_1
+    product_id: product.product_product_25
+    name: Laptop E5023
+    price_unit: 2868.70
+    product_qty: 5.0
+    product_uom: product.product_uom_unit
+    date_planned: !eval time.strftime('%Y-%m-%d')
+-
+  !record {model: purchase.order.line, id: purchase_order_line_3}:
+    order_id: purchase_order_1
+    product_id: product.product_product_27
+    name: Laptop Customized
+    price_unit: 3297.20
+    product_qty: 4.0
+    product_uom: product.product_uom_unit
+    date_planned: !eval time.strftime('%Y-%m-%d')
+-
+  Creating second order
+-
+  !record {model: purchase.order, id: purchase_order_2}:
+    partner_id: base.res_partner_3
+    order_line:
+      - product_id: product.product_delivery_02
+        name: Multimedia Speakers
+        price_unit: 132.50
+        product_qty: 20.0
+        product_uom: product.product_uom_unit
+        date_planned: !eval time.strftime('%Y-%m-%d')
+      - product_id: product.product_delivery_01
+        name: Pen drive, SP-2
+        price_unit: 89
+        product_qty: 5
+        product_uom: product.product_uom_unit
+        date_planned: !eval time.strftime('%Y-%m-%d')
+
+-
+  !record {model: purchase.order, id: purchase_order_3}:
+    partner_id: base.res_partner_12
+    order_line:
+      - product_id: product.product_product_2
+        name: Support Services
+        price_unit: 25.50
+        product_qty: 10.0
+        product_uom: product.product_uom_unit
+        date_planned: !eval time.strftime('%Y-%m-%d')
+
+-
+  !record {model: purchase.order, id: purchase_order_4}:
+    partner_id: base.res_partner_4
+    order_line:
+      - product_id: product.product_delivery_02
+        name: RAM SR2 (kit)
+        price_unit: 85.50
+        product_qty: 6.0
+        product_uom: product.product_uom_unit
+        date_planned: !eval time.strftime('%Y-%m-%d')
+      - product_id: product.product_product_20
+        name: Motherboard I9P57
+        price_unit: 1690
+        product_qty: 5.0
+        product_uom: product.product_uom_unit
+        date_planned: !eval time.strftime('%Y-%m-%d')
+      - product_id: product.product_product_6
+        name: iPad Mini
+        price_unit: 800
+        product_qty: 7.0
+        product_uom: product.product_uom_unit
+        date_planned: !eval time.strftime('%Y-%m-%d')
+
+-
+  !record {model: purchase.order, id: purchase_order_5}:
+    partner_id: base.res_partner_2
+    order_line:
+      - product_id: product.product_product_22
+        name: Processor Core i5 2.70 Ghz
+        product_qty: 3
+        price_unit: 2010
+        product_uom: product.product_uom_unit
+        date_planned: !eval time.strftime('%Y-%m-%d')
+      - product_id: product.product_product_24
+        name: Graphics Card
+        product_qty: 3
+        price_unit: 876
+        product_uom: product.product_uom_unit
+        date_planned: !eval time.strftime('%Y-%m-%d')
+
+-
+  !record {model: purchase.order, id: purchase_order_6}:
+    partner_id: base.res_partner_1
+    order_line:
+      - product_id: product.product_delivery_02
+        name: Ink Cartridge
+        price_unit: 58
+        product_qty: 9
+        product_uom: product.product_uom_unit
+        date_planned: !eval time.strftime('%Y-%m-%d')
+      - product_id: product.product_delivery_01
+        name: Toner Cartridge
+        product_qty: 3
+        price_unit: 65
+        product_uom: product.product_uom_unit
+        date_planned: !eval time.strftime('%Y-%m-%d')
+      - product_id: product.consu_delivery_01
+        name: GrapWorks Software
+        product_qty: 4
+        price_unit: 154.5
+        product_uom: product.product_uom_unit
+        date_planned: !eval time.strftime('%Y-%m-%d')
+
+-
+  !record {model: purchase.order, id: purchase_order_7}:
+    partner_id: base.res_partner_4
+    order_line:
+      - product_id: product.product_product_12
+        name: Mouse, Wireless
+        product_qty: 5
+        price_unit: 13.5
+        product_uom: product.product_uom_unit
+        date_planned: !eval time.strftime('%Y-%m-%d')
+      - product_id: product.product_delivery_02
+        name: Webcam
+        product_qty: 15
+        price_unit: 38.0
+        product_uom: product.product_uom_unit
+        date_planned: !eval time.strftime('%Y-%m-%d')

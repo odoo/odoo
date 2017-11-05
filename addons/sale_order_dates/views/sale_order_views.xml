@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_inherit_sale_stock_inherit_sale_order_dates" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_stock.view_order_form_inherit_sale_stock"/>
+        <field name="arch" type="xml">
+            <group name="sale_shipping" position="inside">
+                <field name="requested_date"/>
+                <field name="commitment_date"/>
+                <field name="effective_date"/>
+            </group>
+        </field>
+    </record>
+    <record id="view_order_tree_date" model="ir.ui.view">
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="confirmation_date" position="after">
+                <field name="requested_date"/>
+                <field name="commitment_date"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Add requested_date and commitment_date on quotation view -->
+    <record id="view_quotation_tree_date" model="ir.ui.view">
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree"/>
+        <field name="arch" type="xml">
+            <field name="date_order" position="after">
+                <field name="requested_date"/>
+                <field name="commitment_date"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

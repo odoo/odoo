@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_account_journal_pos_user_form" model="ir.ui.view">
+            <field name="name">account.journal.pos.user.form.inherit</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='type']" position="after">
+                    <field name="journal_user" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
+                </xpath>
+                <xpath expr="//notebook[last()]" position="inside">
+                    <page string="Point of Sale" attrs="{'invisible': [('journal_user', '=', False)]}">
+                        <group>
+                            <group name="amount_authorized" attrs="{'invisible': [('type', '!=', 'cash')]}">
+                                <field name="amount_authorized_diff"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        <record id="view_account_bank_journal_form_inherited_pos" model="ir.ui.view">
+            <field name="name">account.bank.journal.form.inherit.pos</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_bank_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='advanced_info']" position="inside">
+                    <group string="Point of Sale">
+                        <field name="journal_user"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+</odoo>

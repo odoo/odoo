@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Custom module kanban : install button (even if already installed) which redirects to website after (fake or not) installation + live preview button -->
+    <record model="ir.ui.view" id="theme_view_kanban">
+        <field name="name">Themes Kanban</field>
+        <field name="model">ir.module.module</field>
+        <field name="arch" type="xml">
+            <kanban create="false" class="o_theme_kanban" default_order="state,sequence,name">
+                <field name="icon"/>
+                <field name="name"/>
+                <field name="state"/>
+                <field name="url"/>
+                <field name="image_ids"/>
+                <field name="category_id"/>
+                <field name="display_name"/>
+                <templates>
+                    <div t-name="kanban-box" t-attf-class="o_theme_preview mb16 mt16 #{record.state.raw_value == 'installed'? 'o_theme_installed' : ''}">
+                        <t t-set="has_image" t-value="record.image_ids.raw_value.length > 0"/>
+                        <t t-set="has_screenshot" t-value="record.image_ids.raw_value.length > 1"/>
+                        <t t-set="image_url" t-value="has_image ? 'web/image/' + record.image_ids.raw_value[0] : record.icon.value"/>
+
+                        <div class="o_theme_preview_top bg-white mb4">
+                            <div class="o_browser_bar"/>
+                            <i states="installed" class="text-center bg-white text-success img-circle fa fa-check-circle"/>
+                            <div t-attf-class="bg-gray-lighter #{has_screenshot? 'o_theme_screenshot' : (has_image ? 'o_theme_cover' : 'o_theme_logo')}" t-attf-style="background-image: url(#{image_url});"/>
+                            <div states="uninstalled" class="o_button_area">
+                                <button type="object" name="button_choose_theme" class="btn btn-primary">Use this theme</button>
+                                <hr t-if="record.url.value"/>
+                                <a t-if="record.url.value" class="btn btn-default" t-att-href="record.url.value" target="_blank">Live Preview</a>
+                            </div>
+                        </div>
+                        <div class="o_theme_preview_bottom clearfix">
+                            <h5 t-if="record.display_name.value" class="text-uppercase pull-left">
+                                <img class="pull-left mr4"  t-att-src="record.icon.value" height="16" width="16"/>
+                                <b><t t-esc="record.display_name.value.replace(('Theme'), '').replace(('theme'), '')"/></b>
+                            </h5>
+                            <h6 t-if="record.category_id.value" class="text-muted pull-right">
+                                <b><t t-esc="record.category_id.value"/></b>
+                            </h6>
+                        </div>
+                    </div>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="theme_view_search">
+        <field name="name">Themes Search</field>
+        <field name="model">ir.module.module</field>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" filter_domain="['|', '|', ('summary', 'ilike', self), ('shortdesc', 'ilike', self), ('name', 'ilike', self)]" string="Theme"/>
+                <field name="category_id" filter_domain="['|', '|', ('summary', 'ilike', self), ('shortdesc', 'ilike', self), ('category_id', 'ilike', self)]" string="Category"/>
+                <group>
+                    <filter string="Author" domain="[]" context="{'group_by':'author'}"/>
+                    <filter string="Category" domain="[]" context="{'group_by':'category_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Actions to list themes with custom kanban (launched on module installation) -->
+    <record id="theme_install_kanban_action" model="ir.actions.act_window">
+        <field name="name">Choose Your Theme</field>
+        <field name="res_model">ir.module.module</field>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="theme_view_kanban"/>
+        <field name="search_view_id" ref="theme_view_search"/>
+        <field name="domain" eval="[
+            '|', ('category_id', 'not in', [ref('base.module_category_hidden', False), ref('base.module_category_theme_hidden', False)]), ('name', '=', 'theme_default'),
+            '|', ('category_id', '=', ref('base.module_category_theme', False)), ('category_id.parent_id', '=', ref('base.module_category_theme', False))
+        ]"/>
+    </record>
+    <record id="theme_install_todo_action" model="ir.actions.server">
+        <field name="name">Config: Choose Your Theme</field>
+        <field name="model_id" ref="model_ir_module_module"/>
+        <field name="state">code</field>
+        <field name="code">
+model.update_list()
+action = {
+    'type': 'ir.actions.act_url',
+    'url': '/web?reload#action=website_theme_install.theme_install_kanban_action', # the ?reload option is there to fool the webclient into thinking it is a different location and so to force a reload
+    'target': 'self',
+}
+        </field>
+    </record>
+    <record id="theme_install_todo" model="ir.actions.todo">
+        <field name="action_id" ref="theme_install_todo_action"/>
+        <field name="sequence">0</field>
+    </record>
+
+    <!-- Add link to theme install in default customize modal -->
+    <template id="customize_modal" inherit_id="website.theme_customize" priority="1">
+        <xpath expr="//div[hasclass('modal-header')]" position="inside">
+            <a href="/web#action=website_theme_install.theme_install_kanban_action">See themes here</a>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,692 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="base.user_demo" model="res.users">
+            <field eval="[(4, ref('sales_team.group_sale_salesman'))]" name="groups_id"/>
+        </record>
+
+        <record model="crm.team" id="sales_team.team_sales_department">
+            <field name="invoiced_target">250000</field>
+        </record>
+
+        <record model="crm.team" id="sales_team.crm_team_1">
+            <field name="use_quotations" eval="True"/>
+            <field name="use_invoices" eval="True"/>
+            <field name="invoiced_target">40000</field>
+            <field name="dashboard_graph_model">sale.report</field>
+        </record>
+
+        <record id="sale_order_1" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="partner_invoice_id" ref="base.res_partner_2"/>
+            <field name="partner_shipping_id" ref="base.res_partner_2"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
+        <record id="sale_order_line_1" model="sale.order.line">
+            <field name="order_id" ref="sale_order_1"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">2950.00</field>
+        </record>
+
+        <record id="sale_order_line_2" model="sale.order.line">
+            <field name="order_id" ref="sale_order_1"/>
+            <field name="name">Pen drive, 16GB</field>
+            <field name="product_id" ref="product.product_delivery_02"/>
+            <field name="product_uom_qty">5</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">145.00</field>
+        </record>
+
+        <record id="sale_order_line_3" model="sale.order.line">
+            <field name="order_id" ref="sale_order_1"/>
+            <field name="name">Headset USB</field>
+            <field name="product_id" ref="product.product_delivery_01"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">65.00</field>
+        </record>
+
+        <record id="sale_order_2" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_4"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_13"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_13"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
+        <record id="sale_order_line_4" model="sale.order.line">
+            <field name="order_id" ref="sale_order_2"/>
+            <field name="name">Service on demand</field>
+            <field name="product_id" ref="product.product_product_1"/>
+            <field name="product_uom_qty">24</field>
+            <field name="product_uom" ref="product.product_uom_hour"/>
+            <field name="price_unit">75.00</field>
+        </record>
+
+        <record id="sale_order_line_5" model="sale.order.line">
+            <field name="order_id" ref="sale_order_2"/>
+            <field name="name">On Site Assistance</field>
+            <field name="product_id" ref="product.product_product_2"/>
+            <field name="product_uom_qty">30</field>
+            <field name="product_uom" ref="product.product_uom_hour"/>
+            <field name="price_unit">38.25</field>
+        </record>
+
+        <record id="sale_order_3" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_4"/>
+            <field name="partner_invoice_id" ref="base.res_partner_4"/>
+            <field name="partner_shipping_id" ref="base.res_partner_4"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+        </record>
+
+        <record id="sale_order_line_6" model="sale.order.line">
+            <field name="order_id" ref="sale_order_3"/>
+            <field name="name">On Site Monitoring</field>
+            <field name="product_id" ref="product.product_product_1"/>
+            <field name="product_uom_qty">10</field>
+            <field name="product_uom" ref="product.product_uom_hour"/>
+            <field name="price_unit">30.75</field>
+        </record>
+
+        <record id="sale_order_line_7" model="sale.order.line">
+            <field name="order_id" ref="sale_order_3"/>
+            <field name="name">Toner Cartridge</field>
+            <field name="product_id" ref="product.product_delivery_01"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">70.00</field>
+        </record>
+
+        <record id="sale_order_4" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+        </record>
+
+        <record id="sale_order_line_8" model="sale.order.line">
+            <field name="order_id" ref="sale_order_4"/>
+            <field name="name">Service on demand</field>
+            <field name="product_id" ref="product.product_product_1"/>
+            <field name="product_uom_qty">16</field>
+            <field name="product_uom" ref="product.product_uom_hour"/>
+            <field name="price_unit">75.00</field>
+        </record>
+
+        <record id="sale_order_line_9" model="sale.order.line">
+            <field name="order_id" ref="sale_order_4"/>
+            <field name="name">Webcam</field>
+            <field name="product_id" ref="product.product_delivery_02"/>
+            <field name="product_uom_qty">10</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">45.00</field>
+        </record>
+
+        <record id="sale_order_line_10" model="sale.order.line">
+            <field name="order_id" ref="sale_order_4"/>
+            <field name="name">Multimedia Speakers</field>
+            <field name="product_id" ref="product.consu_delivery_02"/>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">150.00</field>
+        </record>
+
+        <record id="sale_order_line_11" model="sale.order.line">
+            <field name="order_id" ref="sale_order_4"/>
+            <field name="name">Switch, 24 ports</field>
+            <field name="product_id" ref="product.product_delivery_01"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">70.00</field>
+        </record>
+
+        <record id="sale_order_5" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="partner_invoice_id" ref="base.res_partner_2"/>
+            <field name="partner_shipping_id" ref="base.res_partner_2"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
+        <record id="sale_order_line_12" model="sale.order.line">
+            <field name="order_id" ref="sale_order_5"/>
+            <field name="name">External Hard disk</field>
+            <field name="product_id" ref="product.product_delivery_02"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">405.00</field>
+        </record>
+
+        <record id="sale_order_6" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_18"/>
+            <field name="partner_invoice_id" ref="base.res_partner_18"/>
+            <field name="partner_shipping_id" ref="base.res_partner_18"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
+        </record>
+
+        <record id="sale_order_line_15" model="sale.order.line">
+            <field name="order_id" ref="sale_order_6"/>
+            <field name="name">PC Assamble + 2GB RAM</field>
+            <field name="product_id" ref="product.product_product_4"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">750.00</field>
+        </record>
+
+        <record id="sale_order_7" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_11"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_11"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="state">sale</field>
+        </record>
+
+        <record id="sale_order_line_16" model="sale.order.line">
+            <field name="order_id" ref="sale_order_7"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">5</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">2950.00</field>
+        </record>
+
+        <record id="sale_order_line_17" model="sale.order.line">
+            <field name="order_id" ref="sale_order_7"/>
+            <field name="name">GrapWorks Software</field>
+            <field name="product_id" ref="product.consu_delivery_01"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">173.00</field>
+        </record>
+
+        <record id="sale_order_line_18" model="sale.order.line">
+            <field name="order_id" ref="sale_order_7"/>
+            <field name="name">Datacard</field>
+            <field name="product_id" ref="product.product_delivery_02"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">40.00</field>
+        </record>
+
+        <record id="sale_order_line_19" model="sale.order.line">
+            <field name="order_id" ref="sale_order_7"/>
+            <field name="name">USB Adapter</field>
+            <field name="product_id" ref="product.product_delivery_01"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">18.00</field>
+        </record>
+
+        <record id="sale_order_8" model="sale.order">
+            <field name="name">Test/001</field>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
+        </record>
+
+        <record id="sale_order_line_20" model="sale.order.line">
+            <field name="order_id" ref="sale_order_8"/>
+            <field name="name">Laptop Customized</field>
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">3645.00</field>
+        </record>
+
+        <record id="sale_order_line_21" model="sale.order.line">
+            <field name="order_id" ref="sale_order_8"/>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">12.50</field>
+        </record>
+
+        <!-- additional demo data for pretty graphs in sales dashboard -->
+
+        <record id="sale_order_9" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="sale_order_line_22" model="sale.order.line">
+            <field name="order_id" ref="sale_order_9"/>
+            <field name="name">Laptop Customized</field>
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">3245.00</field>
+        </record>
+
+        <record id="sale_order_line_23" model="sale.order.line">
+            <field name="order_id" ref="sale_order_9"/>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">12.50</field>
+        </record>
+
+        <record id="sale_order_10" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=14)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="sale_order_line_24" model="sale.order.line">
+            <field name="order_id" ref="sale_order_10"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">2550.00</field>
+        </record>
+
+        <record id="sale_order_line_25" model="sale.order.line">
+            <field name="order_id" ref="sale_order_10"/>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">12.50</field>
+        </record>
+
+
+        <record id="sale_order_11" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=21)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="sale_order_line_26" model="sale.order.line">
+            <field name="order_id" ref="sale_order_11"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">2450.00</field>
+        </record>
+
+        <record id="sale_order_line_27" model="sale.order.line">
+            <field name="order_id" ref="sale_order_11"/>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">12.50</field>
+        </record>
+
+        <record id="sale_order_12" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=28)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="sale_order_line_28" model="sale.order.line">
+            <field name="order_id" ref="sale_order_12"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">3150.00</field>
+        </record>
+
+        <record id="sale_order_line_29" model="sale.order.line">
+            <field name="order_id" ref="sale_order_12"/>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">12.50</field>
+        </record>
+
+        <record id="sale_order_13" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=35)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="sale_order_line_30" model="sale.order.line">
+            <field name="order_id" ref="sale_order_13"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">2950.00</field>
+        </record>
+
+        <record id="sale_order_line_31" model="sale.order.line">
+            <field name="order_id" ref="sale_order_13"/>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">12.50</field>
+        </record>
+
+        <record id="sale_order_14" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="sale_order_line_32" model="sale.order.line">
+            <field name="order_id" ref="sale_order_14"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">4</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">2750.00</field>
+        </record>
+
+        <record id="sale_order_line_33" model="sale.order.line">
+            <field name="order_id" ref="sale_order_14"/>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">4</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">12.50</field>
+        </record>
+
+        <record id="sale_order_15" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=14)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="sale_order_line_34" model="sale.order.line">
+            <field name="order_id" ref="sale_order_15"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">4</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">2950.00</field>
+        </record>
+
+        <record id="sale_order_line_35" model="sale.order.line">
+            <field name="order_id" ref="sale_order_15"/>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">12.50</field>
+        </record>
+
+        <record id="sale_order_16" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=21)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="sale_order_line_36" model="sale.order.line">
+            <field name="order_id" ref="sale_order_16"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">2750.00</field>
+        </record>
+
+        <record id="sale_order_line_37" model="sale.order.line">
+            <field name="order_id" ref="sale_order_16"/>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">12.50</field>
+        </record>
+
+        <record id="sale_order_17" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=28)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="sale_order_line_38" model="sale.order.line">
+            <field name="order_id" ref="sale_order_17"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">3550.00</field>
+        </record>
+
+        <record id="sale_order_line_39" model="sale.order.line">
+            <field name="order_id" ref="sale_order_17"/>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">12.50</field>
+        </record>
+
+        <record id="sale_order_18" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=35)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="sale_order_line_40" model="sale.order.line">
+            <field name="order_id" ref="sale_order_18"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">2950.00</field>
+        </record>
+
+        <record id="sale_order_line_41" model="sale.order.line">
+            <field name="order_id" ref="sale_order_18"/>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">12.50</field>
+        </record>
+
+        <!-- Confirm some Sales Orders-->
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_4')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_6')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_7')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_8')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_9')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_10')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_11')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_12')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_13')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_14')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_15')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_16')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_17')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_18')]]"/>
+
+        <record id="message_sale_1" model="mail.message">
+            <field name="model">sale.order</field>
+            <field name="res_id" ref="sale_order_2"/>
+            <field name="body">Hi,
+I have a question regarding services pricing: I heard of a possible discount for quantities exceeding 25 hours.
+Could you confirm, please?</field>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+        </record>
+
+        <record id="message_sale_2" model="mail.message">
+            <field name="model">sale.order</field>
+            <field name="res_id" ref="sale_order_2"/>
+            <field name="parent_id" ref="message_sale_1"/>
+            <field name="body">Hello,
+Unfortunately that was a temporary discount that is not available anymore.
+Do you still plan to confirm the order based on the quoted prices?
+Thanks!</field>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_root"/>
+        </record>
+
+        <record id="message_sale_3" model="mail.message">
+            <field name="model">sale.order</field>
+            <field name="res_id" ref="sale_order_2"/>
+            <field name="parent_id" ref="message_sale_2"/>
+            <field name="body">Alright, thanks for the clarification. I will confirm the order as soon as I get my manager's approval.</field>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+        </record>
+        <!-- sale advance demo.. -->
+        <!-- Demo Data for Product -->
+
+        <record id="advance_product_0" model="product.product">
+            <field name="name">Deposit</field>
+            <field name="categ_id" ref="product.product_category_1"/>
+            <field name="type">service</field>
+            <field name="list_price">150.0</field>
+            <field name="invoice_policy">order</field>
+            <field name="standard_price">100.0</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="company_id" eval="[]"/>
+            <field name="image" type="base64" file="sale/static/img/advance_product_0-image.jpg"/>
+            <field name="taxes_id" eval="[]"/>
+            <field name="supplier_taxes_id" eval="[]"/>
+        </record>
+
+        <record id="base.user_demo" model="res.users">
+            <field eval="[(4, ref('sales_team.group_sale_salesman'))]" name="groups_id"/>
+        </record>
+
+        <!-- records coming from website_portal_sale, now dead module -->
+        <record id="portal_sale_order_1" model="sale.order">
+            <field name="partner_id" ref="base.partner_demo_portal"/>
+            <field name="partner_invoice_id" ref="base.partner_demo_portal"/>
+            <field name="partner_shipping_id" ref="base.partner_demo_portal"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="state">sent</field>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="message_partner_ids" eval="[(4, ref('base.partner_demo_portal'))]"/>
+        </record>
+
+        <record id="portal_sale_order_line_1" model="sale.order.line">
+            <field name="order_id" ref="portal_sale_order_1"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">2950.00</field>
+        </record>
+
+        <record id="portal_sale_order_line_2" model="sale.order.line">
+            <field name="order_id" ref="portal_sale_order_1"/>
+            <field name="name">Pen drive, 16GB</field>
+            <field name="product_id" ref="product.product_delivery_02"/>
+            <field name="product_uom_qty">5</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">145.00</field>
+        </record>
+
+        <record id="portal_sale_order_line_3" model="sale.order.line">
+            <field name="order_id" ref="portal_sale_order_1"/>
+            <field name="name">Headset USB</field>
+            <field name="product_id" ref="product.product_delivery_01"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">65.00</field>
+        </record>
+
+        <record id="portal_sale_order_2" model="sale.order">
+            <field name="partner_id" ref="base.partner_demo_portal"/>
+            <field name="partner_invoice_id" ref="base.partner_demo_portal"/>
+            <field name="partner_shipping_id" ref="base.partner_demo_portal"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="message_partner_ids" eval="[(4, ref('base.partner_demo_portal'))]"/>
+        </record>
+
+        <record id="portal_sale_order_line_4" model="sale.order.line">
+            <field name="order_id" ref="portal_sale_order_2"/>
+            <field name="name">Service on demand</field>
+            <field name="product_id" ref="product.product_product_1"/>
+            <field name="product_uom_qty">24</field>
+            <field name="product_uom" ref="product.product_uom_hour"/>
+            <field name="price_unit">75.00</field>
+        </record>
+
+        <record id="portal_sale_order_line_5" model="sale.order.line">
+            <field name="order_id" ref="portal_sale_order_2"/>
+            <field name="name">On Site Assistance</field>
+            <field name="product_id" ref="product.product_product_2"/>
+            <field name="product_uom_qty">30</field>
+            <field name="product_uom" ref="product.product_uom_hour"/>
+            <field name="price_unit">38.25</field>
+        </record>
+
+
+        <!-- Confirm some Sales Orders-->
+        <function model="sale.order" name="action_confirm" eval="[[ref('portal_sale_order_2')]]"/>
+    </data>
+</odoo>

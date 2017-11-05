@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="stock_move_purchase" model="ir.ui.view">
+            <field name="name">stock.move.form</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='origin_grp']" position="inside">
+                    <field name="purchase_line_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_warehouse_inherited" model="ir.ui.view">
+            <field name="name">Stock Warehouse Inherited</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//field[@name='default_resupply_wh_id']" position="before">
+                    <field name="buy_to_resupply" />
+                </xpath>
+            </field>
+        </record>
+        
+        <!-- Purchase button on orderpoints -->
+
+        <record id="view_warehouse_orderpoint_purchase_form" model="ir.ui.view">
+            <field name="name">stock.warehouse.orderpoint.purchase.form</field>
+            <field name="model">stock.warehouse.orderpoint</field>
+            <field name="inherit_id" ref="stock.view_warehouse_orderpoint_form"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button name="%(purchase.purchase_order_action_generic)d" type="action" 
+                        string="Purchases" class="oe_stat_button" icon="fa-refresh"
+                        domain="[('orderpoint_id','=',active_id)]"/>
+                </div>
+            </field>
+        </record>
+
+</odoo>

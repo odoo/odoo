@@ -2,17 +2,13 @@
 # This file contains the translation of the following modules:
 # * stock_landed_costs
 # 
-# Translators:
-# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
-# Mustafa Rawi <mustafa@cubexco.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2017-04-15 21:37+0000\n"
-"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>\n"
-"Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
+"POT-Creation-Date: 2017-09-20 09:52+0000\n"
+"PO-Revision-Date: 2017-09-20 09:52+0000\n"
+"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,433 +16,430 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:142
-#: code:addons/stock_landed_costs/stock_landed_costs.py:150
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:328
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:332
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:349
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:353
 #, python-format
 msgid " already out"
-msgstr "بالفعل خارج"
+msgstr ""
 
 #. module: stock_landed_costs
-#: model:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Click to create a new landed cost.\n"
-"                </p>\n"
-"            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                    انقر لإنشاء تكلفة مُضافة جديدة.\n                </p>\n            "
-
-#. module: stock_landed_costs
-#: model:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new kind of landed cost.\n"
-"              </p>\n"
-"            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                انقر لإنشاء نوع جديد من التكاليف المُضافة.\n              </p>\n            "
-
-#. module: stock_landed_costs
-#: field:stock.landed.cost.lines,account_id:0
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_account_id
 msgid "Account"
-msgstr "الحساب"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.landed.cost,account_journal_id:0
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_account_journal_id
 msgid "Account Journal"
-msgstr "دفتر اليومية"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.valuation.adjustment.lines,additional_landed_cost:0
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_additional_landed_cost
 msgid "Additional Landed Cost"
-msgstr "تكاليف مُضافة أخرى"
+msgstr ""
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
 #: selection:stock.landed.cost.lines,split_method:0
-msgid "By Current Cost Price"
-msgstr "حسب سعر التكلفة الحالي"
+msgid "By Current Cost"
+msgstr ""
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
 #: selection:stock.landed.cost.lines,split_method:0
 msgid "By Quantity"
-msgstr "حسب الكمية"
+msgstr ""
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
 #: selection:stock.landed.cost.lines,split_method:0
 msgid "By Volume"
-msgstr "حسب الحجم"
+msgstr ""
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
 #: selection:stock.landed.cost.lines,split_method:0
 msgid "By Weight"
-msgstr "حسب الوزن"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:product.template,landed_cost_ok:0
-msgid "Can constitute a landed cost"
-msgstr "قد يكون تكلفة مُضافة"
-
-#. module: stock_landed_costs
-#: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_form
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Cancel"
-msgstr "إلغاء"
+msgstr ""
 
 #. module: stock_landed_costs
 #: selection:stock.landed.cost,state:0
 msgid "Cancelled"
-msgstr "ملغي"
+msgstr ""
 
 #. module: stock_landed_costs
-#: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_form
+#: model:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
+msgid "Click to create a new landed cost."
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
+msgid "Click to define a new kind of landed cost."
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Compute"
-msgstr "احتساب"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.landed.cost.lines,price_unit:0
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_price_unit
 msgid "Cost"
-msgstr "التكلفة"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.valuation.adjustment.lines,cost_line_id:0
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_cost_line_id
 msgid "Cost Line"
-msgstr "بند التكلفة"
+msgstr ""
 
 #. module: stock_landed_costs
-#: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_form
-#: field:stock.landed.cost,cost_lines:0
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_cost_lines
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Cost Lines"
-msgstr "بنود التكلفة"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.landed.cost,create_uid:0
-#: field:stock.landed.cost.lines,create_uid:0
-#: field:stock.valuation.adjustment.lines,create_uid:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:90
+#, python-format
+msgid ""
+"Cost and adjustments lines do not match. You should maybe recompute the "
+"landed costs."
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_create_uid
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_create_uid
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_create_uid
 msgid "Created by"
-msgstr "أنشئ بواسطة"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.landed.cost,create_date:0
-#: field:stock.landed.cost.lines,create_date:0
-#: field:stock.valuation.adjustment.lines,create_date:0
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_create_date
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_create_date
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_create_date
 msgid "Created on"
-msgstr "أنشئ في"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.landed.cost,date:0
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_date
 msgid "Date"
-msgstr "التاريخ"
+msgstr ""
 
 #. module: stock_landed_costs
-#: help:stock.landed.cost,message_last_post:0
-msgid "Date of the last message posted on the record."
-msgstr "تاريخ آخر رسالة في هذا السجل."
-
-#. module: stock_landed_costs
-#: field:stock.landed.cost.lines,name:0
-#: field:stock.valuation.adjustment.lines,name:0
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_name
 msgid "Description"
-msgstr "الوصف"
+msgstr ""
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 #: model:mail.message.subtype,name:stock_landed_costs.mt_stock_landed_cost_open
-#: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_search
 msgid "Done"
-msgstr "تم"
+msgstr ""
 
 #. module: stock_landed_costs
-#: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_search
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 #: selection:stock.landed.cost,state:0
 msgid "Draft"
-msgstr "مسودة"
+msgstr ""
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
 #: selection:stock.landed.cost.lines,split_method:0
 msgid "Equal"
-msgstr "بالتساوي"
+msgstr ""
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:74
-#: code:addons/stock_landed_costs/stock_landed_costs.py:112
-#: code:addons/stock_landed_costs/stock_landed_costs.py:192
-#, python-format
-msgid "Error!"
-msgstr "خطأ!"
-
-#. module: stock_landed_costs
-#: field:stock.valuation.adjustment.lines,final_cost:0
-msgid "Final Cost"
-msgstr "التكلفة النهائية"
-
-#. module: stock_landed_costs
-#: field:stock.landed.cost,message_follower_ids:0
-msgid "Followers"
-msgstr "المتابعون"
-
-#. module: stock_landed_costs
-#: field:stock.valuation.adjustment.lines,former_cost:0
-msgid "Former Cost"
-msgstr "التكلفة السابقة"
-
-#. module: stock_landed_costs
-#: field:stock.valuation.adjustment.lines,former_cost_per_unit:0
-msgid "Former Cost(Per Unit)"
-msgstr "التكلفة السابقة (للوحدة)"
-
-#. module: stock_landed_costs
-#: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_search
-msgid "Group By"
-msgstr "تجميع حسب"
-
-#. module: stock_landed_costs
-#: help:stock.landed.cost,message_summary:0
+#: model:ir.model.fields,help:stock_landed_costs.field_product_product_split_method
+#: model:ir.model.fields,help:stock_landed_costs.field_product_template_split_method
 msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr "يحمل ملخص المشارك (عدد الرسائل، ...). هذا ملخص مباشرة بتنسيق HTML من أجل إدراجها في عروض كانبان."
+"Equal : Cost will be equally divided.\n"
+"By Quantity : Cost will be divided according to product's quantity.\n"
+"By Current cost : Cost will be divided according to product's current cost.\n"
+"By Weight : Cost will be divided depending on its weight.\n"
+"By Volume : Cost will be divided depending on its volume."
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.landed.cost,id:0 field:stock.landed.cost.lines,id:0
-#: field:stock.valuation.adjustment.lines,id:0
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_final_cost
+msgid "Final Cost"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_former_cost
+msgid "Former Cost"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_former_cost_per_unit
+msgid "Former Cost(Per Unit)"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Group By"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_id
 msgid "ID"
-msgstr "المعرّف"
+msgstr ""
 
 #. module: stock_landed_costs
-#: help:stock.landed.cost,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "إذا حددته، سيتم إخطارك بالرسائل الجديدة."
-
-#. module: stock_landed_costs
-#: view:product.product:stock_landed_costs.view_stock_landed_cost_type_form
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Information"
-msgstr "المعلومات"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.landed.cost,message_is_follower:0
-msgid "Is a Follower"
-msgstr "متابع"
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_product_landed_cost_ok
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_template_landed_cost_ok
+msgid "Is a Landed Cost"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.landed.cost,description:0
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_description
 msgid "Item Description"
-msgstr "وصف العنصر "
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.landed.cost,account_move_id:0
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_account_move_id
 msgid "Journal Entry"
-msgstr "قيد اليومية"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.landed.cost.lines,cost_id:0
-#: field:stock.valuation.adjustment.lines,cost_id:0
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_cost_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move_landed_cost_value
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_cost_id
 msgid "Landed Cost"
-msgstr "التكلفة المُضافة"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Landed Cost Name"
+msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost_type
 msgid "Landed Cost Type"
-msgstr "نوع التكلفة المُضافة"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
+msgid "Landed Cost Types"
+msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost
-#: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost_main
-#: view:product.product:stock_landed_costs.view_stock_landed_cost_type_form
-#: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_form
-#: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_search
-#: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_tree
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_product_landed_cost_form
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Landed Costs"
-msgstr "التكاليف المُضافة"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Landed cost are computed based on the purchase unit of measure."
+msgstr ""
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
 msgid "Landed cost validated"
-msgstr "تم اعتماد التكلفة المُضافة"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.landed.cost,message_last_post:0
-msgid "Last Message Date"
-msgstr "تاريخ آخر رسالة"
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost___last_update
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines___last_update
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines___last_update
+msgid "Last Modified on"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.landed.cost,write_uid:0
-#: field:stock.landed.cost.lines,write_uid:0
-#: field:stock.valuation.adjustment.lines,write_uid:0
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_write_uid
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_write_uid
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_write_uid
 msgid "Last Updated by"
-msgstr "آخر تحديث بواسطة"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.landed.cost,write_date:0
-#: field:stock.landed.cost.lines,write_date:0
-#: field:stock.valuation.adjustment.lines,write_date:0
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_write_date
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_write_date
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_write_date
 msgid "Last Updated on"
-msgstr "آخر تحديث في"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.landed.cost,message_ids:0
-msgid "Messages"
-msgstr "الرسائل"
-
-#. module: stock_landed_costs
-#: help:stock.landed.cost,message_ids:0
-msgid "Messages and communication history"
-msgstr "الرسائل و سجل التواصل"
-
-#. module: stock_landed_costs
-#: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_search
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Month"
-msgstr "الشهر"
+msgstr ""
 
 #. module: stock_landed_costs
-#: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_search
-#: field:stock.landed.cost,name:0
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_name
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Name"
-msgstr "الاسم"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.landed.cost,picking_ids:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:88
+#, python-format
+msgid ""
+"No valuation adjustments lines. You should maybe recompute the landed costs."
+msgstr ""
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:86
+#, python-format
+msgid "Only draft landed costs can be validated"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_picking_ids
 msgid "Pickings"
-msgstr "العمليات"
+msgstr ""
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:112
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:295
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
-msgstr "الرجاء ضبط حساب التكاليف في المنتج: %s."
+msgstr ""
 
 #. module: stock_landed_costs
 #: selection:stock.landed.cost,state:0
 msgid "Posted"
-msgstr "مُرحل"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.landed.cost.lines,product_id:0
-#: field:stock.valuation.adjustment.lines,product_id:0
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_product_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_product_id
 msgid "Product"
-msgstr "المنتج"
+msgstr ""
 
 #. module: stock_landed_costs
-#: view:product.product:stock_landed_costs.view_stock_landed_cost_type_form
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Product Name"
-msgstr "اسم المنتج"
+msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_product_template
 msgid "Product Template"
-msgstr "قالب المنتج"
+msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.stock_landed_cost_type_action
-#: view:product.product:stock_landed_costs.stock_landed_cost_tree_view
+#: model:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_tree_view
 msgid "Products"
-msgstr "المنتجات"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.valuation.adjustment.lines,quantity:0
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_quantity
 msgid "Quantity"
-msgstr "الكمية"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:product.template,split_method:0
-#: field:stock.landed.cost.lines,split_method:0
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_product_split_method
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_template_split_method
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_split_method
 msgid "Split Method"
-msgstr "طريقة التوزيع"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.landed.cost,state:0
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_state
 msgid "State"
-msgstr "المحافظة"
+msgstr ""
 
 #. module: stock_landed_costs
-#: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_search
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Status"
-msgstr "الحالة"
+msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost
 msgid "Stock Landed Cost"
-msgstr "تكاليف المخزون المُضافة"
+msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
 msgid "Stock Landed Cost Lines"
-msgstr "بنود التكاليف المُضافة"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.valuation.adjustment.lines,move_id:0
+#: model:ir.model,name:stock_landed_costs.model_stock_move
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_move_id
 msgid "Stock Move"
-msgstr "حركة المخزون"
+msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
 msgid "Stock Valuation Adjustment Lines"
-msgstr "بنود تعديل قيمة المخزون"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.landed.cost,message_summary:0
-msgid "Summary"
-msgstr "الملخّص"
-
-#. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:74
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:147
 #, python-format
 msgid ""
 "The selected picking does not contain any move that would be impacted by "
 "landed costs. Landed costs are only possible for products configured in real"
 " time valuation with real price costing method. Please make sure it is the "
 "case, or you selected the correct picking"
-msgstr "العمليات المحددة لا تحتوي أي حركة يمكن أن تتأثر بالتكاليف المضافة. يمكن استخدام التكاليف المُضافة فقط على المنتجات التي تم ضبطها لحساب قيمتها في الوقت الحقيقي وباستخدام طريقة التسعير الحقيقية. الرجاء التأكد أن هذه الإعدادات مُطابقة أو أنك اخترت العمليات الصحيحة."
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.landed.cost,amount_total:0
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_amount_total
 msgid "Total"
-msgstr "الإجمالي"
+msgstr ""
 
 #. module: stock_landed_costs
-#: field:stock.landed.cost,message_unread:0
-msgid "Unread Messages"
-msgstr "رسائل غير مقروءة"
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move_total_value
+msgid "Total Value"
+msgstr ""
 
 #. module: stock_landed_costs
-#: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_form
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Validate"
-msgstr "اعتماد"
+msgstr ""
 
 #. module: stock_landed_costs
-#: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_form
-#: field:stock.landed.cost,valuation_adjustment_lines:0
-msgid "Valuation Adjustments"
-msgstr "تعديلات القيمة"
-
-#. module: stock_landed_costs
-#: field:stock.valuation.adjustment.lines,volume:0
-msgid "Volume"
-msgstr "الحجم"
-
-#. module: stock_landed_costs
-#: field:stock.landed.cost,website_message_ids:0
-msgid "Website Messages"
-msgstr "رسائل الموقع الإلكتروني"
-
-#. module: stock_landed_costs
-#: help:stock.landed.cost,website_message_ids:0
-msgid "Website communication history"
-msgstr "سجل تواصل موقع ويب"
-
-#. module: stock_landed_costs
-#: field:stock.valuation.adjustment.lines,weight:0
-msgid "Weight"
-msgstr "الوزن"
-
-#. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:192
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:80
 #, python-format
-msgid "You cannot validate a landed cost which has no valid valuation lines."
-msgstr "لا يمكنك اعتماد التكاليف المضافة التي لا تملك بنود قيمة سليمة."
+msgid ""
+"Validated landed costs cannot be cancelled, but you could create negative "
+"landed costs to reverse them"
+msgstr ""
 
 #. module: stock_landed_costs
-#: view:product.product:stock_landed_costs.view_stock_landed_cost_type_form
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_valuation_adjustment_lines
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Valuation Adjustments"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_volume
+msgid "Volume"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_weight
+msgid "Weight"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "describe the product characteristics..."
-msgstr "وصف خصائص المنتج.."
+msgstr ""

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_mrporder">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>Production Order # : <span t-field="o.name"/></h2>
+                        </div>
+                    </div>
+                    <div class="row mt32 mb32">
+                        <div class="col-xs-3">
+                            <strong>Source Document:</strong><br/>
+                            <span t-field="o.origin"/>
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>Product:</strong><br/>
+                            <span t-field="o.product_id"/>
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>Quantity:</strong><br/>
+                            <span t-field="o.product_qty"/>
+                            <span t-field="o.product_uom_id.name" groups="product.group_uom"/>
+                        </div>
+                    </div>
+
+                    <div class="row mt32 mb32">
+                        <div class="col-xs-3">
+                            <strong>Scheduled Date:</strong><br/>
+                            <span t-field="o.date_planned_start"/><span t-if="o.date_planned_finished"> - <span t-field="o.date_planned_finished"/></span>
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>Printing date:</strong><br/>
+                            <span t-esc="time.strftime('%Y-%m-%d')"
+                                  t-options='{"widget": "date"}'/>
+                        </div>
+                    </div>
+
+                    <div t-if="o.workorder_ids">
+                        <strong>Work Orders</strong>
+                        <table class="table table-condensed">
+                            <tr>
+                                <td class="text-center"><strong>Name</strong></td>
+                                <td class="text-center"><strong>WorkCenter</strong></td>
+                                <td class="text-center"><strong>No. Of Minutes</strong></td>
+                            </tr>
+                            <tr t-foreach="o.workorder_ids" t-as="line2">
+                                <td class="text-center"><span t-field="line2.name"/></td>
+                                <td class="text-center"><span t-field="line2.workcenter_id.name"/></td>
+                                <td class="text-center"><span t-field="line2.duration_expected"/></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3 t-if="o.move_raw_ids">Bill Of Material</h3>
+
+                    <table class="table table-condensed" t-if="o.move_raw_ids">
+                        <thead>
+                            <tr>
+                                <th><strong>Product</strong></th>
+                                <th class="text-right"><strong>Quantity</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-if="o.move_raw_ids">
+                                <tr>
+                                    <td colspan="4"><strong>Products to Consume</strong></td>
+                                </tr>
+                                <tr t-foreach="o.move_raw_ids" t-as="line">
+                                    <td>
+                                        <span t-field="line.product_id.code"/>
+                                        <span t-field="line.product_id.name"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="line.product_uom_qty"/>
+                                        <span t-field="line.product_uom.name" groups="product.group_uom"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+
+<template id="production_message">
+    <t t-if="move.move_id.raw_material_production_id">
+        <t t-set="message">Consumed</t>
+    </t>
+    <t t-if="move.move_id.production_id">
+        <t t-set="message">Produced</t>
+    </t>
+    <strong><t t-esc="message"/> quantity has been updated.</strong>
+</template>
+
+<template id="track_production_move_template">
+    <div>
+        <t t-call="mrp.production_message"/>
+        <t t-call="stock.message_body"/>
+    </div>
+</template>
+</odoo>

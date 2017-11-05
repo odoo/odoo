@@ -1,40 +1,20 @@
 #-*- coding:utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011 OpenERP SA (<http://openerp.com>). All Rights Reserved
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.report import report_sxw
-from openerp.osv import osv
-from openerp.addons.hr_payroll import report
+from odoo import api, models
 
-class payslip_details_report_in(report.report_payslip_details.payslip_details_report):
 
-    def __init__(self, cr, uid, name, context):
-        super(payslip_details_report_in, self).__init__(cr, uid, name, context)
-        self.localcontext.update({
-            'get_details_by_rule_category': self.get_details_by_rule_category,
-        })
-
-class wrapped_report_payslipdetailsin(osv.AbstractModel):
+class PayslipDetailsReportIN(models.AbstractModel):
     _name = 'report.l10n_in_hr_payroll.report_payslipdetails'
-    _inherit = 'report.abstract_report'
-    _template = 'l10n_in_hr_payroll.report_payslipdetails'
-    _wrapped_report_class = payslip_details_report_in
+    _inherit = 'report.hr_payroll.report_payslipdetails'
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    @api.model
+    def get_report_values(self, docids, data=None):
+        payslips = self.env['hr.payslip'].browse(docids)
+        return {
+            'doc_ids': docids,
+            'doc_model': 'hr.payslip',
+            'docs': payslips,
+            'data': data,
+            'get_details_by_rule_category': self.get_details_by_rule_category(payslips.mapped('details_by_salary_rule_category'))
+        }

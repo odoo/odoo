@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="paperformat_euro_lowmargin" model="report.paperformat">
+        <field name="name">European A4 low margin</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">5</field>
+        <field name="margin_bottom">5</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">80</field>
+    </record>
+
+    <report
+        id="report_event_registration_badge"
+        model="event.registration"
+        string="Registration Badge"
+        report_type="qweb-pdf"
+        name="event.event_registration_report_template_badge"
+        file="event.event_registration_report_template_badge"
+        paperformat="event.paperformat_euro_lowmargin"
+        print_report_name="'Registration Event - %s' % (object.name).replace('/','')"
+    />
+
+     <report
+        id="report_event_event_badge"
+        model="event.event"
+        string="Event Badge"
+        report_type="qweb-html"
+        name="event.event_event_report_template_badge"
+        file="event.event_event_report_template_badge"
+        menu="False"
+        paperformat="event.paperformat_euro_lowmargin"/>
+
+</odoo>

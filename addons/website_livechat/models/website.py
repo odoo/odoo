@@ -1,15 +1,11 @@
-from openerp.osv import osv, fields
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-class website(osv.osv):
+from odoo import fields, models
+
+
+class Website(models.Model):
+
     _inherit = "website"
 
-    _columns = {
-        'channel_id': fields.many2one('im_livechat.channel', string="Channel"),
-    }
-
-class website_config_settings(osv.osv_memory):
-    _inherit = 'website.config.settings'
-
-    _columns = {
-        'channel_id': fields.related('website_id', 'channel_id', type='many2one', relation='im_livechat.channel', string='Live Chat Channel'),
-    }
+    channel_id = fields.Many2one('im_livechat.channel', string='Website Live Chat Channel')

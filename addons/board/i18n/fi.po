@@ -3,16 +3,20 @@
 # * board
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# artol <arto.leskinen@tek.fi>, 2017
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2017
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2017
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-01-08 08:10+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
-"Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>, 2017\n"
+"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -21,49 +25,43 @@ msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:28
+#: code:addons/board/static/src/xml/board.xml:25
 #, python-format
 msgid "&nbsp;"
 msgstr "&nbsp;"
 
 #. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/favorite_menu.js:97
+#, python-format
+msgid "'%s' added to dashboard"
+msgstr "'%s' lisätty työpöydällesi"
+
+#. module: board
 #: model:ir.actions.act_window,help:board.open_board_my_dash_action
-msgid ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"                  <p>\n"
-"                    <b>Your personal dashboard is empty.</b>\n"
-"                  </p><p>\n"
-"                    To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add to\n"
-"                    Dashboard'</i> in the extended search options.\n"
-"                  </p><p>\n"
-"                    You can filter and group data before inserting into the\n"
-"                    dashboard using the search options.\n"
-"                  </p>\n"
-"              </div>\n"
-"            "
-msgstr "<div class=\"oe_empty_custom_dashboard\">\n                  <p>\n                    <b>Oma työpöytäsi on tyhjä.</b>\n                  </p><p>\n                    Lisätäksesi ensimmäisen raportin tähän työpöytään,\n                    siirry valikkoon ja vaihda luettelo tai graafinen näkymä päälle.\n                    Hakukentässä avaa Laajennettu haku -valikko (pieni kolmio) \n                    hakukentän oikeassa laidassa. Valitse <i>'Lisää työpöytään'</i>.\n                  </p><p>\n                    Voit suodattaa ja ryhmitellä tietoja haku-toiminnolla, ennen kuin\n                     lisäät niitätyöpöydälle.\n                  </p>\n              </div>\n            "
+msgid "<b>Your personal dashboard is empty.</b>"
+msgstr "<b> Henkilökohtainen työpöytäsi on tyhjä.</b>"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:70
+#: code:addons/board/static/src/xml/board.xml:69
 #, python-format
 msgid "Add"
 msgstr "Lisää"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:67
+#: code:addons/board/static/src/xml/board.xml:63
 #, python-format
-msgid "Add to Dashboard"
-msgstr "Lisää työpöydälle"
+msgid "Add to my Dashboard"
+msgstr "Lisää työpöydälleni"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:136
+#: code:addons/board/static/src/js/dashboard.js:335
 #, python-format
-msgid "Are you sure you want to remove this item ?"
-msgstr "Oletko varma että haluat poistaa tämän osan?"
+msgid "Are you sure you want to remove this item?"
+msgstr ""
 
 #. module: board
 #: model:ir.model,name:board.model_board_board
@@ -71,144 +69,80 @@ msgid "Board"
 msgstr "Työpöytä"
 
 #. module: board
-#: model:ir.model,name:board.model_board_create
-msgid "Board Creation"
-msgstr "Työpöydän luonti"
-
-#. module: board
-#: field:board.create,name:0
-msgid "Board Name"
-msgstr "Työpöydän nimi"
-
-#. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:374
-#, python-format
-msgid "Can't find dashboard action"
-msgstr "Työpöydän toimintoa ei löydy"
-
-#. module: board
-#: view:board.create:board.view_board_create
-msgid "Cancel"
-msgstr "Peruuta"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:10
+#: code:addons/board/static/src/xml/board.xml:7
 #, python-format
 msgid "Change Layout"
 msgstr "Muuta asettelu"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:8
+#: code:addons/board/static/src/xml/board.xml:5
 #, python-format
 msgid "Change Layout.."
 msgstr "Muuta asettelu.."
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:40
+#: code:addons/board/static/src/xml/board.xml:36
 #, python-format
 msgid "Choose dashboard layout"
 msgstr "Valitse työpöydän asettelu"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:406
+#: code:addons/board/static/src/js/favorite_menu.js:99
 #, python-format
 msgid "Could not add filter to dashboard"
 msgstr "Suodatinta ei pystytty lisäämään työpöydälle"
 
 #. module: board
-#: view:board.create:board.view_board_create
-msgid "Create"
-msgstr "Luo"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_create
-#: model:ir.ui.menu,name:board.menu_board_create
-msgid "Create Board"
-msgstr "Luo työpöytä"
-
-#. module: board
-#: view:board.create:board.view_board_create
-msgid "Create New Dashboard"
-msgstr "Luo uusi työpöytä"
-
-#. module: board
-#: field:board.create,create_uid:0
-msgid "Created by"
-msgstr "Luonut"
-
-#. module: board
-#: field:board.create,create_date:0
-msgid "Created on"
-msgstr "Luotu"
+#: model:ir.model.fields,field_description:board.field_board_board_display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:92
+#: code:addons/board/static/src/js/dashboard.js:85
 #, python-format
 msgid "Edit Layout"
 msgstr "Muokkaa asettelua"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:409
-#, python-format
-msgid "Filter added to dashboard"
-msgstr "Suodatin lisätty työpöydälle"
-
-#. module: board
-#: field:board.board,id:0 field:board.create,id:0
+#: model:ir.model.fields,field_description:board.field_board_board_id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunniste (ID)"
 
 #. module: board
-#: field:board.create,write_uid:0
-msgid "Last Updated by"
-msgstr "Viimeksi päivittänyt"
+#: model:ir.model.fields,field_description:board.field_board_board___last_update
+msgid "Last Modified on"
+msgstr "Viimeksi muokattu"
 
 #. module: board
-#: field:board.create,write_date:0
-msgid "Last Updated on"
-msgstr "Viimeksi päivitetty"
-
-#. module: board
-#: view:board.board:board.board_my_dash_view
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:48
 #: model:ir.actions.act_window,name:board.open_board_my_dash_action
 #: model:ir.ui.menu,name:board.menu_board_my_dash
+#: model:ir.ui.view,arch_db:board.board_my_dash_view
+#, python-format
 msgid "My Dashboard"
 msgstr "Oma työpöytä"
 
 #. module: board
-#: field:board.create,menu_parent_id:0
-msgid "Parent Menu"
-msgstr "Päävalikko"
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"To add your first report into this dashboard, go to any\n"
+"                    menu, switch to list or graph view, and click <i>'Add to\n"
+"                    Dashboard'</i> in the extended search options."
+msgstr ""
+"Lisätäksesi raportin työpöydällesi, mene valikkoon, vaihda graafinäkymään ja"
+" klikkaa <i>'Lisää työpöydälle'</i> laajennetun haun asetuksissa."
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:6
-#, python-format
-msgid "Reset"
-msgstr "Palauta"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:4
-#, python-format
-msgid "Reset Layout.."
-msgstr "Palauta asettelu"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:69
-#, python-format
-msgid "Title of new dashboard item"
-msgstr "Uuden asian nimi työpöydällä"
-
-#. module: board
-#: view:board.create:board.view_board_create
-msgid "or"
-msgstr "tai"
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"You can filter and group data before inserting into the\n"
+"                    dashboard using the search options."
+msgstr ""
+"Voit suodattaa ja ryhmitellä tietoja ennen kuin lisäät ne työpöydälle haun "
+"asetuksissa."

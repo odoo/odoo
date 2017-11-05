@@ -1,4 +1,0 @@
-Installation tips
-=================
-
-TBC.

@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
-
+<odoo>
     <record id="view_payment_advice_tree" model="ir.ui.view">
         <field name="name">payment.advice.report.tree</field>
         <field name="model">payment.advice.report</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state == 'draft';black:state == 'confirm';gray:state == 'cancel' " create="false" string="Advices Analysis">
+            <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" create="false" string="Advices Analysis">
                 <field name="nbr" sum="# Payment Lines"/>
                 <field name="name" invisible="1"/>
                 <field name="employee_id" invisible="1"/>
@@ -51,7 +49,7 @@
                     <field name="bank_id" widget="selection"/>
                     <field name="employee_bank_no"/>
                     <separator orientation="vertical"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By">
@@ -78,7 +76,6 @@
         <field name="help">This report performs analysis on Payment Advices</field>
     </record>
 
-    <menuitem action="action_payment_advice_report_all" id="menu_reporting_payment_advice" parent="hr.menu_hr_reporting" sequence="5" groups="base.group_hr_manager"/>
-
-</data>
-</openerp>
+    <menuitem name="Reporting" id="menu_l10n_in_hr_payroll_report" parent="hr_payroll.menu_hr_payroll_root" sequence="99" groups="hr_payroll.group_hr_payroll_manager"/>
+    <menuitem action="action_payment_advice_report_all" id="menu_reporting_payment_advice" parent="menu_l10n_in_hr_payroll_report" sequence="5" />
+</odoo>

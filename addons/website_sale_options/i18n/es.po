@@ -3,34 +3,26 @@
 # * website_sale_options
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# José Vicente <txusev@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Gelo Joga Landoo <gj@landoo.es>, 2017
+# Antonio Trueba <atgayol@gmail.com>, 2017
+# RGB Consulting <odoo@rgbconsulting.com>, 2017
+# Eric Antones <eantones@users.noreply.github.com>, 2017
+# Gustavo Valverde <g.valverde02@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:09+0000\n"
-"PO-Revision-Date: 2016-12-18 02:21+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>\n"
-"Language-Team: Spanish (http://www.transifex.com/odoo/odoo-8/language/es/)\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Gustavo Valverde <g.valverde02@gmail.com>, 2017\n"
+"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: website_sale_options
-#: code:addons/website_sale_options/models/sale_order.py:46
-#, python-format
-msgid ""
-"%s\n"
-"Option for: %s"
-msgstr "%s\nOpción para: %s"
-
-#. module: website_sale_options
-#: view:website:website_sale_options.modal
-msgid "1 Item"
-msgstr "1 elemento"
 
 #. module: website_sale_options
 #: model:product.attribute.value,name:website_sale_options.product_attribute_value_1
@@ -43,19 +35,40 @@ msgid "2 year"
 msgstr "2 años"
 
 #. module: website_sale_options
-#: view:website:website_sale_options.modal
-msgid "5 Items"
-msgstr "5 elementos"
+#: model:ir.ui.view,arch_db:website_sale_options.modal
+msgid ""
+"<i class=\"fa fa-chevron-left\"/> <span class=\"hidden-xs\">Continue "
+"Shopping</span><span class=\"visible-xs-inline\">Continue</span>"
+msgstr ""
+"<i class=\"fa fa-chevron-left\"/> <span class=\"hidden-xs\">Continuar "
+"comprando</span><span class=\"visible-xs-inline\">Continuar</span>"
 
 #. module: website_sale_options
-#: view:website:website_sale_options.modal
+#: model:ir.ui.view,arch_db:website_sale_options.modal
+msgid ""
+"<i class=\"fa fa-shopping-cart fa-fw\"/> <span class=\"hidden-xs\">Proceed "
+"to Checkout</span><span class=\"visible-xs-inline\">Checkout</span>"
+msgstr ""
+
+#. module: website_sale_options
+#: model:ir.ui.view,arch_db:website_sale_options.modal
+msgid "<small>Remove <span class=\"hidden-xs\"> from Cart</span></small>"
+msgstr ""
+
+#. module: website_sale_options
+#: model:ir.ui.view,arch_db:website_sale_options.modal
+msgid "<span class=\"js_item\">1 </span><span class=\"js_items hidden\">5 </span>"
+msgstr ""
+
+#. module: website_sale_options
+#: model:ir.ui.view,arch_db:website_sale_options.modal
+msgid "<strong>Add<span class=\"hidden-xs\"> to Cart</span></strong>"
+msgstr ""
+
+#. module: website_sale_options
+#: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid "Add to Cart"
-msgstr "Añadir al carro"
-
-#. module: website_sale_options
-#: view:website:website_sale_options.modal
-msgid "Continue Shopping"
-msgstr "Continuar comprando"
+msgstr "Añadir a la cesta"
 
 #. module: website_sale_options
 #: model:product.attribute,name:website_sale_options.product_attribute_1
@@ -63,32 +76,48 @@ msgid "Duration"
 msgstr "Duración"
 
 #. module: website_sale_options
-#: field:sale.order.line,linked_line_id:0
+#: model:ir.model.fields,field_description:website_sale_options.field_sale_order_line_linked_line_id
 msgid "Linked Order Line"
 msgstr "Línea de pedido de venta relacionada"
 
 #. module: website_sale_options
-#: field:product.template,optional_product_ids:0
+#: code:addons/website_sale_options/models/sale_order.py:46
+#, python-format
+msgid "Option for:"
+msgstr "Opción para:"
+
+#. module: website_sale_options
+#: code:addons/website_sale_options/models/sale_order.py:48
+#, python-format
+msgid "Option:"
+msgstr "Oprción:"
+
+#. module: website_sale_options
+#: model:ir.model.fields,field_description:website_sale_options.field_product_product_optional_product_ids
+#: model:ir.model.fields,field_description:website_sale_options.field_product_template_optional_product_ids
 msgid "Optional Products"
 msgstr "Productos opcionales"
 
 #. module: website_sale_options
-#: field:sale.order.line,option_line_ids:0
+#: model:ir.model.fields,help:website_sale_options.field_product_product_optional_product_ids
+#: model:ir.model.fields,help:website_sale_options.field_product_template_optional_product_ids
+msgid ""
+"Optional Products are suggested whenever the customer hits *Add to Cart* "
+"(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
+msgstr ""
+
+#. module: website_sale_options
+#: model:ir.model.fields,field_description:website_sale_options.field_sale_order_line_option_line_ids
 msgid "Options Linked"
 msgstr "Opciones relacionadas"
 
 #. module: website_sale_options
-#: view:website:website_sale_options.modal
+#: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid "Price"
 msgstr "Precio"
 
 #. module: website_sale_options
-#: view:website:website_sale_options.modal
-msgid "Proceed to checkout"
-msgstr "Proceder con la compra"
-
-#. module: website_sale_options
-#: view:website:website_sale_options.modal
+#: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid "Product"
 msgstr "Producto"
 
@@ -98,34 +127,19 @@ msgid "Product Template"
 msgstr "Plantilla de producto"
 
 #. module: website_sale_options
-#: view:website:website_sale_options.modal
+#: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid "Product not available"
 msgstr "Producto no disponible"
 
 #. module: website_sale_options
-#: view:website:website_sale_options.modal
-msgid "Product to add in your shopping cart"
-msgstr "Producto a añadir en su carro"
-
-#. module: website_sale_options
-#: help:product.template,optional_product_ids:0
-msgid "Products to propose when add to cart."
-msgstr "Productos a añadir en su carro"
-
-#. module: website_sale_options
-#: view:website:website_sale_options.modal
+#: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid "Quantity"
 msgstr "Cantidad"
 
 #. module: website_sale_options
-#: view:website:website_sale_options.modal
-msgid "Remove from cart"
-msgstr "Quitar del carro"
-
-#. module: website_sale_options
 #: model:ir.model,name:website_sale_options.model_sale_order
-msgid "Sales Order"
-msgstr "Pedido de venta"
+msgid "Quotation"
+msgstr "Cotización"
 
 #. module: website_sale_options
 #: model:ir.model,name:website_sale_options.model_sale_order_line
@@ -133,21 +147,28 @@ msgid "Sales Order Line"
 msgstr "Línea de pedido de venta"
 
 #. module: website_sale_options
-#: view:website:website_sale_options.modal
+#: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid "Select Your Options:"
 msgstr "Seleccione sus opciones:"
 
 #. module: website_sale_options
+#: model:product.product,name:website_sale_options.product_product_1
+#: model:product.product,name:website_sale_options.service_cost_01
 #: model:product.template,name:website_sale_options.product_product_1_product_template
-#: model:product.template,name:website_sale_options.product_product_1b_product_template
+#: model:product.template,name:website_sale_options.service_cost_01_product_template
 msgid "Warranty"
 msgstr "Garantía"
 
 #. module: website_sale_options
+#: model:product.product,description_sale:website_sale_options.product_product_1
+#: model:product.product,description_sale:website_sale_options.service_cost_01
 #: model:product.template,description_sale:website_sale_options.product_product_1_product_template
-#: model:product.template,description_sale:website_sale_options.product_product_1b_product_template
+#: model:product.template,description_sale:website_sale_options.service_cost_01_product_template
 msgid ""
 "Warranty, issued to the purchaser of an article by its manufacturer, "
 "promising to repair or replace it if necessary within a specified period of "
 "time."
-msgstr "Garantía, emitida al comprador de un artículo por su fabricante, con la promesa de repararlo, o sustituirlo si es necesario, en un plazo determinado de tiempo."
+msgstr ""
+"Garantía, emitida al comprador de un artículo por su fabricante, con la "
+"promesa de repararlo, o sustituirlo si es necesario, en un plazo determinado"
+" de tiempo."
