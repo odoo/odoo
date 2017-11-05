@@ -876,7 +876,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
   <t t-call="website.layout">
     <div id="wrap">
       <div class="container" id="edit_website_pages">
-          <form class="mt8 pull-right" role="search" t-attf-action="/website/pages_management" method="get">
+          <form class="mt8 pull-right" role="search" t-attf-action="/website/pages" method="get">
               <t t-call="website.website_search_box"/>
           </form>
           <div t-if="searchbar_sortings" class="dropdown pull-right mt8 mr8">
