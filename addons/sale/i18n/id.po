@@ -12,10 +12,10 @@
 # Rizki Mudhar <mudharrizki@gmail.com>, 2017
 # Budi Iskandar <budiiskandar11@gmail.com>, 2017
 # firman firman <firman.olxbpn@gmail.com>, 2017
-# Febrasari Almania <febrasari.almania@gmail.com>, 2017
 # oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2017
 # Edy Kend <edy@azmall.co.id>, 2017
 # Deddy Ddr <deddy.ddr@gmail.com>, 2017
+# Febrasari Almania <febrasari.almania@gmail.com>, 2017
 # Hendra So <mask783@gmail.com>, 2017
 msgid ""
 msgstr ""
@@ -387,7 +387,7 @@ msgid ""
 "class=\"hidden-xs\"> Invoiced</span></span>"
 msgstr ""
 "<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
-"class=\"hidden-xs\">Telah ditagih</span></span>"
+"class=\"hidden-xs\">Telah difakturkan</span></span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -396,7 +396,7 @@ msgid ""
 "fa-fw fa-check\"/> Paid</span>"
 msgstr ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
-"fa-fw fa-check\"/>Sudah Dibayar</span>"
+"fa-fw fa-check\"/>Lunas</span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -572,7 +572,7 @@ msgstr "Semua order penjualan dikelompokkan menurut saluran penjualan"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allow manual discounts on order lines"
-msgstr "Ijinkan input diskon per baris pesanan"
+msgstr "Ijinkan input diskon per baris order"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -593,18 +593,18 @@ msgstr "Jumlah"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_amt_invoiced
 #: model:ir.model.fields,field_description:sale.field_sale_report_amt_invoiced
 msgid "Amount Invoiced"
-msgstr "Jumlah Tertagih"
+msgstr "Jumlah telah Difakturkan"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_amt_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report_amt_to_invoice
 msgid "Amount To Invoice"
-msgstr "Jumlah untuk Ditagihkan"
+msgstr "Jumlah siap Difakturkan"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_quotations_amount
 msgid "Amount of quotations to invoice"
-msgstr "Jumlah penawaran untuk ditagihkan"
+msgstr "Jumlah penawaran untuk difakturkan"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_analytic_account_id
@@ -1111,7 +1111,7 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"Dari laporan ini, Anda dapat memperoleh ringkasan dari jumlah tagihan "
+"Dari laporan ini, Anda dapat memperoleh ringkasan dari jumlah faktur "
 "pelanggan Anda. Alat pencarian juga dapat digunakan untuk mengubah laporan "
 "faktur sesuai keinginan Anda."
 
@@ -1119,7 +1119,7 @@ msgstr ""
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Fully Invoiced"
-msgstr "Selesai Ditagih"
+msgstr "Selesai Difakturkan"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1166,7 +1166,7 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
-"Jika pesanan terkunci, Anda tidak dapat mengubahnya lagi. Namun, Anda masih "
+"Jika order terkunci, Anda tidak dapat mengubahnya lagi. Namun, Anda masih "
 "dapat membuat faktur atau memproses surat jalan."
 
 #. module: sale
@@ -1205,7 +1205,7 @@ msgstr "Faktur"
 #: code:addons/sale/models/account_invoice.py:52
 #, python-format
 msgid "Invoice %s paid"
-msgstr "Faktur %s sudah dibayar"
+msgstr "Faktur %s lunas"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_partner_invoice_id
@@ -1240,7 +1240,7 @@ msgstr "Buat Faktur"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Invoice Sales Order"
-msgstr "Tagih Order Penjualan"
+msgstr "Fakturkan Order Penjualan"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_invoice_status
@@ -1251,7 +1251,7 @@ msgstr "Status Faktur"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_partner_invoice_id
 msgid "Invoice address for current sales order."
-msgstr "Alamat penagihan untuk order penjualan ini."
+msgstr "Alamat faktur untuk order penjualan ini."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_invoiced
@@ -1267,39 +1267,39 @@ msgstr ""
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
 msgid "Invoice what is delivered"
-msgstr "Tagihkan yang telah selesai dikirim"
+msgstr "Fakturkan yang telah selesai dikirim"
 
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
 msgid "Invoice what is ordered"
-msgstr "Tagihkan yang dipesan"
+msgstr "Fakturkan yang dipesan"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines"
-msgstr "Barang yang sudah bisa ditagih"
+msgstr "Barang yang sudah bisa difakturkan"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines (deduct down payments)"
-msgstr "Barang yang sudah bisa ditagih (kurangi down payment)"
+msgstr "Barang yang sudah bisa difakturkan (kurangi down payment)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_invoiced
 msgid "Invoiced"
-msgstr "Ditagihkan"
+msgstr "Telah Difakturkan"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:825
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Invoiced Quantity"
-msgstr "Kuantitas Tertagih"
+msgstr "Kuantitas Difakturkan"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_invoiced
 msgid "Invoiced This Month"
-msgstr "Tertagih Bulan Ini"
+msgstr "Difakturkan Bulan Ini"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
@@ -1411,7 +1411,7 @@ msgstr "Aktifitas Terakhir"
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_sequence
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_layout_category_sequence
 msgid "Layout Sequence"
-msgstr "Urutan Tata Letak"
+msgstr "Penomoran Tata Letak"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1461,8 +1461,8 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"Stel manual jumlah pada order: Tagihan berdasarkan input jumlah manual tanpa membuat akun analitik.\n"
-"Absensi pada kontrak: Tagihan berdasarkan jumlah jam kehadiran pada absensi.\n"
+"Stel manual jumlah pada order: Fakturkan berdasarkan input jumlah manual tanpa membuat akun analitik.\n"
+"Absensi pada kontrak: Fakturkan berdasarkan jumlah jam kehadiran pada absensi.\n"
 "Buat tugas dan telusuri jumlah jam: Buat tugas pada validasi order penjualan dan telusuri jam kerja."
 
 #. module: sale
@@ -1517,7 +1517,7 @@ msgstr "Aktifitasku"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "My Orders"
-msgstr "Pesananku"
+msgstr "Orderku"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -1564,8 +1564,8 @@ msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
 msgstr ""
-"Setelah Penawaran menjadi Pesanan Penjualan, dokumen tersebut akan "
-"dipindahkan dari daftar Penawaran ke daftar Order Penjualan"
+"Setelah Penawaran menjadi Order Penjualan, dokumen tersebut akan dipindahkan"
+" dari daftar Penawaran ke daftar Order Penjualan"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -1573,8 +1573,8 @@ msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
 "            from the Quotations list to the Sales Order list."
 msgstr ""
-"Setelah Penawaran menjadi Pesanan Penjualan, dokumen tersebut akan "
-"dipindahkan dari daftar Penawaran ke daftar Order Penjualan"
+"Setelah Penawaran menjadi Order Penjualan, dokumen tersebut akan dipindahkan"
+" dari daftar Penawaran ke daftar Order Penjualan"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1583,14 +1583,14 @@ msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved from the "
 "Quotations list to the Sales Order list."
 msgstr ""
-"Setelah Penawaran menjadi Pesanan Penjualan, dokumen tersebut akan "
-"dipindahkan dari daftar Penawaran ke daftar Order Penjualan"
+"Setelah Penawaran menjadi Order Penjualan, dokumen tersebut akan dipindahkan"
+" dari daftar Penawaran ke daftar Order Penjualan"
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Nothing to Invoice"
-msgstr "Tidak ada bisa ditagih"
+msgstr "Tidak ada bisa difakturkan"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_customer_lead
@@ -1603,12 +1603,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_quotations_count
 msgid "Number of quotations to invoice"
-msgstr "Jumlah penawaran bisa ditagih"
+msgstr "Jumlah penawaran bisa difakturkan"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_sales_to_invoice_count
 msgid "Number of sales to invoice"
-msgstr "Jumlah penjualan bisa ditagih"
+msgstr "Jumlah penjualan bisa difakturkan"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
@@ -1708,7 +1708,7 @@ msgstr "Status Penjualan"
 #: code:addons/sale/controllers/portal.py:218
 #, python-format
 msgid "Order is not in a state requiring customer validation."
-msgstr "Pesanan tidak memerlukan validasi pelanggan."
+msgstr "Order tidak memerlukan validasi pelanggan."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:225
@@ -1719,7 +1719,7 @@ msgstr "Urutan yang ditandatangani oleh %s"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Order to Invoice"
-msgstr "Pesanan akan Ditagihkan"
+msgstr "Order siap Difakturkan"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1740,8 +1740,8 @@ msgid ""
 "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
 "Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
 msgstr ""
-"Jumlah Dipesan: Tagih berdasarkan jumlah yang dipesan pelanggan.\n"
-"Jumlah Dikirim: Tagih berdasarkan jumlah yang pemasok kirimkan (waktu maupun jumlah barang)."
+"Jumlah Dipesan: Fakturkan berdasarkan jumlah yang dipesan pelanggan.\n"
+"Jumlah Dikirim: Fakturkan berdasarkan jumlah yang pemasok kirimkan (waktu maupun jumlah barang)."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1757,14 +1757,14 @@ msgstr "Jumlah dipesan"
 #: model:ir.ui.menu,name:sale.menu_sale_order
 #: model:ir.ui.menu,name:sale.sale_order_menu
 msgid "Orders"
-msgstr "Pesanan"
+msgstr "Order"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_to_invoice
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Orders to Invoice"
-msgstr "Order Penjualan untuk Dibuatkan Faktur"
+msgstr "Order siap Difakturkan"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
@@ -1991,7 +1991,7 @@ msgstr "Jml Terkirim"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_invoiced
 msgid "Qty Invoiced"
-msgstr "Jml Tertagih"
+msgstr "Jml Difakturkan"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_uom_qty
@@ -2001,12 +2001,12 @@ msgstr "Jml Dipesan"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_to_invoice
 msgid "Qty To Invoice"
-msgstr "Jml untuk Ditagih"
+msgstr "Jml siap Difakturkan"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quantities to invoice from sales orders"
-msgstr "Jumlah untuk ditagihkan pada order penjualan"
+msgstr "Jumlah siap difakturkan pada order penjualan"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_uom_qty
@@ -2113,7 +2113,7 @@ msgstr "Penawaran dan Penjualan"
 #: model:ir.model.fields,field_description:sale.field_product_product_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template_expense_policy
 msgid "Re-Invoice Expenses"
-msgstr "Tagih Ulang Pengeluaran"
+msgstr "Fakturkan Ulang Pengeluaran"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:87
@@ -2144,7 +2144,7 @@ msgstr "Kategori Tata Letak Laporan"
 #: model:ir.ui.menu,name:sale.menu_sale_report
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Reporting"
-msgstr "Pelaporan"
+msgstr "Laporan"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
@@ -2246,7 +2246,7 @@ msgstr "Detail Order Penjualan"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines ready to be invoiced"
-msgstr "Detail Order Penjualan siap untuk dibuatkan faktur"
+msgstr "Detail Order Penjualan siap difakturkan"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -2357,7 +2357,7 @@ msgstr "Kirim Faktur Proforma"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Send a product-specific email once the invoice is paid"
-msgstr "Kirim email produk tertentu setelah faktur dibayar"
+msgstr "Kirim email produk tertentu setelah faktur lunas"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -2379,7 +2379,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_sequence
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_sequence
 msgid "Sequence"
-msgstr "Urutan"
+msgstr "Penomoran"
 
 #. module: sale
 #: model:sale.layout_category,name:sale.sale_layout_cat_1
@@ -2603,7 +2603,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
 msgid "The amount to be invoiced in advance, taxes excluded."
-msgstr "Jumlah yang akan ditagihkan di muka, sebelum pajak."
+msgstr "Jumlah yang akan difakturkan di muka, sebelum pajak."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_analytic_account_id
@@ -2638,7 +2638,7 @@ msgid ""
 " create a deposit invoice."
 msgstr ""
 "Produk yang digunakan untuk down payment harus memiliki kebijakan \"Jumlah "
-"dipesan\". Silahkan ubah produk ini agar Anda dapat membuat setoran tagihan."
+"dipesan\". Silahkan ubah produk ini agar Anda dapat membuat setoran faktur."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:78
@@ -2711,11 +2711,11 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
-"Laporan ini melakukan analisa pada penawaran dan pesanan penjualan Anda. "
+"Laporan ini melakukan analisa pada penawaran dan order penjualan Anda. "
 "Analisa ini memeriksa pendapatan penjualan Anda  dan menyortirnya dengan "
 "kriteria kelompok yang berbeda  (salesman, mitra, produk, dll) Gunakan "
-"laporan ini untuk melakukan analisa penjualan yang belum memiliki faktur. "
-"Jika Anda ingin menganalisa omset Anda, Anda sebaiknya menggunakan laporan "
+"laporan ini untuk melakukan analisa penjualan yang belum difakturkan. Jika "
+"Anda ingin menganalisa omset Anda, Anda sebaiknya menggunakan laporan "
 "Analisa Faktur di aplikasi Akuntansi"
 
 #. module: sale
@@ -2727,12 +2727,12 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"Laporan ini melakukan analisis pada kutipan Anda. Analisis Periksa "
-"pendapatan penjualan Anda dan semacam itu oleh kelompok berbeda kriteria "
-"(Penjual, mitra, produk, dll.) Gunakan laporan ini untuk melakukan analisis "
-"pada penjualan yang tidak memiliki tagihan belum. Jika Anda ingin "
-"menganalisis omset Anda, Anda harus menggunakan faktur analisis laporan "
-"dalam aplikasi akuntansi."
+"Laporan ini melakukan analisis pada kutipan Anda. Analisis memeriksa "
+"pendapatan penjualan Anda dan myortirnya menurut kriteria kelompok yang "
+"berbeda (Penjual, mitra, produk, dll.) Gunakan laporan ini untuk melakukan "
+"analisis pada penjualan yang belum difakturkan. Jika Anda ingin menganalisis"
+" omset Anda, Anda harus menggunakan laporan Analisis Faktur dalam aplikasi "
+"Akuntansi."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -2743,12 +2743,12 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"Laporan ini melakukan analisis pada order penjualan Anda. Analisis Periksa "
-"pendapatan penjualan Anda dan semacam itu oleh kelompok berbeda kriteria "
-"(Penjual, mitra, produk, dll.) Gunakan laporan ini untuk melakukan analisis "
-"pada penjualan yang tidak memiliki tagihan belum. Jika Anda ingin "
-"menganalisis omset Anda, Anda harus menggunakan faktur analisis laporan "
-"dalam aplikasi akuntansi."
+"Laporan ini melakukan analisis pada order penjualan Anda. Analisis memeriksa"
+" pendapatan penjualan Anda dan myortirnya menurut kriteria kelompok yang "
+"berbeda (Penjual, mitra, produk, dll.) Gunakan laporan ini untuk melakukan "
+"analisis pada penjualan yang belum difakturkan. Jika Anda ingin menganalisis"
+" omset Anda, Anda harus menggunakan laporan Analisis Faktur dalam aplikasi "
+"Akuntansi."
 
 #. module: sale
 #: selection:product.template,service_type:0
@@ -2762,7 +2762,7 @@ msgstr "Kartu absen pada projek (satu tarif tiap projek)"
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "To Invoice"
-msgstr "Siap Ditagih"
+msgstr "Siap Difakturkan"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2903,7 +2903,7 @@ msgstr "Peringatan"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_advance_payment_method
 msgid "What do you want to invoice?"
-msgstr "Apa yang Anda ingin tagih?"
+msgstr "Apa yang ingin Anda fakturkan?"
 
 #. module: sale
 #. openerp-web
@@ -2938,19 +2938,19 @@ msgid ""
 "You can select all orders and invoice them in batch, or check\n"
 "                every order and invoice them one by one."
 msgstr ""
-"Anda dapat memilih semua order penjualan dan menagihnya secara massal, atau "
-"Anda dapat memeriksa dan menagihnya satu pe satu."
+"Anda dapat memilih semua order penjualan dan memfakturkannya secara massal, "
+"atau Anda dapat memeriksa dan memfakturkannya satu pe satu."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr "Anda akan menemukan di sini semua order yang siap untuk ditagih."
+msgstr "Anda akan menemukan di sini semua order yang siap untuk difakturkan."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:229
 #, python-format
 msgid "Your Order has been confirmed."
-msgstr "Pesanan Anda telah dikonfirmasi"
+msgstr "Order Anda telah dikonfirmasi"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
