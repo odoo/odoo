@@ -1058,6 +1058,9 @@ take the following attributes:
   .. warning::
       The dictionnary definition must use double-quotes, ``{'user_id': 100}`` is
       not a valid value
+``create``, ``edit``
+    allows *dis*\ abling the corresponding action in the view by setting the
+    corresponding attribute to ``false``
 ``string``
   string to display next to the consolidation value, if not specified, the label
   of the consolidation field will be used
