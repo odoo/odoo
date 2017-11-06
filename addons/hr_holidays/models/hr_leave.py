@@ -12,10 +12,9 @@ from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.tools import float_compare
 from odoo.tools.translate import _
 
+from odoo.addons.resource.models.resource import HOURS_PER_DAY
+
 _logger = logging.getLogger(__name__)
-
-
-HOURS_PER_DAY = 8
 
 class HolidaysRequest(models.Model):
     _name = "hr.leave"
