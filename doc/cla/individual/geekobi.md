@@ -1,4 +1,4 @@
-France, 07/11/2017
+France, 2017-11-07
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-geekobi geekobi@openagora.fr https://github.com/geekobi
+Hervé GUERIN geekobi@openagora.fr https://github.com/geekobi
