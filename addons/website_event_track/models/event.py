@@ -52,13 +52,17 @@ class Event(models.Model):
     @api.multi
     def _compute_website_track(self):
         for event in self:
-            existing_pages = event.menu_id.child_id.mapped('name')
+            # existing_pages = event.menu_id.child_id.mapped(lambda r: r.url.split('/')[-1])
+            # event.website_track = 'track' in existing_pages
+            existing_pages = event.menu_id.child_id.mapped('original_name')
             event.website_track = _('Talks') in existing_pages
 
     @api.multi
     def _compute_website_track_proposal(self):
         for event in self:
-            existing_pages = event.menu_id.child_id.mapped('name')
+            # existing_pages = event.menu_id.child_id.mapped(lambda r: r.url.split('/')[-1])
+            # event.website_track_proposal = 'track_proposal' in existing_pages
+            existing_pages = event.menu_id.child_id.mapped('original_name')
             event.website_track_proposal = _('Talk Proposals') in existing_pages
 
     @api.multi
