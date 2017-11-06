@@ -268,12 +268,12 @@ class AliasMixin(models.AbstractModel):
         if alias.alias_contact == 'followers' and self.ids:
             if not hasattr(self, "message_partner_ids") or not hasattr(self, "message_channel_ids"):
                 return {
-                    'error_mesage': _('incorrectly configured alias'),
+                    'error_message': _('incorrectly configured alias'),
                 }
             accepted_partner_ids = self.message_partner_ids | self.message_channel_ids.mapped('channel_partner_ids')
             if not author or author not in accepted_partner_ids:
                 return {
-                    'error_mesage': _('restricted to followers'),
+                    'error_message': _('restricted to followers'),
                 }
         elif alias.alias_contact == 'partners' and not author:
             return {
