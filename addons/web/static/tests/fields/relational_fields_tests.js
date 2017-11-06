@@ -8322,7 +8322,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('fieldmany2many tags with color: rendering and edition', function (assert) {
-        assert.expect(20);
+        assert.expect(28);
 
         this.data.partner.records[0].timmy = [12, 14];
         this.data.partner_type.records.push({id: 13, display_name: "red", color: 8});
@@ -8390,6 +8390,31 @@ QUnit.module('relational_fields', {
 
         // save the record (should do the write RPC with the correct commands)
         form.$buttons.find('.o_form_button_save').click();
+
+        // checkbox 'Hide in Kanban'
+        $input = form.$('.o_field_many2manytags span[data-id=13]'); // selects 'red' tag
+        $input.click(); // opens the colorpicker dropdown
+        assert.ok(form.$('.o_field_many2manytags span[data-id=13] .o_colorpicker .o_checkbox'), "should have a checkbox in the colorpicker dropdown menu");
+        
+        $input.click();
+        var $checkBox = form.$('.o_field_many2manytags span[data-id=13] .o_colorpicker .o_checkbox input');
+        assert.notOk($checkBox.is(':checked'), "should have unticked checkbox in colorpicker dropdown menu");
+
+        $checkBox.mousedown();
+        $input = form.$('.o_field_many2manytags span[data-id=13]'); // refresh
+        assert.equal($input.data('color'), "0", "should become transparent when toggling on checkbox");
+
+        $input.click();
+        $checkBox = form.$('.o_field_many2manytags span[data-id=13] .o_colorpicker .o_checkbox input'); // refresh
+        assert.ok($checkBox.is(':checked'), "should have a ticked checkbox in colorpicker dropdown menu after mousedown");
+
+        $checkBox.mousedown();
+        $input = form.$('.o_field_many2manytags span[data-id=13]'); // refresh
+        assert.equal($input.data('color'), "8", "should revert to old color when toggling off checkbox");
+
+        $input.click();
+        $checkBox = form.$('.o_field_many2manytags span[data-id=13] .o_colorpicker .o_checkbox input'); // refresh
+        assert.notOk($checkBox.is(':checked'), "should have an unticked checkbox in colorpicker dropdown menu after 2nd click");
 
         // TODO: it would be nice to test the behaviors of the autocomplete dropdown
         // (like refining the research, creating new tags...), but ui-autocomplete
