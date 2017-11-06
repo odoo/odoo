@@ -19,6 +19,7 @@ var Widget = require('web.Widget');
 var session = require('web.session');
 
 var FieldMany2One = core.form_widget_registry.get('many2one');
+var FieldMany2ManyTags = core.form_widget_registry.get('many2many_tags');
 var FieldChar = core.form_widget_registry.get('char');
 var FieldFloat = core.form_widget_registry.get('float');
 
@@ -117,18 +118,19 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
                     type: "char",
                 },
             },
-            tax_id: {
-                id: "tax_id",
+            tax_ids: {
+                id: "tax_ids",
                 index: 10,
-                corresponding_property: "tax_id",
-                label: _t("Tax"),
+                corresponding_property: "tax_ids",
+                label: _t("Taxes"),
                 required: false,
-                constructor: FieldMany2One,
+                constructor: FieldMany2ManyTags,
                 field_properties: {
                     relation: "account.tax",
-                    string: _t("Tax"),
-                    type: "many2one",
+                    string: _t("Taxes"),
+                    type: "many2many",
                     domain: [['type_tax_use','!=','none']],
+                    widget: "many2many_tags",
                 },
             },
             amount: {
@@ -213,8 +215,8 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
                         label: datum.label,
                         amount_type: datum.amount_type,
                         amount: datum.amount,
-                        tax_id: datum.tax_id,
-                        analytic_account_id: datum.analytic_account_id
+                        tax_ids: datum.tax_ids,
+                        analytic_account_id: datum.analytic_account_id,
                     }]
                 };
                 if (datum.has_second_line) {
@@ -224,8 +226,8 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
                         label: datum.second_label,
                         amount_type: datum.second_amount_type,
                         amount: datum.second_amount,
-                        tax_id: datum.second_tax_id,
-                        analytic_account_id: datum.second_analytic_account_id
+                        tax_ids: datum.second_tax_ids,
+                        analytic_account_id: datum.second_analytic_account_id,
                     });
                 }
                 self.presets[datum.id] = preset;
@@ -575,7 +577,7 @@ var abstractReconciliationLine = Widget.extend({
             self.$(".create_group_" + (i%2 === 0 ? "left" : "right")).append($field_container);
 
             // Change field value on keypress instead of blur
-            if (field_data.field_properties.type !== "many2one") {
+            if (field_data.field_properties.type !== "many2one" && field_data.field_properties.type !== "many2many") {
                 field.$el.find('input').andSelf().filter('input').keyup(function() {
                     this.store_dom_value();
                 }.bind(field));
@@ -703,6 +705,7 @@ var abstractReconciliationLine = Widget.extend({
             field.set("value", false);
         });
         self.amount_field.set("value", -1*self.get("balance"));
+        self.tax_ids_field.set("value", []);
         self.account_id_field.focus();
     },
 
@@ -995,12 +998,12 @@ var abstractReconciliationLine = Widget.extend({
 
         // Update tax line
         var deferred_tax = new $.Deferred();
-        if (elt === self.tax_id_field || elt === self.amount_field) {
+        if (elt === self.tax_ids_field || elt === self.amount_field) {
             var amount = self.amount_field.get("value");
-            var tax_id = self.tax_id_field.get("value");
-            if (amount && tax_id) {
+            var tax_ids = self.tax_ids_field.get("value");
+            if (amount && tax_ids) {
                 deferred_tax = self.model_tax
-                    .call("json_friendly_compute_all", [[tax_id], amount, self.get("currency_id")])
+                    .call("json_friendly_compute_all", [tax_ids, amount, self.get("currency_id")])
                     .then(function(data){
                         line_created_being_edited.length = 1; // remove tax lines
                         line_created_being_edited[0].amount_before_tax = amount;
@@ -1066,10 +1069,10 @@ var abstractReconciliationLine = Widget.extend({
             };
             // Use amount_before_tax since the amount of the newly created line is adjusted to
             // reflect tax included in price in account_move_line.create()
-            var amount = line.tax_id ? line.amount_before_tax: line.amount;
+            var amount = line.tax_ids ? line.amount_before_tax: line.amount;
             dict['credit'] = (amount > 0 ? amount : 0);
             dict['debit'] = (amount < 0 ? -1 * amount : 0);
-            if (line.tax_id) dict['tax_ids'] = [[4, line.tax_id, null]];
+            if (line.tax_ids) dict['tax_ids'] = [[6, null, line.tax_ids]];
             if (line.analytic_account_id) dict['analytic_account_id'] = line.analytic_account_id;
             return dict;
         });
