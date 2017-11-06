@@ -67,7 +67,7 @@ class Partner(models.Model):
         record_name = message.record_name
 
         tracking = []
-        for tracking_value in message.tracking_value_ids:
+        for tracking_value in self.env['mail.tracking.value'].sudo().search([('mail_message_id', '=', message.id)]):
             tracking.append((tracking_value.field_desc,
                              tracking_value.get_old_display_value()[0],
                              tracking_value.get_new_display_value()[0]))
