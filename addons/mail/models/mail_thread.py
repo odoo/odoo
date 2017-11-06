@@ -665,7 +665,7 @@ class MailThread(models.AbstractModel):
 
         if message.model:
             model_name = self.env['ir.model']._get(message.model).display_name
-            view_title = '%s %s' % (_('View'), model_name)
+            view_title = _('View %s') % model_name
         else:
             view_title = _('View')
 
