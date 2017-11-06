@@ -1025,6 +1025,13 @@ class ProcurementOrder(models.Model):
             domain += (('group_id', '=', group.id),)
         return domain
 
+    def _po_merge_condition(self, line, procurement):
+        # product condition
+        product = line.product_id == procurement.product_id
+        # uom condition
+        uom = line.product_uom == procurement.product_id.uom_po_id
+        return product and uom
+
     @api.multi
     def make_po(self):
         cache = {}
@@ -1071,7 +1078,7 @@ class ProcurementOrder(models.Model):
             # Create Line
             po_line = False
             for line in po.order_line:
-                if line.product_id == procurement.product_id and line.product_uom == procurement.product_id.uom_po_id:
+                if procurement._po_merge_condition(line, procurement):
                     procurement_uom_po_qty = procurement.product_uom._compute_quantity(procurement.product_qty, procurement.product_id.uom_po_id)
                     seller = procurement.product_id._select_seller(
                         partner_id=partner,
