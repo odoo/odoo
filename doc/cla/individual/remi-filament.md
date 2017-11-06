@@ -6,6 +6,6 @@ Agreement v1.0.
 I declare that I am authorized and able to make this agreement and sign this
 declaration.
 
-Signed,
+Signed, 
 
 Rémi CAZENAVE remi@le-filament.com https://github.com/remi-filament
