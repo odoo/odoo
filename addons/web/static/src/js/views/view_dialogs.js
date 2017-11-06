@@ -396,7 +396,8 @@ var SelectCreateDialog = ViewDialog.extend({
         var results = pyeval.eval_domains_and_contexts({
             domains: [this.domain].concat(domains),
             contexts: [this.context].concat(contexts),
-            group_by_seq: groupbys || []
+            group_by_seq: groupbys || [],
+            eval_context: this.getSession().user_context,
         });
         var context = _.omit(results.context, function (value, key) { return key.indexOf('search_default_') === 0; });
         return {
