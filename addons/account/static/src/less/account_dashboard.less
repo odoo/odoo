@@ -26,14 +26,31 @@
         }
 
         .o_arrow_button.btn-default {
-            color: @gray-dark;
+            color: @text-muted;
+            text-transform: none;
+            font-weight: 500;
+
+            .o_account_dashboard_index {
+                color: @gray-dark;
+            }
 
             &.o_action_done {
-                color: @text-muted;
+                color: @gray-dark;
+                background-color: @gray-lighter;
+
+                &:after {
+                    border-left-color: @gray-lighter;
+                }
 
                 .fa-check {
                     color: @brand-success;
                 }
+            }
+
+            &:last-of-type {
+                margin-left: @odoo-horizontal-padding;
+                padding-left: @odoo-horizontal-padding*.5;
+                border-left: 1px solid @gray-lighter-dark;
             }
         }
     }
