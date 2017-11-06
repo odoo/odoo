@@ -8,4 +8,5 @@ declaration.
 
 Signed,
 
-Hervé GUERIN geekobi@openagora.fr https://github.com/geekobi
+Herve GUERIN geekobi@openagora.fr https://github.com/geekobi
+
