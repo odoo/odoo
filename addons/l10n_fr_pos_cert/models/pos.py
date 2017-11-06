@@ -39,7 +39,7 @@ class pos_session(models.Model):
 
 ORDER_FIELDS = ['date_order', 'user_id', 'lines', 'statement_ids', 'pricelist_id', 'partner_id', 'session_id', 'account_move', 'pos_reference', 'sale_journal', 'fiscal_position_id']
 LINE_FIELDS = ['notice', 'product_id', 'qty', 'price_unit', 'discount', 'tax_ids', 'tax_ids_after_fiscal_position']
-ERR_MSG = 'According to the French law, you cannot modify a %s.'
+ERR_MSG = 'According to the French law, you cannot modify a %s. Forbidden fields: %s.'
 
 
 class pos_order(models.Model):
@@ -163,10 +163,10 @@ class pos_order(models.Model):
 
                          The point of sale orders are guaranteed to be in their original and inalterable state
                           - from:   %s
-                                Order reference: %s. %s
+                                Order Name: %s. %s
 
                           - to:      %s
-                                Order reference: %s. %s
+                                Order Name: %s. %s
 
                          Number of orders controlled: %s
                          Number of orders recorded over this period: %s

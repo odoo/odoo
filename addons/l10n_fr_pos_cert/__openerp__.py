@@ -19,6 +19,7 @@
     'application': False,
     'data': [
         'data/pos_inalterability.xml',
+        'views/account_views.xml',
     ],
     'post_init_hook': '_setup_inalterability',
 }
