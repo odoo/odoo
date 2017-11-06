@@ -1266,20 +1266,6 @@ class AccountInvoice(models.Model):
             result.append((0, 0, values))
         return result
 
-    def _get_refund_common_fields(self):
-        return ['partner_id', 'payment_term_id', 'account_id', 'currency_id', 'journal_id']
-
-    def _get_refund_prepare_fields(self):
-        return ['name', 'reference', 'comment', 'date_due']
-
-    def _get_refund_modify_read_fields(self):
-        read_fields = ['type', 'number', 'invoice_line_ids', 'tax_line_ids', 'date']
-        return self._get_refund_common_fields() + self._get_refund_prepare_fields() + read_fields
-
-    def _get_refund_copy_fields(self):
-        copy_fields = ['company_id', 'user_id', 'fiscal_position_id']
-        return self._get_refund_common_fields() + self._get_refund_prepare_fields() + copy_fields
-
     @api.model
     def _get_refund_common_fields(self):
         return ['partner_id', 'payment_term_id', 'account_id', 'currency_id', 'journal_id']
