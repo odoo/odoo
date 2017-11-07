@@ -37,7 +37,7 @@ class SendSMS(models.TransientModel):
             partners = records._get_default_sms_recipients()
             phone_numbers = []
             no_phone_partners = []
-            for partner in records:
+            for partner in partners:
                 number = partner.mobile
                 if number:
                     phone_numbers.append(number)
