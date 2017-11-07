@@ -210,6 +210,98 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('editing a many2one, but not changing anything', function (assert) {
+        assert.expect(2);
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                            '<field name="trululu"/>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'partner,false,form': '<form string="Partners"><field name="display_name"/></form>',
+            },
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'get_formview_id') {
+                    assert.deepEqual(args.args[0], [4], "should call get_formview_id with correct id");
+                    return $.when(false);
+                }
+                return this._super(route, args);
+            },
+            viewOptions: {
+                ids: [1, 2],
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        // click on the external button (should do an RPC)
+        form.$('.o_external_button').click();
+        // save and close modal
+        $('.modal .modal-footer .btn-primary:first').click();
+        // save form
+        form.$buttons.find('.o_form_button_save').click();
+        // click next on pager
+        form.pager.$('.o_pager_next').click();
+
+        // this checks that the view did not ask for confirmation that the
+        // record is dirty
+        assert.strictEqual(form.pager.$el.text().trim(), '2 / 2',
+            'pager should be at second page');
+        form.destroy();
+    });
+
+    QUnit.test('editing a many2one (with form view opened with external button)', function (assert) {
+        assert.expect(1);
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                            '<field name="trululu"/>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'partner,false,form': '<form string="Partners"><field name="foo"/></form>',
+            },
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'get_formview_id') {
+                    return $.when(false);
+                }
+                return this._super(route, args);
+            },
+            viewOptions: {
+                ids: [1, 2],
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        // click on the external button (should do an RPC)
+        form.$('.o_external_button').click();
+
+        $('.modal input[name="foo"]').val('brandon').trigger('input');
+
+        // save and close modal
+        $('.modal .modal-footer .btn-primary:first').click();
+        // save form
+        form.$buttons.find('.o_form_button_save').click();
+        // click next on pager
+        form.pager.$('.o_pager_next').click();
+
+        // this checks that the view did not ask for confirmation that the
+        // record is dirty
+        assert.strictEqual(form.pager.$el.text().trim(), '2 / 2',
+            'pager should be at second page');
+        form.destroy();
+    });
+
     QUnit.test('many2ones in form views with show_adress', function (assert) {
         assert.expect(4);
         var form = createView({
