@@ -30,22 +30,30 @@ var PagePropertiesDialog = widget.Dialog.extend({
      */
     init: function (parent, page_id, options) {
         var self = this;
-        var serverUrl = window.location.origin + "/";
+        var serverUrl = window.location.origin + '/';
         var length_url = serverUrl.length;
         var serverUrlTrunc = serverUrl;
-        if(length_url > 30)
+        if (length_url > 30) {
             serverUrlTrunc = serverUrl.slice(0,14) + '..' + serverUrl.slice(-14);
+        }
         this.serverUrl = serverUrl;
         this.serverUrlTrunc = serverUrlTrunc;
         this.current_page_url = window.location.pathname;
         this.page_id = page_id;
 
         var buttons = [
-            {text: _t("Save"), classes: "btn-primary o_save_button", click: self.save},
+            {text: _t("Save"), classes: 'btn-primary o_save_button', click: this.save},
             {text: _t("Discard"), close: true},
         ];
         if (options.fromPageManagement) {
-            buttons.push({text: _t("Go To Page"), icon: "fa-globe", classes: "btn-link pull-right", click: function(e){window.location.href = self.page.url;}});
+            buttons.push({
+                text: _t("Go To Page"),
+                icon: 'fa-globe',
+                classes: 'btn-link pull-right',
+                click: function (e) {
+                    window.location.href = self.page.url;
+                },
+            });
         }
         this._super(parent, _.extend({}, {
             title: _t("Page Properties"),
@@ -64,10 +72,8 @@ var PagePropertiesDialog = widget.Dialog.extend({
         defs.push(this._rpc({
             model: 'website.page',
             method: 'get_page_info',
-            args: [self.page_id,context.website_id],
-            kwargs: {
-                context: context
-            },
+            args: [this.page_id, context.website_id],
+            context: context,
         }).then(function (page) {
             page[0].url = page[0].url.startsWith('/') ? page[0].url.substring(1) : page[0].url;
             self.page = page[0];
@@ -85,79 +91,82 @@ var PagePropertiesDialog = widget.Dialog.extend({
     /**
      * @override
      */
-    start: function() {
+    start: function () {
         var self = this;
         var context = weContext.get();
 
-        this.$(".ask_for_redirect").hide();
-        this.$(".redirect_type").hide();
-        this.$(".warn_about_call").hide();
+        var defs = [this._super.apply(this, arguments)];
 
-        this._getPageDependencies(self.page_id, context)
+        this.$('.ask_for_redirect').addClass('hidden');
+        this.$('.redirect_type').addClass('hidden');
+        this.$('.warn_about_call').addClass('hidden');
+
+        defs.push(this._getPageDependencies(this.page_id, context)
         .then(function (dependencies) {
             var dep_text = [];
-            _.each(dependencies, function(value, index){
+            _.each(dependencies, function (value, index) {
                 if (value.length > 0) {
                     dep_text.push(value.length + ' ' + index.toLowerCase());
                 }
             });
             dep_text = dep_text.join(', ');
-            $('#dependencies_redirect').html(qweb.render('website.show_page_dependencies', { dependencies: dependencies, dep_text: dep_text }));
-            $('#dependencies_redirect [data-toggle="popover"]').popover({
-               container: 'body'
+            self.$('#dependencies_redirect').html(qweb.render('website.show_page_dependencies', { dependencies: dependencies, dep_text: dep_text }));
+            self.$('#dependencies_redirect [data-toggle="popover"]').popover({
+                container: 'body',
             });
-        });
-        this._getSupportedMimetype(context)
+        }));
+
+        defs.push(this._getSupportedMimetype(context)
         .then(function (mimetypes) {
             self.supportedMimetype = mimetypes;
-        });
-        this._getPageKeyDependencies(self.page_id, context)
+        }));
+
+        defs.push(this._getPageKeyDependencies(this.page_id, context)
         .then(function (dependencies) {
             var dep_text = [];
-            _.each(dependencies, function(value, index){
+            _.each(dependencies, function (value, index) {
                 if (value.length > 0) {
                     dep_text.push(value.length + ' ' + index.toLowerCase());
                 }
             });
             dep_text = dep_text.join(', ');
-            $('.warn_about_call').html(qweb.render('website.show_page_key_dependencies', { dependencies: dependencies, dep_text: dep_text }));
-            $('.warn_about_call [data-toggle="popover"]').popover({
-               container: 'body'
+            self.$('.warn_about_call').html(qweb.render('website.show_page_key_dependencies', {dependencies: dependencies, dep_text: dep_text}));
+            self.$('.warn_about_call [data-toggle="popover"]').popover({
+               container: 'body',
             });
-        });
+        }));
 
         var l10n = _t.database.parameters;
         var datepickersOptions = {
-           minDate: moment({ y: 1900 }),
-           maxDate: moment().add(200, "y"),
-           calendarWeeks: true,
-           icons : {
-               time: 'fa fa-clock-o',
-               date: 'fa fa-calendar',
-               next: 'fa fa-chevron-right',
-               previous: 'fa fa-chevron-left',
-               up: 'fa fa-chevron-up',
-               down: 'fa fa-chevron-down',
-              },
-           locale : moment.locale(),
-           format : time.strftime_to_moment_format(l10n.date_format +' '+ l10n.time_format),
-           widgetPositioning : {
-              horizontal: 'auto',
-              vertical: 'top',
-           },
-         };
-         if (self.page.date_publish) {
-            datepickersOptions.defaultDate = self.page.date_publish;
-         }
+            minDate: moment({y: 1900}),
+            maxDate: moment().add(200, 'y'),
+            calendarWeeks: true,
+            icons : {
+                time: 'fa fa-clock-o',
+                date: 'fa fa-calendar',
+                next: 'fa fa-chevron-right',
+                previous: 'fa fa-chevron-left',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+            },
+            locale : moment.locale(),
+            format : time.strftime_to_moment_format(l10n.date_format +' '+ l10n.time_format),
+            widgetPositioning : {
+                horizontal: 'auto',
+                vertical: 'top',
+            },
+        };
+        if (this.page.date_publish) {
+            datepickersOptions.defaultDate = this.page.date_publish;
+        }
+        this.$('#date_publish_container').datetimepicker(datepickersOptions);
 
-         this.$("#date_publish_container").datetimepicker(datepickersOptions);
-
-         return this._super.apply(this, arguments);
+        return $.when.apply($, defs);
     },
     /**
      * @override
      */
-    destroy: function(){
+    destroy: function () {
         $('.popover').popover('hide');
         return this._super.apply(this, arguments);
     },
@@ -169,41 +178,41 @@ var PagePropertiesDialog = widget.Dialog.extend({
     /**
      * @override
      */
-    save: function(data){
+    save: function (data) {
         var self = this;
         var context = weContext.get();
-        var url = $(".o_page_management_info #page_url").val();
+        var url = this.$('#page_url').val();
 
-        var date_publish = $(".o_page_management_info #date_publish").val();
-        if (date_publish != "") {
+        var date_publish = this.$('#date_publish').val();
+        if (date_publish !== '') {
             date_publish = time.datetime_to_str(new Date(date_publish));
         }
         var params = {
-            id: self.page.id,
-            name: $(".o_page_management_info #page_name").val(),
-            //replace duplicate following "/" by only one "/"
-            url: url.replace(/\/{2,}/g,"/"),
-            is_menu: $(".o_page_management_info #is_menu").prop('checked'),
-            is_homepage: $(".o_page_management_info #is_homepage").prop('checked'),
-            website_published: $(".o_page_management_info #is_published").prop('checked'),
-            create_redirect: $(".o_page_management_info #create_redirect").prop('checked'),
-            redirect_type: $(".o_page_management_info #redirect_type").val(),
-            website_indexed: $(".o_page_management_info #is_indexed").prop('checked'),
+            id: this.page.id,
+            name: this.$('#page_name').val(),
+            // Replace duplicate following '/' by only one '/'
+            url: url.replace(/\/{2,}/g, '/'),
+            is_menu: this.$('#is_menu').prop('checked'),
+            is_homepage: this.$('#is_homepage').prop('checked'),
+            website_published: this.$('#is_published').prop('checked'),
+            create_redirect: this.$('#create_redirect').prop('checked'),
+            redirect_type: this.$('#redirect_type').val(),
+            website_indexed: this.$('#is_indexed').prop('checked'),
             date_publish: date_publish,
         };
-        self._rpc({
+        this._rpc({
             model: 'website.page',
             method: 'save_page_info',
             args: [[context.website_id], params],
-            kwargs: {
-                context: context
-            },
+            context: context,
         }).then(function () {
-            // If from page manager: reload url, if from page itself: go to (possibly) new url
-            if (self._getMainObject().model == 'website.page')
+            // If from page manager: reload url, if from page itself: go to
+            // (possibly) new url
+            if (self._getMainObject().model === 'website.page') {
                 window.location.href = url.toLowerCase();
-            else
+            } else {
                 window.location.reload(true);
+            }
         });
     },
 
@@ -276,37 +285,32 @@ var PagePropertiesDialog = widget.Dialog.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
     _onUrlChanged: function () {
         var url = this.$('input#page_url').val();
-        if (url != this.page.url) {
-            this.$(".ask_for_redirect").show();
-        }
-        else {
-            this.$(".ask_for_redirect").hide();
-        }
+        this.$('.ask_for_redirect').toggleClass('hidden', url === this.page.url);
     },
+    /**
+     * @private
+     */
     _onNameChanged: function () {
         var name = this.$('input#page_name').val();
-        //If the file type is a supported mimetype, check if it is t-called. If so, warn user
-        //Note: different from page_search_dependencies which check only for url and not key
+        // If the file type is a supported mimetype, check if it is t-called.
+        // If so, warn user. Note: different from page_search_dependencies which
+        // check only for url and not key
         var ext = '.' + this.page.name.split('.').pop();
-        if(ext in this.supportedMimetype && ext != '.html'){
-            if (name != this.page.name) {
-                this.$(".warn_about_call").show();
-            }
-            else {
-                this.$(".warn_about_call").hide();
-            }
+        if (ext in this.supportedMimetype && ext !== '.html') {
+            this.$('.warn_about_call').toggleClass('hidden', name === this.page.name);
         }
     },
+    /**
+     * @private
+     */
     _onCreateRedirectChanged: function () {
-      var createRedirect = this.$('input#create_redirect').prop('checked');
-      if (createRedirect) {
-          this.$(".redirect_type").show();
-      }
-      else {
-          this.$(".redirect_type").hide();
-      }
+        var createRedirect = this.$('input#create_redirect').prop('checked');
+        this.$('.redirect_type').toggleClass('hidden', !createRedirect);
     },
 });
 
@@ -666,11 +670,16 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
 
         return def;
     },
+    /**
+     * Opens the page properties dialog.
+     *
+     * @private
+     * @returns {Deferred}
+     */
     _pageProperties: function () {
-        var self = this;
-        var moID = self._getMainObject().id;
-        var dialog = new PagePropertiesDialog(self,moID,{}).open();
-        return dialog;
+        var moID = this._getMainObject().id;
+        var dialog = new PagePropertiesDialog(this, moID, {}).open();
+        return dialog.opened();
     },
 });
 
