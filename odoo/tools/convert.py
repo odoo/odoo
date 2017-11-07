@@ -618,7 +618,11 @@ form: module.record_id""" % (xml_id,)
             f_val = False
 
             if f_search:
-                q = safe_eval(f_search, self.idref)
+                context = self.get_context(data_node, rec, {'ref': self.id_get})
+                uid = self.get_uid(data_node, rec)
+                env = self.env(user=uid, context=context)
+                idref2 = _get_idref(self, env, f_model, self.idref)
+                q = safe_eval(f_search, idref2)
                 assert f_model, 'Define an attribute model="..." in your .XML file !'
                 # browse the objects searched
                 s = self.env[f_model].search(q)
