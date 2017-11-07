@@ -835,10 +835,10 @@ exports.PosModel = Backbone.Model.extend({
                 // generate the pdf and download it
                 self.chrome.do_action('point_of_sale.pos_invoice_report',{additional_context:{ 
                     active_ids:order_server_id,
-                }});
-
-                invoiced.resolve();
-                done.resolve();
+                }}).done(function () {
+                    invoiced.resolve();
+                    done.resolve();
+                });
             });
 
             return done;
@@ -1624,7 +1624,7 @@ exports.Orderline = Backbone.Model.extend({
             }
             if(tax.price_include){
                 if(tax.amount_type === 'fixed')
-                    incl_fixed_amount += tax.amount;
+                    incl_fixed_amount += quantity * tax.amount;
                 else if(tax.amount_type === 'percent')
                     incl_percent_amount += tax.amount;
             }
@@ -1640,7 +1640,7 @@ exports.Orderline = Backbone.Model.extend({
             var amount = self._compute_all(tax, base, quantity, false);
 
             if(!tax.price_include || base_gaps.length == 0)
-                return tax_amount;
+                return amount;
 
             var new_gap = base_gaps[base_gaps.length - 1] - amount;
 
