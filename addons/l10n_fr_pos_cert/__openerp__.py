@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'France - Certification CGI 286 I-3 bis - Point de Vente',
+    'name': 'France - Certification CGI 286 I-3 bis - Point of Sale',
     'version': '1.0',
     'category': 'Localization',
     'description': """This application allows to be in appliance with the inalterability, securisation and archiving of journal entries, as required by the French Law (CGI art. 286, I. 3°bis) as of January 1st 2018.

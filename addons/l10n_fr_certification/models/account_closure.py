@@ -13,15 +13,15 @@ class AccountClosure(models.Model):
     _name = 'account.sale.closure'
 
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
-    date_closure_stop = fields.Datetime('Date to which the values are computed', readonly=True)
-    date_closure_start = fields.Datetime('Date from which the total interval is computed', readonly=True)
+    date_closure_stop = fields.Datetime(string="Closing Date", help='Date to which the values are computed', readonly=True)
+    date_closure_start = fields.Datetime(string="Starting Date", help='Date from which the total interval is computed', readonly=True)
     frequency = fields.Selection(string='Interval of the closure', selection=[('daily', 'Daily'), ('monthly', 'Monthly'), ('annually', 'Annually')], readonly=True)
-    total_interval = fields.Monetary('Total in receivable accounts during the interval', readonly=True)
-    total_fiscal = fields.Monetary('Total in receivable accounts since the beginning of the fiscal year', readonly=True)
-    total_beginning = fields.Monetary('Total in receivable accounts since the beginning of times', readonly=True)
+    total_interval = fields.Monetary(string="Period Total", help='Total in receivable accounts during the interval', readonly=True)
+    total_fiscal = fields.Monetary(string="Fiscal Year Cumulative Total", help='Total in receivable accounts since the beginning of the fiscal year', readonly=True)
+    total_beginning = fields.Monetary(string="Cumulative Grand Total", help='Total in receivable accounts since the beginning of times', readonly=True)
     sequence_number = fields.Integer('Sequence number', readonly=True)
     move_ids = fields.Many2many('account.move', string='Journal entries that are included in the computation', readonly=True)
-    currency_id = fields.Many2one('res.currency', string='Currency of the computation', help="The company's currency", readonly=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', help="The company's currency", readonly=True)
 
     def _build_query(self, company, date_start='', date_stop='', avoid_move_ids=[]):
         params = {'company_id': company.id}

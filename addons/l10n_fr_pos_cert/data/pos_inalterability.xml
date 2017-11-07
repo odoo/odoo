@@ -1,16 +1,19 @@
 <odoo>
-    <menuitem action="l10n_fr_certification.action_list_view_account_sale_closure" id="menu_account_closure" parent="point_of_sale.menu_point_rep" sequence="90"/>
 
-    <menuitem action="l10n_fr_certification.action_check_hash_integrity" id="menu_check_move_integrity" parent="point_of_sale.menu_point_rep" sequence="90"/>
+    <menuitem id="pos_fr_statements_menu" name="French Statements" parent="point_of_sale.menu_point_rep" sequence="3" groups="account.group_account_user"/>
+
+    <menuitem action="l10n_fr_certification.action_list_view_account_sale_closure" id="menu_account_closure" parent="pos_fr_statements_menu" sequence="90"/>
+
+    <menuitem action="l10n_fr_certification.action_check_hash_integrity" id="menu_check_move_integrity" parent="pos_fr_statements_menu" sequence="90"/>
 
     <record model="ir.actions.server" id="action_check_hash_integrity_pos_order">
-        <field name="name">POS Orders Inalterability Check</field>
+        <field name="name">Pos Orders Inalterability Check</field>
         <field name="model_id" ref="point_of_sale.model_pos_order"/>
         <field name="type">ir.actions.server</field>
         <field name="code">
-            action = env['pos.order']._check_hash_integrity(env.user.company_id.id)
+action = env['pos.order']._check_hash_integrity(env.user.company_id.id)
         </field>
     </record>
 
-    <menuitem action="action_check_hash_integrity_pos_order" id="menu_check_pos_order_integrity" parent="point_of_sale.menu_point_rep" sequence="90"/>
+    <menuitem action="action_check_hash_integrity_pos_order" id="menu_check_pos_order_integrity" parent="pos_fr_statements_menu" sequence="90"/>
 </odoo>

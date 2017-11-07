@@ -1,6 +1,6 @@
 <odoo>
     <record id="list_view_account_sale_closure" model="ir.ui.view">
-        <field name="name">Account Closures</field>
+        <field name="name">Sales Closings</field>
         <field name="model">account.sale.closure</field>
         <field name="arch" type="xml">
             <tree create="false" import="false">
@@ -17,7 +17,7 @@
     </record>
 
     <record id="form_view_account_sale_closure" model="ir.ui.view">
-        <field name="name">Account Closures</field>
+        <field name="name">Sales Closings</field>
         <field name="model">account.sale.closure</field>
         <field name="arch" type="xml">
             <form create="false" edit="false" string="Account Closure">
@@ -29,7 +29,7 @@
                 </group>
                 <group>
                     <field name="company_id"/>
-                    <field name="currency_id"/>
+                    <field name="currency_id" invisible="1"/>
                 </group>
                 <group>
                     <field name="total_interval"/>
@@ -43,7 +43,7 @@
     </record>
 
     <record id="action_list_view_account_sale_closure" model="ir.actions.act_window">
-        <field name="name">Account Closures</field>
+        <field name="name">Sales Closings</field>
         <field name="res_model">account.sale.closure</field>
         <field name="view_type">tree</field>
         <field name="view_mode">list,form</field>
