@@ -75,7 +75,7 @@ msgid ""
 "                                                <strong>Replied</strong>"
 msgstr ""
 "%<br/>\n"
-"                                                <strong>Répondu</strong>"
+"                                                <strong>Avec réponse</strong>"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mass_mailing.py:466
@@ -846,9 +846,9 @@ msgid ""
 msgstr ""
 "Si cette option est cochée, les destinataires seront informés par e-mail une"
 " seule fois pour l'ensemble de la campagne. Vous pouvez ainsi envoyer "
-"différents e-mails en publipostage à des destinataires sélectionnés au "
-"hasard et tester l'efficacité de la fonction de publipostage, sans créer de "
-"messages en double."
+"différents e-mails à des destinataires sélectionnés au hasard et tester "
+"l'efficacité de la fonction de publipostage, sans créer de messages en "
+"double."
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mass_mailing.py:474
@@ -1229,11 +1229,6 @@ msgid "Newsletter"
 msgstr "Lettre d'information"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_next_departure
-msgid "Next Departure"
-msgstr "Prochain envoi"
-
-#. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
 msgid "No customization"
 msgstr "Pas de customisation"
@@ -1501,6 +1496,7 @@ msgstr "Planifié"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_scheduled_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_next_departure
 msgid "Scheduled Date"
 msgstr "Date prévue"
 

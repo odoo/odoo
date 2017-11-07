@@ -651,7 +651,15 @@ class StockMove(models.Model):
                 ('picking_type_id', '=', move.picking_type_id.id),
                 ('printed', '=', False),
                 ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])], limit=1)
-            if not picking:
+            if picking:
+                # If a picking is found, we'll append `move` to its move list and thus its
+                # `partner_id` and `ref` field will refer to multiple records. In this
+                # case, we chose to  wipe them.
+                picking.write({
+                    'partner_id': False,
+                    'origin': False,
+                })
+            else:
                 recompute = True
                 picking = Picking.create(move._get_new_picking_values())
             move.write({'picking_id': picking.id})

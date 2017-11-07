@@ -377,9 +377,8 @@ class AccountMoveLine(models.Model):
 
     @api.depends('move_id')
     def _compute_parent_state(self):
-        for record in self:
-            if record.move_id:
-                self.parent_state = self.move_id.state
+        for record in self.filtered('move_id'):
+            record.parent_state = record.move_id.state
 
     @api.one
     @api.depends('move_id.line_ids')
