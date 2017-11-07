@@ -194,7 +194,7 @@ class Post(models.Model):
     _inherit = ['mail.thread', 'website.seo.metadata']
     _order = "is_correct DESC, vote_count DESC, write_date DESC"
 
-    name = fields.Char('Title')
+    name = fields.Char('Title', translate=True)
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
     content = fields.Html('Content', strip_style=True)
     plain_content = fields.Text('Plain Content', compute='_get_plain_content', store=True)
@@ -912,7 +912,7 @@ class Tags(models.Model):
     _description = "Forum Tag"
     _inherit = ['mail.thread', 'website.seo.metadata']
 
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', required=True, translate=True)
     create_uid = fields.Many2one('res.users', string='Created by', readonly=True)
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
     post_ids = fields.Many2many(
