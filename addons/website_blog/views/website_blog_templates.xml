@@ -393,9 +393,9 @@
 <!-- Option:Right Column: tags -->
 
 <template id="tags_hierarchy" name="Tags List">
-    <li t-att-class="'active' if nav_tag.id in active_tag_ids else None">
+    <li t-att-class="'active' if nav_tag.id in active_tag_id else None">
         <i t-attf-class="{{'fa fa-chevron-right' if len(nav_tag.child_ids) else None}}"/>
-        <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, nav_tag.id))}"
+        <a t-attf-href="#{blog_url(tag=tag_clicked(active_tag_id, nav_tag.id))}"
             t-field="nav_tag.name"/>
         <ul t-if="nav_tag.child_ids" class="nav nav-pills nav-stacked nav-hierarchy ml16"
             t-att-style="'display:block;' if not nav_tag.child_ids else 'display:none;'">
