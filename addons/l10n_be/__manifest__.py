@@ -54,7 +54,7 @@ Wizards provided by this module:
         'data/menuitem_data.xml',
     ],
     'demo': [
-        'demo/l10n_be_demo.yml',
+        'demo/l10n_be_demo.xml',
     ],
     'website': 'https://www.odoo.com/page/accounting',
     'post_init_hook': 'load_translations',
