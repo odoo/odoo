@@ -184,6 +184,20 @@ class pos_order(models.Model):
                               end_order_info[1],
                               orders_in_period))
 
+    @api.model
+    def check_global_inalterability(self, user_id):
+        check_string = 'Pos Orders:\n'
+        try:
+            self.env['pos.order']._check_hash_integrity(user_id)
+        except UserError as order_res:
+            check_string += order_res[0] + "\n\nJournal Entries:\n"
+
+        try:
+            self.env['account.move']._check_hash_integrity(user_id)
+        except UserError as move_res:
+            check_string += move_res[0]
+
+        raise UserError(check_string)
 
 class PosOrderLine(models.Model):
     _inherit = "pos.order.line"
