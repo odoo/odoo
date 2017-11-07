@@ -25,7 +25,7 @@
     'depends': ['l10n_cn'],
     'data': [
         'data/l10n_cn_small_business_chart_data.xml',
-        'data/account_chart_template_data.yml',
+        'data/account_chart_template_data.xml',
     ],
     'auto_install': True
 }

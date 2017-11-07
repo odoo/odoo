@@ -45,7 +45,7 @@ position.
         'data/account_data.xml',
         'data/account_tax_data.xml',
         'data/fiscal_templates_data.xml',
-        'data/account_chart_template_data.yml',
+        'data/account_chart_template_configure_data.xml',
         'data/res_company_data.xml',
     ],
     'post_init_hook': 'load_translations',
