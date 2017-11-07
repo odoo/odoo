@@ -268,7 +268,6 @@ return core.Class.extend({
     _processField: function (viewType, field, attrs) {
         var self = this;
         attrs.Widget = this._getFieldWidgetClass(viewType, field, attrs);
-
         if (!_.isObject(attrs.options)) { // parent arch could have already been processed (TODO this should not happen)
             attrs.options = attrs.options ? pyeval.py_eval(attrs.options) : {};
         }
