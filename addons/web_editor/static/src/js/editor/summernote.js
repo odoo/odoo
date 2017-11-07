@@ -1489,7 +1489,9 @@ $.summernote.pluginEvents.backspace = function (event, editor, layoutInfo) {
 };
 
 function isFormatNode(node) {
-    return node.tagName && options.styleTags.indexOf(node.tagName.toLowerCase()) !== -1;
+    if (node) {  // When we clear Everything in summernote the value of node will be null.
+        return node.tagName && options.styleTags.indexOf(node.tagName.toLowerCase()) !== -1;
+    }
 }
 
 $.summernote.pluginEvents.insertUnorderedList = function (event, editor, layoutInfo, sorted) {
