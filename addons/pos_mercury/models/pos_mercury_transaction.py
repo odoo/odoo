@@ -45,7 +45,7 @@ class MercuryTransaction(models.Model):
         data['memo'] = "Odoo " + service.common.exp_version()['server_version']
 
     def _do_request(self, template, data):
-        xml_transaction = self.env.ref(template).render(data)
+        xml_transaction = self.env.ref(template).render(data).decode()
 
         if not data['merchant_id'] or not data['merchant_pwd']:
             return "not setup"
@@ -64,7 +64,7 @@ class MercuryTransaction(models.Model):
         try:
             r = requests.post('https://w1.mercurypay.com/ws/ws.asmx', data=xml_transaction, headers=headers, timeout=65)
             r.raise_for_status()
-            response = werkzeug.utils.unescape(r.content)
+            response = werkzeug.utils.unescape(r.content.decode())
         except:
             response = "timeout"
 
