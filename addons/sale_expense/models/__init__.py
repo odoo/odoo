@@ -3,3 +3,4 @@
 
 from . import analytic
 from . import hr_expense
+from . import product_template
