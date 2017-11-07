@@ -2788,11 +2788,11 @@ QUnit.module('basic_fields', {
             },
         });
 
-        var $phone = form.$('span.o_field_widget:not(.o_form_uri)');
+        var $phone = form.$('a.o_field_widget.o_form_uri');
         assert.strictEqual($phone.length, 1,
-            "should have a simple span rather than a link");
-        assert.strictEqual($phone.text(), 'yop',
-            "value should be displayed properly as text without skype obfuscation");
+            "should have a link");
+        assert.strictEqual($phone.text(), 'y\u00ADop',
+            "value should be displayed properly as text with skype obfuscation");
 
         // switch to edit mode and check the result
         form.$buttons.find('.o_form_button_edit').click();
@@ -2806,8 +2806,8 @@ QUnit.module('basic_fields', {
 
         // save
         form.$buttons.find('.o_form_button_save').click();
-        assert.strictEqual(form.$('span.o_field_widget:not(.o_form_uri)').text(), 'new',
-            "new value should be displayed properly as text without skype obfuscation");
+        assert.strictEqual(form.$('a.o_field_widget.o_form_uri').text(), 'n\u00ADew',
+            "new value should be displayed properly as text with skype obfuscation");
 
         form.destroy();
     });
@@ -2838,11 +2838,11 @@ QUnit.module('basic_fields', {
 
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').length, 5,
             "should have 5 cells");
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'yop',
-            "value should be displayed properly as text without skype obfuscation");
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'y\u00ADop',
+            "value should be displayed properly as text with skype obfuscation");
 
-        assert.strictEqual(list.$('span.o_field_widget:not(.o_form_uri)').length, 5,
-            "should have spans with correct classes");
+        assert.strictEqual(list.$('a.o_field_widget.o_form_uri').length, 5,
+            "should have a link");
 
         // Edit a line and check the result
         var $cell = list.$('tbody td:not(.o_list_record_selector)').first();
@@ -2856,10 +2856,10 @@ QUnit.module('basic_fields', {
         list.$buttons.find('.o_list_button_save').click();
         $cell = list.$('tbody td:not(.o_list_record_selector)').first();
         assert.ok(!$cell.parent().hasClass('o_selected_row'), 'should not be in edit mode anymore');
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'new',
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'n\u00ADew',
             "value should be properly updated");
-        assert.strictEqual(list.$('span.o_field_widget:not(.o_form_uri)').length, 5,
-            "should still have spans with correct classes");
+        assert.strictEqual(list.$('a.o_field_widget.o_form_uri').length, 5,
+            "should still have a link");
 
         list.destroy();
     });
