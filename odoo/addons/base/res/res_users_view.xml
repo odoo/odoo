@@ -78,26 +78,14 @@
                         </page>
                         <page string="Access Rights">
                             <field name="model_access">
-                                <tree string="Access Rules" editable="top">
+                                <tree string="Access Rights" editable="top">
+                                    <field name="name"/>
                                     <field name="model_id"/>
                                     <field name="perm_read"/>
                                     <field name="perm_write"/>
                                     <field name="perm_create"/>
                                     <field name="perm_unlink"/>
-                                    <field name="name"/>
                                 </tree>
-                                <form string="Access Controls">
-                                    <group col="4">
-                                        <field name="name"/>
-                                        <field name="active"/>
-                                        <field name="model_id"/>
-                                        <newline/>
-                                        <field name="perm_read"/>
-                                        <field name="perm_write"/>
-                                        <field name="perm_create"/>
-                                        <field name="perm_unlink"/>
-                                    </group>
-                                </form>
                             </field>
                         </page>
                         <page string="Record Rules">
@@ -105,7 +93,6 @@
                                 <tree string="Record Rules" editable="top">
                                     <field name="name"/>
                                     <field name="model_id"/>
-                                    <field name="global"/>
                                     <field name="domain_force"/>
                                     <field name="perm_read"/>
                                     <field name="perm_write"/>
