@@ -267,7 +267,7 @@ class CrmLead(models.Model):
             'name': values['title'],
             'description': values['description'],
             'priority': '2',
-            'partner_assigned_id': user.partner_id.id,
+            'partner_assigned_id': user.commercial_partner_id.id,
         }
         if tag_own:
             values['tag_ids'] = [(4, tag_own.id, False)]
