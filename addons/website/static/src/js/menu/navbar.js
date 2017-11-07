@@ -17,6 +17,7 @@ var WebsiteNavbar = rootWidget.RootWidget.extend({
     custom_events: _.extend({}, rootWidget.RootWidget.prototype.custom_events || {}, {
         action_demand: '_onActionDemand',
         edit_mode: '_onEditMode',
+        ready_to_save: '_onSave',
     }),
 
     //--------------------------------------------------------------------------
@@ -135,6 +136,16 @@ var WebsiteNavbar = rootWidget.RootWidget.extend({
      */
     _onMobileMenuToggleClick: function () {
         this.$el.parent().toggleClass('o_mobile_menu_opened');
+    },
+    /**
+     * Called in response to edit mode saving -> checks if action-capable
+     * children have something to save.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSave: function (ev) {
+        ev.data.defs.push(this._handleAction('on_save'));
     },
 });
 

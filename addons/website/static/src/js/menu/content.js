@@ -1,6 +1,7 @@
 odoo.define('website.contentMenu', function (require) {
 'use strict';
 
+var Class = require('web.Class');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var time = require('web.time');
@@ -594,12 +595,74 @@ var EditMenuDialog = widget.Dialog.extend({
     },
 });
 
+var PageOption = Class.extend({
+    /**
+     * @constructor
+     */
+    init: function (name, value, setValueCallback) {
+        this.name = name;
+        this.value = value;
+        this.isDirty = false;
+        this.setValueCallback = setValueCallback;
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Sets the new page option value thanks to related callback.
+     */
+    setValue: function (value) {
+        this.setValueCallback.call(this, value);
+        this.value = value;
+        this.isDirty = true;
+    },
+});
+
 var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     xmlDependencies: ['/website/static/src/xml/website.xml'],
     actions: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.actions || {}, {
         edit_menu: '_editMenu',
+        get_page_option: '_getPageOption',
+        on_save: '_onSave',
         page_properties: '_pageProperties',
+        toggle_page_option: '_togglePageOption',
     }),
+
+    /**
+     * @override
+     */
+    start: function () {
+        var self = this;
+        this.pageOptions = {};
+        _.each($('.o_page_option_data'), function (el) {
+            var value = el.value;
+            if (value === "True") {
+                value = true;
+            } else if (value === "False") {
+                value = false;
+            }
+
+            var setValueCallback;
+            switch (el.name) {
+                case 'has_top_content':
+                    setValueCallback = function (value) {
+                        $('#wrapwrap').toggleClass('o_has_top_content', value);
+                    };
+                    break;
+                case 'header_color':
+                    setValueCallback = function (value) {
+                        $('#wrapwrap > header').removeClass(this.value)
+                                               .addClass(value);
+                    };
+                    break;
+            }
+
+            self.pageOptions[el.name] = new PageOption(el.name, value, setValueCallback);
+        });
+        return this._super.apply(this, arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -671,6 +734,38 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         return def;
     },
     /**
+     * Retrieves the value of a page option.
+     *
+     * @private
+     * @param {string} name
+     * @returns {Deferred<*>}
+     */
+    _getPageOption: function (name) {
+        var option = this.pageOptions[name];
+        if (!option) {
+            return $.Deferred().reject();
+        }
+        return $.when(option.value);
+    },
+    /**
+     * On save, simulated page options have to be server-saved.
+     *
+     * @private
+     * @returns {Deferred}
+     */
+    _onSave: function () {
+        var self = this;
+        var defs = _.map(this.pageOptions, function (option, optionName) {
+            if (option.isDirty) {
+                return self._togglePageOption({
+                    name: optionName,
+                    value: option.value,
+                }, true, true);
+            }
+        });
+        return $.when.apply($, defs);
+    },
+    /**
      * Opens the page properties dialog.
      *
      * @private
@@ -680,6 +775,55 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         var moID = this._getMainObject().id;
         var dialog = new PagePropertiesDialog(this, moID, {}).open();
         return dialog.opened();
+    },
+    /**
+     * Toggles a page option.
+     *
+     * @private
+     * @param {Object} params
+     * @param {string} params.name
+     * @param {*} [params.value=true]
+     * @param {boolean} [forceSave=false]
+     * @param {boolean} [noReload=false]
+     * @returns {Deferred}
+     */
+    _togglePageOption: function (params, forceSave, noReload) {
+        // First check it is a website page
+        var mo = this._getMainObject();
+        if (mo.model !== 'website.page') {
+            return $.Deferred().reject();
+        }
+
+        // Check if this is a valid option
+        var name = params.name;
+        var value = params.value === undefined ? true : params.value;
+        var option = this.pageOptions[params.name];
+        if (!option) {
+            return $.Deferred().reject();
+        }
+
+        // If simulate is true, it means we want the option to be toggled but
+        // not saved on the server yet
+        if (!forceSave) {
+            option.setValue(value);
+            return $.when();
+        }
+
+        // If not, write on the server page and reload the current location
+        var vals = {};
+        vals[name] = value;
+        var def = this._rpc({
+            model: 'website.page',
+            method: 'write',
+            args: [[mo.id], vals],
+        });
+        if (noReload) {
+            return def;
+        }
+        return def.then(function () {
+            window.location.reload();
+            return $.Deferred();
+        });
     },
 });
 

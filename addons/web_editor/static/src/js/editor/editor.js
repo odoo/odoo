@@ -144,8 +144,13 @@ var EditorMenuBar = Widget.extend({
      */
     save: function (reload) {
         var self = this;
-        this.snippetsMenu.cleanForSave();
-        return this.rte.save().then(function () {
+        var defs = [];
+        this.trigger_up('ready_to_save', {defs: defs});
+        return $.when.apply($, defs).then(function () {
+            return self.snippetsMenu.cleanForSave();
+        }).then(function () {
+            return self.rte.save();
+        }).then(function () {
             if (reload !== false) {
                 return self._reload();
             }
