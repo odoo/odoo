@@ -89,6 +89,7 @@ class IrModel(models.Model):
                                            help="The list of models that extends the current model.")
     state = fields.Selection([('manual', 'Custom Object'), ('base', 'Base Object')], string='Type', default='manual', readonly=True)
     access_ids = fields.One2many('ir.model.access', 'model_id', string='Access')
+    rule_ids = fields.One2many('ir.rule', 'model_id', string='Record Rules')
     transient = fields.Boolean(string="Transient Model")
     modules = fields.Char(compute='_in_modules', string='In Apps', help='List of modules in which the object is defined or inherited')
     view_ids = fields.One2many('ir.ui.view', compute='_view_ids', string='Views')
