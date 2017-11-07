@@ -298,13 +298,15 @@ class ResPartner(models.Model):
 
     @api.multi
     def _compute_journal_item_count(self):
+        AccountMoveLine = self.env['account.move.line']
         for partner in self:
-            partner.journal_item_count = self.env['account.move.line'].search_count([('partner_id', '=', partner.id)])
+            partner.journal_item_count = AccountMoveLine.search_count([('partner_id', '=', partner.id)])
 
     @api.multi
     def _compute_contracts_count(self):
+        AccountAnalyticAccount = self.env['account.analytic.account']
         for partner in self:
-            partner.contracts_count = self.env['account.analytic.account'].search_count([('partner_id', '=', partner.id)])
+            partner.contracts_count = AccountAnalyticAccount.search_count([('partner_id', '=', partner.id)])
 
     def get_followup_lines_domain(self, date, overdue_only=False, only_unblocked=False):
         domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable'), '|', ('debit', '!=', 0), ('credit', '!=', 0), ('company_id', '=', self.env.user.company_id.id)]
