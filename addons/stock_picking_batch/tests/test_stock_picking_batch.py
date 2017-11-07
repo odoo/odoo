@@ -33,6 +33,7 @@ class TestStockPickingBatch(TestStockCommon):
 
     def test_00_stock_batch_picking(self):
         """ Test stock batch picking."""
+        stock_location = self.env.ref('stock.stock_location_stock')
 
         # Create Product A, B, C
         productA = self.ProductObj.create({
@@ -45,9 +46,9 @@ class TestStockPickingBatch(TestStockCommon):
             'name': 'Product C',
             'type': 'product'})
 
-        self._increase_availability(productA, self.stock_location)
-        self._increase_availability(productB, self.stock_location)
-        self._increase_availability(productC, self.stock_location)
+        self._increase_availability(productA, stock_location)
+        self._increase_availability(productB, stock_location)
+        self._increase_availability(productC, stock_location)
 
         picking_1 = self._create_picking(productA, 10)
         picking_2 = self._create_picking(productB, 10)
