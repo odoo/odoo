@@ -868,10 +868,10 @@ exports.PosModel = Backbone.Model.extend({
                 // generate the pdf and download it
                 self.chrome.do_action('point_of_sale.pos_invoice_report',{additional_context:{
                     active_ids:order_server_id,
-                }});
-
-                invoiced.resolve();
-                done.resolve();
+                }}).done(function () {
+                    invoiced.resolve();
+                    done.resolve();
+                });
             });
 
             return done;
@@ -1718,15 +1718,20 @@ exports.Orderline = Backbone.Model.extend({
            currency_rounding = currency_rounding * 0.00001;
         }
 
-        var recompute_base = function(base_amount, fixed_amount, percent_amount){
-            if(fixed_amount === 0.0 && percent_amount === 0.0)
-                return base_amount;
-             return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0);
-        }
-
         // 4) Iterate the taxes in the reversed sequence order to retrieve the initial base of the computation.
 
         var base = round_pr(price_unit * quantity, currency_rounding);
+
+        var base_gaps = [];
+
+        var recompute_base = function(base_amount, fixed_amount, percent_amount){
+            if(fixed_amount === 0.0 && percent_amount === 0.0)
+                return base_amount;
+             var new_base = (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0);
+             base_gaps.push(base_amount - new_base);
+             return new_base;
+        }
+
         var sign = 1;
         if(base < 0){
             base = -base;
@@ -1743,7 +1748,7 @@ exports.Orderline = Backbone.Model.extend({
             }
             if(tax.price_include){
                 if(tax.amount_type === 'fixed')
-                    incl_fixed_amount += tax.amount;
+                    incl_fixed_amount += quantity * tax.amount;
                 else if(tax.amount_type === 'percent')
                     incl_percent_amount += tax.amount;
             }
@@ -1755,9 +1760,24 @@ exports.Orderline = Backbone.Model.extend({
 
         // 5) Iterate the taxes in the sequence order to fill missing base/amount values.
 
+        var compute_amount = function(tax){
+            var amount = self._compute_all(tax, base, quantity, false);
+
+            if(!tax.price_include || base_gaps.length == 0)
+                return amount;
+
+            var new_gap = base_gaps[base_gaps.length - 1] - amount;
+
+            if(round_pr(new_gap, currency_rounding) === 0.0)
+                return base_gaps.pop();
+
+            base_gaps[base_gaps.length - 1] = new_gap;
+            return amount;
+        };
+
         var taxes_vals = [];
         _(taxes.reverse()).each(function(tax){
-            var tax_amount = self._compute_all(tax, base, quantity, false);
+            var tax_amount = compute_amount(tax);
             tax_amount = round_pr(tax_amount, currency_rounding);
 
             var tax_base = base;
