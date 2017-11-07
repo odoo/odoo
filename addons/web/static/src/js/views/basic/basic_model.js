@@ -896,6 +896,9 @@ var BasicModel = AbstractModel.extend({
                 return def.resolve(changedFields);
             }
 
+            def.then(function () {
+                record._isDirty = false;
+            });
             // in the case of a write, only perform the RPC if there are changes to save
             if (method === 'create' || changedFields.length) {
                 var args = method === 'write' ? [[record.data.id], changes] : [changes];
@@ -917,7 +920,6 @@ var BasicModel = AbstractModel.extend({
 
                         // Erase changes as they have been applied
                         record._changes = {};
-                        record._isDirty = false;
 
                         // Update the data directly or reload them
                         if (shouldReload) {
