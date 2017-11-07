@@ -1848,4 +1848,10 @@
 			<field name="tag_ids" eval="[(6,0,[ref('tag_br_14'), ref('tag_br_15')])]"/>
 			<field name="tax_group_id" ref="tax_group_csll_0"/>
         </record>
+
+        <data noupdate="1">
+            <function model="account.chart.template" name="try_loading_for_current_company">
+                <value eval="[ref('l10n_br.l10n_br_account_chart_template')]"/>
+            </function>
+        </data>
 </odoo>
