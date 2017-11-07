@@ -3818,14 +3818,6 @@ QUnit.module('Views', {
     });
 
     QUnit.test('navigation with tab key in readonly form view', function (assert) {
-        // The behavior of the phone widget is completely altered by voip so
-        // this test fails if voip is installed. The enterprise module is
-        // responsible for testing its own behavior in its own tests.
-        if ('voip.user_agent' in odoo.__DEBUG__.services) {
-            assert.expect(0);
-            return;
-        }
-
         assert.expect(3);
 
         this.data.partner.records[1].product_id = 37;
@@ -3851,13 +3843,17 @@ QUnit.module('Views', {
         // focus first field, trigger tab
         form.$('[name="trululu"]').focus();
         form.$('[name="trululu"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        form.$('[name="foo"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
         assert.strictEqual(form.$('[name="product_id"]')[0], document.activeElement,
             "product_id should be focused");
         form.$('[name="product_id"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        form.$('[name="foo"]:eq(1)').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
         assert.strictEqual(form.$('[name="display_name"]')[0], document.activeElement,
-            "display_name should be focused (emails are focusable but phone aren't)");
+            "display_name should be focused");
 
         // simulate shift+tab on active element
+        $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB, shiftKey: true}));
+        $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB, shiftKey: true}));
         $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB, shiftKey: true}));
         $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB, shiftKey: true}));
         assert.strictEqual(document.activeElement, form.$('[name="trululu"]')[0],
