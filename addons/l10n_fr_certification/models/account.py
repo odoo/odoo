@@ -107,7 +107,7 @@ class AccountMove(models.Model):
         and raises an error with the result.
         """
         def build_move_info(move):
-            entry_reference = _('Entry reference: %s.')
+            entry_reference = _('(ref.: %s)')
             move_reference_string = move.ref and entry_reference % move.ref or ''
             return [move.date, move.l10n_fr_secure_sequence_number, move.name, move_reference_string]
 
@@ -142,11 +142,8 @@ class AccountMove(models.Model):
         raise UserError(_('''Successful test !
 
                          The journal entries are guaranteed to be in their original and inalterable state
-                          - from:   %s
-                                Entry name: %s. %s
-
-                          - to:      %s
-                                Entry name: %s. %s
+                         From: %s %s recorded on %s
+                         To: %s %s recorded on %s
 
                          Number of journal entries controlled: %s
                          Number of journal entries recorded over this period: %s
@@ -155,12 +152,12 @@ class AccountMove(models.Model):
 
                          For this report to be legally meaningfull, dowload your certification at
                          https://accounts.odoo.com/my/contract/certification-french-accounting/'''
-                         ) % (start_move_info[0],
-                              start_move_info[2],
+                         ) % (start_move_info[2],
                               start_move_info[3],
-                              end_move_info[0],
+                              start_move_info[0],
                               end_move_info[2],
                               end_move_info[3],
+                              end_move_info[0],
                               end_move_info[1],
                               moves_in_period))
 

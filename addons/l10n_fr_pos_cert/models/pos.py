@@ -127,7 +127,7 @@ class pos_order(models.Model):
         and raises an error with the result.
         """
         def build_order_info(order):
-            entry_reference = _('Order reference: %s.')
+            entry_reference = _('ref.: %s')
             order_reference_string = order.pos_reference and entry_reference % order.pos_reference or ''
             return [order.date_order, order.l10n_fr_pos_cert_sequence_number, order.name, order_reference_string]
 
@@ -162,11 +162,8 @@ class pos_order(models.Model):
         raise UserError(_('''Successful test !
 
                          The point of sale orders are guaranteed to be in their original and inalterable state
-                          - from:   %s
-                                Order Name: %s. %s
-
-                          - to:      %s
-                                Order Name: %s. %s
+                         From: %s %s recorded on %s
+                         To: %s %s recorded on %s
 
                          Number of orders controlled: %s
                          Number of orders recorded over this period: %s
@@ -175,12 +172,12 @@ class pos_order(models.Model):
 
                          For this report to be legally meaningfull, dowload your certification at
                          https://accounts.odoo.com/my/contract/certification-french-accounting/'''
-                         ) % (start_order_info[0],
-                              start_order_info[2],
+                         ) % (start_order_info[2],
                               start_order_info[3],
-                              end_order_info[0],
+                              start_order_info[0],
                               end_order_info[2],
                               end_order_info[3],
+                              end_order_info[0],
                               end_order_info[1],
                               orders_in_period))
 
