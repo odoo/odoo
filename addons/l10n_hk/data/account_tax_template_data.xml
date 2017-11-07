@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Account Tags -->
+    <record id="tax_tag_purchase" model="account.account.tag">
+        <field name="name">Tax Received 0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_sale" model="account.account.tag">
+        <field name="name">Tax Paid 0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <!-- account.tax.template -->
+
+    <!-- for purchase -->
+    <record id="tax_purchase_zero" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_hk_chart_template"/>
+        <field name="name">Tax Received 0%</field>
+        <field name="description">VAT 0%</field>
+        <field name="amount" eval="0"/>
+        <field name="amount_type">percent</field>
+        <field name="price_include" eval="1"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_purchase')])]"/>
+    </record>
+
+    <!-- for sale -->
+    <record id="tax_sale_zero" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_hk_chart_template"/>
+        <field name="name">Tax Paid 0%</field>
+        <field name="description">VAT 0%</field>
+        <field name="amount" eval="0"/>
+        <field name="amount_type">percent</field>
+        <field name="price_include" eval="1"/>
+        <field name="type_tax_use">sale</field>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale')])]"/>
+    </record>
+
+</odoo>
