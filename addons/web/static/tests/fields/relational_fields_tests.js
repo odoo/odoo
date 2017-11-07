@@ -1397,7 +1397,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('slow create on a many2one', function (assert) {
-        assert.expect(1);
+        assert.expect(7);
 
         var form = createView({
             View: FormView,
@@ -1417,12 +1417,34 @@ QUnit.module('relational_fields', {
             },
         });
 
+        // cancel the many2one creation with Cancel button
+        form.$('.o_field_many2one input').focus().val('new product').trigger('keyup').trigger('blur');
+        assert.strictEqual($('.modal').length, 1, "there should be one opened modal");
+        $('.modal .modal-footer .btn:contains(Cancel)').click();
+        assert.strictEqual(form.$('.o_field_many2one input').val(), "",
+            'the many2one should not set a value as its creation has been cancelled (with Cancel button)');
+
+        // cancel the many2one creation with Close button
+        form.$('.o_field_many2one input').focus().val('new product').trigger('keyup').trigger('blur');
+        $('.modal .modal-header button').click();
+        assert.strictEqual(form.$('.o_field_many2one input').val(), "",
+            'the many2one should not set a value as its creation has been cancelled (with Close button)');
+
+        // select a new value then cancel the creation of the new one --> restore the previous
+        form.$('.o_field_many2one input').click();
+        form.$('.o_field_many2one input').autocomplete('widget').find('a').first().click();
+        assert.strictEqual(form.$('input').val(), "xphone", "should have selected xphone");
+        form.$('.o_field_many2one input').focus().val('new product').trigger('keyup').trigger('blur');
+        assert.strictEqual($('.modal').length, 1, "there should be one opened modal");
+        $('.modal .modal-footer .btn:contains(Cancel)').click();
+        assert.strictEqual(form.$('.o_field_many2one input').val(), "xphone",
+            'should have restored the many2one with its previous selected value (xphone)');
+
+        // confirm the many2one creation
         form.$('.o_field_many2one input').focus();
-        form.$('.o_field_many2one input').val('new partner').trigger('keyup').trigger('focusout');
-
-        $('.modal .modal-footer .btn-primary').first().click();
-
-        assert.strictEqual($('.modal:visible:last .o_form_view').length, 1,
+        form.$('.o_field_many2one input').val('new partner').trigger('keyup').trigger('blur');
+        $('.modal .modal-footer .btn-primary').click();
+        assert.strictEqual($('.modal .o_form_view').length, 1,
             'a new modal should be opened and contain a form view');
 
         form.destroy();

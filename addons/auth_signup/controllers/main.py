@@ -54,7 +54,9 @@ class AuthSignupHome(Home):
                     _logger.error("%s", e)
                     qcontext['error'] = _("Could not create a new account.")
 
-        return request.render('auth_signup.signup', qcontext)
+        response = request.render('auth_signup.signup', qcontext)
+        response.headers['X-Frame-Options'] = 'DENY'
+        return response
 
     @http.route('/web/reset_password', type='http', auth='public', website=True, sitemap=False)
     def web_auth_reset_password(self, *args, **kw):
