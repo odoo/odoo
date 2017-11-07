@@ -933,6 +933,16 @@ class WebsiteSale(http.Controller):
         else:
             return request.redirect('/shop')
 
+    @http.route(['/shop/payment/retry'], type='http', auth="public", website=True)
+    def confirmation_redirect_payment(self, **post):
+        sale_order_id = request.session.get('sale_last_order_id')
+        if sale_order_id:
+            order = request.env['sale.order'].sudo().browse(sale_order_id)
+            order.action_draft()
+            request.session['sale_order_id'] = order.id
+            return request.redirect('/shop/payment')
+        return request.redirect('/shop')
+
     @http.route(['/shop/print'], type='http', auth="public", website=True)
     def print_saleorder(self):
         sale_order_id = request.session.get('sale_last_order_id')

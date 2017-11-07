@@ -1381,8 +1381,8 @@
                 <div class="container oe_website_sale">
                     <div class="row">
                         <div class="col-md-9">
-                            <h1 class="mb32"><span>Order</span> <em t-field="order.name" /> <t t-if="order.state == 'sale'"><span>Confirmed</span></t></h1>
-                            <div class="thanks_msg">
+                            <h1 class="mb32"><span>Order</span> <em t-field="order.name" /> <t t-if="order.state == 'sale' and not order.payment_tx_id.state_message"><span>Confirmed</span></t></h1>
+                            <div class="thanks_msg" t-if="not order.payment_tx_id.state_message">
                                 <h2>Thank you for your order.
                                     <a class="btn btn-primary pull-right hidden-xs" href="/shop/print" target="_blank"><i class="fa fa-print"></i> Print</a>
                                 </h2>
@@ -1560,7 +1560,8 @@
                         <t t-raw="order.payment_acquirer_id.done_msg"/>
                     </t>
                     <t t-if="order.payment_tx_id.state == 'cancel'">
-                        <t t-raw="order.payment_acquirer_id.cancel_msg"/>
+                        <t t-raw="order.payment_tx_id.state_message"/>
+                        <br/><a class="btn btn-danger" href='/shop/payment/retry'>Try Again</a>
                     </t>
                     <t t-if="order.payment_tx_id.state == 'error'">
                         <t t-raw="order.payment_acquirer_id.error_msg"/>
