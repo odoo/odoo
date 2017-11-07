@@ -749,7 +749,7 @@ msgstr "Politique de contrôle"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_stock_move_created_purchase_line_id
 msgid "Created Purchase Order Line"
-msgstr "Ligne de commande d'achat créée"
+msgstr "Ligne de bon de commande créée"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_create_uid
@@ -1023,14 +1023,14 @@ msgid "Invoicing"
 msgstr "Facturation"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings_is_installed_sale
-msgid "Is Installed Sale"
-msgstr "Application Ventes installée"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_is_shipped
 msgid "Is Shipped"
 msgstr "Est expédié"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings_is_installed_sale
+msgid "Is the Sale Module Installed"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order___last_update
@@ -1093,8 +1093,8 @@ msgstr "Logistique"
 msgid ""
 "Make sure you only pay bills for which you received the goods you ordered"
 msgstr ""
-"Assurez-vous de payer uniquement les factures pour lesquelles vous avez reçu"
-" les marchandises que vous avez commandées"
+"Assurez-vous de payer uniquement les factures des marchandises commandées et"
+" reçues"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_manage_vendor_price
@@ -1104,7 +1104,9 @@ msgstr "Gérez les prix fournisseurs"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
-msgstr "Gérer vos conventions d'achat (appels d'offres, commandes ouvertes)"
+msgstr ""
+"Gérer vos contrats d'achat (appels d'offres, commandes à livraison "
+"échelonnée)"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -1142,10 +1144,9 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
-"Marge d'erreur pour les délais pour les fournisseurs. Lorsque le système "
-"génère des bons de commande pour effectuer le réapprovisionnement de "
-"produits, ils seront programmés autant de nombre de jours à l'avance pour "
-"faire face aux retards imprévus des fournisseurs."
+"Marge d'erreur pour les délais des fournisseurs. Lorsque le système génère "
+"des bons de commande de réapprovisionnement, ils sont programmés tant de "
+"jours à l'avance pour faire face aux retards imprévus des fournisseurs."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
@@ -1234,7 +1235,7 @@ msgid ""
 "Non-stored related field to allow portal user to see the image of the "
 "product he has ordered"
 msgstr ""
-"Champ associé non stocké pour permettre à l'utilisateur du portail de voir "
+"Champ associé non stocké permettant à l'utilisateur du portail de voir "
 "l'image du produit qu'il a commandé"
 
 #. module: purchase
@@ -1579,7 +1580,7 @@ msgstr "Bon de commande"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
 msgid "Purchase Orders #"
-msgstr "Nbre de bons de commande"
+msgstr "Nombre de bons de commande"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_graph
@@ -1725,8 +1726,8 @@ msgid ""
 "Reference of the document that generated this purchase order request (e.g. a"
 " sales order)"
 msgstr ""
-"Référence du document qui a généré cette demande de bon de commande (p. ex.,"
-" une ordre de vente)"
+"Référence du document qui a généré cette demande de bon de commande (p. ex. "
+"un ordre de vente)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_partner_ref
@@ -1760,7 +1761,7 @@ msgstr "Demande pour Devis #"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Request your vendors to deliver to your customers"
-msgstr "Demander à vos fournisseurs de livrer à vos clients"
+msgstr "Demander à vos fournisseurs de livrer vos clients"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
@@ -1965,6 +1966,8 @@ msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund. "
 msgstr ""
+"Les quantités indiquées sur votre bon de commande sont inférieures à celles "
+"facturées. Vous devriez demander un remboursement. "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -1995,6 +1998,8 @@ msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
 "this product."
 msgstr ""
+"Aucun fournisseur n'est associé au produit %s. Définissez un fournisseur "
+"pour ce produit."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category_property_account_creditor_price_difference_categ
@@ -2024,6 +2029,11 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
+"Cela permet de demander une livraison directe des produits. Vos fournisseurs"
+" livrent ainsi vos clients directement. Un produit en livraison directe "
+"génère un appel d'offres d'achat une fois le bon de commande confirmé. Il "
+"s'agit d'un flux à la demande. L'adresse de livraison demandée est celle de "
+"votre client, et non de votre entrepôt."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2053,7 +2063,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "This note will show up on purchase orders."
-msgstr ""
+msgstr "Cette note s'affichera sur les bons de commande."
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:203

@@ -80,6 +80,12 @@ class StockQuant(models.Model):
             if quant.in_date and not quant.lot_id:
                 raise ValidationError(_('An incoming date cannot be set to an untracked product.'))
 
+    @api.constrains('location_id')
+    def check_location_id(self):
+        for quant in self:
+            if quant.location_id.usage == 'view':
+                raise ValidationError(_('A product cannot be stored in a "view" location.'))
+
     @api.one
     def _compute_name(self):
         self.name = '%s: %s%s' % (self.lot_id.name or self.product_id.code or '', self.quantity, self.product_id.uom_id.name)
