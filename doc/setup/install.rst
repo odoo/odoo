@@ -137,7 +137,8 @@ following commands as root:
 .. code-block:: console
 
     # wget -O - https://nightly.odoo.com/odoo.key | apt-key add -
-    # echo "deb http://nightly.odoo.com/11.0/nightly/deb/ ./" >> /etc/apt/sources.list.d/odoo.list
+    # apt-get install apt-transport-https
+    # echo "deb https://nightly.odoo.com/11.0/nightly/deb/ ./" >> /etc/apt/sources.list.d/odoo.list
     # apt-get update && apt-get install odoo
 
 You can then use the usual ``apt-get upgrade`` command to keep your installation up-to-date.
