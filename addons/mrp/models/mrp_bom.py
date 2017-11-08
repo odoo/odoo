@@ -168,6 +168,15 @@ class MrpBom(models.Model):
 
         return boms_done, lines_done
 
+    @api.multi
+    def action_report_cost_structure(self):
+        self.ensure_one()
+        action_bom_structure = self.env.ref('mrp.action_report_bom_price')
+        action = action_bom_structure.read()[0]
+        action['type'] = 'ir.actions.client'
+        action['tag'] = 'mrp_bom_cost_structure_report'
+        return action
+
 
 class MrpBomLine(models.Model):
     _name = 'mrp.bom.line'

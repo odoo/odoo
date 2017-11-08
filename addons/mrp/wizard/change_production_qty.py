@@ -7,6 +7,7 @@ from odoo.exceptions import UserError
 from odoo.tools import float_is_zero
 import math
 
+
 class ChangeProductionQty(models.TransientModel):
     _name = 'change.production.qty'
     _description = 'Change Quantity of Products'

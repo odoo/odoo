@@ -9,6 +9,7 @@ from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 from odoo.tools import float_compare
 
+
 class MrpProduction(models.Model):
     """ Manufacturing Orders """
     _name = 'mrp.production'
