@@ -21,7 +21,11 @@
                             <field name="res_model_id" groups="base.group_no_one"/>
                             <field name="summary"/>
                             <field name="icon" groups="base.group_no_one"/>
-                            <field name="days"/>
+                            <label for="days"/>
+                            <div>
+                                <field name="days" class="oe_inline"/>
+                                <span class="oe_inline">days</span>
+                            </div>
                         </group>
                         <group>
                             <field name="next_type_ids" widget="many2many_tags"/>
