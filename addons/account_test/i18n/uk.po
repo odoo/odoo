@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-11-17 14:57+0000\n"
+"PO-Revision-Date: 2017-10-23 14:00+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -37,12 +37,12 @@ msgstr "<strong>Назва:</strong>"
 #: model:ir.actions.report.xml,name:account_test.account_assert_test_report
 #: model:ir.ui.menu,name:account_test.menu_action_license
 msgid "Accounting Tests"
-msgstr ""
+msgstr "Тести для бухобліку"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "Accouting tests on"
-msgstr ""
+msgstr "Бухгалтерські тести на"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_active
@@ -52,33 +52,33 @@ msgstr "Активний"
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
-msgstr ""
+msgstr "Перевірте, чи рух рядків збалансований, і вони мають однакову дату та час"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
 msgid ""
 "Check on bank statement that the Closing Balance = Starting Balance + sum of"
 " statement lines"
-msgstr ""
+msgstr "Перевірте банківську виписку про те, що Закритий баланс = початковий баланс + сума рядків виписок"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
 msgid "Check that paid/reconciled invoices are not in 'Open' state"
-msgstr ""
+msgstr "Переконайтеся, що оплачені / узгоджені рахунки-фактури не у стані \"Відкритий\""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
 msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
-msgstr ""
+msgstr "Перевірте, що узгоджені переходи рахунків, які визначають Платежі та Дебіторську заборгованість, належать до узгоджених рахунків"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
 msgid ""
 "Check that reconciled invoice for Sales/Purchases has reconciled entries for"
 " Payable and Receivable Accounts"
-msgstr ""
+msgstr "Переконайтеся, що узгоджений рахунок для продажів/покупок узгоджений із записами для Платежу та Дебіторської заборгованості"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
@@ -88,12 +88,12 @@ msgstr "Перевірте баланс: Дебет = Кредит"
 #. module: account_test
 #: model:ir.actions.act_window,help:account_test.action_accounting_assert
 msgid "Click to create Accounting Test."
-msgstr ""
+msgstr "Натисніть, щоб створити бухгалтерський тест."
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Code Help"
-msgstr ""
+msgstr "Код допомоги"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
@@ -118,7 +118,7 @@ msgid ""
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
-msgstr ""
+msgstr "Код завжди повинен встановлювати змінну з назвою `результат` з результатом вашого тесту, що може бути списком або\nсловником. Якщо у `результаті` порожній рядок, це означає, що тест був успішним. В іншому випадку \nвін намагатиметься перекласти і роздруковувати те, що знаходиться всередині `результату`.\n\nЯкщо результат вашого тесту це словник, ви можете встановити змінну з назвою `колонка_порядку`, \nякий порядок ви хочете роздрукувати у вмісті `результат`.\n\nЯкщо вам це потрібно, ви також можете використовувати наступні змінні у вашому коді:\n    * cr: курсор до бази даних\n    * uid: ID поточного користувача\n\nБудь-якими способами цей код повинен бути легальною заявою python з правильним відступом (при необхідності).\n\nнаприклад: \n    sql = '''SELECT id, name, ref, date\n             FROM account_move_line \n             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n          '''\n    cr.execute(sql)\n    result = cr.dictfetchall()"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_uid
@@ -239,9 +239,9 @@ msgstr "Тест успішно пройдено"
 #. module: account_test
 #: model:ir.model,name:account_test.model_accounting_assert_test
 msgid "accounting.assert.test"
-msgstr ""
+msgstr "accounting.assert.test"
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_report_account_test_report_accounttest
 msgid "report.account_test.report_accounttest"
-msgstr ""
+msgstr "report.account_test.report_accounttest"
