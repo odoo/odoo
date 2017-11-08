@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from hashlib import sha256
 from json import dumps
+from datetime import timedelta
 
 from openerp import models, api, fields
+from openerp.fields import Datetime as FieldDateTime
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
@@ -129,9 +131,9 @@ class AccountMove(models.Model):
             previous_hash = move.l10n_fr_hash
         end_move_info = build_move_info(move)
 
-        # Dates in db are to the ms, while in python they are to the second
+        # Datetimes in db are to the µs, while in python they are to the second
         # and they are floored in python
-        end_write_date = end_move_info[4][:-1] + str(int(end_move_info[4][-1]) + 1)
+        end_write_date = FieldDateTime.to_string(FieldDateTime.from_string(end_move_info[4]) + timedelta(seconds=1))
         moves_in_period = len(self.search([
             ('write_date', '>=', start_move_info[4]), ('write_date', '<=', end_write_date),
             ('state', '=', 'posted'),

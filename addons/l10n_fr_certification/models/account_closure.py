@@ -1,10 +1,9 @@
 from datetime import datetime, timedelta
-import calendar
 
 from openerp import models, api, fields
+from openerp.fields import Datetime as FieldDateTime
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 WRITE_MSG = _('Sale Closings are not meant to be written or deleted under any circumstances.')
 
@@ -16,7 +15,7 @@ class AccountClosure(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     date_closure_stop = fields.Datetime(string="Closing Date", help='Date to which the values are computed', readonly=True)
     date_closure_start = fields.Datetime(string="Starting Date", help='Date from which the total interval is computed', readonly=True)
-    frequency = fields.Selection(string='Interval of the closing', selection=[('daily', 'Daily'), ('monthly', 'Monthly'), ('annually', 'Annual')], readonly=True)
+    frequency = fields.Selection(string='Closing Type', selection=[('daily', 'Daily'), ('monthly', 'Monthly'), ('annually', 'Annual')], readonly=True)
     total_interval = fields.Monetary(string="Period Total", help='Total in receivable accounts during the interval', readonly=True)
     total_beginning = fields.Monetary(string="Cumulative Grand Total", help='Total in receivable accounts since the beginning of times', readonly=True)
     sequence_number = fields.Integer('Sequence #', readonly=True)
@@ -86,9 +85,6 @@ class AccountClosure(models.Model):
                 'date_closure_start': interval_dates['interval_from']}
 
     def _interval_dates(self, frequency, company):
-        def time_to_string(datetime):
-            return datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-
         date_stop = datetime.utcnow()
         interval_from = None
         if frequency == 'daily':
@@ -101,8 +97,8 @@ class AccountClosure(models.Model):
             year_target = date_stop.year - 1
             interval_from = date_stop.replace(year=year_target)
 
-        return {'interval_from': time_to_string(interval_from),
-                'date_stop': time_to_string(date_stop)}
+        return {'interval_from': FieldDateTime.to_string(interval_from),
+                'date_stop': FieldDateTime.to_string(date_stop)}
 
     @api.multi
     def write(self, vals):
@@ -114,6 +110,11 @@ class AccountClosure(models.Model):
 
     @api.model
     def automated_closure(self, frequency='daily'):
+        def get_selection_value(field, value=''):
+            for item in field.selection:
+                if item[0] == value:
+                    return item[1]
+            return value
         # To be executed by the CRON to compute all the amount
         # call every _compute to get the amounts
         res_company = self.env['res.company'].search([])
@@ -125,7 +126,7 @@ class AccountClosure(models.Model):
             values['company_id'] = company.id
             values['currency_id'] = company.currency_id.id
             values['sequence_number'] = new_sequence_number
-            values['name'] = _('%s Closing - ') + values['date_closure_stop'][:8]
+            values['name'] = _('%s Closing - ') % (get_selection_value(self._fields['frequency'], value=frequency),) + values['date_closure_stop'][:10]
             account_closures |= account_closures.create(values)
 
         return account_closures

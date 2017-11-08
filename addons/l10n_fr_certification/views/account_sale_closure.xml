@@ -3,7 +3,7 @@
         <field name="name">Sales Closings</field>
         <field name="model">account.sale.closure</field>
         <field name="arch" type="xml">
-            <tree create="false" import="false">
+            <tree create="false" import="false" default_order="-date_closure_stop">
                 <field name="date_closure_start"/>
                 <field name="date_closure_stop"/>
                 <field name="company_id" groups="base.group_multi_company"/>
@@ -48,7 +48,7 @@
                     </group>
                 </group>
                 <notebook>
-                    <page string="Journal Entries">
+                    <page string="Journal Entries" groups="account.group_account_user">
                         <field name="move_ids"/>
                     </page>
                 </notebook>
@@ -62,6 +62,13 @@
         <field name="res_model">account.sale.closure</field>
         <field name="view_type">tree</field>
         <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_nocreate">
+                The closings are created by Odoo
+                </p><p>
+                Sales closings run automatically on a daily, monthly and annual basis. It computes both period and cumulative totals from all the sales entries posted in the system after the previous closing.
+            </p>
+        </field>
     </record>
 
     <menuitem action="action_list_view_account_sale_closure" id="menu_account_closure" parent="inalterability_fr_statements_menu" sequence="90"/>
