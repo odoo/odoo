@@ -150,7 +150,7 @@ class AccountMove(models.Model):
 
                          ''' + warning_on_count_mismatch + '''
 
-                         For this report to be legally meaningfull, dowload your certification at
+                         For this report to be legally meaningful, please dowload your certification at
                          https://accounts.odoo.com/my/contract/certification-french-accounting/'''
                          ) % (start_move_info[2],
                               start_move_info[3],

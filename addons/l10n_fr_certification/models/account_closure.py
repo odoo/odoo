@@ -6,7 +6,7 @@ from openerp.tools.translate import _
 from openerp.exceptions import UserError
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
-WRITE_MSG = _('Closures of receivable accounts are not meant to be written or deleted under any circumstances.')
+WRITE_MSG = _('Sale Closings are not meant to be written or deleted under any circumstances.')
 
 
 class AccountClosure(models.Model):
@@ -16,10 +16,10 @@ class AccountClosure(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     date_closure_stop = fields.Datetime(string="Closing Date", help='Date to which the values are computed', readonly=True)
     date_closure_start = fields.Datetime(string="Starting Date", help='Date from which the total interval is computed', readonly=True)
-    frequency = fields.Selection(string='Interval of the closure', selection=[('daily', 'Daily'), ('monthly', 'Monthly'), ('annually', 'Annually')], readonly=True)
+    frequency = fields.Selection(string='Interval of the closing', selection=[('daily', 'Daily'), ('monthly', 'Monthly'), ('annually', 'Annual')], readonly=True)
     total_interval = fields.Monetary(string="Period Total", help='Total in receivable accounts during the interval', readonly=True)
     total_beginning = fields.Monetary(string="Cumulative Grand Total", help='Total in receivable accounts since the beginning of times', readonly=True)
-    sequence_number = fields.Integer('Sequence number', readonly=True)
+    sequence_number = fields.Integer('Sequence #', readonly=True)
     move_ids = fields.Many2many('account.move', string='Journal entries that are included in the computation', readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', help="The company's currency", readonly=True)
 
@@ -125,7 +125,7 @@ class AccountClosure(models.Model):
             values['company_id'] = company.id
             values['currency_id'] = company.currency_id.id
             values['sequence_number'] = new_sequence_number
-            values['name'] = frequency + ", " + str(new_sequence_number)
+            values['name'] = _('%s Closing - ') + values['date_closure_stop']
             account_closures |= account_closures.create(values)
 
         return account_closures

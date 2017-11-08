@@ -53,7 +53,7 @@ class pos_order(models.Model):
         """ Returns the hash to write on pos orders when they get posted"""
         self.ensure_one()
         #get the only one exact previous order in the securisation sequence
-        prev_order = self.search([('state', 'in', ['done', 'invoiced']),
+        prev_order = self.search([('state', 'in', ['paid', 'done', 'invoiced']),
                                  ('company_id', '=', self.company_id.id),
                                  ('l10n_fr_pos_cert_sequence_number', '!=', 0),
                                  ('l10n_fr_pos_cert_sequence_number', '=', int(secure_seq_number) - 1)])
@@ -101,11 +101,11 @@ class pos_order(models.Model):
         for order in self:
             if order.company_id._is_accounting_unalterable(raise_on_nocountry=True):
                 # write the hash and the secure_sequence_number when posting or invoicing an pos.order
-                if vals.get('state') in ['done', 'invoiced']:
+                if vals.get('state') in ['paid', 'done', 'invoiced']:
                     has_been_posted = True
 
                 # restrict the operation in case we are trying to write a forbidden field
-                if (order.state in ['done', 'invoiced'] and set(vals).intersection(ORDER_FIELDS)):
+                if (order.state in ['paid', 'done', 'invoiced'] and set(vals).intersection(ORDER_FIELDS)):
                     raise UserError(ERR_MSG % ('point of sale order', ', '.join(ORDER_FIELDS)))
                 # restrict the operation in case we are trying to overwrite existing hash
                 if (order.l10n_fr_pos_cert_hash and 'l10n_fr_pos_cert_hash' in vals) or (order.l10n_fr_pos_cert_sequence_number and 'l10n_fr_pos_cert_sequence_number' in vals):
@@ -127,17 +127,17 @@ class pos_order(models.Model):
         and raises an error with the result.
         """
         def build_order_info(order):
-            entry_reference = _('ref.: %s')
+            entry_reference = _('(Receipt ref.: %s)')
             order_reference_string = order.pos_reference and entry_reference % order.pos_reference or ''
             return [order.date_order, order.l10n_fr_pos_cert_sequence_number, order.name, order_reference_string]
 
-        orders = self.search([('state', 'in', ['done', 'invoiced']),
+        orders = self.search([('state', 'in', ['paid', 'done', 'invoiced']),
                              ('company_id', '=', company_id),
                              ('l10n_fr_pos_cert_sequence_number', '!=', 0)],
                             order="l10n_fr_pos_cert_sequence_number ASC")
 
         if not orders:
-            raise UserError(_('There isn\'t any pos order flagged for data inalterability yet for the company %s. This mechanism only runs for point of sale orders generated after the installation of the module France - Certification CGI 286 I-3 bis. - POS') % self.env.user.company_id.name)
+            raise UserError(_('There isn\'t any order flagged for data inalterability yet for the company %s. This mechanism only runs for point of sale orders generated after the installation of the module France - Certification CGI 286 I-3 bis. - POS') % self.env.user.company_id.name)
         previous_hash = ''
         start_order_info = []
         for order in orders:
@@ -152,7 +152,7 @@ class pos_order(models.Model):
         # Raise on success
         orders_in_period = len(self.search([
             ('date_order', '>=', start_order_info[0]), ('date_order', '<=', end_order_info[0]),
-            ('state', 'in', ['done', 'invoiced']),
+            ('state', 'in', ['paid', 'done', 'invoiced']),
             ('company_id', '=', company_id)]))
 
         warning_on_count_mismatch = ''
@@ -170,7 +170,7 @@ class pos_order(models.Model):
 
                          ''' + warning_on_count_mismatch + '''
 
-                         For this report to be legally meaningfull, dowload your certification at
+                         For this report to be legally meaningful, please dowload your certification at
                          https://accounts.odoo.com/my/contract/certification-french-accounting/'''
                          ) % (start_order_info[2],
                               start_order_info[3],
@@ -195,6 +195,7 @@ class pos_order(models.Model):
             check_string += move_res[0]
 
         raise UserError(check_string)
+
 
 class PosOrderLine(models.Model):
     _inherit = "pos.order.line"
