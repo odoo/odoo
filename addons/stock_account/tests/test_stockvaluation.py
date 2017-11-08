@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase
 
 
@@ -2733,4 +2734,89 @@ class TestStockValuation(TransactionCase):
         ]})
         move2._action_done()
         self.assertEqual(move2.value, -10)
+
+    def test_move_in_or_out(self):
+        """ Test a few combination of move and their move lines and
+        check their valuation. A valued move should be IN or OUT.
+        Creating a move that is IN and OUT should be forbidden.
+        """
+        # an internal move should be considered as OUT if any of its move line
+        # is moved in a scrap location
+        scrap = self.env['stock.location'].create({
+            'name': 'scrap',
+            'usage': 'inventory',
+            'location_id': self.stock_location.id,
+            'scrap_location': True,
+        })
+
+        move1 = self.env['stock.move'].create({
+            'name': 'internal but out move',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.write({'move_line_ids': [
+            (0, None, {
+                'product_id': self.product1.id,
+                'qty_done': 1,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_uom_id': self.uom_unit.id
+            }),
+            (0, None, {
+                'product_id': self.product1.id,
+                'qty_done': 1,
+                'location_id': self.stock_location.id,
+                'location_dest_id': scrap.id,
+                'product_uom_id': self.uom_unit.id
+            }),
+        ]})
+        self.assertEqual(move1._is_out(), True)
+
+        # a move should be considered as invalid if some of its move lines are
+        # entering the company and some are leaving
+        customer1 = self.env['stock.location'].create({
+            'name': 'customer',
+            'usage': 'customer',
+            'location_id': self.stock_location.id,
+        })
+        supplier1 = self.env['stock.location'].create({
+            'name': 'supplier',
+            'usage': 'supplier',
+            'location_id': self.stock_location.id,
+        })
+        move2 = self.env['stock.move'].create({
+            'name': 'internal but in and out move',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+        })
+        move2._action_confirm()
+        move2._action_assign()
+        move2.write({'move_line_ids': [
+            (0, None, {
+                'product_id': self.product1.id,
+                'qty_done': 1,
+                'location_id': customer1.id,
+                'location_dest_id': self.stock_location.id,
+                'product_uom_id': self.uom_unit.id
+            }),
+            (0, None, {
+                'product_id': self.product1.id,
+                'qty_done': 1,
+                'location_id': self.stock_location.id,
+                'location_dest_id': customer1.id,
+                'product_uom_id': self.uom_unit.id
+            }),
+        ]})
+        self.assertEqual(move2._is_in(), True)
+        self.assertEqual(move2._is_out(), True)
+        with self.assertRaises(UserError):
+            move2._action_done()
 

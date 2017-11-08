@@ -184,7 +184,10 @@ class StockMove(models.Model):
 
         :return: True if the move is entering the company else False
         """
-        return not self.location_id._should_be_valued() and self.location_dest_id._should_be_valued()
+        for move_line in self.move_line_ids:
+            if not move_line.location_id._should_be_valued() and move_line.location_dest_id._should_be_valued():
+                return True
+        return False
 
     def _is_out(self):
         """ Check if the move should be considered as leaving the company so that the cost method
@@ -192,7 +195,10 @@ class StockMove(models.Model):
 
         :return: True if the move is leaving the company else False
         """
-        return self.location_id._should_be_valued() and not self.location_dest_id._should_be_valued()
+        for move_line in self.move_line_ids:
+            if move_line.location_id._should_be_valued() and not move_line.location_dest_id._should_be_valued():
+                return True
+        return False
 
     @api.model
     def _run_fifo(self, move, quantity=None):
@@ -292,6 +298,21 @@ class StockMove(models.Model):
         self.product_price_update_before_done()
         res = super(StockMove, self)._action_done()
         for move in res:
+            # Apply restrictions on the stock move to be able to make
+            # consistent accounting entries.
+            if move._is_in() and move._is_out():
+                raise UserError(_("The move lines are not in a consistent state: some are entering and other are leaving the company. "))
+            company_src = move.mapped('move_line_ids.location_id.company_id')
+            company_dst = move.mapped('move_line_ids.location_dest_id.company_id')
+            try:
+                if company_src:
+                    company_src.ensure_one()
+                if company_dst:
+                    company_dst.ensure_one()
+            except ValueError:
+                raise UserError(_("The move lines are not in a consistent states: they do not share the same origin or destination company."))
+            if company_src and company_dst and company_src.id != company_dst.id:
+                raise UserError(_("The move lines are not in a consistent states: they are doing an intercompany in a single step while they should go through the intercompany transit location."))
             move._run_valuation()
         for move in res.filtered(lambda m: m.product_id.valuation == 'real_time' and (m._is_in() or m._is_out())):
             move._account_entry_move()
@@ -536,12 +557,12 @@ class StockMove(models.Model):
 
         location_from = self.location_id
         location_to = self.location_dest_id
-        company_from = location_from._should_be_valued() and location_from.company_id or False
-        company_to = location_to._should_be_valued() and location_to.company_id or False
+        company_from = self._is_out() and self.mapped('move_line_ids.location_id.company_id') or False
+        company_to = self._is_in() and self.mapped('move_line_ids.location_dest_id.company_id') or False
 
         # Create Journal Entry for products arriving in the company; in case of routes making the link between several
         # warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
-        if company_to and (self._is_in() or company_from != company_to):
+        if self._is_in():
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
             if location_from and location_from.usage == 'customer':  # goods returned from customer
                 self.with_context(force_company=company_to.id)._create_account_move_line(acc_dest, acc_valuation, journal_id)
@@ -549,7 +570,7 @@ class StockMove(models.Model):
                 self.with_context(force_company=company_to.id)._create_account_move_line(acc_src, acc_valuation, journal_id)
 
         # Create Journal Entry for products leaving the company
-        if company_from and (self._is_out() or company_from != company_to):
+        if self._is_out():
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
             if location_to and location_to.usage == 'supplier':  # goods returned to supplier
                 self.with_context(force_company=company_from.id)._create_account_move_line(acc_valuation, acc_src, journal_id)
