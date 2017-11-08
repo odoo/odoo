@@ -226,7 +226,9 @@ var StatementModel = BasicModel.extend({
      * @returns {Deferred}
      */
     changeOffset: function (handle, offset) {
-        this.getLine(handle).offset += (offset > 0 ? 1 : -1) * this.limitMoveLines;
+        var line = this.getLine(handle);
+        line.offset += (offset > 0 ? 1 : -1) * this.limitMoveLines;
+        line.clear_lines = false;
         return this._performMoveLine(handle);
     },
     /**
@@ -373,6 +375,8 @@ var StatementModel = BasicModel.extend({
                         mv_lines: [],
                         offset: 0,
                         filter: "",
+                        limit: statement.mv_lines_limit || 40,
+                        clear_lines: true,
                         reconciliation_proposition: [],
                         reconcileModels: [],
                     };
@@ -909,7 +913,13 @@ var StatementModel = BasicModel.extend({
     _formatMoveLine: function (handle, mv_lines) {
         var self = this;
         var line = this.getLine(handle);
-        _.extend(line, {'mv_lines': mv_lines});
+        if (line.clear_lines) {
+            _.extend(line, {'mv_lines': mv_lines});
+        } else {
+            // expand mv_lines, when we click on show more buton
+            line.mv_lines = _.uniq(line.mv_lines.concat(mv_lines), 'id');
+            mv_lines = line.mv_lines;
+        }
         this._formatLineProposition(line, mv_lines);
         if (line.mode !== 'create' && !mv_lines.length && !line.filter.length) {
             line.mode = this.avoidCreate || !line.balance.amount ? 'inactive' : 'create';
@@ -1025,7 +1035,7 @@ var StatementModel = BasicModel.extend({
         })));
         var filter = line.filter || "";
         var offset = line.offset;
-        var limit = this.limitMoveLines+1;
+        var limit = line.limit + 1; // +1 to show load more button
         return this._rpc({
                 model: 'account.bank.statement.line',
                 method: 'get_move_lines_for_reconciliation_widget',
@@ -1154,6 +1164,7 @@ var ManualModel = StatementModel.extend({
                             context: context,
                         })
                         .then(function (result) {
+                            self.mv_lines_limit = result.mv_lines_limit;
                             var defs = _.map(result.accounts, self._formatLine.bind(self, 'accounts'));
                             defs = defs.concat(_.map(result.customers, self._formatLine.bind(self, 'customers')));
                             defs = defs.concat(_.map(result.suppliers, self._formatLine.bind(self, 'suppliers')));
@@ -1307,8 +1318,9 @@ var ManualModel = StatementModel.extend({
             reconciled: false,
             mode: 'inactive',
             offset: 0,
-            limitMoveLines: this.limitMoveLines,
+            limit: this.mv_lines_limit || 40,
             filter: "",
+            clear_lines: true,
             reconcileModels: [],
             account_id: this._formatNameGet([data.account_id, data.account_name]),
             st_line: data,
@@ -1376,7 +1388,7 @@ var ManualModel = StatementModel.extend({
         })));
         var filter = line.filter || "";
         var offset = line.offset;
-        var limit = this.limitMoveLines+1;
+        var limit = line.limit + 1; // +1 to show load more button
         var args = [line.account_id.id, line.partner_id, excluded_ids, filter, offset, limit];
         return this._rpc({
                 model: 'account.move.line',

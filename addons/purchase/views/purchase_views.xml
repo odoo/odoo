@@ -599,8 +599,8 @@
                     <attribute name="domain">[('deprecated','=',False)]</attribute>
                     <attribute name="attrs">{'readonly': [('purchase_ok', '=', 0)]}</attribute>
                 </field>
-                <field name='supplier_taxes_id' position="replace" >
-                     <field name="supplier_taxes_id" colspan="2" widget="many2many_tags" attrs="{'readonly':[('purchase_ok','=',0)]}"/>
+                <field name='supplier_taxes_id' position="attributes">
+                    <attribute name="attrs">{'readonly':[('purchase_ok','=',0)]}</attribute>
                 </field>
             </field>
         </record>

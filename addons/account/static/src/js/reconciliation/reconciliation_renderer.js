@@ -253,8 +253,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         'click .accounting_view tfoot td:not(.cell_left,.cell_right)': '_onShowPanel',
         'click tfoot .cell_left, tfoot .cell_right': '_onSearchBalanceAmount',
         'input input.filter': '_onFilterChange',
-        'click .match_controls .fa-chevron-left:not(.disabled)': '_onPrevious',
-        'click .match_controls .fa-chevron-right:not(.disabled)': '_onNext',
+        'click .show_more': '_onShowMore',
         'click .match .mv_line td': '_onSelectMoveLine',
         'click .accounting_view tbody .mv_line td': '_onSelectProposition',
         'click .o_reconcile_models button': '_onQuickCreateProposition',
@@ -316,6 +315,38 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * Show move line into the statement
+     *
+     * @param {object} state - statement line
+     */
+    loadMoveLine: function (state) {
+        var $mv_lines = this.$('.match table tbody');
+        if (state.clear_lines) {
+            $mv_lines.empty();
+            this._reset(state);
+        }
+        var limit = this.pagerOffset + state.limit;
+        _.each(state.mv_lines.slice(this.pagerOffset, limit), function (line) {
+            var $line = $(qweb.render("reconciliation.line.mv_line", {'line': line, 'state': state,}));
+            if (!isNaN(line.id)) {
+                $('<span/>', {
+                    class: 'line_info_button fa fa-info-circle',
+                })
+                .appendTo($line.find('.cell_info_popover'))
+                .attr("data-content", qweb.render('reconciliation.line.mv_line.details', {'line': line}));
+            }
+            $mv_lines.append($line);
+        });
+        if (state.mv_lines.length > limit) {
+            this.$('.show_more').removeClass('hidden');
+            this.pagerOffset += state.limit;
+        } else {
+            // reset, when we reach the all move lines
+            this._reset(state);
+            this.$('.show_more').addClass('hidden');
+        }
+    },
     /**
      * update the statement line rendering
      *
@@ -385,20 +416,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             $props.append($line);
         });
 
-        // mv_lines
-        var $mv_lines = this.$('.match table tbody').empty();
-        _.each(state.mv_lines.slice(0, state.limitMoveLines), function (line) {
-            var $line = $(qweb.render("reconciliation.line.mv_line", {'line': line, 'state': state}));
-            if (!isNaN(line.id)) {
-                $('<span class="line_info_button fa fa-info-circle"/>')
-                    .appendTo($line.find('.cell_info_popover'))
-                    .attr("data-content", qweb.render('reconciliation.line.mv_line.details', {'line': line}));
-            }
-            $mv_lines.append($line);
-        });
-        this.$('.match .fa-chevron-right').toggleClass('disabled', state.mv_lines.length <= state.limitMoveLines);
-        this.$('.match .fa-chevron-left').toggleClass('disabled', !state.offset);
-        this.$('.match').css('max-height', !state.mv_lines.length && !state.filter.length ? '0px' : '');
+        self.loadMoveLine(state);
 
         // balance
         this.$('.popover').remove();
@@ -441,6 +459,15 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         if (popover) {
             popover.destroy();
         }
+    },
+    /**
+     * @private
+     * @param {object} state
+     */
+    _reset: function (state) {
+        this.pagerOffset = 0; // for move line
+        state.offset = 0;
+        state.clear_lines = true;
     },
     /**
      * @private
@@ -648,15 +675,12 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     },
     /**
      * @private
+     * @param {MouseEvent} event
      */
-    _onPrevious: function () {
-        this.trigger_up('change_offset', {'data': -1});
-    },
-    /**
-     * @private
-     */
-    _onNext: function () {
-        this.trigger_up('change_offset', {'data': 1});
+    _onShowMore: function (ev) {
+        ev.preventDefault();
+        var limit = this.model.getLine(this.handle).limit;
+        this.trigger_up('change_offset', {'data': limit});
     },
     /**
      * @private

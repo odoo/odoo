@@ -224,6 +224,7 @@ var data_preprocess = {
     num_already_reconciled_lines: 0,
     st_lines_ids: [5, 6, 7, 8],
     statement_name: 'BNK/2014/001',
+    mv_lines_limit: 5,
 };
 
 var data_widget = [
@@ -428,7 +429,8 @@ var data_for_manual_reconciliation_widget = {
                 ],
                 'currency_id': 3, 'max_date': "2017-02-14 12:36:05", 'last_time_entries_checked': null, 'account_code': "111100", 'partner_id': 12, 'account_name': "Account Payable"
             }
-        ]
+        ],
+        'mv_lines_limit': 5,
     },
     '["partner",null,"receivable"]': [
         {'account_id': 287, 'partner_name': "Agrolait", 'reconciliation_proposition': [], 'currency_id': 3, 'max_date': "2017-02-14 12:30:31", 'last_time_entries_checked': null, 'account_code': "101200", 'partner_id': 8, 'account_name': "101200 Account Receivable"},
@@ -582,7 +584,7 @@ QUnit.module('account', {
     });
 
     QUnit.test('Reconciliation basic data', function (assert) {
-        assert.expect(14);
+        assert.expect(16);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
         testUtils.addMockEnvironment(clientAction, {
@@ -616,11 +618,12 @@ QUnit.module('account', {
             " 101401 2017-01-23 ASUSTeK: BNK1/2017/0002: SUPP.OUT/2017/0002 : BILL/2017/0003 $ 376.00 101401 2017-01-23 Agrolait: BNK1/2017/0003: CUST.IN/2017/0001 $ 100.00 101401 2017-01-23 Agrolait: BNK1/2017/0004: CUST.IN/2017/0002 : INV/2017/0003 $ 525.50 101200 2017-02-07 Agrolait: INV/2017/0002 $ 650.00 101200 2017-02-22 Agrolait: INV/2017/0004 $ 525.00 ",
             "should display 4 account move lines who contains the account_code, due_date, label and the credit");
         assert.strictEqual(clientAction.widgets[1].$('.mv_line .cell_left:not(:empty)').length, 1, "should display only 1 debit account move lines");
-        clientAction.widgets[1].$('.match_controls .fa-chevron-right').trigger('click');
+        assert.strictEqual(clientAction.$('.show_more:visible').length, 1, "should display the show more button");
+        clientAction.$('.show_more:visible').click();
+        assert.strictEqual(clientAction.$('.mv_line').length, 11, "should load the last record");
         assert.strictEqual(clientAction.widgets[1].$('.mv_line').text().replace(/[\n\r\s]+/g, ' '),
-            " 101200 2017-02-28 Camptocamp: INV/2017/0001 $ 4,610.00 111100 2017-02-28 Camptocamp: BILL/2017/0001 $ 10,000.00 111100 2017-02-28 ASUSTeK: BILL/2017/0002 $ 5,749.99 ",
-            "should display the next 5 account move lines");
-
+            " 101401 2017-01-23 ASUSTeK: BNK1/2017/0002: SUPP.OUT/2017/0002 : BILL/2017/0003 $ 376.00 101401 2017-01-23 Agrolait: BNK1/2017/0003: CUST.IN/2017/0001 $ 100.00 101401 2017-01-23 Agrolait: BNK1/2017/0004: CUST.IN/2017/0002 : INV/2017/0003 $ 525.50 101200 2017-02-07 Agrolait: INV/2017/0002 $ 650.00 101200 2017-02-22 Agrolait: INV/2017/0004 $ 525.00 101200 2017-02-28 Camptocamp: INV/2017/0001 $ 4,610.00 111100 2017-02-28 Camptocamp: BILL/2017/0001 $ 10,000.00 111100 2017-02-28 ASUSTeK: BILL/2017/0002 $ 5,749.99 ",
+            "should add the next 5 account move lines");
         assert.ok(clientAction.widgets[0].$('caption button.btn-default:visible').length, "should display the 'validate' button");
         assert.ok(clientAction.widgets[1].$('caption .text-danger:visible').length, "should display the 'Select a partner or choose a counterpart' message");
         assert.ok(clientAction.widgets[2].$('caption button.btn-primary:visible').length, "should display the 'Reconcile' button");
@@ -837,8 +840,8 @@ QUnit.module('account', {
         widget.$('.o_input_dropdown input').trigger('click');
         widget.$('.o_input_dropdown input').val('').trigger('keyup').trigger('blur');
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "", "the partner many2one should be empty");
-        assert.strictEqual(widget.$('.match table tr.mv_line').length, 5, "should have 5 propositions for reconciliation if partner is false");
-        assert.strictEqual(widget.$('.match .match_controls > .fa:not(.disabled)').length, 1, "should display the right arrow");
+        assert.strictEqual(widget.$('.match table tr.mv_line').length, 5, "should have 5 propositions for reconciliation if partner is false")
+        assert.strictEqual(widget.$('.show_more:not(.hidden)').length, 1, "should not display the show more button");
 
         clientAction.destroy();
     });
