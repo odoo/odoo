@@ -352,7 +352,7 @@ class account_payment(models.Model):
             self.destination_account_id = self.invoice_ids[0].account_id.id
         elif self.payment_type == 'transfer':
             if not self.company_id.transfer_account_id.id:
-                raise UserError(_('Transfer account not defined on the company.'))
+                raise UserError(_('There is no Transfer Account defined in the accounting settings. Please define one to be able to confirm this transfer.'))
             self.destination_account_id = self.company_id.transfer_account_id.id
         elif self.partner_id:
             if self.partner_type == 'customer':
