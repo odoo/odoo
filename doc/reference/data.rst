@@ -23,12 +23,31 @@ of an XML data file is the following:
 
     <!-- the root elements of the data file -->
     <odoo>
-      <operation/>
-      ...
+      <data>
+        <operation/>
+        ...
+      </data>
     </odoo>
 
 Data files are executed sequentially, operations can only refer to the result
 of operations defined previously
+
+Data Tag Parameter
+==================
+
+``noupdate``
+   ``values : 0 or 1``
+    As name suggest, ``noupdate="0"`` mode make record can be modify by other advanced modules otherwise ``noupdate="1"``.
+
+.. code-block:: xml
+
+    <odoo>
+      <data noupdate="1">
+        <operation/>
+        ...
+      </data>
+    </odoo>
+
 
 Core operations
 ===============
@@ -57,6 +76,17 @@ following attributes:
 
     Requires an :term:`external id`, defaults to ``True``.
 
+.. code-block:: xml
+
+    <!-- Ecommerce Variants and Products -->
+    <record id="product_attribute_1" model="product.attribute">
+      ...
+    </record>
+
+    <record id="product_attribute_value_1" model="product.attribute.value">
+      ...
+    </record>
+
 ``field``
 ----------
 
@@ -78,12 +108,22 @@ Nothing
     Will evaluate the domain, search the field's model using it and set the
     search's result as the field's value. Will only use the first result if
     the field is a :class:`~odoo.fields.Many2one`
+
+.. code-block:: xml
+
+    <field name="journal_id" search="[('type', '=', 'purchase')]"/>
+
 ``ref``
     if a ``ref`` attribute is provided, its value must be a valid
     :term:`external id`, which will be looked up and set as the field's value.
 
     Mostly for :class:`~odoo.fields.Many2one` and
     :class:`~odoo.fields.Reference` fields
+
+.. code-block:: xml
+
+     <field name="attribute_id" ref="product_attribute_1"/>
+
 ``type``
     if a ``type`` attribute is provided, it is used to interpret and convert
     the field's content. The field's content can be provided through an
