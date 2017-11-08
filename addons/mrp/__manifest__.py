@@ -15,7 +15,6 @@
         'security/mrp_security.xml',
         'security/ir.model.access.csv',
         'data/mrp_data.xml',
-        'data/mrp_data.yml',
         'wizard/mrp_product_produce_views.xml',
         'wizard/change_production_qty_views.xml',
         'wizard/mrp_workcenter_block_view.xml',
@@ -44,7 +43,7 @@
     ],
     'demo': [
         'data/mrp_demo.xml',
-        'data/mrp_lot_demo.yml'],
+    ],
     'qweb': ['static/src/xml/mrp.xml'],
     'test': [],
     'application': True,
