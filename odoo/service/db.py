@@ -361,14 +361,7 @@ def list_dbs(force=False):
     db = odoo.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
         try:
-            db_user = odoo.tools.config["db_user"]
-            if not db_user and os.name == 'posix':
-                import pwd
-                db_user = pwd.getpwuid(os.getuid())[0]
-            if not db_user:
-                cr.execute("select usename from pg_user where usesysid=(select datdba from pg_database where datname=%s)", (odoo.tools.config["db_name"],))
-                res = cr.fetchone()
-                db_user = res and str(res[0])
+            db_user = cr._cnx.get_dsn_parameters().get('user')
             if db_user:
                 cr.execute("select datname from pg_database where datdba=(select usesysid from pg_user where usename=%s) and not datistemplate and datallowconn and datname not in %s order by datname", (db_user, templates_list))
             else:
