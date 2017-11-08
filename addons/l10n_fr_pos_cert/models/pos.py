@@ -129,7 +129,7 @@ class pos_order(models.Model):
         def build_order_info(order):
             entry_reference = _('(Receipt ref.: %s)')
             order_reference_string = order.pos_reference and entry_reference % order.pos_reference or ''
-            return [order.date_order, order.l10n_fr_pos_cert_sequence_number, order.name, order_reference_string]
+            return [order.date_order, order.l10n_fr_pos_cert_sequence_number, order.name, order_reference_string, order.write_date]
 
         orders = self.search([('state', 'in', ['paid', 'done', 'invoiced']),
                              ('company_id', '=', company_id),
@@ -149,7 +149,6 @@ class pos_order(models.Model):
             previous_hash = order.l10n_fr_pos_cert_hash
         end_order_info = build_order_info(order)
 
-        # Raise on success
         orders_in_period = len(self.search([
             ('date_order', '>=', start_order_info[0]), ('date_order', '<=', end_order_info[0]),
             ('state', 'in', ['paid', 'done', 'invoiced']),
@@ -157,8 +156,9 @@ class pos_order(models.Model):
 
         warning_on_count_mismatch = ''
         if orders_in_period != end_order_info[1]:
-            warning_on_count_mismatch = _('All orders recorded over this period should have also been controlled to be compliant with the legislation. Please refer to our [official documentation][LINK TO DOC] to avoid such an issue moving forward.')
+            warning_on_count_mismatch = _('All orders recorded over this period should have also been controlled to be compliant with the legislation. Please refer to our official documentation to avoid such an issue moving forward.')
 
+        # Raise on success
         raise UserError(_('''Successful test !
 
                          The point of sale orders are guaranteed to be in their original and inalterable state

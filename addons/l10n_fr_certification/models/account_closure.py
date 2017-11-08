@@ -125,7 +125,7 @@ class AccountClosure(models.Model):
             values['company_id'] = company.id
             values['currency_id'] = company.currency_id.id
             values['sequence_number'] = new_sequence_number
-            values['name'] = _('%s Closing - ') + values['date_closure_stop']
+            values['name'] = _('%s Closing - ') + values['date_closure_stop'][:8]
             account_closures |= account_closures.create(values)
 
         return account_closures

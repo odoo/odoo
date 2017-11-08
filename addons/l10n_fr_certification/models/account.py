@@ -109,7 +109,7 @@ class AccountMove(models.Model):
         def build_move_info(move):
             entry_reference = _('(ref.: %s)')
             move_reference_string = move.ref and entry_reference % move.ref or ''
-            return [move.date, move.l10n_fr_secure_sequence_number, move.name, move_reference_string]
+            return [move.date, move.l10n_fr_secure_sequence_number, move.name, move_reference_string, move.write_date]
 
         moves = self.search([('state', '=', 'posted'),
                              ('company_id', '=', company_id),
@@ -129,16 +129,19 @@ class AccountMove(models.Model):
             previous_hash = move.l10n_fr_hash
         end_move_info = build_move_info(move)
 
-        # Raise on success
+        # Dates in db are to the ms, while in python they are to the second
+        # and they are floored in python
+        end_write_date = end_move_info[4][:-1] + str(int(end_move_info[4][-1]) + 1)
         moves_in_period = len(self.search([
-            ('date', '>=', start_move_info[0]), ('date', '<=', end_move_info[0]),
+            ('write_date', '>=', start_move_info[4]), ('write_date', '<=', end_write_date),
             ('state', '=', 'posted'),
             ('company_id', '=', company_id)]))
 
         warning_on_count_mismatch = ''
         if moves_in_period != end_move_info[1]:
-            warning_on_count_mismatch = _('All the entries recorded over this period should have also been controlled to be compliant with the legislation. Please refer to our [official documentation][LINK TO DOC] to avoid such an issue moving forward.')
+            warning_on_count_mismatch = _('All the entries recorded over this period should have also been controlled to be compliant with the legislation. Please refer to our official documentation to avoid such an issue moving forward.')
 
+        # Raise on success
         raise UserError(_('''Successful test !
 
                          The journal entries are guaranteed to be in their original and inalterable state
