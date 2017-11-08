@@ -2644,3 +2644,93 @@ class TestStockValuation(TransactionCase):
         # (9 * 10) + (15 * 10) / 19
         self.assertEqual(self.product1.standard_price, 12.63)
 
+    def test_fifo_sublocation_valuation_1(self):
+        """ Set the main stock as a view location. Receive 2 units of a
+        product, put 1 unit in an internal sublocation and the second
+        one in a scrap sublocation. Only a single unit, the one in the
+        internal sublocation, should be valued. Then, send these two
+        quants to a customer, only the one in the internal location
+        should be valued.
+        """
+        self.product1.product_tmpl_id.cost_method = 'fifo'
+
+        view_location = self.env['stock.location'].create({'name': 'view', 'usage': 'view'})
+        subloc1 = self.env['stock.location'].create({
+            'name': 'internal',
+            'usage': 'internal',
+            'location_id': view_location.id,
+        })
+        # sane settings for a scrap location, company_id doesn't matter
+        subloc2 = self.env['stock.location'].create({
+            'name': 'scrap',
+            'usage': 'inventory',
+            'location_id': view_location.id,
+            'scrap_location': True,
+        })
+
+        move1 = self.env['stock.move'].create({
+            'name': '2 units @ 10.00 per unit',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+            'price_unit': 10,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+
+        move1.write({'move_line_ids': [
+            (0, None, {
+                'product_id': self.product1.id,
+                'qty_done': 1,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': subloc1.id,
+                'product_uom_id': self.uom_unit.id
+            }),
+            (0, None, {
+                'product_id': self.product1.id,
+                'qty_done': 1,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': subloc2.id,
+                'product_uom_id': self.uom_unit.id
+            }),
+        ]})
+
+        move1._action_done()
+        self.assertEqual(move1.value, 10)
+        self.assertEqual(move1.remaining_value, 10)
+        self.assertEqual(move1.remaining_qty, 1)
+        self.assertEqual(self.product1.stock_value, 10)
+        self.assertTrue(len(move1.account_move_ids), 1)
+
+        move2 = self.env['stock.move'].create({
+            'name': '2 units out',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+        })
+        move2._action_confirm()
+        move2._action_assign()
+
+        move2.write({'move_line_ids': [
+            (0, None, {
+                'product_id': self.product1.id,
+                'qty_done': 1,
+                'location_id': subloc1.id,
+                'location_dest_id': self.supplier_location.id,
+                'product_uom_id': self.uom_unit.id
+            }),
+            (0, None, {
+                'product_id': self.product1.id,
+                'qty_done': 1,
+                'location_id': subloc2.id,
+                'location_dest_id': self.supplier_location.id,
+                'product_uom_id': self.uom_unit.id
+            }),
+        ]})
+        move2._action_done()
+        self.assertEqual(move2.value, -10)
+

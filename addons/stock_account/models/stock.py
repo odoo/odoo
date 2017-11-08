@@ -198,7 +198,10 @@ class StockMove(models.Model):
     def _run_fifo(self, move, quantity=None):
         move.ensure_one()
         # Find back incoming stock moves (called candidates here) to value this move.
-        qty_to_take_on_candidates = quantity or move.product_qty
+        valued_move_lines = move.move_line_ids.filtered(lambda ml: ml.location_id._should_be_valued() and not ml.location_dest_id._should_be_valued())
+        valued_quantity = sum(valued_move_lines.mapped('qty_done'))
+
+        qty_to_take_on_candidates = quantity or valued_quantity
         candidates = move.product_id._get_fifo_candidates_in_move()
         new_standard_price = 0
         tmp_value = 0  # to accumulate the value taken on the candidates
@@ -252,32 +255,37 @@ class StockMove(models.Model):
     def _run_valuation(self, quantity=None):
         self.ensure_one()
         if self._is_in():
+            valued_move_lines = self.move_line_ids.filtered(lambda ml: not ml.location_id._should_be_valued() and ml.location_dest_id._should_be_valued())
+            valued_quantity = sum(valued_move_lines.mapped('qty_done'))
+
             if self.product_id.cost_method in ['fifo', 'average']:
                 price_unit = self._get_price_unit()
-                value = price_unit * (quantity or self.product_qty)
+                value = price_unit * (quantity or valued_quantity)
                 vals = {
                     'price_unit': price_unit,
                     'value': value if quantity is None or not self.value else self.value,
                     'remaining_value': value if quantity is None else self.remaining_value + value,
                 }
                 if self.product_id.cost_method == 'fifo':
-                    vals['remaining_qty'] = self.product_qty if quantity is None else self.remaining_qty + quantity
+                    vals['remaining_qty'] = valued_quantity if quantity is None else self.remaining_qty + quantity
                 self.write(vals)
             else:  # standard
-                value = self.product_id.standard_price * (quantity or self.product_qty)
+                value = self.product_id.standard_price * (quantity or valued_quantity)
                 self.write({
                     'price_unit': self.product_id.standard_price,
                     'value': value if quantity is None or not self.value else self.value,
                 })
         elif self._is_out():
+            valued_move_lines = self.move_line_ids.filtered(lambda ml: ml.location_id._should_be_valued() and not ml.location_dest_id._should_be_valued())
+            valued_quantity = sum(valued_move_lines.mapped('qty_done'))
             if self.product_id.cost_method == 'fifo':
                 self.env['stock.move']._run_fifo(self, quantity=quantity)
             elif self.product_id.cost_method in ['standard', 'average']:
                 curr_rounding = self.company_id.currency_id.rounding
-                value = -float_round(self.product_id.standard_price * (self.product_qty if quantity is None else quantity), precision_rounding=curr_rounding)
+                value = -float_round(self.product_id.standard_price * (valued_quantity if quantity is None else quantity), precision_rounding=curr_rounding)
                 self.write({
                     'value': value if quantity is None else self.value + value,
-                    'price_unit': value / self.product_qty,
+                    'price_unit': value / valued_quantity,
                 })
 
     def _action_done(self):
