@@ -1019,6 +1019,118 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move4.remaining_qty, 3.0)
         self.assertEqual(move5.remaining_qty, 0.0)  # unused in out moves
 
+    def test_fifo_perpetual_4(self):
+        """ Fifo and return handling.
+        """
+        self.product1.cost_method = 'fifo'
+
+        # in 8 @ 10
+        move1 = self.env['stock.move'].create({
+            'name': 'in 8 @ 10',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 8.0,
+            'price_unit': 10,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.move_line_ids.qty_done = 8.0
+        move1._action_done()
+
+        self.assertEqual(move1.value, 80.0)
+        self.assertEqual(move1.remaining_value, 80.0)
+        self.assertEqual(move1.remaining_qty, 8.0)
+
+        # in 4 @ 16
+        move2 = self.env['stock.move'].create({
+            'name': 'in 4 @ 16',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 4.0,
+            'price_unit': 16,
+        })
+        move2._action_confirm()
+        move2._action_assign()
+        move2.move_line_ids.qty_done = 4.0
+        move2._action_done()
+
+
+        self.assertEqual(move2.value, 64)
+        self.assertEqual(move2.remaining_value, 64)
+        self.assertEqual(move2.remaining_qty, 4.0)
+
+        # out 10
+        out_pick = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'partner_id': self.env['res.partner'].search([], limit=1).id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        move3 = self.env['stock.move'].create({
+            'name': 'out 10',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'picking_id': out_pick.id,
+        })
+        move3._action_confirm()
+        move3._action_assign()
+        move3.move_line_ids.qty_done = 10.0
+        move3._action_done()
+
+
+        # note: it' ll have to get 8 units from move1 and 2 from move2
+        # so its value should be -((8*10) + (2*16)) = -116
+        self.assertEqual(move3.value, -112.0)
+
+        self.assertEqual(move1.remaining_qty, 0)
+        self.assertEqual(move2.remaining_qty, 2)
+        self.assertEqual(move3.remaining_qty, 0.0)  # unused in out moves
+
+        # in 2 @ 6
+        move4 = self.env['stock.move'].create({
+            'name': 'in 2 @ 6',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+            'price_unit': 6,
+        })
+        move4._action_confirm()
+        move4._action_assign()
+        move4.move_line_ids.qty_done = 2.0
+        move4._action_done()
+
+        self.assertEqual(move4.value, 12.0)
+
+        self.assertEqual(move1.remaining_qty, 0)
+        self.assertEqual(move2.remaining_qty, 2)
+        self.assertEqual(move3.remaining_qty, 0.0)  # unused in out moves
+        self.assertEqual(move4.remaining_qty, 2.0)
+
+        self.assertEqual(self.product1.standard_price, 16)
+
+        # return
+        stock_return_picking = self.env['stock.return.picking']\
+            .with_context(active_ids=[out_pick.id], active_id=out_pick.id)\
+            .create({})
+        stock_return_picking.product_return_moves.quantity = 1.0 # Return only 2
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick.move_lines[0].move_line_ids[0].qty_done = 1.0
+        return_pick.do_transfer()
+
+        self.assertEqual(self.product1.standard_price, 16)
+
+        self.assertEqual(return_pick.move_lines.price_unit, 16)
+
     def test_fifo_negative_1(self):
         """ Send products that you do not have. Value the first outgoing move to the standard
         price, receive in multiple times the delivered quantity and run _fifo_vacuum to compensate.
