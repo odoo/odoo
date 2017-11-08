@@ -63,17 +63,18 @@
                                 <div class="o_setting_left_pane"/>
                                 <div class="o_setting_right_pane">
                                     <label string='Default Taxes'/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                     <div class="text-muted">
                                         Default taxes applied to local transactions
                                     </div>
                                     <div class="content-group">
                                         <div class="row mt16">
-                                            <label string="Sales Tax" for="default_sale_tax_id" class="col-md-3 o_light_label"/>
-                                            <field name="default_sale_tax_id" domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"/>
+                                            <label string="Sales Tax" for="sale_tax_id" class="col-md-3 o_light_label"/>
+                                            <field name="sale_tax_id" domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"/>
                                         </div>
                                         <div class="row">
-                                            <label string="Purchase Tax" for="default_purchase_tax_id" class="col-md-3 o_light_label"/>
-                                            <field name="default_purchase_tax_id" domain="[('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company_id)]"/>
+                                            <label string="Purchase Tax" for="purchase_tax_id" class="col-md-3 o_light_label"/>
+                                            <field name="purchase_tax_id" domain="[('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company_id)]"/>
                                         </div>
                                     </div>
                                 </div>
