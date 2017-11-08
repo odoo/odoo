@@ -42,9 +42,12 @@ class WebsiteEventSaleController(WebsiteEventController):
             attendees = request.env['event.registration'].browse(list(attendee_ids))
             # clean context and session, then redirect to the confirmation page
             request.website.sale_reset()
+            urls = event._get_event_resource_urls(list(attendee_ids))
             return request.render("website_event.registration_complete", {
                 'attendees': attendees,
                 'event': event,
+                'google_url': urls.get('google_url'),
+                'iCal_url': urls.get('iCal_url')
             })
 
         return request.redirect("/shop/checkout")
