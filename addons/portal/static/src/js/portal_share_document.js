@@ -77,6 +77,19 @@ var ShareDocument = Widget.extend({
                     return term.text + " "+"(" + term.email + ")";
                 }
             },
+            createSearchChoice: function (term, data) {
+                var added_tags = $(this.opts.element).select2('data');
+                if (_.filter(_.union(added_tags, data), function (tag) {
+                    return tag.text.toLowerCase().localeCompare(term.toLowerCase()) === 0;
+                }).length === 0) {
+                    return {
+                        id: _.uniqueId('partner_'),
+                        create: true,
+                        tag: term,
+                        text: _.str.sprintf(term),
+                    };
+                }
+            },
             fill_data: function (query, data) {
                 var that = this,
                     tags = {results: []};
