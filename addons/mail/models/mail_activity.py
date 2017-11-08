@@ -26,7 +26,7 @@ class MailActivityType(models.Model):
     res_model_id = fields.Many2one(
         'ir.model', 'Model', index=True,
         help='Specify a model if the activity should be specific to a model'
-             'and not available when managing activities for other models.')
+             ' and not available when managing activities for other models.')
     next_type_ids = fields.Many2many(
         'mail.activity.type', 'mail_activity_rel', 'activity_id', 'recommended_id',
         string='Recommended Next Activities')
