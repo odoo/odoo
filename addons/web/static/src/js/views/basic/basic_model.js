@@ -3030,10 +3030,24 @@ var BasicModel = AbstractModel.extend({
             value = isValueArray ? params.value[1] : params.value;
         }
 
+        var field_dependencies = {}
+        var fields_info = params.fieldsInfo || {};
+        var fields_info_keys = Object.keys(fields_info);
+        for (var i in fields_info_keys) {
+            var view_type = fields_info_keys[i];
+            var fields_array = Object.keys(fields_info[view_type]);
+            for (var j in fields_array) {
+                var field_key = fields_array[j];
+                if (fields_info[view_type][field_key].is_dependency) {
+                    field_dependencies[field_key] = fields_info[view_type][field_key];
+                }
+            }
+        }
+
         var fields = _.extend({
             display_name: {type: 'char'},
             id: {type: 'integer'},
-        }, params.fields);
+        }, params.fields, field_dependencies);
 
         var dataPoint = {
             _cache: type === 'list' ? {} : undefined,
