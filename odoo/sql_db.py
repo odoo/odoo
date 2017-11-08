@@ -191,6 +191,7 @@ class Cursor(object):
 
         # event handlers, see method after() below
         self._event_handlers = {'commit': [], 'rollback': []}
+        self._allow_commit = True
 
     def __build_dict(self, row):
         return {d.name: row[i] for i, d in enumerate(self._obj.description)}
@@ -347,6 +348,15 @@ class Cursor(object):
         self._cnx.set_isolation_level(isolation_level)
 
     @check
+    def allow_commit(self, allowed):
+        """ Allow or disallow commit on the cursor.
+            Return the old value of the flag.
+        """
+        old = self._allow_commit
+        self._allow_commit = allowed
+        return old
+
+    @check
     def after(self, event, func):
         """ Register an event handler.
 
@@ -372,6 +382,9 @@ class Cursor(object):
     def commit(self):
         """ Perform an SQL `COMMIT`
         """
+        if not self._allow_commit:
+            _logger.error("commit() is not allowed here", stack_info=True)
+            return
         result = self._cnx.commit()
         for func in self._pop_event_handlers()['commit']:
             func()
@@ -479,6 +492,14 @@ class LazyCursor(object):
     def __getattr__(self, name):
         cr = self._cursor
         if cr is None:
+            # retrieve a valid cursor from some environment
+            from odoo.api import Environment
+            for env in Environment.envs:
+                if isinstance(env.cr, Cursor) and not env.cr.closed:
+                    cr = env.cr
+                    break
+        if cr is None:
+            # create a brand new cursor
             from odoo import registry
             cr = self._cursor = registry(self.dbname).cursor()
             for _ in range(self._depth):

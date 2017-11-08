@@ -201,7 +201,7 @@ class Challenge(models.Model):
     ##### Update #####
 
     @api.model # FIXME: check how cron functions are called to see if decorator necessary
-    def _cron_update(self, ids=False):
+    def _cron_update(self, ids=False, commit=True):
         """Daily cron check.
 
         - Start planned challenges (in draft and with start_date = today)
@@ -227,8 +227,7 @@ class Challenge(models.Model):
         records = self.browse(ids) if ids else self.search([('state', '=', 'inprogress')])
 
         # in cron mode, will do intermediate commits
-        # FIXME: replace by parameter
-        return records.with_context(commit_gamification=True)._update_all()
+        return records.with_context(commit_gamification=commit)._update_all()
 
     def _update_all(self):
         """Update the challenges and related goals
