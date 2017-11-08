@@ -16,16 +16,25 @@ class MailActivityType(models.Model):
     _rec_name = 'name'
     _order = 'sequence, id'
 
+    @api.model
+    def default_get(self, fields):
+        if not self.env.context.get('default_res_model_id') and self.env.context.get('default_res_model'):
+            self = self.with_context(
+                default_res_model_id=self.env['ir.model']._get(self.env.context.get('default_res_model'))
+            )
+        return super(MailActivityType, self).default_get(fields)
+
     name = fields.Char('Name', required=True, translate=True)
     summary = fields.Char('Summary', translate=True)
     sequence = fields.Integer('Sequence', default=10)
     active = fields.Boolean(default=True)
     days = fields.Integer(
-        '# Days', default=0,
+        'Planned in', default=0,
         help='Number of days before executing the action. It allows to plan the action deadline.')
     icon = fields.Char('Icon', help="Font awesome icon e.g. fa-tasks")
     res_model_id = fields.Many2one(
         'ir.model', 'Model', index=True,
+        domain=['&', ('is_mail_thread', '=', True), ('transient', '=', False)],
         help='Specify a model if the activity should be specific to a model'
              ' and not available when managing activities for other models.')
     next_type_ids = fields.Many2many(
