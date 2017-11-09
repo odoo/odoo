@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Valerio Baldisserotto svalo@libersoft.it https://github.com/svalo
+Valerio Baldisserotto svalo@users.noreply.github.com https://github.com/svalo
