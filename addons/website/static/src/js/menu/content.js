@@ -45,7 +45,7 @@ var PagePropertiesDialog = widget.Dialog.extend({
             {text: _t("Discard"), close: true},
         ];
         if (options.fromPageManagement) {
-            buttons.push({text: _t("Go To Page"), icon: "fa-globe", classes: "btn-link pull-right", click: function(e){window.location.href = self.page.url;}});
+            buttons.push({text: _t("Go To Page"), icon: "fa-globe", classes: "btn-link pull-right", click: function(e){window.location.href = '/' + self.page.url;}});
         }
         this._super(parent, _.extend({}, {
             title: _t("Page Properties"),
