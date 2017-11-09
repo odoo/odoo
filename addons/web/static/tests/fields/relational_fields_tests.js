@@ -135,6 +135,7 @@ QUnit.module('relational_fields', {
                     partner_ids: [],
                     turtle_ref: 'product,37',
                 }],
+                onchanges: {},
             },
             user: {
                 fields: {
@@ -2674,6 +2675,45 @@ QUnit.module('relational_fields', {
         // save
         form.$buttons.find('.o_form_button_save').click();
 
+        form.destroy();
+    });
+
+    QUnit.test('edition of one2many field, with onchange and not inline sub view', function (assert) {
+        assert.expect(2);
+
+        this.data.turtle.onchanges.turtle_int = function (obj) {
+            obj.turtle_foo = String(obj.turtle_int);
+        };
+        this.data.partner.onchanges.turtles = function () {};
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles"/>' +
+                '</form>',
+            archs: {
+                'turtle,false,list': '<tree><field name="turtle_foo"/></tree>',
+                'turtle,false,form': '<form><group><field name="turtle_foo"/><field name="turtle_int"/></group></form>',
+            },
+            mockRPC: function (route, args) {
+                return this._super.apply(this, arguments);
+            },
+            res_id: 1,
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+        $('input[name="turtle_int"]').val('5').trigger('input');
+        $('.modal-footer button.btn-primary').first().click();
+        assert.strictEqual(form.$('tbody tr:eq(1) td.o_data_cell').text(), '5',
+            'should display 5 in the foo field');
+        form.$('tbody tr:eq(1) td.o_data_cell').click();
+
+        $('input[name="turtle_int"]').val('3').trigger('input');
+        $('.modal-footer button.btn-primary').first().click();
+        assert.strictEqual(form.$('tbody tr:eq(1) td.o_data_cell').text(), '3',
+            'should now display 3 in the foo field');
         form.destroy();
     });
 
