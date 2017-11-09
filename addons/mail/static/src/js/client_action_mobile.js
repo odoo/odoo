@@ -232,7 +232,7 @@ ChatAction.include({
         var $enable_searchview = $('<button/>', {type: 'button'})
             .addClass('o_enable_searchview btn fa fa-search')
             .on('click', this._toggleSearchView.bind(this));
-            $enable_searchview.insertAfter(this.searchview.$el);
+        $enable_searchview.insertAfter(this.searchview.$el);
     },
 
     //--------------------------------------------------------------------------
