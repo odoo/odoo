@@ -32,9 +32,6 @@ var MockServer = Class.extend({
             if (!('name' in model.fields)) {
                 model.fields.name = {string: "Name", type: "char", default: "name"};
             }
-            for (var fieldName in model.onchanges) {
-                model.fields[fieldName].onChange = "1";
-            }
             model.records = model.records || [];
 
             for (var i = 0; i < model.records.length; i++) {
@@ -282,7 +279,7 @@ var MockServer = Class.extend({
 
             // add onchanges
             if (name in onchanges) {
-                field.onChange="1";
+                node.attrs.on_change="1";
             }
         });
         return {
