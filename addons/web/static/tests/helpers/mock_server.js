@@ -707,6 +707,23 @@ var MockServer = Class.extend({
 
             return res;
         });
+
+        if (kwargs.orderby) {
+            // only consider first sorting level
+            kwargs.orderby = kwargs.orderby.split(',')[0];
+            var fieldName = kwargs.orderby.split(' ')[0];
+            var order = kwargs.orderby.split(' ')[1];
+            result.sort(function (g1, g2) {
+                if (g1[fieldName] < g2[fieldName]) {
+                    return order === 'ASC' ? -1 : 1;
+                }
+                if (g1[fieldName] > g2[fieldName]) {
+                    return order === 'ASC' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+
         return result;
     },
     /**
