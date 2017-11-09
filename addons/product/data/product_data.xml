@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!--
-    Resource: product.uom.categ
-    -->
         <record id="product_category_all" model="product.category">
             <field name="name">All</field>
         </record>
@@ -11,7 +8,14 @@
             <field name="parent_id" ref="product_category_all"/>
             <field name="name">Saleable</field>
         </record>
-        
+        <record id="cat_expense" model="product.category">
+            <field name="parent_id" ref="product_category_all"/>
+            <field name="name">Expenses</field>
+        </record>
+
+        <!--
+            Resource: product.uom.categ
+        -->
         <record id="product_uom_categ_unit" model="product.uom.categ">
             <field name="name">Unit</field>
         </record>
