@@ -1107,11 +1107,6 @@
                                 <a class="btn btn-default btn-primary pull-right mb32 " href="/shop/confirm_order">Confirm <span class="fa fa-long-arrow-right" /></a>
                             </div>
                         </div>
-                        <div class="col-lg-offset-1 col-md-3 text-muted">
-                            <h3 class="page-header mt16">Your Order</h3>
-                            <t t-set="website_sale_order" t-value="website.sale_get_order()" />
-                            <t t-call="website_sale.total" />
-                        </div>
                     </div>
                 </div>
             </div>
