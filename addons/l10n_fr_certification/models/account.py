@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 from hashlib import sha256
 from json import dumps
-from datetime import timedelta
 
 from openerp import models, api, fields
-from openerp.fields import Datetime as FieldDateTime
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
@@ -21,8 +19,8 @@ class AccountMove(models.Model):
 
     # TO DO in master : refactor hashing algo to go into a mixin
 
-    l10n_fr_secure_sequence_number = fields.Integer(readonly=True, copy=False)
-    l10n_fr_hash = fields.Char(readonly=True, copy=False)
+    l10n_fr_secure_sequence_number = fields.Integer(string="Inalteralbility No Gap Sequence #", readonly=True, copy=False)
+    l10n_fr_hash = fields.Char(string="Inalterability Hash", readonly=True, copy=False)
     l10n_fr_string_to_hash = fields.Char(compute='_compute_string_to_hash', readonly=True, store=False)
 
     def _get_new_hash(self, secure_seq_number):
@@ -131,18 +129,6 @@ class AccountMove(models.Model):
             previous_hash = move.l10n_fr_hash
         end_move_info = build_move_info(move)
 
-        # Datetimes in db are to the µs, while in python they are to the second
-        # and they are floored in python
-        end_write_date = FieldDateTime.to_string(FieldDateTime.from_string(end_move_info[4]) + timedelta(seconds=1))
-        moves_in_period = len(self.search([
-            ('write_date', '>=', start_move_info[4]), ('write_date', '<=', end_write_date),
-            ('state', '=', 'posted'),
-            ('company_id', '=', company_id)]))
-
-        warning_on_count_mismatch = ''
-        if moves_in_period != end_move_info[1]:
-            warning_on_count_mismatch = _('All the entries recorded over this period should have also been controlled to be compliant with the legislation. Please refer to our official documentation to avoid such an issue moving forward.')
-
         # Raise on success
         raise UserError(_('''Successful test !
 
@@ -150,21 +136,14 @@ class AccountMove(models.Model):
                          From: %s %s recorded on %s
                          To: %s %s recorded on %s
 
-                         Number of journal entries controlled: %s
-                         Number of journal entries recorded over this period: %s
-
-                         ''' + warning_on_count_mismatch + '''
-
-                         For this report to be legally meaningful, please dowload your certification at
+                         For this report to be legally meaningful, please download your certification at
                          https://accounts.odoo.com/my/contract/certification-french-accounting/'''
                          ) % (start_move_info[2],
                               start_move_info[3],
                               start_move_info[0],
                               end_move_info[2],
                               end_move_info[3],
-                              end_move_info[0],
-                              end_move_info[1],
-                              moves_in_period))
+                              end_move_info[0],))
 
 
 class AccountMoveLine(models.Model):

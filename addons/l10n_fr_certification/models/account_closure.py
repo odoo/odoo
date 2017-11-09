@@ -22,7 +22,20 @@ class AccountClosure(models.Model):
     move_ids = fields.Many2many('account.move', string='Journal entries that are included in the computation', readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', help="The company's currency", readonly=True)
 
-    def _build_query(self, company, date_start='', date_stop='', avoid_move_ids=[]):
+    def _query_closures_for_move_ids(self, frequency, company):
+        query = '''SELECT rel.account_move_id as move_id
+                    FROM account_move_account_sale_closure_rel rel
+                    JOIN account_sale_closure clo on rel.account_sale_closure_id = clo.id
+                    JOIN account_move m on rel.account_move_id = m.id
+                    WHERE clo.frequency = %(frequency)s
+                        AND clo.company_id = %(company_id)s
+                        AND m.company_id = %(company_id)s
+                        AND m.state = 'posted' '''
+
+        self.env.cr.execute(query, {'frequency': frequency, 'company_id': company.id})
+        return [res['move_id'] for res in self.env.cr.dictfetchall()]
+
+    def _build_query_for_aml(self, company, date_start='', date_stop='', avoid_move_ids=[]):
         params = {'company_id': company.id}
         query = '''SELECT m.write_date AS move_write_date,
                           m.id AS move_id,
@@ -53,6 +66,11 @@ class AccountClosure(models.Model):
 
         return query, params
 
+    def _query_for_aml(self, company, date_start='', date_stop='', avoid_move_ids=[]):
+        query, params = self._build_query_for_aml(company, date_start, date_stop, avoid_move_ids)
+        self.env.cr.execute(query, params)
+        return self.env.cr.dictfetchall()
+
     def _compute_amounts(self, frequency, company):
         interval_dates = self._interval_dates(frequency, company)
         previous_closure = self.search([
@@ -60,23 +78,18 @@ class AccountClosure(models.Model):
             ('company_id', '=', company.id)], limit=1, order='sequence_number desc')
 
         date_query_start = ''
-        previous_move_ids = []
-
         if previous_closure and previous_closure.move_ids:
             previous_date = previous_closure.move_ids.sorted(key=lambda m: m.write_date)[-1].write_date
             date_query_start = min(previous_date, interval_dates['interval_from'])
-            previous_move_ids = previous_closure.move_ids.ids
 
-        query, params = self._build_query(company, date_query_start, interval_dates['date_stop'])
-        self.env.cr.execute(query, params)
-        results = self.env.cr.dictfetchall()
+        moves_already_counted = self._query_closures_for_move_ids(frequency, company)
+        aml_fetched = self._query_for_aml(company, date_query_start, interval_dates['date_stop'], moves_already_counted)
 
         date_interval_start = date_query_start and date_query_start or interval_dates['interval_from']
-        aml_interval = filter(lambda aml: aml['move_write_date'] >= date_interval_start, results)
-        aml_beginning = filter(lambda aml: aml['move_id'] not in previous_move_ids, results)
+        aml_interval = filter(lambda aml: aml['move_write_date'] >= date_interval_start, aml_fetched)
 
         total_interval = sum(aml['balance'] for aml in aml_interval)
-        total_beginning = sum(aml['balance'] for aml in aml_beginning)
+        total_beginning = sum(aml['balance'] for aml in aml_fetched)
 
         return {'total_interval': total_interval,
                 'total_beginning': previous_closure.total_beginning + total_beginning,
@@ -110,13 +123,14 @@ class AccountClosure(models.Model):
 
     @api.model
     def automated_closure(self, frequency='daily'):
+        # To be executed by the CRON to compute all the amount
+        # call every _compute to get the amounts
         def get_selection_value(field, value=''):
             for item in field.selection:
                 if item[0] == value:
                     return item[1]
             return value
-        # To be executed by the CRON to compute all the amount
-        # call every _compute to get the amounts
+
         res_company = self.env['res.company'].search([])
         account_closures = self.env['account.sale.closure']
         for company in res_company.filtered(lambda c: c._is_accounting_unalterable()):

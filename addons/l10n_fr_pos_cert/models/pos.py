@@ -45,8 +45,8 @@ ERR_MSG = _('According to the French law, you cannot modify a %s. Forbidden fiel
 class pos_order(models.Model):
     _inherit = 'pos.order'
 
-    l10n_fr_pos_cert_hash = fields.Char()
-    l10n_fr_pos_cert_sequence_number = fields.Integer(readonly=True, copy=False)
+    l10n_fr_pos_cert_hash = fields.Char(string="Inalteralbility Hash", readonly=True, copy=False)
+    l10n_fr_pos_cert_sequence_number = fields.Integer(string="Inalteralbility No Gap Sequence #", readonly=True, copy=False)
     l10n_fr_pos_cert_string_to_hash = fields.Char(compute='_compute_string_to_hash', readonly=True, store=False)
 
     def _get_new_hash(self, secure_seq_number):
@@ -149,15 +149,6 @@ class pos_order(models.Model):
             previous_hash = order.l10n_fr_pos_cert_hash
         end_order_info = build_order_info(order)
 
-        orders_in_period = len(self.search([
-            ('date_order', '>=', start_order_info[0]), ('date_order', '<=', end_order_info[0]),
-            ('state', 'in', ['paid', 'done', 'invoiced']),
-            ('company_id', '=', company_id)]))
-
-        warning_on_count_mismatch = ''
-        if orders_in_period != end_order_info[1]:
-            warning_on_count_mismatch = _('All orders recorded over this period should have also been controlled to be compliant with the legislation. Please refer to our official documentation to avoid such an issue moving forward.')
-
         # Raise on success
         raise UserError(_('''Successful test !
 
@@ -165,21 +156,14 @@ class pos_order(models.Model):
                          From: %s %s recorded on %s
                          To: %s %s recorded on %s
 
-                         Number of orders controlled: %s
-                         Number of orders recorded over this period: %s
-
-                         ''' + warning_on_count_mismatch + '''
-
-                         For this report to be legally meaningful, please dowload your certification at
+                         For this report to be legally meaningful, please download your certification at
                          https://accounts.odoo.com/my/contract/certification-french-accounting/'''
                          ) % (start_order_info[2],
                               start_order_info[3],
                               start_order_info[0],
                               end_order_info[2],
                               end_order_info[3],
-                              end_order_info[0],
-                              end_order_info[1],
-                              orders_in_period))
+                              end_order_info[0]))
 
     @api.model
     def check_global_inalterability(self, user_id):
