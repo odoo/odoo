@@ -140,6 +140,44 @@ QUnit.module('Views', {
         dialog.destroy();
     });
 
+    QUnit.test('SelectCreateDialog correctly evaluates domains', function (assert) {
+        assert.expect(1);
+
+        var parent = createParent({
+            data: this.data,
+            archs: {
+                'partner,false,list':
+                    '<tree string="Partner">' +
+                        '<field name="display_name"/>' +
+                        '<field name="foo"/>' +
+                    '</tree>',
+                'partner,false,search':
+                    '<search>' +
+                        '<field name="foo"/>' +
+                    '</search>',
+            },
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    assert.deepEqual(args.domain, [['id', '=', 2]],
+                        "should have correctly evaluated the domain");
+                }
+                return this._super.apply(this, arguments);
+            },
+            session: {
+                user_context: {uid: 2},
+            },
+        });
+
+        var dialog = new dialogs.SelectCreateDialog(parent, {
+            no_create: true,
+            readonly: true,
+            res_model: 'partner',
+            domain: "[['id', '=', uid]]",
+        }).open();
+
+        dialog.destroy();
+    });
+
     QUnit.test('SelectCreateDialog list view in readonly', function (assert) {
         assert.expect(1);
 

@@ -355,8 +355,8 @@ var ListController = BasicController.extend({
         // trigger a click on the main bus, which would be then caught by the
         // list editable renderer and would unselect the newly created row
         event.stopPropagation();
-
-        if (this.editable) {
+        var state = this.model.get(this.handle, {raw: true});
+        if (this.editable && !state.groupedBy.length) {
             this._addRecord();
         } else {
             this.trigger_up('switch_view', {view_type: 'form', res_id: undefined});
