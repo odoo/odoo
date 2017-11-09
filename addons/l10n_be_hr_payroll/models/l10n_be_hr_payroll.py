@@ -80,7 +80,7 @@ class HrContract(models.Model):
     def _compute_wage_with_holidays(self):
         for contract in self:
             if contract.holidays > 20.0:
-                yearly_cost = contract.final_yearly_costs * (1.0 - (contract.holidays - 20.0) / 220.0)
+                yearly_cost = contract.final_yearly_costs * (1.0 - (contract.holidays - 20.0) / 231.0)
                 contract.wage_with_holidays = contract._get_gross_from_employer_costs(yearly_cost)
             else:
                 contract.wage_with_holidays = contract.wage
@@ -133,7 +133,7 @@ class HrContract(models.Model):
     def _compute_holidays_compensation(self):
         for contract in self:
             if contract.holidays < 20:
-                decrease_amount = contract.final_yearly_costs * (20.0 - contract.holidays) / 220.0
+                decrease_amount = contract.final_yearly_costs * (20.0 - contract.holidays) / 231.0
                 contract.holidays_compensation = decrease_amount
             else:
                 contract.holidays_compensation = 0.0
