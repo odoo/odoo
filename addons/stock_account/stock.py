@@ -263,8 +263,8 @@ class stock_picking(osv.osv):
             partner = self._get_partner_to_invoice(cr, uid, picking, dict(context, type=type))
             #grouping is based on the invoiced partner
             if group:
-                if picking.supplier.supplier_delivery_order:
-                    partner = picking.supplier.id
+                #if picking.supplier.supplier_delivery_order:
+                #    partner = picking.supplier.id
                 key = partner
             else:
                 key = picking.id
