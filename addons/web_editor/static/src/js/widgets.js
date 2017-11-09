@@ -199,6 +199,7 @@ var MediaDialog = Dialog.extend({
 
         this.final_data = [media, self.old_media];
         $(document.body).trigger("media-saved", this.final_data);
+        $(this.final_data).trigger('input');
 
         // Update editor bar after image edition (in case the image change to icon or other)
         _.defer(function () {
