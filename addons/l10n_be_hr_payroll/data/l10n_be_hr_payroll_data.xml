@@ -100,7 +100,11 @@
         <field name="condition_select">none</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
-result = contract.wage + contract.mobile + contract.mobile_plus + contract.internet
+result = contract.wage
+if contract.internet:
+    result += 5.0
+if contract.mobile:
+    result += 12.0
 if contract.transport_mode == 'company_car':
     result += contract.car_atn
         </field>
