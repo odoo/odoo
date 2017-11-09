@@ -2140,7 +2140,6 @@ class TestStockValuation(TransactionCase):
         move1._action_done()
 
         self.assertEqual(move1.value, 900.0)
-        self.assertEqual(move1.remaining_qty, 0.0)  # unusedin average move
 
         # Purchase 140 units @ 15.50 per unit
         move2 = self.env['stock.move'].create({
@@ -2407,7 +2406,6 @@ class TestStockValuation(TransactionCase):
         move1.quantity_done = 10.0
         move1._action_done()
         self.assertEqual(move1.value, -990.0)  # as no move out were done for this product, fallback on the standard price
-        self.assertEqual(move1.remaining_qty, 0.0)  # unused in average move
 
     def test_average_negative_3(self):
         """ Send goods that you don't have in stock but received and send some units before.
@@ -2433,7 +2431,6 @@ class TestStockValuation(TransactionCase):
         move1._action_done()
 
         self.assertEqual(move1.value, 100.0)
-        self.assertEqual(move1.remaining_qty, 0.0)  # unused in average move
 
         # send 10 products
         move2 = self.env['stock.move'].create({
@@ -2467,7 +2464,6 @@ class TestStockValuation(TransactionCase):
         move3._action_done()
 
         self.assertEqual(move3.value, -100.0)  # as no move out were done for this product, fallback on latest cost
-        self.assertEqual(move3.remaining_qty, 0.0)  # unused in average move
 
     def test_average_negative_4(self):
         self.product1.product_tmpl_id.cost_method = 'average'
@@ -2491,7 +2487,6 @@ class TestStockValuation(TransactionCase):
         move1._action_done()
 
         self.assertEqual(move1.value, 100.0)
-        self.assertEqual(move1.remaining_qty, 0.0)  # unused in average move
 
     def test_average_negative_5(self):
         self.product1.product_tmpl_id.cost_method = 'average'
@@ -2678,7 +2673,7 @@ class TestStockValuation(TransactionCase):
         # ---------------------------------------------------------------------
         # Change the production valuation to AVCO
         # ---------------------------------------------------------------------
-        self.product1.with_context(debug=True).product_tmpl_id.cost_method = 'average'
+        self.product1.product_tmpl_id.cost_method = 'average'
 
         # valuation should stay to ~240
         self.assertAlmostEqual(self.product1.stock_value, 240, delta=0.03)

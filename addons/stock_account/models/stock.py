@@ -235,7 +235,7 @@ class StockMove(models.Model):
                 break
 
         # Update the standard price with the price of the last used candidate, if any.
-        if new_standard_price:
+        if new_standard_price and move.product_id.cost_method == 'fifo':
             move.product_id.standard_price = new_standard_price
 
         # If there's still quantity to value but we're out of candidates, we fall in the
@@ -264,29 +264,30 @@ class StockMove(models.Model):
             valued_move_lines = self.move_line_ids.filtered(lambda ml: not ml.location_id._should_be_valued() and ml.location_dest_id._should_be_valued())
             valued_quantity = sum(valued_move_lines.mapped('qty_done'))
 
-            if self.product_id.cost_method in ['fifo', 'average']:
-                price_unit = self._get_price_unit()
-                value = price_unit * (quantity or valued_quantity)
-                vals = {
-                    'price_unit': price_unit,
-                    'value': value if quantity is None or not self.value else self.value,
-                    'remaining_value': value if quantity is None else self.remaining_value + value,
-                }
-                if self.product_id.cost_method == 'fifo':
-                    vals['remaining_qty'] = valued_quantity if quantity is None else self.remaining_qty + quantity
-                self.write(vals)
-            else:  # standard
+            # Note: we always compute the fifo `remaining_value` and `remaining_qty` fields no
+            # matter which cost method is set, to ease the switching of cost method.
+            vals = {}
+            price_unit = self._get_price_unit()
+            value = price_unit * (quantity or valued_quantity)
+            vals = {
+                'price_unit': price_unit,
+                'value': value if quantity is None or not self.value else self.value,
+                'remaining_value': value if quantity is None else self.remaining_value + value,
+            }
+            vals['remaining_qty'] = valued_quantity if quantity is None else self.remaining_qty + quantity
+
+            if self.product_id.cost_method == 'standard':
                 value = self.product_id.standard_price * (quantity or valued_quantity)
-                self.write({
+                vals.update({
                     'price_unit': self.product_id.standard_price,
                     'value': value if quantity is None or not self.value else self.value,
                 })
+            self.write(vals)
         elif self._is_out():
             valued_move_lines = self.move_line_ids.filtered(lambda ml: ml.location_id._should_be_valued() and not ml.location_dest_id._should_be_valued())
             valued_quantity = sum(valued_move_lines.mapped('qty_done'))
-            if self.product_id.cost_method == 'fifo':
-                self.env['stock.move']._run_fifo(self, quantity=quantity)
-            elif self.product_id.cost_method in ['standard', 'average']:
+            self.env['stock.move']._run_fifo(self, quantity=quantity)
+            if self.product_id.cost_method in ['standard', 'average']:
                 curr_rounding = self.company_id.currency_id.rounding
                 value = -float_round(self.product_id.standard_price * (valued_quantity if quantity is None else quantity), precision_rounding=curr_rounding)
                 self.write({
