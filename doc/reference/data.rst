@@ -23,29 +23,25 @@ of an XML data file is the following:
 
     <!-- the root elements of the data file -->
     <odoo>
-      <data>
         <operation/>
         ...
-      </data>
     </odoo>
 
 Data files are executed sequentially, operations can only refer to the result
 of operations defined previously
 
-Data Tag Parameter
-==================
+Odoo Tag Parameter
+------------------
 
 ``noupdate``
    ``values : 0 or 1``
-    As name suggest, ``noupdate="0"`` mode make record can be modify by other advanced modules otherwise ``noupdate="1"``.
+    As name suggest, ``noupdate="0"`` mode makes record modifiable by other modules.``noupdate="1"``, on the other hand, makes the record unmodifiable.
 
 .. code-block:: xml
 
-    <odoo>
-      <data noupdate="1">
+    <odoo noupdate="1">
         <operation/>
         ...
-      </data>
     </odoo>
 
 
@@ -165,6 +161,10 @@ Nothing
     identifiers` (``ref``) and the model object for the current field if
     applicable (``obj``)
 
+.. code-block:: xml
+
+    <field eval="'Budget '+str(time.localtime(time.time())[0]+1)+': Optimistic'" name="name"/>
+
 ``delete``
 ----------
 
@@ -181,6 +181,12 @@ has the following attributes:
 
 ``id`` and ``search`` are exclusive
 
+.. code-block:: xml
+
+    <delete model="account.fiscal.position.template" search="[('chart_template_id','=',ref('l10n_fr_pcg_chart_template'))]"/>
+
+
+
 ``function``
 ------------
 
@@ -191,6 +197,14 @@ the model and the name of the method to call.
 Parameters can be provided using ``eval`` (should evaluate to a sequence of
 parameters to call the method with) or ``value`` elements (see ``list``
 values).
+
+.. code-block:: xml
+
+    <function
+        id="mail_template_function_module_install_crm"
+        model="mail.template"
+        name="send_mail"
+        eval="[ref('mail_template_data_module_install_crm'), ref('base.module_crm')]"/>
 
 .. ignored assert
 
@@ -206,7 +220,7 @@ data files provide shorter alternatives to defining them using
 
 Defines an ``ir.ui.menu`` record with a number of defaults and fallbacks:
 
-Parent menu
+``parent``
     * If a ``parent`` attribute is set, it should be the :term:`external id`
       of an other menu item, used as the new item's parent
     * If no ``parent`` is provided, tries to interpret the ``name`` attribute
@@ -215,10 +229,10 @@ Parent menu
       created
     * Otherwise the menu is defined as a "top-level" menu item (*not* a menu
       with no parent)
-Menu name
+``name``
     If no ``name`` attribute is specified, tries to get the menu name from
     a linked action if any. Otherwise uses the record's ``id``
-Groups
+``groups``
     A ``groups`` attribute is interpreted as a comma-separated sequence of
     :term:`external identifiers` for ``res.groups`` models. If an
     :term:`external identifier` is prefixed with a minus (``-``), the group
