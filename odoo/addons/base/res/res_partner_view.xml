@@ -263,7 +263,7 @@
 
                     <notebook colspan="4">
                         <page string="Contacts &amp; Addresses" autofocus="autofocus">
-                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer, 'default_lang': lang,}">
+                            <field name="child_ids" mode="kanban" string="Contacts &amp; Addresses" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer, 'default_lang': lang, 'parent_company_type': company_type}">
                                 <kanban>
                                     <field name="color"/>
                                     <field name="name"/>
@@ -328,7 +328,8 @@
                                         <!-- parent_id and type fields needed in attrs in base_address_city module which overwrites
                                         _fields_view_get() of partner. It would be better to put those fields there but the web client
                                         dosen't support when a field is displayed several times in the same view.-->
-                                        <field name="type" required="1" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium", "size": [90, 90]}'/>
+                                        <field name="type" required="1" widget="contact_type" options="{'horizontal': true}"/>
                                         <field name="parent_id" invisible="1"/>
                                         <hr/>
                                         <group>

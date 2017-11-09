@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from operator import itemgetter
+
+from odoo import api, fields, models
 from odoo.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 
@@ -12,6 +14,7 @@ class ResPartner(models.Model):
     sale_order_ids = fields.One2many('sale.order', 'partner_id', 'Sales Order')
     sale_warn = fields.Selection(WARNING_MESSAGE, 'Sales Order', default='no-message', help=WARNING_HELP, required=True)
     sale_warn_msg = fields.Text('Message for Sales Order')
+    type = fields.Selection(selection_add=[('invoice', 'Invoice address'), ('delivery', 'Shipping address')])
 
     def _compute_sale_order_count(self):
         sale_data = self.env['sale.order'].read_group(domain=[('partner_id', 'child_of', self.ids)],
@@ -25,3 +28,12 @@ class ResPartner(models.Model):
             partner_ids = [partner.id] + item.get('child_ids')
             # then we can sum for all the partner's child
             partner.sale_order_count = sum(mapped_data.get(child, 0) for child in partner_ids)
+
+    @api.model
+    def fields_get(self, fields=None, attributes=None):
+        result = super(ResPartner, self).fields_get(fields, attributes=attributes)
+        if not self.user_has_groups('sale.group_delivery_invoice_address'):
+            selection = [(x, y) for x, y in result.get('type')['selection'] if x not in ['delivery', 'invoice']]
+            result.get('type')['selection'] = selection
+        result.get('type')['selection'].sort(key=itemgetter(0))
+        return result

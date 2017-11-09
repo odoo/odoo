@@ -73,5 +73,6 @@ registry
 
 // Special fields
 registry
+    .add('contact_type', special_fields.FieldContactType)
     .add('timezone_mismatch', special_fields.FieldTimezoneMismatch);
 });
