@@ -652,14 +652,15 @@ class StockMove(models.Model):
                 ('printed', '=', False),
                 ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])], limit=1)
             if picking:
-                if picking.partner_id.id != move.partner_id.id or picking.origin != move.origin:
-                    # If a picking is found, we'll append `move` to its move list and thus its
-                    # `partner_id` and `ref` field will refer to multiple records. In this
-                    # case, we chose to  wipe them.
-                    picking.write({
-                        'partner_id': False,
-                        'origin': False,
-                    })
+                # If a picking is found, we'll append `move` to its move list and thus its
+                # `partner_id` and `ref` field will refer to multiple records. In this
+                # case, we chose to  wipe them.
+                vals = {}
+                if picking.partner_id and move.partner_id and picking.partner_id.id != move.partner_id.id:
+                    vals.update({'partner_id': False})
+                if picking.origin and move.origin and picking.origin != move.origin:
+                    vals.update({'origin': False})
+                picking.write(vals)
             else:
                 recompute = True
                 picking = Picking.create(move._get_new_picking_values())
