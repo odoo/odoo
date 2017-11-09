@@ -19,6 +19,28 @@
             <field name="name">Physical</field>
         </record>
 
+        <!-- Expensable products -->
+        <record id="expense_product" model="product.product">
+            <field name="name">General Expense</field>
+            <field name="list_price">14.0</field>
+            <field name="standard_price">8.0</field>
+            <field name="type">service</field>
+            <field name="default_code">EXP</field>
+            <field name="categ_id" ref="product.cat_expense"/>
+        </record>
+
+        <record id="expense_hotel" model="product.product">
+            <field name="name">Hotel Accommodation</field>
+            <field name="list_price">400.0</field>
+            <field name="standard_price">400.0</field>
+            <field name="type">service</field>
+            <field name="default_code">EXP</field>
+            <field name="uom_id" ref="product_uom_day"/>
+            <field name="uom_po_id" ref="product_uom_day"/>
+            <field name="categ_id" ref="cat_expense"/>
+        </record>
+
+        <!-- Service products -->
         <record id="service_order_01" model="product.product">
             <field name="name">Prepaid Consulting</field>
             <field name="categ_id" ref="product_category_3"/>
@@ -108,7 +130,6 @@
             <field name="uom_po_id" ref="product_uom_hour"/>
             <field name="description">Example of product to invoice based on delivery.</field>
         </record>
-
 
         <record id="product_product_3" model="product.product">
             <field name="name">Computer SC234</field>
@@ -203,11 +224,11 @@
         <record id="product_product_4_product_template" model="product.template">
             <field name="attribute_line_ids" eval="[(6,0,[ref('product.product_attribute_line_1'), ref('product.product_attribute_line_2'), ref('product.product_attribute_line_3')])]"/>
         </record>
-        
+
         <record id="product_product_4d" model="product.product">
             <field name="active" eval="False"/>
         </record>
-        
+
         <record id="product_attribute_price_1" model="product.attribute.price">
             <field name="product_tmpl_id" ref="product_product_4_product_template"/>
             <field name="value_id" ref="product_attribute_value_2"/>
@@ -343,7 +364,7 @@
         <record id="product_product_11_product_template" model="product.template">
             <field name="attribute_line_ids" eval="[(6,0,[ref('product.product_attribute_line_4')])]"/>
         </record>
-        
+
         <record id="product_attribute_price_2" model="product.attribute.price">
             <field name="product_tmpl_id" ref="product_product_11_product_template"/>
             <field name="value_id" ref="product_attribute_value_2"/>

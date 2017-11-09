@@ -28,7 +28,7 @@
             <field name="default_code">CarTRA</field>
             <field name="uom_id" ref="product.product_uom_km"/>
             <field name="uom_po_id" ref="product.product_uom_km"/>
-            <field name="categ_id" ref="hr_expense.cat_expense"/>
+            <field name="categ_id" ref="product.cat_expense"/>
             <field name="can_be_expensed" eval="True" />
             <field name="image" type="base64" file="hr_expense/static/img/car_travel-image.jpg"/>
         </record>
@@ -39,20 +39,12 @@
             <field name="type">service</field>
             <field name="name">Air Flight</field>
             <field name="default_code">AT</field>
-            <field name="categ_id" ref="hr_expense.cat_expense"/>
+            <field name="categ_id" ref="product.cat_expense"/>
             <field name="can_be_expensed" eval="True" />
             <field name="image" type="base64" file="hr_expense/static/img/air_ticket-image.jpg"/>
         </record>
 
-        <record id="hotel_rent" model="product.product">
-            <field name="list_price">400.0</field>
-            <field name="standard_price">400.0</field>
-            <field name="type">service</field>
-            <field name="name">Hotel Accommodation</field>
-            <field name="default_code">HA0</field>
-            <field name="uom_id" ref="product.product_uom_day"/>
-            <field name="uom_po_id" ref="product.product_uom_day"/>
-            <field name="categ_id" ref="hr_expense.cat_expense"/>
+        <record id="product.expense_hotel" model="product.product">
             <field name="can_be_expensed" eval="True" />
             <field name="image" type="base64" file="hr_expense/static/img/hotel_rent-image.jpg"/>
         </record>
@@ -69,7 +61,7 @@
         <record id="hotel_bill_expense" model="hr.expense">
             <field name="name">Hotel Expenses</field>
             <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
-            <field name="product_id" ref="hotel_rent"/>
+            <field name="product_id" ref="product.expense_hotel"/>
             <field eval="400.0" name="unit_amount"/>
             <field name="product_uom_id" ref="product.product_uom_day"/>
             <field eval="5.0" name="quantity"/>

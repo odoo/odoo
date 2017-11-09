@@ -10,20 +10,14 @@
             <field name="alias_contact">employees</field>
         </record>
 
-
-        <!-- Resource: product.uom.categ -->
-        <record id="cat_expense" model="product.category">
-            <field name="parent_id" ref="product.product_category_all"/>
-            <field name="name">Expenses</field>
-        </record>
-
+        <!-- Master Data for expense created by email -->
         <record id="product_product_fixed_cost" model="product.product">
             <field name="name">Expenses</field>
             <field name="list_price">0.0</field>
             <field name="standard_price">1.0</field>
             <field name="type">service</field>
             <field name="default_code">EXP</field>
-            <field name="categ_id" ref="hr_expense.cat_expense"/>
+            <field name="categ_id" ref="product.cat_expense"/>
             <field name="can_be_expensed" eval="True"/>
         </record>
 
