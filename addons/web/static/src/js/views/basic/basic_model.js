@@ -3431,6 +3431,7 @@ var BasicModel = AbstractModel.extend({
                 domain: list.domain,
                 context: list.context,
                 groupBy: list.groupedBy,
+                orderBy: list.orderedBy,
                 lazy: true,
             })
             .then(function (groups) {
