@@ -59,6 +59,7 @@ class TestPointOfSaleCommon(common.TransactionCase):
             'company_id': self.ref('stock.res_company_1')
         })
 
+        self.product4.company_id = False
         # I assign those 5 percent taxes on the PCSC349 product as a sale taxes
         self.product4.write(
             {'taxes_id': [(6, 0, [account_tax_05_incl.id, account_tax_05_incl_chicago.id])]})

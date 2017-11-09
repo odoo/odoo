@@ -1968,8 +1968,8 @@ msgid ""
 "Explanation text to help users using the star and priority mechanism on "
 "stages or issues that are in this stage."
 msgstr ""
-"Magyarázó szöveg a felhasználóknak az ezen a szinten lévő lépés szintek vagy"
-" ügyek csillag és prioritás szerkezet használatának segítségére."
+"Magyarázó szöveg a felhasználóknak az ebben a szakaszban lévő feladatok "
+"csillag és prioritás használatára."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -2125,9 +2125,7 @@ msgstr "Sok szerencsét!"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Green: the Task is ready for next stage (the job for this stage is complete)"
-msgstr ""
-"Zöld: a Feladat készen áll a következő szakaszhoz (ehhez a szinthez tartozó "
-"munka elvégezve)"
+msgstr "Zöld: a Feladat készen áll a következő szakaszhoz"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2494,7 +2492,7 @@ msgstr "Utoljára frissítve ekkor"
 #: model:ir.model.fields,field_description:project.field_project_task_date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_last_stage_update
 msgid "Last Stage Update"
-msgstr "Utolsó szint frissítése"
+msgstr "Szakasz frissítése"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_write_uid
@@ -2852,8 +2850,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
-"Írja felül az alapértelmezett kanban kiválasztás elvégzett állapotú "
-"kijelzett értéket, ha a feladat vagy ügy ebben az állapotban van."
+"Írja felül a kanban kiválasztás alapértelmezett értékét elkészült állapot "
+"esetén, ha a feladat vagy ügy ebben a szakaszban van."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_legend_normal
@@ -2863,7 +2861,7 @@ msgid ""
 "selection, when the task or issue is in that stage."
 msgstr ""
 "Írja felül az alapértelmezett kanban kiválasztás normál állapotú kijelzett "
-"értéket, ha a feladat vagy ügy ebben az állapotban van."
+"értéket, ha a feladat vagy ügy ebben a szakaszban van."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_user_id
@@ -3070,7 +3068,7 @@ msgstr "Látványtervezésre / reklámszövegírásra kész"
 #: selection:project.task,kanban_state:0
 #: selection:report.project.task.user,state:0
 msgid "Ready for next stage"
-msgstr "Következő fokra ugorhat"
+msgstr "Következő szakaszra ugorhat"
 
 #. module: project
 #. openerp-web
@@ -3328,33 +3326,33 @@ msgstr "Sprint"
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Stage"
-msgstr "Értékesítési szint"
+msgstr "Szakasz"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr "Szint megváltoztatva"
+msgstr "Szakasz megváltoztatva"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Stage Description and Tooltips"
-msgstr "Szakasz Leírás és Eszköztippek"
+msgstr "Szakasz leírás és tippek"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_name
 msgid "Stage Name"
-msgstr "Értékesítési szint neve"
+msgstr "Szakasz név"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr "Szint megváltoztatva"
+msgstr "Szakasz megváltoztatva"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
 #: model:ir.ui.menu,name:project.menu_project_config_project
 msgid "Stages"
-msgstr "Szintek"
+msgstr "Szakaszok"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3436,7 +3434,7 @@ msgstr "Feladat szakasza"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
 msgid "Task Stage Changed"
-msgstr "A feladat szintje változott"
+msgstr "A feladat szakasza megváltozott"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_name
@@ -3488,7 +3486,7 @@ msgstr "Feladat megnyitott"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
 msgid "Task ready for Next Stage"
-msgstr "Az ügy készen áll a következő szintre lépésre"
+msgstr "A feladat készen áll a következő szakaszra"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
@@ -3681,7 +3679,7 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Ez a szint behajtott a kanban nézetben, ha nincsenek benne megjeleníthető "
+"A szakasz behajtott kanban nézetben, ha nincsenek benne megjeleníthető "
 "rekordok."
 
 #. module: project
