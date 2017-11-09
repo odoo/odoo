@@ -896,6 +896,9 @@ var BasicModel = AbstractModel.extend({
                 return def.resolve(changedFields);
             }
 
+            def.then(function () {
+                record._isDirty = false;
+            });
             // in the case of a write, only perform the RPC if there are changes to save
             if (method === 'create' || changedFields.length) {
                 var args = method === 'write' ? [[record.data.id], changes] : [changes];
@@ -917,7 +920,6 @@ var BasicModel = AbstractModel.extend({
 
                         // Erase changes as they have been applied
                         record._changes = {};
-                        record._isDirty = false;
 
                         // Update the data directly or reload them
                         if (shouldReload) {
@@ -947,8 +949,8 @@ var BasicModel = AbstractModel.extend({
      */
     addFieldsInfo: function (recordID, viewInfo) {
         var record = this.localData[recordID];
-        record.fields = _.defaults(record.fields, viewInfo.fields);
-        record.fieldsInfo = _.defaults(record.fieldsInfo, viewInfo.fieldsInfo);
+        record.fields = _.extend({}, record.fields, viewInfo.fields);
+        record.fieldsInfo = _.extend({}, record.fieldsInfo, viewInfo.fieldsInfo);
     },
     /**
      * Manually sets a resource as dirty. This is used to notify that a field
