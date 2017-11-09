@@ -3,7 +3,7 @@
 
 from datetime import date, datetime, timedelta
 
-from odoo import api, fields, models
+from odoo import api, exceptions, fields, models, _
 
 
 class MailActivityType(models.Model):
@@ -134,21 +134,61 @@ class MailActivity(models.Model):
     def _onchange_recommended_activity_type_id(self):
         self.activity_type_id = self.recommended_activity_type_id
 
+    @api.multi
+    def _check_access(self, operation):
+        """ Rule to access activities
+
+         * create: check write rights on related document;
+         * write: rule OR write rights on document;
+         * unlink: rule OR write rights on document;
+        """
+        self.check_access_rights(operation, raise_exception=True)  # will raise an AccessError
+
+        if operation in ('write', 'unlink'):
+            try:
+                self.check_access_rule(operation)
+            except exceptions.AccessError:
+                pass
+            else:
+                return
+
+        doc_operation = 'read' if operation == 'read' else 'write'
+        activity_to_documents = dict()
+        for activity in self.sudo():
+            activity_to_documents.setdefault(activity.res_model, list()).append(activity.res_id)
+        for model, res_ids in activity_to_documents.items():
+            self.env[model].check_access_rights(doc_operation, raise_exception=True)
+            try:
+                self.env[model].browse(res_ids).check_access_rule(doc_operation)
+            except exceptions.AccessError:
+                raise exceptions.AccessError(
+                    _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
+                    (self._description, operation))
+
     @api.model
     def create(self, values):
-        activity = super(MailActivity, self).create(values)
-        self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
+        # already compute default values to be sure those are computed using the current user
+        values_w_defaults = self.default_get(self._fields.keys())
+        values_w_defaults.update(values)
+
+        # continue as sudo because activities are somewhat protected
+        activity = super(MailActivity, self.sudo()).create(values_w_defaults)
+        activity_user = activity.sudo(self.env.user)
+        activity_user._check_access('create')
+        self.env[activity_user.res_model].browse(activity_user.res_id).message_subscribe(partner_ids=[activity_user.user_id.partner_id.id])
         if activity.date_deadline <= fields.Date.today():
             self.env['bus.bus'].sendone(
                 (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
                 {'type': 'activity_updated', 'activity_created': True})
-        return activity
+        return activity_user
 
     @api.multi
     def write(self, values):
+        self._check_access('write')
         if values.get('user_id'):
             pre_responsibles = self.mapped('user_id.partner_id')
-        res = super(MailActivity, self).write(values)
+        res = super(MailActivity, self.sudo()).write(values)
+
         if values.get('user_id'):
             for activity in self:
                 self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
@@ -166,12 +206,13 @@ class MailActivity(models.Model):
 
     @api.multi
     def unlink(self):
+        self._check_access('unlink')
         for activity in self:
             if activity.date_deadline <= fields.Date.today():
                 self.env['bus.bus'].sendone(
                     (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
                     {'type': 'activity_updated', 'activity_deleted': True})
-        return super(MailActivity, self).unlink()
+        return super(MailActivity, self.sudo()).unlink()
 
     @api.multi
     def action_done(self):

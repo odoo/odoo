@@ -503,9 +503,11 @@ var FieldMany2One = AbstractField.extend({
                     title: _t("Open: ") + self.string,
                     view_id: view_id,
                     readonly: !self.can_write,
-                    on_saved: function () {
-                        self._setValue(self.value.data, {forceChange: true});
-                        self.trigger_up('reload', {db_id: self.value.id});
+                    on_saved: function (record, changed) {
+                        if (changed) {
+                            self._setValue(self.value.data, {forceChange: true});
+                            self.trigger_up('reload', {db_id: self.value.id});
+                        }
                     },
                 }).open();
             });
