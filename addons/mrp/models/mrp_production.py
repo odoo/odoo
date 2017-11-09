@@ -306,8 +306,7 @@ class MrpProduction(models.Model):
                 values['name'] = self.env['stock.picking.type'].browse(values['picking_type_id']).sequence_id.next_by_id()
             else:
                 values['name'] = self.env['ir.sequence'].next_by_code('mrp.production') or _('New')
-        if not values.get('procurement_group_id'):
-            values['procurement_group_id'] = self.env["procurement.group"].create({'name': values['name']}).id
+        values['procurement_group_id'] = self.env["procurement.group"].create({'name': values['name']}).id
         production = super(MrpProduction, self).create(values)
         production._generate_moves()
         return production
@@ -411,7 +410,7 @@ class MrpProduction(models.Model):
             mto_route = False
         for move in self.move_raw_ids:
             product = move.product_id
-            routes = product.route_ids + product.route_from_categ_ids
+            routes = product.route_ids + product.route_from_categ_ids + move.warehouse_id.route_ids
             # TODO: optimize with read_group?
             pull = self.env['procurement.rule'].search([('route_id', 'in', [x.id for x in routes]), ('location_src_id', '=', move.location_id.id),
                                                         ('location_id', '=', move.location_dest_id.id)], limit=1)
@@ -527,7 +526,8 @@ class MrpProduction(models.Model):
             finish_moves = production.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             raw_moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             (finish_moves | raw_moves)._action_cancel()
-
+            picking_ids = production.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+            picking_ids.action_cancel()
         self.write({'state': 'cancel', 'is_locked': True})
         return True
 

@@ -112,6 +112,35 @@ class StockMove(models.Model):
         for move in self:
             move.is_done = (move.state in ('done', 'cancel'))
 
+    @api.multi
+    def _action_launch_procurement_rule(self):
+        errors = []
+        ProcGroup = self.env['procurement.group']
+        for move in self.filtered(lambda move: move.procure_method == 'make_to_order' and move.move_orig_ids):
+            qty = 0
+            production = move.raw_material_production_id
+            if production and not production.procurement_group_id:
+                group_id = ProcGroup.create({
+                    'name': production.name,
+                })
+                production.procurement_group_id = group_id
+            for org_move in move.move_orig_ids.filtered(lambda m: m.state != 'cancel'):
+                qty += org_move.product_uom_qty
+            if qty == move.product_uom_qty:
+                continue
+            diff_qty = move.product_uom_qty - qty
+            values = {'company_id': move.raw_material_production_id.company_id,
+                      'group_id': production.procurement_group_id,
+                      'warehouse_id': move.warehouse_id or False}
+            if diff_qty > 0:
+                try:
+                    res = ProcGroup.run(move.product_id, diff_qty, move.product_uom, move.location_id, move.name, move.origin, values)
+                except UserError as error:
+                    errors.append(error.name)
+            if errors:
+                raise UserError('\n'.join(errors))
+        return True
+
     @api.model
     def default_get(self, fields_list):
         defaults = super(StockMove, self).default_get(fields_list)
