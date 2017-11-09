@@ -38,8 +38,8 @@ class Lang(models.Model):
              "-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500; "
              "[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. "
              "Provided ',' as the thousand separator in each case.")
-    decimal_point = fields.Char(string='Decimal Separator', required=True, default='.')
-    thousands_sep = fields.Char(string='Thousands Separator', default=',')
+    decimal_point = fields.Char(string='Decimal Separator', required=True, default='.', trim=False)
+    thousands_sep = fields.Char(string='Thousands Separator', default=',', trim=False)
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'The name of the language must be unique !'),

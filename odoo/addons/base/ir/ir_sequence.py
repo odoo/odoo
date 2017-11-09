@@ -122,8 +122,8 @@ class IrSequence(models.Model):
                                            "and 'No gap'. The later is slower than the former but forbids any"
                                            "gap in the sequence (while they are possible in the former).")
     active = fields.Boolean(default=True)
-    prefix = fields.Char(help="Prefix value of the record for the sequence")
-    suffix = fields.Char(help="Suffix value of the record for the sequence")
+    prefix = fields.Char(help="Prefix value of the record for the sequence", trim=False)
+    suffix = fields.Char(help="Suffix value of the record for the sequence", trim=False)
     number_next = fields.Integer(string='Next Number', required=True, default=1, help="Next number of this sequence")
     number_next_actual = fields.Integer(compute='_get_number_next_actual', inverse='_set_number_next_actual',
                                         string='Next Number',
