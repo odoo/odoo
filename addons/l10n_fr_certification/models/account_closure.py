@@ -78,6 +78,7 @@ class AccountClosure(models.Model):
             ('company_id', '=', company.id)], limit=1, order='sequence_number desc')
 
         date_query_start = ''
+        previous_date = False
         if previous_closure and previous_closure.move_ids:
             previous_date = previous_closure.move_ids.sorted(key=lambda m: m.write_date)[-1].write_date
             date_query_start = min(previous_date, interval_dates['interval_from'])
@@ -95,7 +96,7 @@ class AccountClosure(models.Model):
                 'total_beginning': previous_closure.total_beginning + total_beginning,
                 'move_ids': [(4, aml['move_id'], False) for aml in aml_interval],
                 'date_closure_stop': interval_dates['date_stop'],
-                'date_closure_start': interval_dates['interval_from']}
+                'date_closure_start': previous_date and previous_date or interval_dates['interval_from']}
 
     def _interval_dates(self, frequency, company):
         date_stop = datetime.utcnow()
