@@ -23,6 +23,24 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box" title="Use pre-defined email layouts or customize them as per your requirement and use it for sending mails going out from the system (@mycompany.odoo.com).">
+                            <div class="o_setting_right_pane">
+                                <label string="Email Template Layout"/>
+                                <span class="fa fa-lg fa-fa-envelope-o" title="Values set here are generic"/>
+                                <div class="text-muted">
+                                    Use your own email layout template
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <label for="email_template_layout" class="o_light_label"/>
+                                        <field name="email_template_layout" class="ml16 oe_inline" widget="selection"/>
+                                    </div>
+                                    <div class="mt16" groups="base.group_no_one">
+                                         <button name="edit_email_header_footer" string="Edit Email Template Layout" type="object" class="oe_link" icon="fa-arrow-right" attrs="{'invisible':[('email_template_layout','=',False)]}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-xs-12 col-md-6 o_setting_box" title="Using your own email server is required to send/receive emails in Community and Enterprise versions. Online users already benefit from a ready-to-use email server (@mycompany.odoo.com).">
                             <div class="o_setting_left_pane">
                                 <field name="default_external_email_server"/>

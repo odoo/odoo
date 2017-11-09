@@ -61,13 +61,10 @@
             <field name="partner_to">${object.partner_id and object.partner_id.email and object.partner_id.email==object.email and object.partner_id.id or False }</field>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[
-<div summary="o_mail_template" style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+<div summary="o_mail_template" style="padding:0px;width:100%;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
 % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}
-    <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
+    <table cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;background:inherit;color:inherit">
         <tbody><tr>
-            <td valign="center" width="200" style="padding:10px 10px 10px 5px;font-size: 12px">
-                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
-            </td>
             <td valign="center" align="right" width="340" style="padding:10px 10px 10px 5px; font-size: 12px;">
                 <p>
                     <a href="/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Accept</a>
@@ -77,18 +74,9 @@
             </td>
         </tr></tbody>
     </table>
-    <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
-        <tbody><tr>
-            <td valign="top" style="width:600px; padding:10px 10px 10px 5px;">
-                <div>
-                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0">
-                </div>
-            </td>
-        </tr></tbody>
-    </table>
 </div>
-<div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
-    <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
+<div style="padding:0px;width:100%;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+    <table cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;background:inherit;color:inherit">
         <tbody><tr>
             <td style="padding:10px 10px 10px 5px;font-size: 14px;">
                 <p style="font-size: 20px; text-align: center;">Invitation to <strong>${object.event_id.name}</strong></p>
@@ -152,13 +140,10 @@
             <field name="partner_to">${object.partner_id and object.partner_id.email and object.partner_id.email==object.email and object.partner_id.id or False }</field>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[
-<div summary="o_mail_template" style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+<div summary="o_mail_template" style="padding:0px;width:100%;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
 % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}
-    <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
+    <table cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;background:inherit;color:inherit">
         <tbody><tr>
-            <td valign="center" width="200" style="padding:10px 10px 10px 5px;font-size: 12px">
-                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
-            </td>
             <td valign="center" align="right" width="340" style="padding:10px 10px 10px 5px; font-size: 12px;">
                 <p>
                     <a href="/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Accept</a>
@@ -168,18 +153,9 @@
             </td>
         </tr></tbody>
     </table>
-    <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
-        <tbody><tr>
-            <td valign="top" style="width:600px; padding:10px 10px 10px 5px;">
-                <div>
-                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0">
-                </div>
-            </td>
-        </tr></tbody>
-    </table>
 </div>
-<div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
-    <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
+<div style="padding:0px;width:100%;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+    <table cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;background:inherit;color:inherit">
         <tbody><tr>
             <td style="padding:10px 10px 10px 5px;font-size: 14px;">
                 <p style="font-size: 20px; text-align: center;"><strong>${object.event_id.name} date updated</strong></p>
@@ -244,13 +220,10 @@
             <field name="partner_to">${object.partner_id and object.partner_id.email and object.partner_id.email==object.email and object.partner_id.id or False }</field>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[
-<div summary="o_mail_template" style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+<div summary="o_mail_template" style="padding:0px;width:100%;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
 % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}
-    <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
+    <table cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;background:inherit;color:inherit">
         <tbody><tr>
-            <td valign="center" width="200" style="padding:10px 10px 10px 5px;font-size: 12px">
-                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
-            </td>
             <td valign="center" align="right" width="340" style="padding:10px 10px 10px 5px; font-size: 12px;">
                 <p>
                     <a href="/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Accept</a>
@@ -260,18 +233,9 @@
             </td>
         </tr></tbody>
     </table>
-    <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
-        <tbody><tr>
-            <td valign="top" style="width:600px; padding:10px 10px 10px 5px;">
-                <div>
-                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0">
-                </div>
-            </td>
-        </tr></tbody>
-    </table>
 </div>
-<div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
-    <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
+<div style="padding:0px;width:100%;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+    <table cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;background:inherit;color:inherit">
         <tbody><tr>
             <td style="padding:10px 10px 10px 5px;font-size: 14px;">
                 <p style="font-size: 20px; text-align: center;">Reminder for <strong>${object.event_id.name}</strong></p>

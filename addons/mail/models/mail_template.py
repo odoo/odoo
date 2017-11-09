@@ -192,6 +192,7 @@ class MailTemplate(models.Model):
     null_value = fields.Char('Default Value', help="Optional value to use if the target field is empty")
     copyvalue = fields.Char('Placeholder Expression', help="Final placeholder expression, to be copy-pasted in the desired template field.")
     scheduled_date = fields.Char('Scheduled Date', help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Jinja2 placeholders may be used.")
+    use_default_layout = fields.Boolean("Use Default Layout Template", default=True)
 
     @api.onchange('model_id')
     def onchange_model_id(self):
@@ -324,8 +325,25 @@ class MailTemplate(models.Model):
         html = self._replace_local_links(html)
         return html
 
+
     @api.model
-    def render_template(self, template_txt, model, res_ids, post_process=False):
+    def render_default_layout(self, custom_body, variables):
+        """
+        Takes template body as raw html in form of string and wraps the default layout
+        around it
+
+        :param string custom_body: body of the original template in string form
+        :return string html: original body wrapped inside the layout template selected in settings
+
+        """
+        variables['body'] = custom_body
+        email_template_layout_id = int(self.env['ir.config_parameter'].sudo().get_param('email_template_layout', default=False))
+        if email_template_layout_id:
+            return self.env['ir.ui.view'].browse(email_template_layout_id).render(variables)
+        return custom_body
+
+    @api.model
+    def render_template(self, template_txt, model, res_ids, post_process=False, use_default_layout=False):
         """ Render the given template text, replace mako expressions ``${expr}``
         with the result of evaluating these expressions with an evaluation
         context containing:
@@ -367,6 +385,7 @@ class MailTemplate(models.Model):
         }
         for res_id, record in res_to_rec.items():
             variables['object'] = record
+            variables['company'] = 'company_id' in record and record.company_id or self.env.user.company_id
             try:
                 render_result = template.render(variables)
             except Exception:
@@ -378,7 +397,9 @@ class MailTemplate(models.Model):
 
         if post_process:
             for res_id, result in results.items():
-                results[res_id] = self.render_post_process(result)
+                # Append mailbody to the QWeb layout of default template
+                layout = use_default_layout and self.render_default_layout(result, variables) or result
+                results[res_id] = self.render_post_process(layout)
 
         return multi_mode and results or results[res_ids[0]]
 
@@ -473,7 +494,7 @@ class MailTemplate(models.Model):
                 Template = Template.with_context(safe=field in {'subject'})
                 generated_field_values = Template.render_template(
                     getattr(template, field), template.model, template_res_ids,
-                    post_process=(field == 'body_html'))
+                    post_process=(field == 'body_html'), use_default_layout=self.use_default_layout)
                 for res_id, field_value in generated_field_values.items():
                     results.setdefault(res_id, dict())[field] = field_value
             # compute recipients

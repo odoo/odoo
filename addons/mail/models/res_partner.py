@@ -100,7 +100,6 @@ class Partner(models.Model):
         custom_values = dict()
         if message.res_id and message.model in self.env and hasattr(self.env[message.model], 'message_get_email_values'):
             custom_values = self.env[message.model].browse(message.res_id).message_get_email_values(message)
-
         mail_values = {
             'mail_message_id': message.id,
             'mail_server_id': message.mail_server_id.id,
@@ -158,13 +157,7 @@ class Partner(models.Model):
         if not self.ids:
             return True
 
-        # existing custom notification email
-        base_template = None
-        if message.model and self._context.get('custom_layout', False):
-            base_template = self.env.ref(self._context['custom_layout'], raise_if_not_found=False)
-        if not base_template:
-            base_template = self.env.ref('mail.mail_template_data_notification_email_default')
-
+        base_template = self.env.ref('mail.mail_template_data_notification_email_default')
         base_template_ctx = self._notify_prepare_template_context(message)
         if not user_signature:
             base_template_ctx['signature'] = False

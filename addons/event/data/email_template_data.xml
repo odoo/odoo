@@ -28,28 +28,21 @@
             <field name="lang">${object.partner_id.lang}</field>
             <field name="reply_to" eval="False"/>
             <field name="subject">Your registration at ${object.event_id.name}</field>
+            <field name="use_default_layout" eval="False"/>
             <field name="body_html"><![CDATA[
-<div style="background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+<div style="color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
 % set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')
 % set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')
-    <table style="width:600px;margin:5px auto;">
+    <table style="width:100%;margin:0px auto;background:white;border:0px solid #e1e1e1;">
         <tbody>
-            <tr>
-                <td>
-                    <a href="/">
-                        <img src="/logo" alt="${object.company_id.name}" style="vertical-align:baseline;max-width:100px;" />
-                    </a>
-                </td>
+            <tr style="height: 47px;">
                 <td style="text-align:right;vertical-align:middle;">
-                    % if 'website_url' in object.event_id and object.event_id.website_url:
-                        <a href="${object.event_id.website_url}" style="background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;">View Event</a>
+                     % if 'website_url' in object.event_id and object.event_id.website_url:
+                        <a href="${object.event_id.website_url}" style="background-color: #1abc9c; padding: 10px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px; margin-right: 4px;
+">View Event</a>
                     % endif
                 </td>
             </tr>
-        </tbody>
-    </table>
-    <table style="width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;">
-        <tbody>
             <tr>
                 <td style="padding:15px 20px 0px 20px; font-size:16px; font-weight:300;">
                     <p style="font-size:16px;">
@@ -84,7 +77,7 @@
             </tr>
             <tr>
                 <td style="padding:15px 20px 0px 20px;">
-                    <table style="width:100%;border-top:1px solid #e1e1e1;">
+                    <table style="width:100%;border-top:0px solid #e1e1e1;">
                         <tr>
                             <td style="padding:25px 0px; text-align:center;">
                                 <p>
@@ -170,28 +163,13 @@
         </tbody>
     </table>
     % if object.event_id.address_id:
-    <div style="width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;">
+    <div style="width:588px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;">
         <a href="https://maps.google.com/maps?q=${location}" target="new">
-            <img src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}" style="vertical-align:bottom;" />
+            <img src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=588x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}" style="vertical-align:bottom;" />
         </a>
     </div>
     % endif
-    <table style="width:600px;margin:0px auto;text-align:center;">
-        <tbody>
-            <tr>
-                <td style="padding-top:10px;font-size: 12px;">
-                    <div>Sent by ${object.company_id.name}</div>
-                    % if 'website_url' in object.event_id and object.event_id.website_url:
-                    <div>
-                        Discover <a href="/event" style="text-decoration:none;color:#717188;">all our events</a>.
-                    </div>
-                    % endif
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-            ]]></field>
+</div> ]]></field>
         </record>
 
         <record id="event_reminder" model="mail.template">
@@ -202,28 +180,21 @@
             <field name="lang">${object.partner_id.lang}</field>
             <field name="reply_to" eval="False"/>
             <field name="subject">${object.event_id.name}: ${object.get_date_range_str()}</field>
+            <field name="use_default_layout" eval="False"/>
             <field name="body_html"><![CDATA[
-<div style="background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+<div style="color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
 % set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')
 % set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')
-    <table style="width:600px;margin:5px auto;">
+    <table style="width:100%;margin:0px auto;background:white;border:0px solid #e1e1e1;">
         <tbody>
-            <tr>
-                <td>
-                    <a href="/">
-                        <img src="/logo" alt="${object.company_id.name}" style="vertical-align:baseline;max-width:100px;" />
-                    </a>
-                </td>
+            <tr style="height:55px;"">
                 <td style="text-align:right;vertical-align:middle;">
                     % if 'website_url' in object.event_id and object.event_id.website_url:
-                        <a href="${object.event_id.website_url}" style="background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;">View Event</a>
+                        <a href="${object.event_id.website_url}" style="background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px; margin-right: 4px;
+">View Event</a>
                     % endif
                 </td>
             </tr>
-        </tbody>
-    </table>
-    <table style="width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;">
-        <tbody>
             <tr>
                 <td style="padding:15px 20px 0px 20px; font-size:16px;">
                     <p style="font-size:16px;">
@@ -338,13 +309,13 @@
         </tbody>
     </table>
     % if object.event_id.address_id:
-    <div style="width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;">
+    <div style="width:100%;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;">
         <a href="https://maps.google.com/maps?q=${location}" target="new">
-            <img src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}" style="vertical-align:bottom;" />
+            <img src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=588x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}" style="vertical-align:bottom; width:100%" />
         </a>
     </div>
     % endif
-    <table style="width:600px;margin:0px auto;text-align:center;">
+    <table style="width:100%;margin:0px auto;text-align:center;">
         <tbody>
             <tr>
                 <td style="padding-top:10px;font-size: 12px;">
