@@ -514,6 +514,8 @@ class HrExpenseSheet(models.Model):
 
     @api.multi
     def refuse_expenses(self, reason):
+        if not self.user_has_groups('hr_expense.group_hr_expense_user'):
+            raise UserError(_("Only HR Officers can refuse expenses"))
         self.write({'state': 'cancel'})
         for sheet in self:
             body = (_("Your Expense %s has been refused.<br/><ul class=o_timeline_tracking_value_list><li>Reason<span> : </span><span class=o_timeline_tracking_value>%s</span></li></ul>") % (sheet.name, reason))
@@ -521,6 +523,8 @@ class HrExpenseSheet(models.Model):
 
     @api.multi
     def approve_expense_sheets(self):
+        if not self.user_has_groups('hr_expense.group_hr_expense_user'):
+            raise UserError(_("Only HR Officers can approve expenses"))
         self.write({'state': 'approve', 'responsible_id': self.env.user.id})
 
     @api.multi
