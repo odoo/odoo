@@ -16,7 +16,7 @@ class AccountClosure(models.Model):
     date_closure_stop = fields.Datetime(string="Closing Date", help='Date to which the values are computed', readonly=True)
     date_closure_start = fields.Datetime(string="Starting Date", help='Date from which the total interval is computed', readonly=True)
     frequency = fields.Selection(string='Closing Type', selection=[('daily', 'Daily'), ('monthly', 'Monthly'), ('annually', 'Annual')], readonly=True)
-    total_interval = fields.Monetary(string="Period Total", help='Total in receivable accounts during the interval', readonly=True)
+    total_interval = fields.Monetary(string="Period Total", help='Total in receivable accounts during the interval, excluding overlapping periods', readonly=True)
     total_beginning = fields.Monetary(string="Cumulative Grand Total", help='Total in receivable accounts since the beginning of times', readonly=True)
     sequence_number = fields.Integer('Sequence #', readonly=True)
     move_ids = fields.Many2many('account.move', string='Journal entries that are included in the computation', readonly=True)

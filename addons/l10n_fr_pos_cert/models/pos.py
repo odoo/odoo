@@ -156,8 +156,7 @@ class pos_order(models.Model):
                          From: %s %s recorded on %s
                          To: %s %s recorded on %s
 
-                         For this report to be legally meaningful, please download your certification at
-                         https://accounts.odoo.com/my/contract/certification-french-accounting/'''
+                         For this report to be legally meaningful, please download your certification from your customer account (Only for Odoo Enterprise users).'''
                          ) % (start_order_info[2],
                               start_order_info[3],
                               start_order_info[0],
