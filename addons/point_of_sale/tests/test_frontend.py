@@ -36,6 +36,21 @@ class TestUi(odoo.tests.HttpCase):
                                    'fields_id': field.id,
                                    'value': 'account.account,' + str(account_receivable.id)})
 
+        # test an extra price on an attribute
+        pear = env.ref('point_of_sale.poire_conference')
+        attribute_value = env['product.attribute.value'].create({
+            'name': 'add 2',
+            'product_ids': [(6, 0, [pear.id])],
+            'attribute_id': env['product.attribute'].create({
+                'name': 'add 2',
+            }).id,
+        })
+        env['product.attribute.price'].create({
+            'product_tmpl_id': pear.product_tmpl_id.id,
+            'price_extra': 2,
+            'value_id': attribute_value.id,
+        })
+
         fixed_pricelist = env['product.pricelist'].create({
             'name': 'Fixed',
             'item_ids': [(0, 0, {
