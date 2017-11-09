@@ -63,7 +63,7 @@ class account_abstract_payment(models.AbstractModel):
     @api.depends('payment_type', 'journal_id')
     def _compute_hide_payment_method(self):
         for payment in self:
-            if not payment.journal_id:
+            if not payment.journal_id or payment.journal_id.type not in ['bank', 'cash']:
                 payment.hide_payment_method = True
                 continue
             journal_payment_methods = payment.payment_type == 'inbound'\
