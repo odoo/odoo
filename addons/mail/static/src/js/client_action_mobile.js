@@ -230,8 +230,8 @@ ChatAction.include({
         this.$buttons.appendTo(this.$('.o_mail_chat_mobile_control_panel'));
         this.searchview.$el.appendTo(this.$('.o_mail_chat_mobile_control_panel'));
         var $enable_searchview = $('<button/>', {type: 'button'})
-                .addClass('o_enable_searchview btn fa fa-search')
-                .on('click', this._toggleSearchView.bind(this));
+            .addClass('o_enable_searchview btn fa fa-search')
+            .on('click', this._toggleSearchView.bind(this));
             $enable_searchview.insertAfter(this.searchview.$el);
     },
 
