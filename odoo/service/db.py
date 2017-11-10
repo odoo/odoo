@@ -361,16 +361,11 @@ def list_dbs(force=False):
     db = odoo.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
         try:
-            cr.execute('SELECT current_user')
-            db_user = cr.fetchone()
-            if db_user:
-                cr.execute("select datname from pg_database where datdba=(select usesysid from pg_user where usename=%s) and not datistemplate and datallowconn and datname not in %s order by datname", (db_user, templates_list))
-            else:
-                cr.execute("select datname from pg_database where not datistemplate and datallowconn and datname not in %s order by datname", (templates_list,))
+            cr.execute("select datname from pg_database where datdba=(select usesysid from pg_user where usename=current_user) and not datistemplate and datallowconn and datname not in %s order by datname", (templates_list,))
             res = [odoo.tools.ustr(name) for (name,) in cr.fetchall()]
         except Exception:
+            _logger.exception('Listing databases failed:')
             res = []
-    res.sort()
     return res
 
 def list_db_incompatible(databases):
