@@ -18,5 +18,5 @@ class FleetConfigSettings(models.TransientModel):
     @api.model
     def get_default_max_unused_cars(self, fields):
         params = self.env['ir.config_parameter'].sudo()
-        max_unused_cars = params.get_param('l10n_be_hr_payroll_fleet.max_unused_cars', default=3)
+        max_unused_cars = params.get_param('l10n_be_hr_payroll_fleet.max_unused_cars', default=1000)
         return dict(max_unused_cars=int(max_unused_cars))
