@@ -1,9 +1,10 @@
 from datetime import datetime
 from hashlib import sha256
 from json import dumps
+import pytz
 
 from openerp import models, api, fields
-from fields.DateTime import context_timestamp, from_string as date_from_string
+from openerp.fields import Datetime
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
@@ -11,7 +12,16 @@ NOT_SAME_DAY_ERROR = _("This session has been opened another day. To comply with
 
 
 def ctx_tz(record, field):
-    return context_timestamp(record, date_from_string(record[field]))
+    res_lang = None
+    ctx = record._context
+    tz_name = pytz.timezone(ctx.get('tz') or record.env.user.tz)
+    timestamp = Datetime.from_string(record[field])
+    if ctx.get('lang'):
+        res_lang = record.env['res.lang'].search([('code', '=', ctx['lang'])], limit=1)
+    if res_lang:
+        timestamp = pytz.utc.localize(timestamp, is_dst=False)
+        return datetime.strftime(timestamp.astimezone(tz_name), res_lang.date_format + ' ' + res_lang.time_format)
+    return Datetime.context_timestamp(record, timestamp)
 
 
 class pos_config(models.Model):
@@ -22,7 +32,7 @@ class pos_config(models.Model):
         date_today = datetime.utcnow()
         for config in self.filtered(lambda c: c.company_id._is_accounting_unalterable()):
             if config.current_session_id:
-                session_start = date_from_string(config.current_session_id.start_at)
+                session_start = Datetime.from_string(config.current_session_id.start_at)
                 if session_start.date() != date_today.date():
                     raise UserError(NOT_SAME_DAY_ERROR % config.current_session_id.name)
         return super(pos_config, self).open_ui()
@@ -35,7 +45,7 @@ class pos_session(models.Model):
     def open_frontend_cb(self):
         date_today = datetime.utcnow()
         for session in self.filtered(lambda s: s.config_id.company_id._is_accounting_unalterable()):
-            session_start = date_from_string(session.start_at)
+            session_start = Datetime.from_string(session.start_at)
             if session_start.date() != date_today.date():
                 raise UserError(NOT_SAME_DAY_ERROR % session.name)
         return super(pos_session, self).open_frontend_cb()
