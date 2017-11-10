@@ -310,7 +310,7 @@ var SearchView = Widget.extend({
         this.toggle_visibility(false);
         this.setup_global_completion();
         this.query = new SearchQuery();
-        this.searchviewQueryBindEvent();
+        this._searchviewQueryBindEvent();
         this.$('.o_searchview_more')
             .toggleClass('fa-search-minus', this.visible_filters)
             .toggleClass('fa-search-plus', !this.visible_filters);
