@@ -56,7 +56,7 @@ QUnit.module('account_asset', {
 });
 
 QUnit.test('basic rendering', function (assert) {
-    assert.expect(17);
+    assert.expect(18);
 
     var form = createView({
         View: FormView,
@@ -120,6 +120,10 @@ QUnit.test('basic rendering', function (assert) {
         "third line toggle should be disabled");
     assert.ok(!form.$('.o_deprec_lines_toggler_cell:nth(3) button').attr('disabled'),
         "fourth line toggle should not be disabled");
+
+    // check the visibility: the widget should always be visible, regardless its value
+    assert.strictEqual(form.$('.o_deprec_lines_toggler:visible').length, 4,
+        "all togglers should be visible");
 
     form.destroy();
 });
