@@ -164,6 +164,34 @@ class MrpProduction(models.Model):
     is_locked = fields.Boolean('Is Locked', default=True, copy=False)
     show_final_lots = fields.Boolean('Show Final Lots', compute='_compute_show_lots')
     production_location_id = fields.Many2one('stock.location', "Production Location", related='product_id.property_stock_production')
+    picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this manufacturing order')
+    delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
+
+    @api.multi
+    @api.depends('procurement_group_id')
+    def _compute_picking_ids(self):
+        for order in self:
+            warehouse = order.location_src_id.get_warehouse()
+            order.picking_ids = self.env['stock.picking'].search([
+                ('group_id', '=', order.procurement_group_id.id),
+                ('picking_type_id', '=', warehouse.int_type_id.id)])
+            order.delivery_count = len(order.picking_ids)
+
+    @api.multi
+    def action_view_mo_delivery(self):
+        '''
+        This function returns an action that display picking related to
+        manufacturing order orders. It can either be a in a list or in a form
+        view, if there is only one picking to show.
+        '''
+        action = self.env.ref('stock.action_picking_tree_all').read()[0]
+        pickings = self.mapped('picking_ids')
+        if len(pickings) > 1:
+            action['domain'] = [('id', 'in', pickings.ids)]
+        elif pickings:
+            action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            action['res_id'] = pickings.id
+        return action
 
     @api.depends('product_id.tracking')
     def _compute_show_lots(self):
