@@ -11,7 +11,12 @@ class WebSuite(odoo.tests.HttpCase):
     at_install = False
 
     def test_01_js(self):
+        # webclient desktop test suite
         self.phantom_js('/web/tests?mod=web', "", "", login='admin', timeout=300)
+
+    def test_02_js(self):
+        # webclient mobile test suite
+        self.phantom_js('/web/tests/mobile?mod=web', "", "", login='admin', timeout=300)
 
     def test_check_suite(self):
         # verify no js test is using `QUnit.only` as it forbid any other test to be executed

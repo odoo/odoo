@@ -37,10 +37,11 @@ var SnippetOption = Widget.extend({
      *
      * @constructor
      */
-    init: function (parent, $target, $overlay) {
+    init: function (parent, $target, $overlay, data) {
         this._super.apply(this, arguments);
         this.$target = $target;
         this.$overlay = $overlay;
+        this.data = data;
         this.__methodNames = [];
     },
     /**
@@ -50,7 +51,6 @@ var SnippetOption = Widget.extend({
      * @override
      */
     start: function () {
-        this.data = this.$el.data();
         this._setActive();
         return this._super.apply(this, arguments);
     },

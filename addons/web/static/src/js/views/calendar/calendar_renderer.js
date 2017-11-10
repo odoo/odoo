@@ -355,7 +355,7 @@ return AbstractRenderer.extend({
             },
             // Dirty hack to ensure a correct first render
             eventAfterAllRender: function () {
-                window.dispatchEvent(new Event('resize'));
+                $(window).trigger('resize');
             },
             viewRender: function (view) {
                 // compute mode from view.name which is either 'month', 'agendaWeek' or 'agendaDay'

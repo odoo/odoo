@@ -2628,7 +2628,7 @@ QUnit.module('Views', {
         // Editable grouped list views are not supported, so the purpose of this
         // test is to check that when a list view is grouped, its editable
         // attribute is ignored
-        assert.expect(4);
+        assert.expect(5);
 
         var list = createView({
             View: ListView,
@@ -2636,8 +2636,9 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<tree editable="top"><field name="foo"/><field name="bar"/></tree>',
             intercepts: {
-                switch_view: function () {
-                    assert.step('switch view');
+                switch_view: function (event) {
+                    var resID = event.data.res_id || false;
+                    assert.step('switch view ' + event.data.view_type + ' ' + resID);
                 },
             },
         });
@@ -2649,9 +2650,15 @@ QUnit.module('Views', {
 
         // reload with groupBy
         list.reload({groupBy: ['bar']});
+
+        // clicking on record should open the form view
         list.$('.o_group_header:first').click();
         list.$('.o_data_cell:first').click();
-        assert.verifySteps(['switch view'], 'one switch view should have been requested');
+
+        // clicking on create button should open the form view
+        list.$buttons.find('.o_list_button_add').click();
+        assert.verifySteps(['switch view form 1', 'switch view form false'],
+            'two switch view to form should have been requested');
 
         list.destroy();
     });

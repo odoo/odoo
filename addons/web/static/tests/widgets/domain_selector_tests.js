@@ -194,6 +194,25 @@ QUnit.module('DomainSelector', {
 
         domainSelector.destroy();
     });
+
+    QUnit.test("editing a domain with `parent` key", function (assert) {
+        assert.expect(1);
+
+        var $target = $("#qunit-fixture");
+
+        // Create the domain selector and its mock environment
+        var domainSelector = new DomainSelector(null, "product", "[['name','=',parent.foo]]", {
+            debugMode: true,
+            readonly: false,
+        });
+        testUtils.addMockEnvironment(domainSelector, {data: this.data});
+        domainSelector.appendTo($target);
+
+        assert.strictEqual(domainSelector.$el.text(), "This domain is not supported.",
+            "an error message should be displayed because of the `parent` key");
+
+        domainSelector.destroy();
+    });
 });
 });
 });

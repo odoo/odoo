@@ -346,7 +346,8 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'product.product',
-        fields: ['display_name', 'list_price', 'standard_price', 'categ_id', 'pos_categ_id', 'taxes_id',
+        // todo remove list_price in master, it is unused
+        fields: ['display_name', 'list_price', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_id', 'taxes_id',
                  'barcode', 'default_code', 'to_weight', 'uom_id', 'description_sale', 'description',
                  'product_tmpl_id','tracking'],
         order:  _.map(['sequence','default_code','name'], function (name) { return {name: name}; }),
@@ -1234,7 +1235,7 @@ exports.Product = Backbone.Model.extend({
                    (! item.date_end || moment(item.date_end).isSameOrAfter(date));
         });
 
-        var price = self.list_price;
+        var price = self.lst_price;
         _.find(pricelist_items, function (rule) {
             if (rule.min_quantity && quantity < rule.min_quantity) {
                 return false;
