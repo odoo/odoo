@@ -1,4 +1,4 @@
-odoo.define('website.content.affix_menu', function (require) {
+odoo.define('website.content.menu', function (require) {
 'use strict';
 
 var sAnimation = require('website.content.snippets.animation');
