@@ -361,7 +361,8 @@ def list_dbs(force=False):
     db = odoo.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
         try:
-            db_user = cr._cnx.get_dsn_parameters().get('user')
+            cr.execute('SELECT current_user')
+            db_user = cr.fetchone()
             if db_user:
                 cr.execute("select datname from pg_database where datdba=(select usesysid from pg_user where usename=%s) and not datistemplate and datallowconn and datname not in %s order by datname", (db_user, templates_list))
             else:
