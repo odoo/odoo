@@ -38,65 +38,57 @@ class account_journal(models.Model):
         elif self.type == 'bank':
             return ['', _('Bank: Balance')]
 
+    # Below method is used to get data of bank and cash statemens
     @api.multi
     def get_line_graph_datas(self):
+        """Computes the data used to display the graph for bank and cash journals in the accounting dashboard"""
+
+        def build_graph_data(date, amount):
+            #display date in locale format
+            name = format_date(date, 'd LLLL Y', locale=locale)
+            short_name = format_date(date, 'd MMM', locale=locale)
+            return {'x':short_name,'y': amount, 'name':name}
+
+        self.ensure_one()
+        BankStatement = self.env['account.bank.statement']
         data = []
         today = datetime.today()
         last_month = today + timedelta(days=-30)
-        bank_stmt = []
-        # Query to optimize loading of data for bank statement graphs
-        # Return a list containing the latest bank statement balance per day for the
-        # last 30 days for current journal
-        query = """SELECT a.date, a.balance_end
-                        FROM account_bank_statement AS a,
-                            (SELECT c.date, max(c.id) AS stmt_id
-                                FROM account_bank_statement AS c
-                                WHERE c.journal_id = %s
-                                    AND c.date > %s
-                                    AND c.date <= %s
-                                    GROUP BY date, id
-                                    ORDER BY date, id) AS b
-                        WHERE a.id = b.stmt_id;"""
-
-        self.env.cr.execute(query, (self.id, last_month, today))
-        bank_stmt = self.env.cr.dictfetchall()
-
-        last_bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids),('date', '<=', last_month.strftime(DF))], order="date desc, id desc", limit=1)
-        start_balance = last_bank_stmt and last_bank_stmt[0].balance_end or 0
-
         locale = self._context.get('lang') or 'en_US'
-        show_date = last_month
-        #get date in locale format
-        name = format_date(show_date, 'd LLLL Y', locale=locale)
-        short_name = format_date(show_date, 'd MMM', locale=locale)
-        data.append({'x':short_name,'y':start_balance, 'name':name})
 
-        for stmt in bank_stmt:
-            #fill the gap between last data and the new one
-            number_day_to_add = (datetime.strptime(stmt.get('date'), DF) - show_date).days
-            last_balance = data[len(data) - 1]['y']
-            for day in range(0,number_day_to_add + 1):
-                show_date = show_date + timedelta(days=1)
-                #get date in locale format
-                name = format_date(show_date, 'd LLLL Y', locale=locale)
-                short_name = format_date(show_date, 'd MMM', locale=locale)
-                data.append({'x': short_name, 'y':last_balance, 'name': name})
-            #add new stmt value
-            data[len(data) - 1]['y'] = stmt.get('balance_end')
+        #starting point of the graph is the last statement
+        last_stmt = BankStatement.search([('journal_id', '=', self.id), ('date', '<=', today.strftime(DF))], order='date desc, id desc', limit=1)
+        if not last_stmt:
+            last_stmt = BankStatement.search([('journal_id', '=', self.id), ('date', '<=', last_month.strftime(DF))], order='date desc, id desc', limit=1)
+        last_balance = last_stmt and last_stmt.balance_end_real or 0
+        data.append(build_graph_data(today, last_balance))
 
-        #continue the graph if the last statement isn't today
-        if show_date != today:
-            number_day_to_add = (today - show_date).days
-            last_balance = data[len(data) - 1]['y']
-            for day in range(0,number_day_to_add):
-                show_date = show_date + timedelta(days=1)
-                #get date in locale format
-                name = format_date(show_date, 'd LLLL Y', locale=locale)
-                short_name = format_date(show_date, 'd MMM', locale=locale)
-                data.append({'x': short_name, 'y':last_balance, 'name': name})
+        #then we subtract the total amount of bank statement lines per day to get the previous points
+        #(graph is drawn backward)
+        date = today
+        amount = last_balance
+        query = """SELECT l.date, sum(l.amount) as amount
+                        FROM account_bank_statement_line l
+                        RIGHT JOIN account_bank_statement st ON l.statement_id = st.id
+                        WHERE st.journal_id = %s
+                          AND l.date > %s
+                          AND l.date <= %s
+                        GROUP BY l.date
+                        ORDER BY l.date desc
+                        """
+        self.env.cr.execute(query, (self.id, last_month, today))
+        for val in self.env.cr.dictfetchall():
+            date = datetime.strptime(val['date'], DF)
+            if val['date'] != today.strftime(DF):  # make sure the last point in the graph is today
+                data[:0] = [build_graph_data(date, amount)]
+            amount -= val['amount']
+
+        # make sure the graph starts 1 month ago
+        if date.strftime(DF) != last_month.strftime(DF):
+            data[:0] = [build_graph_data(last_month, amount)]
 
         [graph_title, graph_key] = self._graph_title_and_key()
-        color = '#875A7B' if '+e' in version else '#7c7bad'
+        color = '#875A7B' if 'e' in version else '#7c7bad'
         return [{'values': data, 'title': graph_title, 'key': graph_key, 'area': True, 'color': color}]
 
     @api.multi

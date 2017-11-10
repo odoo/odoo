@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
         <record id="view_account_position_form" model="ir.ui.view">
             <field name="name">account.fiscal.position.form</field>
             <field name="model">account.fiscal.position</field>
             <field name="arch" type="xml">
                 <form string="Fiscal Position">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="active"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                         <group>
@@ -68,6 +72,15 @@
                     <field name="note" placeholder="Legal Notes..."/>
                     </sheet>
                 </form>
+            </field>
+        </record>
+        <record id="view_account_position_filter" model="ir.ui.view">
+            <field name="name">account.fiscal.position.filter</field>
+            <field name="model">account.fiscal.position</field>
+            <field name="arch" type="xml">
+                <search string="Search Fiscal Positions">
+                    <filter name="active" string="Archived" domain="[('active', '=', False)]"/>
+                </search>
             </field>
         </record>
         <record id="view_account_position_tree" model="ir.ui.view">
@@ -165,6 +178,7 @@
             <field name="res_model">account.fiscal.position</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
+            <field name="search_view_id" ref="view_account_position_filter"/>
         </record>
 
         <menuitem
