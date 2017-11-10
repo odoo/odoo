@@ -165,7 +165,7 @@ class hr_timesheet_sheet_sheet_day(models.Model):
                                 ON r.user_id = u.id
                                 LEFT JOIN res_partner p
                                 ON u.partner_id = p.id
-                            WHERE check_out IS NOT NULL
+                            WHERE a.check_out IS NOT NULL
                             group by (a.check_in AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))::date, s.id, timezone
                         )) AS foo
                         GROUP BY name, sheet_id, timezone

@@ -264,16 +264,27 @@ class AliasMixin(models.AbstractModel):
                          record._name, record.display_name, record.id)
 
     def _alias_check_contact(self, message, message_dict, alias):
+        """ Main mixin method that inheriting models may inherit in order
+        to implement a specifc behavior. """
+        return self._alias_check_contact_on_record(self, message, message_dict, alias)
+
+    def _alias_check_contact_on_record(self, record, message, message_dict, alias):
+        """ Generic method that takes a record not necessarily inheriting from
+        mail.alias.mixin. """
         author = self.env['res.partner'].browse(message_dict.get('author_id', False))
-        if alias.alias_contact == 'followers' and self.ids:
-            if not hasattr(self, "message_partner_ids") or not hasattr(self, "message_channel_ids"):
+        if alias.alias_contact == 'followers':
+            if not record.ids:
                 return {
-                    'error_mesage': _('incorrectly configured alias'),
+                    'error_message': _('incorrectly configured alias (unknown reference record)'),
                 }
-            accepted_partner_ids = self.message_partner_ids | self.message_channel_ids.mapped('channel_partner_ids')
+            if not hasattr(record, "message_partner_ids") or not hasattr(record, "message_channel_ids"):
+                return {
+                    'error_message': _('incorrectly configured alias'),
+                }
+            accepted_partner_ids = record.message_partner_ids | record.message_channel_ids.mapped('channel_partner_ids')
             if not author or author not in accepted_partner_ids:
                 return {
-                    'error_mesage': _('restricted to followers'),
+                    'error_message': _('restricted to followers'),
                 }
         elif alias.alias_contact == 'partners' and not author:
             return {

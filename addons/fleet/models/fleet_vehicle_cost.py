@@ -112,7 +112,7 @@ class FleetVehicleLogContract(models.Model):
         ('diesoon', 'Expiring Soon'),
         ('closed', 'Closed')
         ], 'Status', default='open', readonly=True,
-        help='Choose wheter the contract is still valid or not',
+        help='Choose whether the contract is still valid or not',
         track_visibility="onchange",
         copy=False)
     notes = fields.Text('Terms and Conditions', help='Write here all supplementary information relative to this contract', copy=False)

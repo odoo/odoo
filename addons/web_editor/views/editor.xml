@@ -114,10 +114,14 @@
         <t t-call-assets="web_editor.assets_editor" t-css="false"/>
     </xpath>
 </template>
-<template id="qunit_suite" inherit_id="web.qunit_suite">
-    <xpath expr="//t[@t-call-assets='web.assets_backend'][@t-css='false']" position="after">
+<template id="js_tests_assets" inherit_id="web.js_tests_assets">
+    <xpath expr="." position="inside">
         <t t-call-assets="web_editor.summernote" t-css="false"/>
         <t t-call-assets="web_editor.assets_editor" t-css="false"/>
+    </xpath>
+</template>
+<template id="qunit_suite" inherit_id="web.qunit_suite">
+    <xpath expr="." position="inside">
         <script type="text/javascript" src="/web_editor/static/tests/web_editor_tests.js"></script>
     </xpath>
 </template>
