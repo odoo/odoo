@@ -78,11 +78,14 @@
                               <thead>
                                 <tr>
                                     <th width="15%">Product</th>
+                                    <th width="10%">
+                                        <t t-if="any([move_line.description for move_line in o.move_line_ids])">Description</t>
+                                    </th>
                                     <th width="10%">Quantity</th>
-                                    <th width="20%" class="text-center">
+                                    <th width="15%" class="text-center">
                                         <t t-if="has_barcode">Barcode</t>
                                     </th>
-                                    <th width="15%"> 
+                                    <th width="10%">
                                         <t t-if="o.picking_type_id.code != 'incoming'" align="left">Source</t>
                                     </th>
                                     <th width="20%">
@@ -98,8 +101,13 @@
                                             <span t-field="move.product_id.description_picking"/>
                                         </td>
                                         <td>
+                                            <t t-if="move.description">
+                                                <span t-field="move.description"/>
+                                            </t>
+                                        </td>
+                                        <td>
                                             <span t-if="move.product_qty" t-esc="move.product_qty"/>
-                                            <span t-if="not move.product_qty" t-esc="move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id, rounding_method='HALF-UP')"/>
+                                            <span t-if="not move.product_qty" t-esc="move.product_uom._compute_quantity(move.quantity_done, move_lines.product_id.uom_id, rounding_method='HALF-UP')"/>
                                             <span t-field="move.product_id.uom_id" groups="product.group_uom"/>
                                         </td>
                                         <td>
@@ -158,6 +166,9 @@
                                 to check if products are available.
                             </p>
                             <p t-field="o.note"/>
+                        </div>
+                        <div t-if="o.picking_note">
+                            <strong>Note: </strong><span t-field="o.picking_note"/>
                         </div>
                     </t>
                  </t>
