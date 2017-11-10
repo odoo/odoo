@@ -133,16 +133,14 @@ class AccountMove(models.Model):
         raise UserError(_('''Successful test !
 
                          The journal entries are guaranteed to be in their original and inalterable state
-                         From: %s %s recorded on %s
-                         To: %s %s recorded on %s
+                         From: %s %s
+                         To: %s %s
 
-                         For this report to be legally meaningful, please download your certification from your customer account (Only for Odoo Enterprise users).'''
+                         For this report to be legally meaningful, please download your certification from your customer account on Odoo.com (Only for Odoo Enterprise users).'''
                          ) % (start_move_info[2],
                               start_move_info[3],
-                              start_move_info[0],
                               end_move_info[2],
-                              end_move_info[3],
-                              end_move_info[0],))
+                              end_move_info[3],))
 
 
 class AccountMoveLine(models.Model):

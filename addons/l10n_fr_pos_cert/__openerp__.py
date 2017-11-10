@@ -5,13 +5,14 @@
     'name': 'France - Certification CGI 286 I-3 bis - Point of Sale',
     'version': '1.0',
     'category': 'Localization',
-    'description': """This application allows to be in appliance with the inalterability, securisation and archiving of journal entries, as required by the French Law (CGI art. 286, I. 3°bis) as of January 1st 2018.
+    'description': """This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C). 
+    Install it if you use the Point of Sale app to sell to individuals. 
 
-        Don't uninstall this application. This would remove the inalterability check on existing previous journal entries.
-
-        To be fully compliant with the law, this module goes with a certification provided by Odoo that is downloadable here:
-        https://accounts.odoo.com/my/contract/certification-french-accounting/
-
+    The module adds following features:
+> Inalterability: deactivation of all the ways to cancel or modify key data of POS orders, invoices and journal entries
+> Security: chaining algorithm to verify the inalterability
+> Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)
+> Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)
 """,
     'depends': ['l10n_fr_certification', 'point_of_sale'],
     'installable': True,

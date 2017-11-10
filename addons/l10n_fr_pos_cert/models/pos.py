@@ -3,11 +3,15 @@ from hashlib import sha256
 from json import dumps
 
 from openerp import models, api, fields
+from fields.DateTime import context_timestamp, from_string as date_from_string
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
-NOT_SAME_DAY_ERROR = _("According to the French law, you shouldn't resume a point of sale for another day. Please close and validate session %s.")
+NOT_SAME_DAY_ERROR = _("This session has been opened another day. To comply with the French law, you should close sessions on a daily basis. Please close session %s and open a new one.")
+
+
+def ctx_tz(record, field):
+    return context_timestamp(record, date_from_string(record[field]))
 
 
 class pos_config(models.Model):
@@ -18,7 +22,7 @@ class pos_config(models.Model):
         date_today = datetime.utcnow()
         for config in self.filtered(lambda c: c.company_id._is_accounting_unalterable()):
             if config.current_session_id:
-                session_start = datetime.strptime(config.current_session_id.start_at, DEFAULT_SERVER_DATETIME_FORMAT)
+                session_start = date_from_string(config.current_session_id.start_at)
                 if session_start.date() != date_today.date():
                     raise UserError(NOT_SAME_DAY_ERROR % config.current_session_id.name)
         return super(pos_config, self).open_ui()
@@ -31,7 +35,7 @@ class pos_session(models.Model):
     def open_frontend_cb(self):
         date_today = datetime.utcnow()
         for session in self.filtered(lambda s: s.config_id.company_id._is_accounting_unalterable()):
-            session_start = datetime.strptime(session.start_at, DEFAULT_SERVER_DATETIME_FORMAT)
+            session_start = date_from_string(session.start_at)
             if session_start.date() != date_today.date():
                 raise UserError(NOT_SAME_DAY_ERROR % session.name)
         return super(pos_session, self).open_frontend_cb()
@@ -129,7 +133,7 @@ class pos_order(models.Model):
         def build_order_info(order):
             entry_reference = _('(Receipt ref.: %s)')
             order_reference_string = order.pos_reference and entry_reference % order.pos_reference or ''
-            return [order.date_order, order.l10n_fr_pos_cert_sequence_number, order.name, order_reference_string, order.write_date]
+            return [ctx_tz(order, 'date_order'), order.l10n_fr_pos_cert_sequence_number, order.name, order_reference_string, ctx_tz(order, 'write_date')]
 
         orders = self.search([('state', 'in', ['paid', 'done', 'invoiced']),
                              ('company_id', '=', company_id),
@@ -143,11 +147,11 @@ class pos_order(models.Model):
         for order in orders:
             if order.l10n_fr_pos_cert_hash != order._compute_hash(previous_hash=previous_hash):
                 raise UserError(_('Corrupted data on point of sale order with id %s.') % order.id)
-            if not previous_hash:
-                #save the date and sequence number of the first order hashed
-                start_order_info = build_order_info(order)
             previous_hash = order.l10n_fr_pos_cert_hash
-        end_order_info = build_order_info(order)
+
+        orders_sorted_date = orders.sorted(lambda o: o.date_order)
+        start_order_info = build_order_info(orders_sorted_date[0])
+        end_order_info = build_order_info(orders_sorted_date[-1])
 
         # Raise on success
         raise UserError(_('''Successful test !
@@ -156,7 +160,7 @@ class pos_order(models.Model):
                          From: %s %s recorded on %s
                          To: %s %s recorded on %s
 
-                         For this report to be legally meaningful, please download your certification from your customer account (Only for Odoo Enterprise users).'''
+                         For this report to be legally meaningful, please download your certification from your customer account on Odoo.com (Only for Odoo Enterprise users).'''
                          ) % (start_order_info[2],
                               start_order_info[3],
                               start_order_info[0],
