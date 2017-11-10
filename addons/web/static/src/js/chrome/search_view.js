@@ -334,9 +334,9 @@ var SearchView = Widget.extend({
     },
     /**
      * will be overridden in mobile so we can stop do_search on fly and apply on click of button.
-     * @public
+     * @private
      */
-    searchviewQueryBindEvent: function () {
+    _searchviewQueryBindEvent: function () {
         this.query.on('change', this.proxy('renderChangedFacets'))
             .on('add reset remove', this.proxy('renderFacets'))
             .on('add change reset remove', this.proxy('do_search'));
