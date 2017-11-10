@@ -914,6 +914,10 @@ class WizardMultiChartsAccounts(models.TransientModel):
 
         # Create the current year earning account if it wasn't present in the CoA
         company.get_unaffected_earnings_account()
+
+        # set the default taxes on the company
+        company.account_sale_tax_id = self.env['account.tax'].search([('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company.id)], limit=1).id
+        company.account_purchase_tax_id = self.env['account.tax'].search([('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company.id)], limit=1).id
         return {}
 
     @api.multi
