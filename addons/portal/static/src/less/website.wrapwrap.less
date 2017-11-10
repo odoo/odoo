@@ -205,6 +205,36 @@ ul.nav-stacked > li > a {
     padding: 2px 15px;
 }
 
+// TODO should be moved to website/ when the LESS split of portal/website will
+// be reviewed
+.navbar .o_extra_menu_items.open > ul {
+    padding: 0;
+
+    > li {
+        &.divider {
+            display: none;
+        }
+        + li {
+            border-top: 1px solid @gray-lighter;
+        }
+        > a.dropdown-toggle {
+            background-color: @gray-lighter;
+            color: inherit; // Useful when the toggle is active
+            pointer-events: none; // hack to prevent clicking on it because dropdown always opened
+        }
+        > ul { // remove dropdown-menu default style as it is nested in another one
+            position: static;
+            float: none;
+            display: block;
+            max-height: none;
+            margin-top: 0;
+            padding: 0;
+            border: none;
+            box-shadow: none;
+        }
+    }
+}
+
 // Columns min height
 [class^="col-md-"] {
     min-height: 24px;

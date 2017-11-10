@@ -229,7 +229,13 @@
 
 <template id="affix_top_menu" inherit_id="website.layout" customize_show="True" name="Affix Top Menu">
     <xpath expr="//div[@id='wrapwrap']/header" position="attributes">
-        <attribute name="class" add="o_affix_enabled" separator=" "/>
+        <attribute name="t-attf-class" add="#{'o_affix_enabled'}" separator=" "/>
+    </xpath>
+</template>
+
+<template id="no_autohide_menu" inherit_id="website.layout" active="False">
+    <xpath expr="//header" position="attributes">
+        <attribute name="t-attf-class" add="#{'o_no_autohide_menu'}" separator=" "/>
     </xpath>
 </template>
 
@@ -772,7 +778,7 @@
                     <div class="navbar navbar-default navbar-static-top">
                         <div class="container">
                             <div class="collapse navbar-collapse navbar-top-collapse">
-                                <ul class="nav navbar-nav navbar-right" id="top_menu">
+                                <ul class="nav navbar-nav pull-right" id="top_menu">
                                     <li><a href="/">Home</a></li>
                                     <li><a href="javascript: window.history.back()">Back</a></li>
                                 </ul>

@@ -603,7 +603,14 @@ var SnippetsMenu = Widget.extend({
             $(r && r.sc).closest('.o_default_snippet_text').removeClass('o_default_snippet_text');
         });
 
-        return $.when.apply($, defs);
+        return $.when.apply($, defs).then(function () {
+            // Trigger a resize event once entering edit mode as the snippets
+            // menu will take part of the screen width (delayed because of
+            // animation). (TODO wait for real animation end)
+            setTimeout(function () {
+                $window.trigger('resize');
+            }, 1000);
+        });
     },
     /**
      * @override
