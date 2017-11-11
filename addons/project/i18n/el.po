@@ -8,13 +8,14 @@
 # Alex Yo <omikr0n@hotmail.com>, 2016
 # Stefanos Nikou <stefanos.nikou@gmail.com>, 2016
 # Giota Dandidou <giotadandidou@gmail.com>, 2017
+# George Tarasidis <george_tarasidis@yahoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
 "PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: Giota Dandidou <giotadandidou@gmail.com>, 2017\n"
+"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2017\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -554,7 +555,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Billing</strong>"
-msgstr ""
+msgstr "<strong>Τιμολόγηση</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -880,6 +881,11 @@ msgid "Active"
 msgstr "Ενεργή"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Activities"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
 msgstr "Προσθέστε μια περιγραφή..."
@@ -1011,7 +1017,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_user_id
 msgid "Assigned To"
-msgstr ""
+msgstr "Ανατεθειμένο σε"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_user_id
@@ -1328,12 +1334,12 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
 msgid "Create a Project"
-msgstr ""
+msgstr "Δημιουργία ενός Έργου"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all_config
 msgid "Create a new project."
-msgstr ""
+msgstr "Δημιουργία ενός νέου έργου."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2078,6 +2084,8 @@ msgid ""
 "Internal notes are messages that will appear in the Chatter but will not be "
 "notified in Odoo's Inbox."
 msgstr ""
+"Οι εσωτερικές σημειώσεις είναι μηνύματα που θα εμφανιστούν στον συνομιλητή "
+"αλλά δεν θα εμφανιστούν στα Εισερχόμενα."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2332,7 +2340,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "My Favorites"
-msgstr ""
+msgstr "Τα Αγαπημένα μου"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -2405,7 +2413,7 @@ msgstr "Κανονική"
 #: model:project.task,legend_blocked:project.project_task_9
 #: model:project.task.type,legend_blocked:project.project_stage_0
 msgid "Not validated"
-msgstr ""
+msgstr "Μη Επικυρωμένο"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
@@ -2437,6 +2445,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_doc_count
 msgid "Number of documents attached"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Objectives"
 msgstr ""
 
 #. module: project
@@ -2687,12 +2700,12 @@ msgstr "Όνομα Έργου"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Project Settings"
-msgstr ""
+msgstr "Ρυθμίσεις Έργου"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Project Settings."
-msgstr ""
+msgstr "Ρυθμίσεις Έργου."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_task_graph
@@ -2723,6 +2736,7 @@ msgstr "Εργασίες Έργου"
 #: model:ir.model.fields,field_description:project.field_project_task_type_project_ids
 #: model:ir.ui.menu,name:project.menu_projects_config
 #: model:ir.ui.view,arch_db:project.analytic_account_inherited_form
+#: model:ir.ui.view,arch_db:project.project_planner
 #: model:ir.ui.view,arch_db:project.view_project
 msgid "Projects"
 msgstr "Έργα"
@@ -2980,7 +2994,7 @@ msgstr "Προδιαγραφή"
 #: code:addons/project/static/src/js/web_planner_project.js:23
 #, python-format
 msgid "Specification is validated"
-msgstr ""
+msgstr "Η προδιαγραφή είναι επικυρωμένη"
 
 #. module: project
 #. openerp-web
