@@ -295,10 +295,22 @@ class Picking(models.Model):
     product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id')
     show_operations = fields.Boolean(compute='_compute_show_operations')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
+    partial_delivery = fields.Boolean(
+        string='Partial Delivery',
+        compute='_compute_partial_delivery',
+    )
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
     ]
+
+    @api.depends('move_lines', 'move_lines.state')
+    def _compute_partial_delivery(self):
+        for picking in self:
+            partial = False
+            if any([move.state not in ['cancel', 'done', 'assigned'] for move in picking.move_lines]):
+                partial = True
+            picking.partial_delivery = partial
 
     @api.depends('picking_type_id.show_operations')
     def _compute_show_operations(self):
