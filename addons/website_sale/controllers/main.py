@@ -400,9 +400,10 @@ class WebsiteSale(http.Controller):
             return {}
 
         value = order._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty)
+
         if not order.cart_quantity:
             request.website.sale_reset()
-            return {}
+            return value
 
         order = request.website.sale_get_order()
         value['cart_quantity'] = order.cart_quantity
@@ -503,6 +504,8 @@ class WebsiteSale(http.Controller):
         # vat validation
         Partner = request.env['res.partner']
         if data.get("vat") and hasattr(Partner, "check_vat"):
+            if data.get("country_id"):
+                data["vat"] = Partner.fix_eu_vat_number(data.get("country_id"), data.get("vat"))
             partner_dummy = Partner.new({
                 'vat': data['vat'],
                 'country_id': (int(data['country_id'])
@@ -742,6 +745,7 @@ class WebsiteSale(http.Controller):
             [('website_published', '=', True), ('company_id', '=', order.company_id.id)]
         )
 
+        values['access_token'] = order.access_token
         values['form_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 'form' and acq.view_template_id]
         values['s2s_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 's2s' and acq.registration_view_template_id]
         values['tokens'] = request.env['payment.token'].search(

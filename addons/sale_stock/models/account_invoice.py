@@ -51,7 +51,7 @@ class AccountInvoiceLine(models.Model):
                 qty_to_consider = invoiced_qty - qty_done
             qty_to_consider = min(qty_to_consider, quantity - qty_delivered)
             qty_delivered += qty_to_consider
-            average_price_unit = (average_price_unit * (qty_delivered - qty_to_consider) + move.price_unit * qty_to_consider) / qty_delivered
+            average_price_unit = (average_price_unit * (qty_delivered - qty_to_consider) + (-1 * move.price_unit) * qty_to_consider) / qty_delivered
             if qty_delivered == quantity:
                 break
         return average_price_unit

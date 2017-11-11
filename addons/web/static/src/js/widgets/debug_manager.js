@@ -6,7 +6,6 @@ var dialogs = require('web.view_dialogs');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var field_utils = require('web.field_utils');
-var framework = require('web.framework');
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var utils = require('web.utils');
@@ -189,12 +188,26 @@ var DebugManager = Widget.extend({
             }
         }).open();
     },
+    /**
+     * Runs the JS (desktop) tests
+     */
     perform_js_tests: function () {
         this.do_action({
             name: _t("JS Tests"),
             target: 'new',
             type: 'ir.actions.act_url',
             url: '/web/tests?mod=*'
+        });
+    },
+    /**
+     * Runs the JS mobile tests
+     */
+    perform_js_mobile_tests: function () {
+        this.do_action({
+            name: _t("JS Mobile Tests"),
+            target: 'new',
+            type: 'ir.actions.act_url',
+            url: '/web/tests/mobile?mod=*'
         });
     },
     split_assets: function() {

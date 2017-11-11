@@ -96,12 +96,15 @@
     for rec in self.move_line_ids:
       if rec.package_id.name == 'Palneg 1':
         rec.qty_done = rec.product_qty
+        rec.result_package_id = False
       elif rec.package_id.name == 'Palneg 2' and rec.lot_id.name == 'Lot neg' :
         rec.write({
           'qty_done': 140,
+          'result_package_id': False,
         })
       elif rec.package_id.name == 'Palneg 3':
         rec.qty_done = 10
+        rec.result_package_id = False
 -
   Process this picking
 -

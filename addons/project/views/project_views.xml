@@ -132,7 +132,7 @@
                         </div>
                     </div>
                     <notebook>
-                        <page string="Settings">
+                        <page name="settings" string="Settings">
                             <group>
                                 <field name="user_id" string="Project Manager"
                                         attrs="{'readonly':[('active','=',False)]}"/>
@@ -149,7 +149,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Emails" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                        <page name="emails" string="Emails" attrs="{'invisible': [('alias_domain', '=', False)]}">
                             <group name="group_alias">
                                 <label for="alias_name" string="Email Alias"/>
                                 <div name="alias_def">
@@ -307,23 +307,21 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="o_kanban_card_manage_pane">
+                                    <div class="o_kanban_card_manage_pane" groups="project.group_project_manager">
                                         <div class="o_kanban_card_manage_section o_kanban_manage_reports">
-                                            <div groups="project.group_project_manager">
+                                            <div>
                                                 <a type="edit">Settings</a>
                                             </div>
                                             <div>
                                                 <a name="%(project.action_project_task_user_tree_filtered)d" type="action">Tasks</a>
                                             </div>
                                         </div>
-                                        <div t-if="widget.editable" class="o_project_kanban_colorpicker">
+                                        <div class="o_project_kanban_colorpicker">
                                             <ul class="oe_kanban_colorpicker" data-field="color"/>
                                         </div>
                                     </div>
-                                    <div class="o_project_kanban_manage">
-                                        <a class="o_kanban_manage_toggle_button o_left" href="#"><i class="fa fa-ellipsis-v" /></a>
-                                        <span class="o_right"><field name="is_favorite" widget="boolean_favorite" nolabel="1" /></span>
-                                    </div>
+                                    <a class="o_kanban_manage_toggle_button o_left" href="#" groups="project.group_project_manager"><i class="fa fa-ellipsis-v" /></a>
+                                    <span class="o_right"><field name="is_favorite" widget="boolean_favorite" nolabel="1" /></span>
                                 </div>
 
                                 <div class="o_project_kanban_boxes">
@@ -443,7 +441,7 @@
                             <field name="description" type="html"/>
                             <div class="oe_clear"/>
                         </page>
-                        <page string="Extra Info">
+                        <page name="extra_info" string="Extra Info">
                             <group>
                                 <group>
                                     <field name="sequence" groups="base.group_no_one"/>

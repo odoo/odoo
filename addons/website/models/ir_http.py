@@ -105,11 +105,12 @@ class Http(models.AbstractModel):
         req_page = request.httprequest.path
 
         domain = [('url', '=', req_page), '|', ('website_ids', 'in', request.website.id), ('website_ids', '=', False)]
+        pages = request.env['website.page'].search(domain)
 
-        if not request.website.is_publisher:
-            domain += [('is_visible', '=', True)]
+        if not request.website.is_publisher():
+            pages = pages.filtered('is_visible')
 
-        mypage = request.env['website.page'].search(domain, limit=1)
+        mypage = pages[0] if pages else False
         _, ext = os.path.splitext(req_page)
         if mypage:
             return request.render(mypage.view_id.id, {
@@ -122,7 +123,8 @@ class Http(models.AbstractModel):
     @classmethod
     def _serve_404(cls):
         req_page = request.httprequest.path
-        return request.website.is_publisher() and request.render('website.page_404', {'path': req_page[1:]}) or False
+        page404 = 'website.%s' % (request.website.is_publisher() and 'page_404' or '404')
+        return request.render(page404, {'path': req_page[1:]})
 
     @classmethod
     def _serve_redirect(cls):

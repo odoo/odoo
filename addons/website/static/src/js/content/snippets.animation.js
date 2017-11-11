@@ -343,12 +343,19 @@ var Animation = Widget.extend({
      * Also stops animation effects and destroys them if any.
      */
     destroy: function () {
+        var $oldel = this.$el;
         // The difference with the default behavior is that we unset the
         // associated element first so that:
         // 1) its events are unbinded
         // 2) it is not removed from the DOM
         this.setElement(null);
         this._super.apply(this, arguments);
+        // Reassign the variables afterwards to allow extensions to use them
+        // after calling the _super method
+        this.$el = $oldel;
+        this.el = $oldel[0];
+        this.$target = this.$el;
+        this.target = this.el;
     },
     /**
      * @override

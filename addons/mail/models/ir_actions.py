@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class ServerActions(models.Model):
@@ -28,6 +28,12 @@ class ServerActions(models.Model):
         """ Render the raw template in the server action fields. """
         if self.template_id and not self.template_id.email_from:
             raise UserError(_('Your template should define email_from'))
+
+    @api.constrains('state', 'model_id')
+    def _check_mail_thread(self):
+        for action in self:
+            if action.state == 'followers' and not action.model_id.is_mail_thread:
+                raise ValidationError(_("Add Followers can only be done on a mail thread model"))
 
     @api.model
     def run_action_followers_multi(self, action, eval_context=None):

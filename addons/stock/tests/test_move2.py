@@ -4,6 +4,7 @@
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import UserError
 from odoo import api, registry
+from odoo.tests.common import TransactionCase
 
 
 class TestPickShip(TestStockCommon):
@@ -24,6 +25,7 @@ class TestPickShip(TestStockCommon):
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
             'state': 'waiting',
+            'procure_method': 'make_to_order',
         })
 
         picking_pick = self.env['stock.picking'].create({
@@ -508,6 +510,27 @@ class TestPickShip(TestStockCommon):
 
         self.assertEqual(set(return_pick_picking.move_lines.move_orig_ids.ids), set((picking_pick.move_lines | return_pack_picking.move_lines).ids))
         self.assertEqual(len(return_pick_picking.move_lines.move_dest_ids), 0)
+
+    def test_merge_move_mto_mts(self):
+        """ Create 2 moves of the same product in the same picking with
+        one in 'MTO' and the other one in 'MTS'. The moves shouldn't be merged
+        """
+        picking_pick, picking_client = self.create_pick_ship()
+
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 3,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_client.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'origin': 'MPS',
+            'procure_method': 'make_to_stock',
+        })
+        picking_client.action_confirm()
+        self.assertEqual(len(picking_client.move_lines), 2, 'Moves should not be merged')
+
 
 class TestSinglePicking(TestStockCommon):
     def test_backorder_1(self):
@@ -1443,7 +1466,6 @@ class TestSinglePicking(TestStockCommon):
 
 
 class TestStockUOM(TestStockCommon):
-
     def setUp(self):
         with registry().cursor() as cr:
             env = api.Environment(cr, 1, {})
@@ -1520,3 +1542,78 @@ class TestStockUOM(TestStockCommon):
 
         self.assertEqual(len(back_order_in), 1.00, 'There should be one back order created')
         self.assertEqual(back_order_in.move_lines.product_qty, 91640.00, 'There should be one back order created')
+
+
+class TestRoutes(TransactionCase):
+    def test_pick_ship_1(self):
+        """ Enable the pick ship route, force a procurement group on the
+        pick. When a second move is added, make sure the `partner_id` and
+        `origin` fields are erased.
+        """
+        product1 = self.env['product.product'].create({
+            'name': 'product a',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        uom_unit = self.env.ref('product.product_uom_unit')
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+
+        # create and get back the pick ship route
+        wh.write({'delivery_steps': 'pick_ship'})
+        pick_ship_route = wh.route_ids.filtered(lambda r: 'Pick + Ship' in r.name)
+
+        # create a procurement group and set in on the pick procurement rule
+        procurement_group0 = self.env['procurement.group'].create({})
+        pick_rule = pick_ship_route.pull_ids.filtered(lambda rule: 'Stock -> Output' in rule.name)
+        push_rule = pick_ship_route.pull_ids - pick_rule
+        pick_rule.write({
+            'group_propagation_option': 'fixed',
+            'group_id': procurement_group0.id,
+        })
+
+        stock_location = pick_rule.location_src_id
+        ship_location = pick_rule.location_id
+        customer_location = push_rule.location_id
+        partners = self.env['res.partner'].search([], limit=2)
+        partner0 = partners[0]
+        partner1 = partners[1]
+        procurement_group1 = self.env['procurement.group'].create({'partner_id': partner0.id})
+        procurement_group2 = self.env['procurement.group'].create({'partner_id': partner1.id})
+
+        move1 = self.env['stock.move'].create({
+            'name': 'first out move',
+            'procure_method': 'make_to_order',
+            'location_id': ship_location.id,
+            'location_dest_id': customer_location.id,
+            'product_id': product1.id,
+            'product_uom': uom_unit.id,
+            'product_uom_qty': 1.0,
+            'warehouse_id': wh.id,
+            'group_id': procurement_group1.id,
+            'origin': 'origin1',
+        })
+
+        move2 = self.env['stock.move'].create({
+            'name': 'second out move',
+            'procure_method': 'make_to_order',
+            'location_id': ship_location.id,
+            'location_dest_id': customer_location.id,
+            'product_id': product1.id,
+            'product_uom': uom_unit.id,
+            'product_uom_qty': 1.0,
+            'warehouse_id': wh.id,
+            'group_id': procurement_group2.id,
+            'origin': 'origin2',
+        })
+
+        # first out move, the "pick" picking should have a partner and an origin
+        move1._action_confirm()
+        picking_pick = move1.move_orig_ids.picking_id
+        self.assertEqual(picking_pick.partner_id.id, procurement_group1.partner_id.id)
+        self.assertEqual(picking_pick.origin, move1.group_id.name)
+
+        # second out move, the "pick" picking should have lost its partner and origin
+        move2._action_confirm()
+        self.assertEqual(picking_pick.partner_id.id, False)
+        self.assertEqual(picking_pick.origin, False)
+

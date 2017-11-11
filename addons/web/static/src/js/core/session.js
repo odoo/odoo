@@ -278,7 +278,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             options.data.session_id = this.session_id;
         }
         options.session = this;
-        ajax.get_file(options);
+        return ajax.get_file(options);
     },
     /**
      * (re)loads the content of a session: db name, username, user id, session

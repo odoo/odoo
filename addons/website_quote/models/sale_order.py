@@ -106,15 +106,20 @@ class SaleOrder(models.Model):
 
         order_lines = [(5, 0, 0)]
         for line in template.quote_line:
+            discount = 0
             if self.pricelist_id:
                 price = self.pricelist_id.with_context(uom=line.product_uom_id.id).get_product_price(line.product_id, 1, False)
+                if self.pricelist_id.discount_policy == 'without_discount' and line.price_unit:
+                    discount = (line.price_unit - price) / line.price_unit * 100
+                    price = line.price_unit
+
             else:
                 price = line.price_unit
 
             data = {
                 'name': line.name,
                 'price_unit': price,
-                'discount': line.discount,
+                'discount': 100 - ((100 - discount) * (100 - line.discount)/100),
                 'product_uom_qty': line.product_uom_qty,
                 'product_id': line.product_id.id,
                 'layout_category_id': line.layout_category_id,
@@ -195,17 +200,6 @@ class SaleOrder(models.Model):
         if self.template_id:
             return 'sign' if self.require_payment == 1 else 'pay'
         return super(SaleOrder, self).get_portal_confirmation_action()
-
-    @api.multi
-    def _confirm_online_quote(self, transaction):
-        """ Payment callback: validate the order and write transaction details in chatter """
-        # create draft invoice if transaction is ok
-        if transaction and transaction.state == 'done':
-            transaction._confirm_so()
-            message = _('Order paid by %s. Transaction: %s. Amount: %s.') % (transaction.partner_id.name, transaction.acquirer_reference, transaction.amount)
-            self.message_post(body=message)
-            return True
-        return False
 
     @api.multi
     def action_confirm(self):

@@ -88,7 +88,7 @@
                 </div>
                 <div class="oe_product_image">
                     <a itemprop="url" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))">
-                        <span itemprop="image" t-field="product.image" t-options="{'widget': 'image', 'resize': None if product_image_big else '300x300', 'zoom': 'image'}" t-att-alt="product.name" />
+                        <span itemprop="image" t-attf-content="{{request.httprequest.url_root}}web/image/product.template/{{product.id}}/image" t-field="product.image" t-options="{'widget': 'image', 'resize': None if product_image_big else '300x300', 'zoom': 'image'}" t-att-alt="product.name" />
                     </a>
                 </div>
                 <t t-if="show_publish">
@@ -103,12 +103,12 @@
                 <section>
                     <h5>
                         <strong>
-                            <a itemprop="name" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" t-field="product.name" />
+                            <a itemprop="name" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" t-att-content="product.name" t-field="product.name" />
                         </strong>
                     </h5>
                     <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
                         <b>
-                            <t t-if="(compute_currency(product.lst_price) - product.website_price ) &gt; 0.01  and website.get_current_pricelist().discount_policy=='without_discount'">
+                            <t t-if="product.website_price_difference and website.get_current_pricelist().discount_policy=='without_discount'">
                                 <del class="text-danger mr8" style="white-space: nowrap;" t-esc="compute_currency(product.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
                             </t>
 
@@ -413,7 +413,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-7">
-                            <span itemprop="image" t-field="product.image" t-options="{'widget': 'image', 'class': 'product_detail_img', 'alt-field': 'name', 'zoom': 'image'}" groups="!website_sale.group_website_multi_image"/>
+                            <span itemprop="image" t-attf-content="{{request.httprequest.url_root}}web/image/product.template/{{product.id}}/image" t-field="product.image" t-options="{'widget': 'image', 'class': 'product_detail_img', 'alt-field': 'name', 'zoom': 'image'}" groups="!website_sale.group_website_multi_image"/>
                             <t groups="website_sale.group_website_multi_image">
                                 <t t-set="variant_img" t-value="product.product_variant_id.image_variant"/>
                                 <t t-set="image_ids"  t-value="product.product_image_ids"/>
@@ -457,7 +457,7 @@
                         </div>
                         <div class="col-sm-5 col-lg-4 col-lg-offset-1" id="product_details">
                             <h1 itemprop="name" t-field="product.name">Product Name</h1>
-                            <span itemprop="url" style="display:none;" t-esc="'/shop/product/%s' % slug(product)" />
+                            <span itemprop="url" style="display:none;" t-esc="'%sshop/product/%s' % (request.httprequest.url_root, slug(product))"/>
                             <t t-set="attribute_value_ids" t-value="get_attribute_value_ids(product)"/>
                             <form action="/shop/cart/update" class="js_add_cart_variants" t-att-data-attribute_value_ids="attribute_value_ids" method="POST">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
@@ -581,7 +581,7 @@
       <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price mt16">
           <h4 class="oe_price_h4 css_editable_mode_hidden">
               <span class="text-danger oe_default_price" style="text-decoration: line-through; white-space: nowrap;"
-                t-esc="compute_currency(product.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" t-att-style="'text-decoration: line-through; white-space: nowrap; ' + '' if (compute_currency(product.lst_price) - product.website_price) &gt; 0.01 and website.get_current_pricelist().discount_policy == 'without_discount' else 'display: none;'"
+                t-esc="compute_currency(product.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" t-att-style="'text-decoration: line-through; white-space: nowrap; ' + '' if product.website_price_difference and website.get_current_pricelist().discount_policy == 'without_discount' else 'display: none;'"
               />
               <b class="oe_price" style="white-space: nowrap;" t-esc="product.website_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
               <span itemprop="price" style="display:none;" t-esc="product.website_price"/>
@@ -864,7 +864,8 @@
         </table>
         <div class="js_cart_lines row">
             <t t-call="website_sale.total">
-                <t t-set='extra_class' t-value='"col-md-5 col-md-offset-7 col-xs-8 col-xs-offset-4"'/>
+                <t t-set='extra_class' t-value='"col-xs-12 col-sm-5 col-sm-push-7"'/>
+                <t t-set='redirect'>/shop/cart</t>
             </t>
         </div>
     </template>
@@ -936,7 +937,9 @@
             </t>
             <div class="text-center">
                 <span class="h5">
-                    <t t-call="website_sale.total" />
+                    <t t-call="website_sale.total">
+                        <t t-set='hide_coupon'>True</t>
+                    </t>
                 </span>
                 <a class="btn btn-primary" href="/shop/cart">
                        View Cart (<t t-esc="website_sale_order.cart_quantity" /> items)
@@ -965,7 +968,7 @@
                             <div class="text-muted hidden-xs" t-field="product.description_sale" />
                         </td>
                         <td class='td-price'>
-                            <t t-if="(compute_currency(product.lst_price) - product.website_price) &gt; 0.01  and website.get_current_pricelist().discount_policy=='without_discount'">
+                            <t t-if="product.website_price_difference  and website.get_current_pricelist().discount_policy=='without_discount'">
                                 <del class="text-danger mr8" style="white-space: nowrap;" t-field="product.lst_price" t-options="{'widget': 'monetary','from_currency': product.currency_id, 'display_currency': website.currency_id}" />
                             </t>
                             <span t-field="product.website_price" style="white-space: nowrap;" t-options="{'widget': 'monetary','display_currency': website.currency_id}" />
@@ -1303,18 +1306,9 @@
                                 </table>
                             </div>
                             <div class="col-md-12">
-                                <div class="col-lg-5 col-sm-6 col-xs-12 text-muted" id="coupon_box">
-                                    <t t-if="request.env.ref('website_sale.reduction_code').active">
-                                        <p>
-                                          Have a promo code? Fill in this field and apply.
-                                        </p>
-                                        <t t-call='website_sale.coupon_form'>
-                                            <t t-set='redirect'>/shop/payment</t>
-                                        </t>
-                                    </t>
-                                </div>
                                 <t t-call="website_sale.total">
-                                    <t t-set='extra_class' t-value='"col-md-4 col-md-offset-8 col-sm-4 col-sm-offset-8 col-xs-8 col-xs-offset-4"'/>
+                                    <t t-set='extra_class' t-value='"col-xs-12 col-sm-5 col-sm-push-7"'/>
+                                    <t t-set='redirect'>/shop/payment</t>
                                 </t>
                             </div>
                             <div class="clearfix" />
@@ -1530,14 +1524,11 @@
 
     <template id="reduction_code" inherit_id="website_sale.total" active="False" customize_show="True" name="Promo Code">
         <xpath expr="//div[@id='cart_total']" position="after">
-            <div class='col-md-offset-6 col-md-6'>
-                <h4>Promo Code</h4>
+            <div class='col-xs-12 col-sm-6 col-sm-pull-5 text-muted' t-if="not hide_coupon and website_sale_order and website_sale_order.website_order_line" id="coupon_box">
                 <p>
                   Have a promo code? Fill in this field and apply.
                 </p>
-                <t t-call='website_sale.coupon_form'>
-                    <t t-set='redirect'>/shop/cart</t>
-                </t>
+                <t t-call='website_sale.coupon_form'/>
             </div>
         </xpath>
     </template>

@@ -8,9 +8,12 @@ class StockPickingType(models.Model):
     _inherit = 'stock.picking.type'
 
     code = fields.Selection(selection_add=[('mrp_operation', 'Manufacturing Operation')])
-    count_mo_todo = fields.Integer(compute='_get_mo_count')
-    count_mo_waiting = fields.Integer(compute='_get_mo_count')
-    count_mo_late = fields.Integer(compute='_get_mo_count')
+    count_mo_todo = fields.Integer(string="Number of Manufacturing Orders to Process",
+        compute='_get_mo_count')
+    count_mo_waiting = fields.Integer(string="Number of Manufacturing Orders Waiting",
+        compute='_get_mo_count')
+    count_mo_late = fields.Integer(string="Number of Manufacturing Orders Late",
+        compute='_get_mo_count')
 
     def _get_mo_count(self):
         mrp_picking_types = self.filtered(lambda picking: picking.code == 'mrp_operation')

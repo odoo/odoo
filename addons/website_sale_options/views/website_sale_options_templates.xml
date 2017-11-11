@@ -121,7 +121,7 @@
                     <input type="hidden" class="js_optional_same_quantity" t-attf-name="optional-add-#{product_index}" value="0"/>
                     <a href="#" class="js_add btn btn-sm btn-info"><strong>Add<span class='hidden-xs'> to Cart</span></strong></a>
                     <span class="js_remove hidden">
-                      <span class="js_item">1 </span><span class="js_items hidden">5 </span> <span t-field="product.uom_id.name"/><br/>
+                      <span class="js_item">1 </span><span class="js_items hidden">5 </span> <span t-field="product.uom_id.sudo().name"/><br/>
                       <a href="#" class="js_remove btn btn-xs btn-info"><small>Remove <span class='hidden-xs'> from Cart</span></small></a>
                     </span>
                   </div>

@@ -12,7 +12,7 @@ from werkzeug.exceptions import Forbidden
 
 from odoo import api, fields, models, modules, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import pycompat
+from odoo.tools import pycompat, misc
 
 _logger = logging.getLogger(__name__)
 
@@ -38,10 +38,8 @@ class Forum(models.Model):
 
     @api.model
     def _get_default_faq(self):
-        fname = modules.get_module_resource('website_forum', 'data', 'forum_default_faq.html')
-        with open(fname, 'r') as f:
+        with misc.file_open('website_forum/data/forum_default_faq.html', 'r') as f:
             return f.read()
-        return False
 
     # description and use
     name = fields.Char('Forum Name', required=True, translate=True)

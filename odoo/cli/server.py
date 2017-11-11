@@ -98,7 +98,7 @@ def export_translation():
 
     fileformat = os.path.splitext(config["translate_out"])[-1][1:].lower()
 
-    with open(config["translate_out"], "w") as buf:
+    with open(config["translate_out"], "wb") as buf:
         registry = odoo.modules.registry.Registry.new(dbname)
         with odoo.api.Environment.manage():
             with registry.cursor() as cr:

@@ -111,7 +111,6 @@ class AccountInvoiceLine(models.Model):
         'invoice_line_id', 'order_line_id',
         string='Sales Order Lines', readonly=True, copy=False)
     layout_category_id = fields.Many2one('sale.layout_category', string='Section')
-    layout_category_sequence = fields.Integer(
-        related='layout_category_id.sequence',
-        string='Layout Sequence', store=True)
+    layout_category_sequence = fields.Integer(string='Layout Sequence')
+    # TODO: remove layout_category_sequence in master or make it work properly
     price_total = fields.Monetary(compute='_compute_total_price', string='Total Amount', store=True)

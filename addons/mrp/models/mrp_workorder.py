@@ -60,7 +60,8 @@ class MrpWorkorder(models.Model):
         'Currently Produced Quantity', default=1.0,
         digits=dp.get_precision('Product Unit of Measure'),
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
-    is_produced = fields.Boolean(compute='_compute_is_produced')
+    is_produced = fields.Boolean(string="Has Been Produced",
+        compute='_compute_is_produced')
 
     state = fields.Selection([
         ('pending', 'Pending'),
@@ -116,7 +117,7 @@ class MrpWorkorder(models.Model):
     time_ids = fields.One2many(
         'mrp.workcenter.productivity', 'workorder_id')
     is_user_working = fields.Boolean(
-        'Is Current User Working', compute='_compute_is_user_working',
+        'Is the Current User Working', compute='_compute_is_user_working',
         help="Technical field indicating whether the current user is working. ")
     production_messages = fields.Html('Workorder Message', compute='_compute_production_messages')
 

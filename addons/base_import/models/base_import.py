@@ -37,7 +37,7 @@ except ImportError:
 FILE_TYPE_DICT = {
     'text/csv': ('csv', True, None),
     'application/vnd.ms-excel': ('xls', xlrd, 'xlrd'),
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ('xlsx', xlsx, 'xlrd >= 0.8'),
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ('xlsx', xlsx, 'xlrd >= 1.0.0'),
     'application/vnd.oasis.opendocument.spreadsheet': ('ods', odf_ods_reader, 'odfpy')
 }
 EXTENSIONS = {
@@ -597,9 +597,18 @@ class Import(models.TransientModel):
 
     @api.multi
     def _parse_import_data(self, data, import_fields, options):
+        """ Lauch first call to _parse_import_data_recursive with an
+        empty prefix. _parse_import_data_recursive will be run
+        recursively for each relational field.
+        """
+        return self._parse_import_data_recursive(self.res_model, '', data, import_fields, options)
+
+    @api.multi
+    def _parse_import_data_recursive(self, model, prefix, data, import_fields, options):
         # Get fields of type date/datetime
-        all_fields = self.env[self.res_model].fields_get()
+        all_fields = self.env[model].fields_get()
         for name, field in all_fields.items():
+            name = prefix + name
             if field['type'] in ('date', 'datetime') and name in import_fields:
                 # Parse date
                 index = import_fields.index(name)
@@ -618,7 +627,11 @@ class Import(models.TransientModel):
                                 raise ValueError(_("Column %s contains incorrect values. Error in line %d: %s") % (name, num + 1, e))
                             except Exception as e:
                                 raise ValueError(_("Error Parsing Date [%s:L%d]: %s") % (name, num + 1, e))
-
+            # Check if the field is in import_field and is a relational (followed by /)
+            # Also verify that the field name exactly match the import_field at the correct level.
+            elif any(name + '/' in import_field and name == import_field.split('/')[prefix.count('/')] for import_field in import_fields):
+                # Recursive call with the relational as new model and add the field name to the prefix
+                self._parse_import_data_recursive(field['relation'], name + '/', data, import_fields, options)
             elif field['type'] in ('float', 'monetary') and name in import_fields:
                 # Parse float, sometimes float values from file have currency symbol or () to denote a negative value
                 # We should be able to manage both case

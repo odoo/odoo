@@ -37,7 +37,7 @@ class FleetVehicleModel(models.Model):
 
 class FleetVehicleModelBrand(models.Model):
     _name = 'fleet.vehicle.model.brand'
-    _description = 'Brand model of the vehicle'
+    _description = 'Brand of the vehicle'
     _order = 'name asc'
 
     name = fields.Char('Make', required=True)

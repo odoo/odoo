@@ -1,20 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * utm
-#
+# 
 # Translators:
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Manami Hashi <manami@roomsfor.hk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-07-14 07:44+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
-"Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
-"Language: ja\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Manami Hashi <manami@roomsfor.hk>, 2017\n"
+"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: utm
@@ -65,17 +69,17 @@ msgstr "チャネル"
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_christmas_special
 msgid "Christmas Special"
-msgstr ""
+msgstr "クリスマススペシャル"
 
 #. module: utm
 #: model:ir.actions.act_window,help:utm.utm_medium_action
 msgid "Click to define a new medium."
-msgstr ""
+msgstr "クリックして新媒体を定義してください。"
 
 #. module: utm
 #: model:ir.actions.act_window,help:utm.utm_source_action
 msgid "Click to define a new source."
-msgstr ""
+msgstr "クリックして新ソースを定義してください。"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign_create_uid
@@ -100,6 +104,11 @@ msgid "Display Name"
 msgstr "表示名"
 
 #. module: utm
+#: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
+msgid "Email Campaign - Products"
+msgstr "Eメールキャンペーン - 製品"
+
+#. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_services
 msgid "Email Campaign - Services"
 msgstr "Eメールキャンペーン - サービス"
@@ -107,12 +116,12 @@ msgstr "Eメールキャンペーン - サービス"
 #. module: utm
 #: model:utm.source,name:utm.utm_source_facebook
 msgid "Facebook"
-msgstr ""
+msgstr "Facebook"
 
 #. module: utm
 #: model:ir.model,name:utm.model_ir_http
 msgid "HTTP routing"
-msgstr ""
+msgstr "HTTPルーティング"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign_id
@@ -152,7 +161,7 @@ msgstr "リンクトラッカー"
 #. module: utm
 #: model:utm.source,name:utm.utm_source_mailing
 msgid "Mailing Partner"
-msgstr ""
+msgstr "取引先へのメール配信"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_medium_action
@@ -166,10 +175,9 @@ msgstr ""
 #: model:ir.ui.view,arch_db:utm.utm_medium_view_tree
 #: model:ir.ui.view,arch_db:utm.utm_source_view_tree
 msgid "Medium"
-msgstr "中程度"
+msgstr "配信手段"
 
 #. module: utm
-#: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
 #: model:utm.source,name:utm.utm_source_newsletter
 msgid "Newsletter"
 msgstr "ニュースレター"
@@ -182,7 +190,7 @@ msgstr "販売"
 #. module: utm
 #: model:utm.source,name:utm.utm_source_search_engine
 msgid "Search engine"
-msgstr ""
+msgstr "サーチエンジン"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source
@@ -193,18 +201,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:utm.field_sale_order_source_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin_source_id
 msgid "Source"
-msgstr "ソース"
+msgstr "要求元"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source_name
 msgid "Source Name"
-msgstr "情報源の名前"
+msgstr "ソース名"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_source_action
 #: model:ir.ui.menu,name:utm.menu_utm_source
 msgid "Sources"
-msgstr ""
+msgstr "ソース"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_account_invoice_campaign_id
@@ -214,9 +222,9 @@ msgstr ""
 #: model:ir.model.fields,help:utm.field_sale_order_campaign_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_campaign_id
 msgid ""
-"This is a name that helps you keep track of your different campaign efforts "
-"Ex: Fall_Drive, Christmas_Special"
-msgstr "例えば、秋やクリスマスなど別のキャンペーンの取り組みを追跡する名前"
+"This is a name that helps you keep track of your different campaign efforts,"
+" i.e. Fall_Drive, Christmas_Special"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_account_invoice_medium_id
@@ -225,9 +233,8 @@ msgstr "例えば、秋やクリスマスなど別のキャンペーンの取り
 #: model:ir.model.fields,help:utm.field_link_tracker_medium_id
 #: model:ir.model.fields,help:utm.field_sale_order_medium_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_medium_id
-#, fuzzy
-msgid "This is the method of delivery.Ex: Postcard, Email, or Banner Ad"
-msgstr "ポストカードやEメール、バナー広告などの配信方法"
+msgid "This is the method of delivery, i.e. Postcard, Email, or Banner Ad"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_account_invoice_source_id
@@ -236,26 +243,22 @@ msgstr "ポストカードやEメール、バナー広告などの配信方法"
 #: model:ir.model.fields,help:utm.field_link_tracker_source_id
 #: model:ir.model.fields,help:utm.field_sale_order_source_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_source_id
-#, fuzzy
 msgid ""
-"This is the source of the link Ex:Search Engine, another domain,or name of "
-"email list"
-msgstr "検索エンジンや別ドメイン、Eメールリストの名前などリンクのソース"
+"This is the source of the link, i.e. Search Engine, another domain, or name "
+"of email list"
+msgstr ""
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_twitter
 msgid "Twitter"
-msgstr ""
+msgstr "Twitter"
 
 #. module: utm
 #: model:ir.ui.menu,name:utm.marketing_utm
 msgid "UTMs"
-msgstr ""
+msgstr "UTMs"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_mixin
 msgid "utm.mixin"
-msgstr ""
-
-#~ msgid "Email Campaign - Products"
-#~ msgstr "Eメールキャンペーン - 製品"
+msgstr "utm.mixin"

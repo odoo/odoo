@@ -932,7 +932,8 @@ def trans_generate(lang, modules, cr):
     def get_module_from_path(path):
         for (mp, rec) in path_list:
             mp = os.path.join(mp, '')
-            if rec and path.startswith(mp) and os.path.dirname(path) != mp:
+            dirname = os.path.join(os.path.dirname(path), '')
+            if rec and path.startswith(mp) and dirname != mp:
                 path = path[len(mp):]
                 return path.split(os.path.sep)[0]
         return 'base' # files that are not in a module are considered as being in 'base' module
@@ -1043,7 +1044,9 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
 
             # Make a reader for the POT file and be somewhat defensive for the
             # stable branch.
-            if fileobj.name.endswith('.po'):
+
+            # when fileobj is a TemporaryFile, its name is an interget in P3, a string in P2
+            if isinstance(fileobj.name, str) and fileobj.name.endswith('.po'):
                 try:
                     # Normally the path looks like /path/to/xxx/i18n/lang.po
                     # and we try to find the corresponding

@@ -29,9 +29,20 @@
                         <group>
                             <field name="code"/>
                             <field name="type" widget="radio"/>
-                            <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
-                                When processing a sales order for this product, the delivery order
-                                will contain the raw materials, instead of the finished product.
+                            <p colspan="2" class="oe_grey oe_edit_only" attrs="{'invisible': [('type','=','normal')]}">
+                            <ul>
+                                <li>
+                                    If the product is a finished product: When processing a sales
+                                    order for this product, the delivery order will contain the raw
+                                    materials, instead of the finished product.
+                                </li>
+                                <li>
+                                    If the product is a semi-finished product: When processing a
+                                    manufacturing order that contains that product as component,
+                                    the raw materials of that product will be added to the
+                                    manufacturing order of the final product.
+                                </li>
+                            </ul>
                             </p>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         </group>
@@ -199,20 +210,6 @@
                 </tree>
             </field>
         </record>
-       <record id="mrp_bom_line_tree_view" model="ir.ui.view">
-            <field name="name">mrp.bom.tree</field>
-            <field name="model">mrp.bom.line</field>
-            <field name="field_parent">child_line_ids</field>
-            <field name="arch" type="xml">
-                <tree string="Bill of Materials">
-                    <field name="sequence" invisible="1"/>
-                    <field name="product_id"/>
-                    <field name="product_qty"/>
-                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
-                    <field name="routing_id" groups="mrp.group_mrp_routings"/>
-                </tree>
-            </field>
-        </record>
         <record id="view_mrp_bom_line_filter" model="ir.ui.view">
             <field name="name">mrp.bom.line.select</field>
             <field name="model">mrp.bom.line</field>
@@ -228,16 +225,6 @@
                    </group>
                 </search>
             </field>
-        </record>
-        <record id="mrp_bom_line_action_from_bom" model="ir.actions.act_window">
-            <field name="name">Bill of Materials Structure</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.bom.line</field>
-            <field name="domain">[('bom_id', 'in', active_ids)]</field>
-            <field name="view_type">tree</field>
-            <field name="view_id" ref="mrp_bom_line_tree_view"/>
-            <field name="view_type">tree</field>
-            <field name="binding_model_id" ref="mrp.model_mrp_bom"/>
         </record>
 
         <record id="template_open_bom" model="ir.actions.act_window">

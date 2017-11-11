@@ -49,7 +49,7 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
-                                <field name="name" placeholder="Employee's Name"/>
+                                <field name="name" placeholder="Employee's Name" required="True"/>
                             </h1>
                         </div>
                         <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="e.g. Part Time" groups="hr.group_hr_user"/>

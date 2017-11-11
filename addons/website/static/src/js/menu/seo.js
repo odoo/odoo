@@ -336,8 +336,8 @@ var SeoConfigurator = Dialog.extend({
     init: function (parent, options) {
         options = options || {};
         _.defaults(options, {
-            title: _t('Promote This Page'),
-            subtitle: _t('Get this page efficiently referenced in Google to attract more visitors.'),
+            title: _t('Promote Page'),
+            subtitle: _t('Get this page efficiently referenced in search engines to attract more visitors.'),
             buttons: [
                 {text: _t('Save'), classes: 'btn-primary', click: this.update},
                 {text: _t('Discard'), close: true},
@@ -540,7 +540,7 @@ var SeoConfigurator = Dialog.extend({
         }
         else{
             preview = new Preview(this, {
-                description: _("You have hidden this page from search results. It won't be indexed by search engine"),
+                description: _("You have hidden this page from search results. It won't be indexed by search engines."),
             });
         }
         var $preview = this.$('.js_seo_preview');

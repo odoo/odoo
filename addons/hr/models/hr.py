@@ -105,6 +105,7 @@ class Employee(models.Model):
         return tools.image_resize_image_big(base64.b64encode(open(image_path, 'rb').read()))
 
     # resource and user
+    # required on the resource, make sure required="True" set in the view
     name = fields.Char(related='resource_id.name', store=True, oldname='name_related')
     user_id = fields.Many2one('res.users', 'User', related='resource_id.user_id')
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True)

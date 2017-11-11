@@ -26,11 +26,11 @@ var MockServer = Class.extend({
             if (!('display_name' in model.fields)) {
                 model.fields.display_name = {string: "Display Name", type: "char"};
             }
+            if (!('__last_update' in model.fields)) {
+                model.fields.__last_update = {string: "Last Modified on", type: "datetime"};
+            }
             if (!('name' in model.fields)) {
                 model.fields.name = {string: "Name", type: "char", default: "name"};
-            }
-            for (var fieldName in model.onchanges) {
-                model.fields[fieldName].onChange = "1";
             }
             model.records = model.records || [];
 
@@ -110,6 +110,14 @@ var MockServer = Class.extend({
                 console.log('%c[rpc] response' + route, 'color: blue; font-weight: bold;', JSON.parse(resultString));
             }
             return JSON.parse(resultString);
+        }).fail(function (result) {
+            var errorString = JSON.stringify(result || false);
+            if (logLevel === 1) {
+                console.log('Mock: (ERROR)' + route, JSON.parse(errorString));
+            } else if (logLevel === 2) {
+                console.log('%c[rpc] response (error) ' + route, 'color: orange; font-weight: bold;', JSON.parse(errorString));
+            }
+            return JSON.parse(errorString);
         });
     },
 
@@ -271,7 +279,7 @@ var MockServer = Class.extend({
 
             // add onchanges
             if (name in onchanges) {
-                field.onChange="1";
+                node.attrs.on_change="1";
             }
         });
         return {

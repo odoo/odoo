@@ -80,7 +80,11 @@ class TestSaleStock(TestSale):
         for sol in self.so.order_line:
             sol.product_id.invoice_policy = 'order'
         # confirm our standard so, check the picking
+        self.so.order_line._compute_product_updatable()
+        self.assertTrue(self.so.order_line[0].product_updatable)
         self.so.action_confirm()
+        self.so.order_line._compute_product_updatable()
+        self.assertFalse(self.so.order_line[0].product_updatable)
         self.assertTrue(self.so.picking_ids, 'Sale Stock: no picking created for "invoice on order" stockable products')
         # let's do an invoice for a deposit of 5%
         adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({

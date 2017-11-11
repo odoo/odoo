@@ -1,0 +1,204 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_payment
+# 
+# Translators:
+# Jeffery CHEN <jeffery9@gmail.com>, 2017
+# glovebx <ruinning@163.com>, 2017
+# Luke <cialuo@qq.com>, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
+# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_payment
+#: code:addons/account_payment/models/payment.py:61
+#, python-format
+msgid "<%s>  transaction (%s) invoice confirmation failed : <%s>"
+msgstr ""
+
+#. module: account_payment
+#: code:addons/account_payment/models/payment.py:45
+#, python-format
+msgid "<%s> transaction (%s) failed : <%s>"
+msgstr ""
+
+#. module: account_payment
+#: code:addons/account_payment/models/payment.py:52
+#, python-format
+msgid "<%s> transaction (%s) invalid state : %s"
+msgstr ""
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-arrow-circle-right\"/> Pay Now"
+msgstr "<i class=\"fa fa-arrow-circle-right\"/> 现在付款"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"hidden-xs\"> Pay "
+"Now</span>"
+msgstr ""
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-check-circle\"/> Paid"
+msgstr "<i class=\"fa fa-check-circle\"/> 已付"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-check-circle\"/> Pending"
+msgstr "<i class=\"fa fa-check-circle\"/> 待定"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
+msgid ""
+"<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
+" fa-clock-o\"/> Waiting</span>"
+msgstr ""
+"<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
+" fa-clock-o\"/> 等待</span>"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
+msgid ""
+"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
+"fa-fw fa-check\"/> Done</span>"
+msgstr ""
+"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
+"fa-fw fa-check\"/> 完成</span>"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
+msgid "<strong>Transactions</strong>"
+msgstr "<strong>交易</strong>"
+
+#. module: account_payment
+#: code:addons/account_payment/controllers/payment.py:53
+#, python-format
+msgid ""
+"If we store your payment information on our server, subscription payments "
+"will be made automatically."
+msgstr "如果我们在服务器存储你的支付信息,订阅将自动支付。"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_invoice
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction_account_invoice_id
+msgid "Invoice"
+msgstr "发票"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_success
+msgid "Invoice successfully paid."
+msgstr "发票已成功支付."
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_id
+msgid "Last Transaction"
+msgstr "最近交易"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_count
+msgid "Number of payment transactions"
+msgstr "付款交易次数"
+
+#. module: account_payment
+#: code:addons/account_payment/controllers/payment.py:50
+#, python-format
+msgid "Pay & Confirm"
+msgstr "支付&确认"
+
+#. module: account_payment
+#: code:addons/account_payment/models/payment.py:119
+#: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+#, python-format
+msgid "Pay Now"
+msgstr "现在付款"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "Pay with"
+msgstr "支付 于"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_acquirer_id
+msgid "Payment Acquirer"
+msgstr "收单"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "付款交易"
+
+#. module: account_payment
+#: code:addons/account_payment/models/account_invoice.py:28
+#, python-format
+msgid "Payment Transactions"
+msgstr "付款交易"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid "Status"
+msgstr "状态"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
+msgid ""
+"There was an error processing your payment: impossible to validate invoice."
+msgstr ""
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
+msgid "There was an error processing your payment: invalid invoice state."
+msgstr ""
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
+msgid "There was an error processing your payment: invalid invoice."
+msgstr ""
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
+msgid ""
+"There was an error processing your payment: issue with credit card ID "
+"validation."
+msgstr "您有一个付款的错误：信用卡身份验证问题。"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
+msgid ""
+"There was an error processing your payment: transaction amount issue.<br/>"
+msgstr "您有一个付款的错误：交易量的问题。<br/>"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
+msgid "There was an error processing your payment: transaction failed.<br/>"
+msgstr "您有一个付款的错误：交易失败<br/>"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
+msgid "There was an error processing your payment: transaction issue.<br/>"
+msgstr "您有一个付款的错误：交易失败。<br/>"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
+msgid "There was en error processing your payment: invalid credit card ID."
+msgstr "您有一个付款的错误：无效的信用卡号"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_ids
+#: model:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
+msgid "Transactions"
+msgstr "交易"

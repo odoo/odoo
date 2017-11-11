@@ -3,7 +3,7 @@
 import logging
 
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.addons.iap.models import iap
 
@@ -37,7 +37,7 @@ class SendSMS(models.TransientModel):
             partners = records._get_default_sms_recipients()
             phone_numbers = []
             no_phone_partners = []
-            for partner in records:
+            for partner in partners:
                 number = partner.mobile
                 if number:
                     phone_numbers.append(number)

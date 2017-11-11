@@ -13,6 +13,7 @@ from odoo.tools.float_utils import float_round, float_compare, float_is_zero
 class StockMoveLine(models.Model):
     _name = "stock.move.line"
     _description = "Packing Operation"
+    _rec_name = "product_id"
     _order = "result_package_id desc, id"
 
     picking_id = fields.Many2one(
@@ -426,9 +427,9 @@ class StockMoveLine(models.Model):
         if 'lot_id' in vals and vals['lot_id'] != move.lot_id.id:
             data['lot_name'] = self.env['stock.production.lot'].browse(vals.get('lot_id')).name
         if 'location_id' in vals:
-            data['location_name'] = self.env['stock.location_id'].browse(vals.get('location_id')).name
+            data['location_name'] = self.env['stock.location'].browse(vals.get('location_id')).name
         if 'location_dest_id' in vals:
-            data['location_dest_name'] = self.env['stock.location_id'].browse(vals.get('location_dest_id')).name
+            data['location_dest_name'] = self.env['stock.location'].browse(vals.get('location_dest_id')).name
         if 'package_id' in vals and vals['package_id'] != move.package_id.id:
             data['package_name'] = self.env['stock.quant.package'].browse(vals.get('package_id')).name
         if 'package_result_id' in vals and vals['package_result_id'] != move.package_result_id.id:
