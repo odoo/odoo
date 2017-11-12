@@ -29,7 +29,7 @@ msgstr "Boeking"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move_account_move_ids
 msgid "Account Move"
-msgstr ""
+msgstr "Boeking"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -53,6 +53,8 @@ msgid ""
 "Affect landed costs on receipt operations and split them among products to "
 "update their cost price."
 msgstr ""
+"Heeft effect op de extra kosten bij ontvangsten en wordt gedeeld over de "
+"producten om de kostprijs bij te werken."
 
 #. module: stock_account
 #: selection:product.category,property_valuation:0
@@ -398,6 +400,9 @@ msgid ""
 "        Average Cost (AVCO): The products are valued at weighted average cost.\n"
 "        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first."
 msgstr ""
+"Vaste verreken prijs: De producten worden gewaardeerd tegen de kostprijs zoals ingesteld op het product\n"
+"Gemiddelde prijs (GIP): De producten worden gewaardeerd tegen de gewogen gemiddelde waarde.\n"
+" First In First Out (FIFO): De producten worden gewaardeerd, waarbij ervan uit wordt gegaan dat de producten welke het bedrijf als eerste binnenkomen ook als eerste het bedrijf verlaten."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
@@ -407,6 +412,10 @@ msgid ""
 "        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
+"Vaste verreken prijs: De producten worden gewaardeerd tegen de kostprijs zoals ingesteld op het product\n"
+"Gemiddelde prijs (GIP): De producten worden gewaardeerd tegen de gewogen gemiddelde waarde.\n"
+"First In First Out (FIFO): De producten worden gewaardeerd, waarbij ervan uit wordt gegaan dat de producten welke het bedrijf als eerste binnenkomen ook als eerste het bedrijf verlaten.\n"
+"        "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -465,7 +474,7 @@ msgstr "Voorraadwaarde rekening (uitgaand)"
 #. module: stock_account
 #: model:ir.actions.server,name:stock_account.action_stock_account_valuation_report
 msgid "Stock Valuation Report"
-msgstr ""
+msgstr "Voorraadwaarde rapportage"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
@@ -479,6 +488,8 @@ msgid ""
 "The cost of %s is currently equal to 0. Change the cost or the configuration"
 " of your product to avoid an incorrect valuation."
 msgstr ""
+"De kostprijs van%s is 0. Wijzig de kostprijs of de productinstellingen om "
+"verkeerde waardering te voorkomen."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move_to_refund
@@ -498,6 +509,8 @@ msgid ""
 "Trigger a decrease of the delivered/received quantity in the associated Sale"
 " Order/Purchase Order"
 msgstr ""
+"Leidt tot een daling van de geleverde/ontvangen hoeveelheid in de "
+"bijbehorende verkooporder/inkooporder"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
