@@ -43,6 +43,23 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div>\n"
+"    <p>\n"
+"        Beste<t t-esc=\"object.partner_name\"/>\n"
+"    </p><p>\n"
+"        We zijn blij om u te kunnen informeren dat uw voorstel ${object.name} is geaccepteerd en bevestigd voor het evenement ${object.event_id.name}.\n"
+"    </p><p>\n"
+"        Meer details vind u hier:\n"
+"        <div style=\"margin-top: 16px;\">\n"
+"            <a href=\"/event/${object.event_id.id}/\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"                Bekijk evenement\n"
+"            </a>\n"
+"        </div>\n"
+"    </p>\n"
+"    Met vriendelijke groet,</p>\n"
+"</div>\n"
+"            "
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -1030,7 +1047,7 @@ msgstr "Volg voorstellen op website"
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_ready
 msgid "Track Ready"
-msgstr ""
+msgstr "Parallelsessie gereed"
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_ready

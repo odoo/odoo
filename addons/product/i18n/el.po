@@ -5,6 +5,7 @@
 # Translators:
 # Kostas Goutoudis <goutoudis@gmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
+# George Tarasidis <george_tarasidis@yahoo.com>, 2017
 # Stefanos Nikou <stefanos.nikou@gmail.com>, 2017
 # Costas Pittalis <cpittalis@gmail.com>, 2017
 msgid ""
@@ -24,7 +25,7 @@ msgstr ""
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
 msgid " Product Category"
-msgstr "Κατηγορία Προϊόντος"
+msgstr "Κατηγορία Eίδους"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_product_variant_count
@@ -35,7 +36,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_product_count
 msgid "# Products"
-msgstr ""
+msgstr "# Είδη"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:446
@@ -133,7 +134,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "<span class=\"o_stat_text\"> Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Είδη</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -153,7 +154,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Description</strong>"
-msgstr ""
+msgstr "<strong>Περιγραφή</strong>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
@@ -209,7 +210,7 @@ msgid ""
 "A precise description of the Product, used only for internal information "
 "purposes."
 msgstr ""
-"Μια ακριβής περιγραφή του Προϊόντος, χρησιμοποιείται μόνο για σκοπούς "
+"Μια ακριβής περιγραφή του Είδους , χρησιμοποιείται μόνο για σκοπούς "
 "εσωτερικής πληροφόρησης."
 
 #. module: product
@@ -253,7 +254,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_uom_active
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Active"
-msgstr "Ενεργή"
+msgstr "Ενεργό"
 
 #. module: product
 #: model:product.category,name:product.product_category_all
@@ -264,12 +265,12 @@ msgstr "Όλα"
 #: code:addons/product/models/product_pricelist.py:441
 #, python-format
 msgid "All Products"
-msgstr "Όλα τα Προϊόντα"
+msgstr "Όλα τα Είδη"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "All general settings about this product are managed on"
-msgstr ""
+msgstr "Όλες οι γενικές ρυθμίσεις σχετικά με αυτό το είδος διαχειρίζονται στο"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_config_settings_group_sale_pricelist
@@ -374,7 +375,7 @@ msgstr "Ιδιότητες"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings_group_product_variant
 msgid "Attributes and Variants"
-msgstr ""
+msgstr "Χαρακτηριστικά και Παραλλαγές"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -514,8 +515,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_product_price_list
 msgid "Calculate Product Price per Unit Based on Pricelist Version."
-msgstr ""
-"Υπολογισμός Τιμής Προϊόντος ανά μονάδα βασισμένη σε έκδοση τιμοκαταλόγου"
+msgstr "Υπολογισμός Τιμής Είδους ανά μονάδα βασισμένη σε έκδοση τιμοκαταλόγου"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_purchase_ok
@@ -551,7 +551,7 @@ msgstr "Κατηγορία"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "Category name"
-msgstr ""
+msgstr "Όνομα Κατηγορίας"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:435
@@ -617,7 +617,7 @@ msgstr "Κάντε κλικ για να δημιουργήσετε έναν νέ
 #: model:ir.actions.act_window,help:product.product_template_action_all
 #: model:ir.actions.act_window,help:product.product_variant_action
 msgid "Click to define a new product."
-msgstr "Κάντε κλικ για να ορίσετε ένα νέο προϊόν."
+msgstr "Κάντε κλικ για να ορίσετε ένα νέο είδος."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -720,9 +720,8 @@ msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
 msgstr ""
-"Η μετατροπή από Μονάδα Μέτρησης Προϊόντος %s σε προεπιλεγμένη Μονάδα "
-"Μέτρησης %s δεν είναι δυνατή μια που και οι δύο ανήκουν σε διαφορετικές "
-"Κατηγορίες!."
+"Η μετατροπή από Μονάδα Μέτρησης Είδους%s σε προεπιλεγμένη Μονάδα Μέτρησης %s"
+" δεν είναι δυνατή μια που και οι δύο ανήκουν σε διαφορετικές Κατηγορίες!."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_cost
@@ -842,7 +841,7 @@ msgstr "Laptop προσαρμοσμένο στις απαιτήσεις του �
 #: model:product.product,description:product.product_product_5
 #: model:product.template,description:product.product_product_5_product_template
 msgid "Custom computer shipped in kit."
-msgstr ""
+msgstr "Προσαρμοσμένος υπολογιστής που αποστέλλεται σε κιτ."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_partner_ref
@@ -903,7 +902,7 @@ msgstr "Περιγραφή"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Description for Customers"
-msgstr ""
+msgstr "Περιγραφή για Πελάτες"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -970,7 +969,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_end
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_date_end
 msgid "End Date"
-msgstr "Ημερομηνία Λήξης"
+msgstr "Ημερ. Λήξης"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_end
@@ -1207,7 +1206,7 @@ msgstr "Κάρτα Γραφικών"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Group By"
-msgstr "Ομαδοποίηση Κατά"
+msgstr "Ομαδοποίηση κατά"
 
 #. module: product
 #: model:product.product,name:product.product_product_17
@@ -1330,7 +1329,7 @@ msgstr ""
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
 msgstr ""
-"Εάν αποεπιλεγεί, θα σας επιτρέψει να κρύψετε ένα προϊόν χωρίς να το "
+"Εάν αποεπιλεγεί, θα σας επιτρέψει να κρύψετε ένα είδος χωρίς να το "
 "διαγράψετε."
 
 #. module: product
@@ -1345,10 +1344,9 @@ msgid ""
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
 msgstr ""
-"Εικόνα της παραλλαγής προϊόντος (εάν είναι Ψευδές, τότε θα χρησιμοποιηθεί η "
-"μεγάλου μεγέθους εικόνα του προτύπου προϊόντος). Θα αλλάξει αυτόματα το "
-"μέγεθός τους ως 1024x1024 εικονοστοιχεία, με διατήρηση της αναλογίας "
-"διαστάσεων."
+"Εικόνα της παραλλαγής είδους (εάν είναι Ψευδές, τότε θα χρησιμοποιηθεί η "
+"μεγάλου μεγέθους εικόνα του προτύπου είδους). Θα αλλάξει αυτόματα το μέγεθός"
+" τους ως 1024x1024 εικονοστοιχεία, με διατήρηση της αναλογίας διαστάσεων."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_medium
@@ -1356,8 +1354,8 @@ msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
 msgstr ""
-"Εικόνα της παραλλαγής προϊόντος (εάν είναι Ψευδές, τότε θα χρησιμοποιηθεί η "
-"μεσαίου μεγέθους εικόνα του προτύπου προϊόντος)."
+"Εικόνα της παραλλαγής είδους (εάν είναι Ψευδές, τότε θα χρησιμοποιηθεί η "
+"μεσαίου μεγέθους εικόνα του προτύπου είδους)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_small
@@ -1365,8 +1363,8 @@ msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
 msgstr ""
-"Εικόνα της παραλλαγής προϊόντος (εάν είναι Ψευδές, τότε θα χρησιμοποιηθεί η "
-"μικρού μεγέθους εικόνα του προτύπου προϊόντος)."
+"Εικόνα της παραλλαγής είδους (εάν είναι Ψευδές, τότε θα χρησιμοποιηθεί η "
+"μικρού μεγέθους εικόνα του προτύπου είδους)."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -1391,7 +1389,7 @@ msgstr ""
 #. module: product
 #: model:product.category,name:product.product_category_2
 msgid "Internal"
-msgstr "Εσωτερικό"
+msgstr "Εσωτερικές"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_categ_id
@@ -1507,7 +1505,7 @@ msgid ""
 "automatic computation of the purchase order planning."
 msgstr ""
 "Χρόνος σε μέρες ανάμεσα στην επιβεβαίωση μιας αγοράς και την παραλαβή των "
-"προϊόντων στην αποθήκη σας. Χρησιμοποιείται από τον προγραμματιστή για "
+"ειδών στην αποθήκη σας. Χρησιμοποιείται από τον χρονοπρογραμματιστή για "
 "αυτόματο υπολογισμό του προγραμματισμού των παραγγελιών αγορών."
 
 #. module: product
@@ -1549,7 +1547,7 @@ msgstr "Διαχείριση Στοιχείων Τιμοκαταλόγου"
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
 msgid "Manage Product Packaging"
-msgstr "Διαχείριση Συσκευασίας Προϊόντων"
+msgstr "Διαχείριση Συσκευασίων Ειδών"
 
 #. module: product
 #: model:res.groups,name:product.group_product_variant
@@ -1579,8 +1577,8 @@ msgid ""
 "128x128px image, with aspect ratio preserved, only when the image exceeds "
 "one of those sizes. Use this field in form views or some kanban views."
 msgstr ""
-"Μεσαίου-μεγέθους εικόνα του προϊόντος. Το μέγεθος αλλάζει αυτόματα σε εικόνα"
-" διαστάσεων 128x128px, με διατήρηση των αναλογιών, μόνο όταν η εικόνα "
+"Μεσαίου-μεγέθους εικόνα του είδους. Το μέγεθος αλλάζει αυτόματα σε εικόνα "
+"διαστάσεων 128x128px, με διατήρηση των αναλογιών, μόνο όταν η εικόνα "
 "υπερβαίνει αυτές τις διαστάσεις. Χρησιμοποιήστε αυτό το πεδίο για προβολές "
 "φορμών ή προβολές kanban."
 
@@ -1868,7 +1866,7 @@ msgstr "Τιμοκατάλογοι"
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Pricelists On Product"
-msgstr "Τιμοκατάλογοι σε Προϊόν"
+msgstr "Τιμοκατάλογοι σε Είδος"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form
@@ -1915,12 +1913,12 @@ msgstr "Είδος"
 #: model:ir.model,name:product.model_product_attribute
 #: model:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Product Attribute"
-msgstr "Χαρακτηριστικό προϊόντων"
+msgstr "Χαρακτηριστικό Είδους"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_price_value_id
 msgid "Product Attribute Value"
-msgstr "Αξία Χαρακτηριστικών Προϊόντος"
+msgstr "Αξία Χαρακτηριστικού Είδους"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_attribute_line_form
@@ -1931,26 +1929,26 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product_attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line_ids
 msgid "Product Attributes"
-msgstr "Χαρακτηριστικά Προϊόντος"
+msgstr "Χαρακτηριστικά Είδους"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
 #: model:ir.ui.view,arch_db:product.product_category_list_view
 #: model:ir.ui.view,arch_db:product.product_category_search_view
 msgid "Product Categories"
-msgstr "Κατηγορίες Προϊόντων"
+msgstr "Κατηγορίες Είδους"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_categ_id
 msgid "Product Category"
-msgstr "Κατηγορία Προϊόντος"
+msgstr "Κατηγορία Είδους"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Product Name"
-msgstr "Περιγραφή Προϊόντος"
+msgstr "Περιγραφή Είδους"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
@@ -1959,7 +1957,7 @@ msgstr "Περιγραφή Προϊόντος"
 #: model:ir.model.fields,field_description:product.field_res_config_settings_group_stock_packaging
 #: model:ir.ui.view,arch_db:product.product_packaging_tree_view
 msgid "Product Packages"
-msgstr ""
+msgstr "Συσκευασίες Είδους"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_packaging_form_view
@@ -1975,18 +1973,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_tmpl_id
 #: model:ir.ui.view,arch_db:product.product_search_form_view
 msgid "Product Template"
-msgstr "Πρότυπο Προϊόντος"
+msgstr "Πρότυπο Είδους"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_type
 #: model:ir.model.fields,field_description:product.field_product_template_type
 msgid "Product Type"
-msgstr "Τύπος Προϊόντος"
+msgstr "Τύπος Είδους"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom
 msgid "Product Unit of Measure"
-msgstr "Μονάδα Μέτρησης Προϊόντος"
+msgstr "Μονάδα Μέτρησης Είδους"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -1999,7 +1997,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: selection:product.pricelist.item,applied_on:0
 msgid "Product Variant"
-msgstr "Μεταβλητή Προϊόντος"
+msgstr "Μεταβλητή Είδους"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
@@ -2007,7 +2005,7 @@ msgstr "Μεταβλητή Προϊόντος"
 #: model:ir.actions.act_window,name:product.product_variant_action
 #: model:ir.ui.view,arch_db:product.product_product_tree_view
 msgid "Product Variants"
-msgstr "Παραλλαγές του Προϊόντος"
+msgstr "Παραλλαγές του Είδους"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_template_action
@@ -2022,29 +2020,29 @@ msgstr "Είδη"
 #: model:ir.actions.report,name:product.report_product_label
 #: model:ir.actions.report,name:product.report_product_template_label
 msgid "Products Labels"
-msgstr "Ετικέτες Προϊόντων"
+msgstr "Ετικέτες Ειδών"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
 msgid "Products Price"
-msgstr "Τιμή Προϊόντος"
+msgstr "Τιμή Είδους"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_tree
 msgid "Products Price List"
-msgstr "Τιμοκατάλογος Προϊόντων"
+msgstr "Τιμοκατάλογος Ειδών"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
 msgid "Products Price Search"
-msgstr "Αναζήτηση Τιμών Προϊόντων"
+msgstr "Αναζήτηση Τιμών Ειδών"
 
 #. module: product
 #: code:addons/product/models/product.py:448
 #, python-format
 msgid "Products: "
-msgstr "Προϊόντα: "
+msgstr "Είδη: "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_lst_price
@@ -2210,7 +2208,7 @@ msgstr "Πωλήσεις"
 #: model:ir.model.fields,field_description:product.field_product_product_list_price
 #: model:ir.model.fields,field_description:product.field_product_template_list_price
 msgid "Sales Price"
-msgstr "Τιμή Πωλήσεων"
+msgstr "Τιμή Πώλησης"
 
 #. module: product
 #: model:res.groups,name:product.group_sale_pricelist
@@ -2235,7 +2233,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_categ_id
 #: model:ir.model.fields,help:product.field_product_template_categ_id
 msgid "Select category for the current product"
-msgstr "Επιλέξτε κατηγορία για το τρέχον προϊόν"
+msgstr "Επιλέξτε κατηγορία για το τρέχον είδος"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_sequence
@@ -2294,7 +2292,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings_group_product_pricelist
 msgid "Show pricelists On Products"
-msgstr "Εμφάνιση τιμοκαταλόγων στα Προϊόντα"
+msgstr "Εμφάνιση τιμοκαταλόγων στα Είδη"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings_group_pricelist_item
@@ -2326,9 +2324,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
-"Μικρού-μεγέθους φωτογραφία του προϊόντος. Αυτόματα μετασχηματίζεται σε "
-"64x64px εικόνα, με aspect ratio preserved. Χρησιμοπιήστε αυτό το πεδίο "
-"οπουδήποτε μια μικρή εικόνα είναι αναγκαία."
+"Μικρού-μεγέθους φωτογραφία του είδους. Αυτόματα μετασχηματίζεται σε 64x64px "
+"εικόνα, με aspect ratio preserved. Χρησιμοποιήστε αυτό το πεδίο οπουδήποτε "
+"μια μικρή εικόνα είναι αναγκαία."
 
 #. module: product
 #: selection:product.uom,uom_type:0
@@ -2354,9 +2352,9 @@ msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
 msgstr ""
-"Καθορίστε μια κατηγορία προϊόντος εάν αυτός ο κανόνας αναπτύσεται σε "
-"προϊόντα που ανήκουν σε αυτή την κατηγορία ή τις θυγατρικές κατηγορίες της. "
-"Κρατήστε κενό αλλιώς."
+"Καθορίστε μια κατηγορία είδους εάν αυτός ο κανόνας αναπτύσσεται σε είδη που "
+"ανήκουν σε αυτή την κατηγορία ή τις θυγατρικές κατηγορίες της. Κρατήστε κενό"
+" αλλιώς."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_product_id
@@ -2364,8 +2362,8 @@ msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
 msgstr ""
-"Συγκεκριμενοποίησε ένα προϊόν εάν αυτός ο κανόνας εφαρμόζεται μόνο σε ένα "
-"προϊόν. Αλλιώς κράτησε το κενό."
+"Συγκεκριμενοποίησε ένα είδος εάν αυτός ο κανόνας εφαρμόζεται μόνο σε ένα "
+"είδος. Αλλιώς κράτησε το κενό."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_product_tmpl_id
@@ -2374,13 +2372,13 @@ msgid ""
 "empty otherwise."
 msgstr ""
 "Καθορίστε ένα πρότυπο εάν αυτός ο κανόνας εφαρμόζεται μόνο σε ένα πρότυπο "
-"προϊόντος. Αλλιώς κρατήστε το κενό."
+"είδους. Αλλιώς κρατήστε το κενό."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_sale_ok
 #: model:ir.model.fields,help:product.field_product_template_sale_ok
 msgid "Specify if the product can be selected in a sales order line."
-msgstr "Καθορίστε εάν το προϊόν μπορεί να επιλεγεί σε μια γραμμή παραγγελίας"
+msgstr "Καθορίστε εάν το είδος μπορεί να επιλεγεί σε μια γραμμή παραγγελίας"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_surcharge
@@ -2420,7 +2418,7 @@ msgstr "Έναρξη ισχύος για το στοιχείο επικύρωσ�
 #. module: product
 #: selection:product.template,type:0
 msgid "Stockable Product"
-msgstr "Προϊόν Αποθήκευσης"
+msgstr "Είδος Αποθεματικό"
 
 #. module: product
 #: model:product.product,name:product.product_product_2
@@ -2501,7 +2499,7 @@ msgid ""
 "product."
 msgstr ""
 "Η τιμή που υπολογίστηκε είναι εκφρασμένη στην προεπιλεγμένη Μονάδα Μέτρησης "
-"του προϊόντος."
+"του είδους."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_rounding
@@ -2589,6 +2587,9 @@ msgid ""
 "                process: price, notes in the quotation, accounting data,\n"
 "                procurement methods, etc."
 msgstr ""
+"Η φόρμα είδους περιέχει πληροφορίες για την απλούστευση της διαδικασίας πώλησης: \n"
+" τιμή, σημειώσεις στην προσφορά, λογιστικά δεδομένα, \n"
+" μεθόδους προμήθειας κ.λ.π."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
@@ -2596,6 +2597,9 @@ msgid ""
 "The product form contains information to simplify the sale process: price, "
 "notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
+"Η φόρμα είδους περιέχει πληροφορίες για την απλούστευση της διαδικασίας πώλησης: \n"
+" τιμή, σημειώσεις στην προσφορά, λογιστικά δεδομένα, \n"
+" μεθόδους προμήθειας κ.λ.π."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2692,7 +2696,7 @@ msgstr "Η αξία του χαρακτηριστικού υπάρχει ήδη!
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_uom
 msgid "This comes from the product form."
-msgstr "Αυτό έρχεται από την φόρμα καταχώρησης προϊόντος"
+msgstr "Αυτό έρχεται από την φόρμα καταχώρησης είδους"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_variant
@@ -2700,8 +2704,8 @@ msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
 msgstr ""
-"Στο πεδίο περιέχεται η εικόνα της παραλλαγής του προϊόντος, με περιορισμό σε"
-" 1024x1024px."
+"Στο πεδίο περιέχεται η εικόνα της παραλλαγής του είδους, με περιορισμό σε "
+"1024x1024px."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_image
@@ -2709,7 +2713,7 @@ msgid ""
 "This field holds the image used as image for the product, limited to "
 "1024x1024px."
 msgstr ""
-"Αυτό το πεδίο κρατά την εικόνα σαν φωτογραφία για το προϊόν, περιορισμένη σε"
+"Αυτό το πεδίο κρατά την εικόνα σαν φωτογραφία για το είδος, περιορισμένη σε"
 "  1024x1024px."
 
 #. module: product
@@ -2864,7 +2868,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_name
 msgid "Value"
-msgstr "Τιμή"
+msgstr "Αξία"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_ids
@@ -3078,6 +3082,9 @@ msgid ""
 "                a physical product, a consumable or a service you offer to\n"
 "                customers."
 msgstr ""
+"Πρέπει να ορίσετε ένα είδος για όλα όσα πουλάτε, είτε είναι \n"
+" ένα φυσικό εμπόρευμα, ένα αναλώσιμο προϊόν ή μια υπηρεσία που προσφέρετε \n"
+" στους πελάτες."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
@@ -3085,6 +3092,9 @@ msgid ""
 "You must define a product for everything you sell, whether it's a physical "
 "product, a consumable or a service you offer to customers."
 msgstr ""
+"Πρέπει να ορίσετε ένα είδος για όλα όσα πουλάτε, είτε είναι \n"
+" ένα φυσικό εμπόρευμα, ένα αναλώσιμο προϊόν ή μια υπηρεσία που προσφέρετε \n"
+" στους πελάτες."
 
 #. module: product
 #: code:addons/product/models/product_template.py:29

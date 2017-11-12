@@ -1,36 +1,23 @@
-# #-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_payroll_account
-#
+# 
 # Translators:
-# Nemanja Dragovic <nemanjadragovic94@gmail.com>, 2015
-# #-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * hr_payroll_account
-#
-# Translators:
-#, fuzzy
+# Nemanja Dragovic <nemanjadragovic94@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-09-07 21:13+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-9/"
-"language/sr@latin/)\n"
-"Language: sr@latin\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Serbian (Latin) (https://www.transifex.com/odoo/teams/41243/sr%40latin/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: sr@latin\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: hr_payroll_account
 #: model:ir.ui.view,arch_db:hr_payroll_account.hr_contract_form_inherit
@@ -40,17 +27,12 @@ msgstr "Računovodstvo"
 
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_move_id
-#, fuzzy
 msgid "Accounting Entry"
-msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Nalog\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Stavka naloga"
+msgstr "Nalog"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:154
-#: code:addons/hr_payroll_account/hr_payroll_account.py:170
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:113
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:128
 #, python-format
 msgid "Adjustment Entry"
 msgstr "Stavka podešavanja"
@@ -65,13 +47,8 @@ msgstr "Analitički konto"
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line_account_credit
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_account_credit
-#, fuzzy
 msgid "Credit Account"
-msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Potražni konto\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Platni nalog"
+msgstr "Potražni konto"
 
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_date
@@ -81,50 +58,30 @@ msgstr "Datum"
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line_account_debit
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_account_debit
-#, fuzzy
 msgid "Debit Account"
-msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Dugovni konto\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Platni nalog"
+msgstr "Dugovni konto"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_contract
-#, fuzzy
 msgid "Employee Contract"
-msgstr "Ugovor"
+msgstr "Ugovor Zaposlenog"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
-#, fuzzy
 msgid "Generate payslips for all selected employees"
-msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Napravi platne liste za sve izabrane zaposlene\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Napravi obračunski list za sve izabrane zaposlene"
+msgstr "Napravi platne liste za sve izabrane zaposlene"
 
 #. module: hr_payroll_account
 #: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip_date
-#, fuzzy
 msgid "Keep empty to use the period of the validation(Payslip) date."
 msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
 "Sačuvajte prazno mesto radi korišćenja perioda validacije (platna lista) "
-"datuma.\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Sačuvajte prazno mesto radi korišćenja datum validacije (obračuski list)"
+"datuma."
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip
-#, fuzzy
 msgid "Pay Slip"
-msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Platna lista\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Platnio listovi"
+msgstr "Platna lista"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_line
@@ -133,31 +90,21 @@ msgstr "Stavka platne liste"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
-#, fuzzy
 msgid "Payslip Run"
-msgstr "Stavka platne liste"
+msgstr ""
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:105
-#, fuzzy, python-format
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:64
+#, python-format
 msgid "Payslip of %s"
-msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Platna lista %s\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Obračunski list %s"
+msgstr "Platna lista %s"
 
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract_journal_id
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_journal_id
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_run_journal_id
-#, fuzzy
 msgid "Salary Journal"
-msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Dnevnik plata\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Dnevnika plata"
+msgstr "Dnevnik plata"
 
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line_account_tax_id
@@ -166,31 +113,18 @@ msgid "Tax"
 msgstr "Porez"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:152
-#, fuzzy, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Credit Account!"
-msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"U dnevniku troškova \"%s\" nije korektno podešen potražni konto!\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Dnevnik troškova \"%s\" nije tačno podesio platni nalog!"
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:111
+#, python-format
+msgid "The Expense Journal \"%s\" has not properly configured the Credit Account!"
+msgstr "U dnevniku troškova \"%s\" nije korektno podešen potražni konto!"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:168
-#, fuzzy, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Debit Account!"
-msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"U dnevniku troškova \"%s\" nije korektno podešen dugovni konto!\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Dnevnik troškova \"%s\" nije tačno podesio dužnički nalog!"
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:126
+#, python-format
+msgid "The Expense Journal \"%s\" has not properly configured the Debit Account!"
+msgstr "U dnevniku troškova \"%s\" nije korektno podešen dugovni konto!"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
 msgid "hr.salary.rule"
 msgstr "hr.salary.rule"
-
-#~ msgid "Payslip Batches"
-#~ msgstr "Serije obračunskih listova plate"
