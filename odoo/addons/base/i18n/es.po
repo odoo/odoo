@@ -48,13 +48,15 @@
 # AleEscandon <alejandra.escandon@jarsa.com.mx>, 2017
 # e2f_es_ t6 <e2f_es_t6@outlook.com>, 2017
 # Pierre-Antoine Magnet <pma@odoo.com>, 2017
+# Julián Andrés Osorio López <mcjulian1107@gmail.com>, 2017
+# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:14+0000\n"
-"PO-Revision-Date: 2017-10-24 09:14+0000\n"
-"Last-Translator: Pierre-Antoine Magnet <pma@odoo.com>, 2017\n"
+"POT-Creation-Date: 2017-11-08 13:21+0000\n"
+"PO-Revision-Date: 2017-11-08 13:21+0000\n"
+"Last-Translator: Christopher Ormaza <chris.ormaza@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6372,7 +6374,7 @@ msgstr "El número de cuenta debe ser único"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_taxcloud
 msgid "Account TaxCloud"
-msgstr ""
+msgstr "Cuenta TaxCloud"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_account_taxcloud
@@ -7561,6 +7563,13 @@ msgid "Before Amount"
 msgstr "Antes de la cantidad"
 
 #. module: base
+#: code:addons/base/res/res_users.py:954
+#, python-format
+msgid ""
+"Before clicking on 'Change Password', you have to write a new password."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.by
 msgid "Belarus"
 msgstr "Bielorrusia"
@@ -7919,6 +7928,7 @@ msgstr "Canada - Contabilidad"
 #: model:ir.ui.view,arch_db:base.view_base_module_update
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade_install
+#: model:ir.ui.view,arch_db:base.view_company_report_form
 #: model:ir.ui.view,arch_db:base.view_model_menu_create
 #: model:ir.ui.view,arch_db:base.view_users_form_simple_modif
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
@@ -8289,7 +8299,6 @@ msgstr "Etiqueta de acción del cliente"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_language_install
 #: model:ir.ui.view,arch_db:base.view_base_module_update
-#: model:ir.ui.view,arch_db:base.view_company_report_form
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Close"
 msgstr "Cerrar"
@@ -9148,11 +9157,6 @@ msgstr "Croacia - Contabilidad (RRIF 2012)"
 #: model:ir.module.module,shortdesc:base.module_l10n_hr_reports
 msgid "Croatia - RRIF 2012 COA - Accounting Reports"
 msgstr "Croacia - RRIF 2012 COA - Informes contables"
-
-#. module: base
-#: model:ir.model.fields,field_description:base.field_ir_cron_user_id
-msgid "Cron User"
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.cu
@@ -17364,7 +17368,7 @@ msgstr "Sólo lectura"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_L
-msgid "Real Estrate"
+msgid "Real Estate"
 msgstr ""
 
 #. module: base
@@ -18035,12 +18039,18 @@ msgstr "Acción planificada"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
+#: model:ir.model,name:base.model_ir_cron
 #: model:ir.ui.menu,name:base.menu_ir_cron_act
 #: model:ir.ui.view,arch_db:base.ir_cron_view_calendar
 #: model:ir.ui.view,arch_db:base.ir_cron_view_search
 #: model:ir.ui.view,arch_db:base.ir_cron_view_tree
 msgid "Scheduled Actions"
 msgstr "Acciones planificadas"
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_ir_cron_user_id
+msgid "Scheduler User"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_M
@@ -20677,7 +20687,7 @@ msgstr "Validación de número CIF"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_voip
 msgid "VOIP"
-msgstr ""
+msgstr "VOIP"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_voip_onsip
@@ -21862,11 +21872,6 @@ msgstr "ir.autovacuum"
 #: model:ir.model,name:base.model_ir_config_parameter
 msgid "ir.config_parameter"
 msgstr "ir.config_parameter"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_cron
-msgid "ir.cron"
-msgstr "ir.cron"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_default
