@@ -10,8 +10,10 @@ class WebsiteSale(WebsiteSale):
     def pricelist(self, promo, **post):
         order = request.website.sale_get_order()
         coupon_status = request.env['sale.coupon.apply.code'].sudo().apply_coupon(order, promo)
-        if coupon_status.get('error', False):
+        if coupon_status.get('not_found'):
             return super(WebsiteSale, self).pricelist(promo, **post)
+        elif coupon_status.get('error'):
+            request.session['error_promo_code'] = coupon_status['error']
         return request.redirect(post.get('r', '/shop/cart'))
 
     @http.route(['/shop/payment'], type='http', auth="public", website=True)
