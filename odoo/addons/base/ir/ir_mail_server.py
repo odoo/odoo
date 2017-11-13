@@ -8,7 +8,6 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import COMMASPACE, formataddr, formatdate, getaddresses, make_msgid, parseaddr
-from gs.dmarc import receiver_policy
 import logging
 import re
 import smtplib
@@ -143,12 +142,6 @@ class IrMailServer(models.Model):
         string='Email From',
         help='Set this in order to email from a specific address when using '
              'this SMTP server.',
-    )
-    smtp_from_only_dmarc = fields.Boolean(
-        string='Respect DMARC',
-        help='Check this to only alter outbound email FROM header if the '
-             'sender has a DMARC policy that will interfere with message '
-             'delivery.',
     )
     smtp_host = fields.Char(string='SMTP Server', required=True, help="Hostname or IP of SMTP server")
     smtp_port = fields.Integer(string='SMTP Port', size=5, required=True, default=25, help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases.")
@@ -490,14 +483,6 @@ class IrMailServer(models.Model):
 
         if not self.smtp_from:
             return
-
-        if self.smtp_from_only_dmarc:
-            address = parseaddr(message['From'])
-            host = address[1].split('@')[1]
-            policy = receiver_policy(host)
-            # 1 == None, 2 == quarantine, 3 == reject
-            if policy.value <= 1:
-                return
 
         message.replace_header('Reply-To', message['From'])
         message.replace_header(
