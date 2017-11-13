@@ -1496,6 +1496,55 @@ QUnit.module('basic_fields', {
 
     });
 
+    QUnit.test('image fields in subviews are loaded correctly', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
+        this.data.partner.records[0].document = 'myimage';
+        this.data.partner_type.fields.image = {name: 'image', type: 'binary'};
+        this.data.partner_type.records[0].image = 'product_image';
+        this.data.partner.records[0].timmy = [12];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="document" widget="image" options="{\'size\': [90, 90]}"/>' +
+                    '<field name="timmy" widget="many2many">' +
+                        '<tree>' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="image" widget="image"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === 'data:image/png;base64,myimage') {
+                    assert.step("The view's image should have been fetched");
+                    return $.when('wow');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        assert.verifySteps(["The view's image should have been fetched"]);
+
+        assert.strictEqual(form.$('tr.o_data_row').length, 1,
+            'There should be one record in the many2many');
+
+        // Actual flow: click on an element of the m2m to get its form view
+        form.$('tbody td:contains(gold)').click();
+        assert.strictEqual($('.modal-dialog').length, 1,
+            'The modal should have opened');
+        assert.strictEqual($('.modal-dialog').find('.o_field_image > img')[0].src,
+            'data:image/png;base64,product_image',
+            'The image of the many2many in its form view should be present');
+
+        form.destroy();
+    });
+
     QUnit.module('JournalDashboardGraph');
 
     QUnit.test('graph dashboard widget is rendered correctly', function (assert) {
