@@ -136,6 +136,8 @@ def check(f):
             except IntegrityError, inst:
                 registry = openerp.registry(dbname)
                 for key in registry._sql_error.keys():
+                    if isinstance(key, unicode):
+                        key = key.encode('utf-8')
                     if key in inst[0]:
                         raise ValidationError(tr(registry._sql_error[key], 'sql_constraint') or inst[0])
                 if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
