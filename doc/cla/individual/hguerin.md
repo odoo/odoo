@@ -1,4 +1,4 @@
-France, 2017-11-07
+France, 2017-11-01
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
@@ -8,5 +8,5 @@ declaration.
 
 Signed,
 
-Herve GUERIN herve.guerin@tranquil.it https://github.com/geekobi
+Herve GUERIN hguerin@tranquil.it https://github.com/geekobi
 
