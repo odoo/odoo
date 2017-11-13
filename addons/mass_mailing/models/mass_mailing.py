@@ -597,6 +597,7 @@ class MassMailing(models.Model):
         mail_field = 'email' if 'email' in target._fields else 'email_from'
         # avoid loading a large number of records in memory
         # + use a basic heuristic for extracting emails
+        #Fields email or email_from don't exist in model mail_mail_statistics
         query = """
             SELECT lower(substring(%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
               FROM mail_mail_statistics s
