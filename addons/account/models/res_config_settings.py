@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
+
 from odoo import api, fields, models, _
 
 
@@ -64,9 +66,16 @@ class ResConfigSettings(models.TransientModel):
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         params = self.env['ir.config_parameter'].sudo()
+        tax = self.env['account.tax'].sudo()
+        default_purchase_tax_id = literal_eval(params.get_param('account.default_purchase_tax_id', default='False'))
+        default_sale_tax_id = literal_eval(params.get_param('account.default_sale_tax_id', default='False'))
+        if default_purchase_tax_id and not tax.browse(default_purchase_tax_id).exists():
+            default_purchase_tax_id = False
+        if default_sale_tax_id and not tax.browse(default_sale_tax_id).exists():
+            default_sale_tax_id = False
         res.update(
-            default_purchase_tax_id=int(params.get_param('account.default_purchase_tax_id', default=False)) or False,
-            default_sale_tax_id=int(params.get_param('account.default_sale_tax_id', default=False)) or False
+            default_purchase_tax_id=default_purchase_tax_id,
+            default_sale_tax_id=default_sale_tax_id,
         )
         return res
 

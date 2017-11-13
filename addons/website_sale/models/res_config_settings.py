@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
+
 from odoo import api, models, fields
 
 class ResConfigSettings(models.TransientModel):
@@ -62,8 +64,8 @@ class ResConfigSettings(models.TransientModel):
             if self.env['ir.module.module'].search([('name', '=', 'website_sale_delivery')], limit=1).state in ('installed', 'to install', 'to upgrade'):
                 sale_delivery_settings = 'website'
 
-        cart_recovery_mail_template = int(params.get_param('website_sale.cart_recovery_mail_template_id'))
-        if not cart_recovery_mail_template:
+        cart_recovery_mail_template = literal_eval(params.get_param('website_sale.cart_recovery_mail_template_id', default='False'))
+        if cart_recovery_mail_template and not self.env['mail.template'].browse(cart_recovery_mail_template).exists():
             cart_recovery_mail_template = self._default_recovery_mail_template()
 
         res.update(
