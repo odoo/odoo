@@ -47,7 +47,7 @@ class ResConfigSettings(models.TransientModel):
     sale_show_tax = fields.Selection([
         ('subtotal', 'Tax-Excluded Prices'),
         ('total', 'Tax-Included Prices')], string="Tax Display",
-        required=True)
+        default='subtotal', required=True)
     default_invoice_policy = fields.Selection([
         ('order', 'Invoice what is ordered'),
         ('delivery', 'Invoice what is delivered')
