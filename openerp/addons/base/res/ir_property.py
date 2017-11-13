@@ -315,3 +315,12 @@ class ir_property(osv.osv):
             return [('id', 'not in', bad_ids)]
         else:
             return [('id', 'in', good_ids)]
+
+    @api.model
+    def _generate_order_by(self, order_spec, query):
+        if order_spec=='company_id asc':
+            #Avoid link to res_company just for sorting to get non null company first
+            return ' ORDER BY company_id asc'
+        else:
+            return super(ir_property, self)._generate_order_by(order_spec, query)
+            
