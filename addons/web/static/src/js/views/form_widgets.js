@@ -1177,7 +1177,7 @@ var FieldBinaryFile = FieldBinary.extend({
         this._super();
         if (this.get("effective_readonly")) {
             this.$el.click(function(ev) {
-                if (self.get('value')) {
+                if (self.get('value') && self.view.datarecord.id) {
                     self.on_save_as(ev);
                 }
                 return false;
@@ -1195,6 +1195,11 @@ var FieldBinaryFile = FieldBinary.extend({
             this.do_toggle(!!this.get('value'));
             if (this.get('value')) {
                 this.$el.empty().append($("<span/>").addClass('fa fa-download'));
+                if (this.view.datarecord.id) {
+                    this.$el.css('cursor', 'pointer');
+                } else {
+                    this.$el.css('cursor', 'not-allowed');
+                }
                 if (filename) {
                     this.$el.append(" " + filename);
                 }
