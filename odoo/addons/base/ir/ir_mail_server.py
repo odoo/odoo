@@ -7,7 +7,8 @@ from email.header import Header
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from email.utils import COMMASPACE, formataddr, formatdate, getaddresses, make_msgid
+from email.utils import COMMASPACE, formataddr, formatdate, getaddresses, make_msgid, parseaddr
+from gs.dmarc import receiver_policy
 import logging
 import re
 import smtplib
@@ -131,6 +132,17 @@ class IrMailServer(models.Model):
                           "specified for outgoing emails (To/Cc/Bcc)")
 
     name = fields.Char(string='Description', required=True, index=True)
+    smtp_from = fields.Char(
+        string='Email From',
+        help='Set this in order to email from a specific address when using '
+             'this SMTP server.',
+    )
+    smtp_from_only_dmarc = fields.Boolean(
+        string='Respect DMARC',
+        help='Check this to only alter outbound email FROM header if the '
+             'sender has a DMARC policy that will interfere with message '
+             'delivery.',
+    )
     smtp_host = fields.Char(string='SMTP Server', required=True, help="Hostname or IP of SMTP server")
     smtp_port = fields.Integer(string='SMTP Port', size=5, required=True, default=25, help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases.")
     smtp_user = fields.Char(string='Username', help="Optional username for SMTP authentication")
@@ -189,11 +201,8 @@ class IrMailServer(models.Model):
         if getattr(threading.currentThread(), 'testing', False):
             return None
 
-        mail_server = smtp_encryption = None
-        if mail_server_id:
-            mail_server = self.sudo().browse(mail_server_id)
-        elif not host:
-            mail_server = self.sudo().search([], order='sequence', limit=1)
+        smtp_encryption = None
+        mail_server = self.__get_mail_server(mail_server_id, host)
 
         if mail_server:
             smtp_server = mail_server.smtp_host
@@ -447,6 +456,10 @@ class IrMailServer(models.Model):
             _test_logger.info("skip sending email in test mode")
             return message['Message-Id']
 
+        mail_server = self.__get_mail_server(mail_server_id, host)
+        if mail_server:
+            mail_server._update_message_from(message)
+
         try:
             message_id = message['Message-Id']
             smtp = smtp_session
@@ -465,6 +478,71 @@ class IrMailServer(models.Model):
             _logger.info(msg)
             raise MailDeliveryException(_("Mail Delivery Failed"), msg)
         return message_id
+
+    @api.multi
+    def _update_message_from(self, message):
+        """Update the FROM header on message to align with server settings.
+
+        Args:
+            message (email.message): The message object to be evaluated and
+                possibly mutated.
+        """
+
+        self.ensure_one()
+
+        if not self.smtp_from:
+            return
+
+        if self.smtp_from_only_dmarc:
+            address = parseaddr(message['From'])
+            host = address[1].split('@')[1]
+            policy = receiver_policy(host)
+            # 1 == None, 2 == quarantine, 3 == reject
+            if policy.value <= 1:
+                return
+
+        message.replace_header('Reply-To', message['From'])
+        message.replace_header(
+            'From', self.__get_canonical_from(message['From']),
+        )
+
+    @api.multi
+    def __get_canonical_from(self, original_from):
+        """Returns a FROM header to respect the SMTP server settings.
+
+        Args:
+            original_from (str): The original FROM header for the message.
+
+        Returns:
+            str: A string that should be used in a message header.
+        """
+        # Use the canonical name, if existing.
+        address = parseaddr(original_from)
+        # Otherwise we use the name part of the email address.
+        if not address[0]:
+            address[0] = address[1].split('@', 1)[0]
+        return '%s via %s <%s>' % (
+            address[0],
+            self.env.user.company_id.name,
+            self.smtp_from,
+        )
+
+    @api.model
+    def __get_mail_server(self, mail_server_id=None, host=None):
+        """Helper method to obtain the mail server for sending.
+
+        Args:
+            host (str, optional): Host of IP of a manual SMTP server host.
+                Setting this will cause this method to return ``None``,
+                because a manual SMTP server configuration is in use.
+            mail_server_id (int, optional): The ID of the mail server to get.
+
+        Returns:
+            IrMailServer or None: ``None`` if host is set. Otherwise, the mail
+                server record indicated by ``mail_server_id``, or the default
+                mail server if not defined.
+        """
+
 
     @api.onchange('smtp_encryption')
     def _onchange_encryption(self):
