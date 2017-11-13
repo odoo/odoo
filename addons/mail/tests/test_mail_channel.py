@@ -31,7 +31,7 @@ class TestMailGroup(TestMail):
         def mail_group_message_get_recipient_values(self, cr, uid, ids, notif_message=None, recipient_ids=None, context=None):
             return self.pool['mail.thread'].message_get_recipient_values(cr, uid, ids, notif_message=notif_message, recipient_ids=recipient_ids, context=context)
         cls.env['mail.channel']._patch_method('message_get_recipient_values', mail_group_message_get_recipient_values)
-        super(TestMail, cls).tearDownClass()
+        super(TestMailGroup, cls).tearDownClass()
 
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
     def test_access_rights_public(self):
