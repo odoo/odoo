@@ -326,7 +326,6 @@ snippets_editor.Class.include({
             switch_theme.last = theme_params;
 
             $body.removeClass(all_classes).addClass(theme_params.className);
-            switch_images(theme_params, $editable_area);
 
             var $old_layout = $editable_area.find(".o_layout");
             // This wrapper structure is the only way to have a responsive and
@@ -349,6 +348,8 @@ snippets_editor.Class.include({
                 $contents = $editable_area.contents();
             }
 
+            $contents = $($contents);
+            switch_images(theme_params, $contents);
             $editable_area.empty().append($new_layout);
             $new_wrapper_content.append($contents);
             $old_layout.remove();
