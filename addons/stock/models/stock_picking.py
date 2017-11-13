@@ -326,7 +326,7 @@ class Picking(models.Model):
             else:
                 picking.show_lots_text = False
 
-    @api.depends('move_type', 'move_lines.state', 'move_lines.picking_id')
+    @api.depends('move_type', 'move_lines.state', 'move_lines.picking_id', 'move_line_ids')
     @api.one
     def _compute_state(self):
         ''' State of a picking depends on the state of its related stock.move
@@ -352,7 +352,10 @@ class Picking(models.Model):
         else:
             relevant_move_state = self.move_lines._get_relevant_state_among_moves()
             if relevant_move_state == 'partially_available':
-                self.state = 'assigned'
+                if self.move_line_ids:
+                    self.state = 'assigned'
+                else:
+                    self.state = 'confirmed'
             else:
                 self.state = relevant_move_state
 
