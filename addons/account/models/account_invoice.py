@@ -1387,8 +1387,6 @@ class AccountInvoice(models.Model):
             'payment_difference_handling': writeoff_acc and 'reconcile' or 'open',
             'writeoff_account_id': writeoff_acc and writeoff_acc.id or False,
         }
-        if self.env.context.get('tx_currency_id'):
-            payment_vals['currency_id'] = self.env.context.get('tx_currency_id')
 
         payment = self.env['account.payment'].create(payment_vals)
         payment.post()
