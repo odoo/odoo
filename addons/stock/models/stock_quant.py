@@ -84,7 +84,7 @@ class StockQuant(models.Model):
     def check_location_id(self):
         for quant in self:
             if quant.location_id.usage == 'view':
-                raise ValidationError(_('A product cannot be stored in a "view" location.'))
+                raise ValidationError(_('You cannot take products from or deliver products to a location of type "view".'))
 
     @api.one
     def _compute_name(self):
