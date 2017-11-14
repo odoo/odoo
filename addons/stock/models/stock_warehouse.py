@@ -36,16 +36,16 @@ class Warehouse(models.Model):
         'Routes', domain="[('warehouse_selectable', '=', True)]",
         help='Defaults routes through the warehouse')
     reception_steps = fields.Selection([
-        ('one_step', 'Receive goods directly in stock (1 step)'),
-        ('two_steps', 'Unload in input location then go to stock (2 steps)'),
-        ('three_steps', 'Unload in input location, go through a quality control before being admitted in stock (3 steps)')],
-        'Incoming Shipments', default='one_step', required=True,
+        ('one_step', 'Vendor > Stock'),
+        ('two_steps', 'Vendor > Input > Stock'),
+        ('three_steps', 'Vendor > Input > Quality > Stock')],
+        'Receipts', default='one_step', required=True,
         help="Default incoming route to follow")
     delivery_steps = fields.Selection([
-        ('ship_only', 'Ship directly from stock (Ship only)'),
-        ('pick_ship', 'Bring goods to output location before shipping (Pick + Ship)'),
-        ('pick_pack_ship', 'Make packages into a dedicated location, then bring them to the output location for shipping (Pick + Pack + Ship)')],
-        'Outgoing Shippings', default='ship_only', required=True,
+        ('ship_only', 'Stock > Customer'),
+        ('pick_ship', 'Stock > Output > Customer'),
+        ('pick_pack_ship', 'Stock > Output > Packing Zone > Customer')],
+        'Deliveries', default='ship_only', required=True,
         help="Default outgoing route to follow")
     wh_input_stock_loc_id = fields.Many2one('stock.location', 'Input Location')
     wh_qc_stock_loc_id = fields.Many2one('stock.location', 'Quality Control Location')
@@ -428,12 +428,12 @@ class Warehouse(models.Model):
             raise UserError(_('Can\'t find any customer or supplier location.'))
         return customer_loc, supplier_loc
 
-    def _get_route_name(self, route_type):
+    def _get_route_name(self):
         names = {'one_step': _('Receipt in 1 step'), 'two_steps': _('Receipt in 2 steps'),
                  'three_steps': _('Receipt in 3 steps'), 'crossdock': _('Cross-Dock'),
                  'ship_only': _('Ship Only'), 'pick_ship': _('Pick + Ship'),
                  'pick_pack_ship': _('Pick + Pack + Ship')}
-        return names[route_type]
+        return names
 
     def get_routes_dict(self):
         # TDE todo: rename me (was get_routes_dict)
@@ -696,7 +696,7 @@ class Warehouse(models.Model):
 
     def _format_routename(self, name=None, route_type=None):
         if route_type:
-            name = self._get_route_name(route_type)
+            name = self._get_route_name()[route_type]
         return '%s: %s' % (self.name, name)
 
     @api.returns('self')
