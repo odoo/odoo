@@ -88,10 +88,10 @@ class PaymentTransaction(models.Model):
                                     self.acquirer_id.provider, self.sale_order_id.name, self.sale_order_id.id)
                     return False
                 self.acquirer_id.journal_id = default_journal
-                # TDE Note: in post-v11 we could probably add an explicit parameter + update account.payment tx directly at creation, not afterwards
-                created_invoice.with_context(default_currency_id=self.currency_id.id).pay_and_reconcile(self.acquirer_id.journal_id, pay_amount=created_invoice.amount_total)
-                if created_invoice.payment_ids:
-                    created_invoice.payment_ids[0].payment_transaction_id = self
+            # TDE Note: in post-v11 we could probably add an explicit parameter + update account.payment tx directly at creation, not afterwards
+            created_invoice.with_context(default_currency_id=self.currency_id.id).pay_and_reconcile(self.acquirer_id.journal_id, pay_amount=created_invoice.amount_total)
+            if created_invoice.payment_ids:
+                created_invoice.payment_ids[0].payment_transaction_id = self
         else:
             _logger.warning('<%s> transaction completed, could not auto-generate invoice for %s (ID %s)',
                             self.acquirer_id.provider, self.sale_order_id.name, self.sale_order_id.id)
