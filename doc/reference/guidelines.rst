@@ -789,8 +789,7 @@ Symbols and Conventions
     - When defining *report* model (SQL views e.i.) : use
       ``<related_base_model>.report.<action>``, based on the Transient convention.
 
-- Odoo Python Class : use camelcase for code in api V11 (Object-oriented style),
-  underscore lowercase notation for old api (SQL style).
+- Odoo Python Class : use camelcase for code.
 
 
 .. code-block:: python
