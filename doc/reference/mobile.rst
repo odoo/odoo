@@ -204,7 +204,7 @@ Switching account in device
 
 .. js:function:: switchAccount
 
-Use switchAccount to switch from account on the device.
+Use switchAccount to switch from one account to another on the device.
 
 .. code-block:: javascript
 	
