@@ -138,11 +138,6 @@ class IrMailServer(models.Model):
                           "specified for outgoing emails (To/Cc/Bcc)")
 
     name = fields.Char(string='Description', required=True, index=True)
-    smtp_from = fields.Char(
-        string='Email From',
-        help='Set this in order to email from a specific address when using '
-             'this SMTP server.',
-    )
     smtp_host = fields.Char(string='SMTP Server', required=True, help="Hostname or IP of SMTP server")
     smtp_port = fields.Integer(string='SMTP Port', size=5, required=True, default=25, help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases.")
     smtp_user = fields.Char(string='Username', size=64, help="Optional username for SMTP authentication")
@@ -471,26 +466,7 @@ class IrMailServer(models.Model):
         return message_id
 
     @api.multi
-    def _update_message_from(self, message):
-        """Update the FROM header on message to align with server settings.
-
-        Args:
-            message (email.message): The message object to be evaluated and
-                possibly mutated.
-        """
-
-        self.ensure_one()
-
-        if not self.smtp_from:
-            return
-
-        message.replace_header('Reply-To', message['From'])
-        message.replace_header(
-            'From', self.__get_canonical_from(message['From']),
-        )
-
-    @api.multi
-    def __get_canonical_from(self, original_from):
+    def _get_canonical_from(self, original_from):
         """Returns a FROM header to respect the SMTP server settings.
 
         Args:
@@ -507,9 +483,51 @@ class IrMailServer(models.Model):
         return '%s via %s <%s>' % (
             address[0],
             self.env.user.company_id.name,
-            self.smtp_from,
+            self._get_default_bounce_address(),
         )
 
+    @api.model
+    def _get_dmarc_whitelist(self):
+        """Return a list of domains that this system is allowed to send from.
+
+        Returns:
+            list(str): Domains that this system can send authenticated emails
+                for.
+        """
+        whitelist = self.env['ir.config_parameter'].sudo().get_param(
+            'mail.dmarc.whitelist',
+        )
+        if whitelist.strip():
+            return [line.strip() for line in whitelist.split(',')]
+
+    @api.multi
+    def _update_message_from(self, message):
+        """Update the FROM header on message to align with server settings.
+
+        Args:
+            message (email.message): The message object to be evaluated and
+                possibly mutated.
+        """
+
+        self.ensure_one()
+
+        domain_catchall = self.env['ir.config_parameter'].sudo().get_param(
+            'mail.catchall.domain',
+        )
+        # Without a catchall domain, we do not have an address to send from
+        if not domain_catchall:
+            return
+
+        whitelist = self._get_dmarc_whitelist()
+        address = parseaddr(message['From'])
+        domain_email = address[1].split('@', 1)[1]
+
+        if not whitelist or domain_email in whitelist:
+            return
+
+        message.replace_header(
+            'From', self._get_canonical_from(message['From']),
+        )
 
     @api.onchange('smtp_encryption')
     def _onchange_encryption(self):
