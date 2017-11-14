@@ -978,7 +978,7 @@ class AccountInvoice(models.Model):
             move_line_dict = {
                 'invl_id': line.id,
                 'type': 'src',
-                'name': line.name.split('\n')[0][:64],
+                'name': line.name,
                 'price_unit': line.price_unit,
                 'quantity': line.quantity,
                 'price': line.price_subtotal,
