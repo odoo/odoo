@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common
+from odoo.tests import common, Form
 
 
 class TestDropship(common.TransactionCase):
@@ -16,7 +16,7 @@ class TestDropship(common.TransactionCase):
             'name': "Pen drive",
             'type': "product",
             'categ_id': self.env.ref('product.product_category_1').id,
-            'list_price': 100.0,
+            'lst_price': 100.0,
             'standard_price': 0.0,
             'uom_id': self.env.ref('product.product_uom_unit').id,
             'uom_po_id': self.env.ref('product.product_uom_unit').id,
@@ -28,17 +28,15 @@ class TestDropship(common.TransactionCase):
         })
 
         # Create a sales order with a line of 200 PCE incoming shipment, with route_id drop shipping
-        sale_order_drp_shpng = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
-            'note': 'Create sale order for drop shipping',
-            'payment_term_id': self.env.ref('account.account_payment_term').id,
-            'order_line': [(0, 0, {
-                'product_id': drop_shop_product.id,
-                'product_uom_qty': 200,
-                'price_unit': 1.00,
-                'route_id': self.env.ref('stock_dropshipping.route_drop_shipping').id,
-            })]
-        })
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.env.ref('base.res_partner_2')
+        so_form.payment_term_id = self.env.ref('account.account_payment_term')
+        with so_form.order_line.new() as line:
+            line.product_id = drop_shop_product
+            line.product_uom_qty = 200
+            line.price_unit = 1.00
+            line.route_id = self.env.ref('stock_dropshipping.route_drop_shipping')
+        sale_order_drp_shpng = so_form.save()
 
         # Confirm sales order
         sale_order_drp_shpng.action_confirm()
