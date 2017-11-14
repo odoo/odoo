@@ -8,7 +8,7 @@ Odoo Guidelines
 
 This page introduces the new Odoo Coding Guidelines. Those aim to improve the quality of the code (e.g. better readability of source) and Odoo Apps. Indeed, proper code eases maintenance, aids debugging, lowers complexity and promotes reliability.
 
-These guidelines should be applied to every new module, and new developpment. These guidelines will be applied to old module **only** in case of code refactoring (migration to new API, big refactoring, ...).
+These guidelines should be applied to every new module, and new development.
 
 .. warning::
 
@@ -23,7 +23,7 @@ Module structure
 
 Directories
 -----------
-A module is organised in important directories. Those contain the business logic; having a look at them should make understand the purpose of the module.
+A module is organised in important directories. Those contain the business logic; having a look at them should make you understand the purpose of the module.
 
 - *data/* : demo and data xml
 - *models/* : models definition
@@ -487,12 +487,11 @@ Programming in Odoo
   ease code reading and performance.
 
 
-Make your method works in batch
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Make your method work in batch
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 When adding a function, make sure it can process multiple records. Typically,
-such method is decorated with ``api.multi`` decorator (or takes a list of *id*,
-if written in old api). Then you will have to iterate on ``self`` to treat each
-record.
+such methods are decorated with the ``api.multi`` decorator. Then you will have
+to iterate on ``self`` to treat each record.
 
 .. code-block:: python
 
@@ -522,8 +521,8 @@ is recommended to use ``read_group`` method, to compute all value in only one re
 
 Propagate the context
 ~~~~~~~~~~~~~~~~~~~~~
-In new API, the context is a ``frozendict`` that cannot be modified. To call
-a method with a different context, the ``with_context`` method should be used :
+The context is a ``frozendict`` that cannot be modified. To call a method with
+a different context, the ``with_context`` method should be used :
 
 .. code-block:: python
 
@@ -789,8 +788,7 @@ Symbols and Conventions
     - When defining *report* model (SQL views e.i.) : use
       ``<related_base_model>.report.<action>``, based on the Transient convention.
 
-- Odoo Python Class : use camelcase for code in api v8 (Object-oriented style),
-  underscore lowercase notation for old api (SQL style).
+- Odoo Python Class : use camelcase for code.
 
 
 .. code-block:: python
@@ -798,15 +796,11 @@ Symbols and Conventions
     class AccountInvoice(models.Model):
         ...
 
-    class account_invoice(osv.osv):
-        ...
-
 - Variable name :
     - use camelcase for model variable
     - use underscore lowercase notation for common variable.
-    - since new API works with record or recordset instead of id list, don't
-      suffix variable name with *_id* or *_ids* if they not contain id or list
-      of id.
+    - Odoo works with a record or a recordset, don't suffix variable names with
+      *_id* or *_ids* if they don't contain an id or a list of ids.
 
 .. code-block:: python
 
