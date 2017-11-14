@@ -26,7 +26,7 @@ access all available mobile features.
 How does it work? 
 =================
 
-Internal working of the mobile application:
+Internal workings of the mobile application:
 
 .. image:: images/mobile_working.jpg
 
@@ -49,7 +49,7 @@ from the Native resources. For example the Camera or GPS Location.
 How to use it?
 ==============
 
-Just like the Odoo Web Framework the Mobile API can be used anywhere by getting the object from
+Just like the Odoo Web Framework, the Mobile API can be used anywhere by getting the object from
 **web_mobile.rpc**
 
 .. image:: images/odoo_mobile_api.png
@@ -108,7 +108,7 @@ Show snackbar with action
 
 Snackbars provide lightweight feedback about an operation. They show a brief
 message at the bottom of the screen on mobile or in the lower left corner on larger devices.
-Snackbars appears above all other elements on the screen and only one can be
+Snackbars appear above all the other elements on the screen and only one can be
 displayed at a time.
 
 .. code-block:: javascript
