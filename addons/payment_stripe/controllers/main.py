@@ -5,6 +5,7 @@ import werkzeug
 
 from odoo import http
 from odoo.http import request
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -26,7 +27,13 @@ class StripeController(http.Controller):
 
     @http.route(['/payment/stripe/s2s/create_json_3ds'], type='json', auth='public', csrf=False)
     def stripe_s2s_create_json_3ds(self, verify_validity=False, **kwargs):
-        token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
+        token = False
+        try:
+            token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
+        except ValidationError as e:
+            return {
+                'error': e.args[0]
+            }
 
         if not token:
             res = {

@@ -151,10 +151,19 @@ class PaymentAcquirer(models.Model):
              "Use this field anywhere a small image is required.")
 
     payment_icon_ids = fields.Many2many('payment.icon', string='Supported Payment Icons')
-    payment_flow = fields.Selection(selection=[('s2s','The customer encode his payment details on the website.'),
-        ('form', 'The customer is redirected to the website of the acquirer.')],
-        default='form', required=True, string='Payment flow',
+    payment_flow = fields.Selection(selection=[('s2s','The customer encode his payment details on the website'),
+        ('form', 'The customer is redirected to the website of the acquirer')],
+        default='form', required=True, string='Payment Flow',
         help="""Note: Subscriptions does not take this field in account, it uses server to server by default.""")
+    s2s_available = fields.Boolean(compute="_compute_s2s_support", string="S2S available")
+
+    def _compute_s2s_support(self):
+        for acquirer in self:
+            cust_method_name = '%s_s2s_form_process' % (acquirer.provider)
+            if hasattr(acquirer, cust_method_name):
+                acquirer.s2s_available = True
+            else:
+                acquirer.s2s_available = False
 
     def _search_is_tokenized(self, operator, value):
         tokenized = self._get_feature_support()['tokenize']
@@ -425,6 +434,10 @@ class PaymentAcquirer(models.Model):
                 'res_id': self.ids[0],
                 'context': context,
             }
+
+    def _get_cancel_url(self):
+        return ''
+
 
 class PaymentIcon(models.Model):
     _name = 'payment.icon'

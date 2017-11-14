@@ -68,6 +68,32 @@
       </t>
     </template>
 
+    <template id="payment_confirmation_status">
+        <div class="alert alert-success alert-dismissable" t-if="invoice.payment_tx_id and invoice.payment_tx_id.state == 'done'">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <span t-if='invoice.payment_acquirer_id.done_msg' t-raw="invoice.payment_acquirer_id.done_msg"/>
+            <span t-if='invoice.payment_acquirer_id.post_msg' t-raw="invoice.payment_acquirer_id.post_msg"/>
+        </div>
+        <div class="alert alert-warning alert-dismissable" t-if="invoice.payment_tx_id and invoice.payment_tx_id.state == 'pending'">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <span t-if='invoice.payment_acquirer_id.pending_msg' t-raw="invoice.payment_acquirer_id.pending_msg"/>
+            <span t-if='invoice.payment_acquirer_id.post_msg' t-raw="invoice.payment_acquirer_id.post_msg"/>
+        </div>
+        <div class="alert alert-danger alert-dismissable" t-if="invoice.payment_tx_id and invoice.payment_tx_id.state == 'cancel'">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <span t-if='invoice.payment_acquirer_id.cancel_msg' t-raw="invoice.payment_acquirer_id.cancel_msg"/>
+        </div>
+        <div class="alert alert-danger alert-dismissable" t-if="invoice.payment_tx_id and invoice.payment_tx_id.state == 'error'">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <span t-if='invoice.payment_acquirer_id.error_msg' t-raw="invoice.payment_acquirer_id.error_msg"/>
+        </div>
+        <div class="alert alert-success alert-dismissable" t-if="invoice.payment_tx_id and invoice.payment_tx_id.state == 'authorized'">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            Your payment has been authorized.
+            <span t-if='invoice.payment_acquirer_id.post_msg' t-raw="invoice.payment_acquirer_id.post_msg"/>
+        </div>
+    </template>
+
     <template id="portal_invoice_page" name="Invoice Portal Template">
         <t t-call="portal.portal_layout">
             <div class="container">
@@ -96,6 +122,7 @@
                     <div class="panel-body">
                         <t t-if="error or warning" t-call="account.portal_invoice_error"/>
                         <t t-if="success and (not error and not warning)" t-call="account.portal_invoice_success"/>
+                        <div id="optional_container"></div>
                         <t t-call="account.portal_invoice_report"/>
                     </div>
                 </div>
@@ -253,21 +280,17 @@
     </template>
 
     <template id="portal_invoice_error" name="Invoice error/warning display">
-        <div class="row">
-            <div t-att-class="'col-md-6 col-md-offset-3 text-center alert alert-dismissable %s' % ('alert-danger' if error else 'alert-warning')">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
-                <t t-if="error == 'generic'" name="generic">
-                    There was an error processing this page.
-                </t>
-            </div>
+        <div t-att-class="'col-md-12 alert alert-dismissable %s' % ('alert-danger' if error else 'alert-warning')">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+            <t t-if="error == 'generic'" name="generic">
+                There was an error processing this page.
+            </t>
         </div>
     </template>
 
     <template id="portal_invoice_success" name="Invoice success display">
-        <div class="row">
-            <div class="col-md-6 col-md-offset-3 text-center alert alert-dismissable alert-success">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
-            </div>
+        <div class="col-md-12 alert alert-dismissable alert-success">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
         </div>
     </template>
 </odoo>

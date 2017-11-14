@@ -5,7 +5,7 @@
         </xpath>
         <xpath expr="//t[@t-foreach='invoices']/tr/td[last()]" position="before">
             <td>
-                <a t-if="invoice.state == 'open'" t-att-href="'/my/invoices/%s#portal_pay' % invoice.id" alt="Pay Now" class="btn btn-xs btn-primary">
+                <a t-if="not invoice.payment_tx_ids.filtered(lambda tx: tx.state in ('authorized', 'done')) and invoice.state == 'open'" t-att-href="'/my/invoices/%s#portal_pay' % invoice.id" alt="Pay Now" class="btn btn-xs btn-primary">
                     <i class="fa fa-arrow-circle-right"/><span class='hidden-xs'> Pay Now</span>
                 </a>
             </td>
@@ -14,22 +14,23 @@
 
     <template id="portal_invoice_page_inherit_payment" name="Payment on My Invoices" inherit_id="account.portal_invoice_page">
         <xpath expr="//div[@id='o_portal_account_actions']/a" position="before">
-            <t t-set="tx_ids" t-value="invoice.payment_tx_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
-            <a t-if="not tx_ids and invoice.state == 'open' and invoice.amount_total"
+            <t t-set="tx_ids" t-value="invoice.payment_tx_ids.filtered(lambda tx: tx.state in ('done', 'authorized'))"/>
+            <a t-if="not tx_ids and invoice.state != 'paid' and invoice.amount_total"
                     class="btn btn-primary pull-right ml8" href="#portal_pay">
                 <i class="fa fa-arrow-circle-right"/> Pay Now
-            </a>
-            <a t-if="tx_ids and invoice.state != 'paid'"
-                    class="btn btn-warning ml8 pull-right" disabled="disabled">
-                <i class="fa fa-check-circle"/> Pending
             </a>
             <a t-if="tx_ids and invoice.state == 'paid'"
                     class="btn btn-success ml8 pull-right" disabled="disabled">
                 <i class="fa fa-check-circle"/> Paid
             </a>
         </xpath>
+        <xpath expr="//div[@id='optional_container']" position="inside">
+            <div t-if="invoice.payment_tx_ids and invoice.amount_total and not success and not error" class="o_account_payment_tx_status" t-att-data-invoice-id="invoice.id">
+                <t t-call="account.payment_confirmation_status"/>
+            </div>
+        </xpath>
         <xpath expr="//div[hasclass('panel-body')]" position="after">
-            <div class="panel-body" t-if="not tx_ids and invoice.state == 'open' and invoice.amount_total" id="portal_pay">
+            <div class="panel-body" t-if="not invoice.payment_tx_ids.filtered(lambda tx: tx.state in ('done', 'authorized')) and invoice.state != 'paid' and invoice.amount_total" id="portal_pay">
                 <div t-if="pms or s2s_acquirers or form_acquirers" id="payment_method" class="col-md-offset-3 col-md-6">
                     <h4 class="mb24">Pay with</h4>
                     <t t-call="payment.payment_tokens_list">
@@ -53,10 +54,10 @@
         <xpath expr="//div[@name='customer_address']" position="after">
             <t t-set="tx_ids" t-value="invoice.payment_tx_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
             <t t-if="tx_ids">
-                <div>
-                    <strong>Transactions</strong>
+                <div class="col-md-12">
+                    <strong>Transaction</strong>
                 </div>
-                <div>
+                <div class="col-md-12">
                     <t t-foreach="tx_ids" t-as="tx">
                     <div>
                         <span t-esc="tx.reference"/>
@@ -64,9 +65,11 @@
                         <t t-if="tx.state == 'done'">
                             <span class="label label-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Done</span>
                         </t>
-                        <t t-if="tx.state != 'done'">
+                        <t t-if="tx.state == 'authorized'">
+                            <span class="label label-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Authorized</span>
+                        </t>
+                        <t t-if="tx.state not in ('done', 'authorized')">
                             <span class="label label-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> Waiting</span>
-                            <t t-if="tx.state_message"><br /><span t-esc="tx.state_message"/></t>
                         </t>
                     </div>
                     </t>
@@ -119,7 +122,8 @@
             inherit_id="account.portal_invoice_success">
         <xpath expr="//a[hasclass('close')]" position="after">
             <t t-if="success == 'pay_invoice'">
-                Invoice successfully paid.
+                <span t-if='invoice.payment_acquirer_id.done_msg' t-raw="invoice.payment_acquirer_id.done_msg"/>
+                <span t-if='invoice.payment_acquirer_id.post_msg' t-raw="invoice.payment_acquirer_id.post_msg"/>
             </t>
         </xpath>
     </template>
