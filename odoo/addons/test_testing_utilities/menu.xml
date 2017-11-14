@@ -1,0 +1,94 @@
+<odoo>
+    <record id="action_test_o2m_onchange" model="ir.actions.act_window">
+        <field name="name">Test o2m onchange thing</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">test_testing_utilities.parent</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_o2m" parent="base.menu_tests"
+              name="O2M onchange test thing"
+              action="action_test_o2m_onchange"/>
+
+    <record id="o2m_parent" model="ir.ui.view">
+        <field name="name">Parent External Form</field>
+        <field name="priority">1</field>
+        <field name="model">test_testing_utilities.parent</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="value"/>
+                        <field name="v"/>
+                    </group>
+                    <group>
+                        <field name="subs"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="o2m_parent_readonly" model="ir.ui.view">
+        <field name="name">Parent readonly o2m field</field>
+        <field name="model">test_testing_utilities.parent</field>
+        <field name="inherit_id" ref="o2m_parent"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='subs']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="o2m_tree" model="ir.ui.view">
+        <field name="name">Sub regular</field>
+        <field name="priority">1</field>
+        <field name="model">test_testing_utilities.sub</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="value"/>
+                <field name="v"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="o2m_parent_ed" model="ir.ui.view">
+        <field name="name">Parent External Tree</field>
+        <field name="model">test_testing_utilities.parent</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="value"/>
+                <field name="v"/>
+                <field name="subs" context="{'tree_view_ref': 'test_testing_utilities.editable_external'}"/>
+            </form>
+        </field>
+    </record>
+    <record id="editable_external" model="ir.ui.view">
+        <field name="name">Sub regular</field>
+        <field name="model">test_testing_utilities.sub</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="value"/>
+                <field name="v"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="o2m_parent_inline" model="ir.ui.view">
+        <field name="name">Parent Inline Tree</field>
+        <field name="model">test_testing_utilities.parent</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="value"/>
+                <field name="v"/>
+                <field name="subs">
+                    <tree editable="bottom">
+                        <field name="value"/>
+                        <field name="name"/>
+                    </tree>
+                </field>
+            </form>
+        </field>
+    </record>
+</odoo>
