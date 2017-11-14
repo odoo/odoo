@@ -94,7 +94,7 @@ function formatDate(value, field, options) {
     }
     if (field && field.type === 'datetime') {
         if (!options || !('timezone' in options) || options.timezone) {
-            value = value.clone().add(session.getTZOffset(value), 'minutes');
+            value = moment(value).clone().add(session.getTZOffset(value), 'minutes');
         }
     }
     var l10n = core._t.database.parameters;
@@ -120,7 +120,7 @@ function formatDateTime(value, field, options) {
         return "";
     }
     if (!options || !('timezone' in options) || options.timezone) {
-        value = value.clone().add(session.getTZOffset(value), 'minutes');
+        value = moment(value).clone().add(session.getTZOffset(value), 'minutes');
     }
     var l10n = core._t.database.parameters;
     var date_format = time.strftime_to_moment_format(l10n.date_format);
