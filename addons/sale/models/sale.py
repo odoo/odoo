@@ -470,17 +470,23 @@ class SaleOrder(models.Model):
         return True
 
     @api.multi
+    def _get_analytic_account_vals(self, prefix=None):
+        self.ensure_one()
+        name = self.name
+        if prefix:
+            name = prefix + ": " + name
+        return {
+            'name': name,
+            'code': self.client_order_ref,
+            'company_id': self.company_id.id,
+            'partner_id': self.partner_id.id
+        }
+
+    @api.multi
     def _create_analytic_account(self, prefix=None):
         for order in self:
-            name = order.name
-            if prefix:
-                name = prefix + ": " + order.name
-            analytic = self.env['account.analytic.account'].create({
-                'name': name,
-                'code': order.client_order_ref,
-                'company_id': order.company_id.id,
-                'partner_id': order.partner_id.id
-            })
+            vals = order._get_analytic_account_vals(prefix=prefix)
+            analytic = self.env['account.analytic.account'].create(vals)
             order.project_id = analytic
 
     @api.multi
