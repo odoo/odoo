@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common
+from odoo.tests import common, Form
 
 
 class TestCrossdock(common.TransactionCase):
@@ -12,12 +12,12 @@ class TestCrossdock(common.TransactionCase):
         supplier_crossdock = self.env['res.partner'].create({'name': "Crossdocking supplier"})
 
         # I first create a warehouse with pick-pack-ship and reception in 2 steps
-        wh_pps = self.env['stock.warehouse'].create({
-            'name': 'WareHouse PickPackShip',
-            'code': 'whpps',
-            'reception_steps': 'two_steps',
-            'delivery_steps': 'pick_pack_ship'
-        })
+        wh_f = Form(self.env['stock.warehouse'])
+        wh_f.name = 'WareHouse PickPackShip'
+        wh_f.code = 'whpps'
+        wh_f.reception_steps = 'two_steps'
+        wh_f.delivery_steps = 'pick_pack_ship'
+        wh_pps = wh_f.save()
 
         # Check that cross-dock route is active
         self.assertTrue(wh_pps.crossdock_route_id.active,
@@ -38,17 +38,13 @@ class TestCrossdock(common.TransactionCase):
         })
 
         # Create a sales order with a line of 100 PCE incoming shipment with route_id crossdock shipping
-        sale_order_crossdock = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_4').id,
-            'warehouse_id': wh_pps.id,
-            'note': 'Create Sales Order',
-            'order_line': [(0, 0, {
-                'product_id': cross_shop_product.id,
-                'product_uom_qty': 100.0,
-                'product_uom': self.env.ref('product.product_uom_unit').id,
-                'route_id': wh_pps.crossdock_route_id.id,
-            })]
-        })
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.env.ref('base.res_partner_4')
+        so_form.warehouse_id = wh_pps
+        with so_form.order_line.new() as line:
+            line.product_id = cross_shop_product
+            line.product_uom_qty = 100.0
+        sale_order_crossdock = so_form.save()
 
         # Confirm sales order
         sale_order_crossdock.action_confirm()

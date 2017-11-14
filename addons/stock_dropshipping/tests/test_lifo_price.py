@@ -3,9 +3,11 @@
 
 import time
 
+from datetime import date
+
 from odoo import tools
 from odoo.modules.module import get_module_resource
-from odoo.tests import common
+from odoo.tests import common, Form
 
 
 class TestLifoPrice(common.TransactionCase):
@@ -26,49 +28,46 @@ class TestLifoPrice(common.TransactionCase):
         product_category_001 = self.env['product.category'].create({
             'name': 'Lifo Category',
             'removal_strategy_id': self.env.ref('stock.removal_lifo').id,
+            'property_valuation': 'real_time',
+            'property_cost_method': 'fifo',
         })
 
         # Set a product as using lifo price
-        product_lifo_icecream = self.env['product.product'].create({
-            'default_code': 'LIFO',
-            'name': 'LIFO Ice Cream',
-            'type': 'product',
-            'categ_id': product_category_001.id,
-            'list_price': 100.0,
-            'standard_price': 70.0,
-            'uom_id': self.env.ref('product.product_uom_kgm').id,
-            'uom_po_id': self.env.ref('product.product_uom_kgm').id,
-            'valuation': 'real_time',
-            'cost_method': 'fifo',
-            'property_stock_account_input': self.env.ref('stock_dropshipping.o_expense').id,
-            'property_stock_account_output': self.env.ref('stock_dropshipping.o_income').id,
-        })
+        product_form = Form(self.env['product.product'])
+        product_form.default_code = 'LIFO'
+        product_form.name = 'LIFO Ice Cream'
+        product_form.type = 'product'
+        product_form.categ_id = product_category_001
+        product_form.lst_price = 100.0
+        product_form.standard_price = 70.0
+        product_form.uom_id = self.env.ref('product.product_uom_kgm')
+        product_form.uom_po_id = self.env.ref('product.product_uom_kgm')
+        # these are not available (visible) in either product or variant
+        # for views, apparently from the UI you can only set the product
+        # category (or hand-assign the property_* version which seems...)
+        # product_form.valuation = 'real_time'
+        # product_form.cost_method = 'fifo'
+        product_form.property_stock_account_input = self.env.ref('stock_dropshipping.o_expense')
+        product_form.property_stock_account_output = self.env.ref('stock_dropshipping.o_income')
+        product_lifo_icecream = product_form.save()
 
         # I create a draft Purchase Order for first in move for 10 pieces at 60 euro
-        purchase_order_lifo1 = self.env['purchase.order'].create({
-            'partner_id': self.env.ref('base.res_partner_3').id,
-            'order_line': [(0, 0, {
-                'product_id': product_lifo_icecream.id,
-                'product_qty': 10.0,
-                'product_uom': self.env.ref('product.product_uom_kgm').id,
-                'price_unit': 60.0,
-                'name': 'LIFO Ice Cream',
-                'date_planned': time.strftime('%Y-%m-%d'),
-            })]
-        })
+        order_form = Form(self.env['purchase.order'])
+        order_form.partner_id = self.env.ref('base.res_partner_3')
+        with order_form.order_line.new() as line:
+            line.product_id = product_lifo_icecream
+            line.product_qty = 10.0
+            line.price_unit = 60.0
+        purchase_order_lifo1 = order_form.save()
 
         # I create a draft Purchase Order for second shipment for 30 pieces at 80 euro
-        purchase_order_lifo2 = self.env['purchase.order'].create({
-            'partner_id': self.env.ref('base.res_partner_3').id,
-            'order_line': [(0, 0, {
-                'product_id': product_lifo_icecream.id,
-                'product_qty': 30.0,
-                'product_uom': self.env.ref('product.product_uom_kgm').id,
-                'price_unit': 80.0,
-                'name': 'LIFO Ice Cream',
-                'date_planned': time.strftime('%Y-%m-%d'),
-            })]
-        })
+        order2_form = Form(self.env['purchase.order'])
+        order2_form.partner_id = self.env.ref('base.res_partner_3')
+        with order2_form.order_line.new() as line:
+            line.product_id = product_lifo_icecream
+            line.product_qty = 30.0
+            line.price_unit = 80.0
+        purchase_order_lifo2 = order2_form.save()
 
         # I confirm the first purchase order
         purchase_order_lifo1.button_confirm()
@@ -88,28 +87,16 @@ class TestLifoPrice(common.TransactionCase):
         purchase_order_lifo2.picking_ids[0].button_validate()
 
         # Let us send some goods
-        outgoing_lifo_shipment = self.env['stock.picking'].new({
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
-        })
-        outgoing_lifo_shipment.onchange_picking_type()
-        vals = outgoing_lifo_shipment._convert_to_write(outgoing_lifo_shipment._cache)
-        outgoing_lifo_shipment = self.env['stock.picking'].create(vals)
-
-        # Picking needs movement from stock, outgoing_shipment_lifo_icecream
-        self.env['stock.move'].create({
-            'name': product_lifo_icecream.name,
-            'product_id': product_lifo_icecream.id,
-            'picking_id': outgoing_lifo_shipment.id,
-            'product_uom': self.env.ref('product.product_uom_kgm').id,
-            'location_id': self.env.ref('stock.stock_location_stock').id,
-            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'product_uom_qty': 20.0,
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
-        })
+        out_form = Form(self.env['stock.picking'])
+        out_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        out_form.scheduled_date = date.today().strftime('%Y-%m-%d')
+        with out_form.move_lines.new() as move:
+            move.product_id = product_lifo_icecream
+            move.quantity_done = 20.0
+        outgoing_lifo_shipment = out_form.save()
 
         # I assign this outgoing shipment
         outgoing_lifo_shipment.action_assign()
-        outgoing_lifo_shipment.move_lines.quantity_done = outgoing_lifo_shipment.move_lines.product_qty
 
         # Process the delivery of the outgoing shipment
         outgoing_lifo_shipment.button_validate()

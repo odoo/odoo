@@ -19,14 +19,15 @@ import threading
 import time
 import unittest
 from contextlib import contextmanager
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from pprint import pformat
 
 import requests
 from lxml import etree, html
 
 from odoo.models import BaseModel
-from odoo.tools import pycompat, safe_eval
+from odoo.tools import pycompat
+from odoo.tools.safe_eval import safe_eval
 
 try:
     from itertools import zip_longest as izip_longest
@@ -579,6 +580,13 @@ class Form(object):
         else:
             self._init_from_defaults(self._model)
 
+    def __str__(self):
+        return "<%s %s(%s)>" % (
+            type(self).__name__,
+            self._model._name,
+            self._values.get('id', False),
+        )
+
     def _process_fvg(self, model, fvg):
         """ Post-processes to augment the fields_view_get with:
 
@@ -687,7 +695,23 @@ class Form(object):
         if not c:
             return {}
 
-        return safe_eval(c, self._values)
+        # see _getEvalContext
+        # the context for a field's evals (of domain/context) is the composition of:
+        # * the parent's values
+        # * ??? element.context ???
+        # * the environment's context (?)
+        # * a few magic values
+        record_id = self._values.get('id') or False
+        ctx = dict(self._values)
+        ctx.update(self._env.context)
+        ctx.update(
+            id=record_id,
+            active_id=record_id,
+            active_ids=[record_id] if record_id else [],
+            active_model=self._model._name,
+            current_date=date.today().strftime("%Y-%m-%d"),
+        )
+        return safe_eval(c, ctx, {'context': ctx})
 
     def __setattr__(self, field, value):
         descr = self._view['fields'].get(field)
@@ -712,8 +736,9 @@ class Form(object):
     # q: how to get recordset?
     def __enter__(self):
         return self
-    def __exit__(self, *_):
-        self.save()
+    def __exit__(self, etype, _evalue, _etb):
+        if not etype:
+            self.save()
 
     def save(self):
         id_ = self._values.get('id')
@@ -852,8 +877,10 @@ class O2MForm(Form):
 
     def _onchange_values(self):
         values = super(O2MForm, self)._onchange_values()
-        values[self._proxy._descr['relation_field']] = \
-            self._proxy._parent._values
+        # computed o2m may not have a relation_field(?)
+        descr = self._proxy._descr
+        if 'relation_field' in descr:
+            values[descr['relation_field']] = self._proxy._parent._values
         return values
 
     def save(self):
