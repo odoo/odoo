@@ -1133,8 +1133,11 @@ consteq = getattr(passlib.utils, 'consteq', _consteq)
 class Unpickler(pickle_.Unpickler, object):
     find_global = None # Python 2
     find_class = None # Python 3
-def _pickle_load(stream, errors=False):
-    unpickler = Unpickler(stream)
+def _pickle_load(stream, encoding='ASCII', errors=False):
+    if sys.version_info[0] == 3:
+        unpickler = Unpickler(stream, encoding=encoding)
+    else:
+        unpickler = Unpickler(stream)
     try:
         return unpickler.load()
     except Exception:
@@ -1143,6 +1146,6 @@ def _pickle_load(stream, errors=False):
         return errors
 pickle = types.ModuleType(__name__ + '.pickle')
 pickle.load = _pickle_load
-pickle.loads = lambda text: _pickle_load(io.BytesIO(text))
+pickle.loads = lambda text, encoding='ASCII': _pickle_load(io.BytesIO(text), encoding=encoding)
 pickle.dump = pickle_.dump
 pickle.dumps = pickle_.dumps
