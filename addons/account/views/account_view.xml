@@ -1434,6 +1434,13 @@
                     <sheet>
                         <field name="id" invisible="1"/>
                         <div class="oe_button_box">
+                            <button name="action_view_reverse_entry"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-refresh"
+                                attrs="{'invisible': [('reverse_entry_id', '=', False)]}"
+                                string="Reversed entry">
+                            </button>
                             <button name="open_reconcile_view"
                                 class="oe_stat_button"
                                 icon="fa-bars"
@@ -1477,6 +1484,13 @@
                                 </tree>
                             </field>
                             <field name="narration" colspan="4" placeholder="Add an internal note..." nolabel="1" height="50"/>
+                        </page>
+                        <page string="Other Info">
+                            <group>
+                                <field name="auto_reverse" attrs="{'readonly':[('reverse_entry_id', '!=', False)]}"/>
+                                <field name="reverse_date" attrs="{'invisible':[('auto_reverse', '=', False)], 'required':[('auto_reverse', '=', True)],'readonly':[('reverse_entry_id', '!=', False)]}"/>
+                                <field name="reverse_entry_id" attrs="{'invisible':True}"/>    
+                            </group>
                         </page>
                     </notebook>
                     </sheet>
