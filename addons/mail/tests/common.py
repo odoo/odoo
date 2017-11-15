@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from contextlib import contextmanager
+
 from odoo import api
 from odoo.tests import common
 
@@ -44,6 +46,20 @@ class BaseFunctionalTest(common.SavepointCase):
             'mail_create_nolog': True,
             'mail_create_nosubscribe': True
         }).create({'name': 'Listener'})
+
+    @contextmanager
+    def sudoAs(self, login):
+        old_uid = self.uid
+        try:
+            user = self.env['res.users'].sudo().search([('login', '=', login)])
+            # switch user
+            self.uid = user.id
+            self.env = self.env(user=self.uid)
+            yield
+        finally:
+            # back
+            self.uid = old_uid
+            self.env = self.env(user=self.uid)
 
 
 class TestMail(BaseFunctionalTest):
