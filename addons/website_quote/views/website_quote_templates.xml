@@ -368,13 +368,13 @@
                       <t t-call="website_quote.so_quotation_content"/>
 
                       <div class="text-center hidden-print mt16 mb16" id="quotation_toolbar" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
-                          <a class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and not quotation.require_payment">
+                          <a class="btn btn-success col-lg-3 col-md-3 col-sm-3 col-xs-12 ml4 mb4" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and not quotation.require_payment">
                               <i class="fa fa-check"></i> Accept
                           </a>
-                          <a class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and quotation.require_payment">
+                          <a class="btn btn-success col-lg-3 col-md-3 col-sm-3 col-xs-12 ml4 mb4" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and quotation.require_payment">
                               <i class="fa fa-check"></i> Accept &amp; Pay
                           </a>
-                          <a class="btn btn-danger" data-toggle="modal" data-target="#modaldecline">
+                          <a class="btn btn-danger col-lg-3 col-md-3 col-sm-3 col-xs-12 ml4 mb4" data-toggle="modal" data-target="#modaldecline">
                               <i class="fa fa-times"></i> Reject
                           </a>
                       </div>
@@ -405,7 +405,7 @@
           </a>
       </xpath>
       <xpath expr="//div[@id='quotation_toolbar']/a[@data-target='#modaldecline']" position="before">
-          <a class="btn btn-info" type="submit" href="#discussion">
+          <a class="btn btn-info col-lg-3 col-md-3 col-sm-3 col-xs-12 mb4 ml4" type="submit" href="#discussion">
               <i class="fa fa-comment"></i> Feedback
           </a>
       </xpath>
@@ -420,29 +420,37 @@
       <!-- Intro -->
       <div id="introduction" class="page-header mt16">
         <h1>
+          <div class="header-text">
             <t t-if="quotation.state in ('draft','sent','cancel')">Your Quotation</t>
             <t t-if="quotation.state not in ('draft','sent','cancel')">Your Order</t>
             <em t-esc="quotation.name"/>
-            <small t-field="quotation.state"/>
-            <div t-ignore="true" class="pull-right css_editable_mode_hidden hidden-print">
-               <ul class="list-inline">
+          </div>
+          <div class="row">
+            <div class="col-sm-6 col-xs-12">
+              <small t-field="quotation.state"/>
+            </div>
+            <div class="col-sm-6 col-xs-12">
+              <div t-ignore="true" class="pull-right css_editable_mode_hidden hidden-print header-button">
+                <ul class="list-inline">
                   <li groups="sales_team.group_sale_salesman">
                     <a t-if="quotation.state not in ('manual')" class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Edit Quote</a>
                     <a t-if="quotation.state in ('manual')" class=" btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Back to Sales Order</a>
                   </li>
                   <li>
-                     <a class="btn btn-info" target="_blank" t-att-href="'/quote/%s/%s' % (quotation.id,quotation.access_token)+'?pdf=True'">Print</a>
+                    <a class="btn btn-info" target="_blank" t-att-href="'/quote/%s/%s' % (quotation.id,quotation.access_token)+'?pdf=True'">Print</a>
                   </li>
                   <li>
                     <t t-call='portal.record_pager'/>
                   </li>
-               </ul>
+                </ul>
+              </div>
             </div>
+          </div>
         </h1>
       </div>
       <!-- Informations -->
       <div class="row mt32">
-          <div class="col-md-6 col-xs-6">
+          <div class="col-md-6 col-sm-6 col-xs-12">
               <div class="row">
                   <label class="col-sm-4 col-xs-4 text-right">Customer:</label>
                   <div class="col-sm-8 col-xs-8">
@@ -468,9 +476,9 @@
                   </div>
               </div>
           </div>
-          <div class="col-md-6 col-xs-6">
+          <div class="col-md-6 col-sm-6 col-xs-10">
               <div class="row">
-                  <label class="col-sm-5 col-xs-5 text-right">Your Contact:</label>
+                  <label class="col-sm-5 col-xs-5 text-right">Contact:</label>
                   <div class="col-sm-7 col-xs-7">
                       <div t-field="quotation.user_id" t-options='{
                           "widget": "contact",

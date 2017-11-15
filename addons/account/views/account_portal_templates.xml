@@ -74,7 +74,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-6 col-xs-6">
                                 <h4>
                                     <t t-call='portal.record_pager'/>
                                     <span t-if="invoice.type == 'out_invoice' and (invoice.state == 'open' or invoice.state == 'paid')">Invoice</span>
@@ -86,8 +86,8 @@
                                     <span t-field="invoice.number"/>
                                 </h4>
                             </div>
-                            <div class="col-md-6 col-sm-6 col-xs-12 hidden-print" id="o_portal_account_actions">
-                                <a target="_blank" t-att-href="'/my/invoices/pdf/%s?%s' % (invoice.id, keep_query())" class="pull-right" title="Download">
+                            <div class="col-md-6 col-sm-6 col-xs-6 hidden-print" id="o_portal_account_actions">
+                                <a target="_blank" t-att-href="'/my/invoices/pdf/%s?%s' % (invoice.id, keep_query())" class="mt4 mr16 pull-right" title="Download">
                                     <i class="fa fa-download fa-2x" aria-hidden="true"/>
                                 </a>
                             </div>
@@ -106,7 +106,18 @@
 
     <template id="portal_invoice_report" name="Invoice Portal Report">
         <div class="row">
-            <div class="col-xs-5" name="customer_address">
+            <div class="col-sm-6 col-xs-12" name="customer_address">
+                <h4>
+                <span t-if="invoice.type == 'out_invoice' and (invoice.state == 'open' or invoice.state == 'paid')">Invoice</span>
+                <span t-if="invoice.type == 'out_invoice' and invoice.state == 'draft'">Draft Invoice</span>
+                <span t-if="invoice.type == 'out_invoice' and invoice.state == 'cancel'">Cancelled Invoice</span>
+                <span t-if="invoice.type == 'out_refund'">Credit Note</span>
+                <span t-if="invoice.type == 'in_refund'">Vendor Credit Note</span>
+                <span t-if="invoice.type == 'in_invoice'">Vendor Bill</span>
+                <span t-field="invoice.number"/>
+                </h4>
+            </div>
+            <div class="col-sm-6 col-xs-12">
                 <strong>Customer Address</strong>
                 <address t-field="invoice.partner_id"
                     t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
@@ -115,83 +126,85 @@
         </div>
 
         <div class="row mt32 mb32">
-            <div class="col-xs-2" t-if="invoice.name">
+            <div class="col-sm-12 col-xs-12" t-if="invoice.name">
                 <strong>Description:</strong>
                 <p t-field="invoice.name"/>
             </div>
-            <div class="col-xs-2" t-if="invoice.date_invoice">
+            <div name="reference" class="col-sm-12 col-xs-12" t-if="invoice.reference">
+                <strong>Reference:</strong>
+                <p t-field="invoice.reference"/>
+            </div>
+            <div class="col-sm-3 col-xs-12" t-if="invoice.date_invoice">
                 <strong>Invoice Date:</strong>
                 <p t-field="invoice.date_invoice"/>
             </div>
-            <div class="col-xs-2" t-if="invoice.date_due and invoice.type == 'out_invoice' and (invoice.state == 'open' or invoice.state == 'paid')">
+            <div class="col-sm-3 col-xs-12" t-if="invoice.date_due and invoice.type == 'out_invoice' and (invoice.state == 'open' or invoice.state == 'paid')">
                 <strong>Due Date:</strong>
                 <p t-field="invoice.date_due"/>
             </div>
-            <div class="col-xs-2" t-if="invoice.origin">
+            <div class="col-sm-3 col-xs-12" t-if="invoice.origin">
                 <strong>Source:</strong>
                 <p t-field="invoice.origin"/>
             </div>
-            <div class="col-xs-2" t-if="invoice.partner_id.ref">
+            <div class="col-sm-3 col-xs-12" t-if="invoice.partner_id.ref">
                 <strong>Customer Code:</strong>
                 <p t-field="invoice.partner_id.ref"/>
-            </div>
-            <div name="reference" class="col-xs-2" t-if="invoice.reference">
-                <strong>Reference:</strong>
-                <p t-field="invoice.reference"/>
             </div>
         </div>
 
         <!-- Is there a discount on at least one line? -->
         <t t-set="display_discount" t-value="any([l.discount for l in invoice.invoice_line_ids])"/>
 
-        <table class="table table-condensed">
-            <thead>
-                <tr>
-                    <th>Description</th>
-                    <th class="hidden">Source Document</th>
-                    <th class="text-right">Quantity</th>
-                    <th class="text-right">Unit Price</th>
-                    <th t-if="display_discount" class="text-right">Disc.(%)</th>
-                    <th class="text-right">Taxes</th>
-                    <th class="text-right">Amount</th>
-                </tr>
-            </thead>
-            <tbody class="o_portal_report_tbody">
-                <tr t-foreach="invoice.invoice_line_ids" t-as="l">
-                    <td><span t-field="l.name"/></td>
-                    <td class="hidden"><span t-field="l.origin"/></td>
-                    <td class="text-right">
-                        <span t-field="l.quantity"/>
-                        <span t-field="l.uom_id"  groups="product.group_uom"/>
-                    </td>
-                    <td class="text-right">
-                        <span t-field="l.price_unit"/>
-                    </td>
-                    <td t-if="display_discount" class="text-right">
-                        <span t-field="l.discount"/>
-                    </td>
-                    <td class="text-right">
-                        <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.invoice_line_tax_ids))"/>
-                    </td>
-                    <td class="text-right" id="subtotal">
-                        <span t-field="l.price_subtotal"
-                            t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
-                    </td>
-                </tr>
-                <tr t-foreach="range(max(5-len(invoice.invoice_line_ids),0))" t-as="l">
-                    <td>&amp;nbsp;</td>
-                    <td class="hidden"></td>
-                    <td></td>
-                    <td></td>
-                    <td t-if="display_discount"></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th class="hidden">Source Document</th>
+                        <th class="text-right">Quantity</th>
+                        <th class="text-right">Unit Price</th>
+                        <th t-if="display_discount" class="text-right">Disc.(%)</th>
+                        <th class="text-right">Taxes</th>
+                        <th class="text-right">Amount</th>
+                    </tr>
+                </thead>
+                <tbody class="o_portal_report_tbody">
+                    <tr t-foreach="invoice.invoice_line_ids" t-as="l">
+                        <td><span t-field="l.name"/></td>
+                        <td class="hidden"><span t-field="l.origin"/></td>
+                        <td class="text-right">
+                            <span t-field="l.quantity"/>
+                            <span t-field="l.uom_id"  groups="product.group_uom"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-field="l.price_unit"/>
+                        </td>
+                        <td t-if="display_discount" class="text-right">
+                            <span t-field="l.discount"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.invoice_line_tax_ids))"/>
+                        </td>
+                        <td class="text-right" id="subtotal">
+                            <span t-field="l.price_subtotal"
+                                t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                        </td>
+                    </tr>
+                    <tr t-foreach="range(max(5-len(invoice.invoice_line_ids),0))" t-as="l">
+                        <td>&amp;nbsp;</td>
+                        <td class="hidden"></td>
+                        <td></td>
+                        <td></td>
+                        <td t-if="display_discount" groups="sale.group_discount_per_so_line"></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
         <div id="total" class="row">
-            <div class="col-xs-4 pull-right">
+            <div class="col-xs-12 pull-right">
                 <table class="table table-condensed">
                     <tr class="border-black">
                         <td><strong>Subtotal</strong></td>
