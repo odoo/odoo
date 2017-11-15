@@ -2040,8 +2040,8 @@ QUnit.module('relational_fields', {
                         "embedded one2many should not have a selector");
         assert.ok(!form.$('.o_field_x2many_list_row_add').length,
             "embedded one2many should not be editable");
-        assert.ok(!form.$('td.o_list_record_delete').length,
-            "embedded one2many records should not have a trash icon");
+        assert.ok(!form.$('td.o_list_record_remove').length,
+            "embedded one2many records should not have a remove icon");
 
         form.$buttons.find('.o_form_button_edit').click();
 
@@ -2049,10 +2049,10 @@ QUnit.module('relational_fields', {
             "embedded one2many should now be editable");
 
         assert.strictEqual(form.$('.o_field_x2many_list_row_add').attr('colspan'), "2",
-            "should have colspan 2 (one for field foo, one for being below trash icon)");
+            "should have colspan 2 (one for field foo, one for being below remove icon)");
 
-        assert.ok(form.$('td.o_list_record_delete').length,
-            "embedded one2many records should have a trash icon");
+        assert.ok(form.$('td.o_list_record_remove').length,
+            "embedded one2many records should have a remove icon");
         form.destroy();
     });
 
@@ -2914,7 +2914,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('one2many list: unlink one record', function (assert) {
-        assert.expect(5);
+        assert.expect(6);
         this.data.partner.records[0].p = [2, 4];
         var form = createView({
             View: FormView,
@@ -2943,13 +2943,16 @@ QUnit.module('relational_fields', {
         });
         form.$buttons.find('.o_form_button_edit').click();
 
-        assert.strictEqual(form.$('td.o_list_record_delete span').length, 2,
-            "should have 2 delete buttons");
+        assert.strictEqual(form.$('td.o_list_record_remove i').length, 2,
+            "should have 2 remove buttons");
 
-        form.$('td.o_list_record_delete span').first().click();
+        assert.ok(form.$('td.o_list_record_remove i').first().hasClass('fa fa-times'),
+            "should have X icons to remove (unlink) records");
 
-        assert.strictEqual(form.$('td.o_list_record_delete span').length, 1,
-            "should have 1 delete button (a record is supposed to have been unlinked)");
+        form.$('td.o_list_record_remove i').first().click();
+
+        assert.strictEqual(form.$('td.o_list_record_remove i').length, 1,
+            "should have 1 remove button (a record is supposed to have been unlinked)");
 
         // save and check that the correct command has been generated
         form.$buttons.find('.o_form_button_save').click();
@@ -2957,7 +2960,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('one2many list: deleting one record', function (assert) {
-        assert.expect(5);
+        assert.expect(6);
         this.data.partner.records[0].p = [2, 4];
         var form = createView({
             View: FormView,
@@ -2986,13 +2989,16 @@ QUnit.module('relational_fields', {
         });
         form.$buttons.find('.o_form_button_edit').click();
 
-        assert.strictEqual(form.$('td.o_list_record_delete span').length, 2,
-            "should have 2 delete buttons");
+        assert.strictEqual(form.$('td.o_list_record_remove i').length, 2,
+            "should have 2 remove buttons");
 
-        form.$('td.o_list_record_delete span').first().click();
+        assert.ok(form.$('td.o_list_record_remove i').first().hasClass('fa fa-trash-o'),
+            "should have trash bin icons to remove (delete) records");
 
-        assert.strictEqual(form.$('td.o_list_record_delete span').length, 1,
-            "should have 1 delete button (a record is supposed to have been deleted)");
+        form.$('td.o_list_record_remove i').first().click();
+
+        assert.strictEqual(form.$('td.o_list_record_remove i').length, 1,
+            "should have 1 remove button (a record is supposed to have been deleted)");
 
         // save and check that the correct command has been generated
         form.$buttons.find('.o_form_button_save').click();
@@ -3164,8 +3170,8 @@ QUnit.module('relational_fields', {
             },
         });
 
-        assert.ok(!form.$('.o_list_record_delete').length,
-            'delete icon should not be visible in readonly');
+        assert.ok(!form.$('.o_list_record_remove').length,
+            'remove icon should not be visible in readonly');
         assert.ok(!form.$('.o_field_x2many_list_row_add').length,
             '"Add an item" should not be visible in readonly');
 
@@ -3175,8 +3181,8 @@ QUnit.module('relational_fields', {
             'should contain 2 records');
         assert.strictEqual(form.$('.o_list_view tbody td:first()').text(), 'second record',
             'display_name of first subrecord should be the one in DB');
-        assert.ok(form.$('.o_list_record_delete').length,
-            'delete icon should be visible in edit');
+        assert.ok(form.$('.o_list_record_remove').length,
+            'remove icon should be visible in edit');
         assert.ok(form.$('.o_field_x2many_list_row_add').length,
             '"Add an item" should not visible in edit');
 
@@ -3192,8 +3198,8 @@ QUnit.module('relational_fields', {
         // create new subrecords
         // TODO when 'Add an item' will be implemented
 
-        // delete subrecords
-        form.$('.o_list_record_delete:nth(1)').click();
+        // remove subrecords
+        form.$('.o_list_record_remove:nth(1)').click();
         assert.strictEqual(form.$('.o_list_view td.o_list_number').length, 1,
             'should contain 1 subrecord');
         assert.strictEqual(form.$('.o_list_view tbody td:first()').text(), 'new name',
@@ -3738,7 +3744,7 @@ QUnit.module('relational_fields', {
         form.$('.o_data_cell:first').click();
         form.$('.o_field_widget[name="product_id"] input').val('').trigger('keyup');
         assert.verifySteps(['read', 'read'], 'no onchange should be done as line is invalid');
-        form.$('.o_list_record_delete').click();
+        form.$('.o_list_record_remove').click();
         assert.verifySteps(['read', 'read', 'onchange'], 'onchange should have been done');
 
         form.destroy();
@@ -5334,8 +5340,8 @@ QUnit.module('relational_fields', {
         });
         assert.strictEqual(form.$('.o_data_row').length, 2,
             'there should be only 2 rows displayed');
-        form.$('.o_list_record_delete').click();
-        form.$('.o_list_record_delete').click();
+        form.$('.o_list_record_remove').click();
+        form.$('.o_list_record_remove').click();
 
         assert.strictEqual(form.$('.o_data_row').length, 1,
             'there should be just one remaining row');
@@ -5450,9 +5456,9 @@ QUnit.module('relational_fields', {
         // disable the many2many onchange
         form.$('input.o_field_integer[name="int_field"]').val('0').trigger('input');
 
-        // delete and start over
-        form.$('.o_list_record_delete:first span').click();
-        form.$('.o_list_record_delete:first span').click();
+        // remove and start over
+        form.$('.o_list_record_remove:first i').click();
+        form.$('.o_list_record_remove:first i').click();
 
         // enable the many2many onchange
         form.$('input.o_field_integer[name="int_field"]').val('10').trigger('input');
@@ -7256,7 +7262,7 @@ QUnit.module('relational_fields', {
             },
         });
 
-        assert.ok(!form.$('.o_list_record_delete').length,
+        assert.ok(!form.$('.o_list_record_remove').length,
             'delete icon should not be visible in readonly');
         assert.ok(!form.$('.o_field_x2many_list_row_add').length,
             '"Add an item" should not be visible in readonly');
@@ -7267,7 +7273,7 @@ QUnit.module('relational_fields', {
             'should contain 2 records');
         assert.strictEqual(form.$('.o_list_view tbody td:first()').text(), 'gold',
             'display_name of first subrecord should be the one in DB');
-        assert.ok(form.$('.o_list_record_delete').length,
+        assert.ok(form.$('.o_list_record_remove').length,
             'delete icon should be visible in edit');
         assert.ok(form.$('.o_field_x2many_list_row_add').length,
             '"Add an item" should be visible in edit');
@@ -7292,8 +7298,8 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('.o_list_view td.o_list_number').length, 3,
             'should contain 3 subrecords');
 
-        // delete subrecords
-        form.$('.o_list_record_delete:nth(1)').click();
+        // remove subrecords
+        form.$('.o_list_record_remove:nth(1)').click();
         assert.strictEqual(form.$('.o_list_view td.o_list_number').length, 2,
             'should contain 2 subrecords');
         assert.strictEqual(form.$('.o_list_view .o_data_row td:first').text(), 'new name',
@@ -7323,7 +7329,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('many2many list (editable): edition', function (assert) {
-        assert.expect(30);
+        assert.expect(31);
 
         this.data.partner.records[0].timmy = [12, 14];
         this.data.partner_type.records.push({id: 15, display_name: "bronze", color: 6});
@@ -7358,7 +7364,7 @@ QUnit.module('relational_fields', {
             res_id: 1,
         });
 
-        assert.ok(!form.$('.o_list_record_delete').length,
+        assert.ok(!form.$('.o_list_record_remove').length,
             'delete icon should not be visible in readonly');
         assert.ok(!form.$('.o_field_x2many_list_row_add').length,
             '"Add an item" should not be visible in readonly');
@@ -7369,8 +7375,10 @@ QUnit.module('relational_fields', {
             'should contain 2 records');
         assert.strictEqual(form.$('.o_list_view tbody td:first()').text(), 'gold',
             'display_name of first subrecord should be the one in DB');
-        assert.ok(form.$('.o_list_record_delete').length,
+        assert.ok(form.$('.o_list_record_remove').length,
             'delete icon should be visible in edit');
+        assert.ok(form.$('td.o_list_record_remove i').first().hasClass('fa fa-times'),
+            "should have X icons to remove (unlink) records");
         assert.ok(form.$('.o_field_x2many_list_row_add').length,
             '"Add an item" should not visible in edit');
 
@@ -7404,8 +7412,8 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('.o_list_view td.o_list_number').length, 3,
             'should contain 3 subrecords');
 
-        // delete subrecords
-        form.$('.o_list_record_delete:nth(1)').click();
+        // remove subrecords
+        form.$('.o_list_record_remove:nth(1)').click();
         assert.strictEqual(form.$('.o_list_view td.o_list_number').length, 2,
             'should contain 2 subrecord');
         assert.strictEqual(form.$('.o_list_view tbody .o_data_row td:first').text(),
@@ -7453,7 +7461,7 @@ QUnit.module('relational_fields', {
         form.$buttons.find('.o_form_button_edit').click();
 
         assert.strictEqual(form.$('.o_field_x2many_list_row_add').length, 1, "should have the 'Add an item' link");
-        assert.strictEqual(form.$('.o_list_record_delete').length, 2, "should have the 'Add an item' link");
+        assert.strictEqual(form.$('.o_list_record_remove').length, 2, "should have the 'Add an item' link");
 
         form.destroy();
 
@@ -7474,7 +7482,7 @@ QUnit.module('relational_fields', {
         form.$buttons.find('.o_form_button_edit').click();
 
         assert.strictEqual(form.$('.o_field_x2many_list_row_add').length, 0, "should not have the 'Add an item' link");
-        assert.strictEqual(form.$('.o_list_record_delete').length, 0, "should not have the 'Add an item' link");
+        assert.strictEqual(form.$('.o_list_record_remove').length, 0, "should not have the 'Add an item' link");
 
         form.destroy();
     });
