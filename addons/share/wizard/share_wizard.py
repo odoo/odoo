@@ -908,7 +908,7 @@ class share_result_line(osv.osv_memory):
         'user_id': fields.many2one('res.users', required=True, readonly=True),
         'login': fields.related('user_id', 'login', string='Login', type='char', size=64, required=True, readonly=True),
         'password': fields.char('Password', size=64, readonly=True),
-        'share_url': fields.function(_share_url, string='Share URL', type='char', size=512),
+        'share_url': fields.function(_share_url, string='Share URL', type='char', store=True, size=512),
         'share_wizard_id': fields.many2one('share.wizard', 'Share Wizard', required=True, ondelete='cascade'),
         'newly_created': fields.boolean('Newly created', readonly=True),
     }
