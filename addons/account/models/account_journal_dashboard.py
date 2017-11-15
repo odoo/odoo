@@ -48,7 +48,8 @@ class account_journal(models.Model):
                                     AND c.date <= %s 
                                     GROUP BY date, id 
                                     ORDER BY date, id) AS b 
-                        WHERE a.id = b.stmt_id;"""
+                        WHERE a.id = b.stmt_id
+                        ORDER BY a.date;"""
 
         self.env.cr.execute(query, (self.id, last_month, today))
         bank_stmt = self.env.cr.dictfetchall()
