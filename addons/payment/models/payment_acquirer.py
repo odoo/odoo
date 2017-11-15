@@ -155,6 +155,7 @@ class PaymentAcquirer(models.Model):
         ('form', 'The customer is redirected to the website of the acquirer.')],
         default='form', required=True, string='Payment flow',
         help="""Note: Subscriptions does not take this field in account, it uses server to server by default.""")
+    s2s_supported = fields.Boolean(compute="_compute_feature_support")
 
     def _search_is_tokenized(self, operator, value):
         tokenized = self._get_feature_support()['tokenize']
@@ -169,6 +170,7 @@ class PaymentAcquirer(models.Model):
             acquirer.fees_implemented = acquirer.provider in feature_support['fees']
             acquirer.authorize_implemented = acquirer.provider in feature_support['authorize']
             acquirer.token_implemented = acquirer.provider in feature_support['tokenize']
+            acquirer.s2s_supported = hasattr(acquirer, '%s_s2s_form_process' % acquirer.provider)
 
     @api.multi
     def _check_required_if_provider(self):

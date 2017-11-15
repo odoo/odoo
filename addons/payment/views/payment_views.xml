@@ -113,7 +113,8 @@
                                     </div>
                                     <field name="registration_view_template_id" groups="base.group_no_one"/>
                                     <field name="payment_icon_ids" widget="many2many_tags"/>
-                                    <field name="payment_flow" widget="radio"/>
+                                    <field name="s2s_supported" invisible="1"/>
+                                    <field name="payment_flow" widget="radio" attrs="{'invisible': [('s2s_supported', '=', False)]}"/>
                                 </group>
                             </page>
                         </notebook>
