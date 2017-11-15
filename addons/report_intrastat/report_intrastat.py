@@ -82,8 +82,8 @@ class report_intrastat(osv.osv):
                     min(inv_line.id) as id,
                     intrastat.id as intrastat_id,
                     upper(inv_country.code) as code,
-                    sum(case when inv_line.price_unit is not null
-                            then inv_line.price_unit * inv_line.quantity
+                    sum(case when inv_line.price_subtotal is not null
+                            then inv_line.price_subtotal
                             else 0
                         end) as value,
                     sum(
