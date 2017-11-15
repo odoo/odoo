@@ -48,7 +48,7 @@ class TestPerformance(TransactionCase):
 
     def setUp(self):
         super(TestPerformance, self).setUp()
-        self._debug = True
+        self._debug = False
 
     def assertQueryCount(self, actual, expected, message):
         self.assertLessEqual(actual, expected, message)
@@ -71,13 +71,19 @@ class TestPerformance(TransactionCase):
         return value + 1 if self._round else value
 
     @contextmanager
-    def logQueries(self):
-        """ Log the queries that are made in this scope. """
-        sql_log, level = self.cr.sql_log, sql_logger.getEffectiveLevel()
-        try:
-            sql_logger.setLevel(logging.DEBUG)
-            self.cr.sql_log = True
-            yield
-        finally:
-            self.cr.sql_log = sql_log
-            sql_logger.setLevel(level)
+    def queryCheck(self, expected, message):
+        pass
+        # # warm up the caches
+        # self._round = False
+        # func(self)
+        # self.env.cache.invalidate()
+        # # test for real, and check query count
+        # self._round = True
+        # self.resetQueryCount()
+        # if self.debugMode():
+        #     with sql_db._enable_full_sql_log:
+        #         func(self)
+        # else:
+        #     func(self)
+        # self.assertQueryCount(self.cr.sql_log_count - self._count,
+        #                       counters[user.login], user.login)
