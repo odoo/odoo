@@ -300,7 +300,7 @@ class TestFields(common.TransactionCase):
 
     def test_16_rw_stored(self):
         """ test readwrite stored computed fields """
-        record = self.env['test_new_api.message'].create({
+        record = self.env['test_new_api.compute_read_write'].create({
             'body': 'Whatever'
         })
         introductory = "%s says on %s: \"" % (record.display_name, record.write_date)

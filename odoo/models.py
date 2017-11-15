@@ -2012,14 +2012,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         self.invalidate_cache(['parent_left', 'parent_right'])
         return True
 
-    @api.model
-    def _check_selection_field_value(self, field, value):
-        """ Check whether value is among the valid values for the given
-            selection/reference field, and raise an exception if not.
-        """
-        field = self._fields[field]
-        field.convert_to_cache(value, self)
-
     @api.model_cr
     def _check_removed_columns(self, log=False):
         # iterate on the database columns to drop the NOT NULL constraints of
@@ -2888,9 +2880,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         return True
 
-    #
-    # TODO: Validate
-    #
     @api.multi
     def write(self, vals):
         """ write(vals)
@@ -2975,48 +2964,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         self._check_concurrency()
         self.check_access_rights('write')
-
-        # No user-driven update of these columns
-        pop_fields = ['parent_left', 'parent_right']
-        if self._log_access:
-            pop_fields.extend(MAGIC_COLUMNS)
-        for field in pop_fields:
-            vals.pop(field, None)
-
-        # split up fields into old-style and pure new-style ones
-        old_vals, new_vals, unknown = {}, {}, []
-        for key, val in vals.items():
-            field = self._fields.get(key)
-            if field:
-                if field.store or field.inherited:
-                    old_vals[key] = val
-                if field.inverse and not field.inherited:
-                    new_vals[key] = val
-            else:
-                unknown.append(key)
-
-        if unknown:
-            _logger.warning("%s.write() with unknown fields: %s", self._name, ', '.join(sorted(unknown)))
+        self.prepare_update()
 
         protected_fields = [self._fields[n] for n in new_vals]
         with self.env.protecting(protected_fields, self):
             # write old-style fields with (low-level) method _write
             if old_vals:
                 self._write(old_vals)
-
-            if new_vals:
-                # put the values of pure new-style fields into cache, and inverse them
-                self.modified(set(new_vals) - set(old_vals))
-                for record in self:
-                    record._cache.update(record._convert_to_cache(new_vals, update=True))
-                for key in new_vals:
-                    self._fields[key].determine_inverse(self)
-                self.modified(set(new_vals) - set(old_vals))
-                # check Python constraints for inversed fields
-                self._validate_fields(set(new_vals) - set(old_vals))
-                # recompute new-style fields
-                if self.env.recompute and self._context.get('recompute', True):
-                    self.recompute()
+                self.post_update(records)
 
         return True
 
@@ -3064,8 +3019,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if field and field.deprecated:
                 _logger.warning('Field %s.%s is deprecated: %s', self._name, name, field.deprecated)
             if field.store:
-                if hasattr(field, 'selection') and val:
-                    self._check_selection_field_value(name, val)
                 if field.column_type:
                     if single_lang or not (has_trans and field.translate is True):
                         # val is not a translation: update the table
@@ -3154,14 +3107,41 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if unknown_fields:
             _logger.warning('No such field(s) in model %s: %s.', self._name, ', '.join(unknown_fields))
 
-        # check Python constraints
-        self._validate_fields(vals)
+        return True
+
+    def prepare_update(self, vals):
+        # add missing defaults, and drop fields that may not be set by user
+        vals = self._add_missing_default_values(vals)
+        pop_fields = ['parent_left', 'parent_right']
+        if self._log_access:
+            pop_fields.extend(MAGIC_COLUMNS)
+        for field in pop_fields:
+            vals.pop(field, None)
+
+        # split up fields into old-style and pure new-style ones
+        old_vals, new_vals, unknown = {}, {}, []
+        for key, val in vals.items():
+            field = self._fields.get(key)
+            if field:
+                if field.store or field.inherited:
+                    old_vals[key] = val
+                if field.inverse and not field.inherited:
+                    new_vals[key] = val
+            else:
+                unknown.append(key)
+
+        if unknown:
+            _logger.warning("%s.create() includes unknown fields: %s", self._name, ', '.join(sorted(unknown)))
+
+
+    def post_update(self, records):
+        # from now on, self is the new record
 
         # TODO: use _order to set dest at the right position and not first node of parent
         # We can't defer parent_store computation because the stored function
         # fields that are computer may refer (directly or indirectly) to
         # parent_left/right (via a child_of domain)
-        if parents_changed:
+        if parents_changed or self._parent_store and not self._context.get('defer_parent_store_computation'):
             if self.pool._init:
                 self.pool._init_parent[self._name] = True
             else:
@@ -3215,11 +3195,22 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
                 self.invalidate_cache(['parent_left', 'parent_right'])
 
-        # recompute new-style fields
-        if self.env.recompute and self._context.get('recompute', True):
-            self.recompute()
+        protected_fields = [self._fields[n] for n in new_vals]
+        with self.env.protecting(protected_fields, record):
+            # put the values of pure new-style fields into cache, and inverse them
+            record.modified(set(new_vals) - set(old_vals))
+            record._cache.update(record._convert_to_cache(new_vals))
+            for key in new_vals:
+                self._fields[key].determine_inverse(record)
+            record.modified(set(new_vals) - set(old_vals))
+            # check Python constraints for inversed fields
+            record._validate_fields(set(new_vals) - set(old_vals))
+            # recompute new-style fields
+            if self.env.recompute and self._context.get('recompute', True):
+                self.recompute()
 
-        return True
+        # check Python constraints
+        self._validate_fields(vals)
 
     #
     # TODO: Should set perm to user.xxx
@@ -3247,46 +3238,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         :raise UserError: if a loop would be created in a hierarchy of objects a result of the operation (such as setting an object as its own parent)
         """
         self.check_access_rights('create')
-
-        # add missing defaults, and drop fields that may not be set by user
-        vals = self._add_missing_default_values(vals)
-        pop_fields = ['parent_left', 'parent_right']
-        if self._log_access:
-            pop_fields.extend(MAGIC_COLUMNS)
-        for field in pop_fields:
-            vals.pop(field, None)
-
-        # split up fields into old-style and pure new-style ones
-        old_vals, new_vals, unknown = {}, {}, []
-        for key, val in vals.items():
-            field = self._fields.get(key)
-            if field:
-                if field.store or field.inherited:
-                    old_vals[key] = val
-                if field.inverse and not field.inherited:
-                    new_vals[key] = val
-            else:
-                unknown.append(key)
-
-        if unknown:
-            _logger.warning("%s.create() includes unknown fields: %s", self._name, ', '.join(sorted(unknown)))
+        self.prepare_update(vals)
 
         # create record with old-style fields
         record = self.browse(self._create(old_vals))
-
-        protected_fields = [self._fields[n] for n in new_vals]
-        with self.env.protecting(protected_fields, record):
-            # put the values of pure new-style fields into cache, and inverse them
-            record.modified(set(new_vals) - set(old_vals))
-            record._cache.update(record._convert_to_cache(new_vals))
-            for key in new_vals:
-                self._fields[key].determine_inverse(record)
-            record.modified(set(new_vals) - set(old_vals))
-            # check Python constraints for inversed fields
-            record._validate_fields(set(new_vals) - set(old_vals))
-            # recompute new-style fields
-            if self.env.recompute and self._context.get('recompute', True):
-                self.recompute()
+        self.post_update(record)
 
         return record
 
@@ -3349,9 +3305,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             else:
                 upd_todo.append(name)
 
-            if hasattr(field, 'selection') and val:
-                self._check_selection_field_value(name, val)
-
         if self._log_access:
             updates.append(('create_uid', '%s', self._uid))
             updates.append(('write_uid', '%s', self._uid))
@@ -3366,44 +3319,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 ', '.join(u[1] for u in updates),
             )
         cr.execute(query, tuple(u[2] for u in updates if len(u) > 2))
-
-        # from now on, self is the new record
-        id_new, = cr.fetchone()
-        self = self.browse(id_new)
-
-        if self._parent_store and not self._context.get('defer_parent_store_computation'):
-            if self.pool._init:
-                self.pool._init_parent[self._name] = True
-            else:
-                parent_val = vals.get(self._parent_name)
-                if parent_val:
-                    # determine parent_left: it comes right after the
-                    # parent_right of its closest left sibling
-                    pleft = None
-                    cr.execute("SELECT parent_right FROM %s WHERE %s=%%s ORDER BY %s" % \
-                                    (self._table, self._parent_name, self._parent_order),
-                               (parent_val,))
-                    for (pright,) in cr.fetchall():
-                        if not pright:
-                            break
-                        pleft = pright + 1
-                    if not pleft:
-                        # this is the leftmost child of its parent
-                        cr.execute("SELECT parent_left FROM %s WHERE id=%%s" % self._table, (parent_val,))
-                        pleft = cr.fetchone()[0] + 1
-                else:
-                    # determine parent_left: it comes after all top-level parent_right
-                    cr.execute("SELECT MAX(parent_right) FROM %s" % self._table)
-                    pleft = (cr.fetchone()[0] or 0) + 1
-
-                # make some room for the new node, and insert it in the MPTT
-                cr.execute("UPDATE %s SET parent_left=parent_left+2 WHERE parent_left>=%%s" % self._table,
-                           (pleft,))
-                cr.execute("UPDATE %s SET parent_right=parent_right+2 WHERE parent_right>=%%s" % self._table,
-                           (pleft,))
-                cr.execute("UPDATE %s SET parent_left=%%s, parent_right=%%s WHERE id=%%s" % self._table,
-                           (pleft, pleft + 1, id_new))
-                self.invalidate_cache(['parent_left', 'parent_right'])
 
         with self.env.protecting(protected_fields, self):
             # invalidate and mark new-style fields to recompute; do this before
@@ -3423,9 +3338,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
             # for recomputing new-style fields
             self.modified(upd_todo)
-
-            # check Python constraints
-            self._validate_fields(vals)
 
             if self.env.recompute and self._context.get('recompute', True):
                 # recompute new-style fields
