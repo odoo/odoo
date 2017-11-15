@@ -251,7 +251,7 @@
                         <group>
                             <field name="origin" attrs="{'invisible': [('origin', '=', False)]}"/>
                             <field name="date_invoice" string="Bill Date"/>
-                            <field name="date_due" attrs="{'readonly': [('payment_term_id','!=',False)]}"/>
+                            <field name="date_due" attrs="{'readonly': ['|',('payment_term_id','!=',False), ('state','=','paid')]}"/>
                             <field name="move_name" invisible="1"/>
                             <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
                             <field name="company_currency_id" invisible="1"/>
@@ -395,7 +395,7 @@
                         </group>
                         <group>
                             <field name="date_invoice"/>
-                            <field name="date_due" attrs="{'readonly': [('payment_term_id','!=',False)]}" force_save="1"/>
+                            <field name="date_due" attrs="{'readonly': ['|',('payment_term_id','!=',False), ('state','=','paid')]}" force_save="1"/>
                             <field name="move_name" invisible="1"/>
                             <field name="user_id" groups="base.group_user"/>
                             <label for="currency_id" groups="base.group_multi_currency"/>
