@@ -1,22 +1,28 @@
 .o_mail_theme_selector {
-    > a {
-        .o-position-absolute(0, 0, auto, 0);
+
+    .o_mail_theme_selector_btn, .o_mail_theme_save_btn {
+        .o-flex-display();
+        .o-align-items(center);
+        .o-justify-content(center);
         height: 34px;
-        line-height: 31px;
-        border-radius: 0;
-        background-color: @o-we-color-darker;
         color: @o-we-color-text-normal;
 
-        &:hover, &:focus, &:active {
+        &:hover {
             color: @o-we-color-text-light;
-        }
-
-        i {
-            margin-right: 10px;
         }
     }
 
-    &.open > a {
+    .o_mail_save_template_button {
+        width: 40%;
+        .o-position-absolute(@top: 0, @left: 0);
+    }
+
+    > a.dropdown-toggle {
+        width: 60%;
+        .o-position-absolute(@top: 0, @left: 40%);
+    }
+
+    &.open > a.dropdown-toggle {
         color: white;
         background-color: @o-we-color-dark;
     }
@@ -27,6 +33,7 @@
         border-radius: 0;
         overflow: auto;
         background-color: @o-we-color-dark;
+        color: white;
 
         > li {
             margin: 0;
@@ -68,20 +75,20 @@ body.o_force_mail_theme_choice {
         width: 100%;
 
         .o_mail_theme_selector {
-            .dropdown-toggle {
+            .o_mail_theme_selector_btn, .o_mail_theme_save_btn {
                 display: none;
             }
 
             .dropdown-menu {
                 display: block;
 
-                > li {
+                li {
                     margin: 0;
                     float: left;
                     width: 100%;
-                    max-width: 25%;
+                    max-width: 20%;
 
-                    > a {
+                    a {
                         .o-transition(all, 0.3s, ease);
 
                         .o_thumb {
@@ -109,7 +116,7 @@ body.o_force_mail_theme_choice {
                         }
                     }
 
-                    &:hover > a {
+                    &:hover a {
                         background-color: @o-we-color-dark;
 
                         .o_thumb {
@@ -144,4 +151,70 @@ body.o_force_mail_theme_choice {
             }
         }
     }
+}
+
+.o_mass_mailing_snippet_menu {
+    .o_mail_search_theme_input {
+        color: white;
+        background: @o-we-color-dark;
+        border: 1px solid darken(@o-we-color-dark, 5%);
+        box-shadow: 0px 0px 7px rgba(29, 29, 35, 0.89) inset;
+    }
+
+    .o_mail_switch_theme_btn {
+        color:  @o-we-color-text-normal;
+        border: 1px solid darken(@o-we-color-dark, 5%);
+        &:hover {
+            color: @o-we-color-text-light;
+        }
+        &.active {
+            color: white;
+            box-shadow: 0px 0px 7px rgba(29, 29, 35, 0.89) inset;
+        }
+    }
+}
+
+.o_mail_user_saved_templates {
+    margin: 10px;
+    position: relative;
+
+    .o_mail_template_image {
+        background-color: white;
+        background-size: cover;
+    }
+
+    .o_mail_custom_template_name {
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+        background: @o-we-color-dark;
+    }
+
+    .o_mail_delete_template_btn {
+        position: absolute;
+        right: 0px;
+        display: none;
+        z-index: 1101;
+    }
+
+    &:hover {
+       .o_mail_delete_template_btn {
+            display: block;
+        }
+    }
+
+    .o_mail_update_template_success {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        top: 50%;
+        left: 50%;
+    }
+}
+
+.o_mail_selected_image_area img {
+    height: 128px;
+    max-width: 100%;
+    border: 1px solid @o-we-color-light;
+    border-top: 1px solid @o-we-color-text-normal;
+    box-shadow: 0 5px 10px fade(black, 80%);
 }
