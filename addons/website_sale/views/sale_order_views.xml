@@ -167,7 +167,7 @@
             <xpath expr="//button[@name='action_quotation_send']" position="after">
                 <button name="action_mark_as_paid" type="object"
                     string="Mark as Paid" class="btn-primary"
-                    attrs="{'invisible': ['|', ('can_directly_mark_as_paid', '=', False), ('state', 'not in', ['sent', 'sale'])]}"/>
+                    attrs="{'invisible': ['|', ('can_directly_mark_as_paid', '=', False), ('state', '!=', 'sent')]}"/>
             </xpath>
             <field name="partner_id" position="after">
                 <field name="can_directly_mark_as_paid" invisible="1"/>
