@@ -22,25 +22,30 @@
                 </tr>
             </table>
         </td>
-        <td width="2%">
-            <img t-if="rec.att_list.length"
-                id="side-add" t-att-src='_s + "/web/static/src/img/icons/gtk-add.png"' style="cursor: pointer;"/>
-        </td>
-        <td width="2%">
-            <img  id="side-remove" t-att-src='_s + "/web/static/src/img/icons/gtk-remove.png"' style="cursor: pointer;"/>
-        </td>
-        <td width="2%">
-            <img t-if="rec.att_list.length and !_.include(no_properties, rec.att_list[0])"
-                id="side-edit" t-att-src='_s + "/web/static/src/img/icons/gtk-edit.png"' style="cursor: pointer;"/>
-        </td>
-        <td width="2%">
-            <img t-if="rec.att_list.length"
-                id="side-up" t-att-src='_s + "/web/static/src/img/icons/gtk-go-up.png"' style="cursor: pointer;"/>
-        </td>
-        <td width="2%">
-            <img t-if="rec.att_list.length"
-                id="side-down" t-att-src='_s + "/web/static/src/img/icons/gtk-go-down.png"' style="cursor: pointer;"/>
-        </td>
+        <t t-if="rec.level == 0">
+            <td width="10%" colspan="5"></td>
+        </t>
+        <t t-if="rec.level != 0">
+            <td width="2%">
+                <img t-if="rec.att_list.length"
+                    id="side-add" t-att-src='_s + "/web/static/src/img/icons/gtk-add.png"' style="cursor: pointer;"/>
+            </td>
+            <td width="2%">
+                <img  id="side-remove" t-att-src='_s + "/web/static/src/img/icons/gtk-remove.png"' style="cursor: pointer;"/>
+            </td>
+            <td width="2%">
+                <img t-if="rec.att_list.length and !_.include(no_properties, rec.att_list[0])"
+                    id="side-edit" t-att-src='_s + "/web/static/src/img/icons/gtk-edit.png"' style="cursor: pointer;"/>
+            </td>
+            <td width="2%">
+                <img t-if="rec.att_list.length"
+                    id="side-up" t-att-src='_s + "/web/static/src/img/icons/gtk-go-up.png"' style="cursor: pointer;"/>
+            </td>
+            <td width="2%">
+                <img t-if="rec.att_list.length"
+                    id="side-down" t-att-src='_s + "/web/static/src/img/icons/gtk-go-down.png"' style="cursor: pointer;"/>
+            </td>
+        </t>
         <t t-if="rec.child_id.length">
             <t t-set="data" t-value="rec.child_id"/>
             <t t-call="view_editor.row"/>
