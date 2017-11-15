@@ -1645,10 +1645,10 @@ class product_product(osv.Model):
     _inherit = 'product.product'
     
     def _purchase_count(self, cr, uid, ids, field_name, arg, context=None):
-        Purchase = self.pool['purchase.order']
-        return {
-            product_id: Purchase.search_count(cr,uid, [('order_line.product_id', '=', product_id)], context=context) 
-            for product_id in ids
+        return { 
+            res['product_id'][0]: res['product_id_count']
+            for res in self.pool['purchase.order.line'].read_group(cr, uid, 
+                [('product_id', 'in', ids)], fields=['product_id', 'count(order_id)'], groupby=['product_id'])
         }
 
     def action_view_purchases(self, cr, uid, ids, context=None):
