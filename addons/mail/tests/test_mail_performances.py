@@ -28,15 +28,15 @@ class TestMailPerformances(TestPerformance):
         self.test_record_activity_id = self.test_record_activity.id
 
     @queryCount(admin=20, emp=26)
-    def test_simple(self):
+    def test_create_simple(self):
         self.env['mail.test.simple'].create({'name': 'Zboobs'})
 
     @queryCount(admin=23, emp=29)
-    def test_activity(self):
+    def test_create_activity_mixin(self):
         self.env['mail.test.activity'].create({'name': 'Zboobs'})
 
     @queryCount(admin=37, emp=42)
-    def test_activity_full(self):
+    def test_log_activity(self):
         self.env['mail.activity'].with_context({
             'default_res_model': 'mail.test.activity',
         }).create({
