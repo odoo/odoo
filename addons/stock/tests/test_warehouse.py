@@ -6,20 +6,8 @@ from odoo.addons.stock.tests.common2 import TestStockCommon
 class TestWarehouse(TestStockCommon):
 
     def test_inventory_product(self):
-        self.product_1.type = 'product'
-        inventory_wizard = self.env['stock.change.product.qty'].create({
-            'product_id': self.product_1.id,
-            'new_quantity': 50.0,
-            'location_id': self.warehouse_1.lot_stock_id.id,
-        })
-        inventory_wizard.change_product_qty()
-        inventory = self.env['stock.inventory'].sudo(self.user_stock_manager).create({
-            'name': 'Starting for product_1',
-            'filter': 'product',
-            'location_id': self.warehouse_1.lot_stock_id.id,
-            'product_id': self.product_1.id,
-        })
-        inventory.action_start()
+        inventory = self._create_inventory(location_id=self.warehouse_1.lot_stock_id.id, product_id=self.product_1.id)
+
         # As done in common.py, there is already an inventory line existing
         self.assertEqual(len(inventory.line_ids), 1)
         self.assertEqual(inventory.line_ids.theoretical_qty, 50.0)
@@ -48,13 +36,6 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(self.env['stock.quant']._gather(self.product_1, self.env.ref('stock.stock_location_stock')).quantity, 0.0)
 
     def test_inventory_wizard(self):
-        self.product_1.type = 'product'
-        inventory_wizard = self.env['stock.change.product.qty'].create({
-            'product_id': self.product_1.id,
-            'new_quantity': 50.0,
-            'location_id': self.warehouse_1.lot_stock_id.id,
-        })
-        inventory_wizard.change_product_qty()
         # Check inventory performed in setup was effectivley performed
         self.assertEqual(self.product_1.virtual_available, 50.0)
         self.assertEqual(self.product_1.qty_available, 50.0)

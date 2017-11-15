@@ -163,7 +163,7 @@
             <field name="arch" type="xml">
                 <sheet position="before">
                     <header>
-                        <button name="%(action_view_change_product_quantity)d" string="Update Qty On Hand" type="action" attrs="{'invisible': [('type', '!=', 'product')]}"/>
+                        <button name="action_create_inventory_adjustment" string="Update Qty On Hand" type="object" attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
                 </sheet>
             </field>
@@ -178,8 +178,8 @@
                 <data>
                     <header position="inside">
                         <button string="Update Qty On Hand"
-                            type="action"
-                            name="%(action_view_change_product_quantity)d"
+                            type="object"
+                            name="action_create_inventory_adjustment"
                             attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
                     <button name="toggle_active" position="before">
@@ -248,7 +248,7 @@
             <field name="arch" type="xml">
                 <data>
                     <header position="inside" >
-                        <button name="%(action_view_change_product_quantity)d" string="Update Qty On Hand" type="action" attrs="{'invisible': [('type', '!=', 'product')]}"/>
+                        <button name="action_create_inventory_adjustment" string="Update Qty On Hand" type="object" attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
                     <button name="toggle_active" position="before">
                         <button type="object"
