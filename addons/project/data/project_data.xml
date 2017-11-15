@@ -283,22 +283,4 @@
         </record>
 
     </data>
-    <template id="mail_template_task_merge">
-        <t t-if="target">
-            <t t-if="len(tasks) == 1"><p>The following task has been merged into this one:</p></t>
-            <t t-if="len(tasks) &gt; 1"><p>The following tasks have been merged into this one:</p></t>
-            <ul>
-                <t t-foreach="tasks" t-as="task">
-                    <li><a href="#" t-att-data-oe-model="task._name" t-att-data-oe-id="task.id"><t t-esc="task.name"/></a></li>
-                </t>
-            </ul>
-        </t>
-        <t t-if="not target">
-            <p>This task has been merged into the following task:</p>
-            <ul>
-                <li><a href="#" t-att-data-oe-model="task._name" t-att-data-oe-id="task.id"><t t-esc="task.name"/></a></li>
-            </ul>
-        </t>
-    </template>
-
 </odoo>

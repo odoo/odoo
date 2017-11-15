@@ -33,7 +33,6 @@
         'views/project_portal_templates.xml',
         'views/project_rating_templates.xml',
         'data/project_mail_template_data.xml',
-        'wizard/project_task_merge_wizard_views.xml',
     ],
     'qweb': ['static/src/xml/project.xml'],
     'demo': ['data/project_demo.xml'],
