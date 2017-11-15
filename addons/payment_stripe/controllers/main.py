@@ -35,5 +35,5 @@ class StripeController(http.Controller):
         response = tx._create_stripe_charge(tokenid=post['tokenid'], email=post['email'])
         _logger.info('Stripe: entering form_feedback with post data %s', pprint.pformat(response))
         if response:
-            request.env['payment.transaction'].sudo().form_feedback(response, 'stripe')
+            request.env['payment.transaction'].sudo().with_context(lang=None).form_feedback(response, 'stripe')
         return post.pop('return_url', '/')
