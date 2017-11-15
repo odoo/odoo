@@ -617,6 +617,13 @@ class AccountJournal(models.Model):
                 vals['default_debit_account_id'] = default_account.id
                 vals['default_credit_account_id'] = default_account.id
 
+            default_profit_loss_account = vals.get('profit_account_id') or vals.get('loss_account_id')
+            if not default_profit_loss_account:
+                profit_loss_account = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id),
+                                                                          ('company_id', '=', self.env.user.company_id.id)], limit=1)
+                vals['profit_account_id'] = profit_loss_account.id
+                vals['loss_account_id'] = profit_loss_account.id
+
         # We just need to create the relevant sequences according to the chosen options
         if not vals.get('sequence_id'):
             vals.update({'sequence_id': self.sudo()._create_sequence(vals).id})
