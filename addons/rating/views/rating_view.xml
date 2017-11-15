@@ -42,12 +42,14 @@
                             <group>
                                 <div colspan="2" class="text-center">
                                     <field name="rating_image" widget='image'/>
-                                    <div class="mt4">
+                                    <div class="mt4 text-left">
                                         <strong><field name="rating_text"/></strong>
                                     </div>
                                 </div>
                             </group>
-                            <field name="feedback" nolabel="1" attrs="{'invisible': [('feedback','=',False)]}"/>
+                            <group>
+                                <field name="feedback" attrs="{'invisible': [('feedback','=',False)]}"/>
+                            </group>
                         </group>
                     </sheet>
                 </form>
