@@ -2891,9 +2891,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         return True
 
-    #
-    # TODO: Validate
-    #
     @api.multi
     def write(self, vals):
         """ write(vals)
@@ -2979,45 +2976,66 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         self._check_concurrency()
         self.check_access_rights('write')
 
-        # No user-driven update of these columns
-        pop_fields = ['parent_left', 'parent_right']
+        bad_names = {'id', 'parent_left', 'parent_right'}
         if self._log_access:
-            pop_fields.extend(MAGIC_COLUMNS)
-        for field in pop_fields:
-            vals.pop(field, None)
+            bad_names.update(LOG_ACCESS_COLUMNS)
 
-        # split up fields into old-style and pure new-style ones
-        old_vals, new_vals, unknown = {}, {}, []
+        # distribute fields into sets for various purposes
+        store_vals = {}
+        inverse_vals = {}
+        inherited_vals = defaultdict(dict)      # {modelname: {fieldname: value}}
+        unknown_names = []
+        protected_fields = []
         for key, val in vals.items():
+            if key in bad_names:
+                continue
             field = self._fields.get(key)
-            if field:
-                if field.store or field.inherited:
-                    old_vals[key] = val
-                if field.inverse and not field.inherited:
-                    new_vals[key] = val
-            else:
-                unknown.append(key)
+            if not field:
+                unknown_names.append(key)
+                continue
+            if field.store:
+                store_vals[key] = val
+            if field.inherited:
+                inherited_vals[field.related_field.model_name][key] = val
+            elif field.inverse:
+                inverse_vals[key] = val
+                protected_fields.append(field)
 
-        if unknown:
-            _logger.warning("%s.write() with unknown fields: %s", self._name, ', '.join(sorted(unknown)))
+        if unknown_names:
+            _logger.warning("%s.write() with unknown fields: %s",
+                            self._name, ', '.join(sorted(unknown_names)))
 
-        protected_fields = [self._fields[n] for n in new_vals]
         with self.env.protecting(protected_fields, self):
-            # write old-style fields with (low-level) method _write
-            if old_vals:
-                self._write(old_vals)
+            # write stored fields with (low-level) method _write
+            if store_vals:
+                self._write(store_vals)
 
-            if new_vals:
-                # put the values of pure new-style fields into cache, and inverse them
-                self.modified(set(new_vals) - set(old_vals))
+            # update parent records (after possibly updating parent fields)
+            cr = self.env.cr
+            for model_name, parent_vals in inherited_vals.items():
+                parent_name = self._inherits[model_name]
+                # optimization of self.mapped(parent_name)
+                parent_ids = set()
+                query = "SELECT %s FROM %s WHERE id IN %%s" % (parent_name, self._table)
+                for sub_ids in cr.split_for_in_conditions(self.ids):
+                    cr.execute(query, [sub_ids])
+                    parent_ids.update(row[0] for row in cr.fetchall())
+
+                self.env[model_name].browse(parent_ids).write(parent_vals)
+
+            if inverse_vals:
+                # put the values of inverse fields in cache, and inverse them
+                self.modified(set(inverse_vals) - set(store_vals))
                 for record in self:
-                    record._cache.update(record._convert_to_cache(new_vals, update=True))
-                for key in new_vals:
+                    record._cache.update(record._convert_to_cache(inverse_vals, update=True))
+                for key in inverse_vals:
                     self._fields[key].determine_inverse(self)
-                self.modified(set(new_vals) - set(old_vals))
+                self.modified(set(inverse_vals) - set(store_vals))
+
                 # check Python constraints for inversed fields
-                self._validate_fields(set(new_vals) - set(old_vals))
-                # recompute new-style fields
+                self._validate_fields(set(inverse_vals) - set(store_vals))
+
+                # recompute fields
                 if self.env.recompute and self._context.get('recompute', True):
                     self.recompute()
 
@@ -3058,27 +3076,24 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         updates = []            # list of (column, expr) or (column, pattern, value)
         upd_todo = []           # list of column names to set explicitly
-        updend = []             # list of possibly inherited field names
         direct = []             # list of direcly updated columns
         has_trans = self.env.lang and self.env.lang != 'en_US'
         single_lang = len(self.env['res.lang'].get_installed()) <= 1
         for name, val in vals.items():
             field = self._fields[name]
-            if field and field.deprecated:
+            assert field.store
+            if field.deprecated:
                 _logger.warning('Field %s.%s is deprecated: %s', self._name, name, field.deprecated)
-            if field.store:
-                if hasattr(field, 'selection') and val:
-                    self._check_selection_field_value(name, val)
-                if field.column_type:
-                    if single_lang or not (has_trans and field.translate is True):
-                        # val is not a translation: update the table
-                        val = field.convert_to_column(val, self, vals)
-                        updates.append((name, field.column_format, val))
-                    direct.append(name)
-                else:
-                    upd_todo.append(name)
+            if hasattr(field, 'selection') and val:
+                self._check_selection_field_value(name, val)
+            if field.column_type:
+                if single_lang or not (has_trans and field.translate is True):
+                    # val is not a translation: update the table
+                    val = field.convert_to_column(val, self, vals)
+                    updates.append((name, field.column_format, val))
+                direct.append(name)
             else:
-                updend.append(name)
+                upd_todo.append(name)
 
         if self._log_access:
             updates.append(('write_uid', '%s', self._uid))
@@ -3134,28 +3149,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # for recomputing new-style fields
         self.modified(upd_todo)
-
-        # write inherited fields on the corresponding parent records
-        unknown_fields = set(updend)
-        for parent_model, parent_field in self._inherits.items():
-            parent_ids = []
-            for sub_ids in cr.split_for_in_conditions(self.ids):
-                query = "SELECT DISTINCT %s FROM %s WHERE id IN %%s" % (parent_field, self._table)
-                cr.execute(query, (sub_ids,))
-                parent_ids.extend([row[0] for row in cr.fetchall()])
-
-            parent_vals = {}
-            for name in updend:
-                field = self._fields[name]
-                if field.inherited and field.related[0] == parent_field:
-                    parent_vals[name] = vals[name]
-                    unknown_fields.discard(name)
-
-            if parent_vals:
-                self.env[parent_model].browse(parent_ids).write(parent_vals)
-
-        if unknown_fields:
-            _logger.warning('No such field(s) in model %s: %s.', self._name, ', '.join(unknown_fields))
 
         # check Python constraints
         self._validate_fields(vals)
@@ -3224,9 +3217,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         return True
 
-    #
-    # TODO: Should set perm to user.xxx
-    #
     @api.model
     @api.returns('self', lambda value: value.id)
     def create(self, vals):
@@ -3251,43 +3241,61 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """
         self.check_access_rights('create')
 
-        # add missing defaults, and drop fields that may not be set by user
+        # add missing defaults
         vals = self._add_missing_default_values(vals)
-        pop_fields = ['parent_left', 'parent_right']
+
+        bad_names = {'id', 'parent_left', 'parent_right'}
         if self._log_access:
-            pop_fields.extend(MAGIC_COLUMNS)
-        for field in pop_fields:
-            vals.pop(field, None)
+            bad_names.update(LOG_ACCESS_COLUMNS)
 
-        # split up fields into old-style and pure new-style ones
-        old_vals, new_vals, unknown = {}, {}, []
+        # distribute fields into sets for various purposes
+        store_vals = {}
+        inverse_vals = {}
+        inherited_vals = defaultdict(dict)      # {modelname: {fieldname: value}}
+        unknown_names = []
+        protected_fields = []
         for key, val in vals.items():
+            if key in bad_names:
+                continue
             field = self._fields.get(key)
-            if field:
-                if field.store or field.inherited:
-                    old_vals[key] = val
-                if field.inverse and not field.inherited:
-                    new_vals[key] = val
-            else:
-                unknown.append(key)
+            if not field:
+                unknown_names.append(key)
+                continue
+            if field.store:
+                store_vals[key] = val
+            if field.inherited:
+                inherited_vals[field.related_field.model_name][key] = val
+            elif field.inverse:
+                inverse_vals[key] = val
+                protected_fields.append(field)
 
-        if unknown:
-            _logger.warning("%s.create() includes unknown fields: %s", self._name, ', '.join(sorted(unknown)))
+        if unknown_names:
+            _logger.warning("%s.create() with unknown fields: %s",
+                            self._name, ', '.join(sorted(unknown_names)))
 
-        # create record with old-style fields
-        record = self.browse(self._create(old_vals))
+        # create or update parent records
+        for model_name, parent_name in self._inherits.items():
+            parent_record = self.env[model_name].browse(store_vals.get(parent_name))
+            parent_vals = inherited_vals[model_name]
+            if not parent_record:
+                store_vals[parent_name] = parent_record.create(parent_vals).id
+            elif parent_vals:
+                parent_record.write(parent_vals)
 
-        protected_fields = [self._fields[n] for n in new_vals]
+        # create record with stored fields
+        record = self.browse(self._create(store_vals))
+
         with self.env.protecting(protected_fields, record):
-            # put the values of pure new-style fields into cache, and inverse them
-            record.modified(set(new_vals) - set(old_vals))
-            record._cache.update(record._convert_to_cache(new_vals))
-            for key in new_vals:
+            # put the values of inverse fields in cache, and inverse them
+            record._cache.update(record._convert_to_cache(inverse_vals))
+            for key in inverse_vals:
                 self._fields[key].determine_inverse(record)
-            record.modified(set(new_vals) - set(old_vals))
+            record.modified(set(inverse_vals) - set(store_vals))
+
             # check Python constraints for inversed fields
-            record._validate_fields(set(new_vals) - set(old_vals))
-            # recompute new-style fields
+            record._validate_fields(set(inverse_vals) - set(store_vals))
+
+            # recompute fields
             if self.env.recompute and self._context.get('recompute', True):
                 self.recompute()
 
@@ -3295,12 +3303,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     @api.model
     def _create(self, vals):
-        # data of parent records to create or update, by model
-        tocreate = {
-            parent_model: {'id': vals.pop(parent_field, None)}
-            for parent_model, parent_field in self._inherits.items()
-        }
-
         # list of column assignments defined as tuples like:
         #   (column_name, format_string, column_value)
         #   (column_name, sql_formula)
@@ -3311,31 +3313,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         ]
 
         upd_todo = []
-        unknown_fields = []
         protected_fields = []
         for name, val in list(vals.items()):
-            field = self._fields.get(name)
-            if not field:
-                unknown_fields.append(name)
-                del vals[name]
-            elif field.inherited:
-                tocreate[field.related_field.model_name][name] = val
-                del vals[name]
-            elif not field.store:
-                del vals[name]
-            elif field.inverse:
+            field = self._fields[name]
+            assert field.store
+            if field.inverse:
                 protected_fields.append(field)
-        if unknown_fields:
-            _logger.warning('No such field(s) in model %s: %s.', self._name, ', '.join(unknown_fields))
-
-        # create or update parent records
-        for parent_model, parent_vals in tocreate.items():
-            parent_id = parent_vals.pop('id')
-            if not parent_id:
-                parent_id = self.env[parent_model].create(parent_vals).id
-            else:
-                self.env[parent_model].browse(parent_id).write(parent_vals)
-            vals[self._inherits[parent_model]] = parent_id
 
         # set boolean fields to False by default (to make search more powerful)
         for name, field in self._fields.items():
