@@ -780,6 +780,32 @@ class UnquoteEvalContext(defaultdict):
         return unquote(key)
 
 
+class enable_logger(object):
+
+    def __init__(self, *loggers):
+        self.loggers = loggers
+        self.enable = False
+        for logger in self.loggers:
+            assert isinstance(logger, pycompat.string_types), "A logger name must be a string, got %s" % type(logger)
+            logging.getLogger(logger).addFilter(self)
+
+    def filter(self, record):
+        return self.enable
+
+    def __enter__(self):
+        self.enable = True
+
+    def __exit__(self, exc_type=None, exc_val=None, exc_tb=None):
+        self.enable = False
+
+    def __call__(self, func):
+        @wraps(func)
+        def deco(*args, **kwargs):
+            with self:
+                return func(*args, **kwargs)
+        return deco
+
+
 class mute_logger(object):
     """Temporary suppress the logging.
     Can be used as context manager or decorator.
