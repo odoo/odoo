@@ -65,7 +65,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 files.append(f)
                 if k.endswith('_xml') and not (k == 'init_xml' and not f.endswith('.xml')):
                     # init_xml, update_xml and demo_xml are deprecated except
-                    # for the case of init_xml with yaml, csv and sql files as
+                    # for the case of init_xml with csv and sql files as
                     # we can't specify noupdate for those file.
                     correct_key = 'demo' if k.count('demo') else 'data'
                     _logger.warning(

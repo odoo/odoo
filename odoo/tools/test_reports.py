@@ -4,7 +4,7 @@
 """ Helper functions for reports testing.
 
     Please /do not/ import this file by default, but only explicitly call it
-    through the code of yaml tests.
+    through the code of python tests.
 """
 
 import logging
