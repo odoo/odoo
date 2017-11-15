@@ -69,7 +69,7 @@ var PagePropertiesDialog = widget.Dialog.extend({
                 context: context
             },
         }).then(function (page) {
-            page[0].url = page[0].url.startsWith('/') ? page[0].url.substring(1) : page[0].url;
+            page[0].url = _.str.startsWith(page[0].url, '/') ? page[0].url.substring(1) : page[0].url;
             self.page = page[0];
         }));
 
