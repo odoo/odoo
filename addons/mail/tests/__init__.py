@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from . import test_mail_activity
 from . import test_mail_followers
 from . import test_mail_message
 from . import test_mail_mail
