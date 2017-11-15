@@ -12,6 +12,8 @@
 
     <record id="l10n_de_chart_template" model="account.chart.template">
         <field name="name">Deutscher Kontenplan SKR03</field>
+        <field name="cash_account_code_prefix">1000</field>
+        <field name="bank_account_code_prefix">1200</field>
         <field name="currency_id" ref="base.EUR"/>
         <field name="transfer_account_id" ref="account_1327"/>
     </record>
@@ -11294,8 +11296,6 @@
     </record>
 
     <record id="l10n_de_chart_template" model="account.chart.template">
-        <field name="cash_account_code_prefix">1000</field>
-        <field name="bank_account_code_prefix">1200</field>
         <field name="property_account_receivable_id" ref="account_1410"/>
         <field name="property_account_payable_id" ref="account_1610"/>
         <field name="property_account_expense_categ_id" ref="account_3400"/>
