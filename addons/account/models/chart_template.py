@@ -32,14 +32,16 @@ def migrate_tags_on_taxes(cr, registry):
         ('module', 'like', 'l10n_%')
     ])
     tax_template_ids = [x['res_id'] for x in xml_records.sudo().read(['res_id'])]
-    for tax_template in env['account.tax.template'].browse(tax_template_ids):
+    tax_templates = env['account.tax.template'].browse(tax_template_ids)
+    for tax_template in tax_templates:
         tax_id = env['account.tax'].search([
             ('name', '=', tax_template.name),
             ('type_tax_use', '=', tax_template.type_tax_use),
             ('description', '=', tax_template.description)
         ])
-        if len(tax_id.ids) == 1:
-            tax_id.sudo().write({'tag_ids': [(6, 0, tax_template.tag_ids.ids)]})
+        tax_id.sudo().write({
+            'tag_ids': [(6, 0, tax_template.tag_ids.ids)]
+        })
 
 def preserve_existing_tags_on_taxes(cr, registry, module):
     ''' This is a utility function used to preserve existing previous tags during upgrade of the module.'''
