@@ -303,7 +303,7 @@ a.o_underline {
 // Convert HTML to CSS styles in browsers using those
 .o-align-fix(@align) {
     [align="@{align}"] {
-        text-align: @align;
+        text-align: @align !important;
     }
 }
 .o-align-fix(left);
