@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import pytz
+from datetime import datetime, timedelta
 
 from odoo import _, api, fields, models
 from odoo.addons.mail.models.mail_template import format_tz
@@ -170,6 +171,55 @@ class EventEvent(models.Model):
     badge_innerleft = fields.Html(string='Badge Inner Left')
     badge_innerright = fields.Html(string='Badge Inner Right')
     event_logo = fields.Html(string='Event Logo')
+    show_timezone = fields.Selection(
+        [('hidden', 'Don\'t show timezone'), ('visitor', 'Show time in visitior\'s timezone'), ('unique', 'Show time in unique timezone')],
+        string='Show Timezone', required=True, default='hidden')
+    # add dummy datetime field for new datetime calculation as per visitor/user timezone
+    # purpose of field is that edit this field into the event page on website.
+    # in that case need to recalculate to field as per visitor/user time zone and store for website
+    dummy_date_begin = fields.Datetime(compute="_compute_dummy_date_begin_tz", inverse="_inverse_dummy_date_begin_tz", store=True)
+    dummy_date_end = fields.Datetime(compute="_compute_dummy_date_end_tz", inverse="_inverse_dummy_date_end_tz", store=True)
+
+    def _visitor_timezone(self, date_time, timezone):
+        if timezone and date_time and self.show_timezone == 'visitor':
+            aware_tz = pytz.utc.localize(fields.Datetime.from_string(date_time))
+            # new datetime with visitor/user timezone
+            new_date = aware_tz.astimezone(pytz.timezone(timezone))
+            # format back to string
+            return fields.Datetime.to_string(new_date)
+
+    def _convert_user_timezone(self, date_time, timezone):
+        if date_time and timezone:
+            user_tz = pytz.timezone(timezone)
+            return user_tz.localize(fields.Datetime.from_string(date_time)).astimezone(pytz.utc)
+
+    @api.multi
+    @api.depends('date_begin')
+    def _compute_dummy_date_begin_tz(self):
+        for event in self:
+            visitor_datetime = event._visitor_timezone(event.date_begin, self.env.user.tz)
+            event.dummy_date_begin = event._convert_user_timezone(visitor_datetime, self.env.context.get('visitor_tz', self.env.user.tz)) or event.date_begin
+
+    @api.multi
+    def _inverse_dummy_date_begin_tz(self):
+        # method call by website side, when we use website editor
+        for event in self:
+            visitor_datetime = event._visitor_timezone(event.dummy_date_begin, self.env.user.tz)
+            event.date_begin = event._convert_user_timezone(visitor_datetime, self.env.context.get('visitor_tz', self.env.user.tz)) or event.dummy_date_begin
+
+    @api.multi
+    @api.depends('date_end')
+    def _compute_dummy_date_end_tz(self):
+        for event in self:
+            visitor_datetime = event._visitor_timezone(event.date_end, self.env.user.tz)
+            event.dummy_date_end = event._convert_user_timezone(visitor_datetime, self.env.context.get('visitor_tz', self.env.user.tz)) or event.date_end
+
+    @api.multi
+    def _inverse_dummy_date_end_tz(self):
+        # method call by website side, when we use website editor
+        for event in self:
+            visitor_datetime = event._visitor_timezone(event.dummy_date_end, self.env.user.tz)
+            event.date_end = event._convert_user_timezone(visitor_datetime, self.env.context.get('visitor_tz', self.env.user.tz)) or event.dummy_date_end
 
     @api.multi
     @api.depends('seats_max', 'registration_ids.state')

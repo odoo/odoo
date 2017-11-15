@@ -3,6 +3,7 @@
 import babel.dates
 import re
 import werkzeug
+import pytz
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
@@ -173,9 +174,18 @@ class WebsiteEventController(http.Controller):
             'event': event,
             'main_object': event,
             'range': range,
-            'registrable': event._is_event_registrable()
+            'registrable': event._is_event_registrable(),
+            'timezones': [timezone for timezone in pytz.all_timezones]
         }
         return request.render("website_event.event_description_full", values)
+
+    @http.route(['/event/set_timezone'], type='json', auth="public", methods=['POST'], website=True)
+    def set_new_timezone(self, timezone, date_time):
+        for key, value in date_time.items():
+            aware_tz = pytz.utc.localize(fields.Datetime.from_string(value))
+            # fixed format date time(mm/dd/yy hh:mm) on the event page
+            date_time[key] = aware_tz.astimezone(pytz.timezone(timezone)).strftime("%m/%d/%Y %H:%M")
+        return date_time
 
     @http.route('/event/add_event', type='json', auth="user", methods=['POST'], website=True)
     def add_event(self, event_name="New Event", **kwargs):

@@ -66,7 +66,9 @@
                                     </t>
                                 </div>
                                 <div>
-                                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'> </span>
+                                    <i class="fa fa-clock-o"></i>
+                                    <span itemprop="startDate" t-att-class="'o_event_date_begin' if event.show_timezone == 'visitor' else ''" t-field="event.with_context(tz=event.date_tz).dummy_date_begin" t-att-data-event-visitor-date="event.date_begin" t-options='{"hide_seconds":"True"}'> </span> <i>to</i>
+                                    <span itemprop="endDate" t-att-class="'o_event_date_end' if event.show_timezone == 'visitor' else ''" t-field="event.with_context(tz=event.date_tz).dummy_date_end" t-att-data-event-visitor-date="event.date_end" t-options='{"hide_seconds":"True"}'> </span> <t t-if="event.show_timezone != 'hidden'">(<span t-att-class="'o_event_timezone' if event.show_timezone == 'visitor' else ''" t-esc="event.date_tz"/>)</t>
                                 </div>
                                 <t t-if="not event.is_online">
                                     <div itemprop="location" t-field="event.address_id" t-options='{
@@ -278,9 +280,9 @@
                 <small t-if="event.is_participating" class="label label-info">Participating</small>
             </div>
             <h4 class="text-center text-muted">
-                <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'/> to
-                <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'/>
-                <t t-if="event.date_tz">(<span t-field="event.date_tz"/>)</t>
+                <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-att-class="'o_event_date_begin' if event.show_timezone == 'visitor' else ''" t-field="event.with_context(tz=event.date_tz).dummy_date_begin" t-att-data-event-visitor-date="event.date_begin" t-options='{"hide_seconds":"True"}'/> to
+                <span itemprop="endDate" t-att-class="'o_event_date_end' if event.show_timezone == 'visitor' else ''" t-field="event.with_context(tz=event.date_tz).dummy_date_end" t-att-data-event-visitor-date="event.date_end" t-options='{"hide_seconds":"True"}'/>
+                <t t-if="event.show_timezone != 'hidden'">(<span t-att-class="'o_event_timezone' if event.show_timezone == 'visitor' else ''" t-field="event.date_tz"/>)</t>
             </h4>
             <h4 class="text-center text-muted"
                 t-field="event.address_id" t-options='{
@@ -363,8 +365,43 @@
                     <h4>When</h4>
                 </div>
                 <div class="panel-body">
-                    <i class="fa fa-clock-o"></i> From <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'> </span><br/>
-                    <i class="fa fa-clock-o"></i> To <span t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'> </span>
+                    <div id="select_user_timezone" class="modal fade" tabindex="-1" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                                    <h3 class="modal-title" id="myModalLabel"><strong>Select Timezone</strong></h3>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <select class="form-control" id="timezone-container">
+                                            <t t-foreach="timezones" t-as="timezone">
+                                                <option t-att-value="timezone"><t t-esc="timezone"/></option>
+                                            </t>
+                                        </select>
+                                        <input type="hidden" name="event-origin-date-start" t-att-value="event.date_begin"/>
+                                        <input type="hidden" name="event-origin-date-end" t-att-value="event.date_end"/>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="pull-left">
+                                        <button class="btn btn-primary o_set_timezone_btn">Set Timezone</button>
+                                        <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <i class="fa fa-clock-o"></i> From <span t-att-class="'o_event_date_begin' if event.show_timezone == 'visitor' else ''" t-field="event.with_context(tz=event.date_tz).dummy_date_begin" t-att-data-event-visitor-date="event.date_begin" t-options='{"hide_seconds":"True"}'> </span><br/>
+                    <i class="fa fa-clock-o"></i> To <span t-att-class="'o_event_date_end' if event.show_timezone == 'visitor' else ''" t-field="event.with_context(tz=event.date_tz).dummy_date_end" t-att-data-event-visitor-date="event.date_end" t-options='{"hide_seconds":"True"}'> </span>
+                    <t t-if="event.show_timezone == 'visitor' and event.state == 'confirm'">
+                        <br/>
+                        <i class="fa fa-arrow-right" aria-hidden="true">
+                            <a href="#" class="o_show_another_timezone" data-toggle="modal" data-target="#select_user_timezone">
+                                Show time in another timezone
+                            </a>
+                        </i>
+                    </t>
                 </div>
             </div>
 
