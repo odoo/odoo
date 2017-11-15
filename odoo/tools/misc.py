@@ -1175,7 +1175,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
     if isinstance(value, (str, unicode)) and not value:
         return ''
 
-    lang = env.user.company_id.partner_id.lang or 'en_US'
+    lang = env.context.get('lang') or env.user.company_id.partner_id.lang or 'en_US'
     lang_objs = env['res.lang'].search([('code', '=', lang)])
     if not lang_objs:
         lang_objs = env['res.lang'].search([], limit=1)
