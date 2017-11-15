@@ -318,8 +318,13 @@ class MrpProduction(models.Model):
     def _generate_raw_moves(self, exploded_lines):
         self.ensure_one()
         moves = self.env['stock.move']
+        #El siguiente codigo fue modificado por TRESCLOUD
+        ctx = self.env.context.copy()
+        count = 0
         for bom_line, line_data in exploded_lines:
-            moves += self._generate_raw_move(bom_line, line_data)
+            count += 1
+            ctx.update({'sequence': count})
+            moves += self.with_context(ctx)._generate_raw_move(bom_line, line_data)
         return moves
 
     def _generate_raw_move(self, bom_line, line_data):
@@ -339,8 +344,12 @@ class MrpProduction(models.Model):
         else:
             source_location = self.location_src_id
         original_quantity = self.product_qty - self.qty_produced
+        #El siguiente codigo fue modificado por TRESCLOUD
+        sequence = bom_line.sequence
+        if self.env.context.get('sequence'):
+            sequence = self.env.context.get('sequence')
         data = {
-            'sequence': bom_line.sequence,
+            'sequence': sequence,
             'name': self.name,
             'date': self.date_planned_start,
             'date_expected': self.date_planned_start,
