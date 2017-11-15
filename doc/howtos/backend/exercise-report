@@ -31,8 +31,8 @@ Index: addons/openacademy/reports.xml
 +    <template id="report_session_view">
 +        <t t-call="report.html_container">
 +            <t t-foreach="docs" t-as="doc">
-+                <t t-call="report.external_layout">
-+                    <div class="page">
++                <div class="page">
++                    <t t-call="report.external_layout">
 +                        <h2 t-field="doc.name"/>
 +                        <p>From <span t-field="doc.start_date"/> to <span t-field="doc.end_date"/></p>
 +                        <h3>Attendees:</h3>
@@ -41,8 +41,8 @@ Index: addons/openacademy/reports.xml
 +                                <li><span t-field="attendee.name"/></li>
 +                            </t>
 +                        </ul>
-+                    </div>
-+                </t>
++                    </t>
++                </div>
 +            </t>
 +        </t>
 +    </template>
