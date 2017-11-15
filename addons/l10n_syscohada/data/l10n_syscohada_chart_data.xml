@@ -14,6 +14,8 @@
     <!-- Chart Template -->
     <record id="syscohada_chart_template" model="account.chart.template">
         <field name="name">SYSCOHADA - Plan de compte</field>
+        <field name="bank_account_code_prefix">52</field>
+        <field name="cash_account_code_prefix">51</field>
         <field name="code_digits">6</field>
         <field name="currency_id" ref="base.XOF"/>
         <field name="transfer_account_id" ref="pcg_588"/>
@@ -6009,8 +6011,6 @@
     </record>
 
     <record id="syscohada_chart_template" model="account.chart.template">
-        <field name="bank_account_code_prefix">52</field>
-        <field name="cash_account_code_prefix">51</field>
         <field name="property_account_receivable_id" ref="pcg_4111"/>
         <field name="property_account_payable_id" ref="pcg_4011"/>
         <field name="property_account_expense_categ_id" ref="pcg_6011"/>
