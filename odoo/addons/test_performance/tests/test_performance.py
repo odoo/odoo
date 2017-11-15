@@ -16,7 +16,12 @@ def queryCount(**counters):
     def decorate(func):
         @functools.wraps(func)
         def wrapper(self):
-            for user in self.env.user + self.env.ref('base.user_demo'):
+            if hasattr(self, 'test_users'):
+                users = self.test_users.filtered(lambda user: user.login in counters.keys())
+            else:
+                users = self.env['res.users'].search([('login', 'in', list(counters.keys()))])
+            # for user in self.env.user + self.env.ref('base.user_demo'):
+            for user in users:
                 # switch user
                 self.uid = user.id
                 self.env = self.env(user=self.uid)
