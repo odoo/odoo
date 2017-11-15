@@ -73,6 +73,7 @@ class product_product(osv.osv):
         warehouse_obj = self.pool.get('stock.warehouse')
 
         location_ids = []
+        operator = context.get('compute_child', True) and 'child_of' or 'in'
         if context.get('location', False):
             if isinstance(context['location'], (int, long)):
                 location_ids = [context['location']]
@@ -97,12 +98,16 @@ class product_product(osv.osv):
             else:
                 wids = warehouse_obj.search(cr, uid, [], context=context)
 
-            for w in warehouse_obj.browse(cr, uid, wids, context=context):
-                location_ids.append(w.view_location_id.id)
+            locs = [x.view_location_id.id for x in warehouse_obj.browse(cr, uid, wids, context=context)]
+            if len(wids) > 100: #If we have so many warehouses, the ORM would throw a maximum recursion depth error for normalizing the domain
+                location_ids = location_obj.search(cr, uid, [('id', 'child_of', locs)], context=context)
+                operator = 'in'
+            else:
+                location_ids = locs
 
-        operator = context.get('compute_child', True) and 'child_of' or 'in'
         domain = context.get('force_company', False) and ['&', ('company_id', '=', context['force_company'])] or []
         locations = location_obj.browse(cr, uid, location_ids, context=context)
+        #As the ORM does not optimize the auto_join child_of itself, we do it manually here
         if operator == "child_of" and locations and locations[0].parent_left != 0:
             loc_domain = []
             dest_loc_domain = []
