@@ -109,8 +109,8 @@ class AccountChartTemplate(models.Model):
     account_ids = fields.One2many('account.account.template', 'chart_template_id', string='Associated Account Templates')
     tax_template_ids = fields.One2many('account.tax.template', 'chart_template_id', string='Tax Template List',
         help='List of all the taxes that have to be installed by the wizard')
-    bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts', oldname="bank_account_code_char")
-    cash_account_code_prefix = fields.Char(string='Prefix of the main cash accounts')
+    bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts', required=True, oldname="bank_account_code_char")
+    cash_account_code_prefix = fields.Char(string='Prefix of the main cash accounts', required=True)
     transfer_account_id = fields.Many2one('account.account.template', string='Transfer Account', required=True,
         domain=lambda self: [('reconcile', '=', True), ('user_type_id.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
         help="Intermediary account used when moving money from a liquidity account to another")
@@ -686,8 +686,8 @@ class WizardMultiChartsAccounts(models.TransientModel):
     only_one_chart_template = fields.Boolean(string='Only One Chart Template Available')
     chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
     bank_account_ids = fields.One2many('account.bank.accounts.wizard', 'bank_account_id', string='Cash and Banks', required=True, oldname="bank_accounts_id")
-    bank_account_code_prefix = fields.Char('Bank Accounts Prefix', oldname="bank_account_code_char")
-    cash_account_code_prefix = fields.Char('Cash Accounts Prefix')
+    bank_account_code_prefix = fields.Char('Bank Accounts Prefix', required=True, oldname="bank_account_code_char")
+    cash_account_code_prefix = fields.Char('Cash Accounts Prefix', required=True)
     code_digits = fields.Integer(string='# of Digits', required=True, help="No. of Digits to use for account code")
     sale_tax_id = fields.Many2one('account.tax.template', string='Default Sales Tax', oldname="sale_tax")
     purchase_tax_id = fields.Many2one('account.tax.template', string='Default Purchase Tax', oldname="purchase_tax")
