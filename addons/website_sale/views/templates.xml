@@ -1033,7 +1033,7 @@
         <t t-if="request.params.get('code_not_available')" name="code_not_available">
             <p class="bg-warning">This promo code is not available</p>
         </t>
-        <form t-if="website_sale_order and website_sale_order.website_order_line" t-att-action="'/shop/pricelist%s' % (redirect and '?r=' + redirect or '')"
+        <form t-att-action="'/shop/pricelist%s' % (redirect and '?r=' + redirect or '')"
             method="post" class="mb32" name="coupon_code">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
             <div class="input-group">
@@ -1047,13 +1047,15 @@
 
     <template id="reduction_code" inherit_id="website_sale.cart" active="False" customize_show="True" name="Promo Code">
         <xpath expr="//div[@id='right_column']" position="inside">
-            <h4>Promo Code</h4>
-            <p>
-              Have a promo code? Fill in this field and apply.
-            </p>
-            <t t-call='website_sale.coupon_form'>
-                <t t-set='redirect'>/shop/cart</t>
-            </t>
+            <div t-if="website_sale_order and website_sale_order.website_order_line">
+                <h4>Promo Code</h4>
+                <p>
+                  Have a promo code? Fill in this field and apply.
+                </p>
+                <t t-call='website_sale.coupon_form'>
+                    <t t-set='redirect'>/shop/cart</t>
+                </t>
+            </div>
         </xpath>
     </template>
 
@@ -1622,7 +1624,7 @@
     </template>
 
     <template id="total">
-        <div id="cart_total" t-att-class="extra_class or ''" t-if="website_sale_order">
+        <div id="cart_total" t-att-class="extra_class or ''" t-if="website_sale_order and website_sale_order.website_order_line">
             <div class="row" id="order_total_untaxed">
                 <span class="col-xs-6 text-right text-muted">Subtotal:</span>
                 <span class="col-xs-6 text-right-not-xs text-left-xs text-muted">
