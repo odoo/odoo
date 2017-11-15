@@ -594,7 +594,7 @@ API.
 
 Odoo Web eschews direct calls to :py:meth:`~odoo.models.Model.read_group`
 in favor of calling a method of :class:`~odoo.web.Query`, :py:meth:`much
-in the way it is one in SQLAlchemy <sqlalchemy.orm.query.Query.group_by>`
+in the way it is done in SQLAlchemy <sqlalchemy.orm.query.Query.group_by>`
 [#terminal]_::
 
     some_query.group_by(['field1', 'field2']).then(function (groups) {
