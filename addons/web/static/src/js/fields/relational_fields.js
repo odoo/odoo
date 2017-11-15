@@ -1191,9 +1191,13 @@ var FieldMany2Many = FieldX2Many.extend({
      *
      * @override
      * @private
+     * @param {OdooEvent|MouseEvent} ev this event comes either from the 'Add
+     *   record' link in the list editable renderer, or from the 'Create' button
+     *   in the kanban view
      */
-    _onAddRecord: function () {
+    _onAddRecord: function (ev) {
         var self = this;
+        ev.stopPropagation();
 
         var domain = this.record.getDomain({fieldName: this.name});
 
