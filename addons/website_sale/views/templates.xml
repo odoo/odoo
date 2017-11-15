@@ -1625,7 +1625,7 @@
     </template>
 
     <template id="total">
-        <div id="cart_total" t-att-class="extra_class or ''" t-if="website_sale_order">
+        <div id="cart_total" t-att-class="extra_class or ''" t-if="website_sale_order and website_sale_order.website_order_line">
             <div class="row" id="order_total_untaxed">
                 <span class="col-xs-6 text-right text-muted">Subtotal:</span>
                 <span class="col-xs-6 text-right-not-xs text-left-xs text-muted">
