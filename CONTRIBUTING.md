@@ -12,3 +12,10 @@ TL;DR
   when reporting issues. Please search for duplicates first!
 * Pull requests must be made against the [correct version](https://github.com/odoo/odoo/wiki/Contributing#against-which-version-should-i-submit-a-patch)
 * There are restrictions on the kind of [changes allowed in stable series](https://github.com/odoo/odoo/wiki/Contributing#what-does-stable-mean)
+
+
+Practical tipp, if you use any autoformatting tools: 
+```shell
+git diff -U0 -w --no-color | git apply --cached --ignore-whitespace --unidiff-zero -
+```
+This usually stages your changes ignoring whitespace changes, which aleviates considerably the task of the reviewer. You can use it in combination with cherry-pciks and soft resets from your working branch to exisolate your changes.
