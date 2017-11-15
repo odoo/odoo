@@ -2975,95 +2975,48 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         self._check_concurrency()
         self.check_access_rights('write')
-        records_values = {}
 
-        with self.env.do_in_draft():
+        # No user-driven update of these columns
+        pop_fields = ['parent_left', 'parent_right']
+        if self._log_access:
+            pop_fields.extend(MAGIC_COLUMNS)
+        for field in pop_fields:
+            vals.pop(field, None)
 
-            # No user-driven update of these columns
-            pop_fields = ['parent_left', 'parent_right']
-            if self._log_access:
-                pop_fields.extend(MAGIC_COLUMNS)
-            for field in pop_fields:
-                vals.pop(field, None)
+        # split up fields into old-style and pure new-style ones
+        old_vals, new_vals, unknown = {}, {}, []
+        for key, val in vals.items():
+            field = self._fields.get(key)
+            if field:
+                if field.store or field.inherited:
+                    old_vals[key] = val
+                if field.inverse and not field.inherited:
+                    new_vals[key] = val
+            else:
+                unknown.append(key)
 
-            # split up fields into old-style and pure new-style ones
-            old_vals, new_vals, unknown = {}, {}, []
-            for key, val in pycompat.items(vals):
-                field = self._fields.get(key)
-                if field:
-                    if field.readonly:
-                        continue
-                    if field.store or field.inherited:
-                        old_vals[key] = val
-                    if field.inverse and not field.inherited:
-                        new_vals[key] = val
-                else:
-                    unknown.append(key)
+        if unknown:
+            _logger.warning("%s.write() with unknown fields: %s", self._name, ', '.join(sorted(unknown)))
 
-            for record in self:
-                for key in old_vals:
-                    field = self._fields[key]
-                    value = old_vals[key]
+        protected_fields = [self._fields[n] for n in new_vals]
+        with self.env.protecting(protected_fields, self):
+            # write old-style fields with (low-level) method _write
+            if old_vals:
+                self._write(old_vals)
 
-                    try:
-                        value = safe_eval(value)
-                    except:
-                        pass
-
-                    record[key] = value
-
-                write_vals = {}
-                for key in self._fields:
-                    field = self._fields[key]
-                    if field.compute or key in old_vals:
-                        value = record[key]
-                        value = field.convert_to_cache(value, record, validate=False)
-                        if value == () or value == []:
-                            write_vals[key] = False
-                            continue
-
-                        value = field.convert_to_record(value, record)
-                        value = field.convert_to_write(value, record)
-                        value = field.convert_to_column(value, record)
-                        write_vals[key] = value
-
-                if unknown:
-                    _logger.warning("%s.write() with unknown fields: %s", self._name, ', '.join(sorted(unknown)))
-
-                frozen_vals = frozendict(**write_vals)
-                frozen_hash = hash(frozen_vals)
-                records_values.setdefault(frozen_hash, {
-                    'values': frozen_vals,
-                    'ids': [],
-                    'old_vals': old_vals,
-                    'new_vals': new_vals,
-                })
-                records_values[frozen_hash]['ids'].append(record.id)
-
-            for values_hash in records_values:
-                write_vals = records_values[values_hash]['values']
-                records = self._browse(records_values[values_hash]['ids'], self.env)
-                new_vals = records_values[values_hash]['new_vals']
-                protected_fields = [self._fields[n] for n in new_vals]
-
-                with self.env.protecting(protected_fields, self):
-                    # write old-style fields with (low-level) method _write
-                    if write_vals:
-                        records._write(write_vals)
-
-                    if new_vals:
-                        # put the values of pure new-style fields into cache, and inverse them
-                        records.modified(set(new_vals) - set(write_vals))
-                        for record in records:
-                            records._cache.update(records._convert_to_cache(new_vals, update=True))
-                        for key in new_vals:
-                            records._fields[key].determine_inverse(self)
-                        records.modified(set(new_vals) - set(write_vals))
-                        # check Python constraints for inversed fields
-                        records._validate_fields(set(new_vals) - set(write_vals))
-                        # recompute new-style fields
-                        if self.env.recompute and self._context.get('recompute', True):
-                            records.recompute()
+            if new_vals:
+                # put the values of pure new-style fields into cache, and inverse them
+                self.modified(set(new_vals) - set(old_vals))
+                for record in self:
+                    record._cache.update(record._convert_to_cache(new_vals, update=True))
+                for key in new_vals:
+                    self._fields[key].determine_inverse(self)
+                self.modified(set(new_vals) - set(old_vals))
+                # check Python constraints for inversed fields
+                self._validate_fields(set(new_vals) - set(old_vals))
+                # recompute new-style fields
+                if self.env.recompute and self._context.get('recompute', True):
+                    self.recompute()
 
         return True
 
@@ -3308,8 +3261,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for key, val in vals.items():
             field = self._fields.get(key)
             if field:
-                if field.readonly:
-                    continue
                 if field.store or field.inherited:
                     old_vals[key] = val
                 if field.inverse and not field.inherited:
@@ -3317,35 +3268,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             else:
                 unknown.append(key)
 
-        old_vals['create_uid'] = self._uid
-        old_vals['write_uid'] = self._uid
-
-        old_vals['create_date'] = datetime.datetime.utcnow()
-        old_vals['write_date'] = old_vals['create_date']
-
         if unknown:
             _logger.warning("%s.create() includes unknown fields: %s", self._name, ', '.join(sorted(unknown)))
 
         # create record with old-style fields
-        record = self.new(old_vals)
-
-        create_vals = {}
-
-        for key in self._fields:
-            if self._fields[key].compute or key in old_vals:
-                value = record[key]
-                field = self._fields[key]
-                value = field.convert_to_cache(value, record, validate=False)
-                if value == () or value == []:
-                    create_vals[key] = False
-                    continue
-
-                value = field.convert_to_record(value, record)
-                value = field.convert_to_write(value, record)
-                value = field.convert_to_column(value, record)
-                create_vals[key] = value
-
-        record = self.browse(self._create(create_vals))
+        record = self.browse(self._create(old_vals))
 
         protected_fields = [self._fields[n] for n in new_vals]
         with self.env.protecting(protected_fields, record):
@@ -3424,6 +3351,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
             if hasattr(field, 'selection') and val:
                 self._check_selection_field_value(name, val)
+
+        if self._log_access:
+            updates.append(('create_uid', '%s', self._uid))
+            updates.append(('write_uid', '%s', self._uid))
+            updates.append(('create_date', "(now() at time zone 'UTC')"))
+            updates.append(('write_date', "(now() at time zone 'UTC')"))
 
         # insert a row for this record
         cr = self._cr
