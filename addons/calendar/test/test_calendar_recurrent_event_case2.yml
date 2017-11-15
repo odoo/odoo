@@ -100,3 +100,50 @@
     self.write(cr, uid, ids, {'description': DESCRIPTION}, context=context)
     for i, event in enumerate(self.browse(cr, uid, ids, context)):
       assert event.description == DESCRIPTION, "Event %d has not been updated" % i
+-
+  !record {model: calendar.event, id: calendar_event_reviewcode0}:
+    count: 12
+    start: '2011-01-22 11:47:00'
+    stop: '2011-01-22 12:47:00'
+    day: 0.0
+    duration: 1.0
+    final_date: 2017-06-30
+    end_type: 'end_date'
+    name: Review code with programmer
+    fr: true
+    mo: true
+    th: true
+    tu: true
+    we: true
+    recurrency: true
+    rrule_type: weekly
+-
+  !python {model: calendar.event}: |
+    context = {'virtual_id': True}
+
+    meetings_count = self.search_count(cr, uid, [
+            ('start', '<=', '2017-01-24'), ('stop', '>=', '2017-01-24'), ('name', '=', 'Review code with programmer')
+        ], context=context)
+
+    assert meetings_count == 1, 'Recurrent weekly meetings are not found using date filter !'
+
+    meetings_count = self.search_count(cr, uid, [
+            ('start', '<=', '2017-01-24 11:55:00'), ('stop', '>=', '2017-01-24 11:55:00'), ('name', '=', 'Review code with programmer')
+        ], context=context)
+    assert meetings_count == 1, 'Recurrent weekly meetings are not found using time filter !'
+
+    meetings_count = self.search_count(cr, uid, [
+            ('start', '!=', False), ('stop', '>=', '2017-06-30 11:55:00'), ('name', '=', 'Review code with programmer')
+        ], context=context)
+    assert meetings_count == 1, "Last recurrent weekly meetings are not found using 'is set' filter !"
+
+    meetings_count = self.search_count(cr, uid, [
+            ('start', '<=', '2017-01-24 11:55:00'), ('stop', '>=', '2017-01-24 15:55:00')
+        ], context=context)
+    assert meetings_count == 0, 'Too late recurrent meetings are found using time filter !'
+
+    # I search using a start filter but no stop
+    meetings_count = self.search_count(cr, uid, [
+            ('start', '>=', '2017-06-30 08:00:00'), ('name', '=', 'Review code with programmer')
+        ], context=context)
+    assert meetings_count == 1, "Last recurrent weekly meetings are not found without stop filter !"
