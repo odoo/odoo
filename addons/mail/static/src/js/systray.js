@@ -133,7 +133,7 @@ var MessagingMenu = Widget.extend({
             } else {
                 this.do_action('mail.mail_channel_action_client_chat', {clear_breadcrumbs: true})
                     .then(function () {
-                        self.trigger_up('hide_app_switcher');
+                        self.trigger_up('hide_home_menu'); // we cannot 'go back to previous page' otherwise
                         core.bus.trigger('change_menu_section', chat_manager.get_discuss_menu_id());
                     });
             }
