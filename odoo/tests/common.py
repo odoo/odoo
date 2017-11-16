@@ -600,7 +600,7 @@ class Form(object):
         contexts = fvg['contexts'] = {}
         for f in etree.fromstring(fvg['arch']).iter('field'):
             fname = f.get('name')
-            modifiers[fname] = json.loads(f.get('modifiers'))
+            modifiers[fname] = json.loads(f.get('modifiers', '{}'))
             ctx = f.get('context')
             if ctx:
                 contexts[fname] = ctx
@@ -766,7 +766,7 @@ class Form(object):
         for f in self._view['fields']:
             v = self._values[f]
             if self._get_modifier(f, 'required'):
-                assert v, "{} is a required field".format(f)
+                assert v is not False, "{} is a required field".format(f)
 
             # skip unmodified fields
             if f not in self._changed:
@@ -788,7 +788,8 @@ class Form(object):
             fields,
             self._view['onchange'],
         )
-        assert not result.get('warning')
+        if result.get('warning'):
+            _logger.warn("%(title)s: %(message)s" % result.get('warning'))
         values = result.get('value', {})
         # mark onchange output as changed
         self._changed.update(values.keys())
@@ -994,8 +995,12 @@ class M2MProxy(X2MProxy):
     def add(self, record):
         self._assert_editable()
         parent = self._parent
-        assert isinstance(record, BaseModel) \
-           and record._name == parent._view['fields'][self._field]['relation']
+        relation_ = parent._view['fields'][self._field]['relation']
+        assert isinstance(record, BaseModel) and record._name == relation_,\
+            "trying to assign a '{}' object to a '{}' field".format(
+                record._name,
+                relation_,
+            )
         self._get_ids().append(record.id)
 
         parent._perform_onchange([self._field])
