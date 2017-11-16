@@ -51,7 +51,7 @@ var PagePropertiesDialog = widget.Dialog.extend({
                 icon: 'fa-globe',
                 classes: 'btn-link pull-right',
                 click: function (e) {
-                    window.location.href = self.page.url;
+                    window.location.href = '/' + self.page.url;
                 },
             });
         }
@@ -75,7 +75,7 @@ var PagePropertiesDialog = widget.Dialog.extend({
             args: [this.page_id, context.website_id],
             context: context,
         }).then(function (page) {
-            page[0].url = page[0].url.startsWith('/') ? page[0].url.substring(1) : page[0].url;
+            page[0].url = _.str.startsWith(page[0].url, '/') ? page[0].url.substring(1) : page[0].url;
             self.page = page[0];
         }));
 

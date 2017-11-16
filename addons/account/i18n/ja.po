@@ -40,6 +40,11 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+" * ドラフト: 新規の未検証請求書\n"
+" * プロフォーマ: 請求書番号がまだない場合に使用\n"
+" * オープン: 検証済未払の請求書\n"
+" * 支払済: 請求書は支払済。関連会計仕訳は消込済の場合とそうでない場合がある\n"
+" * 取消済: 請求書は取消済"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
@@ -525,7 +530,7 @@ msgstr "<span>消込</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reporting</span>"
-msgstr ""
+msgstr "<span>レポーティング</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1907,7 +1912,7 @@ msgstr "分析"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:178
 #, python-format
 msgid "Analytic Acc."
-msgstr ""
+msgstr "分析勘定"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_account_analytic_id
@@ -6322,12 +6327,12 @@ msgstr "メインタイトル1 (太字、下線)"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings_currency_id
 msgid "Main currency of the company."
-msgstr "会社の主な通貨"
+msgstr "会社の基本通貨"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Main currency of your company"
-msgstr ""
+msgstr "会社の基本通貨"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

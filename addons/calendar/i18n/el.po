@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
 # Kostas Goutoudis <goutoudis@gmail.com>, 2017
+# George Tarasidis <george_tarasidis@yahoo.com>, 2017
 # Timos Zacharatos <kokkinopioupiou@hotmail.com>, 2017
 msgid ""
 msgstr ""
@@ -139,7 +140,7 @@ msgstr ""
 " <td style=\"padding:10px 10px 10px 5px;font-size: 14px;\">\n"
 " <p style=\"font-size: 20px; text-align: center;\"><strong>${object.event_id.name} ενημερώθηκε η ημερομηνία</strong></p>\n"
 " <p>\n"
-" <strong>Αγαπητέ/ή ${object.common_name}</strong>,<br/>\n"
+" <strong>Αγαπητέ/η ${object.common_name}</strong>,<br/>\n"
 " Η ημερομηνία της συνάντησης έχει ενημερωθεί. Η συνάντηση ${object.event_id.name} που δημιουργήθηκε από ${object.event_id.user_id.partner_id.name} είναι πλέον προγραμματισμένη για ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.\n"
 " </p>\n"
 " <table style=\"margin-top: 20px;\"><tr>\n"
@@ -307,7 +308,7 @@ msgstr ""
 " <td style=\"padding:10px 10px 10px 5px;font-size: 14px;\">\n"
 " <p style=\"font-size: 20px; text-align: center;\">Πρόσκληση για <strong>${object.event_id.name}</strong></p>\n"
 " <p>\n"
-" <strong>Αγαπητέ/ή ${object.common_name}</strong>,<br />\n"
+" <strong>Αγαπητέ/η ${object.common_name}</strong>,<br />\n"
 " ${object.event_id.user_id.partner_id.name} έχετε προσκληθεί για ${object.event_id.name} συνάντηση της ${object.event_id.user_id.company_id.name}.</p>\n"
 " <table style=\"margin-top: 20px;\"><tr>\n"
 " <td>\n"
@@ -475,7 +476,7 @@ msgstr ""
 " <td style=\"padding:10px 10px 10px 5px;font-size: 14px;\">\n"
 " <p style=\"font-size: 20px; text-align: center;\">Υπενθύμιση για <strong>${object.event_id.name}</strong></p>\n"
 " <p>\n"
-" <strong>Αγαπητέ/ή ${object.common_name}</strong>,<br />\n"
+" <strong>Αγαπητέ/η ${object.common_name}</strong>,<br />\n"
 " Αυτή είναι μια υπενθύμιση για το παρακάτω συμβάν :\n"
 " </p>\n"
 " <table style=\"margin-top: 20px;\"><tr>\n"
@@ -599,7 +600,7 @@ msgstr "Ενεργή"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_activity_ids
 msgid "Activities"
-msgstr "Δράσεις"
+msgstr "Δραστηριότητες"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity
@@ -614,13 +615,13 @@ msgstr "Τύπος Δραστηριότητας"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_allday
 msgid "All Day"
-msgstr "Ολοήμερο"
+msgstr "Ολοήμερη"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:690
 #, python-format
 msgid "AllDay , %s"
-msgstr "Ολοήμερο, %s"
+msgstr "Ολοήμερη, %s"
 
 #. module: calendar
 #: sql_constraint:calendar.contacts:0
@@ -635,7 +636,7 @@ msgstr "Συμμετέχων"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_attendee_status
 msgid "Attendee Status"
-msgstr "Κατάσταση συμμετέχων"
+msgstr "Κατάσταση συμμετεχόντων"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
@@ -648,7 +649,7 @@ msgstr "Πληροφορίες Συμμετέχοντα"
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Attendees"
-msgstr "Παρεβρισκόμενοι"
+msgstr "Συμμετέχοντες"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -719,7 +720,7 @@ msgstr "Κοινό όνομα"
 #. module: calendar
 #: selection:calendar.event,state:0
 msgid "Confirmed"
-msgstr "Επιβεβαιωμένο"
+msgstr "Επιβεβαιώθηκε"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_partner
@@ -858,17 +859,17 @@ msgstr "Υπάλληλος"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_stop_date
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "End Date"
-msgstr "Ημερομηνία Λήξης"
+msgstr "Ημερ. Λήξης"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_stop_datetime
 msgid "End Datetime"
-msgstr "Ημερομηνία και ώρα Λήξης"
+msgstr "Ημερ. και ώρα Λήξης"
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
 msgid "End date"
-msgstr "Ημερομηνία λήξης"
+msgstr "Ημερ. λήξης"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -967,7 +968,7 @@ msgstr "Παρασκευή"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Group By"
-msgstr "Ομαδοποίηση Κατά"
+msgstr "Ομαδοποίηση κατά"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:1526
@@ -1148,7 +1149,7 @@ msgstr "Μήνυμα"
 #. module: calendar
 #: selection:calendar.alarm,interval:0
 msgid "Minute(s)"
-msgstr "Λεπτό(ά)"
+msgstr "Λεπτό(α)"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1178,7 +1179,7 @@ msgstr "Οι Εκδηλώσεις Μου"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "My Meetings"
-msgstr "Οι συναντήσεις μου"
+msgstr "Οι Συναντήσεις Μου"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_name
@@ -1490,9 +1491,9 @@ msgid ""
 "            other applications such as the employee leaves or the business\n"
 "            opportunities."
 msgstr ""
-"Το ημερολόγιο μοιράζεται μεταξύ των εργαζομένων και είναι πλήρως "
-"ενσωματωμένο με άλλες εφαρμογές, όπως οι άδειες των εργαζομένων ή τις "
-"Επιχειρηματικές."
+"Το ημερολόγιο μοιράζεται μεταξύ των εργαζομένων και είναι πλήρως ενσωματωμένο με \n"
+"            άλλες εφαρμογές, όπως τις Άδειες των Εργαζομένων ή \n"
+"            τις Ευκαιρίες Πωλήσεων."
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -1534,12 +1535,12 @@ msgstr "Τύπος"
 #: selection:calendar.event,attendee_status:0
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Uncertain"
-msgstr "Αβέβαιο"
+msgstr "Αβέβαιη"
 
 #. module: calendar
 #: selection:calendar.event,state:0
 msgid "Unconfirmed"
-msgstr "Μη Επιβεβαιωμένο"
+msgstr "Μη Επιβεβαιωμένη"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_interval
@@ -1574,12 +1575,12 @@ msgstr "Τετάρτη"
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Week(s)"
-msgstr "Εβδομάδες"
+msgstr "Εβδομάδα(ες)"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_week_list
 msgid "Weekday"
-msgstr "Καθημερινή"
+msgstr "Ημέρα"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0

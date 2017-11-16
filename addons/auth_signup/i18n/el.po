@@ -5,13 +5,14 @@
 # Translators:
 # Kostas Goutoudis <goutoudis@gmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
+# George Tarasidis <george_tarasidis@yahoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2017\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,6 +50,32 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+" <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+" <tbody><tr>\n"
+" <td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\">\n"
+" <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+" </td>\n"
+" </tr></tbody>\n"
+" </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+" <p>Αγαπητέ/η ${object.name},</p>\n"
+" <p>Απαιτείται επαναφορά του κωδικού πρόσβασης για τον λογαριασμό Odoo που συνδέεται με αυτό το email.</p>\n"
+" <p>Μπορείτε να αλλάξετε τον κωδικό πρόσβασης ακολουθώντας τον παρακάτω σύνδεσμο, ο οποίος θα είναι έγκυρος για τις επόμενες 24 ώρες:</p>\n"
+" <div style=\"text-align: center; margin-top: 16px;\">\n"
+" <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Αλλαγή κωδικού πρόσβασης</a>\n"
+" </div>\n"
+" <p>Εάν δεν το περιμένετε αυτό το email, μπορείτε να το αγνοήσετε με ασφάλεια.</p>\n"
+" <p>Με φιλικούς χαιρετισμούς,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
+" ${user.signature | safe}\n"
+" <p style=\"font-size: 11px; margin-top: 10px;\">\n"
+" <strong>Στάλθηκε από ${user.company_id.name} χρησιμοποιώντας <a href=\"https://www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
+" </p>\n"
+"</div>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -83,6 +110,35 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+" <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+" <tbody><tr>\n"
+" <td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\">\n"
+" <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+" </td>\n"
+" </tr></tbody>\n"
+" </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"<p>Αγαπητέ/η ${object.name},</p>\n"
+" <p>\n"
+" Έχετε προσκληθεί να συνδεθείτε στη \"${object.company_id.name}\" για να αποκτήσετε πρόσβαση στα έγγραφά σας στο Odoo.\n"
+" </p>\n"
+" <p>\n"
+" Για να αποδεχτείτε την πρόσκληση, κάντε κλικ στον παρακάτω σύνδεσμο:\n"
+" </p>\n"
+" <div style=\"text-align: center; margin-top: 16px;\">\n"
+" <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Αποδοχή πρόσκλησης από \"${object.company_id.name}\"</a>\n"
+" </div>\n"
+" <p>Με φιλικούς χαιρετισμούς,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
+" ${user.signature | safe}\n"
+" <p style=\"font-size: 11px; margin-top: 10px;\">\n"
+" <strong>Στάλθηκε από ${user.company_id.name} χρησιμοποιώντας <a href=\"https://www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
+" </p>\n"
+"</div>"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
@@ -126,6 +182,39 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+" <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+" <tbody><tr>\n"
+" <td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\">\n"
+" <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+" </td>\n"
+" </tr></tbody>\n"
+" </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+" <p>Αγαπητέ/η ${object.name},</p>\n"
+" <p>\n"
+" Ο λογαριασμός σας δημιουργήθηκε επιτυχώς!\n"
+" </p>\n"
+" <p>\n"
+" Email/Όνομα χρήστη: ${object.email}\n"
+" <br/>\n"
+" Κωδικός Πρόσβασης: ${ctx['password']}\n"
+" </p>\n"
+" <p>\n"
+" Για να αποκτήσετε πρόσβαση στο λογαριασμό σας, ακολουθήστε τον παρακάτω σύνδεσμο:\n"
+" </p>\n"
+" <div style=\"text-align: center; margin-top: 16px;\">\n"
+" <a href=\"/web/login?${ctx['auth_login']}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Μετάβαση στον λογαριασμό μου</a>\n"
+" </div>\n"
+" <p>Με φιλικούς χαιρετισμούς,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
+" ${user.signature | safe}\n"
+" <p style=\"font-size: 11px; margin-top: 10px;\">\n"
+" <strong>Στάλθηκε από ${user.company_id.name} χρησιμοποιώντας <a href=\"https://www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
+" </p>\n"
+"</div>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -148,7 +237,7 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Already have an account?"
-msgstr ""
+msgstr "Έχετε ήδη λογαριασμό;"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:78
@@ -195,7 +284,7 @@ msgstr "Επιβεβαίωση Κωδικού Πρόσβασης"
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Confirmed"
-msgstr "Επιβεβαιωμένο"
+msgstr "Επιβεβαιώθηκε"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -205,7 +294,7 @@ msgstr "Επαφή"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Copy access rights from"
-msgstr ""
+msgstr "Αντιγράψτε τα δικαιώματα πρόσβασης από "
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:55
@@ -222,7 +311,7 @@ msgstr "Δεν ήταν δυνατή η επαναφορά του κωδικού
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_uninvited
 msgid "Customer Account"
-msgstr ""
+msgstr "Λογαριασμός Πελάτη"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -232,7 +321,7 @@ msgstr "Προεπιλεγμένα δικαιώματα πρόσβασης"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
-msgstr ""
+msgstr "Δεν έχετε Λογαριασμό;"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_reset_password
@@ -243,7 +332,7 @@ msgstr "Ενεργοποίηση επαναφοράς κωδικού πρόσβ�
 #. module: auth_signup
 #: selection:res.config.settings,auth_signup_uninvited:0
 msgid "Free sign up (B2C)"
-msgstr ""
+msgstr "Ελεύθερη εγγραφή (B2C)"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_http
@@ -278,12 +367,12 @@ msgstr "Ποτέ δεν συνδέθηκε"
 #: code:addons/auth_signup/controllers/main.py:73
 #, python-format
 msgid "No login provided."
-msgstr ""
+msgstr "Δεν παρέχεται σύνδεση."
 
 #. module: auth_signup
 #: selection:res.config.settings,auth_signup_uninvited:0
 msgid "On invitation (B2B)"
-msgstr ""
+msgstr "Με Πρόσκληση (B2B)"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -293,7 +382,7 @@ msgstr "Κωδικός Πρόσβασης"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Password Reset"
-msgstr ""
+msgstr "Επαναφορά Κωδικού"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
@@ -304,7 +393,7 @@ msgstr "Επαναφορά Κωδικού"
 #: code:addons/auth_signup/controllers/main.py:121
 #, python-format
 msgid "Passwords do not match; please retype them."
-msgstr ""
+msgstr "Οι κωδικοί πρόσβασης δεν ταιριάζουν, παρακαλώ ξαναγράψτε τους."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
@@ -366,19 +455,19 @@ msgstr "Διεύθυνση URL Εγγραφής"
 #: code:addons/auth_signup/models/res_users.py:88
 #, python-format
 msgid "Signup is not allowed for uninvited users"
-msgstr ""
+msgstr "Η εγγραφή δεν επιτρέπεται για τους χρήστες που δεν προσκλήθηκαν"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:146
 #, python-format
 msgid "Signup token '%s' is no longer valid"
-msgstr ""
+msgstr "Το διακριτικό εγγραφής '%s' δεν ισχύει πλέον"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:142
 #, python-format
 msgid "Signup token '%s' is not valid"
-msgstr ""
+msgstr "Το διακριτικό εγγραφής '%s' δεν ισχύει"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
@@ -394,7 +483,7 @@ msgstr "Πρότυπο χρήστη για νέους χρήστες που δη
 #: code:addons/auth_signup/controllers/main.py:119
 #, python-format
 msgid "The form was not properly filled in."
-msgstr ""
+msgstr "Η φόρμα δεν έχει συμπληρώθηκε σωστά."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -404,7 +493,7 @@ msgstr "Χρήστες"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to ${object.company_id.name}!"
-msgstr ""
+msgstr "Καλώς Ήρθατε στην ${object.company_id.name}!"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields

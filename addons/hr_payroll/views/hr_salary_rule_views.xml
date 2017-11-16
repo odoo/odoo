@@ -103,19 +103,6 @@
         parent="menu_hr_payroll_configuration"
         sequence="2"
     />
-    <record id="action_view_hr_payroll_structure_tree" model="ir.actions.act_window">
-        <field name="name">Salary Structures Hierarchy</field>
-        <field name="res_model">hr.payroll.structure</field>
-        <field name="view_type">tree</field>
-        <field name="domain">[('parent_id','=',False)]</field>
-        <field name="view_id" ref="view_hr_payroll_structure_tree"/>
-    </record>
-    <menuitem
-        id="menu_hr_payroll_structure_tree"
-        action="action_view_hr_payroll_structure_tree"
-        parent="menu_hr_payroll_configuration"
-        sequence="2"
-    />
     <!-- Salary Category-->
     <record id="hr_salary_rule_category_form" model="ir.ui.view">
         <field name="name">hr.salary.rule.category.form</field>

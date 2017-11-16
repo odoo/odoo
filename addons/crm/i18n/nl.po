@@ -729,7 +729,7 @@ msgid ""
 "                                    accurate expected revenues by closing date."
 msgstr ""
 "<strong>Toekomstige opbrengsten inschatten</strong><br/>\n"
-"                                    U kan de maturiteit van een verkoopteam afmeten aan het vermogen om toekomstige\n"
+"                                    U kan de volwassenheid van een verkoopteam afmeten aan het vermogen om toekomstige\n"
 "                                    opbrengsten voor de komende maanden en kwartalen in te schatten. Leid het team op\n"
 "                                    om juiste schattingen te maken voor een up-to-date pijplijn.\n"
 "                                    Na een paar maanden kan u de werkelijke succesratio voor een fase instellen\n"
@@ -761,6 +761,8 @@ msgid ""
 "<strong>Organize weekly sales meetings</strong><br/>\n"
 "                                    It's a great way to see where you can improve and keep track of the progress of your sales channel. Start the pipeline review by looking at the big picture; revenues and number of opportunities by stage, by expected closing date and by salespeople."
 msgstr ""
+"<strong>Organizeer wekelijks verkoopvergaderingen</strong><br/>\n"
+"                                    Verkoopvergaderingen zijn erg nuttig om te kijken waar verbeteringen kunnen worden aangebracht en welke voortgang het verkoopteam heeft geboekt. Bekijk uw pijplijn in grote lijnen: opbrengsten, aantal prospects per fase, per afsluitdatum en per verkoper."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1291,6 +1293,8 @@ msgid ""
 "Check this box to filter and qualify incoming requests as leads before "
 "converting them into opportunities and assigning them to a salesperson."
 msgstr ""
+"Vink dit veld om inkomende aanvragen as leads te filteren voor dat deze "
+"omgezet worden naar een prospect en worden toegewezen aan een verkoper."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_use_opportunities
@@ -1764,6 +1768,8 @@ msgid ""
 "Dashboard graph content cannot be Pipeline if the sales channel doesn't use "
 "it. (Pipeline is unchecked.)"
 msgstr ""
+"Dashboard grafiek inhoud kan de pijplijn niet zijn wanneer het verkoopkanaal"
+" deze niet gebruikt. (Pijplijn is uit gevinkt)."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_date
@@ -1828,6 +1834,8 @@ msgid ""
 "Depending on how complex your business is, it may take between 6 months and 18 months for a new\n"
 "                                    sales channel to efficiently forecasts future revenues."
 msgstr ""
+"Afhankelijk van hoe complex uw bedrijf is, kan het tussen de 6 en 18 maanden duren  voordat\n"
+"een verkoopkanaal efficiënt toekomstige omzetten kan voorspellen."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1952,6 +1960,11 @@ msgid ""
 "Incoming emails can be automatically assigned to specific sales channels. To"
 " do so, set an email alias on the sales channel."
 msgstr ""
+"E-mails verstuurd aan het adres maken nieuwe leads aan die niet toegewezen "
+"zijn aan een verkoopkanaal. Dit kan veranderd worden bij het omzetten naar "
+"een prospect, inkomende e-mails kunnen automatisch worden toegewezen aan "
+"specifieke verkoopkanalen. Om dit doen, stel het e-mail alias in op het "
+"verkoopkanaal."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2300,6 +2313,8 @@ msgid ""
 "Here are a few examples of documents you should provide to your sales "
 "channel based on the sales stage:"
 msgstr ""
+"Hier zijn een aantal voorbeelden van documenten die u beschikbaar kan "
+"stellen aan uw verkoopkanaal gebaseerd op de verkoopfase:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2383,6 +2398,9 @@ msgid ""
 "                        the foundations to a strong process leading to\n"
 "                        continuous improvements of your sales channels."
 msgstr ""
+"Wanneer u de vorige stappen heeft uitgevoerd, heeft u al\n"
+"de fundering van een sterk proces leidend naar \n"
+"continue verbeteringen van uw verkoopkanaal gemaakt."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2815,7 +2833,7 @@ msgstr "Gemiddeld"
 #: code:addons/crm/models/crm_lead.py:924
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
-msgstr "Afspraak ingeplant op '%s'<br> Onderwerp: %s <br> Duur: %s Uur"
+msgstr "Afspraak ingepland op '%s'<br> Onderwerp: %s <br> Duur: %s Uur"
 
 #. module: crm
 #. openerp-web
@@ -3211,6 +3229,11 @@ msgid ""
 "mainly used by the sales manager in order to do the periodic review with the"
 " channels of the sales pipeline."
 msgstr ""
+"Prospectsanalyse geeft u directe toegang tot uw prospects met informatie "
+"zoals verwachte omzet, geschatte kosten, gemiste einddata of het aantal "
+"interacties per prospect. Dit overzicht wordt meestal gebruikt door de sales"
+" manager om periodiek commercieel overleg met de verkoopteams over de "
+"verkoop pijplijn te houden."
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_opportunities_cohort
@@ -3630,6 +3653,8 @@ msgid ""
 "Ready to boost your sales? Your <b>Pipeline</b> can be found here, under "
 "<b>CRM</b> app."
 msgstr ""
+"Klaar om uw verkoop te stimuleren? Uw <b>Pijplijn</b> kan hier gevonden "
+"worden, in de <b>CRM</b> app."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
@@ -4244,6 +4269,14 @@ msgid ""
 "\n"
 "                        That's the easiest way to integrate Odoo with third party apps."
 msgstr ""
+"Er zijn verschillende manieren voor uw bedrijf om leads met Odoo CRM te genereren.\n"
+"Een van hen is het gebruik van een generiek e-mailadres als trigger\n"
+"om een nieuwe lead aan te maken in het systeem. In Odoo, elk verkoop team\n"
+"is gekoppeld aan een eigen e-mail adres waar prospects hen kunnen bereiken.\n"
+"Bijvoorbeeld, als het persoonlijke e-mailadres van uw directe team\n"
+"direct@mycompany.example.com is, dan krijgt u bij elke e-mail verzonden door een nieuw contactpersoon een nieuwe prospect in het verkoop team.\n"
+"\n"
+"Dat is de makkelijkste manier om Odoo te integreren met apps van derden."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -4686,6 +4719,9 @@ msgid ""
 "you with a list of matching contacts or companies.When selecting one item, "
 "the partner name, logo and website get automatically set."
 msgstr ""
+"Bij het vullen van uw adresboek, gebruikt Odoo Clearbit's API om een lijst "
+"met mogelijke contacten en bedrijven weer te geven. Door het selecteren, "
+"wordt de klantnaam, logo en de website automatisch ingesteld."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_team_id
@@ -4752,7 +4788,7 @@ msgstr "Gewonnen in functie van doelstelling"
 #: code:addons/crm/models/crm_lead.py:383
 #, python-format
 msgid "Yeah! Deal of the last 7 days for the team."
-msgstr ""
+msgstr "Yeah! Deal van de laatste 7 dagen van het team."
 
 #. module: crm
 #. openerp-web

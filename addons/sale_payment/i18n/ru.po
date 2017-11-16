@@ -5,14 +5,14 @@
 # Translators:
 # Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
-# SV <sv@grimmette.ru>, 2017
+# Sergey Vilizhanin <sv@grimmette.ru>, 2017
 # Artur Komishenko <Archi1792@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2017-11-07 15:45+0000\n"
+"PO-Revision-Date: 2017-11-07 15:45+0000\n"
 "Last-Translator: Artur Komishenko <Archi1792@gmail.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -91,7 +91,12 @@ msgid "Awaiting Payment"
 msgstr ""
 
 #. module: sale_payment
-#: code:addons/sale_payment/controllers/payment.py:53
+#: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
+msgid "Awaiting Payments"
+msgstr ""
+
+#. module: sale_payment
+#: code:addons/sale_payment/controllers/payment.py:52
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -143,11 +148,6 @@ msgid "Pay with"
 msgstr ""
 
 #. module: sale_payment
-#: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
-msgid "Payment"
-msgstr "Платеж"
-
-#. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_acquirer_id
 msgid "Payment Acquirer"
 msgstr "Платежи клиентов"
@@ -156,6 +156,16 @@ msgstr "Платежи клиентов"
 #: model:ir.model,name:sale_payment.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Операция Оплаты"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
+msgid "Payment to Capture"
+msgstr ""
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
+msgid "Payments to Capture"
+msgstr ""
 
 #. module: sale_payment
 #: model:ir.actions.act_window,name:sale_payment.payment_transaction_action_pending
@@ -226,8 +236,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale_payment.sale_order_view_form
 msgid "Transactions"
 msgstr "Транзакции"
-
-#. module: sale_payment
-#: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
-msgid "to Capture"
-msgstr ""

@@ -1502,43 +1502,45 @@ QUnit.module('basic_fields', {
 
     });
 
-    QUnit.module('JournalDashboardGraph');
+    QUnit.module('JournalDashboardGraph', {
+        beforeEach: function () {
+            _.extend(this.data.partner.fields, {
+                graph_data: { string: "Graph Data", type: "text" },
+                graph_type: {
+                    string: "Graph Type",
+                    type: "selection",
+                    selection: [['line', 'Line'], ['bar', 'Bar']]
+                },
+            });
+            this.data.partner.records[0].graph_type = "bar";
+            this.data.partner.records[1].graph_type = "line";
+            var graph_values = [
+                {'value': 300, 'label': '5-11 Dec'},
+                {'value': 500, 'label': '12-18 Dec'},
+                {'value': 100, 'label': '19-25 Dec'},
+            ];
+            this.data.partner.records[0].graph_data = JSON.stringify([{
+                color: 'red',
+                title: 'Partner 0',
+                values: graph_values,
+                key: 'A key',
+                area: true,
+            }]);
+            this.data.partner.records[1].graph_data = JSON.stringify([{
+                color: 'blue',
+                title: 'Partner 1',
+                values: graph_values,
+                key: 'A key',
+                area: true,
+            }]);
+        },
+    });
 
     QUnit.test('graph dashboard widget is rendered correctly', function (assert) {
         var done = assert.async();
         assert.expect(4);
 
-        var graph_key = "";
-        _.extend(this.data.partner.fields, {
-            graph_data: { string: "Graph Data", type: "text" },
-            graph_type: {
-                string: "Graph Type",
-                type: "selection",
-                selection: [['line', 'Line'], ['bar', 'Bar']]
-            },
-        });
-        this.data.partner.records[0].graph_type = "bar";
-        this.data.partner.records[1].graph_type = "line";
-        var graph_values = [
-            {'value': 300, 'label': '5-11 Dec'},
-            {'value': 500, 'label': '12-18 Dec'},
-            {'value': 100, 'label': '19-25 Dec'},
-        ];
-        this.data.partner.records[0].graph_data = JSON.stringify([{
-            color: 'red',
-            title: 'Partner 0',
-            values: graph_values,
-            key: 'A key',
-            area: true,
-        }]);
-        graph_key = JSON.parse(this.data.partner.records[0].graph_data)[0].key
-        this.data.partner.records[1].graph_data = JSON.stringify([{
-            color: 'blue',
-            title: 'Partner 1',
-            values: graph_values,
-            key: 'A key',
-            area: true,
-        }]);
+        var graph_key = JSON.parse(this.data.partner.records[0].graph_data)[0].key;
         var kanban = createView({
             View: KanbanView,
             model: 'partner',
@@ -1571,7 +1573,7 @@ QUnit.module('basic_fields', {
             evt.initMouseEvent("mouseover", true, true, window, 0, 0, 0, 80, 20, false, false, false, false, 0, null);
             $('.discreteBar')[0].dispatchEvent(evt);
             var tooltip = $('.nvtooltip').find('table').find('.key')[0].innerText;
-            assert.equal(tooltip,graph_key, "graph tooltip should be generated ");
+            assert.equal(tooltip, graph_key, "graph tooltip should be generated ");
             $('.nvtooltip').remove();
 
             // force a re-rendering of the first record (to check if the
@@ -1588,6 +1590,41 @@ QUnit.module('basic_fields', {
             done();
         });
 
+    });
+
+    QUnit.test('graph dashboard widget does not need nv to be destroyed', function (assert) {
+        // this test ensures that the JournalDashboardGraph widget doesn't crash
+        // when being destroyed before nv has been loaded
+        assert.expect(2);
+
+        var destroy = basicFields.JournalDashboardGraph.prototype.destroy;
+        basicFields.JournalDashboardGraph.prototype.destroy = function () {
+            assert.step('destroy');
+            var nv = window.nv;
+            delete window.nv;
+            destroy.apply(this, arguments);
+            window.nv = nv;
+        };
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                    '<field name="graph_type"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                        '<field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>' +
+                        '</div>' +
+                    '</t>' +
+                '</templates></kanban>',
+            domain: [['id', 'in', [1]]],
+        });
+
+        kanban.destroy();
+        basicFields.JournalDashboardGraph.prototype.destroy = destroy;
+
+        assert.verifySteps(['destroy']);
     });
 
     QUnit.module('AceEditor');

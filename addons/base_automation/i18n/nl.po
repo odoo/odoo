@@ -100,7 +100,7 @@ msgstr "Automatisering"
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
-msgstr ""
+msgstr "Basis actie regel: controleer en voer uit"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_recursive
@@ -454,6 +454,8 @@ msgid ""
 "Provide the field used to link the newly created recordon the record on used"
 " by the server action."
 msgstr ""
+"Vul het veld in welke gebruikt wordt om het nieuw aangemaakte veld te linken"
+" aan het veld gebruikt door de server actie."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_code
@@ -525,6 +527,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (available in Discuss)\n"
 "- 'Send Email': automatically send an email (available in email_template)"
 msgstr ""
+"Type van server actie. De volgende opties zijn beschikbaar:\n"
+"- 'Voer Python code uit': een blok van Python code dat wordt uitgevoerd\n"
+"- 'Trigger een workflow signaal': stuur een signaal naar een workflow\n"
+"- 'Aanmaken of kopiëren van een nieuw record': maak een nieuw record aan met nieuwe waardes of kopieer een record in uw database\n"
+"- 'Schijf op record': update de waardes van een record\n"
+"- 'Voer verschillende acties uit': definieer een actie die meerdere andere server acties uitvoert\n"
+"- 'Voeg volgers toe' Voeg volgers toe aan een record (beschikbaar in discussie)\n"
+"- 'Verstuur e-mail': stuur automatisch een e-mail (beschikbaar in email_template)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_usage
@@ -545,6 +555,11 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"Gebruik automatisch acties om automatisch acties te starten voor\n"
+"verschillende schermen. Bijvoorbeeld: een lead die aangemaakt wordt door een specifieke gebruiker\n"
+"mag automatisch toegewezen worden aan een specifiek verkoopkanaal, of een\n"
+"prospect die na 14 dagen nog de status in afwachting heeft kan\n"
+"een automatische herinnering e-mail starten."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_user_id
