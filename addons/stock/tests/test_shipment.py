@@ -6,7 +6,6 @@ from odoo.addons.stock.tests.common2 import TestStockCommon
 class TestInventory(TestStockCommon):
 
     def test_shipment(self):
-        # TDE NOTE: this test replaces test/shipment.yml present until saas-10
         # TDE TODO
         # pickign.action_confirm -> confirm moves
         # picking.do_prepare_partial, should create pack ops, write on it ?

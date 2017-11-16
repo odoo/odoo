@@ -1,0 +1,27 @@
+<odoo>
+    <data noupdate="1"> 
+        <record id="location_order" model="stock.location">
+            <field name="name">Order Processing</field>
+            <field name="usage">internal</field>
+            <field name="location_id" ref="stock.stock_location_company"/>
+        </record>
+
+        <record id="location_dispatch_zone" model="stock.location">
+            <field name="name">Dispatch Zone</field>
+            <field name="usage">internal</field>
+            <field name="location_id" ref="stock.location_order"/>
+        </record>
+
+        <record id="location_gate_a" model="stock.location">
+            <field name="name">Gate A</field>
+            <field name="usage">internal</field>
+            <field name="location_id" ref="stock.location_dispatch_zone"/>
+        </record>
+
+        <record id="location_gate_b" model="stock.location">
+            <field name="name">Gate B</field>
+            <field name="usage">internal</field>
+            <field name="location_id" ref="stock.location_dispatch_zone"/>
+        </record>
+    </data>
+</odoo>

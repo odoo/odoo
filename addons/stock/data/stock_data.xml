@@ -143,5 +143,109 @@
             <field name="number_increment">1</field>
         </record>
 
+        <record id="base.main_partner" model="res.partner">
+            <field name="property_stock_customer" model="stock.warehouse" 
+                eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+        </record>
+
+        <!-- create xml ids for demo data that are widely used in tests or in other codes, for more convenience -->
+        <function model="ir.model.data" name="create">
+            <value model="stock.warehouse" eval="{
+                'name': 'stock_location_stock',
+                'module':'stock',
+                'model': 'stock.location',
+                'res_id': obj().env.ref('stock.warehouse0').lot_stock_id.id,
+            }"/>
+        </function>
+        <function model="ir.model.data" name="create">
+            <value model="stock.warehouse" eval="{
+                'name': 'stock_location_company',
+                'module':'stock',
+                'model': 'stock.location',
+                'res_id': obj().env.ref('stock.warehouse0').wh_input_stock_loc_id.id,
+            }"/>
+        </function>
+        <function model="ir.model.data" name="create">
+            <value model="stock.warehouse" eval="{
+                'name': 'stock_location_output',
+                'module':'stock',
+                'model': 'stock.location',
+                'res_id': obj().env.ref('stock.warehouse0').wh_output_stock_loc_id.id,
+            }"/>
+        </function>
+        <function model="ir.model.data" name="create">
+            <value model="stock.warehouse" eval="{
+                'name': 'location_pack_zone',
+                'module':'stock',
+                'model': 'stock.location',
+                'res_id': obj().env.ref('stock.warehouse0').wh_pack_stock_loc_id.id,
+            }"/>
+        </function>
+        <function model="ir.model.data" name="create">
+            <value model="stock.warehouse" eval="{
+                'name': 'picking_type_internal',
+                'module':'stock',
+                'model': 'stock.picking.type',
+                'res_id': obj().env.ref('stock.warehouse0').int_type_id.id,
+            }"/>
+        </function>
+        <function model="ir.model.data" name="create">
+            <value model="stock.warehouse" eval="{
+                'name': 'picking_type_in',
+                'module':'stock',
+                'model': 'stock.picking.type',
+                'res_id': obj().env.ref('stock.warehouse0').in_type_id.id,
+            }"/>
+        </function>
+        <function model="ir.model.data" name="create">
+            <value model="stock.warehouse" eval="{
+                'name': 'picking_type_out',
+                'module':'stock',
+                'model': 'stock.picking.type',
+                'res_id': obj().env.ref('stock.warehouse0').out_type_id.id,
+            }"/>
+        </function>
+
+        <!-- avoid the xml id and the associated resource being dropped by the orm by manually making a hit on it -->
+        <function model="ir.model.data" name="_update_dummy">
+            <value>stock.location</value>
+            <value>stock</value>
+            <value>stock_location_stock</value>
+        </function>
+        <function model="ir.model.data" name="_update_dummy">
+            <value>stock.location</value>
+            <value>stock</value>
+            <value>stock_location_company</value>
+        </function>
+        <function model="ir.model.data" name="_update_dummy">
+            <value>stock.location</value>
+            <value>stock</value>
+            <value>stock_location_output</value>
+        </function>
+        <function model="ir.model.data" name="_update_dummy">
+            <value>stock.location</value>
+            <value>stock</value>
+            <value>location_pack_zone</value>
+        </function>
+        <function model="ir.model.data" name="_update_dummy">
+            <value>stock.picking.type</value>
+            <value>stock</value>
+            <value>picking_type_internal</value>
+        </function>
+        <function model="ir.model.data" name="_update_dummy">
+            <value>stock.picking.type</value>
+            <value>stock</value>
+            <value>picking_type_in</value>
+        </function>
+        <function model="ir.model.data" name="_update_dummy">
+            <value>stock.picking.type</value>
+            <value>stock</value>
+            <value>picking_type_out</value>
+        </function>
+
+        <!-- create the transit location for each company existing -->
+        <function model="res.company" name="create_transit_location">
+            <value model="res.company" eval="obj().search([('internal_transit_location_id', '=', False)]).ids"/>
+        </function>
     </data>
 </odoo>

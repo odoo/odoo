@@ -82,5 +82,22 @@
             <field name="manual" eval="False"/>
             <field name="sequence">0</field>
         </record>
+
+        <function model="ir.model.data" name="create">
+            <value model="stock.warehouse" eval="{
+                'name': 'picking_type_manufacturing',
+                'module':'mrp',
+                'model': 'stock.picking.type',
+                'res_id': obj().env.ref('stock.warehouse0').manu_type_id.id,
+            }"/>
+        </function>
+
+        <!-- avoid the xml id and the associated resource being dropped by the orm by manually making a hit on it -->
+        <function model="ir.model.data" name="_update_dummy">
+            <value>stock.picking.type</value>
+            <value>mrp</value>
+            <value>picking_type_manufacturing</value>
+        </function>
     </data>
+
 </odoo>

@@ -35,7 +35,7 @@ The following topics are covered by this module:
         'data/ir_sequence_data.xml',
         'data/mrp_repair_data.xml',
     ],
-    'demo': ['data/mrp_repair_demo.yml'],
+    'demo': ['data/mrp_repair_demo.xml'],
     'test': [],
     'installable': True,
     'auto_install': False,

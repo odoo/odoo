@@ -29,5 +29,13 @@
             <field name="css_class">fa fa-google-plus-square</field>
             <field name="body">Log in with Google</field>
         </record>
+
+        <!-- Use database uuid as client_id for OpenERP oauth provider -->
+        <function model="auth.oauth.provider" name="write">
+            <value eval="[ref('auth_oauth.provider_openerp')]"/>
+            <value model="ir.config_parameter" eval="{
+                'client_id': obj().env['ir.config_parameter'].get_param('database.uuid'),
+            }"/>
+        </function>
     </data>
 </odoo>
