@@ -13,7 +13,7 @@
         </record>
     </data>
     <data>
-        <function model="ir.config_parameter" name="set_param" eval="('auth_signup.allow_uninvited', True)"/>
+        <function model="ir.config_parameter" name="set_param" eval="('auth_signup.invitation_scope', 'b2c')"/>
 
         <!-- JUMP TO FORUM AT INSTALL -->
         <record id="action_open_forum" model="ir.actions.act_url">
