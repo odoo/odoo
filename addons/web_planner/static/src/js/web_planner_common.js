@@ -1,6 +1,7 @@
 odoo.define('web.planner.common', function (require) {
 "use strict";
 
+var base = require('web_editor.base');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom_utils = require('web.dom_utils');
@@ -66,10 +67,12 @@ var PlannerDialog = Widget.extend({
      */
     willStart: function() {
         var self = this;
+        // fallback on context for frontend
+        var context = _.isEmpty(session.user_context) ? base.get_context() : session.user_context;
         var res = this._super.apply(this, arguments).then(function() {
             return (new Model('web.planner')).call('render',
                 [self.planner.view_id[0], self.planner.planner_application],
-                {context: session.user_context});
+                {context: context});
         }).then(function(template) {
             self.$res = $(template);
         });
