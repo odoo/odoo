@@ -1534,7 +1534,7 @@
         <div class="oe_website_sale_tx_status" t-att-data-order-id="order.id">
             <div t-att-class="'panel %s' % (
                     (order.payment_tx_id.state == 'pending' and 'panel-info') or
-                    (order.payment_tx_id.state == 'done' and 'panel-success') or
+                    (order.payment_tx_id.state in ('done', 'authorized') and 'panel-success') or
                     'panel-danger')">
                 <a groups="base.group_system" class="btn pull-right" target="_blank"
                         t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % ('payment.acquirer', order.payment_acquirer_id.id, 'payment.action_payment_acquirer')">
@@ -1552,6 +1552,9 @@
                     </t>
                     <t t-if="order.payment_tx_id.state == 'error'">
                         <t t-raw="order.payment_acquirer_id.error_msg"/>
+                    </t>
+                    <t t-if="order.payment_tx_id.state == 'authorized'">
+                        Your payment has been authorized.
                     </t>
                 </div>
                 <div class="panel-body" t-if="order.payment_acquirer_id.post_msg">
