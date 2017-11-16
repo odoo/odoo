@@ -41,6 +41,12 @@
                 <i class="fa fa-check-circle"/> Paid
             </a>
         </xpath>
+        <xpath expr="//div[@id='payment_status']" position="inside">
+            <div t-if="invoice.payment_tx_ids and invoice.amount_total and not success and not error" class="o_account_payment_tx_status" t-att-data-invoice-id="invoice.id">
+                <t t-set="payment_tx_id" t-value="invoice.payment_tx_id"/>
+                <t t-call="payment.payment_confirmation_status"/>
+            </div>
+        </xpath>
         <xpath expr="//div[hasclass('panel-body')]" position="after">
             <div class="panel-body" t-if="not invoice.payment_tx_ids.filtered(lambda tx: tx.state in ('done', 'authorized')) and invoice.state == 'open' and invoice.amount_total" id="portal_pay">
                 <div t-if="pms or s2s_acquirers or form_acquirers" id="payment_method" class="col-md-offset-3 col-md-6">
@@ -135,7 +141,8 @@
             inherit_id="account.portal_invoice_success">
         <xpath expr="//a[hasclass('close')]" position="after">
             <t t-if="success == 'pay_invoice'">
-                Invoice successfully paid.
+                <span t-if='invoice.payment_acquirer_id.done_msg' t-raw="invoice.payment_acquirer_id.done_msg"/>
+                <span t-if='invoice.payment_acquirer_id.post_msg' t-raw="invoice.payment_acquirer_id.post_msg"/>
             </t>
         </xpath>
     </template>

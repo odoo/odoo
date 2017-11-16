@@ -1,4 +1,5 @@
 <odoo>
+
     <template id="portal_my_orders_payment" name="Payment on my orders" inherit_id="sale.portal_order_page">
         <xpath expr="//t[@name='portal_confirmation_sign']" position="after">
             <t t-set="tx_ids" t-value="order.payment_tx_ids.filtered(lambda tx: tx.state in ('authorized', 'done'))"/>
@@ -12,6 +13,12 @@
                     <i class="fa fa-check-circle"/> Done
                 </a>
             </t>
+        </xpath>
+        <xpath expr="//div[@id='payment_status']" position="inside">
+            <div t-if="order.payment_tx_ids and not invoices and order.state in ('sent', 'sale') and portal_confirmation == 'pay' and not success and not error" class="o_sale_payment_tx_status" t-att-data-order-id="order.id">
+                <t t-set="payment_tx_id" t-value="order.payment_tx_id"/>
+                <t t-call="payment.payment_confirmation_status"/>
+            </div>
         </xpath>
         <xpath expr="//div[@id='portal_sign']" position="after">
             <div class="row" t-if="not order.payment_tx_ids.filtered(lambda tx: tx.state in ('authorized', 'done')) and not invoices and order.state in ('sent', 'sale') and portal_confirmation == 'pay'" id="portal_pay">
@@ -105,7 +112,8 @@
             inherit_id="sale.portal_order_success">
         <xpath expr="//a[hasclass('close')]" position="after">
             <t t-if="success == 'pay_sale'">
-                Order successfully paid.
+                <span t-if='order.payment_acquirer_id.done_msg' t-raw="order.payment_acquirer_id.done_msg"/>
+                <span t-if='order.payment_acquirer_id.post_msg' t-raw="order.payment_acquirer_id.post_msg"/>
             </t>
         </xpath>
     </template>
