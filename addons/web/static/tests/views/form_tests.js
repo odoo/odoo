@@ -4,6 +4,7 @@ odoo.define('web.form_tests', function (require) {
 var concurrency = require('web.concurrency');
 var config = require('web.config');
 var core = require('web.core');
+var fieldRegistry = require('web.field_registry');
 var FormView = require('web.FormView');
 var pyeval = require('web.pyeval');
 var RainbowMan = require('web.rainbow_man');
@@ -308,6 +309,41 @@ QUnit.module('Views', {
         assert.ok(!form.$('.foo_field').hasClass('o_invisible_modifier'), 'should display foo field');
         form.destroy();
     });
+
+    QUnit.test('asynchronous fields can be set invisible', function (assert) {
+        assert.expect(1);
+
+        var def = $.Deferred();
+
+        // we choose this widget because it is a quite simple widget with a non
+        // empty qweb template
+        var PercentPieWidget = fieldRegistry.get('percentpie');
+        fieldRegistry.add('asyncwidget', PercentPieWidget.extend({
+            willStart: function () {
+                return def;
+            },
+        }));
+
+        createAsyncView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet><group>' +
+                        '<field name="foo"/>' +
+                        '<field name="int_field" invisible="1" widget="asyncwidget"/>' +
+                    '</group></sheet>' +
+                '</form>',
+            res_id: 1,
+        }).then(function (form) {
+            assert.ok(form.$('.o_field_widget[name="int_field"]').hasClass('o_invisible_modifier'),
+                'int_field is invisible');
+            form.destroy();
+            delete fieldRegistry.map.asyncwidget;
+        });
+        def.resolve();
+    });
+
 
     QUnit.test('properly handle modifiers and attributes on notebook tags', function (assert) {
         assert.expect(2);
