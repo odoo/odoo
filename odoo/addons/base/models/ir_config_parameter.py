@@ -27,6 +27,7 @@ class IrConfigParameter(models.Model):
     """Per-database storage of configuration key-value pairs."""
     _name = 'ir.config_parameter'
     _rec_name = 'key'
+    _order = 'key'
 
     key = fields.Char(required=True, index=True)
     value = fields.Text(required=True)
