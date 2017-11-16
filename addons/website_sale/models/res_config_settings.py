@@ -50,8 +50,9 @@ class ResConfigSettings(models.TransientModel):
     module_l10n_eu_service = fields.Boolean(string="EU Digital Goods VAT")
 
     cart_recovery_mail_template = fields.Many2one('mail.template', string='Cart Recovery Email',
-        default=_default_recovery_mail_template, domain="[('model', '=', 'sale.order')]")
-    cart_abandoned_delay = fields.Float("Abandoned Delay", default=1.0, help="number of hours after which the cart is considered abandoned")
+        default=_default_recovery_mail_template, config_parameter='website_sale.cart_recovery_mail_template_id', domain="[('model', '=', 'sale.order')]")
+    cart_abandoned_delay = fields.Float("Abandoned Delay", help="number of hours after which the cart is considered abandoned",
+                                        default=1.0, config_parameter='website_sale.cart_abandoned_delay')
 
     @api.model
     def get_values(self):
@@ -64,15 +65,9 @@ class ResConfigSettings(models.TransientModel):
             if self.env['ir.module.module'].search([('name', '=', 'website_sale_delivery')], limit=1).state in ('installed', 'to install', 'to upgrade'):
                 sale_delivery_settings = 'website'
 
-        cart_recovery_mail_template = literal_eval(params.get_param('website_sale.cart_recovery_mail_template_id', default='False'))
-        if cart_recovery_mail_template and not self.env['mail.template'].browse(cart_recovery_mail_template).exists():
-            cart_recovery_mail_template = self._default_recovery_mail_template()
-
         res.update(
             automatic_invoice=params.get_param('website_sale.automatic_invoice', default=False),
             sale_delivery_settings=sale_delivery_settings,
-            cart_recovery_mail_template=cart_recovery_mail_template,
-            cart_abandoned_delay=float(params.get_param('website_sale.cart_abandoned_delay', '1.0'))
         )
         return res
 
@@ -80,8 +75,6 @@ class ResConfigSettings(models.TransientModel):
         super(ResConfigSettings, self).set_values()
         value = self.module_account_invoicing and self.default_invoice_policy == 'order' and self.automatic_invoice
         self.env['ir.config_parameter'].sudo().set_param('website_sale.automatic_invoice', value)
-        self.env['ir.config_parameter'].sudo().set_param('website_sale.cart_recovery_mail_template_id', self.cart_recovery_mail_template.id)
-        self.env['ir.config_parameter'].sudo().set_param('website_sale.cart_abandoned_delay', self.cart_abandoned_delay)
 
     @api.onchange('sale_delivery_settings')
     def _onchange_sale_delivery_settings(self):

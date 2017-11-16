@@ -15,21 +15,21 @@ class ResConfigSettings(models.TransientModel):
 
     fail_counter = fields.Integer('Fail Mail', readonly=True)
     alias_domain = fields.Char('Alias Domain', help="If you have setup a catch-all email domain redirected to "
-                               "the Odoo server, enter the domain name here.")
+                               "the Odoo server, enter the domain name here.", config_parameter='mail.catchall.domain')
 
     @api.model
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
 
-        previous_date = datetime.datetime.now() - datetime.timedelta(days=30)
-
-        alias_domain = self.env["ir.config_parameter"].get_param("mail.catchall.domain", default=None)
-        if alias_domain is None:
+        alias_domain = res.get('alias_domain')
+        if not alias_domain:
             domain = self.env["ir.config_parameter"].get_param("web.base.url")
             try:
                 alias_domain = urls.url_parse(domain).host
             except Exception:
                 pass
+
+        previous_date = datetime.datetime.now() - datetime.timedelta(days=30)
 
         res.update(
             fail_counter=self.env['mail.mail'].sudo().search_count([

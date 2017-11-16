@@ -28,6 +28,7 @@ class ResConfigSettings(models.TransientModel):
     use_propagation_minimum_delta = fields.Boolean(
         string="No Rescheduling Propagation",
         oldname='default_new_propagation_minimum_delta',
+        config_parameter='stock.use_propagation_minimum_delta',
         help="Rescheduling applies to any chain of operations (e.g. Make To Order, Pick Pack Ship). In the case of MTO sales, a vendor delay (updated incoming date) impacts the expected delivery date to the customer. \n This option allows to not propagate the rescheduling if the change is not critical.")
     module_stock_picking_batch = fields.Boolean("Batch Pickings", oldname="module_stock_picking_wave")
     module_stock_barcode = fields.Boolean("Barcode Scanner")
@@ -61,20 +62,13 @@ class ResConfigSettings(models.TransientModel):
         if self.group_stock_adv_location and not self.group_stock_multi_locations:
             self.group_stock_multi_locations = True
 
-    @api.model
-    def get_values(self):
-        res = super(ResConfigSettings, self).get_values()
-        res.update(
-            use_propagation_minimum_delta=self.env['ir.config_parameter'].sudo().get_param('stock.use_propagation_minimum_delta')
-        )
-        return res
-
     @api.multi
     def set_values(self):
         super(ResConfigSettings, self).set_values()
+
         if not self.user_has_groups('stock.group_stock_manager'):
             return
-        self.env['ir.config_parameter'].sudo().set_param('stock.use_propagation_minimum_delta', self.use_propagation_minimum_delta)
+
         """ If we are not in multiple locations, we can deactivate the internal
         operation types of the warehouses, so they won't appear in the dashboard.
         Otherwise, activate them.
