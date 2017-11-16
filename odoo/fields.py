@@ -787,7 +787,7 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Return the null value for this field in the record format. """
         return False
 
-    def convert_to_column(self, value, record, values=None):
+    def convert_to_column(self, value, record, values=None, validate=True):
         """ Convert ``value`` from the ``write`` format to the SQL format. """
         if value is None or value is False:
             return None
@@ -1145,7 +1145,7 @@ class Boolean(Field):
     type = 'boolean'
     column_type = ('bool', 'bool')
 
-    def convert_to_column(self, value, record, values=None):
+    def convert_to_column(self, value, record, values=None, validate=True):
         return bool(value)
 
     def convert_to_cache(self, value, record, validate=True):
@@ -1166,7 +1166,7 @@ class Integer(Field):
 
     _description_group_operator = property(attrgetter('group_operator'))
 
-    def convert_to_column(self, value, record, values=None):
+    def convert_to_column(self, value, record, values=None, validate=True):
         return int(value or 0)
 
     def convert_to_cache(self, value, record, validate=True):
@@ -1232,7 +1232,7 @@ class Float(Field):
     _description_digits = property(attrgetter('digits'))
     _description_group_operator = property(attrgetter('group_operator'))
 
-    def convert_to_column(self, value, record, values=None):
+    def convert_to_column(self, value, record, values=None, validate=True):
         result = float(value or 0.0)
         digits = self.digits
         if digits:
@@ -1286,11 +1286,11 @@ class Monetary(Field):
         assert self.currency_field in model._fields, \
             "Field %s with unknown currency_field %r" % (self, self.currency_field)
 
-    def convert_to_column(self, value, record, values=None):
+    def convert_to_column(self, value, record, values=None, validate=True):
         # retrieve currency from values or record
         if values and self.currency_field in values:
             field = record._fields[self.currency_field]
-            currency = field.convert_to_cache(values[self.currency_field], record)
+            currency = field.convert_to_cache(values[self.currency_field], record, validate)
             currency = field.convert_to_record(currency, record)
         else:
             # Note: this is wrong if 'record' is several records with different
@@ -1419,7 +1419,7 @@ class Char(_String):
         assert self.size is None or isinstance(self.size, int), \
             "Char field %s with non-integer size %r" % (self, self.size)
 
-    def convert_to_column(self, value, record, values=None):
+    def convert_to_column(self, value, record, values=None, validate=True):
         if value is None or value is False:
             return None
         # we need to convert the string to a unicode object to be able
@@ -1484,7 +1484,7 @@ class Html(_String):
     _description_strip_style = property(attrgetter('strip_style'))
     _description_strip_classes = property(attrgetter('strip_classes'))
 
-    def convert_to_column(self, value, record, values=None):
+    def convert_to_column(self, value, record, values=None, validate=True):
         if value is None or value is False:
             return None
         if self.sanitize:
@@ -1671,7 +1671,7 @@ class Binary(Field):
 
     _description_attachment = property(attrgetter('attachment'))
 
-    def convert_to_column(self, value, record, values=None):
+    def convert_to_column(self, value, record, values=None, validate=True):
         # Binary values may be byte strings (python 2.6 byte array), but
         # the legacy OpenERP convention is to transfer and store binaries
         # as base64-encoded strings. The base64 string may be provided as a
@@ -1755,6 +1755,7 @@ class Selection(Field):
     type = 'selection'
     _slots = {
         'selection': None,              # [(value, string), ...], function or method name
+        'validate': True,               # whether validating upon write
     }
 
     def __init__(self, selection=Default, string=Default, **kwargs):
@@ -1820,6 +1821,11 @@ class Selection(Field):
             selection = selection(env[self.model_name])
         return [value for value, _ in selection]
 
+    def convert_to_column(self, value, record, values=None, validate=True):
+        if validate and self.validate:
+            value = self.convert_to_cache(value, record)
+        return super(Selection, self).convert_to_column(value, record, values, validate)
+
     def convert_to_cache(self, value, record, validate=True):
         if not validate:
             return value or False
@@ -1845,6 +1851,9 @@ class Reference(Selection):
     @property
     def column_type(self):
         return ('varchar', pg_varchar())
+
+    def convert_to_column(self, value, record, values=None, validate=True):
+        return Field.convert_to_column(self, value, record, values, validate)
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: (res_model, res_id) or False
@@ -1987,7 +1996,7 @@ class Many2one(_Relational):
         for record in records:
             cache.set(record, self, self.convert_to_cache(value, record, validate=False))
 
-    def convert_to_column(self, value, record, values=None):
+    def convert_to_column(self, value, record, values=None, validate=True):
         return value or None
 
     def convert_to_cache(self, value, record, validate=True):

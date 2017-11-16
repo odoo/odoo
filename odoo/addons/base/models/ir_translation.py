@@ -186,7 +186,7 @@ class IrTranslation(models.Model):
 
     name = fields.Char(string='Translated field', required=True)
     res_id = fields.Integer(string='Record ID', index=True)
-    lang = fields.Selection(selection='_get_languages', string='Language')
+    lang = fields.Selection(selection='_get_languages', string='Language', validate=False)
     type = fields.Selection(TRANSLATION_TYPE, string='Type', index=True)
     src = fields.Text(string='Internal Source')  # stored in database, kept for backward compatibility
     source = fields.Text(string='Source term', compute='_compute_source',
@@ -265,12 +265,6 @@ class IrTranslation(models.Model):
         tools.create_unique_index(self._cr, 'ir_translation_unique', self._table,
                                   ['type', 'name', 'lang', 'res_id', 'md5(src)'])
         return res
-
-    @api.model
-    def _check_selection_field_value(self, field, value):
-        if field == 'lang':
-            return
-        return super(IrTranslation, self)._check_selection_field_value(field, value)
 
     @api.model
     def _get_ids(self, name, tt, lang, ids):
