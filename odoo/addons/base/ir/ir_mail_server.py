@@ -15,7 +15,7 @@ import threading
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import except_orm, UserError
-from odoo.tools import html2text, ustr
+from odoo.tools import email_split, html2text, ustr
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -466,7 +466,7 @@ class IrMailServer(models.Model):
         return message_id
 
     @api.multi
-    def _get_canonical_from(self, original_from):
+    def _get_rewritten_from(self, original_from):
         """Returns a FROM header to respect the SMTP server settings.
 
         Args:
@@ -480,14 +480,16 @@ class IrMailServer(models.Model):
         # Otherwise we use the name part of the email address.
         if not address[0]:
             address[0] = address[1].split('@', 1)[0]
-        return '%s via %s <%s>' % (
-            address[0],
-            self.env.user.company_id.name,
-            self._get_default_bounce_address(),
+        rewritten_name = _('%(author)s via %(company)s') % {
+            'author': address[0],
+            'company': self.env.user.company_id.name,
+        }
+        return '%s <%s>' % (
+            rewritten_name, self._get_default_bounce_address(),
         )
 
     @api.model
-    def _get_dmarc_whitelist(self):
+    def _get_rewrite_from_whitelist(self):
         """Return a list of domains that this system is allowed to send from.
 
         Returns:
@@ -495,7 +497,7 @@ class IrMailServer(models.Model):
                 for.
         """
         whitelist = self.env['ir.config_parameter'].sudo().get_param(
-            'mail.dmarc.whitelist',
+            'mail.rewrite_from.whitelist', default='',
         )
         if whitelist.strip():
             return [line.strip() for line in whitelist.split(',')]
@@ -518,15 +520,15 @@ class IrMailServer(models.Model):
         if not domain_catchall:
             return
 
-        whitelist = self._get_dmarc_whitelist()
-        address = parseaddr(message['From'])
-        domain_email = address[1].split('@', 1)[1]
+        whitelist = self._get_rewrite_from_whitelist()
+        address = email_split(message['From'])[0]
+        domain_email = address.split('@', 1)[1]
 
         if not whitelist or domain_email in whitelist:
             return
 
         message.replace_header(
-            'From', self._get_canonical_from(message['From']),
+            'From', self._get_rewritten_from(message['From']),
         )
 
     @api.onchange('smtp_encryption')
