@@ -41,6 +41,7 @@ import dateutil.relativedelta
 import psycopg2
 from lxml import etree
 from lxml.builder import E
+from psycopg2.extensions import AsIs
 
 import odoo
 from . import SUPERUSER_ID
@@ -2015,14 +2016,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         self.invalidate_cache(['parent_left', 'parent_right'])
         return True
 
-    @api.model
-    def _check_selection_field_value(self, field, value):
-        """ Check whether value is among the valid values for the given
-            selection/reference field, and raise an exception if not.
-        """
-        field = self._fields[field]
-        field.convert_to_cache(value, self)
-
     @api.model_cr
     def _check_removed_columns(self, log=False):
         # iterate on the database columns to drop the NOT NULL constraints of
@@ -3035,9 +3028,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 # check Python constraints for inversed fields
                 self._validate_fields(set(inverse_vals) - set(store_vals))
 
-                # recompute fields
-                if self.env.recompute and self._context.get('recompute', True):
-                    self.recompute()
+            # recompute fields
+            if self.env.recompute and self._context.get('recompute', True):
+                self.recompute()
 
         return True
 
@@ -3050,11 +3043,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         cr = self._cr
 
-        # for recomputing new-style fields
-        extra_fields = ['write_date', 'write_uid'] if self._log_access else []
-        self.modified(list(vals) + extra_fields)
-
-        # for updating parent_left, parent_right
+        # determine records that require updating parent_left, parent_right
         parents_changed = []
         if self._parent_store and (self._parent_name in vals) and \
                 not self._context.get('defer_parent_store_computation'):
@@ -3074,81 +3063,88 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 cr.execute(query, (tuple(self.ids),))
             parents_changed = [x[0] for x in cr.fetchall()]
 
-        updates = []            # list of (column, expr) or (column, pattern, value)
-        upd_todo = []           # list of column names to set explicitly
-        direct = []             # list of direcly updated columns
-        has_trans = self.env.lang and self.env.lang != 'en_US'
+        # determine SQL values
+        columns = []                    # list of (column_name, format, value)
+        updated = []                    # list of updated or translated columns
+        other_fields = []               # list of non-column fields
         single_lang = len(self.env['res.lang'].get_installed()) <= 1
+        has_translation = self.env.lang and self.env.lang != 'en_US'
+
         for name, val in vals.items():
             field = self._fields[name]
             assert field.store
+
             if field.deprecated:
-                _logger.warning('Field %s.%s is deprecated: %s', self._name, name, field.deprecated)
-            if hasattr(field, 'selection') and val:
-                self._check_selection_field_value(name, val)
+                _logger.warning('Field %s is deprecated: %s', field, field.deprecated)
+
             if field.column_type:
-                if single_lang or not (has_trans and field.translate is True):
+                if single_lang or not (has_translation and field.translate is True):
                     # val is not a translation: update the table
                     val = field.convert_to_column(val, self, vals)
-                    updates.append((name, field.column_format, val))
-                direct.append(name)
+                    columns.append((name, field.column_format, val))
+                updated.append(name)
             else:
-                upd_todo.append(name)
+                other_fields.append(field)
 
         if self._log_access:
-            updates.append(('write_uid', '%s', self._uid))
-            updates.append(('write_date', "(now() at time zone 'UTC')"))
-            direct.append('write_uid')
-            direct.append('write_date')
+            columns.append(('write_uid', '%s', self._uid))
+            columns.append(('write_date', '%s', AsIs("(now() at time zone 'UTC')")))
+            updated.append('write_uid')
+            updated.append('write_date')
 
-        if updates:
+        # mark fields to recompute (the ones that depend on old values)
+        self.modified(vals)
+
+        # update columns
+        if columns:
             self.check_access_rule('write')
             query = 'UPDATE "%s" SET %s WHERE id IN %%s' % (
-                self._table, ','.join('"%s"=%s' % (u[0], u[1]) for u in updates),
+                self._table, ','.join('"%s"=%s' % (column[0], column[1]) for column in columns),
             )
-            params = tuple(u[2] for u in updates if len(u) > 2)
+            params = [column[2] for column in columns]
             for sub_ids in cr.split_for_in_conditions(set(self.ids)):
-                cr.execute(query, params + (sub_ids,))
+                cr.execute(query, params + [sub_ids])
                 if cr.rowcount != len(sub_ids):
                     raise MissingError(_('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description)
 
-            # TODO: optimize
-            for name in direct:
+            for name in updated:
                 field = self._fields[name]
                 if callable(field.translate):
                     # The source value of a field has been modified,
                     # synchronize translated terms when possible.
-                    self.env['ir.translation']._sync_terms_translations(self._fields[name], self)
+                    self.env['ir.translation']._sync_terms_translations(field, self)
 
-                elif has_trans and field.translate:
+                elif has_translation and field.translate:
                     # The translated value of a field has been modified.
                     src_trans = self.read([name])[0][name]
                     if not src_trans:
                         # Insert value to DB
                         src_trans = vals[name]
                         self.with_context(lang=None).write({name: src_trans})
-                    val = field.convert_to_column(vals[name], self, vals)
                     tname = "%s,%s" % (self._name, name)
+                    val = field.convert_to_column(vals[name], self, vals)
                     self.env['ir.translation']._set_ids(
                         tname, 'model', self.env.lang, self.ids, val, src_trans)
 
-        # invalidate and mark new-style fields to recompute; do this before
-        # setting other fields, because it can require the value of computed
-        # fields, e.g., a one2many checking constraints on records
-        self.modified(direct)
+        # mark fields to recompute; do this before setting other fields, because
+        # the latter can require the value of computed fields, e.g., a one2many
+        # checking constraints on records
+        self.modified(updated)
 
-        # defaults in context must be removed when call a one2many or many2many
-        rel_context = {key: val
-                       for key, val in self._context.items()
-                       if not key.startswith('default_')}
+        # set the value of non-column fields
+        if other_fields:
+            # discard default values from context
+            other = self.with_context({
+                key: val
+                for key, val in self._context.items()
+                if not key.startswith('default_')
+            })
 
-        # call the 'write' method of fields which are not columns
-        for name in upd_todo:
-            field = self._fields[name]
-            field.write(self.with_context(rel_context), vals[name])
+            for field in sorted(other_fields, key=attrgetter('_sequence')):
+                field.write(other, vals[field.name])
 
-        # for recomputing new-style fields
-        self.modified(upd_todo)
+            # mark fields to recompute
+            self.modified(field.name for field in other_fields)
 
         # check Python constraints
         self._validate_fields(vals)
@@ -3210,10 +3206,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                                    (pleft0 - pleft1 + width, pleft0 - pleft1 + width, pleft0 + width, pright0 + width))
 
                 self.invalidate_cache(['parent_left', 'parent_right'])
-
-        # recompute new-style fields
-        if self.env.recompute and self._context.get('recompute', True):
-            self.recompute()
 
         return True
 
@@ -3283,7 +3275,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 parent_record.write(parent_vals)
 
         # create record with stored fields
-        record = self.browse(self._create(store_vals))
+        record = self._create(store_vals)
 
         with self.env.protecting(protected_fields, record):
             # put the values of inverse fields in cache, and inverse them
@@ -3303,60 +3295,55 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     @api.model
     def _create(self, vals):
-        # list of column assignments defined as tuples like:
-        #   (column_name, format_string, column_value)
-        #   (column_name, sql_formula)
-        # Those tuples will be used by the string formatting for the INSERT
-        # statement below.
-        updates = [
-            ('id', "nextval('%s')" % self._sequence),
-        ]
-
-        upd_todo = []
-        protected_fields = []
-        for name, val in list(vals.items()):
-            field = self._fields[name]
-            assert field.store
-            if field.inverse:
-                protected_fields.append(field)
+        self = self.browse()
 
         # set boolean fields to False by default (to make search more powerful)
         for name, field in self._fields.items():
-            if field.type == 'boolean' and field.store and name not in vals:
-                vals[name] = False
+            if field.type == 'boolean' and field.store:
+                vals.setdefault(name, False)
 
         # determine SQL values
-        self = self.browse()
+        columns = []                    # list of (column_name, format, value)
+        other_fields = []               # list of non-column fields
+        protected_fields = []           # list of fields to not recompute on self
+        translated_names = []           # list of translated field names
+
+        columns.append(('id', "nextval(%s)", self._sequence))
+
         for name, val in vals.items():
             field = self._fields[name]
-            if field.store and field.column_type:
-                column_val = field.convert_to_column(val, self, vals)
-                updates.append((name, field.column_format, column_val))
-            else:
-                upd_todo.append(name)
+            assert field.store
 
-            if hasattr(field, 'selection') and val:
-                self._check_selection_field_value(name, val)
+            if field.column_type:
+                column_val = field.convert_to_column(val, self, vals)
+                columns.append((name, field.column_format, column_val))
+                if field.translate is True:
+                    translated_names.append(name)
+            else:
+                other_fields.append(field)
+
+            if field.inverse:
+                protected_fields.append(field)
 
         if self._log_access:
-            updates.append(('create_uid', '%s', self._uid))
-            updates.append(('write_uid', '%s', self._uid))
-            updates.append(('create_date', "(now() at time zone 'UTC')"))
-            updates.append(('write_date', "(now() at time zone 'UTC')"))
+            columns.append(('create_uid', '%s', self._uid))
+            columns.append(('write_uid', '%s', self._uid))
+            columns.append(('create_date', '%s', AsIs("(now() at time zone 'UTC')")))
+            columns.append(('write_date', '%s', AsIs("(now() at time zone 'UTC')")))
 
         # insert a row for this record
         cr = self._cr
         query = """INSERT INTO "%s" (%s) VALUES(%s) RETURNING id""" % (
                 self._table,
-                ', '.join('"%s"' % u[0] for u in updates),
-                ', '.join(u[1] for u in updates),
+                ', '.join('"%s"' % column[0] for column in columns),
+                ', '.join(column[1] for column in columns),
             )
-        cr.execute(query, tuple(u[2] for u in updates if len(u) > 2))
+        cr.execute(query, [column[2] for column in columns])
 
         # from now on, self is the new record
-        id_new, = cr.fetchone()
-        self = self.browse(id_new)
+        self = self.browse(cr.fetchone()[0])
 
+        # update parent_left, parent_right
         if self._parent_store and not self._context.get('defer_parent_store_computation'):
             if self.pool._init:
                 self.pool._init_parent[self._name] = True
@@ -3388,46 +3375,47 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 cr.execute("UPDATE %s SET parent_right=parent_right+2 WHERE parent_right>=%%s" % self._table,
                            (pleft,))
                 cr.execute("UPDATE %s SET parent_left=%%s, parent_right=%%s WHERE id=%%s" % self._table,
-                           (pleft, pleft + 1, id_new))
+                           (pleft, pleft + 1, record_id))
                 self.invalidate_cache(['parent_left', 'parent_right'])
 
         with self.env.protecting(protected_fields, self):
-            # invalidate and mark new-style fields to recompute; do this before
-            # setting other fields, because it can require the value of computed
-            # fields, e.g., a one2many checking constraints on records
+            # mark fields to recompute; do this before setting other fields,
+            # because the latter can require the value of computed fields, e.g.,
+            # a one2many checking constraints on records
             self.modified(self._fields)
 
-            # defaults in context must be removed when call a one2many or many2many
-            rel_context = {key: val
-                           for key, val in self._context.items()
-                           if not key.startswith('default_')}
+            # set the value of non-column fields
+            if other_fields:
+                # discard default values from context
+                other = self.with_context({
+                    key: val
+                    for key, val in self._context.items()
+                    if not key.startswith('default_')
+                })
 
-            # call the 'write' method of fields which are not columns
-            for name in sorted(upd_todo, key=lambda name: self._fields[name]._sequence):
-                field = self._fields[name]
-                field.write(self.with_context(rel_context), vals[name], create=True)
+                for field in sorted(other_fields, key=attrgetter('_sequence')):
+                    field.write(other, vals[field.name], create=True)
 
-            # for recomputing new-style fields
-            self.modified(upd_todo)
+                # mark fields to recompute
+                self.modified(field.name for field in other_fields)
 
             # check Python constraints
             self._validate_fields(vals)
 
+            # recompute fields
             if self.env.recompute and self._context.get('recompute', True):
-                # recompute new-style fields
                 self.recompute()
 
         self.check_access_rule('create')
 
+        # add translations
         if self.env.lang and self.env.lang != 'en_US':
-            # add translations for self.env.lang
-            for name, val in vals.items():
-                field = self._fields[name]
-                if field.store and field.column_type and field.translate is True:
-                    tname = "%s,%s" % (self._name, name)
-                    self.env['ir.translation']._set_ids(tname, 'model', self.env.lang, self.ids, val, val)
+            for name in translated_names:
+                tname = "%s,%s" % (self._name, name)
+                val = vals[name]
+                self.env['ir.translation']._set_ids(tname, 'model', self.env.lang, self.ids, val, val)
 
-        return id_new
+        return self
 
     # TODO: ameliorer avec NULL
     @api.model

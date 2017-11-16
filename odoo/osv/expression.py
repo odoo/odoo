@@ -1201,7 +1201,7 @@ class expression(object):
                     else:
                         field = model._fields[left]
                         instr = ','.join([field.column_format] * len(params))
-                        params = [field.convert_to_column(p, record=model) for p in params]
+                        params = [field.convert_to_column(p, model, validate=False) for p in params]
                     query = '(%s."%s" %s (%s))' % (table_alias, left, operator, instr)
                 else:
                     # The case for (left, 'in', []) or (left, 'not in', []).
@@ -1257,7 +1257,8 @@ class expression(object):
                     query = '(%s OR %s."%s" IS NULL)' % (query, table_alias, left)
                 params = ['%%%s%%' % native_str]
             else:
-                params = [model._fields[left].convert_to_column(right, model)]
+                field = model._fields[left]
+                params = [field.convert_to_column(right, model, validate=False)]
 
         return query, params
 
