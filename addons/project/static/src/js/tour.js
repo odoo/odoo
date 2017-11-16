@@ -84,7 +84,7 @@ tour.register('project_tour', {
     extra_trigger: '.o_form_project_tasks.o_form_readonly',
     content: _t("Use the breadcrumbs to <b>go back to your tasks pipeline</b>."),
     position: "bottom"
-}, tour.STEPS.TOGGLE_APPSWITCHER,
+}, tour.STEPS.TOGGLE_HOME_MENU,
 tour.STEPS.MENU_MORE, {
     trigger: '.o_app[data-menu-xmlid="base.menu_administration"], .oe_menu_toggler[data-menu-xmlid="base.menu_administration"]',
     content: _t("Configuration options are available in the Settings app."),
@@ -93,7 +93,7 @@ tour.STEPS.MENU_MORE, {
     trigger: ".o_web_settings_dashboard textarea#user_emails",
     content: _t("<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"),
     position: "right"
-}, tour.STEPS.TOGGLE_APPSWITCHER,
+}, tour.STEPS.TOGGLE_HOME_MENU,
 tour.STEPS.MENU_MORE, {
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"], .oe_menu_toggler[data-menu-xmlid="project.menu_main_pm"]',
     content: _t("Good job! Your completed the Project Management tour."),

@@ -6,7 +6,7 @@
     </t>
 
     <t t-name="HrAttendanceKioskMode">
-        <div class="o_hr_attendance_kiosk_mode_container o_app_switcher_background">
+        <div class="o_hr_attendance_kiosk_mode_container o_home_menu_background">
             <div class="o_hr_attendance_kiosk_mode">
                 <h1>Welcome to <t t-esc="widget.company_name"/></h1>
                 <img t-attf-src="{{widget.company_image_url}}" alt="Company Logo"/>
@@ -19,7 +19,7 @@
     </t>
 
     <t t-name="HrAttendanceMyMainMenu">
-        <div class="o_hr_attendance_kiosk_mode_container o_app_switcher_background">
+        <div class="o_hr_attendance_kiosk_mode_container o_home_menu_background">
             <div class="o_hr_attendance_kiosk_mode">
                 <t t-if="widget.employee">
                     <h1>Welcome <t t-esc="widget.employee.name"/></h1>
@@ -40,7 +40,7 @@
     </t>
 
     <t t-name="HrAttendanceKioskConfirm">
-        <div class="o_hr_attendance_kiosk_mode_container o_app_switcher_background">
+        <div class="o_hr_attendance_kiosk_mode_container o_home_menu_background">
             <div class="o_hr_attendance_kiosk_mode">
                 <t t-if="widget.employee_id">
                     <h1>Welcome <t t-esc="widget.employee_name"/></h1>
@@ -90,7 +90,7 @@
     </t>
 
     <t t-name="HrAttendanceGreetingMessage">
-        <div class="o_hr_attendance_message_container o_app_switcher_background">
+        <div class="o_hr_attendance_message_container o_home_menu_background">
             <div class="o_hr_attendance_message">
                 <t t-if="widget.attendance">
                     <t t-if="widget.attendance.check_out">
