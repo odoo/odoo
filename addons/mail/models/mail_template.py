@@ -35,7 +35,7 @@ def format_date(env, date, pattern=False):
         return date.strftime(pattern)
 
 
-def format_tz(env, dt, tz=False, format=False):
+def format_tz(env, dt, tz=False, format=False, display_tz=True):
     record_user_timestamp = env.user.sudo().with_context(tz=tz or env.user.sudo().tz or 'UTC')
     timestamp = datetime.datetime.strptime(dt, tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
@@ -63,7 +63,7 @@ def format_tz(env, dt, tz=False, format=False):
 
         fdate = ts.strftime(format_date).decode('utf-8')
         ftime = ts.strftime(format_time).decode('utf-8')
-        return "%s %s%s" % (fdate, ftime, (' (%s)' % tz) if tz else '')
+        return '{} {}{}'.format(fdate, ftime, (' (%s)' % tz) if tz and display_tz else '')
 
 def format_amount(env, amount, currency):
     fmt = "%.{0}f".format(currency.decimal_places)
@@ -383,7 +383,7 @@ class MailTemplate(models.Model):
             res_to_rec[record.id] = record
         variables = {
             'format_date': lambda date, format=False, context=self._context: format_date(self.env, date, format),
-            'format_tz': lambda dt, tz=False, format=False, context=self._context: format_tz(self.env, dt, tz, format),
+            'format_tz': lambda dt, tz=False, format=False, display_tz=True, context=self._context: format_tz(self.env, dt, tz, format, display_tz),
             'format_amount': lambda amount, currency, context=self._context: format_amount(self.env, amount, currency),
             'user': self.env.user,
             'ctx': self._context,  # context kw would clash with mako internals
