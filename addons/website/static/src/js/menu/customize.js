@@ -2,8 +2,8 @@ odoo.define('website.customizeMenu', function (require) {
 'use strict';
 
 var core = require('web.core');
+var session = require('web.session');
 var Widget = require('web.Widget');
-var weContext = require('web_editor.context');
 var websiteNavbarData = require('website.navbar');
 var WebsiteAceEditor = require('website.ace');
 
@@ -50,7 +50,7 @@ var CustomizeMenu = Widget.extend({
             model: 'ir.ui.view',
             method: 'toggle',
             args: [[viewID]],
-            context: weContext.get(),
+            context: session.user_context,
         }).then(function () {
             window.location.reload();
             return $.Deferred();

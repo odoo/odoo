@@ -3,8 +3,8 @@ odoo.define('web_editor.widget', function (require) {
 
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+var session = require('web.session');
 var Widget = require('web.Widget');
-var weContext = require("web_editor.context");
 
 var QWeb = core.qweb;
 var range = $.summernote.core.range;
@@ -294,7 +294,7 @@ var ImageDialog = Widget.extend({
                 domain: domain,
                 fields: ['name', 'mimetype', 'checksum', 'url', 'type'],
                 order: [{name: 'id', asc: false}],
-                context: weContext.get(),
+                context: session.user_context,
             }
         }).then(this.proxy('fetched_existing'));
     },

@@ -6,8 +6,8 @@ var Class = require('web.Class');
 var Dialog = require('web.Dialog');
 var mixins = require('web.mixins');
 var rpc = require('web.rpc');
+var session = require('web.session');
 var Widget = require('web.Widget');
-var weContext = require('web_editor.context');
 var websiteNavbarData = require('website.navbar');
 
 var _t = core._t;
@@ -80,7 +80,7 @@ var SuggestionList = Widget.extend({
     refresh: function () {
         var self = this;
         self.$el.append(_t("Loading..."));
-        var language = self.language || weContext.get().lang.toLowerCase();
+        var language = self.language || session.user_context.lang.toLowerCase();
         this._rpc({
             route: '/website/seo_suggest',
             params: {
@@ -387,12 +387,12 @@ var SeoConfigurator = Dialog.extend({
         this._rpc({
             model: 'website',
             method: 'get_languages',
-            args: [[weContext.get().website_id]],
-            context: weContext.get(),
+            args: [[session.user_context.website_id]],
+            context: session.user_context,
         }).then( function (data) {
             self.$('#language-box').html(core.qweb.render('Configurator.language_promote', {
                 'language': data,
-                'def_lang': weContext.get().lang
+                'def_lang': session.user_context.lang 
             }));
         });
     },
@@ -485,7 +485,7 @@ var SeoConfigurator = Dialog.extend({
             rpc.query({
                 model: obj.model,
                 method: 'read',
-                args: [[obj.id], fields, weContext.get()],
+                args: [[obj.id], fields, session.user_context],
             }).then(function (data) {
                 if (data.length) {
                     var meta = data[0];
@@ -508,7 +508,7 @@ var SeoConfigurator = Dialog.extend({
             return rpc.query({
                 model: obj.model,
                 method: 'write',
-                args: [[obj.id], data, weContext.get()],
+                args: [[obj.id], data, session.user_context],
             });
         }
     },

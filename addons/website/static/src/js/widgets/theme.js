@@ -5,7 +5,6 @@ var ajax = require('web.ajax');
 var core = require('web.core');
 var session = require('web.session');
 var Widget = require('web.Widget');
-var weContext = require('web_editor.context');
 var websiteNavbarData = require('website.navbar');
 
 var QWeb = core.qweb;
@@ -31,7 +30,7 @@ var ThemeCustomizeDialog = Widget.extend({
             templateDef = this._rpc({
                 model: 'ir.ui.view',
                 method: 'read_template',
-                args: ['website.theme_customize', weContext.get()],
+                args: ['website.theme_customize', session.user_context],
             }).then(function (data) {
                 return QWeb.add_template(data);
             });

@@ -4,7 +4,7 @@ odoo.define('web_editor.rte', function (require) {
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Widget = require('web.Widget');
-var weContext = require('web_editor.context');
+var session = require('web.session');
 var summernote = require('web_editor.summernote');
 var weWidgets = require('web_editor.widget');
 
@@ -413,7 +413,7 @@ var RTEWidget = Widget.extend({
             // TODO: Add a queue with concurrency limit in webclient
             // https://github.com/medikoo/deferred/blob/master/lib/ext/function/gate.js
             return self.saving_mutex.exec(function () {
-                return self._saveElement($el, context || weContext.get())
+                return self._saveElement($el, context || session.user_context)
                 .then(function () {
                     $el.removeClass('o_dirty');
                 }, function (response) {

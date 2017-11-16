@@ -100,9 +100,9 @@ odoo.define('web_editor.IframeRoot', function (require) {
 'use strict';
 
 var BodyManager = require('web_editor.BodyManager');
-var weContext = require('web_editor.context');
 var editor = require('web_editor.editor');
 var rootWidget = require('web_editor.root_widget');
+var session = require('web.session');
 var translate = require('web_editor.translate');
 
 var iframeRootRegistry = new rootWidget.RootWidgetRegistry();
@@ -115,7 +115,12 @@ var IframeRoot = BodyManager.extend({
     start: function () {
         var defs = [this._super.apply(this, arguments)];
 
-        var ctx = weContext.getExtra();
+        var html = document.documentElement;
+        var ctx = _.extend({}, session.user_context, {
+            editable: !!(html.dataset.editable || $('[data-oe-model]').length), // temporary hack, this should be done in python
+            translatable: !!html.dataset.translatable,
+            edit_translations: !!html.dataset.edit_translations,
+        });
 
         if (ctx.editable && window.location.search.indexOf('enable_editor') >= 0) {
             var editorInstance = new (editor.Class)(this);

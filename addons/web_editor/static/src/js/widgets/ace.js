@@ -5,7 +5,6 @@ var ajax = require('web.ajax');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
-var weContext = require('web_editor.context');
 var localStorage = require('web.local_storage');
 var session = require('web.session');
 
@@ -589,7 +588,7 @@ var ViewEditor = Widget.extend({
         this._rpc({
             model: 'ir.ui.view',
             method: 'write',
-            args: [[session.id], {arch: session.text}, _.extend(weContext.get(), {lang: null})],
+            args: [[session.id], {arch: session.text}, _.extend(session.user_context, {lang: null})],
         }).then(function () {
             self._toggleDirtyInfo(session.id, 'xml', false);
             def.resolve();

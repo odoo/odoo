@@ -3,8 +3,8 @@ odoo.define('web_editor.snippets.options', function (require) {
 
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+var session = require('web.session');
 var Widget = require('web.Widget');
-var weContext = require('web_editor.context');
 var widget = require('web_editor.widget');
 
 var qweb = core.qweb;
@@ -1286,7 +1286,7 @@ registry.many2one = SnippetOption.extend({
             kwargs: {
                 order: 'name DESC',
                 limit: 5,
-                context: weContext.get(),
+                context: session.user_context,
             },
         }).then(function (result) {
             self.$search.siblings().remove();
@@ -1325,7 +1325,7 @@ registry.many2one = SnippetOption.extend({
                         args: [[self.ID]],
                         kwargs: {
                             options: options,
-                            context: weContext.get(),
+                            context: session.user_context,
                         },
                     }).then(function (html) {
                         $node.html(html);

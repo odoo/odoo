@@ -4,7 +4,7 @@ odoo.define('website_mass_mailing.editor', function (require) {
 var ajax = require('web.ajax');
 var core = require('web.core');
 var rpc = require('web.rpc');
-var weContext = require('web_editor.context');
+var session = require('web.session');
 var web_editor = require('web_editor.editor');
 var options = require('web_editor.snippets.options');
 var wUtils = require('website.utils');
@@ -24,7 +24,7 @@ var mass_mailing_common = options.Class.extend({
                         model: 'mail.mass_mailing.list',
                         method: 'name_search',
                         args: ['', []],
-                        context: weContext.get(),
+                        context: session.user_context,
                     });
             },
         });
@@ -57,7 +57,7 @@ options.registry.newsletter_popup = mass_mailing_common.extend({
             ajax.jsonRpc('/web/dataset/call', 'call', {
                 model: 'mail.mass_mailing.list',
                 method: 'read',
-                args: [[parseInt(mailing_list_id)], ['popup_content'], weContext.get()],
+                args: [[parseInt(mailing_list_id)], ['popup_content'], session.user_context],
             }).then(function (data) {
                 self.$target.find(".o_popup_content_dev").empty();
                 if (data && data[0].popup_content) {
@@ -90,7 +90,7 @@ web_editor.Class.include({
                 args: [
                     parseInt(newsletter_id),
                     {'popup_content':content},
-                    weContext.get()
+                    session.user_context
                 ],
             });
         }

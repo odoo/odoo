@@ -6,8 +6,8 @@ var ajax = require('web.ajax');
 var rpc = require('web.rpc');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
+var session = require('web.session');
 var website_sale_utils = require('website_sale.utils');
-var weContext = require('web_editor.context');
 
 if(!$('.oe_website_sale').length) {
     return $.Deferred().reject("DOM doesn't contain '.oe_website_sale'");
@@ -87,10 +87,16 @@ var ProductWishlist = Widget.extend({
         var product = tr.data('product-id');
         var self = this;
 
+        var context = _.extend({}, session.user_context, {
+            editable: !!(html.dataset.editable || $('[data-oe-model]').length), // temporary hack, this should be done in python
+            translatable: !!html.dataset.translatable,
+            edit_translations: !!html.dataset.edit_translations,
+        });
+
         rpc.query({
                 model: 'product.wishlist',
                 method: 'write',
-                args: [[wish], { active: false }, weContext.getExtra()],
+                args: [[wish], { active: false }, context],
             })
             .then(function(){
                 $(tr).hide();

@@ -2,12 +2,12 @@ odoo.define('website.translateMenu', function (require) {
 'use strict';
 
 var utils = require('web.utils');
-var weContext = require('web_editor.context');
 var translate = require('web_editor.translate');
 var websiteNavbarData = require('website.navbar');
 
-var ctx = weContext.getExtra();
-if (!ctx.translatable) {
+var edit_translations = document.documentElement.dataset.translatable;
+
+if (!document.documentElement.dataset.translatable) {
     return;
 }
 
@@ -22,7 +22,7 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      */
     start: function () {
         var defs = [this._super.apply(this, arguments)];
-        if (ctx.edit_translations) {
+        if (edit_translations) {
             defs.push(this._startTranslateMode());
         }
         return $.when.apply($, defs);
@@ -64,7 +64,7 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @returns {Deferred}
      */
     _startTranslateMode: function () {
-        if (!ctx.edit_translations) {
+        if (!edit_translations) {
             window.location.search += '&edit_translations';
             return $.Deferred();
         }

@@ -5,8 +5,8 @@ var ajax = require('web.ajax');
 var Class = require('web.Class');
 var core = require('web.core');
 var mixins = require('web.mixins');
-var weContext = require('web_editor.context');
 var rte = require('web_editor.rte');
+var session = require('web.session');
 var weWidgets = require('web_editor.widget');
 
 var QWeb = core.qweb;
@@ -15,7 +15,7 @@ var _t = core._t;
 ajax.jsonRpc('/web/dataset/call', 'call', {
     'model': 'ir.ui.view',
     'method': 'read_template',
-    'args': ['web_editor.colorpicker', weContext.get()]
+    'args': ['web_editor.colorpicker', session.user_context]
 }).done(function (data) {
     QWeb.add_template(data);
 });

@@ -3,9 +3,9 @@ odoo.define('website_slides.upload', function (require) {
 
 var ajax = require('web.ajax');
 var core = require('web.core');
+var session = require('web.session')
 var Widget = require('web.Widget');
 require('web.dom_ready');
-var weContext = require("web_editor.context");
 var slides = require('website_slides.slides');
 
 var qweb = core.qweb;
@@ -258,7 +258,7 @@ var SlideDialog = Widget.extend({
                     kwargs: {
                         fields: ['name'],
                         domain: [['channel_id', '=', self.channel_id]],
-                        context: weContext.get()
+                        context: session.user_context
                     }
                 });
             }));
@@ -279,7 +279,7 @@ var SlideDialog = Widget.extend({
                 args: [],
                 kwargs: {
                     fields: ['name'],
-                    context: weContext.get()
+                    context: session.user_context
                 }
             });
         }));
