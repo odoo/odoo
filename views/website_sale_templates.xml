@@ -47,6 +47,13 @@
                 </div>
             </div>
         </t>
+        <t t-if="website_sale_order.get_promo_code_error(delete=False)">
+            <div class="panel panel-danger mt16">
+                <div class="panel-heading clearfix">
+                    <span class="pull-left"><t t-esc="website_sale_order.get_promo_code_error()" /></span>
+                </div>
+            </div>
+        </t>
     </xpath>
     <xpath expr="//t[@name='code_not_available']" position="replace"/>
 </template>
