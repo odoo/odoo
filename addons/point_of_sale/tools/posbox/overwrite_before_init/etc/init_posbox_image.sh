@@ -54,7 +54,6 @@ sudo -u postgres createuser -s pi
 mkdir /var/log/odoo
 chown pi:pi /var/log/odoo
 chown pi:pi -R /home/pi/odoo/
-chmod 770 -R /home/pi/odoo/
 
 # logrotate is very picky when it comes to file permissions
 chown -R root:root /etc/logrotate.d/
