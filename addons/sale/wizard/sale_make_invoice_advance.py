@@ -23,6 +23,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
             order = sale_obj.browse(self._context.get('active_ids'))[0]
             if all([line.product_id.invoice_policy == 'order' for line in order.order_line]) or order.invoice_count:
                 return 'all'
+        else:
+            return 'all'
         return 'delivered'
 
     @api.model
