@@ -66,10 +66,17 @@ var PlannerDialog = Widget.extend({
      */
     willStart: function() {
         var self = this;
+        var context = session.user_context;
+        // fallback context for frontend
+        if(_.isEmpty(context)) {
+            context = {
+                lang: (document.documentElement.getAttribute('lang')||'').replace('-', '_'),
+            };
+        }
         var res = this._super.apply(this, arguments).then(function() {
             return (new Model('web.planner')).call('render',
                 [self.planner.view_id[0], self.planner.planner_application],
-                {context: session.user_context});
+                {context: context});
         }).then(function(template) {
             self.$res = $(template);
         });
