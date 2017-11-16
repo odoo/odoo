@@ -19,6 +19,8 @@ class SaleCouponApplyCode(models.TransientModel):
         error_status = self.apply_coupon(sales_order, self.coupon_code)
         if error_status.get('error', False):
             raise UserError(error_status.get('error', False))
+        if error_status.get('not_found', False):
+            raise UserError(error_status.get('not_found', False))
 
     def apply_coupon(self, order, coupon_code):
         error_status = {}
@@ -46,5 +48,5 @@ class SaleCouponApplyCode(models.TransientModel):
                     order.applied_coupon_ids += coupon
                     coupon.write({'state': 'used'})
             else:
-                error_status = {'error': _('The code %s is invalid') % (coupon_code)}
+                error_status = {'not_found': _('The code %s is invalid') % (coupon_code)}
         return error_status
