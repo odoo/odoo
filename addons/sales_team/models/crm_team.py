@@ -115,7 +115,7 @@ class CrmTeam(models.Model):
         # we take the start of the following month/week/day if we group by month/week/day
         # (to avoid having twice the same month/week/day from different years/month/week)
         if self.dashboard_graph_group == 'month':
-            start_date = date(start_date.year + start_date.month / 12, start_date.month % 12 + 1, 1)
+            start_date = date(start_date.year + start_date.month // 12, start_date.month % 12 + 1, 1)
             # handle period=week, grouping=month for silly managers
             if self.dashboard_graph_period == 'week':
                 start_date = today.replace(day=1)

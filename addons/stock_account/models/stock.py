@@ -49,6 +49,15 @@ class StockLocation(models.Model):
              "and into an internal location, instead of the generic Stock Output Account set on the product. "
              "This has no effect for internal locations.")
 
+    def _should_be_valued(self):
+        """ This method returns a boolean reflecting whether the products stored in `self` should
+        be considered when valuating the stock of a company.
+        """
+        self.ensure_one()
+        if self.usage == 'internal' or (self.usage == 'transit' and self.company_id):
+            return True
+        return False
+
 
 class StockMoveLine(models.Model):
     _inherit = 'stock.move.line'
@@ -175,7 +184,10 @@ class StockMove(models.Model):
 
         :return: True if the move is entering the company else False
         """
-        return not self.location_id.company_id and self.location_dest_id.company_id.id == self.company_id.id
+        for move_line in self.move_line_ids:
+            if not move_line.location_id._should_be_valued() and move_line.location_dest_id._should_be_valued():
+                return True
+        return False
 
     def _is_out(self):
         """ Check if the move should be considered as leaving the company so that the cost method
@@ -183,13 +195,19 @@ class StockMove(models.Model):
 
         :return: True if the move is leaving the company else False
         """
-        return self.location_id.company_id.id == self.company_id.id and not self.location_dest_id.company_id
+        for move_line in self.move_line_ids:
+            if move_line.location_id._should_be_valued() and not move_line.location_dest_id._should_be_valued():
+                return True
+        return False
 
     @api.model
     def _run_fifo(self, move, quantity=None):
         move.ensure_one()
         # Find back incoming stock moves (called candidates here) to value this move.
-        qty_to_take_on_candidates = quantity or move.product_qty
+        valued_move_lines = move.move_line_ids.filtered(lambda ml: ml.location_id._should_be_valued() and not ml.location_dest_id._should_be_valued())
+        valued_quantity = sum(valued_move_lines.mapped('qty_done'))
+
+        qty_to_take_on_candidates = quantity or valued_quantity
         candidates = move.product_id._get_fifo_candidates_in_move()
         new_standard_price = 0
         tmp_value = 0  # to accumulate the value taken on the candidates
@@ -217,7 +235,7 @@ class StockMove(models.Model):
                 break
 
         # Update the standard price with the price of the last used candidate, if any.
-        if new_standard_price:
+        if new_standard_price and move.product_id.cost_method == 'fifo':
             move.product_id.standard_price = new_standard_price
 
         # If there's still quantity to value but we're out of candidates, we fall in the
@@ -243,38 +261,59 @@ class StockMove(models.Model):
     def _run_valuation(self, quantity=None):
         self.ensure_one()
         if self._is_in():
-            if self.product_id.cost_method in ['fifo', 'average']:
-                price_unit = self._get_price_unit()
-                value = price_unit * (quantity or self.product_qty)
-                vals = {
-                    'price_unit': price_unit,
-                    'value': value if quantity is None or not self.value else self.value,
-                    'remaining_value': value if quantity is None else self.remaining_value + value,
-                }
-                if self.product_id.cost_method == 'fifo':
-                    vals['remaining_qty'] = self.product_qty if quantity is None else self.remaining_qty + quantity
-                self.write(vals)
-            else:  # standard
-                value = self.product_id.standard_price * (quantity or self.product_qty)
-                self.write({
+            valued_move_lines = self.move_line_ids.filtered(lambda ml: not ml.location_id._should_be_valued() and ml.location_dest_id._should_be_valued())
+            valued_quantity = sum(valued_move_lines.mapped('qty_done'))
+
+            # Note: we always compute the fifo `remaining_value` and `remaining_qty` fields no
+            # matter which cost method is set, to ease the switching of cost method.
+            vals = {}
+            price_unit = self._get_price_unit()
+            value = price_unit * (quantity or valued_quantity)
+            vals = {
+                'price_unit': price_unit,
+                'value': value if quantity is None or not self.value else self.value,
+                'remaining_value': value if quantity is None else self.remaining_value + value,
+            }
+            vals['remaining_qty'] = valued_quantity if quantity is None else self.remaining_qty + quantity
+
+            if self.product_id.cost_method == 'standard':
+                value = self.product_id.standard_price * (quantity or valued_quantity)
+                vals.update({
                     'price_unit': self.product_id.standard_price,
                     'value': value if quantity is None or not self.value else self.value,
                 })
+            self.write(vals)
         elif self._is_out():
-            if self.product_id.cost_method == 'fifo':
-                self.env['stock.move']._run_fifo(self, quantity=quantity)
-            elif self.product_id.cost_method in ['standard', 'average']:
+            valued_move_lines = self.move_line_ids.filtered(lambda ml: ml.location_id._should_be_valued() and not ml.location_dest_id._should_be_valued())
+            valued_quantity = sum(valued_move_lines.mapped('qty_done'))
+            self.env['stock.move']._run_fifo(self, quantity=quantity)
+            if self.product_id.cost_method in ['standard', 'average']:
                 curr_rounding = self.company_id.currency_id.rounding
-                value = -float_round(self.product_id.standard_price * (self.product_qty if quantity is None else quantity), precision_rounding=curr_rounding)
+                value = -float_round(self.product_id.standard_price * (valued_quantity if quantity is None else quantity), precision_rounding=curr_rounding)
                 self.write({
                     'value': value if quantity is None else self.value + value,
-                    'price_unit': value / self.product_qty,
+                    'price_unit': value / valued_quantity,
                 })
 
     def _action_done(self):
         self.product_price_update_before_done()
         res = super(StockMove, self)._action_done()
         for move in res:
+            # Apply restrictions on the stock move to be able to make
+            # consistent accounting entries.
+            if move._is_in() and move._is_out():
+                raise UserError(_("The move lines are not in a consistent state: some are entering and other are leaving the company. "))
+            company_src = move.mapped('move_line_ids.location_id.company_id')
+            company_dst = move.mapped('move_line_ids.location_dest_id.company_id')
+            try:
+                if company_src:
+                    company_src.ensure_one()
+                if company_dst:
+                    company_dst.ensure_one()
+            except ValueError:
+                raise UserError(_("The move lines are not in a consistent states: they do not share the same origin or destination company."))
+            if company_src and company_dst and company_src.id != company_dst.id:
+                raise UserError(_("The move lines are not in a consistent states: they are doing an intercompany in a single step while they should go through the intercompany transit location."))
             move._run_valuation()
         for move in res.filtered(lambda m: m.product_id.valuation == 'real_time' and (m._is_in() or m._is_out())):
             move._account_entry_move()
@@ -519,12 +558,12 @@ class StockMove(models.Model):
 
         location_from = self.location_id
         location_to = self.location_dest_id
-        company_from = location_from.usage == 'internal' and location_from.company_id or False
-        company_to = location_to and (location_to.usage == 'internal') and location_to.company_id or False
+        company_from = self._is_out() and self.mapped('move_line_ids.location_id.company_id') or False
+        company_to = self._is_in() and self.mapped('move_line_ids.location_dest_id.company_id') or False
 
         # Create Journal Entry for products arriving in the company; in case of routes making the link between several
         # warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
-        if company_to and (self.location_id.usage not in ('internal', 'transit') and self.location_dest_id.usage == 'internal' or company_from != company_to):
+        if self._is_in():
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
             if location_from and location_from.usage == 'customer':  # goods returned from customer
                 self.with_context(force_company=company_to.id)._create_account_move_line(acc_dest, acc_valuation, journal_id)
@@ -532,7 +571,7 @@ class StockMove(models.Model):
                 self.with_context(force_company=company_to.id)._create_account_move_line(acc_src, acc_valuation, journal_id)
 
         # Create Journal Entry for products leaving the company
-        if company_from and (self.location_id.usage == 'internal' and self.location_dest_id.usage not in ('internal', 'transit') or company_from != company_to):
+        if self._is_out():
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
             if location_to and location_to.usage == 'supplier':  # goods returned to supplier
                 self.with_context(force_company=company_from.id)._create_account_move_line(acc_valuation, acc_src, journal_id)

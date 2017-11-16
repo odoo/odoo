@@ -95,6 +95,7 @@ QUnit.module('Views', {
                         domain: [["display_name","like","a"], ["display_name","ilike","piou"], ["foo","ilike","piou"]],
                         fields:["display_name","foo","bar"],
                         groupby:["bar"],
+                        orderby: '',
                         lazy: true
                     }, "should search with the complete domain (domain + search), and group by 'bar'");
                 }

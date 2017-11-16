@@ -39,10 +39,10 @@
 # Hubert TETARD <htetard@apik-conseils.com>, 2017
 # Benedicte HANET <hanetb@gmail.com>, 2017
 # Nicolas JEUDY <njeudy@panda-chi.io>, 2017
-# Alexis de Lattre <alexis@via.ecp.fr>, 2017
 # Lucas Deliege <lud@odoo.com>, 2017
 # Shark McGnark <peculiarcheese@gmail.com>, 2017
 # Bertrand LATOUR <divoir@gmail.com>, 2017
+# Alexis de Lattre <alexis@via.ecp.fr>, 2017
 # Florian Hatat <mininet@wanadoo.fr>, 2017
 # Leo Schmitt <inactive+lschmitt@transifex.com>, 2017
 # fr rev <e2ffr02@hotmail.com>, 2017
@@ -1584,7 +1584,7 @@ msgstr "Messages directs"
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
 msgid "Discard"
-msgstr "Abandonner"
+msgstr "Annuler"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_channel_menu_root_chat
@@ -4881,12 +4881,9 @@ msgstr "Smiley"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type_res_model_id
 msgid ""
-"Specify a model if the activity should be specific to a modeland not "
+"Specify a model if the activity should be specific to a model and not "
 "available when managing activities for other models."
 msgstr ""
-"Indiquez un modèle si l'activité doit être spécifique à un modèle et qu'elle"
-" n'est pas disponible lors de la gestion des activités pour d'autres "
-"modèles."
 
 #. module: mail
 #. openerp-web
@@ -5582,12 +5579,17 @@ msgstr ""
 "(@masociete.odoo.com)."
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:668
 #: code:addons/mail/models/mail_thread.py:670
 #: model:ir.ui.view,arch_db:mail.message_user_assigned
 #, python-format
 msgid "View"
 msgstr "Voir"
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:668
+#, python-format
+msgid "View %s"
+msgstr ""
 
 #. module: mail
 #. openerp-web

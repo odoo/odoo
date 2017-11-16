@@ -5,6 +5,7 @@
 # Translators:
 # Kostas Goutoudis <goutoudis@gmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
+# George Tarasidis <george_tarasidis@yahoo.com>, 2017
 # Stefanos Nikou <stefanos.nikou@gmail.com>, 2017
 # Costas Pittalis <cpittalis@gmail.com>, 2017
 msgid ""
@@ -31,7 +32,7 @@ msgstr " (αντίγραφο)"
 #: code:addons/account_asset/models/account_asset.py:538
 #, python-format
 msgid " (grouped)"
-msgstr ""
+msgstr "(ομαδοποιήθηκαν)"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_entry_count
@@ -53,12 +54,12 @@ msgstr ""
 #: model:ir.cron,cron_name:account_asset.account_asset_cron
 #: model:ir.cron,name:account_asset.account_asset_cron
 msgid "Account Asset: Generate asset entries"
-msgstr ""
+msgstr "Λογαριασμοί Παγίων: Δημιουργία Αποσβέσεων Παγίων"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_date
 msgid "Account Date"
-msgstr "Ημερομηνία Λογαριασμού"
+msgstr "Λογαριασμού Ημερομηνία "
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_move
@@ -99,7 +100,7 @@ msgstr "Ενεργή"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Additional Options"
-msgstr ""
+msgstr "Επιπλέον Επιλογές"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:595
@@ -175,14 +176,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_asset.field_product_template_asset_category_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Asset Type"
-msgstr ""
+msgstr "Τύπος Παγίου"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal_purchase
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_list_normal_purchase
 #: model:ir.ui.view,arch_db:account_asset.res_config_settings_view_form
 msgid "Asset Types"
-msgstr ""
+msgstr "Τύποι Παγίων"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_category
@@ -196,7 +197,7 @@ msgstr "Κατηγορία Παγίου"
 #: code:addons/account_asset/models/account_asset.py:286
 #, python-format
 msgid "Asset created"
-msgstr ""
+msgstr "Το πάγιο δημιουργήθηκε"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
@@ -265,7 +266,7 @@ msgstr "Πάγια σε Εξέλιξη"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_open_asset
 msgid "Auto-confirm Assets"
-msgstr ""
+msgstr "Αυτόματη Επιβεβαίωση Παγίου"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -309,7 +310,7 @@ msgid ""
 msgstr ""
 "Επιλέξτε την μέθοδο που θα χρησιμοποιηθεί για τον υπολογισμό του ποσού στις γραμμές απόσβεσης.\n"
 "* Γραμμική: Υπολογίζεται με βάση την: Ακαθάριστη Αξία / Αριθμός Αποσβέσεων\n"
-"* Σταδιακή Μείωση: Υπολογίζεται με βάση την: Εναπομένουσα Αξία / Συντελεστή Σταδιακής Μείωσης"
+"* Φθίνουσα: Υπολογίζεται με βάση την: Εναπομένουσα Αξία / Συντελεστή Σταδιακής Μείωσης"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method_time
@@ -401,7 +402,7 @@ msgstr "Δημιουργήθηκε στις"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_depreciated_value
 msgid "Cumulative Depreciation"
-msgstr ""
+msgstr "Σωρευμένες Αποσβέσεις"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:595
@@ -462,7 +463,7 @@ msgstr ""
 #: selection:account.asset.asset,method:0
 #: selection:account.asset.category,method:0
 msgid "Degressive"
-msgstr "Σταδιακή Μείωση"
+msgstr "Φθίνουσα"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_progress_factor
@@ -571,7 +572,7 @@ msgstr ""
 #: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Draft"
-msgstr "Πρόχειρο"
+msgstr "Προσχέδιο"
 
 #. module: account_asset
 #: selection:account.asset.asset,method_time:0
@@ -584,7 +585,7 @@ msgstr "Λήξη"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_method_end
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_method_end
 msgid "Ending date"
-msgstr "Ημερομηνία λήξης"
+msgstr "Ημερ. λήξης"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -601,7 +602,7 @@ msgstr ""
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
 msgid "Generate Assets Entries"
-msgstr ""
+msgstr "Δημιουργία Αποσβέσεων Παγίων"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
@@ -626,18 +627,18 @@ msgstr ""
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Group By"
-msgstr "Ομαδοποίηση Κατά"
+msgstr "Ομαδοποίηση κατά"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
 msgid "Group By..."
-msgstr "Ομαδοποίηση ανά..."
+msgstr "Ομαδοποίηση κατά..."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_group_entries
 msgid "Group Journal Entries"
-msgstr ""
+msgstr "Ομαδοποίηση Καταχωρήσεων Ημερολογίου"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_id
@@ -731,7 +732,7 @@ msgstr "Τελευταία Ενημέρωση στις"
 #: selection:account.asset.asset,method:0
 #: selection:account.asset.category,method:0
 msgid "Linear"
-msgstr "Γραμμικό"
+msgstr "Γραμμική"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_check
@@ -787,7 +788,7 @@ msgstr "Αριθμός Αποσβέσεων"
 #: selection:account.asset.category,method_time:0
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Number of Entries"
-msgstr ""
+msgstr "Αριθμός Καταχωρήσεων"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_period
@@ -797,7 +798,7 @@ msgstr "Πλήθος Μηνών σε μία Περίοδο"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "One Entry Every"
-msgstr ""
+msgstr "Μία Καταχώρηση Κάθε"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:597
@@ -816,12 +817,12 @@ msgstr "Μήκος Περιόδου"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Periodicity"
-msgstr ""
+msgstr "Περιοδικότητα"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
 msgid "Post Depreciation Lines"
-msgstr ""
+msgstr "Ανάρτηση Γραμμών Αποσβέσεων"
 
 #. module: account_asset
 #. openerp-web
@@ -831,7 +832,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 #, python-format
 msgid "Posted"
-msgstr "Καταχωρημένο"
+msgstr "Καταχωρημένη"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_posted_value
@@ -846,7 +847,7 @@ msgstr "Καταχωρημένες γραμμές αποσβέσεων"
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_product_template
 msgid "Product Template"
-msgstr "Πρότυπο Προϊόντος"
+msgstr "Πρότυπο Είδους"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_prorata
@@ -938,7 +939,7 @@ msgstr "Αναζήτηση Κατηγορίας Παγίου"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Sell or Dispose"
-msgstr ""
+msgstr "Πώληση ή Απομάκρυνση"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_sequence
@@ -948,7 +949,7 @@ msgstr "Ακολουθία"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Set to Draft"
-msgstr "Ορισμός σε Πρόχειρο"
+msgstr "Ορισμός σε Προσχέδιο"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_method_period
@@ -992,6 +993,8 @@ msgid ""
 "This wizard will post installment/depreciation lines for the selected month.<br/>\n"
 "                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well."
 msgstr ""
+"Αυτός ο οδηγός θα αναρτήσει γραμμές δόσης / απόσβεσης για τον επιλεγμένο μήνα.<br/>\n"
+"                        Αυτό θα δημιουργήσει επίσης ,ημερολογιακές καταχωρήσεις για όλες τις σχετικές γραμμές σε αυτήν την περίοδο αναγνώρισης παγίων / εσόδων."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_time
@@ -1003,7 +1006,7 @@ msgstr "Μέθοδος Χρόνου"
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Time Method Based On"
-msgstr ""
+msgstr "Η μέθοδος με βάση το χρόνο βασίζεται σε"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_type
@@ -1017,7 +1020,7 @@ msgstr "Τύπος"
 #: code:addons/account_asset/static/src/js/account_asset.js:44
 #, python-format
 msgid "Unposted"
-msgstr "Μη Καταχωρημένο"
+msgstr "Μη Καταχωρημένη"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_unposted_value

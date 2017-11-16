@@ -349,7 +349,7 @@ var DateField = Field.extend(/** @lends instance.web.search.DateField# */{
         var t, v;
         try {
             t = (this.attrs && this.attrs.type === 'datetime') ? 'datetime' : 'date';
-            v = field_utils.parse[t](needle, {type: t});
+            v = field_utils.parse[t](needle, {type: t}, {timezone: true});
         } catch (e) {
             return $.when(null);
         }

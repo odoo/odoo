@@ -3,6 +3,7 @@
 import json
 import re
 import uuid
+from functools import partial
 
 from lxml import etree
 from dateutil.relativedelta import relativedelta
@@ -10,6 +11,7 @@ from werkzeug.urls import url_encode
 
 from odoo import api, exceptions, fields, models, _
 from odoo.tools import float_is_zero, float_compare, pycompat
+from odoo.tools.misc import formatLang
 
 from odoo.exceptions import AccessError, UserError, RedirectWarning, ValidationError, Warning
 
@@ -1394,8 +1396,6 @@ class AccountInvoice(models.Model):
             'payment_difference_handling': writeoff_acc and 'reconcile' or 'open',
             'writeoff_account_id': writeoff_acc and writeoff_acc.id or False,
         }
-        if self.env.context.get('tx_currency_id'):
-            payment_vals['currency_id'] = self.env.context.get('tx_currency_id')
 
         payment = self.env['account.payment'].create(payment_vals)
         payment.post()
@@ -1416,13 +1416,18 @@ class AccountInvoice(models.Model):
     @api.multi
     def _get_tax_amount_by_group(self):
         self.ensure_one()
+        currency = self.currency_id or self.company_id.currency_id
+        fmt = partial(formatLang, self.with_context(lang=self.partner_id.lang).env, currency_obj=currency)
         res = {}
         for line in self.tax_line_ids:
             res.setdefault(line.tax_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
             res[line.tax_id.tax_group_id]['amount'] += line.amount
             res[line.tax_id.tax_group_id]['base'] += line.base
         res = sorted(res.items(), key=lambda l: l[0].sequence)
-        res = [(l[0].name, l[1]['amount'], l[1]['base']) for l in res]
+        res = [(
+            r[0].name, r[1]['amount'], r[1]['base'],
+            fmt(r[1]['amount']), fmt(r[1]['base']),
+        ) for r in res]
         return res
 
 

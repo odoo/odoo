@@ -5,6 +5,7 @@
 # Translators:
 # Kostas Goutoudis <goutoudis@gmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
+# George Tarasidis <george_tarasidis@yahoo.com>, 2017
 # Sophia Anastasopoulos <sophiaanast1@gmail.com>, 2017
 # Nikos Gkountras <nick@ngsol.net>, 2017
 # Costas Pittalis <cpittalis@gmail.com>, 2017
@@ -205,17 +206,17 @@ msgstr "Αποδέκτης"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_id
 msgid "Acquirer Account"
-msgstr ""
+msgstr "Λογαριασμός Αποδέκτη / Acquirer"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_ref
 msgid "Acquirer Ref."
-msgstr ""
+msgstr "Αναφ. Αποδέκτη"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_reference
 msgid "Acquirer Reference"
-msgstr ""
+msgstr "Αναφορά Αποδέκτη"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon_acquirer_ids
@@ -281,7 +282,7 @@ msgstr "Authorize.Net"
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Authorized"
-msgstr ""
+msgstr "Εγκεκριμένη"
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
@@ -412,7 +413,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users_payment_token_count
 msgid "Count Payment Token"
-msgstr ""
+msgstr "Πλήθος Διακριτικών Πληρωμής"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_country_ids
@@ -491,7 +492,7 @@ msgstr "Εμφάνιση Ονόματος"
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Done"
-msgstr "Ολοκληρωμένο"
+msgstr "Ολοκληρωμένη"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_done_msg
@@ -501,7 +502,7 @@ msgstr "Ολοκληρωμένο Μήνυμα"
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Draft"
-msgstr "Πρόχειρο"
+msgstr "Προσχέδιο"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
@@ -511,7 +512,7 @@ msgstr ""
 #. module: payment
 #: model:account.payment.method,name:payment.account_payment_method_electronic_in
 msgid "Electronic"
-msgstr ""
+msgstr "Ηλεκτρονικά"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_email
@@ -597,7 +598,7 @@ msgstr "Από"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Group By"
-msgstr "Ομαδοποίηση Κατά"
+msgstr "Ομαδοποίηση κατά"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pre_msg
@@ -704,7 +705,7 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_meth_link
 msgid "Manage your payment methods"
-msgstr "Διαχειριστείτε τους δικούς σας τρόπους πληρωμής"
+msgstr "Διαχειριστείτε τις δικές σας μεθόδους πληρωμής"
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
@@ -798,7 +799,7 @@ msgstr "Περιγραφή"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token_name
 msgid "Name of the payment token"
-msgstr ""
+msgstr "Όνομα του διακριτικού πληρωμής"
 
 #. module: payment
 #: selection:payment.acquirer,save_token:0
@@ -902,22 +903,22 @@ msgstr ""
 #: model:ir.actions.act_window,name:payment.action_payment_icon
 #: model:ir.ui.menu,name:payment.payment_icon_menu
 msgid "Payment Icons"
-msgstr ""
+msgstr "Εικονίδια Πληρωμής"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_journal_id
 msgid "Payment Journal"
-msgstr ""
+msgstr "Ημερολόγιο Πληρωμών"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_methods
 msgid "Payment Methods"
-msgstr "Τρόποι Πληρωμής"
+msgstr "Μέθοδοι Πληρωμής"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_token_id
 msgid "Payment Token"
-msgstr ""
+msgstr "Διακριτικό Πληρωμής"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_ids
@@ -926,7 +927,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.payment_token_tree_view
 #: model:ir.ui.view,arch_db:payment.payment_token_view_search
 msgid "Payment Tokens"
-msgstr ""
+msgstr "Διακριτικά Πληρωμής"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
@@ -960,7 +961,7 @@ msgstr ""
 #: model:ir.ui.menu,name:payment.root_payment_menu
 #: model:ir.ui.view,arch_db:payment.payment_token_form_view
 msgid "Payments"
-msgstr "Πληρωμές"
+msgstr "Συναλλαγές"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_journal_id
@@ -1040,12 +1041,12 @@ msgstr "Αναφορά του ΤΧ όπως είναι αποθηκευμένη 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Refunded"
-msgstr ""
+msgstr "Επιστράφηκε"
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Refunding"
-msgstr ""
+msgstr "Αναχρηματοδότηση"
 
 #. module: payment
 #: constraint:payment.acquirer:0
@@ -1071,12 +1072,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:payment.payment_token_action
 #: model:ir.ui.menu,name:payment.payment_token_menu
 msgid "Saved Payment Data"
-msgstr ""
+msgstr "Αποθηκευμένα Δεδομένα Πληρωμής"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment_payment_token_id
 msgid "Saved payment token"
-msgstr ""
+msgstr "Αποθηκευμένο διακριτικό πληρωμής"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_token_implemented
@@ -1156,7 +1157,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_icon_ids
 msgid "Supported Payment Icons"
-msgstr ""
+msgstr "Υποστηριζόμενα Εικονίδια Πληρωμής"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id

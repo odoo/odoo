@@ -20,11 +20,14 @@ class ResConfigSettings(models.TransientModel):
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         get_param = self.env['ir.config_parameter'].sudo().get_param
+        auth_signup_template_user_id = literal_eval(get_param('auth_signup.template_user_id', default='False'))
+        if auth_signup_template_user_id and not self.env['res.users'].sudo().browse(auth_signup_template_user_id).exists():
+            auth_signup_template_user_id = False
         # the value of the parameter is a nonempty string
         res.update(
             auth_signup_reset_password=get_param('auth_signup.reset_password', 'False').lower() == 'true',
             auth_signup_uninvited='b2c' if get_param('auth_signup.allow_uninvited', 'False').lower() == 'true' else 'b2b',
-            auth_signup_template_user_id=literal_eval(get_param('auth_signup.template_user_id', 'False')),
+            auth_signup_template_user_id=auth_signup_template_user_id,
         )
         return res
 
