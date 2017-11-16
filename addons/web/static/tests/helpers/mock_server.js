@@ -12,7 +12,7 @@ var MockServer = Class.extend({
      * @constructor
      * @param {Object} data
      * @param {Object} options
-     * @param {integer} [options.logLevel=0]
+     * @param {boolean} [options.debug=false] logs RPCs if set to true
      * @param {string} [options.currentDate] formatted string, default to
      *   current day
      */
@@ -40,10 +40,7 @@ var MockServer = Class.extend({
             }
         }
 
-        // 0 is for no log
-        // 1 is for short
-        // 2 is for detailed
-        this.logLevel = (options && options.logLevel) || 0;
+        this.debug = options && options.debug;
 
         this.currentDate = options.currentDate || moment().format("YYYY-MM-DD");
     },
@@ -96,25 +93,21 @@ var MockServer = Class.extend({
      *          error object, stringified then parsed.
      */
     performRpc: function (route, args) {
-        var logLevel = this.logLevel;
+        var debug = this.debug;
         args = JSON.parse(JSON.stringify(args));
-        if (logLevel === 2) {
+        if (debug) {
             console.log('%c[rpc] request ' + route, 'color: blue; font-weight: bold;', args);
             args = JSON.parse(JSON.stringify(args));
         }
         return this._performRpc(route, args).then(function (result) {
             var resultString = JSON.stringify(result || false);
-            if (logLevel === 1) {
-                console.log('Mock: ' + route, JSON.parse(resultString));
-            } else if (logLevel === 2) {
+            if (debug) {
                 console.log('%c[rpc] response' + route, 'color: blue; font-weight: bold;', JSON.parse(resultString));
             }
             return JSON.parse(resultString);
         }).fail(function (result) {
             var errorString = JSON.stringify(result || false);
-            if (logLevel === 1) {
-                console.log('Mock: (ERROR)' + route, JSON.parse(errorString));
-            } else if (logLevel === 2) {
+            if (debug) {
                 console.log('%c[rpc] response (error) ' + route, 'color: orange; font-weight: bold;', JSON.parse(errorString));
             }
             return JSON.parse(errorString);
