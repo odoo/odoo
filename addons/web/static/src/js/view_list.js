@@ -2285,11 +2285,20 @@ instance.web.list.Button = instance.web.list.Column.extend({
         }
         if (attrs.invisible) { return ''; }
         var template = this.icon && 'ListView.row.button' || 'ListView.row.text_button';
+        var disable = (isNaN(row_data.id.value) || !(_.isString(row_data.id.value) && (row_data.id.value.indexOf('-') > -1)));
+        disable = !disable;
         return QWeb.render(template, {
             widget: this,
             prefix: instance.session.prefix,
+            /*
+            Allow recurring event 1-2014...
+            
+            !_.isNumber(parseInt(row_data.id.value))
+            instead of 
+            isNan(row_data.id.value)
+            */
             disabled: attrs.readonly
-                || isNaN(row_data.id.value)
+                || disable
                 || instance.web.BufferedDataSet.virtual_id_regex.test(row_data.id.value)
         });
     }

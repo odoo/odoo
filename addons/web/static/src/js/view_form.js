@@ -4534,7 +4534,11 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         });
     },
     do_button_action: function (name, id, callback) {
-        if (!_.isNumber(id)) {
+        // manage recurring event.
+        // a correct data is either a virtual or a stored entry on the database.
+        // this mean the data have an id.
+        var is_correct_data = (isNaN(id) || !(_.isString(id) && (id.indexOf('-') > -1)));
+        if (!is_correct_data) {
             instance.webclient.notification.warn(
                 _t("Action Button"),
                 _t("The o2m record must be saved before an action can be used"));

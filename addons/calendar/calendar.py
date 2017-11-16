@@ -1194,7 +1194,15 @@ class calendar_event(osv.Model):
                 result_data.append(self.get_search_fields(ev, order_fields))
                 continue
             rdates = self.get_recurrent_date_by_event(cr, uid, ev, context=context)
-
+            start = datetime.strptime(
+                ev.start, DEFAULT_SERVER_DATETIME_FORMAT)
+            stop = datetime.strptime(
+                ev.stop, DEFAULT_SERVER_DATETIME_FORMAT)
+            duration = stop - start
+            seconds = duration.total_seconds()
+            duration_hours = seconds // 3600
+            # TOCHECK: Not sure if ev.duration is always right but if yes we should 
+            # use it to optimise the process.
             for r_date in rdates:
                 # fix domain evaluation
                 # step 1: check date and replace expression by True or False, replace other expressions by True
@@ -1202,18 +1210,31 @@ class calendar_event(osv.Model):
                 # check if there are one False
                 pile = []
                 ok = True
+                stopdate = r_date + timedelta(hours=duration_hours)
                 for arg in domain:
-                    if str(arg[0]) in ('start', 'stop', 'final_date'):
+                    if str(arg[0]) in ('start'):
                         if (arg[1] == '='):
-                            ok = r_date.strftime('%Y-%m-%d') == arg[2]
+                            ok = r_date.strftime('%Y-%m-%d %H:%M:%S') == arg[2]
                         if (arg[1] == '>'):
-                            ok = r_date.strftime('%Y-%m-%d') > arg[2]
+                            ok = r_date.strftime('%Y-%m-%d %H:%M:%S') > arg[2]
                         if (arg[1] == '<'):
-                            ok = r_date.strftime('%Y-%m-%d') < arg[2]
+                            ok = r_date.strftime('%Y-%m-%d %H:%M:%S') < arg[2]
                         if (arg[1] == '>='):
-                            ok = r_date.strftime('%Y-%m-%d') >= arg[2]
+                            ok = r_date.strftime('%Y-%m-%d %H:%M:%S') >= arg[2]
                         if (arg[1] == '<='):
-                            ok = r_date.strftime('%Y-%m-%d') <= arg[2]
+                            ok = r_date.strftime('%Y-%m-%d %H:%M:%S') <= arg[2]
+                        pile.append(ok)
+                    elif str(arg[0]) in ('stop'):
+                        if (arg[1] == '='):
+                            ok = stopdate.strftime('%Y-%m-%d %H:%M:%S') == arg[2]
+                        if (arg[1] == '>'):
+                            ok = stopdate.strftime('%Y-%m-%d %H:%M:%S') > arg[2]
+                        if (arg[1] == '<'):
+                            ok = stopdate.strftime('%Y-%m-%d %H:%M:%S') < arg[2]
+                        if (arg[1] == '>='):
+                            ok = stopdate.strftime('%Y-%m-%d %H:%M:%S') >= arg[2]
+                        if (arg[1] == '<='):
+                            ok = stopdate.strftime('%Y-%m-%d %H:%M:%S') <= arg[2]
                         pile.append(ok)
                     elif str(arg) == str('&') or str(arg) == str('|'):
                         pile.append(arg)
