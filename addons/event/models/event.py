@@ -208,7 +208,7 @@ class EventEvent(models.Model):
     @api.depends('date_tz', 'date_begin')
     def _compute_date_begin_tz(self):
         if self.date_begin:
-            self.date_begin_located = format_tz(self.with_context({'use_babel': True}).env, self.date_begin, tz=self.date_tz)
+            self.date_begin_located = format_tz(self.with_context(use_babel=True).env, self.date_begin, tz=self.date_tz)
         else:
             self.date_begin_located = False
 
@@ -216,7 +216,7 @@ class EventEvent(models.Model):
     @api.depends('date_tz', 'date_end')
     def _compute_date_end_tz(self):
         if self.date_end:
-            self.date_end_located = format_tz(self.with_context({'use_babel': True}).env, self.date_end, tz=self.date_tz)
+            self.date_end_located = format_tz(self.with_context(use_babel=True).env, self.date_end, tz=self.date_tz)
         else:
             self.date_end_located = False
 
