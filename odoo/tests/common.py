@@ -4,6 +4,7 @@ The module :mod:`odoo.tests.common` provides unittest test cases and a few
 helpers and classes to write tests.
 
 """
+import collections
 import errno
 import glob
 import importlib
@@ -501,18 +502,78 @@ ref_re = re.compile("""
 \2
 """, re.VERBOSE)
 class Form(object):
+    """ Server-side form view implementation (partial)
+
+    Implements much of the "form view" manipulation flow, such that
+    server-side tests can more properly reflect the behaviour which would be
+    observed when manipulating the interface:
+
+    * call default_get and the relevant onchanges on "creation"
+    * call the relevant onchanges on setting fields
+    * properly handle defaults & onchanges around x2many fields
+
+    Saving the form returns the created record if in creation mode.
+
+    Regular fields can just be assigned directly to the form, for
+    :class:`~odoo.fields.Many2one` fields assign a singleton recordset::
+
+        # empty recordset => creation mode
+        f = Form(self.env['sale.order'])
+        f.partner_id = a_partner
+        so = f.save()
+
+    When editing a record, using the form as a context manager to
+    automatically save it at the end of the scope::
+
+        with Form(so) as f2:
+            f2.payment_term_id = env.ref('account.account_payment_term_15days')
+            # f2 is saved here
+
+    For :class:`~odoo.fields.Many2many` fields, the field itself is a
+    :class:`~odoo.tests.common.M2MProxy` and can be altered by adding or
+    removing records::
+
+        with Form(user) as u:
+            u.groups_id.add(env.ref('account.group_account_manager'))
+            u.groups_id.remove(id=env.ref('base.group_portal').id)
+
+    Finally :class:`~odoo.fields.One2many` are reified as
+    :class:`~odoo.tests.common.O2MProxy`.
+
+    Because the :class:`~odoo.fields.One2many` only exists through its
+    parent, it is manipulated more directly by creating "sub-forms"
+    with the :meth:`~odoo.tests.common.O2MProxy.new` and
+    :meth:`~odoo.tests.common.O2MProxy.edit` methods. These would
+    normally be used as context managers since they get saved in the
+    parent record::
+
+        with Form(so) as f3:
+            # add support
+            with f3.order_line.new() as line:
+                line.product_id = env.ref('product.product_product_2')
+            # add a computer
+            with f3.order_line.new() as line:
+                line.product_id = env.ref('product.product_product_3')
+            # we actually want 5 computers
+            with f3.order_line.edit(1) as line:
+                line.product_uom_qty = 5
+            # remove support
+            f3.order_line.remove(index=0)
+            # SO is saved here
+
+    :param recordp: empty or singleton recordset. An empty recordset will
+                    put the view in "creation" mode and trigger calls to
+                    default_get and on-load onchanges, a singleton will
+                    put it in "edit" mode and only load the view's data.
+    :type recordp: odoo.models.Model
+    :param view: the id, xmlid or actual view object to use for
+                    onchanges and view constraints. If none is provided,
+                    simply loads the default view for the model.
+    :type view: int | str | odoo.model.Model
+
+    .. versionadded:: 12.0
+    """
     def __init__(self, recordp, view=None):
-        """
-        :param recordp: empty or singleton recordset. An empty recordset will
-                        put the view in "creation" mode and trigger calls to
-                        default_get and on-load onchanges, a singleton will
-                        put it in "edit" mode and only load the view'd data.
-        :type recordp: odoo.models.BaseModel
-        :param view: the id, xmlid or actual view object to use for
-                        onchanges and view constraints. If none is provided,
-                        simply loads the default view for the model.
-        :type view: int | str | odoo.model.BaseModel
-        """
         # necessary as we're overriding setattr
         assert isinstance(recordp, BaseModel)
         env = recordp.env
@@ -521,6 +582,7 @@ class Form(object):
         # store model bit only
         object.__setattr__(self, '_model', recordp.browse(()))
         if isinstance(view, BaseModel):
+            assert view._name == 'ir.ui.view', "the view parameter must be a view id, xid or record, got %s" % view
             view_id = view.id
         elif isinstance(view, pycompat.string_types):
             view_id = env.ref(view).id
@@ -716,7 +778,7 @@ class Form(object):
     def __setattr__(self, field, value):
         descr = self._view['fields'].get(field)
         assert descr is not None, "%s was not found in the view" % field
-        assert descr['type'] not in ('many2many', 'one2many'),\
+        assert descr['type'] not in ('many2many', 'one2many'), \
             "Can't set an o2m or m2m field, manipulate the corresponding proxies"
 
         # TODO: consider invisible to be the same as readonly?
@@ -741,6 +803,15 @@ class Form(object):
             self.save()
 
     def save(self):
+        """ Saves the form, returns the created record if applicable
+
+        * does not save ``readonly`` fields
+        * does not save unmodified fields (during edition) — any assignment
+          or onchange return marks the field as modified, even if set to its
+          current value
+
+        :raises AssertionError: if the form has any unfilled required field
+        """
         id_ = self._values.get('id')
         values = self._values_to_save()
         if id_:
@@ -829,7 +900,7 @@ class Form(object):
                         for k, v in command[2].items()
                         if k in subfields
                     }))
-                # TODO: should reuse existing values if not 5?
+                    # TODO: should reuse existing values if not 5?
             return v
         elif descr['type'] == 'many2many':
             # onchange result is a bunch of commands, normalize to single 6
@@ -906,6 +977,8 @@ class X2MProxy(object):
             'field %s is not editable' % self._field
 
 class O2MProxy(X2MProxy):
+    """ O2MProxy()
+    """
     def __init__(self, parent, field):
         self._parent = parent
         self._field = field
@@ -956,14 +1029,34 @@ class O2MProxy(X2MProxy):
         )
 
     def new(self):
+        """ Returns a :class:`Form` for a new
+        :class:`~odoo.fields.One2many` record, properly initialised.
+
+        The form is created from the list view if editable, or the field's
+        form view otherwise.
+
+        :raises AssertionError: if the field is not editable
+        """
         self._assert_editable()
         return O2MForm(self)
 
     def edit(self, index):
+        """ Returns a :class:`Form` to edit the pre-existing
+        :class:`~odoo.fields.One2many` record.
+
+        The form is created from the list view if editable, or the field's
+        form view otherwise.
+
+        :raises AssertionError: if the field is not editable
+        """
         self._assert_editable()
         return O2MForm(self, index)
 
     def remove(self, index):
+        """ Removes the record at ``index`` from the parent form.
+
+        :raises AssertionError: if the field is not editable
+        """
         self._assert_editable()
         # remove reified record from local list & either remove 0 from
         # commands list or replace 1 (update) by 2 (remove)
@@ -982,7 +1075,12 @@ class O2MProxy(X2MProxy):
         del self._records[index]
         self._parent._perform_onchange([self._field])
 
-class M2MProxy(X2MProxy):
+class M2MProxy(X2MProxy, collections.Sequence):
+    """ M2MProxy()
+
+    Behaves as a :class:`~collection.Sequence` of recordsets, can be
+    indexed or sliced to get actual underlying recordsets.
+    """
     def __init__(self, parent, field):
         self._parent = parent
         self._field = field
@@ -992,7 +1090,25 @@ class M2MProxy(X2MProxy):
         model = p._view['fields'][self._field]['relation']
         return p._env[model].browse(self._get_ids()[it])
 
+    def __len__(self):
+        return len(self._get_ids())
+
+    def __iter__(self):
+        return iter(self[:])
+
+    def __contains__(self, record):
+        relation_ = self._parent._view['fields'][self._field]['relation']
+        assert isinstance(record, BaseModel)\
+           and record._name == relation_
+
+        return record.id in self._get_ids()
+
+
     def add(self, record):
+        """ Adds ``record`` to the field, the record must already exist.
+
+        The addition will only be finalized when the parent record is saved.
+        """
         self._assert_editable()
         parent = self._parent
         relation_ = parent._view['fields'][self._field]['relation']
@@ -1009,6 +1125,10 @@ class M2MProxy(X2MProxy):
         return self._parent._values[self._field][0][2]
 
     def remove(self, id=None, index=None):
+        """ Removes a record at a certain index or with a provided id from
+        the field.
+        """
+
         self._assert_editable()
         assert (id is None) ^ (index is None), \
             "can remove by either id or index"
