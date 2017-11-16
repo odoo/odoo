@@ -345,7 +345,7 @@ Idiomatics Python Programming
     new_dict = dict(my_dict)
     new_list = list(old_list)
 
-- Python dictionnary : creation and update
+- Python dictionary : creation and update
 
 .. code-block:: python
 

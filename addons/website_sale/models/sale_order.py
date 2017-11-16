@@ -71,7 +71,7 @@ class SaleOrder(models.Model):
         if order.pricelist_id and order.partner_id:
             order_line = order._cart_find_product_line(product.id)
             if order_line:
-                pu = self.env['account.tax']._fix_tax_included_price(pu, product.taxes_id, order_line[0].tax_id)
+                pu = self.env['account.tax']._fix_tax_included_price_company(pu, product.taxes_id, order_line[0].tax_id, self.company_id)
 
         return {
             'product_id': product_id,
@@ -159,10 +159,11 @@ class SaleOrder(models.Model):
                     'pricelist': order.pricelist_id.id,
                 })
                 product = self.env['product.product'].with_context(product_context).browse(product_id)
-                values['price_unit'] = self.env['account.tax']._fix_tax_included_price(
+                values['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(
                     order_line._get_display_price(product),
                     order_line.product_id.taxes_id,
-                    order_line.tax_id
+                    order_line.tax_id,
+                    self.company_id
                 )
 
             order_line.write(values)
@@ -244,12 +245,13 @@ class Website(models.Model):
         :param bool show_visible: if True, we don't display pricelist where selectable is False (Eg: Code promo)
         :returns: pricelist recordset
         """
-        website = request and request.website or None
+        website = request and hasattr(request, 'website') and request.website or None
         if not website:
             if self.env.context.get('website_id'):
                 website = self.browse(self.env.context['website_id'])
             else:
-                website = self.search([], limit=1)
+                # In the weird case we are coming from the backend (https://github.com/odoo/odoo/issues/20245)
+                website = len(self) == 1 and self or self.search([], limit=1)
         isocountry = request and request.session.geoip and request.session.geoip.get('country_code') or False
         partner = self.env.user.partner_id
         order_pl = partner.last_website_so_id and partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
@@ -459,7 +461,7 @@ class Website(models.Model):
 
         else:
             request.session['sale_order_id'] = None
-            return None
+            return self.env['sale.order']
 
         return sale_order
 

@@ -69,14 +69,14 @@ class SaleOrderLine(models.Model):
                 if uom.id != components[product]['uom']:
                     from_uom = uom
                     to_uom = self.env['product.uom'].browse(components[product]['uom'])
-                    qty = from_uom._compute_quantity(qty, to_uom_id=to_uom)
+                    qty = from_uom._compute_quantity(qty, to_uom)
                 components[product]['qty'] += qty
             else:
                 # To be in the uom reference of the product
                 to_uom = self.env['product.product'].browse(product).uom_id
                 if uom.id != to_uom.id:
                     from_uom = uom
-                    qty = from_uom._compute_quantity(qty, to_uom_id=to_uom)
+                    qty = from_uom._compute_quantity(qty, to_uom)
                 components[product] = {'qty': qty, 'uom': to_uom.id}
         return components
 

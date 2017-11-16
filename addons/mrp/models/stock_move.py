@@ -138,6 +138,14 @@ class StockMove(models.Model):
         self.check_move_lots()
         return res
 
+    def _propagate_cancel(self):
+        self.ensure_one()
+        if not self.move_dest_id.raw_material_production_id:
+            super(StockMove, self)._propagate_cancel()
+        elif self.move_dest_id.state == 'waiting':
+            # If waiting, the chain will be broken and we are not sure if we can still wait for it (=> could take from stock instead)
+            self.move_dest_id.write({'state': 'confirmed'})
+
     @api.multi
     def action_cancel(self):
         if any(move.quantity_done for move in self):
@@ -153,7 +161,7 @@ class StockMove(models.Model):
     def create_lots(self):
         lots = self.env['stock.move.lots']
         for move in self:
-            unlink_move_lots = move.move_lot_ids.filtered(lambda x : (x.quantity_done == 0) and not x.workorder_id)
+            unlink_move_lots = move.move_lot_ids.filtered(lambda x : (x.quantity_done == 0) and x.done_wo)
             unlink_move_lots.sudo().unlink()
             group_new_quant = {}
             old_move_lot = {}
@@ -276,7 +284,7 @@ class StockMove(models.Model):
                 quants = quant_obj.quants_get_preferred_domain(move.product_qty, move, domain=main_domain, preferred_domain_list=preferred_domain_list)
                 self.env['stock.quant'].quants_move(quants, move, move.location_dest_id)
             else:
-                for movelot in move.move_lot_ids:
+                for movelot in move.active_move_lot_ids:
                     if float_compare(movelot.quantity_done, 0, precision_rounding=rounding) > 0:
                         if not movelot.lot_id:
                             raise UserError(_('You need to supply a lot/serial number.'))
@@ -285,7 +293,7 @@ class StockMove(models.Model):
                         self.env['stock.quant'].quants_move(quants, move, move.location_dest_id, lot_id = movelot.lot_id.id)
             moves_to_unreserve |= move
             # Next move in production order
-            if move.move_dest_id:
+            if move.move_dest_id and move.move_dest_id.state not in ('done', 'cancel'):
                 move.move_dest_id.action_assign()
         moves_to_unreserve.quants_unreserve()
         moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
@@ -372,6 +380,10 @@ class StockMove(models.Model):
         # delete the move with original product which is not relevant anymore
         self.sudo().unlink()
         return processed_moves
+
+    def _propagate_split(self, new_move, qty):
+        if not self.move_dest_id.raw_material_production_id:
+            super(StockMove, self)._propagate_split(new_move, qty)
 
     def _generate_move_phantom(self, bom_line, quantity):
         if bom_line.product_id.type in ['product', 'consu']:

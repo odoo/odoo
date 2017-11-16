@@ -1,45 +1,41 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * google_drive
-#
+# 
 # Translators:
+# 방상우 <mrroom@gmail.com>, 2017
+# 최재호 <hwangtog@gmail.com>, 2017
+# 종현 엄 <whd5367@naver.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-01-25 08:56+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
-"Language: ko\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
 "<b>To create a new filter:</b><br/>\n"
-"                                - Go to the Odoo document you want to "
-"filter. For instance, go to Opportunities and search on Sales Department.<br/"
-">\n"
-"                                - In this \"Search\" view, select the option "
-"\"Save Current Filter\", enter the name (Ex: Sales Department)<br/>\n"
-"                                - If you select \"Share with all users\", "
-"link of google document in \"More\" options will appear for all users in "
-"opportunities of Sales Department.<br/>\n"
-"                                - If you don't select \"Share with all users"
-"\", link of google document in \"More\" options will not appear for other "
-"users in opportunities of Sales Department.<br/>\n"
-"                                - If filter is not specified, link of google "
-"document will appear in \"More\" option for all users for all opportunities."
+"                                - Go to the Odoo document you want to filter. For instance, go to Opportunities and search on Sales Department.<br/>\n"
+"                                - In this \"Search\" view, select the option \"Save Current Filter\", enter the name (Ex: Sales Department)<br/>\n"
+"                                - If you select \"Share with all users\", link of google document in \"More\" options will appear for all users in opportunities of Sales Department.<br/>\n"
+"                                - If you don't select \"Share with all users\", link of google document in \"More\" options will not appear for other users in opportunities of Sales Department.<br/>\n"
+"                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
 msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_active
 msgid "Active"
-msgstr "활성"
+msgstr "사용"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:40
@@ -55,11 +51,9 @@ msgstr "인증 코드"
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_google_drive_config_name_template
 msgid ""
-"Choose how the new google drive will be named, on google side. Eg. gdoc_"
-"%(field_name)s"
-msgstr ""
-"새로운 구글 드라이브는 구글 측에 어떻게 불려지는지 지정됩니다. 예를 들면 "
+"Choose how the new google drive will be named, on google side. Eg. "
 "gdoc_%(field_name)s"
+msgstr "새로운 구글 드라이브는 구글 측에 어떻게 불려지는지 지정됩니다. 예를 들면 gdoc_%(field_name)s"
 
 #. module: google_drive
 #: model:ir.actions.act_window,help:google_drive.action_google_drive_users_config
@@ -199,9 +193,7 @@ msgstr "리소스 ID"
 msgid ""
 "Something went wrong during the token generation. Please request again an "
 "authorization code ."
-msgstr ""
-"토큰을 생성하는 동안 문제가 발생했습니다. 인증 코드를 다시 요청하시기 바랍니"
-"다."
+msgstr "토큰을 생성하는 동안 문제가 발생했습니다. 인증 코드를 다시 요청하시기 바랍니다."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name
@@ -233,21 +225,15 @@ msgstr "구글로부터 인증 코드를 생성하기 위한 URL."
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
-"The name of the attached document can use fixed or variable data. To "
-"distinguish between documents in\n"
-"                                Google Drive, use fixed words and fields. "
-"For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
-"                                in the Google Drive name field, the document "
-"in your Google Drive and in Odoo attachment will be named\n"
+"The name of the attached document can use fixed or variable data. To distinguish between documents in\n"
+"                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
+"                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
 "                                'Agrolait_SO0001_Sales'."
 msgstr ""
 "첨부 된 문서의 이름은 고정 또는 가변 데이터를 사용할 수 있습니다. \n"
-"                                구글 드라이브에 문서를 구별하기 위해 고정 단"
-"어와 필드를 사용합니다.\n"
-"                                예를 들어 귀하가 구글 드라이브 이름 필드에 "
-"Agrolait_%(name)s_Sales 라고 쓴다면\n"
-"                                구글 드라이브와 Odoo에 첨부된 문서는 "
-"'Agrolait_SO0001_Sales'라는 이름이 됩니다."
+"                                구글 드라이브에 문서를 구별하기 위해 고정 단어와 필드를 사용합니다.\n"
+"                                예를 들어 귀하가 구글 드라이브 이름 필드에 Agrolait_%(name)s_Sales 라고 쓴다면\n"
+"                                구글 드라이브와 Odoo에 첨부된 문서는 'Agrolait_SO0001_Sales'라는 이름이 됩니다."
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:135
@@ -268,9 +254,7 @@ msgstr "URL"
 msgid ""
 "You haven't configured 'Authorization Code' generated from google, Please "
 "generate and configure it ."
-msgstr ""
-"구글에서 생성된 '인증 코드'를 구성하지 않았습니다. '인증 코드'를 생성하고 구"
-"성하세요."
+msgstr "구글에서 생성된 '인증 코드'를 구성하지 않았습니다. '인증 코드'를 생성하고 구성하세요."
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.inherited_google_view_general_configuration
@@ -285,8 +269,6 @@ msgstr ""
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
-"https://docs.google.com/document/"
-"d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
+"https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
 msgstr ""
-"https://docs.google.com/document/"
-"d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
+"https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"

@@ -326,7 +326,6 @@ snippets_editor.Class.include({
             switch_theme.last = theme_params;
 
             $body.removeClass(all_classes).addClass(theme_params.className);
-            switch_images(theme_params, $editable_area);
 
             var $old_layout = $editable_area.find(".o_layout");
             // This wrapper structure is the only way to have a responsive and
@@ -349,8 +348,9 @@ snippets_editor.Class.include({
                 $contents = $editable_area.contents();
             }
 
-            $editable_area.empty().append($new_layout);
             $new_wrapper_content.append($contents);
+            switch_images(theme_params, $new_wrapper_content);
+            $editable_area.empty().append($new_layout);
             $old_layout.remove();
 
             if (first_choice) {
@@ -402,4 +402,15 @@ odoo_top[callback+"_updown"] = function (value, fields_values, field_name) {
 if ($editable_area.html().indexOf('on_change_model_and_list') !== -1) {
     $editable_area.empty();
 }
+// Adding compatibility for the outlook compliance of mailings.
+// Commit of such compatibility : a14f89c8663c9cafecb1cc26918055e023ecbe42
+options.registry.background.include({
+    start: function() {
+        this._super();
+        var $table_target = this.$target.find('table:first');
+        if ($table_target) {
+            this.$target = $table_target;
+        }
+    }
+});
 });

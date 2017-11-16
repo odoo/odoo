@@ -74,7 +74,7 @@ class AccountInvoiceRefund(models.TransientModel):
                     for tmpline in refund.move_id.line_ids:
                         if tmpline.account_id.id == inv.account_id.id:
                             to_reconcile_lines += tmpline
-                            to_reconcile_lines.filtered(lambda l: l.reconciled == False).reconcile()
+                    to_reconcile_lines.filtered(lambda l: l.reconciled == False).reconcile()
                     if mode == 'modify':
                         invoice = inv.read(inv_obj._get_refund_modify_read_fields())
                         invoice = invoice[0]

@@ -10,15 +10,15 @@
 # Bole <bole@dajmi5.com>, 2016
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2016
 # Mario Jureša <mario.juresa@uvid.hr>, 2016
-# Davor Bojkić <davor.bojkic@storm.hr>, 2016
 # Tina Milas <tina@uvid.hr>, 2016
+# Davor Bojkić <davor.bojkic@storm.hr>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-18 14:21+0000\n"
 "PO-Revision-Date: 2017-07-18 14:21+0000\n"
-"Last-Translator: Tina Milas <tina@uvid.hr>, 2016\n"
+"Last-Translator: Davor Bojkić <davor.bojkic@storm.hr>, 2016\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,7 +72,7 @@ msgid ""
 "                                                Are you sure you want to pay with this card: <br/>"
 msgstr ""
 "<i class=\"fa fa-3x fa-credit-card text-muted\" aria-hidden=\"true\"/><br/>\n"
-"Jeste li sigurni želite li platiti ovom karticom: <br/>"
+"Jeste li sigurni da želite platiti ovom karticom: <br/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address_kanban
@@ -241,6 +241,9 @@ msgid ""
 "                                <span class=\"visible-xs-inline\">Checkout</span>\n"
 "                                <span class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
+"<span class=\"hidden-xs\">Završi kupovinu</span>\n"
+"                                <span class=\"visible-xs-inline\">Završi</span>\n"
+"                                <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
@@ -968,12 +971,12 @@ msgstr "Katalog"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
 msgid "Catalog price: decreasing order"
-msgstr ""
+msgstr "Kataloška cijena: od veće prema manjoj"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
 msgid "Catalog price: increasing order"
-msgstr ""
+msgstr "Kataloška cijena: od manje prema većoj"
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.product_public_category_action
@@ -1066,7 +1069,7 @@ msgstr "Kliknite na ovaj gumb kako bi ga kupci mogli vidjeti."
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.product_public_category_action
 msgid "Click to define a new category."
-msgstr "Klikni za definiranje nove kategorije."
+msgstr "Kliknite za definiranje nove kategorije."
 
 #. module: website_sale
 #: selection:product.attribute,type:0
@@ -1081,7 +1084,7 @@ msgstr "Community &amp; Enterprise korisnici:"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "Company Name"
-msgstr "Naziv za prikaz"
+msgstr "Tvrtka"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.Components
@@ -1258,7 +1261,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_description
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_description
 msgid "Description for the website"
-msgstr ""
+msgstr "Opis za web stranicu"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier_website_sequence
@@ -1344,7 +1347,7 @@ msgstr "E-mail poslan kupcu na kraju odjavljivanja"
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:19
 #, python-format
 msgid "Enter a name for your new product"
-msgstr "Unesi naziv svog novog proizvoda"
+msgstr "Unesite naziv svog novog proizvoda"
 
 #. module: website_sale
 #: code:addons/website_sale/models/product.py:89
@@ -1451,7 +1454,7 @@ msgstr "Slušalice"
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Here are <strong>some pros and cons</strong> to help you decide:<br/>"
 msgstr ""
-"Ovdje su <strong>neke prednosti i zaostaci</strong> koji će Vam pomoći "
+"Ovdje su <strong>neke prednosti i mane</strong> koje će Vam pomoći "
 "odlučiti:<br/>"
 
 #. module: website_sale
@@ -1572,7 +1575,7 @@ msgstr ""
 #: code:addons/website_sale/controllers/main.py:474
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr "Nevažeći email! Unesite valjanu adresu e-pošte."
+msgstr "Nevažeći e-mail! Unesite valjanu adresu e-pošte!"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_invoices_ecommerce
@@ -1799,7 +1802,7 @@ msgstr "U jednom koraku \"dodaj u košaricu\""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Online users: we do it for you!"
-msgstr "Online korisnici: mi ćemo to učiniti za vas!"
+msgstr "Online korisnici: mi ćemo to učiniti za Vas!"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_only_services
@@ -1859,12 +1862,12 @@ msgstr "Partner"
 #: code:addons/website_sale/controllers/main.py:834
 #, python-format
 msgid "Pay Now"
-msgstr "Plati odmah"
+msgstr "Plaćanje"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Pay Now <span class=\"fa fa-long-arrow-right\"/>"
-msgstr "Plati sada <span class=\"fa fa-long-arrow-right\"/>"
+msgstr "Plaćanje <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
@@ -2291,7 +2294,7 @@ msgid ""
 "Select <b>New Product</b> to create it and manage its properties to boost "
 "your sales."
 msgstr ""
-"Odaberi <b>Novi produkt</b> kako biste kreirali i upravljali njegovim "
+"Odaberite <b>Novi proizvod</b> kako biste kreirali i upravljali njegovim "
 "svojstvima u cilju povećanja prodaje."
 
 #. module: website_sale
@@ -2615,7 +2618,7 @@ msgstr "Sažetak"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "TIN / VAT"
-msgstr "Porezni broj / PDV ID"
+msgstr "OIB s prefiksom (npr. HR01234567896)"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2640,17 +2643,17 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Terms &amp; Conditions"
-msgstr "Odredbe &amp; Uvjeti"
+msgstr "Odredbe i uvjeti"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
 msgid "Terms &amp;amp; Conditions"
-msgstr "Odredbe &amp;amp; Uvjeti"
+msgstr "Odredbe i uvjeti"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Thank you for your order."
-msgstr "Hvala na vašoj narudžbi."
+msgstr "Hvala na narudžbi!"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -2706,7 +2709,7 @@ msgstr "Nema skorijih online prodaja."
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.order_state_message
 msgid "There seems to be an error with your request."
-msgstr "Postoji pogreška u vašem zahtjevu."
+msgstr "Postoji pogreška u Vašem zahtjevu."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category_image

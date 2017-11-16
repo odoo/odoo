@@ -110,7 +110,8 @@ odoo.define('point_of_sale.Tour', function (require) {
         trigger: ".header-button",
     }, {
         content: "confirm closing the frontend",
-        trigger: ".header-button",
+        trigger: ".header-button.confirm",
+        run: function() {}, //it's a check,
     }]);
 
     tour.register('pos_basic_order', { test: true, url: '/pos/web' }, steps);

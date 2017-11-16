@@ -418,7 +418,7 @@ msgstr "En advarsel kan sættes på et produkt eller en kunde (Salg)"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Account used for deposits"
-msgstr "Konto bruges til indlån"
+msgstr "Konto bruges til forudbetalinger"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_pagebreak
@@ -461,7 +461,7 @@ msgstr "Alle produkter og kunder kan bruges i salgsordrer"
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
 msgid "Allow discounts on sales order lines"
-msgstr "Tillad rabatter på salgsordre"
+msgstr "Tillad rabatter på salgsordrelinier"
 
 #. module: sale
 #: selection:sale.config.settings,auto_done_setting:0
@@ -496,7 +496,7 @@ msgstr "Giver dig mulighed for at angive en analysekonto på salgsordrer."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_sales_to_invoice_amount
 msgid "Amount of sales to invoice"
-msgstr "Antal salg til fakturering"
+msgstr "Beløb til fakturering"
 
 #. module: sale
 #: selection:sale.config.settings,group_warning_sale:0
@@ -562,7 +562,7 @@ msgstr "Blokerende meddelelse"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
 msgid "Breaks Page"
-msgstr "Pauseside"
+msgstr "Sideskift"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
@@ -582,7 +582,7 @@ msgstr "Af salgsteam"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_delivered_updateable
 msgid "Can Edit Delivered"
-msgstr "Kan redigeres leveret"
+msgstr "Leveret kan ændres"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -770,7 +770,7 @@ msgstr "Standard salgs- og leveringsbetingelser *"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Default product used for payment advances"
-msgstr "Standardprodukt anvendt til forskudsbetaling"
+msgstr "Standardprodukt anvendt til forudbetalinger"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_delivered
@@ -819,7 +819,7 @@ msgstr "Depositum"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Deposit Product"
-msgstr "Deponer produkt"
+msgstr "Produkt til depositum"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_name
@@ -883,12 +883,12 @@ msgstr "Vis navn"
 #. module: sale
 #: model:res.groups,name:sale.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
-msgstr "Vis inco-betingelser på salgsordre og relaterede fakturaer"
+msgstr "Vis incoterms på salgsordre og relaterede fakturaer"
 
 #. module: sale
 #: selection:sale.config.settings,module_sale_margin:0
 msgid "Display margins on quotations and sales orders"
-msgstr "Vis margener på tilbud og salgsordre"
+msgstr "Vis dækningsbidrag på tilbud og salgsordre"
 
 #. module: sale
 #: selection:sale.config.settings,group_sale_layout:0
@@ -899,17 +899,17 @@ msgstr "Personliggør ikke salgsordrer og fakturaer"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:84
 #, python-format
 msgid "Down Payment"
-msgstr "Acontobetaling"
+msgstr "Aconto betaling"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_amount
 msgid "Down Payment Amount"
-msgstr "Beløb til acontofakturering"
+msgstr "Beløb til aconto fakturering"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_product_id
 msgid "Down Payment Product"
-msgstr "Acontofakturere produkt"
+msgstr "Produkt til aconto fakturering"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -925,7 +925,7 @@ msgstr "Aconto (procent)"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:81
 #, python-format
 msgid "Down payment of %s%%"
-msgstr "Acontobetaling af %s%%"
+msgstr "Acontobetaling på %s%%"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -1110,9 +1110,9 @@ msgid ""
 " invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
-"Fakturaindtægter for den aktuelle måned. Dette er det beløb, som salgsteamet"
+"Faktureret beløb for den aktuelle måned. Dette er det beløb, som salgsteamet"
 " har faktureret denne måned. Det bruges til at beregne udviklingen mellem "
-"nuværendeomsætning og målomsætning på kanbanvisningen."
+"nuværende omsætning og målomsætning på kanbanvisningen."
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1205,7 +1205,7 @@ msgstr "Faktura- og forsendelsesadresse er altid de samme"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
 msgid "Invoicing/Progression Ratio"
-msgstr "Fakturering/Forløb"
+msgstr "Fakturering/Udviklings ratio"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv___last_update
@@ -1269,7 +1269,7 @@ msgstr "Låst"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_contract
 msgid "Manage subscriptions and recurring invoicing"
-msgstr "Administrer abonnementer og genfakturering"
+msgstr "Administrer abonnementer og abonnementsfakturering"
 
 #. module: sale
 #: selection:product.template,track_service:0
@@ -1377,7 +1377,7 @@ msgstr "Ingen rabat på salgsordrelinjer, kun overordnet (global) rabat"
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
 msgid "No incoterm on reports"
-msgstr "Ingen uoverensstemmelser på rapporter"
+msgstr "Ingen incoterms på rapporter"
 
 #. module: sale
 #: selection:sale.config.settings,group_product_variant:0
@@ -1457,7 +1457,7 @@ msgstr "Online tilbud"
 #: code:addons/sale/static/src/js/sale.js:26
 #, python-format
 msgid "Only Integer Value should be valid."
-msgstr "Kun hele tal skal være gyldige."
+msgstr "Kun hele tal bør være gyldige."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -1523,7 +1523,7 @@ msgid ""
 "Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
 msgstr ""
 "Bestilt mængde: Faktura baseret ud fra den mængde kunden har bestilt.\n"
-"Leveret mængde: Faktura baseret ud fra den leveret mængde (tid eller leverancer)."
+"Leveret mængde: Faktura baseret ud fra den leverede mængde (tid eller antal)."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1548,7 +1548,7 @@ msgid ""
 "                policy based on <i>ordered quantities</i> for which you have\n"
 "                delivered more than what have been ordered."
 msgstr ""
-"Ordrer på mersalg, er ordrer der har produkter der har en fakturerings\n"
+"Ordrer til mersalg, er ordrer der har produkter der har en fakturerings-\n"
 "                politik baseret på <i>bestilte mængder</i>hvor du har\n"
 "                leveret mere end det der er blevet bestilt."
 
@@ -1557,7 +1557,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tour.js:13
 #, python-format
 msgid "Organize your sales activities with the <b>Sales app</b>."
-msgstr "Organiser dine salgsaktiviteter med <b>Salgs app</b>."
+msgstr "Organiser dine salgsaktiviteter med <b>Salgs app'en</b>."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1588,7 +1588,7 @@ msgstr "Betalingsbetingelser"
 #. module: sale
 #: model:res.groups,name:sale.group_sale_layout
 msgid "Personalize sale order and invoice report"
-msgstr "Tilpas salgsordre- og fakturarapport"
+msgstr "Tilpas salgsordre- og fakturaer"
 
 #. module: sale
 #: selection:sale.config.settings,group_sale_layout:0
@@ -1596,14 +1596,13 @@ msgid ""
 "Personalize the sales orders and invoice report with categories, subtotals "
 "and page-breaks"
 msgstr ""
-"Tilpas salgsordrer- og fakturarapport med kategorier, subtotaler og "
-"sideskift"
+"Tilpas salgsordrer- og fakturaer med kategorier, subtotaler og sideskift"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:276
 #, python-format
 msgid "Please define an accounting sale journal for this company."
-msgstr "Definér en bogføringsjournal for denne virksomhed."
+msgstr "Definér en bogføringsjournal for salg for denne virksomhed."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:770
@@ -1612,8 +1611,8 @@ msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
 "category: \"%s\"."
 msgstr ""
-"Definér indtægtskonto for dette produkt: \"%s\" (id:%d) - eller for "
-"kategorien: \"%s\"."
+"Definér indtægtskonto for dette produkt: \"%s\" (id:%d) - eller for dets "
+"kategori: \"%s\"."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -2030,7 +2029,7 @@ msgstr "Salg der skal faktureres"
 #. module: sale
 #: selection:sale.config.settings,module_sale_margin:0
 msgid "Salespeople do not need to view margins when quoting"
-msgstr "Sælgere behøver ikke at se marginer, når de laver tilbud"
+msgstr "Sælgere behøver ikke at se dækningsbidrag, når de laver tilbud"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_salesman_id
@@ -2068,7 +2067,7 @@ msgid ""
 "the default sale price (that you can change), taxes and description "
 "automatically."
 msgstr ""
-"Vælg et produkt, eller opret en ny på farten. Produktet vil automatisk "
+"Vælg et produkt, eller opret et nyt på farten. Produktet vil automatisk "
 "definere standardsalgsprisen (som du kan ændre), moms og beskrivelse."
 
 #. module: sale
@@ -2081,10 +2080,10 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"Hvis du vælger indstillingen \"Advarsel\", vises denne meddelelsen til "
-"brugeren. Hvis du vælger \"Blokerende meddelelse\", vil der blive sendt en "
-"undtagelse ud sammen meddelelsen og blokere strømmen. Meddelelsen skal "
-"skrives i det næste felt."
+"Hvis du vælger indstillingen \"Advarsel\", vises meddelelsen til brugeren. "
+"Hvis du vælger \"Blokerende meddelelse\", vil der blive sendt en undtagelse "
+"sammen med meddelelsen og blokere flowet. Meddelelsen skal skrives i det "
+"næste felt."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_sale_digital
@@ -2218,7 +2217,7 @@ msgid ""
 "Target of invoice revenue for the current month. This is the amount the "
 "sales team estimates to be able to invoice this month."
 msgstr ""
-"Mål for fakturaindtægter for den aktuelle måned. Dette er det beløb, som "
+"Mål for faktureret beløb for den aktuelle måned. Dette er det beløb, som "
 "salgsteamet anslår at kunne fakturere denne måned."
 
 #. module: sale
@@ -2248,7 +2247,7 @@ msgstr "Moms"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_taxes_id
 msgid "Taxes used for deposits"
-msgstr "Moms på indbetalinger"
+msgstr "Moms på forudbetalinger/deposita"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_note
@@ -2262,13 +2261,13 @@ msgid ""
 "The Sale Order %s linked to the Analytic Account must be validated before "
 "registering expenses."
 msgstr ""
-"Salgsordren %s der er knyttet til den analytiske konto skal valideres før "
+"Salgsordren %s der er knyttet til analysekontoen skal valideres før "
 "registrering af udgifter."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
 msgid "The amount to be invoiced in advance, taxes excluded."
-msgstr "Det beløb der skal faktureres på forhånd, eksklusiv moms."
+msgstr "Det beløb der skal faktureres aconto, eksklusiv moms."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_project_id
@@ -2283,7 +2282,7 @@ msgid ""
 "The ordered quantity has been decreased. Do not forget to take it into "
 "account on your invoices and delivery orders."
 msgstr ""
-"Den bestilte mængde er blevet reduceret. Glem ikke at tage justere det på "
+"Den bestilte mængde er blevet reduceret. Glem ikke at tage højde for det på "
 "dine fakturaer og leveringsordrer."
 
 #. module: sale
@@ -2354,11 +2353,11 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
-"Denne rapport analysere dine tilbud og salgsordrer. Analysen kontrollere "
-"dine salgsindtægter og sortere det efter forskellige gruppekriterier "
-"(sælger, partner, produkt osv.) Brug denne rapport til at udføre analyse på "
-"salg, der ikke er faktureret endnu. Hvis du vil analysere din omsætning, "
-"skal du bruge fakturaanalyserapporten i regnskabs app'en."
+"Denne rapport analyserer dine tilbud og salgsordrer. Analysen viser dine "
+"salg og sorterer dem efter forskellige kriterier (sælger, partner, produkt "
+"osv.) Brug denne rapport til at udføre analyse på salg, der ikke er "
+"faktureret endnu. Hvis du vil analysere din omsætning, skal du bruge "
+"fakturaanalyserapporten i regnskabs app'en."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -2369,11 +2368,11 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"Denne rapport analyserer dine tilbud. Analysen kontrollere dine "
-"salgsindtægter og sortere dem efter forskellige gruppekriterier (sælger, "
-"partner, produkt osv.) Brug denne rapport til at udføre analyse om salg, der"
-" ikke er faktureret endnu. Hvis du vil analysere din omsætning, skal du "
-"bruge fakturaanalyserapporten i regnskabs app'en."
+"Denne rapport analyserer dine tilbud. Analysen kontrollere dine salg og "
+"sorterer dem efter forskellige kriterier (sælger, partner, produkt osv.) "
+"Brug denne rapport til at udføre analyse om salg, der ikke er faktureret "
+"endnu. Hvis du vil analysere din omsætning, skal du bruge "
+"fakturaanalyserapporten i regnskabs app'en."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -2384,11 +2383,11 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"Denne rapport analysere dine salgsordrer. Analysen kontrollere dine "
-"salgsindtægter og sortere dem efter forskellige kriterier gruppe (sælger, "
-"partner, produkt, etc.) Brug denne rapport til at udføre analyser på salget "
-"der ikke er faktureret endnu. Hvis du vil analysere din omsætning, skal du "
-"bruge fakturaanalyserapporten i regnskabs app'en."
+"Denne rapport analyserer dine salgsordrer. Analysen kontrollere dine salg og"
+" sorterer dem efter forskellige kriterier (sælger, partner, produkt, etc.) "
+"Brug denne rapport til at udføre analyser på salg der ikke er faktureret "
+"endnu. Hvis du vil analysere din omsætning, skal du bruge "
+"fakturaanalyserapporten i regnskabs app'en."
 
 #. module: sale
 #: selection:product.template,track_service:0
@@ -2493,7 +2492,7 @@ msgstr "Brug prislister for at knytte priser til dine kunder"
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to preceeding screens</b>."
 msgstr ""
-"Brug brødkrummestien til <b>at gå tilbage til foregående skærmebillede</b>."
+"Brug brødkrummestien til <b>at gå tilbage til foregående skærmbillede</b>."
 
 #. module: sale
 #. openerp-web
@@ -2546,7 +2545,7 @@ msgid ""
 "Work with product variant allows you to define some variant of the same products\n"
 "                , an ease the product management in the ecommerce for example"
 msgstr ""
-"Arbejdet med en produktvariant giver dig mulighed for at definere en variant af de samme produkter\n"
+"Produktvarianter giver dig mulighed for at definere en variant af de samme produkter\n"
 "                og gøre det lettere at håndtere produkter i webshoppen for eksempel"
 
 #. module: sale
@@ -2575,7 +2574,7 @@ msgid ""
 "before."
 msgstr ""
 "Du kan ikke slette et sendt tilbud eller en salgsordre! Prøv at annullere "
-"det før."
+"det først."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:883

@@ -1,20 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * auth_oauth
-#
+# 
 # Translators:
+# 방상우 <mrroom@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# 최재호 <hwangtog@gmail.com>, 2017
+# 종현 엄 <whd5367@naver.com>, 2017
+# Goh Gangtai <gangtai.goh@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-01-25 08:56+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
-"Language: ko\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Goh Gangtai <gangtai.goh@gmail.com>, 2017\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: auth_oauth
@@ -47,7 +52,7 @@ msgstr "허용함"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Authentication"
-msgstr ""
+msgstr "인증"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_auth_endpoint
@@ -73,8 +78,7 @@ msgstr "CSS 클래스"
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
 "Check that the application type is set on <b>Web Application</b>. \n"
-"                                        Now configure the allowed pages on "
-"which you will be redirected."
+"                                        Now configure the allowed pages on which you will be redirected."
 msgstr ""
 
 #. module: auth_oauth
@@ -124,7 +128,7 @@ msgstr "작성일"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_currency_id
 msgid "Currency"
-msgstr ""
+msgstr "유통"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_payment_term_id
@@ -176,7 +180,7 @@ msgstr "ID"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn
 msgid "Invoice"
-msgstr ""
+msgstr "송장"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_ids
@@ -220,7 +224,7 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn_msg
 msgid "Message for Invoice"
-msgstr ""
+msgstr "송장에 대한 메시지"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_access_token
@@ -266,16 +270,14 @@ msgstr "Oauth 공급자 user_id"
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
 "On the left side menu, select the sub menu <b>Credentials</b> \n"
-"                                        (from <b>API Manager</b>) then "
-"select <b>OAuth consent screen</b>."
+"                                        (from <b>API Manager</b>) then select <b>OAuth consent screen</b>."
 msgstr ""
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
 "Once done, you receive two information (your <b>Client ID</b> and <b>\n"
-"                                        Client Secret</b>). You have to "
-"insert your <b>Client ID</b> in \n"
+"                                        Client Secret</b>). You have to insert your <b>Client ID</b> in \n"
 "                                        the field below."
 msgstr ""
 
@@ -311,11 +313,13 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"\"경고\" 옵션을 선택하면 사용자들이 메시지를 받을 수 있습니다. \"메시지 차단\"을 선택하면, 메시지 흐름이 차단됩니다. 메시지는 "
+"다음 필드에 작성되어야 합니다."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "순서"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_server_uri_google
@@ -389,15 +393,13 @@ msgstr ""
 msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
-msgstr ""
-"이 지불 기간은 판매 주문과 고객 송장 중 하나를 기본으로 대신해 사용합니다."
+msgstr "이 지불 기간은 판매 주문과 고객 송장 중 하나를 기본으로 대신해 사용합니다."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
 "To achieve this, complete the field <b>Authorized redirect URIs</b>.\n"
-"                                        Copy paste the following link in the "
-"box"
+"                                        Copy paste the following link in the box"
 msgstr ""
 
 #. module: auth_oauth
@@ -435,7 +437,7 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
 msgid "Users"
-msgstr "사용자"
+msgstr "사용자 목록"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_currency_id
@@ -459,9 +461,7 @@ msgid ""
 "You do not have access to this database or your invitation has expired. "
 "Please ask for an invitation and be sure to follow the link in your "
 "invitation email."
-msgstr ""
-"이 데이터베이스에 접근할 수 없거나 초청장이 만료됐습니다. 초청장을 요청해주시"
-"고 초청 이메일의 링크를 클릭해주세요."
+msgstr "이 데이터베이스에 접근할 수 없거나 초청장이 만료됐습니다. 초청장을 요청해주시고 초청 이메일의 링크를 클릭해주세요."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form

@@ -25,6 +25,8 @@ class TestPyLint(TransactionCase):
         'E0601',  # using variable before assignment
         'W0123',  # eval used
         'W0101',  # unreachable code
+
+        'mixed-indentation',
     ]
 
     def _skip_test(self, reason):

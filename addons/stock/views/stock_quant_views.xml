@@ -13,6 +13,8 @@
                 <field name="lot_id" groups="stock.group_production_lot"/>
                 <field name="owner_id" groups="stock.group_tracking_owner"/>
                 <group expand='0' string='Filters'>
+                    <filter name="stockable" string="Stockable" domain="[('product_id.type', '=', 'product')]"/>
+                    <separator/>
                     <filter name='internal_loc' string="Internal Locations" domain="[('location_id.usage','=', 'internal')]"/>
                     <filter name='transit_loc' string="Transit Locations" domain="[('location_id.usage' ,'=', 'transit')]"/>
                     <separator/>
@@ -123,7 +125,7 @@
         <field name="res_model">stock.quant</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,pivot</field>
-        <field name="context">{'search_default_internal_loc': 1, 'group_by': ['product_id', 'location_id']}</field>
+        <field name="context">{'search_default_internal_loc': 1, 'search_default_stockable': 1, 'group_by': ['product_id', 'location_id']}</field>
         <field name="help">This analysis gives you a fast overview on the current stock level of your products and their current inventory value.</field>
     </record>
     <record model="ir.actions.act_window" id="product_template_open_quants"> <!-- Not used -->
@@ -157,9 +159,8 @@
                 <field name="location_id"/>
                 <field name="packaging_id"/>
                 <group  expand='0' string='Group by...'>
-                   <filter string='Location' domain="[]" context="{'group_by' : 'location_id'}"/>
+                   <!-- FORWARD-PORT UP TO v11 -->
                    <filter string='Packaging' domain="[]" context="{'group_by' : 'packaging_id'}"/>
-                   <filter string='Company' domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
                </group>
             </search>
         </field>
@@ -176,8 +177,8 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" name="%(action_picking_tree_all)d"
-                        string="Package Transfers" type="action"
+                        <button class="oe_stat_button" name="action_view_related_picking"
+                        string="Package Transfers" type="object"
                         widget="statinfo" icon="fa-dropbox"/>
                         <button name="get_content_package" type="object" string="View Contained Packages content" icon="fa-cogs" attrs="{'invisible': [('children_ids','=',[])]}"/>
                     </div>

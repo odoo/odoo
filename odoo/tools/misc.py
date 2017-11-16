@@ -372,11 +372,12 @@ try:
 
         # TODO when xlsxwriter bump to 0.9.8, add worksheet_class=None parameter instead of kw
         def add_worksheet(self, name=None, **kw):
-            # invalid Excel character: []:*?/\
-            name = re.sub(r'[\[\]:*?/\\]', '', name)
+            if name:
+                # invalid Excel character: []:*?/\
+                name = re.sub(r'[\[\]:*?/\\]', '', name)
 
-            # maximum size is 31 characters
-            name = name[:31]
+                # maximum size is 31 characters
+                name = name[:31]
             return super(PatchedXlsxWorkbook, self).add_worksheet(name, **kw)
 
     xlsxwriter.Workbook = PatchedXlsxWorkbook
@@ -1174,7 +1175,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
     if isinstance(value, (str, unicode)) and not value:
         return ''
 
-    lang = env.user.company_id.partner_id.lang or 'en_US'
+    lang = env.context.get('lang') or env.user.company_id.partner_id.lang or 'en_US'
     lang_objs = env['res.lang'].search([('code', '=', lang)])
     if not lang_objs:
         lang_objs = env['res.lang'].search([], limit=1)

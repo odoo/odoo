@@ -12,6 +12,7 @@
 # Luca Tralli <luca.tralli@gemsrl.it>, 2016
 # Paolo Valier <paolo.valier@hotmail.it>, 2016
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2016
+# Alex Comba <alex.comba@agilebg.com>, 2016
 # p_amoruso <p.amoruso@elvenstudio.it>, 2016
 # Monica Parvanova <monicaparvanova@gmail.com>, 2016
 # Davide Corio <enlightx@gmail.com>, 2016
@@ -27,13 +28,14 @@
 # Giovanni Perteghella <giovanni@perteghella.org>, 2016
 # Gabriele Crosa Lenz <gabrielecrosalenz@gmail.com>, 2016
 # Giuliano Lotta <giuliano.lotta@gmail.com>, 2016
+# Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: Giuliano Lotta <giuliano.lotta@gmail.com>, 2016\n"
+"Last-Translator: Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2017\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3421,7 +3423,7 @@ msgstr "Creato il"
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "Credit"
-msgstr "Credito"
+msgstr "Avere"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_credit_card
@@ -3657,7 +3659,7 @@ msgstr "Giorno(i) dopo la data fattura"
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "Debit"
-msgstr "Debito"
+msgstr "Dare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_inbound_payment_method_ids
@@ -6850,7 +6852,7 @@ msgstr ""
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 msgid "Open"
-msgstr "Aperti"
+msgstr "Aperta"
 
 #. module: account
 #. openerp-web
@@ -7201,7 +7203,7 @@ msgstr "Differenza pagamento"
 #: code:addons/account/static/src/js/account_payment_widget.js:53
 #, python-format
 msgid "Payment Information"
-msgstr ""
+msgstr "Informazioni pagamento"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_journal_id
@@ -10037,7 +10039,7 @@ msgstr "Utili/perdite non distribuiti"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:278
 #, python-format
 msgid "Undo the partial reconciliation."
-msgstr ""
+msgstr "Annulla riconciliazione parziale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_unit
@@ -10503,7 +10505,7 @@ msgstr "Con imposta"
 #. module: account
 #: model:ir.model,name:account.model_tax_adjustments_wizard
 msgid "Wizard for Tax Adjustments"
-msgstr ""
+msgstr "Aggiustamenti Fiscali Manuali"
 
 #. module: account
 #: code:addons/account/models/account_move.py:888
@@ -10813,6 +10815,12 @@ msgid "You have"
 msgstr "Ci sono"
 
 #. module: account
+#: code:addons/account/models/account_payment.py:360
+#, python-format
+msgid "You have to define a sequence for %s in your company."
+msgstr ""
+
+#. module: account
 #: code:addons/account/wizard/account_report_general_ledger.py:21
 #, python-format
 msgid "You must define a Start Date"
@@ -11043,7 +11051,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
 msgid "invoice"
-msgstr ""
+msgstr "fattura"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
