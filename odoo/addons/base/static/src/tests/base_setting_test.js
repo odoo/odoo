@@ -1,17 +1,16 @@
 odoo.define('web.base_setting_test', function (require) {
 "use strict";
 
-var core = require('web.core');
-var FormView = require('web.FormView');
-var testUtils = require('web.test_utils');
 var BaseSetting = require('base.settings');
 
-var createView = testUtils.createView;
-var _t = core._t;
+var testUtils = require('web.test_utils');
+var view_registry = require('web.view_registry');
 
+var createView = testUtils.createView;
+var BaseSettingsView = view_registry.get('base_settings');
 
 BaseSetting.Renderer.include({
-    _getAppIconUrl: function(app) {
+    _getAppIconUrl: function() {
         return "#test:";
     }
 });
@@ -35,14 +34,14 @@ QUnit.module('base_settings_tests', {
         assert.expect(4);
 
         var form = createView({
-            View: FormView,
+            View: BaseSettingsView,
             model: 'project',
             data: this.data,
-            arch: '<form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">' +
-                    '<div class="o_panel">' + 
-                        '<div class="setting_search">' + 
+            arch: '<form string="Settings" class="oe_form_configuration o_base_settings">' +
+                    '<div class="o_panel">' +
+                        '<div class="setting_search">' +
                             '<input type="text" class="searchInput" placeholder="Search..."/>' +
-                        '</div> ' + 
+                        '</div> ' +
                     '</div> ' +
                     '<header>' +
                         '<button string="Save" type="object" name="execute" class="oe_highlight" />' +
