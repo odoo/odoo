@@ -23,7 +23,7 @@
             <value model="stock.warehouse" eval="{
                 'name': 'stock_location_shop0',
                 'module':'stock',
-                'model': 'stock.picking.type',
+                'model': 'stock.location',
                 'res_id': obj().env.ref('stock.stock_warehouse_shop0').lot_stock_id.id,
             }"/>
         </function>
@@ -39,7 +39,7 @@
             <value>chi_picking_type_out</value>
         </function>
         <function model="ir.model.data" name="_update_dummy">
-            <value>stock.picking.type</value>
+            <value>stock.location</value>
             <value>stock</value>
             <value>stock_location_shop0</value>
         </function>
