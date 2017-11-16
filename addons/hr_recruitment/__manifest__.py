@@ -26,6 +26,7 @@
         'views/hr_recruitment_templates.xml',
         'views/hr_department_views.xml',
         'views/hr_job_views.xml',
+        'views/mail_activity_views.xml',
     ],
     'demo': [
         'data/hr_recruitment_demo.xml',
