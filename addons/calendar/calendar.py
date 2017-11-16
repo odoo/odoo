@@ -1205,15 +1205,15 @@ class calendar_event(osv.Model):
                 for arg in domain:
                     if str(arg[0]) in ('start', 'stop', 'final_date'):
                         if (arg[1] == '='):
-                            ok = r_date.strftime('%Y-%m-%d') == arg[2]
+                            ok = r_date.strftime('%Y-%m-%d %H:%M:%S') == arg[2]
                         if (arg[1] == '>'):
-                            ok = r_date.strftime('%Y-%m-%d') > arg[2]
+                            ok = r_date.strftime('%Y-%m-%d %H:%M:%S') > arg[2]
                         if (arg[1] == '<'):
-                            ok = r_date.strftime('%Y-%m-%d') < arg[2]
+                            ok = r_date.strftime('%Y-%m-%d %H:%M:%S') < arg[2]
                         if (arg[1] == '>='):
-                            ok = r_date.strftime('%Y-%m-%d') >= arg[2]
+                            ok = r_date.strftime('%Y-%m-%d %H:%M:%S') >= arg[2]
                         if (arg[1] == '<='):
-                            ok = r_date.strftime('%Y-%m-%d') <= arg[2]
+                            ok = r_date.strftime('%Y-%m-%d %H:%M:%S') <= arg[2]
                         pile.append(ok)
                     elif str(arg) == str('&') or str(arg) == str('|'):
                         pile.append(arg)
