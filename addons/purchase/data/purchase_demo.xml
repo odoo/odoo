@@ -22,5 +22,170 @@
             <field name="route_ids" eval="[(4,ref('route_warehouse0_buy'))]"></field>
         </record>
     </data>
+    
+    <record id="purchase_order_1" model="purchase.order">
+        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="state">draft</field>
+        <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
+            (0, 0, {
+                'product_id': ref('product.product_delivery_01'),
+                'name': 'RAM SR3',
+                'price_unit': 79.80,
+                'product_qty': 15.0,
+                'product_uom': ref('product.product_uom_unit'),
+                'date_planned': time.strftime('%Y-%m-%d')}),
+            (0, 0, {
+                'product_id': ref('product.product_product_25'),
+                'name': 'Laptop E5023',
+                'price_unit': 2868.70,
+                'product_qty': 5.0,
+                'product_uom': ref('product.product_uom_unit'),
+                'date_planned': time.strftime('%Y-%m-%d')}),
+            (0, 0, {
+                'product_id': ref('product.product_product_27'),
+                'name': 'Laptop Customized',
+                'price_unit': 3297.20,
+                'product_qty': 4.0,
+                'product_uom': ref('product.product_uom_unit'),
+                'date_planned': time.strftime('%Y-%m-%d')})
+        ]"/>
+    </record>
+
+    <record id="purchase_order_2" model="purchase.order">
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="state">draft</field>
+        <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
+            (0, 0, {
+                'product_id': ref('product.product_delivery_02'),
+                'name': 'Multimedia Speakers',
+                'price_unit': 132.50,
+                'product_qty': 20.0,
+                'product_uom': ref('product.product_uom_unit'),
+                'date_planned': time.strftime('%Y-%m-%d')}),
+            (0, 0, {
+                'product_id': ref('product.product_delivery_01'),
+                'name': 'Pen drive, SP-2',
+                'price_unit': 89.0,
+                'product_qty': 5.0,
+                'product_uom': ref('product.product_uom_unit'),
+                'date_planned': time.strftime('%Y-%m-%d')}),
+        ]"/>
+    </record>
+
+    <record id="purchase_order_3" model="purchase.order">
+        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="state">draft</field>
+        <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
+            (0, 0, {
+                'product_id': ref('product.product_product_2'),
+                'name': 'Support Services',
+                'price_unit': 25.50,
+                'product_qty': 10.0,
+                'product_uom': ref('product.product_uom_unit'),
+                'date_planned': time.strftime('%Y-%m-%d')}),
+        ]"/>
+    </record>
+
+    <record id="purchase_order_4" model="purchase.order">
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="state">draft</field>
+        <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
+            (0, 0, {
+                'product_id': ref('product.product_delivery_02'),
+                'name': 'RAM SR2 (kit)',
+                'price_unit': 85.50,
+                'product_qty': 6.0,
+                'product_uom': ref('product.product_uom_unit'),
+                'date_planned': time.strftime('%Y-%m-%d')}),
+            (0, 0, {
+                'product_id': ref('product.product_product_20'),
+                'name': 'Motherboard I9P57',
+                'price_unit': 1690.0,
+                'product_qty': 5.0,
+                'product_uom': ref('product.product_uom_unit'),
+                'date_planned': time.strftime('%Y-%m-%d')}),
+            (0, 0, {
+                'product_id': ref('product.product_product_6'),
+                'name': 'iPad Mini',
+                'price_unit': 800.0,
+                'product_qty': 7.0,
+                'product_uom': ref('product.product_uom_unit'),
+                'date_planned': time.strftime('%Y-%m-%d')})
+        ]"/>
+    </record>
+
+    <record id="purchase_order_5" model="purchase.order">
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="state">draft</field>
+        <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
+            (0, 0, {
+                'product_id': ref('product.product_product_22'),
+                'name': 'Processor Core i5 2.70 Ghz',
+                'price_unit': 2010.0,
+                'product_qty': 3.0,
+                'product_uom': ref('product.product_uom_unit'),
+                'date_planned': time.strftime('%Y-%m-%d')}),
+            (0, 0, {
+                'product_id': ref('product.product_product_24'),
+                'name': 'Graphics Card',
+                'price_unit': 876.0,
+                'product_qty': 3.0,
+                'product_uom': ref('product.product_uom_unit'),
+                'date_planned': time.strftime('%Y-%m-%d')}),
+        ]"/>
+    </record>
+
+    <record id="purchase_order_6" model="purchase.order">
+        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="state">draft</field>
+        <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
+            (0, 0, {
+                'product_id': ref('product.product_delivery_02'),
+                'name': 'Ink Cartridge',
+                'price_unit': 58.0,
+                'product_qty': 9.0,
+                'product_uom': ref('product.product_uom_unit'),
+                'date_planned': time.strftime('%Y-%m-%d')}),
+            (0, 0, {
+                'product_id': ref('product.product_delivery_01'),
+                'name': 'Toner Cartridge',
+                'price_unit': 65.0,
+                'product_qty': 3.0,
+                'product_uom': ref('product.product_uom_unit'),
+                'date_planned': time.strftime('%Y-%m-%d')}),
+            (0, 0, {
+                'product_id': ref('product.consu_delivery_01'),
+                'name': 'GrapWorks Software',
+                'price_unit': 154.5,
+                'product_qty': 4.0,
+                'product_uom': ref('product.product_uom_unit'),
+                'date_planned': time.strftime('%Y-%m-%d')}),
+        ]"/>
+    </record>
+
+    <record id="purchase_order_7" model="purchase.order">
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="state">draft</field>
+        <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
+            (0, 0, {
+                'product_id': ref('product.product_product_12'),
+                'name': 'Mouse, Wireless',
+                'price_unit': 13.5,
+                'product_qty': 5.0,
+                'product_uom': ref('product.product_uom_unit'),
+                'date_planned': time.strftime('%Y-%m-%d')}),
+            (0, 0, {
+                'product_id': ref('product.product_delivery_02'),
+                'name': 'Webcam',
+                'price_unit': 38.0,
+                'product_qty': 15.0,
+                'product_uom': ref('product.product_uom_unit'),
+                'date_planned': time.strftime('%Y-%m-%d')}),
+        ]"/>
+    </record>
+
+    <record id="stock.stock_warehouse_shop0" model="stock.warehouse">
+        <field name="buy_to_resupply" eval="True"/>
+    </record>
 </odoo>
 

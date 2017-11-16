@@ -36,5 +36,10 @@
             <field name="padding">5</field>
             <field name="company_id" eval="False"/>
         </record>
+
+        <!-- enable purchase on main warehouse -->
+        <record id="stock.warehouse0" model="stock.warehouse">
+            <field name="buy_to_resupply" eval="True"/>
+        </record>
     </data>
 </odoo>
