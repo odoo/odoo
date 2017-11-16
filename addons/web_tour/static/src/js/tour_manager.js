@@ -302,6 +302,13 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         }
     },
     _check_for_tooltip: function (tip, tour_name) {
+
+        if ($('.blockUI').length) {
+            this._deactivate_tip(tip);
+            this._log.push("blockUI is preventing the tip to be consumed");
+            return;
+        }
+
         var $trigger;
         if (tip.in_modal !== false && this.$modal_displayed.length) {
             $trigger = this.$modal_displayed.find(tip.trigger);
