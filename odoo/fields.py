@@ -1017,8 +1017,11 @@ class Field(object):
             if self.recursive:
                 self.compute_value(record)
             else:
-                recs = record._in_cache_without(self)
-                recs = recs.with_prefetch(record._prefetch)
+                if self.prefetch:
+                    recs = record._in_cache_without(self)
+                    recs = recs.with_prefetch(record._prefetch)
+                else:
+                    recs = record
                 self.compute_value(recs)
 
         else:
