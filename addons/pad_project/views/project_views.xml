@@ -10,7 +10,7 @@
             </xpath>
             <field name="description" position="after">
                 <field name="use_pad" invisible="1"/>
-                <field name="description_pad" widget="pad" attrs="{'invisible': [('use_pad', '=', False)]}"/>
+                <field name="description_pad" widget="pad" attrs="{'invisible': [('use_pad', '=', False)], 'readonly': [('use_pad', '=', False)]}"/>
             </field>
         </field>
     </record>

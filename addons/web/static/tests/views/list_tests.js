@@ -637,6 +637,42 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('groups can be sorted on aggregates', function (assert) {
+        assert.expect(10);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            groupBy: ['foo'],
+            arch: '<tree editable="bottom"><field name="int_field" sum="Sum"/></tree>',
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    assert.step(args.kwargs.orderby || 'default order');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(list.$('tbody .o_list_number').text(), '10517',
+            "initial order should be 10, 5, 17");
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '32', "total should be 32");
+
+        list.$('.o_column_sortable').click(); // sort (int_field ASC)
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '32', "total should still be 32");
+        assert.strictEqual(list.$('tbody .o_list_number').text(), '51017',
+            "order should be 5, 10, 17");
+
+        list.$('.o_column_sortable').click(); // sort (int_field DESC)
+        assert.strictEqual(list.$('tbody .o_list_number').text(), '17105',
+            "initial order should be 17, 10, 5");
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '32', "total should still be 32");
+
+        assert.verifySteps(['default order', 'int_field ASC', 'int_field DESC']);
+
+        list.destroy();
+    });
+
     QUnit.test('properly apply onchange in simple case', function (assert) {
         assert.expect(2);
 
@@ -1695,7 +1731,7 @@ QUnit.module('Views', {
         // close first level group
         nbRPCs = {readGroup: 0, searchRead: 0};
         envIDs = []; // the group being closed, there is no more record in the environment
-        list.$('.o_group_header:first').click();
+        list.$('.o_group_header:nth(1)').click();
         assert.strictEqual(nbRPCs.readGroup, 0, "should have done no read_group");
         assert.strictEqual(nbRPCs.searchRead, 0, "should have done no search_read");
 
