@@ -550,11 +550,13 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     }
                     var rel = relations[field.relation];
                     field.raw_value.forEach(function(id) {
-                        rel.ids.push(id);
-                        if (!rel.elements[id]) {
-                            rel.elements[id] = [];
+                        if (id === parseInt(id, 10)) {
+                            rel.ids.push(id);
+                            if (!rel.elements[id]) {
+                                rel.elements[id] = [];
+                            }
+                            rel.elements[id].push($el[0]);
                         }
-                        rel.elements[id].push($el[0]);
                     });
                 });
             });

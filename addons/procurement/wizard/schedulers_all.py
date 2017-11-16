@@ -41,11 +41,10 @@ class procurement_compute_all(osv.osv_memory):
         @param ids: List of IDs selected
         @param context: A standard dictionary
         """
-        with Environment.manage():
+        with Environment.manage(), self.pool.cursor() as new_cr:
             proc_obj = self.pool.get('procurement.order')
             #As this function is in a new thread, i need to open a new cursor, because the old one may be closed
 
-            new_cr = self.pool.cursor()
             scheduler_cron_id = self.pool['ir.model.data'].get_object_reference(new_cr, SUPERUSER_ID, 'procurement', 'ir_cron_scheduler_action')[1]
             # Avoid to run the scheduler multiple times in the same time
             try:
@@ -54,15 +53,12 @@ class procurement_compute_all(osv.osv_memory):
             except Exception:
                 _logger.info('Attempt to run procurement scheduler aborted, as already running')
                 new_cr.rollback()
-                new_cr.close()
                 return {}
             user = self.pool.get('res.users').browse(new_cr, uid, uid, context=context)
             comps = [x.id for x in user.company_ids]
             for comp in comps:
                 proc_obj.run_scheduler(new_cr, uid, use_new_cursor=new_cr.dbname, company_id = comp, context=context)
-            #close the new cursor
-            new_cr.close()
-            return {}
+        return {}
 
     def procure_calculation(self, cr, uid, ids, context=None):
         """

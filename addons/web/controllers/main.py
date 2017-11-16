@@ -1017,7 +1017,7 @@ class Binary(http.Controller):
         last_update = '__last_update'
         Model = request.registry[model]
         cr, uid, context = request.cr, request.uid, request.context
-        headers = [('Content-Type', 'image/png')]
+        headers = list()
         etag = request.httprequest.headers.get('If-None-Match')
         hashed_session = hashlib.md5(request.session_id).hexdigest()
         retag = hashed_session
@@ -1057,6 +1057,20 @@ class Binary(http.Controller):
             image_data = self.placeholder()
         headers.append(('ETag', retag))
         headers.append(('Content-Length', len(image_data)))
+
+        # Guess mime type
+        signatures = {
+            "image/jpeg": ['\xFF\xD8\xFF\xE0', '\xFF\xD8\xFF\xE2',
+                           '\xFF\xD8\xFF\xE3', '\xFF\xD8\xFF\xE1'],
+            "image/gif": ['GIF87a', 'GIF89a'],
+        }
+        mime = False
+        for key, matches in signatures.iteritems():
+            if any(image_data.startswith(match) for match in matches):
+                mime = key
+                break
+        headers.append(("Content-Type", mime or "image/png"))
+
         try:
             ncache = int(kw.get('cache'))
             headers.append(('Cache-Control', 'no-cache' if ncache == 0 else 'max-age=%s' % (ncache)))
@@ -1086,10 +1100,14 @@ class Binary(http.Controller):
         Model = request.registry[model]
         cr, uid, context = request.cr, request.uid, request.context
         fields = [field]
+        content_type = 'application/octet-stream'
         if filename_field:
             fields.append(filename_field)
         if id:
+            fields.append('file_type')
             res = Model.read(cr, uid, [int(id)], fields, context)[0]
+            if res.get('file_type'):
+                content_type = res['file_type']
         else:
             res = Model.default_get(cr, uid, fields, context)
         filecontent = base64.b64decode(res.get(field) or '')
@@ -1099,9 +1117,10 @@ class Binary(http.Controller):
             filename = '%s_%s' % (model.replace('.', '_'), id)
             if filename_field:
                 filename = res.get(filename_field, '') or filename
-            return request.make_response(filecontent,
-                [('Content-Type', 'application/octet-stream'),
-                 ('Content-Disposition', content_disposition(filename))])
+            return request.make_response(
+                filecontent, [('Content-Type', content_type),
+                              ('Content-Disposition',
+                               content_disposition(filename))])
 
     @http.route('/web/binary/saveas_ajax', type='http', auth="public")
     @serialize_exception
@@ -1113,6 +1132,7 @@ class Binary(http.Controller):
         id = jdata.get('id', None)
         filename_field = jdata.get('filename_field', None)
         context = jdata.get('context', {})
+        content_type = 'application/octet-stream'
 
         Model = request.session.model(model)
         fields = [field]
@@ -1121,7 +1141,10 @@ class Binary(http.Controller):
         if data:
             res = {field: data, filename_field: jdata.get('filename', None)}
         elif id:
+            fields.append('file_type')
             res = Model.read([int(id)], fields, context)[0]
+            if res.get('file_type'):
+                content_type = res['file_type']
         else:
             res = Model.default_get(fields, context)
         filecontent = base64.b64decode(res.get(field) or '')
@@ -1132,9 +1155,10 @@ class Binary(http.Controller):
             filename = '%s_%s' % (model.replace('.', '_'), id)
             if filename_field:
                 filename = res.get(filename_field, '') or filename
-            return request.make_response(filecontent,
-                headers=[('Content-Type', 'application/octet-stream'),
-                        ('Content-Disposition', content_disposition(filename))],
+            return request.make_response(
+                filecontent, headers=[('Content-Type', content_type),
+                                      ('Content-Disposition',
+                                       content_disposition(filename))],
                 cookies={'fileToken': token})
 
     @http.route('/web/binary/upload', type='http', auth="user")

@@ -22,6 +22,6 @@ Ask your functionnal question directly to the Odoo Operators with the livechat s
         'static/src/xml/im_odoo_support.xml'
     ],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
     'application': True,
 }

@@ -118,7 +118,7 @@ POSTGRES_CONFDELTYPES = {
 }
 
 def intersect(la, lb):
-    return filter(lambda x: x in lb, la)
+    return list(set(lb).intersection(la))
 
 def same_name(f, g):
     """ Test whether functions ``f`` and ``g`` are identical or have the same name """
@@ -1761,7 +1761,7 @@ class BaseModel(object):
                     else:
                         res[lang][f] = self._columns[f].string
         for table in self._inherits:
-            cols = intersect(self._inherit_fields.keys(), fields)
+            cols = list(set(fields).intersection(self._inherit_fields))
             res2 = self.pool[table].read_string(cr, uid, id, langs, cols, context)
         for lang in res2:
             if lang in res:
@@ -1779,7 +1779,7 @@ class BaseModel(object):
                     src = self._columns[field].string
                     self.pool.get('ir.translation')._set_ids(cr, uid, self._name+','+field, 'field', lang, [0], vals[field], src)
         for table in self._inherits:
-            cols = intersect(self._inherit_fields.keys(), vals)
+            cols = list(set(vals).intersection(self._inherit_fields))
             if cols:
                 self.pool[table].write_string(cr, uid, id, langs, vals, context)
         return True
@@ -3377,10 +3377,32 @@ class BaseModel(object):
             if column.deprecated:
                 _logger.warning('Field %s.%s is deprecated: %s', self._name, f, column.deprecated)
 
+        # determine fields that need cache validation (nonstored float function
+        # fields with a decimal precision)
+        validate_fields = [
+            f for f in field_names
+            if isinstance(self._columns[f], openerp.osv.fields.function) and
+            self._columns[f]._type == 'float' and self._columns[f].digits and
+            not self._columns[f].store
+        ]
         # store result in cache
         for vals in result:
             record = self.browse(vals.pop('id'))
-            record._cache.update(record._convert_to_cache(vals, validate=False))
+            # write database fields to cache without validation
+            record._cache.update(record._convert_to_cache(
+                {
+                    key: value for key, value in vals.iteritems()
+                    if key not in validate_fields
+                },
+                validate=False))
+            # write other fields to cache with validation
+            record._cache.update(record._convert_to_cache(
+                {
+                    key: value for key, value in vals.iteritems()
+                    if key in validate_fields
+                },
+                validate=True))
+
 
         # store failed values in cache for the records that could not be read
         fetched = self.browse(ids)

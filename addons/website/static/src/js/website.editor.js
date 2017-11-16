@@ -1007,6 +1007,11 @@
             });
             return this._super().then(this.proxy('bind_data'));
         },
+        is_email: function(val) {
+            // http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
+            var re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+            return re.test(val);
+        },
         get_data: function (test) {
             var self = this,
                 def = new $.Deferred(),
@@ -1025,7 +1030,7 @@
             var size = this.$("input[name='link-style-size']:checked").val();
             var classes = (style && style.length ? "btn " : "") + style + " " + size;
 
-            if ($e.hasClass('email-address') && $e.val().indexOf("@") !== -1) {
+            if ($e.hasClass('email-address') && this.is_email($e.val())) {
                 def.resolve('mailto:' + val, false, label, classes);
             } else if ($e.val() && $e.val().length && $e.hasClass('page')) {
                 var data = $e.select2('data');
@@ -1140,7 +1145,7 @@
         },
         onkeyup: function (e) {
             var $e = $(e.target);
-            var is_link = ($e.val()||'').length && $e.val().indexOf("@") === -1;
+            var is_link = !this.is_email($e.val())
             this.$('input.window-new').closest("div").toggle(is_link);
             this.preview();
         },
