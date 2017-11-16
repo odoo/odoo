@@ -484,9 +484,7 @@ class IrMailServer(models.Model):
             'author': address[0],
             'company': self.env.user.company_id.name,
         }
-        return '%s <%s>' % (
-            rewritten_name, self._get_default_bounce_address(),
-        )
+        return formataddr((rewritten_name, self._get_default_bounce_address()))
 
     @api.model
     def _get_rewrite_from_whitelist(self):
