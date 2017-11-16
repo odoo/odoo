@@ -878,7 +878,7 @@ class AccountBankStatementLine(models.Model):
 
         # Fully reconciled moves are just linked to the bank statement
         for aml_rec in payment_aml_rec:
-            aml_rec.write({'statement_id': self.statement_id.id})
+            aml_rec.with_context(check_move_validity=False).write({'statement_id': self.statement_id.id})
             aml_rec.move_id.write({'statement_line_id': self.id})
             counterpart_moves = (counterpart_moves | aml_rec.move_id)
 
