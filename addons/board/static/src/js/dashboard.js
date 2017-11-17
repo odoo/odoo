@@ -224,7 +224,7 @@ FormRenderer.include({
                 var view = _.find(action.views, function (descr) {
                     return descr[1] === params.viewType;
                 });
-                return self.loadViews(action.res_model, params.context, [view])
+                return self.loadViews(action.res_model, context, [view])
                            .then(function (viewsInfo) {
                     var viewInfo = viewsInfo[params.viewType];
                     var View = viewRegistry.get(params.viewType);

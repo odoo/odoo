@@ -238,7 +238,7 @@ var AbstractView = Class.extend({
                     }
                     defs.push(parent.loadViews(
                             field.relation,
-                            new Context(context, self.userContext, self.loadParams.context),
+                            new Context(context, self.userContext, self.loadParams.context).eval(),
                             [[null, attrs.mode === 'tree' ? 'list' : attrs.mode]])
                         .then(function (views) {
                             for (var viewName in views) {

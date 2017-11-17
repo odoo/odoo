@@ -4053,7 +4053,7 @@ QUnit.module('Views', {
             res_id: 1,
             intercepts: {
                 load_views: function (event) {
-                    var context = event.data.context.eval();
+                    var context = event.data.context;
                     assert.strictEqual(context.tree_view_ref, 'module.tree_view_ref',
                         "context should contain tree_view_ref");
                     event.data.on_success();
