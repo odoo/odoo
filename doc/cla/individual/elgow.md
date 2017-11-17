@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Edward Gow elgow@uw.edu https://github.com/elgow
+Edward Gow elgow@users.noreply.github.com https://github.com/elgow
