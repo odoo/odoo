@@ -764,13 +764,7 @@ QUnit.module('account', {
                             partner_id: false,
                             counterpart_aml_dicts:[],
                             payment_aml_ids: [392],
-                            new_aml_dicts: [
-                                {
-                                  "credit": 343.42,
-                                  "debit": 0,
-                                  "name": "Bank fees : Open balance"
-                                }
-                            ],
+                            new_aml_dicts: [],
                         }]
                     ], "should call process_reconciliations with partial reconcile values");
                 }
