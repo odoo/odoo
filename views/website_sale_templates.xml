@@ -6,11 +6,9 @@
         <attribute name="t-att-style">line.is_reward_line and "display:none;"</attribute>
     </xpath>
     <xpath expr="//td[hasclass('td-qty')]/div" position="after">
-        <div t-if="line.is_reward_line" class="css_quantity input-group oe_website_spinner" id="line_qty">
-            <div t-attf-href="#" class="mb8 input-group-addon js_add_cart_json hidden-xs"><i class="fa fa-minus text-muted"/></div>
-            <span class="js_quantity form-control"><t t-esc="int(line.product_uom_qty)"/></span>
-            <div t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json hidden-xs"><i class="fa fa-plus text-muted"/></div>
-        </div>
+        <t t-if="line.is_reward_line">
+            <span class="js_quantity text-muted" t-esc="int(line.product_uom_qty)"/>
+        </t>
     </xpath>
 </template>
 <template id="sale_coupon_result" inherit_id="website_sale.coupon_form">
