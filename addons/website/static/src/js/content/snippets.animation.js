@@ -865,6 +865,31 @@ registry.socialShare = Animation.extend({
     },
 });
 
+registry.facebookPage = Animation.extend({
+    selector: '.o_facebook_page',
+
+    /**
+     * @override
+     */
+    start: function () {
+        var params = _.pick(this.$el.data(), 'href', 'height', 'width', 'tabs', 'small_header', 'hide_cover', 'show_facepile');
+        if (params.href) {
+            var actualWidth = this.$el.width();
+            params.width = actualWidth > 500 ? 500 : actualWidth < 180 ? 180 : actualWidth;
+            var newSrc = $.param.querystring('https://www.facebook.com/plugins/page.php', params);
+            this.$el.append(_.str.sprintf('<iframe src="%s" width="%s" height="%s" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>', newSrc, params.width, params.height));
+        }
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super.apply(this, arguments);
+        this.$('iframe').remove();
+    },
+});
+
 /**
  * This is a fix for apple device (<= IPhone 4, IPad 2)
  * Standard bootstrap requires data-toggle='collapse' element to be <a/> tags.

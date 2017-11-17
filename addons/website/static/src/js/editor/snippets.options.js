@@ -394,6 +394,167 @@ options.registry.parallax = options.Class.extend({
     },
 });
 
+options.registry.facebook_page = options.Class.extend({
+    template: 'website.facebook_page_dialog',
+    xmlDependencies: ['/website/static/src/xml/website.facebook_page.xml'],
+
+    /**
+     * @override
+     */
+    start: function () {
+        var self = this;
+        this.$target.on('click', '.o_add_facebook_page', function (ev) {
+            ev.preventDefault();
+            self.fbPageOptions();
+        });
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Open dialog to configure facebook page options.
+     */
+    fbPageOptions: function () {
+        var self = this;
+        this._setParams().then(function () {
+            var $dialog = new Dialog(null, {
+                title: _t("Facebook page"),
+                $content: $(core.qweb.render('website.facebook_page_dialog', self.fbData)),
+                buttons: [
+                    {text: _t("Save"), classes: 'btn-primary', close: true, click: function () {
+                        self.$target.empty();
+                        _.each(self.fbData, function (value, key) {
+                            self.$target.attr('data-' + key, value);
+                            self.$target.data(key, value);
+                        });
+                        self.trigger_up('animation_start_demand', {
+                            editableMode: true,
+                            $target: self.$target,
+                        });
+                    }},
+                    {text: _t("Discard"), close: true},
+                ]
+            }).open();
+
+            $dialog.opened().then(function () {
+                $dialog.$el.find('.form-horizontal').on('change', function () {
+                    // Update values in fbData
+                    self.fbData.tabs = _.map($dialog.$('.o_facebook_tabs input:checked'), function (tab) { return tab.name; }).join(',');
+                    self.fbData.href = $dialog.$('.o_facebook_page_url').prop('value');
+                    _.each($dialog.$('.o_facebook_options input'), function (el) {
+                        self.fbData[el.name] = $(el).prop('checked');
+                    });
+                    self._renderPreview($dialog);
+                });
+            });
+            if (self.fbData.href) {
+                self._renderPreview($dialog);
+            }
+        });
+    },
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Fetch and set default url for facebook page from website
+     *
+     * @private
+     * @returns {Deferred}
+     */
+    _fetchFbUrl: function () {
+        var self = this;
+        return this._rpc({
+            model: 'website',
+            method: 'search_read',
+            args: [[], ['social_facebook']],
+            limit: 1
+        }).then(function (res) {
+            if (res) {
+                self.fbData.href = res[0].social_facebook || 'https://www.facebook.com/Odoo';
+            }
+        });
+    },
+    /**
+     * It manages facebook page preview in config dialog.
+     * Also verifies page is exist on facebook or not.
+     *
+     * @private
+     * @param {jQueryElement} $dialog
+     */
+    _renderPreview: function ($dialog) {
+        var self = this;
+        var regex = /^(?:http(?:s)?:\/\/)?(?:www.)?(facebook.com|fb.com)\/([a-zA-Z0-9]+)/;
+        var match = regex.exec(this.fbData.href);
+        if (match !== null) {
+            var pictureUrl= 'https://graph.facebook.com/' + match[2] + '/picture';
+            // Check Page is exist or not in Facebook
+            $.ajax({
+                url: pictureUrl,
+                statusCode: {
+                    200: function () {
+                        self._toggleWarning($dialog, true);
+
+                        // Managing height based on options
+                        if (self.fbData.tabs) {
+                            self.fbData.height = self.fbData.tabs == 'events' ? 300 : 500;
+                        } else if (self.fbData.small_header) {
+                            self.fbData.height = self.fbData.show_facepile ? 165 : 70;
+                        } else if (!self.fbData.small_header) {
+                            self.fbData.height = self.fbData.show_facepile ? 225 : 150;
+                        }
+                        self.fbData.width = $dialog.$('.o_facebook_preview').width();
+                        var iframeSrc = $.param.querystring('https://www.facebook.com/plugins/page.php', self.fbData);
+                        $dialog.$('.o_facebook_preview').append(_.str.sprintf('<iframe src="%s" width="%s" height="%s" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>', iframeSrc, self.fbData.width, self.fbData.height));
+                    },
+                    404: function () {
+                        self._toggleWarning($dialog, false);
+                    }
+                }
+            });
+        } else {
+            self._toggleWarning($dialog, false);
+        }
+    },
+    /**
+     * Initialize facebook page data required to create iframe.
+     *
+     * @private
+     * @returns {Deferred}
+     */
+    _setParams: function () {
+        var defaults = {
+            href: false,
+            height: 215,
+            width: 350,
+            tabs: '',
+            small_header: false,
+            hide_cover: false,
+            show_facepile: false
+        };
+        this.fbData = _.defaults(_.pick(this.$target.data(), _.keys(defaults)), defaults);
+        if (!this.fbData.href) {
+            return this._fetchFbUrl();
+        }
+        return $.when();
+    },
+    /**
+     * Toggling of warning message and save button.
+     *
+     * @private
+     * @param {jQueryElement} $dialog
+     * @param {Boolean} toggle
+     */
+    _toggleWarning: function ($dialog, toggle) {
+        $dialog.$('.o_facebook_preview iframe').remove();
+        $dialog.$('.facebook_page_warning').toggleClass('hidden', toggle);
+        $dialog.$footer.find('.btn-primary').prop('disabled', !toggle);
+    }
+});
+
 options.registry.ul = options.Class.extend({
     /**
      * @override
