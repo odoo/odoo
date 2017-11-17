@@ -303,7 +303,6 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
                 $searchview: this.$searchview,
                 $buttons: QWeb.render("website.GoToButtons"),
             },
-            breadcrumbs: this.getParent().get_breadcrumbs(),
         });
     },
 

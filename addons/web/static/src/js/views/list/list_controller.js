@@ -128,7 +128,7 @@ var ListController = BasicController.extend({
      * @param {jQuery Node} $node
      */
     renderSidebar: function ($node) {
-        if (this.hasSidebar && !this.sidebar) {
+        if (this.hasSidebar) {
             var other = [{
                 label: _t("Export"),
                 callback: this._onExportData.bind(this)

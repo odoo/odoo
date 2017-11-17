@@ -68,7 +68,6 @@ var stock_report_generic = Widget.extend(ControlPanelMixin, {
             this.renderButtons();
         }
         var status = {
-            breadcrumbs: this.actionManager.get_breadcrumbs(),
             cp_content: {$buttons: this.$buttons},
         };
         return this.update_control_panel(status);
