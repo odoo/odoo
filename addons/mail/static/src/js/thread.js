@@ -67,9 +67,14 @@ var Thread = Widget.extend({
         },
     },
 
+    /**
+     * @override
+     * @param {widget} parent
+     * @param {Object} options
+     */
     init: function (parent, options) {
         this._super.apply(this, arguments);
-        this.options = _.defaults(options || {}, {
+        this.enabledOptions = _.defaults(options || {}, {
             display_order: ORDER.ASC,
             display_needactions: true,
             display_stars: true,
@@ -79,17 +84,37 @@ var Thread = Widget.extend({
             display_email_icon: true,
             display_reply_icon: false,
         });
+        this.disabledOptions = {
+            display_order: this.enabledOptions.display_order,
+            display_needactions: false,
+            display_stars: false,
+            display_document_link: false,
+            display_avatar: this.enabledOptions.display_avatar,
+            squash_close_messages: false,
+            display_email_icon: false,
+            display_reply_icon: false,
+        };
         this.expanded_msg_ids = [];
         this.selected_id = null;
     },
 
+    /**
+     * @param {Object[]} messages
+     * @param {Object} [options]
+     * @param {integer} [options.display_order=ORDER.ASC]
+     * @param {boolean} [options.display_load_more]
+     * @param {boolean} [options.isCreateMode]
+     * @param {boolean} [options.squash_close_messages]
+     */
     render: function (messages, options) {
         var self = this;
-        var msgs = _.map(messages, this._preprocess_message.bind(this));
-        if (this.options.display_order === ORDER.DESC) {
+        var msgs = _.map(messages, this._preprocessMessage.bind(this));
+
+        var modeOptions = options.isCreateMode ? this.disabledOptions : this.enabledOptions;
+        if (modeOptions.display_order === ORDER.DESC) {
             msgs.reverse();
         }
-        options = _.extend({}, this.options, options);
+        options = _.extend({}, modeOptions, options);
 
         // Hide avatar and info of a message if that message and the previous
         // one are both comments wrote by the same author at the same minute
@@ -219,40 +244,8 @@ var Thread = Widget.extend({
         }
     },
 
-    _redirect: _.debounce(function (options) {
-        if ('channel_id' in options) {
-            this.trigger('redirect_to_channel', options.channel_id);
-        } else {
-            this.trigger('redirect', options.model, options.id);
-        }
-    }, 200, true),
-
     on_click_show_more: function () {
         this.trigger('load_more_messages');
-    },
-
-    _preprocess_message: function (message) {
-        var msg = _.extend({}, message);
-
-        msg.date = moment.min(msg.date, moment());
-        msg.hour = time_from_now(msg.date);
-
-        var date = msg.date.format('YYYY-MM-DD');
-        if (date === moment().format('YYYY-MM-DD')) {
-            msg.day = _t("Today");
-        } else if (date === moment().subtract(1, 'days').format('YYYY-MM-DD')) {
-            msg.day = _t("Yesterday");
-        } else {
-            msg.day = msg.date.format('LL');
-        }
-
-        if (_.contains(this.expanded_msg_ids, message.id)) {
-            msg.expanded = true;
-        }
-
-        msg.display_subject = message.subject && message.message_type !== 'notification' && !(message.model && (message.model !== 'mail.channel'));
-        msg.is_selected = msg.id === this.selected_id;
-        return msg;
     },
 
     /**
@@ -307,6 +300,56 @@ var Thread = Widget.extend({
     destroy: function () {
         clearInterval(this.update_timestamps_interval);
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Object} message
+     * @param {integer} [message.id]
+     * @param {string} [message.model]
+     * @param {string} [message.subject]
+     * @param {string} [message.message_type]
+     */
+    _preprocessMessage: function (message) {
+        var msg = _.extend({}, message);
+
+        msg.date = moment.min(msg.date, moment());
+        msg.hour = time_from_now(msg.date);
+
+        var date = msg.date.format('YYYY-MM-DD');
+        if (date === moment().format('YYYY-MM-DD')) {
+            msg.day = _t("Today");
+        } else if (date === moment().subtract(1, 'days').format('YYYY-MM-DD')) {
+            msg.day = _t("Yesterday");
+        } else {
+            msg.day = msg.date.format('LL');
+        }
+
+        if (_.contains(this.expanded_msg_ids, message.id)) {
+            msg.expanded = true;
+        }
+
+        msg.display_subject = message.subject && message.message_type !== 'notification' && !(message.model && (message.model !== 'mail.channel'));
+        msg.is_selected = msg.id === this.selected_id;
+        return msg;
+    },
+    /**
+     * @private
+     * @param {Object} options
+     * @param {integer} [options.channel_id]
+     * @param {string} options.model
+     * @param {integer} options.id
+     */
+    _redirect: _.debounce(function (options) {
+        if ('channel_id' in options) {
+            this.trigger('redirect_to_channel', options.channel_id);
+        } else {
+            this.trigger('redirect', options.model, options.id);
+        }
+    }, 200, true),
 
     //--------------------------------------------------------------------------
     // Handlers

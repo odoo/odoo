@@ -8,6 +8,7 @@ var AbstractField = require('web.AbstractField');
 var core = require('web.core');
 var field_registry = require('web.field_registry');
 var concurrency = require('web.concurrency');
+var session = require('web.session');
 
 var _t = core._t;
 
@@ -69,7 +70,15 @@ var ThreadField = AbstractField.extend(chat_mixin, {
         this.res_id = record.res_id;
     },
 
-    // public
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @param  {Object} message
+     * @param  {integer[]} message.partner_ids
+     * @return {Deferred}
+     */
     postMessage: function (message) {
         var self = this;
         var options = {model: this.model, res_id: this.res_id};
@@ -84,18 +93,54 @@ var ThreadField = AbstractField.extend(chat_mixin, {
             });
     },
 
-    // private
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @returns {Object[]} an array containing a single message 'Creating a new record...'
+     */
+    _forgeCreationModeMessages: function () {
+        return [{
+            id: 0,
+            body: "<p>Creating a new record...</p>",
+            date: moment(),
+            author_id: [session.partner_id, session.partner_display_name],
+            displayed_author: session.partner_display_name,
+            avatar_src: "/web/image/res.partner/" + session.partner_id + "/image_small",
+            attachment_ids: [],
+            customer_email_data: [],
+            tracking_value_ids: [],
+        }];
+    },
+    /**
+     * @private
+     * @param {integer[]} ids
+     * @param {Object} [options]
+     */
     _fetchAndRenderThread: function (ids, options) {
         var self = this;
         options = options || {};
         options.ids = ids;
         var fetch_def = this.dp.add(this._getMessages(options));
         return fetch_def.then(function (raw_messages) {
-            self.thread.render(raw_messages, {display_load_more: raw_messages.length < ids.length});
+            var isCreateMode = false;
+            if (!self.res_id) {
+                raw_messages = self._forgeCreationModeMessages();
+                isCreateMode = true;
+            }
+            self.thread.render(raw_messages, {
+                display_load_more: raw_messages.length < ids.length,
+                isCreateMode: isCreateMode,
+            });
         });
     },
 
-    // handlers
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
     /**
      * When a new message arrives, fetch its data to render it
      * @param {Number} message_id : the identifier of the new message
