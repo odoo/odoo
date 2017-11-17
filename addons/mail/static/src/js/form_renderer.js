@@ -1,9 +1,7 @@
 odoo.define('mail.form_renderer', function (require) {
 "use strict";
 
-var BasicModel = require('web.BasicModel');
 var Chatter = require('mail.Chatter');
-var FormController = require('web.FormController');
 var FormRenderer = require('web.FormRenderer');
 
 /**
@@ -89,53 +87,6 @@ FormRenderer.include({
             this.chatter.$el.detach();
         }
         return this._super.apply(this, arguments);
-    },
-});
-
-/**
- * Include the FormController and BasicModel to update the datapoint on the
- * model when a message is posted.
- */
-FormController.include({
-    custom_events: _.extend({}, FormController.prototype.custom_events, {
-        new_message: '_onNewMessage',
-    }),
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {OdooEvent} event
-     * @param {string} event.data.id datapointID
-     * @param {integer[]} event.data.msgIDs list of message ids
-     */
-    _onNewMessage: function (event) {
-        this.model.updateMessageIDs(event.data.id, event.data.msgIDs);
-    },
-});
-
-BasicModel.include({
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * Update the message ids on a datapoint.
-     *
-     * Note that we directly update the res_ids on the datapoint as the message
-     * has already been posted ; this change can't be handled 'normally' with
-     * x2m commands because the change won't be saved as a normal field.
-     *
-     * @param {string} id
-     * @param {integer[]} msgIDs
-     */
-    updateMessageIDs: function (id, msgIDs) {
-        var element = this.localData[id];
-        element.res_ids = msgIDs;
-        element.count = msgIDs.length;
     },
 });
 
