@@ -245,6 +245,7 @@ function addMockEnvironment(widget, params) {
         console.log('%c[debug] debug mode activated', 'color: blue; font-weight: bold;', url);
     }
     var mockServer = new Server(params.data, {
+        archs: params.archs,
         currentDate: params.currentDate,
         debug: params.debug,
     });
@@ -313,30 +314,21 @@ function addMockEnvironment(widget, params) {
     });
 
     intercept(widget, "load_views", function (event) {
-        if (params.debug) {
-            console.log('[mock] load_views', event.data);
-        }
-        var views = {};
-        var model = event.data.modelName;
-        _.each(event.data.views, function (view_descr) {
-            var view_id = view_descr[0] || false;
-            var view_type = view_descr[1];
-            var key = [model, view_id, view_type].join(',');
-            var arch = params.archs[key];
-            var viewParams = {
-                arch: arch,
-                model: model,
-                viewOptions: {
-                    context: event.data.context.eval(),
-                },
-            };
-            if (!arch) {
-                throw new Error('No arch found for key ' + key);
-            }
-            views[view_type] = mockServer.fieldsViewGet(viewParams);
+        mockServer.performRpc('/web/dataset/call_kw/' + event.data.modelName, {
+            args: [],
+            kwargs: {
+                context: event.data.context.eval(),
+                options: event.data.options,
+                views: event.data.views,
+            },
+            method: 'load_views',
+            model: event.data.modelName,
+        }).then(function (views) {
+            views = _.mapObject(views, function (viewParams) {
+                return mockServer.fieldsViewGet(viewParams);
+            });
+            event.data.on_success(views);
         });
-
-        event.data.on_success(views);
     });
 
     intercept(widget, "get_session", function (event) {

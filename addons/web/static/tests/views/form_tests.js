@@ -4272,7 +4272,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('open one2many form containing one2many', function (assert) {
-        assert.expect(8);
+        assert.expect(9);
 
         this.data.partner.records[0].product_ids = [37];
         this.data.product.fields.partner_type_ids = {
@@ -4326,7 +4326,7 @@ QUnit.module('Views', {
             "the row should contains the 2 fields defined in the form view");
         assert.strictEqual($(modal_row).text(), "gold2",
             "the value of the fields should be fetched and displayed");
-        assert.verifySteps(['read', 'read', 'read', 'read'],
+        assert.verifySteps(['read', 'read', 'load_views', 'read', 'read'],
             "there should be 4 read rpcs");
         form.destroy();
     });
@@ -5905,7 +5905,7 @@ QUnit.module('Views', {
         // parent view. If this event isn't stopPropagated by the first controller
         // catching it, it will crash when the other one will try to handle it,
         // as this one doesn't know at all the dataPointID to reload.
-        assert.expect(9);
+        assert.expect(11);
 
         var arch = '<form>' +
                         '<field name="display_name"/>' +
@@ -5943,8 +5943,10 @@ QUnit.module('Views', {
         assert.verifySteps([
             "read", // main record
             "get_formview_id", // id of first form view opened in a dialog
+            "load_views", // arch of first form view opened in a dialog
             "read", // first dialog
             "get_formview_id", // id of second form view opened in a dialog
+            "load_views", // arch of second form view opened in a dialog
             "read", // second dialog
             "write", // save second dialog
             "read", // reload first dialog

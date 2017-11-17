@@ -88,8 +88,7 @@ QUnit.module('Views', {
                     '</search>',
             },
             mockRPC: function (route, args) {
-                search++;
-                if (search === 1 && args.method === 'read_group') {
+                if (args.method === 'read_group') {
                     assert.deepEqual(args.kwargs, {
                         context: {group_by: "bar"},
                         domain: [["display_name","like","a"], ["display_name","ilike","piou"], ["foo","ilike","piou"]],
@@ -99,7 +98,8 @@ QUnit.module('Views', {
                         lazy: true
                     }, "should search with the complete domain (domain + search), and group by 'bar'");
                 }
-                if (search === 2 && route === '/web/dataset/search_read') {
+                if (search === 0 && route === '/web/dataset/search_read') {
+                    search++;
                     assert.deepEqual(args, {
                         context: {},
                         domain: [["display_name","like","a"], ["display_name","ilike","piou"], ["foo","ilike","piou"]],
@@ -108,8 +108,7 @@ QUnit.module('Views', {
                         limit: 80,
                         sort: ""
                     }, "should search with the complete domain (domain + search)");
-                }
-                if (search === 3 && route === '/web/dataset/search_read') {
+                } else if (search === 1 && route === '/web/dataset/search_read') {
                     assert.deepEqual(args, {
                         context: {},
                         domain: [["display_name","like","a"]],
