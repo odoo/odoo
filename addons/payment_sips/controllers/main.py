@@ -5,6 +5,7 @@
 import json
 import logging
 import werkzeug
+import pprint
 
 from odoo import http
 from odoo.http import request
@@ -27,6 +28,7 @@ class SipsController(http.Controller):
         return return_url
 
     def sips_validate_data(self, **post):
+        _logger.info('Beginning SIPS form_feedback with post data %s', pprint.pformat(post))  # debug
         sips = request.env['payment.acquirer'].search([('provider', '=', 'sips')], limit=1)
         security = sips.sudo()._sips_generate_shasign(post)
         if security == post['Seal']:
