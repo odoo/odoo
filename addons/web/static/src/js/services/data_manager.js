@@ -95,7 +95,7 @@ return core.Class.extend({
                 kwargs: {
                     views: views_descr,
                     options: options,
-                    context: context.eval(),
+                    context: context,
                 },
                 model: model,
                 method: 'load_views',

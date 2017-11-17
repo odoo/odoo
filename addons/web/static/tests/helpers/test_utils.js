@@ -317,7 +317,7 @@ function addMockEnvironment(widget, params) {
         mockServer.performRpc('/web/dataset/call_kw/' + event.data.modelName, {
             args: [],
             kwargs: {
-                context: event.data.context.eval(),
+                context: event.data.context,
                 options: event.data.options,
                 views: event.data.views,
             },

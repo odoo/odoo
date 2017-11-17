@@ -30,7 +30,7 @@ var PlanAction = Widget.extend(ControlPanelMixin, {
         var self = this;
         var view_id = this.action && this.action.search_view_id && this.action.search_view_id[0];
         var def = this
-            .loadViews('account.analytic.line', new Context(this.action.context || {}), [[view_id, 'search']])
+            .loadViews('account.analytic.line', this.action.context || {}, [[view_id, 'search']])
             .then(function (result) {
                 self.fields_view = result.search;
             });

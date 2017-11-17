@@ -298,7 +298,7 @@ var SelectCreateDialog = ViewDialog.extend({
                 search_defaults[match[1]] = value_;
             }
         });
-        this.loadViews(this.dataset.model, this.dataset.get_context(), [[false, 'list'], [false, 'search']], {})
+        this.loadViews(this.dataset.model, this.dataset.get_context().eval(), [[false, 'list'], [false, 'search']], {})
             .then(this.setup.bind(this, search_defaults))
             .then(function (fragment) {
                 self.opened().then(function () {
