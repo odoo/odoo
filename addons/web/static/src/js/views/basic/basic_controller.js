@@ -200,7 +200,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
     _abandonRecord: function (recordID) {
         recordID = recordID || this.handle;
         if (recordID === this.handle) {
-            this.trigger_up('switch_to_previous_view');
+            this.trigger_up('history_back');
         } else {
             this.model.removeLine(recordID);
         }
@@ -244,17 +244,11 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 model: record.model,
                 resIDs: record.res_ids,
             },
-            on_closed: function (reason) {
-                if (!_.isObject(reason)) {
-                    reload(reason);
-                }
-            },
-            on_fail: function (reason) {
-                reload().always(function() {
-                    def.reject(reason);
-                });
-            },
             on_success: def.resolve.bind(def),
+            on_fail: function () {
+                reload().always(def.reject.bind(def));
+            },
+            on_closed: reload,
         });
         return this.alive(def);
     },
@@ -313,13 +307,13 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @param {Object} [options]
      * @param {boolean} [options.readonlyIfRealDiscard=false]
      *        After discarding record changes, the usual option is to make the
-     *        record readonly. However, the view manager calls this function
+     *        record readonly. However, the action manager calls this function
      *        at inappropriate times in the current code and in that case, we
      *        don't want to go back to readonly if there is nothing to discard
      *        (e.g. when switching record in edit mode in form view, we expect
      *        the new record to be in edit mode too, but the view manager calls
      *        this function as the URL changes...) @todo get rid of this when
-     *        the view manager is improved.
+     *        the webclient/action_manager's hashchange mechanism is improved.
      * @returns {Deferred}
      */
     _discardChanges: function (recordID, options) {
@@ -467,7 +461,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             var sidebarEnv = this._getSidebarEnv();
             this.sidebar.updateEnv(sidebarEnv);
         }
-        this.trigger_up('env_updated', env);
+        this.trigger_up('env_updated', {controllerID: this.controllerID, env: env});
     },
     /**
      * Helper method, to make sure the information displayed by the pager is up

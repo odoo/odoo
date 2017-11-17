@@ -53,7 +53,7 @@ QUnit.module('widgets', {
             data: this.data,
             arch: '<tree><field name="foo"/></tree>',
             viewOptions: {
-                sidebar: true,
+                hasSidebar: true,
             },
             mockRPC: function (route) {
                 if (route === '/web/export/formats') {
@@ -144,7 +144,7 @@ QUnit.module('widgets', {
             data: this.data,
             arch: '<tree><field name="foo"/></tree>',
             viewOptions: {
-                sidebar: true,
+                hasSidebar: true,
             },
             mockRPC: function (route) {
                 if (route === '/web/export/formats') {

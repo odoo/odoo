@@ -56,7 +56,7 @@ odoo.define('document.tests', function (require) {
                         '</sheet>' +
                     '</form>',
                 res_id: 1,
-                viewOptions: {sidebar: true},
+                viewOptions: {hasSidebar: true},
                 mockRPC: function (route, args) {
                     if (args.method === 'search_read' && args.model === 'ir.attachment') {
                         return $.when(this.data['ir.attachment'].records);

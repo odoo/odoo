@@ -104,10 +104,9 @@ FormController.include({
     },
 
     /**
-     * We need to intercept switch_view event coming from sub views, because
-     * there is no view manager doing the job.  Also, we don't actually want to
-     * switch view in dashboard, we want to do a do_action (which will open the
-     * record in a different breadcrumb)
+     * We need to intercept switch_view event coming from sub views, because we
+     * don't actually want to switch view in dashboard, we want to do a
+     * do_action (which will open the record in a different breadcrumb).
      *
      * @private
      * @param {OdooEvent} event
@@ -126,6 +125,9 @@ FormController.include({
 });
 
 FormRenderer.include({
+    custom_events: _.extend({}, FormRenderer.prototype.custom_events, {
+        env_updated: '_onEnvUpdated',
+    }),
     events: _.extend({}, FormRenderer.prototype.events, {
         'click .oe_dashboard_column .oe_fold': '_onFoldClick',
         'click .oe_dashboard_link_change_layout': '_onChangeLayout',
@@ -338,6 +340,16 @@ FormRenderer.include({
                 self.trigger_up('save_dashboard');
             },
         });
+    },
+    /**
+     * Stops the propagation of 'update_env' events triggered by the controllers
+     * instantiated by the dashboard.
+     *
+     * @override
+     * @private
+     */
+    _onEnvUpdated: function (event) {
+        event.stopPropagation();
     },
     /**
      * @private

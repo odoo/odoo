@@ -67,11 +67,18 @@ var AbstractView = Class.extend({
      * @param {string} params.modelName The actual model name
      * @param {Object} params.context
      * @param {number} [params.count]
+     * @param {string} [params.controllerID]
      * @param {string[]} params.domain
      * @param {string[]} params.groupBy
      * @param {number} [params.currentId]
      * @param {number[]} [params.ids]
+     * @param {boolean} [params.withControlPanel]
+     * @param {boolean} [params.action.flags.headless]
+     * @param {string} [params.action.display_name]
+     * @param {string} [params.action.name]
      * @param {string} [params.action.help]
+     * @param {string} [params.action.jsID]
+     * @param {boolean} [params.action.views]
      */
     init: function (viewInfo, params) {
         this.rendererParams = {
@@ -87,7 +94,23 @@ var AbstractView = Class.extend({
                 delete: viewInfo.arch.attrs.delete ? JSON.parse(viewInfo.arch.attrs.delete) : true,
                 duplicate: viewInfo.arch.attrs.duplicate ? JSON.parse(viewInfo.arch.attrs.duplicate) : true,
             },
+            controllerID: params.controllerID,
         };
+        // AAB: these params won't be necessary as soon as the ControlPanel will
+        // be instantiated by the View
+        this.controllerParams.displayName = params.action && (params.action.display_name || params.action.name);
+        this.controllerParams.isMultiRecord = this.multi_record;
+        this.controllerParams.searchable = this.searchable;
+        this.controllerParams.searchView = params.action && params.action.searchView;
+        this.controllerParams.searchViewHidden = this.searchview_hidden; // AAB: use searchable instead where it is used?
+        this.controllerParams.actionViews = params.action ? params.action.views : [];
+        this.controllerParams.viewType = this.viewType;
+        this.controllerParams.withControlPanel = true;
+        if (params.action && params.action.flags) {
+            this.controllerParams.withControlPanel = !params.action.flags.headless;
+        } else if ('withControlPanel' in params) {
+            this.controllerParams.withControlPanel = params.withControlPanel;
+        }
 
         this.loadParams = {
             context: params.context,
@@ -133,7 +156,7 @@ var AbstractView = Class.extend({
      * load itself, and the renderer needs the data in its constructor.
      *
      * @param {Widget} parent The parent of the resulting Controller (most
-     *      likely a view manager)
+     *      likely an action manager)
      * @returns {Deferred} The deferred resolves to a controller
      */
     getController: function (parent) {

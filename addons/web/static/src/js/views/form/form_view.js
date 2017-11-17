@@ -2,7 +2,6 @@ odoo.define('web.FormView', function (require) {
 "use strict";
 
 var BasicView = require('web.BasicView');
-var Context = require('web.Context');
 var core = require('web.core');
 var FormController = require('web.FormController');
 var FormRenderer = require('web.FormRenderer');
@@ -25,15 +24,16 @@ var FormView = BasicView.extend({
     init: function (viewInfo, params) {
         this._super.apply(this, arguments);
 
-        var mode = params.mode || (params.currentId ? 'readonly' : 'edit');
+        var mode = params.mode || params.context.form_view_initial_mode ||
+                   (params.currentId ? 'readonly' : 'edit');
         this.loadParams.type = 'record';
 
         this.controllerParams.disableAutofocus = params.disable_autofocus;
-        this.controllerParams.hasSidebar = params.sidebar;
+        this.controllerParams.hasSidebar = params.hasSidebar;
         this.controllerParams.toolbarActions = viewInfo.toolbar;
-        this.controllerParams.footerToButtons = params.footer_to_buttons;
+        this.controllerParams.footerToButtons = params.footerToButtons;
         if ('action' in params && 'flags' in params.action) {
-            this.controllerParams.footerToButtons = params.action.flags.footer_to_buttons;
+            this.controllerParams.footerToButtons = params.action.flags.footerToButtons;
         }
         var defaultButtons = 'default_buttons' in params ? params.default_buttons : true;
         this.controllerParams.defaultButtons = defaultButtons;

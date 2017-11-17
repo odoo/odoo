@@ -140,17 +140,6 @@ function Home (parent, action) {
 }
 core.action_registry.add("home", Home);
 
-/**
- * Client action to go back in breadcrumb history.
- * If can't go back in history stack, will go back to home.
- */
-function HistoryBack (parent) {
-    parent.history_back().fail(function () {
-        Home(parent);
-    });
-}
-core.action_registry.add("history_back", HistoryBack);
-
 function login() {
     redirect('/web/login');
 }

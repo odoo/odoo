@@ -278,7 +278,7 @@ var SearchView = Widget.extend({
         this.fields = this.fields_view.fields;
         this.query = undefined;
         this.title = this.options.action && this.options.action.name;
-        this.action_id = this.options.action && this.options.action.id;
+        this.action = this.options.action || {};
         this.search_fields = [];
         this.filters = [];
         this.groupbys = [];
@@ -297,7 +297,7 @@ var SearchView = Widget.extend({
         var self = this;
         var def;
         if (!this.options.disable_favorites) {
-            def = this.loadFilters(this.dataset, this.action_id).then(function (filters) {
+            def = this.loadFilters(this.dataset, this.action.id).then(function (filters) {
                 self.favorite_filters = filters;
             });
         }
@@ -328,7 +328,7 @@ var SearchView = Widget.extend({
                 menu_defs.push(this.groupby_menu.appendTo(this.$buttons));
             }
             if (!this.options.disable_favorites) {
-                this.favorite_menu = new FavoriteMenu(this, this.query, this.dataset.model, this.action_id, this.favorite_filters);
+                this.favorite_menu = new FavoriteMenu(this, this.query, this.dataset.model, this.action, this.favorite_filters);
                 menu_defs.push(this.favorite_menu.appendTo(this.$buttons));
             }
         }
