@@ -100,9 +100,11 @@
         <field name="condition_select">none</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
-result = contract.wage + contract.mobile + contract.mobile_plus + contract.internet
-if contract.transport_mode == 'company_car':
-    result += contract.car_atn
+result = contract.wage
+if contract.internet:
+    result += 5.0
+if contract.mobile:
+    result += 12.0
         </field>
         <field name="sequence">20</field>
         <field name="appears_on_payslip" eval="False"/>
@@ -399,7 +401,7 @@ elif salary &lt;= 2461.27:
         <field name="category_id" ref="hr_payroll_head_div_impos"/>
         <field name="name">ATN Company Car</field>
         <field name="code">ATN.CAR</field>
-        <field name="sequence">15</field>
+        <field name="sequence">99</field>
         <field name="condition_select">python</field>
         <field name="condition_python">
 result = bool(contract.transport_mode == 'company_car' and contract.car_atn)
