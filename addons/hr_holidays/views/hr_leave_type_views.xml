@@ -132,8 +132,13 @@
         id="menu_hr_holidays_configuration"
         name="Configuration"
         parent="menu_hr_holidays_root"
-        sequence="100"
-        groups="hr_holidays.group_hr_holidays_manager"
-        action="open_view_holiday_status"/>
+        sequence="100"/>
+
+    <menuitem
+        id="hr_holidays_status_menu_configuration"
+        action="open_view_holiday_status"
+        name="Leave Types"
+        parent="menu_hr_holidays_configuration"
+        sequence="1"/>
 
 </odoo>
