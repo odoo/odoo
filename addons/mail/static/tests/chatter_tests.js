@@ -494,6 +494,86 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
         });
 });
 
+
+QUnit.test('chatter: post a message and switch in edit mode', function (assert) {
+    assert.expect(5);
+
+    var messages = [];
+    var bus = new Bus();
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread" options="{\'display_log_button\': True}"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        session: {},
+        mockRPC: function (route, args) {
+            if (route === "/web/dataset/call_kw/partner/message_get_suggested_recipients") {
+                return $.when({2: []});
+            }
+            return this._super(route, args);
+        },
+        intercepts: {
+            get_messages: function (event) {
+                event.stopPropagation();
+                var requested_msgs = _.filter(messages, function (msg) {
+                    return _.contains(event.data.options.ids, msg.id);
+                });
+                event.data.callback($.when(requested_msgs));
+            },
+            post_message: function (event) {
+                event.stopPropagation();
+                messages.push({
+                    attachment_ids: [],
+                    author_id: ["42", "Me"],
+                    body: event.data.message.content,
+                    date: moment(), // now
+                    displayed_author: "Me",
+                    id: 42,
+                    is_note: event.data.message.subtype === 'mail.mt_note',
+                    is_starred: false,
+                    model: 'partner',
+                    res_id: 2,
+                });
+                bus.trigger('new_message', {
+                    id: 42,
+                    model: event.data.options.model,
+                    res_id: event.data.options.res_id,
+                });
+            },
+            get_bus: function (event) {
+                event.stopPropagation();
+                event.data.callback(bus);
+            },
+        },
+    });
+
+    assert.strictEqual(form.$('.o_thread_message').length, 0, "thread should not contain messages");
+
+    // send a message
+    form.$('.o_chatter_button_new_message').click();
+    form.$('.oe_chatter .o_composer_text_field:first()').val("My first message");
+    form.$('.oe_chatter .o_composer_button_send').click();
+    assert.strictEqual(form.$('.o_thread_message').length, 1, "thread should contain a message");
+    assert.ok(form.$('.o_thread_message:first() .o_thread_message_core').text().indexOf('My first message') >= 0,
+        "the message's body should be correct");
+
+    // switch in edit mode
+    form.$buttons.find('.o_form_button_edit').click();
+    assert.strictEqual(form.$('.o_thread_message').length, 1, "thread should contain a message");
+    assert.ok(form.$('.o_thread_message:first() .o_thread_message_core').text().indexOf('My first message') >= 0,
+        "the message's body should be correct");
+
+    form.destroy();
+});
+
 QUnit.test('chatter: Attachment viewer', function (assert) {
     assert.expect(6);
     this.data.partner.records[0].message_ids = [1];
