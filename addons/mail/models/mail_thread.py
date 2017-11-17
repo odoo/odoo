@@ -837,7 +837,7 @@ class MailThread(models.AbstractModel):
             # sender should not see private diagnostics info, just the error
             raise ValueError(short_message)
 
-    def _routing_create_bounce_email(self, email_from, body_html, message):
+    def _routing_create_bounce_email(self, email_from, body_html, message, **mail_values):
         bounce_to = tools.decode_message_header(message, 'Return-Path') or email_from
         bounce_mail_values = {
             'body_html': body_html,
@@ -848,6 +848,7 @@ class MailThread(models.AbstractModel):
         bounce_from = self.env['ir.mail_server']._get_default_bounce_address()
         if bounce_from:
             bounce_mail_values['email_from'] = 'MAILER-DAEMON <%s>' % bounce_from
+        bounce_mail_values.update(mail_values)
         self.env['mail.mail'].create(bounce_mail_values).send()
 
     @api.model
@@ -1015,6 +1016,7 @@ class MailThread(models.AbstractModel):
             raise TypeError('message must be an email.message.Message at this point')
         MailMessage = self.env['mail.message']
         Alias, dest_aliases = self.env['mail.alias'], self.env['mail.alias']
+        catchall_alias = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias")
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias")
         fallback_model = model
 
@@ -1134,6 +1136,16 @@ class MailThread(models.AbstractModel):
         if rcpt_tos_localparts:
             # no route found for a matching reference (or reply), so parent is invalid
             message_dict.pop('parent_id', None)
+
+            # check it does not directly contact catchall
+            if catchall_alias and catchall_alias in email_to_localpart:
+                _logger.info('Routing mail from %s to %s with Message-Id %s: direct write to catchall, bounce', email_from, email_to, message_id)
+                body = self.env.ref('mail.mail_bounce_catchall').render({
+                    'message': message,
+                }, engine='ir.qweb')
+                self._routing_create_bounce_email(email_from, body, message, reply_to=self.env.user.company_id.email)
+                return []
+
             dest_aliases = Alias.search([('alias_name', 'in', rcpt_tos_localparts)])
             if dest_aliases:
                 routes = []

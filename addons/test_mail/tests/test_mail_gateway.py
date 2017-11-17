@@ -250,6 +250,26 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
                          'message_process: email should be sent to Sylvie')
 
     # --------------------------------------------------
+    # Email Management
+    # --------------------------------------------------
+
+    def test_message_process_write_to_catchall(self):
+        """ Writing directly to catchall should bounce """
+        self.env['ir.config_parameter'].set_param('mail.bounce.alias', 'bounce.test')
+        self.env['ir.config_parameter'].set_param('mail.catchall.alias', 'catchall.test')
+        self.env['ir.config_parameter'].set_param('mail.catchall.domain', 'test.com')
+
+        # Test: no group created, email bounced
+        record = self.format_and_process(MAIL_TEMPLATE, to='catchall.test@test.com', subject='Should Bounce')
+        self.assertTrue(len(record) == 0)
+        self.assertEqual(len(self._mails), 1,
+                         'message_process: writing directly to catchall should bounce')
+        # Test bounce email
+        self.assertEqual(self._mails[0].get('subject'), 'Re: Should Bounce')
+        self.assertEqual(self._mails[0].get('email_to')[0], 'whatever-2a840@postmaster.twitter.com')
+        self.assertEqual(self._mails[0].get('email_from'), formataddr(('MAILER-DAEMON', 'bounce.test@test.com')))
+
+    # --------------------------------------------------
     # Thread formation
     # --------------------------------------------------
 
