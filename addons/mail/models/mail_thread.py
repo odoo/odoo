@@ -1210,7 +1210,6 @@ class MailThread(models.AbstractModel):
                 thread = self.env['mail.thread']
             if not hasattr(thread, 'message_post'):
                 thread = self.env['mail.thread'].with_context(thread_model=model)
-
             # replies to internal message are considered as notes, but parent message
             # author is added in recipients to ensure he is notified of a private answer
             partner_ids = []
@@ -1222,12 +1221,7 @@ class MailThread(models.AbstractModel):
             else:
                 subtype = 'mail.mt_comment'
             new_msg = thread.message_post(subtype=subtype, partner_ids=partner_ids, **message_dict)
-            #remove message without notify if 'email from' is in ban list on specific channel
-            if new_msg.message_type == 'email' and new_msg.channel_ids.filtered(lambda c: c.moderation)._is_moderated_email(new_msg.email_from, 'ban'):
-                new_msg.unlink()
-                return thread_id
-
-            if original_partner_ids:
+            if new_msg and original_partner_ids:
                 # postponed after message_post, because this is an external message and we don't want to create
                 # duplicate emails due to notifications
                 new_msg.write({'partner_ids': original_partner_ids})
@@ -1770,7 +1764,7 @@ class MailThread(models.AbstractModel):
         return m2m_attachment_ids
 
     @api.multi
-    @api.returns('self', lambda value: value.id)
+    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, body='', subject=None, message_type='notification',
                      subtype=None, parent_id=False, attachments=None,
                      content_subtype='html', **kwargs):
@@ -1792,6 +1786,7 @@ class MailThread(models.AbstractModel):
                     to the related document. Should only be set by Chatter.
             :return int: ID of newly created mail.message
         """
+
         if attachments is None:
             attachments = {}
         if self.ids and not self.ensure_one():

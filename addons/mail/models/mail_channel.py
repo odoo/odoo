@@ -7,9 +7,9 @@ import re
 import uuid
 
 from odoo import _, api, fields, models, modules, tools
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import ormcache
+from odoo.tools import ormcache, pycompat
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -27,24 +27,6 @@ class ChannelPartner(models.Model):
     is_minimized = fields.Boolean("Conversation is minimized")
     is_pinned = fields.Boolean("Is pinned on the interface", default=True)
 
-class ChannelMessage(models.Model):
-    _name = 'mail.channel.message'
-    _description = 'Contains status of messages within channels'
-    _table = 'mail_message_mail_channel_rel'
-
-    mail_channel_id = fields.Many2one('mail.channel')
-    mail_message_id = fields.Many2one('mail.message')
-    status = fields.Selection([('accepted', 'Accepted'),('pending_moderation','Pending_moderation'),('spam', 'Spam')], string='Status', default='accepted')
-    #force user to be a moderator of the corresponding channel would be necessary?
-    moderator_id = fields.Many2one('res.users', string="Moderated by")
-
-    _sql_constraints = [
-    ('channel_message_uniq', 'unique (mail_channel_id,mail_message_id)', 'The message must be unique per channel!')
-    ]
-
-
-
-
 
 class ChannelModeratedEmails(models.Model):
     """
@@ -52,9 +34,19 @@ class ChannelModeratedEmails(models.Model):
     """
     _name = 'channel.moderated.emails'
 
-    email = fields.Char(string="Email")
-    moderator_action = fields.Selection([('allow', 'Always Allow'), ('ban', 'Permanent Ban')])
-    channel_id = fields.Many2one('mail.channel', string="Channel")
+    email = fields.Char(string="Email", index=True, required=True)
+    decision = fields.Selection([('allow', 'Always Allow'), ('ban', 'Permanent Ban')], required=True)
+    channel_id = fields.Many2one('mail.channel', string="Channel", index=True, required=True)
+    #corresponding user if exitsts and decision is 'ban'
+    blackened_user_id = fields.Many2one('res.users', string="Corresponding blackened user", compute="_compute_blackened_user_id", store=True)
+
+    @api.multi
+    @api.depends('email', 'decision')
+    def _compute_blackened_user_id(self):
+        for rec in self.filtered(lambda rec: rec.decision == 'ban'):
+            rec.blackened_user_id = self.env['res.users'].search([('email', '=', rec.email)])
+            if not rec.blackened_user_id.ensure_one():
+                raise ValidationError('Different users use the same email address')
 
     _sql_constraints = [
          ('channel_email_uniq', 'unique (email,channel_id)', 'The email address must be unique per channel !')
@@ -124,13 +116,82 @@ class Channel(models.Model):
     is_subscribed = fields.Boolean(
         'Is Subscribed', compute='_compute_is_subscribed')
     moderation = fields.Boolean(string='Moderate this channel')
-    moderator_ids = fields.Many2many('res.users', string='Moderators')
+    moderator_ids = fields.Many2many('res.users', 'mail_channel_moderator_rel', string='Moderators')
     moderated_email_ids = fields.One2many('channel.moderated.emails', 'channel_id', string='Moderated Emails')
-    auto_notification = fields.Boolean(string="Automatic Notification", help="People receive an automatic notification about their message being waiting for moderation.")
-    notification_message = fields.Text(string="Notification Message")
-    #One should allow the possibility to edit and send new guidelines to all subscribers manually
-    send_guidelines = fields.Boolean(string="Guidelines automatically sent to new subscribers", help="Newcomers on the moderated channel will receive the guidelines.")
+    blackened_user_ids = fields.Many2many('res.users', 'channel_moderated_emails',
+        column1='channel_id', column2='blackened_user_id', string="List of blackened people on channel", store=True)
+    auto_notification = fields.Boolean(string="Automatic notification", help="People receive an automatic notification about their message being waiting for moderation.")
+    notification_message = fields.Text(string="Notification message")
+    send_guidelines = fields.Boolean(string="Send guidelines to new subscribers", help="Newcomers on this moderated channel will automatically receive the guidelines.", default=False)
     guidelines = fields.Text(string="Guidelines")
+
+    @api.constrains('moderator_ids')
+    def _check_moderators_have_email_addresses(self):
+        if self.mapped('moderator_ids').filtered(lambda moderator: moderator.email == False):
+            raise ValidationError("Moderators must have an email address!")
+
+
+    @api.constrains('moderation', 'email_send')
+    def _check_moderation_implies_email_send(self):
+        if self.filtered(lambda channel: channel.moderation and not channel.email_send):
+            raise ValidationError('Only email lists can be moderated!')
+    """
+    forbidden_to_user = fields.Boolean(string="partner is banned of channel", compute="_compute_forbidden_to_user", search="_search_forbidden_to_user")
+
+    @api.multi
+    def _compute_forbidden_to_user(self):
+        user = self.env.user
+        email = user.partner_id.email
+        channels_forbidden_to_user = self.env['channel.moderated.emails'].search([('email', '=', email), ('decision', '=', 'ban')]).mapped('channel_id').ids
+        for channel in self:
+            channel.forbidden_to_user = channel.id in channels_forbidden_to_user
+
+
+
+    @api.model
+    def _search_forbidden_to_user(self, operator, operand):
+        user = self.env.user
+        email = user.partner_id.email
+        channels_forbidden_to_user = self.env['channel.moderated.emails'].search([('email', '=', email),
+            ('decision', '=', 'ban')]).mapped('channel_id').ids
+        if (operator == '=' and operand) or (operator == '!=' and not operand):
+            return ['|', ('name', '=', 'bar'), ('id', 'in', channels_forbidden_to_user)]
+        elif (operator == '=' and not operand) or (operator == '!=' and operand):
+            return ['|', ('name', '=', 'foo'), ('id', 'not in', channels_forbidden_to_user)]
+
+    """
+    @api.multi
+    def _send_guidelines(self, partners):
+        self.ensure_one()
+        template = self.env.ref('mail.guidelines_notification_email', raise_if_not_found=False)
+        banned_emails = self.moderated_email_ids.filtered(lambda x: x.decision == 'ban').mapped('email')
+        good_partners = partners.filtered(lambda p: not (p.email in banned_emails))
+        #need to change expeditor address
+        for partner in good_partners:
+            template.with_context(lang=partner.lang, expeditor="dam@openerp.com", channel_name=self.name, guidelines_text=self.guidelines).send_mail(partner.id, raise_exception=True)
+
+    @api.multi
+    def _add_to_moderated_email_list(self, email, decision):
+        """ This method will add an email address into either white list of emails or ban list of emails
+            according to the decision of the moderator. 
+            If the email already exists in the list, it should not be allowed to change related decision using this method 
+            (although it is possible, we want to simplify work and not to ask useless repetitive actions from the moderators). 
+        """
+        email_from = tools.email_split(email)
+        email = email_from[0] if email_from else False
+        #search if already exist
+        moderated_email_id = self.env['channel.moderated.emails'].search([('email', '=', email), ('channel_id', 'in', self.ids)], limit=1).id
+        vals = [(1, moderated_email_id, {'decision': decision})] if moderated_email_id else [(0, _, {'email': email, 'decision': decision})]
+        self.write({'moderated_email_ids': vals})
+
+    @api.multi
+    def _is_moderated_email(self, email, decision):
+        """ This method will returns true if decision (ban or allow) has been taken concerning email for a unique channel.
+        """
+        self.ensure_one()
+        email_from = tools.email_split(email)
+        email = email_from[0] if email_from else False
+        return bool(self.moderated_email_ids.search([('email', '=', email)], limit=1))
 
 
     @api.one
@@ -209,7 +270,7 @@ class Channel(models.Model):
         self.ensure_one()
         channel_partner = self.mapped('channel_last_seen_partner_ids').filtered(lambda cp: cp.partner_id == self.env.user.partner_id)
         if not channel_partner:
-            return self.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': self.env.user.partner_id.id})]})
+            return self.write({'channel_last_seen_partner_ids': [(0, _, {'partner_id': self.env.user.partner_id.id})]})
 
     @api.multi
     def action_unfollow(self):
@@ -281,12 +342,57 @@ class Channel(models.Model):
         return super(Channel, self).message_get_recipient_values(notif_message=notif_message, recipient_ids=recipient_ids)
 
     @api.multi
-    @api.returns('self', lambda value: value.id)
-    def message_post(self, body='', subject=None, message_type='notification', subtype=None, parent_id=False, attachments=None, content_subtype='html', **kwargs):
+    def _extract_values(self, message_type, **kwargs):
+        """ This method is used to compute moderation status before the creation of a message. For this operation the message's author email address is required.
+            This address is returned with status for other computations.
+        """
+        moderation_status = 'accepted'
+        email = ''
+        if self.moderation and message_type in ['email','comment']:
+            author_id = kwargs.get('author_id')
+            if author_id and isinstance(author_id, pycompat.integer_types):
+                author = self.env['res.partner'].browse([author_id])
+                email = author.email
+            elif author_id:
+                email = author_id.email
+            elif self.env.user:
+                email = self.env.user.email
+            else:
+                email_from = kwargs.get('email_from')
+                email = tools.email_split(email_from)[0]
+            if self.env['channel.moderated.emails'].search([('email', '=', email), ('decision', '=', 'allow')]):
+                moderation_status = 'accepted'
+            elif self.env['channel.moderated.emails'].search([('email', '=', email), ('decision', '=', 'ban')]):
+                moderation_status = 'rejected'
+            else:
+                moderation_status = 'pending_moderation'
+        return moderation_status, email
+
+    @api.multi
+    @api.returns('mail.message', lambda value: value.id)
+    def message_post(self, body='', subject=None, message_type='notification', subtype=None, parent_id=False, attachments=None, 
+        content_subtype='html', **kwargs):
+        moderation_status, email= self._extract_values(message_type, **kwargs)
+        if moderation_status == 'rejected':
+            # Notifications The following steps
+            
+
+            return self.env['mail.message']
+        if self.auto_notification and message_type == 'email' and moderation_status == 'pending_moderation':
+        # Notifies the message author when his message is pending moderation if required on channel.
+            if not subject:
+                subject = ''
+            self.env['mail.message'].create_notification_email({
+            'body_html': self.notification_message,
+            'subject': 'Re: {}'.format(subject),
+            'email_to': email, 'auto_delete': True})
+        if self.auto_notification and message_type == 'comment' and moderation_status == 'pending_moderation':
+            pass   
         # auto pin 'direct_message' channel partner
         self.filtered(lambda channel: channel.channel_type == 'chat').mapped('channel_last_seen_partner_ids').write({'is_pinned': True})
-        message = super(Channel, self.with_context(mail_create_nosubscribe=True)).message_post(body=body, subject=subject, message_type=message_type, subtype=subtype, parent_id=parent_id, attachments=attachments, content_subtype=content_subtype, **kwargs)
+        message = super(Channel, self.with_context(mail_create_nosubscribe=True)).message_post(body=body, subject=subject, message_type=message_type, subtype=subtype, parent_id=parent_id, attachments=attachments, content_subtype=content_subtype, moderation_status=moderation_status, **kwargs)
         return message
+
 
     def _alias_check_contact(self, message, message_dict, alias):
         if alias.alias_contact == 'followers' and self.ids:
@@ -604,6 +710,9 @@ class Channel(models.Model):
             self.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
         self.action_follow()
 
+        if self.send_guidelines:
+            self._send_guidelines(self.env.user.partner_id)
+
         channel_info = self.channel_info()[0]
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_info)
         return channel_info
@@ -673,23 +782,10 @@ class Channel(models.Model):
             channel['last_message'] = message
         return list(channels_preview.values())
 
-    def _add_to_moderated_email_list(self, email, moderator_action):
-        """ This method will add a email address into either white list of emails or ban list of emails
-            according to the moderator action.
-        """
-        #search if already exist
-        moderated_email_id = self.env['channel.moderated.emails'].search([('email', '=', email), ('channel_id', 'in', self.ids)], limit=1).id
-        vals = [(1, moderated_email_id, {'moderator_action': moderator_action})] if moderated_email_id else [(0, 0, {'email': email, 'moderator_action': moderator_action})]
-        self.write({'moderated_email_ids': vals})
-
-    def _is_moderated_email(self, email, moderator_action):
-        """ This method will returns true if email address is present either in ban list or always allow list according to moderator_action.
-        """
-        return email in self.mapped('moderated_email_ids').filtered(lambda e: e.moderator_action == moderator_action).mapped('email')
-
     #------------------------------------------------------
     # Commands
     #------------------------------------------------------
+
     @api.model
     @ormcache()
     def get_mention_commands(self):

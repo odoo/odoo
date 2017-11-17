@@ -31,7 +31,7 @@
             </div>
             <div t-if="is_moderator" t-attf-class="o_mail_chat_title_main o_mail_chat_channel_item #{(active_channel_id == 'channel_moderation') ? 'o_active': ''}"
                  data-channel-id="channel_moderation">
-                <span class="o_channel_name"> <i class="fa fa-envelope"/> Moderation Queue </span>
+                <span class="o_channel_name"> <i class="fa fa-envelope"/>Moderation Queue</span>
                 <t t-set="counter" t-value="moderation_counter"/>
                 <t t-call="mail.chat.SidebarNeedaction"/>
             </div>
@@ -143,9 +143,9 @@
             <button type="button" class="btn btn-default btn-sm o_mail_chat_button_dm visible-xs" title="New Message">New Message</button>
             <button t-if="!disable_add_channel" type="button" class="btn btn-default btn-sm o_mail_chat_button_public o_mail_chat_button_private visible-xs" title="New Channel">New Channel</button>
             <button t-if="debug" type="button" class="btn btn-default btn-sm o_mail_chat_button_settings" title="Open channel settings">Settings</button>
-            <button type="button" data-moderator-action="accept" class="btn btn-default btn-sm o_mail_chat_button_moderate_all" title="Accept selected messages">Accept</button>
-            <button type="button" data-moderator-action="reject" class="btn btn-default btn-sm o_mail_chat_button_moderate_all" title="Reject selected messages">Reject</button>
-            <button type="button" data-moderator-action="discard" class="btn btn-default btn-sm o_mail_chat_button_moderate_all" title="Discard selected messages">Discard</button>
+            <button type="button" data-decision="accept" class="btn btn-default btn-sm o_mail_chat_button_moderate_all" title="Accept selected messages">Accept</button>
+            <button type="button" data-decision="reject" class="btn btn-default btn-sm o_mail_chat_button_moderate_all" title="Reject selected messages">Reject</button>
+            <button type="button" data-decision="discard" class="btn btn-default btn-sm o_mail_chat_button_moderate_all" title="Discard selected messages">Discard</button>
         </div>
     </t>
 

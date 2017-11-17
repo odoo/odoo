@@ -36,7 +36,7 @@
             <field name="code">model.notify_moderator()</field>
             <field name="user_id" ref="base.user_root" />
             <field name="interval_number">1</field>
-            <field name="interval_type">minutes</field>
+            <field name="interval_type">days</field>
 
             <field name="numbercall">-1</field>
             <field eval="False" name="doall" />
@@ -193,5 +193,23 @@
             <field name="user_signature" eval="False"/>
         </record>
 
+
+
+
+        <record id="guidelines_notification_email" model="mail.template">
+            <field name="name">Notification Email</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="email_from">${ctx['expeditor']}</field>
+            <field name="email_to">${object.email or ''|safe}</field>
+            <field name="subject">Guidelines</field>
+            <field name="body_html" type="xml">
+<p>Hello ${object.name or ''},</p>
+<p>You have just subscribed to the channel ${ctx['channel_name']}. Please find below the guidelines for conversing on that channel.</p>
+<p>
+${ctx['guidelines_text']}
+</p>
+<p></p></field>
+            <field name="user_signature" eval="False"/>
+        </record>
     </data>
 </odoo>

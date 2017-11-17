@@ -33,6 +33,7 @@ var emoji_unicodes = {};
 var needaction_counter = 0;
 var starred_counter = 0;
 var moderation_counter = 0;
+var moderated_channel_ids = [];
 var is_moderator = false;
 var mention_partner_suggestions = [];
 var canned_responses = [];
@@ -173,7 +174,7 @@ function make_message (data) {
     Object.defineProperties(msg, {
         is_starred: property_descr("channel_starred"),
         is_needaction: property_descr("channel_inbox"),
-        is_moderation: property_descr("channel_moderation"),
+        needs_moderation: property_descr("channel_moderation"),
     });
 
     if (_.contains(data.needaction_partner_ids, session.partner_id)) {
@@ -182,8 +183,8 @@ function make_message (data) {
     if (_.contains(data.starred_partner_ids, session.partner_id)) {
         msg.is_starred = true;
     }
-    if (data.moderator_status == 'pending_moderation') {
-        msg.is_moderation = true;
+    if (data.moderation_status == 'pending_moderation') {
+        msg.needs_moderation = true;
     }
     if (msg.model === 'mail.channel') {
         var real_channels = _.without(msg.channel_ids, 'channel_inbox', 'channel_starred', 'channel_moderation');
@@ -538,13 +539,13 @@ function on_moderator_notification(message) {
     chat_manager.bus.trigger('update_moderation_counter');
 }
 
-function on_moderator_action(message_ids, moderator_action) {
+function on_moderation(message_ids, decision) {
     moderation_counter = moderation_counter - message_ids.length;
     _.each(message_ids, function(msg_id) {
         var message = chat_manager.get_message(msg_id);
-        message.is_moderation = false;
+        message.needs_moderation = false;
         remove_message_from_channel("channel_moderation", message);
-        if (_.contains(['reject', 'discard', 'ban'], moderator_action))
+        if (_.contains(['reject', 'discard', 'ban'], decision))
             remove_message_from_cache(message);
         chat_manager.bus.trigger('update_message', message);
     });
@@ -707,6 +708,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         needaction_counter = result.needaction_inbox_counter;
         starred_counter = result.starred_counter;
         moderation_counter = result.moderation_counter;
+        moderated_channel_ids = result.moderated_channel_ids;
         chat_manager.is_moderator = result.is_moderator;
         //if user is moderator then add moderation channel
         if (chat_manager.is_moderator) {
@@ -744,7 +746,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         var domain =
             (channel.id === "channel_inbox") ? [['needaction', '=', true]] :
             (channel.id === "channel_starred") ? [['starred', '=', true]] :
-            (channel.id === "channel_moderation") ? [['channel_ids.moderator_ids', '=', session.uid], ['channel_ids.moderation', '=', true], ['message_type', '=', 'email'], ['moderator_status', '=', 'pending_moderation']] :
+            (channel.id === "channel_moderation") ? [['res_id', 'in', moderated_channel_ids], ['message_type', 'in', ['email','comment']], ['moderation_status', '=', 'pending_moderation']] :
                                                 [['channel_ids', 'in', channel.id]];
         var cache = get_channel_cache(channel, options.domain);
 
@@ -928,20 +930,20 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
                 args: [[message_id]],
             });
     },
-    moderator_action: function (message_ids, moderator_action) {
-        if (message_ids.length && moderator_action) {
+    moderate: function (message_ids, decision) {
+        if (message_ids.length && decision) {
             return this._rpc({
                 model: 'mail.message',
-                method: 'moderator_action',
-                args: [message_ids, moderator_action]
+                method: 'moderate',
+                args: [message_ids, decision]
             })
             .then(function() {
-                on_moderator_action(message_ids, moderator_action);
+                on_moderation(message_ids, decision);
             })
         }
     },
-    moderate_selected_messages: function(message_ids, moderator_action) {
-        chat_manager.moderator_action(message_ids, moderator_action);
+    moderate_selected_messages: function(message_ids, decision) {
+        chat_manager.moderate(message_ids, decision);
     },
     unstar_all: function () {
         return this._rpc({

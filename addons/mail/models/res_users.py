@@ -4,7 +4,7 @@
 from odoo import _, api, exceptions, fields, models, modules
 from odoo.tools import pycompat
 from odoo.addons.base.models.res_users import is_selection_groups
-
+from odoo.exceptions import ValidationError
 
 class Users(models.Model):
     """ Update of res.users class
@@ -35,22 +35,20 @@ class Users(models.Model):
 
     is_moderator = fields.Boolean(string="Is moderator", compute="_compute_is_moderator")
     messages_to_moderate_count = fields.Integer(string="Count of messages to moderate", compute="_compute_messages_to_moderate_count")
-
+    moderated_channel_ids = fields.Many2many('mail.channel', 'mail_channel_moderator_rel', string="User moderated channels")
 
     @api.multi
     def _compute_is_moderator(self):
         for user in self:
-            user.is_moderator = bool(self.env['mail.channel'].search_count([('moderation', '=', True), ('moderator_ids', 'in', user.id)]))
-
+            user.is_moderator = bool(self.env['mail.channel'].search([('moderation', '=', True), ('moderator_ids', 'in', user.id)]))
 
     @api.multi
     def _compute_messages_to_moderate_count(self):
         for user in self:
-            user.messages_to_moderate_count = self.env['mail.channel.message'].search_count([
-                ('status', '=', 'pending_moderation'),
-                ('mail_message_id.type', '=', 'email'),
-                ('mail_message_id.moderation', '=', True),
-                ('mail_message_id.moderator_ids', 'in', user.id)
+            user.messages_to_moderate_count = self.env['mail.message'].search_count([
+                ('moderation_status', '=', 'pending_moderation'),
+                ('message_type', 'in', ['email', 'comment']),
+                ('res_id', 'in', user.moderated_channel_ids.ids)
                 ])
 
     def __init__(self, pool, cr):

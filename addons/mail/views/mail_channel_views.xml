@@ -133,12 +133,14 @@
                                     <field name="moderator_ids" widget="many2many_tags"/>
                                     <field name="auto_notification"/>
                                     <field name="notification_message" attrs="{'invisible': [('auto_notification', '=', False)]}"/>
+                                    <field name="send_guidelines"/>
+                                    <field name="guidelines" attrs="{'invisible':[('send_guidelines', '=', False)]}"/>
                                 </group>
                                 <group string="Whitelist/Blacklist">
                                     <field name="moderated_email_ids" nolabel="1">
                                         <tree editable="bottom" string="Moderated Emails">
                                             <field name="email"/>
-                                            <field name="moderator_action"/>
+                                            <field name="decision"/>
                                         </tree>
                                     </field>
                                 </group>
