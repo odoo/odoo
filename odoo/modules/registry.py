@@ -82,7 +82,7 @@ class Registry(Mapping):
                     try:
                         odoo.modules.load_modules(registry._db, force_demo, status, update_module)
                     except Exception:
-                        odoo.modules.reset_modules_state(registry._db)
+                        odoo.modules.reset_modules_state(db_name)
                         raise
                 except Exception:
                     _logger.exception('Failed to load registry')
