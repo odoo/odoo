@@ -581,6 +581,79 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('prevent drag and drop of record if grouped by readonly', function (assert) {
+        assert.expect(12);
+
+        this.data.partner.fields.foo.readonly = true;
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                        '<templates>' +
+                            '<t t-name="kanban-box"><div>' +
+                                '<field name="foo"/>' +
+                                '<field name="state" readonly="1"/>' +
+                            '</div></t>' +
+                        '</templates>' +
+                    '</kanban>',
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/resequence') {
+                    return $.when();
+                }
+                if (args.model === 'partner' && args.method === 'write') {
+                    throw new Error('should not be draggable');
+                }
+                return this._super(route, args);
+            },
+        });
+        // simulate an update coming from the searchview, with another groupby given
+        kanban.update({groupBy: ['state']});
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 1,
+                        "column should contain 1 record(s)");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length, 1,
+                        "column should contain 1 record(s)");
+        // drag&drop a record in another column
+        var $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
+        var $group = kanban.$('.o_kanban_group:nth-child(2)');
+        testUtils.dragAndDrop($record, $group);
+        // should not be draggable
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 1,
+                        "column should now contain 1 record(s)");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length, 1,
+                        "column should contain 1 record(s)");
+
+        // simulate an update coming from the searchview, with another groupby given
+        kanban.update({groupBy: ['foo']});
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 1,
+                        "column should contain 1 record(s)");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length, 2,
+                        "column should contain 2 record(s)");
+        // drag&drop a record in another column
+        $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
+        $group = kanban.$('.o_kanban_group:nth-child(2)');
+        testUtils.dragAndDrop($record, $group);
+        // should not be draggable
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 1,
+                        "column should now contain 1 record(s)");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length, 2,
+                        "column should contain 2 record(s)");
+
+        // drag&drop a record in the same column
+        var $record1 = kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record:eq(0)');
+        var $record2 = kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record:eq(1)');
+        assert.strictEqual($record1.text(), "blipDEF", "first record should be DEF");
+        assert.strictEqual($record2.text(), "blipGHI", "second record should be GHI");
+        testUtils.dragAndDrop($record2, $record1, {position: 'top'});
+        // should still be able to resequence
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record:eq(0)').text(), "blipGHI",
+            "records should have been resequenced");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record:eq(1)').text(), "blipDEF",
+            "records should have been resequenced");
+
+        kanban.destroy();
+    });
+
     QUnit.test('kanban view with default_group_by', function (assert) {
         assert.expect(7);
         this.data.partner.records.product_id = 1;
