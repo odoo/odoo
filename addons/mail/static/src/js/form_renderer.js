@@ -44,39 +44,22 @@ FormRenderer.include({
     /**
      * Overrides the function that renders the nodes to return the chatter's $el
      * for the 'oe_chatter' div node.
-     * Returns an empty div instead of the chatter's $el in create mode.
      *
      * @override
      * @private
      */
     _renderNode: function (node) {
         if (node.tag === 'div' && node.attrs.class === 'oe_chatter') {
-            if (this.chatter) {
-                // Detach the chatter before updating the $el.
-                // This is important because if the view is now in create mode
-                // (edit mode with no res_id), the chatter will be removed from
-                // the DOM, and its handlers will be unbound. By detaching it
-                // beforehand, we ensure to keep its handlers alive so that if
-                // it is re-appended later, everything will still work properly
-                this.chatter.$el.detach();
-            }
-            if (this.mode === 'edit' && !this.state.data.id) {
-                // there is no chatter in create mode
-                var $div = $('<div>');
-                this._handleAttributes($div, node);
-                return $div;
+            if (!this.chatter) {
+                this.chatter = new Chatter(this, this.state, this.mailFields, {
+                    isEditable: this.activeActions.edit,
+                });
+                this.chatter.appendTo($('<div>'));
+                this._handleAttributes(this.chatter.$el, node);
             } else {
-                if (!this.chatter) {
-                    this.chatter = new Chatter(this, this.state, this.mailFields, {
-                        isEditable: this.activeActions.edit,
-                    });
-                    this.chatter.appendTo($('<div>'));
-                    this._handleAttributes(this.chatter.$el, node);
-                } else {
-                    this.chatter.update(this.state);
-                }
-                return this.chatter.$el;
+                this.chatter.update(this.state);
             }
+            return this.chatter.$el;
         } else {
             return this._super.apply(this, arguments);
         }
