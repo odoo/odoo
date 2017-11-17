@@ -433,7 +433,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         cr.close()
 
 
-def cleanup_modules(db):
+def reset_modules_state(db):
     """
     Resets modules flagged as "to x" to their original state
     """
@@ -443,14 +443,13 @@ def cleanup_modules(db):
     # installation/upgrade/uninstallation fails, which is the only known case
     # for which modules can stay marked as 'to %' for an indefinite amount
     # of time
-    cr = db.cursor()
-    cr.execute(
-        "UPDATE ir_module_module SET state=%s WHERE state IN (%s, %s)",
-        ('installed', 'to remove', 'to upgrade')
-    )
-    cr.execute(
-        "UPDATE ir_module_module SET state=%s WHERE state=%s",
-        ('uninstalled', 'to install')
-    )
-    cr.commit()
-    cr.close()
+    with db.cursor() as cr:
+        cr.execute(
+            "UPDATE ir_module_module SET state='installed' WHERE state IN "
+            "('to remove', 'to upgrade')"
+        )
+        cr.execute(
+            "UPDATE ir_module_module SET state='uninstalled' WHERE "
+            "state='to install'"
+        )
+        cr.commit()
