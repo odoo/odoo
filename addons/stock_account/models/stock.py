@@ -205,7 +205,9 @@ class StockMove(models.Model):
         move.ensure_one()
         # Find back incoming stock moves (called candidates here) to value this move.
         valued_move_lines = move.move_line_ids.filtered(lambda ml: ml.location_id._should_be_valued() and not ml.location_dest_id._should_be_valued())
-        valued_quantity = sum(valued_move_lines.mapped('qty_done'))
+        valued_quantity = 0
+        for valued_move_line in valued_move_lines:
+            valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
 
         qty_to_take_on_candidates = quantity or valued_quantity
         candidates = move.product_id._get_fifo_candidates_in_move()
@@ -262,7 +264,9 @@ class StockMove(models.Model):
         self.ensure_one()
         if self._is_in():
             valued_move_lines = self.move_line_ids.filtered(lambda ml: not ml.location_id._should_be_valued() and ml.location_dest_id._should_be_valued())
-            valued_quantity = sum(valued_move_lines.mapped('qty_done'))
+            valued_quantity = 0
+            for valued_move_line in valued_move_lines:
+                valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, self.product_id.uom_id)
 
             # Note: we always compute the fifo `remaining_value` and `remaining_qty` fields no
             # matter which cost method is set, to ease the switching of cost method.
