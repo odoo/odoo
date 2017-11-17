@@ -53,6 +53,7 @@
                 <field name="last_session_closing_date"/>
                 <field name="pos_session_username"/>
                 <field name="pos_session_state"/>
+                <field name="pos_session_duration"/>
                 <field name="currency_id"/>
                 <templates>
                     <t t-name="kanban-box">
@@ -70,6 +71,12 @@
                                     </t>
                                     <t t-if="record.pos_session_state.raw_value == 'closing_control'">
                                         <div class="label label-info o_kanban_inline_block">Closing Control</div>
+                                    </t>
+                                    <t t-if="record.pos_session_state.raw_value == 'opened' and record.pos_session_duration.raw_value > 1">
+                                        <div t-attf-class="label label-#{record.pos_session_duration.raw_value > 3 and 'danger' or 'warning'} o_kanban_inline_block"
+                                             title="The session has been opened for an unusually long period. Please consider closing.">
+                                             To Close
+                                        </div>
                                     </t>
                                     <div class="o_secondary mt16"><t t-esc="record.pos_session_username.value || 'Unused'"/></div>
                                 </div>
