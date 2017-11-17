@@ -96,6 +96,7 @@ class PaymentAcquirerAuthorize(models.Model):
         }
         temp_authorize_tx_values['returndata'] = authorize_tx_values.pop('return_url', '')
         temp_authorize_tx_values['x_fp_hash'] = self._authorize_generate_hashing(temp_authorize_tx_values)
+        temp_authorize_tx_values.pop('x_trans_key') # We remove this value since it is secret and isn't needed on the form
         authorize_tx_values.update(temp_authorize_tx_values)
         return authorize_tx_values
 

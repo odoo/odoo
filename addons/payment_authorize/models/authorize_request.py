@@ -4,10 +4,14 @@ import requests
 from lxml import etree, objectify
 from xml.etree import ElementTree as ET
 from uuid import uuid4
+import pprint
+import logging
 
 from odoo import _
 from odoo.exceptions import ValidationError, UserError
 from odoo import _
+
+_logger = logging.getLogger(__name__)
 
 XMLNS = 'AnetApi/xml/v1/schema/AnetApiSchema.xsd'
 
@@ -58,10 +62,21 @@ class AuthorizeAPI():
 
         :param etree._Element data: etree data to process
         """
+        logged_data = data
         data = etree.tostring(data, encoding='utf-8')
+
+        for node in logged_data.xpath('//merchantAuthentication'):
+            node.getparent().remove(node)
+        logged_data = str(etree.tostring(logged_data, encoding='utf-8', pretty_print=True)).replace(r'\n', '\n')
+        _logger.info('_authorize_request: Sending values to URL %s, values:\n%s', self.url, logged_data)
+
         r = requests.post(self.url, data=data, headers={'Content-Type': 'text/xml'})
         r.raise_for_status()
         response = strip_ns(r.content, XMLNS)
+
+        logged_data = etree.XML(r.content)
+        logged_data = str(etree.tostring(logged_data, encoding='utf-8', pretty_print=True)).replace(r'\n', '\n')
+        _logger.info('_authorize_request: Values received\n%s', logged_data)
         if response.find('messages/resultCode').text == 'Error':
             messages = [m.text for m in response.findall('messages/message/text')]
             raise ValidationError(_('Authorize.net Error Message(s):\n %s') % '\n'.join(messages))

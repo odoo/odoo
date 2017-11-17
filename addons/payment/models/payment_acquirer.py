@@ -3,6 +3,7 @@ import hashlib
 import hmac
 import logging
 import datetime
+import pprint
 
 from odoo import api, exceptions, fields, models, _
 from odoo.tools import consteq, float_round, image_resize_images, image_resize_image, ustr
@@ -375,6 +376,7 @@ class PaymentAcquirer(models.Model):
         })
         values.setdefault('return_url', False)
 
+        _logger.info('payment.acquirer.render: <%s> values rendered for form payment:\n%s', self.provider, pprint.pformat(values))
         return self.view_template_id.render(values, engine='ir.qweb')
 
     def get_s2s_form_xml_id(self):
