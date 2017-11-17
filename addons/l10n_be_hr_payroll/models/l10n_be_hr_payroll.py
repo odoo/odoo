@@ -80,7 +80,7 @@ class HrContract(models.Model):
     def _compute_wage_with_holidays(self):
         for contract in self:
             if contract.holidays > 20.0:
-                yearly_cost = contract.final_yearly_costs * (1.0 - (contract.holidays - 20.0) / 220.0)
+                yearly_cost = contract.final_yearly_costs * (1.0 - (contract.holidays - 20.0) / 231.0)
                 contract.wage_with_holidays = contract._get_gross_from_employer_costs(yearly_cost)
             else:
                 contract.wage_with_holidays = contract.wage
@@ -116,13 +116,12 @@ class HrContract(models.Model):
                 contract.transport_employer_cost
             )
 
-    @api.depends('yearly_cost_before_charges', 'ucm_insurance', 'social_security_contributions',
+    @api.depends('yearly_cost_before_charges', 'social_security_contributions',
         'social_security_contributions', 'double_holidays', 'warrants_cost', 'meal_voucher_paid_by_employer')
     def _compute_final_yearly_costs(self):
         for contract in self:
             contract.final_yearly_costs = (
                 contract.yearly_cost_before_charges +
-                contract.ucm_insurance +
                 contract.social_security_contributions +
                 contract.double_holidays +
                 contract.warrants_cost +
@@ -133,7 +132,7 @@ class HrContract(models.Model):
     def _compute_holidays_compensation(self):
         for contract in self:
             if contract.holidays < 20:
-                decrease_amount = contract.final_yearly_costs * (20.0 - contract.holidays) / 220.0
+                decrease_amount = contract.final_yearly_costs * (20.0 - contract.holidays) / 231.0
                 contract.holidays_compensation = decrease_amount
             else:
                 contract.holidays_compensation = 0.0

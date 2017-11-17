@@ -33,7 +33,7 @@ class StockMoveLine(models.Model):
     @api.multi
     def write(self, vals):
         for move_line in self:
-            if move_line.production_id and 'lot_id' in vals:
+            if move_line.move_id.production_id and 'lot_id' in vals:
                 move_line.production_id.move_raw_ids.mapped('move_line_ids')\
                     .filtered(lambda r: r.done_wo and not r.done_move and r.lot_produced_id == move_line.lot_id)\
                     .write({'lot_produced_id': vals['lot_id']})
