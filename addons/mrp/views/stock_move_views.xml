@@ -80,6 +80,7 @@
                                 <span><field name="product_uom_id" attrs="{'readonly': [('id', '!=', False)]}" nolabel="1"/></span>
                             </div>
                             <field name="lot_id" string="Lot/Serial number" groups="stock.group_production_lot" readonly="1" attrs="{'invisible': [('lots_visible', '=', False)]}"/>
+                            <field name="lots_visible" invisible="1"/>
                         </group>
                     </group>
                 </form>
