@@ -36,7 +36,7 @@ class HrContract(models.Model):
     @api.depends('name')
     def _compute_max_unused_cars(self):
         params = self.env['ir.config_parameter'].sudo()
-        max_unused_cars = params.get_param('l10n_be_hr_payroll_fleet.max_unused_cars', default=3)
+        max_unused_cars = params.get_param('l10n_be_hr_payroll_fleet.max_unused_cars', default=1000)
         for contract in self:
             contract.max_unused_cars = int(max_unused_cars)
 
