@@ -3157,6 +3157,30 @@ QUnit.module('Views', {
             "The first element of the row name should be a span");
         list.destroy();
     });
+
+    QUnit.test('use the limit attribute in arch', function (assert) {
+        assert.expect(3);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree limit="2"><field name="foo"/></tree>',
+            mockRPC: function (route, args) {
+                assert.strictEqual(args.limit, 2,
+                    'should use the correct limit value');
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(list.pager.$el.text().trim(), '1-2 / 4',
+            "pager should be correct");
+
+        assert.strictEqual(list.$('.o_data_row').length, 2,
+            'should display 2 data rows');
+        list.destroy();
+    });
+
 });
 
 });

@@ -2122,6 +2122,65 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('use the limit attribute in arch (in field o2m inline tree view)', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].turtles = [1,2,3];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                '<field name="turtles">' +
+                    '<tree limit="2">' +
+                        '<field name="turtle_foo"/>' +
+                    '</tree>' +
+                '</field>' +
+            '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.model === 'turtle') {
+                    assert.deepEqual(args.args[0], [1,2],
+                        'should only load first 2 records');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(form.$('.o_data_row').length, 2,
+            'should display 2 data rows');
+        form.destroy();
+    });
+
+    QUnit.test('use the limit attribute in arch (in field o2m non inline tree view)', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].turtles = [1,2,3];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                '<field name="turtles"/>' +
+            '</form>',
+            archs: {
+                'turtle,false,list': '<tree limit="2"><field name="turtle_foo"/></tree>',
+            },
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.model === 'turtle') {
+                    assert.deepEqual(args.args[0], [1,2],
+                        'should only load first 2 records');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(form.$('.o_data_row').length, 2,
+            'should display 2 data rows');
+        form.destroy();
+    });
+
     QUnit.test('embedded one2many with widget', function (assert) {
         assert.expect(1);
 
