@@ -1573,7 +1573,9 @@ var BasicModel = AbstractModel.extend({
         return $.when.apply($, defs).then(function () {
             // ensure to fetch up to 'limit' records (may be useful if records of
             // the current page have been removed)
-            return self._readUngroupedList(list);
+            return self._readUngroupedList(list).then(function () {
+                return self._fetchX2ManysBatched(list);
+            });
         });
     },
     /**
