@@ -1197,6 +1197,7 @@ class calendar_event(osv.Model):
                 # check if there are one False
                 pile = []
                 ok = True
+                r_date = None
                 for arg in domain:
                     if str(arg[0]) in ('start', 'stop', 'final_date'):
                         if str(arg[0]) == 'start':
