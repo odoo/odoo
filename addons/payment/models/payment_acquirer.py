@@ -3,6 +3,7 @@ import hashlib
 import hmac
 import logging
 import datetime
+import pprint
 
 from odoo import api, exceptions, fields, models, _
 from odoo.tools import consteq, float_round, image_resize_images, image_resize_image, ustr
@@ -571,6 +572,7 @@ class PaymentTransaction(models.Model):
 
     @api.model
     def create(self, values):
+        _logger.info('payment.transaction.create: Entering create values %s' % (pprint.pformat(values)))
         if values.get('partner_id'):  # @TDENOTE: not sure
             values.update(self.on_change_partner_id(values['partner_id'])['value'])
 
@@ -601,6 +603,7 @@ class PaymentTransaction(models.Model):
         if tx_sudo.callback_model_id and tx_sudo.callback_res_id and tx_sudo.callback_method:
             tx.write({'callback_hash': tx._generate_callback_hash()})
 
+        _logger.info('payment.transaction.create: <%s> (acquirer_id %d) %s' % (tx.acquirer_id.provider, tx.acquirer_id.id, pprint.pformat(tx.get_loggable_info())))
         return tx
 
     @api.multi
@@ -695,30 +698,52 @@ class PaymentTransaction(models.Model):
 
         return True
 
+    def get_loggable_info(self):
+        self.ensure_one()
+        return {
+            'tx_id': self.id,
+            'reference': self.reference,
+            'amount': self.amount,
+            'currency': self.currency_id,
+            'partner': self.partner_id,
+            'partner_name': self.partner_name,
+            'partner_lang': self.partner_lang,
+            'partner_email': self.partner_email,
+            'partner_zip': self.partner_zip,
+            'partner_address': self.partner_address,
+            'partner_city': self.partner_city,
+            'partner_country': self.partner_country_id,
+            'partner_phone': self.partner_phone,
+        }
+
     # --------------------------------------------------
     # SERVER2SERVER RELATED METHODS
     # --------------------------------------------------
 
     @api.multi
     def s2s_do_transaction(self, **kwargs):
+        _logger.info('payment.transaction.s2s_do_transaction: <%s> (acquirer_id %d) %s' % (self.acquirer_id.provider, self.acquirer_id.id, pprint.pformat(self.get_loggable_info())))
         custom_method_name = '%s_s2s_do_transaction' % self.acquirer_id.provider
         if hasattr(self, custom_method_name):
             return getattr(self, custom_method_name)(**kwargs)
 
     @api.multi
     def s2s_do_refund(self, **kwargs):
+        _logger.info('payment.transaction.s2s_do_refund: <%s> (acquirer_id %d) %s' % (self.acquirer_id.provider, self.acquirer_id.id, pprint.pformat(self.get_loggable_info())))
         custom_method_name = '%s_s2s_do_refund' % self.acquirer_id.provider
         if hasattr(self, custom_method_name):
             return getattr(self, custom_method_name)(**kwargs)
 
     @api.multi
     def s2s_capture_transaction(self, **kwargs):
+        _logger.info('payment.transaction.s2s_capture_transaction: <%s> (acquirer_id %d) %s' % (self.acquirer_id.provider, self.acquirer_id.id, pprint.pformat(self.get_loggable_info())))
         custom_method_name = '%s_s2s_capture_transaction' % self.acquirer_id.provider
         if hasattr(self, custom_method_name):
             return getattr(self, custom_method_name)(**kwargs)
 
     @api.multi
     def s2s_void_transaction(self, **kwargs):
+        _logger.info('payment.transaction.s2s_void_transaction: <%s> (acquirer_id %d) %s' % (self.acquirer_id.provider, self.acquirer_id.id, pprint.pformat(self.get_loggable_info())))
         custom_method_name = '%s_s2s_void_transaction' % self.acquirer_id.provider
         if hasattr(self, custom_method_name):
             return getattr(self, custom_method_name)(**kwargs)
