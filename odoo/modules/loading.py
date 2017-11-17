@@ -431,3 +431,26 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             _logger.log(25, "All post-tested in %.2fs, %s queries", time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
     finally:
         cr.close()
+
+
+def cleanup_modules(db):
+    """
+    Resets modules flagged as "to x" to their original state
+    """
+    # Warning, this function was introduced in response to commit 763d714
+    # which locks cron jobs for dbs which have modules marked as 'to %'.
+    # The goal of this function is to be called ONLY when module
+    # installation/upgrade/uninstallation fails, which is the only known case
+    # for which modules can stay marked as 'to %' for an indefinite amount
+    # of time
+    cr = db.cursor()
+    cr.execute(
+        "UPDATE ir_module_module SET state=%s WHERE state IN (%s, %s)",
+        ('installed', 'to remove', 'to upgrade')
+    )
+    cr.execute(
+        "UPDATE ir_module_module SET state=%s WHERE state=%s",
+        ('uninstalled', 'to install')
+    )
+    cr.commit()
+    cr.close()

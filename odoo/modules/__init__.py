@@ -7,7 +7,7 @@
 
 from . import db, graph, loading, migration, module, registry
 
-from odoo.modules.loading import load_modules
+from odoo.modules.loading import load_modules, cleanup_modules
 
 from odoo.modules.module import (
     adapt_version,
