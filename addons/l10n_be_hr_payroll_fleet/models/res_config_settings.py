@@ -18,5 +18,5 @@ class ResConfigSettings(models.TransientModel):
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         params = self.env['ir.config_parameter'].sudo()
-        res.update(max_unused_cars=int(params.get_param('l10n_be_hr_payroll_fleet.max_unused_cars', default=3)))
+        res.update(max_unused_cars=int(params.get_param('l10n_be_hr_payroll_fleet.max_unused_cars', default=1000)))
         return res
