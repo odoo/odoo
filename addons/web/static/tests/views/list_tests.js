@@ -141,6 +141,27 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('list with delete="0"', function (assert) {
+        assert.expect(4);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            viewOptions: {sidebar: true},
+            arch: '<tree delete="0"><field name="foo"/></tree>',
+        });
+
+        assert.ok(list.sidebar.$el.hasClass('o_hidden'), 'sidebar should be invisible');
+        assert.ok(list.$('tbody td.o_list_record_selector').length, "should have at least one record");
+
+        list.$('tbody td.o_list_record_selector:first input').click();
+        assert.ok(!list.sidebar.$el.hasClass('o_hidden'), 'sidebar should be visible');
+        assert.notOk(list.sidebar.$('a:contains(Delete)').length, 'sidebar should not have Delete button');
+
+        list.destroy();
+    });
+
     QUnit.test('simple editable rendering', function (assert) {
         assert.expect(12);
 
