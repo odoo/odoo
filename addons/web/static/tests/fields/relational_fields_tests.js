@@ -5084,6 +5084,52 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2manytag in one2many, onchange, some modifiers, and more than one page', function (assert) {
+        assert.expect(9);
+
+        this.data.partner.records[0].turtles = [1,2,3];
+
+        this.data.partner.onchanges.turtles = function () {};
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="top" limit="2">' +
+                            '<field name="turtle_foo"/>' +
+                            '<field name="partner_ids" widget="many2many_tags" attrs="{\'readonly\': [(\'turtle_foo\', \'=\', \'a\')]}"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {mode: 'edit'},
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+        });
+        assert.strictEqual(form.$('.o_data_row').length, 2,
+            'there should be only 2 rows displayed');
+        form.$('.o_list_record_delete').click();
+        form.$('.o_list_record_delete').click();
+
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            'there should be just one remaining row');
+
+        assert.verifySteps([
+            "read",  // initial read on partner
+            "read",  // initial read on turtle
+            "read",  // batched read on partner (field partner_ids)
+            "read",  // after first delete, read on turtle (to fetch 3rd record)
+            "onchange",  // after first delete, onchange on field turtles
+            "onchange"   // onchange after second delete
+        ]);
+
+        form.destroy();
+    });
+
     QUnit.test('load view for x2many in one2many', function (assert) {
         assert.expect(2);
 
