@@ -378,15 +378,18 @@ class PaymentTxOgone(models.Model):
 
         direct_order_url = 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % (self.acquirer_id.environment)
 
-        _logger.debug("Ogone data %s", pformat(data))
+        logged_data = data.copy()
+        logged_data.pop('PSWD')
+        _logger.info("ogone_s2s_do_transaction: Sending values to URL %s, values:\n%s", direct_order_url, pformat(logged_data))
         result = requests.post(direct_order_url, data=data).content
-        _logger.debug('Ogone response = %s', result)
 
         try:
             tree = objectify.fromstring(result)
+            _logger.info('ogone_s2s_do_transaction: Values received:\n%s', etree.tostring(tree, pretty_print=True, encoding='utf-8'))
         except etree.XMLSyntaxError:
             # invalid response from ogone
             _logger.exception('Invalid xml response from ogone')
+            _logger.info('ogone_s2s_do_transaction: Values received:\n%s', result)
             raise
 
         return self._ogone_s2s_validate_tree(tree)
@@ -416,15 +419,18 @@ class PaymentTxOgone(models.Model):
 
         direct_order_url = 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % (self.acquirer_id.environment)
 
-        _logger.debug("Ogone data %s", pformat(data))
+        logged_data = data.copy()
+        logged_data.pop('PSWD')
+        _logger.info("ogone_s2s_do_refund: Sending values to URL %s, values:\n%s", direct_order_url, pformat(logged_data))
         result = requests.post(direct_order_url, data=data).content
-        _logger.debug('Ogone response = %s', result)
 
         try:
             tree = objectify.fromstring(result)
+            _logger.info('ogone_s2s_do_refund: Values received:\n%s', etree.tostring(tree, pretty_print=True, encoding='utf-8'))
         except etree.XMLSyntaxError:
             # invalid response from ogone
             _logger.exception('Invalid xml response from ogone')
+            _logger.info('ogone_s2s_do_refund: Values received:\n%s', result)
             raise
 
         return self._ogone_s2s_validate_tree(tree)
@@ -504,15 +510,19 @@ class PaymentTxOgone(models.Model):
 
         query_direct_url = 'https://secure.ogone.com/ncol/%s/querydirect.asp' % (self.acquirer_id.environment)
 
-        _logger.debug("Ogone data %s", pformat(data))
+        logged_data = data.copy()
+        logged_data.pop('PSWD')
+
+        _logger.info("_ogone_s2s_get_tx_status: Sending values to URL %s, values:\n%s", query_direct_url, pformat(logged_data))
         result = requests.post(query_direct_url, data=data).content
-        _logger.debug('Ogone response = %s', result)
 
         try:
             tree = objectify.fromstring(result)
+            _logger.info('_ogone_s2s_get_tx_status: Values received:\n%s', etree.tostring(tree, pretty_print=True, encoding='utf-8'))
         except etree.XMLSyntaxError:
             # invalid response from ogone
             _logger.exception('Invalid xml response from ogone')
+            _logger.info('_ogone_s2s_get_tx_status: Values received:\n%s', result)
             raise
 
         return tree
