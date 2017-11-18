@@ -15,10 +15,10 @@
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
 "Last-Translator: Šarūnas Ažna <sarunas.azna@gmail.com>, 2017\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
@@ -498,7 +498,7 @@ msgid ""
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:187
+#: code:addons/website_forum/controllers/main.py:196
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 #, python-format
 msgid "All"
@@ -515,7 +515,7 @@ msgid "Answer"
 msgstr "Atsakymas"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:501
+#: code:addons/website_forum/models/forum.py:499
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
@@ -699,8 +699,9 @@ msgid "Back to"
 msgstr "Grįžti į"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:324
-#: code:addons/website_forum/controllers/main.py:395
+#: code:addons/website_forum/controllers/main.py:333
+#: code:addons/website_forum/controllers/main.py:335
+#: code:addons/website_forum/controllers/main.py:404
 #, python-format
 msgid "Bad Request"
 msgstr "Netinkamas prašymas"
@@ -1839,20 +1840,20 @@ msgid "Nofollow links"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:870
-#: code:addons/website_forum/models/forum.py:890
+#: code:addons/website_forum/models/forum.py:868
+#: code:addons/website_forum/models/forum.py:888
 #, python-format
 msgid "Not allowed to vote for its own post"
 msgstr "Neleidžiama balsuoti už savo įrašą"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:934
+#: code:addons/website_forum/models/forum.py:932
 #, python-format
 msgid "Not enough karma to create a new Tag"
 msgstr "Nepakankamai karmos sukurti naują žymą"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:491
+#: code:addons/website_forum/models/forum.py:489
 #, python-format
 msgid "Not enough karma to retag."
 msgstr ""
@@ -2048,7 +2049,7 @@ msgid "Posted 100 comments"
 msgstr "Paskelbė 100 komentarų"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:435
+#: code:addons/website_forum/models/forum.py:433
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible"
 msgstr ""
@@ -2104,7 +2105,7 @@ msgid "Question"
 msgstr "Klausimas"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:504
+#: code:addons/website_forum/models/forum.py:502
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
@@ -2142,6 +2143,12 @@ msgid "Question set as favorite by 5 users"
 msgstr "Klausimas 5 vartotojų pažymėtas kaip mėgstamiausias "
 
 #. module: website_forum
+#: code:addons/website_forum/controllers/main.py:335
+#, python-format
+msgid "Question should not be empty."
+msgstr ""
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Question tools"
 msgstr "Klausimo įrankiai"
@@ -2175,7 +2182,7 @@ msgid "Questions"
 msgstr "Klausimai"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:522
+#: code:addons/website_forum/models/forum.py:520
 #, python-format
 msgid "Re: %s"
 msgstr "Re: %s"
@@ -2564,7 +2571,7 @@ msgid ""
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:411
+#: code:addons/website_forum/models/forum.py:409
 #, python-format
 msgid "This forum does not allow %s"
 msgstr "Šis forumas neleidžia %s"
@@ -2612,8 +2619,8 @@ msgid "Title must not be empty"
 msgstr "Pavadinimas negali būti tuščias"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:324
-#: code:addons/website_forum/controllers/main.py:395
+#: code:addons/website_forum/controllers/main.py:333
+#: code:addons/website_forum/controllers/main.py:404
 #, python-format
 msgid "Title should not be empty."
 msgstr "Pavadinimas neturi būti tuščias."
@@ -2853,7 +2860,7 @@ msgstr ""
 "            Prieš tęsiant prašome palaukti, kol moderatorius patvirtins Jūsų ankstesnį įrašą."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:140
+#: code:addons/website_forum/models/forum.py:138
 #, python-format
 msgid ""
 "You cannot choose %s as default post since the forum does not allow it."

@@ -277,7 +277,7 @@ Possible children elements of the list view are:
             filled, and a cross if it is not
         ``handle``
             for ``sequence`` fields, instead of displaying the field's value
-            just displays a dra&drop icon
+            just displays a drag&drop icon
     ``sum``, ``avg``
         displays the corresponding aggregate at the bottom of the column. The
         aggregation is only computed on *currently displayed* records. The
@@ -1058,6 +1058,9 @@ take the following attributes:
   .. warning::
       The dictionnary definition must use double-quotes, ``{'user_id': 100}`` is
       not a valid value
+``create``, ``edit``
+    allows *dis*\ abling the corresponding action in the view by setting the
+    corresponding attribute to ``false``
 ``string``
   string to display next to the consolidation value, if not specified, the label
   of the consolidation field will be used
@@ -1170,7 +1173,7 @@ Possible children elements of the search view are:
         fields don't generate domains.
 
         .. note:: the domain and context are inclusive and both are generated
-                  if if a ``context`` is specified. To only generate context
+                  if a ``context`` is specified. To only generate context
                   values, set ``filter_domain`` to an empty list:
                   ``filter_domain="[]"``
     ``groups``

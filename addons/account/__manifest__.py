@@ -11,7 +11,7 @@ Core mechanisms for the accounting modules. To display the menuitems, install th
     'category': 'Accounting',
     'website': 'https://www.odoo.com/page/billing',
     'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],
-    'depends' : ['base_setup', 'product', 'analytic', 'web_planner', 'portal'],
+    'depends' : ['base_setup', 'product', 'analytic', 'portal'],
     'data': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
@@ -57,7 +57,6 @@ Core mechanisms for the accounting modules. To display the menuitems, install th
         'views/tax_adjustments.xml',
         'wizard/wizard_tax_adjustments_view.xml',
         'views/res_config_settings_views.xml',
-        'views/web_planner_data.xml',
         'views/account_journal_dashboard_view.xml',
         'views/account_portal_templates.xml',
         'report/account_report_payment_receipt_templates.xml',
@@ -66,6 +65,7 @@ Core mechanisms for the accounting modules. To display the menuitems, install th
         'views/account_dashboard_setup_bar.xml',
         'wizard/account_report_tax_view.xml',
         'views/report_tax.xml',
+        'data/service_cron_reverse.xml',
     ],
     'demo': [
         'demo/account_demo.xml',

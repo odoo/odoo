@@ -58,6 +58,23 @@ def get_real_ids(ids):
 def real_id2calendar_id(record_id, date):
     return '%s-%s' % (record_id, date.strftime(VIRTUALID_DATETIME_FORMAT))
 
+def any_id2key(record_id):
+    """ Creates a (real_id: int, thing: str) pair which allows ordering mixed
+    collections of real and virtual events.
+
+    The first item of the pair is the event's real id, the second one is
+    either an empty string (for real events) or the datestring (for virtual
+    ones)
+
+    :param record_id:
+    :type record_id: int | str
+    :rtype: (int, str)
+    """
+    if isinstance(record_id, pycompat.integer_types):
+        return record_id, u''
+
+    (real_id, virtual_id) = record_id.split('-')
+    return int(real_id), virtual_id
 
 def is_calendar_id(record_id):
     return len(str(record_id).split('-')) != 1
@@ -467,7 +484,7 @@ class Alarm(models.Model):
 
     _interval_selection = {'minutes': 'Minute(s)', 'hours': 'Hour(s)', 'days': 'Day(s)'}
 
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', translate=True, required=True)
     type = fields.Selection([('notification', 'Notification'), ('email', 'Email')], 'Type', required=True, default='email')
     duration = fields.Integer('Remind Before', required=True, default=1)
     interval = fields.Selection(list(_interval_selection.items()), 'Unit', required=True, default='hours')
@@ -1124,9 +1141,15 @@ class Meeting(models.Model):
             for key in (order or self._order).split(',')
         ))
         def key(record):
-            return [
-                tools.Reverse(record[name]) if desc else record[name]
+            # first extract the values for each key column (ids need special treatment)
+            vals_spec = (
+                (any_id2key(record[name]) if name == 'id' else record[name], desc)
                 for name, desc in sort_spec
+            )
+            # then Reverse if the value matches a "desc" column
+            return [
+                (tools.Reverse(v) if desc else v)
+                for v, desc in vals_spec
             ]
         return [r['id'] for r in sorted(result_data, key=key)]
 

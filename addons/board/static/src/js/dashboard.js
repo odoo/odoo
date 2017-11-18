@@ -188,13 +188,9 @@ FormRenderer.include({
                 var actionID = $(this).attr('data-id');
                 var newAttrs = _.clone(self.actionsDescr[actionID]);
 
-                if (newAttrs.domain) {
-                    newAttrs.domain = newAttrs.domain_string;
-                    delete(newAttrs.domain_string);
-                }
-                if (newAttrs.context) {
-                    newAttrs.context = newAttrs.context_string;
-                    delete(newAttrs.context_string);
+                /* prepare attributes as they should be saved */
+                if (newAttrs.modifiers) {
+                    newAttrs.modifiers = JSON.stringify(newAttrs.modifiers);
                 }
                 actions.push(newAttrs);
             });

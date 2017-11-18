@@ -9,7 +9,8 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field model="stock.warehouse" name="warehouse_id" search="[]"/>
             <field name="product_id" ref="product.product_delivery_02"/>
-            <!-- <field name="location_id" ref="stock.stock_location_stock"/> -->
+            <field name="location_id" model="stock.location"
+                eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_warehouse_orderpoint_2" model="stock.warehouse.orderpoint">
             <field name="product_max_qty">12.0</field>
@@ -17,7 +18,8 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field model="stock.warehouse" name="warehouse_id" search="[]"/>
             <field name="product_id" ref="product.product_product_20"/>
-            <!-- <field name="location_id" ref="stock.stock_location_stock"/> -->           
+            <field name="location_id" model="stock.location"
+                eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_warehouse_orderpoint_5" model="stock.warehouse.orderpoint">
             <field name="product_max_qty">5.0</field>
@@ -25,7 +27,9 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field model="stock.warehouse" name="warehouse_id" search="[]"/>
             <field name="product_id" ref="product.product_delivery_01"/>
-            <!-- <field name="location_id" ref="stock.stock_location_stock"/> -->
+            <field name="location_id" model="stock.location"
+                eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
+
     </data>
 </odoo>

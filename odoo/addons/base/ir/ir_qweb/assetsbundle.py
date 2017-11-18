@@ -201,12 +201,15 @@ class AssetsBundle(object):
         return self.env['ir.attachment'].sudo().browse(attachment_ids)
 
     def save_attachment(self, type, content, inc=None):
+        assert type in ('js', 'css')
         ira = self.env['ir.attachment']
 
         fname = '%s%s.%s' % (self.name, ('' if inc is None else '.%s' % inc), type)
+        mimetype = 'application/javascript' if type == 'js' else 'text/css'
         values = {
             'name': "/web/content/%s" % type,
             'datas_fname': fname,
+            'mimetype' : mimetype,
             'res_model': 'ir.ui.view',
             'res_id': False,
             'type': 'binary',
@@ -388,7 +391,7 @@ class AssetsBundle(object):
             if '.' not in ref and line not in imports and not ref.startswith(('.', '/', '~')):
                 imports.append(line)
                 return line
-            msg = "Local import '%s' is forbidden for security reasons." % ref
+            msg = "Local import '%s' is forbidden for security reasons. Please remove all @import \"your_file.less\" imports in your custom less files. In Odoo you have to import all less files in the assets, and not through the @import statement." % ref
             _logger.warning(msg)
             self.css_errors.append(msg)
             return ''

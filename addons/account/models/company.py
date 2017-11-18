@@ -24,6 +24,8 @@ class ResCompany(models.Model):
     bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts', oldname="bank_account_code_char")
     cash_account_code_prefix = fields.Char(string='Prefix of the cash accounts')
     accounts_code_digits = fields.Integer(string='Number of digits in an account code')
+    account_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax")
+    account_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax")
     tax_cash_basis_journal_id = fields.Many2one('account.journal', string="Cash Basis Journal")
     tax_calculation_rounding_method = fields.Selection([
         ('round_per_line', 'Round per Line'),
@@ -271,7 +273,7 @@ Best Regards,''')
             default_journal = self.env['account.journal'].search([('type', '=', 'general'), ('company_id', '=', self.id)], limit=1)
 
             if not default_journal:
-                raise UserError(_("No miscellanous journal could be found. Please create one before proceeding."))
+                raise UserError(_("No miscellaneous journal could be found. Please create one before proceeding."))
 
             self.account_opening_move_id = self.env['account.move'].create({
                 'name': _('Opening Journal Entry'),

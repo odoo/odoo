@@ -1079,6 +1079,7 @@ actual arch.
             relativedelta=relativedelta,
             xmlid=self.key,
             viewid=self.id,
+            to_text=pycompat.to_text,
         )
         return qcontext
 

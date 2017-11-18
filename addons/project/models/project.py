@@ -870,11 +870,11 @@ class Task(models.Model):
 class ProjectTags(models.Model):
     """ Tags of project's tasks """
     _name = "project.tags"
-    _description = "Tags of project's tasks"
+    _description = "Tasks Tags"
 
     name = fields.Char(required=True)
     color = fields.Integer(string='Color Index', default=10)
 
     _sql_constraints = [
-        ('name_uniq', 'unique (name)', "Tag name already exists !"),
+        ('name_uniq', 'unique (name)', "Tag name already exists!"),
     ]

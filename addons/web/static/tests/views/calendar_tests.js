@@ -21,7 +21,8 @@ CalendarRenderer.include({
 
 var createView = testUtils.createView;
 
-var initialDate = new Date("2016-12-12T08:00:00Z");
+var initialDate = new Date(2016, 11, 12, 8, 0, 0);
+initialDate = new Date(initialDate.getTime() - initialDate.getTimezoneOffset()*60*1000);
 
 
 QUnit.module('Views', {
@@ -31,15 +32,15 @@ QUnit.module('Views', {
             event: {
                 fields: {
                     id: {string: "ID", type: "integer"},
-                    user_id: {string: "user", type: "many2one", relation: 'user'},
-                    partner_id: {string: "user", type: "many2one", relation: 'partner', related: 'user_id.partner_id'},
+                    user_id: {string: "user", type: "many2one", relation: 'user', default: session.uid},
+                    partner_id: {string: "user", type: "many2one", relation: 'partner', related: 'user_id.partner_id', default: 1},
                     name: {string: "name", type: "char"},
                     start_date: {string: "start date", type: "date"},
                     stop_date: {string: "stop date", type: "date"},
                     start: {string: "start datetime", type: "datetime"},
                     stop: {string: "stop datetime", type: "datetime"},
                     allday: {string: "allday", type: "boolean"},
-                    partner_ids: {string: "attendees", type: "one2many", relation: 'partner'},
+                    partner_ids: {string: "attendees", type: "one2many", relation: 'partner', default: [[6, 0, [1]]]},
                     type: {string: "type", type: "integer"},
                 },
                 records: [
@@ -1085,7 +1086,6 @@ QUnit.module('Views', {
         assert.strictEqual($('#ui-datepicker-div:empty').length, 0, "should have a clean body");
     });
 
-
     QUnit.test('readonly date_start field', function (assert) {
         assert.expect(4);
 
@@ -1203,6 +1203,305 @@ QUnit.module('Views', {
         calendar.$('.o_calendar_filter_item[data-value=all] input').click();
         assert.strictEqual(calendar.$('.fc-event').length, 9,
             "should display 9 events on the week");
+
+        calendar.destroy();
+    });
+
+    QUnit.test('create event with filters', function (assert) {
+        assert.expect(7);
+
+        this.data.event.fields.user_id.default = 5;
+        this.data.event.fields.partner_id.default = 3;
+        this.data.user.records.push({id: 5, display_name: "user 5", partner_id: 3});
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'event_open_popup="true" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="week" '+
+                'attendee="partner_ids" '+
+                'color="partner_id">'+
+                    '<field name="name"/>'+
+                    '<filter name="user_id" avatar_field="image"/>'+
+                    '<field name="partner_ids" write_model="filter_partner" write_field="partner_id"/>'+
+            '</calendar>',
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        var $view = $('#qunit-fixture').contents();
+        $view.prependTo('body'); // => select with click position
+
+        calendar.$('.o_calendar_filter_item[data-value=4] input').click();
+
+        assert.strictEqual(calendar.$('.o_calendar_filter_item').length, 5, "should display 5 filter items");
+        assert.strictEqual(calendar.$('.fc-event').length, 3, "should display 3 events");
+
+        // quick create a record
+        var left = calendar.$('.fc-bg td:eq(4)').offset().left+15;
+        var top = calendar.$('.fc-slats tr:eq(4) td:first').offset().top+15;
+        try {
+            testUtils.triggerPositionalMouseEvent(left, top, "mousedown");
+        } catch (e) {
+            calendar.destroy();
+            $view.remove();
+            throw new Error('The test fails to simulate a click in the screen. Your screen is probably too small or your dev tools is open.');
+        }
+        testUtils.triggerPositionalMouseEvent(left, top + 200, "mousemove");
+        testUtils.triggerPositionalMouseEvent(left, top + 200, "mouseup");
+
+        $('.modal-body input:first').val('coucou').trigger('input');
+        $('.modal button.btn:contains(Create)').trigger('click');
+
+        assert.strictEqual(calendar.$('.o_calendar_filter_item').length, 6, "should add the missing filter (active)");
+        assert.strictEqual(calendar.$('.fc-event').length, 4, "should display the created item");
+
+        // change default value for quick create an hide record
+        this.data.event.fields.user_id.default = 4;
+        this.data.event.fields.partner_id.default = 4;
+
+        // quick create and other record
+        left = calendar.$('.fc-bg td:eq(3)').offset().left+15;
+        top = calendar.$('.fc-slats tr:eq(4) td:first').offset().top+15;
+        testUtils.triggerPositionalMouseEvent(left, top, "mousedown");
+        testUtils.triggerPositionalMouseEvent(left, top + 200, "mousemove");
+        testUtils.triggerPositionalMouseEvent(left, top + 200, "mouseup");
+
+        $('.modal-body input:first').val('coucou 2').trigger('input');
+        $('.modal button.btn:contains(Create)').trigger('click');
+
+        assert.strictEqual(calendar.$('.o_calendar_filter_item').length, 6, "should have the same filters");
+        assert.strictEqual(calendar.$('.fc-event').length, 4, "should not display the created item");
+
+        calendar.$('.o_calendar_filter_item[data-value=4] input').click();
+
+        assert.strictEqual(calendar.$('.fc-event').length, 11, "should display all records");
+
+        calendar.destroy();
+        $view.remove();
+    });
+
+    QUnit.test('create event with filters (no quickCreate)', function (assert) {
+        assert.expect(4);
+
+        this.data.event.fields.user_id.default = 5;
+        this.data.event.fields.partner_id.default = 3;
+        this.data.user.records.push({
+            id: 5,
+            display_name: "user 5",
+            partner_id: 3
+        });
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'event_open_popup="true" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="week" '+
+                'attendee="partner_ids" '+
+                'color="partner_id">'+
+                    '<field name="name"/>'+
+                    '<filter name="user_id" avatar_field="image"/>'+
+                    '<field name="partner_ids" write_model="filter_partner" write_field="partner_id"/>'+
+            '</calendar>',
+            archs: {
+                "event,false,form":
+                    '<form>'+
+                        '<group>'+
+                            '<field name="name"/>'+
+                            '<field name="start"/>'+
+                            '<field name="stop"/>'+
+                            '<field name="user_id"/>'+
+                            '<field name="partner_id" invisible="1"/>'+
+                        '</group>'+
+                    '</form>',
+            },
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        var $view = $('#qunit-fixture').contents();
+        $view.prependTo('body'); // => select with click position
+
+        calendar.$('.o_calendar_filter_item[data-value=4] input').click();
+
+        assert.strictEqual(calendar.$('.o_calendar_filter_item').length, 5, "should display 5 filter items");
+        assert.strictEqual(calendar.$('.fc-event').length, 3, "should display 3 events");
+
+        // quick create a record
+        var left = calendar.$('.fc-bg td:eq(4)').offset().left+15;
+        var top = calendar.$('.fc-slats tr:eq(4) td:first').offset().top+15;
+        try {
+            testUtils.triggerPositionalMouseEvent(left, top, "mousedown");
+        } catch (e) {
+            calendar.destroy();
+            $view.remove();
+            throw new Error('The test fails to simulate a click in the screen. Your screen is probably too small or your dev tools is open.');
+        }
+        testUtils.triggerPositionalMouseEvent(left, top + 200, "mousemove");
+        testUtils.triggerPositionalMouseEvent(left, top + 200, "mouseup");
+
+        $('.modal-body input:first').val('coucou').trigger('input');
+
+        $('.modal button.btn:contains(Edit)').trigger('click');
+        $('.modal button.btn:contains(Save)').trigger('click');
+
+        assert.strictEqual(calendar.$('.o_calendar_filter_item').length, 6, "should add the missing filter (active)");
+        assert.strictEqual(calendar.$('.fc-event').length, 4, "should display the created item");
+
+        calendar.destroy();
+        $view.remove();
+    });
+
+    QUnit.test('Update event with filters', function (assert) {
+        assert.expect(4);
+
+        var records = this.data.user.records;
+        records.push({
+            id: 5,
+            display_name: "user 5",
+            partner_id: 3
+        });
+
+        this.data.event.onchanges = {
+            user_id: function (obj) {
+                obj.partner_id = _.findWhere(records, {id:obj.user_id}).partner_id;
+            }
+        };
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'event_open_popup="true" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="week" '+
+                'attendee="partner_ids" '+
+                'color="partner_id">'+
+                    '<field name="name"/>'+
+                    '<filter name="user_id" avatar_field="image"/>'+
+                    '<field name="partner_ids" write_model="filter_partner" write_field="partner_id"/>'+
+            '</calendar>',
+            archs: {
+                "event,false,form":
+                    '<form>'+
+                        '<group>'+
+                            '<field name="name"/>'+
+                            '<field name="start"/>'+
+                            '<field name="stop"/>'+
+                            '<field name="user_id"/>'+
+                            '<field name="partner_ids" widget="many2many_tags"/>'+
+                        '</group>'+
+                    '</form>',
+            },
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        calendar.$('.o_calendar_filter_item[data-value=4] input').click();
+
+        assert.strictEqual(calendar.$('.o_calendar_filter_item').length, 5, "should display 5 filter items");
+        assert.strictEqual(calendar.$('.fc-event').length, 3, "should display 3 events");
+
+        calendar.$('.fc-event:contains(event 2) .fc-content').trigger('click');
+        $('.modal button.btn:contains(Edit)').trigger('click');
+        $('.modal .o_field_widget[name="user_id"] input').trigger('click');
+        $('.ui-menu-item a:contains(user 5)').trigger('mouseenter').trigger('click');
+        $('.modal button.btn:contains(Save)').trigger('click');
+
+        assert.strictEqual(calendar.$('.o_calendar_filter_item').length, 6, "should add the missing filter (active)");
+        assert.strictEqual(calendar.$('.fc-event').length, 3, "should display the updated item");
+
+        calendar.destroy();
+    });
+
+    QUnit.test('change pager with filters', function (assert) {
+        assert.expect(3);
+
+        this.data.user.records.push({
+            id: 5,
+            display_name: "user 5",
+            partner_id: 3
+        });
+        this.data.event.records.push({
+            id: 7,
+            user_id: 5,
+            partner_id: 3,
+            name: "event 7",
+            start: "2016-12-06 04:00:00",
+            stop: "2016-12-06 08:00:00",
+            allday: false,
+            partner_ids: [1,2,3],
+            type: 1
+        }, {
+            id: 8,
+            user_id: session.uid,
+            partner_id: 1,
+            name: "event 8",
+            start: "2016-12-07 04:00:00",
+            stop: "2016-12-07 08:00:00",
+            allday: false,
+            partner_ids: [1,2,3],
+            type: 1
+        },{
+            id: 9,
+            user_id: 4,
+            partner_id: 4,
+            name: "event 9",
+            start: "2016-12-08 04:00:00",
+            stop: "2016-12-08 08:00:00",
+            allday: false,
+            partner_ids: [1,2,3],
+            type: 1
+        });
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'event_open_popup="true" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="week" '+
+                'attendee="partner_ids" '+
+                'color="partner_id">'+
+                    '<field name="name"/>'+
+                    '<filter name="user_id" avatar_field="image"/>'+
+                    '<field name="partner_ids" write_model="filter_partner" write_field="partner_id"/>'+
+            '</calendar>',
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        calendar.$('.o_calendar_filter_item[data-value=4] input').click();
+        $('.o_calendar_button_prev').click();
+
+        assert.strictEqual(calendar.$('.o_calendar_filter_item').length, 6, "should display 6 filter items");
+        assert.strictEqual(calendar.$('.fc-event').length, 2, "should display 2 events");
+        assert.strictEqual(calendar.$('.fc-event .o_field_name').text().replace(/\s/g, ''), "event7event8",
+            "should display 2 events");
 
         calendar.destroy();
     });

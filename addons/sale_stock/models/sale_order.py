@@ -34,11 +34,10 @@ class SaleOrder(models.Model):
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
 
     @api.multi
-    def action_confirm(self):
-        result = super(SaleOrder, self).action_confirm()
+    def _action_confirm(self):
+        super(SaleOrder, self)._action_confirm()
         for order in self:
             order.order_line._action_launch_procurement_rule()
-        return result
 
     @api.depends('picking_ids')
     def _compute_picking_ids(self):
@@ -177,9 +176,12 @@ class SaleOrderLine(models.Model):
                             (self.product_uom_qty, self.product_uom.name, product.virtual_available, product.uom_id.name, self.order_id.warehouse_id.name)
                     # We check if some products are available in other warehouses.
                     if float_compare(product.virtual_available, self.product_id.virtual_available, precision_digits=precision) == -1:
-                        message += _('\nThere are %s %s available accross all warehouses.') % \
+                        message += _('\nThere are %s %s available across all warehouses.\n\n') % \
                                 (self.product_id.virtual_available, product.uom_id.name)
-
+                        for warehouse in self.env['stock.warehouse'].search([]):
+                            quantity = self.product_id.with_context(warehouse=warehouse.id).virtual_available
+                            if quantity > 0:
+                                message += "%s: %s %s\n" % (warehouse.name, quantity, self.product_id.uom_id.name)
                     warning_mess = {
                         'title': _('Not enough inventory!'),
                         'message' : message

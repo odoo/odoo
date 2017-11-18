@@ -133,8 +133,8 @@ class SaleOrder(models.Model):
     confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sales order is confirmed.", oldname="date_confirm")
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, index=True, track_visibility='always')
-    partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Invoice address for current sales order.")
-    partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Delivery address for current sales order.")
+    partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]}, help="Invoice address for current sales order.")
+    partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]}, help="Delivery address for current sales order.")
 
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current sales order.")
     currency_id = fields.Many2one("res.currency", related='pricelist_id.currency_id', string="Currency", readonly=True, required=True)
@@ -497,6 +497,13 @@ class SaleOrder(models.Model):
         }
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
+    def message_post(self, **kwargs):
+        if self.env.context.get('mark_so_as_sent'):
+            self.filtered(lambda o: o.state == 'draft').write({'state': 'sent'})
+        return super(SaleOrder, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
+
+    @api.multi
     def force_quotation_send(self):
         for order in self:
             email_act = order.action_quotation_send()
@@ -515,7 +522,7 @@ class SaleOrder(models.Model):
         self.write({'state': 'sale'})
 
     @api.multi
-    def action_confirm(self):
+    def _action_confirm(self):
         for order in self.filtered(lambda order: order.partner_id not in order.message_partner_ids):
             order.message_subscribe([order.partner_id.id])
         self.write({
@@ -524,14 +531,19 @@ class SaleOrder(models.Model):
         })
         if self.env.context.get('send_email'):
             self.force_quotation_send()
-        if self.env['ir.config_parameter'].sudo().get_param('sale.auto_done_setting'):
-            self.action_done()
 
         # create an analytic account if at least an expense product
         if any([expense_policy != 'no' for expense_policy in self.order_line.mapped('product_id.expense_policy')]):
             if not self.analytic_account_id:
                 self._create_analytic_account()
 
+        return True
+
+    @api.multi
+    def action_confirm(self):
+        self._action_confirm()
+        if self.env['ir.config_parameter'].sudo().get_param('sale.auto_done_setting'):
+            self.action_done()
         return True
 
     @api.multi
@@ -706,7 +718,10 @@ class SaleOrderLine(models.Model):
         for line in self:
             line.qty_delivered_updateable = (line.order_id.state == 'sale') and (line.product_id.service_type == 'manual') and (line.product_id.expense_policy == 'no')
 
-    @api.depends('invoice_lines',
+    @api.depends('state',
+                 'price_reduce_taxinc',
+                 'qty_delivered',
+                 'invoice_lines',
                  'invoice_lines.price_total',
                  'invoice_lines.invoice_id',
                  'invoice_lines.invoice_id.state',
@@ -723,8 +738,15 @@ class SaleOrderLine(models.Model):
             invoiced_amount_total = sum(invoice_lines.mapped('price_total'))
             # Total refunded amount
             refund_amount_total = sum(refund_invoices.mapped('amount_total'))
+            # Total of remaining amount to invoice on the sale ordered (and draft invoice included) to support upsell (when
+            # delivered quantity is higher than ordered one). Draft invoice are ignored on purpose, the 'to invoice' should
+            # come only from the SO lines.
+            total_sale_line = line.price_total
+            if line.product_id.invoice_policy == 'delivery':
+                total_sale_line = line.price_reduce_taxinc * line.qty_delivered
+
             line.amt_invoiced = invoiced_amount_total - refund_amount_total
-            line.amt_to_invoice = line.price_total - invoiced_amount_total
+            line.amt_to_invoice = (total_sale_line - invoiced_amount_total) if line.state in ['sale', 'done'] else 0.0
 
     @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'order_id.state')
     def _get_to_invoice_qty(self):
@@ -803,7 +825,7 @@ class SaleOrderLine(models.Model):
     def create(self, values):
         values.update(self._prepare_add_missing_fields(values))
         line = super(SaleOrderLine, self).create(values)
-        if line.state == 'sale':
+        if line.order_id.state == 'sale':
             msg = _("Extra line with %s ") % (line.product_id.display_name,)
             line.order_id.message_post(body=msg)
             # create an analytic account if at least an expense product
@@ -895,8 +917,8 @@ class SaleOrderLine(models.Model):
     customer_lead = fields.Float(
         'Delivery Lead Time', required=True, default=0.0,
         help="Number of days between the order confirmation and the shipping of the products to the customer", oldname="delay")
-    amt_to_invoice = fields.Monetary(string='Amount To Invoice', compute='_compute_invoice_amount', store=True)
-    amt_invoiced = fields.Monetary(string='Amount Invoiced', compute='_compute_invoice_amount', store=True)
+    amt_to_invoice = fields.Monetary(string='Amount To Invoice', compute='_compute_invoice_amount', compute_sudo=True, store=True)
+    amt_invoiced = fields.Monetary(string='Amount Invoiced', compute='_compute_invoice_amount', compute_sudo=True, store=True)
 
     layout_category_id = fields.Many2one('sale.layout_category', string='Section')
     layout_category_sequence = fields.Integer(string='Layout Sequence')
@@ -966,15 +988,13 @@ class SaleOrderLine(models.Model):
         # TO DO: move me in master/saas-16 on sale.order
         if self.order_id.pricelist_id.discount_policy == 'with_discount':
             return product.with_context(pricelist=self.order_id.pricelist_id.id).price
-        price, rule_id = self.order_id.pricelist_id.get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
-        pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
-        if (pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id.discount_policy == 'with_discount'):
-            price, rule_id = pricelist_item.base_pricelist_id.get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
-            return price
-        else:
-            from_currency = self.order_id.company_id.currency_id
-            product_price = product[pricelist_item.base] if (pricelist_item and pricelist_item.base != 'pricelist') else product.lst_price
-            return from_currency.compute(product_price, self.order_id.pricelist_id.currency_id)
+        final_price, rule_id = self.order_id.pricelist_id.get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
+        context_partner = dict(self.env.context, partner_id=self.order_id.partner_id.id, date=self.order_id.date_order)
+        base_price, currency_id = self.with_context(context_partner)._get_real_price_currency(self.product_id, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
+        if currency_id != self.order_id.pricelist_id.currency_id.id:
+            base_price = self.env['res.currency'].browse(currency_id).with_context(context_partner).compute(base_price, self.order_id.pricelist_id.currency_id)
+        # negative discounts (= surcharge) are included in the display price
+        return max(base_price, final_price)
 
     @api.multi
     @api.onchange('product_id')
@@ -1137,11 +1157,10 @@ class SaleOrderLine(models.Model):
 
         price, rule_id = self.order_id.pricelist_id.with_context(pricelist_context).get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
         new_list_price, currency_id = self.with_context(context_partner)._get_real_price_currency(self.product_id, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
-        new_list_price = self.env['account.tax']._fix_tax_included_price_company(new_list_price, self.product_id.taxes_id, self.tax_id, self.company_id)
 
         if new_list_price != 0:
-            if self.product_id.company_id and self.order_id.pricelist_id.currency_id != self.product_id.company_id.currency_id:
-                # new_list_price is in company's currency while price in pricelist currency
+            if self.order_id.pricelist_id.currency_id.id != currency_id:
+                # we need new_list_price in the same currency as price, which is in the SO's pricelist's currency
                 new_list_price = self.env['res.currency'].browse(currency_id).with_context(context_partner).compute(new_list_price, self.order_id.pricelist_id.currency_id)
             discount = (new_list_price - price) / new_list_price * 100
             if discount > 0:

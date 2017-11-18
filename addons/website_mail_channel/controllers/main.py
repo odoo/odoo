@@ -49,7 +49,10 @@ class MailGroup(http.Controller):
             [], ['res_id'])
         message_data = dict((message['res_id'], message['res_id_count']) for message in messages)
 
-        group_data = dict((group.id, {'monthly_message_nbr': message_data.get(group.id, 0)}) for group in groups)
+        group_data = dict(
+            (group.id, {'monthly_message_nbr': message_data.get(group.id, 0),
+                        'members_count': len(group.channel_partner_ids)})
+            for group in groups.sudo())
         return request.render('website_mail_channel.mail_channels', {'groups': groups, 'group_data': group_data})
 
     @http.route(["/groups/is_member"], type='json', auth="public", website=True)
@@ -228,15 +231,19 @@ class MailGroup(http.Controller):
     def confirm_unsubscribe(self, channel, partner_id, token, **kw):
         subscriber = request.env['mail.channel.partner'].search([('channel_id', '=', channel.id), ('partner_id', '=', partner_id)])
         if not subscriber:
+            partner = request.env['res.partner'].browse(partner_id).sudo().exists()
             # FIXME: remove try/except in master
             try:
-                return request.render(
-                    'website_mail_channel.not_subscribed', {
-                    'partner_id': partner_id
-                })
+                response = request.render(
+                    'website_mail_channel.not_subscribed',
+                    {'partner_id': partner})
+                # make sure the rendering (and thus error if template is
+                # missing) happens inside the try block
+                response.flatten()
+                return response
             except ValueError:
                 return _("The address %s is already unsubscribed or was never subscribed to any mailing list") % (
-                    partner_id.email
+                    partner.email
                 )
 
         subscriber_token = channel._generate_action_token(partner_id, action='unsubscribe')

@@ -27,7 +27,7 @@ class HrExpense(models.Model):
     tax_ids = fields.Many2many('account.tax', 'expense_tax', 'expense_id', 'tax_id', string='Taxes', states={'done': [('readonly', True)], 'post': [('readonly', True)]})
     untaxed_amount = fields.Float(string='Subtotal', store=True, compute='_compute_amount', digits=dp.get_precision('Account'))
     total_amount = fields.Monetary("Total", compute='_compute_amount', store=True, currency_field='currency_id', digits=dp.get_precision('Account'))
-    total_amount_company = fields.Monetary("Total submitted amount in company currency", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id', digits=dp.get_precision('Account'))
+    total_amount_company = fields.Monetary("Total (Company Currency)", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id', digits=dp.get_precision('Account'))
     company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.user.company_id)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.user.company_id.currency_id)
     company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='sheet_id.currency_id', store=True)
@@ -454,13 +454,7 @@ class HrExpenseSheet(models.Model):
 
     @api.model
     def create(self, vals):
-        # Add the followers at creation, so they can be notified
-        if vals.get('employee_id'):
-            employee = self.env['hr.employee'].browse(vals['employee_id'])
-            users = self._get_users_to_subscribe(employee=employee) - self.env.user
-            vals['message_follower_ids'] = []
-            for partner in users.mapped('partner_id'):
-                vals['message_follower_ids'] += self.env['mail.followers']._add_follower_command(self._name, [], {partner.id: None}, {})[0]
+        self._create_set_followers(vals)
         sheet = super(HrExpenseSheet, self).create(vals)
         self.check_consistency()
         return sheet
@@ -512,6 +506,20 @@ class HrExpenseSheet(models.Model):
         users = self._get_users_to_subscribe()
         self.message_subscribe_users(user_ids=users.ids)
 
+    @api.model
+    def _create_set_followers(self, values):
+        # Add the followers at creation, so they can be notified
+        employee_id = values.get('employee_id')
+        if not employee_id:
+            return
+
+        employee = self.env['hr.employee'].browse(employee_id)
+        users = self._get_users_to_subscribe(employee=employee) - self.env.user
+        values['message_follower_ids'] = []
+        MailFollowers = self.env['mail.followers']
+        for partner in users.mapped('partner_id'):
+            values['message_follower_ids'] += MailFollowers._add_follower_command(self._name, [], {partner.id: None}, {})[0]
+
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
         self.address_id = self.employee_id.address_home_id
@@ -527,28 +535,14 @@ class HrExpenseSheet(models.Model):
         for sheet in self:
             sheet.is_multiple_currency = len(sheet.expense_line_ids.mapped('currency_id')) > 1
 
-    # FIXME: A 4 command is missing to explicitly declare the one2many relation
-    # between the sheet and the lines when using 'default_expense_line_ids':[ids]
-    # in the context. A fix from chm-odoo should come since
-    # several saas versions but sadly I had to add this hack to avoid this
-    # issue
-    @api.model
-    def _add_missing_default_values(self, values):
-        values = super(HrExpenseSheet, self)._add_missing_default_values(values)
-        if self.env.context.get('default_expense_line_ids', False):
-            lines_to_add = []
-            for line in values.get('expense_line_ids', []):
-                if line[0] == 1:
-                    lines_to_add.append([4, line[1], False])
-            values['expense_line_ids'] = lines_to_add + values['expense_line_ids']
-        return values
-
     @api.one
     def _compute_attachment_number(self):
         self.attachment_number = sum(self.expense_line_ids.mapped('attachment_number'))
 
     @api.multi
     def refuse_sheet(self, reason):
+        if not self.user_has_groups('hr_expense.group_hr_expense_user'):
+            raise UserError(_("Only HR Officers can refuse expenses"))
         self.write({'state': 'cancel'})
         for sheet in self:
             sheet.message_post_with_view('hr_expense.hr_expense_template_refuse_reason',
@@ -556,6 +550,8 @@ class HrExpenseSheet(models.Model):
 
     @api.multi
     def approve_expense_sheets(self):
+        if not self.user_has_groups('hr_expense.group_hr_expense_user'):
+            raise UserError(_("Only HR Officers can approve expenses"))
         self.write({'state': 'approve', 'responsible_id': self.env.user.id})
 
     @api.multi

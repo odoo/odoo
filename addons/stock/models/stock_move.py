@@ -108,7 +108,7 @@ class StockMove(models.Model):
              "* Done: When the shipment is processed, the state is \'Done\'.")
     price_unit = fields.Float(
         'Unit Price', help="Technical field used to record the product cost set by the user during a picking confirmation (when costing "
-                           "method used is 'average price' or 'real'). Value given in company currency and in product uom.")  # as it's a technical field, we intentionally don't provide the digits attribute
+                           "method used is 'average price' or 'real'). Value given in company currency and in product uom.", copy=False)  # as it's a technical field, we intentionally don't provide the digits attribute
     backorder_id = fields.Many2one('stock.picking', 'Back Order of', related='picking_id.backorder_id', index=True)
     origin = fields.Char("Source Document")
     procure_method = fields.Selection([
@@ -517,7 +517,7 @@ class StockMove(models.Model):
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
         return [
-            'product_id', 'price_unit', 'product_packaging',
+            'product_id', 'price_unit', 'product_packaging', 'procure_method',
             'product_uom', 'restrict_partner_id', 'scrapped', 'origin_returned_move_id'
         ]
 
@@ -525,8 +525,8 @@ class StockMove(models.Model):
     def _prepare_merge_move_sort_method(self, move):
         move.ensure_one()
         return [
-            move.product_id.id, move.price_unit, move.product_packaging.id, move.product_uom.id,
-            move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id
+            move.product_id.id, move.price_unit, move.product_packaging.id, move.procure_method, 
+            move.product_uom.id, move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id
         ]
 
     def _merge_moves(self):
@@ -607,9 +607,13 @@ class StockMove(models.Model):
         if not self.product_id or self.product_qty < 0.0:
             self.product_qty = 0.0
         if self.product_qty < self._origin.product_qty:
-            return {'warning': _("By changing this quantity here, you accept the "
-                                 "new quantity as complete: Odoo will not "
-                                 "automatically generate a back order.")}
+            warning_mess = {
+                'title': _('Quantity decreased!'),
+                'message' : _("By changing this quantity here, you accept the "
+                              "new quantity as complete: Odoo will not "
+                              "automatically generate a back order."),
+            }
+            return {'warning': warning_mess}
 
     @api.onchange('product_id')
     def onchange_product_id(self):
@@ -651,7 +655,16 @@ class StockMove(models.Model):
                 ('picking_type_id', '=', move.picking_type_id.id),
                 ('printed', '=', False),
                 ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])], limit=1)
-            if not picking:
+            if picking:
+                if picking.partner_id.id != move.partner_id.id or picking.origin != move.origin:
+                    # If a picking is found, we'll append `move` to its move list and thus its
+                    # `partner_id` and `ref` field will refer to multiple records. In this
+                    # case, we chose to  wipe them.
+                    picking.write({
+                        'partner_id': False,
+                        'origin': False,
+                    })
+            else:
                 recompute = True
                 picking = Picking.create(move._get_new_picking_values())
             move.write({'picking_id': picking.id})
@@ -1010,7 +1023,7 @@ class StockMove(models.Model):
             rounding = move.product_uom.rounding
             if float_compare(move.quantity_done, move.product_uom_qty, precision_rounding=rounding) < 0:
                 # Need to do some kind of conversion here
-                qty_split = move.product_uom._compute_quantity(move.product_uom_qty - move.quantity_done, move.product_id.uom_id)
+                qty_split = move.product_uom._compute_quantity(move.product_uom_qty - move.quantity_done, move.product_id.uom_id, rounding_method='HALF-UP')
                 new_move = move._split(qty_split)
                 for move_line in move.move_line_ids:
                     if move_line.product_qty and move_line.qty_done:
@@ -1025,6 +1038,13 @@ class StockMove(models.Model):
                 # If you were already putting stock.move.lots on the next one in the work order, transfer those to the new move
                 move.move_line_ids.filtered(lambda x: x.qty_done == 0.0).write({'move_id': new_move})
             move.move_line_ids._action_done()
+        # Check the consistency of the result packages; there should be an unique location across
+        # the contained quants.
+        for result_package in moves_todo\
+                .mapped('move_line_ids.result_package_id')\
+                .filtered(lambda p: p.quant_ids and len(p.quant_ids) > 1):
+            if len(result_package.quant_ids.mapped('location_id')) > 1:
+                raise UserError(_('You should not put the contents of a package in different locations.'))
         picking = self and self[0].picking_id or False
         moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
         moves_todo.mapped('move_dest_ids')._action_assign()

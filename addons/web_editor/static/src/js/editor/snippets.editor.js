@@ -227,7 +227,7 @@ var SnippetEditor = Widget.extend({
 
             var optionName = val.option;
             var $el = val.$el.children('li').clone(true).addClass('snippet-option-' + optionName);
-            var option = new (options.registry[optionName] || options.Class)(self, self.$target, self.$el);
+            var option = new (options.registry[optionName] || options.Class)(self, self.$target, self.$el, val.data);
             self.styles[optionName || _.uniqueId('option')] = option;
             option.__order = i++;
             return option.attachTo($el);
@@ -622,6 +622,7 @@ var SnippetsMenu = Widget.extend({
      * - Remove the 'contentEditable' attributes
      */
     cleanForSave: function () {
+        this.trigger_up('ready_to_clean_for_save');
         _.each(this.snippetEditors, function (snippetEditor) {
             snippetEditor.cleanForSave();
         });

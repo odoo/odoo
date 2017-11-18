@@ -13,6 +13,7 @@
 # Antonio Trueba <atgayol@gmail.com>, 2017
 # Cristóbal Martí Oliver <info@moblesmarti.com>, 2017
 # José Vicente <txusev@gmail.com>, 2017
+# Raquel Iciarte <ric@odoo.com>, 2017
 # Daniel Blanco <daniel@blancomartin.com.ar>, 2017
 # RGB Consulting <odoo@rgbconsulting.com>, 2017
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
@@ -24,10 +25,8 @@
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2017
 # Alejandro Santana <alejandrosantana@anubia.es>, 2017
 # oihane <oihanecruce@gmail.com>, 2017
-# Raquel Iciarte <ric@odoo.com>, 2017
 # Eric Antones <eantones@users.noreply.github.com>, 2017
 # Ivan Nieto <ivan.n.s@tuta.io>, 2017
-# Gelo Joga Landoo <gj@landoo.es>, 2017
 # Sergio Flores <vitavitae1@gmail.com>, 2017
 # alvaro hdz <alaherma@gmail.com>, 2017
 # Nicole Kist <nki@odoo.com>, 2017
@@ -36,13 +35,14 @@
 # Daniel Santibáñez Polanco <dansanti@gmail.com>, 2017
 # Gafic SLP Albert Cabedo (GAFIC, SLP) <albertgafic@gmail.com>, 2017
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
+# Pierre-Antoine Magnet <pma@odoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-10 11:34+0000\n"
 "PO-Revision-Date: 2017-10-10 11:34+0000\n"
-"Last-Translator: Christopher Ormaza <chris.ormaza@gmail.com>, 2017\n"
+"Last-Translator: Pierre-Antoine Magnet <pma@odoo.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,7 +55,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:816
 #, python-format
 msgid " REFUND"
-msgstr "ABONO"
+msgstr "REEMBOLSO"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_nbr_lines
@@ -66,32 +66,32 @@ msgstr "# de líneas"
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "$ 3.12"
-msgstr ""
+msgstr "$ 3.12"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "$ 4.40"
-msgstr ""
+msgstr "$ 4.40"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "$ 4.50"
-msgstr ""
+msgstr "$ 4.50"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "$ 8.50"
-msgstr ""
+msgstr "$ 8.50"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1474
 #, python-format
 msgid "% discount"
-msgstr "% descuento"
+msgstr "% discount"
 
 #. module: point_of_sale
 #. openerp-web
@@ -125,7 +125,7 @@ msgstr "<b>Establecer imagen personalizada...</b>"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_snippets
 msgid "<i class=\"fa fa-eye-slash\"/>Hide"
-msgstr ""
+msgstr "<i class=\"fa fa-eye-slash\"/>Ocultar"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1453,7 +1453,7 @@ msgstr "Saldo final"
 #: code:addons/point_of_sale/models/pos_category.py:13
 #, python-format
 msgid "Error ! You cannot create recursive categories."
-msgstr "¡Error! No puede crear categorías recursivas"
+msgstr "¡Error! No puedes crear categorías recursivas."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1506,7 +1506,7 @@ msgstr "Información extra"
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "Fanta"
-msgstr ""
+msgstr "Fanta"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1545,12 +1545,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.fruits_vegetables
 msgid "Fruits and Vegetables"
-msgstr "Frutas y Verduras"
+msgstr "Frutas y vegetales"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "General Information"
-msgstr "Información General"
+msgstr "Información general"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1594,7 +1594,7 @@ msgstr "Manzanas Golden Perlim"
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "Gordon"
-msgstr ""
+msgstr "Gordon"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.pomme_granny_smith

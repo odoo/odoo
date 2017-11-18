@@ -35,7 +35,7 @@ class account_abstract_payment(models.AbstractModel):
         help="Manual: Get paid by cash, check or any other method outside of Odoo.\n"\
         "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"\
         "Check: Pay bill by check and print it from Odoo.\n"\
-        "Batch Deposit: Encash several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit,module account_batch_deposit must be installed.\n"\
+        "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit,module account_batch_deposit must be installed.\n"\
         "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed ")
     payment_method_code = fields.Char(related='payment_method_id.code',
         help="Technical field used to adapt the interface to the payment type selected.", readonly=True)
@@ -132,7 +132,7 @@ class account_register_payments(models.TransientModel):
 
         # Check for selected invoices ids
         if not active_ids:
-            raise UserError(_("Programmation error: wizard action executed without active_ids in context."))
+            raise UserError(_("Programming error: wizard action executed without active_ids in context."))
 
         invoices = self.env['account.invoice'].browse(active_ids)
 
@@ -459,8 +459,8 @@ class account_payment(models.Model):
     def post(self):
         """ Create the journal items for the payment and update the payment's state to 'posted'.
             A journal entry is created containing an item in the source liquidity account (selected journal's default_debit or default_credit)
-            and another in the destination reconciliable account (see _compute_destination_account_id).
-            If invoice_ids is not empty, there will be one reconciliable move line per invoice to reconcile with.
+            and another in the destination reconcilable account (see _compute_destination_account_id).
+            If invoice_ids is not empty, there will be one reconcilable move line per invoice to reconcile with.
             If the payment is a transfer, a second journal entry is created in the destination journal to receive money from the transfer account.
         """
         for rec in self:
@@ -524,7 +524,7 @@ class account_payment(models.Model):
         aml_obj = self.env['account.move.line'].with_context(check_move_validity=False)
         invoice_currency = False
         if self.invoice_ids and all([x.currency_id == self.invoice_ids[0].currency_id for x in self.invoice_ids]):
-            #if all the invoices selected share the same currency, record the paiement in that currency too
+            #if all the invoices selected share the same currency, record the payment in that currency too
             invoice_currency = self.invoice_ids[0].currency_id
         debit, credit, amount_currency, currency_id = aml_obj.with_context(date=self.payment_date).compute_amount_fields(amount, self.currency_id, self.company_id.currency_id, invoice_currency)
 
@@ -589,7 +589,7 @@ class account_payment(models.Model):
         return move
 
     def _create_transfer_entry(self, amount):
-        """ Create the journal entry corresponding to the 'incoming money' part of an internal transfer, return the reconciliable move line
+        """ Create the journal entry corresponding to the 'incoming money' part of an internal transfer, return the reconcilable move line
         """
         aml_obj = self.env['account.move.line'].with_context(check_move_validity=False)
         debit, credit, amount_currency, dummy = aml_obj.with_context(date=self.payment_date).compute_amount_fields(amount, self.currency_id, self.company_id.currency_id)

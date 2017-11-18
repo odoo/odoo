@@ -9,7 +9,7 @@ class ProductTemplate(models.Model):
 
     bom_ids = fields.One2many('mrp.bom', 'product_tmpl_id', 'Bill of Materials')
     bom_count = fields.Integer('# Bill of Material', compute='_compute_bom_count')
-    used_in_bom_count = fields.Integer('# BoM Where Used', compute='_compute_used_in_bom_count')
+    used_in_bom_count = fields.Integer('# of BoM Where is Used', compute='_compute_used_in_bom_count')
     mo_count = fields.Integer('# Manufacturing Orders', compute='_compute_mo_count')
     produce_delay = fields.Float(
         'Manufacturing Lead Time', default=0.0,
@@ -92,5 +92,5 @@ class ProductProduct(models.Model):
             'default_product_tmpl_id': template_ids[0],
             'default_product_id': self.ids[0],
         }
-        action['domain'] = ['|', ('product_id', 'in', [self.ids]), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', template_ids)]
+        action['domain'] = ['|', ('product_id', 'in', self.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', template_ids)]
         return action

@@ -805,7 +805,7 @@ var StatementModel = BasicModel.extend({
                 if (!prop.invalid) {
                     total -= prop.amount;
                     if (isOtherCurrencyId) {
-                        amount_currency -= prop.amount_currency;
+                        amount_currency -= (prop.amount < 0 ? -1 : 1) * Math.abs(prop.amount_currency);
                     }
                 }
             });

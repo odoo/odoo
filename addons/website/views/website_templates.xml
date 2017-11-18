@@ -55,7 +55,6 @@
     <script type="text/javascript" src="/website/static/src/js/menu/edit.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/mobile_view.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/new_content.js"/>
-    <script type="text/javascript" src="/website/static/src/js/menu/planner.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/seo.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/translate.js"/>
 
@@ -578,7 +577,7 @@
     <t t-call="website.404">
         <div class="container">
             <div class="well mt32">
-                <p>This page does not exists, but you can create it as you are administrator of this site.</p>
+                <p>This page does not exist, but you can create it as you are administrator of this site.</p>
                 <a class="btn btn-primary js_disable_on_click" t-attf-href="/website/add/#{ path }#{ from_template and '?template=%s' % from_template }">Create Page</a>
             </div>
             <div class="text-center text-muted">Edit the content below this line to adapt the default "page not found" page.</div>
@@ -884,7 +883,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
   <t t-call="website.layout">
     <div id="wrap">
       <div class="container" id="edit_website_pages">
-          <form class="mt8 pull-right" role="search" t-attf-action="/website/pages_management" method="get">
+          <form class="mt8 pull-right" role="search" t-attf-action="/website/pages" method="get">
               <t t-call="website.website_search_box"/>
           </form>
           <div t-if="searchbar_sortings" class="dropdown pull-right mt8 mr8">

@@ -896,6 +896,9 @@ var BasicModel = AbstractModel.extend({
                 return def.resolve(changedFields);
             }
 
+            def.then(function () {
+                record._isDirty = false;
+            });
             // in the case of a write, only perform the RPC if there are changes to save
             if (method === 'create' || changedFields.length) {
                 var args = method === 'write' ? [[record.data.id], changes] : [changes];
@@ -917,7 +920,6 @@ var BasicModel = AbstractModel.extend({
 
                         // Erase changes as they have been applied
                         record._changes = {};
-                        record._isDirty = false;
 
                         // Update the data directly or reload them
                         if (shouldReload) {
@@ -947,8 +949,8 @@ var BasicModel = AbstractModel.extend({
      */
     addFieldsInfo: function (recordID, viewInfo) {
         var record = this.localData[recordID];
-        record.fields = _.defaults(record.fields, viewInfo.fields);
-        record.fieldsInfo = _.defaults(record.fieldsInfo, viewInfo.fieldsInfo);
+        record.fields = _.extend({}, record.fields, viewInfo.fields);
+        record.fieldsInfo = _.extend({}, record.fieldsInfo, viewInfo.fieldsInfo);
     },
     /**
      * Manually sets a resource as dirty. This is used to notify that a field
@@ -1092,9 +1094,12 @@ var BasicModel = AbstractModel.extend({
      * @param {boolean} [options.doNotSetDirty=false] if this flag is set to
      *   true, then we will not tag the record as dirty.  This should be avoided
      *   for most situations.
+     * @param {boolean} [options.notifyChange=true] if this flag is set to
+     *   false, then we will not notify and not trigger the onchange, even though
+     *   it was changed.
      * @param {string} [options.viewType] current viewType. If not set, we will assume
      *   main viewType from the record
-     * @returns {Deferred}
+     * @returns {Deferred} list of changed fields
      */
     _applyChange: function (recordID, changes, options) {
         var self = this;
@@ -1106,6 +1111,10 @@ var BasicModel = AbstractModel.extend({
         if (!options.doNotSetDirty) {
             record._isDirty = true;
         }
+        var initialData = {};
+        this._visitChildren(record, function (elem) {
+            initialData[elem.id] = $.extend(true, {}, _.pick(elem, 'data', '_changes'));
+        });
 
         // apply changes to local data
         for (var fieldName in changes) {
@@ -1119,6 +1128,10 @@ var BasicModel = AbstractModel.extend({
             }
         }
 
+        if (options.notifyChange === false) {
+            return $.Deferred().resolve(_.keys(changes));
+        }
+
         return $.when.apply($, defs).then(function () {
             var onChangeFields = []; // the fields that have changed and that have an on_change
             for (var fieldName in changes) {
@@ -1130,12 +1143,18 @@ var BasicModel = AbstractModel.extend({
                     }
                 }
             }
-            var onchangeDef;
+            var onchangeDef = $.Deferred();
             if (onChangeFields.length) {
-                onchangeDef = self._performOnChange(record, onChangeFields, options.viewType).then(function (result) {
-                    delete record._warning;
-                    return _.keys(changes).concat(Object.keys(result && result.value || {}));
-                });
+                self._performOnChange(record, onChangeFields, options.viewType)
+                    .then(function (result) {
+                        delete record._warning;
+                        onchangeDef.resolve(_.keys(changes).concat(Object.keys(result && result.value || {})));
+                    }).fail(function () {
+                        self._visitChildren(record, function (elem) {
+                            _.extend(elem, initialData[elem.id]);
+                        });
+                        onchangeDef.resolve({});
+                    });
             } else {
                 onchangeDef = $.Deferred().resolve(_.keys(changes));
             }
@@ -1306,15 +1325,17 @@ var BasicModel = AbstractModel.extend({
                 } else {
                     var fieldInfo = record.fieldsInfo[viewType][name];
                     if (!fieldInfo) {
-                        return; //ignore changes of x2many not in view
+                        return; // ignore changes of x2many not in view
                     }
+                    var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
                     list = self._makeDataPoint({
-                        fieldsInfo: fieldInfo.fieldsInfo,
+                        fields: view ? view.fields : fieldInfo.relatedFields,
+                        fieldsInfo: view ? view.fieldsInfo : fieldInfo.fieldsInfo,
                         modelName: field.relation,
                         parentID: record.id,
                         static: true,
                         type: 'list',
-                        viewType: fieldInfo.viewType,
+                        viewType: view ? view.type : fieldInfo.viewType,
                     });
                 }
                 // TODO: before registering the changes, verify that the x2many
@@ -2305,6 +2326,7 @@ var BasicModel = AbstractModel.extend({
                 var ids = record.data[fieldName] || [];
                 var list = self._makeDataPoint({
                     count: ids.length,
+                    context: record.context,
                     fieldsInfo: fieldsInfo,
                     fields: view ? view.fields : fieldInfo.relatedFields,
                     limit: fieldInfo.limit,
@@ -2643,13 +2665,21 @@ var BasicModel = AbstractModel.extend({
                             }
                             commands[fieldName].push(command);
                         } else if (_.contains(addedIds, list.res_ids[i])) {
-                            // this is a new id
+                            // this is a new id (maybe existing in DB, but new in JS)
                             relRecord = _.findWhere(relRecordAdded, {res_id: list.res_ids[i]});
                             changes = this._generateChanges(relRecord, options);
                             if ('id' in changes) {
+                                // the subrecord already exists in db
                                 delete changes.id;
-                                commands[fieldName].push(x2ManyCommands.update(relRecord.res_id, changes));
+                                if (this.isNew(record.id)) {
+                                    // if the main record is new, link the subrecord to it
+                                    commands[fieldName].push(x2ManyCommands.link_to(relRecord.res_id));
+                                }
+                                if (!_.isEmpty(changes)) {
+                                    commands[fieldName].push(x2ManyCommands.update(relRecord.res_id, changes));
+                                }
                             } else {
+                                // the subrecord is new, so create it
                                 commands[fieldName].push(x2ManyCommands.create(relRecord.ref, changes));
                             }
                         }
@@ -2882,7 +2912,8 @@ var BasicModel = AbstractModel.extend({
      * @returns {boolean}
      */
     _isFieldProtected: function (record, fieldName, viewType) {
-        var fieldInfo = record.fieldsInfo[viewType || record.viewType][fieldName];
+        var fieldInfo = record.fieldsInfo &&
+                        (record.fieldsInfo[viewType || record.viewType][fieldName]);
         if (fieldInfo) {
             var rawModifiers = fieldInfo.modifiers || {};
             var modifiers = this._evalModifiers(record, rawModifiers);
@@ -3239,15 +3270,18 @@ var BasicModel = AbstractModel.extend({
                 });
                 return $.when.apply($, defs)
                     .then(function () {
-                        return self._performOnChange(record, fields_key).then(function () {
+                        var def = $.Deferred();
+                        self._performOnChange(record, fields_key).always(function () {
                             if (record._warning) {
                                 if (params.allowWarning) {
                                     delete record._warning;
                                 } else {
-                                    return $.Deferred().reject();
+                                    def.reject();
                                 }
                             }
+                            def.resolve();
                         });
+                        return def;
                     })
                     .then(function () {
                         return self._fetchRelationalData(record);
@@ -3314,10 +3348,7 @@ var BasicModel = AbstractModel.extend({
      * @param {string[]} fields changed fields
      * @param {string} [viewType] current viewType. If not set, we will assume
      *   main viewType from the record
-     * @returns {Deferred} Note: this deferred cannot fail. It is either in the
-     *   'success' or 'pending' state.  If the onchange rpc fails, it will be
-     *   resolved with an empty dictionary.  Note that the initial change was
-     *   already applied.
+     * @returns {Deferred}
      */
     _performOnChange: function (record, fields, viewType) {
         var self = this;
@@ -3337,9 +3368,7 @@ var BasicModel = AbstractModel.extend({
         var context = this._getContext(record, options);
         var currentData = this._generateOnChangeData(record, {changesOnly: false});
 
-        var def = $.Deferred();
-
-        self._rpc({
+        return self._rpc({
                 model: record.model,
                 method: 'onchange',
                 args: [idList, currentData, fields, onchangeSpec, context],
@@ -3364,12 +3393,9 @@ var BasicModel = AbstractModel.extend({
                     record._domains = _.extend(record._domains, result.domain);
                 }
                 return self._applyOnChange(result.value, record).then(function () {
-                    def.resolve(result);
+                    return result;
                 });
-            }).fail(function () {
-                def.resolve({});
             });
-        return def;
     },
     /**
      * Once a record is created and some data has been fetched, we need to do
@@ -3432,6 +3458,7 @@ var BasicModel = AbstractModel.extend({
                 domain: list.domain,
                 context: list.context,
                 groupBy: list.groupedBy,
+                orderBy: list.orderedBy,
                 lazy: true,
             })
             .then(function (groups) {

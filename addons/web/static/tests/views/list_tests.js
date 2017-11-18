@@ -143,6 +143,27 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('list with delete="0"', function (assert) {
+        assert.expect(4);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            viewOptions: {sidebar: true},
+            arch: '<tree delete="0"><field name="foo"/></tree>',
+        });
+
+        assert.ok(list.sidebar.$el.hasClass('o_hidden'), 'sidebar should be invisible');
+        assert.ok(list.$('tbody td.o_list_record_selector').length, 'should have at least one record');
+
+        list.$('tbody td.o_list_record_selector:first input').click();
+        assert.ok(!list.sidebar.$el.hasClass('o_hidden'), 'sidebar should be visible');
+        assert.notOk(list.sidebar.$('a:contains(Delete)').length, 'sidebar should not have Delete button');
+
+        list.destroy();
+    });
+
     QUnit.test('simple editable rendering', function (assert) {
         assert.expect(12);
 
@@ -560,7 +581,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('aggregates are computed correctly', function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         var list = createView({
             View: ListView,
@@ -581,6 +602,11 @@ QUnit.module('Views', {
         $thead_selector.click();
         assert.strictEqual(list.$('tfoot td:nth(2)').text(), "32",
                         "total should be 32 as all records are selected");
+
+        // Let's update the view to dislay NO records
+        list.update({domain: ['&', ['bar', '=', false], ['int_field', '>', 0]]});
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), "0", "total should have been recomputed to 0");
+
         list.destroy();
     });
 
@@ -595,20 +621,76 @@ QUnit.module('Views', {
             arch: '<tree editable="bottom"><field name="int_field" sum="Sum"/></tree>',
         });
 
-        var $group_1_header = list.$('.o_group_header').filter(function (index, el) {
+        var $groupHeader1 = list.$('.o_group_header').filter(function (index, el) {
             return $(el).data('group').res_id === 1;
         });
-        var $group_2_header = list.$('.o_group_header').filter(function (index, el) {
+        var $groupHeader2 = list.$('.o_group_header').filter(function (index, el) {
             return $(el).data('group').res_id === 2;
         });
-        assert.strictEqual($group_1_header.find('td:nth(1)').text(), "23", "first group total should be 23");
-        assert.strictEqual($group_2_header.find('td:nth(1)').text(), "9", "second group total should be 9");
+        assert.strictEqual($groupHeader1.find('td:nth(1)').text(), "23", "first group total should be 23");
+        assert.strictEqual($groupHeader2.find('td:nth(1)').text(), "9", "second group total should be 9");
         assert.strictEqual(list.$('tfoot td:nth(2)').text(), "32", "total should be 32");
 
-        $group_1_header.click();
+        $groupHeader1.click();
         list.$('tbody .o_list_record_selector input').first().click();
         assert.strictEqual(list.$('tfoot td:nth(2)').text(), "10",
                         "total should be 10 as first record of first group is selected");
+        list.destroy();
+    });
+
+    QUnit.test('aggregates are updated when a line is edited', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="int_field" sum="Sum"/></tree>',
+        });
+
+        assert.strictEqual(list.$('td[title="Sum"]').text(), "32", "current total should be 32");
+
+        list.$('tr.o_data_row td.o_data_cell').first().click();
+        list.$('td.o_data_cell input').val("15").trigger("input");
+
+        assert.strictEqual(list.$('td[title="Sum"]').text(), "37",
+            "current total should now be 37");
+        list.destroy();
+    });
+
+    QUnit.test('groups can be sorted on aggregates', function (assert) {
+        assert.expect(10);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            groupBy: ['foo'],
+            arch: '<tree editable="bottom"><field name="int_field" sum="Sum"/></tree>',
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    assert.step(args.kwargs.orderby || 'default order');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(list.$('tbody .o_list_number').text(), '10517',
+            "initial order should be 10, 5, 17");
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '32', "total should be 32");
+
+        list.$('.o_column_sortable').click(); // sort (int_field ASC)
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '32', "total should still be 32");
+        assert.strictEqual(list.$('tbody .o_list_number').text(), '51017',
+            "order should be 5, 10, 17");
+
+        list.$('.o_column_sortable').click(); // sort (int_field DESC)
+        assert.strictEqual(list.$('tbody .o_list_number').text(), '17105',
+            "initial order should be 17, 10, 5");
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '32', "total should still be 32");
+
+        assert.verifySteps(['default order', 'int_field ASC', 'int_field DESC']);
+
         list.destroy();
     });
 
@@ -1670,7 +1752,7 @@ QUnit.module('Views', {
         // close first level group
         nbRPCs = {readGroup: 0, searchRead: 0};
         envIDs = []; // the group being closed, there is no more record in the environment
-        list.$('.o_group_header:first').click();
+        list.$('.o_group_header:nth(1)').click();
         assert.strictEqual(nbRPCs.readGroup, 0, "should have done no read_group");
         assert.strictEqual(nbRPCs.searchRead, 0, "should have done no search_read");
 
@@ -2603,7 +2685,7 @@ QUnit.module('Views', {
         // Editable grouped list views are not supported, so the purpose of this
         // test is to check that when a list view is grouped, its editable
         // attribute is ignored
-        assert.expect(4);
+        assert.expect(5);
 
         var list = createView({
             View: ListView,
@@ -2611,8 +2693,9 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<tree editable="top"><field name="foo"/><field name="bar"/></tree>',
             intercepts: {
-                switch_view: function () {
-                    assert.step('switch view');
+                switch_view: function (event) {
+                    var resID = event.data.res_id || false;
+                    assert.step('switch view ' + event.data.view_type + ' ' + resID);
                 },
             },
         });
@@ -2624,9 +2707,15 @@ QUnit.module('Views', {
 
         // reload with groupBy
         list.reload({groupBy: ['bar']});
+
+        // clicking on record should open the form view
         list.$('.o_group_header:first').click();
         list.$('.o_data_cell:first').click();
-        assert.verifySteps(['switch view'], 'one switch view should have been requested');
+
+        // clicking on create button should open the form view
+        list.$buttons.find('.o_list_button_add').click();
+        assert.verifySteps(['switch view form 1', 'switch view form false'],
+            'two switch view to form should have been requested');
 
         list.destroy();
     });
@@ -2707,7 +2796,7 @@ QUnit.module('Views', {
                         "should write the sequence starting from the lowest current one");
                     assert.strictEqual(args.field, 'int_field',
                         "should write the right field as sequence");
-                    assert.deepEqual(args.ids, [1, 4, 2 , 3],
+                    assert.deepEqual(args.ids, [4, 2 , 3],
                         "should write the sequence in correct order");
                     return $.when();
                 }
@@ -2760,7 +2849,7 @@ QUnit.module('Views', {
                         "should write the sequence starting from the lowest current one");
                     assert.strictEqual(args.field, 'int_field',
                         "should write the right field as sequence");
-                    assert.deepEqual(args.ids, [1, 4, 2, 3],
+                    assert.deepEqual(args.ids, [4, 2, 3],
                         "should write the sequence in correct order");
                     return $.when();
                 }
@@ -2820,7 +2909,7 @@ QUnit.module('Views', {
                         "should write the sequence starting from the lowest current one");
                     assert.strictEqual(args.field, 'int_field',
                         "should write the right field as sequence");
-                    assert.deepEqual(args.ids, [1, 4, 2, 3],
+                    assert.deepEqual(args.ids, [4, 2, 3],
                         "should write the sequence in correct order");
                     return $.when(def);
                 }

@@ -50,7 +50,7 @@ QUnit.module('ModelFieldSelector', {
 }, function () {
 
     QUnit.test("creating a field chain from scratch", function (assert) {
-        assert.expect(10);
+        assert.expect(14);
 
         var $target = $("#qunit-fixture");
 
@@ -90,6 +90,14 @@ QUnit.module('ModelFieldSelector', {
         assert.strictEqual(getValueFromDOM($value), "Bar",
             "field selector value should be displayed with a 'Bar' tag");
 
+        assert.deepEqual(fieldSelector.getSelectedField(), {
+            model: "partner",
+            name: "bar",
+            searchable: true,
+            string: "Bar",
+            type: "boolean",
+        }, "the selected field should be correctly set");
+
         // Focusing the input again should open the same popover
         fieldSelector.$el.trigger('focusin');
         assert.ok($fieldSelectorPopover.is(":visible"),
@@ -124,6 +132,33 @@ QUnit.module('ModelFieldSelector', {
             "field selector popover should be closed now");
         assert.strictEqual(getValueFromDOM($value), "Product -> Product Name",
             "field selector value should be displayed with two tags: 'Product' and 'Product Name'");
+
+        // Remove the current selection and recreate it again
+        fieldSelector.$el.trigger('focusin');
+        fieldSelector.$('.o_field_selector_prev_page').click();
+        fieldSelector.$('.o_field_selector_close').click();
+
+        fieldSelector.$el.trigger('focusin');
+        $fieldSelectorPopover = fieldSelector.$(".o_field_selector_popover:visible");
+        $lis = $fieldSelectorPopover.find("li");
+        $productLi = $();
+        $lis.each(function () {
+            var $li = $(this);
+            if ($li.html().indexOf("Product") >= 0) {
+                $productLi = $li;
+            }
+        });
+        assert.strictEqual($productLi.length, 1,
+            "field selector popover should contain the 'Product' field");
+
+        $productLi.click();
+        $lis = $fieldSelectorPopover.find("li");
+        $lis.first().click();
+        assert.notOk($fieldSelectorPopover.is("visible"),
+            "field selector popover should be closed now");
+        assert.strictEqual(getValueFromDOM($value), "Product -> Product Name",
+            "field selector value should be displayed with two tags: 'Product' and 'Product Name'");
+
         fieldSelector.destroy();
 
         function getValueFromDOM($dom) {

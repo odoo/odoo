@@ -30,13 +30,14 @@
 # Daniel Blanco <daniel@blancomartin.com.ar>, 2017
 # Raquel Iciarte <ric@odoo.com>, 2017
 # Jose Manuel <admin@jaboweb.com>, 2017
+# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Jose Manuel <admin@jaboweb.com>, 2017\n"
+"POT-Creation-Date: 2017-10-24 08:59+0000\n"
+"PO-Revision-Date: 2017-10-24 08:59+0000\n"
+"Last-Translator: Christopher Ormaza <chris.ormaza@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -959,6 +960,8 @@ msgstr "Aplicar multi-monedas"
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Apply right VAT rates for digital products sold in EU"
 msgstr ""
+"Aplicar los tipos de IVA correctos para productos digitales vendidos en la "
+"UE"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1603,7 +1606,7 @@ msgid "Enter a name for your new product"
 msgstr "Escriba un nombre para su nuevo producto"
 
 #. module: website_sale
-#: code:addons/website_sale/models/product.py:91
+#: code:addons/website_sale/models/product.py:92
 #, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "¡Error! No puede crear categorías recursivas"
@@ -1675,6 +1678,11 @@ msgstr "Conexiones rápidas. En todo el mundo."
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "FedEx"
 msgstr ""
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_ir_model_fields
+msgid "Fields"
+msgstr "Campos"
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
@@ -1819,7 +1827,7 @@ msgstr "Como utilizar su groove"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "How total tax amount is computed in orders and invoices"
-msgstr ""
+msgstr "Cómo se calcula la cantidad total de impuestos en pedidos y facturas"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment_sale_note
@@ -1857,6 +1865,12 @@ msgid ""
 "telecommunications, and services that are electronically supplied instead of"
 " shipped. Gift cards sent online are not included in the definition."
 msgstr ""
+"Si vende productos digitales a clientes de la UE, debe cobrar el IVA en "
+"función de la ubicación de sus clientes. Esta regla se aplica "
+"independientemente de su ubicación. Los bienes digitales se definen en la "
+"legislación como radiodifusión, telecomunicaciones y servicios que se "
+"suministran electrónicamente en lugar de enviarse. Las tarjetas de regalo "
+"enviadas en línea no están incluidas en la definición."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -1943,7 +1957,7 @@ msgid "Installs *e-Commerce Inventory*"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:501
+#: code:addons/website_sale/controllers/main.py:502
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "Correo no válido. Por favor proporcione un correo electrónico válido."
@@ -2207,7 +2221,7 @@ msgstr "Red"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:964
+#: code:addons/website_sale/controllers/main.py:967
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:32
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
@@ -2358,7 +2372,7 @@ msgid "Parent Category"
 msgstr "Categoría padre"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:752
+#: code:addons/website_sale/controllers/main.py:755
 #, python-format
 msgid "Pay Now"
 msgstr "Pagar ahora"
@@ -3126,7 +3140,7 @@ msgstr ""
 " puertas de enlaze de pago con su propio procesador de pagos."
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:517
+#: code:addons/website_sale/controllers/main.py:520
 #, python-format
 msgid "Some required fields are empty."
 msgstr "Algunos campos requeridos están vacíos."
@@ -3572,6 +3586,12 @@ msgstr "Meta título del sitio web"
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_price
 msgid "Website price"
 msgstr "Precio Página Web"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product_website_price_difference
+#: model:ir.model.fields,field_description:website_sale.field_product_template_website_price_difference
+msgid "Website price difference"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_public_price

@@ -27,7 +27,7 @@ class AccountFiscalPosition(models.Model):
     country_id = fields.Many2one('res.country', string='Country',
         help="Apply only if delivery or invoicing country match.")
     country_group_id = fields.Many2one('res.country.group', string='Country Group',
-        help="Apply only if delivery or invocing country match the group.")
+        help="Apply only if delivery or invoicing country match the group.")
     state_ids = fields.Many2many('res.country.state', string='Federal States')
     zip_from = fields.Integer(string='Zip Range From', default=0)
     zip_to = fields.Integer(string='Zip Range To', default=0)
@@ -137,7 +137,7 @@ class AccountFiscalPosition(models.Model):
     def get_fiscal_position(self, partner_id, delivery_id=None):
         if not partner_id:
             return False
-        # This can be easily overriden to apply more complex fiscal rules
+        # This can be easily overridden to apply more complex fiscal rules
         PartnerObj = self.env['res.partner']
         partner = PartnerObj.browse(partner_id)
 
@@ -271,7 +271,7 @@ class ResPartner(models.Model):
             all_partners_and_children[partner] = self.with_context(active_test=False).search([('id', 'child_of', partner.id)]).ids
             all_partner_ids += all_partners_and_children[partner]
 
-        # searching account.invoice.report via the orm is comparatively expensive
+        # searching account.invoice.report via the ORM is comparatively expensive
         # (generates queries "id in []" forcing to build the full table).
         # In simple cases where all invoices are in the same currency than the user's company
         # access directly these elements

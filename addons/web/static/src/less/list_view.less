@@ -138,6 +138,14 @@
         // consider this later if needed.
         z-index: 1;
 
+        // The in-edition elements will overflow other elements (the rows below,
+        // the content below the list view, ...). As those might be using
+        // position: relative, the in-edition elements have to define a z-index.
+        // Technically, creating a stacking context for a meaningful parent
+        // (maybe the .o_content) might be required for safety but we should
+        // consider this later if needed.
+        z-index: 1;
+
         // Field widgets override
         > .o_field_widget {
             .o-position-absolute(0, 0, auto, 0);

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+<div t-name="website.facebook_page_dialog">
+    <div class="row">
+        <form class="col-md-6 form-horizontal">
+            <div class="form-group">
+                <label class="control-label col-sm-3">Page URL</label>
+                <div class="col-sm-9">
+                    <input class="form-control o_facebook_page_url" required="required" t-att-value="widget.fbData.href"/>
+                </div>
+            </div>
+            <div class="form-group o_facebook_tabs">
+                <t t-set="fb_tabs" t-value="widget.fbData.tabs and widget.fbData.tabs.split(',') or []"/>
+                <label class="control-label col-sm-3">Tabs</label>
+                <div class="col-sm-3 checkbox">
+                    <label><input type="checkbox" name="timeline" t-att-checked="_.contains(fb_tabs, 'timeline') or None"/>Timeline</label>
+                </div>
+                <div class="col-sm-3 checkbox">
+                    <label><input type="checkbox" name="events" t-att-checked="_.contains(fb_tabs, 'events') or None"/>Events</label>
+                </div>
+                <div class="col-sm-3 checkbox">
+                    <label><input type="checkbox" name="messages" t-att-checked="_.contains(fb_tabs, 'messages') or None"/>Messages</label>
+                </div>
+             </div>
+            <div class="form-group o_facebook_options">
+                <label class="control-label col-sm-3">Options</label>
+                <div class="col-sm-9 mt8">
+                <label class="o_switch">
+                    <input name="small_header" type="checkbox" t-att-checked="widget.fbData.small_header or None"/>
+                    <span/>
+                    Use Small Header
+                </label>
+                </div>
+                <div class="col-sm-offset-3 mt16 col-sm-9">
+                <label class="o_switch">
+                    <input name="hide_cover" type="checkbox" t-att-checked="widget.fbData.hide_cover or None"/>
+                    <span/>
+                    Hide Cover Photo
+                </label>
+                </div>
+                <div class="col-sm-offset-3 mt16 col-sm-9">
+                <label class="o_switch">
+                    <input name="show_facepile" type="checkbox" t-att-checked="widget.fbData.show_facepile or None"/>
+                    <span/>
+                    Show Friend's Faces
+                </label>
+                </div>
+            </div>
+        </form>
+        <div class="col-md-6" style="border-left: 1px solid #eeeeee;">
+            <div class="form-group text-center">
+                <label>Preview</label>
+                <div class="alert alert-warning hidden facebook_page_warning text-center">
+                    <div>
+                        <i class="fa fa-exclamation-triangle fa-3x" aria-hidden="true"></i>
+                    </div>
+                    <h4 class="mb0">Invalid Facebook Page Url</h4>
+                    <div>Please enter valid facebook page URL for preview</div>
+                </div>
+                <div class="o_facebook_page o_facebook_preview"/>
+            </div>
+        </div>
+    </div>
+</div>
+</templates>

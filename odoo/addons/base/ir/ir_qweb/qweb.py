@@ -374,7 +374,7 @@ class QWeb(object):
             if isinstance(document, etree._Element):
                 element = document
                 document = etree.tostring(document)
-            elif os.path.exists(document):
+            elif not document.strip().startswith('<') and os.path.exists(document):
                 element = etree.parse(document).getroot()
             else:
                 element = etree.fromstring(document)

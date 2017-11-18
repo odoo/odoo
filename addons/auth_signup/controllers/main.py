@@ -46,7 +46,7 @@ class AuthSignupHome(Home):
                         ).send_mail(user_sudo.id, force_send=True)
                 return super(AuthSignupHome, self).web_login(*args, **kw)
             except UserError as e:
-                qcontext['error'] = str(e)
+                qcontext['error'] = e.name or e.value
             except (SignupError, AssertionError) as e:
                 if request.env["res.users"].sudo().search([("login", "=", qcontext.get("login"))]):
                     qcontext["error"] = _("Another user is already registered using this email address.")
@@ -54,7 +54,9 @@ class AuthSignupHome(Home):
                     _logger.error("%s", e)
                     qcontext['error'] = _("Could not create a new account.")
 
-        return request.render('auth_signup.signup', qcontext)
+        response = request.render('auth_signup.signup', qcontext)
+        response.headers['X-Frame-Options'] = 'DENY'
+        return response
 
     @http.route('/web/reset_password', type='http', auth='public', website=True, sitemap=False)
     def web_auth_reset_password(self, *args, **kw):

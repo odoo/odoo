@@ -454,7 +454,7 @@ class AccountBankStatementLine(models.Model):
             else:
                 unreconciled += stl
 
-        # Collect various informations for the reconciliation widget
+        # Collect various information for the reconciliation widget
         notifications = []
         num_auto_reconciled = len(automatic_reconciliation_entries)
         if num_auto_reconciled > 0:
@@ -733,7 +733,7 @@ class AccountBankStatementLine(models.Model):
         except UserError:
             # A configuration / business logic error that makes it impossible to auto-reconcile should not be raised
             # since automatic reconciliation is just an amenity and the user will get the same exception when manually
-            # reconciling. Other types of exception are (hopefully) programmation errors and should cause a stacktrace.
+            # reconciling. Other types of exception are (hopefully) programming errors and should cause a stacktrace.
             self.invalidate_cache()
             self.env['account.move'].invalidate_cache()
             self.env['account.move.line'].invalidate_cache()
@@ -769,7 +769,7 @@ class AccountBankStatementLine(models.Model):
         st_line_currency = self.currency_id or statement_currency
         amount_currency = False
         st_line_currency_rate = self.currency_id and (self.amount_currency / self.amount) or False
-        # We have several use case here to compure the currency and amount currency of counterpart line to balance the move:
+        # We have several use case here to compare the currency and amount currency of counterpart line to balance the move:
         if st_line_currency != company_currency and st_line_currency == statement_currency:
             # company in currency A, statement in currency B and transaction in currency B
             # counterpart line must have currency B and correct amount is inverse of already existing lines
@@ -812,6 +812,7 @@ class AccountBankStatementLine(models.Model):
                 whose value is the same as described in process_reconciliation except that ids are used instead of recordsets.
         """
         AccountMoveLine = self.env['account.move.line']
+        ctx = dict(self._context, force_price_include=False)
         for st_line, datum in pycompat.izip(self, data):
             payment_aml_rec = AccountMoveLine.browse(datum.get('payment_aml_ids', []))
             for aml_dict in datum.get('counterpart_aml_dicts', []):
@@ -819,7 +820,7 @@ class AccountBankStatementLine(models.Model):
                 del aml_dict['counterpart_aml_id']
             if datum.get('partner_id') is not None:
                 st_line.write({'partner_id': datum['partner_id']})
-            st_line.process_reconciliation(datum.get('counterpart_aml_dicts', []), payment_aml_rec, datum.get('new_aml_dicts', []))
+            st_line.with_context(ctx).process_reconciliation(datum.get('counterpart_aml_dicts', []), payment_aml_rec, datum.get('new_aml_dicts', []))
 
     def fast_counterpart_creation(self):
         for st_line in self:

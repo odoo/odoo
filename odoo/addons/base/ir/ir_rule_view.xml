@@ -6,11 +6,15 @@
             <field name="arch" type="xml">
                 <form string="Record rules">
                   <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"/>
+                        </button>
+                    </div>
                     <group>
                         <group string="General">
                             <field name="name"/>
                             <field name="model_id"/>
-                            <field name="active"/>
                         </group>
                         <group col="4" string="Access Rights">
                             <field name="perm_read"/>
@@ -25,31 +29,36 @@
                         <field name="global"/>
                         <field name="groups" nolabel="1" colspan="4"/>
                     </group>
-                    <group string="Interaction between rules">
-                        <label  colspan="2"
-                            string="Global rules (non group-specific) are restrictions, and cannot be bypassed. Group-local rules grant additional permissions, but are constrained within the bounds of global ones. The first group rules restrict further than global rules, but any additional group rule will add more permissions"/>
-                        <label colspan="2"
-                            string="Detailed algorithm:"/>
-                        <label colspan="2"
-                            string="1. Global rules are combined together with a logical AND operator, and with the result of the following steps"/>
-                        <label colspan="2"
-                            string="2. Group-specific rules are combined together with a logical OR operator"/>
-                        <label colspan="2"
-                            string="3. If user belongs to several groups, the results from step 2 are combined with logical OR operator"/>
-                        <label colspan="2"
-                            string="Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 OR GROUP_A_RULE_2) OR (GROUP_B_RULE_1 OR GROUP_B_RULE_2) )"/>
-                    </group>
-                   </sheet> 
+                    <i class="fa fa-info fa-3x text-info pull-left"/>
+                    <h3>Interaction between rules</h3>
+                    <div>
+                      <p>
+                         Global rules (non group-specific) are restrictions, and cannot be bypassed.
+                         Group-specific rules grant additional permissions, but are constrained within the bounds of global ones.
+                         The first group rules restrict further the global rules, but can be relaxed by additional group rules.
+                      </p>
+                      <p>
+                        Detailed algorithm:
+                        <ol>
+                          <li>Global rules are combined together with a logical AND operator, and with the result of the following steps</li>
+                          <li>Group-specific rules are combined together with a logical OR operator</li>
+                          <li>If user belongs to several groups, the results from step 2 are combined with logical OR operator</li>
+                        </ol>
+                      </p>
+                      <p>Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 OR GROUP_A_RULE_2) OR (GROUP_B_RULE_1 OR GROUP_B_RULE_2) )</p>
+                    </div>
+                   </sheet>
                 </form>
             </field>
         </record>
         <record id="view_rule_tree" model="ir.ui.view">
             <field name="model">ir.rule</field>
             <field name="arch" type="xml">
-                <tree string="Record rules">
-                    <field name="model_id"/>
+                <tree string="Record Rules" decoration-info="global">
                     <field name="name"/>
-                    <field name="global"/>
+                    <field name="model_id"/>
+                    <field name="global" invisible="1"/>
+                    <field name="groups" widget="many2many_tags" options="{'no_create':True}"/>
                     <field name="domain_force"/>
                     <field name="perm_read"/>
                     <field name="perm_write"/>

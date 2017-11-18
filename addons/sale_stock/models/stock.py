@@ -57,6 +57,8 @@ class ProcurementRule(models.Model):
         result = super(ProcurementRule, self)._get_stock_move_values(product_id, product_qty, product_uom, location_id, name, origin, values, group_id)
         if values.get('sale_line_id', False):
             result['sale_line_id'] = values['sale_line_id']
+        if values.get('partner_dest_id'):
+            result['partner_id'] = values['partner_dest_id'].id
         return result
 
 

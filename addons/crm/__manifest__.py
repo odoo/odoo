@@ -17,7 +17,6 @@
         'resource',
         'fetchmail',
         'utm',
-        'web_planner',
         'web_tour',
         'contacts'
     ],
@@ -43,7 +42,6 @@
         'views/crm_lead_views.xml',
         'views/calendar_views.xml',
         'views/res_partner_views.xml',
-        'data/web_planner_data.xml',
         'report/crm_activity_report_views.xml',
         'report/crm_opportunity_report_views.xml',
         'views/crm_team_views.xml',

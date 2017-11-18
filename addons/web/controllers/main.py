@@ -612,6 +612,10 @@ class WebClient(http.Controller):
     def test_suite(self, mod=None, **kwargs):
         return request.render('web.qunit_suite')
 
+    @http.route('/web/tests/mobile', type='http', auth="none")
+    def test_mobile_suite(self, mod=None, **kwargs):
+        return request.render('web.qunit_mobile_suite')
+
     @http.route('/web/benchmarks', type='http', auth="none")
     def benchmarks(self, mod=None, **kwargs):
         return request.render('web.benchmark_suite')
@@ -1214,7 +1218,7 @@ class Export(http.Controller):
         """
         return [
             {'tag': 'csv', 'label': 'CSV'},
-            {'tag': 'xls', 'label': 'Excel', 'error': None if xlwt else "XLWT required"},
+            {'tag': 'xls', 'label': 'Excel', 'error': None if xlwt else "XLWT 1.3.0 required"},
         ]
 
     def fields_get(self, model):

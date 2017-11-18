@@ -107,6 +107,10 @@ var ThreadField = AbstractField.extend(chat_mixin, {
     _onNewMessage: function (message) {
         if (message.model === this.model && message.res_id === this.res_id) {
             this.msgIDs.unshift(message.id);
+            this.trigger_up('new_message', {
+                id: this.value.id,
+                msgIDs: this.msgIDs,
+            });
             this._fetchAndRenderThread(this.msgIDs);
         }
     },

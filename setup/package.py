@@ -240,8 +240,8 @@ class KVMWinTestExe(KVM):
         self.rsync('"%s" %s@127.0.0.1:' % (setuppath, self.login))
         self.ssh("TEMP=/tmp ./%s /S" % setupfile)
         self.ssh('PGPASSWORD=openpgpwd /cygdrive/c/"Program Files"/"Odoo %s"/PostgreSQL/bin/createdb.exe -e -U openpg mycompany' % setupversion)
-        self.ssh('/cygdrive/c/"Program Files"/"Odoo %s"/server/odoo-bin.exe -d mycompany -i base --stop-after-init' % setupversion)
-        self.ssh('net start %s' % nt_service_name)
+        self.ssh('netsh advfirewall set publicprofile state off')
+        self.ssh('/cygdrive/c/"Program Files"/"Odoo {sv}"/python/python.exe \'c:\\Program Files\\Odoo {sv}\\server\\odoo-bin\' -d mycompany -i base --stop-after-init'.format(sv=setupversion))
         _rpc_count_modules(port=18069)
 
 #----------------------------------------------------------
@@ -288,7 +288,7 @@ def build_deb(o):
         deb.expect(pexpect.EOF, timeout=1200)
     else:
         subprocess.call(['dpkg-buildpackage', '-rfakeroot', '-uc', '-us'], cwd=o.build_dir)
-    # As the packages are builded in the parent of the buildir, we move them back to build_dir
+    # As the packages are built in the parent of the buildir, we move them back to build_dir
     build_dir_parent = '{}/../'.format(o.build_dir)
     wildcards = ['odoo_{}'.format(wc) for wc in ('*.deb', '*.dsc', '*_amd64.changes', '*.tar.gz', '*.tar.xz')]
     move_glob(build_dir_parent, wildcards, o.build_dir)
@@ -445,7 +445,7 @@ def options():
 
     op.add_option("-b", "--build-dir", default=build_dir, help="build directory (%default)", metavar="DIR")
     op.add_option("-p", "--pub", default=None, help="pub directory (%default)", metavar="DIR")
-    op.add_option("", "--no-testing", action="store_true", help="don't test the builded packages")
+    op.add_option("", "--no-testing", action="store_true", help="don't test the built packages")
 
     op.add_option("", "--no-debian", action="store_true", help="don't build the debian package")
     op.add_option("", "--no-debsign", action="store_true", help="don't sign the debian package")
@@ -524,7 +524,7 @@ def main():
             shutil.rmtree(o.build_dir)
             logging.info('Build dir %s removed' % o.build_dir)
 
-        if not o.no_testing:
+        if not o.no_testing and not (o.no_debian and o.no_rpm and o.no_tarball):
             system("docker rm -f `docker ps -a | awk '{print $1 }'` 2>>/dev/null")
             logging.info('Remaining dockers removed')
 

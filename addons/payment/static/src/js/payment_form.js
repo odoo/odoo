@@ -15,7 +15,8 @@ odoo.define('payment.payment_form', function (require) {
             'click #o_payment_form_pay': 'payEvent',
             'click #o_payment_form_add_pm': 'addPmEvent',
             'click button[name="delete_pm"]': 'deletePmEvent',
-            'click input[type="radio"]': 'radioClickEvent'
+            'click input[type="radio"]': 'radioClickEvent',
+            'click .o_payment_form_pay_icon_more': 'onClickMorePaymentIcon',
         },
 
         init: function(parent, options) {
@@ -142,13 +143,16 @@ odoo.define('payment.payment_form', function (require) {
                                 // if the server sent us the html form, we create a form element
                                 var newForm = document.createElement('form');
                                 newForm.setAttribute("method", "post"); // set it to post
+                                newForm.setAttribute("provider", checked_radio.dataset.provider);
                                 newForm.hidden = true; // hide it
                                 newForm.innerHTML = result; // put the html sent by the server inside the form
                                 var action_url = $(newForm).find('input[name="data_set"]').data('actionUrl');
                                 newForm.setAttribute("action", action_url); // set the action url
-                                document.getElementsByTagName('body')[0].appendChild(newForm); // append the form to the body
+                                $(document.getElementsByTagName('body')[0]).append(newForm); // append the form to the body
                                 $(newForm).find('input[data-remove-me]').remove(); // remove all the input that should be removed
-                                newForm.submit(); // and finally submit the form
+                                if(action_url) {
+                                    newForm.submit(); // and finally submit the form
+                                }
                             }
                             else {
                                 self.displayError(
@@ -335,6 +339,16 @@ odoo.define('payment.payment_form', function (require) {
                 );
             });
         },
+
+        // event handler when clicking on 'and more' to show more payment icon
+        onClickMorePaymentIcon: function (ev) {
+            ev.preventDefault();
+            var $listItems = $(ev.currentTarget).parents('ul').children('li');
+            var $moreItem = $(ev.currentTarget).parents('li');
+            $listItems.removeClass('hidden');
+            $moreItem.addClass('hidden');
+        },
+
         // event handler when clicking on a radio button
         radioClickEvent: function (ev) {
             this.updateNewPaymentDisplayStatus();

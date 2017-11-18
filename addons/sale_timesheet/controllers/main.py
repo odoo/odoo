@@ -22,9 +22,10 @@ class SaleTimesheetController(http.Controller):
     def _prepare_plan_values(self, domain):
 
         timesheet_lines = request.env['account.analytic.line'].search(domain)
+        currency = request.env.user.company_id.currency_id
 
         values = {
-            'currency': request.env.user.company_id.currency_id,
+            'currency': currency,
             'timesheet_lines': timesheet_lines,
             'domain': domain,
         }
@@ -61,8 +62,8 @@ class SaleTimesheetController(http.Controller):
         # money_amount
         so_lines = values['timesheet_lines'].mapped('so_line')
         invoice_lines = so_lines.mapped('invoice_lines')
-        dashboard_values['money_amount']['invoiced'] = sum([inv_line.price_unit * inv_line.quantity for inv_line in invoice_lines.filtered(lambda line: line.invoice_id.state in ['open', 'paid'])])
-        dashboard_values['money_amount']['to_invoice'] = sum([sol.price_unit * sol.qty_to_invoice for sol in so_lines]) + sum([i.price_unit * i.quantity for i in invoice_lines.filtered(lambda line: line.invoice_id.state == 'draft')])
+        dashboard_values['money_amount']['invoiced'] = sum([inv_line.currency_id.with_context(date=inv_line.invoice_id.date_invoice).compute(inv_line.price_unit * inv_line.quantity, currency) for inv_line in invoice_lines.filtered(lambda line: line.invoice_id.state in ['open', 'paid'])])
+        dashboard_values['money_amount']['to_invoice'] = sum([sol.currency_id.compute(sol.price_unit * (1 - (sol.discount or 0.0) / 100.0) * sol.qty_to_invoice, currency) for sol in so_lines]) + sum([i.currency_id.with_context(date=i.invoice_id.date_invoice).compute(i.price_unit * i.quantity, currency) for i in invoice_lines.filtered(lambda line: line.invoice_id.state == 'draft')])
         dashboard_values['money_amount']['cost'] = sum(values['timesheet_lines'].mapped('amount'))
         dashboard_values['money_amount']['total'] = sum([dashboard_values['money_amount'][item] for item in dashboard_values['money_amount'].keys()])
 

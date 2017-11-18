@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_order_dates
-#
+# 
 # Translators:
+# Hamid Darabi <hamid.darabi@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-09-08 08:03+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Persian (http://www.transifex.com/odoo/odoo-9/language/fa/)\n"
-"Language: fa\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fa\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_order_dates
@@ -26,19 +28,15 @@ msgstr ""
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_requested_date
 msgid ""
 "Date by which the customer has requested the items to be delivered.\n"
-"When this Order gets confirmed, the Delivery Order's expected date will be "
-"computed based on this date and the Company's Security Delay.\n"
-"Leave this field empty if you want the Delivery Order to be processed as "
-"soon as possible. In that case the expected date will be computed using the "
-"default method: based on the Product Lead Times and the Company's Security "
-"Delay."
+"When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
+"Leave this field empty if you want the Delivery Order to be processed as soon as possible. In that case the expected date will be computed using the default method: based on the Product Lead Times and the Company's Security Delay."
 msgstr ""
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
 msgid ""
-"Date by which the products are sure to be delivered. This is a date that you "
-"can promise to the customer, based on the Product Lead Times."
+"Date by which the products are sure to be delivered. This is a date that you"
+" can promise to the customer, based on the Product Lead Times."
 msgstr ""
 
 #. module: sale_order_dates
@@ -52,28 +50,28 @@ msgid "Effective Date"
 msgstr ""
 
 #. module: sale_order_dates
+#: model:ir.model,name:sale_order_dates.model_sale_order
+msgid "Quotation"
+msgstr "پیش فاکتور"
+
+#. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_requested_date
 msgid "Requested Date"
 msgstr ""
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:51
+#: code:addons/sale_order_dates/models/sale_order.py:57
 #, python-format
 msgid "Requested date is too soon!"
 msgstr ""
 
 #. module: sale_order_dates
-#: model:ir.model,name:sale_order_dates.model_sale_order
-msgid "Sales Order"
-msgstr "سفارش فروش"
-
-#. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "سطر سفارش‌فروش"
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:52
+#: code:addons/sale_order_dates/models/sale_order.py:58
 #, python-format
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "

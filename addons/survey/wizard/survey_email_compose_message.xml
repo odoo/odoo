@@ -44,8 +44,14 @@
                     </group>
                     <group col="1" attrs="{'invisible':['|',('public','=',False),('public','in',['public_link'])]}">
                         <group col="2">
-                            <field invisible="context.get('survey_resent_token')" name="partner_ids" widget="many2many_tags_email" placeholder="Add list of existing contacts..." context="{'force_email':True, 'show_email':True}" />
-                            <field invisible="context.get('survey_resent_token')" name="multi_email" placeholder="Add list of email of recipients (will not converted in partner), separated by commas, semicolons or newline..."/>
+                            <field name="partner_ids"
+                                invisible="context.get('survey_resent_token')"
+                                widget="many2many_tags_email"
+                                placeholder="Add existing contacts..."
+                                context="{'force_email':True, 'show_email':True}" />
+                            <field name="multi_email"
+                                invisible="context.get('survey_resent_token')"
+                                placeholder="Add a list of email of recipients (will not be converted into contacts). Separated by commas, semicolons or newline..."/>
                             <field name="subject" placeholder="Subject..."/>
                         </group>
                         <field name="body" options="{'style-inline': true}"/>
