@@ -35,3 +35,13 @@ class MailTest(models.Model):
         res['alias_force_thread_id'] = self.id
         res['alias_parent_thread_id'] = self.id
         return res
+
+
+class MailTestActivity(models.Model):
+    _description = 'Chatter Activity Record'
+    _name = 'mail.test.activity'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+
+    name = fields.Char()
+    email_from = fields.Char()
+    description = fields.Text()
