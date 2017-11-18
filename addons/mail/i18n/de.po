@@ -311,8 +311,8 @@ msgstr ""
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:51
 #, python-format
-msgid ", due to"
-msgstr ", wegen"
+msgid ", due on"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -4858,12 +4858,9 @@ msgstr "Smiley"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type_res_model_id
 msgid ""
-"Specify a model if the activity should be specific to a modeland not "
+"Specify a model if the activity should be specific to a model and not "
 "available when managing activities for other models."
 msgstr ""
-"Geben Sie ein Modell an, wenn die Aktivität sich auf ein bestimmtes Modell "
-"beziehen und nicht verfügbar sein soll, wenn Aktivitäten für andere Modelle "
-"verwaltet werden."
 
 #. module: mail
 #. openerp-web
@@ -5047,7 +5044,7 @@ msgstr "Test E-Mail Model"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_test_simple
 msgid "Test Simple Chatter Record"
-msgstr "Einfachen Chatter-Datensatz testen"
+msgstr "Einfacher Chatter-Datensatz-Test"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_substitution
@@ -5557,12 +5554,17 @@ msgstr ""
 "(@mycompany.odoo.com) profitieren."
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:668
 #: code:addons/mail/models/mail_thread.py:670
 #: model:ir.ui.view,arch_db:mail.message_user_assigned
 #, python-format
 msgid "View"
 msgstr "Ansicht"
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:668
+#, python-format
+msgid "View %s"
+msgstr ""
 
 #. module: mail
 #. openerp-web

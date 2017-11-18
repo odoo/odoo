@@ -310,4 +310,4 @@ class FleetServiceType(models.Model):
     category = fields.Selection([
         ('contract', 'Contract'),
         ('service', 'Service')
-        ], 'Category', required=True, help='Choose wheter the service refer to contracts, vehicle services or both')
+        ], 'Category', required=True, help='Choose whether the service refer to contracts, vehicle services or both')

@@ -26,12 +26,12 @@ msgstr ""
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
 msgid "Add pickings to a batch picking"
-msgstr ""
+msgstr "Voeg leveringen toe aan een batch picking"
 
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
 msgid "Add pickings to batch"
-msgstr ""
+msgstr "Voeg leveringen toe aan een batch"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action
@@ -74,7 +74,7 @@ msgstr "Batch Inzameling is nog niet afgerond"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch_id_8938
 msgid "Batch associated to this picking"
-msgstr ""
+msgstr "Batch behorende bij deze levering"
 
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -95,7 +95,7 @@ msgstr "Geannuleerd"
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid "Click to create a Batch Picking."
-msgstr ""
+msgstr "Klik om een nieuwe picking batch aan te maken."
 
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -204,7 +204,7 @@ msgstr "Laatst bijgewerkt op"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch_picking_ids
 msgid "List of picking associated to this batch"
-msgstr ""
+msgstr "Lijst met leveringen bijhorende bij deze wave"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch_name
@@ -225,7 +225,7 @@ msgstr "Persoon verantwoordelijk voor deze batch picking"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_immediate_transfer_pick_to_backorder_ids
 msgid "Pick To Backorder"
-msgstr ""
+msgstr "Picking naar backorder"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_immediate_transfer_pick_to_backorder_ids
@@ -270,6 +270,8 @@ msgid ""
 "Some pickings are still waiting for goods. Please check or force their "
 "availability before setting this batch to done."
 msgstr ""
+"Sommige leveringen wachten nog op producten. Controleer deze of forceer de "
+"beschikbaarheid, voordat u deze wave gereed meld."
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:77
@@ -319,6 +321,10 @@ msgid ""
 "            It may also be useful to assign jobs (one person = one batch) or\n"
 "            help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
+"Het doel van picking waves is om bewerkingen te groeperen die mogelijk samen"
+" (moeten) gedaan worden om de efficiëntie te verhogen. Het kan ook handig "
+"zijn om functies toe te wijzen (één persoon = één wave) of helpt het "
+"tijdsbeheer van functies (taken die klaar moeten zijn voor 1u)."
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking

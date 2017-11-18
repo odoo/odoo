@@ -137,6 +137,7 @@ QUnit.module('relational_fields', {
                     partner_ids: [],
                     turtle_ref: 'product,37',
                 }],
+                onchanges: {},
             },
             user: {
                 fields: {
@@ -209,6 +210,98 @@ QUnit.module('relational_fields', {
 
         // TODO: test that we can edit the record in the dialog, and that the value is correctly
         // updated on close
+        form.destroy();
+    });
+
+    QUnit.test('editing a many2one, but not changing anything', function (assert) {
+        assert.expect(2);
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                            '<field name="trululu"/>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'partner,false,form': '<form string="Partners"><field name="display_name"/></form>',
+            },
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'get_formview_id') {
+                    assert.deepEqual(args.args[0], [4], "should call get_formview_id with correct id");
+                    return $.when(false);
+                }
+                return this._super(route, args);
+            },
+            viewOptions: {
+                ids: [1, 2],
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        // click on the external button (should do an RPC)
+        form.$('.o_external_button').click();
+        // save and close modal
+        $('.modal .modal-footer .btn-primary:first').click();
+        // save form
+        form.$buttons.find('.o_form_button_save').click();
+        // click next on pager
+        form.pager.$('.o_pager_next').click();
+
+        // this checks that the view did not ask for confirmation that the
+        // record is dirty
+        assert.strictEqual(form.pager.$el.text().trim(), '2 / 2',
+            'pager should be at second page');
+        form.destroy();
+    });
+
+    QUnit.test('editing a many2one (with form view opened with external button)', function (assert) {
+        assert.expect(1);
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                            '<field name="trululu"/>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'partner,false,form': '<form string="Partners"><field name="foo"/></form>',
+            },
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'get_formview_id') {
+                    return $.when(false);
+                }
+                return this._super(route, args);
+            },
+            viewOptions: {
+                ids: [1, 2],
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        // click on the external button (should do an RPC)
+        form.$('.o_external_button').click();
+
+        $('.modal input[name="foo"]').val('brandon').trigger('input');
+
+        // save and close modal
+        $('.modal .modal-footer .btn-primary:first').click();
+        // save form
+        form.$buttons.find('.o_form_button_save').click();
+        // click next on pager
+        form.pager.$('.o_pager_next').click();
+
+        // this checks that the view did not ask for confirmation that the
+        // record is dirty
+        assert.strictEqual(form.pager.$el.text().trim(), '2 / 2',
+            'pager should be at second page');
         form.destroy();
     });
 
@@ -1397,7 +1490,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('slow create on a many2one', function (assert) {
-        assert.expect(1);
+        assert.expect(7);
 
         var form = createView({
             View: FormView,
@@ -1417,12 +1510,34 @@ QUnit.module('relational_fields', {
             },
         });
 
+        // cancel the many2one creation with Cancel button
+        form.$('.o_field_many2one input').focus().val('new product').trigger('keyup').trigger('blur');
+        assert.strictEqual($('.modal').length, 1, "there should be one opened modal");
+        $('.modal .modal-footer .btn:contains(Cancel)').click();
+        assert.strictEqual(form.$('.o_field_many2one input').val(), "",
+            'the many2one should not set a value as its creation has been cancelled (with Cancel button)');
+
+        // cancel the many2one creation with Close button
+        form.$('.o_field_many2one input').focus().val('new product').trigger('keyup').trigger('blur');
+        $('.modal .modal-header button').click();
+        assert.strictEqual(form.$('.o_field_many2one input').val(), "",
+            'the many2one should not set a value as its creation has been cancelled (with Close button)');
+
+        // select a new value then cancel the creation of the new one --> restore the previous
+        form.$('.o_field_many2one input').click();
+        form.$('.o_field_many2one input').autocomplete('widget').find('a').first().click();
+        assert.strictEqual(form.$('input').val(), "xphone", "should have selected xphone");
+        form.$('.o_field_many2one input').focus().val('new product').trigger('keyup').trigger('blur');
+        assert.strictEqual($('.modal').length, 1, "there should be one opened modal");
+        $('.modal .modal-footer .btn:contains(Cancel)').click();
+        assert.strictEqual(form.$('.o_field_many2one input').val(), "xphone",
+            'should have restored the many2one with its previous selected value (xphone)');
+
+        // confirm the many2one creation
         form.$('.o_field_many2one input').focus();
-        form.$('.o_field_many2one input').val('new partner').trigger('keyup').trigger('focusout');
-
-        $('.modal .modal-footer .btn-primary').first().click();
-
-        assert.strictEqual($('.modal:visible:last .o_form_view').length, 1,
+        form.$('.o_field_many2one input').val('new partner').trigger('keyup').trigger('blur');
+        $('.modal .modal-footer .btn-primary').click();
+        assert.strictEqual($('.modal .o_form_view').length, 1,
             'a new modal should be opened and contain a form view');
 
         form.destroy();
@@ -2562,6 +2677,45 @@ QUnit.module('relational_fields', {
         // save
         form.$buttons.find('.o_form_button_save').click();
 
+        form.destroy();
+    });
+
+    QUnit.test('edition of one2many field, with onchange and not inline sub view', function (assert) {
+        assert.expect(2);
+
+        this.data.turtle.onchanges.turtle_int = function (obj) {
+            obj.turtle_foo = String(obj.turtle_int);
+        };
+        this.data.partner.onchanges.turtles = function () {};
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles"/>' +
+                '</form>',
+            archs: {
+                'turtle,false,list': '<tree><field name="turtle_foo"/></tree>',
+                'turtle,false,form': '<form><group><field name="turtle_foo"/><field name="turtle_int"/></group></form>',
+            },
+            mockRPC: function (route, args) {
+                return this._super.apply(this, arguments);
+            },
+            res_id: 1,
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+        $('input[name="turtle_int"]').val('5').trigger('input');
+        $('.modal-footer button.btn-primary').first().click();
+        assert.strictEqual(form.$('tbody tr:eq(1) td.o_data_cell').text(), '5',
+            'should display 5 in the foo field');
+        form.$('tbody tr:eq(1) td.o_data_cell').click();
+
+        $('input[name="turtle_int"]').val('3').trigger('input');
+        $('.modal-footer button.btn-primary').first().click();
+        assert.strictEqual(form.$('tbody tr:eq(1) td.o_data_cell').text(), '3',
+            'should now display 3 in the foo field');
         form.destroy();
     });
 
@@ -5364,6 +5518,65 @@ QUnit.module('relational_fields', {
 
         form.$buttons.find('.o_form_button_save').click();
 
+        form.destroy();
+    });
+
+    QUnit.test('many2many list in a one2many opened by a many2one', function (assert) {
+        assert.expect(1);
+
+        this.data.turtle.records[1].turtle_trululu = 2;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="turtle_trululu"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                "partner,false,form": '<form string="P">' +
+                        '<field name="timmy"/>' +
+                    '</form>',
+                "partner_type,false,list": '<tree editable="bottom">' +
+                        '<field name="display_name"/>' +
+                    '</tree>',
+                "partner_type,false,search": '<search>' +
+                    '</search>',
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/get_formview_id') {
+                    return $.when(false);
+                }
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1].timmy, [[6,  false, [12]]],
+                        'should properly write ids')
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // edit the first partner in the one2many partner form view
+        form.$('.o_data_row:first td.o_data_cell').click();
+        // open form view for many2one
+        form.$('.o_external_button').click();
+
+        // click on add, to add a new partner in the m2m
+        $('.modal .o_field_x2many_list_row_add a').click();
+
+        // select the partner_type 'gold' (this closes the 2nd modal)
+        $('.modal td:contains(gold)').click();
+
+        // confirm the changes in the modal
+        $('.modal .modal-footer .btn-primary').click();
+
+        form.$buttons.find('.o_form_button_save').click();
         form.destroy();
     });
 

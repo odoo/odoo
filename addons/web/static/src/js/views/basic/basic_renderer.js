@@ -513,15 +513,18 @@ var BasicRenderer = AbstractRenderer.extend({
         // Update the modifiers registration by associating the widget and by
         // giving the modifiers options now (as the potential callback is
         // associated to new widget)
-        this._registerModifiers(node, record, widget, _.extend({
-            callback: (function (element, modifiers, record) {
-                element.$el.toggleClass('o_field_empty', !!(
-                    record.data.id
-                    && (modifiers.readonly || this.mode === 'readonly')
-                    && !element.widget.isSet()
-                ));
-            }).bind(this),
-        }, modifiersOptions || {}));
+        var self = this;
+        def.then(function () {
+            self._registerModifiers(node, record, widget, _.extend({
+                callback: function (element, modifiers, record) {
+                    element.$el.toggleClass('o_field_empty', !!(
+                        record.data.id
+                        && (modifiers.readonly || self.mode === 'readonly')
+                        && !element.widget.isSet()
+                    ));
+                },
+            }, modifiersOptions || {}));
+        });
 
         return widget;
     },

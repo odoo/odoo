@@ -377,9 +377,8 @@ class AccountMoveLine(models.Model):
 
     @api.depends('move_id')
     def _compute_parent_state(self):
-        for record in self:
-            if record.move_id:
-                self.parent_state = self.move_id.state
+        for record in self.filtered('move_id'):
+            record.parent_state = record.move_id.state
 
     @api.one
     @api.depends('move_id.line_ids')
@@ -472,7 +471,7 @@ class AccountMoveLine(models.Model):
         balance = 0
         for line in self._context['line_ids']:
             if line[2]:
-                balance += line[2]['debit'] - line[2]['credit']
+                balance += line[2].get('debit', 0) - line[2].get('credit', 0)
         if balance < 0:
             rec.update({'debit': -balance})
         if balance > 0:

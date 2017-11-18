@@ -61,12 +61,6 @@ msgid "# Bill of Material"
 msgstr "# Stücklisten"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_product_product_used_in_bom_count
-#: model:ir.model.fields,field_description:mrp.field_product_template_used_in_bom_count
-msgid "# BoM Where Used"
-msgstr "# Stücklisten wurden verwendet"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workorder_done_count
 msgid "# Done Work Orders"
 msgstr "# Abgeschlossene Arbeitsaufträge"
@@ -88,6 +82,12 @@ msgstr "# Arbeitsaufträge lesen"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_count
 msgid "# Work Orders"
 msgstr "# Arbeistaufträge"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_product_product_used_in_bom_count
+#: model:ir.model.fields,field_description:mrp.field_product_template_used_in_bom_count
+msgid "# of BoM Where is Used"
+msgstr ""
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_leg
@@ -356,6 +356,16 @@ msgstr ""
 "Wenn Sie weitere Produkte auf Stücklisten verwalten möchten, installieren Sie das Modul mrp_byproduct!"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_post_visible
+msgid "Allowed to Post Inventory"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_unreserve_visible
+msgid "Allowed to Unreserve Inventory"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
 msgid "Approve"
 msgstr "Genehmigen"
@@ -571,12 +581,6 @@ msgstr "Stücklistenpositionen"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_type
 msgid "BoM Type"
 msgstr "Stücklisten Typ"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
-#: model:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
-msgid "BoM Where Used"
-msgstr "Stücklisten wurden verwendet"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
@@ -815,21 +819,6 @@ msgstr "Produktion fortsetzen"
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
 msgid "Cost Structure"
 msgstr "Kostenstruktur"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_late
-msgid "Count Mo Late"
-msgstr "Anzahl verspätete Fertigungsaufträge"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_todo
-msgid "Count Mo Todo"
-msgstr "Anzahl zu erledigende Fertigungsaufträge"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_waiting
-msgid "Count Mo Waiting"
-msgstr "Anzahl mtl. warten"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1375,16 +1364,6 @@ msgstr "Lagermitteilung"
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Inventory Moves"
 msgstr "Lagerbewegungen"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_post_visible
-msgid "Inventory Post Visible"
-msgstr "Lagerort erkennbar"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_unreserve_visible
-msgid "Inventory Unreserve Visible"
-msgstr "Abgebrochene Reservierung im Lagerort erkennbar"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_move_line_ids
@@ -1942,6 +1921,21 @@ msgstr "Nicht dringend"
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 msgid "Notes"
 msgstr "Notizen"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_late
+msgid "Number of Manufacturing Orders Late"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_todo
+msgid "Number of Manufacturing Orders to Process"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_waiting
+msgid "Number of Manufacturing Orders Waiting"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity
@@ -3406,6 +3400,12 @@ msgid ""
 msgstr ""
 "Verwenden Sie den Button „Produziere” oder verarbeiten Sie die "
 "Arbeitsaufträge, um fertige Produkte zu erstellen."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
+#: model:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
+msgid "Used In"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_user_id

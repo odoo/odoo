@@ -12,7 +12,9 @@
                         <div class="col-xs-8">
                             <div>
                                 <a name="%(sale_payment.payment_transaction_action_pending)d" type="action">
-                                    <field name="pending_payment_transactions_count"/> Awaiting Payment<t t-if="record.pending_payment_transactions_count.raw_value != 1">s</t>
+                                    <field name="pending_payment_transactions_count"/>
+                                    <t t-if="record.pending_payment_transactions_count.raw_value == 1">Awaiting Payment</t>
+                                    <t t-else="">Awaiting Payments</t>
                                 </a>
                             </div>
                         </div>
@@ -23,7 +25,9 @@
                     <div class="row" t-if="record.authorized_payment_transactions_count.raw_value">
                         <div class="col-xs-8">
                             <a name="%(sale_payment.payment_transaction_action_authorized)d" type="action">
-                                <field name="authorized_payment_transactions_count"/> Payment<t t-if="record.authorized_payment_transactions_count.raw_value != 1">s</t> to Capture
+                                <field name="authorized_payment_transactions_count"/>
+                                <t t-if="record.authorized_payment_transactions_count.raw_value == 1">Payment to Capture</t>
+                                <t t-else="">Payments to Capture</t>
                             </a>
                         </div>
                         <div class="col-xs-4 text-right">

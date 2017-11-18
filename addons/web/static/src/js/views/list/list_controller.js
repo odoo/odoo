@@ -148,6 +148,7 @@ var ListController = BasicController.extend({
                     label: _t('Delete'),
                     callback: this._onDeleteSelectedRecords.bind(this)
                 });
+            }
             this.sidebar = new Sidebar(this, {
                 editable: this.is_action_enabled('edit'),
                 env: {
@@ -157,7 +158,6 @@ var ListController = BasicController.extend({
                 },
                 actions: _.extend(this.toolbarActions, {other: other}),
             });
-            }
             this.sidebar.appendTo($node);
 
             this._toggleSidebar();
@@ -355,8 +355,8 @@ var ListController = BasicController.extend({
         // trigger a click on the main bus, which would be then caught by the
         // list editable renderer and would unselect the newly created row
         event.stopPropagation();
-
-        if (this.editable) {
+        var state = this.model.get(this.handle, {raw: true});
+        if (this.editable && !state.groupedBy.length) {
             this._addRecord();
         } else {
             this.trigger_up('switch_view', {view_type: 'form', res_id: undefined});

@@ -198,7 +198,7 @@ msgstr "*スマイリーは画像を表示するためのHTMLコードにのみ�
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:51
 #, python-format
-msgid ", due to"
+msgid ", due on"
 msgstr ""
 
 #. module: mail
@@ -1104,7 +1104,7 @@ msgstr "合成モード"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your activity types"
-msgstr ""
+msgstr "活動タイプを設定"
 
 #. module: mail
 #. openerp-web
@@ -4610,7 +4610,7 @@ msgstr "スマイリー"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type_res_model_id
 msgid ""
-"Specify a model if the activity should be specific to a modeland not "
+"Specify a model if the activity should be specific to a model and not "
 "available when managing activities for other models."
 msgstr ""
 
@@ -5238,7 +5238,7 @@ msgstr "テンプレートを使用"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Use your own email servers"
-msgstr ""
+msgstr "自分のEメールサーバを使用"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_sequence
@@ -5280,12 +5280,17 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:668
 #: code:addons/mail/models/mail_thread.py:670
 #: model:ir.ui.view,arch_db:mail.message_user_assigned
 #, python-format
 msgid "View"
 msgstr "ビュー"
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:668
+#, python-format
+msgid "View %s"
+msgstr ""
 
 #. module: mail
 #. openerp-web

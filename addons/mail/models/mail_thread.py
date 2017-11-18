@@ -665,7 +665,7 @@ class MailThread(models.AbstractModel):
 
         if message.model:
             model_name = self.env['ir.model']._get(message.model).display_name
-            view_title = '%s %s' % (_('View'), model_name)
+            view_title = _('View %s') % model_name
         else:
             view_title = _('View')
 
@@ -958,9 +958,10 @@ class MailThread(models.AbstractModel):
                 obj = self.env[alias.alias_parent_model_id.model].browse(alias.alias_parent_thread_id)
             elif model:
                 obj = self.env[model]
-            if not hasattr(obj, '_alias_check_contact'):
-                obj = self.env['mail.alias.mixin']
-            check_result = obj._alias_check_contact(message, message_dict, alias)
+            if hasattr(obj, '_alias_check_contact'):
+                check_result = obj._alias_check_contact(message, message_dict, alias)
+            else:
+                check_result = self.env['mail.alias.mixin']._alias_check_contact_on_record(obj, message, message_dict, alias)
             if check_result is not True:
                 self._routing_warn(_('alias %s: %s') % (alias.alias_name, check_result.get('error_message', _('unknown error'))), _('skipping'), message_id, route, False)
                 self._routing_create_bounce_email(email_from, check_result.get('error_template', _generic_bounce_body_html), message)

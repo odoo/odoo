@@ -81,9 +81,9 @@ var FormViewDialog = ViewDialog.extend({
      * @param {Object} [options.fields_view] optional form fields_view
      * @param {boolean} [options.readonly=false] only applicable when not in
      *   creation mode
-     * @param {function} [options.on_save] callback to execute when clicking on
-     *   'Save' (form view's 'saveRecord' by default)
-     * @param {function} [options.on_saved] callback executed after on_save
+     * @param {function} [options.on_saved] callback executed after saving a
+     *   record.  It will be called with the record data, and a boolean which
+     *   indicates if something was changed
      * @param {BasicModel} [options.model] if given, it will be used instead of
      *  a new form view model
      * @param {string} [options.recordID] if given, the model has to be given as
@@ -214,24 +214,16 @@ var FormViewDialog = ViewDialog.extend({
 
     _save: function () {
         var self = this;
-        var def;
-        if (this.options.on_save) {
-            if (this.form_view.canBeSaved()) {
-                return $.Deferred().reject();
-            }
-            def = this.options.on_save(this.form_view.model.get(this.form_view.handle));
-        } else {
-            def = this.form_view.saveRecord(this.form_view.handle, {
+        return this.form_view.saveRecord(this.form_view.handle, {
                 stayInEdit: true,
                 reload: false,
                 savePoint: this.shouldSaveLocally,
                 viewType: 'form',
-            });
-        }
-        return $.when(def).then(function () {
+        }).then(function (changedFields) {
             // record might have been changed by the save (e.g. if this was a new record, it has an
             // id now), so don't re-use the copy obtained before the save
-            self.on_saved(self.form_view.model.get(self.form_view.handle));
+            var record = self.form_view.model.get(self.form_view.handle);
+            self.on_saved(record, !!changedFields.length);
         });
     },
 });
@@ -402,7 +394,8 @@ var SelectCreateDialog = ViewDialog.extend({
         var results = pyeval.eval_domains_and_contexts({
             domains: [this.domain].concat(domains),
             contexts: [this.context].concat(contexts),
-            group_by_seq: groupbys || []
+            group_by_seq: groupbys || [],
+            eval_context: this.getSession().user_context,
         });
         var context = _.omit(results.context, function (value, key) { return key.indexOf('search_default_') === 0; });
         return {

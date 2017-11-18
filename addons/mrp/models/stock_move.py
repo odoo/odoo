@@ -33,7 +33,7 @@ class StockMoveLine(models.Model):
     @api.multi
     def write(self, vals):
         for move_line in self:
-            if move_line.production_id and 'lot_id' in vals:
+            if move_line.move_id.production_id and 'lot_id' in vals:
                 move_line.production_id.move_raw_ids.mapped('move_line_ids')\
                     .filtered(lambda r: r.done_wo and not r.done_move and r.lot_produced_id == move_line.lot_id)\
                     .write({'lot_produced_id': vals['lot_id']})
@@ -173,16 +173,19 @@ class StockMove(models.Model):
         self.sudo().unlink()
         return processed_moves
 
+    def _prepare_phantom_move_values(self, bom_line, quantity):
+        return {
+            'picking_id': self.picking_id.id if self.picking_id else False,
+            'product_id': bom_line.product_id.id,
+            'product_uom': bom_line.product_uom_id.id,
+            'product_uom_qty': quantity,
+            'state': 'draft',  # will be confirmed below
+            'name': self.name,
+        }
+
     def _generate_move_phantom(self, bom_line, quantity):
         if bom_line.product_id.type in ['product', 'consu']:
-            return self.copy(default={
-                'picking_id': self.picking_id.id if self.picking_id else False,
-                'product_id': bom_line.product_id.id,
-                'product_uom': bom_line.product_uom_id.id,
-                'product_uom_qty': quantity,
-                'state': 'draft',  # will be confirmed below
-                'name': self.name,
-            })
+            return self.copy(default=self._prepare_phantom_move_values(bom_line, quantity))
         return self.env['stock.move']
 
     def _generate_consumed_move_line(self, qty_to_add, final_lot, lot=False):
