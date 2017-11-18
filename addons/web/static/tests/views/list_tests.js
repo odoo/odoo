@@ -3189,6 +3189,33 @@ QUnit.module('Views', {
         list.destroy();
         delete widgetRegistry.map.test;
     });
+
+    QUnit.test('list globle context test on delete record', function (assert) {
+        assert.expect(1);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            viewOptions: {
+                sidebar: true,
+                context: {'my_context': 'true'},
+            },
+            arch: '<tree><field name="foo"/></tree>',
+            mockRPC: function (route, args) {
+                if (args.method === 'unlink') {
+                    assert.strictEqual(args.kwargs.context.my_context, "true",
+                        "should have send the correct context");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        list.$('tbody td.o_list_record_selector:first input').click();
+        list.sidebar.$('a:contains(Delete)').click();
+        $('body .modal-dialog button span:contains(Ok)').click();
+        list.destroy();
+    });
 });
 
 });
