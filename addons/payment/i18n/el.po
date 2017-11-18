@@ -7,13 +7,14 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Nikos Gkountras <nick@ngsol.net>, 2016
 # George Tarasidis <george_tarasidis@yahoo.com>, 2017
+# Giota Dandidou <giotadandidou@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2017\n"
+"Last-Translator: Giota Dandidou <giotadandidou@gmail.com>, 2017\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +40,8 @@ msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"o_warning_text\">Δοκιμαστικό</span>\n"
+"                                    <span class=\"o_stat_text\">Περιβάλλον</span>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -46,6 +49,8 @@ msgid ""
 "<span class=\"text-success\">Production</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"text-success\">Παραγωγής</span>\n"
+"                                    <span class=\"o_stat_text\">Περιβάλλον</span>"
 
 #. module: payment
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_adyen
@@ -96,6 +101,10 @@ msgid ""
 "hesitate to contact us if you have any questions on the status of your "
 "order.</span>"
 msgstr ""
+"<span><i>Σφάλμα,</i> έχετε υπόψη σας ότι παρουσιάστηκε σφάλμα κατά τη "
+"διάρκεια της συναλλαγής. Η παραγγελία επιβεβαιώθηκε, αλλά δεν θα πληρωθεί. "
+"Μην διστάσετε να επικοινωνήσετε μαζί μας αν έχετε απορίες σχετικά με την "
+"κατάσταση της παραγγελίας σας."
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -120,6 +129,8 @@ msgid ""
 "<span><i>Pending</i>... The order will be validated after the "
 "payment.</span>"
 msgstr ""
+"<span><i>Σε αναμονή</i>...Η παραγγελία θα επιβεβαιωθεί μετά την "
+"πληρωμή.</span>"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_journal_id
@@ -154,7 +165,7 @@ msgstr "Ενεργή"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_active
 msgid "Add Extra Fees"
-msgstr ""
+msgstr "Προσθήκη Επιπλέον Χρεώσεων"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_address
@@ -219,7 +230,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_cancel_msg
 msgid "Cancel Message"
-msgstr ""
+msgstr "Μήνυμα Ακύρωσης"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -300,7 +311,7 @@ msgstr "Ημερομηνία Δημιουργίας"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Credentials"
-msgstr ""
+msgstr "Διαπιστευτήρια"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -451,7 +462,7 @@ msgstr "Ομαδοποίηση Κατά"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pre_msg
 msgid "Help Message"
-msgstr ""
+msgstr "Μήνυμα Βοήθειας"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_id
@@ -735,7 +746,7 @@ msgstr "Εκρεμμής"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pending_msg
 msgid "Pending Message"
-msgstr ""
+msgstr "Μήνυμα σε Αναμονή"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_phone
@@ -980,6 +991,8 @@ msgid ""
 "You will be redirected to the Paypal website after clicking on the payment "
 "button."
 msgstr ""
+"Θα μεταφερθείτε στον ιστότοπο του Paypal αφού κάνετε κλικ στο κουμπί "
+"πληρωμής."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_sips

@@ -166,7 +166,7 @@ msgstr "# av aktiviteter"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "(if leads are activated)"
-msgstr "(Om leads är aktiverade)"
+msgstr "(Om kundämnen är aktiverade)"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -314,7 +314,8 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"label label-default text-center odoo_purple\">Lead</span>"
-msgstr "<span class=\"label label-default text-center odoo_purple\">Lead</span>"
+msgstr ""
+"<span class=\"label label-default text-center odoo_purple\">Kundämne</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -344,6 +345,9 @@ msgid ""
 "('next_activity_id', '=', False), ('date_action', '=', False)]}\"> on "
 "</span>"
 msgstr ""
+"<span class=\"oe_form_field\" attrs=\"{'invisible': ['|', "
+"('next_activity_id', '=', False), ('date_action', '=', False)]}\"> på "
+"</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -477,6 +481,8 @@ msgid ""
 "<span class=\"panel-title\"><span data-icon=\"&#57366;\"/><strong> Exercise 1</strong></span>\n"
 "                                    <span>(Lead Manager)</span>"
 msgstr ""
+"<span class=\"panel-title\"><span data-icon=\"&#57366;\"/><strong> Övning 1</strong></span>\n"
+"                                    <span>(Kundämnesadministratör)</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -600,12 +606,12 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Propositions:</strong>"
-msgstr ""
+msgstr "<strong>Offerter:</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Qualified:</strong>"
-msgstr ""
+msgstr "<strong>Kvalificerade:</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -617,7 +623,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Recommended actions:</strong>"
-msgstr ""
+msgstr "<strong>Rekommenderade åtgärder:</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
@@ -634,7 +640,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Sales Stages</strong>"
-msgstr ""
+msgstr "<strong>Försäljningsetapper</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -663,12 +669,12 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Subscriptions</strong>"
-msgstr ""
+msgstr "<strong>Prenumerationer</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Survey</strong>"
-msgstr ""
+msgstr "<strong>Enkät</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -717,7 +723,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Your Main KPIs:</strong>"
-msgstr ""
+msgstr "<strong>Dina viktigaste nyckeltal:</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -810,7 +816,7 @@ msgstr "Aktiviteter"
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Activities Analysis"
-msgstr ""
+msgstr "Aktivitetsanalys"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_target_sales_done
@@ -923,7 +929,7 @@ msgstr "Borttagning av dubletter"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Apply multi-currencies"
-msgstr ""
+msgstr "Lägg på flervaluta"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1100,7 +1106,7 @@ msgstr "Ärenden per säljlag"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_tag
 msgid "Category of lead"
-msgstr ""
+msgstr "Kundämneskategori"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_on_change
@@ -1154,6 +1160,8 @@ msgid ""
 "Click here to <b>create your first opportunity</b> and add it to your "
 "pipeline."
 msgstr ""
+"Klicka här för att <b>skapa din första affärsmöjlighet</b> och lägg den till"
+" din försäljningskanal."
 
 #. module: crm
 #. openerp-web
@@ -1166,7 +1174,7 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:867
 #, python-format
 msgid "Click to add a new opportunity"
-msgstr ""
+msgstr "Klicka för att lägga till ny affärsmöjlighet"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_activity_action
@@ -1629,7 +1637,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Deployment"
-msgstr ""
+msgstr "Driftsättning"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1908,7 +1916,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/web_planner_crm.js:32
 #, python-format
 msgid "Final Proposal sent"
-msgstr ""
+msgstr "Slutlig offert skickad"
 
 #. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
@@ -2124,6 +2132,9 @@ msgid ""
 "mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
 "users to filter the leads when performing mass mailing."
 msgstr ""
+"Om undantagen (opt-out) är ikryssad, har denna kontakt tackat nej till att "
+"ta emot e-post för massutskick och marknadsföring. Filtret 'tillgänglig för "
+"massutskick' filtrerar bort dessa kundämnen."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass_force_assignation
@@ -2333,7 +2344,7 @@ msgstr "Kundämne skapat"
 #: model:ir.ui.view,arch_db:crm.crm_lead_tag_form
 #: model:ir.ui.view,arch_db:crm.crm_lead_tag_tree
 msgid "Lead Tags"
-msgstr ""
+msgstr "Kundämnesetiketter"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
@@ -2403,7 +2414,7 @@ msgstr ""
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_salesperson
 msgid "Leads By Salespersons"
-msgstr ""
+msgstr "Kundämnen per säljare"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_sale_config_settings
@@ -2462,7 +2473,7 @@ msgstr "Kundämnen / affärsmöjligheter"
 #: code:addons/crm/static/src/js/tour.js:18
 #, python-format
 msgid "Let's have a look at your opportunities pipeline."
-msgstr ""
+msgstr "Låt oss titta på din kundämneskanal"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2792,7 +2803,7 @@ msgstr "Mina affärsmöjligheter"
 #: model:ir.actions.server,name:crm.action_your_pipeline
 #: model:ir.ui.menu,name:crm.menu_crm_opportunities
 msgid "My Pipeline"
-msgstr ""
+msgstr "Min kanal"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_name
@@ -3082,7 +3093,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Opportunities pipeline"
-msgstr ""
+msgstr "Kundämneskanal"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -3140,7 +3151,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_opt_out
 msgid "Opt-Out"
-msgstr "Hoppa av"
+msgstr "Undantagen"
 
 #. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
@@ -3287,7 +3298,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Pipeline"
-msgstr ""
+msgstr "Kanal"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_opportunity_salesteam
@@ -3297,7 +3308,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_pivot
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Pipeline Analysis"
-msgstr ""
+msgstr "Kanalanalys"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -3413,7 +3424,7 @@ msgstr "Produkter"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 #, python-format
 msgid "Proposal"
-msgstr ""
+msgstr "Offerter"
 
 #. module: crm
 #. openerp-web
@@ -3968,7 +3979,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Templates of quotations (use Odoo Online Proposals for this)"
-msgstr ""
+msgstr "Offertmallar (använd Odoo online-offerter för detta)"
 
 #. module: crm
 #. openerp-web
@@ -4082,6 +4093,12 @@ msgid ""
 "\n"
 "                        That's the easiest way to integrate Odoo with third party apps."
 msgstr ""
+"Det finns många sätt för ditt företag att skapa kundämnen med Odoo-CRM.\n"
+"            Ett av dem är att använda en vanlig epost-adress för att öppna ett nytt kundämne, varje säljteam kan ha en egen adress.\n"
+"                       Till exempel, om den personliga adressen till teamet är\n"
+"                        direct@mycompany.example.com, varje meddelandse skickat till adressen skapar ett nytt kundämne autmatiskt åt säljteamet.\n"
+"\n"
+"Detta är också det enklaste sättet att knyta Odoo till tredjepartsystem."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -4193,7 +4210,7 @@ msgstr "Totala intäkterna"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Tracking"
-msgstr "Tracking"
+msgstr "Spårning"
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor6
@@ -4448,6 +4465,8 @@ msgid ""
 "What <strong>kind of proposals</strong> do you usually send to your "
 "customers ?"
 msgstr ""
+"Vilken <strong>typ av offerter</strong> skickar du vanligen till dina "
+"kunder?"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4589,7 +4608,7 @@ msgstr ""
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_opportunities_tree_view
 msgid "Your Pipeline"
-msgstr ""
+msgstr "Din kanal"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4662,7 +4681,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "e.g. Discuss proposal"
-msgstr ""
+msgstr "e.g Diskutera offert"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor

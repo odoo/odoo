@@ -2543,6 +2543,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"Необов'язковий ID потоку (запису), до якого буде додано всі вхідні "
+"повідомлення, навіть якщо вони не відповіли на нього. Якщо встановлено, це "
+"повністю призведе до вимкнення створення нових записів."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
@@ -2621,7 +2624,7 @@ msgstr "Батьківська модель"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "Запис батьківської теми ID"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_parent_model_id
@@ -2630,6 +2633,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"Батьківська модель, що містить псевдонім. Модель, яка містить посилання на "
+"псевдонім, не обов'язково являє собою модель, що дається alias_model_id "
+"(наприклад: project (parent_model) і завдання (model))"
 
 #. module: project
 #: model:ir.model,name:project.model_res_partner
@@ -2662,6 +2668,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Політика публікації повідомлення на документі за допомогою mailgateway.\n"
+"- всі: кожен може опублікувати\n"
+"- партнери: лише автентифіковані партнери\n"
+"- підписники: лише ті, хто підписаний на відповідний документ або учасники підписаних каналів\n"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2677,7 +2687,7 @@ msgstr "Приорітет"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
 msgid "Priority Management Explanation"
-msgstr ""
+msgstr "Пояснення управління пріоритетом"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_privacy_visibility
@@ -2846,7 +2856,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "Записати тему ID"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3317,6 +3327,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"Модель (тип документу Odoo), до якої відповідає цей псевдонім. Будь-яка "
+"вхідна електронна пошта, яка не відповідає існуючому запису, призведе до "
+"створення нового запису цієї моделі (наприклад, завдання проекту)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_name
@@ -3324,6 +3337,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"Ім'я псевдоніма електронної пошти, наприклад, \"Робота\", якщо ви хочете "
+"отримувати повідомлення електронної пошти на <jobs@example.odoo.com>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_user_id
@@ -3333,6 +3348,11 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
+"Власник записів створений при отриманні електронних листів за цим "
+"псевдонімом. Якщо це поле не встановлено, система намагатиметься знайти "
+"потрібного власника на основі адреси відправника (від) або використовувати "
+"обліковий запис адміністратора, якщо для цієї адреси не знайдено системного "
+"користувача."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3376,6 +3396,8 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
+"Цей етап складається у канбані, коли на цьому етапі відсутні записи для "
+"відображення."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3616,7 +3638,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "We can automate steps in your workflow, for example:"
-msgstr ""
+msgstr "Ми можемо автоматизувати кроки у вашому робочому процесі, наприклад:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
