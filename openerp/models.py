@@ -591,6 +591,10 @@ class BaseModel(object):
         # determine the model's name
         name = cls._name or (len(parents) == 1 and parents[0]) or cls.__name__
 
+        # all models except 'base' implicitly inherit from 'base'
+        if name != 'base':
+            parents = list(parents) + ['base']
+
         # determine the module that introduced the model
         original_module = pool[name]._original_module if name in parents else cls._module
 
