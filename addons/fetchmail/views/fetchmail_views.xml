@@ -23,9 +23,9 @@
             <field name="arch" type="xml">
                 <form string="Incoming Mail Server">
                     <header attrs="{'invisible' : [('type', '=', 'local')]}">
-                        <button string="Test &amp; Confirm" type="object" name="button_confirm_login" states="draft"/>
-                        <button string="Fetch Now" type="object" name="fetch_mail" states="done"/>
-                        <button string="Reset Confirmation" type="object" name="set_draft" states="done"/>
+                        <button string="Test &amp; Confirm" type="object" name="button_confirm_login" states="draft" invisible="context.get('custom_footer_visible')"/>
+                        <button string="Fetch Now" type="object" name="fetch_mail" states="done" invisible="context.get('custom_footer_visible')"/>
+                        <button string="Reset Confirmation" type="object" name="set_draft" states="done" invisible="context.get('custom_footer_visible')"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -66,6 +66,10 @@
                         </page>
                     </notebook>
                   </sheet>
+                  <footer invisible="not context.get('custom_footer_visible')">
+                    <button string="Test &amp; Confirm" name="button_test_confim" type="object" class="btn-primary"/>
+                    <button string="Discard" class="btn-default" special="cancel" />
+                </footer>
                 </form>
             </field>
         </record>

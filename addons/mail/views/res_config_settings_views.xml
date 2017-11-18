@@ -34,8 +34,14 @@
                                 </div>
                                 <div class="content-group"  attrs="{'invisible': [('default_external_email_server', '=', False)]}">
                                     <div class="row mt16" id="mail_alias_domain">
-                                        <label for="alias_domain" class="col-md-3 o_light_label"/>
-                                        <field name="alias_domain" placeholder="mycompany.odoo.com"/>
+                                        <div class="col-md-12">
+                                            <label for="alias_domain" class="col-md-3 o_light_label"/>
+                                            <field name="alias_domain" placeholder="mycompany.odoo.com"/>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label for="catchall_name" class="col-md-3 o_light_label"/>
+                                            <field name="catchall_name"/>@<field name="catchall_domain" class="oe_inline" readonly="1"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

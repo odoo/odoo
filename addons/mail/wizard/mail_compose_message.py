@@ -92,9 +92,26 @@ class MailComposer(models.TransientModel):
             result['model'] = 'res.partner'
             result['res_id'] = self.env.user.partner_id.id
 
+        res = self._check_mail_configuration()
+        result['is_mail_config'] = True if all(res.values()) else False
+
         if fields is not None:
             [result.pop(field, None) for field in list(result) if field not in fields]
         return result
+
+    def _is_fetchmail_server(self):
+        return False
+
+    def _check_mail_configuration(self):
+        """ Check mail Configuration before sending any mail. """
+        res = {}
+        if self.env.user.has_group('base.group_system'):
+            alias_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain", default=None)
+            res['alias_domain'] = alias_domain
+            res['is_alias_domain'] = False if alias_domain == 'localhost' or not alias_domain else True
+            res['is_incoming_server'] = self._is_fetchmail_server()
+            res['is_outgoing_server'] = True if self.env['ir.mail_server'].sudo().search([('check_connection', '=', True)]) else False
+        return res
 
     @api.model
     def _get_composition_mode_selection(self):
@@ -124,6 +141,7 @@ class MailComposer(models.TransientModel):
     # mail_message updated fields
     message_type = fields.Selection(default="comment")
     subtype_id = fields.Many2one(default=lambda self: self.sudo().env.ref('mail.mt_comment', raise_if_not_found=False).id)
+    is_mail_config = fields.Boolean('Check Configuration', help='Check all mail configuration')
 
     @api.multi
     def check_access_rule(self, operation):
@@ -192,6 +210,23 @@ class MailComposer(models.TransientModel):
     def send_mail_action(self):
         # TDE/ ???
         return self.send_mail()
+
+    def action_mail_server_configuration(self):
+        try:
+            mail_server_form_id = self.env.ref('mail.mail_server_configuration_wizard_form').id
+        except ValueError:
+            mail_server_form_id = False
+        return {
+                'name': _('Mail Server Configuration'),
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'mail.server.configuration',
+                'views': [(mail_server_form_id, 'form')],
+                'view_id': mail_server_form_id,
+                'target': 'new',
+                'context': self.env.context
+            }
 
     @api.multi
     def send_mail(self, auto_commit=False):

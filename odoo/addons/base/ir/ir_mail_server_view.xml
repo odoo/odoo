@@ -19,9 +19,13 @@
                         <field name="smtp_encryption"/>
                         <field name="smtp_user"/>
                         <field name="smtp_pass" password="True"/>
-                        <button name="test_smtp_connection" type="object" string="Test Connection" icon="fa-television"/>
+                        <button name="test_smtp_connection" type="object" string="Test Connection" icon="fa-television" invisible="context.get('custom_footer_visible')"/>
                     </group>
-                  </sheet>  
+                  </sheet>
+                   <footer invisible="not context.get('custom_footer_visible')">
+                        <button string="Test &amp; Confirm" name="button_test_confim" type="object" class="btn-primary"/>
+                        <button string="Discard" class="btn-default" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

@@ -25,7 +25,7 @@ class FetchmailServer(models.Model):
     _description = "POP/IMAP Server"
     _order = 'priority'
 
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', required=True, default='Incoming Mail Server')
     active = fields.Boolean('Active', default=True)
     state = fields.Selection([
         ('draft', 'Not Confirmed'),
@@ -146,6 +146,25 @@ class FetchmailServer(models.Model):
                     # ignored, just a consequence of the previous exception
                     pass
         return True
+
+    @api.multi
+    def button_test_confim(self):
+        res = self.button_confirm_login()
+        if res:
+            try:
+                mail_server_form_id = self.env.ref('mail.mail_server_configuration_wizard_form').id
+            except ValueError:
+                mail_server_form_id = False
+            return {
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'mail.server.configuration',
+                'views': [(mail_server_form_id, 'form')],
+                'view_id': mail_server_form_id,
+                'target': 'new',
+                'context': self.env.context
+            }
 
     @api.model
     def _fetch_mails(self):
