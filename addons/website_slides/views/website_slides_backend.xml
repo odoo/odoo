@@ -134,9 +134,9 @@
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Channel" domain="[]" context="{'group_by': 'channel_id'}"/>
-                        <filter string="Category" domain="[]" context="{'group_by': 'category_id'}"/>
-                        <filter string="Type" domain="[]" context="{'group_by': 'slide_type'}"/>
+                        <filter string="Channel" name="channel" domain="[]" context="{'group_by': 'channel_id'}"/>
+                        <filter string="Category" name="category" domain="[]" context="{'group_by': 'category_id'}"/>
+                        <filter string="Type" name="type" domain="[]" context="{'group_by': 'slide_type'}"/>
                     </group>
                 </search>
             </field>

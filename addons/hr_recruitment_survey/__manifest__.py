@@ -21,6 +21,5 @@
     'demo': [
         'data/hr_job_demo.xml',
     ],
-    'test': ['test/recruitment_process.yml'],
     'auto_install': False,
 }

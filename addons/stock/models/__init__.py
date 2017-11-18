@@ -18,5 +18,4 @@ from . import stock_quant
 from . import stock_traceability
 from . import stock_warehouse
 from . import stock_scrap
-from . import web_planner
 from . import product

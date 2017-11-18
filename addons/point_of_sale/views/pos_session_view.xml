@@ -190,12 +190,12 @@
                 <field name="name" />
                 <filter name="open_sessions" string="Open" domain="[('state', '=', 'opened')]" />
                 <separator/>
-                <filter string="Today" domain="[('start_at', '>=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" />
+                <filter string="Today" name="today" domain="[('start_at', '>=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" />
                 <field name="config_id" />
                 <field name="user_id" />
                 <group expand="0" string="Group By">
-                    <filter string="User" domain="[]" context="{'group_by' : 'user_id'}" />
-                    <filter string="Point of Sale" domain="[]" context="{'group_by': 'config_id'}" />
+                    <filter string="User" name="user" domain="[]" context="{'group_by' : 'user_id'}" />
+                    <filter string="Point of Sale" name="point_of_sale" domain="[]" context="{'group_by': 'config_id'}" />
                 </group>
             </search>
         </field>

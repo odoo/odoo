@@ -183,7 +183,7 @@
                     <field name="partner_id"/>
                     <filter string="Archived" domain="[('active', '=', False)]" name="inactive"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Associated Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Associated Partner" name="associatedpartner" domain="[]" context="{'group_by':'partner_id'}"/>
                     </group>
                 </search>
             </field>
@@ -212,6 +212,11 @@
             <field name="context">{'search_default_active':1}</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add an analytic account.
+              </p>
+            </field>
         </record>
 
 

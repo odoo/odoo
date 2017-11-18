@@ -28,6 +28,7 @@
         <script type="text/javascript" src="/website/static/src/js/utils.js"/>
         <script type="text/javascript" src="/website/static/src/js/website.js"/>
 
+        <script type="text/javascript" src="/website/static/src/js/content/affix_menu.js"/>
         <script type="text/javascript" src="/website/static/src/js/content/compatibility.js"/>
         <script type="text/javascript" src="/website/static/src/js/content/lazy_template_call.js"/>
         <script type="text/javascript" src="/website/static/src/js/content/snippets.animation.js"/>
@@ -54,7 +55,6 @@
     <script type="text/javascript" src="/website/static/src/js/menu/edit.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/mobile_view.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/new_content.js"/>
-    <script type="text/javascript" src="/website/static/src/js/menu/planner.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/seo.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/translate.js"/>
 
@@ -98,6 +98,7 @@
             'data-translatable': '1' if translatable else None,
             'data-edit_translations': '1' if edit_translations else None,
             'data-view-xmlid': xmlid if editable or translatable else None,
+            'data-viewid': viewid if editable or translatable else None,
             'data-main-object': repr(main_object) if editable or translatable else None,
             'data-oe-company-name': res_company.name
         }"/>
@@ -223,6 +224,12 @@
         <a href="/" class="navbar-brand logo">
             <span t-field="res_company.logo" t-options="{'widget': 'image'}" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name" />
         </a>
+    </xpath>
+</template>
+
+<template id="affix_top_menu" inherit_id="website.layout" customize_show="True" name="Affix Top Menu">
+    <xpath expr="//div[@id='wrapwrap']/header" position="attributes">
+        <attribute name="class" add="o_affix_enabled" separator=" "/>
     </xpath>
 </template>
 

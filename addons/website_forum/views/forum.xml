@@ -208,15 +208,15 @@
                     <field name="forum_id"/>
                     <field name="tag_ids" string="Tag"/>
                     <filter string="Questions" name="questions" domain="[('parent_id', '=', False)]" />
-                    <filter string="Answers" domain="[('parent_id', '!=', False)]" />
-                    <filter string="Accepted Answer" domain="[('is_correct' , '!=', False), ('parent_id', '!=', False)]" />
-                    <filter string="Answered Questions" domain="[('child_count', '!=', 0), ('parent_id', '=', False)]" />
+                    <filter string="Answers" name="answers" domain="[('parent_id', '!=', False)]" />
+                    <filter string="Accepted Answer" name="accepted_answer" domain="[('is_correct' , '!=', False), ('parent_id', '!=', False)]" />
+                    <filter string="Answered Questions" name="answered_questions" domain="[('child_count', '!=', 0), ('parent_id', '=', False)]" />
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Forum" domain="[]" context="{'group_by': 'forum_id'}"/>
-                        <filter string="Author" domain="[]" context="{'group_by': 'create_uid'}"/>
-                        <filter string="Post" domain="[]" context="{'group_by': 'parent_id'}"/>
+                        <filter string="Forum" name="forum" domain="[]" context="{'group_by': 'forum_id'}"/>
+                        <filter string="Author" name="author" domain="[]" context="{'group_by': 'create_uid'}"/>
+                        <filter string="Post" name="post" domain="[]" context="{'group_by': 'parent_id'}"/>
                     </group>
                 </search>
             </field>

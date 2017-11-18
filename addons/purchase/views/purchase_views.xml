@@ -172,7 +172,7 @@
                         <button type="object"
                             name="action_view_picking"
                             class="oe_stat_button"
-                            icon="fa-truck" attrs="{'invisible':[('state', 'in', ('draft','sent','to approve')),('picking_ids','=',[])]}">
+                            icon="fa-truck" attrs="{'invisible':[('picking_ids','=',[])]}">
                             <field name="picking_count" widget="statinfo" string="Shipment" help="Incoming Shipments"/>
                             <field name="picking_ids" invisible="1"/>
                         </button>
@@ -209,6 +209,7 @@
                                  <tree string="Purchase Order Lines" editable="bottom">
                                     <field name="currency_id" invisible="1"/>
                                     <field name="state" invisible="1"/>
+                                    <field name="product_type" invisible="1"/>
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" attrs="{'readonly': [('state', 'in', ('purchase', 'to approve','done', 'cancel'))]}" context="{'partner_id':parent.partner_id, 'quantity':product_qty,'uom':product_uom, 'company_id': parent.company_id}"/>
                                     <field name="name"/>
@@ -217,8 +218,8 @@
                                     <field name="account_analytic_id" context="{'default_partner_id':parent.partner_id}" groups="purchase.group_analytic_accounting"/>
                                     <field name="analytic_tag_ids" groups="purchase.group_analytic_accounting" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <field name="product_qty"/>
-                                    <field name="qty_received" invisible="not context.get('show_purchase', True)"/>
-                                    <field name="qty_invoiced" invisible="not context.get('show_purchase', True)"/>
+                                    <field name="qty_received" attrs="{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))], 'readonly': [('product_type', 'in', ('consu', 'product'))]}"/>
+                                    <field name="qty_invoiced" attrs="{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))]}"/>
                                     <field name="product_uom" groups="product.group_uom" attrs="{'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))]}"/>
                                     <field name="price_unit"/>
                                     <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]" context="{'default_type_tax_use': 'purchase'}" options="{'no_create': True}"/>
@@ -285,6 +286,7 @@
                                     <field name="incoterm_id"/>
                                 </group>
                                 <group>
+                                    <field name="user_id"/>
                                     <field name="invoice_status"/>
                                     <field name="payment_term_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}"/>
                                     <field name="fiscal_position_id" options="{'no_create': True}" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}"/>
@@ -312,9 +314,11 @@
                     <field name="partner_id" operator="child_of"/>
                     <field name="product_id"/>
                     <field name="create_uid"/>
+                    <field name="user_id"/>
                     <filter name="draft" string="Quotations" domain="[('state','in',('draft','sent','to approve'))]"/>
                     <filter name="approved" string="Purchase Orders" domain="[('state','in',('purchase','done'))]"/>
                     <filter name="to_approve" string="To Approve" domain="[('state', '=', 'to approve')]"/>
+                    <filter name="my_purchases" string="My Purchases" domain="[('user_id','=', uid)]"/>
                     <separator/>
                     <filter name="not_invoiced" string="Waiting Bills" domain="[('invoice_status','=', 'to invoice')]" help="Purchase orders that include lines not invoiced."/>
                     <filter name="invoiced" string="Bills Received" domain="[('invoice_status','=', 'invoiced')]" help="Purchase orders that have been invoiced."/>
@@ -332,9 +336,10 @@
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Vendor" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Order Date" domain="[]" context="{'group_by':'date_order'}"/>
-                        <filter string="Expected Date" domain="[]" context="{'group_by':'date_planned'}"/>
+                        <filter string="Vendor" name="vendor" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Purchase Representative" name="representative" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Order Date" name="order_date" domain="[]" context="{'group_by':'date_order'}"/>
+                        <filter string="Expected Date" name="expected_date" domain="[]" context="{'group_by':'date_planned'}"/>
                     </group>
                 </search>
             </field>
@@ -388,12 +393,13 @@
                     <field name="partner_id"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                     <field name="date_planned" invisible="context.get('quotation_only', False)"/>
+                    <field name="user_id"/>
                     <field name="origin"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary"/>
                     <field name="amount_total" sum="Total amount" widget="monetary"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="state"/>
-                    <field name="invoice_status" invisible="not context.get('show_purchase', True)"/>
+                    <field name="invoice_status" attrs="{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))]}"/>
                 </tree>
             </field>
         </record>
@@ -410,8 +416,6 @@
             <field name="name">Requests for Quotation</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
-            <field name="context">{'search_default_todo':1, 'show_purchase': False}</field>
-            <field name="domain">[('state','in',('draft','sent','bid','cancel', 'confirmed'))]</field>
             <field name="view_mode">tree,kanban,form,pivot,graph,calendar</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help" type="html">
@@ -436,8 +440,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="view_mode">tree,kanban,form,pivot,graph,calendar</field>
-            <field name="context">{'search_default_todo':1, 'show_purchase': True}</field>
-            <field name="domain">[('state','not in',('draft','sent','bid', 'confirmed'))]</field>
+            <field name="domain">[('state','in',('purchase', 'done'))]</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -524,8 +527,8 @@
                     <group expand="0" string="Group By">
                         <filter name="groupby_supplier" string="Vendor" domain="[]" context="{'group_by' : 'partner_id'}" />
                         <filter name="groupby_product" string="Product" domain="[]" context="{'group_by' : 'product_id'}" />
-                        <filter string="Order Reference" domain="[]" context="{'group_by' :'order_id'}"/>
-                        <filter string="Status" domain="[]" context="{'group_by' : 'state'}" />
+                        <filter string="Order Reference" name="order_reference" domain="[]" context="{'group_by' :'order_id'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by' : 'state'}" />
                     </group>
                 </search>
             </field>
@@ -538,34 +541,31 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <page name="sales" position="after">
-                    <page string="Purchase" name="purchase" attrs="{'invisible': [('purchase_ok','=',False)]}">
-                        <group string="Vendors" name="vendors" attrs="{'invisible': [('product_variant_count','&gt;',1)]}">
-                            <field name="seller_ids" context="{'default_product_tmpl_id':context.get('product_tmpl_id',active_id), 'product_template_invisible_variant': True}" nolabel="1"/>
-                        </group>
-                        <group string="Vendors" name="variant_vendors" attrs="{'invisible': [('product_variant_count','&lt;=',1)]}">
-                            <field name="variant_seller_ids" context="{'default_product_tmpl_id': context.get('product_tmpl_id', active_id)}" nolabel="1"/>
-                        </group>
-                    </page>
-                </page>
-                <group name="invoicing" position="inside">
-                    <group string="Purchase Bills" name="bill" attrs="{'invisible': [('purchase_ok','=',False)]}" groups="purchase.group_purchase_manager">
-                        <field name="purchase_method" widget="radio"/>
+                <group name="purchase" position="before">
+                    <group string="Vendors" name="vendors" attrs="{'invisible': [('product_variant_count','&gt;',1)]}">
+                        <field name="seller_ids" context="{'default_product_tmpl_id':context.get('product_tmpl_id',active_id), 'product_template_invisible_variant': True}" nolabel="1"/>
+                    </group>
+                    <group string="Vendors" name="variant_vendors" attrs="{'invisible': [('product_variant_count','&lt;=',1)]}">
+                        <field name="variant_seller_ids" context="{'default_product_tmpl_id': context.get('product_tmpl_id', active_id)}" nolabel="1"/>
                     </group>
                 </group>
-                <group name="purchase_warning" position="replace">
+                <group name="bill" position="attributes">
+                    <attribute name="groups">purchase.group_purchase_manager</attribute>
+                </group>
+                <group name="bill" position="inside">
+                    <field name="purchase_method" widget="radio"/>
+                </group>
+                <page name="purchase" position="inside">
+                    <group string="Description for Vendors">
+                       <field name="description_purchase" nolabel="1"
+                            placeholder="This note will show up on purchase orders."/>
+                    </group>
                     <group string="Warning when Purchasing this Product" groups="purchase.group_warning_purchase">
                         <field name="purchase_line_warn" nolabel="1"/>
                         <field name="purchase_line_warn_msg" colspan="3" nolabel="1"
                                 attrs="{'required':[('purchase_line_warn','!=','no-message')],'readonly':[('purchase_line_warn','=','no-message')], 'invisible':[('purchase_line_warn','=','no-message')]}"/>
                     </group>
-                </group>
-                <group name="description" position="inside">
-                    <group string="Description for Vendors" attrs="{'invisible': [('purchase_ok','=',False)]}">
-                       <field name="description_purchase" nolabel="1"
-                            placeholder="This note will show up on purchase orders."/>
-                    </group>
-                </group>
+                </page>
             </field>
         </record>
 
@@ -583,8 +583,9 @@
         <record model="ir.actions.act_window" id="action_purchase_line_product_tree">
             <field name="context">{}</field>
             <field name="domain">[('product_id.product_tmpl_id','in',active_ids), ('state', 'in', ['purchase', 'done'])]</field>
-            <field name="name">Purchases</field>
+            <field name="name">Purchase Order Lines</field>
             <field name="res_model">purchase.order.line</field>
+            <field name="view_mode">tree</field>
             <field name="view_id" ref="purchase_order_line_tree"/>
         </record>
 
@@ -611,7 +612,7 @@
             <field name="arch" type="xml">
                 <button name="toggle_active" position="before">
                    <button class="oe_stat_button" name="%(purchase.action_purchase_line_product_tree)d"
-                       type="action" icon="fa-shopping-cart">
+                       type="action" icon="fa-shopping-cart" attrs="{'invisible': [('purchase_ok', '=', False)]}">
                        <field string="Purchases" name="purchase_count" widget="statinfo"/>
                    </button>
                 </button>

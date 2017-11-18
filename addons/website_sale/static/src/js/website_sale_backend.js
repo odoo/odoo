@@ -30,4 +30,6 @@ WebsiteBackend.include({
         });
     },
 });
+return WebsiteBackend;
+
 });

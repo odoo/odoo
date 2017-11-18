@@ -100,6 +100,6 @@ en Odoo):
         # Adds fiscal position
         'data/fiscal_position_template.xml',
         # configuration wizard, views, reports...
-        'data/account_chart_template_data.yml',
+        'data/account_chart_template_configure_data.xml',
     ],
 }

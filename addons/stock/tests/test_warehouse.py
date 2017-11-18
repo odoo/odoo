@@ -74,7 +74,6 @@ class TestWarehouse(TestStockCommon):
         # TDE TODO: expand this test
 
     def test_basic_move(self):
-        # TDE NOTE: replaces test/move.yml present until saas-10, including onchanges
         product = self.product_3.sudo(self.user_stock_manager)
         product.type = 'product'
         picking_out = self.env['stock.picking'].create({

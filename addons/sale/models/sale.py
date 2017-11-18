@@ -133,8 +133,8 @@ class SaleOrder(models.Model):
     confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sales order is confirmed.", oldname="date_confirm")
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, index=True, track_visibility='always')
-    partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Invoice address for current sales order.")
-    partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Delivery address for current sales order.")
+    partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]}, help="Invoice address for current sales order.")
+    partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]}, help="Delivery address for current sales order.")
 
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current sales order.")
     currency_id = fields.Many2one("res.currency", related='pricelist_id.currency_id', string="Currency", readonly=True, required=True)
@@ -495,6 +495,13 @@ class SaleOrder(models.Model):
             'target': 'new',
             'context': ctx,
         }
+
+    @api.multi
+    @api.returns('self', lambda value: value.id)
+    def message_post(self, **kwargs):
+        if self.env.context.get('mark_so_as_sent'):
+            self.filtered(lambda o: o.state == 'draft').write({'state': 'sent'})
+        return super(SaleOrder, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
 
     @api.multi
     def force_quotation_send(self):
@@ -1079,7 +1086,7 @@ class SaleOrderLine(models.Model):
     @api.multi
     def unlink(self):
         if self.filtered(lambda x: x.state in ('sale', 'done')):
-            raise UserError(_('You can not remove a sales order line.\nDiscard changes and try setting the quantity to 0.'))
+            raise UserError(_('You can not remove an order line once the sales order is confirmed.\nYou should rather set the quantity to 0.'))
         return super(SaleOrderLine, self).unlink()
 
     @api.multi

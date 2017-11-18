@@ -318,7 +318,7 @@
                     <filter string="To Do" name="future" domain="[('state','in',('assigned','confirmed','waiting'))]" help="Stock moves that are Confirmed, Available or Waiting"/>
                     <filter string="Done" name="done" domain="[('state','=','done')]" help="Stock moves that have been processed"/>
                     <separator/>
-                    <filter string="Today" domain="[('date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59))), ('date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Orders processed today or scheduled for today"/>
+                    <filter string="Today" name="today" domain="[('date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59))), ('date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Orders processed today or scheduled for today"/>
                     <separator/>
                     <filter string="Incoming" name="incoming" domain="[('location_id.usage', 'not in', ('internal', 'transit')), ('location_dest_id.usage', 'in', ('internal', 'transit'))]"/>
                     <filter string="Outgoing" name="outgoing" domain="[('location_id.usage', 'in', ('internal', 'transit')), ('location_dest_id.usage', 'not in', ('internal', 'transit'))]"/>
@@ -330,7 +330,7 @@
                         <filter string="Picking" name="groupby_picking_id" domain="[]"  context="{'group_by':'picking_id'}"/>
                         <filter string="Source" name="groupby_location_id" domain="[]" context="{'group_by':'location_id'}" groups="stock.group_stock_multi_locations"/>
                         <filter string="Destination" name="groupby_dest_location_id" domain="[]" context="{'group_by':'location_dest_id'}" groups="stock.group_stock_multi_locations"/>
-                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Creation" name="groupby_create_date" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
                         <filter string="Scheduled" name="groupby_date" domain="[]" context="{'group_by':'date_expected'}"/>
                     </group>

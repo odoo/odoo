@@ -34,10 +34,10 @@
 	        <field name="model">sale.layout_category</field>
 	        <field name="arch" type="xml">
                 <search string="Search Name">
-                    <filter string="Total" domain="[('subtotal','=','True')]"/>
-                    <filter string="Breaks Page" domain="[('pagebreak','=','True')]"/>
+                    <filter string="Total" name="total" domain="[('subtotal','=','True')]"/>
+                    <filter string="Breaks Page" name="breaks_page" domain="[('pagebreak','=','True')]"/>
                     <group string="Group By Name">
-                        <filter string="Name"  context="{'group_by' : 'name'}"/>
+                        <filter string="Name" name="group_name" context="{'group_by' : 'name'}"/>
                     </group>
                 </search>
             </field>

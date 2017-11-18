@@ -884,16 +884,6 @@ def _reexec(updated_modules=None):
         args.insert(0, exe)
     os.execv(sys.executable, args)
 
-def load_test_file_yml(registry, test_file):
-    with registry.cursor() as cr:
-        odoo.tools.convert_yaml_import(cr, 'base', open(test_file, 'rb'), 'test', {}, 'init')
-        if config['test_commit']:
-            _logger.info('test %s has been commited', test_file)
-            cr.commit()
-        else:
-            _logger.info('test %s has been rollbacked', test_file)
-            cr.rollback()
-
 def load_test_file_py(registry, test_file):
     # Locate python module based on its filename and run the tests
     test_path, _ = os.path.splitext(os.path.abspath(test_file))
@@ -928,9 +918,7 @@ def preload_registries(dbnames):
                 test_file = config['test_file']
                 _logger.info('loading test file %s', test_file)
                 with odoo.api.Environment.manage():
-                    if test_file.endswith('yml'):
-                        load_test_file_yml(registry, test_file)
-                    elif test_file.endswith('py'):
+                    if test_file.endswith('py'):
                         load_test_file_py(registry, test_file)
 
             # run post-install tests

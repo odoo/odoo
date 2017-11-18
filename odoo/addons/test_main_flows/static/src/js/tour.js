@@ -208,8 +208,8 @@ tour.register('main_flow_tour', {
     position: 'left',
     run: 'text "service"',
 }, {
-    trigger: '.o_notebook a:contains("Invoicing")',
-    content: _t('Go to invoicing tab'),
+    trigger: '.o_notebook a:contains("Sales")',
+    content: _t('Go to sales tab'),
     position: 'bottom',
 }, {
     trigger: '.o_field_widget[name=service_policy] .o_radio_input[data-value="delivered_timesheet"]',
@@ -236,7 +236,7 @@ tour.register('main_flow_tour', {
 // Create an opportunity
     edition: "enterprise",
     trigger: '.o_menu_toggle',
-    content: _t('Go back to the app switcher'),
+    content: _t('Go back to the home menu'),
     position: 'bottom',
 }, {
     trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"], .oe_menu_toggler[data-menu-xmlid="crm.crm_menu_root"]',
@@ -359,7 +359,7 @@ tour.register('main_flow_tour', {
 }, {
     edition: "enterprise",
     trigger: '.o_menu_toggle',
-    content: _t('Go back to the app switcher'),
+    content: _t('Go back to the home menu'),
     position: 'bottom',
 }, {
     trigger: '.o_app > div:contains("Inventory"), .oe_menu_toggler:contains("Inventory")',
@@ -419,7 +419,7 @@ tour.register('main_flow_tour', {
 //Go to purchase:
     edition: "enterprise",
     trigger: '.o_menu_toggle',
-    content: _t('Go back to the app switcher'),
+    content: _t('Go back to the home menu'),
     position: 'bottom',
 }, {
     trigger: '.o_app > div:contains("Purchases"), .oe_menu_toggler:contains("Purchases")',
@@ -480,7 +480,7 @@ tour.register('main_flow_tour', {
 }, {
     edition: "enterprise",
     trigger: '.o_menu_toggle',
-    content: _t('Go back to the app switcher'),
+    content: _t('Go back to the home menu'),
     position: 'bottom',
 }, {
     trigger: '.o_app > div:contains("Manufacturing"), .oe_menu_toggler:contains("Manufacturing")',
@@ -509,7 +509,7 @@ tour.register('main_flow_tour', {
 }, {
     edition: "enterprise",
     trigger: '.o_menu_toggle',
-    content: _t('Go back to the app switcher'),
+    content: _t('Go back to the home menu'),
     position: 'bottom',
 }, {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"], .oe_menu_toggler[data-menu-xmlid="sale.sale_menu_root"]',
@@ -602,7 +602,7 @@ tour.register('main_flow_tour', {
 }, {
     edition: "enterprise",
     trigger: '.o_menu_toggle',
-    content: _t('Go back to the app switcher'),
+    content: _t('Go back to the home menu'),
     position: 'bottom',
 }, {
     edition: "enterprise",

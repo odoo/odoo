@@ -31,7 +31,7 @@ After installing this module, the Configuration wizard for accounting is launche
              'data/l10n_sg_chart_data.xml',
              'data/account_data.xml',
              'data/account_tax_data.xml',
-             'data/account_chart_template_data.yml',
+             'data/account_chart_template_data.xml',
     ],
     'post_init_hook': '_preserve_tag_on_taxes',
 }

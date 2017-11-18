@@ -112,6 +112,9 @@ class AccountMove(models.Model):
         string='Tax Cash Basis Entry of',
         help="Technical field used to keep track of the tax cash basis reconciliation."
         "This is needed when cancelling the source: it will post the inverse journal entry to cancel that part too.")
+    auto_reverse = fields.Boolean(string='Reverse Automatically', default=False, help='If this checkbox is ticked, this entry will be automatically reversed at the reversal date you defined.')
+    reverse_date = fields.Date(string='Reversal Date', help='Date of the reverse accounting entry.')
+    reverse_entry_id = fields.Many2one('account.move', String="Reverse entry", store=True, readonly=True)
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
@@ -228,32 +231,35 @@ class AccountMove(models.Model):
         return True
 
     @api.multi
-    def _reverse_move(self, date=None, journal_id=None):
+    def _reverse_move(self, date=None, journal_id=None, auto=False):
         self.ensure_one()
         reversed_move = self.copy(default={
             'date': date,
             'journal_id': journal_id.id if journal_id else self.journal_id.id,
-            'ref': _('reversal of: ') + self.name})
+            'ref': _('%sreversal of: ') % (_('Automatic ') if auto else '') + self.name,
+            'auto_reverse': False})
         for acm_line in reversed_move.line_ids.with_context(check_move_validity=False):
             acm_line.write({
                 'debit': acm_line.credit,
                 'credit': acm_line.debit,
                 'amount_currency': -acm_line.amount_currency
             })
+        self.reverse_entry_id = reversed_move
         return reversed_move
 
     @api.multi
-    def reverse_moves(self, date=None, journal_id=None):
+    def reverse_moves(self, date=None, journal_id=None, auto=False):
         date = date or fields.Date.today()
         reversed_moves = self.env['account.move']
         for ac_move in self:
             reversed_move = ac_move._reverse_move(date=date,
-                                                  journal_id=journal_id)
+                                                  journal_id=journal_id,
+                                                  auto=auto)
             reversed_moves |= reversed_move
             #unreconcile all lines reversed
             aml = ac_move.line_ids.filtered(lambda x: x.account_id.reconcile or x.account_id.internal_type == 'liquidity')
             aml.remove_move_reconcile()
-            #reconcile together the reconciliable (or the liquidity aml) and their newly created counterpart
+            #reconcile together the reconcilable (or the liquidity aml) and their newly created counterpart
             for account in list(set([x.account_id for x in aml])):
                 to_rec = aml.filtered(lambda y: y.account_id == account)
                 to_rec |= reversed_move.line_ids.filtered(lambda y: y.account_id == account)
@@ -270,6 +276,26 @@ class AccountMove(models.Model):
     def open_reconcile_view(self):
         return self.line_ids.open_reconcile_view()
 
+    @api.model
+    def _run_reverses_entries(self):
+        ''' This method is called from a cron job. '''
+        records = self.search([
+            ('state', '=', 'posted'),
+            ('auto_reverse', '=', True),
+            ('reverse_date', '<=', fields.Date.today()),
+            ('reverse_entry_id', '=', False)])
+        for move in records:
+            date = None
+            if move.reverse_date and (not self.env.user.company_id.period_lock_date or move.reverse_date > self.env.user.company_id.period_lock_date):
+                date = move.reverse_date
+            move.reverse_moves(date=date, auto=True)
+            
+    @api.multi
+    def action_view_reverse_entry(self):
+        action = self.env.ref('account.action_move_journal_line').read()[0]
+        action['views'] = [(self.env.ref('account.view_move_form').id, 'form')]
+        action['res_id'] = self.reverse_entry_id.id
+        return action
 
 class AccountMoveLine(models.Model):
     _name = "account.move.line"
@@ -290,8 +316,8 @@ class AccountMoveLine(models.Model):
 
     @api.depends('debit', 'credit', 'amount_currency', 'currency_id', 'matched_debit_ids', 'matched_credit_ids', 'matched_debit_ids.amount', 'matched_credit_ids.amount', 'account_id.currency_id', 'move_id.state')
     def _amount_residual(self):
-        """ Computes the residual amount of a move line from a reconciliable account in the company currency and the line's currency.
-            This amount will be 0 for fully reconciled lines or lines from a non-reconciliable account, the original line amount
+        """ Computes the residual amount of a move line from a reconcilable account in the company currency and the line's currency.
+            This amount will be 0 for fully reconciled lines or lines from a non-reconcilable account, the original line amount
             for unreconciled lines, and something in-between for partially reconciled lines.
         """
         for line in self:
@@ -811,10 +837,10 @@ class AccountMoveLine(models.Model):
             # 3)    33      0           25             YEN
             # 
             # If we ask to see the information in the reconciliation widget in company currency, we want to see
-            # The following informations
+            # The following information
             # 1) 25 USD (no currency information)
             # 2) 17 USD [25 EUR] (show 25 euro in currency information, in the little bill)
-            # 3) 33 USD [25 YEN] (show 25 yen in currencu information)
+            # 3) 33 USD [25 YEN] (show 25 yen in currency information)
             # 
             # If we ask to see the information in another currency than the company let's say EUR
             # 1) 35 EUR [25 USD]
@@ -862,7 +888,7 @@ class AccountMoveLine(models.Model):
             :param data: list of dicts containing:
                 - 'type': either 'partner' or 'account'
                 - 'id': id of the affected res.partner or account.account
-                - 'mv_line_ids': ids of exisiting account.move.line to reconcile
+                - 'mv_line_ids': ids of existing account.move.line to reconcile
                 - 'new_mv_line_dicts': list of dicts containing values suitable for account_move_line.create()
         """
         for datum in data:
@@ -880,7 +906,7 @@ class AccountMoveLine(models.Model):
     def process_reconciliation(self, new_mv_line_dicts):
         """ Create new move lines from new_mv_line_dicts (if not empty) then call reconcile_partial on self and new move lines
 
-            :param new_mv_line_dicts: list of dicts containing values suitable fot account_move_line.create()
+            :param new_mv_line_dicts: list of dicts containing values suitable for account_move_line.create()
         """
         if len(self) < 1 or len(self) + len(new_mv_line_dicts) < 2:
             raise UserError(_('A reconciliation must involve at least 2 move lines.'))
@@ -907,7 +933,7 @@ class AccountMoveLine(models.Model):
     def _get_pair_to_reconcile(self):
         #field is either 'amount_residual' or 'amount_residual_currency' (if the reconciled account has a secondary currency set)
         field = self[0].account_id.currency_id and 'amount_residual_currency' or 'amount_residual'
-        #reconciliation on bank accounts are special cases as we don't want to set them as reconciliable
+        #reconciliation on bank accounts are special cases as we don't want to set them as reconcilable
         #but we still want to reconcile entries that are reversed together in order to clear those lines
         #in the bank reconciliation report.
         if not self[0].account_id.reconcile and self[0].account_id.internal_type == 'liquidity':
@@ -1010,7 +1036,7 @@ class AccountMoveLine(models.Model):
         if len(set(all_accounts)) > 1:
             raise UserError(_('Entries are not of the same account!'))
         if not (all_accounts[0].reconcile or all_accounts[0].internal_type == 'liquidity'):
-            raise UserError(_('The account %s (%s) is not marked as reconciliable !') % (all_accounts[0].name, all_accounts[0].code))
+            raise UserError(_('The account %s (%s) is not marked as reconcilable !') % (all_accounts[0].name, all_accounts[0].code))
         if len(partners) > 1:
             raise UserError(_('The partner has to be the same on all lines for receivable and payable accounts!'))
 
@@ -1027,7 +1053,7 @@ class AccountMoveLine(models.Model):
             if not all_aml_share_same_currency:
                 writeoff_vals['amount_currency'] = False
             writeoff_to_reconcile = remaining_moves._create_writeoff(writeoff_vals)
-            #add writeoff line to reconcile algo and finish the reconciliation
+            #add writeoff line to reconcile algorithm and finish the reconciliation
             remaining_moves = (remaining_moves + writeoff_to_reconcile).auto_reconcile_lines()
             return writeoff_to_reconcile
         return True
@@ -1036,7 +1062,7 @@ class AccountMoveLine(models.Model):
         """ Create a writeoff move for the account.move.lines in self. If debit/credit is not specified in vals,
             the writeoff amount will be computed as the sum of amount_residual of the given recordset.
 
-            :param vals: dict containing values suitable fot account_move_line.create(). The data in vals will
+            :param vals: dict containing values suitable for account_move_line.create(). The data in vals will
                 be processed to create bot writeoff acount.move.line and their enclosing account.move.
         """
         # Check and complete vals
@@ -1140,7 +1166,7 @@ class AccountMoveLine(models.Model):
             #eventually create journal entries to book the difference due to foreign currency's exchange rate that fluctuates
             aml_recs, partial_recs = self.env['account.partial.reconcile'].create_exchange_rate_entry(aml_to_balance, 0.0, total_amount_currency, currency, exchange_move)
 
-            #add the ecxhange rate line and the exchange rate partial reconciliation in the et of the full reconcile
+            #add the exchange rate line and the exchange rate partial reconciliation in the et of the full reconcile
             self |= aml_recs
             partial_rec_set |= partial_recs
 
@@ -1371,7 +1397,7 @@ class AccountMoveLine(models.Model):
 
     def _get_matched_percentage(self):
         """ This function returns a dictionary giving for each move_id of self, the percentage to consider as cash basis factor.
-        This is actuallty computing the same as the matched_percentage field of account.move, except in case of multi-currencies
+        This is actually computing the same as the matched_percentage field of account.move, except in case of multi-currencies
         where we recompute the matched percentage based on the amount_currency fields.
         Note that this function is used only by the tax cash basis module since we want to consider the matched_percentage only
         based on the company currency amounts in reports.
@@ -1564,7 +1590,7 @@ class AccountPartialReconcile(models.Model):
     def create_exchange_rate_entry(self, aml_to_fix, amount_diff, diff_in_currency, currency, move):
         """
         Automatically create a journal items to book the exchange rate
-        differences that can occure in multi-currencies environment. That
+        differences that can occur in multi-currencies environment. That
         new journal item will be made into the given `move` in the company
         `currency_exchange_journal_id`, and one of its journal items is
         matched with the other lines to balance the full reconciliation.
@@ -1641,7 +1667,7 @@ class AccountPartialReconcile(models.Model):
             if move_date < move.date:
                 move_date = move.date
             for line in move.line_ids:
-                #TOCHECK: normal and cash basis taxes shoudn't be mixed together (on the same invoice line for example) as it will
+                #TOCHECK: normal and cash basis taxes shouldn't be mixed together (on the same invoice line for example) as it will
                 # create reporting issues. Not sure of the behavior to implement in that case, though.
                 if not line.tax_exigible:
                     percentage_before = percentage_before_rec[move.id]
@@ -1851,7 +1877,7 @@ class AccountFullReconcile(models.Model):
     def unlink(self):
         """ When removing a full reconciliation, we need to revert the eventual journal entries we created to book the
             fluctuation of the foreign currency's exchange rate.
-            We need also to reconcile together the origin currency difference line and its reversal in order to completly
+            We need also to reconcile together the origin currency difference line and its reversal in order to completely
             cancel the currency difference entry on the partner account (otherwise it will still appear on the aged balance
             for example).
         """

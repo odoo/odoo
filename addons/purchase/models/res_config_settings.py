@@ -29,12 +29,23 @@ class ResConfigSettings(models.TransientModel):
     is_installed_sale = fields.Boolean(string="Is the Sale Module Installed")
     group_analytic_account_for_purchases = fields.Boolean('Analytic accounting for purchases',
         implied_group='purchase.group_analytic_accounting')
+    po_lead = fields.Float(related='company_id.po_lead')
+    use_po_lead = fields.Boolean(
+        string="Security Lead Time for Purchase",
+        oldname='default_new_po_lead',
+        help="Margin of error for vendor lead times. When the system generates Purchase Orders for reordering products,they will be scheduled that many days earlier to cope with unexpected vendor delays.")
+
+    @api.onchange('use_po_lead')
+    def _onchange_use_po_lead(self):
+        if not self.use_po_lead:
+            self.po_lead = 0.0
 
     @api.multi
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         res.update(
-            is_installed_sale=self.env['ir.module.module'].search([('name', '=', 'sale'), ('state', '=', 'installed')]).id
+            is_installed_sale=self.env['ir.module.module'].search([('name', '=', 'sale'), ('state', '=', 'installed')]).id,
+            use_po_lead=self.env['ir.config_parameter'].sudo().get_param('purchase.use_po_lead')
         )
         return res
 
@@ -42,5 +53,4 @@ class ResConfigSettings(models.TransientModel):
         super(ResConfigSettings, self).set_values()
         self.po_lock = 'lock' if self.lock_confirmed_po else 'edit'
         self.po_double_validation = 'two_step' if self.po_order_approval else 'one_step'
-
-
+        self.env['ir.config_parameter'].sudo().set_param('purchase.use_po_lead', self.use_po_lead)

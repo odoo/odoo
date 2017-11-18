@@ -154,13 +154,13 @@ class configmanager(object):
         # Testing Group
         group = optparse.OptionGroup(parser, "Testing Configuration")
         group.add_option("--test-file", dest="test_file", my_default=False,
-                         help="Launch a python or YML test file.")
+                         help="Launch a python test file.")
         group.add_option("--test-report-directory", dest="test_report_directory", my_default=False,
                          help="If set, will save sample of all reports in this directory.")
         group.add_option("--test-enable", action="store_true", dest="test_enable",
-                         my_default=False, help="Enable YAML and unit tests.")
+                         my_default=False, help="Enable unit tests.")
         group.add_option("--test-commit", action="store_true", dest="test_commit",
-                         my_default=False, help="Commit database changes performed by YAML or XML tests.")
+                         my_default=False, help="Commit database changes performed by XML tests.")
         parser.add_option_group(group)
 
         # Logging Group
@@ -219,7 +219,7 @@ class configmanager(object):
                          choices=['disable', 'allow', 'prefer', 'require', 'verify-ca', 'verify-full'],
                          help="specify the database ssl connection mode (see PostgreSQL documentation)")
         group.add_option("--db_maxconn", dest="db_maxconn", type='int', my_default=64,
-                         help="specify the the maximum number of physical connections to posgresql")
+                         help="specify the the maximum number of physical connections to PostgreSQL")
         group.add_option("--db-template", dest="db_template", my_default="template1",
                          help="specify a custom database template to create a new database")
         parser.add_option_group(group)
@@ -320,7 +320,7 @@ class configmanager(object):
         arguments.
 
         This method initializes odoo.tools.config and openerp.conf (the
-        former should be removed in the furture) with library-wide
+        former should be removed in the future) with library-wide
         configuration values.
 
         This method must be called before proper usage of this library can be
@@ -395,7 +395,7 @@ class configmanager(object):
         if self.options['server_wide_modules'] in ('', 'None', 'False'):
             self.options['server_wide_modules'] = 'web'
 
-        # if defined dont take the configfile value even if the defined value is None
+        # if defined do not take the configfile value even if the defined value is None
         keys = ['http_interface', 'http_port', 'longpolling_port', 'http_enable',
                 'db_name', 'db_user', 'db_password', 'db_host', 'db_sslmode',
                 'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',

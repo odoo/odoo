@@ -22,7 +22,7 @@ def migrate_set_tags_and_taxes_updatable(cr, registry, module):
         cr.execute("update ir_model_data set noupdate = 'f' where id in %s", (tuple(xml_record_ids),))
 
 def migrate_tags_on_taxes(cr, registry):
-    ''' This is a utiliy function to help migrate the tags of taxes when the localization has been modified on stable version. If
+    ''' This is a utility function to help migrate the tags of taxes when the localization has been modified on stable version. If
     called accordingly in a post_init_hooked function, it will reset the tags set on taxes as per their equivalent template.
 
     Note: This unusual decision has been made in order to help the improvement of VAT reports on version 9.0, to have them more flexible
@@ -366,7 +366,7 @@ class AccountChartTemplate(models.Model):
         return ir_model_data._update(model, template_xmlid.module, vals, xml_id=new_xml_id, store=True, noupdate=True, mode='init', res_id=False)
 
     def _get_account_vals(self, company, account_template, code_acc, tax_template_ref):
-        """ This method generates a dictionnary of all the values for the account that will be created.
+        """ This method generates a dictionary of all the values for the account that will be created.
         """
         self.ensure_one()
         tax_ids = []
@@ -391,7 +391,7 @@ class AccountChartTemplate(models.Model):
         """ This method for generating accounts from templates.
 
             :param tax_template_ref: Taxes templates reference for write taxes_id in account_account.
-            :param acc_template_ref: dictionary with the mappping between the account templates and the real accounts.
+            :param acc_template_ref: dictionary with the mapping between the account templates and the real accounts.
             :param code_digits: number of digits got from wizard.multi.charts.accounts, this is use for account code.
             :param company_id: company_id selected from wizard.multi.charts.accounts.
             :returns: return acc_template_ref for reference purpose.
@@ -411,7 +411,7 @@ class AccountChartTemplate(models.Model):
         return acc_template_ref
 
     def _prepare_reconcile_model_vals(self, company, account_reconcile_model, acc_template_ref, tax_template_ref):
-        """ This method generates a dictionnary of all the values for the account.reconcile.model that will be created.
+        """ This method generates a dictionary of all the values for the account.reconcile.model that will be created.
         """
         self.ensure_one()
         return {
@@ -436,7 +436,7 @@ class AccountChartTemplate(models.Model):
         """ This method for generating accounts from templates.
 
             :param tax_template_ref: Taxes templates reference for write taxes_id in account_account.
-            :param acc_template_ref: dictionary with the mappping between the account templates and the real accounts.
+            :param acc_template_ref: dictionary with the mapping between the account templates and the real accounts.
             :param company_id: company_id selected from wizard.multi.charts.accounts.
             :returns: return new_account_reconcile_model for reference purpose.
             :rtype: dict
@@ -554,7 +554,7 @@ class AccountTaxTemplate(models.Model):
         return res
 
     def _get_tax_vals(self, company, tax_template_to_tax):
-        """ This method generates a dictionnary of all the values for the tax that will be created.
+        """ This method generates a dictionary of all the values for the tax that will be created.
         """
         # Compute children tax ids
         children_ids = []
@@ -609,7 +609,7 @@ class AccountTaxTemplate(models.Model):
 
         if any([tax.tax_exigibility == 'on_payment' for tax in self]):
             # When a CoA is being installed automatically and if it is creating account tax(es) whose field `Use Cash Basis`(tax_exigibility) is set to True by default
-            # (exapmple of such CoA's are l10n_fr and l10n_mx) then in the `Accounting Settings` the option `Cash Basis` should be checked by default.
+            # (example of such CoA's are l10n_fr and l10n_mx) then in the `Accounting Settings` the option `Cash Basis` should be checked by default.
             company.tax_exigibility = True
 
         return {
@@ -728,7 +728,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
             self.complete_tax_set = self.chart_template_id.complete_tax_set
             self.currency_id = currency_id
             if self.chart_template_id.complete_tax_set:
-            # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
+            # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while installing the generic chart of account
                 chart_ids = self._get_chart_parent_ids(self.chart_template_id)
                 base_tax_domain = [('chart_template_id', 'parent_of', chart_ids)]
                 sale_tax_domain = base_tax_domain + [('type_tax_use', '=', 'sale')]
@@ -827,7 +827,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
         it's not the case, it creates the templates for account.tax object accordingly to the provided sale/purchase rates.
         Then it saves the new tax templates as default taxes to use for this chart template.
 
-        :param company_id: id of the company for wich the wizard is running
+        :param company_id: id of the company for which the wizard is running
         :return: True
         '''
         obj_tax_temp = self.env['account.tax.template']
@@ -909,21 +909,15 @@ class WizardMultiChartsAccounts(models.TransientModel):
         # Install all the templates objects and generate the real objects
         acc_template_ref, taxes_ref = self.chart_template_id._install_template(company, code_digits=self.code_digits, transfer_account_id=self.transfer_account_id)
 
-        # write values of default taxes for product as super user and write in the config
-        IrDefault = self.env['ir.default']
-        IrConfig = self.env['ir.config_parameter']
-        if self.sale_tax_id and taxes_ref:
-            IrDefault.sudo().set('product.template', "taxes_id", [taxes_ref[self.sale_tax_id.id]], company_id=company.id)
-            IrConfig.sudo().set_param("account.default_sale_tax_id", taxes_ref[self.sale_tax_id.id])
-        if self.purchase_tax_id and taxes_ref:
-            IrDefault.sudo().set('product.template', "supplier_taxes_id", [taxes_ref[self.purchase_tax_id.id]], company_id=company.id)
-            IrConfig.sudo().set_param("account.default_purchase_tax_id", taxes_ref[self.purchase_tax_id.id])
-
         # Create Bank journals
         self._create_bank_journals_from_o2m(company, acc_template_ref)
 
         # Create the current year earning account if it wasn't present in the CoA
         company.get_unaffected_earnings_account()
+
+        # set the default taxes on the company
+        company.account_sale_tax_id = self.env['account.tax'].search([('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company.id)], limit=1).id
+        company.account_purchase_tax_id = self.env['account.tax'].search([('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company.id)], limit=1).id
         return {}
 
     @api.multi

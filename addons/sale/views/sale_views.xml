@@ -391,6 +391,7 @@
                                 <group string="Reporting" name="technical" groups="base.group_no_one">
                                     <field groups="base.group_no_one" name="origin"/>
                                 </group>
+                                <group name="utm_link" groups="base.group_no_one"/>    
                             </group>
                         </page>
                     </notebook>
@@ -445,9 +446,9 @@
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Salesperson" name="salesperson" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter name="customer" string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Order Month" domain="[]" context="{'group_by':'date_order'}"/>
+                        <filter string="Order Month" name="order_month" domain="[]" context="{'group_by':'date_order'}"/>
                     </group>
                </search>
             </field>
@@ -478,8 +479,8 @@
                     <separator/>
                     <filter string="Sales" name="sales" domain="[('state','in',('progress','done'))]" />
                     <separator/>
-                    <filter string="To Invoice" domain="[('invoice_status','=','to invoice')]" />
-                    <filter string="Upselling" domain="[('invoice_status','=','upselling')]" />
+                    <filter string="To Invoice" name="to_invoice" domain="[('invoice_status','=','to invoice')]" />
+                    <filter string="Upselling" name="upselling" domain="[('invoice_status','=','upselling')]" />
                 </xpath>
             </field>
         </record>
@@ -617,17 +618,17 @@
             <field name="model">sale.order.line</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
-                    <filter string="To Invoice" domain="[('qty_to_invoice','!=', 0)]"  help="Sales Order Lines ready to be invoiced"/>
+                    <filter string="To Invoice" name="to_invoice" domain="[('qty_to_invoice','!=', 0)]"  help="Sales Order Lines ready to be invoiced"/>
                     <separator/>
-                    <filter string="My Sales Order Lines" domain="[('salesman_id','=',uid)]" help="Sales Order Lines related to a Sales Order of mine"/>
+                    <filter string="My Sales Order Lines" name="my_sales_order_lines" domain="[('salesman_id','=',uid)]" help="Sales Order Lines related to a Sales Order of mine"/>
                     <field name="order_id"/>
                     <field name="order_partner_id" operator="child_of"/>
                     <field name="product_id"/>
                     <field name="salesman_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="Order" domain="[]" context="{'group_by':'order_id'}"/>
-                        <filter string="Salesperson" domain="[]" context="{'group_by':'salesman_id'}"/>
+                        <filter string="Product" name="product" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Order" name="order" domain="[]" context="{'group_by':'order_id'}"/>
+                        <filter string="Salesperson" name="salesperson" domain="[]" context="{'group_by':'salesman_id'}"/>
                     </group>
                 </search>
             </field>
@@ -653,7 +654,7 @@
                         <field string="Sales" name="sales_count" widget="statinfo" />
                     </button>
                 </button>
-                <group name="sale_warning" position="replace">
+                <group name="description" position="after">
                     <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
                         <field name="sale_line_warn" nolabel="1"/>
                         <field name="sale_line_warn_msg" colspan="3" nolabel="1"
@@ -671,11 +672,11 @@
             <field name="arch" type="xml">
                 <button name="toggle_active" position="before">
                     <button class="oe_stat_button" name="action_view_sales"
-                        type="object" icon="fa-usd">
+                        type="object" icon="fa-usd" attrs="{'invisible': [('sale_ok', '=', False)]}">
                         <field string="Sales" name="sales_count" widget="statinfo" />
                     </button>
                 </button>
-                <group name="sale_warning" position="replace">
+                <group name="description" position="after">
                     <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
                         <field name="sale_line_warn" nolabel="1"/>
                         <field name="sale_line_warn_msg" colspan="3" nolabel="1"
@@ -690,8 +691,8 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <group name="invoicing" position="inside">
-                    <group string="Invoicing" name="invoicing" attrs="{'invisible': [('sale_ok','=',False)]}">
+                <group name="sale" position="inside">
+                    <group string="Invoicing" name="invoicing">
                         <field name="invoice_policy" widget="radio"/>
                         <field name="service_type" widget="radio" invisible="True"/>
                     </group>
@@ -709,7 +710,7 @@
                     <field name="team_id"/>
                 </xpath>
                 <xpath expr="//group/filter[@name='status']" position="after">
-                    <filter string="Sales Channel" domain="[]" context="{'group_by':'team_id'}"/>
+                    <filter string="Sales Channel" name="sales_channel" domain="[]" context="{'group_by':'team_id'}"/>
                 </xpath>
             </field>
         </record>

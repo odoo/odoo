@@ -71,6 +71,18 @@ class StockMove(models.Model):
         vals['purchase_line_id'] = self.purchase_line_id.id
         return vals
 
+    def _action_done(self):
+        res = super(StockMove, self)._action_done()
+        self.mapped('purchase_line_id').sudo()._update_received_qty()
+        return res
+
+    def write(self, vals):
+        res = super(StockMove, self).write(vals)
+        if 'product_uom_qty' in vals:
+            self.filtered(lambda m: m.state == 'done' and m.purchase_line_id).mapped(
+                'purchase_line_id').sudo()._update_received_qty()
+        return res
+
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
 

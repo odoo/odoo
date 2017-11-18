@@ -82,11 +82,11 @@ var FormRenderer = BasicRenderer.extend({
      *
      * @param {Object[]} alertFields field list
      */
-    displayTranslationAlert: function (alertFields) {
+    displayTranslationAlert: function () {
         this.$('.o_notification_box').remove();
         var $notification = $(qweb.render('notification-box', {type: 'info'}))
             .append(qweb.render('translation-alert', {
-                fields: alertFields,
+                fields: this.alertFields,
                 lang: _t.database.parameters.name
             }));
         if (this.$('.o_form_statusbar').length) {

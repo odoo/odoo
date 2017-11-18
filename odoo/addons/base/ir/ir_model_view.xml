@@ -160,13 +160,30 @@
                         </page>
                         <page string="Access Rights">
                             <field name="access_ids">
-                                <tree string="Access Rules" editable="bottom">
+                                <tree string="Access Rights" editable="top"
+                                      decoration-warning="not group_id and
+                                                         (perm_read or perm_write or
+                                                          perm_create or perm_unlink)">
+                                    <field name="name"/>
                                     <field name="group_id"/>
                                     <field name="perm_read"/>
                                     <field name="perm_write"/>
                                     <field name="perm_create"/>
                                     <field name="perm_unlink"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Record Rules">
+                            <field name="rule_ids">
+                                <tree string="Record Rules" editable="top" decoration-info="global">
                                     <field name="name"/>
+                                    <field name="groups" widget="many2many_tags" options="{'no_create':True}"/>
+                                    <field name="global" invisible="1"/>
+                                    <field name="domain_force"/>
+                                    <field name="perm_read"/>
+                                    <field name="perm_write"/>
+                                    <field name="perm_create"/>
+                                    <field name="perm_unlink"/>
                                 </tree>
                             </field>
                         </page>
@@ -198,10 +215,10 @@
                 <search string="Model Description">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('model','ilike',self)]" string="Model"/>
                     <field name="model" filter_domain="[('model','ilike',self)]" string="Technical Name"/>
-                    <filter string="Transient" domain="[('transient', '=', True)]"/>
+                    <filter string="Transient" name="transient" domain="[('transient', '=', True)]"/>
                     <separator/>
-                    <filter string="Custom" domain="[('state', '=', 'manual')]"/>
-                    <filter string="Base" domain="[('state', '=', 'base')]"/>
+                    <filter string="Custom" name="custom" domain="[('state', '=', 'manual')]"/>
+                    <filter string="Base" name="base" domain="[('state', '=', 'base')]"/>
                 </search>
             </field>
         </record>
@@ -341,20 +358,20 @@
             <field name="arch" type="xml">
                 <search string="Fields">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('field_description','ilike',self)]" string="Field"/>
-                    <filter string="Required" domain="[('required', '=', True)]"/>
+                    <filter string="Required" name="required" domain="[('required', '=', True)]"/>
                     <separator/>
-                    <filter string="Readonly" domain="[('readonly', '=', True)]"/>
+                    <filter string="Readonly" name="readonly" domain="[('readonly', '=', True)]"/>
                     <separator/>
-                    <filter string="Custom" domain="[('state', '=', 'manual')]"/>
-                    <filter string="Base" domain="[('state', '=', 'base')]"/>
+                    <filter string="Custom" name="custom" domain="[('state', '=', 'manual')]"/>
+                    <filter string="Base" name="base" domain="[('state', '=', 'base')]"/>
                     <separator/>
-                    <filter string="Translate" domain="[('translate', '=', True)]"/>
+                    <filter string="Translate" name="translate" domain="[('translate', '=', True)]"/>
                     <field name="model_id"/>
                     <field name="ttype"/>
                     <field name="required"/>
                     <field name="readonly"/>
                     <group expand="0" string="Group By">
-                        <filter string="Object" domain="[]" context="{'group_by':'model_id'}"/>
+                        <filter string="Object" name="group_by_object" domain="[]" context="{'group_by':'model_id'}"/>
                     </group>
                 </search>
             </field>
@@ -413,14 +430,14 @@
             <field name="arch" type="xml">
                 <search string="External Identifiers">
                     <field name="name" filter_domain="[('name','ilike',self)]" string="External Identifier"/>
-                    <filter string="Updatable" domain="[('noupdate', '=', False)]"/>
+                    <filter string="Updatable" name="updatable" domain="[('noupdate', '=', False)]"/>
                     <field name="module"/>
                     <field name="model"/>
                     <field name="res_id"/>
                     <field name="noupdate"/>
                     <group expand="0" string="Group By">
-                        <filter string="Module" domain="[]" context="{'group_by':'module'}"/>
-                        <filter string="Object" domain="[]" context="{'group_by':'model'}"/>
+                        <filter string="Module" name="group_by_module" domain="[]" context="{'group_by':'module'}"/>
+                        <filter string="Object" name="group_by_object" domain="[]" context="{'group_by':'model'}"/>
                     </group>
                 </search>
             </field>
@@ -511,7 +528,10 @@
         <record id="ir_access_view_tree" model="ir.ui.view">
             <field name="model">ir.model.access</field>
             <field name="arch" type="xml">
-                <tree string="Access Controls" editable="top">
+                <tree string="Access Rights" editable="top"
+                      decoration-warning="not group_id and
+                                         (perm_read or perm_write or
+                                          perm_create or perm_unlink)">
                     <field name="name"/>
                     <field name="model_id"/>
                     <field name="group_id"/>
@@ -525,7 +545,7 @@
         <record id="ir_access_view_form" model="ir.ui.view">
             <field name="model">ir.model.access</field>
             <field name="arch" type="xml">
-                <form string="Access Controls">
+                <form string="Access Rights">
                    <sheet>
                     <group col="4">
                         <field name="name"/>
@@ -546,24 +566,24 @@
         <record id="ir_access_view_search" model="ir.ui.view">
             <field name="model">ir.model.access</field>
             <field name="arch" type="xml">
-                <search string="Access Controls">
-                    <field name="name" string="Access Control"/>
-                    <filter string="Global" domain="[('group_id','=',False)]"/>
+                <search string="Access Rights">
+                    <field name="name" string="Access Rights"/>
+                    <filter string="Global" name="global" domain="[('group_id','=',False)]"/>
                     <separator/>
-                    <filter string="Full Access" domain="[('perm_read','=',True),('perm_write','=',True),('perm_create','=',True),('perm_unlink','=',True)]"/>
-                    <filter string="Read Access" domain="[('perm_read','=',True)]"/>
-                    <filter string="Write Access" domain="[('perm_write','=',True)]"/>
+                    <filter string="Full Access" name="full_access" domain="[('perm_read','=',True),('perm_write','=',True),('perm_create','=',True),('perm_unlink','=',True)]"/>
+                    <filter string="Read Access" name="read_access" domain="[('perm_read','=',True)]"/>
+                    <filter string="Write Access" name="write_access" domain="[('perm_write','=',True)]"/>
                     <field name="model_id"/>
                     <field name="group_id"/>
                     <group expand="0" string="Group By" colspan="11" col="11" groups="base.group_no_one">
-                        <filter string="Group" domain="[]" context="{'group_by':'group_id'}"/>
-                        <filter string="Object" domain="[]" context="{'group_by':'model_id'}"/>
+                        <filter string="Group" name="group" domain="[]" context="{'group_by':'group_id'}"/>
+                        <filter string="Object" name="group_by_object" domain="[]" context="{'group_by':'model_id'}"/>
                     </group>
                 </search>
             </field>
         </record>
         <record id="ir_access_act" model="ir.actions.act_window">
-            <field name="name">Access Controls List</field>
+            <field name="name">Access Rights</field>
             <field name="res_model">ir.model.access</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="ir_access_view_tree"/>

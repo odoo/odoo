@@ -121,6 +121,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="activity_ids" widget="mail_activity"/>
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
@@ -422,15 +423,15 @@
             <field name="arch" type="xml">
                 <search string="Jobs">
                     <field name="name" string="Job"/>
-                    <filter domain="[('state','=','open')]" string="In Position"/>
+                    <filter domain="[('state','=','open')]" name="in_position" string="In Position"/>
                     <filter domain="[('state','=','recruit')]" string="In Recruitment" name="in_recruitment"/>
                     <field name="department_id"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
-                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Department" name="department" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
                 </search>
             </field>

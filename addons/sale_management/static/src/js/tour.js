@@ -69,7 +69,7 @@ tour.register('sale_tour', {
     content: _t("Use this menu to access quotations, sales orders and customers."),
     edition: "enterprise",
     position: "bottom"
-}, tour.STEPS.TOGGLE_APPSWITCHER,
+}, tour.STEPS.TOGGLE_HOME_MENU,
 tour.STEPS.MENU_MORE, {
     trigger: '.o_app[data-menu-xmlid="base.menu_administration"], .oe_menu_toggler[data-menu-xmlid="base.menu_administration"]',
     content: _t("Configuration options are available in the Settings app."),

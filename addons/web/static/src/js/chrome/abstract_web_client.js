@@ -20,8 +20,8 @@ var data_manager = require('web.data_manager');
 var Dialog = require('web.Dialog');
 var Loading = require('web.Loading');
 var mixins = require('web.mixins');
-var NotificationManager = require('web.notification').NotificationManager;
-var RainbowMan = require('web.rainbow_man');
+var NotificationManager = require('web.NotificationManager');
+var RainbowMan = require('web.RainbowMan');
 var session = require('web.session');
 var Widget = require('web.Widget');
 

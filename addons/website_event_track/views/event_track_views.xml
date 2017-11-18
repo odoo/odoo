@@ -94,10 +94,10 @@
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Responsible"  context="{'group_by': 'user_id'}"/>
-                        <filter string="Stage" context="{'group_by':'stage_id'}"/>
-                        <filter string="Date" context="{'group_by':'date'}"/>
-                        <filter string="Event" context="{'group_by':'event_id'}"/>
+                        <filter string="Responsible" name="responsible" context="{'group_by': 'user_id'}"/>
+                        <filter string="Stage" name="stage" context="{'group_by':'stage_id'}"/>
+                        <filter string="Date" name="date" context="{'group_by':'date'}"/>
+                        <filter string="Event" name="event" context="{'group_by':'event_id'}"/>
                     </group>
                 </search>
             </field>

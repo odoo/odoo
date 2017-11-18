@@ -91,7 +91,7 @@
         <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='approved']" position="after">
-                <filter string="Requisition" domain="[('requisition_id', '!=', False)]"  help="Purchase Orders with requisition"/>
+                <filter string="Requisition" name="requisition" domain="[('requisition_id', '!=', False)]"  help="Purchase Orders with requisition"/>
             </xpath>
         </field>
     </record>
@@ -260,17 +260,18 @@
                     <field name="name" string="Purchase Agreements" filter_domain="['|', ('name','ilike',self), ('origin','ilike',self)]"/>
                     <field name="type_id"/>
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]" help="New Agreements"/>
-                    <filter string="Confirmed" domain="[('state','in',('in_progress','open'))]" help="In negotiation"/>
-                    <filter string="Done" domain="[('state','=','done')]"/>
+                    <filter string="Confirmed" name="confirmed" domain="[('state','in',('in_progress','open'))]" help="In negotiation"/>
+                    <filter string="Done" name="done" domain="[('state','=','done')]"/>
                     <separator/>
-                    <filter string="Unassigned"  domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
+                    <filter string="Unassigned" name="unassigned" domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
+                    <filter string="My Agreements" name="my_agreements" domain="[('user_id','=', uid)]"/>
                     <field name="user_id" />
                     <group expand="0" string="Group By">
-                        <filter string="Responsible" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Source" domain="[]" context="{'group_by':'origin'}"/>
-                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Ordering Date" domain="[]" context="{'group_by':'ordering_date'}"/>
-                        <filter string="End Month" domain="[]" context="{'group_by':'date_end'}"/>
+                        <filter string="Purchase Representative" name="representative" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Source" name="source" domain="[]" context="{'group_by':'origin'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Ordering Date" name="ordering_date" domain="[]" context="{'group_by':'ordering_date'}"/>
+                        <filter string="End Month" name="end_month" domain="[]" context="{'group_by':'date_end'}"/>
                     </group>
                 </search>
             </field>
@@ -283,7 +284,7 @@
         <field name="res_model">purchase.requisition</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
-        <field name="context">{"search_default_user_id":uid}</field>
+        <field name="context">{}</field>
         <field name="search_view_id" ref="view_purchase_requisition_filter"/>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
@@ -314,7 +315,7 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="purchase.view_product_supplier_inherit"/>
         <field name="arch" type="xml">
-            <group name="vendors" position="after">
+            <group name="bill" position="before">
                 <group string="Reordering">
                     <field name="purchase_requisition" widget="radio"/>
                 </group>

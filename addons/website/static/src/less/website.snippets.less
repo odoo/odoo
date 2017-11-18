@@ -449,3 +449,24 @@ div.carousel {
         }
     }
 }
+
+// TODO this should be moved in a differently-named file but cannot be put in
+// wrapwrap.less file as it is now a portal file (portal/website split should be
+// reviewed).
+#wrapwrap .o_header_affix {
+    .o-position-absolute(0, 0, auto, 0);
+    position: fixed;
+    z-index: @zindex-modal - 20;
+    background: @navbar-default-bg;
+    border-bottom: @navbar-default-border;
+
+    margin-top: -200px;
+    .o-transition(margin-top, 500ms);
+
+    &.affixed {
+        margin-top: 0px;
+    }
+}
+#oe_main_menu_navbar + #wrapwrap .o_header_affix {
+    top: @odoo-navbar-height;
+}

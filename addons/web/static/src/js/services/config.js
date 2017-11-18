@@ -10,8 +10,6 @@ odoo.define('web.config', function (require) {
  * this file someday.
  */
 
-var core = require('web.core');
-
 var config = {
     /**
      * debug is a boolean flag.  It is only considered true if the flag is set
@@ -79,7 +77,6 @@ function _updateSizeProps() {
     if (sc !== config.device.size_class) {
         config.device.size_class = sc;
         config.device.isMobile = config.device.size_class <= config.device.SIZES.XS;
-        core.bus.trigger('size_class', sc);
     }
 }
 

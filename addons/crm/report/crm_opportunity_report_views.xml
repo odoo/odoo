@@ -58,36 +58,24 @@
             <field name="context">{'group_by': ['date_closed:month'],'col_group_by': ['create_date:month'], 'measures': ['__count']}</field>
         </record>
         <record id="filter_opportunity_opportunities_won_per_team" model="ir.filters">
-            <field name="name">Opportunities Won Per Team</field>
+            <field name="name">Won by Channel</field>
             <field name="model_id">crm.opportunity.report</field>
             <field name="domain">[('probability', '=', 100)]</field>
             <field name="user_id" eval="False"/>
             <field name="context">{'group_by': ['team_id'], 'col_group_by': ['date_last_stage_update:month'], 'measures': ['expected revenue']}</field>
         </record>
-        <record id="filter_opportunity_salesperson" model="ir.filters">
-            <field name="name">Leads By Salespersons</field>
-            <field name="model_id">crm.opportunity.report</field>
-            <field name="user_id" eval="False"/>
-            <field name="context">{'col_group_by': ['create_date:month'], 'group_by': ['user_id'], 'measures': ['__count']}</field>
-        </record>
         <record id="filter_opportunity_country" model="ir.filters">
-            <field name="name">Won By Country</field>
+            <field name="name">Won by Country</field>
             <field name="model_id">crm.opportunity.report</field>
             <field name="user_id" eval="False"/>
             <field name="domain">[('probability', '=', 100)]</field>
             <field name="context">{'col_group_by': ['create_date:month'], 'group_by': ['country_id']}</field>
         </record>
         <record id="filter_opportunity_expected_revenue" model="ir.filters">
-            <field name="name">Expected Revenue by Team</field>
+            <field name="name">Expected Revenue by Channel</field>
             <field name="model_id">crm.opportunity.report</field>
             <field name="user_id" eval="False"/>
             <field name="context">{'group_by': ['create_date:month', 'team_id'], 'measures': ['expected_revenue', '__count']}</field>
-        </record>
-        <record id="ir_filters_crm_opportunity_report_next_action" model="ir.filters">
-            <field name="name">Team Activities</field>
-            <field name="model_id">crm.opportunity.report</field>
-            <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['team_id'], 'measures': ['nbr_activities']}</field>
         </record>
 
         <!-- Opportunities by user and team Search View -->
@@ -127,17 +115,17 @@
                         <field name="date_closed"/>
                     </group>
                     <group expand="1" string="Group By">
-                        <filter string="Salesperson" context="{'group_by':'user_id'}" />
-                        <filter string="Sales Channel" context="{'group_by':'team_id'}"/>
-                        <filter string="City" context="{'group_by':'city'}" />
-                        <filter string="Country" context="{'group_by':'country_id'}" />
-                        <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Stage" context="{'group_by':'stage_id'}"/>
+                        <filter string="Salesperson" name="salesperson" context="{'group_by':'user_id'}" />
+                        <filter string="Sales Channel" name="saleschannel" context="{'group_by':'team_id'}"/>
+                        <filter string="City" name="city" context="{'group_by':'city'}" />
+                        <filter string="Country" name="country" context="{'group_by':'country_id'}" />
+                        <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Stage" name="stage" context="{'group_by':'stage_id'}"/>
                         <separator orientation="vertical" />
                         <filter string="Creation Month" context="{'group_by':'create_date:month'}" name="month"/>
                         <filter string="Expected Closing" context="{'group_by':'date_deadline:month'}" name="date_deadline" help="Expiration Closing Month"/>
                         <filter string="Conversion Date" context="{'group_by':'date_conversion:month'}" name="conversion_date" help="Conversion Date from Lead to Opportunity"/>
-                        <filter string="Lost Reason" context="{'group_by':'lost_reason'}"/>
+                        <filter string="Lost Reason" name="lostreason" context="{'group_by':'lost_reason'}"/>
                     </group>
                 </search>
             </field>

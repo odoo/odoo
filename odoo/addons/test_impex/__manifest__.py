@@ -8,8 +8,4 @@
     'data': ['ir.model.access.csv'],
     'installable': True,
     'auto_install': False,
-    'test': [
-        'tests/test_import_reference.yml',
-        'tests/test_import_menuitem.yml',
-    ]
 }

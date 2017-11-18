@@ -138,9 +138,9 @@
                     <filter string="Kit" name="phantom" domain="[('type', '=', 'phantom')]"/>
                     <filter string="Normal" name="normal" domain="[('type', '=', 'normal')]"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Product" domain="[]" context="{'group_by':'product_tmpl_id'}"/>
-                        <filter string='Default Unit of Measure' domain="[]" context="{'group_by' : 'product_uom_id'}"/>
-                        <filter string="Routings" domain="[]" context="{'group_by':'routing_id'}"/>
+                        <filter string="Product" name="product" domain="[]" context="{'group_by':'product_tmpl_id'}"/>
+                        <filter string='Default Unit of Measure' name="default_unit_of_measure" domain="[]" context="{'group_by' : 'product_uom_id'}"/>
+                        <filter string="Routings" name="routings" domain="[]" context="{'group_by':'routing_id'}"/>
                    </group>
                 </search>
             </field>
@@ -218,10 +218,10 @@
                     <field name="bom_id"/>
                     <field name="product_id"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Bill Of Material" domain="[]" context="{'group_by':'bom_id'}"/>
-                        <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string='Default Unit of Measure' domain="[]" context="{'group_by' : 'product_uom_id'}"/>
-                        <filter string="Routings" domain="[]" context="{'group_by':'routing_id'}"/>
+                        <filter string="Bill Of Material" name="bill_of_material" domain="[]" context="{'group_by':'bom_id'}"/>
+                        <filter string="Product" name="product" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string='Default Unit of Measure' name="default_unit_of_measure" domain="[]" context="{'group_by' : 'product_uom_id'}"/>
+                        <filter string="Routings" name="routings" domain="[]" context="{'group_by':'routing_id'}"/>
                    </group>
                 </search>
             </field>

@@ -82,7 +82,7 @@ class EventEvent(models.Model):
     _order = 'date_begin'
 
     name = fields.Char(
-        string='Event Name', translate=True, required=True,
+        string='Event', translate=True, required=True,
         readonly=False, states={'done': [('readonly', True)]})
     active = fields.Boolean(default=True)
     user_id = fields.Many2one(
@@ -311,7 +311,7 @@ class EventEvent(models.Model):
         self.state = 'confirm'
 
     @api.one
-    def mail_attendees(self, template_id, force_send=False, filter_func=lambda self: True):
+    def mail_attendees(self, template_id, force_send=False, filter_func=lambda self: self.state != 'cancel'):
         for attendee in self.registration_ids.filtered(filter_func):
             self.env['mail.template'].browse(template_id).send_mail(attendee.id, force_send=force_send)
 

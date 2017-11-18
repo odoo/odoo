@@ -6,6 +6,7 @@ odoo.define('web.KanbanRecord', function (require) {
  * a Kanban view.
  */
 
+var config = require('web.config');
 var core = require('web.core');
 var Domain = require('web.Domain');
 var field_utils = require('web.field_utils');
@@ -193,7 +194,7 @@ var KanbanRecord = Widget.extend({
                     if (Widget) {
                         widget = self._processWidget($field, field_name, Widget);
                         self.subWidgets[field_name] = widget;
-                    } else if (core.debug) {
+                    } else if (config.debug) {
                         // the widget is not implemented
                         $field.replaceWith($('<span>', {
                             text: _.str.sprintf(_t('[No widget %s]'), field_widget),

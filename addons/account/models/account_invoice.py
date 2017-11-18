@@ -582,6 +582,13 @@ class AccountInvoice(models.Model):
         }
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
+    def message_post(self, **kwargs):
+        if self.env.context.get('mark_invoice_as_sent'):
+            self.filtered(lambda inv: not inv.sent).write({'sent': True})
+        return super(AccountInvoice, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
+
+    @api.multi
     def compute_taxes(self):
         """Function used in other module to compute the taxes on a fresh invoice created (onchanges did not applied)"""
         account_invoice_tax = self.env['account.invoice.tax']
@@ -973,7 +980,7 @@ class AccountInvoice(models.Model):
             move_line_dict = {
                 'invl_id': line.id,
                 'type': 'src',
-                'name': line.name.split('\n')[0][:64],
+                'name': line.name,
                 'price_unit': line.price_unit,
                 'quantity': line.quantity,
                 'price': line.price_subtotal,
@@ -1802,18 +1809,3 @@ class AccountPaymentTermLine(models.Model):
     def _onchange_option(self):
         if self.option in ('last_day_current_month', 'last_day_following_month'):
             self.days = 0
-
-
-class MailComposeMessage(models.TransientModel):
-    _inherit = 'mail.compose.message'
-
-    @api.multi
-    def send_mail(self, auto_commit=False):
-        context = self._context
-        if context.get('default_model') == 'account.invoice' and \
-                context.get('default_res_id') and context.get('mark_invoice_as_sent'):
-            invoice = self.env['account.invoice'].browse(context['default_res_id'])
-            if not invoice.sent:
-                invoice.sent = True
-            self = self.with_context(mail_post_autofollow=True)
-        return super(MailComposeMessage, self).send_mail(auto_commit=auto_commit)

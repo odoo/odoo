@@ -28,7 +28,7 @@
             <field name="inherit_id" ref="sale.product_template_form_view_sale_order_button"/>
             <field name="model">product.template</field>
             <field name="arch" type="xml">
-                <xpath expr="//button[@name='action_view_sales'][last()]" position="replace" />
+                <xpath expr="//button[@name='action_view_sales']" position="replace" />
             </field>
         </record>
 
@@ -39,7 +39,7 @@
             <field name="arch" type="xml">
                 <button name="action_view_orderpoints" position="after">
                     <button class="oe_stat_button" name="action_view_sales"
-                        type="object" icon="fa-usd">
+                        type="object" icon="fa-usd" attrs="{'invisible': [('sale_ok', '=', False)]}">
                         <field string="Sales" name="sales_count" widget="statinfo" />
                     </button>
                 </button>

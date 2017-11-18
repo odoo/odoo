@@ -21,11 +21,11 @@ class OpportunityReport(models.Model):
     active = fields.Boolean('Active', readonly=True)
 
     # durations
-    delay_open = fields.Float('Delay to Assign', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Days to open the case")
-    delay_close = fields.Float('Delay to Close', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Days to close the case")
+    delay_open = fields.Float('Days to Assign', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Days to open the case")
+    delay_close = fields.Float('Days to Close', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Days to close the case")
     delay_expected = fields.Float('Overpassed Deadline', digits=(16, 2), readonly=True, group_operator="avg")
 
-    user_id = fields.Many2one('res.users', string='User', readonly=True)
+    user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
     team_id = fields.Many2one('crm.team', 'Sales Channel', oldname='section_id', readonly=True)
     nbr_activities = fields.Integer('# of Activities', readonly=True)
     city = fields.Char('City')
@@ -35,7 +35,7 @@ class OpportunityReport(models.Model):
     expected_revenue = fields.Float(string='Probable Turnover', digits=(16, 2), readonly=True)
     stage_id = fields.Many2one('crm.stage', string='Stage', readonly=True, domain="['|', ('team_id', '=', False), ('team_id', '=', team_id)]")
     stage_name = fields.Char(string='Stage Name', readonly=True)
-    partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, string='Priority', group_operator="avg")
     type = fields.Selection([

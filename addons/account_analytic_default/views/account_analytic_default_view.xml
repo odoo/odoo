@@ -77,11 +77,11 @@
                     <field name="user_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <group expand="0" string="Group By">
-                        <filter string="User" context="{'group_by':'user_id'}" help="User"/>
-                        <filter string="Partner" context="{'group_by':'partner_id'}" help="Partner"/>
-                        <filter string="Product" context="{'group_by':'product_id'}" help="Product" />
-                        <filter string="Analytic Account" context="{'group_by':'analytic_id'}" help="Analytic Account" groups="analytic.group_analytic_accounting"/>
-                        <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company" />
+                        <filter string="User" name="user" context="{'group_by':'user_id'}" help="User"/>
+                        <filter string="Partner" name="partner" context="{'group_by':'partner_id'}" help="Partner"/>
+                        <filter string="Product" name="product" context="{'group_by':'product_id'}" help="Product" />
+                        <filter string="Analytic Account" name="analyticacc" context="{'group_by':'analytic_id'}" help="Analytic Account" groups="analytic.group_analytic_accounting"/>
+                        <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company" />
                     </group>
                 </search>
             </field>

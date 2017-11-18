@@ -76,10 +76,10 @@
             <field name="arch" type="xml">
                 <search string="Search Incoming Mail Servers">
                     <field name="name" string="Incoming Mail Server"/>
-                    <filter string="IMAP" domain="[('type','=','imap')]" help="Server type IMAP."/>
-                    <filter string="POP" domain="[('type','=','pop')]" help="Server type POP."/>
+                    <filter string="IMAP" name="imap" domain="[('type','=','imap')]" help="Server type IMAP."/>
+                    <filter string="POP" name="pop" domain="[('type','=','pop')]" help="Server type POP."/>
                     <separator/>
-                    <filter string="SSL" domain="[('is_ssl','=',True)]" help="If SSL required."/>
+                    <filter string="SSL" name="ssl" domain="[('is_ssl','=',True)]" help="If SSL required."/>
                 </search>
             </field>
         </record>

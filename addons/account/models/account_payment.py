@@ -146,6 +146,7 @@ class account_register_payments(models.TransientModel):
         # Look if we are mixin multiple commercial_partner or customer invoices with vendor bills
         multi = any(inv.commercial_partner_id != invoices[0].commercial_partner_id
             or MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type] != MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type]
+            or inv.account_id != invoices[0].account_id
             for inv in invoices)
 
         total_amount = self._compute_payment_amount(invoices)
@@ -164,14 +165,18 @@ class account_register_payments(models.TransientModel):
 
     @api.multi
     def _groupby_invoices(self):
-        '''Split the invoices linked to the wizard according to their commercial partner and their type.
+        '''Split the invoices linked to the wizard according to their commercial partner,
+         their account and their type.
 
-        :return: a dictionary mapping (commercial_partner_id, type) => invoices recordset.
+        :return: a dictionary mapping (partner_id, account_id, invoice_type) => invoices recordset.
         '''
         results = {}
         # Create a dict dispatching invoices according to their commercial_partner_id and type
         for inv in self.invoice_ids:
-            key = (inv.commercial_partner_id.id, MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type])
+            partner_id = inv.commercial_partner_id.id
+            account_id = inv.account_id.id
+            invoice_type = MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type]
+            key = (partner_id, account_id, invoice_type)
             if not key in results:
                 results[key] = self.env['account.invoice']
             results[key] += inv
@@ -454,8 +459,8 @@ class account_payment(models.Model):
     def post(self):
         """ Create the journal items for the payment and update the payment's state to 'posted'.
             A journal entry is created containing an item in the source liquidity account (selected journal's default_debit or default_credit)
-            and another in the destination reconciliable account (see _compute_destination_account_id).
-            If invoice_ids is not empty, there will be one reconciliable move line per invoice to reconcile with.
+            and another in the destination reconcilable account (see _compute_destination_account_id).
+            If invoice_ids is not empty, there will be one reconcilable move line per invoice to reconcile with.
             If the payment is a transfer, a second journal entry is created in the destination journal to receive money from the transfer account.
         """
         for rec in self:
@@ -519,7 +524,7 @@ class account_payment(models.Model):
         aml_obj = self.env['account.move.line'].with_context(check_move_validity=False)
         invoice_currency = False
         if self.invoice_ids and all([x.currency_id == self.invoice_ids[0].currency_id for x in self.invoice_ids]):
-            #if all the invoices selected share the same currency, record the paiement in that currency too
+            #if all the invoices selected share the same currency, record the payment in that currency too
             invoice_currency = self.invoice_ids[0].currency_id
         debit, credit, amount_currency, currency_id = aml_obj.with_context(date=self.payment_date).compute_amount_fields(amount, self.currency_id, self.company_id.currency_id, invoice_currency)
 
@@ -584,7 +589,7 @@ class account_payment(models.Model):
         return move
 
     def _create_transfer_entry(self, amount):
-        """ Create the journal entry corresponding to the 'incoming money' part of an internal transfer, return the reconciliable move line
+        """ Create the journal entry corresponding to the 'incoming money' part of an internal transfer, return the reconcilable move line
         """
         aml_obj = self.env['account.move.line'].with_context(check_move_validity=False)
         debit, credit, amount_currency, dummy = aml_obj.with_context(date=self.payment_date).compute_amount_fields(amount, self.currency_id, self.company_id.currency_id)

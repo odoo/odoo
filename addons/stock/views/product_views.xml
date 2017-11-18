@@ -83,50 +83,48 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <group name="packaging" position="before">
-                    <group name="inventory">
-                        <group string="Operations" name="operations">
-                            <field name="route_ids" widget="many2many_checkboxes" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}"/>
-                            <field name="route_from_categ_ids" widget="many2many_tags" readonly="1" attrs="{'invisible':[('route_from_categ_ids', '=', [])]}"/>
-                            <label for="sale_delay"/>
-                            <div>
-                                <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',False)]}" class="oe_inline" style="vertical-align:baseline"/> days
-                            </div>
-                        </group>
-                        <group string="Logistics" name="group_lots_and_weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
-                            <label for="weight"/>
-                            <div class="o_row" name="weight">
-                                <field name="weight"/>
-                                <span>kg</span>
-                            </div>
-                            <label for="volume"/>
-                            <div class="o_row" name="volume">
-                                <field name="volume" string="Volume"/>
-                                <span>m³</span>
-                            </div>
-                        </group>
-                        <group string="Traceability" name="traceability" groups="stock.group_production_lot">
-                            <field name="tracking" widget="radio" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}"/>
-                        </group>
-                        <group string="Counterpart Locations" name="stock_property" groups="base.group_no_one">
-                            <field name="property_stock_production" domain="[('usage','=','production')]"/>
-                            <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>
-                        </group>
+                <group name="inventory_valuation" position="before">
+                    <group string="Operations" name="operations">
+                        <field name="route_ids" widget="many2many_checkboxes" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}"/>
+                        <field name="route_from_categ_ids" widget="many2many_tags" readonly="1" attrs="{'invisible':[('route_from_categ_ids', '=', [])]}"/>
+                        <label for="sale_delay"/>
+                        <div>
+                            <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',False)]}" class="oe_inline" style="vertical-align:baseline"/> days
+                        </div>
+                    </group>
+                    <group string="Traceability" name="traceability" groups="stock.group_production_lot">
+                        <field name="tracking" widget="radio" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}"/>
                     </group>
                 </group>
-                <group name="description" position="after">
-                    <group>
-                        <group string="Description for Delivery Orders">
-                            <field name="description_pickingout" nolabel="1" placeholder="This note will show up on delivery orders."/>
-                        </group>
-                        <group string="Description for Receptions">
-                            <field name="description_pickingin" nolabel="1" placeholder="This note will show up on the receipt orders (e.g. where to store the product in the warehouse)."/>
-                        </group>
-                        <group string="Description for Internal Transfers">
-                            <field name="description_picking" placeholder="This note will show up  on internal transfer orders (e.g. where to pick the product in the warehouse)." nolabel="1"/>
-                        </group>
+                <group name="inventory_valuation" position="after">
+                    <group string="Logistics" name="group_lots_and_weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
+                        <label for="weight"/>
+                        <div class="o_row" name="weight">
+                            <field name="weight"/>
+                            <span>kg</span>
+                        </div>
+                        <label for="volume"/>
+                        <div class="o_row" name="volume">
+                            <field name="volume" string="Volume"/>
+                            <span>m³</span>
+                        </div>
+                    </group>
+                     <group string="Counterpart Locations" name="stock_property" groups="base.group_no_one">
+                        <field name="property_stock_production" domain="[('usage','=','production')]"/>
+                        <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>
                     </group>
                 </group>
+                <page name="inventory" position="inside">
+                    <group string="Description for Delivery Orders">
+                        <field name="description_pickingout" nolabel="1" placeholder="This note will show up on delivery orders."/>
+                    </group>
+                    <group string="Description for Receptions">
+                        <field name="description_pickingin" nolabel="1" placeholder="This note will show up on receipt orders (e.g. where to store the product in the warehouse)."/>
+                    </group>
+                    <group string="Description for Internal Transfers" groups="stock.group_stock_multi_locations">
+                        <field name="description_picking" placeholder="This note will show up on internal transfer orders (e.g. where to pick the product in the warehouse)." nolabel="1"/>
+                    </group>
+                </page>
             </field>
         </record>
 

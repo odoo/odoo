@@ -434,7 +434,7 @@ class AlarmManager(models.AbstractModel):
 
         result = False
         if alarm.type == 'email':
-            result = meeting.attendee_ids._send_mail_to_attendees('calendar.calendar_template_meeting_reminder', force_send=True)
+            result = meeting.attendee_ids.filtered(lambda r: r.state != 'declined')._send_mail_to_attendees('calendar.calendar_template_meeting_reminder', force_send=True)
         return result
 
     def do_notif_reminder(self, alert):

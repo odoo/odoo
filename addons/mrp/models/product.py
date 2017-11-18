@@ -13,7 +13,7 @@ class ProductTemplate(models.Model):
     mo_count = fields.Integer('# Manufacturing Orders', compute='_compute_mo_count')
     produce_delay = fields.Float(
         'Manufacturing Lead Time', default=0.0,
-        help="Average delay in days to produce this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added.")
+        help="Average lead time in days to manufacture this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added.")
 
     def _compute_bom_count(self):
         read_group_res = self.env['mrp.bom'].read_group([('product_tmpl_id', 'in', self.ids)], ['product_tmpl_id'], ['product_tmpl_id'])

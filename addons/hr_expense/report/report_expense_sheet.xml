@@ -40,13 +40,14 @@
                                     <th>Taxes</th>
                                     <th class="text-center">Qty</th>
                                     <th class="text-right">Price</th>
+                                    <th t-if="o.is_multiple_currency" class="text-right">Price in Company Currency</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr t-foreach="o.expense_line_ids" t-as="line">
                                     <td><span t-field="line.date"/></td>
                                     <td>
-                                        <span t-field="line.name"/> 
+                                        <span t-field="line.name"/>
                                         <span t-field="line.description"/><br/>
                                         <span t-field="line.analytic_account_id.name"/>
                                     </td>
@@ -72,6 +73,9 @@
                                     <td class="text-right">
                                         <span t-field="line.total_amount"
                                             t-options='{"widget": "monetary", "display_currency": line.currency_id}'/>
+                                    </td>
+                                    <td t-if="o.is_multiple_currency" class="text-right">
+                                        <span t-field="line.total_amount_company"/>
                                     </td>
                                 </tr>
                             </tbody>
