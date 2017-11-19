@@ -3,53 +3,15 @@
 # * crm
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Antonio Trueba <atgayol@gmail.com>, 2017
-# Ivan Nieto <ivan.n.s@tuta.io>, 2017
-# RGB Consulting <odoo@rgbconsulting.com>, 2017
-# oihane <oihanecruce@gmail.com>, 2017
-# Oriol Carreras <oriolcarreras@gmail.com>, 2017
-# Sergio Hevia <sah@talleresbernesga.com>, 2017
-# José Vicente <txusev@gmail.com>, 2017
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2017
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
-# Roberto Lizana <robertolizana@trey.es>, 2017
-# juani_aizean <juani@aizean.com>, 2017
-# maitaoriana <maitaoriana@gmail.com>, 2017
-# Alejandro Die Sanchis <marketing@domatix.com>, 2017
-# Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>, 2017
-# Jose Manuel <admin@jaboweb.com>, 2017
-# Alejandro Santana <alejandrosantana@anubia.es>, 2017
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2017
-# Gustavo Valverde <g.valverde02@gmail.com>, 2017
-# Miguel Orueta <mo@landoo.es>, 2017
-# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2017
-# Sergio Flores <vitavitae1@gmail.com>, 2017
-# Ana Juaristi <ajuaristio@gmail.com>, 2017
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
-# Carles Antoli <carlesantoli@hotmail.com>, 2017
-# Luis M. Triana <luis.triana@jarsa.com.mx>, 2017
-# phoenixsampras <phoenixsampras@gmail.com>, 2017
-# Rick Hunter <rick_hunter_ec@yahoo.com>, 2017
-# Cristóbal Martí Oliver <info@moblesmarti.com>, 2017
-# Vicent Cubells <vicent.cubells@tecnativa.com>, 2017
-# Daniel Blanco <daniel@blancomartin.com.ar>, 2017
-# Andres Ruiz <andres.ruiz.otalora@gmail.com>, 2017
-# Daniel Blanco Martin <daniel@bmya.cl>, 2017
-# Mariano Rodríguez <mahrodriguez@gmail.com>, 2017
-# Jesus Zapata <jesus@vauxoo.com>, 2017
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
-# e2f_es_ t6 <e2f_es_t6@outlook.com>, 2017
-# Fernando San Martin Woerner <fsnmartin@gmail.com>, 2017
-# Raquel Iciarte <ric@odoo.com>, 2017
+# Eduardo Magdalena <emagdalena@close2circle.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:25+0000\n"
-"PO-Revision-Date: 2017-10-02 11:25+0000\n"
-"Last-Translator: Raquel Iciarte <ric@odoo.com>, 2017\n"
+"POT-Creation-Date: 2017-11-16 08:08+0000\n"
+"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"Last-Translator: Eduardo Magdalena <emagdalena@close2circle.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -160,6 +122,105 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
+"\n"
+"\n"
+"            <div style=\"margin: 10px auto;\">\n"
+"            % set last_created_team = user.env['crm.team'].search([], order=\"create_date desc\")[0]\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                            <p style=\"color:#875A7B;margin:0\" >Hooray!</p><br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>Su aplicación Odoo CRM esta activa y en funcionamiento.</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold; \">¿Qué sigue?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Intente creando un prospecto enviando un correo a </span>\n"
+"                                        <a href=\"mailto:${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}</span>\n"
+"                                        </a>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>Siga sus oportunidades en el flujo de ventas, simplemente arrastrando y soltando las tarjetas de una columna a otra</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Descrubra el </span>\n"
+"                                <span><a href=\"/web#view_type=list&model=crm.lead&action=crm.crm_lead_all_leads\">\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">Planeador CRM </span></a></span>\n"
+"                                <span> para activar caracteristicas extras</span>\n"
+"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_crm')}% done)</span>\n"
+"                            </p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Automaticamente asigne sus prospecto a su vendedor con la calificación de prospectos, </span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Manténgase en contacto con su cliente potencial con campañas eficientes de correo electrónico,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Obtenga información de alta calidad de encuestas,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Obtenga informes inteligentes y paneles de control precisos,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>Y mucho más...</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">¿Necesita ayuda?</span>\n"
+"                                <span style=\"font-style:italic;\">Usted no esta solo</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>Estaremos encantados de ayudarle en el camino. Contáctanos a través de nuestro\n"
+"                                <a href=\"https://www.odoo.com/help\">formulario de soporte</a> si tienes cualquier inquietud.\n"
+"                                También puede descubrir cómo obtener lo mejor de Odoo CRM con nuestro </span>\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/10.0/crm.html\">\n"
+"                                <span style=\"text-decoration:underline;\">Documentación de Usuario</span></a>\n"
+"                                </span><span> or with our </span>\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation\">\n"
+"                                <span style=\"text-decoration:underline;\">Documentación de API</span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Disfruta tu experiencia con Odoo,</span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>El Equipo Odoo<br/>PS: La gente ama Odoo, mira </span><a target=\"_blank\" href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">lo que la gente dice.</span></a></span>\n"
+"            </div>\n"
+"        </div>"
 
 #. module: crm
 #: model:mail.template,body_html:crm.email_template_opportunity_reminder_mail
@@ -370,7 +431,7 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Quotation</span>"
 msgstr ""
 "<span class=\"label label-default text-center "
-"odoo_purple\">Cotización</span>"
+"odoo_purple\">Presupuesto</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -434,6 +495,11 @@ msgid ""
 "                                        <span class=\"small\">Recommended if &gt;50 items</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong>Importe un archivo</strong><br/>\n"
+"                                        <span class=\"small\">Recomendado &gt;50 artículos</span>\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -459,6 +525,11 @@ msgid ""
 "                                        <span class=\"small\"/>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"<span class=\"fa\" data-icon=\"&#57408;\"/>\n"
+"<strong>Suscripciones</strong><br/>\n"
+"<span class=\"small\"/>\n"
+"</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -484,6 +555,11 @@ msgid ""
 "                                        <span class=\"small\">Recommended if &lt;50 items</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong> Cree manualmente</strong><br/>\n"
+"                                        <span class=\"small\">Recomendado si &lt;50 artículos</span>\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -494,6 +570,11 @@ msgid ""
 "                                        <span class=\"small\"/>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong>Venta única vez</strong><br/>\n"
+"                                        <span class=\"small\"/>\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -534,6 +615,8 @@ msgid ""
 "<span class=\"panel-title\"><span data-icon=\"\"/><strong> Exercise 1</strong></span>\n"
 "                                    <span>(Lead Manager)</span>"
 msgstr ""
+"<span class=\"panel-title\"><span data-icon=\"\"/><strong> Ejercicio 1</strong></span>\n"
+"                                    <span>(Gestos de Prospectos)</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -541,6 +624,8 @@ msgid ""
 "<span class=\"panel-title\"><span data-icon=\"\"/><strong> Exercise 3</strong></span>\n"
 "                                    <span>(Salesperson)</span>"
 msgstr ""
+"<span class=\"panel-title\"><span data-icon=\"\"/><strong> Ejercicio 3</strong></span>\n"
+"                                    <span>(Vendedor)</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -548,6 +633,8 @@ msgid ""
 "<span class=\"panel-title\"><span data-icon=\"\"/><strong> Exercise 2</strong></span>\n"
 "                                    <span>(Sales Manager)</span>"
 msgstr ""
+"<span class=\"panel-title\"><span data-icon=\"\"/><strong> Ejercicio 2</strong></span>\n"
+"                                    <span>(Respondable de Ventas)</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -643,6 +730,12 @@ msgid ""
 "                                    After a few month, set the real success rate according to the stages, to have\n"
 "                                    accurate expected revenues by closing date."
 msgstr ""
+"<strong>Pronosticar ingresos futuros</ strong> <br/>\n"
+"                                     Puede evaluar la madurez de un canal de ventas por su capacidad para pronosticar ingresos futuros\n"
+"                                     para los próximos meses o trimestres. Entrenar al equipo para pronosticar eficientemente teniendo\n"
+"                                     una lista actualizada de oportunidades.\n"
+"                                     Después de unos meses, establezca la tasa de éxito real según las etapas, para tener\n"
+"                                     ingresos esperados precisos por fecha de cierre."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -670,6 +763,8 @@ msgid ""
 "<strong>Organize weekly sales meetings</strong><br/>\n"
 "                                    It's a great way to see where you can improve and keep track of the progress of your sales channel. Start the pipeline review by looking at the big picture; revenues and number of opportunities by stage, by expected closing date and by salespeople."
 msgstr ""
+"<strong>Organizar reuniones de ventas semanales</ strong> <br/>\n"
+"                                     Es una excelente manera de ver dónde puede mejorar y realizar un seguimiento del progreso de su canal de ventas. Comience la revisión de la tubería mirando el panorama general; ingresos y número de oportunidades por etapa, por fecha de cierre prevista y por vendedores."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -734,7 +829,7 @@ msgid ""
 "<strong>Standard quotation</strong> <span class=\"small\">(products or "
 "services)</span>"
 msgstr ""
-"<strong>Cotización estándar</strong> <span class=\"small\">(productos o "
+"Presupuesto estándar</strong> <span class=\"small\">(productos o "
 "servicios)</span>"
 
 #. module: crm
@@ -890,7 +985,7 @@ msgstr "Destino de las actividades realizadas"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Activities Todo"
-msgstr ""
+msgstr "Actividades a realizar"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_kanban_state
@@ -905,7 +1000,7 @@ msgstr "Tipo de actividad"
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_menu_config_activity_types
 msgid "Activity Types"
-msgstr ""
+msgstr "Tipos de actividad"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -915,7 +1010,7 @@ msgstr "Añadir características"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Add a qualification step before creating an opportunity"
-msgstr ""
+msgstr "Agregue un paso de calificación antes de crear una oportunidad"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -983,7 +1078,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_opportunities_amount
 msgid "Amount of quotations to invoice"
-msgstr ""
+msgstr "Monto de cotizaciones para facturar"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1114,7 +1209,7 @@ msgstr "Mejor visibilidad con las actividades de equipo"
 #: code:addons/crm/models/crm_lead.py:381
 #, python-format
 msgid "Boom! Team record for the past 30 days."
-msgstr ""
+msgstr "¡Auge! Récord del equipo de los últimos 30 días."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1166,7 +1261,7 @@ msgstr "Cancelar"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_team_act_tree
 msgid "Cases by Sales Channel"
-msgstr ""
+msgstr "Casos por equipo de ventas"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_tag
@@ -1181,7 +1276,7 @@ msgstr "Cambiar la probabilidad automáticamente"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Change the layout of a quotation"
-msgstr "Cambie la disposición de una cotización "
+msgstr "Cambie la disposición de un presupuesto"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
@@ -1194,11 +1289,16 @@ msgid ""
 "Check this box to filter and qualify incoming requests as leads before "
 "converting them into opportunities and assigning them to a salesperson."
 msgstr ""
+"Marque esta casilla para filtrar y calificar las solicitudes entrantes como "
+"prospectos antes de convertirlas en oportunidades y asignarlas a un "
+"vendedor."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_use_opportunities
 msgid "Check this box to manage a presales process with opportunities."
 msgstr ""
+"Marque esta casilla para administrar un proceso de preventa con "
+"oportunidades."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_city
@@ -1339,11 +1439,6 @@ msgid "Configuration options are available in the Settings app."
 msgstr ""
 "Las opciones de configuración están disponibles en la aplicación "
 "Configuración."
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.crm_config_settings_action
-msgid "Configure CRM"
-msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1501,7 +1596,6 @@ msgid "Create a Proof of Concept with consultants"
 msgstr "Crear una prueba de concepto con consultores"
 
 #. module: crm
-#: selection:crm.lead.convert2task,action:0
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Create a new customer"
@@ -1604,7 +1698,7 @@ msgstr "Mes de Creación"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_your_pipeline
 msgid "Crm: My Pipeline"
-msgstr ""
+msgstr "Crm: Mi tubería"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_company_currency
@@ -1622,10 +1716,9 @@ msgid "Current Line"
 msgstr "Línea actual"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1124
+#: code:addons/crm/models/crm_lead.py:1135
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_partner_id
-#: model:ir.model.fields,field_description:crm.field_crm_lead_convert2task_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_partner_id
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1640,7 +1733,7 @@ msgstr "Cliente"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings_module_web_clearbit
 msgid "Customer Autocomplete"
-msgstr ""
+msgstr "Autocompletar del cliente"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:1126
@@ -1673,6 +1766,8 @@ msgid ""
 "Dashboard graph content cannot be Pipeline if the sales channel doesn't use "
 "it. (Pipeline is unchecked.)"
 msgstr ""
+"El contenido gráfico del tablero no puede ser tubería si el canal de ventas "
+"no lo usa. (Tubería está desactivada)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_date
@@ -1737,6 +1832,8 @@ msgid ""
 "Depending on how complex your business is, it may take between 6 months and 18 months for a new\n"
 "                                    sales channel to efficiently forecasts future revenues."
 msgstr ""
+"Dependiendo de la complejidad de su negocio, puede tomar entre 6 meses y 18 meses para un nuevo\n"
+"                                     canal de ventas para pronosticar de manera eficiente los ingresos futuros."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1793,7 +1890,6 @@ msgid "Display your brochures, product sheets, showcases etc."
 msgstr "Muestre sus folletos, hojas de productos, muestrarios, etc."
 
 #. module: crm
-#: selection:crm.lead.convert2task,action:0
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.partner.binding,action:0
@@ -1860,6 +1956,11 @@ msgid ""
 "Incoming emails can be automatically assigned to specific sales channels. To"
 " do so, set an email alias on the sales channel."
 msgstr ""
+"Los correos electrónicos recibidos en esa dirección generan nuevos "
+"prospectos que aún no están asignados a ningún canal de venta. Esto se puede"
+" hacer al convertirlos en oportunidades. Los correos entrantes se pueden "
+"asignar automáticamente a canales de venta específicos. Para hacerlo, "
+"configure un alias de correo electrónico en el canal de ventas."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1956,17 +2057,17 @@ msgstr "Fecha de cierre prevista"
 #. module: crm
 #: selection:crm.team,dashboard_graph_group_pipeline:0
 msgid "Expected Closing Day"
-msgstr ""
+msgstr "Día de cierre esperado"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_group_pipeline:0
 msgid "Expected Closing Month"
-msgstr ""
+msgstr "Mes de cierre esperado"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_group_pipeline:0
 msgid "Expected Closing Week"
-msgstr ""
+msgstr "Semana de cierre esperado"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_planned_revenue
@@ -1976,7 +2077,7 @@ msgstr "﻿Ingreso estimado"
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_expected_revenue
 msgid "Expected Revenue by Team"
-msgstr ""
+msgstr "Ingresos esperados por equipo"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
@@ -1986,7 +2087,7 @@ msgstr "Ingresos esperados"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_dashboard_graph_period_pipeline
 msgid "Expected to Close"
-msgstr ""
+msgstr "Se espera que cierre"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -2079,12 +2180,12 @@ msgstr "Actividades futuras"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Future Activities (7 days)"
-msgstr ""
+msgstr "Actividades futuras (7 días)"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Future Activities (All)"
-msgstr ""
+msgstr "Actividades futuras (todas)"
 
 #. module: crm
 #. openerp-web
@@ -2112,6 +2213,8 @@ msgid ""
 "Generate unassigned leads from incoming emails. Leads coming from\n"
 "                                    that email will be assigned manually."
 msgstr ""
+"Genere prospectos no asignados de correos electrónicos entrantes. Conduce desde\n"
+"                                     ese correo electrónico se asignará manualmente."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
@@ -2127,7 +2230,7 @@ msgstr "CC global"
 #: code:addons/crm/models/crm_lead.py:379
 #, python-format
 msgid "Go, go, go! Congrats for your first deal."
-msgstr ""
+msgstr "¡Ve! Ve! Ve! Felicidades por su primer trato."
 
 #. module: crm
 #. openerp-web
@@ -2204,6 +2307,8 @@ msgid ""
 "Here are a few examples of documents you should provide to your sales "
 "channel based on the sales stage:"
 msgstr ""
+"Aquí hay algunos ejemplos de documentos que debe proporcionar a su canal de "
+"ventas en función de la etapa de ventas:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2228,7 +2333,7 @@ msgstr "Alta"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_dashboard_graph_group_pipeline
 msgid "How this channel's dashboard graph will group the results."
-msgstr ""
+msgstr "Cómo el gráfico del panel de este canal agrupará los resultados."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_id
@@ -2287,6 +2392,9 @@ msgid ""
 "                        the foundations to a strong process leading to\n"
 "                        continuous improvements of your sales channels."
 msgstr ""
+"Si siguió los pasos anteriores, ya ha configurado\n"
+"                         las bases de un proceso fuerte que lleva a\n"
+"                         Mejoras continuas de sus canales de venta."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2623,7 +2731,7 @@ msgstr "Lista de posibles puntos críticos por segmento/perfil"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Look up company information (name, logo, etc.)"
-msgstr ""
+msgstr "Buscar información de la empresa (nombre, logotipo, etc.)"
 
 #. module: crm
 #. openerp-web
@@ -2666,12 +2774,12 @@ msgstr "Realizar una cita"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings_generate_lead_from_alias
 msgid "Manual Assignation of Emails"
-msgstr ""
+msgstr "Asignación manual de correos electrónicos"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Manually Assignation of Incoming Emails"
-msgstr ""
+msgstr "Asignación manual de correos electrónicos entrantes"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2987,7 +3095,7 @@ msgstr "Número de habitaciones"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_opportunities_count
 msgid "Number of open opportunities"
-msgstr ""
+msgstr "Número de oportunidades abiertas"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3070,12 +3178,12 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Open Opportunities"
-msgstr ""
+msgstr "Oportunidades abiertas"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Open Opportunity"
-msgstr ""
+msgstr "Oportunidad abierta"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_opportunity
@@ -3112,6 +3220,12 @@ msgid ""
 "mainly used by the sales manager in order to do the periodic review with the"
 " channels of the sales pipeline."
 msgstr ""
+"El Análisis de Oportunidades le brinda acceso instantáneo a sus "
+"oportunidades con información tal como los ingresos esperados, el costo "
+"planificado, los plazos perdidos o el número de interacciones por "
+"oportunidad. Este informe es utilizado principalmente por el gerente de "
+"ventas para realizar la revisión periódica con los canales de la tubería de "
+"ventas."
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_opportunities_cohort
@@ -3302,7 +3416,7 @@ msgstr "Teléfono"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings_module_crm_phone_validation
 msgid "Phone Validation"
-msgstr ""
+msgstr "Validación de teléfono"
 
 #. module: crm
 #. openerp-web
@@ -3361,12 +3475,17 @@ msgid ""
 "mainly used by the sales manager in order to periodically review the pipeline\n"
 "with the the sales channel."
 msgstr ""
+"Análisis de Tubería le brinda acceso instantáneo a\n"
+"sus oportunidades con información tal como el ingreso esperado, el costo planificado,\n"
+"fechas límite perdidas o el número de interacciones por oportunidad. Este informe es\n"
+"utilizado principalmente por el gerente de ventas para revisar periódicamente la tubería\n"
+"con el canal de ventas"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:231
 #, python-format
 msgid "Pipeline: Expected Revenue"
-msgstr ""
+msgstr "Tubería: ingresos esperados"
 
 #. module: crm
 #: model:web.planner,tooltip_planner:crm.planner_crm
@@ -3499,14 +3618,14 @@ msgstr "Patrocinador  calificado"
 #: code:addons/crm/static/src/js/web_planner_crm.js:25
 #, python-format
 msgid "Quotation sent"
-msgstr "Cotización Enviada"
+msgstr "Presupuesto enviado"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:19
 #, python-format
 msgid "Quotation sent to customer"
-msgstr "Cotización Enviada al Cliente"
+msgstr "Presupuesto enviado al cliente"
 
 #. module: crm
 #. openerp-web
@@ -3528,6 +3647,8 @@ msgid ""
 "Ready to boost your sales? Your <b>Pipeline</b> can be found here, under "
 "<b>CRM</b> app."
 msgstr ""
+"¿Listo para aumentar sus ventas? Su <b>Tubería</ b> se puede encontrar aquí,"
+" en la aplicación <b> CRM </ b>."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
@@ -3607,7 +3728,7 @@ msgstr "Canal de Ventas"
 #: model:ir.ui.menu,name:crm.crm_team_config
 #: model:ir.ui.menu,name:crm.sales_team_menu_report_crm
 msgid "Sales Channels"
-msgstr ""
+msgstr "Canales de Ventas"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3660,7 +3781,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/tour.js:40
 #, python-format
 msgid "Schedule an activity by clicking here"
-msgstr ""
+msgstr "Programe una actividad haciendo clic aquí"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3777,6 +3898,7 @@ msgstr ""
 " guía."
 
 #. module: crm
+#: model:ir.actions.act_window,name:crm.crm_config_settings_action
 #: model:ir.ui.menu,name:crm.crm_config_settings_menu
 msgid "Settings"
 msgstr "Ajustes"
@@ -4039,7 +4161,7 @@ msgstr "Territorio"
 #: code:addons/crm/static/src/js/web_planner_crm.js:19
 #, python-format
 msgid "The customer came back to you to discuss your quotation"
-msgstr "El cliente regresa para discutir la cotización"
+msgstr "El cliente regresa para discutir el presupuesto"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_id
@@ -4047,6 +4169,9 @@ msgid ""
 "The email address associated with this channel. New emails received will "
 "automatically create new leads assigned to the channel."
 msgstr ""
+"La dirección de correo electrónico asociada con este canal. Los nuevos "
+"correos electrónicos recibidos crearán automáticamente nuevas pistas "
+"asignadas al canal."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4123,6 +4248,8 @@ msgstr ""
 #: model:ir.model.fields,help:crm.field_crm_team_dashboard_graph_period_pipeline
 msgid "The time period this channel's dashboard graph will consider."
 msgstr ""
+"El período de tiempo que tendrá en cuenta el gráfico del tablero de este "
+"canal."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4146,6 +4273,15 @@ msgid ""
 "\n"
 "                        That's the easiest way to integrate Odoo with third party apps."
 msgstr ""
+"Hay varias maneras en que su empresa puede generar clientes potenciales con Odoo CRM.\n"
+"                         Uno de ellos está utilizando la dirección de correo electrónico genérica de su empresa como un disparador\n"
+"                         para crear un nuevo prospecto en el sistema. En Odoo, cada uno de tus canales de venta\n"
+"                         está vinculado a su propia dirección de correo electrónico desde la cual pueden llegar los prospectos.\n"
+"                         Por ejemplo, si la dirección de correo electrónico personal de su equipo Direct es\n"
+"                         direct@mycompany.example.com, cada correo electrónico enviado cuando un nuevo prospecto\n"
+"                         contactos creará automáticamente una nueva oportunidad en el canal de ventas.\n"
+"\n"
+"                         Esa es la forma más fácil de integrar Odoo con aplicaciones de terceros."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -4190,6 +4326,8 @@ msgstr "Esta es la configfuración por defecto, no hay nada que ajustar."
 msgid ""
 "This opportunity has <b>no activity planned</b>. <i>Click to check them.</i>"
 msgstr ""
+"Esta oportunidad tiene <b>ninguna actividad planificada</ b>. <i> Haz clic "
+"para verlos. </ i>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_probability
@@ -4302,13 +4440,13 @@ msgstr "No asignado"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Unassigned Lead"
-msgstr ""
+msgstr "Prospecto no asignado"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_unassigned_leads_count
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Unassigned Leads"
-msgstr ""
+msgstr "Prospectos no asignados"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4345,7 +4483,7 @@ msgstr "Usar"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Use an External Email Server"
-msgstr ""
+msgstr "Use un servidor externo de correo electrónico"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner.mass,action:0
@@ -4458,7 +4596,7 @@ msgstr "Correo VIP a patrocinadores potenciales"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Validate and normalize phone numbers."
-msgstr ""
+msgstr "Validar y normalizar números telefónicos."
 
 #. module: crm
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
@@ -4536,7 +4674,7 @@ msgstr "Sitio web"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_website
 msgid "Website of the contact"
-msgstr ""
+msgstr "Sitio web del contacto"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4581,6 +4719,10 @@ msgid ""
 "you with a list of matching contacts or companies.When selecting one item, "
 "the partner name, logo and website get automatically set."
 msgstr ""
+"Cuando rellene su libreta de direcciones, Odoo confía en la API de Clearbit "
+"para proporcionarle una lista de contactos o empresas coincidentes. Al "
+"seleccionar un elemento, el nombre del socio, el logotipo y el sitio web se "
+"configuran automáticamente."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_team_id
@@ -4588,6 +4730,8 @@ msgid ""
 "When sending mails, the default email address is taken from the sales "
 "channel."
 msgstr ""
+"Al enviar correos, la dirección de correo electrónico predeterminada se toma"
+" del canal de ventas."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4597,17 +4741,17 @@ msgstr "Promedio Ganadas / Perdidas"
 #. module: crm
 #: selection:crm.team,dashboard_graph_period_pipeline:0
 msgid "Within a Month"
-msgstr ""
+msgstr "Dentro de un mes"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_period_pipeline:0
 msgid "Within a Week"
-msgstr ""
+msgstr "Dentro de una Semana"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_period_pipeline:0
 msgid "Within a Year"
-msgstr ""
+msgstr "Dentro de un año"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_line_wizard_id
@@ -4645,7 +4789,7 @@ msgstr "Victorias en objetivos de oportunidades"
 #: code:addons/crm/models/crm_lead.py:383
 #, python-format
 msgid "Yeah! Deal of the last 7 days for the team."
-msgstr ""
+msgstr "¡Sí! Oferta de los últimos 7 días para el equipo."
 
 #. module: crm
 #. openerp-web
@@ -4689,13 +4833,13 @@ msgstr "Debe especificar un filtro para su selección"
 #: code:addons/crm/models/crm_lead.py:385
 #, python-format
 msgid "You just beat your personal record for the past 30 days."
-msgstr ""
+msgstr "Acabas de superar tu récord personal en los últimos 30 días."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:387
 #, python-format
 msgid "You just beat your personal record for the past 7 days."
-msgstr ""
+msgstr "Acabas de superar tu récord personal durante los últimos 7 días."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity

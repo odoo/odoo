@@ -1351,7 +1351,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Emailsjablonen toevoegen aan producten bij factuurverzending.\n"
+"E-mailsjablonen toevoegen aan producten bij factuurverzending.\n"
 "========================================================\n"
 "\n"
 "Met deze module kan u uw producten koppelen met een emailsjabloon met volledige\n"
@@ -3691,6 +3691,24 @@ msgid ""
 "* In a module, so that administrators and users of Odoo who do not\n"
 "  need or want an online import can avoid it being available to users.\n"
 msgstr ""
+"\n"
+"Nieuw uitbreidbare bestanden import voor Odoo\n"
+"======================================\n"
+"\n"
+"Her-implementeer Odoo's bestand importeer systeem:\n"
+"\n"
+"* Server kant, het vorige systeem forceert het meeste van de logica in de\n"
+"cliënt wat de inspanningen dupliceert (tussen cliënten), maak het\n"
+"importeer systeem veel moeilijker om te gebruiken zonder een cliënt (directe RPC of\n"
+"andere vormen van automatisering) en maakt het veel moeilijker om\n"
+"kennis over het importeer/exporteer systeem te verzamelen omdat het gespreid is over 3+ verschillende projecten.\n"
+"\n"
+"* In een meer uitbreidbare manier, zodat gebruikers en partners hun eigen\n"
+"front-end kunnen bouwen om via andere bestandsformaten te importeren (bijvoorbeeld OpenDocument\n"
+"bestanden) die mogelijk gemakkelijker te verwerken zijn in hun werk flow of vanuit\n"
+"hun data productie bronnen.\n"
+"\n"
+"* In een module, zodat de administrators en gebruikers van Odoo die online importeren niet nodig hebben of gebruiken dit niet beschikbaar hebben.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa
@@ -3719,7 +3737,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Odoo Contact Formulier\n"
+"Odoo Contactformulier\n"
 "=================\n"
 "\n"
 "        "
@@ -5467,7 +5485,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Deze module voegt de 'picking wave' optie toe in magazijnbeheer.\n"
+"Deze module voegt de 'batch picking' optie toe in magazijnbeheer.\n"
 "=================================================================\n"
 "    "
 
@@ -5496,6 +5514,8 @@ msgid ""
 "\n"
 "This module allows a customer to give rating on task which are created from sales order.\n"
 msgstr ""
+"\n"
+"Deze module laat de klant toe om een taak te beoordelen, welke is aangemaakt van een verkooporder.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_rating
@@ -6776,6 +6796,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>Warning</code>: Warning Exception to use with <code>raise</code>"
 msgstr ""
+"<code>Waarschuwing</code>: Waarschuwingsfout te gebruiken met <code>roep "
+"op</code>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -6792,7 +6814,7 @@ msgstr "<code>dateutil</code> (Python module)"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>env</code>: Odoo Environment on which the action is triggered"
-msgstr ""
+msgstr "<code>env</code>: Odoo omgeving waarop de actie is geactiveerd"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -6801,7 +6823,7 @@ msgid ""
 "information in <code>ir.logging</code> table"
 msgstr ""
 "<code>log(message, level='info')</code>:logging functie om debug informatie "
-"tel loggen in het <code>ir.logging</code> tabel"
+"te loggen in de <code>ir.logging</code> tabel"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -6809,12 +6831,16 @@ msgid ""
 "<code>model</code>: Odoo Model of the record on which the action is "
 "triggered; is a void recordset"
 msgstr ""
+"<code>model</code>: ORM model van het record op welke de functie wordt "
+"geactiveerd; is een void recordset"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>record</code>: record on which the action is triggered; may be be void"
 msgstr ""
+"<code>record</code>: record op welke de actie is geactiveerd; kan ongeldig "
+"zijn"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -6822,6 +6848,8 @@ msgid ""
 "<code>records</code>: recordset of all records on which the action is "
 "triggered in multi mode; may be void"
 msgstr ""
+"<code>records</code>: recordset van alle records op welke de actie is "
+"geactiveerd in multi mode; kan ongeldig zijn"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -6841,6 +6869,8 @@ msgid ""
 "<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
 "<code>timezone</code>: useful Python libraries"
 msgstr ""
+"<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
+"<code>timezone</code>: useful Python libraries"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_currency_kanban
@@ -8409,6 +8439,8 @@ msgstr "Voor bedrag"
 msgid ""
 "Before clicking on 'Change Password', you have to write a new password."
 msgstr ""
+"Voordat u klikt op \"Wijzig wachtwoord\" dient u een nieuw wachtwoord in te "
+"voeren."
 
 #. module: base
 #: model:res.country,name:base.by
@@ -9534,7 +9566,7 @@ msgstr "Relatie aanmaken"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm
 msgid "Contact Form"
-msgstr "Contact formulier"
+msgstr "Contactformulier"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_phone_validation
@@ -9721,7 +9753,7 @@ msgstr "Aanmaakdatum"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm
 msgid "Create Leads From Contact Form"
-msgstr "Maak leads van contact formulier"
+msgstr "Maak leads van contactformulier"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
@@ -11305,6 +11337,9 @@ msgid ""
 "When Formula type is selected, this field may be a Python expression  that can use the same values as for the code field on the server action.\n"
 "If Value type is selected, the value will be used directly without evaluation."
 msgstr ""
+"Expressie met een waarde specificatie. \n"
+"Wanneer Formule-type is geselecteerd, kan dit veld een Python expressie bevatten die dezelfde waarden kan gebruiken als voor het conditie veld op de server actie.\n"
+"Als het type waarde is geselecteerd, wordt de waarde direct gebruikt zonder evaluatie."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_address_extended
@@ -12677,7 +12712,7 @@ msgstr "Hongarije"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_I
 msgid "I ACCOMMODATION AND FOOD SERVICE ACTIVITIES"
-msgstr ""
+msgstr "I ACCOMMODATES EN VOEDSEL DIENSTEN"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_iban
@@ -14393,7 +14428,7 @@ msgstr "Luxemburg - Boekhoudkundige rapporten"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_M
 msgid "M PROFESSIONAL, SCIENTIFIC AND TECHNICAL ACTIVITIES"
-msgstr ""
+msgstr "M PROFESSIONELE, WETENSCHAPPELIJKE EN TECHNISCHE ACTIVITEITEN"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_byproduct
@@ -14583,6 +14618,8 @@ msgid ""
 "Manage sectors of activity to better classify partners for tracking and "
 "analysis purposes."
 msgstr ""
+"Beheer activiteit sectoren om relaties beter te classificeren voor tracking "
+"en analyse doeleinden."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_title_contact
@@ -14803,6 +14840,8 @@ msgid ""
 "Methods that start with `get_default_` are deprecated. Override `get_values`"
 " instead(Method %s)"
 msgstr ""
+"Methodes die starten met `gef_default` zijn vervallen. Gebruik in plaats "
+"hiervan de `get_values` (Methode%s)"
 
 #. module: base
 #: code:addons/base/res/res_config.py:543
@@ -14811,6 +14850,8 @@ msgid ""
 "Methods that start with `set_` are deprecated. Override `set_values` instead"
 " (Method %s)"
 msgstr ""
+"Methodes die starten met `set_` zijn vervallen. Gebruik in plaats hiervan de"
+" `set_values` (Methode%s)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi
@@ -15205,7 +15246,7 @@ msgstr "Myanmar (Birma)"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_N
 msgid "N ADMINISTRATIVE AND SUPPORT SERVICE ACTIVITIES"
-msgstr ""
+msgstr "N ADMINISTRATIEVE EN ONDERSTEUNENDE DIENSTEN"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_name
@@ -15506,7 +15547,7 @@ msgstr "Aantal bijgewerkte modules"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_O
 msgid "O PUBLIC ADMINISTRATION AND DEFENCE;COMPULSORY SOCIAL SECURITY"
-msgstr ""
+msgstr "O PUBLIEKE ADMINISTRATIE EN DEFENSIE, VERPLICHTE SOCIALE ZEKERHEID"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_oauth
@@ -16084,7 +16125,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_reports
 msgid "Odoo Mexican Localization Reports"
-msgstr ""
+msgstr "Mexicaanse lokalisatie rapportages"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_mobile
@@ -16749,7 +16790,7 @@ msgstr "Online offertes"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_quote_subscription
 msgid "Online Subscription Quotes"
-msgstr ""
+msgstr "Online abonnementen sjablonen"
 
 #. module: base
 #: code:addons/base/res/res_config.py:514
@@ -16783,7 +16824,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:res.currency.rate:0
 msgid "Only one currency rate per day allowed!"
-msgstr ""
+msgstr "Er is maar één valutakoers per dag toegestaan!"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:1174
@@ -17415,12 +17456,12 @@ msgstr "Pad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_payment
 msgid "Payment - Account"
-msgstr ""
+msgstr "Betaling - Boekhouding"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_payment
 msgid "Payment - Sale"
-msgstr ""
+msgstr "Betaling - Verkoop"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_payment_acquirer
@@ -17596,7 +17637,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Please set the Model to Create before choosing values"
-msgstr ""
+msgstr "Stel eerst het aan te maken model in voor waardes te kiezen"
 
 #. module: base
 #: code:addons/base/res/res_users.py:250
@@ -17809,12 +17850,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_comparison
 msgid "Product Comparison And Product Attribute Category"
-msgstr ""
+msgstr "Productvergelijk en product kenmerk categorie"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_comparison
 msgid "Product Comparison, Product Attribute Category and specification table"
-msgstr ""
+msgstr "Productvergelijk en product kenmerk categorie en specificatie tabel"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_email_template
@@ -18012,7 +18053,7 @@ msgstr "Openbaar"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_O
 msgid "Public Administration"
-msgstr ""
+msgstr "Openbaar bestuur"
 
 #. module: base
 #: model:res.groups,comment:base.group_public
@@ -18031,7 +18072,7 @@ msgstr "Publiceer verenigingen, groepen en lidmaatschappen"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event
 msgid "Publish Events and Manage Online Registrations on your Website"
-msgstr ""
+msgstr "Pubiceer evenementen beheer online registraties via uw website"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_partner_assign
@@ -18104,7 +18145,7 @@ msgstr "Python expressie"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_Q
 msgid "Q HUMAN HEALTH AND SOCIAL WORK ACTIVITIES"
-msgstr ""
+msgstr "V GEZONDHEIDSZORG EN SOCIALE ACTIVITEITEN"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_search selection:ir.ui.view,type:0
@@ -18175,7 +18216,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_R
 msgid "R ARTS, ENTERTAINMENT AND RECREATION"
-msgstr ""
+msgstr "R KUNST, ENTERTAINMENT EN RECREATIE"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate_rate
@@ -18208,7 +18249,7 @@ msgstr "Alleen lezen"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_L
 msgid "Real Estate"
-msgstr ""
+msgstr "Ontroerend goed"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_data_form
@@ -18362,7 +18403,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Remove Contextual Action"
-msgstr ""
+msgstr "Verwijder contextuele actie"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
@@ -18689,7 +18730,7 @@ msgstr "Sint-Bartholomeus"
 #. module: base
 #: model:res.country,name:base.sh
 msgid "Saint Helena, Ascension and Tristan da Cunha"
-msgstr ""
+msgstr "Sint-Helena, Ascension en Tristan da Cunha"
 
 #. module: base
 #: model:res.country,name:base.kn
@@ -18803,7 +18844,7 @@ msgstr "Verkoop en magazijnbeheer"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale
 msgid "Sales internal machinery"
-msgstr ""
+msgstr "Verkoop interne machines"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_user_id
@@ -18888,7 +18929,7 @@ msgstr "Geplande acties"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_user_id
 msgid "Scheduler User"
-msgstr ""
+msgstr "Geplande gebruiker"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_M
@@ -19835,6 +19876,8 @@ msgid ""
 "T ACTIVITIES OF HOUSEHOLDS AS EMPLOYERS;UNDIFFERENTIATED GOODS- AND "
 "SERVICES-PRODUCING ACTIVITIES OF HOUSEHOLDS FOR OWN USE"
 msgstr ""
+"T ACTIVITEITEN VAN HUISHOUDENS ALS WERKGEVERS, NIET-GEDIFFERENTIEERDE "
+"GOEDEREN- EN DIENST BEDRIJFSACTIVITEITEN VAN HUISHOUDENS VOOR EIGEN GEBRUIK"
 
 #. module: base
 #: selection:base.language.export,format:0
@@ -20412,6 +20455,8 @@ msgid ""
 "The requested operation cannot be completed due to record rules: Document "
 "type: %s, Operation: %s, Records: %s, User: %s"
 msgstr ""
+"De gevraagde bewerking kan niet worden voltooid vanwege recordregels: "
+"Document type: %s, Bewerking: %s, Records: %s, Gebruiker: %s"
 
 #. module: base
 #: code:addons/models.py:2473 code:addons/models.py:2682
@@ -20747,6 +20792,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "To return an action, assign: <code>action = {...}</code>"
 msgstr ""
+"Om een actie terug te sturen wijst u het volgende toe: <code>action = "
+"{...}</code>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_actions_todo_tree
@@ -21023,7 +21070,7 @@ msgstr "Soort:"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_U
 msgid "U ACTIVITIES OF EXTRA TERRITORIAL ORGANISATIONS AND BODIES"
-msgstr ""
+msgstr "U ACTIVITEITEN VAN EXTRA TERRITORIALE ORGANISATIES EN LICHAMEN"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae
@@ -21376,7 +21423,7 @@ msgstr "Gebruik het formaat '%s'"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_vat_label
 msgid "Use this field if you want to change vat label."
-msgstr ""
+msgstr "Gebruikt dit veld als u het BTW label wilt wijzigen."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_address_view_id
