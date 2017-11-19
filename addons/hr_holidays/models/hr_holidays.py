@@ -383,7 +383,7 @@ class Holidays(models.Model):
     def _create_resource_leave(self):
         """ This method will create entry in resource calendar leave object at the time of holidays validated """
         for leave in self:
-            self.env['resource.calendar.leaves'].create({
+            self.env['resource.calendar.leaves'].with_context({'tz': self._context.get('tz') or 'UTC'}).create({
                 'name': leave.name,
                 'date_from': leave.date_from,
                 'holiday_id': leave.id,
