@@ -29,8 +29,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 11:34+0000\n"
-"PO-Revision-Date: 2017-10-10 11:34+0000\n"
+"POT-Creation-Date: 2017-11-16 08:08+0000\n"
+"PO-Revision-Date: 2017-11-16 08:08+0000\n"
 "Last-Translator: Connie Xiao <connie.xiao@elico-corp.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -186,6 +186,11 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Validate the "
 "Receipt Order</span>"
 msgstr "<span class=\"label label-default text-center odoo_purple\">验证收货单</span>"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_inventory_form
+msgid "<span class=\"o_stat_text\">Details</span>"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -1296,7 +1301,6 @@ msgstr "公司"
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_company_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_company_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_company_id
-#: model:ir.ui.view,arch_db:stock.quant_package_search_view
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Company"
 msgstr "公司"
@@ -1722,7 +1726,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_delivery_dhl
-msgid "DHL"
+msgid "DHL USA"
 msgstr ""
 
 #. module: stock
@@ -2977,6 +2981,7 @@ msgstr "盘点月份"
 #: model:ir.model.fields,field_description:stock.field_stock_move_inventory_id
 #: model:ir.ui.menu,name:stock.menu_stock_root
 #: model:ir.ui.menu,name:stock.menu_valuation
+#: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_pivot
 msgid "Inventory"
 msgstr "库存"
@@ -3013,6 +3018,11 @@ msgstr "盘点细节"
 #: model:ir.model,name:stock.model_stock_inventory_line
 msgid "Inventory Line"
 msgstr "盘点行"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_inventory_line_tree
+msgid "Inventory Lines"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_inventory
@@ -3354,6 +3364,11 @@ msgid "Linked Moves"
 msgstr "链接的移动"
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.view_inventory_form
+msgid "List view of lines"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form
 msgid "Localization"
 msgstr "定位"
@@ -3376,10 +3391,8 @@ msgstr "定位"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_location_id
-#: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_repair_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_unbuild_location_id
-#: model:ir.ui.view,arch_db:stock.quant_package_search_view
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 #: model:ir.ui.view,arch_db:stock.stock_scrap_search_view
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -3512,12 +3525,13 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
 #: model:ir.ui.menu,name:stock.menu_action_production_lot_form
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
+#: model:ir.ui.view,arch_db:stock.view_production_lot_form_simple
 #: model:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Lots/Serial Numbers"
 msgstr "批次/序列号码"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:534
+#: code:addons/stock/models/stock_warehouse.py:541
 #, python-format
 msgid "MTO"
 msgstr "MTO"
@@ -4649,7 +4663,6 @@ msgstr "生产的数量"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_product_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_product_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_product_id
-#: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_repair_product_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_product_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_unbuild_product_id
 #: model:ir.ui.view,arch_db:stock.quant_search_view
@@ -4747,6 +4760,7 @@ msgstr "产品变体"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
+#: model:ir.ui.view,arch_db:stock.view_production_lot_form_simple
 msgid ""
 "Product this lot/serial number contains. You cannot change it anymore if it "
 "has already been moved."
@@ -4883,8 +4897,8 @@ msgid "Quality Control Location"
 msgstr "质量管理位置"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location_quant_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_quant_ids
-#: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_repair_quant_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_quant_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_unbuild_quant_ids
 msgid "Quant"
@@ -5660,6 +5674,11 @@ msgid "Show Detailed Operations"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_show_lots_text
+msgid "Show Lots Text"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_show_mark_as_todo
 msgid "Show Mark As Todo"
 msgstr ""
@@ -5900,6 +5919,11 @@ msgstr "库存移动处于已确认、可用或者在等待的状态"
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Stock moves that have been processed"
 msgstr "库存移动已经被处理"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.quant_search_view
+msgid "Stockable"
+msgstr "可库存"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_multi_locations
@@ -6290,6 +6314,13 @@ msgid ""
 "be done with care."
 msgstr ""
 "这是库存视角的产品数量。对于状态为“完成”的移动，这就是真正完成了移动的产品数量。对于其它移动，则是计划进行移动的数量。降低这个数量不会生成欠单。在已指定的移动变更这个数量将影响产品预留，应该慎之又慎。"
+
+#. module: stock
+#: code:addons/stock/models/stock_location.py:87
+#, python-format
+msgid ""
+"This location's usage cannot be changed to view as it contains products."
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_move_action
@@ -7168,13 +7199,11 @@ msgstr ""
 #: code:addons/stock/models/stock_inventory.py:380
 #, python-format
 msgid ""
-"You cannot have two inventory adjustements in state 'in Progess' with the "
+"You cannot have two inventory adjustements in state 'in Progress' with the "
 "same product(%s), same location(%s), same package, same owner and same lot. "
 "Please first validatethe first inventory adjustement with this product "
 "before creating another one."
 msgstr ""
-"同一产品(%s), 同一位置(%s), 同一包裹, 同一所有人以及同一批号，不能有2个状态为“进行中”的库存调整.  "
-"在创建另一个之前，请先验证第一个库存调整。"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:159
@@ -7187,20 +7216,28 @@ msgstr ""
 "\t%s - qty: %s"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1069
+#: code:addons/stock/models/stock_move.py:1097
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
 msgstr "不能拆分一个移动草稿。你需要先确认它。"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1065
+#: code:addons/stock/models/stock_move.py:1093
 #, python-format
 msgid "You cannot split a move done"
 msgstr "你无法拆分一个已完成的移动"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:151
-#: code:addons/stock/models/stock_move_line.py:157
+#: code:addons/stock/models/stock_quant.py:87
+#, python-format
+msgid ""
+"You cannot take products from or deliver products to a location of type "
+"\"view\"."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:152
+#: code:addons/stock/models/stock_move_line.py:158
 #, python-format
 msgid ""
 "You cannot use the same serial number twice. Please correct the serial "
@@ -7208,7 +7245,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:643
+#: code:addons/stock/models/stock_picking.py:656
 #, python-format
 msgid "You cannot validate a transfer if you have not processed any quantity."
 msgstr ""
@@ -7288,10 +7325,16 @@ msgid "You must define a warehouse for the company: %s."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:386
-#: code:addons/stock/models/stock_picking.py:656
+#: code:addons/stock/models/stock_move_line.py:387
+#: code:addons/stock/models/stock_picking.py:669
 #, python-format
 msgid "You need to supply a lot/serial number for %s."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:1043
+#, python-format
+msgid "You should not put the contents of a package in different locations."
 msgstr ""
 
 #. module: stock
@@ -7391,6 +7434,7 @@ msgstr "例如：购买"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
+#: model:ir.ui.view,arch_db:stock.view_production_lot_form_simple
 msgid "e.g. LOT/0001/20121"
 msgstr "例如. LOT/0001/20121"
 

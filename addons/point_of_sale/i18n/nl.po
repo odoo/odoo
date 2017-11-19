@@ -866,7 +866,7 @@ msgstr "Klik om een betaalmethode toe te voegen."
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
 msgid "Click to create a new PoS config."
-msgstr "Klik om een nieuwe PoS configuratie aan te maken."
+msgstr "Klik om een nieuwe kassa configuratie aan te maken."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
@@ -1326,6 +1326,8 @@ msgid ""
 "Don’t turn this option on if you take orders on smartphones or tablets. \n"
 " Such devices already benefit from a native keyboard."
 msgstr ""
+"Zet deze optie niet aan als u orders opneemt op smartphones of tablets.\n"
+" Deze apparaten hebben al het voordeel van een toetsenbord functie."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1333,6 +1335,8 @@ msgid ""
 "Don’t turn this option on if you take orders on smartphones or tablets. Such"
 " devices already benefit from a native keyboard."
 msgstr ""
+"Zet deze optie niet aan als u orders opneemt op smartphones of tablets. Deze"
+" apparaten hebben al het voordeel van een toetsenbord functie."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1556,6 +1560,11 @@ msgid ""
 "recommended for an easy review of your journal entries when managing lots of"
 " orders."
 msgstr ""
+"Krijg één boeking per product in plaats van één boeking per ontvangstregel. "
+"Dit werkt voor iedere anonieme order. Als de klant is ingesteld op de order "
+"wordt er één boeking gemaakt voor iedere ontvangstregel. Deze optie wordt "
+"aangeraden voor een eenvoudige controle van de boekingen, bij het beheren "
+"van heel veel orders."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2203,6 +2212,8 @@ msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
 "prices on orders."
 msgstr ""
+"Allen gebruikers met manager rechten van de kassa kunnen de productprijzen "
+"op order aanpassen."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2337,7 +2348,7 @@ msgstr "Order interface"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_sequence_line_id
 msgid "Order Line IDs Sequence"
-msgstr "Orderlijn IDs reeks"
+msgstr "Orderregel IDs reeks"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_lines
@@ -2449,7 +2460,7 @@ msgstr "Kassaorders aangemaakt in huidige jaar"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line_pos_statement_id
 msgid "POS statement"
-msgstr "POS afschrift"
+msgstr "Kassa afschrift"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_paid
@@ -2745,7 +2756,7 @@ msgstr "Kassa categorieën"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_pos_config_ids
 msgid "Pos Config"
-msgstr "POS configuratie"
+msgstr "Kassa configuratie"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner_pos_order_count
@@ -2756,7 +2767,7 @@ msgstr "Aantal kassa orders"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_pos_order_line_id
 msgid "Pos Order Line"
-msgstr "POS orderlijn"
+msgstr "Kassa orderregel"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pos_session_state
@@ -2766,7 +2777,7 @@ msgstr "Kassa sessie status"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pos_session_username
 msgid "Pos Session Username"
-msgstr "POS sessie gebruikersnaam"
+msgstr "Kassa sessie gebruikersnaam"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_is_posbox
@@ -3150,6 +3161,7 @@ msgstr "Opslaan"
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Save this configuration to see and edit the customer display"
 msgstr ""
+"Sla deze instellingen op om het klantenscherm te zien en bij te werken."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3339,7 +3351,7 @@ msgstr "Stel gewicht in"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Set barcodes to scan products, customer cards, etc."
-msgstr ""
+msgstr "Stel barcode is om producten, klanten, kaarten, etc. te scannen."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3351,7 +3363,7 @@ msgstr "Stel specifieke prijzen, seizoenskortingen, enz. in."
 #: code:addons/point_of_sale/static/src/js/pos.web_editor.js:33
 #, python-format
 msgid "Set your customized advertisement here"
-msgstr ""
+msgstr "Stel uw speciale advertentie hier in"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3571,7 +3583,7 @@ msgstr "BTW regime"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_tax_regime_selection
 msgid "Tax Regime Selection value"
-msgstr ""
+msgstr "BTW beleid selectiewaarde"
 
 #. module: point_of_sale
 #: selection:pos.config,iface_tax_included:0
@@ -3718,6 +3730,8 @@ msgid ""
 "The payment input will behave similarily to bank payment input, and will be "
 "prefilled with the exact due amount."
 msgstr ""
+"De betalingsinput gedraagt zich gelijkwaardig aan bankafschrift input en "
+"wordt automatisch ingevuld met het exacte verschuldigde bedrag."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_config_id
@@ -3731,6 +3745,8 @@ msgid ""
 "The point of sale will display this product category by default. If no "
 "category is specified, all available products will be shown."
 msgstr ""
+"De kassa toont de productcategorieën standaard. Als er geen categorie is "
+"gespecificeerd worden alle producten getoond"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_pricelist_id
@@ -3738,6 +3754,8 @@ msgid ""
 "The pricelist used if no customer is selected or if the customer has no Sale"
 " Pricelist configured."
 msgstr ""
+"De prijslijst welke wordt gebruikt indien geen klant is geselecteerd of als "
+"er geen prijslijst bij de klant is ingesteld."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_display_categ_images
@@ -3764,7 +3782,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_print_auto
 msgid "The receipt will automatically be printed at the end of each order."
-msgstr ""
+msgstr "De kassabon wordt automatisch afgedrukt aan het einde van elke order"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3890,6 +3908,8 @@ msgid ""
 "This field is there to pass the id of the pos manager group to the point of "
 "sale client."
 msgstr ""
+"Dit veld is hier om de id door te geven van de kassa manager groep naar de "
+"kassacliënt"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_group_pos_user_id
@@ -3897,7 +3917,7 @@ msgid ""
 "This field is there to pass the id of the pos user group to the point of "
 "sale client."
 msgstr ""
-"Dit veld is hier om de id van de pos gebruikersgroep door te geven aan de "
+"Dit veld is hier om de id van de kassa gebruikersgroep door te geven aan de "
 "kassa cliënt."
 
 #. module: point_of_sale
@@ -3950,6 +3970,8 @@ msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders lines."
 msgstr ""
+"Deze nummering zal automatisch gegenereerd worden door Odoo, maar u kunt ook"
+" uw eigen nummering samenstellen voor uw orderregels."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_sequence_id
@@ -4298,6 +4320,8 @@ msgid ""
 "You cannot confirm all orders of this session, because they have not the 'paid' status.\n"
 "{reference} is in state {state}, total amount: {total}, paid: {paid}"
 msgstr ""
+"Het is niet mogelijk om alle orders van deze sessie te bevestigen. Dit omdat deze nog niet de status 'betaald' hebben.\n"
+"{reference} staat in fase {state}, totaal bedrag: {total}, betaald: {paid}"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:151

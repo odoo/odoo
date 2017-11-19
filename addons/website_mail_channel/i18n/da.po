@@ -34,6 +34,13 @@ msgid ""
 "<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
 "</data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Hej,</p>\n"
+"<p>Du har bedt om at blive tilføjet mailisten <strong>${object.name}</strong></p>\n"
+"<p> Bekræfte dette ved at klikke på følgende link:</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
+"<p>Hvis dette var en fejl, eller du ikke har anmodet om denne handling, skal du ignorere denne meddelelse.</p>\n"
+"</data>"
 
 #. module: website_mail_channel
 #: model:mail.template,body_html:website_mail_channel.mail_template_list_unsubscribe
