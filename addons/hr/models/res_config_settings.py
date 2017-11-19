@@ -10,3 +10,4 @@ class ResConfigSettings(models.TransientModel):
         'resource.calendar', 'Company Working Hours',
         related='company_id.resource_calendar_id')
     module_hr_org_chart = fields.Boolean(string="Show Organizational Chart")
+    module_hr_phone_validation = fields.Boolean("Phone Validation")
