@@ -1,23 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * pos_restaurant
-#
-# Translators:
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-05-26 15:07+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/"
-"sl/)\n"
-"Language: sl\n"
+"POT-Creation-Date: 2017-09-20 09:52+0000\n"
+"PO-Revision-Date: 2017-09-20 09:52+0000\n"
+"Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
-"%100==4 ? 2 : 3);\n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+
+#. module: pos_restaurant
+#: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
+msgid "<strong>Floor Name: </strong>"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
+msgid "<strong>Point of Sale: </strong>"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_background_image
@@ -29,15 +35,19 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid ""
-"A restaurant floor represents the place where customers are served, this is "
-"where you can\n"
+"A restaurant floor represents the place where customers are served, this is where you can\n"
 "                define and position the tables."
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
+msgid "Accept customer tips or convert their change to a tip"
 msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_active
 msgid "Active"
-msgstr "Aktivno"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
@@ -47,14 +57,24 @@ msgid "Add Note"
 msgstr ""
 
 #. module: pos_restaurant
+#: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
+msgid "Add notes to orderlines"
+msgstr ""
+
+#. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_orderline_notes
-msgid "Allow custom notes on Orderlines"
+msgid "Allow custom notes on Orderlines."
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
+msgid "Allow to print bill before payment"
 msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_printbill
-msgid "Allows to print the Bill before payment"
-msgstr "Omogoči tiskanje računov pred plačilom"
+msgid "Allows to print the Bill before payment."
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_name
@@ -64,7 +84,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer_name
 msgid "An internal identification of the printer"
-msgstr "Notranja identifikacija tiskalnika"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_name
@@ -78,7 +98,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:543
+#: code:addons/pos_restaurant/static/src/js/floors.js:562
 #, python-format
 msgid "Are you sure ?"
 msgstr ""
@@ -89,7 +109,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:61
 #, python-format
 msgid "Back"
-msgstr "Nazaj"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_background_color
@@ -99,19 +119,14 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_background_image
 msgid "Background Image"
-msgstr "Slika ozadja"
-
-#. module: pos_restaurant
-#: model:ir.ui.view,arch_db:pos_restaurant.view_pos_config_form
-msgid "Bar & Restaurant"
-msgstr "Bar in restavracija"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:31
 #, python-format
 msgid "Bill"
-msgstr "Račun"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
@@ -119,7 +134,7 @@ msgstr "Račun"
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config_iface_printbill
 #, python-format
 msgid "Bill Printing"
-msgstr "Tiskanje računa"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
@@ -127,29 +142,22 @@ msgstr "Tiskanje računa"
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config_iface_splitbill
 #, python-format
 msgid "Bill Splitting"
-msgstr "Razdelitev računa"
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:30
-#, python-format
-msgid "CANCELLED"
-msgstr "PREKLICANO"
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:260
-#: code:addons/pos_restaurant/static/src/js/floors.js:404
-#, python-format
-msgid "Changes could not be saved"
 msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:261
-#: code:addons/pos_restaurant/static/src/js/floors.js:405
+#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:39
 #, python-format
-msgid "Check your internet connection and access rights"
+msgid "CANCELLED"
+msgstr ""
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/js/floors.js:270
+#: code:addons/pos_restaurant/static/src/js/floors.js:309
+#: code:addons/pos_restaurant/static/src/js/floors.js:425
+#, python-format
+msgid "Changes could not be saved"
 msgstr ""
 
 #. module: pos_restaurant
@@ -165,58 +173,56 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_color
 msgid "Color"
-msgstr "Barva"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_create_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer_create_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_create_uid
 msgid "Created by"
-msgstr "Ustvaril"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_create_date
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer_create_date
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_create_date
 msgid "Created on"
-msgstr "Ustvarjeno"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:91
 #, python-format
 msgid "Discount:"
-msgstr "Popust:"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:140
 #, python-format
 msgid "Discounts"
-msgstr "Popusti"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_display_name
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer_display_name
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_display_name
 msgid "Display Name"
-msgstr "Prikaz naziva"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
 msgid ""
 "Each Order Printer has an IP Address that defines the PosBox/Hardware\n"
-"                Proxy where the printer can be found, and a list of product "
-"categories.\n"
-"                An Order Printer will only print updates for products "
-"belonging to one of\n"
+"                Proxy where the printer can be found, and a list of product categories.\n"
+"                An Order Printer will only print updates for products belonging to one of\n"
 "                its categories."
 msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_splitbill
-msgid "Enables Bill Splitting in the Point of Sale"
-msgstr "Omogoči razdelitev računa v POS"
+msgid "Enables Bill Splitting in the Point of Sale."
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_floor_id
@@ -235,6 +241,11 @@ msgid "Floor Plans"
 msgstr ""
 
 #. module: pos_restaurant
+#: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
+msgid "Floors"
+msgstr ""
+
+#. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:28
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_customer_count
@@ -244,7 +255,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:918
+#: code:addons/pos_restaurant/static/src/js/floors.js:946
 #, python-format
 msgid "Guests ?"
 msgstr ""
@@ -260,7 +271,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_height
 msgid "Height"
-msgstr "Višina"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_position_h
@@ -272,13 +283,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer_id
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_active
 msgid ""
-"If false, the table is deactivated and will not be available in the point of "
-"sale"
+"If false, the table is deactivated and will not be available in the point of"
+" sale"
 msgstr ""
 
 #. module: pos_restaurant
@@ -286,33 +297,38 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer___last_update
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table___last_update
 msgid "Last Modified on"
-msgstr "Zadnjič spremenjeno"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_write_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer_write_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_write_uid
 msgid "Last Updated by"
-msgstr "Zadnjič posodobil"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_write_date
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer_write_date
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_write_date
 msgid "Last Updated on"
-msgstr "Zadnjič posodobljeno"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
+msgid "Manage table orders"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:52
+#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:62
 #, python-format
 msgid "NEW"
-msgstr "NOVO"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:40
-#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:62
+#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:50
+#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:73
 #, python-format
 msgid "NOTE"
 msgstr ""
@@ -322,11 +338,11 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/notes.xml:16
 #, python-format
 msgid "Note"
-msgstr "Opomba"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:476
+#: code:addons/pos_restaurant/static/src/js/floors.js:495
 #, python-format
 msgid "Number of Seats ?"
 msgstr ""
@@ -336,28 +352,28 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:13
 #, python-format
 msgid "Ok"
-msgstr "V Redu"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/multiprint.xml:6
 #, python-format
 msgid "Order"
-msgstr "Vrstni red"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_printer_form
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_config_is_order_printer
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config_printer_ids
 #: model:ir.ui.menu,name:pos_restaurant.menu_restaurant_printer_all
 msgid "Order Printers"
-msgstr "Tiskalniki za naročila"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
 msgid ""
 "Order Printers are used by restaurants and bars to print the\n"
-"                order updates in the kitchen/bar when the waiter updates the "
-"order."
+"                order updates in the kitchen/bar when the waiter updates the order."
 msgstr ""
 
 #. module: pos_restaurant
@@ -368,24 +384,23 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_printer_form
 msgid "POS Printer"
-msgstr "POS tiskalnik"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:78
 #, python-format
 msgid "Payment"
-msgstr "Plačilo"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_pos_config_id
+msgid "Point of Sale"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order
-#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_pos_config_id
-msgid "Point of Sale"
-msgstr "Prodajna točka"
-
-#. module: pos_restaurant
-#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_pos_order_ids
-msgid "Pos Orders"
+msgid "Point of Sale Orders"
 msgstr ""
 
 #. module: pos_restaurant
@@ -393,26 +408,36 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:20
 #, python-format
 msgid "Print"
-msgstr "Tiskanje"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
+msgid "Print orders at the kitchen, at the bar, etc."
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer_product_categories_ids
 msgid "Printed Product Categories"
-msgstr "Izpisane kategorije proizvodov"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer_name
 msgid "Printer Name"
-msgstr "Naziv tiskalnika"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
+msgid "Printers"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer_proxy_ip
 msgid "Proxy IP Address"
-msgstr "IP naslov Proxy strežnika"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:544
+#: code:addons/pos_restaurant/static/src/js/floors.js:563
 #, python-format
 msgid "Removing a table cannot be undone"
 msgstr ""
@@ -431,7 +456,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_printer
 msgid "Restaurant Order Printers"
-msgstr "Tiskalniki za naročila restavracije"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
@@ -451,14 +476,14 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_sequence
 msgid "Sequence"
-msgstr "Zaporedje"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:71
 #, python-format
 msgid "Served by"
-msgstr "Postregel"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_shape
@@ -470,7 +495,12 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:6
 #, python-format
 msgid "Split"
-msgstr "Razdeli"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
+msgid "Split total or order lines"
+msgstr ""
 
 #. module: pos_restaurant
 #: selection:restaurant.table,shape:0
@@ -482,19 +512,24 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:118
 #, python-format
 msgid "Subtotal"
-msgstr "Skupaj"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:131
 #, python-format
 msgid "TOTAL"
-msgstr "SKUPAJ"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_table_id
 msgid "Table"
-msgstr "Razpredelnica"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_config_is_table_management
+msgid "Table Management"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_name
@@ -503,7 +538,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:464
+#: code:addons/pos_restaurant/static/src/js/floors.js:483
 #, python-format
 msgid "Table Name ?"
 msgstr ""
@@ -519,12 +554,12 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:54
 #, python-format
 msgid "Tel:"
-msgstr "Tel.:"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer_proxy_ip
 msgid "The IP Address or hostname of the Printer's hardware proxy"
-msgstr "Gostitelj ali IP naslov proxy strežnika za strojno opremo."
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order_customer_count
@@ -549,13 +584,8 @@ msgid "The list of tables in this floor"
 msgstr ""
 
 #. module: pos_restaurant
-#: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_pos_order_ids
-msgid "The orders served at this table"
-msgstr ""
-
-#. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_floor_ids
-msgid "The restaurant floors served by this point of sale"
+msgid "The restaurant floors served by this point of sale."
 msgstr ""
 
 #. module: pos_restaurant
@@ -565,7 +595,8 @@ msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_color
-msgid "The table's color, expressed as a valid 'background' CSS property value"
+msgid ""
+"The table's color, expressed as a valid 'background' CSS property value"
 msgstr ""
 
 #. module: pos_restaurant
@@ -576,8 +607,8 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_position_h
 msgid ""
-"The table's horizontal position from the left side to the table's center, in "
-"pixels"
+"The table's horizontal position from the left side to the table's center, in"
+" pixels"
 msgstr ""
 
 #. module: pos_restaurant
@@ -593,9 +624,24 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:102
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:106
 #, python-format
 msgid "This floor has no tables yet, use the"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
+msgid "This product is used as reference on customer receipts."
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
+msgid "Tip Product"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
+msgid "Tips"
 msgstr ""
 
 #. module: pos_restaurant
@@ -611,13 +657,6 @@ msgid "Used to sort Floors"
 msgstr ""
 
 #. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:57
-#, python-format
-msgid "VAT:"
-msgstr "DDV:"
-
-#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_position_v
 msgid "Vertical Position"
 msgstr ""
@@ -625,21 +664,30 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_width
 msgid "Width"
-msgstr "Širina"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:44
 #, python-format
 msgid "With a"
-msgstr "Z"
+msgstr ""
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/js/floors.js:271
+#: code:addons/pos_restaurant/static/src/js/floors.js:310
+#: code:addons/pos_restaurant/static/src/js/floors.js:426
+#, python-format
+msgid "You must be connected to the internet to save your changes."
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:36
 #, python-format
 msgid "at"
-msgstr "pri"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
@@ -651,7 +699,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:103
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:107
 #, python-format
 msgid "button in the editing toolbar to create new tables."
 msgstr ""
@@ -661,12 +709,12 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:46
 #, python-format
 msgid "discount"
-msgstr "popust"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_config
 msgid "pos.config"
-msgstr "pos.config"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_floor

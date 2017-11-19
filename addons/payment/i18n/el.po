@@ -7,6 +7,7 @@
 # Martin Trigaux <mat@odoo.com>, 2017
 # George Tarasidis <george_tarasidis@yahoo.com>, 2017
 # Sophia Anastasopoulos <sophiaanast1@gmail.com>, 2017
+# Giota Dandidou <giotadandidou@gmail.com>, 2017
 # Nikos Gkountras <nick@ngsol.net>, 2017
 # Costas Pittalis <cpittalis@gmail.com>, 2017
 msgid ""
@@ -116,6 +117,8 @@ msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"o_warning_text\">Δοκιμαστικό</span>\n"
+"                                    <span class=\"o_stat_text\">Περιβάλλον</span>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -123,6 +126,8 @@ msgid ""
 "<span class=\"text-success\">Production</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"text-success\">Παραγωγής</span>\n"
+"                                    <span class=\"o_stat_text\">Περιβάλλον</span>"
 
 #. module: payment
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_adyen
@@ -136,7 +141,7 @@ msgstr ""
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_stripe
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_transfer
 msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>Άκυρο,</i> Η πληρωμή σας έχει ακυρωθεί.</span>"
+msgstr "<span><i>Άκυρο,</i> η πληρωμή σας έχει ακυρωθεί.</span>"
 
 #. module: payment
 #: model:payment.acquirer,done_msg:payment.payment_acquirer_adyen
@@ -173,6 +178,10 @@ msgid ""
 "hesitate to contact us if you have any questions on the status of your "
 "order.</span>"
 msgstr ""
+"<span><i>Σφάλμα,</i> έχετε υπόψη σας ότι παρουσιάστηκε σφάλμα κατά τη "
+"διάρκεια της συναλλαγής. Η παραγγελία επιβεβαιώθηκε, αλλά δεν θα πληρωθεί. "
+"Μην διστάσετε να επικοινωνήσετε μαζί μας αν έχετε απορίες σχετικά με την "
+"κατάσταση της παραγγελίας σας.</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -188,7 +197,7 @@ msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
 msgstr ""
-"<span><i>Εν αναμονή,</i> Η Online πληρωμή σας έχει διεκπεραιωθεί επιτυχώς. "
+"<span><i>Εν αναμονή,</i> η Online πληρωμή σας έχει διεκπεραιωθεί επιτυχώς. "
 "Αλλά η παραγγελία σας δεν έχει επικυρωθεί ακόμη.</span>"
 
 #. module: payment
@@ -197,6 +206,8 @@ msgid ""
 "<span><i>Pending</i>... The order will be validated after the "
 "payment.</span>"
 msgstr ""
+"<span><i>Σε αναμονή</i>...Η παραγγελία θα επιβεβαιωθεί μετά την "
+"πληρωμή.</span>"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
@@ -241,7 +252,7 @@ msgstr "Ενεργή"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_active
 msgid "Add Extra Fees"
-msgstr ""
+msgstr "Προσθήκη Επιπλέον Χρεώσεων"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_address
@@ -326,7 +337,7 @@ msgstr "Ακύρωση"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_cancel_msg
 msgid "Cancel Message"
-msgstr ""
+msgstr "Μήνυμα Ακύρωσης"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -449,7 +460,7 @@ msgstr "Ημερομηνία Δημιουργίας"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Credentials"
-msgstr ""
+msgstr "Διαπιστευτήρια"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -603,7 +614,7 @@ msgstr "Ομαδοποίηση κατά"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pre_msg
 msgid "Help Message"
-msgstr ""
+msgstr "Μήνυμα Βοήθειας"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_id
@@ -948,7 +959,7 @@ msgstr "Συναλλαγές Πληρωμής"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_flow
 msgid "Payment flow"
-msgstr ""
+msgstr "Ροή πληρωμών"
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:59
@@ -989,7 +1000,7 @@ msgstr "Εκρεμμής"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pending_msg
 msgid "Pending Message"
-msgstr ""
+msgstr "Μήνυμα σε Αναμονή"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_phone
@@ -1006,7 +1017,7 @@ msgstr ""
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_transfer
 msgid "Please use the order name as communication reference."
-msgstr ""
+msgstr "Χρησιμοποιήστε το όνομα της παραγγελίας ως αναφορά επικοινωνίας."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.confirm
@@ -1141,7 +1152,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_specific_countries
 msgid "Specific Countries"
-msgstr ""
+msgstr "Συγκεκριμένες Χώρες"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state
@@ -1183,12 +1194,12 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
 msgid "The customer encode his payment details on the website."
-msgstr ""
+msgstr "Ο πελάτης κωδικοποιεί τα στοιχεία πληρωμής του στον ιστότοπο."
 
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
 msgid "The customer is redirected to the website of the acquirer."
-msgstr ""
+msgstr "Ο πελάτης κατευθύνεται ξανά στον ιστότοπο του αγοραστή."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:563
@@ -1245,6 +1256,8 @@ msgstr ""
 msgid ""
 "Transfer information will be provided after choosing the payment aquirer."
 msgstr ""
+"Οι πληροφορίες μεταφοράς θα παρέχονται μετά την επιλογή της πληρωμής από τον"
+" αγοραστή."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_type
@@ -1345,6 +1358,8 @@ msgid ""
 "You will be redirected to the Paypal website after clicking on the payment "
 "button."
 msgstr ""
+"Θα μεταφερθείτε στον ιστότοπο του Paypal αφού κάνετε κλικ στο κουμπί "
+"πληρωμής."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_sips
