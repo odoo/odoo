@@ -71,6 +71,7 @@ class Company(models.Model):
         ('clean', 'Clean'),
         ('standard', 'Standard'),
     ], string='Document Template')
+    watermark_id = fields.Many2one('ir.attachment', string='Watermark', help="Attach watermark image for pdf report")
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
