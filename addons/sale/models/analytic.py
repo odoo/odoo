@@ -41,7 +41,7 @@ class AccountAnalyticLine(models.Model):
     @api.multi
     def _sale_postprocess(self, values, additional_so_lines=None):
         if 'so_line' not in values:  # allow to force a False value for so_line
-            self.with_context(sale_analytic_norecompute=True)._sale_determine_order_line()
+            self.sudo().filtered(lambda aal: not aal.so_line and aal.product_id and aal.product_id.expense_policy != 'no').with_context(sale_analytic_norecompute=True)._sale_determine_order_line()
 
         if any(field_name in values for field_name in self._sale_get_fields_delivered_qty()):
             if not self._context.get('sale_analytic_norecompute'):
@@ -102,7 +102,7 @@ class AccountAnalyticLine(models.Model):
     @api.multi
     def _sale_determine_order(self):
         mapping = {}
-        for analytic_line in self.sudo().filtered(lambda aal: not aal.so_line and aal.product_id and aal.product_id.expense_policy != 'no'):
+        for analytic_line in self:
             sale_order = self.env['sale.order'].search([('analytic_account_id', '=', analytic_line.account_id.id), ('state', '=', 'sale')], limit=1)
             if not sale_order:
                 sale_order = self.env['sale.order'].search([('analytic_account_id', '=', analytic_line.account_id.id)], limit=1)
@@ -119,7 +119,7 @@ class AccountAnalyticLine(models.Model):
         # determine SO : first SO open linked to AA
         sale_order_map = self._sale_determine_order()
         # determine so line
-        for analytic_line in self.sudo().filtered(lambda aal: not aal.so_line and aal.product_id and aal.product_id.expense_policy != 'no'):
+        for analytic_line in self:
             sale_order = sale_order_map.get(analytic_line.id)
             if not sale_order:
                 continue
