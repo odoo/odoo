@@ -1071,7 +1071,7 @@ class SaleOrderLine(models.Model):
             if operator in ('ilike', 'like', '=', '=like', '=ilike'):
                 domain = expression.AND([
                     args or [],
-                    ['|', ('order_id.name', operator, name), ('product_id.name', operator, name)]
+                    ['|', ('order_id.name', operator, name), ('name', operator, name)]
                 ])
                 return self.search(domain, limit=limit).name_get()
         return super(SaleOrderLine, self).name_search(name, args, operator, limit)
