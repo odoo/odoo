@@ -159,7 +159,7 @@ class AccountInvoice(models.Model):
                             valuation_price_unit_total = 0
                             valuation_total_qty = 0
                             for val_stock_move in valuation_stock_move:
-                                valuation_price_unit_total += val_stock_move.price_unit * val_stock_move.product_qty
+                                valuation_price_unit_total += abs(val_stock_move.price_unit) * val_stock_move.product_qty
                                 valuation_total_qty += val_stock_move.product_qty
                             valuation_price_unit = valuation_price_unit_total / valuation_total_qty
                             valuation_price_unit = i_line.product_id.uom_id._compute_price(valuation_price_unit, i_line.uom_id)
