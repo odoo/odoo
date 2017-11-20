@@ -5593,9 +5593,9 @@ QUnit.module('Views', {
         form.$buttons.find('.o_form_button_edit').click();
         assert.strictEqual(form.$('input[name="foo"]').val(), '***',
             "password should be displayed with stars");
-        assert.strictEqual(form.$('input[name="display_name"]').prop('autocomplete'), 'coucou',
+        assert.strictEqual(form.$('input[name="display_name"]').attr('autocomplete'), 'coucou',
             "attribute autocomplete should be set");
-        assert.strictEqual(form.$('input[name="foo"]').prop('autocomplete'), 'new-password',
+        assert.strictEqual(form.$('input[name="foo"]').attr('autocomplete'), 'new-password',
             "attribute autocomplete should be set to 'new-password' on password input");
         form.destroy();
     });
