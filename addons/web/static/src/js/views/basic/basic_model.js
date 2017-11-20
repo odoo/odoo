@@ -2499,6 +2499,8 @@ var BasicModel = AbstractModel.extend({
                 changes[fieldName] = value ?
                     this.localData[value].model + ',' + this.localData[value].res_id :
                     false;
+            } else if (type === 'char' && changes[fieldName] === '') {
+                changes[fieldName] = false;
             } else if (changes[fieldName] === null) {
                 changes[fieldName] = false;
             }

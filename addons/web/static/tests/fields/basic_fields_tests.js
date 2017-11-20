@@ -718,6 +718,38 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('setting a char field to empty string is saved as a false value', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {mode: 'edit'},
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.strictEqual(args.args[1].foo, false,
+                        'the foo value should be false');
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        form.$('input[type="text"].o_field_widget').val('').trigger('input');
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        form.destroy();
+    });
+
     QUnit.test('char field with size attribute', function (assert) {
         assert.expect(1);
 
