@@ -752,18 +752,6 @@ class WebsiteSale(http.Controller):
             [('partner_id', '=', order.partner_id.id),
             ('acquirer_id', 'in', [acq.id for acq in values['s2s_acquirers']])])
 
-        for acq in values['form_acquirers']:
-            acq.form = acq.with_context(submit_class='btn btn-primary', submit_txt=_('Pay Now')).sudo().render(
-                '/',
-                order.amount_total,
-                order.pricelist_id.currency_id.id,
-                values={
-                    'return_url': '/shop/payment/validate',
-                    'partner_id': shipping_partner_id,
-                    'billing_partner_id': order.partner_invoice_id.id,
-                }
-            )
-
         return values
 
     @http.route(['/shop/payment'], type='http', auth="public", website=True)
