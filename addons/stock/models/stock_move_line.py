@@ -50,6 +50,7 @@ class StockMoveLine(models.Model):
     consume_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'consume_line_id', 'produce_line_id', help="Technical link to see who consumed what. ")
     produce_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'produce_line_id', 'consume_line_id', help="Technical link to see which line was produced with this. ")
     reference = fields.Char(related='move_id.reference', store=True)
+    in_entire_package = fields.Boolean(compute='_compute_in_entire_package')
 
     @api.one
     def _compute_location_description(self):
@@ -78,6 +79,13 @@ class StockMoveLine(models.Model):
         for `product_qty`, where the same write should set the `product_uom_qty` field instead, in order to
         detect errors. """
         raise UserError(_('The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`.'))
+
+    def _compute_in_entire_package(self):
+        """ This method check if the move line is in an entire pack shown in the picking."""
+        for ml in self:
+            picking_id = ml.picking_id
+            ml.in_entire_package = picking_id and picking_id.picking_type_entire_packs and picking_id.state != 'done'\
+                                   and ml.result_package_id and ml.result_package_id in picking_id.entire_package_ids
 
     @api.constrains('product_uom_qty')
     def check_reserved_done_quantity(self):
