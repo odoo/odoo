@@ -14,7 +14,7 @@ class AccountAnalyticLine(models.Model):
         ('non_billable', 'Non Billable'),
         ('non_billable_project', 'No task found')], string="Billable Type", readonly=True, copy=False)
     timesheet_invoice_id = fields.Many2one('account.invoice', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
-    timesheet_revenue = fields.Monetary("Revenue", default=0.0, readonly=True, currency_field='company_currency_id', copy=False)
+    timesheet_revenue = fields.Monetary("Revenue", default=0.0, readonly=True, copy=False)
 
     @api.model
     def create(self, values):
