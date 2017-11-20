@@ -178,7 +178,7 @@ class AuthorizeForm(AuthorizeCommon):
         # check state
         self.assertEqual(tx.state, 'error', 'Authorize: erroneous validation did not put tx into error state')
 
-    @unittest.skip("Authorize s2s test disabled: We do not want to overload Authorize.net with runbot's requests")
+    #@unittest.skip("Authorize s2s test disabled: We do not want to overload Authorize.net with runbot's requests")
     def test_30_authorize_s2s(self):
         # be sure not to do stupid thing
         authorize = self.authorize
@@ -187,8 +187,8 @@ class AuthorizeForm(AuthorizeCommon):
         # add credential
         # FIXME: put this test in master-nightly on odoo/odoo + create sandbox account
         authorize.write({
-            'authorize_transaction_key': '',
-            'authorize_login': '',
+            'authorize_transaction_key': '7D47zrB597W5xDtE',
+            'authorize_login': '793UsgPA',
         })
         self.assertTrue(authorize.authorize_test_credentials, 'Authorize.net: s2s authentication failed')
 
