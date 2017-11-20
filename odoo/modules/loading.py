@@ -446,10 +446,8 @@ def reset_modules_state(db_name):
     db = odoo.sql_db.db_connect(db_name)
     with db.cursor() as cr:
         cr.execute(
-            "UPDATE ir_module_module SET state='installed' WHERE state IN "
-            "('to remove', 'to upgrade')"
+            "UPDATE ir_module_module SET state='installed' WHERE state IN ('to remove', 'to upgrade')"
         )
         cr.execute(
-            "UPDATE ir_module_module SET state='uninstalled' WHERE "
-            "state='to install'"
+            "UPDATE ir_module_module SET state='uninstalled' WHERE state='to install'"
         )
