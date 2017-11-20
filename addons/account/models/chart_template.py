@@ -38,8 +38,7 @@ def migrate_tags_on_taxes(cr, registry):
             ('type_tax_use', '=', tax_template.type_tax_use),
             ('description', '=', tax_template.description)
         ])
-        if len(tax_id.ids) == 1:
-            tax_id.sudo().write({'tag_ids': [(6, 0, tax_template.tag_ids.ids)]})
+        tax_id.sudo().write({'tag_ids': [(6, 0, tax_template.tag_ids.ids)]})
 
 def preserve_existing_tags_on_taxes(cr, registry, module):
     ''' This is a utility function used to preserve existing previous tags during upgrade of the module.'''
