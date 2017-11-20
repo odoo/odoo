@@ -58,4 +58,13 @@ class AccountAnalyticLine(models.Model):
             else:
                 ts_user_id = self._default_user()
             vals['employee_id'] = self.env['hr.employee'].search([('user_id', '=', ts_user_id)], limit=1).id
+        # force customer partner, from the task or the project
+        if (vals.get('project_id') or vals.get('task_id')) and not vals.get('partner_id'):
+            partner_id = False
+            if vals.get('task_id'):
+                partner_id = self.env['project.task'].browse(vals['task_id']).partner_id.id
+            else:
+                partner_id = self.env['project.project'].browse(vals['project_id']).partner_id.id
+            if partner_id:
+                vals['partner_id'] = partner_id
         return vals
