@@ -511,6 +511,83 @@ class TestPickShip(TestStockCommon):
         self.assertEqual(set(return_pick_picking.move_lines.move_orig_ids.ids), set((picking_pick.move_lines | return_pack_picking.move_lines).ids))
         self.assertEqual(len(return_pick_picking.move_lines.move_dest_ids), 0)
 
+    def test_put_in_pack(self):
+        """ In a pick pack ship scenario, create two packs in pick and check that
+        they are correctly recognised and handled by the pack and ship picking.
+        Along this test, we'll use action_toggle_processed to process a pack
+        from the entire_package_ids one2many and we'll directly fill the move
+        lines, the latter is the behavior when the user did not enable the display
+        of entire packs on the picking type.
+        """
+        picking_pick, picking_pack, picking_ship = self.create_pick_pack_ship()
+        ship_move = self.env['stock.move'].create({
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 4,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': picking_ship.id,
+            'location_id': self.output_location,
+            'location_dest_id': self.customer_location,
+        })
+
+        pack_move = self.env['stock.move'].create({
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 4,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': picking_pack.id,
+            'location_id': self.pack_location,
+            'location_dest_id': self.output_location,
+            'move_dest_ids': [(4, ship_move.id)],
+        })
+
+        self.env['stock.move'].create({
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 4,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': picking_pick.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.pack_location,
+            'move_dest_ids': [(4, pack_move.id)],
+            'state': 'confirmed',
+        })
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+
+        self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 1.0)
+        self.env['stock.quant']._update_available_quantity(self.productB, stock_location, 4.0)
+        picking_pick.action_assign()
+        picking_pick.move_line_ids.filtered(lambda ml: ml.product_id == self.productA).qty_done = 1.0
+        picking_pick.move_line_ids.filtered(lambda ml: ml.product_id == self.productB).qty_done = 2.0
+        first_pack = picking_pick.put_in_pack()
+        picking_pick.move_line_ids.filtered(lambda ml: ml.product_id == self.productB and ml.qty_done == 0.0).qty_done = 2.0
+        second_pack = picking_pick.put_in_pack()
+        picking_pick.button_validate()
+        self.assertEqual(len(first_pack.quant_ids), 2)
+        self.assertEqual(len(second_pack.quant_ids), 1)
+        picking_pack.action_assign()
+        self.assertEqual(len(picking_pack.entire_package_ids), 2)
+        output_sub_location = self.env['stock.location'].create({'name': 'sub1', 'location_id': self.output_location})
+        picking_pack.entire_package_ids[0].with_context(
+            {'picking_id': picking_pack.id, 'destination_location': output_sub_location.id}).action_toggle_processed()
+        picking_pack.entire_package_ids[1].with_context(
+            {'picking_id': picking_pack.id, 'destination_location': output_sub_location.id}).action_toggle_processed()
+        self.assertEqual(picking_pack.move_line_ids[:1].location_dest_id, output_sub_location)
+        picking_pack.button_validate()
+        self.assertEqual(first_pack.location_id, output_sub_location)
+        self.assertEqual(second_pack.location_id, output_sub_location)
+        picking_ship.action_assign()
+        self.assertEqual(picking_ship.move_line_ids[:1].location_id, output_sub_location)
+        for move_line in picking_ship.move_line_ids:
+            move_line.qty_done = move_line.product_uom_qty
+        picking_ship.button_validate()
+        quants_of_products_ab = self.env['stock.quant'].search([('product_id', 'in', (self.productA.id, self.productB.id))])
+        quants_of_product_a = quants_of_products_ab.filtered(lambda q: q.product_id == self.productA)
+        quants_of_product_b = quants_of_products_ab.filtered(lambda q: q.product_id == self.productB)
+        self.assertEqual(quants_of_products_ab.mapped('location_id.id'), [self.customer_location])
+        self.assertEqual(len(quants_of_product_a), 1)
+        self.assertEqual(len(quants_of_product_b), 2)
+
     def test_merge_move_mto_mts(self):
         """ Create 2 moves of the same product in the same picking with
         one in 'MTO' and the other one in 'MTS'. The moves shouldn't be merged

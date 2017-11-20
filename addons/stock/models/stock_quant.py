@@ -335,6 +335,9 @@ class QuantPackage(models.Model):
     move_line_ids = fields.One2many('stock.move.line', 'result_package_id')
     current_picking_move_line_ids = fields.One2many('stock.move.line', compute="_compute_current_picking_info")
     current_picking_id = fields.Boolean(compute="_compute_current_picking_info")
+    current_source_location_id = fields.Many2one('stock.location', compute="_compute_current_picking_info")
+    current_destination_location_id = fields.Many2one('stock.location', compute="_compute_current_picking_info")
+    is_processed = fields.Boolean(compute="_compute_current_picking_info")
 
     @api.depends('quant_ids.package_id', 'quant_ids.location_id', 'quant_ids.company_id', 'quant_ids.owner_id')
     def _compute_package_info(self):
@@ -358,13 +361,41 @@ class QuantPackage(models.Model):
         return res
 
     def _compute_current_picking_info(self):
+        """ When a package is in displayed in picking, it gets the picking id trough the context, and this function
+        populates the different fields used when we move entire packages in pickings.
+        """
+        for package in self:
+            picking_id = self.env.context.get('picking_id')
+            if not picking_id:
+                package.current_picking_move_line_ids = False
+                package.current_picking_id = False
+                package.is_processed = False
+                package.current_source_location_id = False
+                package.current_destination_location_id = False
+                continue
+            package.current_picking_move_line_ids = package.move_line_ids.filtered(lambda ml: ml.picking_id.id == picking_id)
+            package.current_picking_id = True
+            package.current_source_location_id = package.current_picking_move_line_ids[:1].location_id
+            package.current_destination_location_id = package.current_picking_move_line_ids[:1].location_dest_id
+            package.is_processed = not bool(package.current_picking_move_line_ids.filtered(lambda ml: ml.qty_done < ml.product_uom_qty))
+
+    def action_toggle_processed(self):
+        """ This method set the quantity done to the reserved quantity of all move lines of a package or to 0 if the package is already processed"""
         picking_id = self.env.context.get('picking_id')
         if picking_id:
-            self.current_picking_move_line_ids = self.move_line_ids.filtered(lambda move_line: move_line.picking_id.id == picking_id)
-            self.current_picking_id = True
-        else:
-            self.current_picking_move_line_ids = False
-            self.current_picking_id = False
+            self.ensure_one()
+            move_lines = self.current_picking_move_line_ids
+            if move_lines.filtered(lambda ml: ml.qty_done < ml.product_uom_qty):
+                destination_location = self.env.context.get('destination_location')
+                for ml in move_lines:
+                    vals = {'qty_done': ml.product_uom_qty}
+                    if destination_location:
+                        vals['location_dest_id'] = destination_location
+                    ml.write(vals)
+            else:
+                for ml in move_lines:
+                    ml.qty_done = 0
+
 
     def _search_location(self, operator, value):
         if value:
