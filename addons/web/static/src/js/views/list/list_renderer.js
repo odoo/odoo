@@ -274,8 +274,8 @@ var ListRenderer = BasicRenderer.extend({
             return $td.append(this._renderWidget(record, node));
         }
         if (node.attrs.widget || (options && options.renderWidgets)) {
-            var widget = this._renderFieldWidget(node, record, _.pick(options, 'mode'));
-            return $td.append(widget.$el);
+            var $el = this._renderFieldWidget(node, record, _.pick(options, 'mode'));
+            return $td.append($el);
         }
         var name = node.attrs.name;
         var field = this.state.fields[name];

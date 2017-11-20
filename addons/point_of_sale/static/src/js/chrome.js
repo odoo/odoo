@@ -607,7 +607,6 @@ var Chrome = PosBaseWidget.extend({
         $(window).off();
         $('html').off();
         $('body').off();
-        this.$el.parent().off();
         // The above lines removed the bindings, but we really need them for the barcode
         BarcodeEvents.start();
     },

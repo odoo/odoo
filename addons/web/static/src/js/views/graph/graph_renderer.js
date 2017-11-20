@@ -34,7 +34,6 @@ return AbstractRenderer.extend({
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
         this.stacked = params.stacked;
-        this.$el.css({minWidth: '100px', minHeight: '100px'});
     },
     /**
      * @override
