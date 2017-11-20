@@ -355,6 +355,12 @@ class MrpWorkorder(models.Model):
                                  })
             else:
                 production_move.quantity_done += self.qty_producing
+
+        if not self.next_work_order_id:
+            for by_product_move in self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id != self.production_id.product_id.id) and (x.state not in ('done', 'cancel'))):
+                if by_product_move.has_tracking == 'none':
+                    by_product_move.quantity_done += self.qty_producing * by_product_move.unit_factor
+
         # Update workorder quantity produced
         self.qty_produced += self.qty_producing
 
