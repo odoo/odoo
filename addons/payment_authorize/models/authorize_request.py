@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from lxml import etree, objectify
+import logging
 from urllib2 import urlopen, Request
 from StringIO import StringIO
 import xml.etree.ElementTree as ET
@@ -10,6 +11,8 @@ from odoo.exceptions import ValidationError, UserError
 from odoo import _
 
 XMLNS = 'AnetApi/xml/v1/schema/AnetApiSchema.xsd'
+
+_logger = logging.getLogger(__name__)
 
 
 def strip_ns(xml, ns):
@@ -58,11 +61,13 @@ class AuthorizeAPI():
 
         :param etree._Element data: etree data to process
         """
-        data = etree.tostring(data, xml_declaration=True, encoding='utf-8')
-        request = Request(self.url, data)
+        data_tree = etree.tostring(data, xml_declaration=True, encoding='utf-8')
+        request = Request(self.url, data_tree)
         request.add_header('Content-Type', 'text/xml')
+        _logger.debug('Authorize.net request sent: \n%s', etree.tostring(data, pretty_print=True))
         response = urlopen(request).read()
         response = strip_ns(response, XMLNS)
+        _logger.debug('Authorize.net response: \n%s', etree.tostring(response, pretty_print=True))
         if response.find('messages/resultCode').text == 'Error':
             messages = map(lambda m: m.text, response.findall('messages/message/text'))
             raise ValidationError(_('Authorize.net Error Message(s):\n %s') % '\n'.join(messages))
