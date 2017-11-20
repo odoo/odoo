@@ -792,14 +792,23 @@
     </t>
 </t>
 <t t-name="FieldMany2ManyTag.colorpicker">
-    <div class="o_colorpicker dropdown-menu" role="menu">
+    <div class="o_colorpicker dropdown-menu tagcolor_dropdown_menu" role="menu">
         <ul>
-            <li t-foreach="12" t-as="color">
+            <li t-foreach="11" t-as="color">
                 <a href="#"
                    t-att-data-id="tag_id"
-                   t-att-data-color="color"
-                   t-attf-class="o_tag_color_#{color}"
-                   t-att-title="color === 0 ? 'Not shown in kanban' : ''"/>
+                   t-att-data-color="color+1"
+                   t-attf-class="o_tag_color_#{color+1}"/>
+            </li>
+            <li> <!-- checkbox for tag color 0 -->
+                <div class="o_hide_in_kanban"
+                     t-att-data-id="tag_id"
+                     t-att-data-color="0">
+                    <div class="o_checkbox">
+                        <input type="checkbox"/>
+                        <span/>
+                    </div> Hide in Kanban
+                </div>
             </li>
         </ul>
     </div>

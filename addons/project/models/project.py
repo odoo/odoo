@@ -873,7 +873,7 @@ class ProjectTags(models.Model):
     _description = "Tasks Tags"
 
     name = fields.Char(required=True)
-    color = fields.Integer(string='Color Index', default=10)
+    color = fields.Integer(string='Color Index')
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag name already exists!"),

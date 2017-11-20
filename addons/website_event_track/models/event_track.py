@@ -13,7 +13,7 @@ class TrackTag(models.Model):
 
     name = fields.Char('Tag')
     track_ids = fields.Many2many('event.track', string='Tracks')
-    color = fields.Integer(string='Color Index', default=10)
+    color = fields.Integer(string='Color Index')
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag name already exists !"),

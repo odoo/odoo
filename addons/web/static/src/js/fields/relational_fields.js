@@ -1703,6 +1703,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
     events: _.extend({}, FieldMany2ManyTags.prototype.events, {
         'click .badge': '_onOpenColorPicker',
         'mousedown .o_colorpicker a': '_onUpdateColor',
+        'mousedown .o_colorpicker .o_hide_in_kanban': '_onUpdateColor',
         'focusout .o_colorpicker': '_onCloseColorPicker',
     }),
 
@@ -1713,43 +1714,63 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
     /**
      * @private
      */
-    _onCloseColorPicker: function (){
+    _onCloseColorPicker: function () {
         this.$color_picker.remove();
     },
     /**
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onOpenColorPicker: function (event) {
-        var tag_id = $(event.currentTarget).data('id');
-        var tag = _.findWhere(this.value.data, { res_id: tag_id });
+    _onOpenColorPicker: function (ev) {
+        var tagID = $(ev.currentTarget).data('id');
+        var tagColor = $(ev.currentTarget).data('color');
+        var tag = _.findWhere(this.value.data, { res_id: tagID });
         if (tag && this.colorField in tag.data) { // if there is a color field on the related model
             this.$color_picker = $(qweb.render('FieldMany2ManyTag.colorpicker', {
                 'widget': this,
-                'tag_id': tag_id,
+                'tag_id': tagID,
             }));
 
-            $(event.currentTarget).append(this.$color_picker);
+            $(ev.currentTarget).append(this.$color_picker);
             this.$color_picker.dropdown('toggle');
             this.$color_picker.attr("tabindex", 1).focus();
+            if (!tagColor) {
+                this.$('.o_checkbox input').prop('checked', true);
+            }
         }
     },
     /**
+     * Update color based on target of ev
+     * either by clicking on a color item or
+     * by toggling the 'Hide in Kanban' checkbox.
+     *
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onUpdateColor: function (event) {
-        event.preventDefault();
-        var self = this;
-        var color = $(event.currentTarget).data('color');
-        var id = $(event.currentTarget).data('id');
-        var tag = self.$("span.badge[data-id='" + id + "']");
-        var current_color = tag.data('color');
-
-        if (color === current_color) { return; }
-
+    _onUpdateColor: function (ev) {
+        ev.preventDefault();
+        var $target = $(ev.currentTarget);
+        var color = $target.data('color');
+        var id = $target.data('id');
+        var tag = this.$("span.badge[data-id='" + id + "']");
+        var currentColor = tag.data('color');
         var changes = {};
+
+        if ($target.is('.o_hide_in_kanban')) {
+            var $checkbox = $('.o_hide_in_kanban .o_checkbox input');
+            $checkbox.prop('checked', !$checkbox.prop('checked')); // toggle checkbox
+            this.prevColors = this.prevColors ? this.prevColors : {};
+            if ($checkbox.is(':checked')) {
+                this.prevColors[id] = currentColor
+            } else {
+                color = this.prevColors[id] ? this.prevColors[id] : 1;
+            }
+        } else if ($target.is('[class^="o_tag_color"]')) { // $target.is('o_tag_color_')
+            if (color === currentColor) { return; }
+        }
+
         changes[this.colorField] = color;
+
         this.trigger_up('field_changed', {
             dataPointID: _.findWhere(this.value.data, {res_id: id}).id,
             changes: changes,

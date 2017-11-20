@@ -91,16 +91,6 @@
         .o-flex-flow(row, wrap);
         .o-align-items(baseline);
 
-        .o-tag-color(@size: 0) when (@size < @odoo-nb-ui-color) {
-            .o_tag_color_@{size} {
-                &, &::after {
-                    background-color: ~"@{odoo-color-@{size}}";
-                }
-            }
-            .o-tag-color(@size + 1);
-        }
-        .o-tag-color();
-
         > .o_field_widget {
             .o-flex(1, 0, 100px);
             position: initial;
@@ -119,8 +109,45 @@
                 max-width: 200px;
             }
 
+            // o-kanban-colorpicker without customizing
+            // '&:first-child > a::before' (transparent red-crossed colorpick)
+            .o-tag-colorpicker() {
+                @o-tag-colorpicker-padding-right: @odoo-dropdown-hpadding - 2 * @o-kanban-inner-hmargin;
+
+                max-width: 100%;
+                padding: 3px @o-tag-colorpicker-padding-right 3px @odoo-dropdown-hpadding;
+
+                > li {
+                    display: inline-block;
+                    margin: @o-kanban-inner-hmargin @o-kanban-inner-hmargin 0 0;
+                    border: 1px solid white;
+                    box-shadow: 0 0 0 1px @gray-lighter-dark;
+
+                    > a {
+                        display: block;
+
+                        &::after {
+                            content: "";
+                            display: block;
+                            width: 20px;
+                            height: 15px;
+                        }
+                    }
+
+                    &:last-of-type {
+                        box-shadow: 0 0 0 0px white; // remove grey border on hide in kanban
+                        color: @odoo-main-text-color;
+                    }
+                }
+            }
+
+            > .tagcolor_dropdown_menu {
+                min-width: 150px; // down from 160px of .dropdown-menu
+                margin-right: 0px; // cancel right margin of .dropdown-menu
+            }
+
             > .o_colorpicker > ul {
-                .o-kanban-colorpicker();
+                .o-tag-colorpicker();
                 white-space: normal;
             }
 
@@ -128,6 +155,27 @@
                 cursor: pointer;
             }
         }
+
+        .o-tag-color(@size: 0) when (@size < @odoo-nb-ui-color) {
+            .o_tag_color_@{size} when (@size = 0) {
+                & {
+                    background-color: white;
+                    color: ~"@{odoo-color-@{size}}";
+                    box-shadow: inset 0 0 0 2px ~"@{odoo-color-@{size}}";
+                }
+                &::after {
+                    background-color: ~"@{odoo-color-@{size}}";
+                }
+            }
+            .o_tag_color_@{size} when (@size > 0) {
+                &, &::after {
+                    background-color: ~"@{odoo-color-@{size}}";
+                }
+            }
+            .o-tag-color(@size + 1);
+        }
+        .o-tag-color();
+
     }
 
     // Stars
