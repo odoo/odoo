@@ -270,7 +270,7 @@ var KanbanRecord = Widget.extend({
             var Widget = widgetRegistry.get($field.attr('name'));
             var widget = new Widget(self, self.state);
 
-            var def = widget.__widgetRenderAndInsert(function () {});
+            var def = widget._widgetRenderAndInsert(function () {});
             if (def.state() === 'pending') {
                 self.defs.push(def);
             }
@@ -282,7 +282,7 @@ var KanbanRecord = Widget.extend({
      * Renders the record
      */
     _render: function () {
-        this.replaceElement(this.qweb.render('kanban-box', this.qweb_context));
+        this._replaceElement(this.qweb.render('kanban-box', this.qweb_context));
         this.$el.addClass('o_kanban_record');
         this.$el.data('record', this);
         if (this.$el.hasClass('oe_kanban_global_click') ||

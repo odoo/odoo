@@ -540,7 +540,7 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
      */
     search_change: function () {
         var self = this;
-        var $filters = this.$el.removeClass('selected');
+        var $filters = this.$el ? this.$el.removeClass('selected') : $();
         var facet = this.searchview.query.find(_.bind(this.match_facet, this));
         if (!facet) { return; }
         facet.values.each(function (v) {

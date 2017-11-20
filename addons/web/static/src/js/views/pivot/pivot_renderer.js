@@ -35,7 +35,7 @@ var PivotRenderer = AbstractRenderer.extend({
     _render: function () {
         if (!this._hasContent()) {
             // display the nocontent helper
-            this.replaceElement(QWeb.render('PivotView.nodata'));
+            this._replaceElement(QWeb.render('PivotView.nodata'));
             return this._super.apply(this, arguments);
         }
 
