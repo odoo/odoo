@@ -34,7 +34,7 @@ class AccountAccountTag(models.Model):
 
     name = fields.Char(required=True)
     applicability = fields.Selection([('accounts', 'Accounts'), ('taxes', 'Taxes')], required=True, default='accounts')
-    color = fields.Integer('Color Index', default=10)
+    color = fields.Integer('Color Index')
     active = fields.Boolean(default=True, help="Set active to false to hide the Account Tag without removing it.")
 
 #----------------------------------------------------------
