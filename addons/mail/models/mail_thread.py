@@ -454,6 +454,10 @@ class MailThread(models.AbstractModel):
             initial_value = initial[col_name]
             new_value = getattr(self, col_name)
 
+            if getattr(self._fields[col_name], 'currency_field', False):
+                for field_name, field_info in self.fields_get(getattr(self._fields[col_name], 'currency_field')).items():
+                    col_info['currency'] = getattr(self, field_name)
+
             if new_value != initial_value and (new_value or initial_value):  # because browse null != False
                 tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info)
                 if tracking:
