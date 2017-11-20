@@ -718,36 +718,6 @@ class SaleOrderLine(models.Model):
         for line in self:
             line.qty_delivered_updateable = (line.order_id.state == 'sale') and (line.product_id.service_type == 'manual') and (line.product_id.expense_policy == 'no')
 
-    @api.depends('state',
-                 'price_reduce_taxinc',
-                 'qty_delivered',
-                 'invoice_lines',
-                 'invoice_lines.price_total',
-                 'invoice_lines.invoice_id',
-                 'invoice_lines.invoice_id.state',
-                 'invoice_lines.invoice_id.refund_invoice_ids',
-                 'invoice_lines.invoice_id.refund_invoice_ids.state',
-                 'invoice_lines.invoice_id.refund_invoice_ids.amount_total')
-    def _compute_invoice_amount(self):
-        for line in self:
-            # Invoice lines referenced by this line
-            invoice_lines = line.invoice_lines.filtered(lambda l: l.invoice_id.state in ('open', 'paid'))
-            # Refund invoices linked to invoice_lines
-            refund_invoices = invoice_lines.mapped('invoice_id.refund_invoice_ids').filtered(lambda inv: inv.state in ('open', 'paid'))
-            # Total invoiced amount
-            invoiced_amount_total = sum(invoice_lines.mapped('price_total'))
-            # Total refunded amount
-            refund_amount_total = sum(refund_invoices.mapped('amount_total'))
-            # Total of remaining amount to invoice on the sale ordered (and draft invoice included) to support upsell (when
-            # delivered quantity is higher than ordered one). Draft invoice are ignored on purpose, the 'to invoice' should
-            # come only from the SO lines.
-            total_sale_line = line.price_total
-            if line.product_id.invoice_policy == 'delivery':
-                total_sale_line = line.price_reduce_taxinc * line.qty_delivered
-
-            line.amt_invoiced = invoiced_amount_total - refund_amount_total
-            line.amt_to_invoice = (total_sale_line - invoiced_amount_total) if line.state in ['sale', 'done'] else 0.0
-
     @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'order_id.state')
     def _get_to_invoice_qty(self):
         """
@@ -917,9 +887,6 @@ class SaleOrderLine(models.Model):
     customer_lead = fields.Float(
         'Delivery Lead Time', required=True, default=0.0,
         help="Number of days between the order confirmation and the shipping of the products to the customer", oldname="delay")
-    amt_to_invoice = fields.Monetary(string='Amount To Invoice', compute='_compute_invoice_amount', compute_sudo=True, store=True)
-    amt_invoiced = fields.Monetary(string='Amount Invoiced', compute='_compute_invoice_amount', compute_sudo=True, store=True)
-
     layout_category_id = fields.Many2one('sale.layout_category', string='Section')
     layout_category_sequence = fields.Integer(string='Layout Sequence')
     # TODO: remove layout_category_sequence in master or make it work properly
