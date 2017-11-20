@@ -1304,7 +1304,9 @@ class MailThread(models.AbstractModel):
         # Content-Type: multipart/related;
         #   boundary="_004_3f1e4da175f349248b8d43cdeb9866f1AMSPR06MB343eurprd06pro_";
         #   type="text/html"
-        if not message.is_multipart() or message.get('content-type', '').startswith("text/"):
+        main_type = message.get('content-type', '').split('/')[0]
+        binary_types = ('application', 'audio', 'image', 'video')
+        if (not message.is_multipart and main_type not in binary_types) or main_type == 'text':
             encoding = message.get_content_charset()
             body = message.get_payload(decode=True)
             body = tools.ustr(body, encoding, errors='replace')
@@ -1358,7 +1360,8 @@ class MailThread(models.AbstractModel):
                 else:
                     attachments.append((filename or 'attachment', part.get_payload(decode=True)))
 
-        body, attachments = self._message_extract_payload_postprocess(message, body, attachments)
+        if body:
+            body, attachments = self._message_extract_payload_postprocess(message, body, attachments)
         return body, attachments
 
     @api.model
