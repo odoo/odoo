@@ -869,6 +869,16 @@ class ProcurementRule(models.Model):
     _inherit = 'procurement.rule'
     action = fields.Selection(selection_add=[('buy', 'Buy')])
 
+    def _prepare_purchase_order_line_update(self, line,
+                                            procurement_uom_po_qty,
+                                            price_unit, values):
+        return {
+            'product_qty': line.product_qty + procurement_uom_po_qty,
+            'price_unit': price_unit,
+            'move_dest_ids': [(4, x.id) for x in values.get('move_dest_ids',
+                                                            [])]
+        }
+
     @api.multi
     def _run_buy(self, product_id, product_qty, product_uom, location_id, name, origin, values):
         cache = {}
@@ -918,11 +928,7 @@ class ProcurementRule(models.Model):
                     if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
                         price_unit = seller.currency_id.compute(price_unit, po.currency_id)
 
-                    po_line = line.write({
-                        'product_qty': line.product_qty + procurement_uom_po_qty,
-                        'price_unit': price_unit,
-                        'move_dest_ids': [(4, x.id) for x in values.get('move_dest_ids', [])]
-                    })
+                    po_line = line.write(self._prepare_purchase_order_line_update(line, procurement_uom_po_qty, price_unit, values))
                     break
         if not po_line:
             vals = self._prepare_purchase_order_line(product_id, product_qty, product_uom, values, po, supplier)
