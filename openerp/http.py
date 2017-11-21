@@ -1316,7 +1316,13 @@ class Root(object):
                         manifest['addons_path'] = addons_path
                         _logger.debug("Loading %s", module)
                         if 'openerp.addons' in sys.modules:
-                            m = __import__('openerp.addons.' + module)
+                            try:
+                                m = __import__('openerp.addons.' + module)
+                            except ImportError:
+                                _logger.exception(
+                                    'Was not able to import: "%s"' % module,
+                                )
+                                m = None
                         else:
                             m = None
                         addons_module[module] = m
