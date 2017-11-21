@@ -19,6 +19,8 @@ Swiss localization
 
 **Translation contributors:** brain-tec AG, Agile Business Group
 
+**VAT Taxes and fiscal positions for 2018:** Open Net Sarl
+
 The swiss localization addons are organized this way:
 
 ``l10n_ch``
