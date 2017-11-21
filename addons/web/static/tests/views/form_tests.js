@@ -5871,7 +5871,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('display tooltips for buttons', function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var initialDebugMode = config.debug;
         config.debug = true;
@@ -5884,6 +5884,7 @@ QUnit.module('Views', {
                     '<header>' +
                         '<button name="some_method" class="oe_highlight" string="Button" type="object"/>' +
                     '</header>' +
+                    '<button name="other_method" class="oe_highlight" string="Button2" type="object"/>' +
                 '</form>',
         });
 
@@ -5893,6 +5894,15 @@ QUnit.module('Views', {
 
         assert.strictEqual($('.tooltip .oe_tooltip_string').length, 1,
             "should have rendered a tooltip");
+        $button.trigger($.Event('mouseleave'));
+
+        var $secondButton = form.$('button[name="other_method"]');
+        $secondButton.tooltip('show', false);
+        $secondButton.trigger($.Event('mouseenter'));
+
+        assert.strictEqual($('.tooltip .oe_tooltip_string').length, 1,
+            "should have rendered a tooltip");
+        $secondButton.trigger($.Event('mouseleave'));
 
         config.debug = initialDebugMode;
         form.destroy();
