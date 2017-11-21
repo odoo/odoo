@@ -8,9 +8,8 @@ declaration.
 
 Signed,
 
-Yvon-Philippe Crittin cyp@open-net.ch https://github.com/open-net-sarl
+Jacques-Andre Eberhard jae@open-net.ch https://github.com/open-net-sarl
 
 List of contributors:
 
-Yvon-Philippe Crittin cyp@open-net.ch https://github.com/open-net-sarl
-
+Jacques-Andre Eberhard jae@open-net.ch https://github.com/open-net-sarl
