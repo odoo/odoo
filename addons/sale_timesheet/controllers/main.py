@@ -56,8 +56,9 @@ class SaleTimesheetController(http.Controller):
             dashboard_values['hours'][billable_type] = float_round(data.get('unit_amount'), precision_rounding=hour_rounding)
             dashboard_values['hours']['total'] += float_round(data.get('unit_amount'), precision_rounding=hour_rounding)
             # rates
-            dashboard_values['rates'][billable_type] = round(data.get('unit_amount') / dashboard_total_hours * 100, 2)
-            dashboard_values['rates']['total'] += round(data.get('unit_amount') / dashboard_total_hours * 100, 2)
+            rate = round(data.get('unit_amount') / dashboard_total_hours * 100, 2) if dashboard_total_hours else 0.0
+            dashboard_values['rates'][billable_type] = rate
+            dashboard_values['rates']['total'] += rate
 
         # money_amount
         so_lines = values['timesheet_lines'].mapped('so_line')
@@ -93,7 +94,7 @@ class SaleTimesheetController(http.Controller):
             repartition_employee[employee_id]['total'] = sum([vals[inv_type] for inv_type in billable_types])
 
         hours_per_employee = [repartition_employee[employee_id]['total'] for employee_id in repartition_employee]
-        values['repartition_employee_max'] = max(hours_per_employee) if hours_per_employee else 1
+        values['repartition_employee_max'] = (max(hours_per_employee) if hours_per_employee else 1) or 1
         values['repartition_employee'] = repartition_employee
 
         return values
