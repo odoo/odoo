@@ -200,11 +200,11 @@ class SaleOrderLine(models.Model):
             project = Project.search([('analytic_account_id', '=', account.id)], limit=1)
             if not project:
                 project_name = '%s (%s)' % (account.name, self.order_partner_id.ref) if self.order_partner_id.ref else account.name
-                project_id = account.sudo().project_create({
+                project = Project.create({
                     'name': project_name,
                     'allow_timesheets': self.product_id.service_type == 'timesheet',
+                    'analytic_account_id': account.id,
                 })
-                project = Project.sudo().browse(project_id)
                 # set the SO line origin if product should create project
                 if not project.sale_line_id and self.product_id.service_tracking in ['task_new_project', 'project_only']:
                     project.write({'sale_line_id': self.id})
