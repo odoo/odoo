@@ -4,7 +4,7 @@
 import base64
 from datetime import datetime, timedelta
 
-from odoo.addons.mail.tests.common import BaseFunctionalTest, MockEmails, TestRecipients
+from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails, TestRecipients
 from odoo.tools import mute_logger, DEFAULT_SERVER_DATETIME_FORMAT
 
 

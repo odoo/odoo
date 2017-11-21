@@ -5,9 +5,9 @@ import base64
 
 from unittest.mock import patch
 
-from odoo.addons.mail.tests.common import BaseFunctionalTest, MockEmails, TestRecipients
-from odoo.addons.mail.tests.data.test_mail_data import MAIL_TEMPLATE_PLAINTEXT
-from odoo.addons.mail.tests.models.test_mail_models import MailTestSimple
+from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails, TestRecipients
+from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE_PLAINTEXT
+from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.exceptions import AccessError
 from odoo.tools import mute_logger
 

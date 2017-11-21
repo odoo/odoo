@@ -3,7 +3,7 @@
 
 from psycopg2 import IntegrityError
 
-from odoo.addons.mail.tests import common
+from odoo.addons.test_mail.tests import common
 from odoo.tools.misc import mute_logger
 
 
