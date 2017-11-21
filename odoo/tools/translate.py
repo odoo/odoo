@@ -683,7 +683,7 @@ def trans_export(lang, modules, buffer, format, cr):
                     # translation template, so no translation value
                     row['translation'] = ''
                 elif not row.get('translation'):
-                    row['translation'] = src
+                    row['translation'] = ''
                 writer.write(row['modules'], row['tnrs'], src, row['translation'], row['comments'])
 
         elif format == 'tgz':
