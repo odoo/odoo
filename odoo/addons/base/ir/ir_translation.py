@@ -55,9 +55,6 @@ class IrTranslationImport(object):
 
     def push(self, trans_dict):
         """ Feed a translation, as a dictionary, into the cursor """
-        if not trans_dict['value']:
-            return
-
         params = dict(trans_dict, state="translated")
 
         if params['type'] == 'view':
