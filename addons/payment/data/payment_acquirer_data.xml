@@ -241,4 +241,21 @@
                                                         ref("payment.payment_icon_cc_visa")])]'/>
     </record>
 
+    <record id="payment_acquirer_alipay" model="payment.acquirer">
+        <field name="name">Alipay</field>
+        <field name="image" type="base64" file="payment_alipay/static/description/icon.png"/>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="module_id" ref="base.module_payment_alipay"/>
+        <field name="description" type="html">
+            <p>
+                Alipay is the most popular online payment platform in China. Chinese consumers can buy online using their Alipay eWallet.
+            </p>
+            <ul class="list-inline">
+                <li><i class="fa fa-check"/>Online Payment</li>
+                <li><i class="fa fa-check"/>Payment Status Tracking</li>
+            </ul>
+        </field>
+        <!-- https://intl.alipay.com/ihome/home/about/buy.htm?topic=paymentMethods -->
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_jcb"),ref("payment.payment_icon_cc_mastercard"),ref("payment.payment_icon_cc_western_union"),ref("payment.payment_icon_cc_webmoney"),ref("payment.payment_icon_cc_visa")])]'/>
+    </record>
 </odoo>
