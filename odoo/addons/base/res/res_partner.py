@@ -285,7 +285,7 @@ class Partner(models.Model):
 
         if partner_type in ['other'] and parent_id:
             parent_image = self.browse(parent_id).image
-            image = parent_image and parent_image.decode('base64') or None
+            image = parent_image and base64.b64decode(parent_image) or None
 
         if not image and partner_type == 'invoice':
             img_path = get_module_resource('base', 'static/src/img', 'money.png')
