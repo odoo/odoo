@@ -199,7 +199,7 @@ class SaleOrderLine(models.Model):
                 account = self.order_id.analytic_account_id
             project = Project.search([('analytic_account_id', '=', account.id)], limit=1)
             if not project:
-                project_name = '%s (%s)' % (account.name, self.sale_line_id.order_partner_id.ref) if self.sale_line_id.order_partner_id.ref else account.name
+                project_name = '%s (%s)' % (account.name, self.order_partner_id.ref) if self.order_partner_id.ref else account.name
                 project_id = account.sudo().project_create({
                     'name': project_name,
                     'allow_timesheets': self.product_id.service_type == 'timesheet',
