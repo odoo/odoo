@@ -31,7 +31,7 @@ class PickingType(models.Model):
         help="This is the default destination location when you create a picking manually with this operation type. It is possible however to change it or that the routes put another location. If it is empty, it will check for the customer location on the partner. ")
     code = fields.Selection([('incoming', 'Vendors'), ('outgoing', 'Customers'), ('internal', 'Internal')], 'Type of Operation', required=True)
     return_picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type for Returns')
-    show_entire_packs = fields.Boolean('Allow moving packs', help="If checked, this shows the packs to be moved as a whole in the Operations tab all the time, even if there was no entire pack reserved.")
+    show_entire_packs = fields.Boolean('Move Entire Packages', help="If checked, this shows the packs to be moved as a whole in the Operations tab all the time, even if there was no entire pack reserved.")
     warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse', ondelete='cascade',
         default=lambda self: self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1))

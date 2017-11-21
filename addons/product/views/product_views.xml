@@ -454,10 +454,10 @@
             <field name="name">product.packaging.tree.view</field>
             <field name="model">product.packaging</field>
             <field name="arch" type="xml">
-                <tree string="Product Packages">
+                <tree string="Product Packagings">
                     <field name="sequence" widget="handle"/>
                     <field name="product_id"/>
-                    <field name="name"/>
+                    <field name="name" string="Packaging"/>
                     <field name="qty"/>
                 </tree>
             </field>
@@ -469,7 +469,7 @@
             <field name="arch" type="xml">
                 <form string="Product Packaging">
                     <sheet>
-                        <label for="name"/>
+                        <label for="name" string="Packaging"/>
                         <h1>
                             <field name="name"/>
                         </h1>
@@ -489,7 +489,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_packaging_view">
-            <field name="name">Product Packages</field>
+            <field name="name">Product Packagings</field>
             <field name="res_model">product.packaging</field>
             <field name="domain">[('product_id', '!=', False)]</field>
             <field name="view_ids" eval="[(5, 0, 0),
