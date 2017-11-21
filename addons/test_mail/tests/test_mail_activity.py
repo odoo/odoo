@@ -5,7 +5,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from odoo import exceptions
-from odoo.addons.mail.tests.common import BaseFunctionalTest
+from odoo.addons.test_mail.tests.common import BaseFunctionalTest
 from odoo.tools import mute_logger
 
 

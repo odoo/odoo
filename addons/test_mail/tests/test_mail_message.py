@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 
-from odoo.addons.mail.tests import common
+from odoo.addons.test_mail.tests import common
 from odoo.exceptions import AccessError, except_orm
 from odoo.tools import mute_logger
 

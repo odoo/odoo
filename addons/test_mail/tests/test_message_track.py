@@ -2,7 +2,7 @@
 
 from email.utils import formataddr
 
-from odoo.addons.mail.tests import common
+from odoo.addons.test_mail.tests import common
 
 
 class TestTracking(common.BaseFunctionalTest, common.MockEmails):
@@ -105,7 +105,7 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
     def test_message_track_template(self):
         """ Update some tracked fields linked to some template -> message with onchange + always tracked values """
         mail_template = self.env['mail.template'].create({
-            'model_id': self.env.ref('mail.model_mail_test_full').id,
+            'model_id': self.env.ref('test_mail.model_mail_test_full').id,
             'body_html': '<p>Hello ${object.name}</p>',
             'subject': 'Test Template',
             'partner_to': '${object.customer_id.id | safe}',

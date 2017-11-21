@@ -3,7 +3,7 @@
 
 import itertools
 
-from odoo.addons.mail.tests import common as mail_common
+from odoo.addons.test_mail.tests import common as mail_common
 from odoo.tests import common
 from odoo.tools import mute_logger
 
