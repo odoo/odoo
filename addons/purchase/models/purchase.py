@@ -364,6 +364,15 @@ class PurchaseOrder(models.Model):
                 if inv and inv.state not in ('cancel', 'draft'):
                     raise UserError(_("Unable to cancel this purchase order. You must first cancel related vendor bills."))
 
+            # If the product is MTO, change the procure_method of the the closest move to purchase to MTS.
+            # The purpose is to link the po that the user will manually generate to the existing moves's chain.
+            if order.state in ('draft', 'sent', 'to approve'):
+                for order_line in order.order_line:
+                    if order_line.move_dest_ids:
+                        siblings_states = (order_line.move_dest_ids.mapped('move_orig_ids')).mapped('state')
+                        if all(state in ('done', 'cancel') for state in siblings_states):
+                            order_line.move_dest_ids.write({'procure_method': 'make_to_stock'})
+
             for pick in order.picking_ids.filtered(lambda r: r.state != 'cancel'):
                 pick.action_cancel()
 
