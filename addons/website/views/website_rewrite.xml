@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Attachment -->
+        <record id="view_website_rewrite_form" model="ir.ui.view">
+            <field name="model">website.rewrite</field>
+            <field name="arch" type="xml">
+                <form string="Rewrite">
+                   <sheet>
+                        <group>
+                            <field name="action"/>
+                            <field name="url_from"/>
+                            <field name="url_to" attrs="{'invisible': [('action','in', ['not_found',])]}"/>
+                            <field name="website_id"/>
+                            <field name="active"/>
+                        </group>
+                  </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_website_rewrite_tree" model="ir.ui.view">
+            <field name="model">website.rewrite</field>
+            <field name="arch" type="xml">
+                <tree string="Rewrite">
+                    <field name="action"/>
+                    <field name="url_from"/>
+                    <field name="url_to"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_website_rewrite" model="ir.actions.act_window">
+            <field name="name">Rewrite</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">website.rewrite</field>
+            <field name="view_type">form</field>
+            <field name="view_id" eval="False"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click here to create new documents.
+                </p>
+                <p>
+                    Also you will find here all the related documents and download it by clicking on any individual document.
+                </p>
+            </field>
+        </record>
+
+        <menuitem name="Rewrites &amp; Redirects"
+            id="menu_website_redirect"
+            action="action_website_rewrite"
+            parent="menu_website_global_configuration"
+            sequence="30"
+            groups="base.group_no_one"/>
+
+</odoo>
