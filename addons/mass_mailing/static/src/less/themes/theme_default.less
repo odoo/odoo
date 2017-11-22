@@ -24,13 +24,6 @@
 @o_mm_def_btn_bg        : @o_mm_def_color_gamma;
 @o_mm_def_btn_text      : @o_mm_def_color_beta;
 
-// ===== Editor =====
-#web_editor_inside_iframe {
-    #wrapwrap > main #editable_area {
-        background-color: transparent;
-    }
-}
-
 // ===== Colors =====
 .bg-beta {
     background-color: @o_mm_def_color_zeta;
@@ -54,7 +47,7 @@
     width: 94%;
     min-height: 100%;
     background-color: @o_mm_def_color_alpha;
-    padding: 24px 3%;
+    padding: 0 3%;
 
     // Forces on <p/> and <hx/> elements as several mail clients does not
     // correctly inherit font properties
@@ -68,6 +61,7 @@
 
     > .o_mail_wrapper {
         width: 100%;
+        margin: 24px 0;
         border-collapse: separate; // Allow the first and last td to have the
                                    // same width
 
