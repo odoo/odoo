@@ -62,9 +62,9 @@ ERR_MSG = _('According to the French law, you cannot modify a %s. Forbidden fiel
 class pos_order(models.Model):
     _inherit = 'pos.order'
 
-    l10n_fr_pos_cert_hash = fields.Char(string="Inalteralbility Hash", readonly=True, copy=False)
-    l10n_fr_pos_cert_sequence_number = fields.Integer(string="Inalteralbility No Gap Sequence #", readonly=True, copy=False)
-    l10n_fr_pos_cert_string_to_hash = fields.Char(compute='_compute_string_to_hash', readonly=True, store=False)
+    l10n_fr_hash = fields.Char(string="Inalteralbility Hash", readonly=True, copy=False)
+    l10n_fr_secure_sequence_number = fields.Integer(string="Inalteralbility No Gap Sequence #", readonly=True, copy=False)
+    l10n_fr_string_to_hash = fields.Char(compute='_compute_string_to_hash', readonly=True, store=False)
 
     def _get_new_hash(self, secure_seq_number):
         """ Returns the hash to write on pos orders when they get posted"""
@@ -72,20 +72,20 @@ class pos_order(models.Model):
         #get the only one exact previous order in the securisation sequence
         prev_order = self.search([('state', 'in', ['paid', 'done', 'invoiced']),
                                  ('company_id', '=', self.company_id.id),
-                                 ('l10n_fr_pos_cert_sequence_number', '!=', 0),
-                                 ('l10n_fr_pos_cert_sequence_number', '=', int(secure_seq_number) - 1)])
+                                 ('l10n_fr_secure_sequence_number', '!=', 0),
+                                 ('l10n_fr_secure_sequence_number', '=', int(secure_seq_number) - 1)])
         if prev_order and len(prev_order) != 1:
             raise UserError(
                _('An error occured when computing the inalterability. Impossible to get the unique previous posted point of sale order.'))
 
         #build and return the hash
-        return self._compute_hash(prev_order.l10n_fr_pos_cert_hash if prev_order else '')
+        return self._compute_hash(prev_order.l10n_fr_hash if prev_order else '')
 
     def _compute_hash(self, previous_hash):
         """ Computes the hash of the browse_record given as self, based on the hash
         of the previous record in the company's securisation sequence given as parameter"""
         self.ensure_one()
-        hash_string = sha256(previous_hash + self.l10n_fr_pos_cert_string_to_hash)
+        hash_string = sha256(previous_hash + self.l10n_fr_string_to_hash)
         return hash_string.hexdigest()
 
     def _compute_string_to_hash(self):
@@ -108,7 +108,7 @@ class pos_order(models.Model):
                     values[k] = _getattrstring(line, field)
             #make the json serialization canonical
             #  (https://tools.ietf.org/html/draft-staykov-hu-json-canonical-form-00)
-            order.l10n_fr_pos_cert_string_to_hash = dumps(values, sort_keys=True, encoding="utf-8",
+            order.l10n_fr_string_to_hash = dumps(values, sort_keys=True, encoding="utf-8",
                                                 ensure_ascii=True, indent=None,
                                                 separators=(',',':'))
 
@@ -125,16 +125,16 @@ class pos_order(models.Model):
                 if (order.state in ['paid', 'done', 'invoiced'] and set(vals).intersection(ORDER_FIELDS)):
                     raise UserError(ERR_MSG % ('point of sale order', ', '.join(ORDER_FIELDS)))
                 # restrict the operation in case we are trying to overwrite existing hash
-                if (order.l10n_fr_pos_cert_hash and 'l10n_fr_pos_cert_hash' in vals) or (order.l10n_fr_pos_cert_sequence_number and 'l10n_fr_pos_cert_sequence_number' in vals):
+                if (order.l10n_fr_hash and 'l10n_fr_hash' in vals) or (order.l10n_fr_secure_sequence_number and 'l10n_fr_secure_sequence_number' in vals):
                     raise UserError(_('You cannot overwrite the values ensuring the inalterability of the point of sale.'))
         res = super(pos_order, self).write(vals)
         # write the hash and the secure_sequence_number when posting or invoicing a pos order
         if has_been_posted:
             for order in self.filtered(lambda o: o.company_id._is_accounting_unalterable() and
-                                                not (o.l10n_fr_pos_cert_sequence_number or o.l10n_fr_pos_cert_hash)):
+                                                not (o.l10n_fr_secure_sequence_number or o.l10n_fr_hash)):
                 new_number = order.company_id.l10n_fr_pos_cert_sequence_id.next_by_id()
-                vals_hashing = {'l10n_fr_pos_cert_sequence_number': new_number,
-                                'l10n_fr_pos_cert_hash': order._get_new_hash(new_number)}
+                vals_hashing = {'l10n_fr_secure_sequence_number': new_number,
+                                'l10n_fr_hash': order._get_new_hash(new_number)}
                 res |= super(pos_order, order).write(vals_hashing)
         return res
 
@@ -146,21 +146,21 @@ class pos_order(models.Model):
         def build_order_info(order):
             entry_reference = _('(Receipt ref.: %s)')
             order_reference_string = order.pos_reference and entry_reference % order.pos_reference or ''
-            return [ctx_tz(order, 'date_order'), order.l10n_fr_pos_cert_sequence_number, order.name, order_reference_string, ctx_tz(order, 'write_date')]
+            return [ctx_tz(order, 'date_order'), order.l10n_fr_secure_sequence_number, order.name, order_reference_string, ctx_tz(order, 'write_date')]
 
         orders = self.search([('state', 'in', ['paid', 'done', 'invoiced']),
                              ('company_id', '=', company_id),
-                             ('l10n_fr_pos_cert_sequence_number', '!=', 0)],
-                            order="l10n_fr_pos_cert_sequence_number ASC")
+                             ('l10n_fr_secure_sequence_number', '!=', 0)],
+                            order="l10n_fr_secure_sequence_number ASC")
 
         if not orders:
             raise UserError(_('There isn\'t any order flagged for data inalterability yet for the company %s. This mechanism only runs for point of sale orders generated after the installation of the module France - Certification CGI 286 I-3 bis. - POS') % self.env.user.company_id.name)
         previous_hash = ''
         start_order_info = []
         for order in orders:
-            if order.l10n_fr_pos_cert_hash != order._compute_hash(previous_hash=previous_hash):
+            if order.l10n_fr_hash != order._compute_hash(previous_hash=previous_hash):
                 raise UserError(_('Corrupted data on point of sale order with id %s.') % order.id)
-            previous_hash = order.l10n_fr_pos_cert_hash
+            previous_hash = order.l10n_fr_hash
 
         orders_sorted_date = orders.sorted(lambda o: o.date_order)
         start_order_info = build_order_info(orders_sorted_date[0])
