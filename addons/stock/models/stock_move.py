@@ -411,6 +411,20 @@ class StockMove(models.Model):
         if self.date_expected:
             self.date = self.date_expected
 
+    @api.model
+    def _get_picking_assign_domain(self, move):
+        return [
+            ('group_id', '=', move.group_id.id),
+            ('location_id', '=', move.location_id.id),
+            ('location_dest_id', '=', move.location_dest_id.id),
+            ('picking_type_id', '=', move.picking_type_id.id),
+            ('printed', '=', False),
+            ('state',
+             'in',
+             ['draft', 'confirmed', 'waiting', 'partially_available',
+              'assigned'])
+        ]
+
     # TDE DECORATOR: remove that api.multi when action_confirm is migrated
     @api.multi
     def assign_picking(self):
@@ -421,13 +435,10 @@ class StockMove(models.Model):
         Picking = self.env['stock.picking']
         for move in self:
             recompute = False
-            picking = Picking.search([
-                ('group_id', '=', move.group_id.id),
-                ('location_id', '=', move.location_id.id),
-                ('location_dest_id', '=', move.location_dest_id.id),
-                ('picking_type_id', '=', move.picking_type_id.id),
-                ('printed', '=', False),
-                ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])], limit=1)
+            picking = Picking.search(
+                self._get_picking_assign_domain(move),
+                limit=1
+            )
             if not picking:
                 recompute = True
                 picking = Picking.create(move._get_new_picking_values())
