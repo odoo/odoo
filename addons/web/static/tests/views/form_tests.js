@@ -5871,7 +5871,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('display tooltips for buttons', function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var initialDebugMode = config.debug;
         config.debug = true;
@@ -5884,6 +5884,7 @@ QUnit.module('Views', {
                     '<header>' +
                         '<button name="some_method" class="oe_highlight" string="Button" type="object"/>' +
                     '</header>' +
+                    '<button name="other_method" class="oe_highlight" string="Button2" type="object"/>' +
                 '</form>',
         });
 
@@ -5893,6 +5894,15 @@ QUnit.module('Views', {
 
         assert.strictEqual($('.tooltip .oe_tooltip_string').length, 1,
             "should have rendered a tooltip");
+        $button.trigger($.Event('mouseleave'));
+
+        var $secondButton = form.$('button[name="other_method"]');
+        $secondButton.tooltip('show', false);
+        $secondButton.trigger($.Event('mouseenter'));
+
+        assert.strictEqual($('.tooltip .oe_tooltip_string').length, 1,
+            "should have rendered a tooltip");
+        $secondButton.trigger($.Event('mouseleave'));
 
         config.debug = initialDebugMode;
         form.destroy();
@@ -6135,8 +6145,8 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.test('proper context stringification in debug mode tooltip', function (assert) {
-        assert.expect(2);
+    QUnit.test('proper stringification in debug mode tooltip', function (assert) {
+        assert.expect(4);
 
         var initialDebugMode = config.debug;
         config.debug = true;
@@ -6147,7 +6157,8 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<form string="Partners">' +
                     '<sheet>' +
-                        '<field name="product_id" context="{\'lang\': \'en_US\'}"/>' +
+                        '<field name="product_id" context="{\'lang\': \'en_US\'}" ' +
+                            'attrs=\'{"invisible": [["product_id", "=", 33]]}\'/>' +
                     '</sheet>' +
                 '</form>',
         });
@@ -6159,6 +6170,11 @@ QUnit.module('Views', {
             1, 'context should be present for this field');
         assert.strictEqual($('.oe_tooltip_technical>li[data-item="context"]')[0].lastChild.wholeText.trim(),
             "{'lang': 'en_US'}", "context should be properly stringified");
+
+        assert.strictEqual($('.oe_tooltip_technical>li[data-item="modifiers"]').length,
+            1, 'modifiers should be present for this field');
+        assert.strictEqual($('.oe_tooltip_technical>li[data-item="modifiers"]')[0].lastChild.wholeText.trim(),
+            '{"invisible":[["product_id","=",33]]}', "modifiers should be properly stringified");
 
         config.debug = initialDebugMode;
         form.destroy();

@@ -638,6 +638,7 @@ var FieldMonetary = InputField.extend({
         var currencyField = this.nodeOptions.currency_field || this.field.currency_field || 'currency_id';
         var currencyID = this.record.data[currencyField] && this.record.data[currencyField].res_id;
         this.currency = session.get_currency(currencyID);
+        this.formatOptions.currency = this.currency; // _formatValue() uses formatOptions
     },
 });
 
