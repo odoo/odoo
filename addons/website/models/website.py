@@ -367,18 +367,18 @@ class Website(models.Model):
     #----------------------------------------------------------
 
     @api.model
-    def get_current_website(self):
+    def get_current_website(self, fallback=True):
         domain_name = request and request.httprequest.environ.get('HTTP_HOST', '').split(':')[0] or None
-        website_id = self._get_current_website_id(domain_name)
+        website_id = self._get_current_website_id(domain_name, fallback=fallback)
         if request:
             request.context = dict(request.context, website_id=website_id)
         return self.browse(website_id)
 
-    @tools.cache('domain_name')
-    def _get_current_website_id(self, domain_name):
+    @tools.cache('domain_name', 'fallback')
+    def _get_current_website_id(self, domain_name, fallback=True):
         """ Reminder : cached method should be return record, since they will use a closed cursor. """
         website = self.search([('domain', '=', domain_name)], limit=1)
-        if not website:
+        if fallback and not website:
             website = self.search([], limit=1)
         return website.id
 
@@ -704,7 +704,7 @@ class Page(models.Model):
 
         # Create redirect if needed
         if data['create_redirect']:
-            self.env['website.redirect'].create({
+            self.env['website.rewrite'].create({
                 'type': data['redirect_type'],
                 'url_from': original_url,
                 'url_to': url,
@@ -873,17 +873,3 @@ class Menu(models.Model):
             self.browse(menu['id']).write(menu)
 
         return True
-
-
-class WebsiteRedirect(models.Model):
-    _name = "website.redirect"
-    _description = "Website Redirect"
-    _order = "sequence, id"
-    _rec_name = 'url_from'
-
-    type = fields.Selection([('301', 'Moved permanently'), ('302', 'Moved temporarily')], string='Redirection Type')
-    url_from = fields.Char('Redirect From')
-    url_to = fields.Char('Redirect To')
-    website_id = fields.Many2one('website', 'Website')
-    active = fields.Boolean(default=True)
-    sequence = fields.Integer(default=0)

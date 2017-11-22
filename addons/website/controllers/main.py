@@ -453,3 +453,25 @@ class WebsiteBinary(http.Controller):
             if unique:
                 kw['unique'] = unique
         return Binary().content_image(**kw)
+
+
+# ---------------------
+#   TESTING
+# ---------------------
+class WebsiteRewrite(http.Controller):
+
+    @http.route(['/route'], type='http', auth="public", website=True, multilang=False)
+    def route(self):
+        return request.make_response('OK')
+
+    @http.route(['/route/<int:id>'], type='http', auth="public", website=True, multilang=False)
+    def route2(self, id):
+        return request.make_response('OK: %s' % id)
+
+    @http.route(['/route/c/<model("res.country"):country>'], type='http', auth="public", website=True, multilang=False)
+    def route3(self, country):
+        return request.make_response('OK: %s' % (country))
+
+    @http.route(['/route/c/<int:id>/<model("res.country"):country>'], type='http', auth="public", website=True, multilang=False)
+    def route4(self, id, country):
+        return request.make_response('OK: %d-%s' % (id, country))

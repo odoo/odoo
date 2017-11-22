@@ -10,6 +10,8 @@ import werkzeug
 import werkzeug.routing
 import werkzeug.utils
 
+from functools import partial
+
 import odoo
 from odoo import api, models
 from odoo import SUPERUSER_ID
@@ -43,6 +45,57 @@ class Http(models.AbstractModel):
     _inherit = 'ir.http'
 
     @classmethod
+    def routing_map(cls, key=None):
+        if request:
+            key = request.website_routing
+        return super(Http, cls).routing_map(key=key)
+
+    @classmethod
+    def _clear_routing_map(cls, key=None):
+        if request:
+            key = request.website_routing
+        return super(Http, cls)._clear_routing_map(key=key)
+
+    @classmethod
+    def _slug_matching(cls, adapter, endpoint, **kw):
+        for arg in kw:
+            if isinstance(kw[arg], models.BaseModel):
+                kw[arg] = kw[arg].sudo()  # requestUID
+        return adapter.build(endpoint, kw)
+
+    @classmethod
+    def _find_handler(cls, return_rule=False, key=None):
+        if request:
+            key = request.website_routing
+        return super(Http, cls)._find_handler(return_rule=return_rule, key=key)
+
+    @classmethod
+    def _generate_routing_rules(cls, modules, converters):
+        website_id = request.website_routing
+        logger.debug("_generate_routing_rules for website: %s", website_id)
+        domain = ['|', ('action', '=', 'rewrite'), ('action', '=', 'not_found'), '|', ('website_id', '=', False), ('website_id', '=', website_id)]
+
+        rewrites = dict([(x.url_from, x) for x in request.env['website.rewrite'].search(domain)])  # website = False or current
+
+        for u, e, r in super(Http, cls)._generate_routing_rules(modules, converters):
+            if u in rewrites:
+                rewrite = rewrites[u]
+                if rewrite.action == 'rewrite' and u != rewrite.url_to:
+                    logger.debug('Add rule %s for %s' % (rewrite.url_to, website_id))
+                    yield rewrite.url_to, e, r # yield new url
+
+                    logger.debug('Redirect from %s to %s for website %s' % (u, rewrite.url_to, website_id))
+                    _slug_matching = partial(cls._slug_matching, endpoint=e)
+                    r['redirect_to'] = _slug_matching  # cl
+                    yield u, e, r  # yield original redirected to new url
+                elif rewrite.action == 'not_found':
+                    logger.debug('Return 404 for %s for website %s' % (rewrite.url_from, website_id))
+                    continue
+
+            else:
+                yield u, e, r
+
+    @classmethod
     def _get_converters(cls):
         """ Get the converters list for custom url pattern werkzeug need to
             match Rule. This override adds the website ones.
@@ -68,6 +121,12 @@ class Http(models.AbstractModel):
             super(Http, cls)._auth_method_public()
 
     @classmethod
+    def _dispatch(cls):
+        domain_name = request and request.httprequest.environ.get('HTTP_HOST', '').split(':')[0]
+        request.website_routing = request.env['website']._get_current_website_id(domain_name, fallback=False) or None
+        return super(Http, cls)._dispatch()
+
+    @classmethod
     def _add_dispatch_parameters(cls, func):
         # only called for is_frontend request
         super(Http, cls)._add_dispatch_parameters(func)
@@ -82,10 +141,7 @@ class Http(models.AbstractModel):
         request.context = context
 
         if request.routing_iteration == 1:
-            request.website = request.website
-
-        # bind modified context
-        request.context = context
+            request.website = request.website.with_context(context)
 
     @classmethod
     def _get_languages(cls):
@@ -95,7 +151,7 @@ class Http(models.AbstractModel):
 
     @classmethod
     def _get_language_codes(cls):
-        if request.website:
+        if getattr(request, 'website', False):
             return request.website._get_languages()
         return super(Http, cls)._get_language_codes()
 
@@ -135,10 +191,11 @@ class Http(models.AbstractModel):
     def _serve_redirect(cls):
         req_page = request.httprequest.path
         domain = [
+            '|', ('action', '=', 'redirect_301'), ('action', '=', 'redirect_302'),
             '|', ('website_id', '=', request.website.id), ('website_id', '=', False),
             ('url_from', '=', req_page)
         ]
-        return request.env['website.redirect'].search(domain, limit=1)
+        return request.env['website.rewrite'].search(domain, limit=1)
 
     @classmethod
     def _serve_fallback(cls, exception):

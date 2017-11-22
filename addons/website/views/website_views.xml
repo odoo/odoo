@@ -61,54 +61,6 @@
             </field>
         </record>
 
-        <!-- website.redirect views -->
-        <record id="website_redirect_form_view" model="ir.ui.view">
-            <field name="name">website.redirect.form</field>
-            <field name="model">website.redirect</field>
-            <field name="arch" type="xml">
-                <form string="Website Redirect Settings">
-                    <sheet>
-                        <group>
-                            <group>
-                                <field name="type"/>
-                                <field name="url_from"/>
-                                <field name="url_to"/>
-                            </group>
-                            <group>
-                                <field name="website_id"/>
-                                <field name="active"/>
-                                <field name="sequence"/>
-                            </group>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="website_redirect_tree_view" model="ir.ui.view">
-            <field name="name">website.redirect.list</field>
-            <field name="model">website.redirect</field>
-            <field name="arch" type="xml">
-                <tree string="Website Redirects">
-                    <field name="type"/>
-                    <field name="url_from"/>
-                    <field name="url_to"/>
-                    <field name="website_id"/>
-                    <field name="active"/>
-                    <field name="sequence"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="action_website_redirect_list" model="ir.actions.act_window">
-            <field name="name">Website Redirects</field>
-            <field name="res_model">website.redirect</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="website_redirect_tree_view"/>
-            <field name="target">current</field>
-        </record>
-
         <!-- website.page views -->
         <record id="website_pages_form_view" model="ir.ui.view">
             <field name="name">website.page.form</field>

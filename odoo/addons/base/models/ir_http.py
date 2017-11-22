@@ -80,8 +80,8 @@ class IrHttp(models.AbstractModel):
         return {'model': ModelConverter, 'models': ModelsConverter, 'int': SignedIntConverter}
 
     @classmethod
-    def _find_handler(cls, return_rule=False):
-        return cls.routing_map().bind_to_environ(request.httprequest.environ).match(return_rule=return_rule)
+    def _find_handler(cls, return_rule=False, key=None):
+        return cls.routing_map(key=key).bind_to_environ(request.httprequest.environ).match(return_rule=return_rule)
 
     @classmethod
     def _auth_method_user(cls):
@@ -224,9 +224,15 @@ class IrHttp(models.AbstractModel):
                     return cls._handle_exception(werkzeug.exceptions.NotFound())
 
     @classmethod
-    def routing_map(cls):
+    def _generate_routing_rules(cls, modules, converters):
+        return http._generate_routing_rules(modules, False, converters)
+
+    @classmethod
+    def routing_map(cls, key=None):
         if not hasattr(cls, '_routing_map'):
-            _logger.info("Generating routing map")
+            cls._routing_map = {}
+        if key not in cls._routing_map:
+            _logger.info("Generating routing map for key %s" % str(key))
             installed = request.registry._init_modules - {'web'}
             if tools.config['test_enable'] and odoo.modules.module.current_test:
                 installed.add(odoo.modules.module.current_test)
@@ -235,13 +241,18 @@ class IrHttp(models.AbstractModel):
             # to make it available for all instance. Since `env` create an new instance
             # of the model, each instance will regenared its own routing map and thus
             # regenerate its EndPoint. The routing map should be static.
-            cls._routing_map = http.routing_map(mods, False, converters=cls._get_converters())
-        return cls._routing_map
+            routing_map = werkzeug.routing.Map(strict_slashes=False, converters=cls._get_converters())
+            for u, e, r in cls._generate_routing_rules(mods, converters=cls._get_converters()):
+                xtra_keys = 'defaults subdomain build_only strict_slashes redirect_to alias host'.split()
+                kw = {k: r[k] for k in xtra_keys if k in r}
+                routing_map.add(werkzeug.routing.Rule(u, endpoint=e, **kw))
+            cls._routing_map[key] = routing_map
+        return cls._routing_map[key]
 
     @classmethod
-    def _clear_routing_map(cls):
-        if hasattr(cls, '_routing_map'):
-            del cls._routing_map
+    def _clear_routing_map(cls, key='default'):
+        if hasattr(cls, '_routing_map') and key in cls._routing_map:
+            del cls._routing_map[key]
 
     @classmethod
     def content_disposition(cls, filename):

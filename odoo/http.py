@@ -925,7 +925,7 @@ class EndPoint(object):
     def __call__(self, *args, **kw):
         return self.method(*args, **kw)
 
-def routing_map(modules, nodb_only, converters=None):
+def _generate_routing_rules(modules, nodb_only, converters=None):
     routing_map = werkzeug.routing.Map(strict_slashes=False, converters=converters)
 
     def get_subclasses(klass):
@@ -971,10 +971,7 @@ def routing_map(modules, nodb_only, converters=None):
                                 url = o._cp_path.rstrip('/') + '/' + url.lstrip('/')
                                 if url.endswith("/") and len(url) > 1:
                                     url = url[: -1]
-
-                            xtra_keys = 'defaults subdomain build_only strict_slashes redirect_to alias host'.split()
-                            kw = {k: routing[k] for k in xtra_keys if k in routing}
-                            routing_map.add(werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods'], **kw))
+                            yield (url, endpoint, routing)
     return routing_map
 
 #----------------------------------------------------------
@@ -1287,7 +1284,12 @@ class Root(object):
     @lazy_property
     def nodb_routing_map(self):
         _logger.info("Generating nondb routing")
-        return routing_map([''] + odoo.conf.server_wide_modules, True)
+        routing_map = werkzeug.routing.Map(strict_slashes=False, converters=None)
+        xtra_keys = 'defaults subdomain build_only strict_slashes redirect_to alias host'.split()
+        for u, e, r in odoo.http._generate_routing_rules([''] + odoo.conf.server_wide_modules, True):
+            kw = {k: routing[k] for k in xtra_keys if k in routing}
+            routing_map.add(werkzeug.routing.Rule(u, endpoint=e, methods=r['methods'], **kw))
+        return routing_map
 
     def __call__(self, environ, start_response):
         """ Handle a WSGI request
