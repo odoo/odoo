@@ -262,9 +262,17 @@ class MrpProduction(models.Model):
         location = self.env.ref('stock.stock_location_stock')
         self.location_src_id = self.picking_type_id.default_location_src_id.id or location.id
         self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id
-
-    @api.model
-    def create(self, values):
+    
+    def generate_moves(self,production):
+        '''
+        Hook sera manejado en un modulo superior
+        '''
+        production._generate_moves()
+    
+    def mrp_name(self, values):
+        '''
+        Hook sera manejado en un modulo superior
+        '''
         if not values.get('name', False) or values['name'] == _('New'):
             if values.get('picking_type_id'):
                 values['name'] = self.env['stock.picking.type'].browse(values['picking_type_id']).sequence_id.next_by_id()
@@ -272,8 +280,14 @@ class MrpProduction(models.Model):
                 values['name'] = self.env['ir.sequence'].next_by_code('mrp.production') or _('New')
         if not values.get('procurement_group_id'):
             values['procurement_group_id'] = self.env["procurement.group"].create({'name': values['name']}).id
+        return values
+        
+    @api.model
+    def create(self, values):
+        #modificado por Trescloud
+        values = self.mrp_name(values)
         production = super(MrpProduction, self).create(values)
-        production._generate_moves()
+        self.generate_moves(production)
         return production
 
     @api.multi
