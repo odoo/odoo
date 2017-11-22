@@ -20,8 +20,7 @@ class TestSaleService(CommonTest):
                 'product_uom_qty': 50,
                 'product_uom': self.product_delivery_timesheet2.uom_id.id,
                 'price_unit': self.product_delivery_timesheet2.list_price
-                }),
-            ],
+            })],
             'pricelist_id': self.pricelist_usd.id,
         }
         sale_order = self.env['sale.order'].create(sale_order_vals)

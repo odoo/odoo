@@ -26,23 +26,6 @@ class StockMove(models.Model):
         keys_sorted.append(move.sale_line_id.id)
         return keys_sorted
 
-    def _action_done(self):
-        result = super(StockMove, self)._action_done()
-        for line in self.mapped('sale_line_id'):
-            line.qty_delivered = line._get_delivered_qty()
-        return result
-
-    @api.multi
-    def write(self, vals):
-        res = super(StockMove, self).write(vals)
-        if 'product_uom_qty' in vals:
-            for move in self:
-                if move.state == 'done':
-                    sale_order_lines = self.filtered(lambda move: move.sale_line_id).mapped('sale_line_id')
-                    for line in sale_order_lines:
-                        line.qty_delivered = line._get_delivered_qty()
-        return res
-
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'

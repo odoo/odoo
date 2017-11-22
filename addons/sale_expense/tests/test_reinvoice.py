@@ -76,12 +76,14 @@ class TestReInvoice(TestExpenseCommon, TestCommonSaleNoChart):
         self.assertEquals(sale_order_line.qty_delivered, 0, "Exising SO line should not be impacted by reinvoicing product at cost")
 
         sol_ordered = self.sale_order.order_line.filtered(lambda sol: sol.product_id == self.product_ordered_cost and sol != sale_order_line)
+        self.assertEquals(sol_ordered.qty_delivered_method, 'analytic', 'Delivered quantity of expense SO line should be computed by analytic amount')
         self.assertTrue(sol_ordered, "A new line with ordered expense should have been created on expense report posting")
         self.assertEquals(sol_ordered.price_unit, expense1.unit_amount, "The unit price of new SO line should be the one from the expense (at cost)")
         self.assertEquals(sol_ordered.product_uom_qty, 0, "The ordered quantity of new SO line should be zero")
         self.assertEquals(sol_ordered.qty_delivered, expense1.quantity, "The delivered quantity of new SO line should be the one from the expense")
 
         sol_deliver = self.sale_order.order_line.filtered(lambda sol: sol.product_id == self.product_deliver_cost and sol != sale_order_line)
+        self.assertEquals(sol_deliver.qty_delivered_method, 'analytic', 'Delivered quantity of expense SO line should be computed by analytic amount')
         self.assertTrue(sol_deliver, "A new line with delivered expense should have been created on expense report posting")
         self.assertEquals(sol_deliver.price_unit, expense2.unit_amount, "The unit price of new SO line should be the one from the expense (at cost)")
         self.assertEquals(sol_deliver.product_uom_qty, 0, "The ordered quantity of new SO line should be zero")

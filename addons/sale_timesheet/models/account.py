@@ -3,10 +3,15 @@
 
 from odoo.exceptions import UserError
 from odoo import api, fields, models, _
+from odoo.osv import expression
 
 
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
+
+    def _default_sale_line_domain(self):
+        domain = super(AccountAnalyticLine, self)._default_sale_line_domain()
+        return expression.OR([domain, [('qty_delivered_method', '=', 'timesheet')]])
 
     timesheet_invoice_type = fields.Selection([
         ('billable_time', 'Billable Time'),
