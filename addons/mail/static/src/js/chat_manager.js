@@ -114,6 +114,38 @@ function add_message (data, options) {
                 }
             }
         });
+        if (!msg.channel_ids) {
+            _.each(msg.res_id, function (channel_id) {
+                var channel = chat_manager.get_channel(channel_id);
+                if (channel) {
+                    add_to_cache(msg, []);
+                    if (options.domain && options.domain !== []) {
+                        add_to_cache(msg, options.domain);
+                    }
+                }
+                debugger
+                if (channel.hidden) {
+                    channel.hidden = false;
+                    chat_manager.bus.trigger('new_channel', channel);
+                }
+                if (channel.type !== 'static' && !msg.is_author && !msg.is_system_notification) {
+                    if (options.increment_unread) {
+                        update_channel_unread_counter(channel, channel.unread_counter+1);
+                    }
+                    if (channel.is_chat && options.show_notification) {
+                        if (!client_action_open && !config.device.isMobile) {
+                            // automatically open chat window
+                            chat_manager.bus.trigger('open_chat', channel, { passively: true });
+                        }
+                        var query = {is_displayed: false};
+                        debugger
+                        chat_manager.bus.trigger('anyone_listening', channel, query);
+                        notify_incoming_message(msg, query);
+                    }
+                }
+            });
+        }
+
         if (!options.silent) {
             chat_manager.bus.trigger('new_message', msg);
         }
@@ -743,11 +775,37 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
     // options: domain, load_more
     _fetchFromChannel: function (channel, options) {
         options = options || {};
-        var domain =
-            (channel.id === "channel_inbox") ? [['needaction', '=', true]] :
-            (channel.id === "channel_starred") ? [['starred', '=', true]] :
-            (channel.id === "channel_moderation") ? [['res_id', 'in', moderated_channel_ids], ['message_type', 'in', ['email','comment']], ['moderation_status', '=', 'pending_moderation']] :
-                                                [['channel_ids', 'in', channel.id]];
+        var domain;
+        if (channel.id === "channel_inbox") {
+            domain = [['needaction', '=', true]];
+        } else if (channel.id === "channel_starred") {
+            domain = [['starred', '=', true]];
+        } else if (channel.id === "channel_moderation") {
+            domain = [
+                ['model', '=', 'mail.channel'],
+                ['res_id', 'in', moderated_channel_ids], 
+                ['message_type', 'in', ['email','comment']],
+                ['moderation_status', '=', 'pending_moderation']
+            ];
+        } else {
+            domain = [
+                '|',
+                    ['channel_ids', 'in', channel.id],
+                    '&',
+                        '&',
+                            ['message_type', 'in', ['email','comment']],
+                            '&',
+                                ['model', '=', 'mail.channel'],
+                                ['res_id', '=', channel.id],
+                        '|',
+                            ['author_id', '=', session.uid],
+                            '&',
+                                ['model', '=', 'mail.channel'],
+                                ['res_id', 'in', moderated_channel_ids]
+            ];  
+        } 
+        /*faire fonctionner author_id */
+
         var cache = get_channel_cache(channel, options.domain);
 
         if (options.domain) {
@@ -765,6 +823,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
                 kwargs: {limit: LIMIT, context: session.user_context},
             })
             .then(function (msgs) {
+                debugger
                 if (!cache.all_history_loaded) {
                     cache.all_history_loaded =  msgs.length < LIMIT;
                 }

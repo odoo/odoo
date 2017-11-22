@@ -38,15 +38,15 @@ class ChannelModeratedEmails(models.Model):
     decision = fields.Selection([('allow', 'Always Allow'), ('ban', 'Permanent Ban')], required=True)
     channel_id = fields.Many2one('mail.channel', string="Channel", index=True, required=True)
     #corresponding user if exitsts and decision is 'ban'
-    blackened_user_id = fields.Many2one('res.users', string="Corresponding blackened user", compute="_compute_blackened_user_id", store=True)
+    blackened_partner_id = fields.Many2one('res.partner', string="Corresponding blackened partner", compute="_compute_blackened_partner_id", store=True)
 
     @api.multi
     @api.depends('email', 'decision')
-    def _compute_blackened_user_id(self):
+    def _compute_blackened_partner_id(self):
         for rec in self.filtered(lambda rec: rec.decision == 'ban'):
-            rec.blackened_user_id = self.env['res.users'].search([('email', '=', rec.email)])
-            if not rec.blackened_user_id.ensure_one():
-                raise ValidationError('Different users use the same email address')
+            rec.blackened_partner_id = self.env['res.partner'].search([('email', '=', rec.email)])
+            if not rec.blackened_partner_id.ensure_one():
+                raise ValidationError('Different partners use the same email address')
 
     _sql_constraints = [
          ('channel_email_uniq', 'unique (email,channel_id)', 'The email address must be unique per channel !')
@@ -118,8 +118,8 @@ class Channel(models.Model):
     moderation = fields.Boolean(string='Moderate this channel')
     moderator_ids = fields.Many2many('res.users', 'mail_channel_moderator_rel', string='Moderators')
     moderated_email_ids = fields.One2many('channel.moderated.emails', 'channel_id', string='Moderated Emails')
-    blackened_user_ids = fields.Many2many('res.users', 'channel_moderated_emails',
-        column1='channel_id', column2='blackened_user_id', string="List of blackened people on channel", store=True)
+    blackened_partner_ids = fields.Many2many('res.partner', 'channel_moderated_emails',
+        column1='channel_id', column2='blackened_partner_id', string="List of blackened partner on channel", store=True)
     auto_notification = fields.Boolean(string="Automatic notification", help="People receive an automatic notification about their message being waiting for moderation.")
     notification_message = fields.Text(string="Notification message")
     send_guidelines = fields.Boolean(string="Send guidelines to new subscribers", help="Newcomers on this moderated channel will automatically receive the guidelines.", default=False)
@@ -130,36 +130,11 @@ class Channel(models.Model):
         if self.mapped('moderator_ids').filtered(lambda moderator: moderator.email == False):
             raise ValidationError("Moderators must have an email address!")
 
-
     @api.constrains('moderation', 'email_send')
     def _check_moderation_implies_email_send(self):
         if self.filtered(lambda channel: channel.moderation and not channel.email_send):
             raise ValidationError('Only email lists can be moderated!')
-    """
-    forbidden_to_user = fields.Boolean(string="partner is banned of channel", compute="_compute_forbidden_to_user", search="_search_forbidden_to_user")
 
-    @api.multi
-    def _compute_forbidden_to_user(self):
-        user = self.env.user
-        email = user.partner_id.email
-        channels_forbidden_to_user = self.env['channel.moderated.emails'].search([('email', '=', email), ('decision', '=', 'ban')]).mapped('channel_id').ids
-        for channel in self:
-            channel.forbidden_to_user = channel.id in channels_forbidden_to_user
-
-
-
-    @api.model
-    def _search_forbidden_to_user(self, operator, operand):
-        user = self.env.user
-        email = user.partner_id.email
-        channels_forbidden_to_user = self.env['channel.moderated.emails'].search([('email', '=', email),
-            ('decision', '=', 'ban')]).mapped('channel_id').ids
-        if (operator == '=' and operand) or (operator == '!=' and not operand):
-            return ['|', ('name', '=', 'bar'), ('id', 'in', channels_forbidden_to_user)]
-        elif (operator == '=' and not operand) or (operator == '!=' and operand):
-            return ['|', ('name', '=', 'foo'), ('id', 'not in', channels_forbidden_to_user)]
-
-    """
     @api.multi
     def _send_guidelines(self, partners):
         self.ensure_one()
@@ -348,7 +323,7 @@ class Channel(models.Model):
         """
         moderation_status = 'accepted'
         email = ''
-        if self.moderation and message_type in ['email','comment']:
+        if self.moderation and message_type in ['email', 'comment']:
             author_id = kwargs.get('author_id')
             if author_id and isinstance(author_id, pycompat.integer_types):
                 author = self.env['res.partner'].browse([author_id])
@@ -374,9 +349,6 @@ class Channel(models.Model):
         content_subtype='html', **kwargs):
         moderation_status, email= self._extract_values(message_type, **kwargs)
         if moderation_status == 'rejected':
-            # Notifications The following steps
-            
-
             return self.env['mail.message']
         if self.auto_notification and message_type == 'email' and moderation_status == 'pending_moderation':
         # Notifies the message author when his message is pending moderation if required on channel.
@@ -386,9 +358,6 @@ class Channel(models.Model):
             'body_html': self.notification_message,
             'subject': 'Re: {}'.format(subject),
             'email_to': email, 'auto_delete': True})
-        if self.auto_notification and message_type == 'comment' and moderation_status == 'pending_moderation':
-            pass   
-        # auto pin 'direct_message' channel partner
         self.filtered(lambda channel: channel.channel_type == 'chat').mapped('channel_last_seen_partner_ids').write({'is_pinned': True})
         message = super(Channel, self.with_context(mail_create_nosubscribe=True)).message_post(body=body, subject=subject, message_type=message_type, subtype=subtype, parent_id=parent_id, attachments=attachments, content_subtype=content_subtype, moderation_status=moderation_status, **kwargs)
         return message

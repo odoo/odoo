@@ -12,7 +12,7 @@ class Users(models.Model):
         - make a new user follow itself
         - add a welcome message
         - add suggestion preference
-        - if adding groups to an user, check mail.channels linked to this user
+        - if adding groups to a user, check mail.channels linked to this user
           group, and the user. This is done by overriding the write method.
     """
     _name = 'res.users'
@@ -71,11 +71,18 @@ class Users(models.Model):
             action = self.env.ref('base.action_res_users')
             msg = _("You cannot create a new user from here.\n To create new user please go to configuration panel.")
             raise exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
+        
+        if values.get('groups_id'):
+            # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
+            user_group_ids = [command[1] for command in values['groups_id'] if command[0] == 4]
+            user_group_ids += [id for command in values['groups_id'] if command[0] == 6 for id in command[2]]
+            self.env['mail.channel'].search([('group_ids', 'in', user_group_ids)])._subscribe_users()
 
         user = super(Users, self).create(values)
 
         # create a welcome message
         user._create_welcome_message()
+
         return user
 
     @api.multi
@@ -195,4 +202,5 @@ class res_groups_mail_channel(models.Model):
             user_ids = [command[1] for command in vals['users'] if command[0] == 4]
             user_ids += [id for command in vals['users'] if command[0] == 6 for id in command[2]]
             self.env['mail.channel'].search([('group_ids', 'in', self._ids)])._subscribe_users()
+
         return write_res
