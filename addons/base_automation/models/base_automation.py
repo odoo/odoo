@@ -34,7 +34,7 @@ class BaseAutomation(models.Model):
     action_server_id = fields.Many2one(
         'ir.actions.server', 'Server Actions',
         domain="[('model_id', '=', model_id)]",
-        delegate=True, required=True, ondelete='restrict')
+        delegate=True, required=True, ondelete='cascade')
     active = fields.Boolean(default=True, help="When unchecked, the rule is hidden and will not be executed.")
     trigger = fields.Selection([
         ('on_create', 'On Creation'),
@@ -282,14 +282,7 @@ class BaseAutomation(models.Model):
 
         # retrieve all actions, and patch their corresponding model
         for action_rule in self.with_context({}).search([]):
-            Model = self.env.get(action_rule.model_name)
-
-            # Do not crash if the model of the base_action_rule was uninstalled
-            if Model is None:
-                _logger.warning("Action rule with ID %d depends on model %s" %
-                                (action_rule.id,
-                                 action_rule.model_name))
-                continue
+            Model = self.env[action_rule.model_name]
 
             if action_rule.trigger == 'on_create':
                 patch(Model, 'create', make_create())
