@@ -453,16 +453,15 @@ class Partner(models.Model, FormatAddress):
                 self.update_address(onchange_vals)
 
         # 2. To DOWNSTREAM: sync children
-        if self.child_ids:
+        if self.search_count([('parent_id', '=', self.id)])>0:
             # 2a. Commercial Fields: sync if commercial entity
             if self.commercial_partner_id == self:
                 commercial_fields = self._commercial_fields()
                 if any(field in values for field in commercial_fields):
                     self._commercial_sync_to_children()
-            for child in self.child_ids.filtered(lambda c: not c.is_company):
-                if child.commercial_partner_id != self.commercial_partner_id :
-                    self._commercial_sync_to_children()
-                    break
+            for child in self.search_count([('parent_id', '=', self.id), ('is_company', '=', False), ('commercial_partner_id', '!=',  self.commercial_partner_id.id)])>0:
+                self._commercial_sync_to_children()
+                
             # 2b. Address fields: sync if address changed
             address_fields = self._address_fields()
             if any(field in values for field in address_fields):
@@ -475,7 +474,7 @@ class Partner(models.Model, FormatAddress):
         was meant to be company address """
         parent = self.parent_id
         address_fields = self._address_fields()
-        if (parent.is_company or not parent.parent_id) and len(parent.child_ids) == 1 and \
+        if (parent.is_company or not parent.parent_id) and self.search_count([('parent_id', '=', parent.id)])==1 and \
             any(self[f] for f in address_fields) and not any(parent[f] for f in address_fields):
             addr_vals = self._update_fields_values(address_fields)
             parent.update_address(addr_vals)
