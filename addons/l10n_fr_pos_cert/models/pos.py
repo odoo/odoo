@@ -29,12 +29,9 @@ class pos_config(models.Model):
 
     @api.multi
     def open_ui(self):
-        date_today = datetime.utcnow()
         for config in self.filtered(lambda c: c.company_id._is_accounting_unalterable()):
             if config.current_session_id:
-                session_start = Datetime.from_string(config.current_session_id.start_at)
-                if session_start.date() != date_today.date():
-                    raise UserError(NOT_SAME_DAY_ERROR % config.current_session_id.name)
+                config.current_session_id._check_session_timing()
         return super(pos_config, self).open_ui()
 
 
@@ -42,12 +39,18 @@ class pos_session(models.Model):
     _inherit = 'pos.session'
 
     @api.multi
-    def open_frontend_cb(self):
+    def _check_session_timing(self):
+        self.ensure_one()
         date_today = datetime.utcnow()
+        session_start = Datetime.from_string(self.start_at)
+        if not date_today - datetime.timedelta(hours=24) <= session_start:
+            raise UserError(NOT_SAME_DAY_ERROR % self.name)
+        return True
+
+    @api.multi
+    def open_frontend_cb(self):
         for session in self.filtered(lambda s: s.config_id.company_id._is_accounting_unalterable()):
-            session_start = Datetime.from_string(session.start_at)
-            if session_start.date() != date_today.date():
-                raise UserError(NOT_SAME_DAY_ERROR % session.name)
+            session._check_session_timing()
         return super(pos_session, self).open_frontend_cb()
 
 
