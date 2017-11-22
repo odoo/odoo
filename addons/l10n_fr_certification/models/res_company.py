@@ -2,6 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import fields, models, api
+from openerp.exceptions import UserError
+from openerp.tools.translate import _
+
+UNALTERABLE_COUNTRIES = ['FR', 'MF', 'MQ', 'NC', 'PF', 'RE', 'GF', 'GP', 'TF']
+
 
 class ResCompany(models.Model):
     _inherit = 'res.company'
@@ -12,7 +17,7 @@ class ResCompany(models.Model):
     def create(self, vals):
         company = super(ResCompany, self).create(vals)
         #when creating a new french company, create the securisation sequence as well
-        if company.country_id == self.env.ref('base.fr'):
+        if self._is_accounting_unalterable():
             company._create_secure_sequence()
         return company
 
@@ -20,7 +25,7 @@ class ResCompany(models.Model):
     def write(self, vals):
         res = super(ResCompany, self).write(vals)
         #if country changed to fr, create the securisation sequence
-        if vals.get('country_id') and vals.get('country_id') == self.env.ref('base.fr').id:
+        if self._is_accounting_unalterable():
             self.filtered(lambda c: not c.l10n_fr_secure_sequence_id)._create_secure_sequence()
         return res
 
@@ -40,3 +45,11 @@ class ResCompany(models.Model):
                 'company_id': company.id}
             seq = self.env['ir.sequence'].create(vals)
             company.write({'l10n_fr_secure_sequence_id': seq.id})
+
+    def _is_vat_french(self):
+        return self.vat and self.vat.startswith('FR') and len(self.vat) == 13
+
+    def _is_accounting_unalterable(self, raise_on_nocountry=False):
+        if raise_on_nocountry and not self.vat and not self.country_id:
+            raise UserError(_('Please set up a country or a VAT number on the company %s.') % self.name, )
+        return self.country_id and self.country_id.code in UNALTERABLE_COUNTRIES or self._is_vat_french()
