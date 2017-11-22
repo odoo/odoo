@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from lxml import etree, objectify
+import logging
 from urllib2 import urlopen, Request
 from StringIO import StringIO
 import xml.etree.ElementTree as ET
@@ -11,6 +12,8 @@ from odoo import _
 
 XMLNS = 'AnetApi/xml/v1/schema/AnetApiSchema.xsd'
 
+_logger = logging.getLogger(__name__)
+
 
 def strip_ns(xml, ns):
     """Strip the provided name from tag names.
@@ -21,12 +24,12 @@ def strip_ns(xml, ns):
     :rtype: etree._Element
     :return: the parsed xml string with the namespace prefix removed
     """
-    it = ET.iterparse(StringIO(xml))
+    tree = etree.parse(StringIO(xml))
     ns_prefix = '{%s}' % XMLNS
-    for _, el in it:
+    for el in tree.iter():
         if el.tag.startswith(ns_prefix):
             el.tag = el.tag[len(ns_prefix):]  # strip all Auth.net namespaces
-    return it.root
+    return tree
 
 
 def error_check(elem):
@@ -89,11 +92,13 @@ class AuthorizeAPI():
 
         :param etree._Element data: etree data to process
         """
-        data = etree.tostring(data, xml_declaration=True, encoding='utf-8')
-        request = Request(self.url, data)
+        data_tree = etree.tostring(data, xml_declaration=True, encoding='utf-8')
+        request = Request(self.url, data_tree)
         request.add_header('Content-Type', 'text/xml')
+        _logger.debug('Authorize.net request sent: \n%s', etree.tostring(data, pretty_print=True))
         response = urlopen(request).read()
         response = strip_ns(response, XMLNS)
+        _logger.debug('Authorize.net response: \n%s', etree.tostring(response, pretty_print=True))
         return response
 
     def _base_tree(self, requestType):
