@@ -601,13 +601,14 @@ class AccountMoveLine(models.Model):
             ]
             try:
                 amount = float(str)
+                rounding_factor = self.env.user.company_id.currency_id.rounding
                 amount_domain = [
-                    '|', ('amount_residual', '=', amount),
-                    '|', ('amount_residual_currency', '=', amount),
-                    '|', ('amount_residual', '=', -amount),
-                    '|', ('amount_residual_currency', '=', -amount),
+                    '|', '&', ('amount_residual', '>', amount - rounding_factor), ('amount_residual', '<', amount + rounding_factor),
+                    '|', '&', ('amount_residual_currency', '>', amount - rounding_factor), ('amount_residual_currency', '<', amount + rounding_factor),
+                    '|', '&', ('amount_residual', '<', -amount + rounding_factor), ('amount_residual', '>', -amount - rounding_factor),
+                    '|', '&', ('amount_residual_currency', '<', -amount + rounding_factor), ('amount_residual_currency', '>', -amount - rounding_factor),
                     '&', ('account_id.internal_type', '=', 'liquidity'),
-                    '|', '|', ('debit', '=', amount), ('credit', '=', amount), ('amount_currency', '=', amount),
+                    '&', '|', '&', '|', '&', ('debit', '>', amount - rounding_factor), ('debit', '<', amount + rounding_factor), ('credit', '>', amount - rounding_factor), ('credit', '<', amount + rounding_factor), ('amount_currency', '>', amount - rounding_factor), ('amount_currency', '<', amount + rounding_factor),
                 ]
                 str_domain = expression.OR([str_domain, amount_domain])
             except:
