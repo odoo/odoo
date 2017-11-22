@@ -178,7 +178,7 @@ class AuthorizeForm(AuthorizeCommon):
         # check state
         self.assertEqual(tx.state, 'error', 'Authorize: erroneous validation did not put tx into error state')
 
-    @unittest.skip("Authorize s2s test disabled: We do not want to overload Authorize.net with runbot's requests")
+    #@unittest.skip("Authorize s2s test disabled: We do not want to overload Authorize.net with runbot's requests")
     def test_30_authorize_s2s(self):
         # be sure not to do stupid thing
         authorize = self.authorize
@@ -187,8 +187,8 @@ class AuthorizeForm(AuthorizeCommon):
         # add credential
         # FIXME: put this test in master-nightly on odoo/odoo + create sandbox account
         authorize.write({
-            'authorize_transaction_key': '',
-            'authorize_login': '',
+            'authorize_transaction_key': '7D47zrB597W5xDtE',
+            'authorize_login': '793UsgPA',
         })
         self.assertTrue(authorize.authorize_test_credentials, 'Authorize.net: s2s authentication failed')
 
@@ -209,7 +209,7 @@ class AuthorizeForm(AuthorizeCommon):
             'acquirer_id': authorize.id,
             'type': 'server2server',
             'currency_id': self.currency_usd.id,
-            'reference': 'test_ref_%s' % odoo.fields.Date.today(),
+            'reference': 'test_ref_%s' % int(time.time()),
             'payment_token_id': payment_token.id,
             'partner_id': self.buyer_id,
 
@@ -251,3 +251,20 @@ class AuthorizeForm(AuthorizeCommon):
         self.assertEqual(transaction.state, 'authorized')
         transaction.action_void()
         self.assertEqual(transaction.state, 'cancel')
+
+        # try charging an unexisting profile
+        ghost_payment_token = payment_token.copy()
+        ghost_payment_token.authorize_profile = '99999999999'
+        # create normal s2s transaction
+        transaction = self.env['payment.transaction'].create({
+            'amount': 500,
+            'acquirer_id': authorize.id,
+            'type': 'server2server',
+            'currency_id': self.currency_usd.id,
+            'reference': 'test_ref_%s' % int(time.time()),
+            'payment_token_id': ghost_payment_token.id,
+            'partner_id': self.buyer_id,
+
+        })
+        transaction.authorize_s2s_do_transaction()
+        self.assertEqual(transaction.state, 'error')
