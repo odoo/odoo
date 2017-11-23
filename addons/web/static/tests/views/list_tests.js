@@ -1088,7 +1088,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('can display button in edit mode', function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var list = createView({
             View: ListView,
@@ -1096,10 +1096,11 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<tree editable="bottom">' +
                     '<field name="foo"/>' +
-                    '<button name="notafield" type="object" icon="fa-asterisk"/>' +
+                    '<button name="notafield" type="object" icon="fa-asterisk" class="o_yeah"/>' +
                 '</tree>',
         });
         assert.ok(list.$('tbody button').length, "should have a button");
+        assert.ok(list.$('tbody button').hasClass('o_yeah'), "class should be set on the button");
         list.destroy();
     });
 

@@ -307,7 +307,7 @@ var ListRenderer = BasicRenderer.extend({
         } else {
             $button.text(node.attrs.string);
         }
-
+        this._handleAttributes($button, node);
         this._registerModifiers(node, record, $button);
 
         if (record.res_id) {
