@@ -16,8 +16,13 @@ $(document).ready(function () {
         return ajax.jsonRpc('/shop/payment/get_status/' + order_id, 'call', {
         }).then(function (result) {
             _poll_nbr += 1;
-            if(result.recall && _poll_nbr <= 5){
-                setTimeout(function () { payment_transaction_poll_status(); }, 1000);
+            if(result.recall) {
+                if (_poll_nbr < 20){
+                    setTimeout(function () { payment_transaction_poll_status(); }, Math.ceil(_poll_nbr / 3) * 1000);
+                }
+                else {
+                    result.message = "<i class='fa fa-warning' />";
+                }
             }
             $('div.oe_website_sale_tx_status').html(result.message);
         });
