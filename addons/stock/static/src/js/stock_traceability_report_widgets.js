@@ -32,12 +32,8 @@ var ReportWidget = Widget.extend({
         });
     },
     updownStream: function(e) {
-        var stream = $(e.target).parent().data('stream');
         var $el = $(e.target).parents('tr');
-        var string = "Upstream Traceability"
-        if (stream == 'downstream') {
-            string = "Downstream Traceability"
-        }
+        var string = "Traceability Report"
         this.do_action({
             type: "ir.actions.client",
             tag: 'stock_report_generic',
@@ -45,7 +41,6 @@ var ReportWidget = Widget.extend({
             context: {
                 active_id : $el.data('model_id'),
                 active_model : $el.data('model'),
-                ttype: stream || false,
                 url: '/stock/output_format/stock/active_id'
             },
         });
@@ -83,7 +78,6 @@ var ReportWidget = Widget.extend({
         var active_model_name = $CurretElement.data('model');
         var active_model_id = $CurretElement.data('model_id');
         var row_level = $CurretElement.data('level');
-        var stream = $CurretElement.data('stream');
         var $cursor = $(e.target).parents('tr');
         this._rpc({
                 model: 'stock.traceability.report',
@@ -92,7 +86,6 @@ var ReportWidget = Widget.extend({
                 kwargs: {
                     'model_id': active_model_id,
                     'model_name': active_model_name,
-                    'stream': stream || 'upstream',
                     'level': parseInt(row_level) + 30 || 1
                 },
             })

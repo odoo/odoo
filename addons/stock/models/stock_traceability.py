@@ -20,7 +20,7 @@ class MrpStockReport(models.TransientModel):
     _name = 'stock.traceability.report'
 
     @api.model
-    def get_move_lines_upstream(self, move_lines):
+    def get_move_lines(self, move_lines):
         res = self.env['stock.move.line']
         for move_line in move_lines:
             # if MTO
@@ -38,35 +38,12 @@ class MrpStockReport(models.TransientModel):
                         ('date', '<', move_line.date),
                     ])
         if res:
-            res |= self.get_move_lines_upstream(res)
-        return res
-
-    @api.model
-    def get_move_lines_downstream(self, move_lines):
-        res = self.env['stock.move.line']
-        for move_line in move_lines:
-            # if MTO
-            if move_line.move_id.move_dest_ids:
-                res |= move_line.move_id.move_dest_ids.mapped('move_line_ids').filtered(
-                    lambda m: m.lot_id.id == move_line.lot_id.id)
-            # if MTS
-            else:
-                if move_line.location_dest_id.usage == 'internal':
-                    res |= self.env['stock.move.line'].search([
-                        ('product_id', '=', move_line.product_id.id),
-                        ('lot_id', '=', move_line.lot_id.id),
-                        ('location_id', '=', move_line.location_dest_id.id),
-                        ('id', '!=', move_line.id),
-                        ('date', '>', move_line.date),
-                    ])
-        if res:
-            res |= self.get_move_lines_downstream(res)
+            res |= self.get_move_lines(res)
         return res
 
     @api.model
     def get_lines(self, line_id=None, **kw):
         context = dict(self.env.context)
-        stream = context.get('ttype')
         model = False
         model_id = False
         level = 1
@@ -74,39 +51,23 @@ class MrpStockReport(models.TransientModel):
             level = kw['level']
             model = kw['model_name']
             model_id = kw['model_id']
-            stream = kw['stream']
         res = []
         if context.get('active_id') and not context.get('model') or context.get('model') == 'stock.production.lot':
-            if stream == "downstream":
-                move_ids = self.env['stock.move.line'].search([
-                    ('lot_id', '=', context.get('active_id')),
-                    ('location_id.usage', '!=', 'internal'),
-                    ('state', '=', 'done'),
-                    ('move_id.returned_move_ids', '=', False),
-                ])
-                res += self._lines(line_id, model_id=model_id, model='stock.move.line', level=level,
-                                  stream=stream, obj_ids=move_ids)
-            else:
-                move_ids = self.env['stock.move.line'].search([
-                    ('lot_id', '=', context.get('active_id')),
-                    ('location_dest_id.usage', '!=', 'internal'),
-                    ('state', '=', 'done'),
-                    ('move_id.returned_move_ids', '=', False),
-                ])
-                res += self._lines(line_id, model_id=model_id, model='stock.move.line', level=level,
-                                  stream=stream, obj_ids=move_ids)
+            move_ids = self.env['stock.move.line'].search([
+                ('lot_id', '=', context.get('active_id')),
+                ('state', '=', 'done'),
+                ('move_id.returned_move_ids', '=', False),
+            ])
+            res += self._lines(line_id, model_id=model_id, model='stock.move.line', level=level, obj_ids=move_ids)
         elif context.get('active_id') and context.get('model') == 'stock.picking':
             move_ids = self.env['stock.picking'].browse(context['active_id']).move_lines.mapped('move_line_ids').filtered(lambda m: m.lot_id and m.state == 'done')
-            res = self._lines(line_id, model_id=model_id, model='stock.move.line', level=level, stream=stream, obj_ids=move_ids)
+            res = self._lines(line_id, model_id=model_id, model='stock.move.line', level=level, obj_ids=move_ids)
         elif context.get('active_id') and context.get('model') == 'stock.move.line':
             move_line_ids = self.env['stock.move.line'].browse(context.get('active_id'))
-            res = self._lines(line_id, model_id=context.get('active_id'), model=context.get('model'), level=level, stream=stream, obj_ids=move_line_ids)
+            res = self._lines(line_id, model_id=context.get('active_id'), model=context.get('model'), level=level, obj_ids=move_line_ids)
         else:
-            res = self._lines(line_id,  model_id=model_id, model=model, level=level, stream=stream)
-        reverse_sort = True
-        if stream == "downstream":
-            reverse_sort = False
-        final_vals = sorted(res, key=lambda v: v['date'], reverse=reverse_sort)
+            res = self._lines(line_id,  model_id=model_id, model=model, level=level)
+        final_vals = sorted(res, key=lambda v: v['date'], reverse=True)
         lines = self.final_vals_to_lines(final_vals, level)
         return lines
 
@@ -129,7 +90,7 @@ class MrpStockReport(models.TransientModel):
             ref = move_line.move_id.scrap_ids[0].name
         return res_model, res_id, ref
 
-    def make_dict_move(self, level, parent_id, move_line, stream=False, unfoldable=False):
+    def make_dict_move(self, level, parent_id, move_line, unfoldable=False):
         res_model, res_id, ref = self.get_links(move_line)
         data = [{
             'level': level,
@@ -144,11 +105,10 @@ class MrpStockReport(models.TransientModel):
             'location_destination': move_line.location_dest_id.name,
             'reference_id': ref,
             'res_id': res_id,
-            'stream': stream,
             'res_model': res_model}]
         return data
 
-    def make_dict_head(self, level, parent_id, model=False, stream=False, move_line=False):
+    def make_dict_head(self, level, parent_id, model=False, move_line=False):
         res_model, res_id, ref = self.get_links(move_line)
         data = []
         if model == 'stock.move.line':
@@ -164,34 +124,21 @@ class MrpStockReport(models.TransientModel):
                 'product_qty_uom': str(move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id, rounding_method='HALF-UP')) + ' ' + move_line.product_id.uom_id.name,
                 'location_source': move_line.location_id.name,
                 'location_destination': move_line.location_dest_id.name,
-                'stream': stream,
                 'reference_id': ref,
                 'res_id': res_id,
                 'res_model': res_model}]
         return data
 
     @api.model
-    def upstream_traceability(self, level, stream=False, line_id=False, model=False, model_obj=False):
+    def get_traceability(self, level, line_id=False, model=False, model_obj=False):
         final_vals =[]
         if model == 'stock.move.line':
-            moves = self.get_move_lines_upstream(model_obj)
+            moves = self.get_move_lines(model_obj)
         for move in moves:
             unfoldable = False
             if move.consume_line_ids:
                 unfoldable = True
-            final_vals += self.make_dict_move(level, stream=stream, parent_id=line_id, move_line=move, unfoldable=unfoldable)
-        return final_vals
-
-    @api.model
-    def downstream_traceability(self, level, stream=False, line_id=False, model=False, model_obj=False):
-        final_vals = []
-        if model == 'stock.move.line':
-            moves = self.get_move_lines_downstream(model_obj)
-        for move in moves:
-            unfoldable = False
-            if move.produce_line_ids:
-                unfoldable = True
-            final_vals += self.make_dict_move(level, stream=stream, parent_id=line_id, move_line=move, unfoldable=unfoldable)
+            final_vals += self.make_dict_move(level, parent_id=line_id, move_line=move, unfoldable=unfoldable)
         return final_vals
 
     @api.model
@@ -202,7 +149,6 @@ class MrpStockReport(models.TransientModel):
                 'id': autoIncrement(),
                 'model': data['model'],
                 'model_id': data['model_id'],
-                'stream': data['stream'] or 'upstream',
                 'parent_id': data['parent_id'],
                 'type': 'line',
                 'reference': data.get('reference_id', False),
@@ -222,34 +168,26 @@ class MrpStockReport(models.TransientModel):
         return lines
 
     @api.model
-    def _lines(self, line_id=None, model_id=False, model=False, level=0, stream=False, obj_ids=[], **kw):
+    def _lines(self, line_id=None, model_id=False, model=False, level=0, obj_ids=[], **kw):
         final_vals = []
         if model and line_id:
             model_obj = self.env[model].browse(model_id)
-            if stream == "downstream":
-                final_vals += self.downstream_traceability(level, stream='downstream', line_id=line_id, model=model, model_obj=model_obj)
-                if model == 'stock.move.line':
-                    if model_obj.produce_line_ids:
-                        final_vals += self.get_produced_or_consumed_vals(model_obj.produce_line_ids, level, model=model, stream=stream, parent_id=line_id)
-                    else:
-                        final_vals = self.make_dict_move(level, stream=stream, parent_id=line_id,move_line=model_obj) + final_vals
-            else:
-                final_vals += self.upstream_traceability(level, stream='upstream', line_id=line_id, model=model, model_obj=model_obj)
-                if model == 'stock.move.line':
-                    if model_obj.consume_line_ids:
-                        final_vals += self.get_produced_or_consumed_vals(model_obj.consume_line_ids, level, model=model, stream=stream, parent_id=line_id)
-                    else:
-                        final_vals = self.make_dict_move(level, stream=stream, parent_id=line_id, move_line=model_obj) + final_vals
+            final_vals += self.get_traceability(level, line_id=line_id, model=model, model_obj=model_obj)
+            if model == 'stock.move.line':
+                if model_obj.consume_line_ids:
+                    final_vals += self.get_produced_or_consumed_vals(model_obj.consume_line_ids, level, model=model, parent_id=line_id)
+                else:
+                    final_vals = self.make_dict_move(level, parent_id=line_id, move_line=model_obj) + final_vals
         else:
             for move_line in obj_ids:
-                final_vals += self.make_dict_head(level, stream=stream, parent_id=line_id, model=model or 'stock.pack.operation', move_line=move_line)
+                final_vals += self.make_dict_head(level, parent_id=line_id, model=model or 'stock.pack.operation', move_line=move_line)
         return final_vals
 
     @api.model
-    def get_produced_or_consumed_vals(self, move_lines, level, model, stream, parent_id):
+    def get_produced_or_consumed_vals(self, move_lines, level, model, parent_id):
         final_vals = []
         for line in move_lines:
-            final_vals += self.make_dict_head(level, model=model, stream=stream, parent_id=parent_id, move_line=line)
+            final_vals += self.make_dict_head(level, model=model, parent_id=parent_id, move_line=line)
         return final_vals
 
     def get_pdf_lines(self, line_data=[]):
@@ -268,7 +206,6 @@ class MrpStockReport(models.TransientModel):
                 'model': data['model'],
                 'model_id': data['model_id'],
                 'parent_id': data['parent_id'],
-                'stream': "%s" % (data['stream']),
                 'type': 'line',
                 'name': _(data.get('lot_id')),
                 'columns': [data.get('reference_id'),

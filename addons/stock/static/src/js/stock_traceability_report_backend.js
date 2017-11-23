@@ -37,9 +37,7 @@ var stock_report_generic = Widget.extend(ControlPanelMixin, {
         }
         def.then(function () {
             self.report_widget.$el.html(self.html);
-            if(self.given_context['ttype'] == 'downstream'){
-                self.report_widget.$el.find('.o_report_heading').html('<h1>Downstream Traceability</h1>');
-            }
+            self.report_widget.$el.find('.o_report_heading').html('<h1>Traceability Report</h1>')
         });
     },
     start: function() {
