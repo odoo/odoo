@@ -10,13 +10,13 @@
                 <t t-set="domainClass" t-value="'o_stock_reports_domain_line_1'"/>
             </t>
             <t t-set="column" t-value="0" />
-            <tr t-att-data-type="a['type']" t-att-data-stream="a['stream']" t-att-data-unfold="a['unfoldable']" t-att-data-parent_id="a['parent_id']" t-att-data-id="a['id']" t-att-data-model_id="a['model_id']" t-att-data-model="a['model']" t-att-class="trclass">
+            <tr t-att-data-type="a['type']" t-att-data-unfold="a['unfoldable']" t-att-data-parent_id="a['parent_id']" t-att-data-id="a['id']" t-att-data-model_id="a['model_id']" t-att-data-model="a['model']" t-att-class="trclass">
                 <t t-set="tdclass" t-value="''" />
                 <t t-if="a.get('unfoldable')"><t t-set="tdclass" t-value="'o_stock_reports_unfoldable'" /></t>
                 <t t-set="column" t-value="0" />
                 <t t-foreach="a['columns']" t-as="c">
                     <t t-set="column" t-value="column + 1" />
-                      <td t-att-data-id="a.get('id')" t-att-data-model="a['model']" t-att-data-model_id="a['model_id']" t-att-data-stream="a['stream']" t-att-class="tdclass" t-att-data-level="a['level']">
+                      <td t-att-data-id="a.get('id')" t-att-data-model="a['model']" t-att-data-model_id="a['model_id']" t-att-class="tdclass" t-att-data-level="a['level']">
                         <t t-if="column == 1">
                             <span t-att-data-active-id="a['id']" t-att-class="a['type'] + ' ' + domainClass"></span>
                             <t t-if="a.get('unfoldable')">
@@ -36,7 +36,7 @@
 
     <template id="report_stock_inventory">
         <div class="container o_stock_reports_page o_stock_reports_no_print">
-            <span t-if="lines" class="o_report_heading text-left"><h1>Upstream Traceability</h1></span>
+            <span t-if="lines" class="o_report_heading text-left"><h1>Traceability Report</h1></span>
             <span><t t-esc="context"/></span>
             <div class="o_stock_reports_table">
                 <t t-if="not lines">
@@ -101,7 +101,7 @@
                             <t t-set="trclass" t-value="'o_stock_reports_default_style'"/>
                             <t t-if="a.get('model') == 'stock.move.line'"><t t-set="trclass" t-value="'o_stock_reports_level0'"/></t>
                             <t t-set="column" t-value="0" />
-                            <tr t-att-data-type="a['type']" t-att-data-stream="a['stream']" t-att-data-id="a['id']" t-att-data-model="a['model']" t-att-class="trclass">
+                            <tr t-att-data-type="a['type']" t-att-data-id="a['id']" t-att-data-model="a['model']" t-att-class="trclass">
                                 <t t-set="tdclass" t-value="''" />
                                 <t t-if="a.get('unfoldable')"><t t-set="tdclass" t-value="'o_stock_reports_unfoldable'" /></t>
                                 <t t-set="column" t-value="0" />
