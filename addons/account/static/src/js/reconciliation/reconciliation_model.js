@@ -67,6 +67,7 @@ var _t = core._t;
  *      mv_lines: object - idem than reconciliation_proposition
  *      offset: integer
  *      limitMoveLines: integer
+ *      showMore: boolean
  *      filter: string
  *      [createForm]: {
  *          account_id: {
@@ -220,6 +221,7 @@ var StatementModel = BasicModel.extend({
                 args: [this.bank_statement_id.id, {name: name}],
             });
     },
+
     /**
      * change the offset for the matched lines, and fetch the new matched lines
      *
@@ -227,9 +229,10 @@ var StatementModel = BasicModel.extend({
      * @param {number} offset
      * @returns {Deferred}
      */
-    changeOffset: function (handle, offset) {
-        this.getLine(handle).offset += (offset > 0 ? 1 : -1) * this.limitMoveLines;
-        return this._performMoveLine(handle);
+    changeOffset: function (handle) {
+        var line = this.getLine(handle);
+        line.offset += line.limitMoveLines;
+        return this._performMoveLine(handle, {offset: true});
     },
     /**
      * change the partner on the line and fetch the new matched lines
@@ -1070,7 +1073,9 @@ var StatementModel = BasicModel.extend({
      * @param {string} handle
      * @returns {Deferred}
      */
-    _performMoveLine: function (handle) {
+    _performMoveLine: function (handle, options) {
+        options = options || {};
+        var self = this;
         var line = this.getLine(handle);
         var excluded_ids = _.compact(_.flatten(_.map(this.lines, function (line) {
             return _.map(line.reconciliation_proposition, function (prop) {
@@ -1078,14 +1083,20 @@ var StatementModel = BasicModel.extend({
             });
         })));
         var filter = line.filter || "";
-        var offset = line.offset;
-        var limit = this.limitMoveLines+1;
+        var offset = options.offset ? line.offset : 0;
+        var limit = this.limitMoveLines + 1;
         return this._rpc({
                 model: 'account.reconciliation.widget',
                 method: 'get_move_lines_for_bank_statement_line',
                 args: [line.id, line.st_line.partner_id, excluded_ids, filter, offset, limit],
-            })
-            .then(this._formatMoveLine.bind(this, handle));
+            }).then(function (move_lines) {
+                line.showMore = move_lines.length > line.limitMoveLines ? true : false;
+                move_lines.splice(line.limitMoveLines);
+                if (options.offset){
+                    move_lines = line.mv_lines.concat(move_lines);
+                }
+                return self._formatMoveLine(handle, move_lines);
+            });
     },
     /**
      * format the proposition to send information server side
@@ -1369,6 +1380,7 @@ var ManualModel = StatementModel.extend({
             mode: 'inactive',
             offset: 0,
             limitMoveLines: this.limitMoveLines,
+            showMore: false,
             filter: "",
             reconcileModels: [],
             account_id: this._formatNameGet([data.account_id, data.account_name]),

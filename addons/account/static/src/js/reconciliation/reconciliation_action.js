@@ -27,12 +27,13 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
         create_proposition: '_onAction',
         quick_create_proposition: '_onAction',
         toggle_partial_reconcile: '_onAction',
+        load_more_lines: '_onAction',     // account.move.line
         auto_reconciliation: '_onValidate',
         validate: '_onValidate',
         validate_all_balanced: '_onValidate',
         change_name: '_onChangeName',
         close_statement: '_onCloseStatement',
-        load_more: '_onLoadMore',
+        load_more: '_onLoadMore',               // account.bank.statement.line
     },
     config: {
         // used to instanciate the model
@@ -44,7 +45,7 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
         // used context params
         params: ['statement_ids'],
         // number of moves lines displayed in 'match' mode
-        limitMoveLines: 5,
+        limitMoveLines: 40,
     },
 
     /**

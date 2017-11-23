@@ -265,8 +265,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         'click .accounting_view tfoot td:not(.cell_left,.cell_right)': '_onShowPanel',
         'click tfoot .cell_left, tfoot .cell_right': '_onSearchBalanceAmount',
         'input input.filter': '_onFilterChange',
-        'click .match_controls .fa-chevron-left:not(.disabled)': '_onPrevious',
-        'click .match_controls .fa-chevron-right:not(.disabled)': '_onNext',
+        'click .match a.show_more': '_onLoadMoreLines',
         'click .match .mv_line td': '_onSelectMoveLine',
         'click .accounting_view tbody .mv_line td': '_onSelectProposition',
         'click .o_reconcile_models button': '_onQuickCreateProposition',
@@ -408,21 +407,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             }
             $props.append($line);
         });
-
-        // mv_lines
-        var $mv_lines = this.$('.match table tbody').empty();
-        _.each(state.mv_lines.slice(0, state.limitMoveLines), function (line) {
-            var $line = $(qweb.render("reconciliation.line.mv_line", {'line': line, 'state': state}));
-            if (!isNaN(line.id)) {
-                $('<span class="line_info_button fa fa-info-circle"/>')
-                    .appendTo($line.find('.cell_info_popover'))
-                    .attr("data-content", qweb.render('reconciliation.line.mv_line.details', {'line': line}));
-            }
-            $mv_lines.append($line);
-        });
-        this.$('.match .fa-chevron-right').toggleClass('disabled', state.mv_lines.length <= state.limitMoveLines);
-        this.$('.match .fa-chevron-left').toggleClass('disabled', !state.offset);
-        this.$('.match').css('max-height', !state.mv_lines.length && !state.filter.length ? '0px' : '');
+        this.renderMoveLines(state);
 
         // balance
         this.$('.popover').remove();
@@ -460,6 +445,25 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             });
         }
         this.$('.create .add_line').toggle(!!state.balance.amount_currency);
+    },
+
+    renderMoveLines: function (state){
+        var $mv_lines = this.$('.match table tbody').empty();
+        var fragment = document.createDocumentFragment();
+        _.each(state.mv_lines, function (line) {
+            var $line = $(qweb.render("reconciliation.line.mv_line", {'line': line, 'state': state}));
+            if (!isNaN(line.id)) {
+                $('<span class="line_info_button fa fa-info-circle"/>')
+                    .appendTo($line.find('.cell_info_popover'))
+                    .attr("data-content", qweb.render('reconciliation.line.mv_line.details', {'line': line}));
+            }
+            $line.appendTo(fragment);
+        });
+        if (state.showMore) {
+            var $showMore = $(qweb.render('reconciliation.show_more'));
+            $showMore.appendTo(fragment);
+        }
+        $(fragment).appendTo($mv_lines);
     },
 
     //--------------------------------------------------------------------------
@@ -693,18 +697,14 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             break;
         }
     },
+    // Trigger load more account move lines
     /**
      * @private
      */
-    _onPrevious: function () {
-        this.trigger_up('change_offset', {'data': -1});
+    _onLoadMoreLines: function () {
+        this.trigger_up('change_offset');
     },
-    /**
-     * @private
-     */
-    _onNext: function () {
-        this.trigger_up('change_offset', {'data': 1});
-    },
+    // Trigger load more
     /**
      * @private
      * @param {MouseEvent} event
