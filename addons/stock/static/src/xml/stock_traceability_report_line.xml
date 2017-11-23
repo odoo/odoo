@@ -13,7 +13,6 @@
     <t t-name="report_mrp_line">
         <t t-set="trclass" t-value="'o_stock_reports_default_style'"/>
         <t t-if="l.model == 'stock.move.line'"><t t-set="trclass" t-value="'o_stock_reports_level0'"/></t>
-        <t t-if="l.model == 'stock.quant'"><t t-set="trclass" t-value="'o_stock_reports_level0'"/></t>
         <t t-set="space_td" t-value="'margin-left: '+ l.level + 'px;'"/>
         <t t-set="domainClass" t-value="'o_stock_reports_domain_line_0'"/>
         <t t-if="l.unfoldable == false">
@@ -25,7 +24,7 @@
             <t t-set="column" t-value="0" />
             <t t-foreach="l.columns" t-as="c">
                 <t t-set="column" t-value="column + 1" />
-                <td style="white-space: nowrap;" t-att-data-id="l.id" t-att-data-stream="l.stream" t-att-data-model="l.model" t-att-data-model_id="l.model_id" t-att-class="tdclass" t-att-data-level="l.level" t-att-data-parent_quant="l.parent_quant">
+                <td style="white-space: nowrap;" t-att-data-id="l.id" t-att-data-stream="l.stream" t-att-data-model="l.model" t-att-data-model_id="l.model_id" t-att-class="tdclass" t-att-data-level="l.level">
                     <t t-if="column == 1">
                         <span t-att-style="space_td" t-att-class="domainClass"></span>
                         <t t-if="l.unfoldable">
