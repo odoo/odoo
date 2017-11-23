@@ -12,6 +12,14 @@ class PortalMixin(models.AbstractModel):
     portal_url = fields.Char(
         'Portal Access URL', compute='_compute_portal_url',
         help='Customer Portal URL')
+    shared = fields.Boolean('Check shared Document', compute="_compute_shared")
+
+    def _compute_shared(self):
+        # when Access through sudo in portal env.user will be super user
+        user_id = self.env.context.get('uid')
+        partner = self.env['res.users'].browse(user_id).partner_id
+        for record in self.filtered(lambda x: partner in x.message_follower_ids.mapped('partner_id') and  x.create_uid.id != user_id and partner != x.partner_id):
+            record.shared = True
 
     @api.multi
     def _compute_portal_url(self):
