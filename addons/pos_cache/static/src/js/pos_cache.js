@@ -37,8 +37,11 @@ models.PosModel = models.PosModel.extend({
                     args: [self.pos_session.config_id[0], product_fields, product_domain],
                 });
             self.chrome.loading_message(_t('Loading') + ' product.product', 1);
-            return records.then(function (product) {
-                self.db.add_products(product);
+            return records.then(function (products) {
+                self.db.add_products(_.map(products, function (product) {
+                    product.categ = _.findWhere(self.product_categories, {'id': product.categ_id[0]});
+                    return new models.Product({}, product);
+                }));
             });
         });
     },
