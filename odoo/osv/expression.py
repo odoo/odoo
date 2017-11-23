@@ -1226,6 +1226,14 @@ class expression(object):
             query = '(%s."%s" IS NOT NULL and %s."%s" != false)' % (table_alias, left, table_alias, left)
             params = []
 
+        elif left in model and model._fields[left].type == "monetary" and right and operator == '=':
+            currency_field = model._fields[left].currency_field
+            rounding_factor = currency_field and model[currency_field].rounding or 0.01
+            sign = right > 0 and 1 or -1
+            right = abs(right)
+            query = '%s."%s" BETWEEN %f AND %f' % (table_alias, left, sign * (right - rounding_factor), sign * (right + rounding_factor))
+            params = []
+
         elif (right is False or right is None) and (operator == '!='):
             query = '%s."%s" IS NOT NULL' % (table_alias, left)
             params = []
