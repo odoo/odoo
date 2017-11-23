@@ -32,7 +32,7 @@ Including the following data in the Accounting Standards for Business Enterprise
     'data': [
         'data/l10n_cn_standard_chart_data.xml',
         'data/account.account.template.csv',
-        'data/account_tax_templates.xml',
+        'data/account_tax_template_data.xml',
         'data/account_chart_template_data.xml',
     ],
 }
