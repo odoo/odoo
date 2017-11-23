@@ -23,9 +23,16 @@
                                 <span t-att-data-id="a['id']" class="o_stock_reports_unfoldable o_stock_reports_caret_icon"><i class="fa fa-fw fa-caret-right"></i></span>
                             </t>
                         </t>
-                        <span>
-                            <t t-raw="c" />
-                        </span>
+                        <t t-if="a['reference'] == c">
+                            <span>
+                                <a t-att-data-active-id="a['res_id']" t-att-data-res-model="a['res_model']" class="o_stock_reports_web_action"><t t-raw="c" /></a>
+                            </span>
+                        </t>
+                        <t t-else="">
+                            <span>
+                                <t t-raw="c"/>
+                            </span>
+                        </t>
                     </td>
                 </t>
             <td>
