@@ -309,10 +309,8 @@ var SearchView = Widget.extend({
         }
         this.toggle_visibility(false);
         this.setup_global_completion();
-        this.query = new SearchQuery()
-                .on('add change reset remove', this.proxy('do_search'))
-                .on('change', this.proxy('renderChangedFacets'))
-                .on('add reset remove', this.proxy('renderFacets'));
+        this.query = new SearchQuery();
+        this._searchviewQueryBindEvent();
         this.$('.o_searchview_more')
             .toggleClass('fa-search-minus', this.visible_filters)
             .toggleClass('fa-search-plus', !this.visible_filters);
@@ -333,6 +331,15 @@ var SearchView = Widget.extend({
             }
         }
         return $.when.apply($, menu_defs).then(this.set_default_filters.bind(this));
+    },
+    /**
+     * will be overridden in mobile so we can stop do_search on fly and apply on click of button.
+     * @private
+     */
+    _searchviewQueryBindEvent: function () {
+        this.query.on('change', this.proxy('renderChangedFacets'))
+            .on('add reset remove', this.proxy('renderFacets'))
+            .on('add change reset remove', this.proxy('do_search'));
     },
     get_title: function () {
         return this.title;

@@ -971,7 +971,7 @@
 </t>
 <div t-name="SearchView.FilterMenu" class="btn-group o_dropdown">
     <button class="o_dropdown_toggler_btn btn btn-sm dropdown-toggle" data-toggle="dropdown">
-        <span class="fa fa-filter"/> Filters <span class="caret"/>
+        <span class="fa fa-filter"/> Filters <span t-attf-class="#{widget.isMobile ? 'fa fa-chevron-right pull-right mt4' : 'caret'}"/>
     </button>
     <ul class="dropdown-menu o_filters_menu" role="menu">
         <li class="o_add_filter o_closed_menu">
@@ -1081,9 +1081,9 @@
         </option>
     </select>
 </t>
-<div t-name="SearchView.GroupByMenu" class="btn-group hidden-xs o_dropdown">
+<div t-name="SearchView.GroupByMenu" class="btn-group o_dropdown">
     <button class="o_dropdown_toggler_btn btn btn-sm dropdown-toggle" data-toggle="dropdown">
-        <span class="fa fa-bars"/> Group By <span class="caret"/>
+        <span class="fa fa-bars"/> Group By <span t-attf-class="#{widget.isMobile ? 'fa fa-chevron-right pull-right mt4' : 'caret'}"/>
     </button>
     <ul class="dropdown-menu o_group_by_menu" role="menu">
         <li class="divider"/>
@@ -1104,7 +1104,7 @@
 </t>
 <div t-name="SearchView.FavoriteMenu" class="btn-group o_dropdown">
     <button class="o_dropdown_toggler_btn btn btn-sm dropdown-toggle" data-toggle="dropdown">
-        <span class="fa fa-star"/> Favorites <span class="caret"/>
+        <span class="fa fa-star"/> Favorites <span t-attf-class="#{widget.isMobile ? 'fa fa-chevron-right pull-right mt4' : 'caret'}"/>
     </button>
     <ul class="dropdown-menu o_favorites_menu" role="menu">
         <li class="divider user_filter"/>
