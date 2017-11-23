@@ -19,12 +19,12 @@
             <t t-set="domainClass" t-value="'o_stock_reports_domain_line_1'"/>
         </t>
 
-        <tr t-att-data-type="l.type" t-att-data-unfold="l.unfoldable" t-att-data-parent_id="l.parent_id" t-att-data-id="l.id" t-att-data-stream="'l.stream'" t-att-data-model_id="l.model_id" t-att-data-model="l.model" t-att-class="trclass">
+        <tr t-att-data-type="l.type" t-att-data-unfold="l.unfoldable" t-att-data-parent_id="l.parent_id" t-att-data-id="l.id"  t-att-data-model_id="l.model_id" t-att-data-model="l.model" t-att-class="trclass">
             <t t-if="l.unfoldable == true"><t t-set="tdclass" t-value="'o_stock_reports_unfoldable'" /></t>
             <t t-set="column" t-value="0" />
             <t t-foreach="l.columns" t-as="c">
                 <t t-set="column" t-value="column + 1" />
-                <td style="white-space: nowrap;" t-att-data-id="l.id" t-att-data-stream="l.stream" t-att-data-model="l.model" t-att-data-model_id="l.model_id" t-att-class="tdclass" t-att-data-level="l.level">
+                <td style="white-space: nowrap;" t-att-data-id="l.id" t-att-data-model="l.model" t-att-data-model_id="l.model_id" t-att-class="tdclass" t-att-data-level="l.level">
                     <t t-if="column == 1">
                         <span t-att-style="space_td" t-att-class="domainClass"></span>
                         <t t-if="l.unfoldable">
@@ -71,12 +71,6 @@
                     </t>
                 </td>
             </t>
-            <td>
-                <t t-if="l.model == 'stock.move.line'">
-                    <span t-if="l.stream == 'downstream'" class="o_stock_reports_stream text-muted" data-stream="upstream" title="Upstream Traceability"><i class="fa fa-arrow-up"></i></span>
-                    <span t-if="l.stream == 'upstream'" class="o_stock_reports_stream" data-stream="downstream" title="Downstream Traceability"><i class="fa fa-arrow-down"></i></span>
-                </t>
-            </td>
         </tr>
     </t>
 
