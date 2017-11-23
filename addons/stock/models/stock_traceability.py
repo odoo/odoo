@@ -140,7 +140,8 @@ class MrpStockReport(models.TransientModel):
             'model':'stock.move.line',
             'product_id': move_line.product_id.display_name,
             'product_qty_uom': str(move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id, rounding_method='HALF-UP')) + ' ' + move_line.product_id.uom_id.name,
-            'location': move_line.location_id.name + ' -> ' + move_line.location_dest_id.name,
+            'location_source': move_line.location_id.name,
+            'location_destination': move_line.location_dest_id.name,
             'reference_id': ref,
             'res_id': res_id,
             'stream': stream,
@@ -148,6 +149,7 @@ class MrpStockReport(models.TransientModel):
         return data
 
     def make_dict_head(self, level, parent_id, model=False, stream=False, move_line=False):
+        res_model, res_id, ref = self.get_links(move_line)
         data = []
         if model == 'stock.move.line':
             data = [{
@@ -160,9 +162,12 @@ class MrpStockReport(models.TransientModel):
                 'product_id': move_line.product_id.display_name,
                 'lot_id': move_line.lot_id.name,
                 'product_qty_uom': str(move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id, rounding_method='HALF-UP')) + ' ' + move_line.product_id.uom_id.name,
-                'location': move_line.location_dest_id.name,
+                'location_source': move_line.location_id.name,
+                'location_destination': move_line.location_dest_id.name,
                 'stream': stream,
-                'reference_id': False}]
+                'reference_id': ref,
+                'res_id': res_id,
+                'res_model': res_model}]
         return data
 
     @api.model
@@ -204,11 +209,13 @@ class MrpStockReport(models.TransientModel):
                 'res_id': data.get('res_id', False),
                 'res_model': data.get('res_model', False),
                 'name': _(data.get('lot_id', False)),
-                'columns': [data.get('reference_id', False) or data.get('product_id', False),
-                            data.get('lot_id', False),
+                'columns': [data.get('reference_id', False),
+                            data.get('product_id', False),
                             data.get('date', False),
-                            data.get('product_qty_uom', 0),
-                            data.get('location', False)],
+                            data.get('lot_id', False),
+                            data.get('location_source', False),
+                            data.get('location_destination', False),
+                            data.get('product_qty_uom', 0)],
                 'level': level,
                 'unfoldable': data['unfoldable'],
             })
@@ -264,11 +271,13 @@ class MrpStockReport(models.TransientModel):
                 'stream': "%s" % (data['stream']),
                 'type': 'line',
                 'name': _(data.get('lot_id')),
-                'columns': [data.get('reference_id') or data.get('product_id'),
-                            data.get('lot_id'),
+                'columns': [data.get('reference_id'),
+                            data.get('product_id'),
                             data.get('date'),
-                            data.get('product_qty_uom', 0),
-                            data.get('location')],
+                            data.get('lot_id'),
+                            data.get('location_source', False),
+                            data.get('location_destination', False),
+                            data.get('product_qty_uom', 0)],
                 'level': data['level'],
                 'unfoldable': data['unfoldable'],
             })
