@@ -72,7 +72,7 @@ class ChangeProductionQty(models.TransientModel):
                     quantity = quantity if (quantity > 0) else 0
                 if float_is_zero(quantity, precision_digits=precision):
                     wo.final_lot_id = False
-                    wo.active_move_lot_ids.unlink()
+                    wo.active_move_line_ids.unlink()
                 wo.qty_producing = quantity
                 if wo.qty_produced < wo.qty_production and wo.state == 'done':
                     wo.state = 'progress'
