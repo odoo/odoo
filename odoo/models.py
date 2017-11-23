@@ -3541,16 +3541,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # The parenthesis surrounding the select are important, as this is a sub-select.
             # The quotes surrounding `ir_translation` are important as well.
             unique_translation_subselect = """
-                (SELECT DISTINCT ON (res_id) res_id, value
-                 FROM "ir_translation"
-                 WHERE name=%s AND lang=%s AND value!=%s
+                (SELECT res_id, value FROM "ir_translation"
+                 WHERE name=%s AND lang=%s AND value!=''
                  ORDER BY res_id, id DESC)
             """
             alias, alias_statement = query.add_join(
                 (table_alias, unique_translation_subselect, 'id', 'res_id', field),
                 implicit=False,
                 outer=True,
-                extra_params=["%s,%s" % (self._name, field), self.env.lang, ""],
+                extra_params=["%s,%s" % (self._name, field), self.env.lang],
             )
             return 'COALESCE("%s"."%s", "%s"."%s")' % (alias, 'value', table_alias, field)
         else:
