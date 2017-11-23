@@ -84,7 +84,6 @@ var ReportWidget = Widget.extend({
         var active_model_id = $CurretElement.data('model_id');
         var row_level = $CurretElement.data('level');
         var stream = $CurretElement.data('stream');
-        var parent_quant = $CurretElement.data('parent_quant');
         var $cursor = $(e.target).parents('tr');
         this._rpc({
                 model: 'stock.traceability.report',
@@ -94,7 +93,6 @@ var ReportWidget = Widget.extend({
                     'model_id': active_model_id,
                     'model_name': active_model_name,
                     'stream': stream || 'upstream',
-                    'parent_quant': parseInt(parent_quant) || false,
                     'level': parseInt(row_level) + 30 || 1
                 },
             })
