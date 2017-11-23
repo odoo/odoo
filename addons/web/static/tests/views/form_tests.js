@@ -1815,6 +1815,52 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('circular many2many\'s', function (assert) {
+        assert.expect(4);
+        this.data.partner_type.fields.partner_ids = {string: "partners", type: "many2many", relation: 'partner'}
+        this.data.partner.records[0].timmy = [12];
+        this.data.partner_type.records[0].partner_ids = [1];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="timmy">' +
+                        '<tree>' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="partner_ids">' +
+                                '<tree>' +
+                                    '<field name="display_name"/>' +
+                                '</tree>' +
+                                '<form>' +
+                                    '<field name="display_name"/>' +
+                                '</form>' +
+                            '</field>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('td:contains(gold)').length, 1,
+            "should display the name of the many2many on the original form");
+        form.$('td:contains(gold)').click();
+
+        assert.strictEqual($('.modal-dialog').length, 1,
+            'The partner_type modal should have opened');
+        assert.strictEqual($('.modal-dialog').find('td:contains(first record)').length, 1,
+            "should display the name of the many2many on the modal form");
+
+        $('.modal-dialog').find('td:contains(first record)').click();
+        assert.strictEqual($('.modal-dialog').length, 2,
+            'There should be 2 modals (partner on top of partner_type) opened');
+
+        form.destroy();
+    });
+
     QUnit.test('discard changes on a non dirty form view', function (assert) {
         assert.expect(4);
 
