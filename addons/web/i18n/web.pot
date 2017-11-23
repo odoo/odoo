@@ -2377,6 +2377,12 @@ msgid "There are too many rows (%s rows, limit: 65535) to export as Excel 97-200
 msgstr ""
 
 #. module: web
+#: code:addons/web/controllers/main.py:1474
+#, python-format
+msgid "Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s."
+msgstr ""
+
+#. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:1128
 #, python-format
