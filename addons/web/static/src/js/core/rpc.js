@@ -51,9 +51,15 @@ return {
         }
 
         if (options.method === 'read_group') {
-            params.kwargs.domain = options.domain || params.domain || params.kwargs.domain || [];
-            params.kwargs.fields = options.fields || params.fields || params.kwargs.fields || [];
-            params.kwargs.groupby = options.groupBy || params.groupBy || params.kwargs.groupby || [];
+            if (!(params.args && params.args[0] !== undefined)) {
+                params.kwargs.domain = options.domain || params.domain || params.kwargs.domain || [];
+            }
+            if (!(params.args && params.args[1] !== undefined)) {
+                params.kwargs.fields = options.fields || params.fields || params.kwargs.fields || [];
+            }
+            if (!(params.args && params.args[2] !== undefined)) {
+                params.kwargs.groupby = options.groupBy || params.groupBy || params.kwargs.groupby || [];
+            }
             params.kwargs.offset = options.offset || params.offset || params.kwargs.offset;
             params.kwargs.limit = options.limit || params.limit || params.kwargs.limit;
             // In kwargs, we look for "orderby" rather than "orderBy" (note the absence of capital B),
