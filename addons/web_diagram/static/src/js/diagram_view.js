@@ -26,6 +26,7 @@ var DiagramView = BasicView.extend({
         Renderer: DiagramRenderer,
         Controller: DiagramController,
     },
+    viewType: 'diagram',
 
     /**
      * @override

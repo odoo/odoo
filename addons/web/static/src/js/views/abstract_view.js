@@ -40,12 +40,12 @@ var AbstractView = Class.extend({
     // multi_record is used to distinguish views displaying a single record
     // (e.g. FormView) from those that display several records (e.g. ListView)
     multi_record: true,
-
     // determine if a search view should be displayed in the control panel and
     // allowed to interact with the view.  Currently, the only not searchable
     // views are the form view and the diagram view.
     searchable: true,
-
+    // viewType is the type of the view, like 'form', 'kanban', 'list'...
+    viewType: undefined,
     config: {
         Model: AbstractModel,
         Renderer: AbstractRenderer,
