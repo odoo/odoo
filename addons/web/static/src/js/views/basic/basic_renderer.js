@@ -328,6 +328,17 @@ var BasicRenderer = AbstractRenderer.extend({
         return this.state.count !== 0;
     },
     /**
+     * This function is called each time a field widget is created, when it is
+     * ready (after its willStart and Start methods are complete).  This is the
+     * place where work having to do with $el should be done.
+     *
+     * @private
+     * @param {Widget} widget the field widget instance
+     * @param {Object} node the attrs coming from the arch
+     */
+    _postProcessField: function (widget, node) {
+    },
+    /**
      * Registers or updates the modifiers data associated to the given node.
      * This method is quiet complex as it handles all the needs of the basic
      * renderers:
@@ -495,6 +506,7 @@ var BasicRenderer = AbstractRenderer.extend({
                     ));
                 },
             }, modifiersOptions || {}));
+            self._postProcessField(widget, node);
         });
 
         return widget;
