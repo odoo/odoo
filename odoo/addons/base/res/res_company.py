@@ -223,6 +223,7 @@ class Company(models.Model):
             'phone': vals.get('phone'),
             'website': vals.get('website'),
             'vat': vals.get('vat'),
+            'company_id': False,
         })
         vals['partner_id'] = partner.id
         self.clear_caches()
