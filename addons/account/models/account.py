@@ -262,6 +262,41 @@ class AccountAccount(models.Model):
         self.env.cr.execute(query, [tuple(self.ids)])
 
     @api.multi
+    def _toggle_reconcile_to_true(self):
+        '''Toggle the reconciled boolean from false -> true'''
+        query = """
+            UPDATE account_move_line SET
+                reconciled = CASE WHEN debit = 0 AND credit = 0 AND amount_currency = 0
+                    THEN true ELSE false END,
+                amount_residual = CASE WHEN amount_residual = 0
+                    THEN (debit-credit) ELSE amount_residual END,
+                amount_residual_currency = CASE WHEN amount_residual_currency = 0
+                    THEN amount_currency ELSE amount_residual_currency END
+            WHERE full_reconcile_id IS NULL and account_id IN %s
+        """
+        self.env.cr.execute(query, [tuple(self.ids)])
+
+    @api.multi
+    def _toggle_reconcile_to_false(self):
+        '''Toggle the reconciled boolean from true -> false'''
+        partial_lines_count = self.env['account.move.line'].search_count([
+            ('account_id', 'in', self.ids),
+            ('full_reconcile_id', '=', False),
+            ('|'),
+            ('matched_debit_ids', '!=', False),
+            ('matched_credit_ids', '!=', False),
+        ])
+        if partial_lines_count > 0:
+            raise UserError(_('You cannot switch an account to not allow the reconciliation'
+                              'if some partial reconciliations are still pending.'))
+        query = """
+            UPDATE account_move_line
+                SET amount_residual = 0, amount_residual_currency = 0
+            WHERE full_reconcile_id = NULL AND account_id IN %s
+        """
+        self.env.cr.execute(query, [tuple(self.ids)])
+
+    @api.multi
     def write(self, vals):
         # Do not allow changing the company_id when account_move_line already exist
         if vals.get('company_id', False):
