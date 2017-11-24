@@ -32,6 +32,7 @@ var GraphView = AbstractView.extend({
         Controller: Controller,
         Renderer: GraphRenderer,
     },
+    viewType: 'graph',
     /**
      * @override
      */
