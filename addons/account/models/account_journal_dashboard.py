@@ -6,6 +6,7 @@ from babel.dates import format_datetime, format_date
 from odoo import models, api, _, fields
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from odoo.tools.misc import formatLang
+from odoo.tools import float_round
 
 class account_journal(models.Model):
     _inherit = "account.journal"
@@ -200,11 +201,19 @@ class account_journal(models.Model):
                 number_late += 1
                 sum_late += cur.compute(result.get('amount_total'), currency) * factor
 
+        rounding = self.currency_id.rounding or self.company_id.currency_id.rounding or 0.01
+        difference = float_round(last_balance-account_sum, precision_rounding=rounding) + 0.0
+        account_sum = float_round(account_sum, precision_rounding=rounding) + 0.0
+        last_balance = float_round(last_balance, precision_rounding=rounding) + 0.0
+        sum_draft = float_round(sum_draft, precision_rounding=rounding) + 0.0
+        sum_waiting = float_round(sum_waiting, precision_rounding=rounding) + 0.0
+        last_balance = float_round(last_balance, precision_rounding=rounding) + 0.0
+        
         return {
             'number_to_reconcile': number_to_reconcile,
             'account_balance': formatLang(self.env, account_sum, currency_obj=self.currency_id or self.company_id.currency_id),
             'last_balance': formatLang(self.env, last_balance, currency_obj=self.currency_id or self.company_id.currency_id),
-            'difference': (last_balance-account_sum) and formatLang(self.env, last_balance-account_sum, currency_obj=self.currency_id or self.company_id.currency_id) or False,
+            'difference': (difference) and formatLang(self.env, difference, currency_obj=self.currency_id or self.company_id.currency_id) or False,
             'number_draft': number_draft,
             'number_waiting': number_waiting,
             'number_late': number_late,
