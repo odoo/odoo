@@ -472,6 +472,7 @@ class Picking(models.Model):
 
             self.location_id = location_id
             self.location_dest_id = location_dest_id
+            self.company_id = self.picking_type_id.warehouse_id.company_id.id
         # TDE CLEANME move into onchange_partner_id
         if self.partner_id:
             if self.partner_id.picking_warn == 'no-message' and self.partner_id.parent_id:
@@ -495,6 +496,8 @@ class Picking(models.Model):
         if vals.get('name', '/') == '/' and defaults.get('name', '/') == '/' and vals.get('picking_type_id', defaults.get('picking_type_id')):
             vals['name'] = self.env['stock.picking.type'].browse(vals.get('picking_type_id', defaults.get('picking_type_id'))).sequence_id.next_by_id()
 
+        if not vals.get('company_id'):
+            vals['company_id'] = self.env['stock.picking.type'].browse(vals.get('picking_type_id', defaults.get('picking_type_id'))).warehouse_id.company_id.id
         # TDE FIXME: what ?
         # As the on_change in one2many list is WIP, we will overwrite the locations on the stock moves here
         # As it is a create the format will be a list of (0, 0, dict)
