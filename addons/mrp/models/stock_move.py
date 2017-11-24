@@ -148,7 +148,7 @@ class StockMove(models.Model):
 
     @api.multi
     def action_cancel(self):
-        #Siguelte linea modificada por Trescloud
+        #La Siguiente linea fue modificada por Trescloud
         self.check_move_cancel()
         return super(StockMove, self).action_cancel()
     
