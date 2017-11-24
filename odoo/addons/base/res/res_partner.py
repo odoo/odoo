@@ -487,6 +487,14 @@ class Partner(models.Model):
         return website
 
     @api.multi
+    def _get_all_children(self):
+        childs = self
+        for partner in self:
+            if partner.child_ids:
+                childs |= partner.child_ids._get_all_children()
+        return childs
+
+    @api.multi
     def write(self, vals):
         # res.partner must only allow to set the company_id of a partner if it
         # is the same as the company of all users that inherit from this partner
@@ -511,6 +519,9 @@ class Partner(models.Model):
         if 'is_company' in vals and self.user_has_groups('base.group_partner_manager') and not self.env.uid == SUPERUSER_ID:
             result = super(Partner, self).sudo().write({'is_company': vals.get('is_company')})
             del vals['is_company']
+        if vals.get('company_id') and vals['company_id'] and not self._context.get('stop_recursion_company'):
+            partners = self._get_all_children()
+            result = result and partners.with_context(stop_recursion_company=True).write({'company_id': vals.get('company_id')})
         result = result and super(Partner, self).write(vals)
         for partner in self:
             if any(u.has_group('base.group_user') for u in partner.user_ids if u != self.env.user):
