@@ -167,6 +167,37 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('attributes are transferred on async widgets', function (assert) {
+        assert.expect(1);
+
+        var def = $.Deferred();
+
+        var FieldChar = fieldRegistry.get('char');
+        fieldRegistry.add('asyncwidget', FieldChar.extend({
+            willStart: function () {
+                return def;
+            },
+        }));
+
+        createAsyncView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="foo" style="color: blue" widget="asyncwidget"/>' +
+                    '</group>' +
+                '</form>',
+            res_id: 2,
+        }).then(function (form) {
+            assert.strictEqual(form.$('.o_field_widget[name=foo]').attr('style'), 'color: blue',
+                "should apply style attribute on fields");
+            form.destroy();
+            delete fieldRegistry.map.asyncwidget;
+        });
+        def.resolve();
+    });
+
     QUnit.test('only necessary fields are fetched with correct context', function (assert) {
         assert.expect(2);
 
