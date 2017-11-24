@@ -74,7 +74,7 @@ class DeliveryCarrier(models.Model):
             'res_model': 'ir.module.module',
             'domain': [['name', 'ilike', 'delivery_']],
             'type': 'ir.actions.act_window',
-            'help': _('''<p class="oe_view_nocontent">
+            'help': _('''<p class="o_view_nocontent">
                     Buy Odoo Enterprise now to get more providers.
                 </p>'''),
         }

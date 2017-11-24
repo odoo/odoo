@@ -71,11 +71,11 @@
             }</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
+                <p class="o_view_nocontent_smiling_face">
                     Here, you can create new tasks
-                </p>
-                <p>
-                    You can now manage your tasks in order to get things done efficiently. Track progress, discuss, attach documents, etc.
+                </p><p>
+                    You can now manage your tasks in order to get things done efficiently.<br />
+                    Track progress, discuss, attach documents, etc.
                 </p>
             </field>
         </record>
@@ -379,9 +379,10 @@
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="target">main</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Click to create a new project.<br/>
-                    <i>Or <a type="action" name="%(project.ir_actions_server_project_sample)d">activate a sample project</a> to play with.</i>
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new project
+                </p><p>
+                    Or <a type="action" name="%(project.ir_actions_server_project_sample)d">activate a sample project</a> to play with.
                 </p>
             </field>
         </record>
@@ -398,8 +399,8 @@
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{}</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Create a new project.
+                <p class="o_view_nocontent_empty_folder">
+                    Create a new project
                 </p><p>
                     Organize your activities (plan tasks, track issues, invoice timesheets) for internal, personal or customer projects.
                 </p>
@@ -678,8 +679,11 @@
             <field name="context">{'search_default_my_tasks': 1}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
-                <p>
-                    Odoo's project management allows you to manage the pipeline of your tasks efficiently. You can track progress, discuss on tasks, attach documents, etc.
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new task
+                </p><p>
+                    Odoo's project management allows you to manage the pipeline of your tasks efficiently.<br/>
+                    You can track progress, discuss on tasks, attach documents, etc.
                 </p>
             </field>
         </record>
@@ -703,8 +707,8 @@
             <field name="context">{'search_default_activities_my':1}</field>
             <field name="domain">[('activity_date_deadline', '!=', False)]</field>
             <field name="help" type="html">
-                <p>
-                    Currently there are not any activity scheduled.
+                <p class="o_view_nocontent_empty_folder">
+                    No scheduled activity at the moment
                 </p>
             </field>
         </record>
@@ -862,8 +866,8 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="task_type_tree"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a stage in the task pipeline.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new stage in the task pipeline
               </p><p>
                 Define the steps that will be used in the project from the
                 creation of the task, up to the closing of the task or issue.
@@ -911,8 +915,8 @@
             <field name="res_model">project.tags</field>
             <field name="view_type">form</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a new tag.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new tag
               </p>
             </field>
         </record>

@@ -323,9 +323,10 @@
         <field name="context">{'search_default_dashboard':1}</field>
         <field name="domain">[('belongs_to_company', '=', True)]</field>
         <field name="help" type="html">
-            <p>
-                This is the accounting dashboard. If you have not yet
-                installed a chart of account, please install one first.
+            <p class="o_view_nocontent_neutral_face">
+                This is the accounting dashboard
+            </p><p>
+                If you have not installed a chart of account, please install one first.<br/>
                <a type="action" name="%(open_account_charts_modules)d">Browse available countries.</a>
             </p>
         </field>

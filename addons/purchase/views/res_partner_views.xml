@@ -21,8 +21,8 @@
             <field name="context">{'search_default_partner_id': active_id}</field>
             <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    This vendor has no purchase order. Click to create a new RfQ.
+                <p class="o_view_nocontent_smiling_face">
+                    This vendor has no purchase order. Create a new RfQ
                 </p><p>
                     The request for quotation is the first step of the purchases flow. Once
                     converted into a purchase order, you will be able to control the receipt
@@ -55,8 +55,8 @@
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'search_default_partner_id': active_id, 'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Click here to record a vendor bill.
+                <p class="o_view_nocontent_smiling_face">
+                    Record a new vendor bill
                 </p><p>
                     Vendors bills can be pre-generated based on purchase
                     orders or receipts. This allows you to control bills

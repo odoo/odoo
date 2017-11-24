@@ -89,8 +89,9 @@ class SaleOrder(models.Model):
 
     @api.model
     def get_empty_list_help(self, help):
-        if help:
-            return '<p class=''oe_view_nocontent_create''">%s</p>' % (help)
+        self = self.with_context(
+            empty_list_help_document_name=_("sale order"),
+        )
         return super(SaleOrder, self).get_empty_list_help(help)
 
     def _get_default_access_token(self):

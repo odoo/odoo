@@ -805,14 +805,13 @@ for rec in records:
                 }
             </field>
             <field name="help" type="html">
-                <p>
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new lead
+                </p><p>
                     Use leads if you need a qualification step before creating an
                     opportunity or a customer. It can be a business card you received,
                     a contact form filled in your website, or a file of unqualified
                     prospects you import, etc.
-                </p><p>
-                    Once qualified, the lead can be converted into a business
-                    opportunity and/or a new customer in your address book.
                 </p>
             </field>
         </record>
@@ -838,9 +837,15 @@ for rec in records:
             </field>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
             <field name="help" type="html">
-                <p>
-                    You will be able to schedule activities, attach related documents,
-                    track all discussions, convert into a quotation and much more.
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new opportunity
+                </p><p>
+                    Odoo helps you keep track of your sales pipeline to follow
+                    up potential sales and better forecast your future revenues.
+                </p><p>
+                    You will be able to plan meetings and phone calls from
+                    opportunities, convert them into quotations, attach related
+                    documents, track all discussions, and much more.
                 </p>
             </field>
         </record>
@@ -893,9 +898,15 @@ for rec in records:
                           (0, 0, {'view_mode': 'graph'})]"/>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
             <field name="help" type="html">
-                <p>
-                    You will be able to schedule activities, attach related documents,
-                    track all discussions, convert into a quotation and much more.
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new opportunity
+                </p><p>
+                    Odoo helps you keep track of your sales pipeline to follow
+                    up potential sales and better forecast your future revenues.
+                </p><p>
+                    You will be able to plan meetings and phone calls from
+                    opportunities, convert them into quotations, attach related
+                    documents, track all discussions, and much more.
                 </p>
             </field>
         </record>
@@ -931,7 +942,9 @@ for rec in records:
                 }
             </field>
             <field name="help" type="html">
-                <p>
+                <p class="o_view_nocontent_empty_folder">
+                    No next activity
+                </p><p>
                    Here is the list of your next activities. Those are linked to your opportunities.
                    To set a next activity, go on an opportunity and add one. It will then appear in this list.
                 </p>
@@ -945,13 +958,10 @@ for rec in records:
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_lead_tag_tree"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new sales tag.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new tag for your opportunities
               </p><p>
-                Create specific tags that fit your company's activities
-                to better classify and analyse your leads and opportunities.
-                Such categories could for instance reflect your product
-                structure or the different types of sales you do.
+                Create tags that fit your business (product structure, sales type, etc.) to better manage and tack your opportunities.
               </p>
             </field>
         </record>
@@ -970,8 +980,8 @@ for rec in records:
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new lost reason.
+              <p class="o_view_nocontent_smiling_face">
+                Define a new lost reason
               </p><p>
                 Use lost reasons to explain why an opportunity is lost.
               </p><p>

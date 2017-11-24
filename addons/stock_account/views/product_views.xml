@@ -110,7 +110,9 @@
             <field name="domain">[('type', '=', 'product'), ('qty_available', '!=', 0)]</field>
             <field name="context">{}</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new product valuation
+                </p><p>
                     If there are products, you will see its name and valuation. 
                 </p>
             </field>
@@ -173,8 +175,8 @@
             <field name="search_view_id" ref="stock.view_move_search"/>
             <field name="context">{'search_default_outgoing': 1, 'search_default_incoming': 1, 'search_default_done': 1, 'search_default_group_by_product': 1}</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a stock movement.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new stock movement
               </p>
             </field>
         </record>

@@ -562,7 +562,7 @@ var BasicRenderer = AbstractRenderer.extend({
      */
     _renderNoContentHelper: function () {
         var $msg = $('<div>')
-            .addClass('oe_view_nocontent')
+            .addClass('o_view_nocontent')
             .html(this.noContentHelp);
         this.$el.html($msg);
     },

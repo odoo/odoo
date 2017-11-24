@@ -28,7 +28,7 @@ tour.register('main_flow_tour', {
     trigger: '.o-kanban-button-new',
     extra_trigger: '.o_kanban_view',
     content: _t('Let\'s create your first product.'),
-    position: 'right',
+    position: 'bottom',
 }, {
     trigger: 'input[name=name]',
     extra_trigger: '.o_form_sheet',
@@ -68,7 +68,7 @@ tour.register('main_flow_tour', {
 }, {
     trigger: ".o_list_button_add",
     content: _t("Let's create a new bill of material"),
-    position: "right",
+    position: "bottom",
 }, {
 // Add first component
     trigger: ".o_field_x2many_list_row_add > a",
@@ -195,7 +195,7 @@ tour.register('main_flow_tour', {
     trigger: '.o-kanban-button-new',
     extra_trigger: '.o_kanban_view',
     content: _t('Let\'s create your second product.'),
-    position: 'right',
+    position: 'bottom',
 }, {
     trigger: 'input[name=name]',
     extra_trigger: '.o_form_sheet',
@@ -246,7 +246,7 @@ tour.register('main_flow_tour', {
     trigger: ".o-kanban-button-new",
     extra_trigger: '.o_opportunity_kanban',
     content: _t("Click here to <b>create your first opportunity</b> and add it to your pipeline."),
-    position: "right"
+    position: "bottom"
 }, {
     trigger: ".modal-body input:first",
     content: _t("Enter the opportunity title."),

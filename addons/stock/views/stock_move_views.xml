@@ -356,8 +356,8 @@
             <field name="search_view_id" ref="view_move_search"/>
             <field name="context">{}</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a stock movement.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new stock movement
               </p><p>
                 This menu gives you the full traceability of inventory
                 operations on a specific product. You can filter on the product
@@ -530,15 +530,16 @@
                 (0, 0, {'view_mode': 'kanban', 'view_id': ref('stock_move_view_kanban')})]"/>
             <field name="context">{'product_receive': True, 'search_default_future': True}</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to register a product receipt.
+              <p class="o_view_nocontent_smiling_face">
+                Register a product receipt
               </p><p>
                 Here you can receive individual products, no matter what
                 purchase order or picking order they come from. You will find
-                the list of all products you are waiting for. Once you receive
-                an order, you can filter based on the name of the vendor or
-                the purchase order reference. Then you can confirm all products
-                received using the buttons on the right of each line.
+                the list of all products you are waiting for.
+              </p><p>
+                Once you receive an order, you can filter based on the name of
+                the vendor or the purchase order reference. Then you can confirm
+                all products received using the buttons on the right of each line.
               </p>
             </field>
         </record>

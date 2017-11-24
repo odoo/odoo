@@ -228,15 +228,10 @@
         <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to create a new vehicle.
+          <p class="o_view_nocontent_smiling_face">
+            Create a new vehicle
           </p><p>
-            You will be able to manage your fleet by keeping track of the
-            contracts, services, fixed and recurring costs, odometers and
-            fuel logs associated to each vehicle.
-        </p><p>
-            Odoo will warn you when services or contract have to be
-            renewed.
+            Manage your fleet by keeping track of the contracts, services, odometers and fuel logs associated to each vehicle.
           </p>
         </field>
     </record>
@@ -334,13 +329,10 @@
         <field name="view_mode">tree,kanban,form,graph</field>
         <field name="context">{"search_default_groupby_vehicle" : True}</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to create a new odometer log.
-          </p>
-          <p>
-            Here you can add various odometer entries for all vehicles.
-            You can also show odometer value for a particular vehicle using
-            the search field.
+          <p class="o_view_nocontent_smiling_face">
+            Create a new odometer log
+          </p><p>
+            You can add various odometer entries for all vehicles.
           </p>
         </field>
     </record>
@@ -366,8 +358,8 @@
         <field name="domain">[('category','=','service')]</field>
         <field name="context">{'default_category':'service'}</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to create a new type of service.
+          <p class="o_view_nocontent_smiling_face">
+            Create a new type of service
           </p><p>
             Each service can used in contracts, as a standalone service or both.
           </p>
@@ -383,8 +375,8 @@
         <field name="domain">[('category','=','contract')]</field>
         <field name="context">{'default_category':'contract'}</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to create a new type of contract.
+          <p class="o_view_nocontent_smiling_face">
+            Create a new type of contract
           </p>
         </field>
     </record>
@@ -408,11 +400,11 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to create a vehicle status.
+          <p class="o_view_nocontent_smiling_face">
+            Create a new vehicle status
           </p><p>
             You can customize available status to track the evolution of
-            each vehicle. Example: Active, Being Repaired, Sold.
+            each vehicle. Example: active, being repaired, sold.
           </p>
         </field>
     </record>
@@ -436,8 +428,8 @@
         <field name="res_model">fleet.vehicle.tag</field>
         <field name="view_type">form</field>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to add a new tag.
+            <p class="o_view_nocontent_smiling_face">
+                Add a new tag
             </p>
         </field>
     </record>

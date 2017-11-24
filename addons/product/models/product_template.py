@@ -443,3 +443,10 @@ class ProductTemplate(models.Model):
                     variant.write({'active': False})
                     pass
         return True
+
+    @api.model
+    def get_empty_list_help(self, help):
+        self = self.with_context(
+            empty_list_help_document_name=_("product"),
+        )
+        return super(ProductTemplate, self).get_empty_list_help(help)

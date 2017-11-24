@@ -1373,22 +1373,22 @@ QUnit.module('Views', {
             },
         });
 
-        assert.ok(kanban.$('.o_kanban_view').hasClass('o_kanban_nocontent'),
+        assert.ok(kanban.$('.o_kanban_view').hasClass('o_view_nocontent_container'),
             "$el should have correct no content class");
 
-        assert.strictEqual(kanban.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(kanban.$('.o_view_nocontent').length, 1,
             "should display the no content helper");
 
-        assert.strictEqual(kanban.$('.oe_view_nocontent p.hello:contains(add a partner)').length, 1,
+        assert.strictEqual(kanban.$('.o_view_nocontent p.hello:contains(add a partner)').length, 1,
             "should have rendered no content helper from action");
 
         this.data.partner.records = records;
         kanban.reload();
 
-        assert.notOk(kanban.$el.hasClass('o_kanban_nocontent'),
+        assert.notOk(kanban.$el.hasClass('o_view_nocontent_container'),
             "$el should have removed no content class");
 
-        assert.strictEqual(kanban.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(kanban.$('.o_view_nocontent').length, 0,
             "should not display the no content helper");
         kanban.destroy();
     });
@@ -1462,7 +1462,7 @@ QUnit.module('Views', {
             "there should be no columns");
         assert.strictEqual(kanban.$('.o_kanban_record').length, 0,
             "there should be no records");
-        assert.strictEqual(kanban.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(kanban.$('.o_view_nocontent').length, 0,
             "there should be no nocontent helper");
         assert.strictEqual(kanban.$('.o_column_quick_create').length, 1,
             "there should be a column quick create");
@@ -1495,7 +1495,7 @@ QUnit.module('Views', {
             "there should be no columns");
         assert.strictEqual(kanban.$('.o_kanban_record').length, 0,
             "there should be no records");
-        assert.strictEqual(kanban.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(kanban.$('.o_view_nocontent').length, 1,
             "there should be a nocontent helper");
         assert.strictEqual(kanban.$('.o_column_quick_create').length, 0,
             "there should not be a column quick create");

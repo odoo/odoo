@@ -158,9 +158,10 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'search_default_expected': True}</field>
             <field name="help" type="html">
-<p class="oe_view_nocontent_create">
-    Click to add a new attendee.
-</p></field>
+                <p class="o_view_nocontent_smiling_face">
+                    Add a new attendee
+                </p>
+            </field>
         </record>
 
         <!-- EVENT.EVENT VIEWS -->
@@ -407,13 +408,14 @@
            <field name="view_mode">kanban,calendar,tree,form,pivot</field>
            <field name="context">{"search_default_upcoming":1}</field>
            <field name="search_view_id" ref="view_event_search"/>
-           <field name="help" type="html"><p class="oe_view_nocontent_create">
-    Click to add a new event.
-</p><p>
-    Odoo helps you schedule and efficiently organize your events:
-    track registrations and participations, automate the confirmation emails,
-    sell tickets, etc.
-</p></field>
+           <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Add a new event
+              </p><p>
+                Schedule and organize your events efficiently:
+                track registrations and participations, automate the confirmation emails, sell tickets, etc.
+              </p>
+            </field>
         </record>
 
         <act_window

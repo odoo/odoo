@@ -16,7 +16,7 @@ tour.register('project_tour', {
     trigger: '.o-kanban-button-new',
     extra_trigger: '.o_project_kanban',
     content: _t('Let\'s create your first project.'),
-    position: 'right',
+    position: 'bottom',
     width: 200,
 }, {
     trigger: 'input.o_project_name',

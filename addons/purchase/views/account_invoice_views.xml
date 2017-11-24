@@ -10,8 +10,8 @@
         <field name="context">{'default_type':'in_invoice', 'type':'in_invoice', 'journal_type': 'purchase'}</field>
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to create a vendor bill.
+          <p class="o_view_nocontent_smiling_face">
+            Create a vendor bill
           </p><p>
             Use this menu to control the invoices to be received from your
             vendors. When registering a new bill, set the purchase order
@@ -31,13 +31,12 @@
         <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase', 'default_purchase_id': active_id}</field>
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-            Click to record a vendor bill related to this purchase.
-            </p>
-            <p>
+          <p class="o_view_nocontent_smiling_face">
+            Record a vendor bill related to this purchase
+          </p><p>
             You can control the invoice from your vendor according to
             what you purchased (services) or received (products).
-            </p>
+          </p>
         </field>
     </record>
     <record id="action_invoice_supplier_tree1_view1" model="ir.actions.act_window.view">

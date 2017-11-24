@@ -493,13 +493,10 @@
             <field name="context">{}</field>
             <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Create a Quotation, the first step of a new sale.
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new quotation, the first step of a new sale!
                 </p><p>
-                    Once the quotation is confirmed, it becomes a sales order.
-                    You'll be able to invoice it and collect payments.
-                    From the <i>Sales Orders</i> menu, you can track delivery
-                    orders or services.
+                    Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
                 </p>
             </field>
         </record>
@@ -520,11 +517,11 @@
             <field name="domain">[('invoice_status','=','to invoice')]</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
             <field name="help" type="html">
-              <p>
-                You will find here all orders that are ready to be invoiced.
+              <p class="o_view_nocontent_smiling_face">
+                No orders to invoice found
               </p><p>
-                You can select all orders and invoice them in batch, or check
-                every order and invoice them one by one.
+                You can select all orders and invoice them in batch,<br/>
+                or check every order and invoice them one by one.
               </p>
             </field>
         </record>
@@ -549,14 +546,14 @@
             <field name="context">{'create': False}</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
             <field name="help" type="html">
-              <p>
-                Orders to upsell are orders having products with an invoicing
-                policy based on <i>ordered quantities</i> for which you have
-                delivered more than what have been ordered.
+              <p class="o_view_nocontent_smiling_face">
+                No orders to upsell found
               </p><p>
-                <i>Example: pre-paid service offers for which the customer have
-                to buy an extra pack of hours, because he used all his support
-                hours.</i>
+                These are orders with products invoiced based on ordered quantities, 
+                in the case you have delivered more than what was ordered.
+                A typical example is the pre-paid hours of service, 
+                where you want to sell extra hours to the customer
+                because the initial hours have already been used.
               </p>
             </field>
         </record>
@@ -574,11 +571,10 @@
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
             <field name="search_view_id" ref="sale_order_view_search_inherit_quotation"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Create a Quotation, the first step of a new sale.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new sale!
               </p><p>
-                Your next actions should flow efficiently: confirm the Quotation
-                to a Sales Order, then create the Invoice and collect the Payment.
+                Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
               </p>
             </field>
         </record>
@@ -825,12 +821,10 @@
                 }
             </field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Create a Quotation, the first step of a new sale.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new sale!
               </p><p>
-                Your next actions should flow efficiently: confirm the Quotation to a Sales Order, then create the Invoice and collect the Payment.
-              </p><p>
-                Note that once a Quotation becomes a Sales Order, it will be moved from the Quotations list to the Sales Order list.
+                Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
               </p>
             </field>
         </record>
@@ -865,14 +859,10 @@
             <field name="domain">[]</field>
             <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Create a Quotation, the first step of a new sale.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new sale!
               </p><p>
-                Your next actions should flow efficiently: confirm the Quotation
-                to a Sales Order, then create the Invoice and collect the Payment.
-              </p><p>
-                Note that once a Quotation becomes a Sales Order, it will be moved
-                from the Quotations list to the Sales Order list.
+                Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
               </p>
             </field>
         </record>

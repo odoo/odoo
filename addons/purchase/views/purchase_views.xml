@@ -63,16 +63,11 @@
         <field name="search_view_id" eval="False"/> <!-- Force empty -->
         <field name="view_id" eval="False"/> <!-- Force empty -->
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to define a new product.
+          <p class="o_view_nocontent_smiling_face">
+            Create a new product
           </p><p>
-            You must define a product for everything you purchase, whether
-            it's a physical product, a consumable or services you buy to
-            subcontractors.
-          </p><p>
-            The product form contains detailed information to improve the
-            purchase process: prices, procurement logistics, accounting data,
-            available vendors, etc.
+            You must define a product for everything you purchase,
+            whether it's a physical product, a consumable or services.
           </p>
         </field>
     </record>
@@ -88,16 +83,11 @@
             <field name="view_type">form</field>
             <field name="context">{"search_default_filter_to_purchase": 1}</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new product.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new product variant
               </p><p>
-                You must define a product for everything you purchase, whether
-                it's a physical product, a consumable or services you buy to
-                subcontractors.
-              </p><p>
-                The product form contains detailed information to improve the
-                purchase process: prices, procurement logistics, accounting data,
-                available vendors, etc.
+                You must define a product for everything you purchase,
+                whether it's a physical product, a consumable or services.
               </p>
             </field>
         </record>
@@ -420,15 +410,11 @@
             <field name="view_mode">tree,kanban,form,pivot,graph,calendar</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a request for quotation.
+              <p class="o_view_nocontent_smiling_face">
+                Create a request for quotation
               </p><p>
-                The quotation contains the history of the discussion/negotiation
-                you had with your vendor. Once confirmed, a request for
-                quotation is converted into a purchase order.
-              </p><p>
-                Most propositions of purchase orders are created automatically
-                by Odoo based on inventory needs.
+                The quotation contains the history of the discussion
+                you had with your vendor.
               </p>
             </field>
         </record>
@@ -444,13 +430,10 @@
             <field name="domain">[('state','in',('purchase', 'done'))]</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a quotation that will be converted into a purchase order. 
+              <p class="o_view_nocontent_smiling_face">
+                Create a quotation
               </p><p>
-                Use this menu to search within your purchase orders by
-                references, vendor, products, etc. For each purchase order,
-                you can track the related discussion with the vendor, control
-                the products received and control the vendor bills.
+                It will be converted into a purchase order.
               </p>
             </field>
         </record>

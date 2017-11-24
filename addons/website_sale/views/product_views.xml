@@ -18,6 +18,13 @@
         <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="context">{'search_default_published': 1, 'default_website_published': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new product
+            </p><p>
+                A product can be either a physical product or a service that you sell to your customers.
+            </p>
+        </field>
     </record>
 
     <record id="product_attribute_line_form" model="ir.ui.view">
@@ -178,8 +185,8 @@
         <field name="view_mode">tree,form</field>
         <field name="view_id" eval="False"/>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to define a new category.
+          <p class="o_view_nocontent_smiling_face">
+            Define a new category
           </p><p>
             Categories are used to browse your products through the
             touchscreen interface.

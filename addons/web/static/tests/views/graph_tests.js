@@ -148,7 +148,7 @@ QUnit.module('Views', {
         });
         return concurrency.delay(0).then(function () {
             assert.ok(!graph.$('svg').length, "should not have a svg");
-            assert.ok(graph.$('.oe_view_nocontent').length, "should have an error message");
+            assert.ok(graph.$('.o_view_nocontent').length, "should have an error message");
             graph.destroy();
             done();
         });
@@ -204,13 +204,13 @@ QUnit.module('Views', {
         return concurrency.delay(0).then(function () {
             assert.ok(graph.$('div.o_graph_svg_container svg.nvd3-svg').length,
                         "should contain a div with a svg element");
-            assert.notOk(graph.$('div.oe_view_nocontent').length,
+            assert.notOk(graph.$('div.o_view_nocontent').length,
                 "should not display the no content helper");
             graph.update({domain: [['product_id', '=', 4]]});
 
             assert.notOk(graph.$('div.o_graph_svg_container svg.nvd3-svg').length,
                         "should not contain a div with a svg element");
-            assert.ok(graph.$('div.oe_view_nocontent').length,
+            assert.ok(graph.$('div.o_view_nocontent').length,
                 "should display the no content helper");
             graph.destroy();
             done();
