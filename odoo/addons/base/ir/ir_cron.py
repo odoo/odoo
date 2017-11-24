@@ -5,55 +5,24 @@ import threading
 import time
 import psycopg2
 import pytz
-from collections import defaultdict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 import odoo
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.modules.loading import reset_modules_state
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
 BASE_VERSION = odoo.modules.load_information_from_description_file('base')['version']
-MAX_TIME = 8 * 3600
-MAX_FAILURES = int((MAX_TIME / 60) * 1.5)
 
 
 class BadVersion(Exception):
     pass
 
-
 class BadModuleState(Exception):
-    _fails = defaultdict(dict)
-
-    def __init__(self, db_name):
-        cur = BadModuleState._fails[db_name]
-        _first_fail = cur.get('first_fail')
-        t = datetime.now()
-
-        if _first_fail is not None:
-            dt = t - _first_fail
-
-            if dt.seconds <= MAX_TIME and cur['count'] >= MAX_FAILURES:
-                reset_modules_state(db_name)
-                new = {}
-            elif dt.seconds > MAX_TIME and cur['count'] < MAX_FAILURES:
-                # Reset
-                new = {'first_fail': t, 'count': 1}
-            else:
-                # Update
-                new = {'count': cur['count'] + 1}
-        else:
-            # Set
-            new = {'first_fail': t, 'count': 1}
-
-        if new:
-            BadModuleState._fails[db_name].update(new)
-        else:
-            del BadModuleState._fails[db_name]
+    pass
 
 
 def str2tuple(s):
@@ -230,7 +199,7 @@ class ir_cron(models.Model):
                 cr.execute("SELECT COUNT(*) FROM ir_module_module WHERE state LIKE %s", ['to %'])
                 (changes,) = cr.fetchone()
                 if not version or changes:
-                    raise BadModuleState(db_name)
+                    raise BadModuleState()
                 elif version != BASE_VERSION:
                     raise BadVersion()
                 # Careful to compare timestamps with 'UTC' - everything is UTC as of v6.1.
