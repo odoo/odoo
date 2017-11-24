@@ -3,7 +3,7 @@
 
 from datetime import datetime, timedelta
 
-from odoo import fields, http
+from odoo import _, fields, http
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo import release
@@ -13,7 +13,7 @@ class WebSettingsDashboard(http.Controller):
     @http.route('/web_settings_dashboard/data', type='json', auth='user')
     def web_settings_dashboard_data(self, **kw):
         if not request.env.user.has_group('base.group_erp_manager'):
-            raise AccessError("Access Denied")
+            raise AccessError(_("Access Denied"))
 
         installed_apps = request.env['ir.module.module'].search_count([
             ('application', '=', True),

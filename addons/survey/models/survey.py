@@ -684,7 +684,7 @@ class SurveyLabel(models.Model):
     def _check_question_not_empty(self):
         """Ensure that field question_id XOR field question_id_2 is not null"""
         if not bool(self.question_id) != bool(self.question_id_2):
-            raise ValidationError("A label must be attached to one and only one question")
+            raise ValidationError(_("A label must be attached to one and only one question"))
 
 
 class SurveyUserInput(models.Model):
