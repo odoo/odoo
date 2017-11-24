@@ -534,7 +534,7 @@ class ProductProduct(models.Model):
             PriceHistory.create({
                 'product_id': product.id,
                 'cost': value,
-                'company_id': self._context.get('force_company', self.env.user.company_id.id),
+                'company_id': self._context.get('force_company', self.company_id.id or self.env.user.company_id.id),
             })
 
     @api.multi
