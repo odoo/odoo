@@ -3330,6 +3330,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # create or update parent records
         for parent_model, parent_vals in tocreate.items():
             parent_id = parent_vals.pop('id')
+
+            # share the company_id to the parent_id if possible
+            if vals.get('company_id') and self.env[parent_model]._fields.get('company_id'):
+                parent_vals['company_id'] = vals.get('company_id')
+
             if not parent_id:
                 parent_id = self.env[parent_model].create(parent_vals).id
             else:
