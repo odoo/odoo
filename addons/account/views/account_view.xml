@@ -1225,6 +1225,40 @@
                 </form>
             </field>
         </record>
+
+        <record id="account_move_line_view_kanban" model="ir.ui.view">
+            <field name="name">account.move.line.kanban</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="date_maturity"/>
+                    <field name="move_id"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="row mb4">
+                                    <strong class="col-xs-6">
+                                        <span t-esc="record.move_id.value"/>
+                                    </strong>
+                                    <strong class="col-xs-6 text-right">
+                                        <i class="fa fa-clock-o"/><field name="date_maturity"/>
+                                    </strong>
+                                    <div class="col-xs-10">
+                                        <span t-esc="record.name.value"/>
+                                    </div>
+                                    <div class="col-xs-2 text-right">
+                                        <img t-att-src="kanban_image('res.partner', 'image_small', record.partner_id.raw_value)" t-att-title="record.partner_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="view_move_line_pivot" model="ir.ui.view">
             <field name="name">account.move.line.pivot</field>
             <field name="model">account.move.line</field>
@@ -1343,7 +1377,7 @@
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree"/>
-            <field name="view_mode">tree,pivot,graph,form</field>
+            <field name="view_mode">tree,pivot,graph,form,kanban</field>
         </record>
         <menuitem action="action_account_moves_all_a" id="menu_action_account_moves_all" parent="account.menu_finance_entries_accounting_entries" sequence="1" groups="group_account_manager" />
         <record id="action_account_moves_all_tree" model="ir.actions.act_window">

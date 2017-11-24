@@ -559,6 +559,40 @@
             </field>
         </record>
 
+        <record id="product_supplierinfo_view_kanban" model="ir.ui.view">
+            <field name="name">product.supplierinfo.kanban</field>
+            <field name="model">product.supplierinfo</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="min_qty"/>
+                    <field name="delay"/>
+                    <field name="price"/>
+                    <field name="name"/>
+                    <field name="currency_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="row mb4">
+                                    <strong class="col-xs-6">
+                                        <span t-esc="record.name.value"/>
+                                    </strong>
+                                    <strong class="col-xs-6 text-right">
+                                        <strong><field name="price" widget="monetary"/></strong>
+                                    </strong>
+                                    <div class="col-xs-6">
+                                        <span t-esc="record.min_qty.value"/>
+                                    </div>
+                                    <div class="col-xs-6 text-right">
+                                        <span t-esc="record.delay.value"/> days
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="product_supplierinfo_tree_view" model="ir.ui.view">
             <field name="name">product.supplierinfo.tree.view</field>
             <field name="model">product.supplierinfo</field>
@@ -581,7 +615,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.supplierinfo</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,kanban</field>
         <field name="context">{'visible_product_tmpl_id':False}</field>
     </record>
 
