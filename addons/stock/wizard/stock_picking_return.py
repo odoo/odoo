@@ -32,7 +32,7 @@ class ReturnPicking(models.TransientModel):
     @api.model
     def default_get(self, fields):
         if len(self.env.context.get('active_ids', list())) > 1:
-            raise UserError("You may only return one picking at a time!")
+            raise UserError(_("You may only return one picking at a time!"))
         res = super(ReturnPicking, self).default_get(fields)
 
         move_dest_exists = False

@@ -1358,7 +1358,7 @@ class IrModelData(models.Model):
         if self.env[model].search([('id', '=', res_id)]):
             return model, res_id
         if raise_on_access_error:
-            raise AccessError('Not enough access rights on the external ID: %s.%s' % (module, xml_id))
+            raise AccessError(_('Not enough access rights on the external ID:') + ' %s.%s' % (module, xml_id))
         return model, False
 
     @api.model
