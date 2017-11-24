@@ -724,7 +724,7 @@ class Message(models.Model):
         """
         message_values = message.message_format()[0]
         notifications = []
-        for moderator in self.channel_ids.mapped('moderator_ids'):
+        for moderator in self.env['mail.channel'].browse(message.res_id).mapped('moderator_ids'):
             notification = {'type': 'moderation', 'message': message_values}
             notifications.append([(self._cr.dbname, 'res.partner', moderator.partner_id.id), notification])
         self.env['bus.bus'].sendmany(notifications)

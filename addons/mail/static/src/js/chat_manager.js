@@ -77,7 +77,6 @@ function notify_incoming_message (msg, options) {
 function add_message (data, options) {
     options = options || {};
     var msg = _.findWhere(messages, { id: data.id });
-
     if (!msg) {
         msg = chat_manager.make_message(data);
         // Keep the array ordered by id when inserting the new message
@@ -114,37 +113,6 @@ function add_message (data, options) {
                 }
             }
         });
-        if (!msg.channel_ids) {
-            _.each(msg.res_id, function (channel_id) {
-                var channel = chat_manager.get_channel(channel_id);
-                if (channel) {
-                    add_to_cache(msg, []);
-                    if (options.domain && options.domain !== []) {
-                        add_to_cache(msg, options.domain);
-                    }
-                }
-                debugger
-                if (channel.hidden) {
-                    channel.hidden = false;
-                    chat_manager.bus.trigger('new_channel', channel);
-                }
-                if (channel.type !== 'static' && !msg.is_author && !msg.is_system_notification) {
-                    if (options.increment_unread) {
-                        update_channel_unread_counter(channel, channel.unread_counter+1);
-                    }
-                    if (channel.is_chat && options.show_notification) {
-                        if (!client_action_open && !config.device.isMobile) {
-                            // automatically open chat window
-                            chat_manager.bus.trigger('open_chat', channel, { passively: true });
-                        }
-                        var query = {is_displayed: false};
-                        debugger
-                        chat_manager.bus.trigger('anyone_listening', channel, query);
-                        notify_incoming_message(msg, query);
-                    }
-                }
-            });
-        }
 
         if (!options.silent) {
             chat_manager.bus.trigger('new_message', msg);
@@ -164,6 +132,7 @@ function make_message (data) {
         message_type: data.message_type,
         subtype_description: data.subtype_description,
         is_author: data.author_id && data.author_id[0] === session.partner_id,
+        is_moderator: data.model === 'mail.channel' && _.contains(moderated_channel_ids,data.res_id),
         is_note: data.is_note,
         is_system_notification: (data.message_type === 'notification' && data.model === 'mail.channel')
             || data.info === 'transient_message',
@@ -180,7 +149,7 @@ function make_message (data) {
         url: session.url("/mail/view?message_id=" + data.id),
         module_icon:data.module_icon,
     };
-
+    
     _.each(_.keys(emoji_substitutions), function (key) {
         var escaped_key = String(key).replace(/([.*+?=^!:${}()|[\]\/\\])/g, '\\$1');
         var regexp = new RegExp("(?:^|\\s|<[a-z]*>)(" + escaped_key + ")(?=\\s|$|</[a-z]*>)", "g");
@@ -217,6 +186,7 @@ function make_message (data) {
     }
     if (data.moderation_status == 'pending_moderation') {
         msg.needs_moderation = true;
+        msg.channel_ids = msg.channel_ids.concat([msg.res_id]);
     }
     if (msg.model === 'mail.channel') {
         var real_channels = _.without(msg.channel_ids, 'channel_inbox', 'channel_starred', 'channel_moderation');
@@ -798,7 +768,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
                                 ['model', '=', 'mail.channel'],
                                 ['res_id', '=', channel.id],
                         '|',
-                            ['author_id', '=', session.uid],
+                            ['author_id', '=', session.partner_id],
                             '&',
                                 ['model', '=', 'mail.channel'],
                                 ['res_id', 'in', moderated_channel_ids]
@@ -823,7 +793,6 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
                 kwargs: {limit: LIMIT, context: session.user_context},
             })
             .then(function (msgs) {
-                debugger
                 if (!cache.all_history_loaded) {
                     cache.all_history_loaded =  msgs.length < LIMIT;
                 }
@@ -906,7 +875,20 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
                         subtype: 'mail.mt_comment',
                         command: data.command,
                     }),
+                })
+                .then(function (msg_id) {
+                    return self._rpc({
+                            model: 'mail.message',
+                            method: 'message_format',
+                            args: [msg_id],
+                        })
+                        .then(function (msgs) {
+                            if (msgs[0].moderation_status === 'pending_moderation') {
+                                add_message(msgs[0]);
+                            }
+                        });
                 });
+
         }
         if ('model' in options && 'res_id' in options) {
             // post a message in a chatter
@@ -917,7 +899,6 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
                 subtype: data.subtype,
                 subtype_id: data.subtype_id,
             });
-
             return this._rpc({
                     model: options.model,
                     method: 'message_post',

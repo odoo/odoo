@@ -940,7 +940,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 }
             })
             .fail(function () {
-                // todo: display notification
+                // todo: display notifications
             });
     },
     /**

@@ -116,7 +116,6 @@ var Thread = Widget.extend({
             }
             prev_msg = msg;
         });
-
         this.$el.html(QWeb.render('mail.ChatThread', {
             messages: msgs,
             options: options,
