@@ -925,11 +925,11 @@ class Lead(models.Model):
                 email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
                 email_link = "<a href='mailto:%s'>%s</a>" % (email, email)
                 help_title = _('%s or send an email to %s') % (help_title, email_link)
-            return '<p class="oe_view_nocontent_create">%s</p><p>%s</p>' % (help_title, help)
+            return '<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>' % (help_title, help)
         return super(Lead, self.with_context(
             empty_list_help_model='crm.team',
             empty_list_help_id=self._context.get('default_team_id', False),
-            empty_list_help_document_name= _('leads') if self._context.get('default_type') == 'lead' else _('opportunities'),
+            empty_list_help_document_name= _('leads') if self._context.get('default_type') == 'lead' else _('opportunity'),
         )).get_empty_list_help(help)
 
     @api.multi

@@ -104,15 +104,23 @@
     </t>
 
     <!-- When a channel is empty-->
-    <div t-name="mail.EmptyChannel" class="o_mail_no_content">
-        <t t-if="options.channel_id==='channel_inbox'">
-            <div class="o_thread_title">Congratulations, your inbox is empty</div>
-            <div>New messages appear here.</div>
-        </t>
-        <t t-if="options.channel_id==='channel_starred'">
-            <div class="o_thread_title">No starred message</div>
-            <div> You can mark any message as 'starred', and it shows up in this channel.</div>
-        </t>
+    <div t-name="mail.EmptyChannel" class="o_mail_no_content o_view_nocontent_container">
+        <div class="o_view_nocontent">
+            <t t-if="options.channel_id==='channel_inbox'">
+                <p class="o_view_nocontent_smiling_face">
+                    Congratulations, your inbox is empty
+                </p><p>
+                    New messages appear here.
+                </p>
+            </t>
+            <t t-if="options.channel_id==='channel_starred'">
+                <p class="o_view_nocontent_neutral_face">
+                    No starred message
+                </p><p>
+                    You can mark any message as 'starred', and it shows up in this channel.
+                </p>
+            </t>
+        </div>
     </div>
 
     <t t-name="mail.ChatThread.Content">

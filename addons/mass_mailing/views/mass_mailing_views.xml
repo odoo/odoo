@@ -176,6 +176,13 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,graph,pivot</field>
             <field name="context">{'search_default_not_opt_out': 1}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a contact in your address book
+              </p><p>
+                Odoo helps you to easily track all activities related to a customer.
+              </p>
+            </field>
         </record>
 
         <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts_from_list">
@@ -186,8 +193,8 @@
             <field name="domain">[('list_ids', 'in', [active_id])]</field>
             <field name="context">{'search_default_not_opt_out': 1, 'default_list_ids': [(4,active_id)]}</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a recipient.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new recipient
               </p>
             </field>
         </record>
@@ -286,12 +293,13 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Click here to create a new mailing list.
-                </p><p>
-                    Mailing lists allows you to to manage customers and
-                    contacts easily and to send to mailings in a single click.
-                </p></field>
+              <p class="o_view_nocontent_smiling_face">
+                Create a new mailing list
+              </p><p>
+                Mailing lists allow you to manage customers and
+                contacts easily and to send to mailings in a single click.
+              </p>
+            </field>
         </record>
 
         <menuitem name="Mailing Lists" id="menu_email_mass_mailing_lists"
@@ -561,11 +569,13 @@
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form,graph</field>
             <field name="help" type="html">
-<p class="oe_view_nocontent_create">
-    Click here to create a new mailing.
-</p><p>
-    Mass mailing allows you to to easily design and send mass mailings to your contacts, customers or leads using mailing lists.
-</p></field>
+              <p class="o_view_nocontent_smiling_face">
+                Create a new mailing list
+              </p><p>
+                Mailing lists allow you to manage customers and
+                contacts easily and to send to mailings in a single click.
+              </p>
+            </field>
         </record>
 
         <record id="action_view_mass_mailings_from_campaign" model="ir.actions.act_window">
@@ -579,11 +589,13 @@
             }
             </field>
             <field name="help" type="html">
-<p class="oe_view_nocontent_create">
-    Click here to create a new mailing.
-</p><p>
-    Mass mailing allows you to to easily design and send mass mailings to your contacts, customers or leads using mailing lists.
-</p></field>
+              <p class="o_view_nocontent_smiling_face">
+                Create a new mailing list
+              </p><p>
+                Mailing lists allow you to manage customers and
+                contacts easily and to send to mailings in a single click.
+              </p>
+            </field>
         </record>
 
         <record id="action_create_mass_mailings_from_campaign" model="ir.actions.act_window">
@@ -597,11 +609,13 @@
             }
             </field>
             <field name="help" type="html">
-<p class="oe_view_nocontent_create">
-    Click here to create a new mailing.
-</p><p>
-    Mass mailing allows you to to easily design and send mass mailings to your contacts, customers or leads using mailing lists.
-</p></field>
+              <p class="o_view_nocontent_smiling_face">
+                Create a new mailing list
+              </p><p>
+                Mailing lists allow you to manage customers and
+                contacts easily and to send to mailings in a single click.
+              </p>
+            </field>
         </record>
 
         <record id="action_create_ab_mass_mailings_from_campaign" model="ir.actions.act_window">
@@ -616,11 +630,13 @@
             }
             </field>
             <field name="help" type="html">
-<p class="oe_view_nocontent_create">
-    Click here to create a new mailing.
-</p><p>
-    Mass mailing allows you to to easily design and send mass mailings to your contacts, customers or leads using mailing lists.
-</p></field>
+              <p class="o_view_nocontent_smiling_face">
+                Create a new mailing list
+              </p><p>
+                Mailing lists allow you to manage customers and
+                contacts easily and to send to mailings in a single click.
+              </p>
+            </field>
         </record>
 
         <menuitem name="Mass Mailings" id="menu_email_mass_mailings"
@@ -654,6 +670,11 @@
             <field name="res_model">mail.mass_mailing.stage</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new mass mailing stage
+              </p>
+            </field>
         </record>
 
         <menuitem id="menu_mass_mailing_configuration" name="Configuration" parent="mass_mailing_menu_root"
@@ -681,8 +702,8 @@
             <field name="res_model">mail.mass_mailing.tag</field>
             <field name="view_type">form</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a new tag.
+              <p class="o_view_nocontent_smiling_face">
+                Add a new tag
               </p>
             </field>
         </record>
@@ -867,12 +888,12 @@
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="help" type="html">
-  <p class="oe_view_nocontent_create">
-    Click to define a new mass mailing campaign.
-  </p><p>
-    Create a campaign to structure mass mailing and get analysis from email status.
-  </p>
-</field>
+              <p class="o_view_nocontent_smiling_face">
+                Create a campaign
+              </p><p>
+                Create a campaign to structure mass mailing and get analysis from email status.
+              </p>
+            </field>
         </record>
 
         <menuitem name="Campaigns" id="menu_email_campaigns"

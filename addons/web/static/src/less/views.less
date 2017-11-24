@@ -3,20 +3,6 @@
  * all renderers. For field default rules, see the fields.less file.
  */
 
-// No content helper
-.oe_view_nocontent {
-    a {
-        cursor: pointer;
-    }
-    span, a {
-        display: inline!important;
-    }
-}
-.o_field_widget .oe_view_nocontent,
-.o_cannot_create .oe_view_nocontent_create {
-    display: none;
-}
-
 // Invisible modifier (can be inside the view, the button area, ...)
 .o_invisible_modifier {
     display: none!important;
@@ -49,5 +35,63 @@
     & > a {
         margin-bottom: -4px !important;
         margin-left: 3px;
+    }
+}
+
+// No content helper
+.o_view_nocontent_container {
+    .o-flex-display();
+    height: 100%;
+    padding: 0;
+}
+
+.o_view_nocontent {
+    max-width: 650px;
+    margin: auto;
+    padding: 15px;
+    text-align: center;
+    color: @odoo-tooltip-text-color;
+    font-size: 115%;
+
+    > p:first-of-type {
+        margin-top: 0;
+        color: @odoo-tooltip-title-text-color;
+        font-weight: bold;
+        font-size: 125%;
+    }
+
+    .o-init-image() {
+        content: "";
+        display: block;
+        margin: auto;
+        background-size: cover;
+    }
+
+    .o_view_nocontent_smiling_face:before {
+        .o-init-image();
+        .size(120px, 140px);
+        background: transparent url(/web/static/src/img/smiling_face.svg) no-repeat center;
+    }
+
+    .o_view_nocontent_neutral_face:before {
+        .o-init-image();
+        .size(120px, 140px);
+        background: transparent url(/web/static/src/img/neutral_face.svg) no-repeat center;
+    }
+
+    .o_view_nocontent_empty_folder:before {
+        .o-init-image();
+        .size(120px, 80px);
+        margin-top: 30px;
+        margin-bottom: 30px;
+        background: transparent url(/web/static/src/img/empty_folder.svg) no-repeat center;
+    }
+
+    .o_empty_custom_dashboard {
+        min-height: 327px;
+        margin-left: -@grid-gutter-width/2;
+        margin-top: -@grid-gutter-width/2;
+        padding: 100px 0 0 137px;
+        background: transparent url(/web/static/src/img/graph_background.png) no-repeat 0 0;
     }
 }

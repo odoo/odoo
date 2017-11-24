@@ -202,14 +202,14 @@
         <field name="domain">[('user_id', '=', uid)]</field>
         <field name="search_view_id" ref="view_hr_holidays_filter"/>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to create a new leave request.
-          </p><p>
-            Once you have recorded your leave request, it will be sent
-            to a manager for validation. Be sure to set the right leave
-            type (recuperation, legal leaves, sickness) and the exact
-            number of open days related to your leave.
-          </p>
+            <p class="o_view_nocontent_smiling_face">
+                Create a new leave request
+            </p><p>
+                Once you have recorded your leave request, it will be sent
+                to a manager for validation. Be sure to set the right leave
+                type (recuperation, legal leaves, sickness) and the exact
+                number of open days related to your leave.
+            </p>
         </field>
     </record>
 
@@ -272,8 +272,8 @@
         <field name="view_mode">tree,kanban,form,calendar</field>
         <field name="view_id" eval="view_holiday"/>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click here to create a new leave request.
+            <p class="o_view_nocontent_smiling_face">
+                Create a new leave request
             </p>
         </field>
         <field name="search_view_id" ref="view_hr_holidays_filter"/>
@@ -286,8 +286,13 @@
         <field name="view_mode">tree,form,calendar</field>
         <field name="context">{'search_default_department':1, 'search_default_approve':1}</field>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click here to create a new leave request.
+            <p class="o_view_nocontent_smiling_face">
+                Create a new leave request
+            </p><p>
+                Once you have recorded your leave request, it will be sent
+                to a manager for validation. Be sure to set the right leave
+                type (recuperation, legal leaves, sickness) and the exact
+                number of open days related to your leave.
             </p>
         </field>
         <field name="search_view_id" ref="view_hr_holidays_filter"/>

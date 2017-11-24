@@ -24,8 +24,8 @@ class Project(models.Model):
             'view_mode': 'tree,form',
             'view_type': 'form',
             'help': _("""
-                <p class="oe_view_nocontent_create">
-                    Click to record timesheets.
+                <p class="o_view_nocontent_smiling_face">
+                    Record timesheets
                 </p><p>
                     You can register and track your workings hours by project every
                     day. Every time spent on a project will become a cost and can be re-invoiced to

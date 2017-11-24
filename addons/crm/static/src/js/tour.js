@@ -16,7 +16,7 @@ tour.register('crm_tour', {
     trigger: ".o-kanban-button-new",
     extra_trigger: '.o_opportunity_kanban',
     content: _t("Click here to <b>create your first opportunity</b> and add it to your pipeline."),
-    position: "right",
+    position: "bottom",
 }, {
     trigger: ".modal-body input:first",
     auto: true

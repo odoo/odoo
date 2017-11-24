@@ -278,7 +278,7 @@ class Applicant(models.Model):
     def get_empty_list_help(self, help):
         return super(Applicant, self.with_context(empty_list_help_model='hr.job',
                                                   empty_list_help_id=self.env.context.get('default_job_id'),
-                                                  empty_list_help_document_name=_("job applicants"))).get_empty_list_help(help)
+                                                  empty_list_help_document_name=_("job applicant"))).get_empty_list_help(help)
 
     @api.multi
     def action_get_created_employee(self):

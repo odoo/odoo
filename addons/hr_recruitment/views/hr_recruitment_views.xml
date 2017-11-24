@@ -10,8 +10,8 @@
         <field name="domain">[]</field>
         <field name="context">{}</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to add a new stage in the recruitment process.
+          <p class="o_view_nocontent_smiling_face">
+            Add a new stage in the recruitment process
           </p><p>
             Define here your stages of the recruitment process, for example:
             qualification call, first interview, second interview, refused,
@@ -328,7 +328,9 @@
         <field name="search_view_id" ref="view_crm_case_jobs_filter"/>
         <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
         <field name="help" type="html">
-              <p>
+              <p class="o_view_nocontent_empty_folder">
+                No applications yet
+              </p><p>
                 Odoo helps you track applicants in the recruitment
                 process and follow up all operations: meetings, interviews, etc.
               </p><p>
@@ -348,8 +350,8 @@
         <field name="context">{'search_default_activities_my': 1}</field>
         <field name="domain">[('activity_date_deadline', '!=', False)]</field>
         <field name="help" type="html">
-            <p>
-                Currently there are not any activity scheduled.
+            <p class="o_view_nocontent_smiling_face">
+                No scheduled activities for the moment
             </p>
         </field>
     </record>
@@ -361,10 +363,9 @@
         <field name="domain">[('job_id', '=', active_id)]</field>
         <field name="context">{'default_job_id': active_id}</field>
         <field name="help" type="html">
-              <p>
-                Create some aliases that will allow you to track where applicants come from.
-              </p>
-              <p>
+              <p class="o_view_nocontent_smiling_face">
+                Create some aliases to track where applicants come from
+              </p><p>
                 These aliases can be emails or urls for every source. When the applicant arrives here through one of these you'll know where he came from.
               </p>
          </field>
@@ -390,8 +391,8 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="context">{'search_default_job_id': active_id}</field>
         <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a new employee.
+              <p class="o_view_nocontent_smiling_face">
+                Add a new employee
               </p><p>
                 With just a quick glance on the Odoo employee screen, you
                 can easily find all the information you need for each person;
@@ -500,12 +501,10 @@
                 (0, 0, {'view_mode': 'form', 'view_id': ref('hr.view_hr_job_form')})]"/>
             <field name="context">{'search_default_in_recruitment': 1}</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                  Click here to create a new job position.
+              <p class="o_view_nocontent_smiling_face">
+                Ready to recruit more efficiently?
               </p><p>
-                  Once a job position is created, you can track the applicants
-                  and manage the recruitment process related to the job
-                  position.
+                Let's create a job position.
               </p>
             </field>
         </record>
@@ -519,7 +518,9 @@
         <field name="search_view_id" ref="view_crm_case_jobs_filter"/>
         <field name="context">{}</field>
         <field name="help" type="html">
-          <p>
+          <p class="o_view_nocontent_empty_folder">
+            No applications yet
+          </p><p>
             Odoo helps you track applicants in the recruitment
             process and follow up all operations: meetings, interviews, etc.
           </p><p>
@@ -624,8 +625,8 @@
         <field name="domain">[('res_model','=','hr.applicant')]</field>
         <field name="context">{'create': False}</field>
         <field name="help" type="html">
-            <p>
-                No document yet.
+            <p class="o_view_nocontent_empty_folder">
+                No document yet
             </p><p>
                 This menu helps you search through resumes and motivation
                 letters. Odoo automatically indexes .PDF, .DOC, DOCX, .TXT
@@ -705,8 +706,8 @@
         <field name="view_mode">tree,kanban,form</field>
         <field name="view_id" ref="hr_recruitment_stage_tree"/>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to add a new stage in the recruitment process.
+          <p class="o_view_nocontent_smiling_face">
+            Add a new stage in the recruitment process
           </p><p>
             Don't forget to specify the department if your recruitment process
             is different according to the job position.
@@ -742,8 +743,8 @@
         <field name="res_model">hr.applicant.category</field>
         <field name="view_type">form</field>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to add a new tag.
+            <p class="o_view_nocontent_smiling_face">
+                Add a new tag
             </p>
         </field>
     </record>

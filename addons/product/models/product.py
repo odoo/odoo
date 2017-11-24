@@ -550,6 +550,14 @@ class ProductProduct(models.Model):
             ('datetime', '<=', date or fields.Datetime.now())], order='datetime desc,id desc', limit=1)
         return history.cost or 0.0
 
+    @api.model
+    def get_empty_list_help(self, help):
+        self = self.with_context(
+            empty_list_help_document_name=_("product"),
+        )
+        return super(ProductProduct, self).get_empty_list_help(help)
+
+
 class ProductPackaging(models.Model):
     _name = "product.packaging"
     _description = "Packaging"

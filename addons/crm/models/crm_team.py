@@ -135,10 +135,10 @@ class Team(models.Model):
         user_team_id = self.env.user.sale_team_id.id
         if not user_team_id:
             user_team_id = self.search([], limit=1).id
-            action['help'] = """<p class='oe_view_nocontent_create'>Click here to add new opportunities</p><p>
+            action['help'] = _("""<p class='o_view_nocontent_smiling_face'>Add new opportunities</p><p>
     Looks like you are not a member of a sales channel. You should add yourself
     as a member of one of the sales channel.
-</p>"""
+</p>""")
             if user_team_id:
                 action['help'] += "<p>As you don't belong to any sales channel, Odoo opens the first one by default.</p>"
 

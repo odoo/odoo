@@ -1270,18 +1270,18 @@ QUnit.module('Views', {
             },
         });
 
-        assert.strictEqual(list.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(list.$('.o_view_nocontent').length, 1,
             "should display the no content helper");
 
         assert.strictEqual(list.$('table').length, 0, "should not have a table in the dom");
 
-        assert.strictEqual(list.$('.oe_view_nocontent p.hello:contains(add a partner)').length, 1,
+        assert.strictEqual(list.$('.o_view_nocontent p.hello:contains(add a partner)').length, 1,
             "should have rendered no content helper from action");
 
         this.data.foo.records = records;
         list.reload();
 
-        assert.strictEqual(list.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(list.$('.o_view_nocontent').length, 0,
             "should not display the no content helper");
         assert.strictEqual(list.$('table').length, 1, "should have a table in the dom");
         list.destroy();
@@ -1299,7 +1299,7 @@ QUnit.module('Views', {
             arch: '<tree><field name="foo"/></tree>',
         });
 
-        assert.strictEqual(list.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(list.$('.o_view_nocontent').length, 0,
             "should not display the no content helper");
 
         assert.strictEqual(list.$('tr.o_data_row').length, 0,
@@ -1339,7 +1339,7 @@ QUnit.module('Views', {
             },
         });
 
-        assert.strictEqual(list.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(list.$('.o_view_nocontent').length, 1,
             "should have a no content helper displayed");
 
         assert.strictEqual(list.$('div.table-responsive').length, 0,
@@ -1348,7 +1348,7 @@ QUnit.module('Views', {
 
         list.$buttons.find('.o_list_button_add').click();
 
-        assert.strictEqual(list.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(list.$('.o_view_nocontent').length, 0,
             "should not have a no content helper displayed");
         assert.strictEqual(list.$('table').length, 1, "should have rendered a table");
         assert.strictEqual(list.$el.css('height'), list.$('div.table-responsive').css('height'),

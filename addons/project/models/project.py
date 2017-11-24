@@ -123,7 +123,7 @@ class Project(models.Model):
             'view_id': False,
             'view_mode': 'kanban,tree,form',
             'view_type': 'form',
-            'help': _('''<p class="oe_view_nocontent_create">
+            'help': _('''<p class="o_view_nocontent_smiling_face">
                         Documents are attached to the tasks and issues of your project.</p><p>
                         Send messages or log internal notes with attachments to link
                         documents to your project.
@@ -151,7 +151,8 @@ class Project(models.Model):
         action_data = None
         if action:
             action.sudo().write({
-                "help": _('''<p class="oe_view_nocontent_create">Click to create a new project.</p>''')
+                "help": _('''<p class="o_view_nocontent_smiling_face">
+                    Create a new project</p>''')
             })
             action_data = action.read()[0]
         # Reload the dashboard
@@ -693,7 +694,7 @@ class Task(models.Model):
         self = self.with_context(
             empty_list_help_id=self.env.context.get('default_project_id'),
             empty_list_help_model='project.project',
-            empty_list_help_document_name=_("tasks")
+            empty_list_help_document_name=_("task"),
         )
         return super(Task, self).get_empty_list_help(help)
 

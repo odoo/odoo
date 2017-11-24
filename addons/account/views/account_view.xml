@@ -153,8 +153,8 @@
             <field name="search_view_id" ref="view_account_search"/>
             <field name="view_id" ref="view_account_list"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add an account.
+              <p class="o_view_nocontent_smiling_face">
+                Add a new account
               </p><p>
                 An account is part of a ledger allowing your company
                 to register all kinds of debit and credit transactions.
@@ -438,8 +438,8 @@
             <field name="domain">[('type', '=', 'bank')]</field>
             <field name="context">{'default_type': 'bank'}</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a bank account.
+              <p class="o_view_nocontent_smiling_face">
+                Create a bank account
               </p>
             </field>
         </record>
@@ -455,15 +455,11 @@
                 (0, 0, {'view_mode': 'kanban', 'view_id': ref('account_journal_view_kanban')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('view_account_journal_form')})]"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a journal.
+              <p class="o_view_nocontent_smiling_face">
+                Add a journal
               </p><p>
                 A journal is used to record transactions of all accounting data
                 related to the day-to-day business.
-              </p><p>
-                A typical company may use one journal per payment method (cash,
-                bank accounts, checks), one purchase journal, one sales journal
-                and one for miscellaneous information.
               </p>
             </field>
         </record>
@@ -508,8 +504,8 @@
             <field name="res_model">account.account.tag</field>
             <field name="view_type">form</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a new tag.
+              <p class="o_view_nocontent_smiling_face">
+                Add a new tag
               </p>
             </field>
         </record>
@@ -712,8 +708,8 @@
             <field name="context">{'journal_type':'bank'}</field>
             <field name="search_view_id" ref="view_bank_statement_search"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to register a bank statement.
+              <p class="o_view_nocontent_smiling_face">
+                Register a bank statement
               </p><p>
                 A bank statement is a summary of all financial transactions
                 occurring over a given period of time on a bank account. You
@@ -799,8 +795,8 @@
             <field name="context">{}</field>
             <field name="search_view_id" ref="view_bank_statement_line_search"/>
             <field name="help" type="html">
-              <p>
-                A bank statement line is a financial transaction on a bank account.
+              <p class="o_view_nocontent_empty_folder">
+                A bank statement line is a financial transaction on a bank account
               </p><p>
                 Odoo allows you to reconcile a statement line directly with
                 the related sale or puchase invoice(s).
@@ -913,8 +909,8 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_reconcile_model_search"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a reconciliation model.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new reconciliation model
               </p><p>
                 Those can be used to quickly create a journal items when reconciling
                 a bank statement or an account.
@@ -975,8 +971,8 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_type_search"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new account type.
+              <p class="o_view_nocontent_smiling_face">
+                Define a new account type
               </p><p>
                 An account type is used to determine how an account is used in
                 each journal. The deferral method of an account type determines
@@ -1123,6 +1119,11 @@
             <field name="domain" eval="False"/> <!-- Force empty -->
             <field name="context">{'search_default_sale': True, 'search_default_purchase': True, 'active_test': False}</field>
             <field name="view_id" ref="view_tax_tree"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new tax
+              </p>
+            </field>
         </record>
         <menuitem action="action_tax_form" id="menu_action_tax_form" parent="account_account_menu" sequence="1"/>
 
@@ -1533,16 +1534,11 @@
             <field name="search_view_id" ref="view_account_move_filter"/>
             <field name="context">{'search_default_misc_filter':1, 'view_no_maturity': True}</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a journal entry.
+              <p class="o_view_nocontent_smiling_face">
+                Create a journal entry
               </p><p>
                 A journal entry consists of several journal items, each of
                 which is either a debit or a credit transaction.
-              </p><p>
-                Odoo automatically creates one journal entry per accounting
-                document: invoice, refund, vendor payment, bank statements,
-                etc. So, you should record journal entries manually only/mainly
-                for miscellaneous operations.
               </p>
             </field>
         </record>
@@ -2049,6 +2045,11 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_position_template_search"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new fiscal position
+              </p>
+            </field>
         </record>
 
         <record id="account_bank_statement_pivot" model="ir.ui.view">
@@ -2085,8 +2086,8 @@
             <field name="domain">[('journal_id.type', '=', 'cash')]</field>
             <field name="context">{'journal_type':'cash'}</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a new cash log.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new cash log
               </p><p>
                 A Cash Register allows you to manage cash entries in your cash
                 journals. This feature provides an easy way to follow up cash
@@ -2133,6 +2134,11 @@
             <field name="view_type">form</field>
             <field name="context">{'search_default_filter_to_sell': 1}</field>
             <field name="view_id" ref="product_product_view_tree"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                  Create a new sellable product
+                </p>
+            </field>
         </record>
 
         <record id="product_product_action_purchasable" model="ir.actions.act_window">
@@ -2143,6 +2149,11 @@
             <field name="view_type">form</field>
             <field name="context">{'search_default_filter_to_purchase': 1}</field>
             <field name="view_id" ref="product_product_view_tree"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                  Create a new purchasable product
+                </p>
+            </field>
         </record>
 
         <menuitem id="product_product_menu_sellable" name="Sellable Products" action="product_product_action_sellable" parent="account.menu_finance_receivables_master_data" sequence="100"/>
@@ -2275,6 +2286,11 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_group_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new account group
+                </p>
+            </field>
         </record>
 
     </data>

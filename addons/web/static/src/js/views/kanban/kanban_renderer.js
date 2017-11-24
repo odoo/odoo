@@ -305,7 +305,7 @@ var KanbanRenderer = BasicRenderer.extend({
         this.$el.empty();
 
         var displayNoContentHelper = !this._hasContent() && !!this.noContentHelp;
-        this.$el.toggleClass('o_kanban_nocontent', displayNoContentHelper);
+        this.$el.toggleClass('o_view_nocontent_container', displayNoContentHelper);
         if (displayNoContentHelper) {
             // display the no content helper if there is no data to display
             this._renderNoContentHelper();

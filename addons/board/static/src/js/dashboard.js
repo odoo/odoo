@@ -266,9 +266,12 @@ FormRenderer.include({
                 return element.tag === "action"? element: false;
             });
         });
+        this.$el.toggleClass('o_dashboard_nocontent', !hasAction);
         if (!hasAction) {
-            return $('<div class="oe_view_nocontent">')
-                .append($('<div>').html(this.noContentHelp || " "));
+            var innerDiv = $('<div class="o_view_nocontent">')
+                            .append(this.noContentHelp || "<div/>");
+            return $('<div class="o_view_nocontent_container">')
+                .append(innerDiv);
         }
         // We should start with three columns available
         node = $.extend(true, {}, node);
