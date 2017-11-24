@@ -1,6 +1,75 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+
+#-------------------------------------------------------------
+# Spanish
+#-------------------------------------------------------------
+
+to_19_es = ( u'cero', 'uno', 'dos', 'tres', 'cuatro', 'cinco','seis', 'siete',
+             'ocho', 'nueve', 'diez', 'once', 'doce', 'trece', 'catorce',
+             'quince', 'dieciseis', 'diecisiete', 'dieciocho', 'diecinueve' )
+tens_es  = ('veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta',
+            'setenta', 'ochenta', 'noventa')
+hundred_es = ('ciento', 'doscientos', 'trecientos', 'cuatrocientos',
+              'quinientos', 'seiscientos', 'setecientos', 'ochocientos',
+              'novecientos')
+thousand_es = (['mil','mil'], [u'millón','millones'],
+               [u'mil millones', 'mil millones'], 
+               [u'billón', u'billones'], [u'trillón', 'trillones'])
+
+def _convert_nn_es(val):
+    """ convert a value < 100 to spanish """
+    if val < 20: return to_19_es[val]
+    unit = val % 10
+    tens_unit = int(val / 10)
+
+    if tens_unit == 2 and unit == 1: return 'veintiuno'
+    else: return tens_es[tens_unit - 2] + ' y ' + to_19_es[unit]
+
+def _convert_nnn_es(val):
+    """ convert a value < 1000 to spanish """
+    hundred_unit = int(val / 100)
+    tens_unit = val - hundred_unit * 100
+
+    if hundred_unit == 1 and tens_unit == 0: return 'cien'
+    else: return hundred_es[hundred_unit - 1] + ' '+ _convert_nn_es(tens_unit)
+    
+def _convert_nnnn_es(val):
+    """ convert a value >= 1000 to spanish """
+    tens_unit, thousand_unit = _rec_thousand(val)
+    # Singular and plural are write differently
+    is_plural = tens_unit > 1 and 1 or 0
+    tens_thousands = spanish_number(tens_unit)
+    thousands = thousand_es[thousand_unit - 1][is_plural]
+    last_tens = val - tens_unit * 1000 ** thousand_unit
+    hundred = last_tens > 0 and ' ' + spanish_number(last_tens) or ''
+
+    if thousand_unit == 1 and not is_plural: return thousands + hundred
+    elif not is_plural: return 'un ' + thousands + hundred
+    return tens_thousands + ' ' + thousands + hundred
+    
+def _rec_thousand(val, count=0):
+    """ convert a value < 1000 to spanish """
+    if val >= 1000:
+        count += 1
+        return _rec_thousand(val / 1000, count)
+    return val, count
+
+def spanish_number(val):
+    if val < 100: return _convert_nn_es(val)
+    elif val < 1000: return _convert_nnn_es(val)
+    else: return _convert_nnnn_es(val)
+
+def amount_to_text_es(number, currency):
+    number = '%.2f' % number
+    units_name = currency
+    list = str(number).split('.')
+    start_word = spanish_number(abs(int(list[0])))
+    end_word = list[1] + '/100'
+    return start_word +' '+units_name+' con '+ end_word
+
+
 #-------------------------------------------------------------
 # French
 #-------------------------------------------------------------
@@ -146,7 +215,7 @@ def amount_to_text_nl(number, currency):
 # Generic functions
 #-------------------------------------------------------------
 
-_translate_funcs = {'fr' : amount_to_text_fr, 'nl' : amount_to_text_nl}
+_translate_funcs = {'es' : amount_to_text_es, 'fr' : amount_to_text_fr, 'nl' : amount_to_text_nl}
 
 def add_amount_to_text_function(lang, func):
     _translate_funcs[lang] = func
