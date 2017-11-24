@@ -148,9 +148,17 @@ class StockMove(models.Model):
 
     @api.multi
     def action_cancel(self):
+        #La Siguiente linea fue modificada por Trescloud
+        self.check_move_cancel()
+        return super(StockMove, self).action_cancel()
+    
+    def check_move_cancel(self):
+        '''
+        Hook sera manejado en un modulo superior
+        '''
         if any(move.quantity_done for move in self):
             raise exceptions.UserError(_('You cannot cancel a move move having already consumed material'))
-        return super(StockMove, self).action_cancel()
+        
 
     @api.multi
     def check_move_lots(self):
