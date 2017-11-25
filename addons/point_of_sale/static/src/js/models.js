@@ -515,7 +515,7 @@ exports.PosModel = Backbone.Model.extend({
                                     .then(function(){ load_model(index + 1); },
                                           function(err){ loaded.reject(err); });
                             }catch(err){
-                                console.error(err.stack);
+                                console.error(err.message, err.stack);
                                 loaded.reject(err);
                             }
                         },function(err){
