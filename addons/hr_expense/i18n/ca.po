@@ -10,13 +10,14 @@
 # Bàrbara Partegàs <barbararof@gmail.com>, 2016
 # Gemma Bochaca <gemma.bochaca@gmail.com>, 2016
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Quim - eccit <quim@eccit.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2016\n"
+"Last-Translator: Quim - eccit <quim@eccit.com>, 2017\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,7 +79,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Date:</strong>"
-msgstr ""
+msgstr "<strong>Data:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -174,15 +175,15 @@ msgid "All Expenses"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_account_id
+msgid "An expense account is expected"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_analytic_account_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Analytic Account"
 msgstr "Compte analític"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_account_id
-msgid "An expense account is expected"
-msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
@@ -863,6 +864,18 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:537
+#, python-format
+msgid "Only HR Officers can approve expenses"
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:528
+#, python-format
+msgid "Only HR Officers can refuse expenses"
+msgstr ""
+
+#. module: hr_expense
 #: selection:hr.expense.sheet,state:0
 #: model:mail.message.subtype,name:hr_expense.mt_expense_paid
 msgid "Paid"
@@ -1360,7 +1373,13 @@ msgid "You cannot report expenses for different employees in the same report!"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:104
+#: code:addons/hr_expense/models/hr_expense.py:605
+#, python-format
+msgid "You cannot report expenses with different payment modes."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:105
 #, python-format
 msgid "You cannot report twice the same line!"
 msgstr ""
