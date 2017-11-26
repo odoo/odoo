@@ -1,22 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp_byproduct
-#
+# 
 # Translators:
-# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2015
-# Ryozuki <clud6565@gmail.com>, 2015
+# Quim - eccit <quim@eccit.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-12-16 22:04+0000\n"
-"Last-Translator: Ryozuki <clud6565@gmail.com>\n"
-"Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
-"Language: ca\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Last-Translator: Quim - eccit <quim@eccit.com>, 2017\n"
+"Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp_byproduct
@@ -27,23 +26,23 @@ msgstr "Llista de material"
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_bom_id
 msgid "BoM"
-msgstr "Llista de materials (LdM)"
+msgstr ""
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_subproduct
 msgid "Byproduct"
-msgstr "Subproducte"
+msgstr ""
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_bom_sub_products
 #: model:ir.ui.view,arch_db:mrp_byproduct.mrp_subproduct_view
 msgid "Byproducts"
-msgstr "Subproductes"
+msgstr ""
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr "Canvia quantitat de productes"
+msgstr ""
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_create_uid
@@ -56,100 +55,85 @@ msgid "Created on"
 msgstr "Creat el"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,help:mrp_byproduct.field_mrp_subproduct_subproduct_type
-msgid ""
-"Define how the quantity of byproducts will be set on the production orders "
-"using this BoM.  'Fixed' depicts a situation where the quantity of created "
-"byproduct is always equal to the quantity set on the BoM, regardless of how "
-"many are created in the production order.  By opposition, 'Variable' means "
-"that the quantity will be computed as    '(quantity of byproduct set on the "
-"BoM / quantity of manufactured product set on the BoM * quantity of "
-"manufactured product in the production order.)'"
-msgstr ""
-"Defineix com la quantitat de subproductes serà posada en la producció "
-"d'ordres fen servir LdM. 'Fix' representa una situació on la quantitat "
-"creada de subproductes es sempre igual a la quantitat posada a LdM, "
-"independentment de quants s'han creat a la ordre de producció. Al contrari, "
-"'Variable' significa la quantitat computada com (quantitat de subproducte "
-"posada en LdM / quantitat del producte manufacturat posat a LdM * quantitat "
-"de producte manufacturat en la ordre de producció.)"
-
-#. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_display_name
 msgid "Display Name"
-msgstr "Mostra Nom"
-
-#. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Fixed"
-msgstr "Fix"
+msgstr "Mostrar Nom"
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct___last_update
 msgid "Last Modified on"
-msgstr "Darrera modificació feta el"
+msgstr ""
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_write_uid
 msgid "Last Updated by"
-msgstr "Actualitzat per última vegada per"
+msgstr ""
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_write_date
 msgid "Last Updated on"
-msgstr "Actualitzat per última vegada el dia"
+msgstr ""
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_operation_id
+msgid "Produced at Operation"
+msgstr ""
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_id
 msgid "Product"
-msgstr "Producte"
+msgstr ""
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_qty
 msgid "Product Qty"
-msgstr "Qtat producte"
-
-#. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_uom
-msgid "Product Unit of Measure"
-msgstr "Unitat de mesura del producte"
+msgstr ""
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_production
-#, fuzzy
 msgid "Production"
-msgstr "Producte"
+msgstr ""
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_subproduct_type
-msgid "Quantity Type"
-msgstr "Tipus de quantitat"
+#: model:ir.model,name:mrp_byproduct.model_mrp_product_produce
+msgid "Record Production"
+msgstr ""
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:45
+#: model:ir.model,name:mrp_byproduct.model_stock_move
+msgid "Stock Move"
+msgstr ""
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_stock_move_subproduct_id
+msgid "Subproduct"
+msgstr ""
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,help:mrp_byproduct.field_stock_move_subproduct_id
+msgid "Subproduct line that generated the move in a manufacturing order"
+msgstr ""
+
+#. module: mrp_byproduct
+#: code:addons/mrp_byproduct/models/mrp_subproduct.py:32
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
 msgstr ""
-"La unitat de mesura del producte que heu triat, te una categoria diferent "
-"que en la forma del producte."
 
 #. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Variable"
-msgstr "Variable"
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_uom_id
+msgid "Unit of Measure"
+msgstr ""
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:45
+#: code:addons/mrp_byproduct/models/mrp_subproduct.py:31
 #, python-format
 msgid "Warning"
-msgstr "Avís"
-
-#~ msgid "Manufacturing Order"
-#~ msgstr "Ordre de fabricació"
+msgstr ""
