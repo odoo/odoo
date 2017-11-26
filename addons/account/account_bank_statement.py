@@ -836,6 +836,7 @@ class account_bank_statement_line(osv.osv):
         for mv_line_dict in mv_line_dicts:
             if mv_line_dict.get('is_tax_line'):
                 continue
+            mv_line_dict = mv_line_dict.copy()
             mv_line_dict['ref'] = move_name
             mv_line_dict['move_id'] = move_id
             mv_line_dict['period_id'] = st_line.statement_id.period_id.id
