@@ -132,7 +132,11 @@ class MailActivity(models.Model):
 
     @api.onchange('recommended_activity_type_id')
     def _onchange_recommended_activity_type_id(self):
-        self.activity_type_id = self.recommended_activity_type_id
+        if self.recommended_activity_type_id:
+            self.activity_type_id = self.recommended_activity_type_id
+        else:
+            domain = ['|', ('res_model_id', '=', False), ('res_model_id', '=', self.res_model_id.id)]
+            self.activity_type_id = self.env['mail.activity.type'].search(domain, order="sequence,id", limit=1)
 
     @api.multi
     def _check_access(self, operation):
