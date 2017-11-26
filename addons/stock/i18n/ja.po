@@ -11,7 +11,6 @@
 # Kohji Katayama <kohji.katayama@dreamyard.co.jp>, 2017
 # Manami Hashi <manami@roomsfor.hk>, 2017
 # NOKA Shigekazu <shigekazu.noka@gmail.com>, 2017
-# kent_ocean <ke.tanabe@gmail.com>, 2017
 # Tim Siu Lai <tl@roomsfor.hk>, 2017
 msgid ""
 msgstr ""
@@ -761,7 +760,7 @@ msgstr "すべてのアイテムは出荷できませんでした。残りのア
 #: code:addons/stock/models/stock_inventory.py:105
 #, python-format
 msgid "All products"
-msgstr "全製品"
+msgstr "全プロダクト"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_returned_move_ids
@@ -1247,7 +1246,7 @@ msgstr "クリックして在庫処理を作成"
 #. module: stock
 #: model:ir.actions.act_window,help:stock.product_template_action_product
 msgid "Click to define a new product."
-msgstr "クリックして新製品を定義してください。"
+msgstr "クリックしてプロダクトを新規作成してください。"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_type_list
@@ -1262,7 +1261,7 @@ msgstr "クリックして倉庫を新たに定義してください。"
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_receipt_picking_move
 msgid "Click to register a product receipt."
-msgstr "クリックして製品領収書を登録"
+msgstr "クリックしてプロダクト入荷を登録してください。"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_inventory_form
@@ -1954,13 +1953,13 @@ msgstr "内部転送用説明"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Receptions"
-msgstr "Description for Receptions"
+msgstr "入荷用説明"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_description_pickingout
 #: model:ir.model.fields,field_description:stock.field_product_template_description_pickingout
 msgid "Description on Delivery Orders"
-msgstr ""
+msgstr "配送オーダ用説明"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_description_picking
@@ -1972,7 +1971,7 @@ msgstr "ピッキング表示用説明"
 #: model:ir.model.fields,field_description:stock.field_product_product_description_pickingin
 #: model:ir.model.fields,field_description:stock.field_product_template_description_pickingin
 msgid "Description on Receptions"
-msgstr ""
+msgstr "入荷用説明"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -2001,7 +2000,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move_move_dest_ids
 #: model:ir.ui.view,arch_db:stock.view_move_form
 msgid "Destination Moves"
-msgstr ""
+msgstr "連携先移動"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_result_package_id
@@ -2267,7 +2266,7 @@ msgstr "カテゴリごとの固定ロケーション"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_putaway_fixed_location_ids
 msgid "Fixed Locations Per Product Category"
-msgstr "製品カテゴリごとの固定ロケーション"
+msgstr "プロダクトカテゴリごとの固定ロケーション"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_group_id
@@ -2488,10 +2487,7 @@ msgid ""
 "                the purchase order reference. Then you can confirm all products\n"
 "                received using the buttons on the right of each line."
 msgstr ""
-"ここでは、購入注文や注文の発注に関係なく、個々の製品を受け取ることができます。\n"
-"あなたは、あなたが待っているすべての製品のリストを見つけるでしょう。 \n"
-"注文を受け取ったら、ベンダーの名前または購入注文の参照に基づいてフィルタリングすることができます。\n"
-"そして、各行の右側にあるボタンを使用して、受け取ったすべての製品を確認することができます。"
+"ここでは購買オーダやピッキングオーダに関係なく、個別のプロダクトの入荷処理を行います。入荷待ちの全てのプロダクトが表示される状態から、仕入先名や購買オーダ参照でフィルタをかけて入荷対象のプロダクトを表示し、各ラインの右側に表示されるボタンをクリックして入荷処理を完了させることができます。"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2806,7 +2802,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_exhausted
 msgid "Include Exhausted Products"
-msgstr "中古製品を含める"
+msgstr "在庫のないプロダクトを含める"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_incoming_qty
@@ -2818,7 +2814,7 @@ msgstr "着信"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_receipt_picking_move
 msgid "Incoming  Products"
-msgstr "入荷製品"
+msgstr "入荷予定プロダクト"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_in_date
@@ -3755,7 +3751,7 @@ msgstr "仕訳明細"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_move_line_nosuggest_ids
 msgid "Move Line Nosuggest"
-msgstr ""
+msgstr "提案なし移動ライン"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_line_form
@@ -4086,7 +4082,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_return_picking_type_id
 msgid "Operation Type for Returns"
-msgstr ""
+msgstr "返品用オペレーションタイプ"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -4094,12 +4090,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
 #: model:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Operation Types"
-msgstr "作業タイプ"
+msgstr "オペレーションタイプ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_name
 msgid "Operation Types Name"
-msgstr ""
+msgstr "オペレーションタイプ名"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_line_ids
@@ -4113,7 +4109,7 @@ msgstr "オペレーション"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_pickingtype
 msgid "Operations Types"
-msgstr "ピッキングタイプ"
+msgstr "オペレーションタイプ"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_partner_id
@@ -4718,7 +4714,7 @@ msgstr "製品"
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #, python-format
 msgid "Product Categories"
-msgstr "製品カテゴリ"
+msgstr "プロダクトカテゴリ"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
@@ -4832,13 +4828,13 @@ msgstr "製造ロケーション"
 #: model:ir.ui.view,arch_db:stock.view_location_form
 #, python-format
 msgid "Products"
-msgstr "製品"
+msgstr "プロダクト"
 
 #. module: stock
 #: code:addons/stock/models/product.py:310
 #, python-format
 msgid "Products: "
-msgstr "製品:"
+msgstr "プロダクト:"
 
 #. module: stock
 #: selection:procurement.rule,group_propagation_option:0
@@ -5380,7 +5376,7 @@ msgstr "ルートマネジメント"
 msgid ""
 "Routes will be created for these resupply warehouses and you can select them"
 " on products and product categories"
-msgstr "これらの補給倉庫のルートが作成され、製品および製品カテゴリで選択することができます"
+msgstr "これらの補給倉庫にルートが作成され、プロダクトおよびプロダクトカテゴリで選択することができるようになります。"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
@@ -5456,7 +5452,7 @@ msgstr "廃棄移動"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_scrap
 msgid "Scrap Orders"
-msgstr ""
+msgstr "廃棄オーダ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_scrapped
@@ -5505,7 +5501,7 @@ msgstr "在庫ロケーションのパスを検索する"
 #: code:addons/stock/models/stock_inventory.py:108
 #, python-format
 msgid "Select products manually"
-msgstr "マニュアルで製品選択"
+msgstr "マニュアルでプロダクト選択"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -5705,7 +5701,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move_show_operations
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_show_operations
 msgid "Show Detailed Operations"
-msgstr ""
+msgstr "詳細オペレーションを表示"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_show_lots_text
@@ -5725,7 +5721,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_show_reserved
 msgid "Show Reserved"
-msgstr ""
+msgstr "引当済在庫を表示"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_show_validate
@@ -6160,7 +6156,7 @@ msgstr ""
 msgid ""
 "The following routes will apply to the products in this category taking into"
 " account parent categories:"
-msgstr "次のルートを関連の製品に適用 (親カテゴリも参照):"
+msgstr "次のルートを関連のプロダクトに適用 (親カテゴリも参照):"
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
@@ -6704,7 +6700,7 @@ msgstr "入荷ロケーションにて荷下ろし後、品質検査を経て、
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Unlock"
-msgstr ""
+msgstr "ロック解除"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
@@ -7028,7 +7024,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking,move_type:0
 msgid "When all products are ready"
-msgstr ""
+msgstr "全プロダクトが準備できてから"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_product_selectable
@@ -7083,7 +7079,7 @@ msgstr "仮想在庫が最小数量を下回ると、Odooは、予測数量を�
 msgid ""
 "When you run the schedulers, Odoo tries to reserve the available stock to fulfill the existing pickings\n"
 "                and verify if some reordering rules should be triggered."
-msgstr ""
+msgstr "スケジューラ実行すると、Odooは既存のピッキングに対し利用可能在庫を引き当てようとし、再発注規則をトリガするか確認します。"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_change_product_quantity
@@ -7097,7 +7093,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_additional
 msgid "Whether the move was added after the picking's confirmation"
-msgstr ""
+msgstr "ピッキング確認後に追加された移動"
 
 #. module: stock
 #: model:product.product,name:stock.test_quant_product
