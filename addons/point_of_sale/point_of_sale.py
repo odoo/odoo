@@ -1363,8 +1363,8 @@ class pos_order_line(osv.osv):
             taxes = account_tax_obj.compute_all(cr, uid, taxes_ids, price, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
 
             cur = line.order_id.pricelist_id.currency_id
-            res[line.id]['price_subtotal'] = taxes['total']
-            res[line.id]['price_subtotal_incl'] = taxes['total_included']
+            res[line.id]['price_subtotal'] = cur.round(taxes['total'])
+            res[line.id]['price_subtotal_incl'] = cur.round(taxes['total_included'])
         return res
 
     def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False, context=None):
