@@ -7,13 +7,16 @@
 # Martin Trigaux <mat@odoo.com>, 2017
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2017
 # José Vicente <txusev@gmail.com>, 2017
+# e2f_es_ t7 <e2f_es_t7@outlook.com>, 2017
+# e2f_EPV Translator <e2f_EPV@outlook.com>, 2017
+# ES T2 <e2f48ds4f2ds1@outlook.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-24 09:00+0000\n"
 "PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: José Vicente <txusev@gmail.com>, 2017\n"
+"Last-Translator: ES T2 <e2f48ds4f2ds1@outlook.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +35,13 @@ msgid ""
 "<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
 "</data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Hola:</p>\n"
+"<p>Ha solicitado suscribirse a la lista de correo <strong>${object.name}</strong></p>\n"
+"<p>Para confirmarlo, visite el siguiente enlace:</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
+"<p>Si se trata de un error o no ha solicitado esta acción, ignore este mensaje.</p>\n"
+"</data>"
 
 #. module: website_mail_channel
 #: model:mail.template,body_html:website_mail_channel.mail_template_list_unsubscribe
@@ -44,6 +54,13 @@ msgid ""
 "<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
 "</data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Hola:</p>\n"
+"<p>Ha solicitado anular su suscripción a la lista de correo <strong>${object.name}</strong></p>\n"
+"<p>Para confirmarlo, visite el siguiente enlace:</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
+"<p>Si se trata de un error o no ha solicitado esta acción, ignore este mensaje.</p>\n"
+"</data>"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
@@ -109,7 +126,7 @@ msgstr "Seguimientos"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.invalid_token_subscription
 msgid "Invalid or expired confirmation link."
-msgstr ""
+msgstr "El enlace de confirmación no es válido o ha expirado."
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.footer_mailing_list
@@ -145,12 +162,12 @@ msgstr "Correos salientes"
 #. module: website_mail_channel
 #: model:mail.template,subject:website_mail_channel.mail_template_list_subscribe
 msgid "Please confirm subscription to ${object.name}"
-msgstr ""
+msgstr "Confirme su suscripción a ${object.name}"
 
 #. module: website_mail_channel
 #: model:mail.template,subject:website_mail_channel.mail_template_list_unsubscribe
 msgid "Please confirm unsubscription to ${object.name}"
-msgstr ""
+msgstr "Confirme la anulación de su suscripción a ${object.name}"
 
 #. module: website_mail_channel
 #: code:addons/website_mail_channel/models/mail_mail.py:21
@@ -177,7 +194,7 @@ msgstr "Suscribir"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
 msgid "The address"
-msgstr ""
+msgstr "La dirección"
 
 #. module: website_mail_channel
 #: code:addons/website_mail_channel/controllers/main.py:238
@@ -186,6 +203,8 @@ msgid ""
 "The address %s is already unsubscribed or was never subscribed to any "
 "mailing list"
 msgstr ""
+"La dirección %s ya está dada de baja o nunca ha estado dada de alta en "
+"ninguna lista de correo"
 
 #. module: website_mail_channel
 #: code:addons/website_mail_channel/models/mail_mail.py:22
@@ -197,7 +216,7 @@ msgstr "Anular subscripción"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "You have been correctly"
-msgstr ""
+msgstr "Se ha"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
@@ -229,6 +248,10 @@ msgid ""
 "                    list, you may want to check that the address was\n"
 "                    correct."
 msgstr ""
+"ya está\n"
+"                    dada de baja o nunca ha estado dada de alta en la lista\n"
+"                    de correo. Compruebe que la dirección es\n"
+"                    correcta."
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -274,12 +297,12 @@ msgstr "mostrar"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "subscribed"
-msgstr ""
+msgstr "suscrito correctamente"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "to the mailing list."
-msgstr ""
+msgstr "a la lista de correo"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -290,7 +313,7 @@ msgstr "anular suscripción"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "unsubscribed"
-msgstr ""
+msgstr "suscripción anulada"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels

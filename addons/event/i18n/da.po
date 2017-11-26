@@ -12,13 +12,14 @@
 # Ejner Sønniksen <ejner@vkdata.dk>, 2017
 # Jesper Carstensen <jc@danodoo.dk>, 2017
 # JonathanStein <jstein@image.dk>, 2017
+# Laerke Mathiasen <lhm@flexerp.dk>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-16 08:08+0000\n"
 "PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: JonathanStein <jstein@image.dk>, 2017\n"
+"Last-Translator: Laerke Mathiasen <lhm@flexerp.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -464,7 +465,7 @@ msgstr ""
 #. module: event
 #: model:event.event,description:event.event_3
 msgid "<strong>Cancellation Policy: </strong>"
-msgstr ""
+msgstr "<strong>Afbestillingspolitik: </strong>"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -585,7 +586,7 @@ msgstr ""
 #. module: event
 #: model:event.event,description:event.event_1
 msgid "Assess whether your expectations are met;"
-msgstr ""
+msgstr "Vurdér om dine forventninger er indfriet;"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -634,17 +635,17 @@ msgstr "Deltagere"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_auto_confirm
 msgid "Autoconfirm Registrations"
-msgstr ""
+msgstr "Autobekræft Tilmeldinger"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_auto_confirm
 msgid "Automatically Confirm Registrations"
-msgstr ""
+msgstr "Bekræft Tilmeldinger Automatisk"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_use_mail_schedule
 msgid "Automatically Send Emails"
-msgstr ""
+msgstr "Send Emails Automatisk"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_available
@@ -734,7 +735,7 @@ msgstr ""
 #. module: event
 #: model:ir.actions.act_window,help:event.act_event_registration_from_event
 msgid "Click to add a new attendee."
-msgstr ""
+msgstr "Klik for at tilføje en ny deltager."
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -1300,7 +1301,7 @@ msgstr "Begrænset"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_has_seats_limitation
 msgid "Limited Seats"
-msgstr ""
+msgstr "Begrænset Antal Pladser"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_address_id
@@ -1375,7 +1376,7 @@ msgstr "Maksimum antal deltagere"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_default_registration_max
 msgid "Maximum Registrations"
-msgstr ""
+msgstr "Maksimum Tilmeldinger"
 
 #. module: event
 #: code:addons/event/models/event.py:253
@@ -1383,6 +1384,8 @@ msgstr ""
 msgid ""
 "Maximum attendees number should be greater than minimum attendees number."
 msgstr ""
+"Det maksimale antal deltagere skal være højere end det minimale antal "
+"deltagere."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_min
@@ -1392,7 +1395,7 @@ msgstr "Minimum antal deltagere"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_default_registration_min
 msgid "Minimum Registrations"
-msgstr ""
+msgstr "Minimum Tilmeldinger"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -1656,12 +1659,12 @@ msgstr "Planlagt tid"
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets on your website"
-msgstr ""
+msgstr "Sælg billetter på din hjemmeside"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with sales orders"
-msgstr ""
+msgstr "Sælg billetter med salgsordrer"
 
 #. module: event
 #: model:event.type,name:event.event_type_0
@@ -1901,12 +1904,12 @@ msgstr "Kommende arrangementer fra idag"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_use_hashtag
 msgid "Use Default Hashtag"
-msgstr ""
+msgstr "Anvend Standard Hashtag"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_use_timezone
 msgid "Use Default Timezone"
-msgstr ""
+msgstr "Anvend Standard Tidszone"
 
 #. module: event
 #: model:res.groups,name:event.group_event_user
@@ -1940,7 +1943,7 @@ msgstr ""
 #. module: event
 #: model:event.event,description:event.event_1
 msgid "We are looking forward to meeting you online,"
-msgstr ""
+msgstr "Vi ser frem til at møde dig online,"
 
 #. module: event
 #: model:event.event,description:event.event_3
@@ -2029,19 +2032,19 @@ msgstr ""
 #: code:addons/event/models/event.py:497
 #, python-format
 msgid "in %d days"
-msgstr ""
+msgstr "om %d dage"
 
 #. module: event
 #: code:addons/event/models/event.py:501
 #, python-format
 msgid "next month"
-msgstr ""
+msgstr "næste måned"
 
 #. module: event
 #: code:addons/event/models/event.py:499
 #, python-format
 msgid "next week"
-msgstr ""
+msgstr "næste uge"
 
 #. module: event
 #: code:addons/event/models/event.py:503
@@ -2058,13 +2061,13 @@ msgstr ""
 #: code:addons/event/models/event.py:493
 #, python-format
 msgid "today"
-msgstr ""
+msgstr "i dag"
 
 #. module: event
 #: code:addons/event/models/event.py:495
 #, python-format
 msgid "tomorrow"
-msgstr ""
+msgstr "i morgen"
 
 #. module: event
 #: model:event.event,description:event.event_3

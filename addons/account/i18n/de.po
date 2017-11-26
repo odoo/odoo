@@ -30,7 +30,7 @@
 # aNj <anj2j@yahoo.de>, 2017
 # Malte Jansen <work@maltejansen.de>, 2017
 # Renzo Meister <info@jamotion.ch>, 2017
-# BT_astauder <andreas.stauder@brain-tec.ch>, 2017
+# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2017
 # Stefan Hartenfels <stefan.hartenfels@camptocamp.com>, 2017
 # Maik Steinfeld <info@streward.de>, 2017
 # Christopher Westburry <cricsus99@gmail.com>, 2017
@@ -1691,7 +1691,7 @@ msgstr "Hinzufügen"
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
 msgid "Add Credit Note"
-msgstr ""
+msgstr "Gutschrift erstellen"
 
 #. module: account
 #: selection:account.cash.rounding,strategy:0
@@ -2706,7 +2706,7 @@ msgstr "Abbrechen"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: create credit note and reconcile"
-msgstr ""
+msgstr "Abbrechen: Gutschrift erstellen und ausgleichen"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -2728,6 +2728,9 @@ msgid ""
 "invoice should be unreconciled first, then only you can add credit note for "
 "this invoice."
 msgstr ""
+"Es kann keine Gutschrift für eine bereits ausgeglichene Rechnung erstellt "
+"werden. Nehmen Sie den Ausgleich der Rechnung zurück, um eine Gutschrift "
+"erstellen zu können."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:54
@@ -3528,7 +3531,7 @@ msgstr "Abschreibung erstellen"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Create a draft credit note"
-msgstr ""
+msgstr "Gutschrift im Entwurf erstellen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
@@ -3752,7 +3755,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_date_invoice
 msgid "Credit Note Date"
-msgstr ""
+msgstr "Gutschrift-Datum"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence_id
@@ -4388,7 +4391,7 @@ msgstr "Rechnungsentwurf"
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Draft Credit Note"
-msgstr ""
+msgstr "Gutschrift im Entwurf"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:437
@@ -6603,7 +6606,7 @@ msgstr "DIV"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Mail your invoices in one-click using"
-msgstr ""
+msgstr "Verschicken Sie Ihre Rechnung mit einem Klick per"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6860,6 +6863,8 @@ msgstr ""
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create credit note, reconcile and create a new draft invoice"
 msgstr ""
+"Modifizieren: Gutschrift erstellen, ausgleichen und Rechnung im Entwurf "
+"erstellen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8136,7 +8141,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Print checks to pay your vendors"
-msgstr ""
+msgstr "Schecks drucken, um Ihre Lieferanten zu bezahlen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_product_id
@@ -9107,7 +9112,7 @@ msgstr "Einstellungen"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Setup"
-msgstr ""
+msgstr "Einrichtung"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_bar_closed
@@ -11060,6 +11065,10 @@ msgid ""
 "                                with the current invoice. A new draft invoice will be created\n"
 "                                so that you can edit it."
 msgstr ""
+"Verwenden Sie diese Option, wenn Sie eine Rechnung stornieren und eine neue "
+"Rechnung erstellen möchten. Die Gutschrift wird erstellt, validiert und mit "
+"der aktuellen Rechnung ausgeglichen. Eine neue Rechnung im Entwurf wird "
+"erstellt, damit Sie sie bearbeiten können."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
