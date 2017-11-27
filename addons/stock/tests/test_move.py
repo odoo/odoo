@@ -3137,3 +3137,40 @@ class StockMove(TransactionCase):
         self.assertTrue(ml.move_id in picking.move_lines, 'Links are not correct between picking, moves and move lines.')
         self.assertEqual(picking.state, 'done', 'Picking should still done after adding a new move line.')
         self.assertTrue(all(move.state == 'done' for move in picking.move_lines), 'Wrong state for move.')
+
+    def test_put_in_pack_1(self):
+        """ Check that reserving a move and adding its move lines to
+        different packages work as expected.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 2)
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        move1 = self.env['stock.move'].create({
+            'name': 'test_transit_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+            'picking_id': picking.id,
+        })
+        picking.action_confirm()
+        picking.action_assign()
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0)
+        move1.quantity_done = 1
+        picking.put_in_pack()
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0)
+        self.assertEqual(len(picking.move_line_ids), 2)
+        unpacked_ml = picking.move_line_ids.filtered(lambda ml: not ml.result_package_id)
+        self.assertEqual(unpacked_ml.product_qty, 1)
+        unpacked_ml.qty_done = 1
+        picking.put_in_pack()
+        self.assertEqual(len(picking.move_line_ids), 2)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0)
+        picking.button_validate()
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.customer_location), 2)
+

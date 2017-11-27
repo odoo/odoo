@@ -11,7 +11,7 @@ from os.path import join as opj
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.modules import load_information_from_description_file
-from odoo.tools import convert_file, exception_to_unicode
+from odoo.tools import convert_file, exception_to_unicode, pycompat
 from odoo.tools.osutil import tempdir
 
 _logger = logging.getLogger(__name__)
@@ -78,8 +78,9 @@ class IrModule(models.Model):
                     full_path = opj(root, static_file)
                     with open(full_path, 'rb') as fp:
                         data = base64.b64encode(fp.read())
-                    url_path = '/%s%s' % (module, full_path.split(path)[1].replace(os.path.sep, '/'))
-                    url_path = url_path.decode(sys.getfilesystemencoding())
+                    url_path = '/{}{}'.format(module, full_path.split(path)[1].replace(os.path.sep, '/'))
+                    if not isinstance(url_path, pycompat.text_type):
+                        url_path = url_path.decode(sys.getfilesystemencoding())
                     filename = os.path.split(url_path)[1]
                     values = dict(
                         name=filename,
