@@ -633,7 +633,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
 
         Example of use:
         ---------------
-        from odoo.addons.base.res.res_config import get_warning_config
+        from odoo.addons.base.models.res_config import get_warning_config
         raise get_warning_config(cr, _("Error: this action is prohibited. You should check the field %(field:sale.config.settings.fetchmail_lead)s in %(menu:sales_team.menu_sale_config)s."), context=context)
 
         This will return an exception containing the following message:

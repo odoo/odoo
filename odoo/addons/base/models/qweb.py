@@ -528,7 +528,7 @@ class QWeb(object):
         return ast.parse(dedent("""
             from collections import OrderedDict
             from odoo.tools.pycompat import to_text, string_types
-            from odoo.addons.base.ir.ir_qweb.qweb import escape, foreach_iterator
+            from odoo.addons.base.models.qweb import escape, foreach_iterator
             """))
 
     def _create_def(self, options, body, prefix='fn', lineno=None):

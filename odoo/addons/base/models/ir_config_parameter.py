@@ -36,7 +36,7 @@ class IrConfigParameter(models.Model):
     ]
 
     @api.model_cr
-    @mute_logger('odoo.addons.base.ir.ir_config_parameter')
+    @mute_logger('odoo.addons.base.models.ir_config_parameter')
     def init(self, force=False):
         """
         Initializes the parameters listed in _default_parameters.

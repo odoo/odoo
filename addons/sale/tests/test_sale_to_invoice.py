@@ -9,7 +9,7 @@ from odoo.tools import mute_logger
 
 class TestSale(TransactionCase):
 
-    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.osv.orm')
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.osv.orm')
     def setUp(self):
         super(TestSale, self).setUp()
 

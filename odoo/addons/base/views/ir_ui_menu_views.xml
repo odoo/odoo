@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        
+        <record id="view_menu" model="ir.ui.view">
+            <field name="name">ir.ui.menu.tree</field>
+            <field name="model">ir.ui.menu</field>
+            <field name="arch" type="xml">
+                <tree string="Menu" toolbar="1">
+                    <field icon="icon" name="name"/>
+                </tree>
+            </field>
+            <field name="field_parent">child_id</field>
+        </record>
+
         <record id="edit_menu_access" model="ir.ui.view">
             <field name="model">ir.ui.menu</field>
             <field name="arch" type="xml">

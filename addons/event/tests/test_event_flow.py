@@ -15,7 +15,7 @@ except ImportError:
 
 class TestEventFlow(TestEventCommon):
 
-    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_00_basic_event_auto_confirm(self):
         """ Basic event management with auto confirmation """
         # EventUser creates a new event: ok
@@ -65,7 +65,7 @@ class TestEventFlow(TestEventCommon):
         with self.assertRaises(UserError):
             test_event.button_cancel()
 
-    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_10_advanced_event_flow(self):
         """ Avanced event flow: no auto confirmation, manage minimum / maximum
         seats, ... """

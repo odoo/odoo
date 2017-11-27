@@ -157,7 +157,7 @@ class TestAPI(common.TransactionCase):
             self.assertFalse(p.active)
 
     @mute_logger('odoo.models')
-    @mute_logger('odoo.addons.base.ir.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_model')
     def test_50_environment(self):
         """ Test environment on records. """
         # partners and reachable records are attached to self.env
