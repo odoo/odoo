@@ -213,18 +213,14 @@ class ir_cron(models.Model):
                 jobs = cr.dictfetchall()
 
             if changes:
-                if jobs:
-                    # nextcall is never updated if the cron is not executed,
-                    # it is used as a sentinel value to check whether cron jobs
-                    # have been locked for a long time (stuck)
-                    min_fail = min([parse(job['nextcall']) for job in jobs])
-                    now = datetime.now()
-                    dt = now - min_fail
-
-                    if dt > MAX_FAIL_TIME:
-                        reset_modules_state(db_name)
-                    else:
-                        raise BadModuleState()
+                if not jobs:
+                    raise BadModuleState()
+                # nextcall is never updated if the cron is not executed,
+                # it is used as a sentinel value to check whether cron jobs
+                # have been locked for a long time (stuck)
+                oldest = min([parse(job['nextcall']) for job in jobs])
+                if oldest + MAX_FAIL_TIME < datetime.now():
+                    reset_modules_state(db_name)
                 else:
                     raise BadModuleState()
 
