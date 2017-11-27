@@ -49,8 +49,7 @@ class SaleOrder(models.Model):
 
     def _get_reward_lines(self):
         self.ensure_one()
-        reward_products = self.applied_coupon_ids.mapped('program_id').mapped('discount_line_product_id')
-        return self.order_line.filtered(lambda line: line.product_id in reward_products)
+        return self.order_line.filtered(lambda line: line.is_reward_line)
 
     def _is_reward_in_order_lines(self, program):
         self.ensure_one()
