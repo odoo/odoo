@@ -44,6 +44,7 @@ class AccountAnalyticTag(models.Model):
     active = fields.Boolean(default=True, help="Set active to false to hide the Analytic Tag without removing it.")
     analytic_distribution = fields.Boolean(string="Analytic Distribution")
     analytic_distribution_ids = fields.One2many('account.analytic.distribution', 'tag_id', string="Analytic Accounts")
+    active_analytic_distribution = fields.Boolean('Analytic Distribution')
 
 class AccountAnalyticCategory(models.Model):
     _name = 'account.analytic.category'
