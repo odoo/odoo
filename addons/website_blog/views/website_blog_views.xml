@@ -202,6 +202,7 @@
                     <sheet>
                         <group>
                             <field name="name"/>
+                            <field name="category_id"/>
                         </group>
                         <label for="post_ids" string="Used in: "/>
                         <field name="post_ids"/>
@@ -219,4 +220,43 @@
         </record>
 
         <menuitem id="menu_blog_tag" parent="menu_website_blog_root" name="Blog Tags" action="action_tags" sequence="40" />
+
+        <record id="blog_tag_category_form" model="ir.ui.view">
+            <field name="name">blog_tag_category_form</field>
+            <field name="model">blog.tag.category</field>
+            <field name="arch" type="xml">
+                <form string="Tag Category Form">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="blog_tag_category_tree" model="ir.ui.view">
+            <field name="name">blog_tag_category_tree</field>
+            <field name="model">blog.tag.category</field>
+            <field name="arch" type="xml">
+                <tree string="Tag Categories">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_tag_category" model="ir.actions.act_window">
+            <field name="name">Tag Category</field>
+            <field name="res_model">blog.tag.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="blog_tag_category_tree"/>
+        </record>
+
+        <menuitem id="menu_website_blog_settings" name="Blog"
+            parent="website.menu_website_global_configuration"/>
+
+        <menuitem id="menu_website_blog_tag_category" name="Tag Categories"
+        parent="menu_website_blog_settings" action="action_tag_category"/>
+
 </odoo>
