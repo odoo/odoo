@@ -719,7 +719,7 @@ class AccountAnalyticAccount(models.Model):
         projects = self.env['project.project'].with_context(active_test=False).search([('analytic_account_id', 'in', self.ids)])
         has_tasks = self.env['project.task'].with_context(active_test=False).search_count([('project_id', 'in', projects.ids)])
         if has_tasks:
-            raise UserError(_('Please remove existing tasks in the project linked to the accounts you want to delete.'))
+            raise UserError(_('Please remove existing and archived tasks in the project linked to the accounts you want to delete.'))
         return super(AccountAnalyticAccount, self).unlink()
 
     @api.model

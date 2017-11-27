@@ -13,7 +13,7 @@ class AccountAnalyticAccount(models.Model):
     @api.multi
     def unlink(self):
         if self.env['project.issue'].with_context(active_test=False).search_count([('project_id.analytic_account_id', 'in', self.ids)]):
-            raise UserError(_('Please remove existing issues in the project linked to the accounts you want to delete.'))
+            raise UserError(_('Please remove existing and archived issues in the project linked to the accounts you want to delete.'))
         return super(AccountAnalyticAccount, self).unlink()
 
     @api.model
