@@ -201,7 +201,9 @@ class ir_cron(models.Model):
                 (version,) = cr.fetchone()
                 cr.execute("SELECT COUNT(*) FROM ir_module_module WHERE state LIKE %s", ['to %'])
                 (changes,) = cr.fetchone()
-                if version != BASE_VERSION:
+                if version is None:
+                    raise BadModuleState()
+                elif version != BASE_VERSION:
                     raise BadVersion()
                 # Careful to compare timestamps with 'UTC' - everything is UTC as of v6.1.
                 cr.execute("""SELECT * FROM ir_cron
@@ -210,17 +212,18 @@ class ir_cron(models.Model):
                               ORDER BY priority""")
                 jobs = cr.dictfetchall()
 
-            if not version or changes:
-                if jobs:
-                    # next is never updated if the cron is not executed, thus
-                    # it is used as a sentinel value to check whether cron jobs
-                    # have been locked for a long time (stuck)
-                    times = [parse(job['nextcall']) for job in jobs]
-                    now = datetime.now()
-                    dts = [(now - t) > MAX_FAIL_TIME for t in times]
-                    if any(dts):
-                        reset_modules_state(db_name)
-                raise BadModuleState()
+            if changes and jobs:
+                # nextcall is never updated if the cron is not executed,
+                # it is used as a sentinel value to check whether cron jobs
+                # have been locked for a long time (stuck)
+                first_fail = min([parse(job['nextcall']) for job in jobs])
+                now = datetime.now()
+                dt = now - first_fail
+
+                if dt > MAX_FAIL_TIME:
+                    reset_modules_state(db_name)
+                else:
+                    raise BadModuleState()
 
             for job in jobs:
                 lock_cr = db.cursor()
