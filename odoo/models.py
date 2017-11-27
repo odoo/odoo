@@ -5024,7 +5024,8 @@ env['account.invoice.line'].search([]).grouped(['partner_id.country_id', 'partne
 
             :param orderby (optional):
                 Sorting function/s, for each grouping level.
-                Same rules than groupby
+                Same rules than groupby.
+                If omitted, groups will be used. Please notice you can also use aggregate functions here.
 
             :param aggregate_functions (optional): either a string, or a 1-ary functions that take a recordset as argument and
                 return a scalar.
@@ -5086,7 +5087,7 @@ env['account.invoice.line'].search([]).grouped(['partner_id.country_id', 'partne
 
         # Fix argument orderby
         # We choose default order by id
-        uniform_orderby = map(uniform_attrgetter, orderby) if orderby else [lambda x:x.id]
+        uniform_orderby = map(uniform_attrgetter, orderby if orderby else groupby)
         if len(uniform_orderby) == 1 and len(uniform_groupby) > 1:
             uniform_orderby = [uniform_orderby[0] for i in range(len(uniform_groupby))]
 
