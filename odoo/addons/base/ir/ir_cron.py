@@ -18,7 +18,7 @@ from odoo.tools.safe_eval import safe_eval
 _logger = logging.getLogger(__name__)
 
 BASE_VERSION = odoo.modules.load_information_from_description_file('base')['version']
-MAX_FAIL_TIME = timedelta(hours=6)
+MAX_FAIL_TIME = timedelta(minutes=5)
 
 
 class BadVersion(Exception):
@@ -217,9 +217,9 @@ class ir_cron(models.Model):
                     # nextcall is never updated if the cron is not executed,
                     # it is used as a sentinel value to check whether cron jobs
                     # have been locked for a long time (stuck)
-                    first_fail = min([parse(job['nextcall']) for job in jobs])
+                    min_fail = min([parse(job['nextcall']) for job in jobs])
                     now = datetime.now()
-                    dt = now - first_fail
+                    dt = now - min_fail
 
                     if dt > MAX_FAIL_TIME:
                         reset_modules_state(db_name)
