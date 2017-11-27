@@ -7,6 +7,17 @@
             <t>
                 <div class="page">
                     <div class="oe_structure"/>
+                    <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)"
+                        style="width:300px;height:50px" class="pull-right mb16"/>
+                    <h1 t-field="o.name" class="mt0 pull-left"/>
+                    <div class="row o_packaging_type" t-if="o.packaging_id">
+                        <div class="col-xs-12" style="font-weight:bold;">Package Type: <span t-field="o.packaging_id.name"/></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>Package Content</h2>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-xs-8">
                             <table class="table table-condensed" style="border-bottom: 0px solid white !important;">
@@ -23,7 +34,7 @@
                                            <span  t-field="l.product_id.name"/>
                                         </td>
                                         <td class="text-right">
-                                            <span t-field="l.qty"/>
+                                            <span t-field="l.quantity"/>
                                             <span groups="product.group_uom" t-field="l.product_id.uom_id.name"/>
                                         </td>
                                         <td>
@@ -32,16 +43,6 @@
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
-                        <div class="col-xs-4">
-                            <img class="image" t-att-src="'data:image/png;base64,%s' % to_text(res_company.logo)" style="border:auto;"/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12 mt32 text-center">
-                            <table class="table table-condensed" style="border-bottom: 3px solid black !important;"><thead><th> </th></thead></table>
-                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px"/>
-                            <p t-field="o.name"></p>
                         </div>
                     </div>
                 </div>
@@ -57,11 +58,16 @@
                 <div class="page">
                     <div class="oe_structure"/>
                     <div class="row">
-                        <div class="col-xs-12 mt32 text-center">
-                            <table class="table table-condensed" style="border-bottom: 3px solid black !important;"><thead><th> </th></thead></table>
-                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px"/>
-                            <p t-field="o.name"></p>
+                        <div class="col-xs-12 text-center">
+                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:600px;height:100px"/>
+                            <p t-field="o.name"  style="font-size:20px;"></p>
                         </div>
+                    </div>
+                    <div class="row o_package_name">
+                        <div class="col-xs-12" style="font-size:24px; font-weight:bold;">Package Reference: <span t-field="o.name"/></div>
+                    </div>
+                    <div class="row o_packaging_type" t-if="o.packaging_id">
+                        <div class="col-xs-12" style="font-size:24px; font-weight:bold;">Package Type: <span t-field="o.packaging_id.name"/></div>
                     </div>
                 </div>
             </t>
