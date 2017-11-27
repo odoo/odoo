@@ -383,7 +383,7 @@ var FieldFloat = FieldChar.extend({
         }
         if (this.digits !== undefined && this.digits.length === 2) {
             value_ = utils.round_decimals(value_, this.digits[1]);
-        }        
+        }
         this._super(value_);
     }
 });
@@ -1190,7 +1190,10 @@ var FieldBinaryFile = FieldBinary.extend({
         }
     },
     render_value: function() {
-        var filename = this.view.datarecord[this.node.attrs.filename];
+        var filename = this.node.attrs.filename;
+        if (filename) {
+            var filename = this.field_manager.fields[filename].get('value');
+        }
         if (this.get("effective_readonly")) {
             this.do_toggle(!!this.get('value'));
             if (this.get('value')) {
@@ -1317,7 +1320,7 @@ var FieldStatus = common.AbstractField.extend({
     render_value: function() {
         var self = this;
         var content = QWeb.render("FieldStatus.content", {
-            'widget': self, 
+            'widget': self,
             'value_folded': _.find(self.selection.folded, function(i){return i[0] === self.get('value');})
         });
         self.$el.html(content);
@@ -1508,7 +1511,7 @@ var FieldMonetary = FieldFloat.extend({
 
 /**
     This widget is intended to be used on stat button numeric fields.  It will display
-    the value   many2many and one2many. It is a read-only field that will 
+    the value   many2many and one2many. It is a read-only field that will
     display a simple string "<value of field> <label of the field>"
 */
 var StatInfo = common.AbstractField.extend({
