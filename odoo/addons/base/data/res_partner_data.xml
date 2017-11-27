@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="True">
+        <record id="main_partner" model="res.partner" context="{'default_is_company': True}">
+            <field name="name">My Company</field>
+            <field name="company_id" eval="None"/>
+            <field name="customer" eval="False"/>
+            <field name="is_company" eval="True"/>
+            <field name="street"></field>
+            <field name="city"></field>
+            <field name="zip"></field>
+            <field name="phone"></field>
+            <field name="email">info@yourcompany.com</field>
+            <field name="website">www.yourcompany.com</field>
+        </record>
+
+        <record model="res.partner" id="base.partner_root">
+            <field name="name">Administrator</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="customer" eval="False"/>
+            <field name="email">admin@example.com</field>
+        </record>
+
+        <record id="public_partner" model="res.partner">
+            <field name="name">Public user</field>
+            <field name="active" eval="False"/>
+        </record>
 
         <!--
         Resource: res.partner.title

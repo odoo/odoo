@@ -288,13 +288,13 @@ class Partner(models.Model):
             image = parent_image and parent_image.decode('base64') or None
 
         if not image and partner_type == 'invoice':
-            img_path = get_module_resource('base', 'static/src/img', 'money.png')
+            img_path = get_module_resource('base', 'static/img', 'money.png')
         elif not image and partner_type == 'delivery':
-            img_path = get_module_resource('base', 'static/src/img', 'truck.png')
+            img_path = get_module_resource('base', 'static/img', 'truck.png')
         elif not image and is_company:
-            img_path = get_module_resource('base', 'static/src/img', 'company_image.png')
+            img_path = get_module_resource('base', 'static/img', 'company_image.png')
         elif not image:
-            img_path = get_module_resource('base', 'static/src/img', 'avatar.png')
+            img_path = get_module_resource('base', 'static/img', 'avatar.png')
             colorize = True
 
         if img_path:

@@ -296,11 +296,11 @@
                                                 <div class="o_kanban_image">
                                                     <img t-if="record.image_small.raw_value" t-att-src="'data:image/png;base64,'+record.image_small.raw_value"/>
                                                     <t t-if="!record.image_small.raw_value">
-                                                        <img t-if="record.type.raw_value === 'delivery'" t-att-src='_s + "/base/static/src/img/truck.png"'/>
-                                                        <img t-if="record.type.raw_value === 'invoice'" t-att-src='_s + "/base/static/src/img/money.png"'/>
+                                                        <img t-if="record.type.raw_value === 'delivery'" t-att-src='_s + "/base/static/img/truck.png"'/>
+                                                        <img t-if="record.type.raw_value === 'invoice'" t-att-src='_s + "/base/static/img/money.png"'/>
                                                         <t t-if="record.type.raw_value !== 'invoice' &amp;&amp; record.type.raw_value !== 'delivery'">
-                                                            <img t-if="record.is_company.raw_value === true" t-att-src='_s + "/base/static/src/img/company_image.png"'/>
-                                                            <img t-if="record.is_company.raw_value === false" t-att-src='_s + "/base/static/src/img/avatar.png"'/>
+                                                            <img t-if="record.is_company.raw_value === true" t-att-src='_s + "/base/static/img/company_image.png"'/>
+                                                            <img t-if="record.is_company.raw_value === false" t-att-src='_s + "/base/static/img/avatar.png"'/>
                                                         </t>
                                                     </t>
                                                 </div>
@@ -453,17 +453,17 @@
                                     </t>
                                     <t t-if="!record.image_small.raw_value">
                                         <t t-if="record.type.raw_value === 'delivery'">
-                                            <img t-att-src='_s + "/base/static/src/img/truck.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                            <img t-att-src='_s + "/base/static/img/truck.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
                                         </t>
                                         <t t-if="record.type.raw_value === 'invoice'">
-                                            <img t-att-src='_s + "/base/static/src/img/money.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                            <img t-att-src='_s + "/base/static/img/money.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
                                          </t>
                                         <t t-if="record.type.raw_value != 'invoice' &amp;&amp; record.type.raw_value != 'delivery'">
                                             <t t-if="record.is_company.raw_value === true">
-                                                <img t-att-src='_s + "/base/static/src/img/company_image.png"'/>
+                                                <img t-att-src='_s + "/base/static/img/company_image.png"'/>
                                             </t>
                                             <t t-if="record.is_company.raw_value === false">
-                                                <img t-att-src='_s + "/base/static/src/img/avatar.png"'/>
+                                                <img t-att-src='_s + "/base/static/img/avatar.png"'/>
                                             </t>
                                         </t>
                                     </t>
