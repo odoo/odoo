@@ -634,6 +634,8 @@ var FormRenderer = BasicRenderer.extend({
                 $statusbar.append(widget.$el);
             }
         });
+        this._handleAttributes($statusbar, node);
+        this._registerModifiers(node, this.state, $statusbar);
         return $statusbar;
     },
     /**
