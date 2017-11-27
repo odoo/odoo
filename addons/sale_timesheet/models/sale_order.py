@@ -6,6 +6,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 from odoo.tools.safe_eval import safe_eval
+from odoo.tools import float_is_zero
 
 
 class SaleOrder(models.Model):
@@ -155,7 +156,9 @@ class SaleOrderLine(models.Model):
     @api.model
     def create(self, values):
         line = super(SaleOrderLine, self).create(values)
-        if line.state == 'sale':
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        # check ordered quantity to avoid create project/task when expensing service products
+        if line.state == 'sale' and not float_is_zero(line.product_uom_qty, precision_digits=precision):
             line._timesheet_service_generation()
         return line
 
