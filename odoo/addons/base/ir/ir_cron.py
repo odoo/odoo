@@ -5,17 +5,20 @@ import threading
 import time
 import psycopg2
 import pytz
-from datetime import datetime
+from datetime import datetime, timedelta
+from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 
 import odoo
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.modules.loading import reset_modules_state
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
 BASE_VERSION = odoo.modules.load_information_from_description_file('base')['version']
+MAX_FAIL_TIME = timedelta(hours=6)
 
 
 class BadVersion(Exception):
@@ -198,9 +201,7 @@ class ir_cron(models.Model):
                 (version,) = cr.fetchone()
                 cr.execute("SELECT COUNT(*) FROM ir_module_module WHERE state LIKE %s", ['to %'])
                 (changes,) = cr.fetchone()
-                if not version or changes:
-                    raise BadModuleState()
-                elif version != BASE_VERSION:
+                if version != BASE_VERSION:
                     raise BadVersion()
                 # Careful to compare timestamps with 'UTC' - everything is UTC as of v6.1.
                 cr.execute("""SELECT * FROM ir_cron
@@ -208,6 +209,18 @@ class ir_cron(models.Model):
                                   AND active AND nextcall <= (now() at time zone 'UTC')
                               ORDER BY priority""")
                 jobs = cr.dictfetchall()
+
+            if not version or changes:
+                if jobs:
+                    # next is never updated if the cron is not executed, thus
+                    # it is used as a sentinel value to check whether cron jobs
+                    # have been locked for a long time (stuck)
+                    times = [parse(job['nextcall']) for job in jobs]
+                    now = datetime.now()
+                    dts = [(now - t) > MAX_FAIL_TIME for t in times]
+                    if any(dts):
+                        reset_modules_state(db_name)
+                raise BadModuleState()
 
             for job in jobs:
                 lock_cr = db.cursor()

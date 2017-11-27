@@ -451,3 +451,4 @@ def reset_modules_state(db_name):
         cr.execute(
             "UPDATE ir_module_module SET state='uninstalled' WHERE state='to install'"
         )
+        _logger.warning("Transient module states were reset")
