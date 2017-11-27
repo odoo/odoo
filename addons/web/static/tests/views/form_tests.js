@@ -248,13 +248,16 @@ QUnit.module('Views', {
     });
 
     QUnit.test('invisible elements are properly hidden', function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         var form = createView({
             View: FormView,
             model: 'partner',
             data: this.data,
             arch: '<form string="Partners">' +
+                    '<header invisible="1">' +
+                        '<button name="myaction" string="coucou"/>' +
+                    '</header>' +
                     '<sheet>' +
                         '<group>' +
                             '<group string="invgroup" invisible="1">' +
@@ -269,6 +272,8 @@ QUnit.module('Views', {
                 '</form>',
             res_id: 1,
         });
+        assert.strictEqual(form.$('.o_form_statusbar.o_invisible_modifier button:contains(coucou)').length, 1,
+                        "should not display invisible header");
         assert.strictEqual(form.$('.o_notebook li.o_invisible_modifier a:contains(invisible)').length, 1,
                         "should not display tab invisible");
         assert.strictEqual(form.$('table.o_inner_group.o_invisible_modifier td:contains(invgroup)').length, 1,
