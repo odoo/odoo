@@ -18,7 +18,7 @@ from odoo.tools.safe_eval import safe_eval
 _logger = logging.getLogger(__name__)
 
 BASE_VERSION = odoo.modules.load_information_from_description_file('base')['version']
-MAX_FAIL_TIME = timedelta(minutes=5)
+MAX_FAIL_TIME = timedelta(hours=5)
 
 
 class BadVersion(Exception):
