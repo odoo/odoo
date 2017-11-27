@@ -187,8 +187,9 @@
             <field name="name">blog_tag_tree</field>
             <field name="model">blog.tag</field>
             <field name="arch" type="xml">
-                <tree string="Tag List" create="false">
+                <tree string="Tag List">
                     <field name="name"/>
+                    <field name="category_id"/>
                     <field name="post_ids"/>
                 </tree>
             </field>
@@ -202,6 +203,7 @@
                     <sheet>
                         <group>
                             <field name="name"/>
+                            <field name="category_id"/>
                         </group>
                         <label for="post_ids" string="Used in: "/>
                         <field name="post_ids"/>
@@ -218,5 +220,41 @@
             <field name="view_id" ref="blog_tag_tree"/>
         </record>
 
-        <menuitem id="menu_blog_tag" parent="menu_website_blog_root" name="Blog Tags" action="action_tags" sequence="40" />
+        <menuitem id="menu_blog_tag" parent="menu_website_blog_root" name="Tags" action="action_tags" sequence="40" />
+
+        <record id="blog_tag_category_form" model="ir.ui.view">
+            <field name="name">blog_tag_category_form</field>
+            <field name="model">blog.tag.category</field>
+            <field name="arch" type="xml">
+                <form string="Tag Category Form">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="blog_tag_category_tree" model="ir.ui.view">
+            <field name="name">blog_tag_category_tree</field>
+            <field name="model">blog.tag.category</field>
+            <field name="arch" type="xml">
+                <tree string="Tag Categories">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_tag_category" model="ir.actions.act_window">
+            <field name="name">Tag Category</field>
+            <field name="res_model">blog.tag.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="blog_tag_category_tree"/>
+        </record>
+
+        <menuitem id="menu_website_blog_tag_category" parent="menu_website_blog_root"
+                  name="Tag Categories" action="action_tag_category" sequence="50" />
+
 </odoo>

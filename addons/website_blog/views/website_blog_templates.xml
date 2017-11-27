@@ -392,23 +392,43 @@
 </template>
 
 <!-- Option:Right Column: tags -->
+
+<template id="tag_category" name="Tags List">
+    <ul class="nav nav-pills ml16">
+        <t t-if="tags">
+            <div t-if='not hide_title' class='text-muted mt8'><i class='fa fa-tag'/> <t t-esc='categ_title' /></div>
+            <t t-foreach="tags" t-as="tag">
+                <t t-if="tag.post_ids">
+                    <li t-att-class="tag.id in active_tag_ids and 'active' or None">
+                        <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}">
+                            <span t-field="tag.name"/>
+                        </a>
+                    </li>
+                </t>
+            </t>
+        </t>
+    </ul>
+</template>
+
 <template id="opt_blog_rc_tags" name="Tags"
         inherit_id="website_blog.index_right" active="True" customize_show="True">
     <xpath expr="//div[@id='main_column']" position="attributes">
         <attribute name="class">col-sm-8</attribute>
     </xpath>
     <xpath expr="//div[@id='blog_right_column']" position="inside">
-        <section class="mt32">
-        <h4>Tags</h4>
-        <ul class="nav nav-pills nav-stacked">
-            <t t-foreach="tags" t-as="nav_tag">
-            <li t-att-class="nav_tag.id in active_tag_ids and 'active' or None" style="display: inline-block;">
-                <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, nav_tag.id))}">
-                    <span t-field="nav_tag.name"/>
-                </a>
-            </li>
+        <section class="mt32 blog_tags">
+            <h4>Tags</h4>
+            <t t-foreach="tag_category" t-as="nav_tag_category">
+                <t t-call="website_blog.tag_category">
+                    <t t-set='categ_title' t-value="nav_tag_category.name"/>
+                    <t t-set='tags' t-value='nav_tag_category.tag_ids' />
+                </t>
             </t>
-        </ul>
+            <t t-call="website_blog.tag_category">
+                <t t-set='hide_title' t-value='not len(tag_category)' />
+                <t t-set='categ_title'>Others</t>
+                <t t-set='tags' t-value='other_tags' />
+            </t>
         </section>
     </xpath>
 </template>
@@ -424,19 +444,19 @@
         <h4>Archives</h4>
         <ul class="nav nav-pills nav-stacked">
             <t t-foreach="nav_list" t-as="year">
-                <li t-esc="year"/>
-                <t t-foreach="nav_list[year]" t-as="months">
-                    <t t-if="months['date_begin'] == date">
-                        <li class="active">
+                <li data-toggle="collapse" t-att-data-target="'#' + year" aria-expanded="false" class="blog_post_year_collapse mt8">
+                    <i t-attf-class="fa #{'fa-chevron-down' if not date and year_index == 0 else 'fa-chevron-right'} mr4"/><span t-esc="year"/>
+                </li>
+                <ul t-attf-class="blog_post_year collapse nav nav-pills nav-stacked #{not date and year_index == 0 and 'in'}" t-att-id="year" role="menu">
+                    <t t-foreach="nav_list[year]" t-as="months">
+                        <li t-if="months['date_begin'] == date" class="active">
                             <a t-ignore="True" t-attf-href="#{blog_url(date_begin=False, date_end=False)}"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['post_date_count']"/></a>
                         </li>
-                    </t>
-                    <t t-else="1">
-                        <li>
+                        <li t-else="1">
                             <a t-ignore="True" t-attf-href="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['post_date_count']"/></a>
                         </li>
                     </t>
-                </t>
+                </ul>
             </t>
         </ul>
         </section>
