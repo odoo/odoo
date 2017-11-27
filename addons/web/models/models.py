@@ -24,7 +24,7 @@ class Base(models.AbstractModel):
 
         data = {}
         for record_values in records_values:
-            group_by_value = record_values[group_by]
+            group_by_value = record_values[group_by.partition(':')[0]]
             if type(group_by_value) == tuple:
                 group_by_value = group_by_value[1] # FIXME should use technical value (0)
 
