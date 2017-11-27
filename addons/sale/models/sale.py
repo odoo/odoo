@@ -387,6 +387,14 @@ class SaleOrder(models.Model):
             action = {'type': 'ir.actions.act_window_close'}
         return action
 
+    @api.model
+    def _get_invoice_group_key(self, order):
+        return (order.partner_invoice_id.id, order.currency_id.id)
+
+    @api.model
+    def _get_draft_invoices(self, invoices, references):
+        return invoices, references
+
     @api.multi
     def action_invoice_create(self, grouped=False, final=False):
         """
@@ -396,12 +404,16 @@ class SaleOrder(models.Model):
         :param final: if True, refunds will be generated if necessary
         :returns: list of created invoices
         """
-        inv_obj = self.env['account.invoice']
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         invoices = {}
         references = {}
+        self._get_draft_invoices(invoices, references)
+        inv_obj = self.env['account.invoice']
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        new_lines = False
         for order in self:
-            group_key = order.id if grouped else (order.partner_invoice_id.id, order.currency_id.id)
+            group_key = order.id if grouped else self._get_invoice_group_key(order)
+            if group_key in invoices:
+                invoice = invoices[group_key]
             for line in order.order_line.sorted(key=lambda l: l.qty_to_invoice < 0):
                 if float_is_zero(line.qty_to_invoice, precision_digits=precision):
                     continue
@@ -411,6 +423,7 @@ class SaleOrder(models.Model):
                     references[invoice] = order
                     invoices[group_key] = invoice
                 elif group_key in invoices:
+                    invoice = invoices[group_key]
                     vals = {}
                     if order.name not in invoices[group_key].origin.split(', '):
                         vals['origin'] = invoices[group_key].origin + ', ' + order.name
@@ -419,14 +432,16 @@ class SaleOrder(models.Model):
                     invoices[group_key].write(vals)
                 if line.qty_to_invoice > 0:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
+                    new_lines = True
                 elif line.qty_to_invoice < 0 and final:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
+                    new_lines = True
 
             if references.get(invoices.get(group_key)):
                 if order not in references[invoices[group_key]]:
                     references[invoice] = references[invoice] | order
 
-        if not invoices:
+        if not new_lines:
             raise UserError(_('There is no invoicable line.'))
 
         for invoice in invoices.values():
