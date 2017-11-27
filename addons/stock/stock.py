@@ -4516,7 +4516,7 @@ class stock_pack_operation(osv.osv):
             return self.pool['stock.location'].browse(cr, uid, default_loc, context=context).name
 
     _columns = {
-        'picking_id': fields.many2one('stock.picking', 'Stock Picking', help='The stock operation where the packing has been made', required=True),
+        'picking_id': fields.many2one('stock.picking', 'Stock Picking', help='The stock operation where the packing has been made', required=True, ondelete="CASCADE"),
         'product_id': fields.many2one('product.product', 'Product', ondelete="CASCADE"),  # 1
         'product_uom_id': fields.many2one('product.uom', 'Unit of Measure'),
         'product_qty': fields.float('To Do', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
