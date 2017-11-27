@@ -493,3 +493,30 @@ class TestAPI(common.TransactionCase):
         # sort by inverse name, with a field name
         by_name_ids.reverse()
         self.assertEqual(ps.sorted('name', reverse=True).ids, by_name_ids)
+
+    @mute_logger('odoo.models')
+    def test_81_grouped(self):
+        """ Check .grouped() on recordsets. """
+        ps = self.env['res.partner'].search([])
+
+        grps = ps.grouped(['country_id'])
+        #grps is a list of groups, ordered by country whose items are recordsets
+        
+        self.cr.execute("SELECT country_id,count(*) FROM res_partner WHERE active")
+        while True:
+            row = self.cr.fetchone()
+            if row == None:
+                break
+            country_id = row[0]
+            count = row[1]
+            self.assertTrue(country_id in grps)
+            grp = grps[grps.index(country_id)]
+            self.assertEqual(count, grp.count)
+            
+        
+        #should test many more cases:
+        grps = ps.grouped(['country_id.name'])
+        grps = ps.grouped(['country_id.name,state_id.name'])
+        grps = ps.grouped(['country_id,state_id'],['country_id.name,state_id.name'])
+        grps = ps.grouped(['country_id.name,state_id.name'],max_state='max(state_id.name)')
+
