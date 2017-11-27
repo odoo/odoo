@@ -254,6 +254,10 @@
                             </div>
                         </group>
                     </group>
+                    <field name="partial_delivery" invisible="1" />
+                    <h2 style="color: red" class="mb32" attrs="{'invisible': ['|', '|', ('move_line_ids', '=', []), ('move_lines', '=', []), ('partial_delivery', '=', False)]}">
+                        <span><i class="fa fa-exclamation-triangle"></i> Only Partial Delivery possible</span>
+                    </h2>
                     <notebook>
                         <page string="Detailed Operations" attrs="{'invisible': [('show_operations', '=', False)]}">
                             <field name="move_line_ids" attrs="{'readonly': [('state', '=', 'done'), ('is_locked', '=', True)]}" context="{'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">

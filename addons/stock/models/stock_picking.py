@@ -295,10 +295,22 @@ class Picking(models.Model):
     product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id')
     show_operations = fields.Boolean(compute='_compute_show_operations')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
+    partial_delivery = fields.Boolean(
+        string='Partial Delivery',
+        compute='_compute_partial_delivery',
+    )
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
     ]
+
+    @api.depends('move_lines', 'move_lines.state')
+    def _compute_partial_delivery(self):
+        for picking in self:
+            partial = False
+            if any([move.state not in ['cancel', 'done', 'assigned'] for move in picking.move_lines]):
+                partial = True
+            picking.partial_delivery = partial
 
     @api.depends('picking_type_id.show_operations')
     def _compute_show_operations(self):
@@ -326,7 +338,7 @@ class Picking(models.Model):
             else:
                 picking.show_lots_text = False
 
-    @api.depends('move_type', 'move_lines.state', 'move_lines.picking_id')
+    @api.depends('move_type', 'move_lines.state', 'move_lines.picking_id', 'move_line_ids')
     @api.one
     def _compute_state(self):
         ''' State of a picking depends on the state of its related stock.move
@@ -352,7 +364,10 @@ class Picking(models.Model):
         else:
             relevant_move_state = self.move_lines._get_relevant_state_among_moves()
             if relevant_move_state == 'partially_available':
-                self.state = 'assigned'
+                if self.move_line_ids:
+                    self.state = 'assigned'
+                else:
+                    self.state = 'confirmed'
             else:
                 self.state = relevant_move_state
 

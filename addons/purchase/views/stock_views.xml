@@ -37,4 +37,16 @@
             </field>
         </record>
 
+        <record id="view_picking_form" model="ir.ui.view">
+            <field name="name">Stock Picking (Form)</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="origin" position="before">
+                        <field name="purchase_id" attrs="{'invisible': [('purchase_id', '=', False)]}" />
+                    </field>
+                </data>
+            </field>
+        </record>
 </odoo>
