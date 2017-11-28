@@ -21,6 +21,11 @@ class View(models.Model):
     customize_show = fields.Boolean("Show As Optional Inherit", default=False)
     website_id = fields.Many2one('website', ondelete='cascade', string="Website")
     page_ids = fields.One2many('website.page', compute='_compute_page_ids', store=False)
+    first_page_id = fields.Many2one('website.page', string='Website Page', help='First page linked to this view', compute='_compute_first_page_id')
+
+    @api.one
+    def _compute_first_page_id(self):
+        self.first_page_id = self.env['website.page'].search([('view_id', '=', self.id)], limit=1)
 
     @api.one
     def _compute_page_ids(self):
