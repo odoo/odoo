@@ -51,8 +51,8 @@ class Http(models.AbstractModel):
         return super(Http, cls).routing_map(key=key)
 
     @classmethod
-    def _clear_routing_map(cls, key=None):
-        if request:
+    def _clear_routing_map(cls, key=None, force=False):
+        if request and not force:
             key = request.website_routing
         return super(Http, cls)._clear_routing_map(key=key)
 
@@ -76,8 +76,9 @@ class Http(models.AbstractModel):
         domain = ['|', ('action', '=', 'rewrite'), ('action', '=', 'not_found'), '|', ('website_id', '=', False), ('website_id', '=', website_id)]
 
         rewrites = dict([(x.url_from, x) for x in request.env['website.rewrite'].search(domain)])  # website = False or current
-
+        import pprint; pprint.pprint(rewrites)
         for u, e, r in super(Http, cls)._generate_routing_rules(modules, converters):
+            print(u)
             if u in rewrites:
                 rewrite = rewrites[u]
                 if rewrite.action == 'rewrite' and u != rewrite.url_to:
