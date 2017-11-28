@@ -236,7 +236,8 @@ class PurchaseOrder(models.Model):
         else:
             self.fiscal_position_id = self.env['account.fiscal.position'].with_context(company_id=self.company_id.id).get_fiscal_position(self.partner_id.id)
             self.payment_term_id = self.partner_id.property_supplier_payment_term_id.id
-            self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.user.company_id.currency_id.id
+            if not self.currency_id:
+                self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.user.company_id.currency_id.id
         return {}
 
     @api.onchange('fiscal_position_id')
@@ -828,7 +829,7 @@ class PurchaseOrderLine(models.Model):
         if not self.product_id:
             return
 
-        seller = self.product_id._select_seller(
+        seller = self.product_id.with_context(current_po=self.order_id)._select_seller(
             partner_id=self.partner_id,
             quantity=self.product_qty,
             date=self.order_id.date_order and self.order_id.date_order[:10],
@@ -889,9 +890,10 @@ class ProcurementRule(models.Model):
 
         supplier = self._make_po_select_supplier(values, suppliers)
         partner = supplier.name
+        # we put `supplier_info` in values for extensibility purposes
+        values['supplier'] = supplier
 
         domain = self._make_po_get_domain(values, partner)
-
         if domain in cache:
             po = cache[domain]
         else:

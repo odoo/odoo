@@ -6,6 +6,16 @@ from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 
 
+PURCHASE_REQUISITION_STATES = [
+    ('draft', 'Draft'),
+    ('ongoing', 'Ongoing'),
+    ('in_progress', 'Confirmed'),
+    ('open', 'Bid Selection'),
+    ('done', 'Closed'),
+    ('cancel', 'Cancelled')
+]
+
+
 class PurchaseRequisitionType(models.Model):
     _name = "purchase.requisition.type"
     _description = "Purchase Agreement Type"
@@ -45,27 +55,67 @@ class PurchaseRequisition(models.Model):
     def _get_type_id(self):
         return self.env['purchase.requisition.type'].search([], limit=1)
 
-    name = fields.Char(string='Agreement Reference', required=True, copy=False, default= lambda self: self.env['ir.sequence'].next_by_code('purchase.order.requisition'))
+    name = fields.Char(string='Agreement Reference', required=True, copy=False, default='New', readonly=True)
     origin = fields.Char(string='Source Document')
     order_count = fields.Integer(compute='_compute_orders_number', string='Number of Orders')
     vendor_id = fields.Many2one('res.partner', string="Vendor")
     type_id = fields.Many2one('purchase.requisition.type', string="Agreement Type", required=True, default=_get_type_id)
-    ordering_date = fields.Date(string="Ordering Date")
-    date_end = fields.Datetime(string='Agreement Deadline')
-    schedule_date = fields.Date(string='Delivery Date', index=True, help="The expected and scheduled delivery date where all the products are received")
+    ordering_date = fields.Date(string="Ordering Date", track_visibility='onchange')
+    date_end = fields.Datetime(string='Agreement Deadline', track_visibility='onchange')
+    schedule_date = fields.Date(string='Delivery Date', index=True, help="The expected and scheduled delivery date where all the products are received", track_visibility='onchange')
     user_id = fields.Many2one('res.users', string='Responsible', default= lambda self: self.env.user)
     description = fields.Text()
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env['res.company']._company_default_get('purchase.requisition'))
     purchase_ids = fields.One2many('purchase.order', 'requisition_id', string='Purchase Orders', states={'done': [('readonly', True)]})
     line_ids = fields.One2many('purchase.requisition.line', 'requisition_id', string='Products to Purchase', states={'done': [('readonly', True)]}, copy=True)
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
-    state = fields.Selection([('draft', 'Draft'), ('in_progress', 'Confirmed'),
-                               ('open', 'Bid Selection'), ('done', 'Done'),
-                               ('cancel', 'Cancelled')],
+    state = fields.Selection(PURCHASE_REQUISITION_STATES,
                               'Status', track_visibility='onchange', required=True,
                               copy=False, default='draft')
+    state_blanket_order = fields.Selection(PURCHASE_REQUISITION_STATES, compute='_set_state')
     account_analytic_id = fields.Many2one('account.analytic.account', 'Analytic Account')
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', required=True, default=_get_picking_in)
+    is_quantity_copy = fields.Boolean(compute='_is_quantity_copy')
+    currency_id = fields.Many2one('res.currency', 'Currency', required=True,
+        default=lambda self: self.env.user.company_id.currency_id.id)
+
+    @api.depends('state')
+    def _set_state(self):
+        self.state_blanket_order = self.state
+
+    @api.model
+    def create(self, vals):
+        rec = super(PurchaseRequisition, self).create(vals)
+        if rec.name == 'New':
+            if rec.is_quantity_copy:
+                rec.name = self.env['ir.sequence'].next_by_code('purchase.requisition.purchase.tender')
+            else:
+                rec.name = self.env['ir.sequence'].next_by_code('purchase.requisition.blanket.order')
+        return rec
+
+    @api.depends('type_id')
+    def _is_quantity_copy(self):
+        for requisition in self:
+            if requisition.type_id.quantity_copy == 'none':
+                requisition.is_quantity_copy = False
+            else:
+                requisition.is_quantity_copy = True
+
+    @api.onchange('vendor_id')
+    def _onchange_vendor(self):
+        requisitions = self.env['purchase.requisition'].search([
+            ('vendor_id', '=', self.vendor_id.id),
+            ('state', '=', 'ongoing'),
+            ('type_id.quantity_copy', '=', 'none'),
+        ])
+        if any(requisitions):
+            title = _("Warning for %s") % self.vendor_id.name
+            message = _("%s has already an ongoing blanket order") % self.vendor_id.name
+            warning = {
+                'title': title,
+                'message': message
+            }
+            return {'warning': warning}
 
     @api.multi
     @api.depends('purchase_ids')
@@ -77,6 +127,8 @@ class PurchaseRequisition(models.Model):
     def action_cancel(self):
         # try to set all associated quotations to cancel state
         for requisition in self:
+            for requisition_line in requisition.line_ids:
+                requisition_line.supplier_info_ids.unlink()
             requisition.purchase_ids.button_cancel()
             for po in requisition.purchase_ids:
                 po.message_post(body=_('Cancelled by the agreement associated to this quotation.'))
@@ -85,8 +137,18 @@ class PurchaseRequisition(models.Model):
     @api.multi
     def action_in_progress(self):
         if not all(obj.line_ids for obj in self):
-            raise UserError(_('You cannot confirm call because there is no product line.'))
-        self.write({'state': 'in_progress'})
+            raise UserError(_('You cannot confirm agreement because there is no product line.'))
+        for requisition in self:
+            if requisition.type_id.quantity_copy == 'none' and requisition.vendor_id:
+                for requisition_line in requisition.line_ids:
+                    if requisition_line.price_unit <= 0.0:
+                        raise UserError(_('You cannot confirm the blanket order without price.'))
+                    if requisition_line.product_qty <= 0.0:
+                        raise UserError(_('You cannot confirm the blanket order without quantity.'))
+                    requisition_line.create_supplier_info()
+                self.write({'state': 'ongoing'})
+            else:
+                self.write({'state': 'in_progress'})
 
     @api.multi
     def action_open(self):
@@ -103,6 +165,9 @@ class PurchaseRequisition(models.Model):
         """
         if any(purchase_order.state in ['draft', 'sent', 'to approve'] for purchase_order in self.mapped('purchase_ids')):
             raise UserError(_('You have to cancel or validate every RfQ before closing the purchase requisition.'))
+        for requisition in self:
+            for requisition_line in requisition.line_ids:
+                requisition_line.supplier_info_ids.unlink()
         self.write({'state': 'done'})
 
     def _prepare_tender_values(self, product_id, product_qty, product_uom, location_id, name, origin, values):
@@ -119,6 +184,20 @@ class PurchaseRequisition(models.Model):
             })],
         }
 
+    def unlink(self):
+        if any(requisition.state not in ('draft', 'cancel') for requisition in self):
+            raise UserError(_('You can only delete draft requisitions.'))
+        # Draft requisitions could have some requisition lines.
+        self.mapped('requisition_line_ids').unlink()
+        return super(PurchaseRequisition, self).unlink()
+
+class SupplierInfo(models.Model):
+    _inherit = "product.supplierinfo"
+    _order = 'sequence, purchase_requisition_id desc, min_qty desc, price'
+
+    purchase_requisition_id = fields.Many2one('purchase.requisition', related='purchase_requisition_line_id.requisition_id', string='Blanket order')
+    purchase_requisition_line_id = fields.Many2one('purchase.requisition.line')
+
 
 class PurchaseRequisitionLine(models.Model):
     _name = "purchase.requisition.line"
@@ -130,11 +209,50 @@ class PurchaseRequisitionLine(models.Model):
     product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'))
     price_unit = fields.Float(string='Unit Price', digits=dp.get_precision('Product Price'))
     qty_ordered = fields.Float(compute='_compute_ordered_qty', string='Ordered Quantities')
-    requisition_id = fields.Many2one('purchase.requisition', string='Purchase Agreement', ondelete='cascade')
+    requisition_id = fields.Many2one('purchase.requisition', required=True, string='Purchase Agreement', ondelete='cascade')
     company_id = fields.Many2one('res.company', related='requisition_id.company_id', string='Company', store=True, readonly=True, default= lambda self: self.env['res.company']._company_default_get('purchase.requisition.line'))
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     schedule_date = fields.Date(string='Scheduled Date')
     move_dest_id = fields.Many2one('stock.move', 'Downstream Move')
+    supplier_info_ids = fields.One2many('product.supplierinfo', 'purchase_requisition_line_id')
+
+    @api.multi
+    def create(self,vals):
+        res = super(PurchaseRequisitionLine, self).create(vals)
+        if res.requisition_id.state not in ['draft', 'cancel', 'done'] and not res.requisition_id.is_quantity_copy:
+            supplier_infos = self.env['product.supplierinfo'].search([
+                ('product_id', '=', vals.get('product_id')),
+                ('name', '=', res.requisition_id.vendor_id.id),
+            ])
+            if not [s.requisition_id for s in supplier_infos]:
+                res.create_supplier_info()
+        return res
+
+    @api.multi
+    def write(self, vals):
+        res = super(PurchaseRequisitionLine, self).write(vals)
+        if 'price_unit' in vals:
+            # If the price is updated, we have to update the related SupplierInfo
+            self.supplier_info_ids.write({'price': vals['price_unit']})
+        return res
+
+    def unlink(self):
+        if self.requisition_id.state not in ['draft', 'cancel', 'done']:
+            self.supplier_info_ids.unlink()
+        return super(PurchaseRequisitionLine, self).unlink()
+
+    def create_supplier_info(self):
+        purchase_requisition = self.requisition_id
+        if purchase_requisition.type_id.quantity_copy == 'none' and purchase_requisition.vendor_id:
+            # create a supplier_info only in case of blanket order
+            self.env['product.supplierinfo'].create({
+                'name': purchase_requisition.vendor_id.id,
+                'product_id': self.product_id.id,
+                'product_tmpl_id': self.product_id.product_tmpl_id.id,
+                'price': self.price_unit,
+                'purchase_requisition_id': purchase_requisition.id,
+                'purchase_requisition_line_id': self.id,
+            })
 
     @api.multi
     @api.depends('requisition_id.purchase_ids.state')
@@ -192,7 +310,6 @@ class PurchaseOrder(models.Model):
         else:
             partner = requisition.vendor_id
         payment_term = partner.property_supplier_payment_term_id
-        currency = partner.property_purchase_currency_id or requisition.company_id.currency_id
 
         FiscalPosition = self.env['account.fiscal.position']
         fpos = FiscalPosition.get_fiscal_position(partner.id)
@@ -202,7 +319,7 @@ class PurchaseOrder(models.Model):
         self.fiscal_position_id = fpos.id
         self.payment_term_id = payment_term.id,
         self.company_id = requisition.company_id.id
-        self.currency_id = currency.id
+        self.currency_id = requisition.currency_id.id
         self.origin = requisition.name
         self.partner_ref = requisition.name # to control vendor bill based on agreement reference
         self.notes = requisition.description
@@ -240,10 +357,6 @@ class PurchaseOrder(models.Model):
 
             if requisition.type_id.quantity_copy != 'copy':
                 product_qty = 0
-
-            # Compute price_unit in appropriate currency
-            if requisition.company_id.currency_id != currency:
-                price_unit = requisition.company_id.currency_id.compute(price_unit, currency)
 
             # Create PO line
             order_line_values = line._prepare_purchase_order_line(
@@ -301,6 +414,16 @@ class PurchaseOrderLine(models.Model):
         return res
 
 
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    def _prepare_sellers(self):
+        if self.env.context and 'current_po' in self.env.context:
+            return [s for s in self.seller_ids if not s.purchase_requisition_id or s.purchase_requisition_id == self.env.context.get('current_po').requisition_id]
+        else:
+            return self.seller_ids
+
+
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
@@ -321,3 +444,19 @@ class ProcurementRule(models.Model):
         values['picking_type_id'] = self.picking_type_id.id
         self.env['purchase.requisition'].create(values)
         return True
+
+    def _prepare_purchase_order(self, product_id, product_qty, product_uom, origin, values, partner):
+        res = super(ProcurementRule, self)._prepare_purchase_order(product_id, product_qty, product_uom, origin, values, partner)
+        res['partner_ref'] = values['supplier'].purchase_requisition_id.name
+        res['requisition_id'] = values['supplier'].purchase_requisition_id.id
+        if values['supplier'].purchase_requisition_id.currency_id:
+            res['currency_id'] = values['supplier'].purchase_requisition_id.currency_id.id
+        return res
+
+    def _make_po_get_domain(self, values, partner):
+        domain = super(ProcurementRule, self)._make_po_get_domain(values, partner)
+        if 'supplier' in values and values['supplier'].purchase_requisition_id:
+            domain += (
+                ('requisition_id', '=', values['supplier'].purchase_requisition_id.id),
+            )
+        return domain
