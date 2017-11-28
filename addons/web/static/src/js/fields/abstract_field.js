@@ -207,15 +207,16 @@ var AbstractField = Widget.extend({
      * will have the cursor at the very end.
      *
      * @param {Object} [options]
+     * @param {Integer} inc: -1 when we come from a next element, 1 for previous.
      * @param {boolean} [options.noselect=false] if false and the input
      *   is of type text or textarea, the content will also be selected
      * @param {Event} [options.event] the event which fired this activation
      * @returns {boolean} true if the widget was activated, false if the
      *                    focusable element was not found or invisible
      */
-    activate: function (options) {
+    activate: function (options, inc) {
         if (this.isFocusable()) {
-            var $focusable = this.getFocusableElement();
+            var $focusable = this.getFocusableElement(inc);
             $focusable.focus();
             if ($focusable.is('input[type="text"], textarea')) {
                 $focusable[0].selectionStart = $focusable[0].selectionEnd = $focusable[0].value.length;
@@ -244,9 +245,10 @@ var AbstractField = Widget.extend({
      * Returns the main field's DOM element (jQuery form) which can be focused
      * by the browser.
      *
+     * {Integer} inc: -1 when we come from a next element, 1 for previous.
      * @returns {jQuery} main focusable element inside the widget
      */
-    getFocusableElement: function () {
+    getFocusableElement: function (inc) {
         return $();
     },
     /**
