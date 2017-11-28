@@ -22,3 +22,24 @@ class WebsiteRewrite(models.Model):
     @api.one
     def _compute_name(self):
         self.name = self.label or "%s for %s" % (self.action, self.url_from)
+
+    @api.model
+    def create(self, vals):
+        self.env['ir.http']._clear_routing_map(key=vals.get('website_id') or None, force=True)
+        return super(WebsiteRewrite, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        # invalid exiting routing
+        self.env['ir.http']._clear_routing_map(key=self.website_id.id or None, force=True)
+        resp = super(WebsiteRewrite, self).write(vals)
+
+        # invalid new routing
+        self.env['ir.http']._clear_routing_map(key=self.website_id.id or None, force=True)
+        return resp
+
+    @api.multi
+    def unlink(self):
+        for r in self:
+            self.env['ir.http']._clear_routing_map(key=r.website_id.id, force=True)
+            return super(WebsiteRewrite, self).unlink()

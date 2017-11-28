@@ -7,9 +7,12 @@
                 <form string="Rewrite">
                    <sheet>
                         <group>
-                            <field name="action"/>
-                            <field name="url_from"/>
-                            <field name="url_to" attrs="{'invisible': [('action','in', ['not_found',])]}"/>
+                            <field name="action" class="col-md-6" />
+                            <!-- <label for="url_from"  class="col-md-6"/> -->
+                            <field name="url_from" widget='modelconverter'/>
+                            <!-- <div class="clearfix" /> -->
+                            <!-- <label for="url_to"  class="col-md-6"/> -->
+                            <field name="url_to" widget='modelconverter' attrs="{'invisible': [('action','in', ['not_found',])]}"/>
                             <field name="website_id"/>
                             <field name="active"/>
                         </group>
