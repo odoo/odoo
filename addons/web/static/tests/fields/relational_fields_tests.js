@@ -2170,7 +2170,7 @@ QUnit.module('relational_fields', {
             },
             res_id: 1,
             mockRPC: function (route, args) {
-                if (args.model === 'turtle') {
+                if (args.model === 'turtle' && args.method === 'read') {
                     assert.deepEqual(args.args[0], [1,2],
                         'should only load first 2 records');
                 }
