@@ -180,7 +180,7 @@ var BasicRenderer = AbstractRenderer.extend({
 
         var recordWidgets = this.allFieldWidgets[record.id] || [];
         for (var i = 0 ; i < recordWidgets.length ; i++) {
-            var activated = recordWidgets[currentIndex].activate({event: options.event});
+            var activated = recordWidgets[currentIndex].activate({event: options.event}, options.inc);
             if (activated) {
                 return currentIndex;
             }
