@@ -542,16 +542,43 @@ ListRenderer.include({
         var row = _.findWhere(rows, {id: movedRecordID});
         var index0 = rows.indexOf(row);
         var index1 = ui.item.index();
-        rows = rows.slice(Math.min(index0, index1), Math.max(index0, index1) + 1);
-        rows = _.without(rows, row);
-        if (index0 > index1) {
-            rows.unshift(row);
+        var lower = Math.min(index0, index1);
+        var upper = Math.max(index0, index1) + 1;
+
+        var order = _.findWhere(self.state.orderedBy, {name: self.handleField});
+        var asc = !order || order.asc;
+        var reorderAll = false;
+        var sequence = (asc ? -1 : 1) * Infinity;
+
+        // determine if we need to reorder all lines
+        _.each(rows, function (row, index) {
+            if ((index < lower || index >= upper) &&
+                ((asc && sequence >= row.data[self.handleField]) ||
+                 (!asc && sequence <= row.data[self.handleField]))) {
+                reorderAll = true;
+            }
+            sequence = row.data[self.handleField];
+        });
+
+        if (reorderAll) {
+            rows = _.without(rows, row);
+            rows.splice(index1, 0, row);
         } else {
-            rows.push(row);
+            rows = rows.slice(lower, upper);
+            rows = _.without(rows, row);
+            if (index0 > index1) {
+                rows.unshift(row);
+            } else {
+                rows.push(row);
+            }
         }
 
         var sequences = _.pluck(_.pluck(rows, 'data'), self.handleField);
         var rowIDs = _.pluck(rows, 'id');
+
+        if (!asc) {
+            rowIDs.reverse();
+        }
 
         this.trigger_up('resequence', {
             rowIDs: rowIDs,
