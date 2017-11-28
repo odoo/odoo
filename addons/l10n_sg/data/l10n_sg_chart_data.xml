@@ -367,7 +367,7 @@
         </record>
 
         <record model="account.account.template" id="account_account_743">
-            <field name="name">Purchase Tax Account 0% ME</field>
+            <field name="name">Purchase Tax Account 7% IGDS</field>
             <field name="code">101310</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets" />
             <field name="chart_template_id" ref="sg_chart_template"/>
@@ -417,6 +417,14 @@
         <record model="account.account.template" id="account_account_749">
             <field name="name">Purchase Tax Account 7% TX7</field>
             <field name="code">101370</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets" />
+            <field name="chart_template_id" ref="sg_chart_template"/>
+            <field name="reconcile" eval="False" />
+        </record>
+
+        <record model="account.account.template" id="account_account_750">
+            <field name="name">Purchase Tax Account 7% TXCA</field>
+            <field name="code">101371</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets" />
             <field name="chart_template_id" ref="sg_chart_template"/>
             <field name="reconcile" eval="False" />
@@ -745,6 +753,22 @@
         <record model="account.account.template" id="account_account_796">
             <field name="name">Sales Tax Account 7% SR</field>
             <field name="code">201220</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+            <field name="chart_template_id" ref="sg_chart_template"/>
+            <field name="reconcile" eval="False" />
+        </record>
+
+        <record model="account.account.template" id="account_account_797">
+            <field name="name">Sales Tax Account SRCA-S</field>
+            <field name="code">201221</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+            <field name="chart_template_id" ref="sg_chart_template"/>
+            <field name="reconcile" eval="False" />
+        </record>
+
+        <record model="account.account.template" id="account_account_798">
+            <field name="name">Sales Tax Account 7% SRCA-C</field>
+            <field name="code">201222</field>
             <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
             <field name="chart_template_id" ref="sg_chart_template"/>
             <field name="reconcile" eval="False" />

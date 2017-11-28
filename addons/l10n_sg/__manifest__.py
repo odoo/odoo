@@ -15,8 +15,8 @@ Singapore accounting chart and localization.
 
 This module add, for accounting:
  - The Chart of Accounts of Singapore
- - Field UEN (Unique Entity Number) on company and partner (used to generate IRAS Audit File)
- - Field PermitNo and PermitNoDate on invoice (used to generate IRAS Audit File) 
+ - Field UEN (Unique Entity Number) on company and partner
+ - Field PermitNo and PermitNoDate on invoice
 
     """,
     'depends': ['base', 'account'],
