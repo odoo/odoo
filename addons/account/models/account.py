@@ -839,6 +839,14 @@ class AccountTax(models.Model):
         default = dict(default or {}, name=_("%s (Copy)") % self.name)
         return super(AccountTax, self).copy(default=default)
 
+    @api.multi
+    @api.depends('name', 'type_tax_use')
+    def name_get(self):
+        result = []
+        for tax in self:
+            result.append((tax.id, '%s - %s' % (tax.type_tax_use.capitalize(), tax.name)))
+        return result
+
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=80):
         """ Returns a list of tuples containing id, name, as internally it is called {def name_get}
