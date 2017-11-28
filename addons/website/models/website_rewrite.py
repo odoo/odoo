@@ -15,7 +15,7 @@ class WebsiteRewrite(models.Model):
         ('not_found', '404'),
         ('redirect_301', 'Moved permanently'),
         ('redirect_302', 'Moved temporarily')
-    ], string='Action todo', default="rewrite")
+    ], string='Action todo', required=True, default="rewrite")
 
     name = fields.Char(compute='_compute_name')
 
@@ -25,21 +25,25 @@ class WebsiteRewrite(models.Model):
 
     @api.model
     def create(self, vals):
-        self.env['ir.http']._clear_routing_map(key=vals.get('website_id') or None, force=True)
+        self.env.registry.registry_invalidated = True
+     #   if 'action' not in vals or vals['action'] in ('rewrite', 'not_found'):
+        #self.env['ir.http']._clear_routing_map(key=vals.get('website_id') or None, force=True)
         return super(WebsiteRewrite, self).create(vals)
 
     @api.multi
     def write(self, vals):
-        # invalid exiting routing
-        self.env['ir.http']._clear_routing_map(key=self.website_id.id or None, force=True)
+        self.env.registry.registry_invalidated = True
         resp = super(WebsiteRewrite, self).write(vals)
+        return resp
+        # invalid exiting routing
+      #  self.env['ir.http']._clear_routing_map(key=self.website_id.id or None, force=True)
 
         # invalid new routing
-        self.env['ir.http']._clear_routing_map(key=self.website_id.id or None, force=True)
-        return resp
+       # self.env['ir.http']._clear_routing_map(key=self.website_id.id or None, force=True)
 
     @api.multi
     def unlink(self):
-        for r in self:
-            self.env['ir.http']._clear_routing_map(key=r.website_id.id, force=True)
-            return super(WebsiteRewrite, self).unlink()
+        self.env.registry.registry_invalidated = True
+        return super(WebsiteRewrite, self).unlink()
+        # for r in self:
+        #     self.env['ir.http']._clear_routing_map(key=r.website_id.id, force=True)
