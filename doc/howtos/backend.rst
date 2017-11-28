@@ -115,19 +115,19 @@ or XML. The usage of most of those files will be explained along this tutorial.
 
         .. patch::
 
-"Odoo does not display my module in the Apps list"
---------------------------------------------------
+Odoo does not display my module in the Apps list
+------------------------------------------------
 
 Odoo **does not** refresh the Apps list when starting the server. This may
-give an unintuitive behavior: you write (the skeleton of) a new module,
+lead to unintuitive behavior: you write (the skeleton of) a new module,
 you add the *module directory* to the ``--addons-path`` and... you don't find
 it once the server is restarted.
 
 In order to update the list of available modules, switch to the *Developer
-mode*, then go to *Apps* > *Update Apps List* > and click on *Update*.
+mode*, then go to :menuselection:`Apps --> Update Apps List --> Update`.
 
-If you still don't find your module in the Apps list, this may be due to a
-wrong module structure or a bad ``--addons-path``.
+If you still don't find your module in the Apps list, this may be due to an
+incorrect module structure or a bad ``--addons-path``.
 
 Object-Relational Mapping
 -------------------------
