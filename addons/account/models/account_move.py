@@ -100,7 +100,7 @@ class AccountMove(models.Model):
     matched_percentage = fields.Float('Percentage Matched', compute='_compute_matched_percentage', digits=0, store=True, readonly=True, help="Technical field used in cash basis method")
     statement_line_id = fields.Many2one('account.bank.statement.line', index=True, string='Bank statement line reconciled with this entry', copy=False, readonly=True)
     # Dummy Account field to search on account.move by account_id
-    dummy_account_id = fields.Many2one('account.account', related='line_ids.account_id', string='Account', store=False)
+    dummy_account_id = fields.Many2one('account.account', related='line_ids.account_id', string='Account', store=False, readonly=True)
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
