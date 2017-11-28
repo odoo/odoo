@@ -235,6 +235,7 @@ class ResourceCalendar(models.Model):
                 int(att.dayofweek) == weekday and
                 not (att.date_from and fields.Date.from_string(att.date_from) > day_date) and
                 not (att.date_to and fields.Date.from_string(att.date_to) < day_date)):
+
             if start_time and float_to_time(attendance.hour_to) < start_time:
                 continue
             if end_time and float_to_time(attendance.hour_from) > end_time:
@@ -418,7 +419,7 @@ class ResourceCalendar(models.Model):
 
         for day in rrule.rrule(rrule.DAILY,
                                dtstart=start_dt,
-                               until=end_dt,
+                               until=end_dt.replace(hour=23, minute=59, second=59, microsecond=999999),
                                byweekday=self._get_weekdays()):
             start_time = datetime.time.min
             if day.date() == start_dt.date():
@@ -447,7 +448,7 @@ class ResourceCalendar(models.Model):
 
         for day in rrule.rrule(rrule.DAILY,
                                dtstart=start_dt,
-                               until=end_dt,
+                               until=end_dt.replace(hour=23, minute=59, second=59, microsecond=999999),
                                byweekday=self._get_weekdays()):
             start_time = datetime.time.min
             if day.date() == start_dt.date():
