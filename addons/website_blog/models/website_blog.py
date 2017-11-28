@@ -77,12 +77,13 @@ class Blog(models.Model):
         return tag_by_blog
 
 
-class BlogTag(models.Model):
+class BlogTagCategory(models.Model):
     _name = 'blog.tag.category'
     _description = 'Blog Tag Category'
     _order = 'name'
 
     name = fields.Char('Name', required=True, translate=True)
+    tag_ids = fields.One2many('blog.tag', 'category_id', string='Tags')
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag category already exists !"),
