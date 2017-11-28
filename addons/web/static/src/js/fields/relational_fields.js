@@ -1069,15 +1069,17 @@ var FieldX2Many = AbstractField.extend({
         var rowIDs = event.data.rowIDs.slice();
         var rowID = rowIDs.pop();
         var defs = _.map(rowIDs, function (rowID, index) {
+            var def = $.Deferred();
             var data = {};
             data[event.data.handleField] = event.data.offset + index;
-            return self._setValue({
+            self._setValue({
                 operation: 'UPDATE',
                 id: rowID,
                 data: data,
             }, {
                 notifyChange: false,
-            });
+            }).always(def.resolve.bind(def));
+            return def;
         });
         $.when.apply($, defs).then(function () {
             // trigger only once the onchange for parent record
