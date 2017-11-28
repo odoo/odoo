@@ -251,7 +251,7 @@ class Project(models.Model):
     @api.model
     def create(self, vals):
         # Prevent double project creation
-        self = self.with_context(project_creation_in_progress=True, mail_create_nosubscribe=True)
+        self = self.with_context(mail_create_nosubscribe=True)
         project = super(Project, self).create(vals)
         if not vals.get('subtask_project_id'):
             project.subtask_project_id = project.id

@@ -738,6 +738,38 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('setting a char field to empty string is saved as a false value', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {mode: 'edit'},
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.strictEqual(args.args[1].foo, false,
+                        'the foo value should be false');
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        form.$('input[type="text"].o_field_widget').val('').trigger('input');
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        form.destroy();
+    });
+
     QUnit.test('char field with size attribute', function (assert) {
         assert.expect(1);
 
@@ -1537,6 +1569,55 @@ QUnit.module('basic_fields', {
             "the image should correctly set its attributes");
         form.destroy();
 
+    });
+
+    QUnit.test('image fields in subviews are loaded correctly', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
+        this.data.partner.records[0].document = 'myimage';
+        this.data.partner_type.fields.image = {name: 'image', type: 'binary'};
+        this.data.partner_type.records[0].image = 'product_image';
+        this.data.partner.records[0].timmy = [12];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="document" widget="image" options="{\'size\': [90, 90]}"/>' +
+                    '<field name="timmy" widget="many2many">' +
+                        '<tree>' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="image" widget="image"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === 'data:image/png;base64,myimage') {
+                    assert.step("The view's image should have been fetched");
+                    return $.when('wow');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        assert.verifySteps(["The view's image should have been fetched"]);
+
+        assert.strictEqual(form.$('tr.o_data_row').length, 1,
+            'There should be one record in the many2many');
+
+        // Actual flow: click on an element of the m2m to get its form view
+        form.$('tbody td:contains(gold)').click();
+        assert.strictEqual($('.modal-dialog').length, 1,
+            'The modal should have opened');
+        assert.strictEqual($('.modal-dialog').find('.o_field_image > img')[0].src,
+            'data:image/png;base64,product_image',
+            'The image of the many2many in its form view should be present');
+
+        form.destroy();
     });
 
     QUnit.module('JournalDashboardGraph', {
@@ -2384,9 +2465,14 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('monetary field with real monetary field in model', function (assert) {
-        assert.expect(4);
+        assert.expect(7);
 
         this.data.partner.fields.qux.type = "monetary";
+        this.data.partner.fields.quux = {
+            string: "Quux", type: "monetary", digits: [16,1], searchable: true, readonly: true,
+        };
+
+        (_.find(this.data.partner.records, function (record) { return record.id === 5 })).quux = 4.2;
 
         this.data.partner.onchanges = {
             bar: function (obj) {
@@ -2401,6 +2487,7 @@ QUnit.module('basic_fields', {
             arch:'<form string="Partners">' +
                     '<sheet>' +
                         '<field name="qux"/>' +
+                        '<field name="quux"/>' +
                         '<field name="currency_id"/>' +
                         '<field name="bar"/>' +
                     '</sheet>' +
@@ -2411,7 +2498,9 @@ QUnit.module('basic_fields', {
             },
         });
 
-        assert.strictEqual(form.$('.o_field_monetary').html(), "$&nbsp;9.10",
+        assert.strictEqual(form.$('.o_field_monetary').first().html(), "$&nbsp;9.10",
+            "readonly value should contain the currency");
+        assert.strictEqual(form.$('.o_field_monetary').first().next().html(), "$&nbsp;4.20",
             "readonly value should contain the currency");
 
         form.$buttons.find('.o_form_button_edit').click();
@@ -2422,12 +2511,16 @@ QUnit.module('basic_fields', {
         form.$('input[type="checkbox"]').click(); // Change the field on which the monetary depends
         assert.strictEqual(form.$('.o_field_monetary > input').length, 1,
             "After the onchange, the monetary <input/> should not have been duplicated");
+        assert.strictEqual(form.$('.o_field_monetary[name=quux]').length, 1,
+            "After the onchange, the monetary readonly field should not have been duplicated");
 
         var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
         form.$('.o_field_many2one input').click();
         $dropdown.find('li:not(.o_m2o_dropdown_option):last').mouseenter().click();
         assert.strictEqual(form.$('.o_field_monetary > span').html(), "€",
             "After currency change, the monetary field currency should have been updated");
+        assert.strictEqual(form.$('.o_field_monetary').first().next().html(), "4.20&nbsp;€",
+            "readonly value should contain the updated currency");
 
         form.destroy();
     });

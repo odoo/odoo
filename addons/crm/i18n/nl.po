@@ -13,10 +13,10 @@
 # Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:25+0000\n"
-"PO-Revision-Date: 2017-10-02 11:25+0000\n"
+"POT-Creation-Date: 2017-11-16 08:08+0000\n"
+"PO-Revision-Date: 2017-11-16 08:08+0000\n"
 "Last-Translator: Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -409,7 +409,7 @@ msgid ""
 "email</span>"
 msgstr ""
 "<span class=\"label label-default text-center odoo_purple\">Inkomende "
-"email</span>"
+"e-mail</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1293,7 +1293,7 @@ msgid ""
 "Check this box to filter and qualify incoming requests as leads before "
 "converting them into opportunities and assigning them to a salesperson."
 msgstr ""
-"Vink dit veld om inkomende aanvragen as leads te filteren voor dat deze "
+"Vink dit veld om inkomende aanvragen als leads te filteren voor dat deze "
 "omgezet worden naar een prospect en worden toegewezen aan een verkoper."
 
 #. module: crm
@@ -1435,11 +1435,6 @@ msgstr "Configuratie"
 #, python-format
 msgid "Configuration options are available in the Settings app."
 msgstr "Configuratie mogelijkheden zijn beschikbaar in de Instellingen app."
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.crm_config_settings_action
-msgid "Configure CRM"
-msgstr "Configureer CRM"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1596,7 +1591,6 @@ msgid "Create a Proof of Concept with consultants"
 msgstr "Maak een Proof of Concept met consultants"
 
 #. module: crm
-#: selection:crm.lead.convert2task,action:0
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Create a new customer"
@@ -1717,10 +1711,9 @@ msgid "Current Line"
 msgstr "Huidige regel"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1124
+#: code:addons/crm/models/crm_lead.py:1135
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_partner_id
-#: model:ir.model.fields,field_description:crm.field_crm_lead_convert2task_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_partner_id
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1741,7 +1734,7 @@ msgstr "Klant automatisch aanvullen"
 #: code:addons/crm/models/crm_lead.py:1126
 #, python-format
 msgid "Customer Email"
-msgstr "Klant email"
+msgstr "Klant e-mail"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_partner_name
@@ -1769,7 +1762,7 @@ msgid ""
 "it. (Pipeline is unchecked.)"
 msgstr ""
 "Dashboard grafiek inhoud kan de pijplijn niet zijn wanneer het verkoopkanaal"
-" deze niet gebruikt. (Pijplijn is uit gevinkt)."
+" deze niet gebruikt. (Pijplijn is uitgevinkt)."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_date
@@ -1892,7 +1885,6 @@ msgid "Display your brochures, product sheets, showcases etc."
 msgstr "Toon uw brochures, uw productfolders, showcases en meer."
 
 #. module: crm
-#: selection:crm.lead.convert2task,action:0
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.partner.binding,action:0
@@ -2219,8 +2211,8 @@ msgid ""
 "Generate unassigned leads from incoming emails. Leads coming from\n"
 "                                    that email will be assigned manually."
 msgstr ""
-"Genereer niet toegewezen leads afkomstig van inkomende emails. Leads komende van \n"
-"deze email zullen handmatig toegewezen worden."
+"Genereer niet toegewezen leads afkomstig van inkomende e-mails. Leads komende van \n"
+"deze e-mail zullen handmatig toegewezen worden."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
@@ -2399,8 +2391,8 @@ msgid ""
 "                        continuous improvements of your sales channels."
 msgstr ""
 "Wanneer u de vorige stappen heeft uitgevoerd, heeft u al\n"
-"de fundering van een sterk proces leidend naar \n"
-"continue verbeteringen van uw verkoopkanaal gemaakt."
+"de fundering gemaakt, van een sterk proces, leidend naar \n"
+"continue verbeteringen van uw verkoopkanaal."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2718,7 +2710,7 @@ msgstr "Licenties"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_line_ids
 msgid "Lines"
-msgstr "Lijnen"
+msgstr "Regels"
 
 #. module: crm
 #: selection:crm.lead.convert2task,action:0
@@ -3902,6 +3894,7 @@ msgstr ""
 "Dat is de bedoeling van deze hulp."
 
 #. module: crm
+#: model:ir.actions.act_window,name:crm.crm_config_settings_action
 #: model:ir.ui.menu,name:crm.crm_config_settings_menu
 msgid "Settings"
 msgstr "Instellingen"
@@ -4274,7 +4267,7 @@ msgstr ""
 "om een nieuwe lead aan te maken in het systeem. In Odoo, elk verkoop team\n"
 "is gekoppeld aan een eigen e-mail adres waar prospects hen kunnen bereiken.\n"
 "Bijvoorbeeld, als het persoonlijke e-mailadres van uw directe team\n"
-"direct@mycompany.example.com is, dan krijgt u bij elke e-mail verzonden door een nieuw contactpersoon een nieuwe prospect in het verkoop team.\n"
+"direct@mijnbedrijf.voorbeeld.com is, dan krijgt u bij elke e-mail verzonden door een nieuw contactpersoon een nieuwe prospect in het verkoop team.\n"
 "\n"
 "Dat is de makkelijkste manier om Odoo te integreren met apps van derden."
 
@@ -4290,9 +4283,9 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr ""
-"Deze email adressen worden toegevoegd aan het CC veld bij alle inkomende en "
-"uitgaande emails voor dit record voorafgaand aan versturen. Scheidt "
-"verschillende email adressen met een komma."
+"Deze e-mail adressen worden toegevoegd aan het CC veld bij alle inkomende en"
+" uitgaande e-mails voor dit record voorafgaand aan versturen. Scheidt "
+"verschillende e-mail adressen met een komma."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search

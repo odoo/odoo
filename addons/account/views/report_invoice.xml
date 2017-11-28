@@ -100,16 +100,15 @@
                     </table>
 
                     <div class="clearfix">
-                        <div id="total" class="row pull-right">
-                            <div>
-                                <table class="table-condensed" style="min-width: 250px;max-width: 400px;">
+                        <div id="total" class="row">
+                            <div class="col-xs-4 pull-right">
+                                <table class="table table-condensed" style="min-width: 250px;max-width: 400px;">
                                     <tr class="border-black" style="border-bottom:1px solid #dddddd;">
                                         <td><strong>Subtotal</strong></td>
                                         <td class="text-right">
                                             <span t-field="o.amount_untaxed" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                         </td>
                                     </tr>
-                                    <t t-set="tax_groups_length" t-value="len(o._get_tax_amount_by_group())"/>
                                     <t t-foreach="o._get_tax_amount_by_group()" t-as="amount_by_group">
                                         <tr style="border-bottom:1px solid #dddddd;">
                                             <t t-if="len(o.tax_line_ids) == 1 and o.amount_untaxed == amount_by_group[2]">

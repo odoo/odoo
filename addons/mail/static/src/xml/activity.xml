@@ -38,11 +38,9 @@
                                     <dd class="mb8">
                                         <t t-esc="activity.activity_type_id[1]"/>
                                     </dd>
-                                    <dt>Created By</dt>
+                                    <dt>Created on</dt>
                                     <dd class="mb8">
-                                        <img t-attf-src="/web/image#{activity.create_uid[0] >= 0 ? ('/res.users/' + activity.create_uid[0] + '/image_small') : ''}" height="18" width="18" class="img-circle mr4" t-att-title="activity.create_uid[1]"/>
-                                        <b><t t-esc="activity.create_uid[1]"/></b>
-                                        <em>, on</em> <t t-esc="moment(activity.create_date)"/>
+                                        <t t-esc="moment(activity.create_date)"/>
                                     </dd>
                                     <dt>Assigned to</dt>
                                     <dd class="mb8">

@@ -129,7 +129,7 @@ class SaleOrderLine(models.Model):
     @api.depends('move_ids')
     def _compute_product_updatable(self):
         for line in self:
-            if not line.move_ids:
+            if not line.move_ids.filtered(lambda m: m.state != 'cancel'):
                 super(SaleOrderLine, line)._compute_product_updatable()
             else:
                 line.product_updatable = False

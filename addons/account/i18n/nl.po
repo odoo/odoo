@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 08:59+0000\n"
-"PO-Revision-Date: 2017-10-24 08:59+0000\n"
+"POT-Creation-Date: 2017-11-16 08:08+0000\n"
+"PO-Revision-Date: 2017-11-16 08:08+0000\n"
 "Last-Translator: Julia van Orsouw <julia@odooexperts.nl>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -1173,7 +1173,7 @@ msgstr "Een kas transactie kan geen 0 bedrag bevatten."
 #, python-format
 msgid "A Payment Terms should have its last line of type Balance."
 msgstr ""
-"Een betalingsvoorwaarde moet zijn laatste lijn als type balans hebben."
+"Bij een betalingsvoorwaarde moet zijn laatste regel het type saldo hebben."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1734
@@ -1256,9 +1256,8 @@ msgid ""
 "A rounding per line is advised if your prices are tax-included. That way, "
 "the sum of line subtotals equals the total with taxes."
 msgstr ""
-"Een afronding per lijn is aanbevolen indien uw prijzen inclusief belastingen"
-" zijn. Hierdoor is de som van de lijnen gelijk aan de totale som met "
-"belastingen."
+"Een afronding per regel is aanbevolen indien uw prijzen inclusief BTW zijn. "
+"Hierdoor is de som van de regels gelijk aan de totale bedrag inclusief BTW."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:880
@@ -1656,10 +1655,10 @@ msgstr "Rekening om toe te passen"
 #: model:ir.model.fields,help:account.field_account_tax_cash_basis_account
 #: model:ir.model.fields,help:account.field_account_tax_template_cash_basis_account
 msgid ""
-"Account used as counterpart for the journal entry, for taxes exigible based "
+"Account used as counterpart for the journal entry, for taxes eligible based "
 "on payments."
 msgstr ""
-"Rekening welke wordt gebruikt als tegenrekening voor de boeking bij BTW "
+"Grootboek welke wordt gebruikt als tegenrekening voor de boeking bij BTW "
 "gebaseerd op betalingen."
 
 #. module: account
@@ -1785,7 +1784,7 @@ msgstr "Voeg credit nota toe"
 #. module: account
 #: selection:account.cash.rounding,strategy:0
 msgid "Add a rounding line"
-msgstr "Voeg een afrondingslijn toe"
+msgstr "Voeg een afrondingsregel toe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_has_second_line
@@ -2037,6 +2036,7 @@ msgstr "Stelt u in staat kostenplaatsen te gebruiken"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:252
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_amount
@@ -2268,10 +2268,15 @@ msgstr "Automatisch toepassen op deze fiscale positie."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_country_group_id
-#: model:ir.model.fields,help:account.field_account_fiscal_position_template_country_group_id
 msgid "Apply only if delivery or invocing country match the group."
 msgstr ""
 "Alleen toepassen als aflevering of facturering overeenkomen met de groep."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position_template_country_group_id
+msgid "Apply only if delivery or invoicing country match the group."
+msgstr ""
+"Alleen toepassen als aflever- of factuur land overeenkomt met de groep."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_country_id
@@ -3408,7 +3413,7 @@ msgstr "Complete set van BTW"
 #: code:addons/account/models/account_invoice.py:570
 #, python-format
 msgid "Compose Email"
-msgstr "Email opstellen"
+msgstr "E-mail opstellen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5928,12 +5933,6 @@ msgid "Invoice paid"
 msgstr "Factuur betaald"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1825
-#, python-format
-msgid "Invoice sent"
-msgstr "Factuur verzonden"
-
-#. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
 msgid "Invoice validated"
 msgstr "Factuur bevestigd"
@@ -6009,6 +6008,7 @@ msgstr "Facturen zonder betaling"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance
 #: model:ir.ui.view,arch_db:account.product_template_form_view
+#: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
 msgstr "Facturatie"
@@ -6836,11 +6836,11 @@ msgstr "Handmatig afletteren"
 msgid ""
 "Manual: Get paid by cash, check or any other method outside of Odoo.\n"
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
-"Batch Deposit: Encash several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
+"Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
 "Handmatig: Krijg betaald met contant geld, cheques of een andere methode buiten Odoo om\n"
 "Elektronisch: Betaal automatisch via een betalingsverwerver door een transactie aan te vragen op een door de klant opgeslagen kaart bij het online kopen of abonneren van (betalingstoken).\n"
-"Batch Deposito: Verzamel meerdere klantcheques tegelijk door een batch deposito te genereren om bij uw bank in te dienen. Wanneer u de bankafschrift in Odoo ingeeft, wordt u voorgesteld om de transactie af te letteren met de batchafbetaling. Schakel deze optie in bij instellingen."
+"Batch Deposito: Verzamel meerdere klantcheques tegelijk door een batch deposito te genereren om bij uw bank in te dienen. Wanneer u de bankafschriften in Odoo ingeeft, wordt u voorgesteld om de transactie af te letteren met de batchafbetaling. Schakel deze optie in bij instellingen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment_payment_method_id
@@ -6850,13 +6850,13 @@ msgid ""
 "Manual: Get paid by cash, check or any other method outside of Odoo.\n"
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Check: Pay bill by check and print it from Odoo.\n"
-"Batch Deposit: Encash several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit,module account_batch_deposit must be installed.\n"
+"Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit,module account_batch_deposit must be installed.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed "
 msgstr ""
 "Handmatig: Krijg betaald met contant geld, cheques of een andere methode buiten Odoo om\n"
 "Elektronisch: Betaal automatisch via een betalingsverwerker door een transactie aan te vragen op een door de klant opgeslagen kaart bij het online kopen of abonneren van (betalingstoken).\n"
 "Cheque: Betaal factuur met een cheque en druk deze af in Odoo\n"
-"Batch Deposito: Verzamel meerdere klantcheques tegelijk door een batch deposito te genereren om bij uw bank in te dienen. Wanneer u de bankafschrift in Odoo ingeeft, wordt u voorgesteld om de transactie af te letteren met de batchafbetaling. Schakel deze optie in bij instellingen.\n"
+"Batch Deposito: Verzamel meerdere klantcheques tegelijk door een batch deposito te genereren om bij uw bank in te dienen. Wanneer u de bankafschriften in Odoo ingeeft, wordt u voorgesteld om de transactie af te letteren met de batchafbetaling. Schakel deze optie in bij instellingen.\n"
 "SEPA overschrijving: Betaal de factuur met een SEPA verschrijvingsbestand welke je upload bij de bank. Om SEPA te activeren dient te module ccount_sepa worden geïnstalleerd."
 
 #. module: account
@@ -6933,7 +6933,7 @@ msgstr "Bijbehorende nummer"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_max_date
 msgid "Max Date of Matched Lines"
-msgstr "Maximale datum van overeenkomende lijnen"
+msgstr "Maximale datum van overeenkomende regels"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -7210,9 +7210,10 @@ msgstr "Geen detail"
 #: code:addons/account/models/company.py:274
 #, python-format
 msgid ""
-"No miscellanous journal could be found. Please create one before proceeding."
+"No miscellaneous journal could be found. Please create one before "
+"proceeding."
 msgstr ""
-"Geen memoriaal dagboek gevonden. Mak een memoriaal dagboek aan om door te "
+"Geen memoriaal dagboek gevonden. Maak een memoriaal dagboek aan om door te "
 "gaan."
 
 #. module: account
@@ -7440,7 +7441,7 @@ msgid ""
 msgstr ""
 "De electronisch facturatie in Odoo vergemakkelijkt en versnelt\n"
 "                het innen van betalingen van klanten. Uw klant ontvangt zijn factuur\n"
-"                per email, en hij kan online betalen en/of de factuur importeren\n"
+"                per e-mail, en hij kan online betalen en/of de factuur importeren\n"
 "                in zijn bedrijfssysteem.."
 
 #. module: account
@@ -8372,7 +8373,7 @@ msgstr "Winst en Verlies"
 #: code:addons/account/models/account_payment.py:135
 #, python-format
 msgid ""
-"Programmation error: wizard action executed without active_ids in context."
+"Programming error: wizard action executed without active_ids in context."
 msgstr ""
 "Programmeerfout: wizard actie uitgevoerd zonder active_ids in context."
 
@@ -8619,7 +8620,7 @@ msgid "Ref."
 msgstr "Ref."
 
 #. module: account
-#: code:addons/account/controllers/portal.py:72
+#: code:addons/account/controllers/portal.py:74
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_ref
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_name
 #: model:ir.model.fields,field_description:account.field_account_move_line_ref
@@ -9441,7 +9442,7 @@ msgid "States Count"
 msgstr "Aantal statussen"
 
 #. module: account
-#: code:addons/account/controllers/portal.py:73
+#: code:addons/account/controllers/portal.py:75
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_state
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_state
 #: model:ir.model.fields,field_description:account.field_account_invoice_state
@@ -10883,7 +10884,6 @@ msgid "Total"
 msgstr "Totaal"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.ui.view,arch_db:account.view_move_tree
 msgid "Total Amount"
 msgstr "Totaalbedrag"
@@ -11851,11 +11851,11 @@ msgstr "U kunt de bankrekening niet leegmaken als deze al is ingesteld."
 #: code:addons/account/models/account.py:55
 #, python-format
 msgid ""
-"You cannot have a receivable/payable account that is not reconciliable. "
+"You cannot have a receivable/payable account that is not reconcilable. "
 "(account code: %s)"
 msgstr ""
-"U kunt geen crediteuren- of debiteurenrekening hebben die niet af te "
-"letteren is. (Rekeningcode: %s)"
+"Het is niet mogelijk om een debiteuren/crediteuren rekening te hebben welke "
+"niet afletterbaar is. (grootboek: %s)"
 
 #. module: account
 #. openerp-web
@@ -12325,4 +12325,4 @@ msgstr "wizard.multi.charts.accounts"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
-msgstr "→ Tel"
+msgstr "→ Aantal"

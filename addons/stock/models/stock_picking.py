@@ -665,8 +665,11 @@ class Picking(models.Model):
 
             for line in lines_to_check:
                 product = line.product_id
-                if product and product.tracking != 'none' and (line.qty_done == 0 or (not line.lot_name and not line.lot_id)):
-                    raise UserError(_('You need to supply a lot/serial number for %s.') % product.name)
+                if product and product.tracking != 'none':
+                    if not line.lot_name and not line.lot_id:
+                        raise UserError(_('You need to supply a lot/serial number for %s.') % product.display_name)
+                    elif line.qty_done == 0:
+                        raise UserError(_('You cannot validate a transfer if you have not processed any quantity for %s.') % product.display_name)
 
         if no_quantities_done:
             view = self.env.ref('stock.view_immediate_transfer')
@@ -808,9 +811,11 @@ class Picking(models.Model):
                             operation.product_uom_qty - operation.qty_done,
                             precision_rounding=operation.product_uom_id.rounding,
                             rounding_method='UP')
+                        done_to_keep = operation.qty_done
                         new_operation = operation.copy(
-                            default={'product_uom_qty': operation.qty_done, 'qty_done': operation.qty_done})
+                            default={'product_uom_qty': 0, 'qty_done': operation.qty_done})
                         operation.write({'product_uom_qty': quantity_left_todo, 'qty_done': 0.0})
+                        new_operation.write({'product_uom_qty': done_to_keep})
                         operation_ids |= new_operation
 
                 operation_ids.write({'result_package_id': package.id})

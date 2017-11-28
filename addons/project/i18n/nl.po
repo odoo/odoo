@@ -11,10 +11,10 @@
 # Volluta <volluta@tutanota.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:25+0000\n"
-"PO-Revision-Date: 2017-10-02 11:25+0000\n"
+"POT-Creation-Date: 2017-11-16 08:08+0000\n"
+"PO-Revision-Date: 2017-11-16 08:08+0000\n"
 "Last-Translator: Volluta <volluta@tutanota.com>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -210,7 +210,7 @@ msgstr ""
 "                                <span style=\"font-style:italic;\">U bent niet alleen</span>\n"
 "                            </p>\n"
 "                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>We zouden het geweldig vinden om u onderweg te ondersteunen. Contacteer ons via ons\n"
+"                                <span>We zouden het geweldig vinden om u onderweg te ondersteunen. Neem contact op via ons\n"
 "                                <a href=\"https://www.odoo.com/help\">support formulier</a> indien u vragen heeft.\n"
 "                                U kan ook ontdekken hoe u het beste haalt uit Odoo Projecten met onzer </span>\n"
 "                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
@@ -1549,11 +1549,6 @@ msgid "Configuration options are available in the Settings app."
 msgstr "Configuratie mogelijkheden zijn beschikbaar in de Instellingen app."
 
 #. module: project
-#: model:ir.actions.act_window,name:project.project_config_settings_action
-msgid "Configure Project"
-msgstr "Project configureren"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Congratulations on choosing Odoo Project to help running your company more "
@@ -1741,7 +1736,7 @@ msgstr "Klant"
 #: code:addons/project/models/project.py:818
 #, python-format
 msgid "Customer Email"
-msgstr "Klant email"
+msgstr "Klant e-mail"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2041,7 +2036,7 @@ msgid ""
 "                    Odoo allows you to customize every application and it's usually a good idea to customize screens to fit your project needs."
 msgstr ""
 "Elke organisatie is anders.<br/>\n"
-"Odoo staat u toe om elke applicatie te personaliseren en het is vaak een goed idee om schermen te personaliseren om aan uw project noden te voldoen."
+"Odoo staat u toe om elke applicatie te personaliseren en het is vaak een goed idee om schermen te personaliseren om aan uw projectbehoeftes te voldoen."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2128,6 +2123,8 @@ msgid ""
 "For example, risk and task owners should come prepared to share the status "
 "of their item and, ideally, a path to resolution."
 msgstr ""
+"Bijvoorbeeld, risico- en taakeigenaren moeten voorbereid komen om de status "
+"van hun item voor te stellen en, ideaal, een weg naar een oplossing hebben."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2491,9 +2488,9 @@ msgid ""
 "automatically synchronized with Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
 msgstr ""
-"Interne e-mail verbonden met dit project. Incomende email worden automatisch"
-" gesynchroniseerd met Taken (of optioneel problemen als de Problemen volg "
-"module is geïnstalleerd)."
+"Interne e-mail verbonden met dit project. Inkomende e-mail worden "
+"automatisch gesynchroniseerd met Taken (of optioneel problemen als de "
+"Problemen volg module is geïnstalleerd)."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3128,6 +3125,7 @@ msgstr "Product of software versie"
 #: model:ir.ui.menu,name:project.menu_main_pm
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
+#: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 #: model:res.request.link,name:project.req_link_project
@@ -3144,7 +3142,7 @@ msgstr "Project -"
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_project_count
 #: model:ir.model.fields,field_description:project.field_project_project_project_count
 msgid "Project Count"
-msgstr "Project teller"
+msgstr "Aantal projecten"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_user_id
@@ -3501,6 +3499,7 @@ msgid "Set a Cover Image"
 msgstr "Stel een voorkant afbeelding in"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.project_config_settings_action
 #: model:ir.ui.menu,name:project.project_config_settings_menu_action
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
@@ -3646,7 +3645,7 @@ msgstr "Sub-taak project"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_subtask_count
 msgid "Sub-task count"
-msgstr "Sub-taak teller"
+msgstr "Antal ub-taken"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_sub_task
@@ -3963,12 +3962,12 @@ msgid ""
 "        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
 msgstr ""
 "Deze e-mail adressen worden toegevoegd aan het CC veld bij alle inkomende\n"
-"en uitgaande e-mails voor dit record voorafgaand aan versturen. Scheidt verschillende email adressen met een komma."
+"en uitgaande e-mails voor dit record voorafgaand aan versturen. Scheidt verschillende e-mail adressen met een komma."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_email_from
 msgid "These people will receive email."
-msgstr "Deze personen zullen email ontvangen."
+msgstr "Deze personen zullen e-mail ontvangen."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3977,6 +3976,9 @@ msgid ""
 "from customers will be transformed into a task that you'll be able to track "
 "easily!"
 msgstr ""
+"Dit is voornamelijk handig om help en ondersteuning te beheren: alle "
+"inkomende e-mail van klanten wordt omgevormd in een taak die u gemakkelijk "
+"kunt opvolgen!"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -3984,6 +3986,9 @@ msgid ""
 "This replaces task's description text field by a collaborative rich text "
 "pad. This is advised if tasks involve several people."
 msgstr ""
+"Dit vervangt de omschrijving van de taak door een samenwerk pad met tekst "
+"welke je kan opmaken. Dit is geadviseerd als een taak door meerdere personen"
+" wordt uitgevoerd."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_project_task_user_tree

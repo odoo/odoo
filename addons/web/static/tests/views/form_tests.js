@@ -279,13 +279,16 @@ QUnit.module('Views', {
     });
 
     QUnit.test('invisible elements are properly hidden', function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         var form = createView({
             View: FormView,
             model: 'partner',
             data: this.data,
             arch: '<form string="Partners">' +
+                    '<header invisible="1">' +
+                        '<button name="myaction" string="coucou"/>' +
+                    '</header>' +
                     '<sheet>' +
                         '<group>' +
                             '<group string="invgroup" invisible="1">' +
@@ -300,6 +303,8 @@ QUnit.module('Views', {
                 '</form>',
             res_id: 1,
         });
+        assert.strictEqual(form.$('.o_form_statusbar.o_invisible_modifier button:contains(coucou)').length, 1,
+                        "should not display invisible header");
         assert.strictEqual(form.$('.o_notebook li.o_invisible_modifier a:contains(invisible)').length, 1,
                         "should not display tab invisible");
         assert.strictEqual(form.$('table.o_inner_group.o_invisible_modifier td:contains(invgroup)').length, 1,
@@ -1881,6 +1886,52 @@ QUnit.module('Views', {
         });
         assert.strictEqual(form.$('td:contains(xphone)').length, 1,
             "should display the name of the many2one");
+        form.destroy();
+    });
+
+    QUnit.test('circular many2many\'s', function (assert) {
+        assert.expect(4);
+        this.data.partner_type.fields.partner_ids = {string: "partners", type: "many2many", relation: 'partner'}
+        this.data.partner.records[0].timmy = [12];
+        this.data.partner_type.records[0].partner_ids = [1];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="timmy">' +
+                        '<tree>' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="partner_ids">' +
+                                '<tree>' +
+                                    '<field name="display_name"/>' +
+                                '</tree>' +
+                                '<form>' +
+                                    '<field name="display_name"/>' +
+                                '</form>' +
+                            '</field>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('td:contains(gold)').length, 1,
+            "should display the name of the many2many on the original form");
+        form.$('td:contains(gold)').click();
+
+        assert.strictEqual($('.modal-dialog').length, 1,
+            'The partner_type modal should have opened');
+        assert.strictEqual($('.modal-dialog').find('td:contains(first record)').length, 1,
+            "should display the name of the many2many on the modal form");
+
+        $('.modal-dialog').find('td:contains(first record)').click();
+        assert.strictEqual($('.modal-dialog').length, 2,
+            'There should be 2 modals (partner on top of partner_type) opened');
+
         form.destroy();
     });
 
@@ -5662,9 +5713,9 @@ QUnit.module('Views', {
         form.$buttons.find('.o_form_button_edit').click();
         assert.strictEqual(form.$('input[name="foo"]').val(), '***',
             "password should be displayed with stars");
-        assert.strictEqual(form.$('input[name="display_name"]').prop('autocomplete'), 'coucou',
+        assert.strictEqual(form.$('input[name="display_name"]').attr('autocomplete'), 'coucou',
             "attribute autocomplete should be set");
-        assert.strictEqual(form.$('input[name="foo"]').prop('autocomplete'), 'new-password',
+        assert.strictEqual(form.$('input[name="foo"]').attr('autocomplete'), 'new-password',
             "attribute autocomplete should be set to 'new-password' on password input");
         form.destroy();
     });
@@ -5902,7 +5953,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('display tooltips for buttons', function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var initialDebugMode = config.debug;
         config.debug = true;
@@ -5915,6 +5966,7 @@ QUnit.module('Views', {
                     '<header>' +
                         '<button name="some_method" class="oe_highlight" string="Button" type="object"/>' +
                     '</header>' +
+                    '<button name="other_method" class="oe_highlight" string="Button2" type="object"/>' +
                 '</form>',
         });
 
@@ -5924,6 +5976,15 @@ QUnit.module('Views', {
 
         assert.strictEqual($('.tooltip .oe_tooltip_string').length, 1,
             "should have rendered a tooltip");
+        $button.trigger($.Event('mouseleave'));
+
+        var $secondButton = form.$('button[name="other_method"]');
+        $secondButton.tooltip('show', false);
+        $secondButton.trigger($.Event('mouseenter'));
+
+        assert.strictEqual($('.tooltip .oe_tooltip_string').length, 1,
+            "should have rendered a tooltip");
+        $secondButton.trigger($.Event('mouseleave'));
 
         config.debug = initialDebugMode;
         form.destroy();
@@ -6168,8 +6229,8 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.test('proper context stringification in debug mode tooltip', function (assert) {
-        assert.expect(2);
+    QUnit.test('proper stringification in debug mode tooltip', function (assert) {
+        assert.expect(4);
 
         var initialDebugMode = config.debug;
         config.debug = true;
@@ -6180,7 +6241,8 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<form string="Partners">' +
                     '<sheet>' +
-                        '<field name="product_id" context="{\'lang\': \'en_US\'}"/>' +
+                        '<field name="product_id" context="{\'lang\': \'en_US\'}" ' +
+                            'attrs=\'{"invisible": [["product_id", "=", 33]]}\'/>' +
                     '</sheet>' +
                 '</form>',
         });
@@ -6192,6 +6254,11 @@ QUnit.module('Views', {
             1, 'context should be present for this field');
         assert.strictEqual($('.oe_tooltip_technical>li[data-item="context"]')[0].lastChild.wholeText.trim(),
             "{'lang': 'en_US'}", "context should be properly stringified");
+
+        assert.strictEqual($('.oe_tooltip_technical>li[data-item="modifiers"]').length,
+            1, 'modifiers should be present for this field');
+        assert.strictEqual($('.oe_tooltip_technical>li[data-item="modifiers"]')[0].lastChild.wholeText.trim(),
+            '{"invisible":[["product_id","=",33]]}', "modifiers should be properly stringified");
 
         config.debug = initialDebugMode;
         form.destroy();

@@ -8,6 +8,7 @@
 # Miguel Orueta <mo@landoo.es>, 2017
 # Gustavo Valverde <g.valverde02@gmail.com>, 2017
 # Rafael Blasco <rafabn@antiun.com>, 2017
+# Eduardo Magdalena <emagdalena@close2circle.com>, 2017
 # José Vicente <txusev@gmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 # Daniel Blanco <daniel@blancomartin.com.ar>, 2017
@@ -22,13 +23,14 @@
 # Ivan Nieto <ivan.n.s@tuta.io>, 2017
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
 # Nicole Kist <nki@odoo.com>, 2017
+# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Nicole Kist <nki@odoo.com>, 2017\n"
+"Last-Translator: Christopher Ormaza <chris.ormaza@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -327,7 +329,7 @@ msgstr ""
 #: model:ir.ui.menu,name:delivery.menu_delivery_packagings
 #: model:ir.ui.view,arch_db:delivery.product_packaging_delivery_tree
 msgid "Delivery Packages"
-msgstr ""
+msgstr "Paquetes de entrega"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_delivery_packaging_id
@@ -656,6 +658,7 @@ msgstr "Operación de empaquetado"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_stock_quant_package_id
 msgid "Physical Packages"
 msgstr "Paquetes físicos"
 
@@ -711,7 +714,7 @@ msgstr "Cantidad"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Quotation"
-msgstr "Cotización"
+msgstr "Presupuesto"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
@@ -803,11 +806,6 @@ msgid "Stock Move"
 msgstr "Movimiento de existencias"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_stock_quant_package_id
-msgid "Stock Quant Package"
-msgstr ""
-
-#. module: delivery
 #: model:product.product,name:delivery.product_product_delivery_poste
 #: model:product.template,name:delivery.product_product_delivery_poste_product_template
 msgid "The Poste"
@@ -822,7 +820,7 @@ msgid ""
 msgstr ""
 "Estos métodos permiten calcular automáticamente el precio de la entrega\n"
 "                de acuerdo a su configuración; en el pedido de venta (basada en la\n"
-"                cotización) o la factura (basada en las órdenes de entrega)."
+"                presupuesto) o la factura (basada en las órdenes de entrega)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner_property_delivery_carrier_id

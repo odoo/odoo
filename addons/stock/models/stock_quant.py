@@ -6,6 +6,7 @@ from psycopg2 import OperationalError, Error
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
+from odoo.tools.float_utils import float_compare, float_is_zero
 
 import logging
 
@@ -71,7 +72,7 @@ class StockQuant(models.Model):
     @api.constrains('quantity')
     def check_quantity(self):
         for quant in self:
-            if quant.quantity > 1 and quant.lot_id and quant.product_id.tracking == 'serial':
+            if float_compare(quant.quantity, 1, precision_rounding=quant.product_uom_id.rounding) > 0 and quant.lot_id and quant.product_id.tracking == 'serial':
                 raise ValidationError(_('A serial number should only be linked to a single product.'))
 
     @api.constrains('in_date', 'lot_id')
@@ -152,12 +153,13 @@ class StockQuant(models.Model):
         """
         self = self.sudo()
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+        rounding = product_id.uom_id.rounding
         if product_id.tracking == 'none':
             available_quantity = sum(quants.mapped('quantity')) - sum(quants.mapped('reserved_quantity'))
             if allow_negative:
                 return available_quantity
             else:
-                return available_quantity if available_quantity >= 0.0 else 0.0
+                return available_quantity if float_compare(available_quantity, 0.0, precision_rounding=rounding) >= 0.0 else 0.0
         else:
             availaible_quantities = {lot_id: 0.0 for lot_id in list(set(quants.mapped('lot_id'))) + ['untracked']}
             for quant in quants:
@@ -168,7 +170,7 @@ class StockQuant(models.Model):
             if allow_negative:
                 return sum(availaible_quantities.values())
             else:
-                return sum([available_quantity for available_quantity in availaible_quantities.values() if available_quantity > 0])
+                return sum([available_quantity for available_quantity in availaible_quantities.values() if float_compare(available_quantity, 0, precision_rounding=rounding) > 0])
 
     @api.model
     def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, in_date=None):
@@ -188,6 +190,7 @@ class StockQuant(models.Model):
         """
         self = self.sudo()
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+        rounding = product_id.uom_id.rounding
 
         if lot_id:
             incoming_dates = quants.mapped('in_date')  # `mapped` already filtered out falsy items
@@ -210,7 +213,7 @@ class StockQuant(models.Model):
                         'in_date': in_date,
                     })
                     # cleanup empty quants
-                    if quant.quantity == 0 and quant.reserved_quantity == 0:
+                    if float_is_zero(quant.quantity, precision_rounding=rounding) and float_is_zero(quant.reserved_quantity, precision_rounding=rounding):
                         quant.unlink()
                     break
             except OperationalError as e:
@@ -244,18 +247,19 @@ class StockQuant(models.Model):
             was done and how much the system was able to reserve on it
         """
         self = self.sudo()
+        rounding = product_id.uom_id.rounding
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
         available_quantity = self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
-        if quantity > 0 and quantity > available_quantity:
-            raise UserError(_('It is not possible to reserve more products than you have in stock.'))
-        elif quantity < 0 and abs(quantity) > sum(quants.mapped('reserved_quantity')):
-            raise UserError(_('It is not possible to unreserve more products than you have in stock.'))
+        if float_compare(quantity, 0, precision_rounding=rounding) > 0 and float_compare(quantity, available_quantity, precision_rounding=rounding) > 0:
+            raise UserError(_('It is not possible to reserve more products of %s than you have in stock.') % (', '.join(quants.mapped('product_id').mapped('display_name'))))
+        elif float_compare(quantity, 0, precision_rounding=rounding) < 0 and float_compare(abs(quantity), sum(quants.mapped('reserved_quantity')), precision_rounding=rounding) > 0:
+            raise UserError(_('It is not possible to unreserve more products of %s than you have in stock.') % (', '.join(quants.mapped('product_id').mapped('display_name'))))
 
         reserved_quants = []
         for quant in quants:
-            if quantity > 0:
+            if float_compare(quantity, 0, precision_rounding=rounding) > 0:
                 max_quantity_on_quant = quant.quantity - quant.reserved_quantity
-                if max_quantity_on_quant <= 0:
+                if float_compare(max_quantity_on_quant, 0, precision_rounding=rounding) <= 0:
                     continue
                 max_quantity_on_quant = min(max_quantity_on_quant, quantity)
                 quant.reserved_quantity += max_quantity_on_quant
@@ -269,7 +273,7 @@ class StockQuant(models.Model):
                 quantity += max_quantity_on_quant
                 available_quantity += max_quantity_on_quant
 
-            if quantity == 0 or available_quantity == 0:
+            if float_is_zero(quantity, precision_rounding=rounding) or float_is_zero(available_quantity, precision_rounding=rounding):
                 break
         return reserved_quants
 
