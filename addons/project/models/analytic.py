@@ -17,21 +17,6 @@ class AccountAnalyticAccount(models.Model):
         for account in self:
             account.project_count = len(account.with_context(active_test=False).project_ids)
 
-    @api.model
-    def create(self, vals):
-        analytic_account = super(AccountAnalyticAccount, self).create(vals)
-        analytic_account.project_create(vals)
-        return analytic_account
-
-    @api.multi
-    def write(self, vals):
-        vals_for_project = vals.copy()
-        for account in self:
-            if not vals.get('name'):
-                vals_for_project['name'] = account.name
-            account.project_create(vals_for_project)
-        return super(AccountAnalyticAccount, self).write(vals)
-
     @api.multi
     def unlink(self):
         projects = self.env['project.project'].search([('analytic_account_id', 'in', self.ids)])
@@ -66,26 +51,3 @@ class AccountAnalyticAccount(models.Model):
         else:
             result = {'type': 'ir.actions.act_window_close'}
         return result
-
-    @api.model
-    def _trigger_project_creation(self, vals):
-        """ This function is used to decide if a project needs to be automatically created or not when an analytic
-            account is created. It returns True if it needs to be so, False otherwise.
-        """
-        return 'project_creation_in_progress' not in self.env.context
-
-    @api.multi
-    def project_create(self, vals):
-        """ This function is called at the time of analytic account creation and is used to create a project
-            automatically linked to it if the conditions are meet.
-        """
-        self.ensure_one()
-        Project = self.env['project.project']
-        project = Project.with_context(active_test=False).search([('analytic_account_id', '=', self.id)])
-        if not project and self._trigger_project_creation(vals):
-            project_values = {
-                'name': vals.get('name'),
-                'analytic_account_id': self.id,
-            }
-            return Project.create(project_values).id
-        return False
