@@ -891,7 +891,7 @@ class ControllerType(type):
                                     " Will use original type: %r" % (cls.__module__, cls.__name__, k, parent_routing_type))
                 v.original_func.routing_type = routing_type or parent_routing_type
 
-                spec = inspect.getargspec(v.original_func)
+                spec = inspect.getfullargspec(v.original_func)
                 first_arg = spec.args[1] if len(spec.args) >= 2 else None
                 if first_arg in ["req", "request"]:
                     v._first_arg_is_req = True
