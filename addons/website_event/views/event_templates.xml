@@ -57,7 +57,7 @@
                                 <h4 class="media-heading">
                                     <a itemprop="url" t-att-class="event.state == 'done' and 'text-success'" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register' or ''}"><span itemprop="name" t-field="event.name"> </span></a>
                                     <small t-if="event.is_participating" class="label label-info">Participating</small>
-                                    <small t-if="not event.is_online" class="label label-info">Online</small>
+                                    <small t-if="event.is_online" class="label label-info">Online</small>
                                     <small t-if="not event.website_published" class="label label-danger">unpublished</small>
                                 </h4>
                                 <div>
