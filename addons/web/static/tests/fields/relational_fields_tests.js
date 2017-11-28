@@ -2249,7 +2249,7 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "yopblipkawa",
             "should still have the 3 rows in the correct order");
 
-        // Drag and drop the fourth line in second position
+        // Drag and drop the second line in first position
         testUtils.dragAndDrop(
             form.$('.ui-sortable-handle').eq(1),
             form.$('tbody tr').first(),
@@ -2309,7 +2309,7 @@ QUnit.module('relational_fields', {
 
         form.$buttons.find('.o_form_button_edit').click();
 
-        // Drag and drop the fourth line in second position
+        // Drag and drop the second line in first position
         testUtils.dragAndDrop(
             form.$('.ui-sortable-handle').eq(1),
             form.$('tbody tr').first(),
@@ -2322,9 +2322,66 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('onchange for embedded one2many with handle widget with same values', function (assert) {
+        assert.expect(2);
+
+        this.data.turtle.records[0].turtle_int = 1;
+        this.data.turtle.records[1].turtle_int = 1;
+        this.data.turtle.records[2].turtle_int = 1;
+        this.data.partner.records[0].turtles = [1, 2, 3];
+        var turtleOnchange = 0;
+        this.data.turtle.onchanges = {
+            turtle_int: function (obj) {
+                turtleOnchange++;
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<notebook>' +
+                            '<page string="P page">' +
+                                '<field name="turtles">' +
+                                    '<tree default_order="turtle_int">' +
+                                        '<field name="turtle_int" widget="handle"/>' +
+                                        '<field name="turtle_foo"/>' +
+                                    '</tree>' +
+                                '</field>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                 '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1].turtles, [[1,1,{"turtle_int":2}],[4,2,false],[1,3,{"turtle_int":3}]],
+                        "should change all ligne who change (the first one don't change because use the same sequence)");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        // Drag and drop the second line in first position
+        testUtils.dragAndDrop(
+            form.$('.ui-sortable-handle').eq(1),
+            form.$('tbody tr').first(),
+            {position: 'top'}
+        );
+
+        assert.strictEqual(turtleOnchange, 3, "should update all lines");
+
+        form.$buttons.find('.o_form_button_save').click();
+        form.destroy();
+    });
+
     QUnit.test('embedded one2many with handle widget with minimum setValue calls', function (assert) {
         var done = assert.async();
-        assert.expect(20);
+        assert.expect(21);
 
 
         this.data.turtle.records[0].turtle_int = 6;
@@ -2376,8 +2433,8 @@ QUnit.module('relational_fields', {
 
         var steps = [];
         var positions = [
-            [6, 0, 'top', [3, 6, 1, 2, 5, 7, 4]], // move the last to the first line
-            [5, 1, 'top', [7, 6, 1, 2, 5]], // move the penultimate to the second line
+            [5, 0, 'top', [4, 6, 1, 2, 5, 7]], // move the penultimate to the first line
+            [6, 0, 'top', [3, 4, 6, 1, 2, 5, 7]], // move the last to the second line
             [2, 5, 'center', [1, 2, 5, 6]], // move the third to the penultimate line
         ];
         function dragAndDrop() {
@@ -2390,8 +2447,7 @@ QUnit.module('relational_fields', {
             );
 
             steps = steps.concat(pos[3]);
-            assert.verifySteps(steps,
-                "sequences values should be apply from the begin index to the drop index");
+            assert.verifySteps(steps, "sequences values should be apply from the begin index to the drop index");
 
             if (positions.length) {
 
@@ -2401,12 +2457,12 @@ QUnit.module('relational_fields', {
 
                 assert.deepEqual(_.pluck(form.model.get(form.handle).data.turtles.data, 'data'), [
                     {  id: 3,  turtle_foo: "kawa",  turtle_int: 2 },
-                    {  id: 7,  turtle_foo: "a4",  turtle_int: 3 },
+                    {  id: 4,  turtle_foo: "a1",  turtle_int: 3 },
                     {  id: 1,  turtle_foo: "yop",  turtle_int: 4 },
                     {  id: 2,  turtle_foo: "blip",  turtle_int: 5 },
                     {  id: 5,  turtle_foo: "a2",  turtle_int: 6 },
                     {  id: 6,  turtle_foo: "a3",  turtle_int: 7 },
-                    {  id: 4,  turtle_foo: "a1",  turtle_int: 8 }
+                    {  id: 7,  turtle_foo: "a4",  turtle_int: 8 }
                 ], "sequences must be apply correctly");
 
                 form.destroy();
