@@ -97,14 +97,28 @@ var createActionManager = function (params) {
         },
     });
     addMockEnvironment(widget, _.defaults(params, {debounce: false}));
+    intercept(widget, 'call_service', function (event) {
+        if (event.data.service === 'report') {
+            var state = widget._rpc({route: '/report/check_wkhtmltopdf'});
+            event.data.callback(state);
+        }
+    }, true);
     widget.appendTo($target);
     widget.$el.addClass('o_web_client');
 
+    // make sure images and iframes do not trigger a GET on the server
+    // AAB; this should be done in addMockEnvironment
+    $target.on('DOMNodeInserted.removeSRC', function () {
+        removeSrcAttribute($(this), widget);
+    });
+
     var userContext = params.context && params.context.user_context || {};
     var actionManager = new ActionManager(widget, userContext);
+
     var originalDestroy = ActionManager.prototype.destroy;
     actionManager.destroy = function () {
         actionManager.destroy = originalDestroy;
+        $target.off('DOMNodeInserted.removeSRC');
         widget.destroy();
     };
     actionManager.appendTo(widget.$el);

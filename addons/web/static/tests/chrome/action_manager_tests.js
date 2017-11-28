@@ -3,6 +3,7 @@ odoo.define('web.action_manager_tests', function (require) {
 
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
+var ReportClientAction = require('report.client_action');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 
@@ -63,7 +64,14 @@ QUnit.module('ActionManager', {
             type: 'ir.actions.act_window',
             view_mode: 'form',
             views: [[false, 'form']],
+        }, {
+            id: 7,
+            name: "Some Report",
+            report_name: 'some_report',
+            report_type: 'qweb-pdf',
+            type: 'ir.actions.report',
         }];
+
         this.archs = {
             // kanban views
             'partner,1,kanban': '<kanban><templates><t t-name="kanban-box">' +
@@ -905,6 +913,141 @@ QUnit.module('ActionManager', {
         ]);
 
         actionManager.destroy();
+    });
+
+    QUnit.module('Report actions');
+
+    QUnit.test('can execute report actions from db ID', function (assert) {
+        assert.expect(5);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                if (route === '/report/check_wkhtmltopdf') {
+                    return $.when('ok');
+                }
+                return this._super.apply(this, arguments);
+            },
+            session: {
+                get_file: function (params) {
+                    assert.step(params.url);
+                    params.success();
+                    params.complete();
+                },
+            },
+        });
+        actionManager.doAction(7, {
+            on_close: assert.step.bind(assert, 'on_close'),
+        });
+
+        assert.verifySteps([
+            '/web/action/load',
+            '/report/check_wkhtmltopdf',
+            '/report/download',
+            'on_close',
+        ]);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('should trigger a notification if wkhtmltopdf is to upgrade', function (assert) {
+        assert.expect(5);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                if (route === '/report/check_wkhtmltopdf') {
+                    return $.when('upgrade');
+                }
+                return this._super.apply(this, arguments);
+            },
+            session: {
+                get_file: function (params) {
+                    assert.step(params.url);
+                    params.success();
+                    params.complete();
+                },
+            },
+            intercepts: {
+                notification: function () {
+                    assert.step('notification');
+                },
+            },
+        });
+        actionManager.doAction(7);
+
+        assert.verifySteps([
+            '/web/action/load',
+            '/report/check_wkhtmltopdf',
+            'notification',
+            '/report/download',
+        ]);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('should open the report client action if wkhtmltopdf is broken', function (assert) {
+        assert.expect(6);
+
+        // patch the report client action to override its iframe's url so that
+        // it doesn't trigger an RPC when it is appended to the DOM (for this
+        // usecase, using removeSRCAttribute doesn't work as the RPC is
+        // triggered as soon as the iframe is in the DOM, even if its src
+        // attribute is removed right after)
+        testUtils.patch(ReportClientAction, {
+            start: function () {
+                var self = this;
+                return this._super.apply(this, arguments).then(function () {
+                    self.iframe.src = 'test: ' + self.iframe.getAttribute('src');
+                });
+            }
+        });
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                if (route === '/report/check_wkhtmltopdf') {
+                    return $.when('broken');
+                }
+                if (route === 'test: /report/html/some_report') {
+                    return $.when();
+                }
+                return this._super.apply(this, arguments);
+            },
+            session: {
+                get_file: function (params) {
+                    assert.step(params.url); // should not be called
+                },
+            },
+            intercepts: {
+                notification: function () {
+                    assert.step('notification');
+                },
+            },
+        });
+        actionManager.doAction(7);
+
+        assert.strictEqual(actionManager.$('.o_report_iframe').length, 1,
+            "should have opened the report client action");
+
+        assert.verifySteps([
+            '/web/action/load',
+            '/report/check_wkhtmltopdf',
+            'notification',
+            'test: /report/html/some_report', // report client action's iframe
+        ]);
+
+        actionManager.destroy();
+        testUtils.unpatch(ReportClientAction);
     });
 
     QUnit.module('Window Actions');
