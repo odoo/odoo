@@ -782,12 +782,11 @@ class Field(object):
         """
         return self.convert_to_read(value)
 
-    def convert_to_onchange(self, value, fnames=None):
+    def convert_to_onchange(self, value, names):
         """ convert ``value`` from the cache to a value as returned by method
             :meth:`BaseModel.onchange`.
 
-            :param fnames: an optional collection of field names to convert
-                (for relational fields only)
+            :param names: a tree of field names (for relational fields only)
         """
         return self.convert_to_read(value)
 
@@ -1725,10 +1724,10 @@ class Many2one(_Relational):
     def convert_to_display_name(self, value, record=None):
         return ustr(value.display_name)
 
-    def convert_to_onchange(self, value, fnames=None):
+    def convert_to_onchange(self, value, names):
         if not value.id:
             return False
-        return super(Many2one, self).convert_to_onchange(value, fnames)
+        return super(Many2one, self).convert_to_onchange(value, names)
 
 class UnionUpdate(SpecialValue):
     """ Placeholder for a value update; when this value is taken from the cache,
@@ -1814,14 +1813,17 @@ class _RelationalMulti(_Relational):
                 result[0][2].append(record.id)
         return result
 
-    def convert_to_onchange(self, value, fnames=None):
+    def convert_to_onchange(self, value, names):
         # return the recordset value as a list of commands; the commands may
         # give all fields values, the client is responsible for figuring out
         # which fields are actually dirty
-        fields = [(name, value._fields[name]) for name in (fnames or []) if name != 'id']
         result = [(5,)]
         for record in value:
-            vals = {name: field.convert_to_onchange(record[name]) for name, field in fields}
+            vals = {
+                name: value._fields[name].convert_to_onchange(record[name], subnames)
+                for name, subnames in names.items()
+                if name != 'id'
+            }
             if not record.id:
                 result.append((0, 0, vals))
             elif vals:
@@ -1916,10 +1918,10 @@ class One2many(_RelationalMulti):
     _column_auto_join = property(attrgetter('auto_join'))
     _column_limit = property(attrgetter('limit'))
 
-    def convert_to_onchange(self, value, fnames=None):
-        fnames = set(fnames or ())
-        fnames.discard(self.inverse_name)
-        return super(One2many, self).convert_to_onchange(value, fnames)
+    def convert_to_onchange(self, value, names):
+        names = names.copy()
+        names.pop(self.inverse_name, None)
+        return super(One2many, self).convert_to_onchange(value, names)
 
 
 class Many2many(_RelationalMulti):
