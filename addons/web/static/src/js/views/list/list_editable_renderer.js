@@ -579,11 +579,12 @@ ListRenderer.include({
         if (!asc) {
             rowIDs.reverse();
         }
-
-        this.trigger_up('resequence', {
-            rowIDs: rowIDs,
-            offset: _.min(sequences),
-            handleField: this.handleField,
+        this.unselectRow().then(function () {
+            self.trigger_up('resequence', {
+                rowIDs: rowIDs,
+                offset: _.min(sequences),
+                handleField: self.handleField,
+            });
         });
     },
     /**
