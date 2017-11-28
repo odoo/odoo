@@ -422,7 +422,7 @@ class ResourceCalendar(models.Model):
 
         for day in rrule.rrule(rrule.DAILY,
                                dtstart=start_dt,
-                               until=end_dt,
+                               until=end_dt.replace(hour=23, minute=59, second=59, microsecond=999999),
                                byweekday=self._get_weekdays()):
             start_time = datetime.time.min
             if day.date() == start_dt.date():
@@ -451,7 +451,7 @@ class ResourceCalendar(models.Model):
 
         for day in rrule.rrule(rrule.DAILY,
                                dtstart=start_dt,
-                               until=end_dt,
+                               until=end_dt.replace(hour=23, minute=59, second=59, microsecond=999999),
                                byweekday=self._get_weekdays()):
             start_time = datetime.time.min
             if day.date() == start_dt.date():
