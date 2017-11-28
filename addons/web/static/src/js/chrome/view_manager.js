@@ -117,6 +117,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                     groupBy: actionGroupBy,
                 }, self.flags, self.flags[view_type], view.options),
                 searchable: View.prototype.searchable,
+                groupby_disable: View.prototype.groupby_disable,
                 title: self.title,
                 type: view_type,
                 view_id: view[0] || view.view_id,
@@ -327,6 +328,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             hidden: this.flags.headless,
             searchview: this.searchview,
             search_view_hidden: !this.active_view.searchable || this.active_view.searchview_hidden,
+            groupby_disable: this.active_view.groupby_disable
         };
         this.update_control_panel(cp_status);
 

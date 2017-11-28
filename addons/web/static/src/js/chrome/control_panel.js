@@ -160,7 +160,7 @@ var ControlPanel = Widget.extend({
             this._attach_content(new_cp_content);
 
             // Update the searchview and switch buttons
-            this._update_search_view(status.searchview, status.search_view_hidden);
+            this._update_search_view(status.searchview, status.search_view_hidden, status.groupby_disable);
             if (status.active_view_selector) {
                 this._update_switch_buttons(status.active_view_selector);
             }
@@ -261,12 +261,15 @@ var ControlPanel = Widget.extend({
      * @param {openerp.web.SearchView} [searchview] the searchview Widget
      * @param {Boolean} [is_hidden] visibility of the searchview
      */
-    _update_search_view: function(searchview, is_hidden) {
+    _update_search_view: function (searchview, is_hidden, groupby_disable) {
         if (searchview) {
             // Set the $buttons div (in the DOM) of the searchview as the $buttons
             // have been appended to a jQuery node not in the DOM at SearchView initialization
             searchview.$buttons = this.nodes.$searchview_buttons;
             searchview.toggle_visibility(!is_hidden);
+            if (!searchview.options.disable_groupby){
+                groupby_disable ? searchview.groupby_menu.do_hide() : searchview.groupby_menu.do_show();
+            }
         }
 
         this.nodes.$searchview.toggle(!is_hidden);

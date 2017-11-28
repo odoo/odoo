@@ -46,6 +46,8 @@ var AbstractView = Class.extend({
     // views are the form view and the diagram view.
     searchable: true,
 
+    // desable groupby option in search view.
+    groupby_disable: false,
     config: {
         Model: AbstractModel,
         Renderer: AbstractRenderer,
