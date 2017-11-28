@@ -59,10 +59,10 @@ class AccountMoveLineReconcile(models.TransientModel):
         move_lines_filtered = move_lines.filtered(lambda aml: not aml.reconciled)
         #Because we are making a full reconciliation in batch, we need to consider use cases as defined in the test test_manual_reconcile_wizard_opw678153
         #So we force the reconciliation in company currency only at first
-        move_lines_filtered.with_context(skip_full_reconcile_check='amount_currency_excluded').reconcile()
-
+        # move_lines_filtered.with_context(skip_full_reconcile_check='amount_currency_excluded').reconcile()
+        move_lines_filtered.reconcile()
         #then in second pass, consider the amounts in secondary currency (only if some lines are still not fully reconciled)
-        move_lines.force_full_reconcile()
+        # move_lines.force_full_reconcile()
         return {'type': 'ir.actions.act_window_close'}
 
 
@@ -111,10 +111,10 @@ class AccountMoveLineReconcileWriteoff(models.TransientModel):
         move_lines_filtered = move_lines.filtered(lambda aml: not aml.reconciled)
         #Because we are making a full reconciliation in batch, we need to consider use cases as defined in the test test_manual_reconcile_wizard_opw678153
         #So we force the reconciliation in company currency only at first,
-        context['skip_full_reconcile_check'] = 'amount_currency_excluded'
+        # context['skip_full_reconcile_check'] = 'amount_currency_excluded'
         writeoff = move_lines_filtered.with_context(context).reconcile(self.writeoff_acc_id, self.journal_id)
         #then in second pass, consider the amounts in secondary currency (only if some lines are still not fully reconciled)
-        if not isinstance(writeoff, bool):
-            move_lines += writeoff
-        move_lines.force_full_reconcile()
+        # if not isinstance(writeoff, bool):
+            # move_lines += writeoff
+        # move_lines.force_full_reconcile()
         return {'type': 'ir.actions.act_window_close'}
