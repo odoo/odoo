@@ -167,6 +167,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         this.running_step_delay = parseInt(local_storage.getItem(get_running_delay_key()), 10) || 10;
         this.edition = (_.last(session.server_version_info) === 'e') ? 'enterprise' : 'community';
         this._log = [];
+        console.log('Tour Manager is ready.  running_tour=' + this.running_tour);
     },
     /**
      * Registers a tour described by the following arguments (in order)
@@ -236,6 +237,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         }).bind(this));
     },
     run: function (tour_name, step_delay) {
+        console.log(_.str.sprintf("Preparing tour %s", tour_name));
         if (this.running_tour) {
             this._deactivate_tip(this.active_tooltips[this.running_tour]);
             this._consume_tour(this.running_tour, _.str.sprintf("Killing tour %s", this.running_tour));
