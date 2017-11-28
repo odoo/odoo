@@ -167,6 +167,37 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('attributes are transferred on async widgets', function (assert) {
+        assert.expect(1);
+
+        var def = $.Deferred();
+
+        var FieldChar = fieldRegistry.get('char');
+        fieldRegistry.add('asyncwidget', FieldChar.extend({
+            willStart: function () {
+                return def;
+            },
+        }));
+
+        createAsyncView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="foo" style="color: blue" widget="asyncwidget"/>' +
+                    '</group>' +
+                '</form>',
+            res_id: 2,
+        }).then(function (form) {
+            assert.strictEqual(form.$('.o_field_widget[name=foo]').attr('style'), 'color: blue',
+                "should apply style attribute on fields");
+            form.destroy();
+            delete fieldRegistry.map.asyncwidget;
+        });
+        def.resolve();
+    });
+
     QUnit.test('only necessary fields are fetched with correct context', function (assert) {
         assert.expect(2);
 
@@ -1855,6 +1886,52 @@ QUnit.module('Views', {
         });
         assert.strictEqual(form.$('td:contains(xphone)').length, 1,
             "should display the name of the many2one");
+        form.destroy();
+    });
+
+    QUnit.test('circular many2many\'s', function (assert) {
+        assert.expect(4);
+        this.data.partner_type.fields.partner_ids = {string: "partners", type: "many2many", relation: 'partner'}
+        this.data.partner.records[0].timmy = [12];
+        this.data.partner_type.records[0].partner_ids = [1];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="timmy">' +
+                        '<tree>' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="partner_ids">' +
+                                '<tree>' +
+                                    '<field name="display_name"/>' +
+                                '</tree>' +
+                                '<form>' +
+                                    '<field name="display_name"/>' +
+                                '</form>' +
+                            '</field>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('td:contains(gold)').length, 1,
+            "should display the name of the many2many on the original form");
+        form.$('td:contains(gold)').click();
+
+        assert.strictEqual($('.modal-dialog').length, 1,
+            'The partner_type modal should have opened');
+        assert.strictEqual($('.modal-dialog').find('td:contains(first record)').length, 1,
+            "should display the name of the many2many on the modal form");
+
+        $('.modal-dialog').find('td:contains(first record)').click();
+        assert.strictEqual($('.modal-dialog').length, 2,
+            'There should be 2 modals (partner on top of partner_type) opened');
+
         form.destroy();
     });
 
@@ -5636,9 +5713,9 @@ QUnit.module('Views', {
         form.$buttons.find('.o_form_button_edit').click();
         assert.strictEqual(form.$('input[name="foo"]').val(), '***',
             "password should be displayed with stars");
-        assert.strictEqual(form.$('input[name="display_name"]').prop('autocomplete'), 'coucou',
+        assert.strictEqual(form.$('input[name="display_name"]').attr('autocomplete'), 'coucou',
             "attribute autocomplete should be set");
-        assert.strictEqual(form.$('input[name="foo"]').prop('autocomplete'), 'new-password',
+        assert.strictEqual(form.$('input[name="foo"]').attr('autocomplete'), 'new-password',
             "attribute autocomplete should be set to 'new-password' on password input");
         form.destroy();
     });
