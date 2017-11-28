@@ -835,7 +835,6 @@ class expression(object):
                 for dom_leaf in reversed(dom):
                     new_leaf = create_substitution_leaf(leaf, dom_leaf, model)
                     push(new_leaf)
-
             # ----------------------------------------
             # PATH SPOTTED
             # -> many2one or one2many with _auto_join:
@@ -1074,6 +1073,17 @@ class expression(object):
                     leaf.leaf = TRUE_LEAF
                     push(leaf)
 
+            elif field.type == "monetary" and operator in ('=', '!='):
+                inselect_operator = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
+                currency_field = model._fields[left].currency_field
+                subselect = '''SELECT r.id FROM {current_table} r
+                                JOIN res_currency c ON c.id = r.{currency_field}
+                                WHERE ABS(r.{quote_left}-%s) <= c.rounding/2'''.format(
+                                    current_table=model._table,
+                                    currency_field=_quote(currency_field),
+                                    quote_left=_quote(left))
+                params = (right,)
+                push(create_substitution_leaf(leaf, ('id', inselect_operator, (subselect, params)), model, internal=True))
             # -------------------------------------------------
             # OTHER FIELDS
             # -> datetime fields: manage time part of the datetime
