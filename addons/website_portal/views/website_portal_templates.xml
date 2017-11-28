@@ -134,7 +134,8 @@
                                     <div class="clearfix" />
                                     <div t-attf-class="form-group #{error.get('company_name') and 'has-error' or ''} col-lg-6">
                                         <label class="control-label label-optional" for="company_name">Company Name</label>
-                                        <input type="text" name="company_name" class="form-control" t-att-value="company_name or partner.company_name"/>
+                                        <p t-if="partner.commercial_partner_id.is_company" class="form-control" t-esc="partner.commercial_company_name"/>
+                                        <input t-else="" type="text" name="company_name" class="form-control" t-att-value="company_name or partner.company_name"/>
                                     </div>
                                     <div t-if="has_check_vat" t-attf-class="form-group #{error.get('vat') and 'has-error' or ''} col-lg-6">
                                         <label class="control-label label-optional" for="vat">VAT Number</label>

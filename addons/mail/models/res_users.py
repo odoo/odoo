@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, exceptions, fields, models
+from odoo.addons.base.res.res_users import is_selection_groups
 
 
 class Users(models.Model):
@@ -54,11 +55,14 @@ class Users(models.Model):
     @api.multi
     def write(self, vals):
         write_res = super(Users, self).write(vals)
+        sel_groups = [vals[k] for k in vals if is_selection_groups(k) and vals[k]]
         if vals.get('groups_id'):
             # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
             user_group_ids = [command[1] for command in vals['groups_id'] if command[0] == 4]
             user_group_ids += [id for command in vals['groups_id'] if command[0] == 6 for id in command[2]]
             self.env['mail.channel'].search([('group_ids', 'in', user_group_ids)])._subscribe_users()
+        elif sel_groups:
+            self.env['mail.channel'].search([('group_ids', 'in', sel_groups)])._subscribe_users()
         return write_res
 
     def _create_welcome_message(self):
