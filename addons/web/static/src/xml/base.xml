@@ -41,9 +41,9 @@
             <span class="oe_tooltip_technical_title">Domain:</span>
             <t t-esc="widget.attrs.domain || JSON.stringify(widget.field.domain)"/>
         </li>
-        <li t-if="widget.attrs.modifiers and widget.attrs.modifiers != '{}'" data-item="modifiers">
+        <li t-if="widget.attrs.modifiers and !_.isEmpty(widget.attrs.modifiers)" data-item="modifiers">
             <span class="oe_tooltip_technical_title">Modifiers:</span>
-            <t t-esc="widget.attrs.modifiers"/>
+            <t t-esc="JSON.stringify(widget.attrs.modifiers)"/>
         </li>
         <li t-if="widget.field and widget.field.change_default" data-item="change_default">
             <span class="oe_tooltip_technical_title">Change default:</span>
@@ -90,9 +90,9 @@
             <span class="oe_tooltip_technical_title">Context:</span>
             <t t-esc="node.attrs.context || widget.field.context"/>
         </li>
-        <li t-if="node.attrs.modifiers and node.attrs.modifiers != '{}'" data-item="modifiers">
+        <li t-if="node.attrs.modifiers and !_.isEmpty(node.attrs.modifiers)" data-item="modifiers">
             <span class="oe_tooltip_technical_title">Modifiers:</span>
-            <t t-esc="node.attrs.modifiers"/>
+            <t t-esc="JSON.stringify(node.attrs.modifiers)"/>
         </li>
         <li t-if="node.attrs.special" data-item="special">
             <span class="oe_tooltip_technical_title">Special:</span>

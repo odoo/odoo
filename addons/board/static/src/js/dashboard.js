@@ -221,6 +221,10 @@ FormRenderer.include({
                 params: {action_id: params.actionID}
             })
             .then(function (action) {
+                if (!action) {
+                    // the action does not exist anymore
+                    return $.when();
+                }
                 var view = _.find(action.views, function (descr) {
                     return descr[1] === params.viewType;
                 });

@@ -173,7 +173,6 @@
                     <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="state"/>
-                    <field name="currency_id" invisible="True"/>
                 </tree>
             </field>
         </record>
@@ -298,6 +297,7 @@
                                     <field name="product_updatable" invisible="1"/>
                                     <field name="product_id"
                                         attrs="{'readonly': [('product_updatable', '=', False)]}"
+                                        force_save="1"
                                         context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
                                        />
                                     <field name="layout_category_id" groups="sale.group_sale_layout"/>

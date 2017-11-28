@@ -22,12 +22,12 @@ class StockMoveLine(models.Model):
         if self.move_id.production_id:
             finished_moves = self.move_id.production_id.move_finished_ids
             finished_move_lines = finished_moves.mapped('move_line_ids')
-            lines |= finished_move_lines.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name))
+            lines |= finished_move_lines.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name) and ml.done_wo == self.done_wo)
         if self.move_id.raw_material_production_id:
             raw_moves = self.move_id.raw_material_production_id.move_raw_ids
             raw_moves_lines = raw_moves.mapped('move_line_ids')
             raw_moves_lines |= self.move_id.active_move_line_ids
-            lines |= raw_moves_lines.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name))
+            lines |= raw_moves_lines.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name) and ml.done_wo == self.done_wo)
         return lines
 
     @api.multi

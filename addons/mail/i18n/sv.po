@@ -256,6 +256,8 @@ msgid ""
 "<div class=\"o_mail_notification\">created <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">skapad <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:508
@@ -265,6 +267,8 @@ msgid ""
 "<div class=\"o_mail_notification\">joined <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">anslutna <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:182
@@ -273,6 +277,8 @@ msgid ""
 "<div class=\"o_mail_notification\">left <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">kvar <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:23
@@ -298,6 +304,9 @@ msgid ""
 "messages.</p><p><i>You might need to invite users from the Settings app "
 "first.</i></p>"
 msgstr ""
+"<p><b>Språka med medarbetare</b> i realtid med "
+"direktmeddelanden.</p><p><i>Du kan behöva bjuda in användare från "
+"inställningsappen först.</i></p>"
 
 #. module: mail
 #. openerp-web
@@ -574,7 +583,7 @@ msgstr "Lägg till"
 #: model:ir.model.fields,field_description:mail.field_ir_act_server_channel_ids
 #, python-format
 msgid "Add Channels"
-msgstr ""
+msgstr "Lägg till kanaler"
 
 #. module: mail
 #. openerp-web
@@ -603,7 +612,7 @@ msgstr "Lägg till signatur"
 #: code:addons/mail/static/src/xml/client_action.xml:186
 #, python-format
 msgid "Add a channel"
-msgstr ""
+msgstr "Lägg till kanal"
 
 #. module: mail
 #. openerp-web
@@ -615,7 +624,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 msgid "Add channels to notify..."
-msgstr ""
+msgstr "Lägg till kanal för aviseringar..."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -1025,7 +1034,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:358
 #, python-format
 msgid "Click here to add new %s"
-msgstr ""
+msgstr "Klicka här för att lägga till en ny %s"
 
 #. module: mail
 #: model:ir.actions.act_window,help:mail.mail_shortcode_action
@@ -1095,7 +1104,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:109
 #, python-format
 msgid "Congratulations, your inbox is empty"
-msgstr ""
+msgstr "Gratulerar, din inkorg är tom"
 
 #. module: mail
 #. openerp-web
@@ -1391,7 +1400,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:46
 #, python-format
 msgid "Direct Messages"
-msgstr ""
+msgstr "Direktmeddelanden"
 
 #. module: mail
 #. openerp-web
@@ -1627,7 +1636,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Email address to redirect replies..."
-msgstr ""
+msgstr "E-postadress för omdirigering av svar..."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
@@ -2869,14 +2878,14 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:134
 #, python-format
 msgid "Mark all as read"
-msgstr ""
+msgstr "Markera allt som läst"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:134
 #, python-format
 msgid "Mark all read"
-msgstr ""
+msgstr "Markera allt läst"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -3118,7 +3127,7 @@ msgstr "E-postsökning"
 #: code:addons/mail/static/src/js/tour.js:20
 #, python-format
 msgid "Messages can be <b>starred</b> to remind you to check back later."
-msgstr ""
+msgstr "Meddelanden kan <b>blockerad</b> som påminnelse att återvända senare."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_internal
@@ -3273,14 +3282,14 @@ msgstr "Nytt meddelande"
 #: code:addons/mail/static/src/xml/thread.xml:233
 #, python-format
 msgid "New messages"
-msgstr ""
+msgstr "Nya meddelanden"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:110
 #, python-format
 msgid "New messages appear here."
-msgstr ""
+msgstr "Nya meddelanden syns här."
 
 #. module: mail
 #. openerp-web
@@ -3412,7 +3421,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:113
 #, python-format
 msgid "No starred message"
-msgstr ""
+msgstr "Inga blockerade meddelanden"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_no_auto_thread
@@ -3743,6 +3752,8 @@ msgid ""
 "Once a message has been starred, you can come back and review it at any time"
 " here."
 msgstr ""
+"Så snart ett meddelande är sjärnmärkt, kan du återkomma och granska det vid "
+"ett senare tillfälle."
 
 #. module: mail
 #. openerp-web
@@ -3792,7 +3803,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:187
 #, python-format
 msgid "Open chat"
-msgstr ""
+msgstr "Starta samspråk"
 
 #. module: mail
 #. openerp-web
@@ -4146,7 +4157,7 @@ msgstr "Integritet"
 #: code:addons/mail/static/src/xml/client_action.xml:176
 #, python-format
 msgid "Private Channels"
-msgstr ""
+msgstr "Privata kanaler"
 
 #. module: mail
 #. openerp-web
@@ -5381,7 +5392,7 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:677
 #, python-format
 msgid "You are in a private conversation with <b>@%s</b>."
-msgstr ""
+msgstr "Du är i en privat konversation med <b>@%s</b>."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:672
@@ -5396,6 +5407,8 @@ msgstr ""
 msgid ""
 "You can mark any message as 'starred', and it shows up in this channel."
 msgstr ""
+"Du kan stjärnmärka vilket meddelande som helst så att det visas i denna "
+"kanalen."
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:53
@@ -5514,7 +5527,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "e.g. Discuss proposal"
-msgstr ""
+msgstr "e.g Diskutera offert"
 
 #. module: mail
 #. openerp-web
@@ -5624,6 +5637,8 @@ msgid ""
 "posting a message without model should be with a null res_id (private "
 "message), received %s"
 msgstr ""
+"att skicka ett meddelande utan klass borde ha en null res_id (privat "
+"meddelande), mottaget %s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:917
@@ -5631,6 +5646,8 @@ msgstr ""
 msgid ""
 "posting a message without model should be with a parent_id (private message)"
 msgstr ""
+"att skicka ett meddelande utan klass borde ha ett parent_id (privat "
+"meddelande)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_publisher_warranty_contract

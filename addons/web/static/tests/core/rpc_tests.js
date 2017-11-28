@@ -243,6 +243,47 @@ QUnit.module('core', {}, function () {
         assert.deepEqual(query.params.kwargs.lazy, undefined, "should not enforce a default value for lazy");
     });
 
+    QUnit.test('read_group with args and kwargs', function (assert) {
+        assert.expect(9);
+        var query = rpc.buildQuery({
+            model: 'partner',
+            method: 'read_group',
+            kwargs: {
+                domain: ['name', '=', 'saucisse'],
+                fields: ['category_id'],
+                groupby: ['country_id'],
+            },
+        });
+
+        assert.deepEqual(query.params.kwargs.domain, ['name', '=', 'saucisse'], "should have ['name', '=', 'saucisse'] category_id as default domain");
+        assert.deepEqual(query.params.kwargs.fields, ['category_id'], "should have category_id as default fields");
+        assert.deepEqual(query.params.kwargs.groupby, ['country_id'], "should have country_id as default groupby");
+
+        var query = rpc.buildQuery({
+            model: 'partner',
+            method: 'read_group',
+            args: [['name', '=', 'saucisse']],
+            kwargs: {
+                fields: ['category_id'],
+                groupby: ['country_id'],
+            },
+        });
+
+        assert.deepEqual(query.params.kwargs.domain, undefined, "should not enforce a default value for domain");
+        assert.deepEqual(query.params.kwargs.fields, ['category_id'], "should have category_id as default fields");
+        assert.deepEqual(query.params.kwargs.groupby, ['country_id'], "should have country_id as default groupby");
+
+        var query = rpc.buildQuery({
+            model: 'partner',
+            method: 'read_group',
+            args: [['name', '=', 'saucisse'], ['category_id'], ['country_id']],
+        });
+
+        assert.deepEqual(query.params.kwargs.domain, undefined, "should not enforce a default value for domain");
+        assert.deepEqual(query.params.kwargs.fields, undefined, "should not enforce a default value for  fields");
+        assert.deepEqual(query.params.kwargs.groupby, undefined, "should not enforce a default value for  groupby");
+    });
+
     QUnit.test('search_read with no domain, nor fields', function (assert) {
         assert.expect(5);
         var query = rpc.buildQuery({

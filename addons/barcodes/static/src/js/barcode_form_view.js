@@ -284,7 +284,7 @@ FormController.include({
                 // Handle the case where there are several barcode widgets on the same page. Since the
                 // event is global on the page, all barcode widgets will be triggered. However, we only
                 // want to keep the event on the target widget.
-                if (self.target && !$.contains(target, self.target.el)) {
+                if (! $.contains(target, self.el)) {
                     continue;
                 }
 
