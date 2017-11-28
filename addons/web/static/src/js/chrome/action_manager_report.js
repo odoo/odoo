@@ -1,5 +1,10 @@
-odoo.define('report.report', function (require) {
-'use strict';
+odoo.define('web.ReportActionManager', function (require) {
+"use strict";
+
+/**
+ * The purpose of this file is to add the support of Odoo actions of type
+ * 'ir.actions.report' to the ActionManager.
+ */
 
 var ActionManager = require('web.ActionManager');
 var core = require('web.core');
