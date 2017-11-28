@@ -1054,10 +1054,10 @@ var ClientListScreenWidget = ScreenWidget.extend({
         this.$('.searchbox input').on('keypress',function(event){
             clearTimeout(search_timeout);
 
-            var query = this.value;
+            var searchbox = this;
 
             search_timeout = setTimeout(function(){
-                self.perform_search(query,event.which === 13);
+                self.perform_search(searchbox.value, event.which === 13);
             },70);
         });
 
