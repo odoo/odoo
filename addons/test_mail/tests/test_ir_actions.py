@@ -6,9 +6,7 @@ from odoo.addons.base.tests.test_ir_actions import TestServerActionsBase
 
 class TestServerActionsEmail(TestServerActionsBase):
 
-    def test_email_action(self):
-        """ Test ir.actions.server email type """
-        # create email_template
+    def test_action_email(self):
         email_template = self.env['mail.template'].create({
             'name': 'TestTemplate',
             'email_from': 'myself@example.com',
@@ -19,17 +17,14 @@ class TestServerActionsEmail(TestServerActionsBase):
             'body_html': '<p>Dear ${object.name}, your parent is ${object.parent_id and object.parent_id.name or "False"}</p>',
         })
         self.action.write({'state': 'email', 'template_id': email_template.id})
-        run_res = self.action.with_context(self.context).run()
-        self.assertFalse(run_res, 'ir_actions_server: email server action correctly finished should return False')
+        self.action.with_context(self.context).run()
         # check an email is waiting for sending
         mail = self.env['mail.mail'].search([('subject', '=', 'About TestingPartner')])
-        self.assertEqual(len(mail), 1, 'ir_actions_server: TODO')
+        self.assertEqual(len(mail), 1)
         # check email content
-        self.assertEqual(mail.body, '<p>Dear TestingPartner, your parent is False</p>',
-                         'ir_actions_server: TODO')
+        self.assertEqual(mail.body, '<p>Dear TestingPartner, your parent is False</p>')
 
-    def test_followers_action(self):
-        """ Test ir.actions.server email type """
+    def test_action_followers(self):
         self.test_partner.message_unsubscribe(self.test_partner.message_partner_ids.ids)
         self.action.write({
             'state': 'followers',
