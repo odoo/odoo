@@ -78,7 +78,7 @@ class AccountMove(models.Model):
 
                 # restrict the operation in case we are trying to write a forbidden field
                 if (move.state == "posted" and set(vals).intersection(MOVE_FIELDS)):
-                    raise UserError(ERR_MSG % ('journal entry', ', '.join(MOVE_FIELDS)))
+                    raise UserError(ERR_MSG % (_('journal entry'), ', '.join(MOVE_FIELDS)))
                 # restrict the operation in case we are trying to overwrite existing hash
                 if (move.l10n_fr_hash and 'l10n_fr_hash' in vals) or (move.l10n_fr_secure_sequence_number and 'l10n_fr_secure_sequence_number' in vals):
                     raise UserError(_('You cannot overwrite the values ensuring the inalterability of the accounting.'))
@@ -151,7 +151,7 @@ class AccountMoveLine(models.Model):
         # restrict the operation in case we are trying to write a forbidden field
         if set(vals).intersection(LINE_FIELDS):
             if any(l.company_id._is_accounting_unalterable(raise_on_nocountry=True) and l.move_id.state == 'posted' for l in self):
-                raise UserError(ERR_MSG % ('journal item', ', '.join(LINE_FIELDS)))
+                raise UserError(ERR_MSG % (_('journal item'), ', '.join(LINE_FIELDS)))
         return super(AccountMoveLine, self).write(vals)
 
 
@@ -161,8 +161,8 @@ class AccountJournal(models.Model):
     @api.onchange('update_posted')
     def _onchange_update_posted(self):
         if self.update_posted and self.company_id._is_accounting_unalterable(raise_on_nocountry=True):
-            field_string = self._fields['update_posted'].string
-            raise UserError(ERR_MSG % ('journal', field_string))
+            field_string = self._fields['update_posted'].get_description(self.env)['string']
+            raise UserError(ERR_MSG % (_('journal'), field_string))
 
     @api.multi
     def _is_journal_alterable(self):
@@ -172,7 +172,7 @@ class AccountJournal(models.Model):
                             '&', ('l10n_fr_secure_sequence_number', '!=', False),
                             ('l10n_fr_secure_sequence_number', '!=', 0)]
         if self.env['account.move'].search(critical_domain):
-            raise UserError('It is not permitted to disable the data inalterability in this journal (%s) since journal entries have already been protected.' % (self.name, ))
+            raise UserError(_('It is not permitted to disable the data inalterability in this journal (%s) since journal entries have already been protected.') % (self.name, ))
         return True
 
     @api.multi
@@ -181,8 +181,8 @@ class AccountJournal(models.Model):
         for journal in self:
             if journal.company_id._is_accounting_unalterable(raise_on_nocountry=True):
                 if vals.get('update_posted'):
-                    field_string = journal._fields['update_posted'].string
-                    raise UserError(ERR_MSG % ('journal', field_string))
+                    field_string = journal._fields['update_posted'].get_description(self.env)['string']
+                    raise UserError(ERR_MSG % (_('journal'), field_string))
         return super(AccountJournal, self).write(vals)
 
     @api.model
@@ -190,6 +190,6 @@ class AccountJournal(models.Model):
         # restrict the operation in case we are trying to set a forbidden field
         if self.company_id._is_accounting_unalterable():
             if vals.get('update_posted'):
-                field_string = self._fields['update_posted'].string
-                raise UserError(ERR_MSG % ('journal', field_string))
+                field_string = self._fields['update_posted'].get_description(self.env)['string']
+                raise UserError(ERR_MSG % (_('journal'), field_string))
         return super(AccountJournal, self).create(vals)
