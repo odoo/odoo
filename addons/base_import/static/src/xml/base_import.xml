@@ -63,6 +63,15 @@
                         Track history during import
                     </label>
                 </div>
+                <div title="If the model uses parent/child relations, computing the 
+                    parent / child relation occurs on every line, and lead to a slower import.
+                    Defering it can speed up import."
+                    class="oe_import_deferparentstore">
+                    <input type="checkbox" id="oe_import_deferparentstore" checked="checked"/>
+                    <label for="oe_import_deferparentstore">
+                        Defer parent/child computation
+                    </label>
+                </div>
                 <input type="checkbox" class="oe_import_has_header"
                        id="oe_import_has_header" checked="checked"/>
                 <label for="oe_import_has_header">The first row
