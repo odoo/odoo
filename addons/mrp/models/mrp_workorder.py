@@ -288,7 +288,7 @@ class MrpWorkorder(models.Model):
         if self.qty_producing <= 0:
             raise UserError(_('Please set the quantity you are currently producing. It should be different from zero.'))
 
-        if (self.production_id.product_id.tracking != 'none') and not self.final_lot_id:
+        if (self.production_id.product_id.tracking != 'none') and not self.final_lot_id and self.move_raw_ids:
             raise UserError(_('You should provide a lot/serial number for the final product'))
 
         # Update quantities done on each raw material line
