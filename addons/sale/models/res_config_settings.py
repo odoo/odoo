@@ -69,11 +69,11 @@ class ResConfigSettings(models.TransientModel):
     ], string='Customer Account')
 
     module_delivery = fields.Boolean("Shipping Costs")
-    module_delivery_dhl = fields.Boolean("DHL")
-    module_delivery_fedex = fields.Boolean("FedEx")
-    module_delivery_ups = fields.Boolean("UPS")
-    module_delivery_usps = fields.Boolean("USPS")
-    module_delivery_bpost = fields.Boolean("bpost")
+    module_delivery_dhl = fields.Boolean("DHL Connector")
+    module_delivery_fedex = fields.Boolean("FedEx Connector")
+    module_delivery_ups = fields.Boolean("UPS Connector")
+    module_delivery_usps = fields.Boolean("USPS Connector")
+    module_delivery_bpost = fields.Boolean("bpost Connector")
 
     module_product_email_template = fields.Boolean("Specific Email")
     module_sale_coupon = fields.Boolean("Coupons & Promotions")
