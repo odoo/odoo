@@ -53,6 +53,7 @@ Wizards provided by this module:
         'data/account_reconcile_model_template.xml',
         'data/account_chart_template_configure_data.xml',
         'data/menuitem_data.xml',
+        'views/res_config_settings_views.xml',
     ],
     'demo': [
         'demo/l10n_be_demo.xml',

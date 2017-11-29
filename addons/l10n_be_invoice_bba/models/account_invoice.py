@@ -12,7 +12,6 @@ from odoo.exceptions import UserError, ValidationError
 """
 account.invoice object:
     - Add support for Belgian structured communication
-    - Rename 'reference' field labels to 'Communication'
 """
 
 
@@ -21,19 +20,18 @@ class AccountInvoice(models.Model):
 
     @api.model
     def _get_reference_type(self):
-        """Add BBA Structured Communication Type and change labels from 'reference' into 'communication' """
         res = super(AccountInvoice, self)._get_reference_type()
-        res[[i for i, x in enumerate(res) if x[0] == 'none'][0]] = ('none', _('Free Communication'))
         res.append(('bba', 'BBA Structured Communication'))
         return res
 
+    # This field's value will be used as label for `reference` field
     reference_type = fields.Selection('_get_reference_type', string='Payment Reference',
         required=True, readonly=True)
 
-    @api.constrains('reference', 'reference_type')
+    @api.constrains('reference')
     def _check_communication(self):
         for inv in self:
-            if inv.reference_type == 'bba' and not self.check_bbacomm(inv.reference):
+            if inv.company_id.out_inv_comm_type == 'bba' and not self.check_bbacomm(inv.reference):
                 raise ValidationError(_('Invalid BBA Structured Communication !'))
 
     def check_bbacomm(self, val):
@@ -48,27 +46,20 @@ class AccountInvoice(models.Model):
             if mod == int(bbacomm[-2:]):
                 return True
 
-    @api.onchange('partner_id', 'type', 'reference_type')
-    def _onchange_partner_id(self):
-        result = super(AccountInvoice, self)._onchange_partner_id()
+    @api.onchange('company_id', 'partner_id', 'type')
+    def _onchange_l10n_be_bba(self):
         reference = False
-        reference_type = 'none'
-        if self.partner_id:
-            if (self.type == 'out_invoice'):
-                reference_type = self.partner_id.out_inv_comm_type
-                if reference_type:
-                    reference = self.generate_bbacomm(self.type, reference_type, self.partner_id.id, '')['value']['reference']
+        reference_type = self.company_id.out_inv_comm_type
+        if self.type == 'out_invoice' and reference_type == 'bba' and self.partner_id:
+            reference = self.generate_bbacomm(self.type, reference_type, self.company_id.id, self.partner_id.id)['value']['reference']
         self.reference_type = reference_type or 'none'
         self.reference = reference
-        return result
 
-    def generate_bbacomm(self, type, reference_type, partner_id, reference):
+    def generate_bbacomm(self, type, reference_type, company_id, partner_id=None, reference=None):
         reference = reference or ''
-        algorithm = False
-        if partner_id:
-            algorithm = self.env['res.partner'].browse(partner_id).out_inv_comm_algorithm
-        algorithm = algorithm or 'random'
-        if (type == 'out_invoice'):
+        company = self.env['res.company'].browse(company_id)
+        if type == 'out_invoice' and reference_type:
+            algorithm = company.out_inv_comm_algorithm
             if reference_type == 'bba':
                 if algorithm == 'date':
                     if not self.check_bbacomm(reference):
@@ -94,8 +85,8 @@ class AccountInvoice(models.Model):
                         partner_ref = self.env['res.partner'].browse(partner_id).ref
                         partner_ref_nr = re.sub('\D', '', partner_ref or '')
                         if (len(partner_ref_nr) < 3) or (len(partner_ref_nr) > 7):
-                            raise UserError(_('The Partner should have a 3-7 digit Reference Number for the generation of BBA Structured Communications!'
-                                                '\nPlease correct the Partner record.'))
+                            raise UserError(_('The Customer should have an Internal Reference with min 3 and max 7 digits'
+                                                '\nfor the generation of BBA Structured Communications!'))
                         else:
                             partner_ref_nr = partner_ref_nr.ljust(7, '0')
                             seq = '001'
@@ -127,40 +118,35 @@ class AccountInvoice(models.Model):
 
     @api.model
     def create(self, vals):
-        reference = vals.get('reference', False)
-        reference_type = vals.get('reference_type', False)
-        if vals.get('type') == 'out_invoice' and not reference_type:
-            # fallback on default communication type for partner
-            partner = self.env['res.partner'].browse(vals['partner_id'])
-            reference_type = partner.out_inv_comm_type
-            if reference_type == 'bba':
-                reference = self.generate_bbacomm(vals['type'], reference_type, partner.id, '')['value']['reference']
-            vals.update({
-                'reference_type': reference_type or 'none',
-                'reference': reference,
-            })
-
+        reference = vals.get('reference')
+        company_id = vals.get('company_id') or self.default_get(['company_id'])['company_id']
+        company = self.env['res.company'].browse(company_id)
+        reference_type = company.out_inv_comm_type
         if reference_type == 'bba':
-            if not reference:
-                raise UserError(_('Empty BBA Structured Communication!'
-                                    '\nPlease fill in a unique BBA Structured Communication.'))
-            if self.check_bbacomm(reference):
-                reference = re.sub('\D', '', reference)
-                vals['reference'] = '+++' + reference[0:3] + '/' + reference[3:7] + '/' + reference[7:] + '+++'
-                same_ids = self.search([('type', '=', 'out_invoice'), ('reference_type', '=', 'bba'), ('reference', '=', vals['reference'])])
-                if same_ids:
-                    raise UserError(_('The BBA Structured Communication has already been used!'
-                                        '\nPlease create manually a unique BBA Structured Communication.'))
+            if reference:
+                if self.check_bbacomm(reference):
+                    new_reference = re.sub('\D', '', reference)
+                    reference = '+++' + new_reference[0:3] + '/' + new_reference[3:7] + '/' + new_reference[7:] + '+++'
+                    same_ids = self.search([('type', '=', 'out_invoice'), ('reference_type', '=', 'bba'), ('reference', '=', reference)])
+                    if same_ids:
+                        raise UserError(_('The BBA Structured Communication has already been used!'
+                                            '\nPlease create manually a unique BBA Structured Communication.'))
+                else:
+                    raise ValidationError('Invalid BBA Structured Communication !')
+            else:
+                reference = self.generate_bbacomm(vals['type'], reference_type, company_id, vals['partner_id'])['value']['reference']
+        vals.update({
+            'reference_type': reference_type,
+            'reference': reference,
+        })
         return super(AccountInvoice, self).create(vals)
 
     @api.multi
     def write(self, vals):
         for invoice in self:
+            reference_type = invoice.company_id.out_inv_comm_type
             if 'reference_type' in vals:
-                reference_type = vals['reference_type']
-            else:
-                reference_type = invoice.reference_type or ''
-
+                vals['reference_type'] = invoice.company_id.out_inv_comm_type
             if reference_type == 'bba' and 'reference' in vals:
                 if self.check_bbacomm(vals['reference']):
                     reference = re.sub('\D', '', vals['reference'])
@@ -170,6 +156,8 @@ class AccountInvoice(models.Model):
                     if same_ids:
                         raise UserError(_('The BBA Structured Communication has already been used!'
                                             '\nPlease create manually a unique BBA Structured Communication.'))
+                else:
+                    raise ValidationError('Invalid BBA Structured Communication !')
         return super(AccountInvoice, self).write(vals)
 
     @api.multi
@@ -181,5 +169,5 @@ class AccountInvoice(models.Model):
             reference_type = self.reference_type or 'none'
             default['reference_type'] = reference_type
             if reference_type == 'bba':
-                default['reference'] = self.generate_bbacomm(self.type, reference_type, self.partner_id.id, '')['value']['reference']
+                default['reference'] = self.generate_bbacomm(self.type, reference_type, self.company_id.id, self.partner_id.id)['value']['reference']
         return super(AccountInvoice, self).copy(default)

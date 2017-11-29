@@ -691,21 +691,24 @@ class AccountReconciliation(models.AbstractModel):
         where_str = where_clause and (" WHERE %s" % where_clause) or ''
 
         # Get pairs
-        query = """
+        main_select_str = """
             SELECT a.id, b.id
-            FROM account_move_line a, account_move_line b
+            FROM account_move_line a, account_move_line b"""
+        main_where_str = """
             WHERE a.id != b.id
-            AND a.amount_residual = -b.amount_residual
             AND NOT a.reconciled
             AND a.account_id = %s
             AND (%s IS NULL AND b.account_id = %s)
             AND (%s IS NULL AND NOT b.reconciled OR b.id = %s)
             AND (%s is NULL OR (a.partner_id = %s AND b.partner_id = %s))
             AND a.id IN (SELECT id FROM {0})
-            AND b.id IN (SELECT id FROM {0})
+            AND b.id IN (SELECT id FROM {0})""".format(from_clause + where_str)
+        where_ref = """
+            AND a.ref = b.ref"""
+        main_order_limit_str = """
             ORDER BY a.date desc
-            LIMIT 1
-            """.format(from_clause + where_str)
+            LIMIT 1"""
+        query = main_select_str + main_where_str + where_ref + main_order_limit_str
         move_line_id = self.env.context.get('move_line_id') or None
         params = [
             account_id,
@@ -716,6 +719,12 @@ class AccountReconciliation(models.AbstractModel):
         self.env.cr.execute(query, params)
 
         pairs = self.env.cr.fetchall()
+        if not pairs:
+            where_amount = """
+            AND a.amount_residual = -b.amount_residual"""
+            query = main_select_str + main_where_str + where_amount + main_order_limit_str
+            self.env.cr.execute(query, params)
+            pairs = self.env.cr.fetchall()
 
         if pairs:
             return Account_move_line.browse(pairs[0])

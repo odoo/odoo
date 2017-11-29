@@ -6,10 +6,10 @@
       <field name="model">account.invoice</field>
       <field name="inherit_id" ref="account.invoice_form"/>
       <field name="arch" type="xml">
-        <field name="date_due" position="after">
-              <field name="reference_type" nolabel="1"  attrs="{'readonly':[('state','!=','draft')]}"/>
-              <field name="reference" nolabel="1"  attrs="{'readonly':[('state','!=','draft')]}"/>
-        </field>
+        <xpath expr="//page[@name='other_info']//field[@name='name']" position="after">
+              <field name="reference_type" invisible="1"/>
+              <field name="reference" string="BBA Structured Communication" attrs="{'readonly':[('state','!=','draft')], 'invisible': [('reference_type','=','none')]}"/>
+        </xpath>
       </field>
     </record>
 </odoo>
