@@ -220,7 +220,7 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
                ]
         msg = '\n'.join(msgs) % (dirpath, abs_filepath)
 
-        with open(abs_filepath, 'r') as fn:
+        with open(abs_filepath, 'rb') as fn:
             self.write({
                 'msg': msg,
                 'file_export': base64.encodestring(fn.read()),
@@ -266,10 +266,10 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
         # load the json/pickle file content into a data structure:
         content = base64.decodestring(self.file_import)
         try:
-            data = json.loads(content)
+            data = json.loads(content.decode('utf8'))
         except Exception:
             # backward-compatible mode
-            data = pickle.loads(content)
+            data = pickle.loads(content, encoding='utf8')
 
         fixes = self.env['ir.model.fields.anonymization.migration.fix'].search_read([
             ('target_version', '=', '.'.join(str(v) for v in version_info[:2]))
