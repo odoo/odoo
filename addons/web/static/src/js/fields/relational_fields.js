@@ -151,6 +151,10 @@ var FieldMany2One = AbstractField.extend({
      * TODO
      */
     reinitialize: function (value) {
+        // to consume tour on click of selection on many2one field.
+        if (value) {
+            this.$input.trigger('m2o_record_selected');
+        }
         this.floating = false;
         this._setValue(value);
     },
