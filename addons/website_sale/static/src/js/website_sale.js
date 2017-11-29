@@ -153,6 +153,9 @@ $('.oe_website_sale').each(function () {
             return;
         }
       var value = parseInt($input.val() || 0, 10);
+      if (isNaN(value)) {
+          value = 1;
+      }
       var $dom = $(this).closest('tr');
       var default_price = parseFloat($dom.find('.text-danger > span.oe_currency_value').text());
       var $dom_optional = $dom.nextUntil(':not(.optional_product.info)');
@@ -173,7 +176,11 @@ $('.oe_website_sale').each(function () {
         'set_qty': value})
         .then(function (data) {
             $input.data('update_change', false);
-            if (value !== parseInt($input.val() || 0, 10)) {
+            var check_value = parseInt($input.val() || 0, 10);
+            if (isNaN(check_value)) {
+                check_value = 1;
+            }
+            if (value !== check_value) {
                 $input.trigger('change');
                 return;
             }
