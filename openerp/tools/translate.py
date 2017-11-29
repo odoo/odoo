@@ -820,8 +820,8 @@ def trans_generate(lang, modules, cr):
             sanitized_term = etree.tostring(node, encoding='UTF-8', method='text')
         except etree.ParseError:
             pass
-        # remove non-alphanumeric chars
-        sanitized_term = re.sub(r'\W+', '', sanitized_term)
+        # remove non-alphanumeric chars but keep the arabic chars now you can export arabic terms too
+        sanitized_term = re.sub(r'\W+', '', sanitized_term, flags=re.UNICODE)
         if not sanitized_term or len(sanitized_term) <= 1:
             return
 
