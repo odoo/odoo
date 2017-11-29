@@ -3,7 +3,7 @@
         <field name="name">Sales Closings</field>
         <field name="model">account.sale.closure</field>
         <field name="arch" type="xml">
-            <tree create="false" import="false" default_order="-date_closure_stop">
+            <tree create="false" import="false">
                 <field name="date_closure_start"/>
                 <field name="date_closure_stop"/>
                 <field name="company_id" groups="base.group_multi_company"/>

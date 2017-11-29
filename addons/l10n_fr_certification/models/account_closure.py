@@ -10,17 +10,18 @@ WRITE_MSG = _('Sale Closings are not meant to be written or deleted under any ci
 
 class AccountClosure(models.Model):
     _name = 'account.sale.closure'
+    _order = 'date_closure_stop desc'
 
-    name = fields.Char(help="Frequency and unique sequence number")
-    company_id = fields.Many2one('res.company', string='Company', readonly=True)
-    date_closure_stop = fields.Datetime(string="Closing Date", help='Date to which the values are computed', readonly=True)
-    date_closure_start = fields.Datetime(string="Starting Date", help='Date from which the total interval is computed', readonly=True)
-    frequency = fields.Selection(string='Closing Type', selection=[('daily', 'Daily'), ('monthly', 'Monthly'), ('annually', 'Annual')], readonly=True)
-    total_interval = fields.Monetary(string="Period Total", help='Total in receivable accounts during the interval, excluding overlapping periods', readonly=True)
-    total_beginning = fields.Monetary(string="Cumulative Grand Total", help='Total in receivable accounts since the beginning of times', readonly=True)
-    sequence_number = fields.Integer('Sequence #', readonly=True)
+    name = fields.Char(help="Frequency and unique sequence number", required=True)
+    company_id = fields.Many2one('res.company', string='Company', readonly=True, required=True)
+    date_closure_stop = fields.Datetime(string="Closing Date", help='Date to which the values are computed', readonly=True, required=True)
+    date_closure_start = fields.Datetime(string="Starting Date", help='Date from which the total interval is computed', readonly=True, required=True)
+    frequency = fields.Selection(string='Closing Type', selection=[('daily', 'Daily'), ('monthly', 'Monthly'), ('annually', 'Annual')], readonly=True, required=True)
+    total_interval = fields.Monetary(string="Period Total", help='Total in receivable accounts during the interval, excluding overlapping periods', readonly=True, required=True)
+    total_beginning = fields.Monetary(string="Cumulative Grand Total", help='Total in receivable accounts since the beginnig of times', readonly=True, required=True)
+    sequence_number = fields.Integer('Sequence #', readonly=True, required=True)
     move_ids = fields.Many2many('account.move', string='Journal entries that are included in the computation', readonly=True)
-    currency_id = fields.Many2one('res.currency', string='Currency', help="The company's currency", readonly=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', help="The company's currency", readonly=True, related='company_id.currency_id', store=True)
 
     def _query_closures_for_move_ids(self, frequency, company):
         query = '''SELECT rel.account_move_id as move_id
@@ -35,11 +36,11 @@ class AccountClosure(models.Model):
         self.env.cr.execute(query, {'frequency': frequency, 'company_id': company.id})
         return [res['move_id'] for res in self.env.cr.dictfetchall()]
 
-    def _build_query_for_aml(self, company, date_start='', date_stop='', avoid_move_ids=[]):
+    def _query_for_aml(self, company, date_start='', date_stop='', avoid_move_ids=[]):
         params = {'company_id': company.id}
         query = '''SELECT m.write_date AS move_write_date,
                           m.id AS move_id,
-                          debit-credit AS balance
+                          aml.balance
             FROM account_move_line aml
             JOIN account_journal j ON aml.journal_id = j.id
             JOIN  (SELECT acc.id FROM account_account acc
@@ -64,10 +65,6 @@ class AccountClosure(models.Model):
             params['avoid_move_ids'] = tuple(avoid_move_ids)
             query += 'AND m.id NOT IN %(avoid_move_ids)s'
 
-        return query, params
-
-    def _query_for_aml(self, company, date_start='', date_stop='', avoid_move_ids=[]):
-        query, params = self._build_query_for_aml(company, date_start, date_stop, avoid_move_ids)
         self.env.cr.execute(query, params)
         return self.env.cr.dictfetchall()
 
@@ -86,7 +83,7 @@ class AccountClosure(models.Model):
         moves_already_counted = self._query_closures_for_move_ids(frequency, company)
         aml_fetched = self._query_for_aml(company, date_query_start, interval_dates['date_stop'], moves_already_counted)
 
-        date_interval_start = date_query_start and date_query_start or interval_dates['interval_from']
+        date_interval_start = date_query_start or interval_dates['interval_from']
         aml_interval = filter(lambda aml: aml['move_write_date'] >= date_interval_start, aml_fetched)
 
         total_interval = sum(aml['balance'] for aml in aml_interval)
@@ -96,7 +93,7 @@ class AccountClosure(models.Model):
                 'total_beginning': previous_closure.total_beginning + total_beginning,
                 'move_ids': [(4, aml['move_id'], False) for aml in aml_interval],
                 'date_closure_stop': interval_dates['date_stop'],
-                'date_closure_start': previous_date and previous_date or interval_dates['interval_from']}
+                'date_closure_start': previous_date or interval_dates['interval_from']}
 
     def _interval_dates(self, frequency, company):
         date_stop = datetime.utcnow()
@@ -127,7 +124,7 @@ class AccountClosure(models.Model):
         # To be executed by the CRON to compute all the amount
         # call every _compute to get the amounts
         def get_selection_value(field, value=''):
-            for item in field.selection:
+            for item in field.get_description(self.env)['selection']:
                 if item[0] == value:
                     return item[1]
             return value
@@ -139,15 +136,8 @@ class AccountClosure(models.Model):
             values = self._compute_amounts(frequency, company)
             values['frequency'] = frequency
             values['company_id'] = company.id
-            values['currency_id'] = company.currency_id.id
             values['sequence_number'] = new_sequence_number
             values['name'] = _('%s Closing - ') % (get_selection_value(self._fields['frequency'], value=frequency),) + values['date_closure_stop'][:10]
             account_closures |= account_closures.create(values)
 
         return account_closures
-
-    def do_all_frequencies(self):
-        results = self.env['account.sale.closure']
-        for frequency in [freq[0] for freq in self._fields['frequency'].selection]:
-            results |= self.automated_closure(frequency)
-        return results

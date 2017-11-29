@@ -109,7 +109,7 @@ class AccountMove(models.Model):
         def build_move_info(move):
             entry_reference = _('(ref.: %s)')
             move_reference_string = move.ref and entry_reference % move.ref or ''
-            return [move.date, move.l10n_fr_secure_sequence_number, move.name, move_reference_string, move.write_date]
+            return [move.name, move_reference_string]
 
         moves = self.search([('state', '=', 'posted'),
                              ('company_id', '=', company_id),
@@ -137,10 +137,10 @@ class AccountMove(models.Model):
                          To: %s %s
 
                          For this report to be legally meaningful, please download your certification from your customer account on Odoo.com (Only for Odoo Enterprise users).'''
-                         ) % (start_move_info[2],
-                              start_move_info[3],
-                              end_move_info[2],
-                              end_move_info[3],))
+                         ) % (start_move_info[0],
+                              start_move_info[1],
+                              end_move_info[0],
+                              end_move_info[1],))
 
 
 class AccountMoveLine(models.Model):
