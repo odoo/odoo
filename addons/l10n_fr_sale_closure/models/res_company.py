@@ -7,7 +7,7 @@ from openerp import fields, models, api
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    l10n_fr_closure_sequence_id = fields.Many2one('ir.sequence')
+    l10n_fr_closure_sequence_id = fields.Many2one('ir.sequence', 'Sequence to use to build sale closures', readonly=True)
 
     @api.model
     def create(self, vals):

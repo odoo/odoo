@@ -26,9 +26,6 @@ The module adds following features:
     'data': [
         'data/account_move.xml',
         'views/res_config.xml',
-        'views/account_sale_closure.xml',
-        'data/account_sale_closure_cron.xml',
-        'security/ir.model.access.csv'
     ],
     'post_init_hook': '_setup_inalterability',
 }

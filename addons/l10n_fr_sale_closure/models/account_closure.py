@@ -138,7 +138,6 @@ class AccountClosure(models.Model):
     @api.model
     def automated_closure(self, frequency='daily'):
         # To be executed by the CRON to compute all the amount
-        # call every _compute to get the amounts
         def get_selection_value(field, value=''):
             for item in field.get_description(self.env)['selection']:
                 if item[0] == value:
