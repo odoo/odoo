@@ -79,6 +79,16 @@ class sale_order(osv.Model):
         """ Add or set product quantity, add_qty can be negative """
         sol = self.pool.get('sale.order.line')
 
+        try:
+            if add_qty:
+                add_qty = float(add_qty)
+        except ValueError:
+            add_qty = 1
+        try:
+            if set_qty:
+                set_qty = float(set_qty)
+        except ValueError:
+            set_qty = 0
         quantity = 0
         for so in self.browse(cr, uid, ids, context=context):
             if so.state != 'draft':

@@ -42,7 +42,7 @@ class website_sale_options(website_sale):
         value = {}
         if add_qty or set_qty:
             value = order._cart_update(product_id=int(product_id),
-                add_qty=int(add_qty), set_qty=int(set_qty),
+                add_qty=add_qty, set_qty=set_qty,
                 optional_product_ids=optional_product_ids)
 
         # options have all time the same quantity
