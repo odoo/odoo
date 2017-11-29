@@ -569,7 +569,7 @@ class MassMailing(models.Model):
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
                 'body': mailing.convert_links()[mailing.id],
-                'subject': mailing.name,
+                'subject': mailing.with_context(lang=mailing.write_uid.lang).name,  # Subject lang from user who last edited mailing
                 'model': mailing.mailing_model,
                 'email_from': mailing.email_from,
                 'record_name': False,
