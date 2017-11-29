@@ -119,17 +119,20 @@ var WebsiteRoot = BodyManager.extend({
      * (@see Animation.selector).
      *
      * @param {boolean} [editableMode=false] - true if the page is in edition mode
-     * @param {jQuery} [$initTarget]
-     *        only initialize the animations whose `selector` matches the element
+     * @param {jQuery} [$from]
+     *        only initialize the animations whose `selector` matches the
+     *        element or one of its descendant (default to the wrapwrap element)
      * @returns {Deferred}
      */
-    _startAnimations: function (editableMode, $initTarget) {
+    _startAnimations: function (editableMode, $from) {
         var self = this;
         editableMode = editableMode || false;
-        var $wrapwrap = this.$('#wrapwrap');
+        if ($from === undefined) {
+            $from = this.$('#wrapwrap');
+        }
         var defs = _.map(sAnimation.registry, function (Animation) {
             var selector = Animation.prototype.selector || '';
-            var $target = $initTarget ? $initTarget.filter(selector) : $wrapwrap.find(selector).addBack(selector);
+            var $target = $from.find(selector).addBack(selector);
 
             var defs = _.map($target, function (el) {
                 var $snippet = $(el);
