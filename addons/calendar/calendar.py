@@ -26,7 +26,7 @@ from openerp.exceptions import UserError
 import logging
 _logger = logging.getLogger(__name__)
 
-
+# rebuild me
 def calendar_id2real_id(calendar_id=None, with_date=False):
     """
     Convert a "virtual/recurring event id" (type string) into a real event id (type int).
