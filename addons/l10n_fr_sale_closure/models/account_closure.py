@@ -131,7 +131,6 @@ class AccountClosure(models.Model):
     def _interval_dates(self, frequency, company):
         """
         Method used to compute the date from which account move lines should be fetched
-        The date is in UTC and complies with Odoo's format.
         @param {string} frequency: a valid value of the selection field on the object (daily, monthly, annually)
             frequencies are literal (daily means 24 hours and so on)
         @param {recordset} company: the company for which the closure is done
