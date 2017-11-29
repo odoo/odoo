@@ -22,7 +22,7 @@
     增加小企业会计科目表
 
     """,
-    'depends': ['base', 'account'],
+    'depends': ['base', 'account', 'l10n_multilang'],
     'data': [
         'data/res_country_state_data.xml',
         'data/account_account_type_data.xml',
