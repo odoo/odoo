@@ -181,21 +181,6 @@ class pos_order(models.Model):
                               end_order_info[3],
                               end_order_info[0]))
 
-    @api.model
-    def check_global_inalterability(self, user_id):
-        check_string = 'Pos Orders:\n'
-        try:
-            self.env['pos.order']._check_hash_integrity(user_id)
-        except UserError as order_res:
-            check_string += order_res[0] + "\n\nJournal Entries:\n"
-
-        try:
-            self.env['account.move']._check_hash_integrity(user_id)
-        except UserError as move_res:
-            check_string += move_res[0]
-
-        raise UserError(check_string)
-
 
 class PosOrderLine(models.Model):
     _inherit = "pos.order.line"
@@ -205,5 +190,5 @@ class PosOrderLine(models.Model):
         # restrict the operation in case we are trying to write a forbidden field
         if set(vals).intersection(LINE_FIELDS):
             if any(l.company_id._is_accounting_unalterable(raise_on_nocountry=True) and l.order_id.state in ['done', 'invoiced'] for l in self):
-                raise UserError(ERR_MSG % ('point of sale order line', ', '.join(LINE_FIELDS)))
+                raise UserError(ERR_MSG % (_('point of sale order line'), ', '.join(LINE_FIELDS)))
         return super(PosOrderLine, self).write(vals)
