@@ -450,7 +450,7 @@ class HrExpense(models.Model):
 class HrExpenseSheet(models.Model):
 
     _name = "hr.expense.sheet"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Expense Report"
     _order = "accounting_date desc, id desc"
 
@@ -529,6 +529,7 @@ class HrExpenseSheet(models.Model):
     def create(self, vals):
         self._create_set_followers(vals)
         sheet = super(HrExpenseSheet, self).create(vals)
+        sheet.activity_update()
         return sheet
 
     @api.multi
@@ -554,8 +555,6 @@ class HrExpenseSheet(models.Model):
         self.ensure_one()
         if 'state' in init_values and self.state == 'approve':
             return 'hr_expense.mt_expense_approved'
-        elif 'state' in init_values and self.state == 'submit':
-            return 'hr_expense.mt_expense_confirmed'
         elif 'state' in init_values and self.state == 'cancel':
             return 'hr_expense.mt_expense_refused'
         elif 'state' in init_values and self.state == 'done':
@@ -621,6 +620,7 @@ class HrExpenseSheet(models.Model):
             self.write({'state': 'post'})
         else:
             self.write({'state': 'done'})
+        self.activity_update()
         return res
 
     @api.multi
@@ -649,6 +649,7 @@ class HrExpenseSheet(models.Model):
             raise UserError(_("Only HR Officers can approve expenses"))
         responsible_id = self.user_id.id or self.env.user.id
         self.write({'state': 'approve', 'user_id': responsible_id})
+        self.activity_update()
 
     @api.multi
     def paid_expense_sheets(self):
@@ -661,8 +662,28 @@ class HrExpenseSheet(models.Model):
         self.write({'state': 'cancel'})
         for sheet in self:
             sheet.message_post_with_view('hr_expense.hr_expense_template_refuse_reason', values={'reason': reason, 'is_sheet': True, 'name': self.name})
+        self.activity_update()
 
     @api.multi
     def reset_expense_sheets(self):
         self.mapped('expense_line_ids').write({'is_refused': False})
-        return self.write({'state': 'submit'})
+        self.write({'state': 'submit'})
+        self.activity_update()
+        return True
+
+    def _get_responsible_for_approval(self):
+        if self.user_id:
+            return self.user_id
+        elif self.employee_id.parent_id.user_id:
+            return self.employee_id.parent_id.user_id
+        elif self.employee_id.department_id.manager_id.user_id:
+            return self.employee_id.department_id.manager_id.user_id
+        return self.env.user
+
+    def activity_update(self):
+        for expense_report in self.filtered(lambda hol: hol.state == 'submit'):
+            self.activity_schedule(
+                'hr_expense.mail_act_expense_approval', fields.Date.today(),
+                user_id=expense_report._get_responsible_for_approval().id)
+        self.filtered(lambda hol: hol.state == 'approve').activity_feedback(['hr_expense.mail_act_expense_approval'])
+        self.filtered(lambda hol: hol.state == 'cancel').activity_unlink(['hr_expense.mail_act_expense_approval'])
