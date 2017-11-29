@@ -61,7 +61,7 @@
             parent="menu_sale_report"
             sequence="3"/>
 
-        <menuitem id="product_menu_catalog" name="Catalog" action="product.product_template_action" parent="sale_menu_root" sequence="4" groups="sales_team.group_sale_salesman"/>
+        <menuitem id="product_menu_catalog" name="Products" action="product.product_template_action" parent="sale_menu_root" sequence="4" groups="sales_team.group_sale_salesman"/>
         <menuitem id="menu_product" name="Product Variants" parent="product_menu_catalog" sequence="2" groups="product.group_product_variant" active="False"/>
         <menuitem action="product.product_template_action" id="menu_product_template_action" parent="product_menu_catalog" sequence="1" active="False"/>
         <menuitem id="prod_config_main" name="Products" parent="menu_sale_config" sequence="5"/>
@@ -476,9 +476,6 @@
             <field name="inherit_id" ref="sale.view_sales_order_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
-                    <separator/>
-                    <filter string="Sales" name="sales" domain="[('state','in',('progress','done'))]" />
-                    <separator/>
                     <filter string="To Invoice" name="to_invoice" domain="[('invoice_status','=','to invoice')]" />
                     <filter string="Upselling" name="upselling" domain="[('invoice_status','=','upselling')]" />
                 </xpath>
@@ -532,7 +529,7 @@
         </record>
 
         <menuitem id="menu_sale_invoicing"
-            name="Invoicing"
+            name="To Invoice"
             parent="sale_menu_root"
             sequence="3" groups="sales_team.group_sale_salesman"/>
 
@@ -581,9 +578,6 @@
               </p><p>
                 Your next actions should flow efficiently: confirm the Quotation
                 to a Sales Order, then create the Invoice and collect the Payment.
-              </p><p>
-                Note that once a Quotation becomes a Sales Order, it will be moved
-                from the Quotations list to the Sales Order list.
               </p>
             </field>
         </record>
