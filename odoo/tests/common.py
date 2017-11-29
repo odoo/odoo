@@ -18,7 +18,7 @@ import itertools
 import unittest
 from contextlib import contextmanager
 from datetime import datetime, timedelta
-from lxml import etree
+from lxml import etree, html
 from pprint import pformat
 
 import requests
@@ -93,6 +93,7 @@ class TreeCase(unittest.TestCase):
     def __init__(self, methodName='runTest'):
         super(TreeCase, self).__init__(methodName)
         self.addTypeEqualityFunc(etree._Element, self.assertTreesEqual)
+        self.addTypeEqualityFunc(html.HtmlElement, self.assertTreesEqual)
 
     def assertTreesEqual(self, n1, n2, msg=None):
         self.assertEqual(n1.tag, n2.tag, msg)
