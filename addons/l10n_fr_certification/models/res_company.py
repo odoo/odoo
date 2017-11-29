@@ -14,14 +14,13 @@ class ResCompany(models.Model):
     # To do in master : refactor to set sequences more generic
 
     l10n_fr_secure_sequence_id = fields.Many2one('ir.sequence', 'Sequence to use to ensure the securisation of data', readonly=True)
-    l10n_fr_closure_sequence_id = fields.Many2one('ir.sequence')
 
     @api.model
     def create(self, vals):
         company = super(ResCompany, self).create(vals)
         #when creating a new french company, create the securisation sequence as well
         if self._is_accounting_unalterable():
-            sequence_fields = ['l10n_fr_secure_sequence_id', 'l10n_fr_closure_sequence_id']
+            sequence_fields = ['l10n_fr_secure_sequence_id']
             company._create_secure_sequence(sequence_fields)
         return company
 
@@ -31,7 +30,7 @@ class ResCompany(models.Model):
         #if country changed to fr, create the securisation sequence
         for company in self:
             if company._is_accounting_unalterable():
-                sequence_fields = ['l10n_fr_secure_sequence_id', 'l10n_fr_closure_sequence_id']
+                sequence_fields = ['l10n_fr_secure_sequence_id']
                 company._create_secure_sequence(sequence_fields)
         return res
 
