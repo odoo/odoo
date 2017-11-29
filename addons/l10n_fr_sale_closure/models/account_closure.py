@@ -163,7 +163,11 @@ class AccountClosure(models.Model):
 
     @api.model
     def automated_closure(self, frequency='daily'):
-        """ To be executed by the CRON to compute all the amounts"""
+        """To be executed by the CRON to create an object of the given frequency for each company that needs it
+        @param {string} frequency: a valid value of the selection field on the object (daily, monthly, annually)
+            frequencies are literal (daily means 24 hours and so on)
+        @return {recordset} all the objects created for the given frequency
+        """
         def get_selection_value(field, value=''):
             for item in field.get_description(self.env)['selection']:
                 if item[0] == value:
