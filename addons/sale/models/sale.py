@@ -290,6 +290,31 @@ class SaleOrder(models.Model):
         return result
 
     @api.multi
+    def _write(self, values):
+        """ Override of private write method in order to generate activities
+        based in the invoice status. As the invoice status is a computed field
+        triggered notably when its lines and linked invoice status changes the
+        flow does not necessarily goes through write if the action was not done
+        on the SO itself. We hence override the _write to catch the computation
+        of invoice_status field. """
+        if self.env.context.get('mail_activity_automation_skip'):
+            return super(SaleOrder, self)._write(values)
+
+        res = super(SaleOrder, self)._write(values)
+        if 'invoice_status' in values:
+            self.activity_unlink(['sale.mail_act_sale_upsell'])
+            if values['invoice_status'] == 'upselling':
+                for order in self:
+                    order.activity_schedule(
+                        'sale.mail_act_sale_upsell', fields.Date.today(),
+                        user_id=order.user_id.id,
+                        note=_("Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> for customer <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>") % (
+                            order._name, order.id, order.name,
+                            order.partner_id._name, order.partner_id.id, order.partner_id.display_name))
+
+        return res
+
+    @api.multi
     def copy_data(self, default=None):
         if default is None:
             default = {}
