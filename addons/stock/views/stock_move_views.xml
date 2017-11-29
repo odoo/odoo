@@ -196,6 +196,7 @@
                     <field name="is_locked" invisible="1"/>
                     <field name="qty_done" attrs="{'readonly': ['|', ('is_initial_demand_editable', '=', True), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}"/>
                     <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': [('product_uom_qty', '!=', 0.0)]}" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="lots_visible" invisible="1"/>
                 </tree>
             </field>
         </record>
