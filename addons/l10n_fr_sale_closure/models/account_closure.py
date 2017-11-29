@@ -9,6 +9,13 @@ WRITE_MSG = _('Sale Closings are not meant to be written or deleted under any ci
 
 
 class AccountClosure(models.Model):
+    """
+    This object olds an interval total and a grand total of the accounts of type receivable for a company,
+    as well as account_moves that are included in the computation
+    It takes its earliest brother to infer from when the computation needs to be done
+    and excludes any account_move that has been already taken into account
+    in order to compute its own data.
+    """
     _name = 'account.sale.closure'
     _order = 'date_closure_stop desc'
 
@@ -83,6 +90,16 @@ class AccountClosure(models.Model):
         return self.env.cr.dictfetchall()[0]
 
     def _compute_amounts(self, frequency, company):
+        """
+        Method used to compute all the business data of the new object.
+        It will search for previous closures of the same frequency to infer the real date from which
+        account move lines should be fetched. We always take the earliest date between the theoretical one and the real one
+        to ensure no move lines are excluded.
+        @param {string} frequency: a valid value of the selection field on the object (daily, monthly, annually)
+            frequencies are literal (daily means 24 hours and so on)
+        @param {recordset} company: the company for which the closure is done
+        @return {dict} containing {field: value} for each business field of the object
+        """
         interval_dates = self._interval_dates(frequency, company)
         previous_closure = self.search([
             ('frequency', '=', frequency),
@@ -112,6 +129,16 @@ class AccountClosure(models.Model):
                 'date_closure_start': previous_date or interval_dates['interval_from']}
 
     def _interval_dates(self, frequency, company):
+        """
+        Method used to compute the date from which account move lines should be fetched
+        The date is in UTC and complies with Odoo's format.
+        @param {string} frequency: a valid value of the selection field on the object (daily, monthly, annually)
+            frequencies are literal (daily means 24 hours and so on)
+        @param {recordset} company: the company for which the closure is done
+        @return {dict} the theoretical date from which account move lines are fetched.
+            date_stop date to which the move lines are fetched, always now()
+            the dates are in their Odoo Database string representation
+        """
         date_stop = datetime.utcnow()
         interval_from = None
         if frequency == 'daily':
@@ -137,7 +164,7 @@ class AccountClosure(models.Model):
 
     @api.model
     def automated_closure(self, frequency='daily'):
-        # To be executed by the CRON to compute all the amount
+        """ To be executed by the CRON to compute all the amounts"""
         def get_selection_value(field, value=''):
             for item in field.get_description(self.env)['selection']:
                 if item[0] == value:
