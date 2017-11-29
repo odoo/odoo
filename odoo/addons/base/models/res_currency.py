@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
 import logging
 import math
 import re
 import time
+import traceback
+
+from odoo import api, fields, models, tools, _
+
+_logger = logging.getLogger(__name__)
 
 try:
     from num2words import num2words
 except ImportError:
-    logging.getLogger(__name__).warning("The num2words python library is not installed, l10n_mx_edi features won't be fully available.")
+    _logger.warning("The num2words python library is not installed, l10n_mx_edi features won't be fully available.")
     num2words = None
-
-from odoo import api, fields, models, tools, _
 
 CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
 
@@ -43,11 +45,7 @@ class Currency(models.Model):
         ('rounding_gt_zero', 'CHECK (rounding>0)', 'The rounding factor must be greater than 0!')
     ]
 
-    @api.multi
-    def _compute_current_rate(self):
-        date = self._context.get('date') or fields.Date.today()
-        company_id = self._context.get('company_id') or self.env['res.users']._get_company().id
-        # the subquery selects the last rate before 'date' for the given currency/company
+    def _get_rates(self, company, date):
         query = """SELECT c.id, (SELECT r.rate FROM res_currency_rate r
                                   WHERE r.currency_id = c.id AND r.name <= %s
                                     AND (r.company_id IS NULL OR r.company_id = %s)
@@ -55,8 +53,16 @@ class Currency(models.Model):
                                   LIMIT 1) AS rate
                    FROM res_currency c
                    WHERE c.id IN %s"""
-        self._cr.execute(query, (date, company_id, tuple(self.ids)))
+        self._cr.execute(query, (date, company.id, tuple(self.ids)))
         currency_rates = dict(self._cr.fetchall())
+        return currency_rates
+
+    @api.multi
+    def _compute_current_rate(self):
+        date = self._context.get('date') or fields.Date.today()
+        company = self._context.get('company_id') or self.env['res.users']._get_company()
+        # the subquery selects the last rate before 'date' for the given currency/company
+        currency_rates = self._get_rates(company, date)
         for currency in self:
             currency.rate = currency_rates.get(currency.id) or 1.0
 
@@ -169,33 +175,46 @@ class Currency(models.Model):
         return tools.float_is_zero(amount, precision_rounding=self.rounding)
 
     @api.model
-    def _get_conversion_rate(self, from_currency, to_currency):
-        from_currency = from_currency.with_env(self.env)
-        to_currency = to_currency.with_env(self.env)
-        return to_currency.rate / from_currency.rate
+    def _get_conversion_rate(self, from_currency, to_currency, company, date):
+        currency_rates = (from_currency + to_currency)._get_rates(company, date)
+        res = currency_rates.get(to_currency.id) / currency_rates.get(from_currency.id)
+        return res
 
-    @api.model
-    def _compute(self, from_currency, to_currency, from_amount, round=True):
-        if (to_currency == from_currency):
-            amount = to_currency.round(from_amount) if round else from_amount
-        else:
-            rate = self._get_conversion_rate(from_currency, to_currency)
-            amount = to_currency.round(from_amount * rate) if round else from_amount * rate
-        return amount
+    def _convert(self, from_amount, to_currency, company, date, round=True):
+        """Returns the converted amount of ``from_amount``` from the currency
+           ``self`` to the currency ``to_currency`` for the given ``date`` and
+           company.
 
-    @api.multi
-    def compute(self, from_amount, to_currency, round=True):
-        """ Convert `from_amount` from currency `self` to `to_currency`. """
+           :param company: The company from which we retrieve the convertion rate
+           :param date: The nearest date from which we retriev the conversion rate.
+           :param round: Round the result or not
+        """
         self, to_currency = self or to_currency, to_currency or self
-        assert self, "compute from unknown currency"
-        assert to_currency, "compute to unknown currency"
+        assert self, "convert amount from unknown currency"
+        assert to_currency, "convert amount to unknown currency"
+        assert company, "convert amount from unknown company"
+        assert date, "convert amount from unknown date"
         # apply conversion rate
         if self == to_currency:
             to_amount = from_amount
         else:
-            to_amount = from_amount * self._get_conversion_rate(self, to_currency)
+            to_amount = from_amount * self._get_conversion_rate(self, to_currency, company, date)
         # apply rounding
         return to_currency.round(to_amount) if round else to_amount
+
+    @api.model
+    def _compute(self, from_currency, to_currency, from_amount, round=True):
+        _logger.warning('The `_compute` method is deprecated. Use `_convert` instead')
+        date = self._context.get('date') or fields.Date.today()
+        company = self.env['res.company'].browse(self._context.get('company_id')) or self.env['res.users']._get_company()
+        return from_currency._convert(from_amount, to_currency, company, date)
+
+    @api.multi
+    def compute(self, from_amount, to_currency, round=True):
+        _logger.warning('The `compute` method is deprecated. Use `_convert` instead')
+        date = self._context.get('date') or fields.Date.today()
+        company = self.env['res.company'].browse(self._context.get('company_id')) or self.env['res.users']._get_company()
+        return self._convert(from_amount, to_currency, company, date)
 
     def _select_companies_rates(self):
         return """
