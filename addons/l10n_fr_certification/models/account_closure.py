@@ -38,9 +38,9 @@ class AccountClosure(models.Model):
 
     def _query_for_aml(self, company, date_start='', date_stop='', avoid_move_ids=[]):
         params = {'company_id': company.id}
-        query = '''SELECT m.write_date AS move_write_date,
-                          m.id AS move_id,
-                          aml.balance
+        query = '''WITH aggregate AS (SELECT m.id AS move_id,
+                          aml.balance as balance,
+                          aml.id as line_id
             FROM account_move_line aml
             JOIN account_journal j ON aml.journal_id = j.id
             JOIN  (SELECT acc.id FROM account_account acc
@@ -65,8 +65,22 @@ class AccountClosure(models.Model):
             params['avoid_move_ids'] = tuple(avoid_move_ids)
             query += 'AND m.id NOT IN %(avoid_move_ids)s'
 
+        query += ") "
+        query += '''SELECT array(SELECT move_id FROM aggregate) AS move_ids,
+                           array(SELECT line_id FROM aggregate) AS line_ids,
+                           sum(balance) AS balance
+                    FROM aggregate'''
+
         self.env.cr.execute(query, params)
-        return self.env.cr.dictfetchall()
+        return self.env.cr.dictfetchall()[0]
+
+    def _refine_amls_for_interval(self, date, line_ids):
+        query_strict_period = '''SELECT sum(balance) as balance FROM account_move_line aml
+                                 JOIN account_move m ON m.id = aml.move_id
+                                    WHERE aml.id IN %s
+                                    AND m.write_date >= %s'''
+        self.env.cr.execute(query_strict_period, ((tuple(line_ids), date)))
+        return self.env.cr.dictfetchall()[0]
 
     def _compute_amounts(self, frequency, company):
         interval_dates = self._interval_dates(frequency, company)
@@ -81,17 +95,19 @@ class AccountClosure(models.Model):
             date_query_start = min(previous_date, interval_dates['interval_from'])
 
         moves_already_counted = self._query_closures_for_move_ids(frequency, company)
-        aml_fetched = self._query_for_aml(company, date_query_start, interval_dates['date_stop'], moves_already_counted)
+        aml_aggregate = self._query_for_aml(company, date_query_start, interval_dates['date_stop'], moves_already_counted)
 
         date_interval_start = date_query_start or interval_dates['interval_from']
-        aml_interval = filter(lambda aml: aml['move_write_date'] >= date_interval_start, aml_fetched)
+        aml_interval = {}
+        if date_interval_start and aml_aggregate['line_ids']:
+            aml_interval = self._refine_amls_for_interval(date_interval_start, aml_aggregate['line_ids'])
 
-        total_interval = sum(aml['balance'] for aml in aml_interval)
-        total_beginning = sum(aml['balance'] for aml in aml_fetched)
+        total_beginning = aml_aggregate['balance'] or 0
+        total_interval = aml_interval.get('balance', 0) or total_beginning
 
         return {'total_interval': total_interval,
                 'total_beginning': previous_closure.total_beginning + total_beginning,
-                'move_ids': [(4, aml['move_id'], False) for aml in aml_interval],
+                'move_ids': [(4, move_id, False) for move_id in aml_aggregate['move_ids']],
                 'date_closure_stop': interval_dates['date_stop'],
                 'date_closure_start': previous_date or interval_dates['interval_from']}
 
