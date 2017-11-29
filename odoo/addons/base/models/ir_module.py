@@ -305,14 +305,6 @@ class Module(models.Model):
             if module.state in ('installed', 'to upgrade', 'to remove', 'to install'):
                 raise UserError(_('You try to remove a module that is installed or will be installed'))
         self.clear_caches()
-        # Installing a module creates entries in base.module.uninstall, during
-        # the unlink process of ir.module.module we try to update the
-        # base.module.uninstall table's module_id to null, which violates a
-        # non-null constraint, effectively raising an Exception.
-        # V11-only !!DO NOT FORWARD-PORT!!
-        self.env['base.module.uninstall'].search(
-            [('module_id', 'in', self.ids)]
-        ).unlink()
         return super(Module, self).unlink()
 
     @staticmethod
