@@ -735,7 +735,7 @@ class WebsiteSale(http.Controller):
             values['acquirers'] = []
             for acquirer in acquirers:
                 acquirer_button = acquirer.with_context(submit_class='btn btn-primary', submit_txt=_('Pay Now')).sudo().render(
-                    '/',
+                    order.name,
                     order.amount_total,
                     order.pricelist_id.currency_id.id,
                     values={
