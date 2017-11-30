@@ -85,8 +85,8 @@ class WebsiteBlog(http.Controller):
          - 'blog': current blog
          - 'blogs': all blogs for navigation
          - 'pager': pager of posts
-         - 'active_tag_ids' :  list of active tag ids,
-         - 'tags_list' : function to built the comma-separated tag list ids (for the url),
+         - 'active_tag_id' : Current active tag id,
+         - 'tag_clicked' : function to built clicked tag in url form,
          - 'tags': all tags, for navigation
          - 'state_info': state of published/unpublished filter
          - 'nav_list': a dict [year][month] for archives navigation
@@ -104,9 +104,9 @@ class WebsiteBlog(http.Controller):
         # build the domain for blog post to display
         domain = []
         # retrocompatibility to accept tag as slug
-        active_tag_ids = tag and [int(unslug(t)[1]) for t in tag.split(',')] or []
-        if active_tag_ids:
-            domain += [('tag_ids', 'in', active_tag_ids)]
+        active_tag_id = tag and [int(unslug(t)[1]) for t in tag.split(',')] or []
+        if active_tag_id:
+            domain += [('tag_ids', 'child_of', active_tag_id)]
         if blog:
             domain += [('blog_id', '=', blog.id)]
         if date_begin and date_end:
@@ -139,25 +139,31 @@ class WebsiteBlog(http.Controller):
         blog_posts = blog_posts[pager_begin:pager_end]
 
         all_tags = blog.all_tags()[blog.id]
+        # Build hierarchy from child to parent tag
+        for tag in all_tags:
+            parent = tag
+            while parent:
+                parent = parent.parent_id
+                all_tags |= parent
 
-        # function to create the string list of tag ids, and toggle a given one.
+        # function to create the string of tag id, and toggle a given one.
         # used in the 'Tags Cloud' template.
-        def tags_list(tag_ids, current_tag):
-            tag_ids = list(tag_ids) # required to avoid using the same list
-            if current_tag in tag_ids:
-                tag_ids.remove(current_tag)
+        def tag_clicked(tag_id, current_tag):
+            if current_tag in tag_id:
+                tag_id.remove(current_tag)
             else:
-                tag_ids.append(current_tag)
-            tag_ids = request.env['blog.tag'].browse(tag_ids).exists()
-            return ','.join(slug(tag) for tag in tag_ids)
+                tag_id = current_tag
+
+            tag_id = request.env['blog.tag'].browse(tag_id).exists()
+            return ','.join(slug(tag) for tag in tag_id)
         values = {
             'blog': blog,
             'blogs': blogs,
             'main_object': blog,
             'tags': all_tags,
             'state_info': {"state": state, "published": published_count, "unpublished": unpublished_count},
-            'active_tag_ids': active_tag_ids,
-            'tags_list' : tags_list,
+            'active_tag_id': active_tag_id,
+            'tag_clicked' : tag_clicked,
             'blog_posts': blog_posts,
             'blog_posts_cover_properties': [json.loads(b.cover_properties) for b in blog_posts],
             'pager': pager,
