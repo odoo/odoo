@@ -140,7 +140,7 @@ class AccountClosure(models.Model):
         raise UserError(_('Sale Closings are not meant to be written or deleted under any circumstances.'))
 
     @api.model
-    def automated_closure(self, frequency='daily'):
+    def _automated_closure(self, frequency='daily'):
         """To be executed by the CRON to create an object of the given frequency for each company that needs it
         @param {string} frequency: a valid value of the selection field on the object (daily, monthly, annually)
             frequencies are literal (daily means 24 hours and so on)
