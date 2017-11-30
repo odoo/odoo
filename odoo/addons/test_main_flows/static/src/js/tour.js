@@ -16,7 +16,7 @@ tour.register('main_flow_tour', {
 }, {
 // Add Stockable product
     edition: "enterprise",
-    trigger: ".o_menu_sections a:contains('Catalog')",
+    trigger: ".o_menu_sections a:contains('Products')",
     extra_trigger: '.o_main_navbar',
     content: _t("Let\'s create products."),
     position: "bottom",
@@ -646,6 +646,7 @@ tour.register('main_flow_tour', {
 }, {
     edition: "enterprise",
     trigger: ".ui-menu-item > a:contains('the_flow.customer')",
+    in_modal: false,
     auto: true,
 }, {
     edition: "enterprise",
