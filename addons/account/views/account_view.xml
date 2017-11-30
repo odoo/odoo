@@ -1600,6 +1600,7 @@
                     <field name="value_amount" attrs="{'readonly':[('value','=','balance')]}"/>
                     <field name="days"/>
                     <field name="option" string=""/>
+                    <field name="day_of_the_month" string="Day of the month"/>
                 </tree>
             </field>
         </record>
@@ -1608,27 +1609,36 @@
             <field name="model">account.payment.term.line</field>
             <field name="arch" type="xml">
                 <form string="Payment Terms">
+                    <h2>Term Type</h2>
                     <group>
-                        <group string="Term Type">
+                        <group>
                             <field name="value" widget="radio"/>
-                            <label for="value_amount" attrs="{'invisible':[('value','=', 'balance')]}"/>
-                            <div attrs="{'invisible':[('value','=', 'balance')]}">
+                        </group>
+
+                        <group>
+                            <div attrs="{'invisible':[('value','=', 'balance')]}" class="o_row">
+                                <label for="value_amount" attrs="{'invisible':[('value','=', 'balance')]}"/>
                                 <field name="value_amount" class="oe_inline"/>
                                 <label string="%" class="oe_inline" attrs="{'invisible':[('value','!=','percent')]}"/>
                             </div>
-                            <field name="sequence" invisible="1"/>
-                        </group>
-                        <group string="Due Date Computation">
-                            <label for="days"/>
-                            <div>
-                                <field name="option" widget="radio"/>
-                                <div class="o_row" attrs="{'invisible': [('option', 'in', ['last_day_following_month', 'last_day_current_month'])]}">
-                                    <field name="days"/>
-                                    days
-                                </div>
-                            </div>
                         </group>
                     </group>
+
+                    <field name="sequence" invisible="1"/>
+
+                    <h2>Due Date Computation</h2>
+                    <div colspan="2">
+                        <label for="days" string="Due" attrs="{'invisible': [('option','not in',('day_after_invoice_date','after_invoice_month'))]}"/>
+                        <label for="days" string="Due the" attrs="{'invisible': [('option','in',('day_after_invoice_date','after_invoice_month'))]}"/>
+                        <field name="days" class="oe_inline"/>
+                        <label for="option" string=""/> <!--Empty label to force space between elements-->
+                        <field name="option" class="oe_inline"/>
+                    </div>
+                    <div colspan="2" attrs="{'invisible': [('option','!=', 'day_after_invoice_date')]}">
+                        <label for="day_of_the_month" string="On the"/>
+                        <field name="day_of_the_month" class="oe_inline"/>
+                        <label string="of the month"/>
+                    </div>
                 </form>
             </field>
         </record>
