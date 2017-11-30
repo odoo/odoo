@@ -63,7 +63,7 @@ class Website(Home):
     @http.route('/', type='http', auth="public", website=True)
     def index(self, **kw):
         page = 'homepage'
-        main_menu = request.env.ref('website.main_menu', raise_if_not_found=False)
+        main_menu = request.website.menu_id or request.env.ref('website.main_menu', raise_if_not_found=False)
         if main_menu:
             first_menu = main_menu.child_id and main_menu.child_id[0]
             if first_menu:
