@@ -8,8 +8,6 @@ from openerp.fields import Datetime
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
-NOT_SAME_DAY_ERROR = _("This session has been opened another day. To comply with the French law, you should close sessions on a daily basis. Please close session %s and open a new one.")
-
 
 def ctx_tz(record, field):
     res_lang = None
@@ -44,7 +42,7 @@ class pos_session(models.Model):
         date_today = datetime.utcnow()
         session_start = Datetime.from_string(self.start_at)
         if not date_today - datetime.timedelta(hours=24) <= session_start:
-            raise UserError(NOT_SAME_DAY_ERROR % self.name)
+            raise UserError(_("This session has been opened another day. To comply with the French law, you should close sessions on a daily basis. Please close session %s and open a new one.") % self.name)
         return True
 
     @api.multi
@@ -123,7 +121,7 @@ class pos_order(models.Model):
 
                 # restrict the operation in case we are trying to write a forbidden field
                 if (order.state in ['paid', 'done', 'invoiced'] and set(vals).intersection(ORDER_FIELDS)):
-                    raise UserError(ERR_MSG % ('point of sale order', ', '.join(ORDER_FIELDS)))
+                    raise UserError(_('According to the French law, you cannot modify a point of sale order. Forbidden fields: %s.') % ', '.join(ORDER_FIELDS))
                 # restrict the operation in case we are trying to overwrite existing hash
                 if (order.l10n_fr_hash and 'l10n_fr_hash' in vals) or (order.l10n_fr_secure_sequence_number and 'l10n_fr_secure_sequence_number' in vals):
                     raise UserError(_('You cannot overwrite the values ensuring the inalterability of the point of sale.'))
@@ -190,5 +188,5 @@ class PosOrderLine(models.Model):
         # restrict the operation in case we are trying to write a forbidden field
         if set(vals).intersection(LINE_FIELDS):
             if any(l.company_id._is_accounting_unalterable() and l.order_id.state in ['done', 'invoiced'] for l in self):
-                raise UserError(ERR_MSG % (_('point of sale order line'), ', '.join(LINE_FIELDS)))
+                raise UserError(_('According to the French law, you cannot modify a point of sale order line. Forbidden fields: %s.') % ', '.join(LINE_FIELDS))
         return super(PosOrderLine, self).write(vals)

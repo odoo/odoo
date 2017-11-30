@@ -7,8 +7,6 @@ from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
 
-ERR_MSG = _("According to the French law, you cannot modify a %s in order for its posted data to be updated or deleted. Unauthorized field: %s.")
-
 #forbidden fields
 MOVE_FIELDS = ['date', 'journal_id', 'company_id']
 LINE_FIELDS = ['debit', 'credit', 'account_id', 'partner_id']
@@ -78,7 +76,7 @@ class AccountMove(models.Model):
 
                 # restrict the operation in case we are trying to write a forbidden field
                 if (move.state == "posted" and set(vals).intersection(MOVE_FIELDS)):
-                    raise UserError(ERR_MSG % (_('journal entry'), ', '.join(MOVE_FIELDS)))
+                    raise UserError(_("According to the French law, you cannot modify a journal entry in order for its posted data to be updated or deleted. Unauthorized field: %s.") % ', '.join(MOVE_FIELDS))
                 # restrict the operation in case we are trying to overwrite existing hash
                 if (move.l10n_fr_hash and 'l10n_fr_hash' in vals) or (move.l10n_fr_secure_sequence_number and 'l10n_fr_secure_sequence_number' in vals):
                     raise UserError(_('You cannot overwrite the values ensuring the inalterability of the accounting.'))
@@ -151,7 +149,7 @@ class AccountMoveLine(models.Model):
         # restrict the operation in case we are trying to write a forbidden field
         if set(vals).intersection(LINE_FIELDS):
             if any(l.company_id._is_accounting_unalterable() and l.move_id.state == 'posted' for l in self):
-                raise UserError(ERR_MSG % (_('journal item'), ', '.join(LINE_FIELDS)))
+                raise UserError(_("According to the French law, you cannot modify a journal item in order for its posted data to be updated or deleted. Unauthorized field: %s.") % ', '.join(LINE_FIELDS))
         return super(AccountMoveLine, self).write(vals)
 
 
@@ -162,7 +160,7 @@ class AccountJournal(models.Model):
     def _onchange_update_posted(self):
         if self.update_posted and self.company_id._is_accounting_unalterable():
             field_string = self._fields['update_posted'].get_description(self.env)['string']
-            raise UserError(ERR_MSG % (_('journal'), field_string))
+            raise UserError(_("According to the French law, you cannot modify a journal in order for its posted data to be updated or deleted. Unauthorized field: %s.") % field_string)
 
     @api.multi
     def _is_journal_alterable(self):
@@ -182,7 +180,7 @@ class AccountJournal(models.Model):
             if journal.company_id._is_accounting_unalterable():
                 if vals.get('update_posted'):
                     field_string = journal._fields['update_posted'].get_description(self.env)['string']
-                    raise UserError(ERR_MSG % (_('journal'), field_string))
+                    raise UserError(_("According to the French law, you cannot modify a journal in order for its posted data to be updated or deleted. Unauthorized field: %s.") % field_string)
         return super(AccountJournal, self).write(vals)
 
     @api.model
@@ -191,5 +189,5 @@ class AccountJournal(models.Model):
         if self.company_id._is_accounting_unalterable():
             if vals.get('update_posted'):
                 field_string = self._fields['update_posted'].get_description(self.env)['string']
-                raise UserError(ERR_MSG % (_('journal'), field_string))
+                raise UserError(_("According to the French law, you cannot modify a journal in order for its posted data to be updated or deleted. Unauthorized field: %s.") % field_string)
         return super(AccountJournal, self).create(vals)
