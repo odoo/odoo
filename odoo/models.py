@@ -5013,7 +5013,7 @@ class BaseModel(object):
             Useful for reporting/pivoting.
 
             Example:
-env['account.invoice.line'].search([]).grouped(['partner_id.country_id', 'partner_id'], ['tot_amount'], tot_amount='sum(price_subtotal_signed)')
+env['account.invoice.line'].search([]).grouped(['partner_id.country_id.name', 'partner_id.name'], ['tot_amount'], tot_amount='sum(price_subtotal_signed)')
 
             :param groupby:
                 A list of grouping functions, one for each grouping level.
@@ -5024,7 +5024,7 @@ env['account.invoice.line'].search([]).grouped(['partner_id.country_id', 'partne
 
             :param orderby (optional):
                 Sorting function/s, for each grouping level.
-                Same rules than groupby.
+                Same rules than groupby
                 If omitted, groups will be used. Please notice you can also use aggregate functions here.
 
             :param aggregate_functions (optional): either a string, or a 1-ary functions that take a recordset as argument and
@@ -5087,7 +5087,7 @@ env['account.invoice.line'].search([]).grouped(['partner_id.country_id', 'partne
 
         # Fix argument orderby
         # We choose default order by id
-        uniform_orderby = map(uniform_attrgetter, orderby if orderby else groupby)
+        uniform_orderby = map(uniform_attrgetter, orderby if orderby else [attrgetter('group_name')])
         if len(uniform_orderby) == 1 and len(uniform_groupby) > 1:
             uniform_orderby = [uniform_orderby[0] for i in range(len(uniform_groupby))]
 
@@ -5107,14 +5107,14 @@ env['account.invoice.line'].search([]).grouped(['partner_id.country_id', 'partne
                 uniform_aggregate_functions[fname] = x
             else:
                 raise ValueError("Expected string or 1-ary function, got " + str(x))
-		
+        
         return self._grouped(uniform_groupby, uniform_orderby, **uniform_aggregate_functions)
 
     def _grouped(self, groupby, orderby, **aggregate_functions):
         """
         Same as grouped(), assume arguments are sanitized, i.e. all lambdas
         """
-		
+        
         class Group():
             def __init__(self, group_name, group_level):
                 self.group_name = group_name
@@ -5143,13 +5143,22 @@ env['account.invoice.line'].search([]).grouped(['partner_id.country_id', 'partne
         else:
             group_f = groupby[0]
             
-            group_names = self.mapped(group_f)
+            
+            group_names = set(map(group_f, self))
+            # don't use self.mapped(). It could return a recordset, and lose "None"
+            #if not False in group_names:
+            #    group_names = set(x for x in group_names)
+            #    group_names.add(False)
+            _logger.info("names=" + str(group_names))    #DEBUG
 
             groups = []
 
             for group_name in set(group_names):
                 group = Group(group_name, group_level)
-                group._all_records = self.filtered(lambda x:group_f(x) == group_name)
+                if group_name is None:
+                    group._all_records = self.filtered(lambda x:group_f(x) is None)
+                else:
+                    group._all_records = self.filtered(lambda x:group_f(x) == group_name)
                 groups.append(group)
 
             for group in groups:
@@ -5160,7 +5169,6 @@ env['account.invoice.line'].search([]).grouped(['partner_id.country_id', 'partne
                 group.items = group._all_records._grouped(groupby[1:], orderby[1:], **aggregate_functions)
 
             return sorted(groups, key=orderby[0])
-
     @api.multi
     def update(self, values):
         """ Update the records in ``self`` with ``values``. """
