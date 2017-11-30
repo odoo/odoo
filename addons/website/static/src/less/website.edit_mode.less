@@ -44,9 +44,15 @@
 
     &.oe_structure.oe_empty, &[data-oe-type=html] {
         &:empty {
-            height: 300px;
-            background: url(/website/static/src/img/drag_here.png) center no-repeat;
-            background-size: 380px;
+            border: 2px dashed @gray-lighter-darker;
+            margin: 20px;
+            padding: 112px 0px;
+            text-align: center;
+            &:before {
+                content: attr(data-editor-message);
+                font-size: 20px;
+                color: @gray-lighter-darker;
+            }
         }
         > p:empty:only-child {
             color: #aaa;
