@@ -55,6 +55,13 @@ class account_abstract_payment(models.AbstractModel):
 
     hide_payment_method = fields.Boolean(compute='_compute_hide_payment_method',
         help="Technical field used to hide the payment method if the selected journal has only one available which is 'manual'")
+    payment_difference = fields.Monetary(compute='_compute_payment_difference', readonly=True)
+    payment_difference_handling = fields.Selection([('open', 'Keep open'), ('reconcile', 'Mark invoice as fully paid')], default='open', string="Payment Difference Handling", copy=False)
+    writeoff_account_id = fields.Many2one('account.account', string="Difference Account", domain=[('deprecated', '=', False)], copy=False)
+    writeoff_label = fields.Char(
+        string='Journal Item Label',
+        help='Change label of the counterpart that will hold the payment difference',
+        default='Write-Off')
 
     @api.one
     @api.constrains('amount')
@@ -74,6 +81,11 @@ class account_abstract_payment(models.AbstractModel):
                 or payment.journal_id.outbound_payment_method_ids
             payment.hide_payment_method = len(journal_payment_methods) == 1 and journal_payment_methods[0].code == 'manual'
 
+    @api.depends('invoice_ids', 'amount', 'payment_date', 'currency_id')
+    def _compute_payment_difference(self):
+        for pay in self.filtered(lambda p: p.invoice_ids):
+            pay.payment_difference = pay.amount - pay._compute_payment_amount()
+
     @api.onchange('journal_id')
     def _onchange_journal(self):
         if self.journal_id:
@@ -86,39 +98,7 @@ class account_abstract_payment(models.AbstractModel):
             return {'domain': {'payment_method_id': [('payment_type', '=', payment_type), ('id', 'in', payment_methods.ids)]}}
         return {}
 
-    @api.model
-    def _compute_total_invoices_amount(self):
-        """ Compute the sum of the residual of invoices, expressed in the payment currency """
-        payment_currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id or self.env.user.company_id.currency_id
-
-        total = 0
-        for inv in self.invoice_ids:
-            if inv.currency_id == payment_currency:
-                total += inv.residual_signed
-            else:
-                total += inv.company_currency_id.with_context(date=self.payment_date).compute(
-                    inv.residual_company_signed, payment_currency)
-        return abs(total)
-
-
-class account_register_payments(models.TransientModel):
-    _name = "account.register.payments"
-    _inherit = 'account.abstract.payment'
-    _description = "Register payments on multiple invoices"
-
-    invoice_ids = fields.Many2many('account.invoice', string='Invoices', copy=False)
-    multi = fields.Boolean(string='Multi', help='Technical field indicating if the user selected invoices from multiple partners or from different types.')
-
-    @api.onchange('payment_type')
-    def _onchange_payment_type(self):
-        if self.payment_type:
-            return {'domain': {'payment_method_id': [('payment_type', '=', self.payment_type)]}}
-
-    @api.onchange('currency_id')
-    def _onchange_currency_id(self):
-        self.amount = abs(self._compute_payment_amount())
-
-    @api.model
+    @api.multi
     def _compute_payment_amount(self, invoice_ids=None):
         payment_currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id
         invoices = invoice_ids or self.invoice_ids
@@ -133,6 +113,15 @@ class account_register_payments(models.TransientModel):
             else:
                 total += currency.with_context(date=self.payment_date).compute(amount_total, payment_currency)
         return total
+
+
+class account_register_payments(models.TransientModel):
+    _name = "account.register.payments"
+    _inherit = 'account.abstract.payment'
+    _description = "Register payments on multiple invoices"
+
+    invoice_ids = fields.Many2many('account.invoice', string='Invoices', copy=False)
+    multi = fields.Boolean(string='Multi', help='Technical field indicating if the user selected invoices from multiple partners or from different types.')
 
     @api.model
     def default_get(self, fields):
@@ -271,16 +260,6 @@ class account_payment(models.Model):
                     rec = False
             payment.move_reconciled = rec
 
-    @api.one
-    @api.depends('invoice_ids', 'amount', 'payment_date', 'currency_id')
-    def _compute_payment_difference(self):
-        if len(self.invoice_ids) == 0:
-            return
-        if self.invoice_ids[0].type in ['in_invoice', 'out_refund']:
-            self.payment_difference = self.amount - self._compute_total_invoices_amount()
-        else:
-            self.payment_difference = self._compute_total_invoices_amount() - self.amount
-
     company_id = fields.Many2one(store=True)
     name = fields.Char(readonly=True, copy=False, default="Draft Payment") # The name is attributed upon post()
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled'), ('cancelled', 'Cancelled')], readonly=True, default='draft', copy=False, string="Status")
@@ -298,13 +277,6 @@ class account_payment(models.Model):
 
     invoice_ids = fields.Many2many('account.invoice', 'account_invoice_payment_rel', 'payment_id', 'invoice_id', string="Invoices", copy=False, readonly=True)
     has_invoices = fields.Boolean(compute="_get_has_invoices", help="Technical field used for usability purposes")
-    payment_difference = fields.Monetary(compute='_compute_payment_difference', readonly=True)
-    payment_difference_handling = fields.Selection([('open', 'Keep open'), ('reconcile', 'Mark invoice as fully paid')], default='open', string="Payment Difference Handling", copy=False)
-    writeoff_account_id = fields.Many2one('account.account', string="Difference Account", domain=[('deprecated', '=', False)], copy=False)
-    writeoff_label = fields.Char(
-        string='Journal Item Label',
-        help='Change label of the counterpart that will hold the payment difference',
-        default='Write-Off')
 
     # FIXME: ondelete='restrict' not working (eg. cancel a bank statement reconciliation with a payment)
     move_line_ids = fields.One2many('account.move.line', 'payment_id', readonly=True, copy=False, ondelete='restrict')
