@@ -1588,7 +1588,9 @@ var BasicModel = AbstractModel.extend({
         return $.when.apply($, defs).then(function () {
             // ensure to fetch up to 'limit' records (may be useful if records of
             // the current page have been removed)
-            return self._readUngroupedList(list);
+            return self._readUngroupedList(list).then(function () {
+                return self._fetchX2ManysBatched(list);
+            });
         });
     },
     /**
@@ -2516,6 +2518,8 @@ var BasicModel = AbstractModel.extend({
                 changes[fieldName] = value ?
                     this.localData[value].model + ',' + this.localData[value].res_id :
                     false;
+            } else if (type === 'char' && changes[fieldName] === '') {
+                changes[fieldName] = false;
             } else if (changes[fieldName] === null) {
                 changes[fieldName] = false;
             }

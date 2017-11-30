@@ -365,4 +365,42 @@ QUnit.test('twice the same action in a dashboard', function (assert) {
     form.destroy();
 });
 
+QUnit.test('non-existing action in a dashboard', function (assert) {
+    assert.expect(1);
+
+    var form = createView({
+        View: FormView,
+        model: 'board',
+        data: this.data,
+        arch: '<form string="My Dashboard">' +
+                '<board style="2-1">' +
+                    '<column>' +
+                        '<action context="{}" view_mode="kanban" string="ABC" name="51" domain="[]"></action>' +
+                    '</column>' +
+                '</board>' +
+            '</form>',
+        intercepts: {
+            load_views: function () {
+                throw new Error('load_views should not be called');
+            }
+        },
+        mockRPC: function (route) {
+            if (route === '/board/static/src/img/layout_1-1-1.png') {
+                return $.when();
+            }
+            if (route === '/web/action/load') {
+                // server answer if the action doesn't exist anymore
+                return $.when(false);
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    assert.strictEqual(form.$('.oe_action:contains(ABC)').length, 1,
+        "there should be a box for the non-existing action");
+
+    form.destroy();
+});
+
+
 });
