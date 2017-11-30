@@ -1362,8 +1362,8 @@ class Char(_String):
 
     :param int size: the maximum size of values stored for that field
 
-    :param bool trim: states whether the value is trimmed or not. Note that
-        the trim operation is applied only on the web client
+    :param bool trim: states whether the value is trimmed or not (by default,
+        ``True``). Note that the trim operation is applied only by the web client.
 
     :param translate: enable the translation of the field's values; use
         ``translate=True`` to translate field values as a whole; ``translate``
