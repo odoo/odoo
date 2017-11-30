@@ -21,7 +21,7 @@ class Partner(models.Model):
             return False
         params = {
             'center': '%s, %s %s, %s' % (self.street or '', self.city or '', self.zip or '', self.country_id and self.country_id.name_get()[0][1] or ''),
-            'size': "%sx%s" % (height, width),
+            'size': "%sx%s" % (width, height),
             'zoom': zoom,
             'sensor': 'false',
             'key': google_maps_api_key,

@@ -10,7 +10,7 @@
  * only when the deferred is resolved, and its value is equal to the resolved value.
  * The module can be rejected (unloaded). This will be logged in the console as info.
  *
- * logs: 
+ * logs:
  *      Missing dependencies:
  *          These modules do not appear in the page. It is possible that the
  *          JavaScript file is not in the page or that the module name is wrong
@@ -180,16 +180,27 @@
                 var failed = odoo.__DEBUG__.get_failed_jobs();
                 var unloaded = _.filter(debug_jobs, function (job) { return job.missing; });
 
-                var log = [(_.isEmpty(failed) ? (_.isEmpty(unloaded) ? 'info' : 'warning' ) : 'error') + ':', 'Some modules could not be started'];
-                if (missing.length)             log.push('\nMissing dependencies:   ', missing);
-                if (!_.isEmpty(failed))         log.push('\nFailed modules:         ', _.pluck(failed, 'name'));
-                if (!_.isEmpty(rejected))       log.push('\nRejected modules:       ', rejected);
-                if (!_.isEmpty(rejected_linked))log.push('\nRejected linked modules:', rejected_linked);
-                if (!_.isEmpty(unloaded))       log.push('\nNon loaded modules:     ', _.pluck(unloaded, 'name'));
-                if (odoo.debug && !_.isEmpty(debug_jobs)) log.push('\nDebug:                  ', debug_jobs);
-
                 if (odoo.debug || !_.isEmpty(failed) || !_.isEmpty(unloaded)) {
-                    console[_.isEmpty(failed) || _.isEmpty(unloaded) ? 'info' : 'error'].apply(console, log);
+                    var log = console[_.isEmpty(failed) || _.isEmpty(unloaded) ? 'info' : 'error'].bind(console);
+                    log((_.isEmpty(failed) ? (_.isEmpty(unloaded) ? 'info' : 'warning') : 'error') + ': Some modules could not be started');
+                    if (missing.length) {
+                        log('Missing dependencies:    ', missing);
+                    }
+                    if (!_.isEmpty(failed)) {
+                        log('Failed modules:          ', _.pluck(failed, 'name'));
+                    }
+                    if (!_.isEmpty(rejected)) {
+                        log('Rejected modules:        ', rejected);
+                    }
+                    if (!_.isEmpty(rejected_linked)) {
+                        log('Rejected linked modules: ', rejected_linked);
+                    }
+                    if (!_.isEmpty(unloaded)) {
+                        log('Non loaded modules:      ', _.pluck(unloaded, 'name'));
+                    }
+                    if (odoo.debug && !_.isEmpty(debug_jobs)) {
+                        log('Debug:                   ', debug_jobs);
+                    }
                 }
             }
         },
