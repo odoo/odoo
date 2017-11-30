@@ -33,4 +33,4 @@ class StockImmediateTransfer(models.TransientModel):
                 pack.write({'qty_done': pack.product_qty})
             else:
                 pack.unlink()
-        self.pick_id.do_transfer()
+        return self.pick_id.do_transfer()

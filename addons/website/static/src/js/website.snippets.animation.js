@@ -413,7 +413,11 @@ animation.registry.share = animation.Class.extend({
 animation.registry.media_video = animation.Class.extend({
     selector: ".media_iframe_video",
     start: function () {
-        if (!this.$target.has('> iframe').length) {
+        // TODO: this code should be refactored to make more sense and be better
+        // integrated with Odoo (this refactoring should be done in master).
+        this.$target.find('iframe').remove();
+
+        if (!this.$target.has('.media_iframe_video_size').length) {
             var editor = '<div class="css_editable_mode_display">&nbsp;</div>';
             var size = '<div class="media_iframe_video_size">&nbsp;</div>';
             this.$target.html(editor+size);
