@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
@@ -22,17 +23,19 @@ class AccountJournal(models.Model):
 
     @api.one
     def _set_check_next_number(self):
-        if self.check_next_number < self.check_sequence_id.number_next_actual:
+        if self.check_next_number and not re.match(r'^[0-9]+$', self.check_next_number):
+            raise ValidationError(_('Next Check Number should only contains numbers.'))
+        if int(self.check_next_number) < self.check_sequence_id.number_next_actual:
             raise ValidationError(_("The last check number was %s. In order to avoid a check being rejected "
                 "by the bank, you can only use a greater number.") % self.check_sequence_id.number_next_actual)
         if self.check_sequence_id:
-            self.check_sequence_id.sudo().number_next_actual = self.check_next_number
+            self.check_sequence_id.sudo().number_next_actual = int(self.check_next_number)
 
     check_manual_sequencing = fields.Boolean('Manual Numbering', default=False,
         help="Check this option if your pre-printed checks are not numbered.")
     check_sequence_id = fields.Many2one('ir.sequence', 'Check Sequence', readonly=True, copy=False,
         help="Checks numbering sequence.")
-    check_next_number = fields.Integer('Next Check Number', compute='_get_check_next_number', inverse='_set_check_next_number',
+    check_next_number = fields.Char('Next Check Number', compute='_get_check_next_number', inverse='_set_check_next_number',
         help="Sequence number of the next printed check.")
     check_printing_payment_method_selected = fields.Boolean(compute='_compute_check_printing_payment_method_selected',
         help="Technical feature used to know whether check printing was enabled as payment method.")
