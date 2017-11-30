@@ -44,7 +44,19 @@ class PaymentTransaction(models.Model):
             _logger.warning('<%s> transaction STATE INCORRECT for order %s (ID %s, state %s)', self.acquirer_id.provider, self.sale_order_id.name, self.sale_order_id.id, self.sale_order_id.state)
             return 'pay_sale_invalid_doc_state'
         if not float_compare(self.amount, self.sale_order_id.amount_total, 2) == 0:
-            _logger.warning('<%s> transaction AMOUNT MISMATCH for order %s (ID %s)', self.acquirer_id.provider, self.sale_order_id.name, self.sale_order_id.id)
+            _logger.warning(
+                '<%s> transaction AMOUNT MISMATCH for order %s (ID %s): expected %r, got %r',
+                self.acquirer_id.provider, self.sale_order_id.name, self.sale_order_id.id,
+                self.sale_order_id.amount_total, self.amount,
+            )
+            self.sale_order_id.message_post(
+                subject=_("Amount Mismatch (%s)") % self.acquirer_id.provider,
+                body=_("The sale order was not confirmed despite response from the acquirer (%s): SO amount is %r but acquirer replied with %r.") % (
+                    self.acquirer_id.provider,
+                    self.sale_order_id.amount_total,
+                    self.amount,
+                )
+            )
             return 'pay_sale_tx_amount'
 
         if self.state == 'authorized' and self.acquirer_id.capture_manually:

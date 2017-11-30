@@ -591,3 +591,10 @@ class HrExpenseSheet(models.Model):
         employee_ids = self.expense_line_ids.mapped('employee_id')
         if len(employee_ids) > 1 or (len(employee_ids) == 1 and employee_ids != self.employee_id):
             raise ValidationError(_('You cannot add expense lines of another employee.'))
+
+    @api.one
+    @api.constrains('expense_line_ids')
+    def _check_payment_mode(self):
+        payment_mode = set(self.expense_line_ids.mapped('payment_mode'))
+        if len(payment_mode) > 1:
+            raise ValidationError(_('You cannot report expenses with different payment modes.'))
