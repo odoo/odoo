@@ -19,8 +19,8 @@ class HrContract(models.Model):
     public_transport_employee_amount = fields.Monetary('Paid by the employee (Monthly)')
     thirteen_month = fields.Monetary(compute='_compute_holidays_advantages', string='13th Month',
         help="Yearly gross amount the employee receives as 13th month bonus.")
-    double_holidays = fields.Monetary(compute='_compute_holidays_advantages', string='Double holidays',
-        help="Yearly gross amount the employee receives as double holidays bonus.")
+    double_holidays = fields.Monetary(compute='_compute_holidays_advantages', string='Holiday Bonus',
+        help="Yearly gross amount the employee receives as holidays bonus.")
     warrant_value_employee = fields.Monetary(compute='_compute_warrants_cost', string="Warrant value for the employee")
 
     # Employer costs fields
@@ -116,7 +116,7 @@ class HrContract(models.Model):
                 contract.transport_employer_cost
             )
 
-    @api.depends('yearly_cost_before_charges', 'social_security_contributions',
+    @api.depends('yearly_cost_before_charges', 'social_security_contributions', 'wage',
         'social_security_contributions', 'double_holidays', 'warrants_cost', 'meal_voucher_paid_by_employer')
     def _compute_final_yearly_costs(self):
         for contract in self:
