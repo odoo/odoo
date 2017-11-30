@@ -496,13 +496,13 @@ class PosOrder(models.Model):
             new_invoice = Invoice.with_context(local_context).sudo().create(inv)
             message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
             new_invoice.message_post(body=message)
-            order.write({'invoice_id': new_invoice.id, 'state': 'invoiced'})
             Invoice += new_invoice
 
             for line in order.lines:
                 self.with_context(local_context)._action_create_invoice_line(line, new_invoice.id)
 
             new_invoice.with_context(local_context).sudo().compute_taxes()
+            order.write({'invoice_id': new_invoice.id, 'state': 'invoiced'})
             order.sudo().write({'state': 'invoiced'})
             # this workflow signal didn't exist on account.invoice -> should it have been 'invoice_open' ? (and now method .action_invoice_open())
             # shouldn't the created invoice be marked as paid, seing the customer paid in the POS?
