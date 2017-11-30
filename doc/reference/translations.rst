@@ -80,7 +80,7 @@ In JavaScript, the wrapping function is generally :js:func:`odoo.web._t`:
 
 .. code-block:: javascript
 
-    title = _t("Bank Accounts")
+    title = _t("Bank Accounts");
 
 .. warning::
 
@@ -135,8 +135,8 @@ Plural
     else:
       msg = _("You have %s invoice") % invoice_count
 
-Lazy
-^^^^
+Read vs Run Time
+^^^^^^^^^^^^^^^^
 
 **Don't** invoke translation lookup at server launch::
 
@@ -151,7 +151,7 @@ Lazy
       def _raise_error(self, code):
         raise UserError(ERROR_MESSAGE[code])
 
-**Don't** invoke translation lookup before loading the translation memory::
+**Don't** invoke translation lookup when the javascript file is read::
 
     # bad, js _t is evaluated too early
     var core = require('web.core');
@@ -170,7 +170,8 @@ Lazy
         missing_error: _('Missing Record'),
       }
 
-**Do** use `_lt` for lazy-loading::
+**Do** in the case where the translation lookup is done when the JS file is
+*read*, use `_lt` instead of `_t` to translate the term when it is *used*::
 
     # good, js _lt is evaluated lazily
     var core = require('web.core');
