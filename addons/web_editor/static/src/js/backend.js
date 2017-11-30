@@ -301,6 +301,8 @@ var FieldTextHtml = AbstractField.extend({
     old_initialize_content: function () {
         this.$el.closest('.modal-body').css('max-height', 'none');
         this.$iframe = this.$el.find('iframe');
+        // deactivate any button to avoid saving a not ready iframe
+        $('.o_cp_buttons, .o_statusbar_buttons').find('button').addClass('o_disabled').attr('disabled', true);
         this.document = null;
         this.$body = $();
         this.$content = $();
@@ -316,6 +318,8 @@ var FieldTextHtml = AbstractField.extend({
         this.render();
         this.add_button();
         this.loaded = true;
+        // reactivate all the buttons when the field's content (the iframe) is loaded
+        $('.o_cp_buttons, .o_statusbar_buttons').find('button').removeClass('o_disabled').attr('disabled', false);
         setTimeout(self.resize, 0);
     },
     on_editor_loaded: function (EditorBar) {
