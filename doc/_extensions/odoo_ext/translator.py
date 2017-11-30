@@ -312,9 +312,9 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
 
     def visit_title(self, node):
         parent = node.parent
-        closing = u'</p>'
+        closing = u'</h3>'
         if isinstance(parent, nodes.Admonition):
-            self.body.append(self.starttag(node, 'p', CLASS='alert-title'))
+            self.body.append(self.starttag(node, 'h3', CLASS='alert-title'))
         elif isinstance(node.parent, nodes.document):
             self.body.append(self.starttag(node, 'h1'))
             closing = u'</h1>'
@@ -633,9 +633,9 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
             classes = env.metadata[ref].get('types', 'tutorials')
             classes += ' toc-single-entry' if not toc else ' toc-section'
             self.body.append(self.starttag(node, 'div', CLASS="row " + classes))
-            self.body.append(u'<h2 class="col-sm-12">')
+            self.body.append(u'<div class="col-sm-12"><h2>')
             self.body.append(title if title else util.nodes.clean_astext(env.titles[ref]))
-            self.body.append(u'</h2>')
+            self.body.append(u'</h2></div>')
 
             entries = [(title, ref)] if not toc else ((e[0], e[1]) for e in toc[0]['entries'])
             for subtitle, subref in entries:

@@ -1,3 +1,5 @@
+:banner: banners/cdn.jpg
+
 ========================================
 Deploying with Content Delivery Networks
 ========================================

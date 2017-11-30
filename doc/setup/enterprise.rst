@@ -1,3 +1,4 @@
+:banner: banners/enterprise.jpg
 .. _setup/enterprise:
 
 ============================
