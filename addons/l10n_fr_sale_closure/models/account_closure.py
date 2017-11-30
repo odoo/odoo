@@ -5,8 +5,6 @@ from openerp.fields import Datetime as FieldDateTime
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
-WRITE_MSG = _('Sale Closings are not meant to be written or deleted under any circumstances.')
-
 
 class AccountClosure(models.Model):
     """
@@ -32,16 +30,13 @@ class AccountClosure(models.Model):
 
     def _query_for_aml(self, company, first_move_sequence_number):
         params = {'company_id': company.id}
-        query = '''WITH aggregate AS 
-            (SELECT m.id AS move_id,
+        query = '''WITH aggregate AS (SELECT m.id AS move_id,
                     aml.balance AS balance,
                     aml.id as line_id
             FROM account_move_line aml
             JOIN account_journal j ON aml.journal_id = j.id
-            JOIN  (SELECT acc.id FROM account_account acc
-                        JOIN account_account_type t ON t.id = acc.user_type_id
-                        WHERE t.type = 'receivable') AS a
-                  ON a.id = aml.account_id
+            JOIN account_account acc ON acc.id = aml.account_id
+            JOIN account_account_type t ON (t.id = acc.user_type_id AND t.type = 'receivable')
             JOIN account_move m ON m.id = aml.move_id
             WHERE j.type = 'sale'
                 AND aml.company_id = %(company_id)s
@@ -51,9 +46,9 @@ class AccountClosure(models.Model):
             params['first_move_sequence_number'] = first_move_sequence_number
             query += '''AND m.l10n_fr_secure_sequence_number > %(first_move_sequence_number)s'''
 
-        query += "ORDER BY m.l10n_fr_secure_sequence_number DESC) "
-        query += '''SELECT array(SELECT move_id FROM aggregate) AS move_ids,
-                           array(SELECT line_id FROM aggregate) AS line_ids,
+        query += " ORDER BY m.l10n_fr_secure_sequence_number DESC) "
+        query += '''SELECT array_agg(move_id) AS move_ids,
+                           array_agg(line_id) AS line_ids,
                            sum(balance) AS balance
                     FROM aggregate'''
 
@@ -138,11 +133,11 @@ class AccountClosure(models.Model):
 
     @api.multi
     def write(self, vals):
-        raise UserError(WRITE_MSG)
+        raise UserError(_('Sale Closings are not meant to be written or deleted under any circumstances.'))
 
     @api.multi
     def unlink(self):
-        raise UserError(WRITE_MSG)
+        raise UserError(_('Sale Closings are not meant to be written or deleted under any circumstances.'))
 
     @api.model
     def automated_closure(self, frequency='daily'):
