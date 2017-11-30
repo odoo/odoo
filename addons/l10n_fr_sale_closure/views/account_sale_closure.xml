@@ -45,13 +45,12 @@
                             <field name="total_interval"/>
                             <field name="total_beginning"/>
                         </group>
+                        <group>
+                            <field name="last_move_id"/>
+                            <field name="last_move_hash"/>
+                        </group>
                     </group>
                 </group>
-                <notebook>
-                    <page string="Journal Entries" groups="account.group_account_user">
-                        <field name="move_ids" groups="account.group_account_user"/>
-                    </page>
-                </notebook>
                 </sheet>
             </form>
         </field>

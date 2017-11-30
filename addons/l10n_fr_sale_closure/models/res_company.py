@@ -13,7 +13,7 @@ class ResCompany(models.Model):
     def create(self, vals):
         company = super(ResCompany, self).create(vals)
         #when creating a new french company, create the securisation sequence as well
-        if self._is_accounting_unalterable():
+        if company._is_accounting_unalterable():
             sequence_fields = ['l10n_fr_closure_sequence_id']
             company._create_secure_sequence(sequence_fields)
         return company

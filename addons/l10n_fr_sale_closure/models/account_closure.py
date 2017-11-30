@@ -10,10 +10,9 @@ WRITE_MSG = _('Sale Closings are not meant to be written or deleted under any ci
 
 class AccountClosure(models.Model):
     """
-    This object olds an interval total and a grand total of the accounts of type receivable for a company,
-    as well as account_moves that are included in the computation
+    This object holds an interval total and a grand total of the accounts of type receivable for a company,
+    as well as the last account_move that has been counted in a previous object
     It takes its earliest brother to infer from when the computation needs to be done
-    and excludes any account_move that has been already taken into account
     in order to compute its own data.
     """
     _name = 'account.sale.closure'
@@ -27,27 +26,16 @@ class AccountClosure(models.Model):
     total_interval = fields.Monetary(string="Period Total", help='Total in receivable accounts during the interval, excluding overlapping periods', readonly=True, required=True)
     total_beginning = fields.Monetary(string="Cumulative Grand Total", help='Total in receivable accounts since the beginnig of times', readonly=True, required=True)
     sequence_number = fields.Integer('Sequence #', readonly=True, required=True)
-    move_ids = fields.Many2many('account.move', string='Journal entries that are included in the computation', readonly=True)
+    last_move_id = fields.Many2one('account.move', string='Last journal entry', help='Last Journal entry included in the grand total', readonly=True)
+    last_move_hash = fields.Char(string='Last journal entry\'s inalteralbility hash', readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', help="The company's currency", readonly=True, related='company_id.currency_id', store=True)
 
-    def _query_closures_for_move_ids(self, frequency, company):
-        query = '''SELECT rel.account_move_id as move_id
-                    FROM account_move_account_sale_closure_rel rel
-                    JOIN account_sale_closure clo on rel.account_sale_closure_id = clo.id
-                    JOIN account_move m on rel.account_move_id = m.id
-                    WHERE clo.frequency = %(frequency)s
-                        AND clo.company_id = %(company_id)s
-                        AND m.company_id = %(company_id)s
-                        AND m.state = 'posted' '''
-
-        self.env.cr.execute(query, {'frequency': frequency, 'company_id': company.id})
-        return [res['move_id'] for res in self.env.cr.dictfetchall()]
-
-    def _query_for_aml(self, company, date_start='', date_stop='', avoid_move_ids=[]):
+    def _query_for_aml(self, company, first_move_sequence_number):
         params = {'company_id': company.id}
-        query = '''WITH aggregate AS (SELECT m.id AS move_id,
-                          aml.balance as balance,
-                          aml.id as line_id
+        query = '''WITH aggregate AS 
+            (SELECT m.id AS move_id,
+                    aml.balance AS balance,
+                    aml.id as line_id
             FROM account_move_line aml
             JOIN account_journal j ON aml.journal_id = j.id
             JOIN  (SELECT acc.id FROM account_account acc
@@ -57,22 +45,13 @@ class AccountClosure(models.Model):
             JOIN account_move m ON m.id = aml.move_id
             WHERE j.type = 'sale'
                 AND aml.company_id = %(company_id)s
-                AND m.state = 'posted'
-                AND m.write_date '''
+                AND m.state = 'posted' '''
 
-        if date_start and date_stop:
-            params['date_stop'] = date_stop
-            params['date_start'] = date_start
-            query += 'BETWEEN %(date_start)s AND %(date_stop)s'
-        elif not date_start:
-            params['date_stop'] = date_stop
-            query += '<= %(date_stop)s'
+        if first_move_sequence_number is not False and first_move_sequence_number is not None:
+            params['first_move_sequence_number'] = first_move_sequence_number
+            query += '''AND m.l10n_fr_secure_sequence_number > %(first_move_sequence_number)s'''
 
-        if avoid_move_ids:
-            params['avoid_move_ids'] = tuple(avoid_move_ids)
-            query += 'AND m.id NOT IN %(avoid_move_ids)s'
-
-        query += ") "
+        query += "ORDER BY m.l10n_fr_secure_sequence_number DESC) "
         query += '''SELECT array(SELECT move_id FROM aggregate) AS move_ids,
                            array(SELECT line_id FROM aggregate) AS line_ids,
                            sum(balance) AS balance
@@ -85,16 +64,15 @@ class AccountClosure(models.Model):
         query_strict_period = '''SELECT sum(balance) as balance FROM account_move_line aml
                                  JOIN account_move m ON m.id = aml.move_id
                                     WHERE aml.id IN %s
-                                    AND m.write_date >= %s'''
+                                    AND m.date >= %s'''
         self.env.cr.execute(query_strict_period, ((tuple(line_ids), date)))
         return self.env.cr.dictfetchall()[0]
 
     def _compute_amounts(self, frequency, company):
         """
         Method used to compute all the business data of the new object.
-        It will search for previous closures of the same frequency to infer the real date from which
-        account move lines should be fetched. We always take the earliest date between the theoretical one and the real one
-        to ensure no move lines are excluded.
+        It will search for previous closures of the same frequency to infer the move from which
+        account move lines should be fetched.
         @param {string} frequency: a valid value of the selection field on the object (daily, monthly, annually)
             frequencies are literal (daily means 24 hours and so on)
         @param {recordset} company: the company for which the closure is done
@@ -105,32 +83,37 @@ class AccountClosure(models.Model):
             ('frequency', '=', frequency),
             ('company_id', '=', company.id)], limit=1, order='sequence_number desc')
 
-        date_query_start = ''
-        previous_date = False
-        if previous_closure and previous_closure.move_ids:
-            previous_date = previous_closure.move_ids.sorted(key=lambda m: m.write_date)[-1].write_date
-            date_query_start = min(previous_date, interval_dates['interval_from'])
+        first_move = self.env['account.move']
+        date_start = interval_dates['interval_from']
+        if previous_closure and previous_closure.last_move_id:
+            first_move = previous_closure.last_move_id
+            date_start = previous_closure.create_date
 
-        moves_already_counted = self._query_closures_for_move_ids(frequency, company)
-        aml_aggregate = self._query_for_aml(company, date_query_start, interval_dates['date_stop'], moves_already_counted)
+        aml_aggregate = self._query_for_aml(company, first_move.l10n_fr_secure_sequence_number)
 
-        date_interval_start = date_query_start or interval_dates['interval_from']
-        aml_interval = {}
-        if date_interval_start and aml_aggregate['line_ids']:
-            aml_interval = self._refine_amls_for_interval(date_interval_start, aml_aggregate['line_ids'])
+        total_beginning = total_interval = aml_aggregate['balance'] or 0
 
-        total_beginning = aml_aggregate['balance'] or 0
-        total_interval = aml_interval.get('balance', 0) or total_beginning
+        if not first_move and aml_aggregate['line_ids']:  # It's the first time we run for this frequency
+            aml_interval = self._refine_amls_for_interval(date_start, aml_aggregate['line_ids'])
+            total_interval = aml_interval.get('balance')
+        else:
+            total_beginning += previous_closure.total_beginning
+
+        # We keep the reference to avoid gaps (like daily object during the weekend)
+        last_move = first_move
+        if aml_aggregate['move_ids']:
+            last_move = last_move.browse(aml_aggregate['move_ids'][0])
 
         return {'total_interval': total_interval,
-                'total_beginning': previous_closure.total_beginning + total_beginning,
-                'move_ids': [(4, move_id, False) for move_id in aml_aggregate['move_ids']],
+                'total_beginning': total_beginning,
+                'last_move_id': last_move.id,
+                'last_move_hash': last_move.l10n_fr_hash,
                 'date_closure_stop': interval_dates['date_stop'],
-                'date_closure_start': previous_date or interval_dates['interval_from']}
+                'date_closure_start': date_start}
 
     def _interval_dates(self, frequency, company):
         """
-        Method used to compute the date from which account move lines should be fetched
+        Method used to compute the theoretical date from which account move lines should be fetched
         @param {string} frequency: a valid value of the selection field on the object (daily, monthly, annually)
             frequencies are literal (daily means 24 hours and so on)
         @param {recordset} company: the company for which the closure is done
