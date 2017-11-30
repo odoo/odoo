@@ -9,6 +9,7 @@ from odoo.osv import expression
 
 from odoo.addons import decimal_precision as dp
 
+from odoo.tools import float_compare
 from odoo.tools import pycompat
 
 
@@ -461,31 +462,36 @@ class ProductProduct(models.Model):
                 'res_id': self.product_tmpl_id.id,
                 'target': 'new'}
 
+    def _check_seller(self, seller, partner_id, quantity, date, uom_id):
+        res = True
+        # Set quantity in UoM of seller
+        quantity_uom_seller = quantity
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        if quantity_uom_seller and uom_id and uom_id != seller.product_uom:
+            quantity_uom_seller = uom_id._compute_quantity(quantity_uom_seller, seller.product_uom)
+
+        if seller.date_start and seller.date_start > date:
+            res = False
+        elif seller.date_end and seller.date_end < date:
+            res = False
+        elif partner_id and seller.name not in [partner_id, partner_id.parent_id]:
+            res = False
+        elif float_compare(quantity_uom_seller, seller.min_qty, precision_digits=precision) == -1:
+            res = False
+        elif seller.product_id and seller.product_id != self:
+            res = False
+        return res
+
     @api.multi
     def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False):
         self.ensure_one()
         if date is None:
-            date = fields.Date.today()
+            date = fields.Date.context_today(self)
         res = self.env['product.supplierinfo']
         for seller in self.seller_ids:
-            # Set quantity in UoM of seller
-            quantity_uom_seller = quantity
-            if quantity_uom_seller and uom_id and uom_id != seller.product_uom:
-                quantity_uom_seller = uom_id._compute_quantity(quantity_uom_seller, seller.product_uom)
-
-            if seller.date_start and seller.date_start > date:
-                continue
-            if seller.date_end and seller.date_end < date:
-                continue
-            if partner_id and seller.name not in [partner_id, partner_id.parent_id]:
-                continue
-            if quantity_uom_seller < seller.min_qty:
-                continue
-            if seller.product_id and seller.product_id != self:
-                continue
-
-            res |= seller
-            break
+            if self._check_seller(seller, partner_id, quantity, date,uom_id):
+                res |= seller
+                break
         return res
 
     @api.multi
