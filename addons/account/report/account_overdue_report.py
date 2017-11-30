@@ -18,14 +18,14 @@ class ReportOverdue(models.AbstractModel):
                 "THEN SUM(l.credit) "
                 "ELSE SUM(l.debit * -1) "
             "END AS credit, "
-            "CASE WHEN l.date_maturity < %s "
+            "CASE WHEN l.date_maturity <= %s "
                 "THEN SUM(l.debit - l.credit) "
                 "ELSE 0 "
             "END AS mat "
             "FROM account_move_line l "
             "JOIN account_account_type at ON (l.user_type_id = at.id) "
             "JOIN account_move m ON (l.move_id = m.id) "
-            "WHERE l.partner_id IN %s AND at.type IN ('receivable', 'payable') AND NOT l.reconciled GROUP BY l.date, l.name, l.ref, l.date_maturity, l.partner_id, at.type, l.blocked, l.amount_currency, l.currency_id, l.move_id, m.name", (((fields.date.today(), ) + (tuple(partner_ids),))))
+            "WHERE l.partner_id IN %s AND at.type IN ('receivable', 'payable') AND l.full_reconcile_id IS NULL GROUP BY l.date, l.name, l.ref, l.date_maturity, l.partner_id, at.type, l.blocked, l.amount_currency, l.currency_id, l.move_id, m.name", (((fields.date.today(), ) + (tuple(partner_ids),))))
         for row in self.env.cr.dictfetchall():
             res[row.pop('partner_id')].append(row)
         return res
@@ -48,7 +48,7 @@ class ReportOverdue(models.AbstractModel):
                 if line['debit'] and line['currency_id']:
                     line['debit'] = line['amount_currency']
                 if line['credit'] and line['currency_id']:
-                    line['credit'] = line['amount_currency']
+                    line['credit'] = line['amount_currency'] * -1
                 if line['mat'] and line['currency_id']:
                     line['mat'] = line['amount_currency']
                 lines_to_display[partner_id][currency].append(line)
