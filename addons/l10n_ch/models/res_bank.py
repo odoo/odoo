@@ -46,7 +46,8 @@ class ResPartnerBank(models.Model):
         for record in self:
             if record.acc_type == 'iban':
                 record.l10n_ch_postal = record._retrieve_l10n_ch_postal(record.sanitized_acc_number)
-            record.l10n_ch_postal = record.sanitized_acc_number
+            else:
+                record.l10n_ch_postal = record.sanitized_acc_number
 
     def _retrieve_l10n_ch_postal(self, iban):
         """ Reads a swiss postal account number from a an IBAN and returns it as

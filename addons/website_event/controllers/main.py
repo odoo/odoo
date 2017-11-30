@@ -153,7 +153,7 @@ class WebsiteEventController(http.Controller):
             # page not found
             values['path'] = re.sub(r"^website_event\.", '', page)
             values['from_template'] = 'website_event.default_page'  # .strip('website_event.')
-            page = 'website.page_404'
+            page = 'website.%s' % (request.website.is_publisher() and 'page_404' or '404')
 
         return request.render(page, values)
 

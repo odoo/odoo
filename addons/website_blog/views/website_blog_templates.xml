@@ -102,6 +102,7 @@
         <t t-set="head">
             <link t-att-href="'/blog/%s/feed' % (blog.id)" type="application/atom+xml" rel="alternate" title="Atom Feed"/>
         </t>
+        <div class="oe_structure"/>
         <div class="container">
             <t t-call="website.pager" >
                 <t t-set="classname">pull-right</t>

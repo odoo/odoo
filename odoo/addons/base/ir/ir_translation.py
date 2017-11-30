@@ -680,6 +680,16 @@ class IrTranslation(models.Model):
                 action['context'] = {
                     'search_default_name': "%s,%s" % (fld.model_name, fld.name),
                 }
+            else:
+                rec = record
+                try:
+                    while fld.related:
+                        rec, fld = fld.traverse_related(rec)
+                    if rec:
+                        action['context'] = {'search_default_name': "%s,%s" % (fld.model_name, fld.name),}
+                except AccessError:
+                    pass
+
         return action
 
     @api.model
