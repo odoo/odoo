@@ -164,20 +164,22 @@ class pos_order(models.Model):
         start_order_info = build_order_info(orders_sorted_date[0])
         end_order_info = build_order_info(orders_sorted_date[-1])
 
+        report_dict = {'start_order_name': start_order_info[2],
+                       'start_order_ref': start_order_info[3],
+                       'start_order_date': start_order_info[0],
+                       'end_order_name': end_order_info[2],
+                       'end_order_ref': end_order_info[3],
+                       'end_order_date': end_order_info[0]}
+
         # Raise on success
         raise UserError(_('''Successful test !
 
                          The point of sale orders are guaranteed to be in their original and inalterable state
-                         From: %s %s recorded on %s
-                         To: %s %s recorded on %s
+                         From: %(start_order_name)s %(start_order_ref)s recorded on %(start_order_date)s
+                         To: %(end_order_name)s %(end_order_ref)s recorded on %(end_order_date)s
 
                          For this report to be legally meaningful, please download your certification from your customer account on Odoo.com (Only for Odoo Enterprise users).'''
-                         ) % (start_order_info[2],
-                              start_order_info[3],
-                              start_order_info[0],
-                              end_order_info[2],
-                              end_order_info[3],
-                              end_order_info[0]))
+                         ) % report_dict)
 
 
 class PosOrderLine(models.Model):

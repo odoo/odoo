@@ -127,18 +127,20 @@ class AccountMove(models.Model):
             previous_hash = move.l10n_fr_hash
         end_move_info = build_move_info(move)
 
+        report_dict = {'start_move_name': start_move_info[0],
+                       'start_move_ref': start_move_info[1],
+                       'end_move_name': end_move_info[0],
+                       'end_move_ref': end_move_info[1]}
+
         # Raise on success
         raise UserError(_('''Successful test !
 
                          The journal entries are guaranteed to be in their original and inalterable state
-                         From: %s %s
-                         To: %s %s
+                         From: %(start_move_name)s %(start_move_ref)s
+                         To: %(end_move_name)s %(end_move_ref)s
 
                          For this report to be legally meaningful, please download your certification from your customer account on Odoo.com (Only for Odoo Enterprise users).'''
-                         ) % (start_move_info[0],
-                              start_move_info[1],
-                              end_move_info[0],
-                              end_move_info[1],))
+                         ) % report_dict)
 
 
 class AccountMoveLine(models.Model):
