@@ -53,7 +53,7 @@ class AccountInvoiceRefund(models.TransientModel):
                 if inv.state in ['draft', 'cancel']:
                     raise UserError(_('Cannot create credit note for the draft/cancelled invoice.'))
                 if inv.reconciled and mode in ('cancel', 'modify'):
-                    raise UserError(_('Cannot create a credit note for the invoice which is already reconciled, invoice should be unreconciled first, then only you can add credit note for this invoice.'))
+                    raise UserError(_('The invoice is already paid or reconciled with a credit note so you cannot reconcile it with a new credit note. You should rather unreconcile the current invoice or create a draft credit note.'))
 
                 date = form.date or False
                 description = form.description or inv.name

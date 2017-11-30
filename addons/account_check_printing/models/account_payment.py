@@ -13,7 +13,7 @@ class AccountRegisterPayments(models.TransientModel):
     check_amount_in_words = fields.Char(string="Amount in Words")
     check_manual_sequencing = fields.Boolean(related='journal_id.check_manual_sequencing', readonly=1)
     # Note: a check_number == 0 means that it will be attributed when the check is printed
-    check_number = fields.Integer(string="Check Number", readonly=True, copy=False, default=0,
+    check_number = fields.Char(string="Check Number", readonly=True, copy=False, default=0,
         help="Number of the check corresponding to this payment. If your pre-printed check are not already numbered, "
              "you can manage the numbering in the journal configuration page.")
 
@@ -44,7 +44,7 @@ class AccountPayment(models.Model):
 
     check_amount_in_words = fields.Char(string="Amount in Words")
     check_manual_sequencing = fields.Boolean(related='journal_id.check_manual_sequencing', readonly=1)
-    check_number = fields.Integer(string="Check Number", readonly=True, copy=False,
+    check_number = fields.Char(string="Check Number", readonly=True, copy=False,
         help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
              "or if the current numbering is wrong, you can change it in the journal configuration page.")
 
@@ -88,8 +88,9 @@ class AccountPayment(models.Model):
             # so payments are attributed the number of the check the'll be printed on.
             last_printed_check = self.search([
                 ('journal_id', '=', self[0].journal_id.id),
-                ('check_number', '!=', 0)], order="check_number desc", limit=1)
-            next_check_number = last_printed_check and last_printed_check.check_number + 1 or 1
+                ('check_number', '!=', "0")], order="check_number desc", limit=1)
+            next_check_number = last_printed_check and int(last_printed_check.check_number) + 1 or 1
+            
             return {
                 'name': _('Print Pre-numbered Checks'),
                 'type': 'ir.actions.act_window',

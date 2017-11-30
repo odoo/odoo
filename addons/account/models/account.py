@@ -414,7 +414,7 @@ class AccountJournal(models.Model):
     code = fields.Char(string='Short Code', size=5, required=True, help="The journal entries of this journal will be named using this prefix.")
     active = fields.Boolean(default=True, help="Set active to false to hide the Journal without removing it.")
     type = fields.Selection([
-            ('sale', 'Sale'),
+            ('sale', 'Sales'),
             ('purchase', 'Purchase'),
             ('cash', 'Cash'),
             ('bank', 'Bank'),
