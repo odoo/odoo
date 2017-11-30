@@ -2,8 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import fields, models, api
-from openerp.exceptions import UserError
-from openerp.tools.translate import _
 
 UNALTERABLE_COUNTRIES = ['FR', 'MF', 'MQ', 'NC', 'PF', 'RE', 'GF', 'GP', 'TF']
 
