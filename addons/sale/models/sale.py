@@ -1186,9 +1186,12 @@ class SaleOrderLine(models.Model):
             domain,
             ['so_line', 'unit_amount', 'product_uom_id'], ['product_uom_id', 'so_line'], lazy=False
         )
-
-        # convert uom and sum all unit_amount of analytic lines to get the delivered qty of SO lines
+        # Force recompute for the "unlink last line" case: if remove the last AAL link to the SO, the read_group
+        # will give no value for the qty of the SOL, so we need to reset it to 0.0
         value_to_write = {}
+        if self._context.get('sale_analytic_force_recompute'):
+            value_to_write = dict.fromkeys([sol for sol in self], 0.0)
+        # convert uom and sum all unit_amount of analytic lines to get the delivered qty of SO lines
         for item in data:
             if not item['product_uom_id']:
                 continue
