@@ -12,7 +12,7 @@ class AccountChartTemplate(models.Model):
 
     @api.model
     def generate_journals(self, acc_template_ref, company, journals_dict=None):
-        journal_to_add = [{'name': _('Stock Journal'), 'type': 'general', 'code': 'STJ', 'favorite': False, 'sequence': 8}]
+        journal_to_add = [{'name': _('Inventory Valuation'), 'type': 'general', 'code': 'STJ', 'favorite': False, 'sequence': 8}]
         return super(AccountChartTemplate, self).generate_journals(acc_template_ref=acc_template_ref, company=company, journals_dict=journal_to_add)
 
     @api.multi
