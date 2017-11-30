@@ -116,7 +116,7 @@ class pos_order(models.Model):
     def write(self, vals):
         has_been_posted = False
         for order in self:
-            if order.company_id._is_accounting_unalterable(raise_on_nocountry=True):
+            if order.company_id._is_accounting_unalterable():
                 # write the hash and the secure_sequence_number when posting or invoicing an pos.order
                 if vals.get('state') in ['paid', 'done', 'invoiced']:
                     has_been_posted = True
@@ -189,6 +189,6 @@ class PosOrderLine(models.Model):
     def write(self, vals):
         # restrict the operation in case we are trying to write a forbidden field
         if set(vals).intersection(LINE_FIELDS):
-            if any(l.company_id._is_accounting_unalterable(raise_on_nocountry=True) and l.order_id.state in ['done', 'invoiced'] for l in self):
+            if any(l.company_id._is_accounting_unalterable() and l.order_id.state in ['done', 'invoiced'] for l in self):
                 raise UserError(ERR_MSG % (_('point of sale order line'), ', '.join(LINE_FIELDS)))
         return super(PosOrderLine, self).write(vals)
