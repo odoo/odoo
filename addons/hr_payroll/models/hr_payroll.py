@@ -541,7 +541,8 @@ class HrPayslip(models.Model):
                     result_dict[key] = {
                         'salary_rule_id': rule.id,
                         'contract_id': contract.id,
-                        'name': rule.name,
+                        #La siguiente línea fue modificada por TRESCLOUD
+                        'name': self.get_name_rule(rule),
                         'code': rule.code,
                         'category_id': rule.category_id.id,
                         #La siguiente línea fue modificada por TRESCLOUD
@@ -568,6 +569,14 @@ class HrPayslip(models.Model):
                     blacklist += [id for id, seq in rule._recursive_search_of_rules()]
 
         return [value for code, value in result_dict.items()]
+    
+    #El siguiente método fue agregado por TRESCLOUD
+    @api.model
+    def get_name_rule(self, rule):
+        '''
+        Este metodo devuelve el nombre de la regla salarial, su logica va ser modificada en ecua_hr
+        '''
+        return rule.name
     
     #El siguiente método fue agregado por TRESCLOUD
     @api.model
