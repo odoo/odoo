@@ -4,6 +4,7 @@
 import time
 
 from odoo.tests.common import TransactionCase, Form
+from odoo.tools import mute_logger
 
 
 class TestSaleMrpProcurement(TransactionCase):
@@ -13,7 +14,10 @@ class TestSaleMrpProcurement(TransactionCase):
         # In order to test the sale_mrp module in OpenERP, I start by creating a new product 'Slider Mobile'
         # I define product category Mobile Products Sellable.
 
-        pc = Form(self.env['product.category'])
+        with mute_logger('odoo.tests.common.onchange'):
+            # Suppress warning on "Changing your cost method" when creating a
+            # product category
+            pc = Form(self.env['product.category'])
         pc.name = 'Mobile Products Sellable'
         product_category_allproductssellable0 = pc.save()
 
@@ -34,7 +38,6 @@ class TestSaleMrpProcurement(TransactionCase):
         product.route_ids.clear()
         product.route_ids.add(warehouse0.manufacture_pull_id.route_id)
         product.route_ids.add(warehouse0.mto_pull_id.route_id)
-
         product_template_slidermobile0 = product.save()
 
         with Form(self.env['mrp.bom']) as bom:

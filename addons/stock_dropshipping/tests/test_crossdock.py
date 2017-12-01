@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common, Form
+from odoo.tools import mute_logger
 
 
 class TestCrossdock(common.TransactionCase):
@@ -23,28 +24,29 @@ class TestCrossdock(common.TransactionCase):
         self.assertTrue(wh_pps.crossdock_route_id.active,
             "Crossdock route should be active when reception_steps is not in 'single_step'")
 
-        # Create new product without any routes
-        cross_shop_product = self.env['product.product'].create({
-            'name': "PCE",
-            'type': 'product',
-            'categ_id': self.env.ref('product.product_category_1').id,
-            'list_price': 100.0,
-            'standard_price': 70.0,
-            'seller_ids': [(0, 0, {
-                'delay': 1,
-                'name': supplier_crossdock.id,
-                'min_qty': 2.0
-            })]
-        })
+        p_f = Form(self.env['product.template'])
+        p_f.name = 'PCE'
+        p_f.type = 'product'
+        p_f.categ_id = self.env.ref('product.product_category_1')
+        p_f.list_price = 100.0
+        p_f.standard_price = 70.0
+        with p_f.seller_ids.new() as seller:
+            seller.name = supplier_crossdock
+        p_f.route_ids.add(wh_pps.crossdock_route_id)
+        cross_shop_product = p_f.save()
 
         # Create a sales order with a line of 100 PCE incoming shipment with route_id crossdock shipping
         so_form = Form(self.env['sale.order'])
         so_form.partner_id = self.env.ref('base.res_partner_4')
         so_form.warehouse_id = wh_pps
-        with so_form.order_line.new() as line:
-            line.product_id = cross_shop_product
-            line.product_uom_qty = 100.0
-        sale_order_crossdock = so_form.save()
+
+        with mute_logger('odoo.tests.common.onchange'):
+            # otherwise complains that there's not enough inventory and
+            # apparently that's normal according to @jco and @sle
+            with so_form.order_line.new() as line:
+                line.product_id = cross_shop_product.product_variant_ids
+                line.product_uom_qty = 100.0
+            sale_order_crossdock = so_form.save()
 
         # Confirm sales order
         sale_order_crossdock.action_confirm()
@@ -53,7 +55,9 @@ class TestCrossdock(common.TransactionCase):
         self.env['procurement.group'].run_scheduler()
 
         # Check a quotation was created for the created supplier and confirm it
-        self.env['purchase.order'].search([
+        po = self.env['purchase.order'].search([
             ('partner_id', '=', supplier_crossdock.id),
             ('state', '=', 'draft')
-        ]).button_confirm()
+        ])
+        self.assertTrue(po, "an RFQ should have been created by the scheduler")
+        po.button_confirm()
