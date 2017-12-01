@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'France - Certification CGI 286 I-3 bis - Sale Closures',
+    'name': 'France - Certification CGI 286 I-3 bis - Sale Closings',
     'version': '1.0',
     'category': 'Localization',
     'description': """
