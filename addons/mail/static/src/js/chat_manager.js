@@ -119,6 +119,14 @@ function add_message (data, options) {
         }
     } else if (options.domain && options.domain !== []) {
         add_to_cache(msg, options.domain);
+    } else if (data.moderation_status === 'accepted') {
+        msg.channel_ids = data.channel_ids
+        if (msg.is_moderator) {
+            moderation_counter --;
+            remove_message_from_channel("channel_moderation", msg);
+            chat_manager.bus.trigger('update_moderation_counter');
+        }
+        chat_manager.bus.trigger('update_message', msg);
     }
     return msg;
 }
@@ -149,7 +157,7 @@ function make_message (data) {
         url: session.url("/mail/view?message_id=" + data.id),
         module_icon:data.module_icon,
     };
-    
+
     _.each(_.keys(emoji_substitutions), function (key) {
         var escaped_key = String(key).replace(/([.*+?=^!:${}()|[\]\/\\])/g, '\\$1');
         var regexp = new RegExp("(?:^|\\s|<[a-z]*>)(" + escaped_key + ")(?=\\s|$|</[a-z]*>)", "g");
@@ -184,9 +192,9 @@ function make_message (data) {
     if (_.contains(data.starred_partner_ids, session.partner_id)) {
         msg.is_starred = true;
     }
-    if (data.moderation_status == 'pending_moderation') {
+    if (data.moderation_status === 'pending_moderation') {
         msg.needs_moderation = true;
-        msg.channel_ids = msg.channel_ids.concat([msg.res_id]);
+        msg.channel_ids.push(msg.res_id);
     }
     if (msg.model === 'mail.channel') {
         var real_channels = _.without(msg.channel_ids, 'channel_inbox', 'channel_starred', 'channel_moderation');
@@ -390,15 +398,14 @@ function remove_message_from_channel (channel_id, message) {
     });
 }
 
-function remove_message_from_cache(message) {
-    _.each(message.channel_ids, function(channel_id) {
-        var channel = chat_manager.get_channel(channel_id);
-        if (channel) {
-            var channel_cache = get_channel_cache(channel);
-            channel_cache.messages = _.without(channel_cache.messages, message);
-        }
-    });
-}
+// function remove_message_from_cache(message) {
+//     _.each(message.channel_ids, function(channel_id) {
+//         var channel = _.findWhere(channels, { id: channel_id });
+//         if (channel) {
+//             channel.cache.messages = _.without(channel.cache.messages, message);
+//         }
+//     });
+// }
 
 function update_channel_unread_counter (channel, counter) {
     if (channel.unread_counter > 0 && counter === 0) {
@@ -502,7 +509,11 @@ function on_partner_notification (data) {
     } else if (data.type === 'mark_as_unread') {
         on_mark_as_unread_notification(data);
     } else if (data.type === 'moderation') {
-        on_moderator_notification(data.message);
+        on_moderator_notification(data);
+    } else if (data.type === 'acceptance') {
+        on_acceptance_notification(data);
+    } else if (data.type === 'deletion') {
+        on_deletion_notification(data);
     } else if (data.info === 'channel_seen') {
         on_channel_seen_notification(data);
     } else if (data.info === 'transient_message') {
@@ -535,22 +546,35 @@ function on_toggle_star_notification (data) {
     chat_manager.bus.trigger('update_starred', starred_counter);
 }
 
-function on_moderator_notification(message) {
+function on_moderator_notification(data) {
     moderation_counter ++;
-    add_message(message, {channel_id: 'channel_moderation'});
+    add_message(data.message, {channel_id: 'channel_moderation'});
     chat_manager.bus.trigger('update_moderation_counter');
 }
 
-function on_moderation(message_ids, decision) {
-    moderation_counter = moderation_counter - message_ids.length;
-    _.each(message_ids, function(msg_id) {
-        var message = chat_manager.get_message(msg_id);
+function on_acceptance_notification(data) {
+    var message = _.findWhere(messages, { id: data.message_id });
+    if (message) {
         message.needs_moderation = false;
-        remove_message_from_channel("channel_moderation", message);
-        if (_.contains(['reject', 'discard', 'ban'], decision))
-            remove_message_from_cache(message);
+        message.channel_ids = data.channel_ids;
         chat_manager.bus.trigger('update_message', message);
-    });
+    }
+}
+
+function on_deletion_notification(data) {
+    _.each(data.message_ids, function (msg_id) {
+        var message = _.findWhere(messages, { id: msg_id });
+        if (message) {
+            if (message.is_moderator)
+            {
+                remove_message_from_channel("channel_moderation", message);
+                moderation_counter --;
+            }
+            message.needs_moderation = false //line not necessary in principle
+            remove_message_from_channel(message.res_id, message);
+            chat_manager.bus.trigger('update_message',message);
+            }
+        });
     chat_manager.bus.trigger('update_moderation_counter');
 }
 
@@ -976,10 +1000,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
                 model: 'mail.message',
                 method: 'moderate',
                 args: [message_ids, decision]
-            })
-            .then(function() {
-                on_moderation(message_ids, decision);
-            })
+            });
         }
     },
     moderate_selected_messages: function(message_ids, decision) {

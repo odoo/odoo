@@ -327,7 +327,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             squash_close_messages: this.channel.type !== 'static' && !this.channel.mass_mailing,
             display_empty_channel: !messages.length && !this.domain.length,
             display_no_match: !messages.length && this.domain.length,
-            display_subject: this.channel.mass_mailing || this.channel.id === "channel_inbox",
+            display_subject: this.channel.mass_mailing || this.channel.id === "channel_inbox" || this.channel.id === "channel_moderation",
             display_email_icon: false,
             display_reply_icon: true,
         };
@@ -876,7 +876,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                     self._updateButtonStatus(messages.length === 0, type);
                 });
             });
-        } else if (_.contains(message.channel_ids, current_channel_id)) {
+        } else if (_.contains(message.channel_ids, current_channel_id) || (message.res_id === current_channel_id)) {
             this._fetchAndRenderThread();
         }
     },

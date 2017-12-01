@@ -718,18 +718,6 @@ class Message(models.Model):
             if record.model and record.res_id:
                 self.env[record.model].invalidate_cache(ids=[record.res_id])
 
-    def _moderator_message_notifications(self, message):
-        """ Generate the bus notifications for the given message
-            :param message : the mail.message to sent
-        """
-        message_values = message.message_format()[0]
-        notifications = []
-        for moderator in self.env['mail.channel'].browse(message.res_id).mapped('moderator_ids'):
-            notification = {'type': 'moderation', 'message': message_values}
-            notifications.append([(self._cr.dbname, 'res.partner', moderator.partner_id.id), notification])
-        self.env['bus.bus'].sendmany(notifications)
-
-
     @api.model
     def create(self, values):
         # coming from mail.js that does not have pid in its values
@@ -892,17 +880,65 @@ class Message(models.Model):
         if decision == 'accept':
             self.accept_message()
         elif decision in ['reject', 'discard']:
-            self.unlink()
+            self.notify_deletion_and_unlink()
         else:
             channel = self.env['mail.channel'].browse(self.res_id)
             channel._add_to_moderated_email_list(self.email_from, decision)
-            self.accept_message() if decision == 'allow' else self.unlink()
+            self.accept_message() if decision == 'allow' else self.notify_deletion_and_unlink()
         return True
 
     def accept_message(self):
         self.write({'moderation_status': 'accepted', 'moderator_id': self.env.uid})
+        notifications = []
         for message in self:
             message._notify()
+            notifications.append(
+                    [
+                        (self._cr.dbname, 'res.partner', message.author_id.id),
+                        {'type': 'acceptance', 'message_id': message.id, 'channel_ids': message.channel_ids.ids}
+                    ]
+                )
+        self.env['bus.bus'].sendmany(notifications)
+
+
+    def notify_deletion_and_unlink(self):
+        """ Delete messages and notify deletion to all moderators and authors. If messages exist on web client side,
+        they will be effectively removed whenever it is appropriate.
+        """
+        channel_ids = self.mapped('res_id')
+        moderators = self.env['mail.channel'].browse(channel_ids).mapped('moderator_ids')
+        authors = self.mapped('author_id')
+        moderators_notifications = [
+            [
+                (self._cr.dbname, 'res.partner', moderator.partner_id.id),
+                {
+                    'type': 'deletion',
+                    'message_ids': [
+                        message.id
+                        for message in self
+                        if message.res_id in moderator.moderated_channel_ids.ids
+                        ]
+                }
+            ]
+            for moderator in moderators
+        ]
+        authors_notifications = [
+            [
+                (self._cr.dbname, 'res.partner', author.id),
+                {
+                    'type': 'deletion',
+                    'message_ids': [
+                        message.id
+                        for message in self
+                        if message.author_id == author
+                        ]
+                }
+            ]
+            for author in authors
+        ]
+        notifications = moderators_notifications + authors_notifications
+        self.env['bus.bus'].sendmany(notifications)
+        self.unlink()
 
     @api.model
     def notify_moderator(self):
@@ -917,3 +953,16 @@ class Message(models.Model):
     @api.model
     def create_notification_email(self, vals):
         self.env['mail.mail'].create(vals).send()
+
+    def _moderator_message_notifications(self, message):
+        """ Generate the bus notifications for the given message
+            :param message : the mail.message to sent
+        """
+        notifications = [
+            [
+                (self._cr.dbname, 'res.partner', moderator.partner_id.id),
+                {'type': 'moderation', 'message': message.message_format()[0]}
+            ]
+            for moderator in self.env['mail.channel'].browse(message.res_id).mapped('moderator_ids')
+        ]
+        self.env['bus.bus'].sendmany(notifications)
