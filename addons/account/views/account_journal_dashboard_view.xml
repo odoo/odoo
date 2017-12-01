@@ -221,7 +221,7 @@
                         <!-- On the left, display :
                             - A button corresponding to the bank_statements_source, if it wasn't configured, a button for each of them
                             - If there are statements to reconcile, a link to reconcile them -->
-                        <div class="col-xs-6 o_kanban_primary_left">
+                        <div class="col-xs-5 o_kanban_primary_left">
                             <t t-if="dashboard.number_to_reconcile > 0">
                                 <button type="object" name="action_open_reconcile" class="btn btn-primary btn-sm"> Reconcile <t t-esc="dashboard.number_to_reconcile"/> Items</button>
                             </t>
@@ -243,27 +243,27 @@
                             </t>
                         </div>
                         <!-- On the right, show other common informations/actions -->
-                        <div class="col-xs-6 o_kanban_primary_right">
+                        <div class="col-xs-7 o_kanban_primary_right">
                             <div class="row">
-                                <div class="col-xs-6">
+                                <div class="col-xs-7">
                                     <span title="Balance in Odoo">Balance in GL</span>
                                 </div>
-                                <div class="col-xs-6 text-right">
+                                <div class="col-xs-5 text-right">
                                     <span><t t-esc="dashboard.account_balance"/></span>
                                 </div>
                             </div>
                             <div class="row" name="latest_statement" t-if="dashboard.last_balance != dashboard.account_balance">
-                                <div class="col-xs-6">
+                                <div class="col-xs-7">
                                     <span title="Latest Statement">Latest Statement</span>
                                 </div>
-                                <div class="col-xs-6 text-right">
+                                <div class="col-xs-5 text-right">
                                     <span><t t-esc="dashboard.last_balance"/></span>
                                 </div>
                             </div>
                         </div>
                     </t>
                     <t t-name="JournalBodySalePurchase" id="account.JournalBodySalePurchase">
-                        <div class="col-xs-6 o_kanban_primary_left">
+                        <div class="col-xs-5 o_kanban_primary_left">
                             <t t-if="journal_type == 'sale'">
                                 <button type="object" name="action_create_new" class="btn btn-primary btn-sm o_invoice_new">
                                     <span>New Invoice</span>
@@ -275,31 +275,31 @@
                                 </button>
                             </t>
                         </div>
-                        <div class="col-xs-6 o_kanban_primary_right">
+                        <div class="col-xs-7 o_kanban_primary_right">
                             <div class="row">
-                                <div class="col-xs-6">
+                                <div class="col-xs-7">
                                     <a type="object" name="open_action" context="{'search_default_draft': '1'}">
-                                        <span t-if="journal_type == 'sale'" title="Invoices to validate"><t t-esc="dashboard.number_draft"/> Invoices to validate</span>
-                                        <span t-if="journal_type == 'purchase'" title="Draft bills"><t t-esc="dashboard.number_draft"/> Draft bills</span>
+                                        <span t-if="journal_type == 'sale'" title="Invoices to Validate"><t t-esc="dashboard.number_draft"/> Invoices to Validate</span>
+                                        <span t-if="journal_type == 'purchase'" title="Bills to Validate"><t t-esc="dashboard.number_draft"/> Bills to Validate</span>
                                     </a>
                                 </div>
-                                <div class="col-xs-6 text-right">
+                                <div class="col-xs-5 text-right">
                                     <span><t t-esc="dashboard.sum_draft"/></span>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-xs-6">
+                                <div class="col-xs-7">
                                     <a type="object" t-if="journal_type == 'sale'" name="open_action"
                                     context="{'search_default_unpaid':1}" id="account_dashboard_sale_pay_link">
-                                        <t t-esc="dashboard.number_waiting"/> Awaiting payments
+                                        <t t-esc="dashboard.number_waiting"/> Payments to Receive
                                     </a>
 
                                     <a type="object" t-if="journal_type == 'purchase'" name="open_action"
                                     context="{'search_default_unpaid':1}" id="account_dashboard_purchase_pay_link">
-                                        <t t-esc="dashboard.number_waiting"/> Payments to do
+                                        <t t-esc="dashboard.number_waiting"/> Payments to Do
                                     </a>
                                 </div>
-                                <div class="col-xs-6 text-right">
+                                <div class="col-xs-5 text-right">
                                     <span><t t-esc="dashboard.sum_waiting"/></span>
                                 </div>
                             </div>
