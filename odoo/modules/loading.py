@@ -430,3 +430,24 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             _logger.log(25, "All post-tested in %.2fs, %s queries", time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
     finally:
         cr.close()
+
+
+def reset_modules_state(db_name):
+    """
+    Resets modules flagged as "to x" to their original state
+    """
+    # Warning, this function was introduced in response to commit 763d714
+    # which locks cron jobs for dbs which have modules marked as 'to %'.
+    # The goal of this function is to be called ONLY when module
+    # installation/upgrade/uninstallation fails, which is the only known case
+    # for which modules can stay marked as 'to %' for an indefinite amount
+    # of time
+    db = odoo.sql_db.db_connect(db_name)
+    with db.cursor() as cr:
+        cr.execute(
+            "UPDATE ir_module_module SET state='installed' WHERE state IN ('to remove', 'to upgrade')"
+        )
+        cr.execute(
+            "UPDATE ir_module_module SET state='uninstalled' WHERE state='to install'"
+        )
+        _logger.warning("Transient module states were reset")
