@@ -429,7 +429,7 @@ var RTE = Widget.extend({
     saveElement: function ($el, context) {
         // remove multi edition
         if ($el.data('oe-model')) {
-            var key =  $el.data('oe-model')+":"+$el.data('oe-id')+":"+$el.data('oe-field')+":"+$el.data('oe-type')+":"+$el.data('oe-expression');
+            var key =  $el.data('oe-model')+":"+$el.data('oe-id')+":"+$el.data('oe-field')+":"+$el.data('oe-type')+":"+$el.data('oe-expression')+":"+$el.data('oe-xpath');
             if (this.__saved[key]) return $.when();
             this.__saved[key] = true;
         }
@@ -578,6 +578,28 @@ var RTE = Widget.extend({
         _.defer(function () {
             self.historyRecordUndo($target, 'activate',  true);
         });
+
+        // To Fix Google Chrome Tripleclick Issue, which selects the ending
+        // whitespace characters (so Tripleclicking then typing text will remove
+        // the whole paragraph instead of its content).
+        // http://stackoverflow.com/questions/38467334/why-does-google-chrome-always-add-space-after-selected-text
+        if ($.browser.chrome === true && event.originalEvent.detail === 3) {
+            var currentSelection = range.create();
+            if (currentSelection.sc.parentNode === currentSelection.ec) {
+                _selectSC(currentSelection);
+            } else if (currentSelection.eo === 0) {
+                var $hasNext = $(currentSelection.sc).parent();
+                while (!$hasNext.next().length && !$hasNext.is('body')) {
+                    $hasNext = $hasNext.parent();
+                }
+                if ($hasNext.next()[0] === currentSelection.ec) {
+                    _selectSC(currentSelection);
+                }
+            }
+        }
+        function _selectSC(selection) {
+            range.create(selection.sc, selection.so, selection.sc, selection.sc.length).select();
+        }
     },
 
     editable: function () {

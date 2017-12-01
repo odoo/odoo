@@ -369,8 +369,8 @@ class WebsiteSale(http.Controller):
     def cart_update(self, product_id, add_qty=1, set_qty=0, **kw):
         request.website.sale_get_order(force_create=1)._cart_update(
             product_id=int(product_id),
-            add_qty=float(add_qty),
-            set_qty=float(set_qty),
+            add_qty=add_qty,
+            set_qty=set_qty,
             attributes=self._filter_attributes(**kw),
         )
         return request.redirect("/shop/cart")
@@ -384,7 +384,6 @@ class WebsiteSale(http.Controller):
         if order.state != 'draft':
             request.website.sale_reset()
             return {}
-
         value = order._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty)
         if not order.cart_quantity:
             request.website.sale_reset()
@@ -483,6 +482,8 @@ class WebsiteSale(http.Controller):
         # vat validation
         Partner = request.env['res.partner']
         if data.get("vat") and hasattr(Partner, "check_vat"):
+            if data.get("country_id"):
+                data["vat"] = Partner.fix_eu_vat_number(data.get("country_id"), data.get("vat"))
             check_func = request.website.company_id.vat_check_vies and Partner.vies_vat_check or Partner.simple_vat_check
             vat_country, vat_number = Partner._split_vat(data.get("vat"))
             if not check_func(vat_country, vat_number):

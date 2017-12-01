@@ -87,7 +87,7 @@
                     <strong>Shipping address:</strong>
                     <div t-field="o.partner_shipping_id"
                         t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                    <span t-if="o.partner_id.vat">TIN: <span t-field="o.partner_id.vat"/></span>
+                    <span t-if="o.partner_shipping_id.vat">TIN: <span t-field="o.partner_shipping_id.vat"/></span>
                 </div>
             </div>
         </xpath>

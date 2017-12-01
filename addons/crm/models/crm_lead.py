@@ -283,6 +283,14 @@ class Lead(FormatAddress, models.Model):
     # ----------------------------------------
 
     @api.model
+    def name_create(self, name):
+        res = super(Lead, self).name_create(name)
+        
+        # update the probability of the lead if the stage is set to update it automatically
+        self.browse(res[0])._onchange_stage_id()
+        return res
+
+    @api.model
     def create(self, vals):
         # set up context used to find the lead's sales team which is needed
         # to correctly set the default stage_id
@@ -328,6 +336,9 @@ class Lead(FormatAddress, models.Model):
         # Set date_open to today if it is an opp
         default = default or {}
         default['date_open'] = fields.Datetime.now() if self.type == 'opportunity' else False
+        # Do not assign to an archived user
+        if not self.user_id.active:
+            default['user_id'] = False
         return super(Lead, self.with_context(context)).copy(default=default)
 
     @api.model

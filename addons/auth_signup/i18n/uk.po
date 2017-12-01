@@ -7,13 +7,14 @@
 # ТАрас <tratatuta@i.ua>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Zoriana Zaiats <sorenabell@quintagroup.com>, 2016
+# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:43+0000\n"
 "PO-Revision-Date: 2016-10-10 08:43+0000\n"
-"Last-Translator: Zoriana Zaiats <sorenabell@quintagroup.com>, 2016\n"
+"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,6 +52,32 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <p>Шановний ${ім'я.об'єкту},</p>\n"
+"    <p>Пароль був скинутий для облікового запису Odoo, на цю електронну адресу.</p>\n"
+"   Ви можете змінити свій пароль, перейшовши за цим посиланням, який діятиме протягом 24 годин:</p>\n"
+"    <div style=\"text-align: center; margin-top: 16px;\">\n"
+"        <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Змінити пароль</a>\n"
+"    </div>\n"
+"    <p>Якщо ви цього не очікували, можна спокійно ігнорувати цей електронний лист.</p>\n"
+"    <p>З найкращими побажаннями,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
+"    ${підпис.користувача | безпечний}\n"
+"    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
+"        <strong>Відправлено ${компанія.користувача_id.назва} користувачем <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
+"    </p>\n"
+"</div>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -85,6 +112,35 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"<p>Шановний ${ім'я.об'єкту},</p>\n"
+"    <p>\n"
+"        Вам було запропоновано підключитися до \"${об'єкт.компанія_id.назва}\" щоб отримати доступ до ваших документів у Odoo.\n"
+"    </p>\n"
+"    <p>\n"
+"        Щоб отримати запрошення, натисніть на це посилання:\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin-top: 16px;\">\n"
+"         <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Прийняти запрошення на \"${об'єкт.компанія_id.назва}\"</a>\n"
+"    </div>\n"
+"    <p>З найкращими побажаннями,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
+"    ${підпис.користувача | безпечний}\n"
+"    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
+"        <strong>Відправлено ${компанія.користувача_id.назва} користувачем<a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
+"    </p>\n"
+"</div>"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
@@ -257,13 +313,13 @@ msgstr "URL реєстрації"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
 msgid "Signup expiration"
-msgstr ""
+msgstr "Термін дії реєстрації"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
 msgid "Signup token"
-msgstr ""
+msgstr "Токен для реєстрації"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state

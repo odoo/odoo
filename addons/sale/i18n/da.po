@@ -124,7 +124,7 @@ msgstr "# fakturaer"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_nbr
 msgid "# of Lines"
-msgstr "af linjer"
+msgstr "Antal linjer"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_count
@@ -450,8 +450,7 @@ msgstr "Forskud: %s"
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "Advanced pricing based on formulas (discounts, margins, rounding)"
 msgstr ""
-"Avanceret prisfastsættelse baseret på formler (rabatter, margener, "
-"afrunding)"
+"Avanceret prisfastsættelse baseret på formler (rabatter, avancer, afrunding)"
 
 #. module: sale
 #: selection:sale.config.settings,group_warning_sale:0
@@ -511,7 +510,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_related_project_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_analytic_account_id
 msgid "Analytic Account"
-msgstr "Analysekonto"
+msgstr "Analyse konto"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -521,7 +520,7 @@ msgstr "Analytisk regnskab ved salg"
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analytisk linje"
+msgstr "Analytisk linie"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_analytic_tag_ids
@@ -546,7 +545,7 @@ msgstr "Til salgspris"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_variants_action
 msgid "Attribute Values"
-msgstr "Egenskabsværdier"
+msgstr "Egenskabs værdier"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_attribute_action
@@ -588,7 +587,7 @@ msgstr "Leveret kan ændres"
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Cancel"
-msgstr "Annullere"
+msgstr "Annuller"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
@@ -782,7 +781,7 @@ msgstr "Leveret"
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Delivered Quantity"
-msgstr "Leveret mængde"
+msgstr "Leveret antal"
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
@@ -814,19 +813,19 @@ msgstr "Den aktuelle salgsordres leveringsadresse"
 #: model:product.product,name:sale.advance_product_0
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Deposit"
-msgstr "Depositum"
+msgstr "Indskyd"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Deposit Product"
-msgstr "Produkt til depositum"
+msgstr "Indskyd produkt"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_name
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Description"
-msgstr "Ref./Beskr."
+msgstr "Beskrivelse"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -837,7 +836,7 @@ msgstr "Digitale produkter"
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Disc.(%)"
-msgstr "Rabat(%)"
+msgstr "Rabat %"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_discount_per_so_line
@@ -935,7 +934,7 @@ msgstr "Tilbudskladde"
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "Guide til sammensætning af e-mail"
+msgstr "Wizard til at oprette Email"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_validity_date
@@ -956,7 +955,7 @@ msgstr "Ekstra linje med %s "
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_fiscal_position_id
 msgid "Fiscal Position"
-msgstr "Konteringsgruppe"
+msgstr "Bogføringsgruppe"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_sale_pricelist_setting
@@ -1060,12 +1059,12 @@ msgstr "Faktura oprettet"
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "Faktura linje"
+msgstr "Fakturalinje"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_invoice_lines
 msgid "Invoice Lines"
-msgstr "Faktura linjer"
+msgstr "Fakturalinjer"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
@@ -1301,7 +1300,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_margin
 msgid "Margins"
-msgstr "Marginer"
+msgstr "Avancer"
 
 #. module: sale
 #: model:sale.layout_category,name:sale.sale_layout_cat_2
@@ -1568,7 +1567,7 @@ msgstr "Anden information"
 #: model:ir.model,name:sale.model_res_partner
 #: model:ir.model.fields,field_description:sale.field_sale_report_partner_id
 msgid "Partner"
-msgstr "Partner"
+msgstr "Kontakt"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_country_id
@@ -1656,7 +1655,7 @@ msgstr "Prislister"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Pricing"
-msgstr "Prisfastsættelse"
+msgstr "Priser"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1690,18 +1689,18 @@ msgstr "Indkøb"
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_id
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Product"
-msgstr "Vare"
+msgstr "Produkt"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_category_action_form
 msgid "Product Categories"
-msgstr "Varekategorier"
+msgstr "Vare kategorier"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_categ_id
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Product Category"
-msgstr "Produktkategori"
+msgstr "Produkt katagori"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
@@ -1714,7 +1713,7 @@ msgstr "Produktskabelon"
 #: model:ir.ui.menu,name:sale.menu_product
 #: model:ir.ui.menu,name:sale.menu_products
 msgid "Product Variants"
-msgstr "Produktvarianter"
+msgstr "Produkt varianter"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_template_action
@@ -2017,7 +2016,7 @@ msgstr "Salgsrapport layout"
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Sales Team"
-msgstr "Salgsteam"
+msgstr "Salgs team"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_to_invoice
@@ -2082,8 +2081,8 @@ msgid ""
 msgstr ""
 "Hvis du vælger indstillingen \"Advarsel\", vises meddelelsen til brugeren. "
 "Hvis du vælger \"Blokerende meddelelse\", vil der blive sendt en undtagelse "
-"sammen med meddelelsen og blokere flowet. Meddelelsen skal skrives i det "
-"næste felt."
+"sammen meddelelsen og blokere flowet. Meddelelsen skal skrives i det næste "
+"felt."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_sale_digital
@@ -2247,7 +2246,7 @@ msgstr "Moms"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_taxes_id
 msgid "Taxes used for deposits"
-msgstr "Moms på forudbetalinger/deposita"
+msgstr "Moms på forudbetalinger"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_note
@@ -2342,7 +2341,7 @@ msgstr "Der er ingen linje til fakturering"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "This Year"
-msgstr "Dette år"
+msgstr "I år"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -2410,7 +2409,7 @@ msgstr "Til fakturering"
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
 #: model:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Total"
-msgstr "Total"
+msgstr "I alt"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2441,19 +2440,19 @@ msgstr "Enhedspris"
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_uom
 #: model:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Unit of Measure"
-msgstr "Måleenhed"
+msgstr "Enhed"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_categ_form_action
 msgid "Unit of Measure Categories"
-msgstr "Måleenheds kategorier"
+msgstr "Enheds-kategorier"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_uom
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
 #: model:ir.ui.menu,name:sale.next_id_16
 msgid "Units of Measure"
-msgstr "Måleenheder"
+msgstr "Enheder"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2504,7 +2503,7 @@ msgstr "Brug denne menu til at få adgang til tilbud, salgsordrer og kunder."
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "VAT:"
-msgstr "Moms:"
+msgstr "Moms"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_volume
@@ -2516,7 +2515,7 @@ msgstr "Volumen"
 #: selection:product.template,sale_line_warn:0
 #: selection:res.partner,sale_warn:0
 msgid "Warning"
-msgstr "Advarsel"
+msgstr "Advarsel!"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:854
@@ -2641,7 +2640,7 @@ msgstr "dage"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr "sale.config.settings"
+msgstr "Salgskonfigurations opsætninger"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_layout_category

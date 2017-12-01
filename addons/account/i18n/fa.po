@@ -18,6 +18,7 @@
 # ifaraz ir <ifarazir@gmail.com>, 2016
 # hamid k <hamidk1010@yahoo.com>, 2016
 # Zahed Alfak <tamass4116@gmail.com>, 2016
+# Sepehr Khoshnood <sepehr.kho@gmail.com>, 2017
 # Sia Rezazadeh <siavash.rezazadeh@gmail.com>, 2017
 # Sahand Hashemi <sahand.twastica@gmail.com>, 2017
 # Maziar Niaki <maziarmn@gmail.com>, 2017
@@ -86,6 +87,11 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+"* وضعیت 'چرک نویس' زمانی استفاده می شود که کاربر در حال نگارش یک فاکتور تأیید نشده است.\n"
+"* وضعیت 'پیش-فاکتور' زمانی استفاده می شود که فاکتور دارای شماره فاکتور نمی باشد.\n"
+"* وضعیت 'باز' زمانی استفاده میشود که کاربر فاکتور ایجاد می کند، یک شماره فاکتور ایجاد می شود. در حالت باز باقی می ماند تا زمانی که کاربر فاکتور را پرداخت کند.\n"
+"* وضعیت 'پرداخت شده' به صورت خودکار وقتی فاکتور پرداخت شود نشان داده می شود. ورودی های بایگانی مرتبط با آن ممکن است جور شوند یا نشوند.\n"
+"* وضعیت 'لغو شده' زمانی استفاده می شود که کاربر فاکتور را لغو کند."
 
 #. module: account
 #. openerp-web
@@ -103,7 +109,7 @@ msgstr "تعداد رقم ها"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_code_digits
 msgid "# of Digits *"
-msgstr "تعداد رقم ها "
+msgstr "تعداد رقم ها *"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
@@ -463,7 +469,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
-msgstr ""
+msgstr "<span title=\"Balance in Odoo\">موجودی در Odoo</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -580,6 +586,8 @@ msgid ""
 "<strong>Cash transactions</strong><br/> (for which there is no invoice or "
 "bill), should be entered directly into your Cash Registers bank account."
 msgstr ""
+"<strong>تراکنش نقدی</strong><br/> (در حالتی که برای آن هیچ رسید یا فاکتوری "
+"وجود نداشته باشد), باید به صورت مستقیم به حساب بانکی صندوق واریز شود."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2122,7 +2130,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
-msgstr ""
+msgstr "صورت حساب بانک"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -2199,7 +2207,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_belongs_to_company
 msgid "Belong to the user's current company"
-msgstr ""
+msgstr "مطلق به شرکت فعلی کاربر است"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view

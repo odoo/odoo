@@ -10,16 +10,16 @@
 # peso <peer.sommerlund@gmail.com>, 2016
 # Jesper Carstensen <jc@danodoo.dk>, 2016
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2016
-# Ejner Sønniksen <ejner@vkdata.dk>, 2016
 # Jesper Carstensen <info@danodoo.dk>, 2016
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2016
+# Ejner Sønniksen <ejner@vkdata.dk>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-18 14:21+0000\n"
 "PO-Revision-Date: 2017-07-18 14:21+0000\n"
-"Last-Translator: Pernille Kristensen <pernillekristensen1994@gmail.com>, 2016\n"
+"Last-Translator: Ejner Sønniksen <ejner@vkdata.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -107,7 +107,7 @@ msgid ""
 "                    My cart"
 msgstr ""
 "<i class=\"fa fa-shopping-cart\"/>\n"
-"                    Min indkøbskurv"
+"                    Min kurv"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -267,7 +267,7 @@ msgstr ""
 "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon=\"&#57408;\"/>\n"
 "                                        <strong>Importer en fil</strong><br/>\n"
-"                                        <span class=\"small\">Anbefales hvis &gt;50 varer</span>\n"
+"                                        <span class=\"small\">Anbefales hvis &gt;50 produkter</span>\n"
 "                                    </span>"
 
 #. module: website_sale
@@ -282,7 +282,7 @@ msgstr ""
 "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon=\"&#57440;\"/>\n"
 "                                        <strong> Opret manuelt</strong><br/>\n"
-"                                        <span class=\"small\">Anbefales hvis &lt;50 varer</span>\n"
+"                                        <span class=\"small\">Anbefales hvis &lt;50 produkter</span>\n"
 "                                    </span>"
 
 #. module: website_sale
@@ -304,7 +304,7 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
-"                                        <strong> Regler &amp; formularer</strong>\n"
+"                                        <strong> Regler &amp; formulaer</strong>\n"
 "                                    </span>"
 
 #. module: website_sale
@@ -598,8 +598,8 @@ msgid ""
 "<strong>For complex imports</strong> (&gt;5000 items, product variants, "
 "pictures, etc.):"
 msgstr ""
-"<strong>Til kompleks import</strong> (&gt;5000 varer, varianter, billeder "
-"osv.):"
+"<strong>Til kompliceret import</strong> (&gt;5000 varer, varianter, billeder"
+" osv.):"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -886,8 +886,7 @@ msgstr "Tilføjer en tilgængelighedsstatus på webproduktsiden."
 #: selection:website.config.settings,sale_pricelist_setting_split_2:0
 msgid "Advanced pricing based on formulas (discounts, margins, rounding)"
 msgstr ""
-"Avanceret prisfastsættelse baseret på formler (rabatter, margener, "
-"afrunding)"
+"Avanceret prisfastsættelse baseret på formler (rabatter, avancer, afrunding)"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.option_collapse_products_categories
@@ -912,7 +911,7 @@ msgid ""
 "                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
 "Tillader at styre forskellige priser baseret på regler pr. kategori af kunder.\n"
-"                Eksempel: 10% til forhandlere, markedsføring på 25 kr. på dette produkt mv."
+"                Eksempel: 10% til forhandlere, markesføring på 25 EUR på dette produkt mv."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_alternative_product_ids
@@ -1148,7 +1147,7 @@ msgstr "Opsæt dine leveringsmetoder (priser, destinationer)"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Configure your pricelists"
-msgstr "Opsæt dine prislister"
+msgstr "Konfigurer dine prislister"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
@@ -1322,7 +1321,7 @@ msgstr "Enheder"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Discount % or amounts, margins, roundings, periods, etc."
-msgstr "Rabat % eller beløb, margener, afrundinger, perioder mv."
+msgstr "Rabat % eller beløb, avancer, afrundinger, perioder mv."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_display_name
@@ -1595,8 +1594,8 @@ msgid ""
 msgstr ""
 "Forestil dig at en ny kunde tilføjer et produkt til kurven og forlader din "
 "webshop på grund af fragtomkostningerne ... Det er svært at definere en god "
-"leveringsstrategi. Du ønsker ikke at skære i dine margener, men du vil gerne"
-" forblive konkurrencedygtig."
+"leveringsstrategi. Du ønsker ikke at skære i dine avancer, men du vil gerne "
+"forblive konkurrencedygtig."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1721,7 +1720,7 @@ msgstr "Logo"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Main Currency"
-msgstr "Hovedvaluta"
+msgstr "Hoved valuta"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1742,7 +1741,7 @@ msgstr "Administrer fragt internt"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_image_medium
 msgid "Medium-sized image"
-msgstr "Mellemstort billede"
+msgstr "Mellem størrelse billede"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category_image_medium
@@ -1789,7 +1788,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/website_sale.js:15
 #, python-format
 msgid "My Cart"
-msgstr "Min indkøbskurv"
+msgstr "Min kurv"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_name
@@ -1914,7 +1913,7 @@ msgstr "Ordrer"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_parent_id
 msgid "Parent Category"
-msgstr "Hovedkategori"
+msgstr "Moder-kategori"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_partner
@@ -1946,7 +1945,7 @@ msgstr "Betalingsindløser"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_acquirers
 msgid "Payment Acquirers"
-msgstr "Betalingsindløsere"
+msgstr "Betalingsindløser"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
@@ -2143,7 +2142,7 @@ msgstr "Varer"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale
 msgid "Promote"
-msgstr "Markedsfør"
+msgstr "Udgiv"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_rating_rating_website_published
@@ -2225,7 +2224,7 @@ msgstr "Bedømmelse"
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_rating_last_value
 #: model:ir.model.fields,field_description:website_sale.field_product_product_rating_last_value
 msgid "Rating Last Value"
-msgstr "Bedømmelse af sidste værdi"
+msgstr "Sidste bedømmelse"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_rating_count
@@ -2601,7 +2600,7 @@ msgid ""
 "Advanced pricing based on formulas (discounts, margins, rounding): apply price rules from a new *Pricelists* menu in Configuration."
 msgstr ""
 "Specifikke priser pr. kundesegment, valuta mv.: Ny prissætningstabel er tilgængelig i produktdetaljeformular (Salgsfane).\n"
-"Avanceret prisfastsættelse baseret på formler (rabatter, margener, afrunding): Anvend prisregler fra en ny *Prisliste* menu i Konfiguration."
+"Avanceret prisfastsættelse baseret på formler (rabatter, avancer, afrunding): Anvend prisregler fra en ny *Prisliste* menu i Konfiguration."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2611,7 +2610,7 @@ msgstr "Start din online shop ved at oprette 3 produktsider.<br/>"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "State / Province"
-msgstr "Stat / Provins"
+msgstr "Stat / provins"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -2704,7 +2703,7 @@ msgstr "Moms"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Taxes:"
-msgstr "Moms:"
+msgstr "Moms"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_temando
@@ -2714,7 +2713,7 @@ msgstr "Temando integration"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Terms &amp; Conditions"
-msgstr "Vilkår & amp; betingelser"
+msgstr "Vilkår &amp; betingelser"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -2824,7 +2823,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
 msgid "Total"
-msgstr "Total"
+msgstr "I alt"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_payment_tx_id
@@ -2891,12 +2890,12 @@ msgstr "Se kurv ("
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_published
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_published
 msgid "Visible in Website"
-msgstr "Synlig på website"
+msgstr "Synlig på hjemmeside"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_rating_rating_website_published
 msgid "Visible on the website as a comment"
-msgstr "Synlig på websitet som en kommentar"
+msgstr "Synlig på hjemmesiden som en kommentar"
 
 #. module: website_sale
 #: selection:product.template,availability:0
@@ -2907,7 +2906,7 @@ msgstr "Advarsel"
 #: model:ir.model,name:website_sale.model_website
 #: model:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Website"
-msgstr "Website"
+msgstr "Hjemmeside"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -2956,7 +2955,7 @@ msgstr "Webshop"
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_url
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_url
 msgid "Website URL"
-msgstr "Website URL"
+msgstr "Hjemmeside URL"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_meta_description
@@ -2968,7 +2967,7 @@ msgstr "Meta beskrivelse"
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_meta_keywords
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_meta_keywords
 msgid "Website meta keywords"
-msgstr "Meta søgeord"
+msgstr "Meta nøgleord"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_meta_title
@@ -3042,7 +3041,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Your Company"
-msgstr "Dit firma"
+msgstr "Din virksomhed"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -3165,7 +3164,7 @@ msgstr "product.style"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "set company logo"
-msgstr "Indsæt firma logo"
+msgstr "indlæs firma logo"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment_sale_note
@@ -3180,7 +3179,7 @@ msgstr "Brug Odoo API til at importere via scripts"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist_website_id
 msgid "website"
-msgstr "Website"
+msgstr "Hjemmeside"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_config_settings

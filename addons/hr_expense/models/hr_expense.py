@@ -420,13 +420,7 @@ class HrExpenseSheet(models.Model):
 
     @api.model
     def create(self, vals):
-        # Add the followers at creation, so they can be notified
-        if vals.get('employee_id'):
-            employee = self.env['hr.employee'].browse(vals['employee_id'])
-            users = self._get_users_to_subscribe(employee=employee) - self.env.user
-            vals['message_follower_ids'] = []
-            for partner in users.mapped('partner_id'):
-                vals['message_follower_ids'] += self.env['mail.followers']._add_follower_command(self._name, [], {partner.id: None}, {})[0]
+        self._create_set_followers(vals)
         sheet = super(HrExpenseSheet, self).create(vals)
         self.check_consistency()
         return sheet
@@ -478,6 +472,20 @@ class HrExpenseSheet(models.Model):
         users = self._get_users_to_subscribe()
         self.message_subscribe_users(user_ids=users.ids)
 
+    @api.model
+    def _create_set_followers(self, values):
+        # Add the followers at creation, so they can be notified
+        employee_id = values.get('employee_id')
+        if not employee_id:
+            return
+
+        employee = self.env['hr.employee'].browse(employee_id)
+        users = self._get_users_to_subscribe(employee=employee) - self.env.user
+        values['message_follower_ids'] = []
+        MailFollowers = self.env['mail.followers']
+        for partner in users.mapped('partner_id'):
+            values['message_follower_ids'] += MailFollowers._add_follower_command(self._name, [], {partner.id: None}, {})[0]
+
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
         self.address_id = self.employee_id.address_home_id
@@ -516,6 +524,8 @@ class HrExpenseSheet(models.Model):
 
     @api.multi
     def refuse_expenses(self, reason):
+        if not self.user_has_groups('hr_expense.group_hr_expense_user'):
+            raise UserError(_("Only HR Officers can refuse expenses"))
         self.write({'state': 'cancel'})
         for sheet in self:
             body = (_("Your Expense %s has been refused.<br/><ul class=o_timeline_tracking_value_list><li>Reason<span> : </span><span class=o_timeline_tracking_value>%s</span></li></ul>") % (sheet.name, reason))
@@ -523,6 +533,8 @@ class HrExpenseSheet(models.Model):
 
     @api.multi
     def approve_expense_sheets(self):
+        if not self.user_has_groups('hr_expense.group_hr_expense_user'):
+            raise UserError(_("Only HR Officers can approve expenses"))
         self.write({'state': 'approve', 'responsible_id': self.env.user.id})
 
     @api.multi
@@ -584,3 +596,10 @@ class HrExpenseSheet(models.Model):
         employee_ids = self.expense_line_ids.mapped('employee_id')
         if len(employee_ids) > 1 or (len(employee_ids) == 1 and employee_ids != self.employee_id):
             raise ValidationError(_('You cannot add expense lines of another employee.'))
+
+    @api.one
+    @api.constrains('expense_line_ids')
+    def _check_payment_mode(self):
+        payment_mode = set(self.expense_line_ids.mapped('payment_mode'))
+        if len(payment_mode) > 1:
+            raise ValidationError(_('You cannot report expenses with different payment modes.'))

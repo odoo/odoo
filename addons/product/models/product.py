@@ -303,7 +303,8 @@ class ProductProduct(models.Model):
             for value in product.attribute_value_ids:
                 if value.attribute_id in attributes:
                     raise ValidationError(_('Error! It is not allowed to choose more than one value for a given attribute.'))
-                attributes |= value.attribute_id
+                if value.attribute_id.create_variant:
+                    attributes |= value.attribute_id
         return True
 
     @api.onchange('uom_id', 'uom_po_id')
@@ -561,7 +562,7 @@ class ProductProduct(models.Model):
         history = self.env['product.price.history'].search([
             ('company_id', '=', company_id),
             ('product_id', 'in', self.ids),
-            ('datetime', '<=', date or fields.Datetime.now())], limit=1)
+            ('datetime', '<=', date or fields.Datetime.now())], order='datetime desc,id desc', limit=1)
         return history.cost or 0.0
 
     def _need_procurement(self):

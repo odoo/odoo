@@ -40,14 +40,15 @@
 # Jeanjean Noname <monsieur.spock@gmail.com>, 2016
 # Micky Jault <micky037@hotmail.fr>, 2017
 # Eloïse Stilmant <est@odoo.com>, 2017
-# jerome rederstorff <contact@jerome-rederstorff.com>, 2017
+# invitu <contact@invitu.com>, 2017
+# fr trans <e2ftrans1@yahoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:53+0000\n"
 "PO-Revision-Date: 2016-11-14 15:53+0000\n"
-"Last-Translator: jerome rederstorff <contact@jerome-rederstorff.com>, 2017\n"
+"Last-Translator: fr trans <e2ftrans1@yahoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -143,9 +144,88 @@ msgid ""
 "</div>"
 msgstr ""
 "\n"
-"<strong>note interne</strong>les réponses ne seront pas envoyées aux followers\n"
-"<p style=\"color: #555555;\">envoyé par\n"
-"<a href=\"${ctx['website_url']}\" style=\"text-decoration:none; color: #875A7B;\">en utilisant"
+"<div>\n"
+"% if ctx.get('has_button_access'):\n"
+"<div itemscope itemtype=\"http://schema.org/EmailMessage\">\n"
+"    <div itemprop=\"potentialAction\" itemscope itemtype=\"http://schema.org/ViewAction\">\n"
+"        <link itemprop=\"target\" href=\"${ctx['button_access']['url']}\"/>\n"
+"        <link itemprop=\"url\" href=\"${ctx['button_access']['url']}\"/>\n"
+"        <meta itemprop=\"name\" content=\"View ${ctx['model_name']}\"/>\n"
+"    </div>\n"
+"</div>\n"
+"% endif\n"
+"% if not ctx['is_discussion'] or not len(ctx['actions']) == 0 or ctx.get('has_button_access'):\n"
+"<div summary=\"o_mail_notification\" style=\"padding: 0px; width:600px;\">\n"
+"<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 600px; margin-top: 5px;\">\n"
+"<tbody><tr>\n"
+"    <td valign=\"center\">\n"
+"        % if ctx.get('has_button_access'):\n"
+"        <a href=\"${ctx['button_access']['url']}\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">${ctx['button_access']['title']}</a>\n"
+"        % endif\n"
+"\n"
+"        % if ctx.get('has_button_follow'):\n"
+"        % if ctx.get('has_button_access'):\n"
+"           |\n"
+"        % endif\n"
+"        <a href=\"${ctx['button_follow']['url']}\" style=\"color: #875A7B; text-decoration: none !important;\">${ctx['button_follow']['title']}</a>\n"
+"        % elif ctx.get('has_button_unfollow'):\n"
+"        % if ctx.get('has_button_access'):\n"
+"           |\n"
+"        % endif\n"
+"        <a href=\"${ctx['button_unfollow']['url']}\" style=\"color: #875A7B; text-decoration: none !important;\">${ctx['button_unfollow']['title']}</a>\n"
+"        % endif\n"
+"\n"
+"        % if ctx.get('actions'):\n"
+"        % for action in ctx['actions']:\n"
+"        |\n"
+"        <a href=\"${action['url']}\" style=\"color: #875A7B; text-decoration:none !important;\">${action['title']}</a>\n"
+"        % endfor\n"
+"        % endif\n"
+"    </td>\n"
+"    <td valign=\"center\" align=\"right\">\n"
+"        <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"    </td>\n"
+"</tr>\n"
+"<tr>\n"
+"    <td colspan=\"2\" style=\"text-align:center;\">\n"
+"        <hr width=\"100%\"\n"
+"            style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:10px 0;\">\n"
+"        % if ctx.get('subtype') and ctx.get('subtype').internal:\n"
+"        <span style=\"background-color: #f2dede; padding: 5px;\">\n"
+"            <strong>Note interne</strong>: les réponses ne sont pas envoyées aux abonnés.\n"
+"        </span>\n"
+"        % endif\n"
+"    </td>\n"
+"</tr>\n"
+"</tbody></table>\n"
+"</div>\n"
+"% endif\n"
+"${object.body | safe}\n"
+"% if ctx.get('tracking'):\n"
+"    <ul>\n"
+"    % for tracking in ctx['tracking']\n"
+"        <li>${tracking[0]} : ${tracking[1]} -&gt; ${tracking[2]}</li>\n"
+"    % endfor\n"
+"    </ul>\n"
+"% endif\n"
+"\n"
+"% if ctx.get('signature'):\n"
+"    ${ctx['signature'] | safe}\n"
+"% endif\n"
+"<br/>\n"
+"<p style=\"color: #555555;\">\n"
+"    Envoyé par\n"
+"    % if ctx.get('website_url'):\n"
+"    <a href=\"${ctx['website_url']}\" style=\"text-decoration:none; color: #875A7B;\">\n"
+"    % endif\n"
+"    ${ctx.get('company_name')}\n"
+"    % if ctx.get('website_url'):\n"
+"    </a>\n"
+"    % endif\n"
+"    avec\n"
+"    <a href=\"https://www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a>.\n"
+"</p>\n"
+"</div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:639
@@ -204,6 +284,8 @@ msgid ""
 "* Smiley are only used for HTML code to display an image * Text (default "
 "value) is used to substitute text with another text"
 msgstr ""
+"* Les smileys sont uniquement utilisés en code HTML pour afficher image * Le"
+" texte (par défaut) est utilisé pour remplacer un texte par un autre"
 
 #. module: mail
 #. openerp-web
@@ -222,6 +304,11 @@ msgid ""
 "            You can execute a command by typing <b>/command</b>.<br>\n"
 "            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>"
 msgstr ""
+"<br><br>\n"
+"            Pour mentionner une personne, saisissez <b>@username</b>, afin d'attirer son attention.<br>\n"
+"            Pour mentionner un canal, saisissez <b>#channel</b>.<br>\n"
+"            Pour exécuter une commande, saisissez <b>/command</b>.<br>\n"
+"            Pour insérer des réponses prédéfinies dans votre message, saisissez <b>:shortcut</b>.<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:550
@@ -1001,7 +1088,7 @@ msgstr "Conversation dans statut plié"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_minimized
 msgid "Conversation is minimized"
-msgstr ""
+msgstr "La conversation a été réduite au minimum"
 
 #. module: mail
 #. openerp-web
@@ -1206,7 +1293,7 @@ msgstr "Supprimer les courriels"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete_message
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete_message
 msgid "Delete Message Copy"
-msgstr ""
+msgstr "Supprimer la copie du message"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete
@@ -1303,6 +1390,8 @@ msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
 msgstr ""
+"Ne pas conserver pas de copie de l'e-mail dans l'historique de communication"
+" de documents (publipostage uniquement)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
@@ -2061,6 +2150,9 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible."
 msgstr ""
+"Si cette option est définie, le gestionnaire de file d'attente enverra "
+"l'email après la date. Si cette option n'est pas définie, l'e-mail sera "
+"envoyée dès que possible."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_scheduled_date
@@ -2069,6 +2161,10 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible. Jinja2 placeholders may be used."
 msgstr ""
+"Si cette option est définie, le gestionnaire de file d'attente enverra "
+"l'e-mail après la date. Si cette option n'est pas définie, l'e-mail sera "
+"envoyée dès que possible. Des paramètres fictifs Jinja2 peuvent être "
+"utilisés."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_base_config_settings_alias_domain
@@ -2457,7 +2553,7 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:663
 #, python-format
 msgid "List users in the current channel"
-msgstr ""
+msgstr "Répertorier les utilisateur dans le canal actuel"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers_channel_id
@@ -2867,7 +2963,7 @@ msgstr "Nécessite une action"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel_res_partner_id
 msgid "Needaction Recipient"
-msgstr ""
+msgstr "Destinataire de messages d'action en demande"
 
 #. module: mail
 #: selection:res.partner,notify_email:0
@@ -4303,6 +4399,8 @@ msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
 msgstr ""
+"Les valeurs suivies sont stockées dans un modèle distinct. Ce champ permet "
+"de reconstruire le suivi et de générer des statistiques sur le modèle."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
@@ -4347,6 +4445,8 @@ msgstr "UUID"
 #, python-format
 msgid "Unable to send email, please configure the sender's email address."
 msgstr ""
+"Impossible d'envoyer l'e-mail, configurez l'adresse électronique de "
+"l'expéditeur."
 
 #. module: mail
 #. openerp-web
@@ -4860,13 +4960,13 @@ msgstr "mentionnée(s) comme lue(s)."
 #: code:addons/mail/models/mail_thread.py:943
 #, python-format
 msgid "model %s does not accept document creation"
-msgstr ""
+msgstr "Le modèle %s n'accepte pas la création de documents"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:938
 #, python-format
 msgid "model %s does not accept document update"
-msgstr ""
+msgstr "Le modèle %s n'accepte pas la mise à jour de documents"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:931
@@ -4874,6 +4974,8 @@ msgstr ""
 msgid ""
 "model %s does not accept document update, fall back on document creation"
 msgstr ""
+"Le modèle %s n'accepte pas la mise à jour de documents, revenez à la "
+"création de documents"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
@@ -4907,6 +5009,8 @@ msgid ""
 "posting a message without model should be with a null res_id (private "
 "message), received %s"
 msgstr ""
+"Pour publier un message sans modèle, vous devez utiliser un ID null res_id "
+"(message privé), reçu : %s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:917
@@ -4914,6 +5018,8 @@ msgstr ""
 msgid ""
 "posting a message without model should be with a parent_id (private message)"
 msgstr ""
+"Pour publier un message sans modèle, vous devez utiliser un ID parent_id "
+"(message privé)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_publisher_warranty_contract
@@ -4948,19 +5054,20 @@ msgstr "enregistrement:"
 #: code:addons/mail/models/mail_thread.py:935
 #, python-format
 msgid "reply to missing document (%s,%s)"
-msgstr ""
+msgstr "réponse à un document manquant (%s,%s)"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:928
 #, python-format
 msgid "reply to missing document (%s,%s), fall back on new document creation"
 msgstr ""
+"réponse à un document manquant (%s,%s), revenez à la création de documents"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:913
 #, python-format
 msgid "resetting thread_id"
-msgstr ""
+msgstr "réinitialisation de l'ID thread_id"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_1
@@ -4976,7 +5083,7 @@ msgstr "ventes"
 #: code:addons/mail/models/mail_thread.py:968
 #, python-format
 msgid "skipping"
-msgstr ""
+msgstr "ignorer"
 
 #. module: mail
 #. openerp-web
@@ -4989,4 +5096,4 @@ msgstr "ce document"
 #: code:addons/mail/models/mail_thread.py:906
 #, python-format
 msgid "unknown target model %s"
-msgstr ""
+msgstr "modèle cible inconnu %s"

@@ -144,8 +144,9 @@ class AccountJournal(models.Model):
     @api.multi
     def write(self, vals):
         # restrict the operation in case we are trying to write a forbidden field
-        if self.company_id.country_id.code == 'FR' and vals.get('update_posted'):
-            raise UserError(ERR_MSG % (self._name, 'update_posted'))
+        for rec in self:
+            if rec.company_id.country_id.code == 'FR' and vals.get('update_posted'):
+                raise UserError(ERR_MSG % (self._name, 'update_posted'))
         return super(AccountJournal, self).write(vals)
 
     @api.model

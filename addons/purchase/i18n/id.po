@@ -18,13 +18,14 @@
 # Rizki Mudhar <mudharrizki@gmail.com>, 2017
 # aryge <gustanto.ary@gmail.com>, 2017
 # Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2017
+# Ryanto The <ry.the77@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2017\n"
+"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2017\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -647,6 +648,8 @@ msgid ""
 "Depicts the date where the Quotation should be validated and converted into "
 "a purchase order."
 msgstr ""
+"Tentukan tanggal di mana Penawaran harus divalidasi dan diubah menjadi order"
+" pembelian."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_name
@@ -729,7 +732,7 @@ msgstr "Penyaring tambahan"
 #: code:addons/purchase/models/purchase.py:559
 #, python-format
 msgid "Extra line with %s "
-msgstr ""
+msgstr "Baris tambahan dengan %s"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_fiscal_position_id
@@ -899,6 +902,10 @@ msgid ""
 "Orders for procuring products, they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Margin kesalahan untuk tanggal yang dijanjikan pemasok. Ketika sistem "
+"membuat Order Pembelian untuk pengadaan produk, akan dijadwalkan lebih awal "
+"sebanyak hari tersebut, untuk mengatisipasi penundaan tak terduga dari "
+"pemasok."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
@@ -916,7 +923,7 @@ msgstr "Pesan untuk pembelian Order Line"
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_po_double_validation_amount
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation_amount
 msgid "Minimum amount for which a double validation is required"
-msgstr ""
+msgstr "Jumlah minimum di mana validasi ganda diharuskan"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
@@ -929,6 +936,8 @@ msgid ""
 "Most propositions of purchase orders are created automatically\n"
 "                by Odoo based on inventory needs."
 msgstr ""
+"Hampir semua penawaran untuk order pembelian dibuat secara otomatis oleh "
+"Odoo menurut kebutuhan persediaan."
 
 #. module: purchase
 #: selection:product.template,purchase_line_warn:0
@@ -1017,7 +1026,7 @@ msgstr "Urutan hari"
 #: code:addons/purchase/models/purchase.py:578
 #, python-format
 msgid "Ordered Quantity"
-msgstr ""
+msgstr "Jumlah Pesanan"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:816
@@ -1339,6 +1348,9 @@ msgid ""
 "Put an address if you want to deliver directly from the vendor to the "
 "customer. Otherwise, keep empty to deliver to your own company."
 msgstr ""
+"Masukkan alamat jika Anda ingin mengirim langsung dari pemasok ke pelanggan."
+" Jika tidak, biarkan kosong untuk menerima pengiriman di perusahaan Anda "
+"sendiri."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_qty
@@ -1439,6 +1451,9 @@ msgid ""
 "matching when you receive the products as this reference is usually written "
 "on the delivery order sent by your vendor."
 msgstr ""
+"Referensi dari order penjualan atau penawaran yang dikirim pemasok. "
+"Digunakan untuk pencocokan ketika Anda menerima produk karena referensi ini "
+"biasanya tertulis pada surat jalan dari pemasok Anda."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report
@@ -1601,7 +1616,7 @@ msgstr "Pajak"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
-msgstr ""
+msgstr "Kolom teknis yang digunakan untuk menampilkan Alamat Dropship"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_notes
@@ -1623,6 +1638,8 @@ msgid ""
 "                purchase process: prices, procurement logistics, accounting data,\n"
 "                available vendors, etc."
 msgstr ""
+"Formulir Produk memiliki informasi rinci untuk memperbarui proses pembelian:"
+" harga, logistik pengadaan, data akuntansi, pemasok yang tersedia, dsb."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -1631,6 +1648,8 @@ msgid ""
 "            purchase process: prices, procurement logistics, accounting data,\n"
 "            available vendors, etc."
 msgstr ""
+"Formulir Produk memiliki informasi rinci untuk memperbarui proses pembelian:"
+" harga, logistik pengadaan, data akuntansi, pemasok yang tersedia, dsb."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -1660,6 +1679,8 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
 msgstr ""
+"Akun ini akan digunakan untuk menilai perbedaan harga antara harga pembelian"
+" dan modal akuntansi."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product_property_account_creditor_price_difference
@@ -1675,6 +1696,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "This changes the scheduled date of all order lines to the given date"
 msgstr ""
+"Ini akan mengganti tanggal terjadwal untuk semua baris order ke tanggal "
+"tersebut"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner_property_purchase_currency_id
@@ -1770,6 +1793,8 @@ msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
 "done."
 msgstr ""
+"Tidak dapat membatalkan order pembelian %s karena telah menerima sebagian "
+"barang."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:348
@@ -1778,6 +1803,8 @@ msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
 "bills."
 msgstr ""
+"Tidak dapat membatalkan order pembelian ini. Anda harus membatalkan tagihan "
+"pemasok terkait terlebih dahulu."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
@@ -1828,6 +1855,9 @@ msgid ""
 "            and Odoo will fill the bill automatically according to ordered\n"
 "            or received quantities."
 msgstr ""
+"Gunakan menu ini untuk mengontrol faktur yang diterima dari pemasok Anda. "
+"Ketika membuat tagihan baru, set order pembelian dan Odoo akan mengisi "
+"tagihan secara otomatis menurut jumlah dipesan dan jumlah dikirim."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -1837,6 +1867,10 @@ msgid ""
 "                you can track the related discussion with the vendor, control\n"
 "                the products received and control the vendor bills."
 msgstr ""
+"Gunakan menu ini untuk mencari di antara order pembelian Anda menurut "
+"referensi, pemasok, produk, dsb. Untuk setiap order pembelian, Anda dapat "
+"melacak diskusi terkait dengan pemasok, mengontrol produk yang diterima, dan"
+" mengontrol tagihan pemasok."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -1908,6 +1942,9 @@ msgid ""
 "                    you receive from your vendor according to the draft\n"
 "                    document in Odoo."
 msgstr ""
+"Tagihan pemasok dapat dibuat terlebih dahulu menurut order pembelian atau "
+"penerimaan. Ini memungkinkan Anda untuk mengontrol tagihan yang Anda terima "
+"dari pemasok Anda menurut rancangan dokumen di Odoo."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
@@ -1979,6 +2016,8 @@ msgid ""
 "You can control the invoice from your vendor according to\n"
 "            what you purchased (services) or received (products)."
 msgstr ""
+"Anda dapat mengontrol faktur dari pemasok Anda berdasarkan pada apa yang "
+"Anda beli (jasa) atau Anda terima (produk)."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_product_action
@@ -1987,6 +2026,8 @@ msgid ""
 "                it's a physical product, a consumable or services you buy to\n"
 "                subcontractors."
 msgstr ""
+"Anda harus menetapkan produk untuk semua yang Anda beli, apakah\n"
+" produk fisik maupun produk konsumsi, maupun jasa yang Anda beli dari pemasok."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -1995,6 +2036,8 @@ msgid ""
 "            it's a physical product, a consumable or services you buy to\n"
 "            subcontractors."
 msgstr ""
+"Anda harus menetapkan produk untuk semua yang Anda beli, apakah\n"
+" produk fisik maupun produk konsumsi, maupun jasa yang Anda beli dari pemasok."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:389

@@ -567,8 +567,8 @@ class AccountTaxGroup(models.Model):
 class AccountTax(models.Model):
     _name = 'account.tax'
     _description = 'Tax'
-    _order = 'sequence'
     _inherit = ['mail.thread']
+    _order = 'sequence,id'
 
     @api.model
     def _default_tax_group(self):
