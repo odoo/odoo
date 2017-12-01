@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2016-02-25 10:34+0000\n"
+"PO-Revision-Date: 2017-11-27 14:30+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Paraguay) (http://www.transifex.com/odoo/odoo-9/language/es_PY/)\n"
 "MIME-Version: 1.0\n"
@@ -3874,6 +3874,12 @@ msgid "Original Move"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/stock.py:576
+#, python-format
+msgid "Otherwise make sure the right stock/owner is set."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_out_type_id
 msgid "Out Type"
 msgstr ""
@@ -4306,7 +4312,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Print"
-msgstr ""
+msgstr "Imprimir"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_printed
@@ -6818,6 +6824,14 @@ msgstr ""
 #: code:addons/stock/stock.py:4447
 #, python-format
 msgid "You should provide a different serial number for each piece"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/product.py:349
+#, python-format
+msgid ""
+"You still have some active reordering rules on this product. Please archive "
+"or delete them first."
 msgstr ""
 
 #. module: stock

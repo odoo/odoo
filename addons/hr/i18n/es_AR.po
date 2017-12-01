@@ -3,14 +3,14 @@
 # * hr
 # 
 # Translators:
-# Rojas Pablo <rojaspablo88@gmail.com>, 2015
+# Pablo Rojas <rojaspablo88@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-15 10:41+0000\n"
-"PO-Revision-Date: 2016-11-07 17:30+0000\n"
-"Last-Translator: Gonzalo Ruzafa <gr@ingadhoc.com>\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2017-11-27 14:25+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/odoo/odoo-9/language/es_AR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -253,7 +253,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_tree
 msgid "Companies"
-msgstr ""
+msgstr "Compañías"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_company_id
@@ -262,7 +262,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Company"
-msgstr ""
+msgstr "Compañía"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
@@ -297,7 +297,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_date
@@ -305,7 +305,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_date
 #: model:ir.model.fields,field_description:hr.field_hr_job_create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creado en"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_employee
@@ -368,7 +368,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Mostrar Nombre"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -439,14 +439,12 @@ msgid "Employees Tags"
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/hr.py:299 constraint:hr.department:0
-#, python-format
+#: constraint:hr.department:0
 msgid "Error! You cannot create recursive departments."
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/hr.py:269 constraint:hr.employee:0
-#, python-format
+#: constraint:hr.employee:0
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr ""
 
@@ -509,6 +507,11 @@ msgid "Gender"
 msgstr ""
 
 #. module: hr
+#: model:web.tip,description:hr.hr_tip_1
+msgid "Get all applications related to this job position."
+msgstr ""
+
+#. module: hr
 #: model:hr.job,website_description:hr.job_developer
 msgid "Good knowledge of HTML and Javascript"
 msgstr ""
@@ -552,7 +555,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Group By"
-msgstr ""
+msgstr "Agrupar por"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
@@ -610,7 +613,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_identification_id
@@ -744,12 +747,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_job___last_update
 msgid "Last Modified on"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users_last_website_so_id
-msgid "Last Online Sale Order"
-msgstr ""
+msgstr "Última modificación en"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_uid
@@ -757,14 +755,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última actualización realizada por"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última actualización el"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_last_login
@@ -982,6 +980,11 @@ msgid "Parent Department"
 msgstr ""
 
 #. module: hr
+#: model:ir.model,name:hr.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: hr
 #: model:hr.job,website_description:hr.job_developer
 msgid "Passion for the Internet and its culture"
 msgstr ""
@@ -1167,7 +1170,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -1254,7 +1257,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
-msgstr ""
+msgstr "Mensajes No Leídos"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_message_unread_counter

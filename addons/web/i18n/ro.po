@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-18 04:43+0000\n"
-"PO-Revision-Date: 2017-03-13 17:22+0000\n"
+"PO-Revision-Date: 2017-11-18 00:02+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -875,6 +875,13 @@ msgid "Error"
 msgstr "Eroare"
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:458
+#, python-format
+msgid "Error: Bad domain"
+msgstr "Eroare! Domeniu greșit."
+
+#. module: web
 #: code:addons/web/controllers/main.py:838
 #, python-format
 msgid "Error, password not changed !"
@@ -1143,6 +1150,15 @@ msgstr "Inactiv(a)"
 #, python-format
 msgid "Invalid data"
 msgstr "Date invalide"
+
+#. module: web
+#: code:addons/web/controllers/main.py:655
+#: code:addons/web/controllers/main.py:669
+#, python-format
+msgid ""
+"Invalid database name. Only alphanumerical characters, underscore, hyphen "
+"and dot are allowed."
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -1503,8 +1519,8 @@ msgstr "Nici o înregistrare selectată"
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:328
 #, python-format
-msgid "No value found for the field  for value "
-msgstr "Valoare negăsită pentru câmpul "
+msgid "No value found for the field %s for value %s"
+msgstr "Nici o valoare pentru câmpul %s pentru valoarea %s"
 
 #. module: web
 #. openerp-web
@@ -1784,8 +1800,8 @@ msgstr "Tipărește Fluxul de lucru"
 #: code:addons/web/static/src/xml/base.xml:578
 #: code:addons/web/static/src/xml/base.xml:610
 #, python-format
-msgid "Quantity"
-msgstr "Cantitate"
+msgid "Count"
+msgstr "Număr"
 
 #. module: web
 #. openerp-web
@@ -2084,6 +2100,13 @@ msgstr "Faceți o pauză de cafea,<br /> pentru că se încarcă..."
 #, python-format
 msgid "Technical Translation"
 msgstr "Traducere Tehnică"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:458
+#, python-format
+msgid "The domain is wrong."
+msgstr "Domeniul este greșit"
 
 #. module: web
 #. openerp-web
@@ -2463,6 +2486,12 @@ msgstr "Valoare greșită introdusă!"
 #, python-format
 msgid "XML ID:"
 msgstr "ID XML:"
+
+#. module: web
+#: code:addons/web/controllers/main.py:513
+#, python-format
+msgid "Wrong login/password"
+msgstr "Parolă sau nume utilizator introduse greșit"
 
 #. module: web
 #. openerp-web

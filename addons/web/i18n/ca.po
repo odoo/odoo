@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-18 04:43+0000\n"
-"PO-Revision-Date: 2017-08-03 14:22+0000\n"
+"PO-Revision-Date: 2017-11-25 01:40+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -874,6 +874,13 @@ msgid "Error"
 msgstr "Error"
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:458
+#, python-format
+msgid "Error: Bad domain"
+msgstr "Error: Domini incorrecte"
+
+#. module: web
 #: code:addons/web/controllers/main.py:838
 #, python-format
 msgid "Error, password not changed !"
@@ -1142,6 +1149,15 @@ msgstr "Inactiu"
 #, python-format
 msgid "Invalid data"
 msgstr "Dades invalides"
+
+#. module: web
+#: code:addons/web/controllers/main.py:655
+#: code:addons/web/controllers/main.py:669
+#, python-format
+msgid ""
+"Invalid database name. Only alphanumerical characters, underscore, hyphen "
+"and dot are allowed."
+msgstr "Nom de la base de dades incorrecta. Només caràcters alfanumèrics, subratllat, guio i punt estan permesos."
 
 #. module: web
 #. openerp-web
@@ -1502,8 +1518,8 @@ msgstr "Cap registre seleccionat"
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:328
 #, python-format
-msgid "No value found for the field  for value "
-msgstr ""
+msgid "No value found for the field %s for value %s"
+msgstr "Cap valor trobat per al camp %s pel valor %s"
 
 #. module: web
 #. openerp-web
@@ -1783,8 +1799,8 @@ msgstr "Imprimir flux de treball"
 #: code:addons/web/static/src/xml/base.xml:578
 #: code:addons/web/static/src/xml/base.xml:610
 #, python-format
-msgid "Quantity"
-msgstr "Quantitat"
+msgid "Count"
+msgstr "Comptar"
 
 #. module: web
 #. openerp-web
@@ -2083,6 +2099,13 @@ msgstr "Agafi's un minut per anar a fer un cafè, <br /> perquè està carregant
 #, python-format
 msgid "Technical Translation"
 msgstr "Traducció tècnica"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:458
+#, python-format
+msgid "The domain is wrong."
+msgstr "El domini és erroni"
 
 #. module: web
 #. openerp-web
@@ -2462,6 +2485,12 @@ msgstr "Valor introduït incorrecte!"
 #, python-format
 msgid "XML ID:"
 msgstr "XML ID:"
+
+#. module: web
+#: code:addons/web/controllers/main.py:513
+#, python-format
+msgid "Wrong login/password"
+msgstr "Login / clau incorrecta"
 
 #. module: web
 #. openerp-web
