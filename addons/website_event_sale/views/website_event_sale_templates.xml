@@ -87,11 +87,8 @@
         <button type="submit" t-if="event.state == 'confirm' and (event.seats_available or event.seats_availability == 'unlimited')"
             class="btn btn-primary btn-lg pull-right a-submit" t-attf-id="#{event.id}">Order Now</button>
     </xpath>
-    <xpath expr="//form[@id='registration_form']" position="before">
-        <t t-set="all_tickets_expired" t-value="all([ticket.is_expired for ticket in event.event_ticket_ids])"/>
-    </xpath>
     <xpath expr="//form[@id='registration_form']" position="attributes">
-        <attribute name="t-if">event.event_ticket_ids and not all_tickets_expired</attribute>
+        <attribute name="t-if">event.event_ticket_ids and not all([ticket.is_expired for ticket in event.event_ticket_ids])</attribute>
     </xpath>
 </template>
 
