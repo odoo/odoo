@@ -860,6 +860,14 @@ var FieldFloatTime = FieldFloat.extend({
     formatType: 'float_time',
 });
 
+var FieldFloatToggle = FieldFloat.extend({
+    // this is not strictly necessary, as for this widget to be used, the 'widget'
+    // attrs must be set to 'float_toggle', so the formatType is automatically
+    // 'float_toggle', but for the sake of clarity, we explicitely define a
+    // FieldFloatToggle widget with formatType = 'float_toggle'.
+    formatType: 'float_toggle',
+});
+
 var FieldText = InputField.extend(TranslatableFieldMixin, {
     className: 'o_field_text',
     supportedFieldTypes: ['text'],
@@ -2555,6 +2563,7 @@ return {
     FieldDomain: FieldDomain,
     FieldFloat: FieldFloat,
     FieldFloatTime: FieldFloatTime,
+    FieldFloatToggle: FieldFloatToggle,
     FieldInteger: FieldInteger,
     FieldMonetary: FieldMonetary,
     FieldPercentPie: FieldPercentPie,
