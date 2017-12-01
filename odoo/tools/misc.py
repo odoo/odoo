@@ -5,7 +5,6 @@
 """
 Miscellaneous tools used by OpenERP.
 """
-
 from functools import wraps
 import cPickle
 import cProfile
@@ -21,6 +20,8 @@ import threading
 import time
 import werkzeug.utils
 import zipfile
+import babel
+import datetime
 from cStringIO import StringIO
 from collections import defaultdict, Iterable, Mapping, MutableSet, OrderedDict
 from itertools import islice, izip, groupby, repeat
@@ -30,6 +31,7 @@ from threading import local
 import traceback
 import csv
 from operator import itemgetter
+from . import pycompat
 
 try:
     from html2text import html2text
@@ -44,6 +46,7 @@ import odoo
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are moved to loglevels until we refactor tools.
 from odoo.loglevels import get_encodings, ustr, exception_to_unicode     # noqa
+from odoo.fields import DATE_LENGTH
 
 _logger = logging.getLogger(__name__)
 
@@ -1189,6 +1192,35 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
         elif currency_obj and currency_obj.position == 'before':
             res = '%s %s' % (currency_obj.symbol, res)
     return res
+
+def format_date(env, value, lang_code=False, date_format=False):
+    '''
+        Formats the date in a given format.
+        :param env: an environment.
+        :param date, datetime or string value: the date to format.
+        :param string lang_code: the lang code, if not specified it is extracted from the
+            environment context.
+        :param string date_format: the format or the date (LDML format), if not specified the
+            default format of the lang.
+        :return: date formatted in the specified format.
+        :rtype: string
+    '''
+    if not value:
+        return ''
+    if isinstance(value, datetime.datetime):
+        value = value.date()
+    elif isinstance(value, pycompat.string_types):
+        if len(value) < DATE_LENGTH:
+            return ''
+        value = value[:DATE_LENGTH]
+        value = datetime.datetime.strptime(value, DEFAULT_SERVER_DATE_FORMAT).date()
+
+    lang = env['res.lang']._lang_get(lang_code or env.context.get('lang') or 'en_US')
+    locale = babel.Locale.parse(lang.code)
+    if not date_format:
+        date_format = posix_to_ldml(lang.date_format, locale=locale)
+
+    return babel.dates.format_date(value, format=date_format, locale=locale)
 
 def _consteq(str1, str2):
     """ Constant-time string comparison. Suitable to compare bytestrings of fixed,
