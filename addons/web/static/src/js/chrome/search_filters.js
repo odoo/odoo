@@ -248,6 +248,10 @@ ExtendedSearchProposition.Date = ExtendedSearchProposition.DateTime.extend({
     attributes: {
         type: 'date'
     },
+    get_value: function (index) {
+        // retrieve the datepicker value
+        return this["datewidget_" + (index || 0)].getValue();
+    },
     _get_widget_class: function () {
         return datepicker.DateWidget;
     },
