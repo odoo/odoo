@@ -118,7 +118,10 @@ odoo.define('payment.payment_form', function (require) {
 
                         self.displayError(
                             _t('Server Error'),
-                            _t("<p>We are not able to add your payment method at the moment.</p>") + (core.debug ? data.data.message : '')
+                            _t("<p>We are not able to add your payment method at the moment.</p>") +
+                               "<p>" +
+                               (core.debug ? (data.data.message.replace(/\n/g, "<br />")): '') +
+                               "</p>"
                         );
                     });
                 }
@@ -162,7 +165,10 @@ odoo.define('payment.payment_form', function (require) {
                         }).fail(function (message, data) {
                             self.displayError(
                                 _t('Server Error'),
-                                _t("<p>We are not able to redirect you to the payment form.</p>") + (core.debug ? data.data.message : '')
+                                _t("<p>We are not able to redirect you to the payment form.</p>") +
+                                   "<p>" +
+                                   (core.debug ? (data.data.message.replace(/\n/g, "<br />")): '') +
+                                   "</p>"
                             );
                         });
                     }
@@ -268,7 +274,10 @@ odoo.define('payment.payment_form', function (require) {
 
                     self.displayError(
                         _t('Server error'),
-                        _t("<p>We are not able to add your payment method at the moment.</p>") + (core.debug ? data.data.message : '')
+                        _t("<p>We are not able to add your payment method at the moment.</p>") +
+                           "<p>" +
+                           (core.debug ? (data.data.message.replace(/\n/g, "<br />")): '') +
+                           "</p>"
                     );
                 });
             }
