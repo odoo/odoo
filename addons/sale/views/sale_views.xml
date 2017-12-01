@@ -885,7 +885,7 @@
             <field name="view_id" ref="account.invoice_tree"/>
             <field name="domain">[
                 ('state', 'not in', ['draft', 'cancel']),
-                ('type', '=', 'out_invoice')]</field>
+                ('type', 'in', ['out_invoice', 'out_refund'])]</field>
             <field name="context">{
                     'search_default_team_id': [active_id],
                     'default_team_id': active_id,
