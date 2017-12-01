@@ -6,19 +6,17 @@ import time
 import psycopg2
 import pytz
 from datetime import datetime, timedelta
-from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 
 import odoo
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.modules.loading import reset_modules_state
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
 BASE_VERSION = odoo.modules.load_information_from_description_file('base')['version']
-MAX_FAIL_TIME = timedelta(hours=5)
+MAX_FAIL_TIME = timedelta(hours=5)  # chosen with a fair roll of the dice
 
 
 class BadVersion(Exception):
@@ -218,9 +216,10 @@ class ir_cron(models.Model):
                 # nextcall is never updated if the cron is not executed,
                 # it is used as a sentinel value to check whether cron jobs
                 # have been locked for a long time (stuck)
+                parse = fields.Datetime.from_string
                 oldest = min([parse(job['nextcall']) for job in jobs])
-                if oldest + MAX_FAIL_TIME < datetime.now():
-                    reset_modules_state(db_name)
+                if datetime.now() - oldest > MAX_FAIL_TIME:
+                    odoo.modules.reset_modules_state(db_name)
                 else:
                     raise BadModuleState()
 
