@@ -31,6 +31,7 @@ class TestSaleMrpProcurement(TransactionCase):
         product.type = 'product'
         product.uom_id = uom_unit
         product.uom_po_id = uom_unit
+        product.route_ids.clear()
         product.route_ids.add(warehouse0.manufacture_pull_id.route_id)
         product.route_ids.add(warehouse0.mto_pull_id.route_id)
 

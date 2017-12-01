@@ -1141,6 +1141,13 @@ class M2MProxy(X2MProxy, collections.Sequence):
 
         self._parent._perform_onchange([self._field])
 
+    def clear(self):
+        """ Removes all existing records in the m2m
+        """
+        self._assert_editable()
+        self._get_ids()[:] = []
+        self._parent._perform_onchange([self._field])
+
 def record_to_values(fields, record):
     r = {}
     for f, descr in fields.items():

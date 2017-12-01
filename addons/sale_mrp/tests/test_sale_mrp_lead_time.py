@@ -19,6 +19,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
             p1.type = 'product'
             p1.produce_delay = 5.0
             p1.sale_delay = 5.0
+            p1.route_ids.clear()
             p1.route_ids.add(self.warehouse_1.manufacture_pull_id.route_id)
             p1.route_ids.add(self.warehouse_1.mto_pull_id.route_id)
 

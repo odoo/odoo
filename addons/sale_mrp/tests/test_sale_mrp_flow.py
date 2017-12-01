@@ -32,6 +32,7 @@ class TestSaleMrpFlow(common.TransactionCase):
             p.type = 'product'
             p.uom_id = uom_id
             p.uom_po_id = uom_id
+            p.route_ids.clear()
             for r in routes:
                 p.route_ids.add(r)
             return p.save()
