@@ -513,8 +513,8 @@ class TestAPI(common.TransactionCase):
             count = row[1]
 
             group = [x for x in grps if x.group_name == country_id]
-            self.assertGreaterEqual(len(x), 1, "Group " + country_id + " on db and not in grps")
-            self.assertLessEqual(len(x), 1, "Group " + country_id + " got multiple times")
+            self.assertGreaterEqual(len(x), 1, "Group " + str(country_id) + " on db and not in grps")
+            self.assertLessEqual(len(x), 1, "Group " + str(country_id) + " got multiple times")
             group = group[0]
             self.assertEqual(count, group.count)
 
