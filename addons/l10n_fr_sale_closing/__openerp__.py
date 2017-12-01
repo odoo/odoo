@@ -21,7 +21,8 @@ The module adds following features:
     'data': [
         'views/account_sale_closure.xml',
         'data/account_sale_closure_cron.xml',
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
+        'security/account_closing_intercompany.xml',
     ],
     'post_init_hook': '_setup_inalterability',
 }
