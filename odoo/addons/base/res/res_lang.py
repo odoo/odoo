@@ -239,6 +239,14 @@ class Lang(models.Model):
             self.env['ir.translation'].search([('lang', '=', language.code)]).unlink()
         self.clear_caches()
         return super(Lang, self).unlink()
+    
+    @api.model
+    def context_lang_format(self, value):
+        """Format the Date as of in Language Settings (based on 'lang' in context)"""
+        if isinstance(value, basestring):
+            value = fields.Datetime.from_string(value)
+        lang = self._lang_get(self.env.context.get('lang', 'en_US'))
+        return fields.datetime.strftime(value, lang.date_format)
 
     @api.multi
     def format(self, percent, value, grouping=False, monetary=False):
