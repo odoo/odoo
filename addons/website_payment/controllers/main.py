@@ -14,7 +14,8 @@ class WebsitePayment(http.Controller):
         payment_tokens |= partner.commercial_partner_id.sudo().payment_token_ids
         values = {
             'pms': payment_tokens,
-            'acquirers': acquirers
+            'acquirers': acquirers,
+            'error_message': [kwargs.get('error')],
         }
         return_url = request.params.get('redirect', '/my/payment_method')
         for acquirer in acquirers:
