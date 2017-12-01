@@ -499,9 +499,9 @@ class TestAPI(common.TransactionCase):
         """ Check .grouped() on recordsets. """
         ps = self.env['res.partner'].search([])
 
-        grps = ps.grouped(['country_id'])
+        grps = ps.grouped(['country_id.id'])
         #grps is a list of groups, ordered by country whose items are recordsets
-        
+
         self.cr.execute("SELECT country_id,count(*) FROM res_partner WHERE active = True GROUP BY country_id")
         while True:
             row = self.cr.fetchone()
@@ -512,9 +512,10 @@ class TestAPI(common.TransactionCase):
             self.assertTrue(country_id in grps)
             grp = grps[grps.index(country_id)]
             self.assertEqual(count, grp.count)
-            
-        
-        #should test many more cases:
+
+        # should test many more cases
+        # at least, we check they don't raise exceptions
+        grps = ps.grouped(['country_id'])
         grps = ps.grouped(['country_id.name'])
         grps = ps.grouped(['country_id.name,state_id.name'])
         grps = ps.grouped(['country_id,state_id'],['country_id.name,state_id.name'])
