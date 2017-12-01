@@ -5,7 +5,9 @@ import socket
 
 from email.utils import formataddr
 
-from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE, MAIL_TEMPLATE_PLAINTEXT, MAIL_MULTIPART_MIXED, MAIL_MULTIPART_MIXED_TWO, MAIL_MULTIPART_IMAGE
+from odoo.addons.test_mail.data.test_mail_data import \
+    MAIL_TEMPLATE, MAIL_TEMPLATE_PLAINTEXT, MAIL_MULTIPART_MIXED, MAIL_MULTIPART_MIXED_TWO, \
+    MAIL_MULTIPART_IMAGE, MAIL_SINGLE_BINARY
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails
 from odoo.tools import mute_logger
 
@@ -44,6 +46,9 @@ class TestEmailParsing(BaseFunctionalTest, MockEmails):
         self.assertIn('Second part', res['body'],
                       'message_parse: second part of the html version should be in body after parsing multipart/mixed')
 
+        res = self.env['mail.thread'].message_parse(MAIL_SINGLE_BINARY)
+        self.assertEqual(res['body'], '')
+        self.assertEqual(res['attachments'][0][0], 'thetruth.pdf')
 
 class TestMailgateway(BaseFunctionalTest, MockEmails):
 

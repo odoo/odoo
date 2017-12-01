@@ -33,6 +33,34 @@ def strip_ns(xml, ns):
     return it.root
 
 
+def error_check(elem):
+    """Check if the response sent by Authorize.net contains an error.
+
+    Errors can be a failure to try the transaction (in that case, the transasctionResponse
+    is empty, and the meaningful error message will be in message/code) or a failure to process
+    the transaction (in that case, the message/code content will be generic and the actual error
+    message is in transactionResponse/errors/error/errorText).
+
+    :param etree._Element elem: the root element of the response that will be parsed
+
+    :rtype: tuple (bool, str)
+    :return: tuple containnig a boolean indicating if the response should be considered
+             as an error and the most meaningful error message found in it.
+    """
+    result_code = elem.find('messages/resultCode')
+    msg = 'No meaningful error message found, please check logs or the Authorize.net backend'
+    has_error = result_code is not None and result_code.text == 'Error'
+    if has_error:
+        # accumulate the most meangingful error
+        error = elem.find('transactionResponse/errors/error')
+        error = error if error is not None else elem.find('messages/message')
+        if error is not None:
+            code = error[0].text
+            text = error[1].text
+            msg = '%s: %s' % (code, text)
+    return (has_error, msg)
+
+
 class AuthorizeAPI():
     """Authorize.net Gateway API integration.
 
@@ -42,6 +70,9 @@ class AuthorizeAPI():
         - Customer Profile/Payment Profile creation
         - Transaction authorization/capture/voiding
     """
+
+    AUTH_ERROR_STATUS = 3
+
     def __init__(self, acquirer):
         """Initiate the environment with the acquirer data.
 
@@ -77,9 +108,6 @@ class AuthorizeAPI():
         logged_data = etree.XML(r.content)
         logged_data = str(etree.tostring(logged_data, encoding='utf-8', pretty_print=True)).replace(r'\n', '\n')
         _logger.info('_authorize_request: Values received\n%s', logged_data)
-        if response.find('messages/resultCode').text == 'Error':
-            messages = [m.text for m in response.findall('messages/message/text')]
-            raise ValidationError(_('Authorize.net Error Message(s):\n %s') % '\n'.join(messages))
         return response
 
     def _base_tree(self, requestType):
@@ -231,6 +259,11 @@ class AuthorizeAPI():
         etree.SubElement(order, "invoiceNumber").text = reference
         response = self._authorize_request(root)
         res = dict()
+        (has_error, error_msg) = error_check(response)
+        if has_error:
+            res['x_response_code'] = self.AUTH_ERROR_STATUS
+            res['x_response_reason_text'] = error_msg
+            return res
         res['x_response_code'] = response.find('transactionResponse/responseCode').text
         res['x_trans_id'] = response.find('transactionResponse/transId').text
         res['x_type'] = 'auth_capture'
@@ -261,6 +294,11 @@ class AuthorizeAPI():
         etree.SubElement(order, "invoiceNumber").text = reference
         response = self._authorize_request(root)
         res = dict()
+        (has_error, error_msg) = error_check(response)
+        if has_error:
+            res['x_response_code'] = self.AUTH_ERROR_STATUS
+            res['x_response_reason_text'] = error_msg
+            return res
         res['x_response_code'] = response.find('transactionResponse/responseCode').text
         res['x_trans_id'] = response.find('transactionResponse/transId').text
         res['x_type'] = 'auth_only'
@@ -286,6 +324,11 @@ class AuthorizeAPI():
         etree.SubElement(tx, "refTransId").text = transaction_id
         response = self._authorize_request(root)
         res = dict()
+        (has_error, error_msg) = error_check(response)
+        if has_error:
+            res['x_response_code'] = self.AUTH_ERROR_STATUS
+            res['x_response_reason_text'] = error_msg
+            return res
         res['x_response_code'] = response.find('transactionResponse/responseCode').text
         res['x_trans_id'] = response.find('transactionResponse/transId').text
         res['x_type'] = 'prior_auth_capture'
@@ -306,6 +349,11 @@ class AuthorizeAPI():
         etree.SubElement(tx, "refTransId").text = transaction_id
         response = self._authorize_request(root)
         res = dict()
+        (has_error, error_msg) = error_check(response)
+        if has_error:
+            res['x_response_code'] = self.AUTH_ERROR_STATUS
+            res['x_response_reason_text'] = error_msg
+            return res
         res['x_response_code'] = response.find('transactionResponse/responseCode').text
         res['x_trans_id'] = response.find('transactionResponse/transId').text
         res['x_type'] = 'void'
