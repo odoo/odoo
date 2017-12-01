@@ -491,20 +491,6 @@ class PurchaseOrder(models.Model):
             'company_id': self.company_id.id
         }
 
-        if not self.invoice_ids:
-            # Choose a default account journal in the same currency in case a new invoice is created
-            journal_domain = [
-                ('type', '=', 'purchase'),
-                ('company_id', '=', self.company_id.id),
-                ('currency_id', '=', self.currency_id.id),
-            ]
-            default_journal_id = self.env['account.journal'].search(journal_domain, limit=1)
-            if default_journal_id:
-                result['context']['default_journal_id'] = default_journal_id.id
-        else:
-            # Use the same account journal than a previous invoice
-            result['context']['default_journal_id'] = self.invoice_ids[0].journal_id.id
-
         #choose the view_mode accordingly
         if len(self.invoice_ids) != 1:
             result['domain'] = "[('id', 'in', " + str(self.invoice_ids.ids) + ")]"
