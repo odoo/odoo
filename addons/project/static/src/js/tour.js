@@ -24,14 +24,13 @@ tour.register('project_tour', {
     position: 'right',
     run: function (actions) {
         actions.auto();
-        actions.auto(".modal:visible .btn.btn-primary");
     },
 }, {
-    trigger: '.o_project_kanban .o_kanban_record:first-child',
-    content: _t('Click on the card to <b>go to your project</b> and start organizing tasks.'),
+    trigger: '.o_open_tasks',
+    content: _t('This will create new project and redirect us to its tasks.'),
     position: 'right',
     run: function (actions) {
-        actions.auto(this.$anchor.find(".o_project_kanban_box:first"));
+        actions.auto(".modal:visible .btn.btn-primary");
     },
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create",
@@ -39,15 +38,31 @@ tour.register('project_tour', {
     position: "right"
 }, {
     trigger: ".o-kanban-button-new",
-    extra_trigger: '.o_kanban_project_tasks .o_kanban_group:eq(2)',
+    extra_trigger: '.o_kanban_project_tasks',
     content: _t("Now that the project is set up, <b>create a few tasks</b>."),
     position: "right"
 }, {
-    trigger: ".o_kanban_group:first-child .o_kanban_record:last-child",
+    trigger: '.o-kanban-button-new',
     extra_trigger: '.o_kanban_project_tasks',
-    content: _t("<b>Drag &amp; drop tasks</b> between columns as you work on them."),
-    position: "right",
-    run: "drag_and_drop .o_kanban_group:eq(2) ",
+    content: _t('Let\'s create your first task.'),
+    position: 'right',
+    width: 200,
+}, {
+    trigger: 'input.o_task_name',
+    content: _t('Choose a <b>task name</b>. (e.g. Website Design, Purchase Goods etc.)'),
+    position: 'right',
+    run: function (actions) {
+        actions.auto();
+    },
+}, {
+    trigger: '.o_form_button_save',
+    content: _t("<p>Once your task is ready, you can save it.</p>"),
+    position: 'bottom',
+}, {
+    trigger: ".breadcrumb li:not(.active):last",
+    extra_trigger: '.o_form_project_tasks.o_form_readonly',
+    content: _t("Use the breadcrumbs to <b>go back to your tasks pipeline</b>."),
+    position: "bottom"
 }, {
     trigger: ".o_kanban_record .o_priority_star",
     extra_trigger: '.o_kanban_project_tasks',
