@@ -17,8 +17,7 @@ export DEBIAN_FRONTEND=noninteractive
 echo "nameserver 8.8.8.8" >> /etc/resolv.conf
 
 
-apt-get update
-apt-get -y dist-upgrade
+apt-get update && apt-get -y upgrade
 # Do not be too fast to upgrade to more recent firmware and kernel than 4.38
 # Firmware 4.44 seems to prevent the LED mechanism from working
 
@@ -39,6 +38,8 @@ rm -rf /usr/share/doc
 pip install pyusb==1.0.0b1
 pip install qrcode
 pip install evdev
+pip install simplejson
+pip install unittest2
 
 # --upgrade because websocket_client in wheezy is bad:
 # https://github.com/docker/compose/issues/1288
@@ -53,7 +54,6 @@ sudo -u postgres createuser -s pi
 mkdir /var/log/odoo
 chown pi:pi /var/log/odoo
 chown pi:pi -R /home/pi/odoo/
-chmod 770 -R /home/pi/odoo/
 
 # logrotate is very picky when it comes to file permissions
 chown -R root:root /etc/logrotate.d/

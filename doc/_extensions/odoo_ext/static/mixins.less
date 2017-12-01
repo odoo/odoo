@@ -2,6 +2,25 @@
 // ================  Mixins =======================
 // ================================================
 
+// Code column layout mixins
+// ------------------------------------------------------------------
+.pseudo-col() {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+    float: left;
+    width: 100%;
+}
+
+.code-col() {
+    content: "";
+    background: @doc_code-bg;
+    .box-shadow(inset 40px 0 40px -18px rgba(22, 24, 29, 0.3));
+    .o-position-absolute(0,0);
+    .size(50%, 100%);
+}
+
 // Utilities
 // ------------------------------------------------------------------
 .o-no-select {
@@ -131,65 +150,11 @@
     }
 }
 
-// Elevation Shadows
-// Visual cue indicating the amount of separation between surfaces.
-// An object’s elevation determines the appearance of its shadow.
-// ------------------------------------------------------------------
-.deep-1-shadow() {
+// Shadows
+// --------------------------------------------------
+.deep-1() {
     box-shadow: 0  1px  1px 0 rgba(0, 0, 0, 0.17);
 }
-.deep-2-shadow() {
-    box-shadow: 0  6px 10px 0 rgba(0, 0, 0, 0.1), 0 2px 2px 0 rgba(0, 0, 0, 0.05);
-}
-.deep-3-shadow() {
-    box-shadow: 0 13px 25px 0 rgba(0, 0, 0, 0.1), 0 11px 7px 0 rgba(0, 0, 0, 0.09);
-}
-.deep-4-shadow() {
-    box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.1), 0 14px 12px 0 rgba(0, 0, 0, 0.07);
-}
-.deep-5-shadow() {
-    box-shadow: 0 27px 55px 0 rgba(0, 0, 0, 0.1), 0 17px 17px 0 rgba(0, 0, 0, 0.05);
-}
-.deep-transition() {
-    .o-transition(box-shadow, 0.3s, @o-ease);
-}
-
-.deep-1() {
-    .deep-1-shadow();
-
-    &.deep_hover:hover {
-        .deep-transition();
-        .deep-2-shadow();
-    }
-}
-.deep-2() {
-    .deep-2-shadow();
-
-    &.deep_hover:hover {
-        .deep-transition();
-        .deep-3-shadow();
-    }
-}
-.deep-3() {
-    .deep-3-shadow();
-
-    &.deep_hover:hover {
-        .deep-transition();
-        .deep-4-shadow();
-    }
-}
-.deep-4() {
-    .deep-4-shadow();
-
-    &.deep_hover:hover {
-        .deep-transition();
-        .deep-5-shadow();
-    }
-}
-.deep-5() {
-    .deep-5-shadow();
-}
-
 
 .transform(@args) {
   -webkit-transform : @args;
@@ -199,7 +164,8 @@
   transform         : @args;
 }
 
-//-- Material Design Icons
+// Material Design Icons
+// --------------------------------------------------
 .mdi-icon(@content) {
     font-family: 'Material-Design-Icons';
     content: @content;
@@ -210,13 +176,8 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-.keyframes(@name; @arguments) {
-  @-moz-keyframes @name { @arguments(); }
-  @-webkit-keyframes @name { @arguments(); }
-  @keyframes @name { @arguments(); }
-}
-
-//-- Documentation Dropdown style
+// Documentation Dropdown style
+// --------------------------------------------------
 .o-doc-dropdown {
     > a.dropdown-toggle {
         padding: 0 5px 0 10px;
@@ -313,36 +274,4 @@
             }
         }
     }
-}
-
-
-// Shadows
-// --------------------------------------------------
-
-.shadow-none {
-  .box-shadow(none);
-}
-
-.deep-1 {
-    box-shadow: 0  1px  1px 0 rgba(0, 0, 0, 0.17);
-}
-.deep-2 {
-    box-shadow: 0  6px 10px 0 rgba(0, 0, 0, 0.1), 0 2px 2px 0 rgba(0, 0, 0, 0.05);
-}
-.deep-3 {
-    box-shadow: 0 13px 25px 0 rgba(0, 0, 0, 0.1), 0 11px 7px 0 rgba(0, 0, 0, 0.09);
-}
-.deep-4 {
-    box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.1), 0 14px 12px 0 rgba(0, 0, 0, 0.07);
-}
-.deep-5 {
-    box-shadow: 0 27px 55px 0 rgba(0, 0, 0, 0.1), 0 17px 17px 0 rgba(0, 0, 0, 0.05);
-}
-
-// overwrite bootstrap inline forcing
-.img-responsive {
-  display: inline-block;
-}
-.img-responsive.center-block {
-  display: block;
 }
