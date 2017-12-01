@@ -336,19 +336,19 @@ class Project(models.Model):
         favorite_projects.write({'favorite_user_ids': [(3, self.env.uid)]})
 
     @api.multi
-    def close_dialog(self):
-        return {'type': 'ir.actions.act_window_close'}
-
-    @api.multi
-    def edit_dialog(self):
-        form_view = self.env.ref('project.edit_project')
+    def open_tasks(self):
+        ctx = dict(self._context)
+        ctx.update({'search_default_project_id': self.id})
+        kanban_view_id = self.env.ref('project.view_task_kanban')
         return {
-            'name': _('Project'),
-            'res_model': 'project.project',
-            'res_id': self.id,
-            'views': [(form_view.id, 'form'),],
+            'name': _('Tasks'),
+            'res_model': 'project.task',
             'type': 'ir.actions.act_window',
-            'target': 'inline'
+            'view_id': kanban_view_id.id,
+            'views': [(kanban_view_id.id, 'kanban'), (False, 'form')],
+            'view_mode': 'kanban,tree,form',
+            'view_type': 'form',
+            'context': ctx
         }
 
 

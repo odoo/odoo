@@ -244,25 +244,21 @@
             <field name="model">project.project</field>
             <field name="arch" type="xml">
                 <form string="Project">
-                    <sheet>
+                    <group>
                         <group>
-                            <group>
-                                <field name="name" class="o_project_name oe_inline"
-                                    string="Project Name" placeholder="e.g. Office Party"/>
-                                <label for="alias_name" string="Choose a Project Email" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
-                                <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                    <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
-                                </div>
-                                <field name="user_id" invisible="1"/>
-                            </group>
+                            <field name="name" class="o_project_name oe_inline"
+                                string="Project Name" placeholder="e.g. Office Party"/>
+                            <field name="user_id" invisible="1"/>
+                            <label for="alias_name" string="Choose a Project Email" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                            <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                            </div>
                         </group>
-                        <footer>
-                            <button string="Create" name="close_dialog" type="object" class="btn-primary"/>
-                            <button string="Create &amp; Edit" name="edit_dialog" type="object" class="btn-primary"/>
-                            <button string="Discard" class="btn-default" special="cancel"/>
-                        </footer>
-
-                    </sheet>
+                    </group>
+                    <footer>
+                        <button string="Create" name="open_tasks" type="object" class="btn-primary o_open_tasks"/>
+                        <button string="Discard" class="btn-default" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>
