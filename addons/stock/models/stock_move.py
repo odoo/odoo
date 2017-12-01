@@ -390,9 +390,13 @@ class StockMove(models.Model):
         if not self.product_id or self.product_qty < 0.0:
             self.product_qty = 0.0
         if self.product_qty < self._origin.product_qty:
-            return {'warning': _("By changing this quantity here, you accept the "
-                                 "new quantity as complete: Odoo will not "
-                                 "automatically generate a back order.")}
+            warning_mess = {
+                'title': _('Quantity decreased!'),
+                'message' : _("By changing this quantity here, you accept the "
+                              "new quantity as complete: Odoo will not "
+                              "automatically generate a back order."),
+            }
+            return {'warning': warning_mess}
 
     @api.onchange('product_id')
     def onchange_product_id(self):
@@ -971,7 +975,7 @@ class StockMove(models.Model):
         self._propagate_split(new_move, qty)
         # returning the first element of list returned by action_confirm is ok because we checked it wouldn't be exploded (and
         # thus the result of action_confirm should always be a list of 1 element length)
-        new_move.action_confirm()
+        new_move = new_move.action_confirm()
         # TDE FIXME: due to action confirm change
         return new_move.id
 

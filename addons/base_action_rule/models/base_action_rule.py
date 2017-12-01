@@ -317,7 +317,15 @@ class BaseActionRule(models.Model):
 
         # retrieve all actions, and patch their corresponding model
         for action_rule in self.with_context({}).search([]):
-            Model = self.env[action_rule.model]
+            Model = self.env.get(action_rule.model)
+
+            # Do not crash if the model of the base_action_rule was uninstalled
+            if Model is None:
+                _logger.warning("Action rule with ID %d depends on model %s" %
+                                (action_rule.id,
+                                 action_rule.model))
+                continue
+
             if action_rule.kind == 'on_create':
                 patch(Model, 'create', make_create())
 

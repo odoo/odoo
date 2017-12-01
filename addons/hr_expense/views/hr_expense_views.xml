@@ -465,9 +465,14 @@
                                 <field name="attachment_number" string=" "/>
                                 <button name="action_get_attachment_view" string="View Attachments" type="object" icon="fa-paperclip"/>
                                 <field name="tax_ids" widget="many2many_tags"/>
-                                <field name="total_amount" sum="Total Amount" widget="monetary"/>
+                                <field name="total_amount" widget="monetary"/>
                            </tree>
                         </field>
+                        <group>
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="expense_total">
+                                <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                            </group>
+                        </group>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>

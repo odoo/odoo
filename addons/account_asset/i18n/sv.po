@@ -5,7 +5,7 @@
 # Translators:
 # Robert Frykelius <robert.frykelius@linserv.se>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# larmar <martin.wilderoth@linserv.se>, 2016
+# Martin Wilderoth <martin.wilderoth@linserv.se>, 2016
 # Jonathan S <jonathan.c.strom@gmail.com>, 2016
 # Jan-Eric Lindh <jelindh@gmail.com>, 2016
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2016
@@ -58,7 +58,7 @@ msgstr ""
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_date
 msgid "Account Date"
-msgstr ""
+msgstr "Bokföringsdatum"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_move
@@ -143,7 +143,7 @@ msgid "Asset Durations to Modify"
 msgstr "Inventariers livslängd att ändra"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
+#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
 msgid "Asset End Date"
 msgstr "Tillgångens slutdatum"
 
@@ -158,7 +158,7 @@ msgid "Asset Name"
 msgstr "Inventarienamn"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
+#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
 msgid "Asset Start Date"
 msgstr "Tillgångens startdatum"
 
@@ -486,6 +486,7 @@ msgstr "Avskrivningsdatutm"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Depreciation Entries: Asset Account"
 msgstr ""
 
@@ -978,6 +979,14 @@ msgstr "Tiden mellan två avskivningar, i månader"
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_method_number
 msgid "The number of depreciations needed to depreciate your asset"
 msgstr "Antal avskrivningar för att anse tillgången helt avskriven"
+
+#. module: account_asset
+#: code:addons/account_asset/models/account_asset.py:477
+#, python-format
+msgid ""
+"This depreciation is already linked to a journal entry! Please post or "
+"delete it."
+msgstr ""
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard

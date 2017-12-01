@@ -5,11 +5,11 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # Morten Schou <ms@msteknik.dk>, 2016
-# Ejner Sønniksen <ejner@vkdata.dk>, 2016
 # jonas jensen <j.jensen@tcomp.dk>, 2016
 # Jesper Carstensen <info@danodoo.dk>, 2016
 # Jesper Carstensen <jc@danodoo.dk>, 2016
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
+# Ejner Sønniksen <ejner@vkdata.dk>, 2017
 # Sanne Kristensen <sanne@vkdata.dk>, 2017
 msgid ""
 msgstr ""
@@ -50,7 +50,7 @@ msgstr "Kontonummer"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type_control_ids
 msgid "Account Types Allowed"
-msgstr "Tilladte konto typer"
+msgstr "Tilladte kontotyper"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_account_control_ids
@@ -60,7 +60,7 @@ msgstr "Tilladte konti"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
 msgid "Allow Cancelling Entries"
-msgstr "Tillad annullering af posteringer"
+msgstr "Tillad annullering af indtastninger"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:238
@@ -88,12 +88,12 @@ msgstr "Bank"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_account_id
 msgid "Bank Account"
-msgstr "Bank konto"
+msgstr "Bankkonto"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_statements_source
 msgid "Bank Feeds"
-msgstr "Bank feeds"
+msgstr "Bankfeeds"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -136,8 +136,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " refunds made from this journal"
 msgstr ""
-"Afkryds dette felt, hvis du ikke vil anvende samme nummerserie for fakturaer"
-" og kreditnotaer lavet i denne journal"
+"Afkryds dette felt, hvis du ikke vil dele samme rækkefølge for fakturaer og "
+"refusioner lavet i denne journal"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
@@ -161,7 +161,7 @@ msgstr "Virksomhed"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_company_id
 msgid "Company related to this journal"
-msgstr "Firma knyttet til denne konto"
+msgstr "Virksomhed knyttet til denne konto"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:106
@@ -198,17 +198,17 @@ msgstr "Debit metoder"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
 msgid "Dedicated Refund Sequence"
-msgstr "Nummerserie for kreditnotaer"
+msgstr "Tilbagebetalingssekvens"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_credit_account_id
 msgid "Default Credit Account"
-msgstr "Standard krediterings konto"
+msgstr "Standard krediteringskonto"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_debit_account_id
 msgid "Default Debit Account"
-msgstr "Standard Debit konto"
+msgstr "Standard debit konto"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_display_name
@@ -222,8 +222,8 @@ msgid ""
 "Display this bank account on the footer of printed documents like invoices "
 "and sales orders."
 msgstr ""
-"Vis denne bankkonto i foden af udskrevne dokumenter, på fakturaer og salgs "
-"ordre."
+"Vis denne bankkonto i bunden af udskrevne dokumenter, på fakturaer og "
+"salgsordre."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -255,7 +255,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_group_invoice_lines
 msgid "Group Invoice Lines"
-msgstr "Grupper fakturalinier"
+msgstr "Gruppér fakturalinjer"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_id
@@ -269,8 +269,8 @@ msgid ""
 "If this box is checked, the system will try to group the accounting lines "
 "when generating them from invoices."
 msgstr ""
-"Hvis denne boks er markeret, forsøger systemet at gruppere posteringerne, "
-"når de genereres fra fakturaer."
+"Hvis denne boks er markeret, forsøger systemet at gruppere "
+"regnskabsposteringerne, når de genereres fra fakturaer."
 
 #. module: account_bank_statement_import
 #: model:ir.actions.act_window,name:account_bank_statement_import.action_account_bank_statement_import
@@ -305,12 +305,12 @@ msgstr "Importer kontoudtog"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_credit_account_id
 msgid "It acts as a default account for credit amount"
-msgstr "Fungerer som standardkonto for kreditbeløb"
+msgstr "Det fungerer som en standardkonto for kreditbeløb"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_debit_account_id
 msgid "It acts as a default account for debit amount"
-msgstr "Fungerer som standardkonto for debetbeløb"
+msgstr "Det fungerer som en standardkonto for debetbeløb"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_journal
@@ -383,7 +383,7 @@ msgid ""
 "handling facilities, but you can always use the 'Manual' payment method in "
 "order to manage payments outside of the software."
 msgstr ""
-"Betalingsmetoder til modtagelse af penge. Odoo-moduler tilbyder forskellige "
+"Betalingsmidler til indsamling af penge. Odoo-moduler tilbyder forskellige "
 "betalingshåndteringsfaciliteter, men du kan altid bruge den 'manuelle' "
 "betalingsmetode for at styre betalinger uden for softwaren."
 
@@ -394,7 +394,7 @@ msgid ""
 "handling facilities, but you can always use the 'Manual' payment method in "
 "order to manage payments outside of the software."
 msgstr ""
-"Betalingsmetoder til afsendelse af penge. Odoo-moduler tilbyder forskellige "
+"Betalingsmidler til afsendelse af penge. Odoo-moduler tilbyder forskellige "
 "betalingshåndteringsfaciliteter, men du kan altid bruge den 'manuelle' "
 "betalingsmetode for at styre betalinger uden for softwaren."
 
@@ -417,12 +417,12 @@ msgstr "Betalingsmetoder"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_profit_account_id
 msgid "Profit Account"
-msgstr "Indtægts konto"
+msgstr "Indtægtskonto"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
 msgid "Refund Entry Sequence"
-msgstr "Nummerserie for kredit poster"
+msgstr "Restitutionssekvens"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
@@ -433,9 +433,9 @@ msgid ""
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
 "Vælg \"Salg\" for kundefaktura journaler.\n"
-"Vælg 'Køb' for leverandørfaktura journaler.\n"
+"Vælg 'Køb' for leverandørregninger journaler.\n"
 "Vælg 'Kontant' eller 'Bank' for journaler, der bruges til kunde- eller leverandørbetalinger.\n"
-"Vælg 'Generelt' for diverse poster."
+"Vælg 'Generelt' for diverse operation journaler."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -493,7 +493,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_currency_id
 msgid "The currency used to enter statement"
-msgstr "Valuta der anvendes ved indtastning af kontoudtoget"
+msgstr "Valuta bruges til at indtaste kontoudtoget"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
@@ -517,8 +517,8 @@ msgid ""
 "This field contains the information related to the numbering of the refund "
 "entries of this journal."
 msgstr ""
-"Dette felt indeholder oplysninger om nummerering af kreditposter i denne "
-"journal."
+"Dette felt indeholder oplysninger om nummerering af restitutionsposter i "
+"denne journal."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:111
@@ -540,7 +540,7 @@ msgstr "Type"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr "Bruges til at sortere Journaler i dashboard visningen"
+msgstr "Bruges til at sortere journaler i dashboardet"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_loss_account_id
@@ -548,8 +548,8 @@ msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
 msgstr ""
-"Bruges til at registrere et tab, når slutkursen i et kasseapparat adskiller "
-"sig fra, hvad systemet beregner"
+"Bruges til at registrere et tab, når kassebeholdningen for et kasseapparat "
+"adskiller sig fra, hvad systemet beregner"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_profit_account_id
@@ -557,8 +557,8 @@ msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
 msgstr ""
-"Bruges til at registrere et overskud, når slutkursen i et kasseapparat "
-"adskiller sig fra, hvad systemet beregner"
+"Bruges til at registrere en indtægt, når kassebeholdningen for et "
+"kasseapparat adskiller sig fra, hvad systemet beregner"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_show_on_dashboard

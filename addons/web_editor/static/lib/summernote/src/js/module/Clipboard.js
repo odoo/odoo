@@ -206,6 +206,18 @@ define([
         r.select();
       }
 
+      // If only pasting a <p/> element in an unique <p/> element, only paste
+      // the <p/> element text
+      var $p = $arch.children('p');
+      var onlyAP = ($p.length === 1 && $arch.children().length === 1);
+      if (onlyAP) {
+        var $p1 = $(r.sc).closest('p');
+        var $p2 = $(r.ec).closest('p');
+        if ($p1.length && $p2.length && $p1[0] === $p2[0]) {
+          $arch.html($p.text());
+        }
+      }
+
       /*
           insert content
       */
