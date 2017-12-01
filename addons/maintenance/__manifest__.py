@@ -16,6 +16,7 @@
         'data/mail_data.xml',
         'views/maintenance_views.xml',
         'views/maintenance_templates.xml',
+        'views/mail_activity_views.xml',
         'data/maintenance_cron.xml',
     ],
     'demo': ['data/maintenance_demo.xml'],
