@@ -523,6 +523,5 @@ class TestAPI(common.TransactionCase):
         grps = ps.grouped(['country_id'])
         grps = ps.grouped(['country_id.name'])
         grps = ps.grouped(['country_id.name','state_id.name'])
-        grps = ps.grouped(['country_id','state_id'],['country_id.name','state_id.name'])
-        grps = ps.grouped(['country_id.name','state_id.name'],max_state='max(state_id.name)')
+        grps = ps.grouped(['country_id.name'],['max_state'],max_state='max(state_id.name)')
 
