@@ -1,4 +1,4 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (C) RockIT Oy 2014-
@@ -12,8 +12,18 @@
 {
     "name": "Finland - Accounting",
     "category": "Localization",
-    "version": "1.0.0",
+    "version": "1.0",
     "author": "RockIt Oy & Avoin.Systems",
+    'description': """
+
+This module for Finland localization
+====================================
+
+This module consists:
+
+ - Tags supporting Finland Accounting
+
+ """,
     "depends": [
         "account",
         "base_vat",

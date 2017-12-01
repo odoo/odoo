@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Account Chart Template -->
+    <record id="chart_template_fi_rapko" model="account.chart.template">
+        <field name="name">Finnish Chart of Accounts (Raportointikoodisto)</field>
+        <field name="code_digits">6</field>
+        <field name="bank_account_code_prefix">1910</field>
+        <field name="cash_account_code_prefix">1901</field>
+        <field name="transfer_account_code_prefix">1919</field>
+        <field name="currency_id" ref="base.EUR"/>
+    </record>
+
+</odoo>
