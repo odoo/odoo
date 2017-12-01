@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.tools import float_compare
 
 _logger = logging.getLogger(__name__)
@@ -29,7 +29,7 @@ class PaymentTransaction(models.Model):
 
             created_invoice.action_invoice_open()
             if tx.acquirer_id.journal_id:
-                created_invoice.pay_and_reconcile(tx.acquirer_id.journal_id, pay_amount=created_invoice.amount_total)
+                created_invoice.with_context(tx_currency_id=tx.currency_id.id).pay_and_reconcile(tx.acquirer_id.journal_id, pay_amount=created_invoice.amount_total)
                 if created_invoice.payment_ids:
                     created_invoice.payment_ids[0].payment_transaction_id = tx
             else:
@@ -80,4 +80,16 @@ class PaymentTransaction(models.Model):
                         _logger.info('<%s> transaction pending/to confirm manually, sending quote email for order %s (ID %s)', acquirer_name, tx.sale_order_id.name, tx.sale_order_id.id)
                         tx.sale_order_id.force_quotation_send()
                 else:
-                    _logger.warning('<%s> transaction MISMATCH for order %s (ID %s)', acquirer_name, tx.sale_order_id.name, tx.sale_order_id.id)
+                    _logger.warning(
+                        '<%s> transaction AMOUNT MISMATCH for order %s (ID %s): expected %r, got %r',
+                        acquirer_name, tx.sale_order_id.name, tx.sale_order_id.id,
+                        tx.sale_order_id.amount_total, tx.amount,
+                    )
+                    tx.sale_order_id.message_post(
+                        subject=_("Amount Mismatch (%s)") % acquirer_name,
+                        body=_("The sale order was not confirmed despite response from the acquirer (%s): SO amount is %r but acquirer replied with %r.") % (
+                            acquirer_name,
+                            tx.sale_order_id.amount_total,
+                            tx.amount,
+                        )
+                    )

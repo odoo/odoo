@@ -9,13 +9,14 @@
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2016
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
 # Ejner Sønniksen <ejner@vkdata.dk>, 2017
+# Sanne Kristensen <sanne@vkdata.dk>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Ejner Sønniksen <ejner@vkdata.dk>, 2017\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,6 +51,29 @@ msgid ""
 "<p>\n"
 "${object.wizard_id.welcome_message or ''}"
 msgstr ""
+"\n"
+"<p>\n"
+"    Kære ${object.user_id.name or ''},\n"
+"</p>\n"
+"<p>\n"
+"    Hermed fremsendes adgang til ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n"
+"</p>\n"
+"<p>\n"
+"    Herunder finder du dine kontooplysninger:\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Brugernavn: ${object.user_id.login or ''}</li>\n"
+"    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"\t<li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"</ul>\n"
+"<p>\n"
+"\tDu kan indtaste eller ændre din adgangskode via følgende URL:\n"
+"</p>\n"
+"<ul>\n"
+"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"</ul>\n"
+"<p>\n"
+"${object.wizard_id.welcome_message or ''}"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_groups
@@ -165,7 +189,7 @@ msgstr "Portal"
 #: model:ir.model,name:portal.model_portal_wizard
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Portal Access Management"
-msgstr ""
+msgstr "Adgangskontrol til portal"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.group_search_view
@@ -184,6 +208,9 @@ msgid ""
 "                        The email address of each selected contact must be valid and unique.\n"
 "                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
+"Vælg hvilke kontakter der skal have adgang til portalen i listen nedenfor.\n"
+"                        E-mailadressen for hver valgt kontakt skal være gyldig og unik.\n"
+"                        Hvis det er nødvendigt, kan du rette kontakternes e-mail-adresser direkte i listen."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:106
@@ -219,6 +246,8 @@ msgstr ""
 #: model:ir.model.fields,help:portal.field_portal_wizard_welcome_message
 msgid "This text is included in the email sent to new users of the portal."
 msgstr ""
+"Denne tekst er inkluderet i den e-mail, der sendes til nye brugere af "
+"portalen."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:112
@@ -228,6 +257,9 @@ msgid ""
 "- Correct the emails of the relevant contacts\n"
 "- Grant access only to contacts with unique emails"
 msgstr ""
+"For at løse denne fejl kan du: \n"
+"- Korrigere e-mails af de relevante kontakter\n"
+"- Giv kun adgang til kontakter med unikke e-mails"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_ids
@@ -245,8 +277,10 @@ msgstr "Guide"
 msgid ""
 "You must have an email address in your User Preferences to send emails."
 msgstr ""
+"Du skal have en e-mailadresse i dine brugerindstillinger for at sende "
+"e-mails."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
 msgid "Your Odoo account at ${user.company_id.name}"
-msgstr ""
+msgstr "Din Odoo konto hos ${user.company_id.name}"

@@ -94,7 +94,7 @@ def ustr(value, hint_encoding='utf-8', errors='strict'):
 def exception_to_unicode(e):
     if (sys.version_info[:2] < (2,6)) and hasattr(e, 'message'):
         return ustr(e.message)
-    if hasattr(e, 'args'):
+    if getattr(e, 'args', ()):
         return "\n".join((ustr(a) for a in e.args))
     try:
         return unicode(e)

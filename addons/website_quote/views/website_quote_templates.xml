@@ -340,9 +340,7 @@
                                     <li t-foreach="acquirers or []" t-as="acquirer">
                                       <label t-if="buttons.get(acquirer.id)">
                                           <input t-att-value="acquirer.id" type="radio" name="acquirer" t-att-checked="acquirers[0] == acquirer"/>
-                                          <img class="media-object" style="width: 60px; display: inline-block;"
-                                              t-att-title="acquirer.name"
-                                              t-att-src="'/payment_%s/static/src/img/%s_icon.png' % (acquirer.provider, acquirer.provider)"/>
+                                          <span itemprop="image" t-field="acquirer.image_small" t-options="{'widget': 'image', 'style':'max-width: 60px; display: inline-block;'}"/>
                                               <span t-field="acquirer.name"/>
                                       </label>
                                     </li>

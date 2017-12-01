@@ -7,7 +7,7 @@
 
 {
     'name': 'Luxembourg - Accounting',
-    'version': '1.0',
+    'version': '2.0',
     'category': 'Localization',
     'description': """
 This is the base module to manage the accounting chart for Luxembourg.
@@ -39,4 +39,5 @@ Notes:
         'data/account.chart.template.csv',
         'data/account_chart_template_data.yml',
     ],
+    'post_init_hook': '_preserve_tag_on_taxes',
 }

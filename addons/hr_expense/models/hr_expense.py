@@ -278,7 +278,7 @@ class HrExpense(models.Model):
             account_move.append(move_line)
 
             # Calculate tax lines and adjust base line
-            taxes = expense.tax_ids.compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id)
+            taxes = expense.tax_ids.with_context(round=True).compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id)
             account_move[-1]['price'] = taxes['total_excluded']
             account_move[-1]['tax_ids'] = [(6, 0, expense.tax_ids.ids)]
             for tax in taxes['taxes']:
@@ -292,6 +292,13 @@ class HrExpense(models.Model):
                     'tax_line_id': tax['id'],
                 })
         return account_move
+
+    @api.multi
+    def unlink(self):
+        for expense in self:
+            if expense.state in ['done']:
+                raise UserError(_('You cannot delete a posted expense.'))
+        super(HrExpense, self).unlink()
 
     @api.multi
     def action_get_attachment_view(self):
@@ -378,7 +385,7 @@ class HrExpenseSheet(models.Model):
     _order = "accounting_date desc, id desc"
 
     name = fields.Char(string='Expense Report Summary', required=True)
-    expense_line_ids = fields.One2many('hr.expense', 'sheet_id', string='Expense Lines', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, copy=False)
+    expense_line_ids = fields.One2many('hr.expense', 'sheet_id', string='Expense Lines', states={'approve': [('readonly', True)], 'done': [('readonly', True)], 'post': [('readonly', True)]}, copy=False)
     state = fields.Selection([('submit', 'Submitted'),
                               ('approve', 'Approved'),
                               ('post', 'Posted'),
@@ -397,7 +404,7 @@ class HrExpenseSheet(models.Model):
     journal_id = fields.Many2one('account.journal', string='Expense Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]},
         default=lambda self: self.env['ir.model.data'].xmlid_to_object('hr_expense.hr_expense_account_journal') or self.env['account.journal'].search([('type', '=', 'purchase')], limit=1),
         help="The journal used when the expense is done.")
-    bank_journal_id = fields.Many2one('account.journal', string='Bank Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, default=lambda self: self.env['account.journal'].search([('type', 'in', ['case', 'bank'])], limit=1), help="The payment method used when the expense is paid by the company.")
+    bank_journal_id = fields.Many2one('account.journal', string='Bank Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, default=lambda self: self.env['account.journal'].search([('type', 'in', ['cash', 'bank'])], limit=1), help="The payment method used when the expense is paid by the company.")
     accounting_date = fields.Date(string="Accounting Date")
     account_move_id = fields.Many2one('account.move', string='Journal Entry', copy=False)
     department_id = fields.Many2one('hr.department', string='Department', states={'post': [('readonly', True)], 'done': [('readonly', True)]})
@@ -413,13 +420,7 @@ class HrExpenseSheet(models.Model):
 
     @api.model
     def create(self, vals):
-        # Add the followers at creation, so they can be notified
-        if vals.get('employee_id'):
-            employee = self.env['hr.employee'].browse(vals['employee_id'])
-            users = self._get_users_to_subscribe(employee=employee) - self.env.user
-            vals['message_follower_ids'] = []
-            for partner in users.mapped('partner_id'):
-                vals['message_follower_ids'] += self.env['mail.followers']._add_follower_command(self._name, [], {partner.id: None}, {})[0]
+        self._create_set_followers(vals)
         sheet = super(HrExpenseSheet, self).create(vals)
         self.check_consistency()
         return sheet
@@ -435,8 +436,8 @@ class HrExpenseSheet(models.Model):
     @api.multi
     def unlink(self):
         for expense in self:
-            if expense.state == "post":
-                raise UserError(_("You cannot delete a posted expense."))
+            if expense.state in ['post', 'done']:
+                raise UserError(_('You cannot delete a posted or paid expense.'))
         super(HrExpenseSheet, self).unlink()
 
     @api.multi
@@ -471,6 +472,20 @@ class HrExpenseSheet(models.Model):
         users = self._get_users_to_subscribe()
         self.message_subscribe_users(user_ids=users.ids)
 
+    @api.model
+    def _create_set_followers(self, values):
+        # Add the followers at creation, so they can be notified
+        employee_id = values.get('employee_id')
+        if not employee_id:
+            return
+
+        employee = self.env['hr.employee'].browse(employee_id)
+        users = self._get_users_to_subscribe(employee=employee) - self.env.user
+        values['message_follower_ids'] = []
+        MailFollowers = self.env['mail.followers']
+        for partner in users.mapped('partner_id'):
+            values['message_follower_ids'] += MailFollowers._add_follower_command(self._name, [], {partner.id: None}, {})[0]
+
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
         self.address_id = self.employee_id.address_home_id
@@ -479,10 +494,13 @@ class HrExpenseSheet(models.Model):
     @api.one
     @api.depends('expense_line_ids', 'expense_line_ids.total_amount', 'expense_line_ids.currency_id')
     def _compute_amount(self):
-        if len(self.expense_line_ids.mapped('currency_id')) < 2:
-            self.total_amount = sum(self.expense_line_ids.mapped('total_amount'))
-        else:
-            self.total_amount = 0.0
+        total_amount = 0.0
+        for expense in self.expense_line_ids:
+            total_amount += expense.currency_id.with_context(
+                date=expense.date,
+                company_id=expense.company_id.id
+            ).compute(expense.total_amount, self.currency_id)
+        self.total_amount = total_amount
 
     # FIXME: A 4 command is missing to explicitly declare the one2many relation
     # between the sheet and the lines when using 'default_expense_line_ids':[ids]
@@ -506,6 +524,8 @@ class HrExpenseSheet(models.Model):
 
     @api.multi
     def refuse_expenses(self, reason):
+        if not self.user_has_groups('hr_expense.group_hr_expense_user'):
+            raise UserError(_("Only HR Officers can refuse expenses"))
         self.write({'state': 'cancel'})
         for sheet in self:
             body = (_("Your Expense %s has been refused.<br/><ul class=o_timeline_tracking_value_list><li>Reason<span> : </span><span class=o_timeline_tracking_value>%s</span></li></ul>") % (sheet.name, reason))
@@ -513,6 +533,8 @@ class HrExpenseSheet(models.Model):
 
     @api.multi
     def approve_expense_sheets(self):
+        if not self.user_has_groups('hr_expense.group_hr_expense_user'):
+            raise UserError(_("Only HR Officers can approve expenses"))
         self.write({'state': 'approve', 'responsible_id': self.env.user.id})
 
     @api.multi
@@ -574,3 +596,10 @@ class HrExpenseSheet(models.Model):
         employee_ids = self.expense_line_ids.mapped('employee_id')
         if len(employee_ids) > 1 or (len(employee_ids) == 1 and employee_ids != self.employee_id):
             raise ValidationError(_('You cannot add expense lines of another employee.'))
+
+    @api.one
+    @api.constrains('expense_line_ids')
+    def _check_payment_mode(self):
+        payment_mode = set(self.expense_line_ids.mapped('payment_mode'))
+        if len(payment_mode) > 1:
+            raise ValidationError(_('You cannot report expenses with different payment modes.'))

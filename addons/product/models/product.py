@@ -303,7 +303,8 @@ class ProductProduct(models.Model):
             for value in product.attribute_value_ids:
                 if value.attribute_id in attributes:
                     raise ValidationError(_('Error! It is not allowed to choose more than one value for a given attribute.'))
-                attributes |= value.attribute_id
+                if value.attribute_id.create_variant:
+                    attributes |= value.attribute_id
         return True
 
     @api.onchange('uom_id', 'uom_po_id')
@@ -314,7 +315,9 @@ class ProductProduct(models.Model):
     @api.model
     def create(self, vals):
         product = super(ProductProduct, self.with_context(create_product_product=True)).create(vals)
-        product._set_standard_price(vals.get('standard_price', 0.0))
+        # When a unique variant is created from tmpl then the standard price is set by _set_standard_price
+        if not (self.env.context.get('create_from_tmpl') and len(product.product_tmpl_id.product_variant_ids) == 1):
+            product._set_standard_price(vals.get('standard_price') or 0.0)
         return product
 
     @api.multi
@@ -559,7 +562,7 @@ class ProductProduct(models.Model):
         history = self.env['product.price.history'].search([
             ('company_id', '=', company_id),
             ('product_id', 'in', self.ids),
-            ('datetime', '<=', date or fields.Datetime.now())], limit=1)
+            ('datetime', '<=', date or fields.Datetime.now())], order='datetime desc,id desc', limit=1)
         return history.cost or 0.0
 
     def _need_procurement(self):

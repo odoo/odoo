@@ -572,8 +572,11 @@ class Picking(models.Model):
                 'location_dest_id': mapping.location_dst_id,
                 'product_uom_id': uom.id,
                 'pack_lot_ids': [
-                    (0, 0, {'lot_id': lot, 'qty': 0.0, 'qty_todo': lots_grouped[mapping][lot]})
-                    for lot in lots_grouped.get(mapping, {}).keys()],
+                    (0, 0, {
+                        'lot_id': lot,
+                        'qty': 0.0,
+                        'qty_todo': mapping.product.uom_id._compute_quantity(lots_grouped[mapping][lot], uom)
+                    }) for lot in lots_grouped.get(mapping, {}).keys()],
             }
             product_id_to_vals.setdefault(mapping.product.id, list()).append(val_dict)
 
@@ -639,7 +642,7 @@ class Picking(models.Model):
             move_dict = prod2move_ids[product_id][index]
             qty_on_link = min(move_dict['remaining_qty'], qty_to_assign)
             self.env['stock.move.operation.link'].create({'move_id': move_dict['move'].id, 'operation_id': operation_id, 'qty': qty_on_link, 'reserved_quant_id': quant_id})
-            if move_dict['remaining_qty'] == qty_on_link:
+            if float_compare(move_dict['remaining_qty'], qty_on_link, precision_rounding=move_dict['move'].product_uom.rounding) == 0:
                 prod2move_ids[product_id].pop(index)
             else:
                 move_dict['remaining_qty'] -= qty_on_link

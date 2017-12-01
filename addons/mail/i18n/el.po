@@ -5,6 +5,7 @@
 # Translators:
 # Kostas Goutoudis <goutoudis@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# Giota Dandidou <giotadandidou@gmail.com>, 2016
 # Nikos Gkountras <nick@ngsol.net>, 2016
 msgid ""
 msgstr ""
@@ -113,6 +114,8 @@ msgstr ""
 #, python-format
 msgid " This channel is private. People must be invited to join it."
 msgstr ""
+"Αυτό το κανάλι είναι ιδιωτικό. Οι άνθρωποι πρέπει να προσκληθούν να "
+"συμμετάσχουν."
 
 #. module: mail
 #: model:mail.template,subject:mail.mail_template_data_notification_email_default
@@ -157,7 +160,7 @@ msgstr "%s έχει ενταχθεί το δίκτυο του %s."
 #: code:addons/mail/static/src/xml/thread.xml:94
 #, python-format
 msgid "(from"
-msgstr ""
+msgstr "(από"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_shortcode_type
@@ -165,6 +168,9 @@ msgid ""
 "* Smiley are only used for HTML code to display an image * Text (default "
 "value) is used to substitute text with another text"
 msgstr ""
+"* Το Smiley χρησιμοποιείται μόνο για κώδικα HTML για την εμφάνιση μιας "
+"εικόνας * Το κείμενο (προεπιλεγμένη τιμή) χρησιμοποιείται για την "
+"αντικατάσταση κειμένου με άλλο κείμενο"
 
 #. module: mail
 #. openerp-web
@@ -183,6 +189,11 @@ msgid ""
 "            You can execute a command by typing <b>/command</b>.<br>\n"
 "            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>"
 msgstr ""
+"<br><br>\n"
+"Μπορείτε να αναφέρετε κάποιον πληκτρολογώντας <b>@όνομαχρήστη </b>, αυτό θα τραβήξει την προσοχή του.<br>\n"
+"Μπορείτε να αναφέρετε ένα κανάλι πληκτρολογώντας <b>#κανάλι</b>.<br>\n"
+"Μπορείτε να εκτελέσετε μια εντολή πληκτρολογώντας <b>/εντολή</b>.<br>\n"
+"Μπορείτε να εισαγάγετε έτοιμες απαντήσεις στο μήνυμά σας πληκτρολογώντας <b>:συντόμευση</b>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:550
@@ -242,6 +253,9 @@ msgid ""
 "messages.</p><p><i>You might need to invite users from the Settings app "
 "first.</i></p>"
 msgstr ""
+"<p>Κάντε <b>Chat με τους συνεργάτες</b>σε πραγματικό χρόνο χρησιμοποιώντας "
+"τα άμεσα μηνύματα.</p><p><i>Θα χρειαστεί να προσκαλέσετε πρώτα τους χρήστες "
+"από την εφαρμογή Ρυθμίσεις.</i></p>"
 
 #. module: mail
 #. openerp-web
@@ -252,6 +266,10 @@ msgid ""
 " notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
+"<p><b>Γράψτε ένα μήνυμα</b> εδώ στα μέλη του καναλιού.</p> <p>Μπορείτε να "
+"ειδοποιήσετε κάποιον με <i>'@'</i> ή να συνδέσετε άλλο κανάλι με <i>'#'</i>."
+" Ξεκινήστε το μήνυμά σας με <i>'/'</i> για να δείτε τη λίστα των πιθανών "
+"εντολών.</p>"
 
 #. module: mail
 #. openerp-web
@@ -262,6 +280,10 @@ msgid ""
 " groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
 "marketing, product XYZ, after work party, etc).</p>"
 msgstr ""
+"<p>Τα κανάλια διευκολύνουν την οργάνωση πληροφοριών μεταξύ διαφορετικών "
+"θεμάτων και ομάδων.</p> <p>Προσπαθήστε να <b>δημιουργήσετε το πρώτο "
+"κανάλι</b> (π.χ. πωλήσεις. μάρκετινγκ, προϊόν ΑΒΓ,μετά από συνάντηση "
+"εργασίας, κ.λ.π).</p>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -608,11 +630,13 @@ msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
+"Τα συνημμένα συνδέονται με ένα έγγραφο μέσω του model / res_id και στο "
+"μήνυμα μέσα από αυτό το πεδίο."
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
 msgid "Authenticated Employees"
-msgstr ""
+msgstr "Επικυρωμένοι Υπάλληλοι"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -686,6 +710,8 @@ msgstr "Διαθέσιμο για μαζική αποστολή mail"
 #, python-format
 msgid "Be careful with channels following internal notifications"
 msgstr ""
+"Να είστε προσεκτικοί με τα κανάλια που ακολουθούν τις εσωτερικές "
+"ειδοποιήσεις"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_body_html
@@ -800,7 +826,7 @@ msgstr "Κανάλι κωδικών μηνυμάτων"
 #: model:ir.ui.view,arch_db:mail.mail_channel_partner_view_tree
 #, python-format
 msgid "Channels"
-msgstr "ΚΑΝΑΛΙΑ"
+msgstr "Κανάλια"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_partner_action
@@ -951,14 +977,14 @@ msgstr "Κατάσταση Αναδίπλωσης Συνομιλίας"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_minimized
 msgid "Conversation is minimized"
-msgstr ""
+msgstr "Η Συνομιλία είναι ελαχιστοποιημένη"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/systray.xml:14
 #, python-format
 msgid "Conversations"
-msgstr ""
+msgstr "Συζητήσεις"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner_message_bounce
@@ -1025,7 +1051,7 @@ msgstr "Μήνας Δημιουργίας"
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_starred
 msgid "Current user has a starred notification linked to this message"
 msgstr ""
-"Ο τρέχων χρήστης ένα μια ειδοποίηση με αστέρια συνδεμένη με αυτό το μήνυμα"
+"Ο τρέχων χρήστης έχει μια ειδοποίηση με αστέρι συνδεδεμένη με αυτό το μήνυμα"
 
 #. module: mail
 #: code:addons/mail/models/res_partner.py:19
@@ -1108,7 +1134,7 @@ msgstr "Ημερομηνία του τελευταίου μηνύματος  π�
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "Dear"
-msgstr ""
+msgstr "Αγαπητέ/ή"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_default
@@ -1150,19 +1176,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete
 msgid "Delete Emails"
-msgstr ""
+msgstr "Διαγραφή Emails"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete_message
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete_message
 msgid "Delete Message Copy"
-msgstr ""
+msgstr "Διαγραφή Αντίγραφου Μηνύματος"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_auto_delete
 msgid "Delete sent emails (mass mailing only)"
-msgstr ""
+msgstr "Διαγραφή απεσταλμένων emails (μόνο από μαζική αποστολή)"
 
 #. module: mail
 #. openerp-web
@@ -1198,7 +1224,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:44
 #, python-format
 msgid "Direct Messages"
-msgstr "ΑΜΕΣΑ ΜΗΝΥΜΑΤΑ"
+msgstr "Άμεσα Μηνύματα"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_channel_menu_root_chat
@@ -1253,6 +1279,8 @@ msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
 msgstr ""
+"Να μην κρατηθεί αντίγραφο του email στο ιστορικό επικοινωνίας εγγράφων (μόνο"
+" για μαζική αποστολή)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
@@ -1321,7 +1349,7 @@ msgstr "Αναζήτηση Email"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel_email_status
 msgid "Email Status"
-msgstr ""
+msgstr "Κατάσταση Email"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_act_server_template_id
@@ -1847,7 +1875,7 @@ msgstr "Αναγνωριστικό του ακολουθούμενου πόρο�
 #: code:addons/mail/static/src/xml/client_action.xml:112
 #, python-format
 msgid "Idle"
-msgstr ""
+msgstr "Αδράνεια"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_account_analytic_account_message_unread
@@ -2015,6 +2043,8 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible."
 msgstr ""
+"Αν οριστεί, ο διαχειριστής ουράς θα στείλει το email μετά την ημερομηνία. "
+"Εάν δεν έχει οριστεί, το email  θα αποσταλεί το συντομότερο δυνατό."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_scheduled_date
@@ -2023,6 +2053,9 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible. Jinja2 placeholders may be used."
 msgstr ""
+"Αν οριστεί, ο διαχειριστής ουράς θα στείλει το email μετά την ημερομηνία. "
+"Εάν δεν έχει οριστεί, το email  θα αποσταλεί το συντομότερο δυνατό. Μπορεί "
+"να χρησιμοποιηθούν τα σύμβολα κράτησης Jinja2."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_base_config_settings_alias_domain
@@ -2085,7 +2118,7 @@ msgstr ""
 #: code:addons/mail/controllers/main.py:43
 #, python-format
 msgid "Invalid token in route %s"
-msgstr ""
+msgstr "Μη έγκυρο διακριτικό στη διαδρομή %s"
 
 #. module: mail
 #. openerp-web
@@ -2128,7 +2161,7 @@ msgstr "Πρόσκληση ατόμων"
 #: code:addons/mail/static/src/js/client_action.js:649
 #, python-format
 msgid "Invite people to #%s"
-msgstr ""
+msgstr "Πρόσκληση ατόμων στο #%s"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -2212,17 +2245,17 @@ msgstr "Είναι Ειδοποίηση"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel_is_read
 msgid "Is Read"
-msgstr ""
+msgstr "Είναι Αναγνωσμένο"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_subscribed
 msgid "Is Subscribed"
-msgstr ""
+msgstr "Είναι Εγγεγραμμένο "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_member
 msgid "Is a member"
-msgstr ""
+msgstr "Είναι μέλος"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_pinned
@@ -2381,7 +2414,7 @@ msgstr "Τελευταία Ενημέρωση στις"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 msgid "Leave"
-msgstr ""
+msgstr "Άδεια"
 
 #. module: mail
 #. openerp-web
@@ -2389,7 +2422,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:101
 #, python-format
 msgid "Leave this channel"
-msgstr ""
+msgstr "Αποχώρηση από αυτό το Κανάλι"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite_channel_ids
@@ -2409,7 +2442,7 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:663
 #, python-format
 msgid "List users in the current channel"
-msgstr ""
+msgstr "Λίστα χρηστών στο τρέχον κανάλι"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers_channel_id
@@ -2511,7 +2544,7 @@ msgstr "Σήμανση όλων ως αναγνωσμένα"
 #: code:addons/mail/static/src/xml/thread.xml:121
 #, python-format
 msgid "Mark as Read"
-msgstr ""
+msgstr "Σήμανση ως Αναγνωσμένο"
 
 #. module: mail
 #. openerp-web
@@ -2569,7 +2602,7 @@ msgstr "Κωδικός Μηνύματος"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_notification
 msgid "Message Notifications"
-msgstr ""
+msgstr "Ειδοποιήσεις μηνυμάτων"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_record_name
@@ -2599,7 +2632,7 @@ msgstr "Μήνυμα αναφορών, όπως αναγνωριστικά πρ�
 #: code:addons/mail/static/src/xml/client_action.xml:124
 #, python-format
 msgid "Message sent in \""
-msgstr ""
+msgstr "Μήνυμα που στάλθηκε σε \""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_name
@@ -2737,6 +2770,8 @@ msgstr "Αναζήτηση μηνυμάτων"
 #, python-format
 msgid "Messages can be <b>starred</b> to remind you to check back later."
 msgstr ""
+"Τα μηνύματα μπορούν να επισημανθούν <b>με αστέρι</b> για να σας υπενθυμίσουν"
+" να τα ελέγξετε αργότερα."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_internal
@@ -2816,7 +2851,7 @@ msgstr "Απαιτεί Ενέργεια"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel_res_partner_id
 msgid "Needaction Recipient"
-msgstr ""
+msgstr "Χρειάζεται δράση παραλήπτη"
 
 #. module: mail
 #: selection:res.partner,notify_email:0
@@ -2896,7 +2931,7 @@ msgstr "Χωρίς ακόλουθο"
 #: code:addons/mail/static/src/xml/thread.xml:16
 #, python-format
 msgid "No matches found"
-msgstr ""
+msgstr "Δεν βρέθηκαν αντιστοιχίες"
 
 #. module: mail
 #. openerp-web
@@ -2904,13 +2939,15 @@ msgstr ""
 #, python-format
 msgid "No message matches your search. Try to change your search filters."
 msgstr ""
+"Κανένα μήνυμα δεν αντιστοιχεί στην αναζήτησή σας. Προσπαθήστε να αλλάξετε τα"
+" φίλτρα αναζήτησης."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:28
 #, python-format
 msgid "No starred message"
-msgstr ""
+msgstr "Δεν υπάρχουν μηνύματα με αστέρι"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_no_auto_thread
@@ -3161,13 +3198,15 @@ msgstr "Odoo"
 msgid ""
 "Odoo has now the permission to send you native notifications on this device."
 msgstr ""
+"Η Odoo έχει τώρα την άδεια να σας στείλει εγγενείς ειδοποιήσεις σε αυτήν τη "
+"συσκευή."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:11
 #, python-format
 msgid "Odoo needs your permission to"
-msgstr ""
+msgstr "Το Odoo χρειάζεται την άδεια σας για"
 
 #. module: mail
 #. openerp-web
@@ -3177,6 +3216,7 @@ msgid ""
 "Odoo will not have the permission to send native notifications on this "
 "device."
 msgstr ""
+"Το Odoo δεν θα έχει την άδεια να στείλει ειδοποιήσεις σε αυτήν τη συσκευή."
 
 #. module: mail
 #. openerp-web
@@ -3223,6 +3263,8 @@ msgid ""
 "Once a message has been starred, you can come back and review it at any time"
 " here."
 msgstr ""
+"Μόλις ένα μήνυμα σημανθεί με αστέρι, μπορείτε να επιστρέψετε και να το "
+"αναθεωρήσετε ανά πάσα στιγμή εδώ."
 
 #. module: mail
 #. openerp-web
@@ -3258,7 +3300,7 @@ msgstr "Άνοιγμα Γονικού Εγγράφου"
 #: code:addons/mail/static/src/xml/client_action.xml:138
 #, python-format
 msgid "Open channel settings"
-msgstr ""
+msgstr "Άνοιγμα Ρυθμίσεων Καναλιού"
 
 #. module: mail
 #. openerp-web
@@ -3454,14 +3496,14 @@ msgstr ""
 #: code:addons/mail/static/src/js/client_action.js:128
 #, python-format
 msgid "Permission denied"
-msgstr ""
+msgstr "Απαγορεύεται η πρόσβαση"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:130
 #, python-format
 msgid "Permission granted"
-msgstr ""
+msgstr "Η άδεια επιτρέπεται"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_image
@@ -3511,6 +3553,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Πολιτική για τη αποστολή μηνύματος στο έγγραφο χρησιμοποιώντας το mailgateway.\n"
+"- όλοι: ο καθένας μπορεί να αποστείλει\n"
+"- συνεργάτες: μόνο οι επικυρωμένοι συνεργάτες \n"
+"- ακόλουθοι: μόνο οι ακόλουθοι του σχετικού εγγράφου ή μέλη των παρακάτω καναλιών\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner_notify_email
@@ -3563,7 +3609,7 @@ msgstr "Μυστικότητα"
 #: code:addons/mail/static/src/xml/client_action.xml:53
 #, python-format
 msgid "Private Channels"
-msgstr "ΙΔΙΩΤΙΚΑ ΚΑΝΑΛΙΑ"
+msgstr "Ιδιωτικά κανάλια"
 
 #. module: mail
 #. openerp-web
@@ -3581,7 +3627,7 @@ msgstr "Re:"
 #. module: mail
 #: selection:mail.notification,email_status:0
 msgid "Ready to Send"
-msgstr ""
+msgstr "Έτοιμο για Αποστολή"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
@@ -3761,7 +3807,7 @@ msgstr "Προγραμματισμένη Ημερομηνία"
 #: model:ir.model.fields,field_description:mail.field_mail_mail_scheduled_date
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Scheduled Send Date"
-msgstr ""
+msgstr "Προγραμματισμένη Ημερομηνία Αποστολής"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -3823,7 +3869,7 @@ msgstr "Αποστολή ενός μηνύματος"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_email_send
 msgid "Send messages by email"
-msgstr ""
+msgstr "Αποστολή μηνυμάτων με email"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_email_from
@@ -3842,7 +3888,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:97
 #, python-format
 msgid "Sends messages by email"
-msgstr ""
+msgstr "Αποστολή μηνυμάτων με email"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
@@ -3853,7 +3899,7 @@ msgstr "Εστάλη"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel_is_email
 msgid "Sent by Email"
-msgstr ""
+msgstr "Αποστολή με Email"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_sequence
@@ -3887,7 +3933,7 @@ msgstr "Συντόμευση"
 #: code:addons/mail/models/mail_channel.py:632
 #, python-format
 msgid "Show an helper message"
-msgstr ""
+msgstr "Εμφάνιση βοηθητικού μηνύματος"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_ref_ir_value
@@ -4064,7 +4110,7 @@ msgstr "Πρότυπα"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_test
 msgid "Test Mail Model"
-msgstr ""
+msgstr "Δοκιμή μοντέλου Mail"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_id
@@ -4078,7 +4124,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_substitution
 msgid "The escaped html code replacing the shortcut"
-msgstr ""
+msgstr "Ο κώδικας HTML που αντικαθιστά τη συντόμευση"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_model_id
@@ -4134,13 +4180,13 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_source
 msgid "The shortcut which must be replaced in the Chat Messages"
-msgstr ""
+msgstr "Η συντόμευση που πρέπει να αντικατασταθεί στα Μηνύματα Συνομιλίας"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_model_id
 #: model:ir.model.fields,help:mail.field_mail_template_model_id
 msgid "The type of document this template can be used with"
-msgstr ""
+msgstr "Ο τύπος εγγράφου που μπορεί να χρησιμοποιηθεί με αυτό το πρότυπο"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -4154,7 +4200,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "This"
-msgstr ""
+msgstr "Αυτό"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_image
@@ -4241,6 +4287,9 @@ msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
 msgstr ""
+"Οι τιμές παρακολούθησης αποθηκεύονται σε ξεχωριστό μοντέλο. Αυτό το πεδίο "
+"επιτρέπει την αναδόμηση της παρακολούθησης και τη δημιουργία στατιστικών "
+"στοιχείων για το μοντέλο."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
@@ -4285,6 +4334,8 @@ msgstr "UUID"
 #, python-format
 msgid "Unable to send email, please configure the sender's email address."
 msgstr ""
+"Δεν μπορεί να αποσταλεί το email, παρακαλώ ρυθμίσετε τη διεύθυνση email "
+"αποστολέα."
 
 #. module: mail
 #. openerp-web
@@ -4371,7 +4422,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_stock_production_lot_message_unread
 #: model:ir.model.fields,field_description:mail.field_survey_survey_message_unread
 msgid "Unread Messages"
-msgstr "Αδιάβαστα Μηνύματα"
+msgstr "Μη αναγνωσμένα μηνύματα"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_unread_counter
@@ -4440,21 +4491,21 @@ msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
 msgid "Unread messages"
-msgstr ""
+msgstr "Μη αναγνωσμένα μηνύματα"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:136
 #, python-format
 msgid "Unstar all"
-msgstr ""
+msgstr "Αφαίρεση αστεριού από όλα"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:136
 #, python-format
 msgid "Unstar all messages"
-msgstr ""
+msgstr "Αφαίρεση αστεριού από όλα τα μηνύματα"
 
 #. module: mail
 #. openerp-web
@@ -4468,7 +4519,7 @@ msgstr "Κατάργηση εγγραφής"
 #: code:addons/mail/static/src/xml/client_action.xml:137
 #, python-format
 msgid "Unsubscribe from channel"
-msgstr ""
+msgstr "Κατάργηση εγγραφής από το κανάλι"
 
 #. module: mail
 #. openerp-web
@@ -4517,7 +4568,7 @@ msgstr "Χρήστες"
 #: code:addons/mail/models/mail_channel.py:676
 #, python-format
 msgid "Users in this channel: %s %s and you."
-msgstr ""
+msgstr "Χρήστες αυτού του καναλιού: %s %s και εσείς."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:672
@@ -4576,14 +4627,14 @@ msgstr "Ποιος μπορεί να ακολουθήσει τις δράσει�
 #: code:addons/mail/static/src/xml/composer.xml:18
 #, python-format
 msgid "Write something..."
-msgstr ""
+msgstr "Γράψτε κάτι..."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread.js:233
 #, python-format
 msgid "Yesterday"
-msgstr ""
+msgstr "Χθες"
 
 #. module: mail
 #. openerp-web
@@ -4596,19 +4647,19 @@ msgstr "Έχετε προστεθεί <b>%s</b> στη συνομιλία."
 #: code:addons/mail/models/mail_channel.py:673
 #, python-format
 msgid "You are alone in this channel."
-msgstr ""
+msgstr "Είστε μόνος/η σε αυτό το κανάλι."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:642
 #, python-format
 msgid "You are in a private conversation with <b>@%s</b>."
-msgstr ""
+msgstr "Βρίσκεστε σε ιδιωτική συνομιλία με <b>@%s</b>."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:637
 #, python-format
 msgid "You are in channel <b>#%s</b>."
-msgstr ""
+msgstr "Είστε στο κανάλι <b>#%s</b>."
 
 #. module: mail
 #. openerp-web
@@ -4617,6 +4668,8 @@ msgstr ""
 msgid ""
 "You can mark any message as 'starred', and it shows up in this channel."
 msgstr ""
+"Μπορείτε να σημειώσετε οποιοδήποτε μήνυμα 'Με αστέρι' και θα εμφανίζεται σε "
+"αυτό το κανάλι."
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:45
@@ -4651,7 +4704,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "You have been assigned to the"
-msgstr ""
+msgstr "Έχετε ανατεθεί στο"
 
 #. module: mail
 #. openerp-web
@@ -4675,7 +4728,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/chat_manager.js:516
 #, python-format
 msgid "You unpinned your conversation with <b>%s</b>."
-msgstr ""
+msgstr "Ξεκαρφιτσώσατε την συνομιλία σας με <b>%s</b>."
 
 #. module: mail
 #. openerp-web
@@ -4719,7 +4772,7 @@ msgstr "base.config.settings"
 #. module: mail
 #: model:mail.channel,name:mail.channel_2
 msgid "board-meetings"
-msgstr ""
+msgstr "πίνακας-συναντήσεων"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
@@ -4729,7 +4782,7 @@ msgstr "από"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "created"
-msgstr ""
+msgstr "δημιουργήθηκε"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:313
@@ -4742,7 +4795,7 @@ msgstr "έγγραφο"
 #: code:addons/mail/static/src/xml/client_action.xml:11
 #, python-format
 msgid "enable desktop notifications"
-msgstr ""
+msgstr "ενεργοποίηση των ειδοποιήσεων επιφάνειας εργασίας"
 
 #. module: mail
 #. openerp-web
@@ -4754,17 +4807,17 @@ msgstr "ακόλουθοι"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "from:"
-msgstr ""
+msgstr "από:"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_all_employees
 msgid "general"
-msgstr "γενικά"
+msgstr "Γενικά"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been"
-msgstr ""
+msgstr "ήταν"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_server
@@ -4779,7 +4832,7 @@ msgstr "ir.autovacuum"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin
 msgid "mail.alias.mixin"
-msgstr ""
+msgstr "mail.alias.mixin"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -4797,13 +4850,13 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:943
 #, python-format
 msgid "model %s does not accept document creation"
-msgstr ""
+msgstr "το μοντέλο %s δεν δέχεται την δημιουργία εγγράφων"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:938
 #, python-format
 msgid "model %s does not accept document update"
-msgstr ""
+msgstr "το μοντέλο %s δεν δέχεται την ενημέρωση εγγράφων"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:931
@@ -4811,11 +4864,13 @@ msgstr ""
 msgid ""
 "model %s does not accept document update, fall back on document creation"
 msgstr ""
+"το μοντέλο %s δεν δέχεται την ενημέρωση εγγράφων, επιστροφή στην δημιουργία "
+"εγγράφων"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "modified"
-msgstr ""
+msgstr "τροποποιήθηκε"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_general_configuration_mail_alias_domain
@@ -4827,7 +4882,7 @@ msgstr "mycompany.odoo.com"
 #: code:addons/mail/static/src/js/thread.js:20
 #, python-format
 msgid "now"
-msgstr ""
+msgstr "τώρα"
 
 #. module: mail
 #. openerp-web
@@ -4844,6 +4899,8 @@ msgid ""
 "posting a message without model should be with a null res_id (private "
 "message), received %s"
 msgstr ""
+"η δημοσίευση μηνύματος χωρίς μοντέλο, θα πρέπει να έχει τιμή Κενό (null) το "
+"πεδίο res_id (ιδιωτικό μήνυμα), λήφθηκε %s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:917
@@ -4851,6 +4908,8 @@ msgstr ""
 msgid ""
 "posting a message without model should be with a parent_id (private message)"
 msgstr ""
+"η δημοσίευση μηνύματος χωρίς μοντέλο, θα πρέπει να έχει τιμή πεδίο parent_id"
+" (ιδιωτικό μήνυμα)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_publisher_warranty_contract
@@ -4860,7 +4919,7 @@ msgstr "publisher_warranty.contract"
 #. module: mail
 #: model:mail.channel,name:mail.channel_3
 msgid "rd"
-msgstr ""
+msgstr "rd"
 
 #. module: mail
 #. openerp-web
@@ -4874,7 +4933,7 @@ msgstr "διαβάστε λιγότερα"
 #: code:addons/mail/static/src/js/thread.js:15
 #, python-format
 msgid "read more"
-msgstr ""
+msgstr "διαβάστε περισσότερα"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
@@ -4885,24 +4944,26 @@ msgstr "εγγραφή:"
 #: code:addons/mail/models/mail_thread.py:935
 #, python-format
 msgid "reply to missing document (%s,%s)"
-msgstr ""
+msgstr "απάντηση στο έγγραφο που λείπει (%s,%s)"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:928
 #, python-format
 msgid "reply to missing document (%s,%s), fall back on new document creation"
 msgstr ""
+"απάντηση στο έγγραφο που λείπει (%s,%s), επιστροφή στην δημιουργία νέου "
+"εγγράφου"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:913
 #, python-format
 msgid "resetting thread_id"
-msgstr ""
+msgstr "επαναφορά thread_id"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_1
 msgid "sales"
-msgstr ""
+msgstr "πωλήσεις"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:917
@@ -4913,7 +4974,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:968
 #, python-format
 msgid "skipping"
-msgstr ""
+msgstr "παρακάμπτοντας"
 
 #. module: mail
 #. openerp-web
@@ -4926,4 +4987,4 @@ msgstr "τρέχον έγγραφο"
 #: code:addons/mail/models/mail_thread.py:906
 #, python-format
 msgid "unknown target model %s"
-msgstr ""
+msgstr "άγνωστο μοντέλο στόχου %s"

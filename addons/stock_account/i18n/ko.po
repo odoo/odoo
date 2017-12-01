@@ -1,20 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_account
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# 최재호 <hwangtog@gmail.com>, 2017
+# Goh Gangtai <gangtai.goh@gmail.com>, 2017
+# 방상우 <mrroom@gmail.com>, 2017
+# 종현 엄 <whd5367@naver.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-01-25 08:56+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
-"Language: ko\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: 종현 엄 <whd5367@naver.com>, 2017\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_account
@@ -54,8 +59,8 @@ msgstr "취소"
 #: code:addons/stock_account/models/stock.py:244
 #, python-format
 msgid ""
-"Cannot find a stock input account for the product %s. You must define one on "
-"the product category, or on the location, before processing this operation."
+"Cannot find a stock input account for the product %s. You must define one on"
+" the product category, or on the location, before processing this operation."
 msgstr ""
 
 #. module: stock_account
@@ -103,13 +108,7 @@ msgid "Company"
 msgstr "회사"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
-#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
-msgid "Compute from average price"
-msgstr ""
-
-#. module: stock_account
-#: code:addons/stock_account/models/stock.py:319
+#: code:addons/stock_account/models/stock.py:338
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -133,6 +132,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_cost_method
 msgid "Costing Method"
 msgstr "원가계산 방법"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
+msgid "Counter-Part Account"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -178,16 +182,11 @@ msgstr "ID"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_change_standard_price_new_price
 msgid ""
-"If cost price is increased, stock variation account will be debited and "
-"stock output account will be credited with the value = (difference of amount "
-"* quantity available).\n"
-"If cost price is decreased, stock variation account will be creadited and "
-"stock input account will be debited."
+"If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
+"If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
 msgstr ""
-"원가가 상승하면 재고 변동 계정의 차변에 기입하고 재고 출고 계정에 (금액*가능 "
-"수량의 차이)=값으로 대변에 기입됩니다.\n"
-"원가가 하락하면 재고 변동 계정의 대변에 기입하고 재고 입고 계정의 차변에 기입"
-"됩니다."
+"원가가 상승하면 재고 변동 계정의 차변에 기입하고 재고 출고 계정에 (금액*가능 수량의 차이)=값으로 대변에 기입됩니다.\n"
+"원가가 하락하면 재고 변동 계정의 대변에 기입하고 재고 입고 계정의 차변에 기입됩니다."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_valuation
@@ -220,11 +219,9 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_config_settings_module_stock_landed_costs
 msgid ""
-"Install the module that allows to affect landed costs on pickings, and split "
-"them onto the different products."
-msgstr ""
-"선택이 운송비에 영향을 미치는 것을 허용하려면 모듈을 설치하고 다른 상품 상에 "
-"분배해야 합니다."
+"Install the module that allows to affect landed costs on pickings, and split"
+" them onto the different products."
+msgstr "선택이 운송비에 영향을 미치는 것을 허용하려면 모듈을 설치하고 다른 상품 상에 분배해야 합니다."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -301,7 +298,7 @@ msgstr "차고"
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Lot/Serial Number"
-msgstr ""
+msgstr "작업 단위/일련번호"
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_inventory_valuation
@@ -343,7 +340,8 @@ msgstr ""
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
-msgid "Perpetual inventory valuation (stock move generates accounting entries)"
+msgid ""
+"Perpetual inventory valuation (stock move generates accounting entries)"
 msgstr ""
 
 #. module: stock_account
@@ -356,7 +354,7 @@ msgstr "가격"
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_product_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Product"
-msgstr "제품"
+msgstr "상품"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
@@ -399,6 +397,12 @@ msgid "Retrieve the curent stock valuation."
 msgstr ""
 
 #. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
+#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
+msgid "Set standard price"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_source
 msgid "Source"
 msgstr "자재"
@@ -420,28 +424,27 @@ msgstr "표준 가격이 변경되었습니다"
 #: model:ir.model.fields,help:stock_account.field_product_product_property_cost_method
 #: model:ir.model.fields,help:stock_account.field_product_template_property_cost_method
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific "
-"period (usually once a year).\n"
-"                Average Price: The cost price is recomputed at each incoming "
-"shipment and used for the product valuation.\n"
-"                Real Price: The cost price displayed is the price of the "
-"last outgoing product (will be use in case of inventory loss for example)."
+"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
+"                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific "
-"period (usually once a year).\n"
-"Average Price: The cost price is recomputed at each incoming shipment and "
-"used for the product valuation.\n"
-"Real Price: The cost price displayed is the price of the last outgoing "
-"product (will be used in case of inventory loss for example)."
+"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
+"Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"Real Price: The cost price displayed is the price of the last outgoing product (will be used in case of inventory loss for example)."
 msgstr ""
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
 msgid "Stock Accounting"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_stock_history
+msgid "Stock History"
 msgstr ""
 
 #. module: stock_account
@@ -525,9 +528,8 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"실시간 재고 평가 사용하기. 가상 위치(비 내부 유형)를 설정하면 제품에 설정된 "
-"일반 재고 출고 계정 대신에 이 계정을 내부 위치에서 이 위치로 이동하는 상품의 "
-"값을 유지하는데 사용합니다. 이것은 내부 위치에 영향을 주지 않습니다."
+"실시간 재고 평가 사용하기. 가상 위치(비 내부 유형)를 설정하면 제품에 설정된 일반 재고 출고 계정 대신에 이 계정을 내부 위치에서 이"
+" 위치로 이동하는 상품의 값을 유지하는데 사용합니다. 이것은 내부 위치에 영향을 주지 않습니다."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_out_account_id
@@ -538,9 +540,8 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"실시간 재고 평가 사용하기. 가상 위치(비 내부 유형)를 설정하면 제품에 설정된 "
-"일반 재고 출고 계정 대신에 이 계정을 이 위치에서 내부 위치로 이동하는 상품의 "
-"값을 유지하는데 사용합니다. 이것은 내부 위치에 영향을 주지 않습니다."
+"실시간 재고 평가 사용하기. 가상 위치(비 내부 유형)를 설정하면 제품에 설정된 일반 재고 출고 계정 대신에 이 계정을 이 위치에서 내부"
+" 위치로 이동하는 상품의 값을 유지하는데 사용합니다. 이것은 내부 위치에 영향을 주지 않습니다."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
@@ -559,12 +560,11 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. This is the default "
-"value for all products in this category. It can also directly be set on each "
-"product"
+"value for all products in this category. It can also directly be set on each"
+" product"
 msgstr ""
-"실시간 재고 평가를 할 때 원본이 설정된 특정 평가 계정을 제외하고 전체 입고 재"
-"고 이동에 대한 상대 분개 항목이 이 계정에 게시됩니다. 이것은 해당 분류의 모"
-"든 상품에 대한 기본값입니다. 또한 각 상품에 직접적으로 설정 될 수 있습니다."
+"실시간 재고 평가를 할 때 원본이 설정된 특정 평가 계정을 제외하고 전체 입고 재고 이동에 대한 상대 분개 항목이 이 계정에 게시됩니다."
+" 이것은 해당 분류의 모든 상품에 대한 기본값입니다. 또한 각 상품에 직접적으로 설정 될 수 있습니다."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_input
@@ -575,9 +575,8 @@ msgid ""
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
 msgstr ""
-"실시간 재고 평가를 할 때 원본이 설정된 특정 평가 계정을 제외하고 전체 입고 재"
-"고 이동에 대한 상대 분개 항목이 이 계정에 게시됩니다. 상품을 설정하지 않으면 "
-"상품 분류 중 하나가 사용됩니다."
+"실시간 재고 평가를 할 때 원본이 설정된 특정 평가 계정을 제외하고 전체 입고 재고 이동에 대한 상대 분개 항목이 이 계정에 게시됩니다."
+" 상품을 설정하지 않으면 상품 분류 중 하나가 사용됩니다."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_output_categ_id
@@ -585,12 +584,11 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. This is the "
-"default value for all products in this category. It can also directly be set "
-"on each product"
+"default value for all products in this category. It can also directly be set"
+" on each product"
 msgstr ""
-"실시간 재고 평가를 할 때 대상지가 설정된 특정 평가 계정을 제외하고 전체 출고 "
-"재고 이동에 대한 상대 분개 항목이 이 계정에 게시됩니다. 이것은 해당 분류의 모"
-"든 상품에 대한 기본값입니다. 또한 각 상품에 직접적으로 설정 될 수 있습니다."
+"실시간 재고 평가를 할 때 대상지가 설정된 특정 평가 계정을 제외하고 전체 출고 재고 이동에 대한 상대 분개 항목이 이 계정에 "
+"게시됩니다. 이것은 해당 분류의 모든 상품에 대한 기본값입니다. 또한 각 상품에 직접적으로 설정 될 수 있습니다."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_output
@@ -601,26 +599,22 @@ msgid ""
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
 msgstr ""
-"실시간 재고 평가를 할 때 대상지가 설정된 특정 평가 계정을 제외하고 전체 출고 "
-"재고 이동에 대한 상대 분개 항목이 이 계정에 게시됩니다. 상품을 설정하지 않으"
-"면 상품 분류 중 하나가 사용됩니다."
+"실시간 재고 평가를 할 때 대상지가 설정된 특정 평가 계정을 제외하고 전체 출고 재고 이동에 대한 상대 분개 항목이 이 계정에 "
+"게시됩니다. 상품을 설정하지 않으면 상품 분류 중 하나가 사용됩니다."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_journal
 msgid ""
 "When doing real-time inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
-msgstr ""
-"실시간 재고평가를 할 때 재고 이동이 처리되면 자동으로 회계 분개 항목이 게시됩"
-"니다."
+msgstr "실시간 재고평가를 할 때 재고 이동이 처리되면 자동으로 회계 분개 항목이 게시됩니다."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_valuation_account_id
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
-msgstr ""
-"상품에 대해 실시간 재고평가를 하면 이 계정은 상품의 현재 값을 유지합니다."
+msgstr "상품에 대해 실시간 재고평가를 하면 이 계정은 상품의 현재 값을 유지합니다."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_wizard_valuation_history
@@ -640,8 +634,8 @@ msgstr ""
 #: code:addons/stock_account/models/stock.py:248
 #, python-format
 msgid ""
-"You don't have any stock valuation account defined on your product category. "
-"You must define one before processing this operation."
+"You don't have any stock valuation account defined on your product category."
+" You must define one before processing this operation."
 msgstr ""
 
 #. module: stock_account

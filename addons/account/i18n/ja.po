@@ -16,13 +16,15 @@
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2016
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
 # Kazuki Eda <edak1209@gmail.com>, 2016
+# Tim Siu Lai <tl@roomsfor.hk>, 2017
+# 前園義博 <yoshihiro.maezono@pro-spire.co.jp>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: Kazuki Eda <edak1209@gmail.com>, 2016\n"
+"Last-Translator: 前園義博 <yoshihiro.maezono@pro-spire.co.jp>, 2017\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,7 +81,7 @@ msgid ""
 " * The 'Open' status is used when user creates invoice, an invoice number is generated. It stays in the open status till the user pays the invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr ""
+msgstr "会計"
 
 #. module: account
 #. openerp-web
@@ -194,7 +196,7 @@ msgstr ": 総勘定元帳"
 #: code:addons/account/models/account.py:397
 #, python-format
 msgid ": Refund"
-msgstr ""
+msgstr ": 返金"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
@@ -442,7 +444,7 @@ msgstr "<span title=\"Balance in Odoo\">GL残高</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Latest Statement\">Latest Statement</span>"
-msgstr ""
+msgstr "<span title=\"Latest Statement\">直近の取引明細書</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form
@@ -585,7 +587,7 @@ msgstr "<strong>会社:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Contracts &amp; Subscriptions</strong>"
-msgstr ""
+msgstr "<strong>契約とサブスクリプション</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -617,7 +619,7 @@ msgstr "<strong>顧客コード:</strong>"
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "<strong>Date from :</strong>"
-msgstr ""
+msgstr "<strong>開始日:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_financial
@@ -625,7 +627,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "<strong>Date to :</strong>"
-msgstr ""
+msgstr "<strong>終了日 :</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -692,7 +694,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Next action:</strong><br/>"
-msgstr ""
+msgstr "<strong>次のアクション:</strong><br/>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -974,7 +976,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_warning_account
 msgid "A warning can be set on a partner (Account)"
-msgstr ""
+msgstr "取引先に警告設定可 (会計)"
 
 #. module: account
 #. openerp-web
@@ -1342,7 +1344,7 @@ msgstr "会計レポート"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Accounting Settings"
-msgstr ""
+msgstr "会計設定"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
@@ -1674,12 +1676,12 @@ msgstr "未払額"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_company_signed
 msgid "Amount Due in Company Currency"
-msgstr ""
+msgstr "会社通貨での未払額"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_signed
 msgid "Amount Due in Invoice Currency"
-msgstr ""
+msgstr "未払額 (請求書通貨)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal_signed
@@ -1747,7 +1749,7 @@ msgstr ""
 #. module: account
 #: selection:account.config.settings,group_warning_account:0
 msgid "An informative or blocking warning can be set on a partner"
-msgstr "情報またはブロック警告を取引先に設定"
+msgstr "取引先に情報またはブロック警告を設定可"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -1760,7 +1762,7 @@ msgstr "分析"
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:152
 #, python-format
 msgid "Analytic Acc."
-msgstr ""
+msgstr "分析勘定"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_account_analytic_id
@@ -1969,7 +1971,7 @@ msgstr "BILL"
 #. module: account
 #: selection:res.partner,trust:0
 msgid "Bad Debtor"
-msgstr ""
+msgstr "悪い"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -2202,7 +2204,7 @@ msgstr "請求担当"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills"
-msgstr ""
+msgstr "請求書"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3075,7 +3077,7 @@ msgstr ""
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:2493
 #, python-format
 msgid "Create writeoff"
-msgstr ""
+msgstr "償却を作成"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5223,7 +5225,7 @@ msgstr ""
 #, python-format
 msgid ""
 "It is mandatory to specify an account and a journal to create a write-off."
-msgstr ""
+msgstr "償却を作成するには、勘定科目と仕訳帳を指定する必要があります。"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:322
@@ -5326,7 +5328,7 @@ msgstr "仕訳"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Journal Entries by Month"
-msgstr ""
+msgstr "月別会計仕訳"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_move_id
@@ -5340,7 +5342,7 @@ msgstr "仕訳"
 #: model:ir.model.fields,field_description:account.field_account_invoice_move_name
 #: model:ir.model.fields,field_description:account.field_account_payment_move_name
 msgid "Journal Entry Name"
-msgstr ""
+msgstr "仕訳名"
 
 #. module: account
 #: selection:account.print.journal,sort_selection:0
@@ -6264,7 +6266,7 @@ msgstr "なし"
 #. module: account
 #: selection:res.partner,trust:0
 msgid "Normal Debtor"
-msgstr ""
+msgstr "普通"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -6832,7 +6834,7 @@ msgstr "支払差額"
 #: code:addons/account/static/src/js/account_payment_widget.js:53
 #, python-format
 msgid "Payment Information"
-msgstr ""
+msgstr "支払情報"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_journal_id
@@ -6851,7 +6853,7 @@ msgstr "支払方法"
 #: model:ir.model.fields,field_description:account.field_account_payment_payment_method_id
 #: model:ir.model.fields,field_description:account.field_account_register_payments_payment_method_id
 msgid "Payment Method Type"
-msgstr ""
+msgstr "支払方法タイプ"
 
 #. module: account
 #. openerp-web
@@ -6869,7 +6871,7 @@ msgstr "支払方法"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_payment_move_line_ids
 msgid "Payment Move Lines"
-msgstr ""
+msgstr "支払仕訳明細"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reference_type
@@ -8005,7 +8007,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_product_template_action
 msgid "Sellable Products"
-msgstr ""
+msgstr "販売可能製品"
 
 #. module: account
 #: selection:account.abstract.payment,payment_type:0
@@ -8109,7 +8111,7 @@ msgstr "略称"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:290
 #, python-format
 msgid "Show"
-msgstr ""
+msgstr "表示"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_display_on_footer
@@ -9399,7 +9401,7 @@ msgstr "会社通貨による合計"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_total_signed
 msgid "Total in Invoice Currency"
-msgstr ""
+msgstr "請求書通貨合計"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_total_entry_encoding
@@ -9587,7 +9589,7 @@ msgstr "税抜金額"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed_signed
 msgid "Untaxed Amount in Company Currency"
-msgstr ""
+msgstr "税抜価格 (会社通貨)"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10204,10 +10206,16 @@ msgid "You have"
 msgstr "この顧客には"
 
 #. module: account
+#: code:addons/account/models/account_payment.py:360
+#, python-format
+msgid "You have to define a sequence for %s in your company."
+msgstr ""
+
+#. module: account
 #: code:addons/account/wizard/account_report_general_ledger.py:21
 #, python-format
 msgid "You must define a Start Date"
-msgstr ""
+msgstr "開始日を設定してください"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1266
@@ -10225,7 +10233,7 @@ msgstr ""
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:28
 #, python-format
 msgid "You must set a start date."
-msgstr ""
+msgstr "開始日を設定してください"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1313
@@ -10379,7 +10387,7 @@ msgstr "cash.box.out"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "code"
-msgstr ""
+msgstr "コード"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10523,7 +10531,7 @@ msgstr "あなたの銀行口座を設定します"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "the customer list"
-msgstr ""
+msgstr "顧客リスト"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
@@ -10567,4 +10575,4 @@ msgstr "wizard.multi.charts.accounts"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
-msgstr ""
+msgstr "合計"

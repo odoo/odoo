@@ -11,13 +11,14 @@
 # Mor Kir <morki@013.net.il>, 2017
 # ilan kl <ilan@qaroads.co.il>, 2017
 # Moshe Flam <pashute@gmail.com>, 2017
+# Yihya Hugirat <hugirat@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
 "PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: Moshe Flam <pashute@gmail.com>, 2017\n"
+"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2017\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -412,7 +413,7 @@ msgstr ""
 msgid ""
 "<span>(*) This configuration is related to the company you're logged "
 "into.</span>"
-msgstr ""
+msgstr "<span>(*) תצורה זו קשורה לחברה שאליה אתה מחובר .</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -867,6 +868,11 @@ msgid "Active"
 msgstr "פעיל"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Activities"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
 msgstr "הוסף תיאור..."
@@ -958,7 +964,7 @@ msgstr "חשבון אנליטי"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_line_ids
 msgid "Analytic Lines"
-msgstr ""
+msgstr "שורות אנליטית"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1454,7 +1460,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Customization"
-msgstr ""
+msgstr "התאמה אישית"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_projects
@@ -1470,7 +1476,7 @@ msgstr "תאריך יעד"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_debit
 msgid "Debit"
-msgstr ""
+msgstr "חובה"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_defaults
@@ -2028,7 +2034,7 @@ msgstr "בתהליך"
 #: code:addons/project/static/src/js/web_planner_project.js:79
 #, python-format
 msgid "Incoming"
-msgstr ""
+msgstr "נכנס"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2414,6 +2420,11 @@ msgstr "מספר מסמכים מצורפים"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
+msgid "Objectives"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Odoo Project is a super fast and easy way to make your activities and tasks visible to\n"
 "                        everyone in your company. Follow how things progress, see when things are stuck, know\n"
@@ -2686,6 +2697,7 @@ msgstr "משימות הפרוייקט"
 #: model:ir.model.fields,field_description:project.field_project_task_type_project_ids
 #: model:ir.ui.menu,name:project.menu_projects_config
 #: model:ir.ui.view,arch_db:project.analytic_account_inherited_form
+#: model:ir.ui.view,arch_db:project.project_planner
 #: model:ir.ui.view,arch_db:project.view_project
 msgid "Projects"
 msgstr "פרוייקטים"
@@ -3748,7 +3760,7 @@ msgstr "משימות"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "to describe<br/> your experience or to suggest improvements !"
-msgstr ""
+msgstr "לתאר <br/> הניסיון שלך או להציע שיפורים !"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all

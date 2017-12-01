@@ -617,7 +617,7 @@ var fontIconsDialog = Widget.extend({
             e.stopPropagation();
 
             this.$('#fa-icon').val(e.target.getAttribute('data-id'));
-            $(".font-icons-icon").removeClass("o_selected");
+            this.$(".font-icons-icon").removeClass("o_selected");
             $(e.target).addClass("o_selected");
         },
         'dblclick .font-icons-icon': function () {
@@ -743,7 +743,7 @@ var fontIconsDialog = Widget.extend({
                     continue;
                 case '': continue;
                 default:
-                    $(".font-icons-icon").removeClass("o_selected").filter("[data-alias*=',"+cls+",']").addClass("o_selected");
+                    this.$(".font-icons-icon").removeClass("o_selected").filter("[data-alias*=',"+cls+",']").addClass("o_selected");
                     if (this.alias.indexOf(cls) !== -1) {
                         this.$('#fa-icon').val(cls);
                     }
@@ -915,7 +915,7 @@ var VideoDialog = Widget.extend({
             video_id = this.$("#video_id").val();
         }
         var $iframe = $(
-            '<div class="media_iframe_video" data-src="'+this.$iframe.attr("src")+'">'+
+            '<div class="media_iframe_video" data-oe-expression="'+this.$iframe.attr("src")+'">'+
                 '<div class="css_editable_mode_display">&nbsp;</div>'+
                 '<div class="media_iframe_video_size" contentEditable="false">&nbsp;</div>'+
                 '<iframe src="'+this.$iframe.attr("src")+'" frameborder="0" allowfullscreen="allowfullscreen" contentEditable="false"></iframe>'+

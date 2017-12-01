@@ -567,7 +567,7 @@ class AccountTaxGroup(models.Model):
 class AccountTax(models.Model):
     _name = 'account.tax'
     _description = 'Tax'
-    _order = 'sequence'
+    _order = 'sequence,id'
 
     @api.model
     def _default_tax_group(self):
@@ -829,6 +829,14 @@ class AccountTax(models.Model):
         if incl_tax:
             return incl_tax.compute_all(price)['total_excluded']
         return price
+
+    @api.model
+    def _fix_tax_included_price_company(self, price, prod_taxes, line_taxes, company_id):
+        if company_id:
+            #To keep the same behavior as in _compute_tax_id
+            prod_taxes = prod_taxes.filtered(lambda tax: tax.company_id == company_id)
+            line_taxes = line_taxes.filtered(lambda tax: tax.company_id == company_id)
+        return self._fix_tax_included_price(price, prod_taxes, line_taxes)
 
 class AccountReconcileModel(models.Model):
     _name = "account.reconcile.model"

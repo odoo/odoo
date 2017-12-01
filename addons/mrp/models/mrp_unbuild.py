@@ -106,6 +106,8 @@ class MrpUnbuild(models.Model):
         self.env['stock.quant'].quants_reserve(quants, consume_move)
 
         if consume_move.has_tracking != 'none':
+            if not quants[0][0]:
+                raise UserError(_("You don't have in the stock the lot %s.") % (self.lot_id.name,))
             self.env['stock.move.lots'].create({
                 'move_id': consume_move.id,
                 'lot_id': self.lot_id.id,
@@ -119,12 +121,20 @@ class MrpUnbuild(models.Model):
         for produce_move in produce_moves:
             if produce_move.has_tracking != 'none':
                 original = original_quants.filtered(lambda quant: quant.product_id == produce_move.product_id)
-                self.env['stock.move.lots'].create({
-                    'move_id': produce_move.id,
-                    'lot_id': original.lot_id.id,
-                    'quantity_done': produce_move.product_uom_qty,
-                    'quantity': produce_move.product_uom_qty
-                })
+                if not original:
+                    raise UserError(_("You don't have in the stock the required lot/serial number for %s .") % (produce_move.product_id.name,))
+                quantity_todo = produce_move.product_qty
+                for quant in original:
+                    if quantity_todo <= 0:
+                        break
+                    move_quantity = min(quantity_todo, quant.qty)
+                    self.env['stock.move.lots'].create({
+                        'move_id': produce_move.id,
+                        'lot_id': quant.lot_id.id,
+                        'quantity_done': produce_move.product_id.uom_id._compute_quantity(move_quantity, produce_move.product_uom),
+                        'quantity': produce_move.product_id.uom_id._compute_quantity(move_quantity, produce_move.product_uom),
+                    })
+                    quantity_todo -= move_quantity
             else:
                 produce_move.quantity_done = produce_move.product_uom_qty
         produce_moves.move_validate()

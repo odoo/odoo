@@ -1,20 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * report
-#
+# 
 # Translators:
+# 최재호 <hwangtog@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Goh Gangtai <gangtai.goh@gmail.com>, 2017
+# 종현 엄 <whd5367@naver.com>, 2017
+# 경민기 <moonend@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-01-25 08:56+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
-"Language: ko\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: 경민기 <moonend@gmail.com>, 2017\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: report
@@ -200,7 +205,7 @@ msgstr "기본 용지 형식?"
 #: code:addons/report/static/src/xml/report.xml:12
 #, python-format
 msgid "Discard"
-msgstr ""
+msgstr "폐기"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_display_name
@@ -220,7 +225,7 @@ msgstr "머리말에 줄 표시"
 #: code:addons/report/static/src/xml/report.xml:8
 #, python-format
 msgid "Edit"
-msgstr ""
+msgstr "편집"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.base_config_settings_inherited
@@ -241,6 +246,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:report.external_layout_footer
 msgid "Email:"
 msgstr "이메일 :"
+
+#. module: report
+#: code:addons/report/models/report_paperformat.py:68
+#, python-format
+msgid "Error ! You cannot select a format AND specific page width/height."
+msgstr ""
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -265,7 +276,7 @@ msgstr "2절판 27  210 x 330 mm"
 #. module: report
 #: model:ir.model,name:report.model_ir_http
 msgid "HTTP routing"
-msgstr ""
+msgstr "HTTP 라우팅"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_spacing
@@ -414,7 +425,7 @@ msgstr ""
 #: code:addons/report/static/src/xml/report.xml:5
 #, python-format
 msgid "Print"
-msgstr ""
+msgstr "인쇄"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_print_report_name
@@ -451,7 +462,7 @@ msgstr "오른쪽 여백 (mm)"
 #: code:addons/report/static/src/xml/report.xml:11
 #, python-format
 msgid "Save"
-msgstr ""
+msgstr "저장"
 
 #. module: report
 #: model:ir.model.fields,help:report.field_report_paperformat_format
@@ -503,12 +514,10 @@ msgstr "위쪽 여백 (mm)"
 #, python-format
 msgid ""
 "Unable to find Wkhtmltopdf on this \n"
-"system. The report will be shown in html.<br><br><a href=\"http://"
-"wkhtmltopdf.org/\" target=\"_blank\">\n"
+"system. The report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\n"
 "wkhtmltopdf.org</a>"
 msgstr ""
-"Wkhtmltopdf를 찾을 수 없습니다. 이 보고서는 html로 보여집니다.<br><br><a "
-"href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\n"
+"Wkhtmltopdf를 찾을 수 없습니다. 이 보고서는 html로 보여집니다.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\n"
 "wkhtmltopdf.org</a>"
 
 #. module: report
@@ -523,7 +532,15 @@ msgid "Website:"
 msgstr "웹 사이트 :"
 
 #. module: report
-#: code:addons/report/models/report.py:435
+#: code:addons/report/models/report.py:450
+#, python-format
+msgid ""
+"Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
+"number of subprocess reached. Message : %s"
+msgstr ""
+
+#. module: report
+#: code:addons/report/models/report.py:452
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Wkhtmltopdf가 실패했습니다 (에러코드: %s). 메시지 : %s"
@@ -545,10 +562,18 @@ msgstr ""
 #, python-format
 msgid ""
 "You should upgrade your version of\n"
-"Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers "
-"and footers as well as\n"
-"support for table-breaking between pages.<br><br><a href=\"http://"
-"wkhtmltopdf.org/\" \n"
+"Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\n"
+"support for table-breaking between pages.<br><br><a href=\"http://wkhtmltopdf.org/\" \n"
+"target=\"_blank\">wkhtmltopdf.org</a>"
+msgstr ""
+
+#. module: report
+#. openerp-web
+#: code:addons/report/static/src/js/qwebactionmanager.js:21
+#, python-format
+msgid ""
+"Your installation of Wkhtmltopdf seems to be broken. The report will be "
+"shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" "
 "target=\"_blank\">wkhtmltopdf.org</a>"
 msgstr ""
 
@@ -558,16 +583,16 @@ msgid "base.config.settings"
 msgstr ""
 
 #. module: report
-#. openerp-web
-#: code:addons/report/static/src/js/qwebactionmanager.js:96
-#, python-format
-msgid ""
-"Your installation of Wkhtmltopdf seems to be broken. The \n"
-"report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" "
-"target=\"_blank\">wkhtmltopdf.org</a>"
-msgstr ""
+#: model:ir.model,name:report.model_ir_actions_report_xml
+msgid "ir.actions.report.xml"
+msgstr "ir.actions.report.xml"
 
 #. module: report
 #: model:ir.model,name:report.model_ir_qweb_field_barcode
 msgid "ir.qweb.field.barcode"
+msgstr ""
+
+#. module: report
+#: model:ir.model,name:report.model_report_abstract_report
+msgid "report.abstract_report"
 msgstr ""

@@ -8,17 +8,18 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Zoriana Zaiats <sorenabell@quintagroup.com>, 2016
 # Kateryna Onyshchenko <Katrona17@gmail.com>, 2016
-# Evgen Zherdev <e.v.zherdev@gmail.com>, 2017
+# Евгений Жердев <e.v.zherdev@gmail.com>, 2017
 # Анатолій Пономаренко <aponomarenko020@gmail.com>, 2017
 # Олександр Воронюк <pactallc@gmail.com>, 2017
 # Анатолій Пономаренко <Ponomarenkoa@minfin.gov.ua>, 2017
+# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Анатолій Пономаренко <Ponomarenkoa@minfin.gov.ua>, 2017\n"
+"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,6 +70,45 @@ msgid ""
 "% endif\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Шановний ${object.partner_id.name}\n"
+"% set access_action = object.with_context(force_website=True).get_access_action()\n"
+"% set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order confirmation'\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"% set access_name = is_online and object.template_id and doc_name == 'quotation' and 'Accept and pay %s online' % doc_name or 'View %s' % doc_name\n"
+"% set access_url = is_online and access_action['url'] or None\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"Це ваш ${doc_name} <strong>${object.name}</strong>\n"
+"% if object.origin:\n"
+"(with reference: ${object.origin} )\n"
+"% endif\n"
+"amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
+"from ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"    <br/><br/>\n"
+"% if is_online:\n"
+"    <center>\n"
+"        <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">${access_name}</a>\n"
+"        <br/><br/>\n"
+"        <span style=\"color:#888888\">(or view attached PDF)</span>\n"
+"    </center>\n"
+"    <br/>\n"
+"% endif\n"
+"\n"
+"<p>Ви можете відповісти на це повідомлення, якщо у вас виникнуть питання.</p>\n"
+"<p>Дякуємо,</p>\n"
+"\n"
+"<p style=\"color:#eeeeee;\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_sales_count
@@ -108,6 +148,8 @@ msgid ""
 "${(object.name or '').replace('/','_')}${object.state == 'draft' and "
 "'_draft' or ''}"
 msgstr ""
+"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
+"'_draft' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -142,6 +184,8 @@ msgid ""
 "<b>Invite salespeople or managers</b> via email.<br/><i>Enter one email per "
 "line.</i>"
 msgstr ""
+"<b>Запросіть продавців або менеджерів з продажу</b>  через "
+"email.<br/><i>Введіть одну електронну пошту рядок.</i>"
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_data_notification_email_sale_order
@@ -219,6 +263,78 @@ msgid ""
 "                </html>\n"
 "            "
 msgstr ""
+"<html>\n"
+"                <head></head>\n"
+"                % set record = ctx.get('record')\n"
+"                % set company = record and record.company_id or user.company_id\n"
+"                <body style=\"margin: 0; padding: 0;\">\n"
+"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
+"                    <tbody>\n"
+"\n"
+"                      <!-- HEADER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\">\n"
+"                                  <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
+"                                      ${object.record_name}\n"
+"                                  </span>\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\">\n"
+"                                  <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\">\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- CONTENT -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\">\n"
+"                            <tbody>\n"
+"                              <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
+"                                ${object.body | safe}\n"
+"                              </td>\n"
+"                            </tbody>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- FOOTER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                ${company.name}<br/>\n"
+"                                ${company.phone or ''}\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                % if company.email:\n"
+"                                <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
+"                                % endif\n"
+"                                % if company.website:\n"
+"                                    <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                                        ${company.website}\n"
+"                                    </a>\n"
+"                                % endif\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                      <tr>\n"
+"                        <td align=\"center\">\n"
+"                            Розроблено <a href=\"https://www.odoo.com\">Odoo</a>.\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"                </body>\n"
+"                </html>\n"
+"            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_upselling
@@ -227,6 +343,9 @@ msgid ""
 "                to buy an extra pack of hours, because he used all his support\n"
 "                hours.</i>"
 msgstr ""
+"<i>Наприклад: попередньо оплачені послуги, за які клієнт повинен\n"
+"                 купити додатковий пакет годин, тому що він використав усі години\n"
+"                 підтримки</i>"
 
 #. module: sale
 #. openerp-web
@@ -749,6 +868,8 @@ msgid ""
 "Display 3 fields on sales orders: customer, invoice address, delivery "
 "address"
 msgstr ""
+"Відображати 3 поля за замовленнями на продаж: клієнт, адреса рахунку-"
+"фактури, адреса доставки"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_display_name
@@ -763,16 +884,17 @@ msgstr "Назва для відображення"
 #: model:res.groups,name:sale.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
 msgstr ""
+"Відображати інкотермс на замовлення на продаж та відповідні рахунки-фактури"
 
 #. module: sale
 #: selection:sale.config.settings,module_sale_margin:0
 msgid "Display margins on quotations and sales orders"
-msgstr ""
+msgstr "Відображати поля на комерційних пропозиціях та замовленнях на продаж"
 
 #. module: sale
 #: selection:sale.config.settings,group_sale_layout:0
 msgid "Do not personalize sales orders and invoice reports"
-msgstr ""
+msgstr "Не персоналізувати замовлення на продаж та рахунки-фактури"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:84
@@ -830,7 +952,7 @@ msgstr "Розширені фільтри"
 #: code:addons/sale/models/sale.py:688
 #, python-format
 msgid "Extra line with %s "
-msgstr ""
+msgstr "Окремий рядок з %s "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_fiscal_position_id
@@ -844,6 +966,9 @@ msgid ""
 "Different prices per Customer: you can assign price on buying of minimum quantity in products sale tab.\n"
 "Advanced pricing based on formula: You can have all the rights on pricelist"
 msgstr ""
+"Фіксована ціна: уся ціна формується з ціни товарів на продаж.\n"
+"Різні ціни на одного клієнта: ви можете призначити ціну на купівлю мінімальної кількості на вкладці продажу товарів.\n"
+"Розширене ціноутворення базується на формулі: ви можете мати всі права на прейскурант"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -852,6 +977,10 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"З цього звіту ви можете переглянути суму рахунка-фактури для вашого клієнта."
+" Інструмент пошуку також може використовуватися для персоналізації звітів "
+"рахунків-фактур, і, таким чином, може узгоджувати цей аналіз з вашими "
+"потребами."
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
@@ -874,7 +1003,7 @@ msgstr "Групувати за"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
 msgid "Group By Name"
-msgstr ""
+msgstr "Група за назвою"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_id
@@ -891,6 +1020,8 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
+"Якщо продаж заблокований, ви більше не можете його змінити. Проте ви все "
+"одно зможете зарахувати рахунок або зробити доставку."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -981,6 +1112,9 @@ msgid ""
 " invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
+"Рахунок доходу за поточний місяць. Це сума, яку відділ продажів виставив у "
+"цьому місяці. Він використовується для обчислення коефіцієнта прогресії "
+"поточного та цільового доходу для відображення у канбані."
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1034,6 +1168,8 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
 msgstr ""
+"Рахунки-фактури будуть створені в проекті, щоб ви могли\n"
+"                        переглянути їх перед перевіркою."
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
@@ -1073,7 +1209,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
 msgid "Invoicing/Progression Ratio"
-msgstr ""
+msgstr "Виставлення рахунків/Прогресивний коефіцієнт"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv___last_update
@@ -1104,7 +1240,7 @@ msgstr "Останнє оновлення"
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_sequence
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_layout_category_sequence
 msgid "Layout Sequence"
-msgstr ""
+msgstr "Макет послідовності"
 
 #. module: sale
 #. openerp-web
@@ -1114,23 +1250,25 @@ msgid ""
 "Let's create a new quotation.<br/><i>Note that colored buttons usually "
 "points to the next logical actions in any screen.</i>"
 msgstr ""
+"Давайте створимо нову комерційну пропозицію.<br/><i>Зауважте, що кольорові "
+"кнопки зазвичай вказують наступні логічні дії на будь-якому екрані.</i>"
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tour.js:18
 #, python-format
 msgid "Let's have a look at the quotations of this sales team."
-msgstr ""
+msgstr "Давайте подивимось на комерційні пропозиції цієї команди продажів."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Lock"
-msgstr ""
+msgstr "Заблокувати"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Locked"
-msgstr ""
+msgstr "Заблокований"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_contract
@@ -1150,6 +1288,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sale order validation and track the work hours."
 msgstr ""
+"Встановіть кількість на замовлення вручну: рахунок-фактура на основі введеної вручну кількості, без створення аналітичного облікового запису.\n"
+"Табель робочого часу у контракті: рахунок-фактура на основі годин, що відстежуються, у відповідному табелі робочого часу.\n"
+"Створення завдання та відстеження годин: створіть завдання з перевірки замовлення на продаж та відстежуйте години роботи."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_validity_date
@@ -1158,6 +1299,9 @@ msgid ""
 "the date automatically based on the template if online quotation is "
 "installed."
 msgstr ""
+"Встановіть дату закінчення вашої комерційної пропозиції вручну або "
+"автоматично встановіть дату, яка базується у шаблоні, якщо встановлена "
+"онлайн-пропозиція."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_margin
@@ -1167,13 +1311,13 @@ msgstr "Маржі"
 #. module: sale
 #: model:sale.layout_category,name:sale.sale_layout_cat_2
 msgid "Material"
-msgstr ""
+msgstr "Матеріал"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner_sale_warn_msg
 #: model:ir.model.fields,field_description:sale.field_res_users_sale_warn_msg
 msgid "Message for Sales Order"
-msgstr ""
+msgstr "Повідомлення для замовлення на продаж"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_sale_line_warn_msg
@@ -1205,7 +1349,7 @@ msgstr "Назва"
 #. module: sale
 #: selection:sale.config.settings,auto_done_setting:0
 msgid "Never allow to modify a confirmed sales order"
-msgstr ""
+msgstr "Ніколи не дозволяйте змінювати підтвердження замовлення на продаж"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:110 code:addons/sale/models/sale.py:261
@@ -1233,7 +1377,7 @@ msgstr "Немає повідомлення"
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
 msgid "No discount on sales order lines, global discount only"
-msgstr ""
+msgstr "Немає знижки в рядку замовлення на продаж, тільки загальна знижка"
 
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
@@ -1251,6 +1395,8 @@ msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
 msgstr ""
+"Зауважте, коли комерційна пропозиція стає замовленням на продаж, вона переміщується\n"
+"                 від списку комерційних пропозицій до списку замовлень на продаж."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -1258,6 +1404,8 @@ msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved\n"
 "            from the Quotations list to the Sales Order list."
 msgstr ""
+"Зауважте, коли комерційна пропозиція стає замовленням на продаж, вона переміщується\n"
+"             зі списку пропозицій до списку замовлень."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1266,6 +1414,8 @@ msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved from the "
 "Quotations list to the Sales Order list."
 msgstr ""
+"Зауважте, коли комерційна пропозиція стає замовленням на продаж, вона "
+"переміщується зі списку пропозицій у список замовлень."
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
@@ -1290,6 +1440,10 @@ msgid ""
 "                    From the <i>Sales Orders</i> menu, you can track delivery\n"
 "                    orders or services."
 msgstr ""
+"Коли підтверджується комерційна пропозиція, вона стає замовленням на продаж.\n"
+"                    Ви зможете зарахувати рахунок і зберегти платіж.\n"
+"                    З меню <i>замовлення на продаж</i>, ви можете відслідковувати доставку\n"
+"                    замовлення або послуг."
 
 #. module: sale
 #. openerp-web
@@ -1297,6 +1451,8 @@ msgstr ""
 #, python-format
 msgid "Once your quotation is ready, you can save, print or send it by email."
 msgstr ""
+"Коли ваша комерційна пропозиція буде готова, ви зможете зберегти, "
+"надрукувати або відправити електронною поштою."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_quote
@@ -1373,6 +1529,8 @@ msgid ""
 "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
 "Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
 msgstr ""
+"Замовлена кількість: рахунок базується на кількості замовлень клієнтів.\n"
+"Кількість доставки: виставлений рахунок-фактура базується на кількості кількості доставки постачальника (час або доставка)."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1397,13 +1555,16 @@ msgid ""
 "                policy based on <i>ordered quantities</i> for which you have\n"
 "                delivered more than what have been ordered."
 msgstr ""
+"Замовлення на поповнення - це замовлення, на які є товари з\n"
+"політикою виставлення рахунків на основі <i>замовлених кількостей</i> для яких ви \n"
+"          доставили більше, ніж замовили."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tour.js:13
 #, python-format
 msgid "Organize your sales activities with the <b>Sales app</b>."
-msgstr ""
+msgstr "Організуйте ваші дії продажу з <b>додатком Продажі</b>."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1434,7 +1595,7 @@ msgstr "Термін оплати"
 #. module: sale
 #: model:res.groups,name:sale.group_sale_layout
 msgid "Personalize sale order and invoice report"
-msgstr ""
+msgstr "Персоналізувати замовлення на продаж та рахунок-фактуру"
 
 #. module: sale
 #: selection:sale.config.settings,group_sale_layout:0
@@ -1442,12 +1603,14 @@ msgid ""
 "Personalize the sales orders and invoice report with categories, subtotals "
 "and page-breaks"
 msgstr ""
+"Персоналізувати замовлення на продаж та рахунки за категоріями, проміжними "
+"сумами та розривами сторінок."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:276
 #, python-format
 msgid "Please define an accounting sale journal for this company."
-msgstr ""
+msgstr "Будь ласка, визначте облік журналу продажів для цієї компанії."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:770
@@ -1456,6 +1619,8 @@ msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
 "category: \"%s\"."
 msgstr ""
+"Будь-ласка, визначте дохід для цього продукту: \"%s\" (id:%d) - або для цієї"
+" категорії: \"%s\"."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -1471,12 +1636,12 @@ msgstr "Уцінка"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr ""
+msgstr "Ціна зниження податку без урахування"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr ""
+msgstr "Ціна зниження податку вкл"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_pricelist
@@ -1691,7 +1856,7 @@ msgstr "Пропозиції та продаж"
 #: model:ir.model.fields,field_description:sale.field_product_product_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template_expense_policy
 msgid "Re-Invoice Expenses"
-msgstr ""
+msgstr "Витрати на переказ коштів"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_origin
@@ -1710,7 +1875,7 @@ msgstr "Налаштування звітів"
 #. module: sale
 #: model:ir.ui.menu,name:sale.Report_configuration
 msgid "Report Layout Categories"
-msgstr ""
+msgstr "Категорії звітів макетування"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1742,7 +1907,7 @@ msgstr "Ціна продажу"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
 msgid "Sale pricelist setting"
-msgstr ""
+msgstr "Встановлення прайслиста продажу"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
@@ -1826,7 +1991,7 @@ msgstr "Рядки замовлення готові до включення у 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr ""
+msgstr "Рядки замовлення на продаж, пов'язані із моїм замовленням на продаж"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
@@ -1849,7 +2014,7 @@ msgstr "Статистика замовлень на продаж"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_layout
 msgid "Sales Reports Layout"
-msgstr ""
+msgstr "Макет звіту продажів"
 
 #. module: sale
 #: model:ir.model,name:sale.model_crm_team
@@ -1875,6 +2040,7 @@ msgstr "Продажі до включення у рахунок"
 #: selection:sale.config.settings,module_sale_margin:0
 msgid "Salespeople do not need to view margins when quoting"
 msgstr ""
+"Продавець не потребує перегляду, під час виставлення комерційної пропозиції"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_salesman_id
@@ -1889,7 +2055,7 @@ msgstr "Продавець"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
 msgid "Search Name"
-msgstr ""
+msgstr "Шукати назву"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1912,6 +2078,8 @@ msgid ""
 "the default sale price (that you can change), taxes and description "
 "automatically."
 msgstr ""
+"Виберіть товар або швидко створіть новий. Товар автоматично визначить "
+"стандартну ціну продажу (яку ви можете змінити), податки та опис."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product_sale_line_warn
@@ -1933,6 +2101,8 @@ msgstr ""
 msgid ""
 "Sell digital products - provide downloadable content on your customer portal"
 msgstr ""
+"Продаж цифрових товарів - забезпечте завантаження вмісту на вашому порталі "
+"клієнтів"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1943,6 +2113,8 @@ msgstr "Надіслати поштою"
 #: selection:sale.config.settings,module_website_quote:0
 msgid "Send quotations your customer can approve & pay online (advanced)"
 msgstr ""
+"Надіслати комерційну пропозицію, яку ваш клієнт може схвалити та оплатити "
+"онлайн (розширено)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_sequence
@@ -1975,19 +2147,19 @@ msgstr "Вкажіть типові терміни та умови в налаш
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
 msgid "Show incoterms on sales orders and invoices"
-msgstr ""
+msgstr "Показати інкотермс за замовленнями на продаж та рахунками-фактурами"
 
 #. module: sale
 #: model:res.groups,comment:sale.group_show_price_total
 #: selection:sale.config.settings,sale_show_tax:0
 msgid "Show line subtotals with taxes included (B2C)"
-msgstr ""
+msgstr "Показати суму рядків з включеними податками (B2C)"
 
 #. module: sale
 #: model:res.groups,comment:sale.group_show_price_subtotal
 #: selection:sale.config.settings,sale_show_tax:0
 msgid "Show line subtotals without taxes (B2B)"
-msgstr ""
+msgstr "Показати кінцеві суми без податків (B2B)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_product_pricelist
@@ -2002,23 +2174,25 @@ msgstr "Відображати прайс-листи по товарах"
 #. module: sale
 #: selection:product.pricelist,discount_policy:0
 msgid "Show public price & discount to the customer"
-msgstr ""
+msgstr "Показати загальну ціну та знижку для клієнта"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_show_price_subtotal
 msgid "Show subtotal"
-msgstr ""
+msgstr "Показати суму"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_show_price_total
 msgid "Show total"
-msgstr ""
+msgstr "Показати загальну кількість"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
 msgstr ""
+"Деякі товари можуть бути продані або придбані в різних одиницях виміру "
+"(розширено)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -2028,7 +2202,7 @@ msgstr "Початковий документ"
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "Specific prices per customer segment, currency, etc."
-msgstr ""
+msgstr "Конкретні ціни на сегмент клієнтів, валюту тощо."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_state
@@ -2058,21 +2232,23 @@ msgid ""
 "Target of invoice revenue for the current month. This is the amount the "
 "sales team estimates to be able to invoice this month."
 msgstr ""
+"Цільова сума доходів від рахунку-фактури за поточний місяць. Це сума, яку "
+"оцінює команда продажу, щоб мати змогу виставити рахунок у цьому місяці."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_show_tax
 msgid "Tax Display"
-msgstr ""
+msgstr "Відображення податку"
 
 #. module: sale
 #: model:res.groups,name:sale.group_show_price_subtotal
 msgid "Tax display B2B"
-msgstr ""
+msgstr "Відображення податку B2B"
 
 #. module: sale
 #: model:res.groups,name:sale.group_show_price_total
 msgid "Tax display B2C"
-msgstr ""
+msgstr "Відображення податку B2C"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_tax
@@ -2100,11 +2276,13 @@ msgid ""
 "The Sale Order %s linked to the Analytic Account must be validated before "
 "registering expenses."
 msgstr ""
+"Замовлення на продаж %s, пов'язані з аналітичним рахунком, повинні бути "
+"підтверджені до реєстрації витрат."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
 msgid "The amount to be invoiced in advance, taxes excluded."
-msgstr ""
+msgstr "Сума, за якою виставляється рахунок, без урахування податків."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_project_id
@@ -2119,6 +2297,8 @@ msgid ""
 "The ordered quantity has been decreased. Do not forget to take it into "
 "account on your invoices and delivery orders."
 msgstr ""
+"Замовлену кількість було зменшено. Не забувайте враховувати її в рахунках-"
+"фактурах та замовленнях на доставку."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_display_incoterm
@@ -2126,6 +2306,8 @@ msgid ""
 "The printed reports will display the incoterms for the sales orders and the "
 "related invoices"
 msgstr ""
+"У друкованих звітах буде відображатися інкотермс за замовленнями на продаж "
+"та відповідними рахунками-фактурами"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:148
@@ -2134,6 +2316,9 @@ msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
 msgstr ""
+"Товар, що використовується для оплати рахунку-фактури початкового внеску, "
+"повинен мати тип \"Сервіс\". Будь ласка, використайте інший товар або "
+"оновіть цей продукт."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:146
@@ -2143,12 +2328,16 @@ msgid ""
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
 msgstr ""
+"Для товару, який використовується для оплати першого внеску, політика "
+"рахунку-фактури повинна бути встановлена на \"Замовлені величини\". Будь "
+"ласка, оновіть депозитний товар, щоб мати змогу створити депозитний рахунок-"
+"фактуру."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:78
 #, python-format
 msgid "The value of the down payment amount must be positive."
-msgstr ""
+msgstr "Вартість суми першого внеску повинна бути позитивною."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:74
@@ -2157,6 +2346,8 @@ msgid ""
 "There is no income account defined for this product: \"%s\". You may have to"
 " install a chart of account from Accounting app, settings menu."
 msgstr ""
+"Для цього товару немає облікового запису про доходи: \"%s\". Можливо, вам "
+"необхідно встановити діаграму рахунку з програми обліку, меню налаштувань."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:366 code:addons/sale/models/sale.py:370
@@ -2178,6 +2369,12 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
+"Цей звіт виконує аналіз ваших комерційних пропозицій та замовлень на продаж."
+" Аналіз перевіряє ваші доходи від продажів та сортує їх за різними "
+"критеріями групи (продавець, партнер, товар тощо). Використовуйте цей звіт "
+"для аналізу продажів, які ще не нарахували рахунки. Якщо ви хочете "
+"проаналізувати ваш оборот, ви повинні використовувати звіт \"Аналіз "
+"рахунків-фактур\" у програмі бухгалтерського обліку."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -2188,6 +2385,12 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"Цей звіт виконує аналіз ваших комерційних пропозицій. Аналіз перевіряє ваші "
+"доходи від продажів та сортує їх за різними критеріями групи (продавець, "
+"партнер, товар тощо). Використовуйте цей звіт для аналізу продажів, які ще "
+"не нарахували рахунки. Якщо ви хочете проаналізувати ваш оборот, ви повинні "
+"використовувати звіт \"Аналіз рахунків-фактур\" у програмі бухгалтерського "
+"обліку."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -2198,6 +2401,12 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"Цей звіт виконує аналіз ваших замовлень на продаж. Аналіз перевіряє ваші "
+"доходи від продажів та сортує їх за різними критеріями групи (продавець, "
+"партнер, товар тощо). Використовуйте цей звіт для аналізу продажів, які ще "
+"не нарахували рахунки. Якщо ви хочете проаналізувати ваш оборот, ви повинні "
+"використовувати звіт \"Аналіз рахунків-фактур\" у програмі бухгалтерського "
+"обліку."
 
 #. module: sale
 #: selection:product.template,track_service:0
@@ -2237,7 +2446,7 @@ msgstr "Всього з податками"
 #: model:ir.model.fields,field_description:sale.field_product_product_track_service
 #: model:ir.model.fields,field_description:sale.field_product_template_track_service
 msgid "Track Service"
-msgstr ""
+msgstr "Відслідковування послуг"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_unit
@@ -2302,6 +2511,7 @@ msgstr "Використовувати прайс-листи для адапта
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to preceeding screens</b>."
 msgstr ""
+"Використовуйте шлях переходів, <b>щоб повернутися на попередні сторінки</b>."
 
 #. module: sale
 #. openerp-web
@@ -2309,6 +2519,8 @@ msgstr ""
 #, python-format
 msgid "Use this menu to access quotations, sales orders and customers."
 msgstr ""
+"Використовуйте це меню для доступу до комерційних пропозицій, замовлень на "
+"продаж та клієнтів."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2336,12 +2548,12 @@ msgstr "Попередження для %s"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Warning on the Sales Order"
-msgstr ""
+msgstr "Попередження у замовленні на продаж"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "Warning when Selling this Product"
-msgstr ""
+msgstr "Попередження при продажі цього товару"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_advance_payment_method
@@ -2354,6 +2566,8 @@ msgid ""
 "Work with product variant allows you to define some variant of the same products\n"
 "                , an ease the product management in the ecommerce for example"
 msgstr ""
+"Робота з різновидом товару дає змогу визначити варіанти тих самих товарів, наприклад,\n"
+"                полегшити менеджмент товарів в електронній комерції"
 
 #. module: sale
 #. openerp-web
@@ -2363,6 +2577,8 @@ msgid ""
 "Write the name of your customer to create one on the fly, or select an "
 "existing one."
 msgstr ""
+"Напишіть ім'я вашого клієнта, щоби швидко його створити або виберіть вже "
+"існуючого."
 
 #. module: sale
 #. openerp-web
@@ -2378,6 +2594,8 @@ msgid ""
 "You can not delete a sent quotation or a sales order! Try to cancel it "
 "before."
 msgstr ""
+"Ви не можете видалити надіслану комерційну пропозицію або замовлення на "
+"продаж! Спробуйте скасувати це раніше."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:883
@@ -2386,6 +2604,8 @@ msgid ""
 "You can not remove a sale order line.\n"
 "Discard changes and try setting the quantity to 0."
 msgstr ""
+"Ви не можете видалити рядок замовлення на продаж.\n"
+"Відхиліть зміни та спробуйте встановити кількість до 0."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -2393,11 +2613,13 @@ msgid ""
 "You can select all orders and invoice them in batch, or check\n"
 "                every order and invoice them one by one."
 msgstr ""
+"Ви можете вибрати всі замовлення та виставити рахунки в пакетному режимі,\n"
+"                або перевіряти кожне замовлення та виставляти рахунок по одному."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr ""
+msgstr "Тут ви знайдете всі замовлення, які готові до виставлення рахунку."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
@@ -2405,6 +2627,8 @@ msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sale Order, then create the Invoice and collect the Payment."
 msgstr ""
+"Ваші наступні дії повинні проходити ефективно: підтвердьте пропозицію щодо\n"
+"                замовлення на продаж, потім створіть рахунок-фактуру та отримайте платіж."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -2412,6 +2636,8 @@ msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "            to a Sale Order, then create the Invoice and collect the Payment."
 msgstr ""
+"Ваші наступні дії повинні проходити ефективно: підтвердьте пропозицію\n"
+"        щодо замовлення на продаж, а потім створіть рахунок-фактуру та збережіть платіж."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -2420,6 +2646,9 @@ msgid ""
 "Your next actions should flow efficiently: confirm the Quotation to a Sale "
 "Order, then create the Invoice and collect the Payment."
 msgstr ""
+"Ваша наступна дія повинна ефективно виконуватися: підтвердіть комерційну "
+"пропозицію на Замовлення на продаж, потім створіть рахунок-фактуру та "
+"збережіть платіж."
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings
@@ -2439,4 +2668,4 @@ msgstr "sale.config.settings"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_layout_category
 msgid "sale.layout_category"
-msgstr ""
+msgstr "sale.layout_category"

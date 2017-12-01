@@ -2,12 +2,19 @@
 # This file contains the translation of the following modules:
 # * account
 # 
+# Translators:
+# ສີສຸວັນ ສັງບົວບຸລົມ <sisouvan@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Phoxaysy Sengchanthanouvong <phoxaysy@gmail.com>, 2017
+# Amkha VAYAPHATH <amkha.nazou@gmail.com>, 2017
+# Aefgh Threenine <aefgh3962@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2017-05-26 08:44+0000\n"
+"Last-Translator: Aefgh Threenine <aefgh3962@gmail.com>, 2017\n"
 "Language-Team: Lao (https://www.transifex.com/odoo/teams/41243/lo/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,6 +62,42 @@ msgid ""
 "    ${object.user_id.signature | safe}\n"
 "% endif\n"
 msgstr ""
+"\n"
+"<p>ທ່ານ ${object.partner_id.name} ທີ່ເຄົາລົບ\n"
+"% set access_action = object.get_access_action()\n"
+"% set access_url = access_action['type'] == 'ir.actions.act_url' and access_action['url'] or '/report/pdf/account.report_invoice/' + str(object.id)\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>ນີ້ແມ່ນໃບເກັບເງິນສຳລັບທ່ານ <strong>${object.number}</strong>\n"
+"% if object.origin:\n"
+"(with reference: ${object.origin} )\n"
+"% endif\n"
+"ໃນມູນຄ່າ <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"from ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"% if is_online:\n"
+"    <br/><br/>\n"
+"    <center>\n"
+"      <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">ເບິ່ງໃບເກັບເງິນ</a>\n"
+"    </center>\n"
+"% endif\n"
+"    <br/><br/>\n"
+"\n"
+"% if object.state=='paid':\n"
+"    <p>ໃບເກັບເງີນນີ້ໄດ້ຊໍາລະແລ້ວ.</p>\n"
+"% else:\n"
+"    <p>ກະລຸຍາ ຊໍາລະເງິນ ຕາມເວລາອັນຄວນດ້ວຍ.</p>\n"
+"% endif\n"
+"\n"
+"<p>ຂອບໃຈ,</p>\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_state
@@ -65,6 +108,9 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+"* ສະຖານະ 'ຊົ່ວຄາວ' ໃຊ້ໃນເວລາ ທີ່ຜູ້ໃຊ້ ກຳລັງສ້າງ ໃບເກັບເງິນໃໝ່ ແລະ ຍັງບໍ່ທັນໄດ້ ຢືນຢັນເທື່ອ.\n"
+"* ສະຖານະ 'ໃບເກັບເງິນລ່ວງໜ້າ' ໃຊ້ໃນເວລາ ໃບເກັບເງີນ ຍັງບໍ່ທັນມີ ເລກທີກຳກັບໃບເກັບເງິນ.\n"
+"* ສະຖານະ 'ໄຂຢູ່' ໃຊ້ໃນເວລາ ທີ່ຜູ້ໃຊ້ງານ ສ້າງໃບເກັບເງິນ, ສ້າງເລກກຳກັບໃບເກັຍເງິນແລ້ວ. ມັນຍັງຢູ່ໃນສະຖານະ ໄຂຢູ່ ຈົນກວ່າ ຜູ້ໃຊ້ ຊໍາລະ ໃບເກັບເງິນນັ້ນ."
 
 #. module: account
 #. openerp-web
@@ -77,7 +123,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_code_digits
 msgid "# of Digits"
-msgstr ""
+msgstr "# ຂອງໂຕເລກ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_code_digits
@@ -87,7 +133,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
 msgid "# of Lines"
-msgstr ""
+msgstr "# ຂອງລາຍການ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_trans_nbr
@@ -132,7 +178,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ", if accounting or purchase is installed"
-msgstr ""
+msgstr ", ຖ້າຫາກ ການບັນຊີ ຫຼື ການສັ່ງຂື້ ໄດ້ຮັບການຕິດຕັ້ງລົງແລ້ວ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -297,6 +343,11 @@ msgid ""
 "                                        <span class=\"small\">&gt; 200 contacts</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"&#57408;\"/>\n"
+"                                        <strong>ນໍາເຂົ້າ</strong><br/>\n"
+"                                        <span class=\"small\">&gt; 200 ທີ່ຢູ່ຕິດຕໍ່</span>\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -307,6 +358,11 @@ msgid ""
 "                                        <span class=\"small\">&lt; 200 contacts</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"&#57440;\"/>\n"
+"                                        <strong> ສ້າງດ້ວຍຕົນເອງ</strong><br/>\n"
+"                                        <span class=\"small\">&lt; 200 ທີ່ຢູ່ຕິດຕໍ່</span>\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -801,7 +857,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>ພະນັກງານຂາຍ:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1101,7 +1157,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template_account_src_id
 msgid "Account Source"
-msgstr ""
+msgstr "ຕົ້້ນບັນຊີ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_bank_statement_graph
@@ -1109,7 +1165,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_move_line_graph_date
 #: model:ir.ui.view,arch_db:account.account_move_line_graph_date_cash_basis
 msgid "Account Statistics"
-msgstr ""
+msgstr "ສະຖິຕິບັນຊີ"
 
 #. module: account
 #: model:ir.model,name:account.model_account_account_tag
@@ -1187,7 +1243,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr ""
+msgstr "ບັນຊີຍັງບໍ່ທັນສົມຕໍ່"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile
@@ -1311,7 +1367,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
 #: model:ir.ui.view,arch_db:account.view_account_search
 msgid "Accounts"
-msgstr ""
+msgstr "ບັນຊີ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_account_control_ids
@@ -1345,14 +1401,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax_active
 #: model:ir.model.fields,field_description:account.field_account_tax_template_active
 msgid "Active"
-msgstr ""
+msgstr "ໃຊ້ຢູ່"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_payment.xml:17
 #, python-format
 msgid "Add"
-msgstr ""
+msgstr "ເພີ່ມເຂົ້າ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_has_second_line
@@ -1380,7 +1436,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Address"
-msgstr ""
+msgstr "ທີ່ຢູ່"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_tax_id
@@ -1440,7 +1496,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:298
 #, python-format
 msgid "All"
-msgstr ""
+msgstr "ທັງໝົດ"
 
 #. module: account
 #: selection:account.aged.trial.balance,target_move:0
@@ -1723,7 +1779,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_analytic_account_id
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Analytic Account"
-msgstr ""
+msgstr "ບັນຊີວິເຄາະ"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
@@ -1993,7 +2049,7 @@ msgstr ""
 #: model:ir.model,name:account.model_res_partner_bank
 #: model:ir.ui.menu,name:account.menu_action_account_bank_journal_form
 msgid "Bank Accounts"
-msgstr ""
+msgstr "ບັນຊີທະນາຄານ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_bank_account_code_prefix
@@ -2047,12 +2103,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
-msgstr ""
+msgstr "ບັນຊີສຳຮອງເງິນຝາກທະນາຄານ"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
+msgstr "ລາຍການບັນຊີສຳຮອງເງິນຝາກທະນາຄານ"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_line
@@ -2172,7 +2228,7 @@ msgstr ""
 #. module: account
 #: selection:res.partner,invoice_warn:0
 msgid "Blocking Message"
-msgstr ""
+msgstr "ປິດ​ການ​ແຈ້ງ​ເຕື່ອນ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_type_include_initial_balance
@@ -2208,7 +2264,7 @@ msgstr ""
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product
 msgid "By Product"
-msgstr ""
+msgstr "ຕາມສິນຄ້າ"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product_category
@@ -2223,7 +2279,7 @@ msgstr ""
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_salespersons
 msgid "By Salespersons"
-msgstr ""
+msgstr "ຕາມພະນັກງານຂາຍ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_active
@@ -2257,7 +2313,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_payment_from_invoices
 #: model:ir.ui.view,arch_db:account.view_account_payment_invoice_form
 msgid "Cancel"
-msgstr ""
+msgstr "ຍົກເລີກ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -2272,7 +2328,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Cancel Invoice"
-msgstr ""
+msgstr "ຍົກເລີກໃບເກັບເງິນ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_cancel_view
@@ -2303,7 +2359,7 @@ msgstr ""
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "ຍົກເລີກ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -2444,7 +2500,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax_template_chart_template_id
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_chart_template_id
 msgid "Chart Template"
-msgstr ""
+msgstr "ເເບບຢ່າງຜັງ"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_charts_modules
@@ -2635,7 +2691,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:41
 #, python-format
 msgid "Close"
-msgstr ""
+msgstr "ອັດ"
 
 #. module: account
 #. openerp-web
@@ -2666,7 +2722,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_register_payments_payment_method_code
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "Code"
-msgstr ""
+msgstr "ລະຫັດ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line_coin_value
@@ -2676,7 +2732,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag_color
 msgid "Color Index"
-msgstr ""
+msgstr "ດັດຊະນີສີ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_label_filter
@@ -2707,7 +2763,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "ບໍລິສັດ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_ref_company_ids
@@ -2753,7 +2809,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Company"
-msgstr ""
+msgstr "ບໍລິສັດ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_company_currency_id
@@ -2821,7 +2877,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_finance_configuration
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Configuration"
-msgstr ""
+msgstr "ການກຳນົດຄ່າ"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:455
@@ -2862,7 +2918,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Configure"
-msgstr ""
+msgstr "ສ້ອມຕັ້້ງ"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_config
@@ -2880,7 +2936,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
 #: model:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Confirm"
-msgstr ""
+msgstr "ຢືນຢັນ"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_invoice_confirm
@@ -2901,7 +2957,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Confirmed"
-msgstr ""
+msgstr "ຮັບຮູ້ເເລັວ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
@@ -2920,7 +2976,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Congratulations, you're done!"
-msgstr ""
+msgstr "ຊົມເຊີຍ! ທ່ານເຮັດສຳເລັດແລ້ວ!"
 
 #. module: account
 #: model:ir.model,name:account.model_account_abstract_payment
@@ -2961,7 +3017,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_country_id
 msgid "Country"
-msgstr ""
+msgstr "ປະເທດ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_country_group_id
@@ -2976,7 +3032,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Create Customers"
-msgstr ""
+msgstr "ສ້າງລູກຄ້າ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
@@ -2986,7 +3042,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Create Vendors"
-msgstr ""
+msgstr "ສ້າງຜູ້ຂາຍ"
 
 #. module: account
 #. openerp-web
@@ -3097,7 +3153,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_validate_account_move_create_uid
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງ ໂດຍ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_create_date
@@ -3160,7 +3216,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_validate_account_move_create_date
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງ ເມື່ອ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_credit
@@ -3240,7 +3296,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Currency"
-msgstr ""
+msgstr "ສະກຸນເງິນ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_currency_rate
@@ -3285,7 +3341,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model:ir.ui.view,arch_db:account.view_account_payment_tree
 msgid "Customer"
-msgstr ""
+msgstr "ລູກຄ້າ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3342,7 +3398,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_account_customer
 #, python-format
 msgid "Customers"
-msgstr ""
+msgstr "ລູກຄ້າ"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
@@ -3373,7 +3429,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 #, python-format
 msgid "Date"
-msgstr ""
+msgstr "ວັນທີ"
 
 #. module: account
 #. openerp-web
@@ -3545,7 +3601,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_type_form
 #, python-format
 msgid "Description"
-msgstr ""
+msgstr "ຄຳອະທິບາຍ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_note
@@ -3684,7 +3740,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_validate_account_move_display_name
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ທີ່ສະແດງອອກ"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
@@ -3723,17 +3779,17 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Don't hesitate to"
-msgstr ""
+msgstr "ກະລຸນາຢ່າລັງເລໃຈ ທີ່ຈະ"
 
 #. module: account
 #: selection:account.invoice.report,state:0
 msgid "Done"
-msgstr ""
+msgstr "ຈົບເເລັວ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Download the"
-msgstr ""
+msgstr "ດາວໂຫຼດເອົາ"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -3742,7 +3798,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Draft"
-msgstr ""
+msgstr "ຕົວທົດລອງ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -3869,7 +3925,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "End"
-msgstr ""
+msgstr "ສິ້ນສຸດ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_date_to
@@ -3884,7 +3940,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_accounting_report_date_to
 #: model:ir.model.fields,field_description:account.field_accounting_report_date_to_cmp
 msgid "End Date"
-msgstr ""
+msgstr "ວັນທີສິ້ນສຸດ"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term
@@ -3958,12 +4014,12 @@ msgstr ""
 #: code:addons/account/wizard/account_report_common.py:28
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "ພິດພາດ!"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Excel template"
-msgstr ""
+msgstr "ຮ່າງແບບເອັກແຊວລ໌"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:185
@@ -4196,7 +4252,7 @@ msgstr ""
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Fixed"
-msgstr ""
+msgstr "ກໍານົດ"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -4445,7 +4501,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_template_search
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Group By"
-msgstr ""
+msgstr "ຈັດກຸ່ມ ໂດຍ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group_invoice_lines
@@ -4561,7 +4617,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_validate_account_move_id
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_id
 msgid "ID"
-msgstr ""
+msgstr "ເລກລຳດັບ"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:182
@@ -4713,7 +4769,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "If you want to do it yourself:"
-msgstr ""
+msgstr "ຖ້າຫາກທ່ານຕ້ອງການເຮັດເອົາດ້ວຍຕົນເອງ."
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -4840,7 +4896,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 #: model:ir.ui.view,arch_db:account.view_move_line_form2
 msgid "Information"
-msgstr ""
+msgstr "ຂໍ້ມູນຂ່າວສານ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_move_line_reconcile_writeoff
@@ -4888,7 +4944,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_note
 msgid "Internal Notes"
-msgstr ""
+msgstr "ບັນທຶກພາຍໃນ"
 
 #. module: account
 #: selection:account.payment,payment_type:0
@@ -4933,7 +4989,7 @@ msgstr ""
 #: model:res.request.link,name:account.req_link_invoice
 #, python-format
 msgid "Invoice"
-msgstr ""
+msgstr "​ໃບ​ເກັບ​ເງີນ"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_created
@@ -4952,7 +5008,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_invoice_line_form
 #: model:ir.ui.view,arch_db:account.view_invoice_line_tree
 msgid "Invoice Line"
-msgstr ""
+msgstr "ລາຍການເກັບເງິນ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_invoice_line_ids
@@ -5217,7 +5273,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.report_generalledger
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 msgid "JRNL"
-msgstr ""
+msgstr "ລາຍວັນ"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -5247,7 +5303,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 #, python-format
 msgid "Journal"
-msgstr ""
+msgstr "ບັນຊີປະຈຳວັນ"
 
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
@@ -5387,7 +5443,7 @@ msgstr ""
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
 msgid "June"
-msgstr ""
+msgstr "ມິຖຸນາ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_reason
@@ -5510,7 +5566,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_validate_account_move___last_update
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "ແກ້ໄຂລ້າສຸດ ເມື່ອ"
 
 #. module: account
 #. openerp-web
@@ -5580,7 +5636,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_validate_account_move_write_uid
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ປັບປຸງລ້າສຸດ ໂດຍ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag_write_date
@@ -5643,7 +5699,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_validate_account_move_write_date
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ປັບປຸງລ້າສຸດ ເມື່ອ"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
@@ -5939,7 +5995,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_partner_invoice_warn_msg
 #: model:ir.model.fields,field_description:account.field_res_users_invoice_warn_msg
 msgid "Message for Invoice"
-msgstr ""
+msgstr "ແຈ້ງ​ເຕື່ອນສຳ​ລັບ​ໃບ​ເກັບ​ເງີນ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -6017,7 +6073,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "More Info"
-msgstr ""
+msgstr "ຂໍ້ມູນເພີ່ມຕື່ມ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6092,7 +6148,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.report_financial
 #: model:ir.ui.view,arch_db:account.report_journal
 msgid "Name"
-msgstr ""
+msgstr "ຊື່"
 
 #. module: account
 #. openerp-web
@@ -6115,7 +6171,7 @@ msgstr ""
 #. module: account
 #: selection:account.bank.statement,state:0
 msgid "New"
-msgstr ""
+msgstr "ສ້າງໃໝ່"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -6151,7 +6207,7 @@ msgstr ""
 #. module: account
 #: selection:res.partner,invoice_warn:0
 msgid "No Message"
-msgstr ""
+msgstr "ບໍ່​ມີແຈ້ງ​ເຕື່ອນ"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1080
@@ -6233,7 +6289,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account_template_note
 #, python-format
 msgid "Note"
-msgstr ""
+msgstr "ໝາຍເຫດ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_note
@@ -6241,7 +6297,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_note
 #: model:ir.ui.view,arch_db:account.view_account_template_form
 msgid "Notes"
-msgstr ""
+msgstr "ໝາຍເຫດ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -6499,7 +6555,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Options"
-msgstr ""
+msgstr "ທາງເລືອກ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_payment_id
@@ -6626,7 +6682,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_parent_id
 msgid "Parent"
-msgstr ""
+msgstr "ບໍລິສັດແມ່"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_parent_id
@@ -6668,7 +6724,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 #, python-format
 msgid "Partner"
-msgstr ""
+msgstr "ພາຄີ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_commercial_partner_id
@@ -6710,12 +6766,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_common_partner_report_result_selection
 #: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_result_selection
 msgid "Partner's"
-msgstr ""
+msgstr "ຄຸ່ຄ້າ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "Partners"
-msgstr ""
+msgstr "ຄູ່ຄ້າ"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:96
@@ -6913,7 +6969,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Payments"
-msgstr ""
+msgstr "ການຊໍາລະ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7001,7 +7057,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_web_planner
 msgid "Planner"
-msgstr ""
+msgstr "ຜູ້​ວາງ​ແຜນ"
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:27
@@ -7141,7 +7197,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_common_report_view
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Print"
-msgstr ""
+msgstr "ພິມອອກ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -7179,14 +7235,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move_line_product_id
 #: model:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "Product"
-msgstr ""
+msgstr "ຜະລິດຕະພັນ"
 
 #. module: account
 #: model:ir.model,name:account.model_product_category
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_categ_id
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Product Category"
-msgstr ""
+msgstr "ໝວດສິນຄ້າ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_product_qty
@@ -7196,7 +7252,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "ຮ່າງແບບຜະລິດຕະພັນ"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:170
@@ -7302,7 +7358,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move_line_quantity
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Quantity"
-msgstr ""
+msgstr "ຈຳນວນ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_currency_exchange_journal_id
@@ -7575,7 +7631,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_register_payments
 msgid "Register payments on multiple invoices"
-msgstr ""
+msgstr "ລົງທະບຽນການຊໍາລະ ໃນໃບເກັບເງິນຫຼາຍໆໃບ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7652,14 +7708,14 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Reset to Draft"
-msgstr ""
+msgstr "ປັບກັບຮ່າງ"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:150
 #, python-format
 msgid "Residual"
-msgstr ""
+msgstr "ເສດເຫຼືອ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_amount_residual
@@ -7675,7 +7731,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_user_id
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Responsible"
-msgstr ""
+msgstr "ຮັບຜິດຊອບ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_deferred_revenue
@@ -7768,7 +7824,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_finance_receivables
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Sales"
-msgstr ""
+msgstr "ການຂາຍ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_sale_tax_rate
@@ -7786,7 +7842,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Salesperson"
-msgstr ""
+msgstr "ພະນັກງານຂາຍ"
 
 #. module: account
 #. openerp-web
@@ -7994,7 +8050,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax_sequence
 #: model:ir.model.fields,field_description:account.field_account_tax_template_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "ລຳດັບ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_active
@@ -8032,7 +8088,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_account_config
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Settings"
-msgstr ""
+msgstr "ການກໍານົດຄ່າ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_code
@@ -8117,7 +8173,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_accounting_report_date_from
 #: model:ir.model.fields,field_description:account.field_accounting_report_date_from_cmp
 msgid "Start Date"
-msgstr ""
+msgstr "ວັນທີເລີ່ມ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_balance_start
@@ -8132,7 +8188,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "State"
-msgstr ""
+msgstr "ແຂວງ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_statement_id
@@ -8167,7 +8223,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "States"
-msgstr ""
+msgstr "ສະພາບ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_states_count
@@ -8185,7 +8241,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 #: model:ir.ui.view,arch_db:account.view_move_line_form2
 msgid "Status"
-msgstr ""
+msgstr "ສະພາບ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line_subtotal
@@ -8212,7 +8268,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax_tag_ids
 #: model:ir.ui.view,arch_db:account.account_tag_view_form
 msgid "Tags"
-msgstr ""
+msgstr "ເປົ້າໝາຍ"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_cash_box_out
@@ -8255,7 +8311,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 #, python-format
 msgid "Tax"
-msgstr ""
+msgstr "ອາກອນ"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:761
@@ -8919,7 +8975,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "This Year"
-msgstr ""
+msgstr "ປີນີ້"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product_property_account_expense_id
@@ -9210,7 +9266,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "To Invoice"
-msgstr ""
+msgstr "ອອກໃບຮັບເງິນ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_tree
@@ -9251,7 +9307,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_cashbox
 #, python-format
 msgid "Total"
-msgstr ""
+msgstr "ລວມທັງໝົດ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_tree
@@ -9416,7 +9472,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move_line_user_type_id
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_value
 msgid "Type"
-msgstr ""
+msgstr "ປະເພດ"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:819
@@ -9435,14 +9491,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_unit
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Unit Price"
-msgstr ""
+msgstr "ລາຄາຫົວໜວຍ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_product_uom_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_uom_id
 #: model:ir.model.fields,field_description:account.field_account_move_line_product_uom_id
 msgid "Unit of Measure"
-msgstr ""
+msgstr "ຫົວໜ່ວຍ"
 
 #. module: account
 #: code:addons/account/report/account_aged_partner_balance.py:187
@@ -9462,6 +9518,8 @@ msgid ""
 "Unless you are starting a new business, you probably have a list of "
 "customers and vendors you'd like to import."
 msgstr ""
+"ເວັ້ນເສຍແຕ່ວ່າທ່ານກໍາລັງເລີ່ມທຸລະກິດໃຫມ່, "
+"ທ່ານອາດຈະມີບັນຊີລາຍຊື່ຂອງລູກຄ້າແລະຜູ້ຂາຍທີ່ທ່ານຢາກນໍາເຂົ້າ."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_invoice_opened
@@ -9516,7 +9574,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed
 msgid "Untaxed Amount"
-msgstr ""
+msgstr "ມູນຄ່າບໍ່ລວມພາສີ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed_signed
@@ -9526,7 +9584,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Use"
-msgstr ""
+msgstr "ໃຊ້ງານ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_use_anglo_saxon
@@ -9663,7 +9721,7 @@ msgstr ""
 #: selection:account.bank.statement,state:0
 #: model:mail.message.subtype,name:account.mt_invoice_validated
 msgid "Validated"
-msgstr ""
+msgstr "ກວດກາເຫັນດີເເລ້ວ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_value_amount
@@ -9748,7 +9806,7 @@ msgstr ""
 #. module: account
 #: selection:account.financial.report,type:0
 msgid "View"
-msgstr ""
+msgstr "ເບຶ່ງ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -9764,25 +9822,25 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_config_settings_group_warning_account
 #: selection:res.partner,invoice_warn:0
 msgid "Warning"
-msgstr ""
+msgstr "​ເຕື່ອນ"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:499
 #, python-format
 msgid "Warning for %s"
-msgstr ""
+msgstr "​ເຕື່ອນ ເພື່ອ %S"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "Warning on the Invoice"
-msgstr ""
+msgstr "ເຕື່ອນ​ເພື່ອ​ໃບ​ເກັບ​ເງີນ"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1265
 #: code:addons/account/models/account_invoice.py:1324
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "ລະວັງ !"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9792,6 +9850,11 @@ msgid ""
 "                                        manager a CSV file containing all your\n"
 "                                        data."
 msgstr ""
+"ພວກເຮົາສາມາດຈັດການຂະບວນການນໍາເຂົ້າທັງໝົດ\n"
+"                                        ໃຫ້ແກ່ທ່ານ: ພຽງແຕ່ສົ່ງ ຜູ້ບໍລິຫານໂຄງການ Odoo ຂອງ ທ່ານ\n"
+"                                        ມາໃນຮູບແບບ ໄຟລ໌ CSV ທີ່ມີຂໍ້ມູນທັງຫມົດ\n"
+"                                        ຂອງທ່ານ.\n"
+"  ."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9810,7 +9873,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Welcome"
-msgstr ""
+msgstr "ຍິນດີຕ້ອນຮັບ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10131,6 +10194,12 @@ msgid "You have"
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_payment.py:360
+#, python-format
+msgid "You have to define a sequence for %s in your company."
+msgstr ""
+
+#. module: account
 #: code:addons/account/wizard/account_report_general_ledger.py:21
 #, python-format
 msgid "You must define a Start Date"
@@ -10316,7 +10385,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "days"
-msgstr ""
+msgstr "ມື້"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -10353,7 +10422,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_common_report_view
 #: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
 msgid "or"
-msgstr ""
+msgstr "ຫຼື"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -10435,7 +10504,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "send us an email"
-msgstr ""
+msgstr "ສົ່ງ ອີເມວລ໌ ຫາ ພວກເຮົາ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

@@ -1,4 +1,4 @@
-Canada, France, 2017-05-12
+Canada, France, 2017-10-17
 
 Savoir-faire Linux agrees to the terms of the Odoo Corporate Contributor License
 Agreement v1.0.
@@ -8,17 +8,22 @@ declaration.
 
 Signed,
 
-Jérome Boisvert-Chouinard jerome.boisvertchouinard@savoirfairelinux.com https://github.com/jbchouinard
+João Alfredo Gama Batista joao.gama@savoirfairelinux.com https://github.com/joaoalf
 
 List of contributors:
 
 Agathe Mollé agathe.molle@savoirfairelinux.com https://github.com/Ehtaga
 Bruno Joliveau bruno.joliveau@savoirfairelinux.com https://github.com/bjoliveau
 David Dufresne david.dufresne@savoirfairelinux.com https://github.com/dufresnedavid
-Jérome Boisvert-Chouinard jerome.boisvertchouinard@savoirfairelinux.com https://github.com/jbchouinard
-Joao Alfredo Gama Batista joao.gama@savoirfairelinux.com https://github.com/joaoalf
-Julie Moussu julie.mousse@savoirfairelinux.com https://github.com/JulieSFL
-Pierre Lamarche pierre.lamarche@savoirfairelinux.com https://github.com/plamarche
+Istvan SZALAÏ istvan.szalai@savoirfairelinux.com https://github.com/ventilooo
+João Alfredo Gama Batista joao.gama@savoirfairelinux.com https://github.com/joaoalf
+Julien Jezequel-Breard julien.jezequel-breard@savoirfairelinux.com https://github.com/jjbreard
+Quentin Lavallée-Bourdeau quentin.lavallee@savoirfairelinux.com https://github.com/qtiplb
+Rim Ben Dhaou rim.bendhaou@savoirfairelinux.com https://github.com/rimbendhaou
+Yasmine El Mrini yasmine.elmrini@savoirfairelinux.com https://github.com/yasmineelmrini
+Jérome Boisvert-Chouinard jerome.boisvertchouinard@savoirfairelinux.com https://github.com/jbchouinard (up to 2017-10-17)
+Julie Moussu julie.mousse@savoirfairelinux.com https://github.com/JulieSFL (up to 2017-10-17)
+Pierre Lamarche pierre.lamarche@savoirfairelinux.com https://github.com/plamarche (up to 2017-10-17)
 David Cormier david.cormier@savoirfairelinux.com https://github.com/cormier (up to 2017-05-12)
 Davin Baragiotta davin.baragiotta@savoirfairelinux.com https://github.com/giotta (up to 2017-05-12)
 El Hadji Dem elhadji.dem@savoirfairelinux.com https://github.com/ehdem (up to 2017-05-12)

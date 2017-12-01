@@ -667,7 +667,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         });
     },
     destroy: function() {
-        this.$buttons.off().destroy();
+        if (this.$buttons) {
+            this.$buttons.off().destroy();
+        }
         this._super.apply(this, arguments);
     },
 });

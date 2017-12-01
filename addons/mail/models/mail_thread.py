@@ -174,10 +174,10 @@ class MailThread(models.AbstractModel):
                              RIGHT JOIN mail_channel_partner cp
                              ON (cp.channel_id = rel.mail_channel_id AND cp.partner_id = %s AND
                                 (cp.seen_message_id IS NULL OR cp.seen_message_id < msg.id))
-                             WHERE msg.model = %s AND msg.res_id in %s AND
+                             WHERE msg.model = %s AND msg.res_id = ANY(%s) AND
                                    (msg.author_id IS NULL OR msg.author_id != %s) AND
                                    (msg.message_type != 'notification' OR msg.model != 'mail.channel')""",
-                         (partner_id, self._name, tuple(self.ids), partner_id,))
+                         (partner_id, self._name, list(self.ids), partner_id,))
         for result in self._cr.fetchall():
             res[result[0]] += 1
 
@@ -1358,6 +1358,8 @@ class MailThread(models.AbstractModel):
         mail module, and should not contain security or generic html cleaning.
         Indeed those aspects should be covered by the html_sanitize method
         located in tools. """
+        if not body:
+            return body, attachments
         root = lxml.html.fromstring(body)
         postprocessed = False
         to_remove = []
@@ -1392,7 +1394,7 @@ class MailThread(models.AbstractModel):
         # Content-Type: multipart/related;
         #   boundary="_004_3f1e4da175f349248b8d43cdeb9866f1AMSPR06MB343eurprd06pro_";
         #   type="text/html"
-        if not message.is_multipart() or message.get('content-type', '').startswith("text/"):
+        if message.get_content_maintype() == 'text':
             encoding = message.get_content_charset()
             body = message.get_payload(decode=True)
             body = tools.ustr(body, encoding, errors='replace')
@@ -1721,6 +1723,7 @@ class MailThread(models.AbstractModel):
             data_attach = {
                 'name': name,
                 'datas': base64.b64encode(str(content)),
+                'type': 'binary',
                 'datas_fname': name,
                 'description': name,
                 'res_model': message_data['model'],

@@ -424,6 +424,7 @@
             <field name="name">Denmark</field>
             <field name="code">dk</field>
             <field file="base/static/img/country_flags/dk.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="DKK" />
             <field eval="45" name="phone_code" />
         </record>

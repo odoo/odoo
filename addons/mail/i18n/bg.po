@@ -10,13 +10,15 @@
 # preslav <hackerz99999@gmail.com>, 2016
 # Turhan Aydn <taydin@unionproject.eu>, 2016
 # Vladimir Dachev <v.dachev@dalkomotors.com>, 2016
+# Vladimir Petrov <vladimir.petrov@gmail.com>, 2017
+# kirily <kiril@teracomp.eu>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:53+0000\n"
 "PO-Revision-Date: 2016-11-14 15:53+0000\n"
-"Last-Translator: Vladimir Dachev <v.dachev@dalkomotors.com>, 2016\n"
+"Last-Translator: kirily <kiril@teracomp.eu>, 2017\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -157,7 +159,7 @@ msgstr "%s се пръсъедини към %s мрежа."
 #: code:addons/mail/static/src/xml/thread.xml:94
 #, python-format
 msgid "(from"
-msgstr ""
+msgstr "(от"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_shortcode_type
@@ -171,7 +173,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:195
 #, python-format
 msgid "-------- Show older messages --------"
-msgstr ""
+msgstr "-------- Покажи по-стари съобщения --------"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:643
@@ -470,7 +472,7 @@ msgstr "Разширени настройки"
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_form
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_tree
 msgid "Alias"
-msgstr ""
+msgstr "Синоним"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_contact
@@ -490,21 +492,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_name
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_name
 msgid "Alias Name"
-msgstr ""
+msgstr "Псевдоним"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_domain
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_domain
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_domain
 msgid "Alias domain"
-msgstr ""
+msgstr "Псевдоним - домейн"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_model_id
 msgid "Aliased Model"
-msgstr ""
+msgstr "Псевдонимен модел"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_alias
@@ -1241,7 +1243,7 @@ msgstr "Имейл"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Email Alias"
-msgstr ""
+msgstr "Псевдоним за имейл"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias
@@ -1693,7 +1695,7 @@ msgstr ""
 #: code:addons/mail/models/res_users.py:46
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "Отиди в панела за конфигурация"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -1762,6 +1764,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
+"Идентификатор на родителския запис, съдържащ псевдонима (пример: проект, "
+"който държи псевдонима за създаване на задачи)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers_res_id
@@ -3779,6 +3783,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
+"Картинка с малък размер на контакта. Автоматично се намалява до размер 64х64"
+" пиксела, като се запазва съотношението. Използвайте това поле навсякъде, "
+"където е необходима картинка с малък размер."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_image_small

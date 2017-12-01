@@ -350,6 +350,15 @@ function round_decimals (value, decimals) {
     return round_precision(value, Math.pow(10,-decimals));
 }
 
+/* Rounds a value according to a currency's digits
+ * @param {dict} The dict containing the currency's info, usually retrieved with session.get_currency
+ * @param {Number} The value to be rounded
+ */
+function round_currency(currency_dict, value) {
+    var digits = currency_dict && currency_dict.digits[1] || 4;
+    return round_decimals(value, digits);
+}
+
 function float_is_zero (value, decimals) {
     var epsilon = Math.pow(10, -decimals);
     return Math.abs(round_precision(value, epsilon)) < epsilon;
@@ -516,6 +525,7 @@ return {
     human_number: human_number,
     round_precision: round_precision,
     round_decimals: round_decimals,
+    round_currency: round_currency,
     float_is_zero: float_is_zero,
     confine: confine,
     assert: assert,

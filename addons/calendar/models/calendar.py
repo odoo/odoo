@@ -531,8 +531,8 @@ class Meeting(models.Model):
 
     @api.multi
     def _get_recurrent_date_by_event(self, date_field='start'):
-        """ Get recurrent dates based on Rule string and all event where recurrent_id is child 
-        
+        """ Get recurrent dates based on Rule string and all event where recurrent_id is child
+
         date_field: the field containing the reference date information for recurrency computation
         """
         self.ensure_one()
@@ -645,16 +645,30 @@ class Meeting(models.Model):
         date_deadline = fields.Datetime.context_timestamp(self.with_context(tz=timezone), fields.Datetime.from_string(stop))
 
         # convert into string the date and time, using user formats
-        date_str = date.strftime(format_date)
-        time_str = date.strftime(format_time)
+        date_str = date.strftime(format_date).decode('utf-8')
+        time_str = date.strftime(format_time).decode('utf-8')
 
         if zallday:
             display_time = _("AllDay , %s") % (date_str)
         elif zduration < 24:
             duration = date + timedelta(hours=zduration)
-            display_time = _("%s at (%s To %s) (%s)") % (date_str, time_str, duration.strftime(format_time), timezone)
+            duration_time = duration.strftime(format_time).decode('utf-8')
+            display_time = _(u"%s at (%s To %s) (%s)") % (
+                date_str,
+                time_str,
+                duration_time,
+                timezone,
+            )
         else:
-            display_time = _("%s at %s To\n %s at %s (%s)") % (date_str, time_str, date_deadline.strftime(format_date), date_deadline.strftime(format_time), timezone)
+            dd_date = date_deadline.strftime(format_date).decode('utf-8')
+            dd_time = date_deadline.strftime(format_time).decode('utf-8')
+            display_time = _(u"%s at %s To\n %s at %s (%s)") % (
+                date_str,
+                time_str,
+                dd_date,
+                dd_time,
+                timezone,
+            )
         return display_time
 
     def _get_duration(self, start, stop):
@@ -694,7 +708,7 @@ class Meeting(models.Model):
         ('weekly', 'Week(s)'),
         ('monthly', 'Month(s)'),
         ('yearly', 'Year(s)')
-    ], string='Recurrency', states={'done': [('readonly', True)]}, help="Let the event automatically repeat at that interval")
+    ], string='Recurrence', states={'done': [('readonly', True)]}, help="Let the event automatically repeat at that interval")
     recurrency = fields.Boolean('Recurrent', help="Recurrent Meeting")
     recurrent_id = fields.Integer('Recurrent ID')
     recurrent_id_date = fields.Datetime('Recurrent ID date')
@@ -1235,8 +1249,6 @@ class Meeting(models.Model):
         meeting_origin = self.browse(real_id)
 
         data = self.read(['allday', 'start', 'stop', 'rrule', 'duration'])[0]
-        data['start_date' if data['allday'] else 'start_datetime'] = data['start']
-        data['stop_date' if data['allday'] else 'stop_datetime'] = data['stop']
         if data.get('rrule'):
             data.update(
                 values,
@@ -1406,7 +1418,8 @@ class Meeting(models.Model):
                         partners_to_notify.append(event_attendees_changes['removed_partners'].ids)
                     self.env['calendar.alarm_manager'].notify_next_alarm(partners_to_notify)
 
-            if (values.get('start_date') or values.get('start_datetime')) and values.get('active', True):
+            if (values.get('start_date') or values.get('start_datetime') or
+                    (values.get('start') and self.env.context.get('from_ui'))) and values.get('active', True):
                 for current_meeting in all_meetings:
                     if attendees_create:
                         attendees_create = attendees_create[current_meeting.id]
@@ -1456,7 +1469,7 @@ class Meeting(models.Model):
     @api.multi
     def read(self, fields=None, load='_classic_read'):
         fields2 = fields and fields[:] or None
-        EXTRAFIELDS = ('privacy', 'user_id', 'duration', 'allday', 'start', 'start_date', 'start_datetime', 'rrule')
+        EXTRAFIELDS = ('privacy', 'user_id', 'duration', 'allday', 'start', 'rrule')
         for f in EXTRAFIELDS:
             if fields and (f not in fields):
                 fields2.append(f)

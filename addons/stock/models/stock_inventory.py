@@ -201,6 +201,19 @@ class Inventory(models.Model):
     prepare_inventory = action_start
 
     @api.multi
+    def action_inventory_line_tree(self):
+        action = self.env.ref('stock.action_inventory_line_tree').read()[0]
+        action['context'] = {
+            'default_location_id': self.location_id.id,
+            'default_product_id': self.product_id.id,
+            'default_prod_lot_id': self.lot_id.id,
+            'default_package_id': self.package_id.id,
+            'default_partner_id': self.partner_id.id,
+            'default_inventory_id': self.id,
+        }
+        return action
+
+    @api.multi
     def _get_inventory_lines_values(self):
         # TDE CLEANME: is sql really necessary ? I don't think so
         locations = self.env['stock.location'].search([('id', 'child_of', [self.location_id.id])])
@@ -297,7 +310,7 @@ class InventoryLine(models.Model):
         'product.product', 'Product',
         index=True, required=True)
     product_name = fields.Char(
-        'Product Name', related='product_id.name', store=True)
+        'Product Name', related='product_id.name', store=True, readonly=True)
     product_code = fields.Char(
         'Product Code', related='product_id.default_code', store=True)
     product_uom_id = fields.Many2one(
@@ -331,6 +344,8 @@ class InventoryLine(models.Model):
     theoretical_qty = fields.Float(
         'Theoretical Quantity', compute='_compute_theoretical_qty',
         digits=dp.get_precision('Product Unit of Measure'), readonly=True, store=True)
+    inventory_location_id = fields.Many2one(
+        'stock.location', 'Location', related='inventory_id.location_id', related_sudo=False)
 
     @api.one
     @api.depends('location_id', 'product_id', 'package_id', 'product_uom_id', 'company_id', 'prod_lot_id', 'partner_id')
@@ -358,8 +373,14 @@ class InventoryLine(models.Model):
             self._compute_theoretical_qty()
             self.product_qty = self.theoretical_qty
 
+    @api.multi
+    def write(self, values):
+        values.pop('product_name', False)
+        res = super(InventoryLine, self).write(values)
+
     @api.model
     def create(self, values):
+        values.pop('product_name', False)
         if 'product_id' in values and 'product_uom_id' not in values:
             values['product_uom_id'] = self.env['product.product'].browse(values['product_id']).uom_id.id
         existings = self.search([

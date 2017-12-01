@@ -300,7 +300,10 @@ class AccountBankStatement(models.Model):
         #try to assign partner to bank_statement_line
         stl_to_assign_partner = [stl.id for stl in st_lines_left if not stl.partner_id]
         refs = list(set([st.name for st in st_lines_left if not stl.partner_id]))
-        if st_lines_left and stl_to_assign_partner and refs:
+        if st_lines_left and stl_to_assign_partner and refs\
+           and st_lines_left[0].journal_id.default_credit_account_id\
+           and st_lines_left[0].journal_id.default_debit_account_id:
+
             sql_query = """SELECT aml.partner_id, aml.ref, stl.id
                             FROM account_move_line aml
                                 JOIN account_account acc ON acc.id = aml.account_id
@@ -597,13 +600,14 @@ class AccountBankStatementLine(models.Model):
         acc_type = "acc.internal_type IN ('payable', 'receivable')" if (self.partner_id or overlook_partner) else "acc.reconcile = true"
         select_clause = "SELECT aml.id "
         from_clause = "FROM account_move_line aml JOIN account_account acc ON acc.id = aml.account_id "
-        where_clause = """WHERE aml.company_id = %(company_id)s  
-                                AND (
-                                        (aml.statement_id IS NULL AND aml.account_id IN %(account_payable_receivable)s 
-                                        AND aml.payment_id IS NOT NULL) 
-                                    OR 
-                                        ("""+acc_type+""" AND aml.reconciled = false)
-                                    )"""
+        account_clause = ''
+        if self.journal_id.default_credit_account_id and self.journal_id.default_debit_account_id:
+            account_clause = "(aml.statement_id IS NULL AND aml.account_id IN %(account_payable_receivable)s AND aml.payment_id IS NOT NULL) OR"
+        where_clause = """WHERE aml.company_id = %(company_id)s
+                          AND (
+                                    """ + account_clause + """
+                                    ("""+acc_type+""" AND aml.reconciled = false)
+                          )"""
         where_clause = where_clause + ' AND aml.partner_id = %(partner_id)s' if self.partner_id else where_clause
         where_clause = where_clause + ' AND aml.id NOT IN %(excluded_ids)s' if excluded_ids else where_clause
         if split:
@@ -826,6 +830,9 @@ class AccountBankStatementLine(models.Model):
             }
             st_line.process_reconciliation(new_aml_dicts=[vals])
 
+    def _get_communication(self, payment_method_id):
+        return self.name or ''
+
     def process_reconciliation(self, counterpart_aml_dicts=None, payment_aml_rec=None, new_aml_dicts=None):
         """ Match statement lines with existing payments (eg. checks) and/or payables/receivables (eg. invoices and refunds) and/or new move lines (eg. write-offs).
             If any new journal item needs to be created (via new_aml_dicts or counterpart_aml_dicts), a new journal entry will be created and will contain those
@@ -885,7 +892,7 @@ class AccountBankStatementLine(models.Model):
         total = self.amount
         for aml_rec in payment_aml_rec:
             total -= aml_rec.debit-aml_rec.credit
-            aml_rec.write({'statement_id': self.statement_id.id})
+            aml_rec.with_context(check_move_validity=False).write({'statement_id': self.statement_id.id})
             aml_rec.move_id.write({'statement_line_id': self.id})
             counterpart_moves = (counterpart_moves | aml_rec.move_id)
 
@@ -924,7 +931,7 @@ class AccountBankStatementLine(models.Model):
                     'state': 'reconciled',
                     'currency_id': currency.id,
                     'amount': abs(total),
-                    'communication': self.name or '',
+                    'communication': self._get_communication(payment_methods[0] if payment_methods else False),
                     'name': self.statement_id.name,
                 })
 

@@ -9,8 +9,10 @@
 # LoganDowns <k0mna80@gmail.com>, 2016
 # Zoriana Zaiats <sorenabell@quintagroup.com>, 2016
 # Kateryna Onyshchenko <Katrona17@gmail.com>, 2016
-# Evgen Zherdev <e.v.zherdev@gmail.com>, 2017
+# Евгений Жердев <e.v.zherdev@gmail.com>, 2017
 # Анатолій Пономаренко <aponomarenko020@gmail.com>, 2017
+# Oleksandr Basenko <oleksandr.basenko@gmail.com>, 2017
+# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
 # Анатолій Пономаренко <Ponomarenkoa@minfin.gov.ua>, 2017
 msgid ""
 msgstr ""
@@ -66,6 +68,8 @@ msgid ""
 "    ${object.user_id.signature | safe}\n"
 "% endif\n"
 msgstr ""
+"\n"
+"Виробниче середовище\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_state
@@ -525,7 +529,8 @@ msgstr "<span> До </span>"
 msgid ""
 "<span>(*) This configuration is related to the company you're logged "
 "into.</span>"
-msgstr "Ця конфігурація пов'язана з компанією, в яку ви ввійшли .<span>"
+msgstr ""
+"<span>Ця конфігурація пов'язана з компанією, до якої ви ввійшли.</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
@@ -10861,6 +10866,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "You have"
 msgstr "Ви маєте"
+
+#. module: account
+#: code:addons/account/models/account_payment.py:360
+#, python-format
+msgid "You have to define a sequence for %s in your company."
+msgstr "Ви повинні визначити послідовність  %s у вашій компанії."
 
 #. module: account
 #: code:addons/account/wizard/account_report_general_ledger.py:21

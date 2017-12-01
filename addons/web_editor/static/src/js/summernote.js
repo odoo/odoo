@@ -504,7 +504,7 @@ dom.removeBetween = function (sc, so, ec, eo, towrite) {
         };
 
         for (var i=0; i<nodes.length; i++) {
-            if (!dom.ancestor(nodes[i], ancestor_first_last) && !$.contains(nodes[i], before) && !$.contains(nodes[i], after)) {
+            if (!dom.ancestor(nodes[i], ancestor_first_last) && !$.contains(nodes[i], before) && !$.contains(nodes[i], after) && !dom.isEditable(nodes[i])) {
                 nodes[i].parentNode.removeChild(nodes[i]);
             }
         }
@@ -550,6 +550,13 @@ dom.removeBetween = function (sc, so, ec, eo, towrite) {
         so = 0;
         eo = 1;
     }
+
+    var parentNode = sc && sc.parentNode;
+    if (parentNode && sc.tagName === 'BR') {
+        sc = parentNode;
+        ec = parentNode;
+    }
+
     return {
         sc: sc,
         so: so,
@@ -1121,6 +1128,9 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
         // double enter on the end of a blockquote & pre = new line out of the list
         $('<p></p>').append(br).insertAfter($(r.sc).closest('blockquote, pre'));
         node = br;
+    } else if (dom.isEditable(dom.node(r.sc))) {
+        // if we are directly in an editable, only SHIFT + ENTER should add a newline
+        node = null;
     } else if (last === r.sc) {
         if (dom.isBR(last)) {
             last = last.parentNode;
@@ -1166,9 +1176,9 @@ $.summernote.pluginEvents.visible = function (event, editor, layoutInfo) {
     if (!r) return;
 
     if (!r.isCollapsed()) {
-        if (dom.isCell(dom.node(r.sc)) || dom.isCell(dom.node(r.ec))) {
+        if ((dom.isCell(dom.node(r.sc)) || dom.isCell(dom.node(r.ec))) && dom.node(r.sc) !== dom.node(r.ec)) {
             remove_table_content(r);
-            r = range.create(r.ec, 0).select();
+            r = range.create(r.ec, 0);
         }
         r.select();
     }

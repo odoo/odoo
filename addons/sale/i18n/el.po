@@ -7,13 +7,15 @@
 # Kostas Goutoudis <goutoudis@gmail.com>, 2016
 # Timos Zacharatos <kokkinopioupiou@hotmail.com>, 2016
 # Stefanos Nikou <stefanos.nikou@gmail.com>, 2016
+# Giota Dandidou <giotadandidou@gmail.com>, 2017
+# George Tarasidis <george_tarasidis@yahoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Stefanos Nikou <stefanos.nikou@gmail.com>, 2016\n"
+"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2017\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,6 +105,8 @@ msgid ""
 "${(object.name or '').replace('/','_')}${object.state == 'draft' and "
 "'_draft' or ''}"
 msgstr ""
+"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
+"'_draft' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -110,11 +114,13 @@ msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
+"'Quotation' or 'Order'} (Αναφ ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_data_notification_email_sale_order
 msgid "${object.subject}"
-msgstr ""
+msgstr "${object.subject}"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -220,6 +226,8 @@ msgid ""
 "                to buy an extra pack of hours, because he used all his support\n"
 "                hours.</i>"
 msgstr ""
+"<i>Παράδειγμα: προπληρωμένες προσφορές υπηρεσιών για τις οποίες ο πελάτης θα πρέπει \n"
+"να αγοράσει ένα επιπλέον πακέτο ωρών, επειδή χρησιμοποίησε ήδη όλες τις ώρες υποστήριξης</i>"
 
 #. module: sale
 #. openerp-web
@@ -234,6 +242,8 @@ msgid ""
 "<span>(*) This configuration is related to the company you're logged "
 "into.</span>"
 msgstr ""
+"<span>(*) Αυτή η ρύθμιση σχετίζεται με την εταιρεία στην οποία είστε "
+"συνδεδεμένοι.</span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -243,7 +253,7 @@ msgstr "<strong>Σχόλιο Φορολογικής Θέσης:</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Payment Terms:</strong>"
-msgstr ""
+msgstr "<strong>Όροι Πληρωμής:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -286,6 +296,7 @@ msgstr "Μια ενιαία τιμή πώλησης ανά προϊόν"
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
 msgstr ""
+"Μια προειδοποίηση μπορεί να οριστεί για ένα προϊόν ή έναν πελάτη (Πώληση)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -295,7 +306,7 @@ msgstr "Λογαριασμός που χρησιμοποιείται για τι
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_pagebreak
 msgid "Add pagebreak"
-msgstr ""
+msgstr "Προσθήκη Αλλαγή Σελίδας"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_subtotal
@@ -404,7 +415,7 @@ msgstr "Αναλυτική Λογιστική για τις πωλήσεις"
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "At cost"
-msgstr ""
+msgstr "Στο κόστος"
 
 #. module: sale
 #: selection:product.template,expense_policy:0
@@ -430,7 +441,7 @@ msgstr "Μπλοκαρισμένο Μήνυμα"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
 msgid "Breaks Page"
-msgstr ""
+msgstr "Αλλαγή Σελίδας"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
@@ -513,7 +524,7 @@ msgstr "Εταιρία"
 #: code:addons/sale/static/src/js/tour.js:79
 #, python-format
 msgid "Configuration options are available in the Settings app."
-msgstr ""
+msgstr "Οι επιλογές διαμόρφωσης είναι διαθέσιμες στην εφαρμογή Ρυθμίσεις."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -675,7 +686,7 @@ msgstr "Απαιτούμενος Χρόνος για Παράδοση"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_invoice_partner_shipping_id
 msgid "Delivery address for current invoice."
-msgstr ""
+msgstr "Διεύθυνση παράδοσης για το τρέχον τιμολόγιο."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_partner_shipping_id
@@ -826,7 +837,7 @@ msgstr "Εκτεταμένα Φίλτρα"
 #: code:addons/sale/models/sale.py:688
 #, python-format
 msgid "Extra line with %s "
-msgstr ""
+msgstr "Επιπλέον γραμμή με %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_fiscal_position_id
@@ -877,7 +888,7 @@ msgstr "Ομαδοποίηση Κατά"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
 msgid "Group By Name"
-msgstr ""
+msgstr "Ομαδοποίηση κατά Όνομα"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_id
@@ -894,6 +905,8 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
+"Εάν η πώληση είναι κλειδωμένη, δεν μπορείτε να την τροποποιήσετε. Ωστόσο, θα"
+" μπορείτε να τιμολογήσετε ή να παραδώσετε τα προϊόντα."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -1041,6 +1054,8 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
 msgstr ""
+"Τα τιμολόγια θα δημιουργηθούν ως Πρόχειρα έτσι ώστε να μπορείτε να το ελέγξετε\n"
+"πριν από την επικύρωση."
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
@@ -1132,12 +1147,12 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Lock"
-msgstr ""
+msgstr "Κλείδωμα"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Locked"
-msgstr ""
+msgstr "Κλειδωμένο"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_contract
@@ -1382,6 +1397,8 @@ msgid ""
 "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
 "Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
 msgstr ""
+"Παραγγελθείσα Ποσότητα: Τιμολόγιο με βάση την ποσότητα που έχει παραγγείλει ο πελάτης.\n"
+"Παραδοθείσα Ποσότητα: Τιμολόγιο με βάση την ποσότητα που έστειλε ο προμηθευτής (χρόνος ή παραδόσεις)."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1406,6 +1423,9 @@ msgid ""
 "                policy based on <i>ordered quantities</i> for which you have\n"
 "                delivered more than what have been ordered."
 msgstr ""
+"Παραγγελίες για επιπλέον πωλήσεις είναι παραγγελίες που έχουν είδη με πολιτική τιμολόγησης \n"
+"               βασισμένη σε  <i>παραγγελθείσες ποσότητες </i> για τις οποίες έχετε \n"
+"                παραδώσει περισσότερα από αυτά που έχουν παραγγελθεί."
 
 #. module: sale
 #. openerp-web
@@ -1692,7 +1712,7 @@ msgstr "Ανάλυση Προσφορών"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "Quotations Sent"
-msgstr ""
+msgstr "Απεσταλμένες Προσφορές"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1900,7 +1920,7 @@ msgstr "Πωλητής"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
 msgid "Search Name"
-msgstr ""
+msgstr "Αναζήτηση Ονόματος"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2030,6 +2050,8 @@ msgstr ""
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
 msgstr ""
+"Ορισμένα προϊόντα μπορούν να πωλούνται/αγοράζονται σε διαφορετικές μονάδες "
+"μέτρησης (για προχωρημένους)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -2075,17 +2097,17 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_show_tax
 msgid "Tax Display"
-msgstr ""
+msgstr "Εμφάνιση Φόρων"
 
 #. module: sale
 #: model:res.groups,name:sale.group_show_price_subtotal
 msgid "Tax display B2B"
-msgstr ""
+msgstr "Εμφάνιση Φόρων B2B"
 
 #. module: sale
 #: model:res.groups,name:sale.group_show_price_total
 msgid "Tax display B2C"
-msgstr ""
+msgstr "Εμφάνιση Φόρων B2C"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_tax
@@ -2311,7 +2333,7 @@ msgstr "Μονάδες Μέτρησης"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Unread Messages"
-msgstr "Αδιάβαστα Μηνύματα"
+msgstr "Μη αναγνωσμένα μηνύματα"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_untaxed
@@ -2321,7 +2343,7 @@ msgstr "Αφορολόγητο Ποσό"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_price_subtotal
 msgid "Untaxed Total"
-msgstr ""
+msgstr "Αφορολόγητο Σύνολο"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
@@ -2346,6 +2368,8 @@ msgstr ""
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to preceeding screens</b>."
 msgstr ""
+"Χρησιμοποιήστε τα ίχνοι πλοήγησης για να <b>επιστρέψτε στις προηγούμενες "
+"οθόνες</b>."
 
 #. module: sale
 #. openerp-web
@@ -2439,11 +2463,13 @@ msgid ""
 "You can select all orders and invoice them in batch, or check\n"
 "                every order and invoice them one by one."
 msgstr ""
+"Μπορείτε να επιλέξετε όλες τις παραγγελίες και να τις τιμολογήσετε σε μία παρτίδα, ή να ελέγξετε \n"
+"                κάθε παραγγελία και να τιμολογήσετε τους μία προς μία"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr ""
+msgstr "Θα βρείτε εδώ όλες τις παραγγελίες που είναι έτοιμες να τιμολογηθούν."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
@@ -2487,4 +2513,4 @@ msgstr "sale.config.settings"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_layout_category
 msgid "sale.layout_category"
-msgstr ""
+msgstr "sale.layout_category"

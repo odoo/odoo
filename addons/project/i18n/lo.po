@@ -4,13 +4,15 @@
 # 
 # Translators:
 # ສີສຸວັນ ສັງບົວບຸລົມ <sisouvan@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Phoxaysy Sengchanthanouvong <phoxaysy@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
 "PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: ສີສຸວັນ ສັງບົວບຸລົມ <sisouvan@gmail.com>, 2017\n"
+"Last-Translator: Phoxaysy Sengchanthanouvong <phoxaysy@gmail.com>, 2017\n"
 "Language-Team: Lao (https://www.transifex.com/odoo/teams/41243/lo/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -876,6 +878,11 @@ msgid "Active"
 msgstr "ໃຊ້ຢູ່"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Activities"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
 msgstr ""
@@ -1143,7 +1150,7 @@ msgstr "ຍົກເລີກ"
 #: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
-msgstr ""
+msgstr "ຍົກເລີກ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1234,7 +1241,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "ບໍລິສັດ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_company_id
@@ -1256,7 +1263,7 @@ msgstr ""
 #: model:ir.ui.menu,name:project.menu_project_config
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Configuration"
-msgstr ""
+msgstr "ການກຳນົດຄ່າ"
 
 #. module: project
 #. openerp-web
@@ -1292,7 +1299,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Contact"
-msgstr ""
+msgstr "ທີ່ຕິດຕໍ່່"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_analytic_account_id
@@ -1626,7 +1633,7 @@ msgstr ""
 #: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
-msgstr ""
+msgstr "ຈົບເເລັວ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2041,7 +2048,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:79
 #, python-format
 msgid "Incoming"
-msgstr ""
+msgstr "ກໍາລັງມາຮອດ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2308,7 +2315,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "More Info"
-msgstr ""
+msgstr "ຂໍ້ມູນເພີ່ມຕື່ມ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2356,7 +2363,7 @@ msgstr ""
 #: model:project.task.type,name:project.project_stage_data_0
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "ສ້າງໃໝ່"
 
 #. module: project
 #: code:addons/project/models/project.py:571
@@ -2380,7 +2387,7 @@ msgstr ""
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
-msgstr ""
+msgstr "ທຳມະດາ"
 
 #. module: project
 #: model:project.task,legend_blocked:project.project_task_1
@@ -2396,7 +2403,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
 msgid "Notes"
-msgstr ""
+msgstr "ໝາຍເຫດ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2423,6 +2430,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_doc_count
 msgid "Number of documents attached"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Objectives"
 msgstr ""
 
 #. module: project
@@ -2468,6 +2480,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"ເລກກຳກັບທີ່ສາມາດເລືອກໄດ້ຂອງກະທູ້ (ແຖວຂໍ້ມູນ) "
+"ຊຶ່ງຂໍ້ຄວາມເຂົ້າທັງໝົດຈະໄດ້ຄັດຕິດມາ, ເຖິງແມ່ນວ່າເຂົາເຈົ້າບໍ່ໄດ້ຕອບກັບກໍຕາມ. "
+"ຖ້າຫາກຕັ້ງຕ່າໄວ້, ອັນນີ້ຈະປິດການສ້າງແຖວຂໍ້ມູນໃໝ່ ທັງໝົດ."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
@@ -2531,7 +2546,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_user_id
 msgid "Owner"
-msgstr ""
+msgstr "ເຈົ້າຂອງ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_pad
@@ -2541,12 +2556,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_model_id
 msgid "Parent Model"
-msgstr ""
+msgstr "ແບບບໍລິສັດແມ່"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "ເລກກຳກັບແຖວຂໍ້ມູນແມ່"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_parent_model_id
@@ -2555,6 +2570,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"ຮູບແບບຂອງແມ່ທີ່ຖືນາມແຝງ. ແບບທີ່ຖືການອ້າງອິງນາມແຝງ "
+"ແມ່ນບໍ່ຈໍາເປັນຕ້ອງແມ່ນແບບທີ່ກໍານົດ ໂດຍ alias_model_id (ຕົວຢ່າງ: ໂຄງການ "
+"(parent_model) ແລະ ໜ້າວຽກ (model))"
 
 #. module: project
 #: model:ir.model,name:project.model_res_partner
@@ -2569,7 +2587,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_web_planner
 msgid "Planner"
-msgstr ""
+msgstr "ຜູ້​ວາງ​ແຜນ"
 
 #. module: project
 #: code:addons/project/models/project.py:723
@@ -2587,6 +2605,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"ນະໂຍບາຍຂອງການສະແດງຂໍ້ຄວາມຢູ່ເທິງເອກະສານ ໃຫ້ນໍາໃຊ້ ປະຕູເມວລ໌ ນີ້.\n"
+"- ທຸກຄົນ: ທຸກຄົນສາມາດສະແດງ\n"
+"- ຄູ່ຮ່ວມງານ: ຄູ່ຮ່ວມງານທີ່ອະນຸຍາດໃຫ້ເທົ່ານັ້ນ\n"
+"- ຜູ້ຕິດຕາມ: ພຽງແຕ່ ຜູ້ຕິດຕາມຂອງເອກະສານທີ່ກ່ຽວຂ້ອງ ຫຼື ສະມາຊິກຂອງຊ່ອງຕໍ່ໄປນີ້ເທົ່ານັ້ນ\n"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2597,12 +2619,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_priority
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_priority
 msgid "Priority"
-msgstr ""
+msgstr "ບຸລິມະສິດ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
 msgid "Priority Management Explanation"
-msgstr ""
+msgstr "ການອະທິບາຍການບໍລິຫານບຸລິມະສິດ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_privacy_visibility
@@ -2699,6 +2721,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type_project_ids
 #: model:ir.ui.menu,name:project.menu_projects_config
 #: model:ir.ui.view,arch_db:project.analytic_account_inherited_form
+#: model:ir.ui.view,arch_db:project.project_planner
 #: model:ir.ui.view,arch_db:project.view_project
 msgid "Projects"
 msgstr "ບັນດາໂຄງການ"
@@ -2770,7 +2793,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "ເລກກຳກັບແຖວຂໍ້ມູນ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2823,7 +2846,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Reporting"
-msgstr ""
+msgstr "ການລາຍງານ"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
@@ -2915,7 +2938,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Settings"
-msgstr ""
+msgstr "ການກໍານົດຄ່າ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2983,7 +3006,7 @@ msgstr "ຂັ້ນ"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "ບາດກ້າວປ່ຽນໄປ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -2993,18 +3016,18 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_name
 msgid "Stage Name"
-msgstr ""
+msgstr "ຊື່ບາດກ້າວ"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "ບາດກ້າວປ່ຽນໄປ"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
 #: model:ir.ui.menu,name:project.menu_project_config_project
 msgid "Stages"
-msgstr ""
+msgstr "ບາດກ້າວ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3024,7 +3047,7 @@ msgstr ""
 #. module: project
 #: sql_constraint:project.tags:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "ຊື່ເປົ້າໝາຍນີ້ມີແລ້ວ!"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
@@ -3033,7 +3056,7 @@ msgstr ""
 #: model:ir.ui.menu,name:project.menu_project_tags_act
 #: model:ir.ui.view,arch_db:project.project_tags_form_view
 msgid "Tags"
-msgstr ""
+msgstr "ເປົ້າໝາຍ"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
@@ -3241,6 +3264,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"ນີ້ແມ່ນຮູບແບບ (ປະເພດເອກະສານ Odoo) ທີ່ ຊື່ແທນນີ້ກົງກັບ. ອີເມວຂາເຂົ້າ "
+"ທີ່ບໍ່ໄດ້ຕອບກັບ ໄປຍັງ ແຖວຂໍ້ມູນທີ່ມີຢູ່ "
+"ຈະເຮັດໃຫ້ເກີດການສ້າງແຖວຂໍ້ມູນໃໝ່ຂອງແບບນີ້ (ເຊັ່ນວຽກໂຄງການ)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_name
@@ -3248,6 +3274,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"ຊື່ຂອງ ຊື່ແທນອີເມວລ໌, ຕ.ຢ. ໃສ່ \"jobs\" ຖ້າທ່ານຕ້ອງການ ເອົາເປັນຊື່ແທນ "
+"ອີເມວລ໌ ຂອງ <jobs@example.odoo.com>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_user_id
@@ -3257,6 +3285,10 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
+"ເຈົ້າຂອງແຖວຂໍ້ມູນໄດ້ສ້າງຂຶ້ນໃນຂະນະທີ່ໄດ້ຮັບອີເມວໃນນາມຊື່ແທນນີ້. "
+"ຖ້າຊ່ອງຂໍ້ມູນນີ້ບໍ່ຖືກກໍານົດ "
+"ລະບົບຈະພະຍາຍາມຊອກຫາເຈົ້າຂອງທີ່ຖືກຕ້ອງໂດຍອີງໃສ່ທີ່ຢູ່ຜູ້ສົ່ງ (ຈາກ), "
+"ຫຼືຈະໃຊ້ບັນຊີ ຜູ້ບໍລິຫານ ຖ້າຫາກວ່າບໍ່ພົບຜູ້ໃຊ້ລະບົບສໍາລັບທີ່ຢູ່ນັ້ນ."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3300,6 +3332,8 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
+"ຂັ້ນຕອນນີ້ ໄດ້ເອົາໄວ້ໃນໂຟນເດີ kanban ສຳລັບເບິ່ງ ເມື່ອບໍ່ມີແຖວຂໍ້ມູນໃດ "
+"ທີ່ຈະສະແດງ ໃນຂັ້ນຕອນນັ້ນ."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3371,7 +3405,7 @@ msgstr ""
 #: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
-msgstr ""
+msgstr "ທີ່ຈະເຮັດ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3406,13 +3440,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unassigned"
-msgstr ""
+msgstr "ບໍ່ໄດ້ມອບໝາຍໃຫ້"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unread Messages"
-msgstr ""
+msgstr "ຂໍ້ຄວາມບໍ່ທັນໄດ້ອ່ານ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_use_tasks
@@ -3466,7 +3500,7 @@ msgstr "ຜູ້ໃຊ້"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_user_email
 msgid "User Email"
-msgstr ""
+msgstr "ຜູ້ໃຊ້ ອີເມວລ໌"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3540,7 +3574,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "We can automate steps in your workflow, for example:"
-msgstr ""
+msgstr "ພວກເຮົາສາມາດ ສ້າງຂັ້ນຕອນອັດຕະໂນມັດ ໃນຂະບວນວຽກຂອງທ່ານ, ເຊັ່ນຕົວຢ່າງ:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3566,7 +3600,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Welcome"
-msgstr ""
+msgstr "ຍິນດີຕ້ອນຮັບ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3615,7 +3649,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_resource_calendar_id
 msgid "Working Time"
-msgstr ""
+msgstr "ເວລາເຮັດວຽກ"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
@@ -3750,7 +3784,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "send us an email"
-msgstr ""
+msgstr "ສົ່ງ ອີເມວລ໌ ຫາ ພວກເຮົາ"
 
 #. module: project
 #: code:addons/project/models/project.py:466
