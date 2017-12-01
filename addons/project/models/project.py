@@ -264,6 +264,8 @@ class Project(models.Model):
         if 'active' in vals:
             # archiving/unarchiving a project does it on its tasks, too
             self.with_context(active_test=False).mapped('tasks').write({'active': vals['active']})
+            # archiving/unarchiving a project implies that we don't want to use the analytic account anymore
+            self.with_context(active_test=False).mapped('analytic_account_id').write({'active': vals['active']})
         return res
 
     @api.multi
