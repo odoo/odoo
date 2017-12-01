@@ -117,11 +117,6 @@
                 <field name="partner_id" position="after">
                     <field name="allow_timesheets" invisible="1"/>
                 </field>
-                <xpath expr="//div[hasclass('o_kanban_manage_reports')]/div[last()]" position="after">
-                    <div attrs="{'invisible': [('allow_timesheets', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user">
-                        <a name="%(act_hr_timesheet_line_by_project)d" type="action">Timesheets</a>
-                    </div>
-                </xpath>
                 <xpath expr="//div[hasclass('o_project_kanban_boxes')]" position="inside">
                     <a t-if="record.allow_timesheets.raw_value" class="o_project_kanban_box" name="%(act_hr_timesheet_line_by_project)d" type="action" groups="hr_timesheet.group_hr_timesheet_user">
                         <div>
