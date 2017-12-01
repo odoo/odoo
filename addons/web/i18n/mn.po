@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-18 04:43+0000\n"
-"PO-Revision-Date: 2017-08-04 09:10+0000\n"
+"PO-Revision-Date: 2017-11-18 00:02+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -874,6 +874,13 @@ msgid "Error"
 msgstr "Алдаа"
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:458
+#, python-format
+msgid "Error: Bad domain"
+msgstr "Алдаа: Муу домэйн"
+
+#. module: web
 #: code:addons/web/controllers/main.py:838
 #, python-format
 msgid "Error, password not changed !"
@@ -1142,6 +1149,15 @@ msgstr "Идэвхгүй"
 #, python-format
 msgid "Invalid data"
 msgstr "Буруу өгөгдөл"
+
+#. module: web
+#: code:addons/web/controllers/main.py:655
+#: code:addons/web/controllers/main.py:669
+#, python-format
+msgid ""
+"Invalid database name. Only alphanumerical characters, underscore, hyphen "
+"and dot are allowed."
+msgstr "Өгөгдлийн сангийн нэр буруу байна. Зөвхөн үсгэн тэмдэгтүүд, доогуур зураас, зураас болон цэг ашиглах боломжтой."
 
 #. module: web
 #. openerp-web
@@ -1502,8 +1518,8 @@ msgstr "Сонгосон бичлэг алга"
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:328
 #, python-format
-msgid "No value found for the field  for value "
-msgstr "Утга талбарт утга олдсонгүй "
+msgid "No value found for the field %s for value %s"
+msgstr "%s талбарт %s утгад утга олдсонгүй"
 
 #. module: web
 #. openerp-web
@@ -1783,8 +1799,8 @@ msgstr "Ажлын урсгал хэвлэх"
 #: code:addons/web/static/src/xml/base.xml:578
 #: code:addons/web/static/src/xml/base.xml:610
 #, python-format
-msgid "Quantity"
-msgstr "Тоо хэмжээ"
+msgid "Count"
+msgstr "Тоолох"
 
 #. module: web
 #. openerp-web
@@ -2083,6 +2099,13 @@ msgstr "Кофе аягалж ирсэн нь дээр байх,<br />учир �
 #, python-format
 msgid "Technical Translation"
 msgstr "Техник Орчуулга"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:458
+#, python-format
+msgid "The domain is wrong."
+msgstr "Домэйн буруу байна."
 
 #. module: web
 #. openerp-web
@@ -2462,6 +2485,12 @@ msgstr "Буруу утга оруулсан байна!"
 #, python-format
 msgid "XML ID:"
 msgstr "XML ID:"
+
+#. module: web
+#: code:addons/web/controllers/main.py:513
+#, python-format
+msgid "Wrong login/password"
+msgstr "Нэвтрэх нэр/нууц үг буруу"
 
 #. module: web
 #. openerp-web

@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-18 04:43+0000\n"
-"PO-Revision-Date: 2016-06-03 05:53+0000\n"
+"PO-Revision-Date: 2017-11-20 14:05+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -878,6 +878,13 @@ msgid "Error"
 msgstr "Fout"
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:458
+#, python-format
+msgid "Error: Bad domain"
+msgstr "Fout: Slecht domein"
+
+#. module: web
 #: code:addons/web/controllers/main.py:838
 #, python-format
 msgid "Error, password not changed !"
@@ -1146,6 +1153,15 @@ msgstr "Inactief"
 #, python-format
 msgid "Invalid data"
 msgstr "Ongeldige data"
+
+#. module: web
+#: code:addons/web/controllers/main.py:655
+#: code:addons/web/controllers/main.py:669
+#, python-format
+msgid ""
+"Invalid database name. Only alphanumerical characters, underscore, hyphen "
+"and dot are allowed."
+msgstr "Ongeldige database naam. Allee alfanumerieke karakters, onderstreep, koppelteken en punten zijn niet toegestaan."
 
 #. module: web
 #. openerp-web
@@ -1506,8 +1522,8 @@ msgstr "Geen geselecteerde regels"
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:328
 #, python-format
-msgid "No value found for the field  for value "
-msgstr "Geen waarde gevonden voor het veld voor waarde "
+msgid "No value found for the field %s for value %s"
+msgstr "Geen waarde gevonden voor het veld %s voor de waarde %s"
 
 #. module: web
 #. openerp-web
@@ -1787,8 +1803,8 @@ msgstr "Afdrukken Workflow"
 #: code:addons/web/static/src/xml/base.xml:578
 #: code:addons/web/static/src/xml/base.xml:610
 #, python-format
-msgid "Quantity"
-msgstr "Hoeveelheid"
+msgid "Count"
+msgstr "Aantal"
 
 #. module: web
 #. openerp-web
@@ -2087,6 +2103,13 @@ msgstr "Neem een minuutje om koffie te halen,<br />want het is aan het laden..."
 #, python-format
 msgid "Technical Translation"
 msgstr "Technische vertaling"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:458
+#, python-format
+msgid "The domain is wrong."
+msgstr "Het domein is foutief."
 
 #. module: web
 #. openerp-web
@@ -2466,6 +2489,12 @@ msgstr "Verkeerde waarde ingevoerd!"
 #, python-format
 msgid "XML ID:"
 msgstr "XML ID:"
+
+#. module: web
+#: code:addons/web/controllers/main.py:513
+#, python-format
+msgid "Wrong login/password"
+msgstr "Foutieve login/wachtwoord"
 
 #. module: web
 #. openerp-web

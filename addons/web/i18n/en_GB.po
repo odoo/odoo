@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-18 04:43+0000\n"
-"PO-Revision-Date: 2016-04-21 09:34+0000\n"
+"PO-Revision-Date: 2017-11-27 14:34+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/odoo/odoo-9/language/en_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -874,6 +874,13 @@ msgid "Error"
 msgstr "Error"
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:458
+#, python-format
+msgid "Error: Bad domain"
+msgstr ""
+
+#. module: web
 #: code:addons/web/controllers/main.py:838
 #, python-format
 msgid "Error, password not changed !"
@@ -1141,6 +1148,15 @@ msgstr ""
 #: code:addons/web/static/src/js/views/graph_widget.js:197
 #, python-format
 msgid "Invalid data"
+msgstr ""
+
+#. module: web
+#: code:addons/web/controllers/main.py:655
+#: code:addons/web/controllers/main.py:669
+#, python-format
+msgid ""
+"Invalid database name. Only alphanumerical characters, underscore, hyphen "
+"and dot are allowed."
 msgstr ""
 
 #. module: web
@@ -1502,8 +1518,8 @@ msgstr ""
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:328
 #, python-format
-msgid "No value found for the field  for value "
-msgstr "No value found for the field  for value "
+msgid "No value found for the field %s for value %s"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -1783,8 +1799,8 @@ msgstr "Print Workflow"
 #: code:addons/web/static/src/xml/base.xml:578
 #: code:addons/web/static/src/xml/base.xml:610
 #, python-format
-msgid "Quantity"
-msgstr "Quantity"
+msgid "Count"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -2083,6 +2099,13 @@ msgstr "Take a minute to get a coffee,<br />because it's loading..."
 #, python-format
 msgid "Technical Translation"
 msgstr "Technical Translation"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:458
+#, python-format
+msgid "The domain is wrong."
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -2462,6 +2485,12 @@ msgstr "Wrong value entered!"
 #, python-format
 msgid "XML ID:"
 msgstr "XML ID:"
+
+#. module: web
+#: code:addons/web/controllers/main.py:513
+#, python-format
+msgid "Wrong login/password"
+msgstr ""
 
 #. module: web
 #. openerp-web
