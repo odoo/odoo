@@ -79,7 +79,7 @@ in each method::
     :members:
 
 .. autoclass:: odoo.tests.common.M2MProxy
-    :members: add, remove
+    :members: add, remove, clear
 
 .. autoclass:: odoo.tests.common.O2MProxy
     :members: new, edit, remove
