@@ -328,7 +328,8 @@ class Channel(models.Model):
                 email = self.env.user.email
             else:
                 email_from = kwargs.get('email_from')
-                email = tools.email_split(email_from)[0]
+                if email_from:
+                    email = tools.email_split(email_from)[0]
             if self.env['channel.moderated.emails'].search([('email', '=', email), ('decision', '=', 'allow')]):
                 moderation_status = 'accepted'
             elif self.env['channel.moderated.emails'].search([('email', '=', email), ('decision', '=', 'ban')]):
