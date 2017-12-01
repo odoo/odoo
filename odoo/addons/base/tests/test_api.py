@@ -502,8 +502,8 @@ class TestAPI(common.TransactionCase):
         grps = ps.grouped(['country_id.id'])
         #grps is a list of groups, ordered by country whose items are recordsets
 
-		self.assertTrue(isinstance(grps, list))
-		
+        self.assertTrue(isinstance(grps, list))
+        
         self.cr.execute("SELECT country_id,count(*) FROM res_partner WHERE active = True GROUP BY country_id")
         while True:
             row = self.cr.fetchone()
@@ -512,7 +512,7 @@ class TestAPI(common.TransactionCase):
             country_id = row[0]
             count = row[1]
 
-			group = [x for x in grps if x.group_name == country_id]
+            group = [x for x in grps if x.group_name == country_id]
             self.assertGreaterEqual(len(x), 1, "Group " + country_id + " on db and not in grps")
             self.assertLessEqual(len(x), 1, "Group " + country_id + " got multiple times")
             group = group[0]
