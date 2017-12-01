@@ -962,11 +962,6 @@ class Message(models.Model):
                         ]
                     )
 
-        for elem in nice_notifications:
-            print('---------------------------------------------')
-            print(elem)
-            print('---------------------------------------------')
-
         self.env['bus.bus'].sendmany(nice_notifications)
         self.unlink()
 

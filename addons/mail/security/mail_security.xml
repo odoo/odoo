@@ -13,18 +13,6 @@
             <field name="perm_create" eval="False"/>
         </record>
 
-<!--
-        <record id="mail_message_rule" model="ir.rule">
-            <field name="name">Message</field>
-            <field name="model_id" ref="model_mail_message"/>
-            <field name="domain_force">['|', '&amp;', ('moderation_status', '=', 'pending_moderation'), ('channel_ids.moderator_ids', 'in', user.id),  ('moderation_status', 'in', [False, 'accepted'])]</field>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
--->
-
         <record id="mail_followers_read_write_own" model="ir.rule">
             <field name="name">mail.followers: write its own entries</field>
             <field name="model_id" ref="model_mail_followers"/>
@@ -61,11 +49,6 @@
             <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_unlink" eval="True"/>
-        </record>
-        <record id="mail_channel_banned_people_rule" model="ir.rule">
-            <field name="name">mail.channel: no access to banned people</field>
-            <field name="model_id" ref="model_mail_channel"/>
-            <field name="domain_force">[('blackened_partner_ids', 'not in', user.partner_id.id)]</field>
         </record>
     </data>
 </odoo>

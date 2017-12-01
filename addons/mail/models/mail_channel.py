@@ -37,16 +37,6 @@ class ChannelModeratedEmails(models.Model):
     email = fields.Char(string="Email", index=True, required=True)
     decision = fields.Selection([('allow', 'Always Allow'), ('ban', 'Permanent Ban')], required=True)
     channel_id = fields.Many2one('mail.channel', string="Channel", index=True, required=True)
-    #corresponding user if exitsts and decision is 'ban'
-    blackened_partner_id = fields.Many2one('res.partner', string="Corresponding blackened partner", compute="_compute_blackened_partner_id", store=True)
-
-    @api.multi
-    @api.depends('email', 'decision')
-    def _compute_blackened_partner_id(self):
-        for rec in self.filtered(lambda rec: rec.decision == 'ban'):
-            rec.blackened_partner_id = self.env['res.partner'].search([('email', '=', rec.email)])
-            if not rec.blackened_partner_id.ensure_one():
-                raise ValidationError('Different partners use the same email address')
 
     _sql_constraints = [
          ('channel_email_uniq', 'unique (email,channel_id)', 'The email address must be unique per channel !')
@@ -118,8 +108,6 @@ class Channel(models.Model):
     moderation = fields.Boolean(string='Moderate this channel')
     moderator_ids = fields.Many2many('res.users', 'mail_channel_moderator_rel', string='Moderators')
     moderated_email_ids = fields.One2many('channel.moderated.emails', 'channel_id', string='Moderated Emails')
-    blackened_partner_ids = fields.Many2many('res.partner', 'channel_moderated_emails',
-        column1='channel_id', column2='blackened_partner_id', string="List of blackened partner on channel", store=True)
     auto_notification = fields.Boolean(string="Automatic notification", help="People receive an automatic notification about their message being waiting for moderation.")
     notification_message = fields.Text(string="Notification message")
     send_guidelines = fields.Boolean(string="Send guidelines to new subscribers", help="Newcomers on this moderated channel will automatically receive the guidelines.", default=False)

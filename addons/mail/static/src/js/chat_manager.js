@@ -901,16 +901,18 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
                     }),
                 })
                 .then(function (msg_id) {
-                    return self._rpc({
-                            model: 'mail.message',
-                            method: 'message_format',
-                            args: [msg_id],
-                        })
-                        .then(function (msgs) {
-                            if (msgs[0].moderation_status === 'pending_moderation') {
-                                add_message(msgs[0]);
-                            }
-                        });
+                    if (msg_id) {
+                        return self._rpc({
+                                model: 'mail.message',
+                                method: 'message_format',
+                                args: [msg_id],
+                            })
+                            .then(function (msgs) {
+                                if (msgs[0].moderation_status === 'pending_moderation') {
+                                    add_message(msgs[0]);
+                                }
+                            });
+                    }
                 });
 
         }
