@@ -502,7 +502,7 @@ class TestAPI(common.TransactionCase):
         grps = ps.grouped(['country_id'])
         #grps is a list of groups, ordered by country whose items are recordsets
         
-        self.cr.execute("SELECT country_id,count(*) FROM res_partner WHERE active")
+        self.cr.execute("SELECT country_id,count(*) FROM res_partner WHERE active = True GROUP BY country_id")
         while True:
             row = self.cr.fetchone()
             if row == None:
