@@ -47,6 +47,9 @@
                 <input t-if="partner_id" type="hidden" name="partner_id" t-att-value="partner_id"/>
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <div class="clearfix"/>
+                <button t-if="mode == 'manage'" class="btn btn-primary btn-lg mb8 mt8 pull-right o_payment_form_add_pm">
+                    <i class="fa fa-plus-circle"/> Add new card
+                </button>
             </div>
         </template>
     </data>

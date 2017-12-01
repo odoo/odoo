@@ -13,7 +13,7 @@ odoo.define('payment.payment_form', function (require) {
 
         events: {
             'click #o_payment_form_pay': 'payEvent',
-            'click #o_payment_form_add_pm': 'addPmEvent',
+            'click .o_payment_form_add_pm': 'addPmEvent',
             'click button[name="delete_pm"]': 'deletePmEvent',
             'click input[type="radio"]': 'radioClickEvent',
             'click .o_payment_form_pay_icon_more': 'onClickMorePaymentIcon',
@@ -81,7 +81,7 @@ odoo.define('payment.payment_form', function (require) {
                     }
 
                     $(button).attr('disabled', true);
-                    $(button).prepend('<span class="o_loader"><i class="fa fa-refresh fa-spin"></i>&nbsp;</span>');
+                    $(button).find("i").toggleClass("fa-lock fa-refresh fa-spin");
 
                     var verify_validity = this.$el.find('input[name="verify_validity"]');
 
@@ -103,19 +103,19 @@ odoo.define('payment.payment_form', function (require) {
                                 form.submit();
                             }
                         }
-                        // if the server has returned false, we display an error
-                        else {
+                        // if the server has returned error, we display an error
+                        if (data.error) {
+                            // here we remove the 'processing' icon from the 'Pay Now' button
+                             $(button).find('i').toggleClass('fa-refresh fa-lock').removeClass('fa-spin');
+                             $(button).attr('disabled', false);
                             self.displayError(
                                 _t('Server Error'),
-                                _t("<p>We are not able to add your payment method at the moment.</p>"));
+                                _t("<p>" + data.error + "</p>"));
                         }
-                        // here we remove the 'processing' icon from the 'add a new payment' button
-                        $(button).attr('disabled', false);
-                        $(button).find('span.o_loader').remove();
                     }).fail(function (message, data) {
                         // if the rpc fails, pretty obvious
+                        $(button).find('i').toggleClass('fa-refresh fa-lock').removeClass('fa-spin');
                         $(button).attr('disabled', false);
-                        $(button).find('span.o_loader').remove();
 
                         self.displayError(
                             _t('Server Error'),
@@ -225,9 +225,9 @@ odoo.define('payment.payment_form', function (require) {
                     );
                     return;
                 }
-                // We add a 'processing' icon into the 'add a new payment' button
+                // We add a 'processing' icon into the 'add a new card' button
                 $(button).attr('disabled', true);
-                $(button).prepend('<span class="o_loader"><i class="fa fa-refresh fa-spin"></i>&nbsp;</span>');
+                $(button).find("i").toggleClass("fa-plus-circle fa-refresh fa-spin");
 
                 // we force the check when adding a card trough here
                 form_data.verify_validity = true;
@@ -252,20 +252,20 @@ odoo.define('payment.payment_form', function (require) {
                             }
                         }
                     }
-                    // if the server has returned false, we display an error
-                    else {
+                    // if the server has returned error, we display an error
+                    if (data.error) {
+                         // here we remove the 'processing' icon from the 'add new card' button
+                         $(button).find('i').toggleClass('fa-refresh fa-plus-circle').removeClass('fa-spin');
+                         $(button).attr('disabled', false);
                         self.displayError(
                             _t('Server Error'),
-                            _t("<p>We are not able to add your payment method at the moment.</p>")
+                            _t("<p>" + data.error + "</p>")
                         );
                     }
-                    // here we remove the 'processing' icon from the 'add a new payment' button
-                    $(button).attr('disabled', false);
-                    $(button).find('span.o_loader').remove();
                 }).fail(function (message, data) {
                     // if the rpc fails, pretty obvious
+                    $(button).find('i').toggleClass('fa-refresh fa-plus-circle').removeClass('fa-spin');
                     $(button).attr('disabled', false);
-                    $(button).find('span.o_loader').remove();
 
                     self.displayError(
                         _t('Server error'),

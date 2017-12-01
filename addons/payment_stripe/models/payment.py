@@ -6,7 +6,6 @@ import pprint
 
 from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
-from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -270,7 +269,7 @@ class PaymentTokenStripe(models.Model):
                     'name': 'XXXXXXXXXXXX%s - %s' % (values['cc_number'][-4:], values['cc_holder_name'])
                 }
             elif token.get('error'):
-                raise UserError(token['error']['message'])
+                raise ValidationError(token['error']['message'])
 
         # pop credit card info to info sent to create
         for field_name in ["cc_number", "cvc", "cc_holder_name", "cc_expiry", "cc_brand"]:
