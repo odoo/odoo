@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-15 10:41+0000\n"
-"PO-Revision-Date: 2017-03-28 14:32+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2017-11-18 00:01+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -445,14 +445,12 @@ msgid "Employees Tags"
 msgstr "Étiquettes d'employés"
 
 #. module: hr
-#: code:addons/hr/hr.py:299 constraint:hr.department:0
-#, python-format
+#: constraint:hr.department:0
 msgid "Error! You cannot create recursive departments."
 msgstr "Erreur ! Impossible de créer des services récursifs."
 
 #. module: hr
-#: code:addons/hr/hr.py:269 constraint:hr.employee:0
-#, python-format
+#: constraint:hr.employee:0
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Erreur ! Impossible de créer une hiérarchie d'employés récursive."
 
@@ -513,6 +511,11 @@ msgstr "Abonnés (Partenaires)"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
 msgid "Gender"
 msgstr "Genre"
+
+#. module: hr
+#: model:web.tip,description:hr.hr_tip_1
+msgid "Get all applications related to this job position."
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -753,11 +756,6 @@ msgid "Last Modified on"
 msgstr "Dernière modification le"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users_last_website_so_id
-msgid "Last Online Sale Order"
-msgstr "Dernière vente en ligne"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_uid
@@ -986,6 +984,11 @@ msgstr "Notre personnel au travail"
 #: model:ir.model.fields,field_description:hr.field_hr_department_parent_id
 msgid "Parent Department"
 msgstr "Département parent"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner
+msgid "Partner"
+msgstr "Partenaire"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-18 04:43+0000\n"
-"PO-Revision-Date: 2016-11-21 16:38+0000\n"
+"PO-Revision-Date: 2017-12-01 00:23+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Bosnian (http://www.transifex.com/odoo/odoo-9/language/bs/)\n"
 "MIME-Version: 1.0\n"
@@ -231,7 +231,7 @@ msgstr "Uredi podatke kompanije"
 #. module: web
 #: model:ir.ui.view,arch_db:web.menu_secondary
 msgid "<span>Odoo</span>"
-msgstr ""
+msgstr "<span>Odoo</span>"
 
 #. module: web
 #. openerp-web
@@ -446,7 +446,7 @@ msgstr "Binarna datoteka"
 #: code:addons/web/static/src/xml/base.xml:1507
 #, python-format
 msgid "Bugfixes guarantee"
-msgstr ""
+msgstr "Garantirano ukljanjanje bagova"
 
 #. module: web
 #. openerp-web
@@ -874,6 +874,13 @@ msgid "Error"
 msgstr "Greška"
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:458
+#, python-format
+msgid "Error: Bad domain"
+msgstr "Greška: loš domen"
+
+#. module: web
 #: code:addons/web/controllers/main.py:838
 #, python-format
 msgid "Error, password not changed !"
@@ -1142,6 +1149,15 @@ msgstr "Neaktivan"
 #, python-format
 msgid "Invalid data"
 msgstr "Nepravilni podatci"
+
+#. module: web
+#: code:addons/web/controllers/main.py:655
+#: code:addons/web/controllers/main.py:669
+#, python-format
+msgid ""
+"Invalid database name. Only alphanumerical characters, underscore, hyphen "
+"and dot are allowed."
+msgstr "Nepravilan naziv baze podataka. Možete koristiti samo alfanumeričke znakove, donju crtu, srednju crtu i tačku."
 
 #. module: web
 #. openerp-web
@@ -1502,8 +1518,8 @@ msgstr "Nema izabranih zapisa"
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:328
 #, python-format
-msgid "No value found for the field  for value "
-msgstr "Unos nije pronađen za polje i vrijednost "
+msgid "No value found for the field %s for value %s"
+msgstr "Nije pronađena vrijednost za polje %s za vrijednost %s"
 
 #. module: web
 #. openerp-web
@@ -1783,8 +1799,8 @@ msgstr "Štampaj radni tok"
 #: code:addons/web/static/src/xml/base.xml:578
 #: code:addons/web/static/src/xml/base.xml:610
 #, python-format
-msgid "Quantity"
-msgstr "Količina"
+msgid "Count"
+msgstr "Broj"
 
 #. module: web
 #. openerp-web
@@ -2086,6 +2102,13 @@ msgstr "Tehnički prevod"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:458
+#, python-format
+msgid "The domain is wrong."
+msgstr "Domen je pogrešan."
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/form_widgets.js:1208
 #, python-format
 msgid "The field is empty, there's nothing to save !"
@@ -2197,7 +2220,7 @@ msgstr "Ovaj čarobnjak će izvesti podatke koji odgovaraju trenutnim uslovima p
 msgid ""
 "Timezone Mismatch : The timezone of your browser doesn't match the selected "
 "one. The time in Odoo is displayed according to your field timezone."
-msgstr ""
+msgstr "Vremenska zona se ne podudara: Vremenska zona vašeg internet pretraživača se ne podudara sa trenutno odabranom. Vrijeme u Odoo-u je prikazano na osnovu vremenske zone unutar polja."
 
 #. module: web
 #. openerp-web
@@ -2462,6 +2485,12 @@ msgstr "Unesena je pogrešna vrijednost!"
 #, python-format
 msgid "XML ID:"
 msgstr "XML ID:"
+
+#. module: web
+#: code:addons/web/controllers/main.py:513
+#, python-format
+msgid "Wrong login/password"
+msgstr "Pogrešno korisničko ime/lozinka"
 
 #. module: web
 #. openerp-web

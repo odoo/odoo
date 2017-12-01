@@ -9,14 +9,14 @@
 # Martin Trigaux, 2015-2016
 # Mateus Lopes <mateus1@gmail.com>, 2015
 # Renato Lima <renatonlima@gmail.com>, 2016
-# Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2016-12-22 23:16+0000\n"
-"Last-Translator: Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>\n"
+"PO-Revision-Date: 2017-11-21 00:23+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3881,6 +3881,12 @@ msgid "Original Move"
 msgstr "Visualização Original"
 
 #. module: stock
+#: code:addons/stock/stock.py:576
+#, python-format
+msgid "Otherwise make sure the right stock/owner is set."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_out_type_id
 msgid "Out Type"
 msgstr "Fora Tipo"
@@ -6826,6 +6832,14 @@ msgstr "Você só deve receber pela peça com o mesmo número de série"
 #, python-format
 msgid "You should provide a different serial number for each piece"
 msgstr "Você deve fornecer um número de série diferente para cada peça"
+
+#. module: stock
+#: code:addons/stock/product.py:349
+#, python-format
+msgid ""
+"You still have some active reordering rules on this product. Please archive "
+"or delete them first."
+msgstr ""
 
 #. module: stock
 #: constraint:stock.move:0

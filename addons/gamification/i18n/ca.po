@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:18+0000\n"
-"PO-Revision-Date: 2017-01-13 21:18+0000\n"
+"PO-Revision-Date: 2017-11-24 16:09+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgid ""
 "            <p><em>${object.comment}</em></p>\n"
 "        % endif\n"
 "        "
-msgstr ""
+msgstr "\n        <p>Felicitats, has aconseguit la insígnia <strong>${object.badge_id.name}</strong> !\n            % if object.sender_id\n                Aquesta insígnia està garantida per <strong>${object.sender_id.name}</strong>.\n            % endif\n        </p>\n\n        % if object.comment\n            <p><em>${object.comment}</em></p>\n        % endif\n        "
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_goal_reminder
@@ -1703,19 +1703,19 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_manager_id
 msgid "The user responsible for the challenge."
-msgstr ""
+msgstr "L'usuari responsable del canvi"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user_sender_id
 msgid "The user who has send the badge"
-msgstr ""
+msgstr "L'usuari que ha enviat la insígnia"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_goal_definition_ids
 msgid ""
 "The users that have succeeded theses goals will receive automatically the "
 "badge."
-msgstr ""
+msgstr "Els usuaris que han aconseguit aquests objectius obtenen directament la insígnia"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_batch_user_expression

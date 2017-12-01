@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2017-10-26 20:02+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2017-11-17 23:24+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -1127,11 +1127,6 @@ msgid "Messages"
 msgstr "Повідомлення"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_message_ids
-msgid "Messages and communication history"
-msgstr "Повідомлення та історія бесіди"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_mobile
 msgid "Mobile"
 msgstr "Мобільний"
@@ -1317,7 +1312,7 @@ msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr ""
+msgstr "Необов'язковий ID потоку (запису), до якого буде додано всі вхідні повідомлення, навіть якщо вони не відповіли на нього. Якщо встановлено, це повністю призведе до вимкнення створення нових записів."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_user_id
@@ -1332,7 +1327,7 @@ msgstr "Батьківська модель"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "Запис батьківської теми ID"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_parent_model_id
@@ -1340,7 +1335,7 @@ msgid ""
 "Parent model holding the alias. The model holding the alias reference is not"
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
-msgstr ""
+msgstr "Батьківська модель, що містить псевдонім. Модель, яка містить посилання на псевдонім, не обов'язково являє собою модель, що дається alias_model_id (наприклад: project (parent_model) і завдання (model))"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_partner_id
@@ -1363,8 +1358,8 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document\n"
-msgstr ""
+"- followers: only followers of the related document or members of following channels\n"
+msgstr "Політика публікації повідомлення на документі за допомогою mailgateway.\n- всі: кожен може опублікувати\n- партнери: лише автентифіковані партнери\n- підписники: лише ті, хто підписаний на відповідний документ або учасники підписаних каналів\n"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -1394,7 +1389,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "Записати тему ID"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_root
@@ -1704,7 +1699,7 @@ msgid ""
 "The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
-msgstr ""
+msgstr "Модель (тип документу Odoo), до якої відповідає цей псевдонім. Будь-яка вхідна електронна пошта, яка не відповідає існуючому запису, призведе до створення нового запису цієї моделі (наприклад, завдання проекту)"
 
 #. module: hr_recruitment
 #: sql_constraint:hr.recruitment.degree:0
@@ -1716,7 +1711,7 @@ msgstr ""
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr ""
+msgstr "Ім'я псевдоніма електронної пошти, наприклад, \"Робота\", якщо ви хочете отримувати повідомлення електронної пошти на <jobs@example.odoo.com>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_user_id
@@ -1725,7 +1720,7 @@ msgid ""
 "field is not set the system will attempt to find the right owner based on "
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
-msgstr ""
+msgstr "Власник записів створений при отриманні електронних листів за цим псевдонімом. Якщо це поле не встановлено, система намагатиметься знайти потрібного власника на основі адреси відправника (від) або використовувати обліковий запис адміністратора, якщо для цієї адреси не знайдено системного користувача."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_cc
@@ -1789,7 +1784,7 @@ msgstr ""
 msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
-msgstr ""
+msgstr "Цей етап складається у канбані, коли на цьому етапі відсутні записи для відображення."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter

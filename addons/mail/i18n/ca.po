@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2017-04-20 08:39+0000\n"
+"PO-Revision-Date: 2017-11-25 15:38+0000\n"
 "Last-Translator: Marc Tormo i Bochaca <mtbochaca@gmail.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -129,7 +129,7 @@ msgid ""
 "or (object.parent_id and object.parent_id.subject and 'Re: %s' % "
 "object.parent_id.subject) or (object.parent_id and "
 "object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
-msgstr "${object.subject o (object.record_name i 'Re: %s' % object.record_name) o (object.parent_id i object.parent_id.subject i 'Re: %s' % object.parent_id.subject) o (object.parent_id and object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
+msgstr "${object.subject or (object.record_name and 'Re: %s' % object.record_name) or (object.parent_id and object.parent_id.subject and 'Re: %s' % object.parent_id.subject) or (object.parent_id and object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
 
 #. module: mail
 #. openerp-web
