@@ -95,9 +95,9 @@ class AuthorizeAPI():
         """
         logged_data = data
         data = etree.tostring(data, encoding='utf-8')
-
-        for node in logged_data.xpath('//merchantAuthentication'):
-            node.getparent().remove(node)
+        for node_to_remove in ['//merchantAuthentication', '//creditCard']:
+            for node in logged_data.xpath(node_to_remove):
+                node.getparent().remove(node)
         logged_data = str(etree.tostring(logged_data, encoding='utf-8', pretty_print=True)).replace(r'\n', '\n')
         _logger.info('_authorize_request: Sending values to URL %s, values:\n%s', self.url, logged_data)
 
