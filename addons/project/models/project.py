@@ -336,19 +336,19 @@ class Project(models.Model):
         favorite_projects.write({'favorite_user_ids': [(3, self.env.uid)]})
 
     @api.multi
-    def close_dialog(self):
-        return {'type': 'ir.actions.act_window_close'}
-
-    @api.multi
-    def edit_dialog(self):
-        form_view = self.env.ref('project.edit_project')
+    def open_tasks(self):
+        ctx = dict(self._context)
+        ctx.update({'search_default_project_id': self.id})
+        kanban_view_id = self.env.ref('project.view_task_kanban')
         return {
-            'name': _('Project'),
-            'res_model': 'project.project',
-            'res_id': self.id,
-            'views': [(form_view.id, 'form'),],
+            'name': _('Tasks'),
+            'res_model': 'project.task',
             'type': 'ir.actions.act_window',
-            'target': 'inline'
+            'view_id': kanban_view_id.id,
+            'views': [(kanban_view_id.id, 'kanban'), (False, 'form')],
+            'view_mode': 'kanban,tree,form',
+            'view_type': 'form',
+            'context': ctx
         }
 
 
@@ -398,11 +398,7 @@ class Task(models.Model):
         ('normal', 'Grey'),
         ('done', 'Green'),
         ('blocked', 'Red')], string='Kanban State',
-        copy=False, default='normal', required=True,
-        help="A task's kanban state indicates special situations affecting it:\n"
-             " * Grey is the default situation\n"
-             " * Red indicates something is preventing the progress of this task\n"
-             " * Green indicates the task is ready to be pulled to the next stage")
+        copy=False, default='normal', required=True)
     kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State', track_visibility='onchange')
     create_date = fields.Datetime(index=True)
     write_date = fields.Datetime(index=True)  #not displayed in the view but it might be useful with base_automation module (and it needs to be defined first for that)
