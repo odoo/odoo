@@ -5169,6 +5169,7 @@ env['account.invoice.line'].search([]).grouped(['partner_id.country_id.name', 'p
                 group.items = group._all_records._grouped(groupby[1:], orderby[1:], **aggregate_functions)
 
             return sorted(groups, key=orderby[0])
+
     @api.multi
     def update(self, values):
         """ Update the records in ``self`` with ``values``. """
