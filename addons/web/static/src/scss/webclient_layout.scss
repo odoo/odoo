@@ -36,12 +36,12 @@
         height: 100%;
 
         .o_sub_menu {
+            z-index: 3;
             @include o-flex(0, 0, 220px);
             @include o-flex-display;
             @include o-flex-flow(column, nowrap);
             border-right: 1px solid darken($o-control-panel-background-color, 20%);
             background-color: $o-control-panel-background-color;
-
             .o_sub_menu_logo {
                 @include o-flex(0, 0, auto);
                 text-align: center;

@@ -65,7 +65,6 @@ ListRenderer.include({
         // list which is reloaded without groupBy wouldn't have this handler
         // bound, and edited rows couldn't be left by clicking outside the list)
         if (this.editable) {
-            this.$el.css({height: '100%'}); // seems useless: to remove in master
             core.bus.on('click', this, this._onWindowClicked.bind(this));
         }
         return this._super();

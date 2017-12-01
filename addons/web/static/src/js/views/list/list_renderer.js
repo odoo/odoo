@@ -63,6 +63,18 @@ var ListRenderer = BasicRenderer.extend({
         this.selection = [];
         this.pagers = []; // instantiated pagers (only for grouped lists)
         this.editable = params.editable;
+        this.isStickyHeader = params.isStickyHeader;
+    },
+    start: function () {
+        var self = this;
+        this.$el.css({height: '100%'});
+        this._super();
+        if (this.isStickyHeader && !config.device.isMobile) {
+            this.$el.on('scroll', function () {
+                // Set left of the head to cloned head(sticky head) when scrolling horizontally
+                self.$('.o_list_view_clone').css({ "left" : (this.scrollLeft * (-1)) + "px"});
+            });
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -75,6 +87,10 @@ var ListRenderer = BasicRenderer.extend({
      */
     giveFocus:function() {
         this.$('tbody .o_list_record_selector input:first()').focus();
+    },
+
+    resetStickyHeaderProps: function () {
+        this._resetStickyHeaderProps();
     },
     /**
      * @override
@@ -160,6 +176,30 @@ var ListRenderer = BasicRenderer.extend({
                 value: aggregateValue,
             };
         }
+    },
+    /**
+     * This method creates clone of thead to make thead sticky
+     * this will also call _resetStickyHeaderProps to reset properties of cloned header
+     *
+     * @private
+     */
+    _createStickyHeader: function () {
+        var $div = $("<div>", {
+            css: {
+                "z-index": "2",
+                "position": "fixed",
+            }
+        });
+        var $table = $("<table>", {
+            class: "o_list_view_clone"
+        });
+        this.$('.o_list_view > thead')
+            .clone(true, true)
+            .appendTo($table);
+
+        $table.appendTo($div);
+        this._resetStickyHeaderProps($table);
+        return $div;
     },
     /**
      * return the number of visible columns.  Note that this number depends on
@@ -672,7 +712,41 @@ var ListRenderer = BasicRenderer.extend({
             });
             $checked_rows.find('.o_list_record_selector input').prop('checked', true);
         }
+        if (this.isStickyHeader && !config.device.isMobile) {
+            var $headerClone = this._createStickyHeader();
+            var $table_cloned = $headerClone.find('table');
+            $table_cloned.toggleClass('o_list_view_grouped', is_grouped);
+            $table_cloned.toggleClass('o_list_view_ungrouped', !is_grouped);
+            $headerClone.insertBefore($table);
+        }
         return this._super();
+    },
+    /**
+     * Reset width and padding on cloned thead cells,
+     * copy the width and padding of orignal cells and assign it to cloned cells,
+     * this method will take left of original head ans assign it to cloned thead,
+     * this will be useful when we have horizontal scroll
+     *
+     * @private
+     * @param {jQueryElement} clone of table
+     */
+    _resetStickyHeaderProps: function ($table) {
+        var $clone_table = $table || this.$(".o_list_view_clone");
+        var $original_table = this.$(".o_list_view");
+        if ($original_table.length && $clone_table.length) {
+            $clone_table.width($original_table.width());
+            $original_table.find("th").each(function (index) {
+                $clone_table.find("th").eq(index)
+                    .outerWidth($(this).outerWidth())
+                    .css('padding', $(this).css('padding-top') + ' ' + $(this).css('padding-right') + ' ' + $(this).css('padding-bottom') + ' ' + $(this).css('padding-left'));
+            });
+            // Firefox Issue: Reset scroll to 0, firefox shows clone header at behind scoll when we have scroll and someone sorts listview
+            this.$el.scrollTop(0);
+            this.$el.scrollLeft(0);
+
+            // Firefox Issue: Reset left of clone table if there is any horizontal scroll
+            $clone_table.css({ 'left': '0px'});
+        }
     },
     /**
      * Each line can be decorated according to a few simple rules. The arch

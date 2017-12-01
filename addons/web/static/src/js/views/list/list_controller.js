@@ -8,6 +8,7 @@ odoo.define('web.ListController', function (require) {
  */
 
 var core = require('web.core');
+var config = require('web.config');
 var BasicController = require('web.BasicController');
 var DataExport = require('web.DataExport');
 var Dialog = require('web.Dialog');
@@ -102,6 +103,11 @@ var ListController = BasicController.extend({
         return _.map(this.selectedRecords, function (db_id) {
             return self.model.get(db_id, {raw: true});
         });
+    },
+    on_attach_callback: function () {
+        if (!config.device.isMobile && this.renderer.isStickyHeader) {
+            this.renderer.resetStickyHeaderProps();
+        }
     },
     /**
      * Display and bind all buttons in the control panel
@@ -273,9 +279,14 @@ var ListController = BasicController.extend({
      * @returns {Deferred}
      */
     _confirmSave: function (id) {
+        var self = this;
         var state = this.model.get(this.handle);
         return this.renderer.updateState(state, {noRender: true})
-            .then(this._setMode.bind(this, 'readonly', id));
+            .then(this._setMode.bind(this, 'readonly', id)).then(function () {
+                if (!config.device.isMobile && self.renderer.isStickyHeader) {
+                    self.renderer.resetStickyHeaderProps();
+                }
+            });
     },
     /**
      * To improve performance, list view must not be rerendered if it is asked
