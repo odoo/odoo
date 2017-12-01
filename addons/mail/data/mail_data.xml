@@ -201,10 +201,10 @@
             <field name="model_id" ref="base.model_res_partner"/>
             <field name="email_from">${ctx['expeditor']}</field>
             <field name="email_to">${object.email or ''|safe}</field>
-            <field name="subject">Guidelines</field>
+            <field name="subject">Guidelines of channel ${ctx['channel_name']}</field>
             <field name="body_html" type="xml">
 <p>Hello ${object.name or ''},</p>
-<p>You have just subscribed to the channel ${ctx['channel_name']}. Please find below the guidelines for conversing on that channel.</p>
+<p>Please find below the guidelines for conversing on the channel ${ctx['channel_name']}.</p>
 <p>
 ${ctx['guidelines_text']}
 </p>

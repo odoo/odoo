@@ -136,14 +136,20 @@ class Channel(models.Model):
             raise ValidationError('Only email lists can be moderated!')
 
     @api.multi
-    def _send_guidelines(self, partners):
+    def send_guidelines_to_partners(self):
+        self._send_guidelines(self.channel_partner_ids, force_send=True)
+        raise UserError("The guidelines have been sent.")
+
+    @api.multi
+    def _send_guidelines(self, partners, force_send=True):
         self.ensure_one()
         template = self.env.ref('mail.guidelines_notification_email', raise_if_not_found=False)
         banned_emails = self.moderated_email_ids.filtered(lambda x: x.decision == 'ban').mapped('email')
         good_partners = partners.filtered(lambda p: not (p.email in banned_emails))
         #need to change expeditor address
         for partner in good_partners:
-            template.with_context(lang=partner.lang, expeditor="dam@openerp.com", channel_name=self.name, guidelines_text=self.guidelines).send_mail(partner.id, raise_exception=True)
+            template.with_context(lang=partner.lang, expeditor="dam@openerp.com", channel_name=self.name, guidelines_text=self.guidelines).send_mail(partner.id, force_send=force_send, raise_exception=True)
+
 
     @api.multi
     def _add_to_moderated_email_list(self, email, decision):

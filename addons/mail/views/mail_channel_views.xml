@@ -83,6 +83,9 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <form string="Mail Channel Form">
+                    <header>
+                        <button name="send_guidelines_to_partners" type="object" string="Send guidelines" attrs="{'invisible':[('send_guidelines','=',False)]}"/>
+                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box"/>
                         <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_medium', 'size': [90, 90]}"/>
@@ -153,6 +156,14 @@
                     </sheet>
                 </form>
             </field>
+        </record>
+
+        <record model="ir.actions.server" id="send_guidelines_to_partners">
+            <field name="name">Send guidelines to partners</field>
+            <field name="model_id" ref="model_mail_channel"/>
+            <field name="code">
+                send_guidelines_to_partner()
+             </field>
         </record>
 
         <record id="mail_channel_view_tree" model="ir.ui.view">

@@ -908,6 +908,7 @@ class Message(models.Model):
         channel_ids = self.mapped('res_id')
         moderators = self.env['mail.channel'].browse(channel_ids).mapped('moderator_ids')
         authors = self.mapped('author_id')
+        
         moderators_notifications = [
             [
                 (self._cr.dbname, 'res.partner', moderator.partner_id.id),
@@ -922,6 +923,7 @@ class Message(models.Model):
             ]
             for moderator in moderators
         ]
+
         authors_notifications = [
             [
                 (self._cr.dbname, 'res.partner', author.id),
@@ -936,15 +938,43 @@ class Message(models.Model):
             ]
             for author in authors
         ]
-        notifications = moderators_notifications + authors_notifications
-        self.env['bus.bus'].sendmany(notifications)
+
+        brut_notifications = moderators_notifications + authors_notifications
+
+        dictionary = {}
+        for notif in brut_notifications:
+            partner_id = notif[0][2]
+            message_ids = notif[1]['message_ids']
+            if partner_id in dictionary:
+                dictionary[partner_id] = list(set(dictionary[partner_id]) or set(message_ids))
+            else:
+                dictionary[partner_id] = message_ids
+
+        nice_notifications = []
+        for partner_id, message_ids in dictionary.items():
+            nice_notifications.append(
+                        [
+                            (self._cr.dbname, 'res.partner', partner_id),
+                            {
+                                'type': 'deletion',
+                                'message_ids': list(dictionary[partner_id])
+                            }
+                        ]
+                    )
+
+        for elem in nice_notifications:
+            print('---------------------------------------------')
+            print(elem)
+            print('---------------------------------------------')
+
+        self.env['bus.bus'].sendmany(nice_notifications)
         self.unlink()
 
     @api.model
     def notify_moderator(self):
         """ This method alerts by email the moderators of the existence of messages that need moderation.
             This method is called once a day by a cron.
-        """
+            """
         moderators_to_notify = self.search([('moderation_status', '=', 'pending_moderation')]).mapped('channel_ids.moderator_ids')
         template = self.env.ref('mail.moderator_notification_email', raise_if_not_found=False)
         for moderator in moderators_to_notify:
