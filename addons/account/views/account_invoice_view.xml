@@ -491,11 +491,11 @@
                                     <field name="name"/>
                                     <!--Need invisible fields for on_change to create all necessary info -->
                                     <field name="tax_id" invisible="1"/>
-                                    <field name="account_analytic_id" invisible="1"/>
                                     <field name="sequence" invisible="1"/>
                                     <field name="manual" invisible="1"/>
                                     <field name="account_id" groups="account.group_account_user"/>
                                     <field name="amount" invisible="1"/>
+                                    <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
                                     <field name="amount_rounding" invisible="1"/>
                                     <field name="amount_total"/>
                                     <field name="currency_id" invisible="1"/>
