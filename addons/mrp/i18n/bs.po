@@ -46,7 +46,7 @@ msgstr "# Proizvodni nalog"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_ready_count
 msgid "# Read Work Orders"
-msgstr ""
+msgstr "# Spremnih radnih naloga"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workorder_count
@@ -59,13 +59,13 @@ msgstr "# Radnih naloga"
 #: model:product.product,description:mrp.product_product_computer_desk_leg
 #: model:product.template,description:mrp.product_product_computer_desk_leg_product_template
 msgid "18″ x 2½″ Square Leg"
-msgstr ""
+msgstr "18″ x 2½″ Kockasta noga"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_laptop_charger
 #: model:product.template,description:mrp.product_product_laptop_charger_product_template
 msgid "19v,5.5 x 2.5 mm Pin Type Adapter (Power Cord Included)"
-msgstr ""
+msgstr "19v,5.5 x 2.5 mm Igličasti tip adaptera (Napojni kabal uključen)"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:266
@@ -102,7 +102,7 @@ msgstr "<span class=\"o_stat_text\">Izgubljeno</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">OEE</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">OEE</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -3400,6 +3400,8 @@ msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
 msgstr ""
+"Ne možete obrisati sastavnicu proizvoda koja se koristi na radnom nalogu u izvršavanju.\n"
+"Molimo da zatvorite ili otkažete prvo radin nalog proizvodnje."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_move.py:40

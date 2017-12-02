@@ -12,13 +12,16 @@
 # Joachim Flottorp <joachimflottorp@gmail.com>, 2016
 # Eirik Halvorsen <eirik386@gmail.com>, 2017
 # Hugo Fossen <hf@optice.no>, 2017
+# Viktor Basso <viktor@voit.no>, 2017
+# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
+# Jan Pedro Tumusok <jpt@eyenetworks.no>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: Hugo Fossen <hf@optice.no>, 2017\n"
+"Last-Translator: Jan Pedro Tumusok <jpt@eyenetworks.no>, 2017\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -129,7 +132,7 @@ msgstr "antall siffer"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_code_digits
 msgid "# of Digits *"
-msgstr ""
+msgstr "# Tall *"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
@@ -144,7 +147,7 @@ msgstr "Ant. transaksjon"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} Faktura (Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_notification_email_account_invoice
@@ -834,7 +837,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Subtotal</strong>"
-msgstr ""
+msgstr "<strong>Subtotal</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -1870,7 +1873,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag_applicability
 msgid "Applicability"
-msgstr ""
+msgstr "Anvendbarhet"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -2339,12 +2342,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
 msgid "Cancel Entry"
-msgstr ""
+msgstr "Avbryt"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Cancel Invoice"
-msgstr ""
+msgstr "Annuler faktura"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_cancel_view
@@ -2651,7 +2654,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,help:account.account_tag_action
 msgid "Click to add a new tag."
-msgstr ""
+msgstr "Klikk for å legge til en ny tag."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -3040,7 +3043,7 @@ msgstr "Land"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_country_group_id
 msgid "Country Group"
-msgstr ""
+msgstr "Land-gruppe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_country_id
@@ -3421,7 +3424,7 @@ msgstr "Kunder"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
-msgstr ""
+msgstr "Dashboard"
 
 #. module: account
 #. openerp-web
@@ -3546,7 +3549,7 @@ msgstr "Standard salgsavgift"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_sale_tax_id
 msgid "Default Sales Tax"
-msgstr ""
+msgstr "Standardmoms"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tax_ids
@@ -3801,7 +3804,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Don't hesitate to"
-msgstr ""
+msgstr "Ikke nøl med"
 
 #. module: account
 #: selection:account.invoice.report,state:0
@@ -3811,7 +3814,7 @@ msgstr "Fullført"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Download the"
-msgstr ""
+msgstr "Last ned"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -3947,7 +3950,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "End"
-msgstr ""
+msgstr "Slutt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_date_to
@@ -4317,6 +4320,8 @@ msgid ""
 "For the Odoo Team,<br/>\n"
 "                            Fabien Pinckaers, Founder"
 msgstr ""
+"For Odoo-teamet,<br/>\n"
+"                         Fabien Pinckaers, grunnlegger"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_currency_id
@@ -4490,7 +4495,7 @@ msgstr ""
 #: code:addons/account/models/account_invoice.py:478
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "Gå til konfigurasjonspanelet"
 
 #. module: account
 #: selection:res.partner,trust:0
@@ -4800,7 +4805,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "If you want to do it yourself:"
-msgstr ""
+msgstr "Hvis du vil gjøre det selv:"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -5028,7 +5033,7 @@ msgstr "Faktura"
 #: model:mail.message.subtype,description:account.mt_invoice_created
 #: model:mail.message.subtype,name:account.mt_invoice_created
 msgid "Invoice Created"
-msgstr ""
+msgstr "Faktura opprettet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_date_invoice
@@ -5878,7 +5883,7 @@ msgstr "DIV"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Main Currency"
-msgstr ""
+msgstr "Hovedvaluta"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -6498,7 +6503,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:780
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr ""
+msgstr "Bare administratorer kan endre innstillingene"
 
 #. module: account
 #. openerp-web
@@ -6656,7 +6661,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Overdue"
-msgstr ""
+msgstr "Forfalt"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -7092,7 +7097,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_web_planner
 msgid "Planner"
-msgstr ""
+msgstr "Planlegger"
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:27
@@ -8068,7 +8073,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_sent
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Sent"
-msgstr ""
+msgstr "Sendt"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -8585,6 +8590,7 @@ msgstr ""
 msgid ""
 "Technical field used to adapt the interface to the payment type selected."
 msgstr ""
+"Teknisk felt brukt for å tilpasse grensesnittet til valgt betalingstype."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment_hide_payment_method
@@ -9643,7 +9649,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Use"
-msgstr ""
+msgstr "Bruk"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_use_anglo_saxon
@@ -9860,7 +9866,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_account_supplier
 #, python-format
 msgid "Vendors"
-msgstr ""
+msgstr "Leverandører"
 
 #. module: account
 #: selection:account.financial.report,type:0
@@ -10567,12 +10573,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "send us an email"
-msgstr ""
+msgstr "send oss en epostmelding"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "set company logo"
-msgstr ""
+msgstr "sett firmalogo"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10597,7 +10603,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "to describe<br/> your experience or to suggest improvements !"
-msgstr ""
+msgstr "for å beskrive <br/>dine erfaringer eller foreslå forbedringer!"
 
 #. module: account
 #. openerp-web
