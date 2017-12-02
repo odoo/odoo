@@ -285,10 +285,7 @@ class Message(models.Model):
         for message in message_tree.values():
             if message.author_id:
                 partners |= message.author_id
-            if message.subtype_id and message.partner_ids:  # take notified people of message with a subtype
-                partners |= message.partner_ids
-            elif not message.subtype_id and message.partner_ids:  # take specified people of message without a subtype (log)
-                partners |= message.partner_ids
+            partners |= message.partner_ids
             if message.needaction_partner_ids:  # notified
                 partners |= message.needaction_partner_ids
             if message.attachment_ids:
@@ -328,12 +325,7 @@ class Message(models.Model):
                 author = partner_tree[message.author_id.id]
             else:
                 author = (0, message.email_from)
-            partner_ids = []
-            if message.subtype_id:
-                partner_ids = [partner_tree[partner.id] for partner in message.partner_ids
-                                if partner.id in partner_tree]
-            else:
-                partner_ids = [partner_tree[partner.id] for partner in message.partner_ids
+            partner_ids = [partner_tree[partner.id] for partner in message.partner_ids
                                 if partner.id in partner_tree]
 
             customer_email_data = []
