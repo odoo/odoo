@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="tax_tag_vat20" model="account.account.tag">
+            <field name="name">ПДВ 20%</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tax_tag_vat7" model="account.account.tag">
+            <field name="name">ПДВ 7%</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tax_tag_vat0" model="account.account.tag">
+            <field name="name">ПДВ 0%</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tax_tag_vat_free" model="account.account.tag">
+            <field name="name">Звільнено від ПДВ</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tax_tag_vat_not" model="account.account.tag">
+            <field name="name">Не є об'єктом ПДВ</field>
+            <field name="applicability">taxes</field>
+        </record>
+    </data>
+</odoo>
