@@ -11,10 +11,10 @@
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2017-11-30 13:11+0000\n"
+"PO-Revision-Date: 2017-11-30 13:11+0000\n"
 "Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +30,7 @@ msgid " (copy)"
 msgstr "(コピー)"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:538
+#: code:addons/account_asset/models/account_asset.py:540
 #, python-format
 msgid " (grouped)"
 msgstr "(グループ化)"
@@ -87,7 +87,7 @@ msgstr ""
 
 #. module: account_asset
 #. openerp-web
-#: code:addons/account_asset/static/src/js/account_asset.js:41
+#: code:addons/account_asset/static/src/js/account_asset.js:52
 #, python-format
 msgid "Accounting entries waiting for manual verification"
 msgstr ""
@@ -104,7 +104,7 @@ msgid "Additional Options"
 msgstr "追加オプション"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:595
+#: code:addons/account_asset/models/account_asset.py:597
 #, python-format
 msgid "Amount"
 msgstr "金額"
@@ -399,7 +399,7 @@ msgid "Cumulative Depreciation"
 msgstr "累積償却額"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:595
+#: code:addons/account_asset/models/account_asset.py:597
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_currency_id
 #, python-format
 msgid "Currency"
@@ -529,7 +529,7 @@ msgid "Depreciation board modified"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:598
+#: code:addons/account_asset/models/account_asset.py:600
 #, python-format
 msgid "Depreciation line posted."
 msgstr "償却明細が記帳されました。"
@@ -557,7 +557,7 @@ msgid "Disposal Moves"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:577
+#: code:addons/account_asset/models/account_asset.py:579
 #, python-format
 msgid "Document closed."
 msgstr ""
@@ -794,7 +794,7 @@ msgid "One Entry Every"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:597
+#: code:addons/account_asset/models/account_asset.py:599
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_partner_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_partner_id
 #, python-format
@@ -819,7 +819,7 @@ msgstr "償却明細記帳"
 
 #. module: account_asset
 #. openerp-web
-#: code:addons/account_asset/static/src/js/account_asset.js:38
+#: code:addons/account_asset/static/src/js/account_asset.js:49
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_posted_check
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_move_check
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -970,11 +970,19 @@ msgid "The number of depreciations needed to depreciate your asset"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_invoice.py:52
+#: code:addons/account_asset/models/account_invoice.py:62
 #, python-format
 msgid ""
 "The number of depreciations or the period length of your asset category "
 "cannot be null."
+msgstr ""
+
+#. module: account_asset
+#: code:addons/account_asset/models/account_asset.py:482
+#, python-format
+msgid ""
+"This depreciation is already linked to a journal entry! Please post or "
+"delete it."
 msgstr ""
 
 #. module: account_asset
@@ -1007,7 +1015,7 @@ msgstr "タイプ"
 
 #. module: account_asset
 #. openerp-web
-#: code:addons/account_asset/static/src/js/account_asset.js:44
+#: code:addons/account_asset/static/src/js/account_asset.js:55
 #, python-format
 msgid "Unposted"
 msgstr "未記帳"
@@ -1050,13 +1058,13 @@ msgid "You cannot delete a document that contains posted entries."
 msgstr "記帳済仕訳を含むドキュメントは削除できません。"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:606
+#: code:addons/account_asset/models/account_asset.py:608
 #, python-format
 msgid "You cannot delete posted depreciation lines."
 msgstr "記帳済の償却明細は削除できません。"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:608
+#: code:addons/account_asset/models/account_asset.py:610
 #, python-format
 msgid "You cannot delete posted installment lines."
 msgstr ""

@@ -11,13 +11,14 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2017
 # Jesper Carstensen <jc@danodoo.dk>, 2017
 # Laerke Mathiasen <lhm@flexerp.dk>, 2017
+# JonathanStein <jstein@image.dk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Laerke Mathiasen <lhm@flexerp.dk>, 2017\n"
+"POT-Creation-Date: 2017-11-30 13:12+0000\n"
+"PO-Revision-Date: 2017-11-30 13:12+0000\n"
+"Last-Translator: JonathanStein <jstein@image.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -118,7 +119,7 @@ msgstr ""
 #: code:addons/im_livechat/static/src/xml/im_livechat.xml:13
 #, python-format
 msgid "Bad"
-msgstr ""
+msgstr "Dårlig"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_canned_response_action
@@ -211,7 +212,7 @@ msgstr ""
 #: code:addons/im_livechat/static/src/js/copy_clipboard.js:32
 #, python-format
 msgid "Copied !"
-msgstr ""
+msgstr "Kopieret !"
 
 #. module: im_livechat
 #. openerp-web
@@ -253,7 +254,6 @@ msgstr ""
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Creation date (hour)"
 msgstr ""
 
@@ -455,11 +455,6 @@ msgid "Last Modified on"
 msgstr "Sidst ændret den"
 
 #. module: im_livechat
-#: model:ir.model,name:im_livechat.model_mail_channel_partner
-msgid "Last Seen Many2many"
-msgstr ""
-
-#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_write_uid
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_write_uid
 msgid "Last Updated by"
@@ -475,7 +470,7 @@ msgstr "Sidst opdateret den"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Last Week"
-msgstr ""
+msgstr "Sidste Uge"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -485,6 +480,11 @@ msgstr "Ferie"
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Leave Channel"
+msgstr "Forlad Kanal"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_mail_channel_partner
+msgid "Listeners of a Channel"
 msgstr ""
 
 #. module: im_livechat
@@ -495,7 +495,7 @@ msgstr "Live Chat"
 #. module: im_livechat
 #: model:ir.module.category,name:im_livechat.module_category_im_livechat
 msgid "Live Support"
-msgstr ""
+msgstr "Live Support"
 
 #. module: im_livechat
 #. openerp-web
@@ -503,7 +503,7 @@ msgstr ""
 #: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:21
 #, python-format
 msgid "Livechat"
-msgstr ""
+msgstr "Livechat"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel
@@ -524,7 +524,7 @@ msgstr ""
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
 #: model:ir.model,name:im_livechat.model_im_livechat_report_operator
 msgid "Livechat Support Report"
-msgstr ""
+msgstr "Livechat Support Rapport"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_report_channel_action
@@ -538,7 +538,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_graph
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_pivot
 msgid "Livechat Support Statistics"
-msgstr ""
+msgstr "Livechat Support Statistikker"
 
 #. module: im_livechat
 #: model:res.groups,name:im_livechat.im_livechat_group_manager
@@ -577,7 +577,7 @@ msgstr "Navn"
 #: code:addons/im_livechat/models/mail_channel.py:125
 #, python-format
 msgid "No history found"
-msgstr ""
+msgstr "Ingen historik fundet"
 
 #. module: im_livechat
 #. openerp-web
@@ -586,6 +586,8 @@ msgstr ""
 msgid ""
 "None of our collaborators seems to be available, please try again later."
 msgstr ""
+"Ingen af vores samarbejdspartnere lader til at være tilgængelige. Prøv "
+"venligst igen senere."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_nbr_channel
@@ -596,7 +598,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel_nbr_speaker
 msgid "Number of different speakers"
-msgstr ""
+msgstr "Antal forskellige talere"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel_nbr_message
@@ -913,13 +915,6 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. YourWebsite.com"
-msgstr ""
-
-#. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:10
-#, python-format
-msgid "fa-comments"
 msgstr ""
 
 #. module: im_livechat

@@ -1,388 +1,328 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_setup
-#
+# 
 # Translators:
-# Joao Vieira <joao.f.vieira@gmail.com>, 2016
-# José Gomes <jg@opencloud.pro>, 2015
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-05-30 16:05+0000\n"
-"Last-Translator: Joao Vieira <joao.f.vieira@gmail.com>\n"
-"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
-"pt/)\n"
-"Language: pt\n"
+"POT-Creation-Date: 2017-11-16 08:08+0000\n"
+"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: pt\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_portal
-msgid "Activate the customer portal"
-msgstr "Activar o portal do cliente"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_share
-msgid "Allow documents sharing"
-msgstr "Permitir a partilha de documentos"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_currency
-msgid "Allow multi currencies"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<strong>Save</strong> this page and come back here to set up the feature."
 msgstr ""
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_google_calendar
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Access Rights"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_google_calendar
 msgid "Allow the users to synchronize their calendar  with Google Calendar"
 msgstr ""
-"Permitir que os utilizadores sincronizem o seu calendário com o Google "
-"Calendar"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_base_import
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_base_import
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
 msgstr ""
-"Permitir aos utilizadores importarem dados via ficheiros CSV/XLS/XLSX/ODS "
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_currency
+#: model:ir.model.fields,help:base_setup.field_res_config_settings_group_multi_currency
 msgid "Allows to work in a multi currency environment"
 msgstr ""
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
-msgid "Apply"
-msgstr "Aplicar"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_voip
+msgid "Asterisk (VoIP)"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_google_drive
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_google_drive
 msgid "Attach Google documents to any record"
-msgstr "Anexe documentos google a qualquer registo"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Authentication"
-msgstr "Autenticação"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Automate inter-company transactions"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
-msgid "Cancel"
-msgstr "Cancelar"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Business Documents"
+msgstr ""
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Client"
-msgstr "Cliente"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"By default, new users get highest access rights for all installed apps."
+msgstr ""
 
 #. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_sale_config
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
-msgid "Configure Sales"
-msgstr "Configurar Vendas"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Change Document Template"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Configure outgoing email servers"
-msgstr "Configurar servidores de saída de email"
+#: code:addons/base_setup/models/res_config_settings.py:100
+#, python-format
+msgid "Choose Your Document Layout"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Configure your company data"
-msgstr "Configurar dados da sua empresa"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Choose your document's header and footer layout"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_uid
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_uid
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_uid
-msgid "Created by"
-msgstr "Criada por"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_pad
+msgid "Collaborative Pads"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_date
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_date
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_date
-msgid "Created on"
-msgstr "Criado em"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Common Contact Book"
+msgstr ""
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Customer"
-msgstr "Cliente"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Companies"
+msgstr "Empresas"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_display_name
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_display_name
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_display_name
-msgid "Display Name"
-msgstr "Nome a Mostrar"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_company_id
+msgid "Company"
+msgstr "Empresa"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Donor"
-msgstr "Doador"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"Configure company rules to automatically create SO/PO when one of your "
+"company sells/buys to another of your company."
+msgstr ""
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Email"
-msgstr "Email"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Create and attach Google Drive documents to any record"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_default_custom_report_footer
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_report_footer
+msgid "Custom Report Footer"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_default_user_rights
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Default Access Rights"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_external_report_layout
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Document Template"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Edit Header"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_default_external_email_server
+msgid "External Email Servers"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Extract and analyze Odoo data from Google Spreadsheet"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_res_config_settings_report_footer
+msgid "Footer text displayed at the bottom of all reports."
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Format"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.menu,name:base_setup.menu_config
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "General Settings"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Gengo Translations"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Google Calendar"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Google Drive"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_google_spreadsheet
+msgid "Google Spreadsheet"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Import & Export"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Integrations"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Inter-Company Transactions"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_auth_ldap
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "LDAP Authentication"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_inter_company_rules
+msgid "Manage Inter Company"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_group_multi_company
+msgid "Manage multiple companies"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Manage multiple legal entities with separate accounting"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_group_multi_currency
+msgid "Multi-Currencies"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Multi-company"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "OAuth Authentication"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_paperformat_id
+msgid "Paper format"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Preview Document"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Set custom access rights for new users"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Set the paper format of printed documents"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_general_configuration
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "General Settings"
-msgstr "Configurações Gerais"
-
-#. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_module_portal
-msgid "Give your customers access to their documents."
-msgstr "Dê aos seus clientes o acesso aos seus documentos ."
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Google Calendar"
-msgstr "Calendário Google"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Google Drive"
-msgstr "Google Drive"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Google Integration"
-msgstr "Integração Google"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Guest"
-msgstr "Convidado"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_partner
-msgid "How do you call a Customer"
-msgstr "Como vai chamar o cliente"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_id
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_id
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_id
-msgid "ID"
-msgstr "ID"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Import / Export"
-msgstr "Importar / Exportar"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Inter company"
-msgstr "Empresa Inter"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings___last_update
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology___last_update
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings___last_update
-msgid "Last Modified on"
-msgstr "Última Modificação em"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_uid
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_uid
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_uid
-msgid "Last Updated by"
-msgstr "Última Actualização por"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_date
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_date
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_date
-msgid "Last Updated on"
-msgstr "Última Actualização em"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_inter_company_rules
-msgid "Manage Inter Company"
-msgstr "Gerir Inter Empresa"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_company
-msgid "Manage multiple companies"
-msgstr "Gerir várias empresas"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Member"
-msgstr "Membro"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Multi Company"
-msgstr "Multi-empresas"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Multi Currencies"
+msgid "Settings"
 msgstr ""
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid ""
-"Once installed, you can configure your API credentials for \"Google calendar"
-"\""
-msgstr ""
-"Uma vez instalado , você pode configurar as suas credenciais de API para \" "
-"Google Calendar \""
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Partner"
-msgstr "Parceiro"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Patient"
-msgstr "Paciente"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Portal access"
-msgstr "Acesso portal"
-
-#. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_module_share
-msgid "Share or embbed any screen of Odoo."
-msgstr "Partilhar ou embutir qualquer ecrã do Odoo"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_company_share_partner
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_company_share_partner
 msgid "Share partners to all companies"
-msgstr "Partilhar clientes para todas as empresas"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_company_share_partner
+#: model:ir.model.fields,help:base_setup.field_res_config_settings_company_share_partner
 msgid ""
 "Share your partners to all companies defined in your instance.\n"
-" * Checked : Partners are visible for every companies, even if a company is "
-"defined on the partner.\n"
-" * Unchecked : Each company can see only its partner (partners where company "
-"is defined). Partners not related to a company are visible for all companies."
+" * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
+" * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
 msgstr ""
-"Partilhe os parceiros por todas as empresas definidas na sua instância.\n"
-"* Com visto: Parceiros estão visíveis para todas as empresas, mesmo que a "
-"empresa estiver definda no parceiro.\n"
-"* Sem visto: Cada empresa pode ver apenas os seus parceiros. Parceiros sem "
-"empresa são vistos por todas."
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Shared resources"
-msgstr "Recursos partilhados"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
-msgid "Specify Your Terminology"
-msgstr "Especifique a sua terminologia"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Tenant"
-msgstr "Inquilino"
-
-#. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_calendar
-msgid "This installs the module google_calendar."
-msgstr "Instala o módulo google_calendar."
-
-#. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_drive
-msgid "This installs the module google_docs."
-msgstr "Instala o módulo google_docs"
-
-#. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_module_inter_company_rules
-msgid ""
-"This installs the module inter_company_rules.\n"
-" Configure company rules to automatically create SO/PO when one of your "
-"company sells/buys to another of your company."
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Synchronize your calendar with Google Calendar"
 msgstr ""
-"Instala o módulo inter_company_rules.\n"
-"Configura regras para que automaticamente sejam criadas SO/PO's se existirem "
-"vendas/compras para a outra empresa."
 
 #. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
-msgid "Use another word to say \"Customer\""
-msgstr "Use outra palavra para dizer \"Cliente\""
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
-msgid "Use external authentication providers, sign in with Google..."
-msgstr "Use registo através de apps terceiras, login com Google..."
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid ""
-"When you send a document to a customer\n"
-"                                    (quotation, invoice), your customer will "
-"be\n"
-"                                    able to signup to get all his "
-"documents,\n"
-"                                    read your company news, check his "
-"projects,\n"
-"                                    etc."
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Template"
 msgstr ""
-"Quando enviar um documento para um cliente\n"
-"                                    ( cotação, fatura) , o seu cliente será\n"
-"                                    capaz de se inscrever para obter todos "
-"os seus documentos ,\n"
-"                                    ler as notícias da empresa, verificar "
-"seus projetos,\n"
-"                                    etc"
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_company
-msgid ""
-"Work in multi-company environments, with appropriate security access between "
-"companies."
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_base_gengo
+msgid "Translate Your Website with Gengo"
 msgstr ""
-"Trabalhe em ambientes multi-empresa, com segurança apropriada entre elas"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
-msgid ""
-"You can use this wizard to change the terminologies for customers in the "
-"whole application."
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Translate your website with Gengo"
 msgstr ""
-"Pode usar este assistente para alterar as terminologias dos clientes em toda "
-"a aplicação."
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid ""
-"You will find more options in your company details: address for the header "
-"and footer, overdue payments texts, etc."
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Use LDAP credentials to log in"
 msgstr ""
-"Vai encontrar mais opções em detalhes da sua empresa : endereço para o "
-"cabeçalho e rodapé , textos pagamentos em atraso , etc"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Use external accounts to log in (Google, Facebook, etc.)"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_terminology
-msgid "base.setup.terminology"
-msgstr "base.setup.terminology"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_auth_oauth
+msgid "Use external authentication providers (OAuth)"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "sale.config.settings"
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Use external pads in Odoo Notes"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Users"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model,name:base_setup.model_res_config_settings
+msgid "res.config.settings"
+msgstr ""
