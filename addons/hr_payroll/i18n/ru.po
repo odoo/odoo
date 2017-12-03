@@ -7,7 +7,7 @@
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
 # Andrey Skabelin <inactive+a.skabelin@transifex.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
-# SV <sv@grimmette.ru>, 2017
+# Sergey Vilizhanin <sv@grimmette.ru>, 2017
 # Denis Trepalin <zekarious@gmail.com>, 2017
 # Максим Дронь <dronmax@gmail.com>, 2017
 # Viktor Pogrebniak <vp@aifil.ru>, 2017
@@ -15,10 +15,10 @@
 # Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2017-11-30 13:11+0000\n"
+"PO-Revision-Date: 2017-11-30 13:11+0000\n"
 "Last-Translator: Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -253,7 +253,7 @@ msgstr "Невозможно отклонить проведённую ведо�
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_7732
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_7804
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Category"
 msgstr "Категория"
@@ -361,11 +361,6 @@ msgstr "Условия"
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_configuration
 msgid "Configuration"
 msgstr "Настройка"
-
-#. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_configuration
-msgid "Configure Payroll"
-msgstr "Настроить Начисления Заработной Платы"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -1273,7 +1268,7 @@ msgstr "Правила начисления зарплаты"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:396
-#: code:addons/hr_payroll/models/hr_payslip.py:445
+#: code:addons/hr_payroll/models/hr_payslip.py:446
 #, python-format
 msgid "Salary Slip of %s for %s"
 msgstr "Зарплатный листок от %s для %s"
@@ -1292,12 +1287,6 @@ msgstr "Структура зарплаты"
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_view
 msgid "Salary Structures"
 msgstr "Структуры заработной платы"
-
-#. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_tree
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_tree
-msgid "Salary Structures Hierarchy"
-msgstr "Иерархия структур заработной платы"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_schedule_pay
@@ -1344,6 +1333,7 @@ msgid "Set to Draft"
 msgstr "Сделать черновиком"
 
 #. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_configuration
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_global_settings
 msgid "Settings"
 msgstr "Настройки"
@@ -1541,7 +1531,7 @@ msgid "You must select employee(s) to generate payslip(s)."
 msgstr "Вы должны выбрать сотрудника(ов) чтобы создать расчетный листок(ки)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:516
+#: code:addons/hr_payroll/models/hr_payslip.py:517
 #, python-format
 msgid "You must set a contract to create a payslip line."
 msgstr "Нужно указать договор для создания расчётного листа."
