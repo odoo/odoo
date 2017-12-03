@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"POT-Creation-Date: 2017-11-30 13:12+0000\n"
+"PO-Revision-Date: 2017-11-30 13:12+0000\n"
 "Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2017\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
@@ -79,7 +79,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_active
 msgid "Active"
-msgstr ""
+msgstr "פעיל"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_id
@@ -109,7 +109,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "All"
-msgstr ""
+msgstr "כל"
 
 #. module: maintenance
 #: sql_constraint:maintenance.equipment:0
@@ -124,7 +124,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Archived"
-msgstr ""
+msgstr "התווסף לארכיון"
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_equipment_category
@@ -163,7 +163,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Cancel"
-msgstr ""
+msgstr "בטל"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_category_id
@@ -325,7 +325,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_description
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Description"
-msgstr ""
+msgstr "תיאור"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_display_name
@@ -345,7 +345,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_duration
 msgid "Duration"
-msgstr ""
+msgstr "משך"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request_duration
@@ -528,7 +528,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_location
 msgid "Location"
-msgstr ""
+msgstr "מיקום"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_losses
@@ -646,7 +646,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_model
 msgid "Model"
-msgstr ""
+msgstr "מודל"
 
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_monitor
@@ -719,13 +719,13 @@ msgid "Number of Requests Scheduled"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_high_priority
-msgid "Number of Requests in High Priority"
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_unscheduled
+msgid "Number of Requests Unscheduled"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_unscheduled
-msgid "Number of Requests Unscheduled"
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_high_priority
+msgid "Number of Requests in High Priority"
 msgstr ""
 
 #. module: maintenance
@@ -754,7 +754,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_tree
 msgid "Owner"
-msgstr ""
+msgstr "בעלים"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_parent_model_id
@@ -812,7 +812,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_priority
 msgid "Priority"
-msgstr ""
+msgstr "עדיפות"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
@@ -848,17 +848,12 @@ msgstr ""
 #: model:ir.ui.menu,name:maintenance.maintenance_reporting
 #: model:ir.ui.menu,name:maintenance.menu_m_reports
 msgid "Reporting"
-msgstr ""
+msgstr "דיווח"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team_request_ids
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Request"
-msgstr ""
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_ids
-msgid "Requests"
 msgstr ""
 
 #. module: maintenance
@@ -887,11 +882,16 @@ msgid "Requested by :"
 msgstr ""
 
 #. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_ids
+msgid "Requests"
+msgstr ""
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_technician_user_id
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_search
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Responsible"
-msgstr ""
+msgstr "אחראי"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
@@ -966,13 +966,13 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_stage_id
 msgid "Stage"
-msgstr ""
+msgstr "שלב"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_stage_action
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Stages"
-msgstr ""
+msgstr "שלבים"
 
 #. module: maintenance
 #: model:mail.message.subtype,name:maintenance.mt_req_status
@@ -1102,7 +1102,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Unread Messages"
-msgstr ""
+msgstr "הודעות שלא נקראו"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban

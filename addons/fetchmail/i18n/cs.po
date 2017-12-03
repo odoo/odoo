@@ -1,73 +1,64 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * fetchmail
-#
+# 
 # Translators:
-# xlu <xlu@seznam.cz>, 2015
-#, fuzzy
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-10-23 14:09+0000\n"
-"Last-Translator: xlu <xlu@seznam.cz>\n"
-"Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
-"Language: cs\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  cs.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"#-#-#-#-#  cs.po (Odoo 9.0)  #-#-#-#-#\n"
+"Language: cs\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_tree
 msgid "# of emails"
-msgstr "# e-mailů"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Actions to Perform on Incoming Mails"
-msgstr "Akce prováděné s příchozími e-maily"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_active
 msgid "Active"
-msgstr "Aktivní"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Advanced"
-msgstr "Pokročilé"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Advanced Options"
-msgstr "Rozšířené volby"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_configuration
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Configuration"
-msgstr "Nastavení"
-
-#. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.inherit_view_general_configuration
-msgid "Configure the incoming email gateway"
-msgstr "Nastavení příchozí poštovní brány"
+msgstr ""
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
 msgid "Confirmed"
-msgstr "Potvrzeno"
+msgstr ""
 
 #. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:150
+#: code:addons/fetchmail/models/fetchmail.py:137
 #, python-format
 msgid "Connection test failed: %s"
-msgstr "Test spojení selhal: %s"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_is_ssl
@@ -75,22 +66,18 @@ msgid ""
 "Connections are encrypted with SSL/TLS through a dedicated port (default: "
 "IMAPS=993, POP3S=995)"
 msgstr ""
-"Přenos je zabezpečen certifikáty SSL/TSL a probíhá přes vyhrazené porty "
-"(standardně: IMAPS=993, POP3S=995)"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_object_id
 msgid "Create a New Record"
-msgstr "Vytvořit nový záznam"
+msgstr ""
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
 msgid "Created by"
 msgstr "Vytvořil(a)"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
 msgid "Created on"
 msgstr "Vytvořeno"
@@ -98,10 +85,9 @@ msgstr "Vytvořeno"
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_priority
 msgid "Defines the order of processing, lower values mean higher priority"
-msgstr "Určuje pořadí provádění, nižší hodnota znamená vyšší prioritu"
+msgstr ""
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_display_name
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
 msgid "Display Name"
 msgstr "Zobrazovaný název"
@@ -109,15 +95,14 @@ msgstr "Zobrazovaný název"
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Fetch Now"
-msgstr "Zkontrolovat"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_server
 msgid "Hostname or IP of the mail server"
-msgstr "Název nebo IP adresa e-mail serveru"
+msgstr ""
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_id
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
 msgid "ID"
 msgstr "ID"
@@ -125,64 +110,66 @@ msgstr "ID"
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "IMAP"
-msgstr "IMAP"
+msgstr ""
 
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
 msgid "IMAP Server"
-msgstr "IMAP server"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "If SSL required."
-msgstr "Je-li požádován SSL."
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_mail_mail_fetchmail_server_id
 msgid "Inbound Mail Server"
-msgstr "Server příchozí pošty"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
+msgid "Incoming Email Servers"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Incoming Mail Server"
-msgstr "Server příchozí pošty"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
 msgid "Incoming Mail Servers"
-msgstr "Servery příchozí pošty"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_attach
 msgid "Keep Attachments"
-msgstr "Ponechat přílohy"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_original
 msgid "Keep Original"
-msgstr "Ponechat originál"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_date
 msgid "Last Fetch Date"
-msgstr "Poslední kontrola pošty"
+msgstr ""
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings___last_update
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
 msgid "Last Modified on"
 msgstr "Naposled upraveno"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
 msgid "Last Updated by"
 msgstr "Naposled upraveno"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
 msgid "Last Updated on"
 msgstr "Naposled upraveno"
@@ -190,28 +177,35 @@ msgstr "Naposled upraveno"
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
 msgid "Local Server"
-msgstr "Místní server"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Login Information"
-msgstr "Přihlašovací údaje"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.actions.server,name:fetchmail.ir_cron_mail_gateway_action_ir_actions_server
+#: model:ir.cron,cron_name:fetchmail.ir_cron_mail_gateway_action
+#: model:ir.cron,name:fetchmail.ir_cron_mail_gateway_action
+msgid "Mail: Fetchmail Service"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.act_server_history
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_message_ids
 msgid "Messages"
-msgstr "Zprávy"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_name
 msgid "Name"
-msgstr "Název"
+msgstr ""
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
 msgid "Not Confirmed"
-msgstr "Nepotvrzeno"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_action_id
@@ -219,43 +213,46 @@ msgid ""
 "Optional custom server action to trigger for each incoming mail, on the "
 "record that was created or updated by this mail"
 msgstr ""
-"Volitelné vlastní akce serveru pro příchozí e-mail – na záznamu, který byl "
-"vytvořen nebo aktualizován tímto e-mailem."
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
+msgid "Outgoing Email Servers"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
 msgid "Outgoing Mails"
-msgstr "Odchozí e-maily"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "POP"
-msgstr "POP"
+msgstr ""
 
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
 msgid "POP Server"
-msgstr "POP server"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_fetchmail_server
 msgid "POP/IMAP Server"
-msgstr "POP/IMAP server"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_tree
 msgid "POP/IMAP Servers"
-msgstr "POP/IMAP servery"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_password
 msgid "Password"
-msgstr "Heslo"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_port
 msgid "Port"
-msgstr "Port"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_object_id
@@ -264,74 +261,71 @@ msgid ""
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
 msgstr ""
-"Zpracuje každý příchozí e-mail jako součást konverzace podle druhu "
-"dokumentu. Buď se nové konverzaci se vytvoří nové dokumenty, nebo se ke "
-"stávající konverzaci připojí navazující e-maily (dokumenty)."
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Reset Confirmation"
-msgstr "Obnovit potvrzení"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "SSL"
-msgstr "SSL"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_is_ssl
 msgid "SSL/TLS"
-msgstr "SSL/TLS"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_script
 msgid "Script"
-msgstr "Skript"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Search Incoming Mail Servers"
-msgstr "Hledat servery příchozí pošty"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Server & Login"
-msgstr "Server & Přihlášení"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_action_id
 msgid "Server Action"
-msgstr "Akce serveru"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Server Information"
-msgstr "Údaje o serveru"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_server
 msgid "Server Name"
-msgstr "Název serveru"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_priority
 msgid "Server Priority"
-msgstr "Priorita serveru"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_type
 msgid "Server Type"
-msgstr "Druh serveru"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Server type IMAP."
-msgstr "IMAP server."
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Server type POP."
-msgstr "POP server."
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_state
@@ -341,23 +335,20 @@ msgstr "Stav"
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Test & Confirm"
-msgstr "Test & Potvrzení"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_user
 msgid "Username"
-msgstr "Uživatelské jméno"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_original
-#, fuzzy
 msgid ""
 "Whether a full original copy of each email should be kept for reference and "
 "attached to each processed message. This will usually double the size of "
 "your message database."
 msgstr ""
-"Mají-li být zahrnuty také originály každého e-mailu u zpracovávaných zpráv. "
-"To obvykle zdvojnásí velikost databáze zpráv."
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_attach
@@ -365,10 +356,3 @@ msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
 msgstr ""
-"Mají-li být za zahrnuty také přílohy. Pokud nebude povoleno, budou příchozí "
-"e-maily zbaveny všech příloh před dalším zpracováním."
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
-msgid "fetchmail.config.settings"
-msgstr "fetchmail.config.settings"

@@ -1,0 +1,119 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_authorize
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Language-Team: Galician (https://www.transifex.com/odoo/teams/41243/gl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: gl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer_authorize_login
+msgid "API Login Id"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer_authorize_transaction_key
+msgid "API Transaction Key"
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/authorize_request.py:67
+#, python-format
+msgid ""
+"Authorize.net Error Message(s):\n"
+" %s"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token_authorize_profile
+msgid "Authorize.net Profile ID"
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment.py:167
+#, python-format
+msgid ""
+"Authorize: received data with missing reference (%s) or trans_id (%s) or "
+"fingerprint (%s)"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
+msgid "CVC"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
+msgid "Card number"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
+msgid "Cardholder name"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
+msgid "Expires (MM / YY)"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
+msgid "How to get paid with Authorize.Net"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model,name:payment_authorize.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model,name:payment_authorize.model_payment_transaction
+msgid "Payment Transaction"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token_provider
+msgid "Provider"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token_save_token
+msgid "Save Cards"
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment.py:372
+#, python-format
+msgid "The Customer Profile creation in Authorize.NET failed."
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_token_authorize_profile
+msgid ""
+"This contains the unique reference for this partner/payment token "
+"combination in the Authorize.net backend"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_token_save_token
+msgid ""
+"This option allows customers to save their credit card as a payment token "
+"and to reuse it for a later purchase.If you manage subscriptions (recurring "
+"invoicing), you need it to automatically charge the customer when you issue "
+"an invoice."
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model,name:payment_authorize.model_payment_token
+msgid "payment.token"
+msgstr ""
