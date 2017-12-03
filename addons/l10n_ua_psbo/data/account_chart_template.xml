@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="ua_psbo_transfer_account" model="account.account.template">
+        <field name="name">Транзитний рахунок</field>
+        <field name="code">317000</field>
+        <field eval="True" name="reconcile"/>
+        <field name="user_type_id"
+            ref="account.data_account_type_current_assets"/>
+    </record>
+
+    <!-- Chart template -->
+    <record id="l10n_ua_psbo_chart_template" model="account.chart.template">
+        <field name="name">План рахунків ПСБО</field>
+        <field name="cash_account_code_prefix">301</field>
+        <field name="bank_account_code_prefix">311</field>
+        <field name="code_digits">6</field>
+        <field name="currency_id" ref="base.UAH"/>
+        <field name="transfer_account_id" ref="ua_psbo_transfer_account"/>
+    </record>
+
+    <record id="ua_psbo_transfer_account" model="account.account.template">
+        <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+    </record>
+
+</odoo>

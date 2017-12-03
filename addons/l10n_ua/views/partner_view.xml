@@ -1,0 +1,32 @@
+<?xml version="1.0"  encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_partner_form_l1">
+        <field name="name">res.partner.vat.inherit_l1</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <field name="property_account_position_id" position="after">
+                <label for="company_registry"/>
+                <div name="company_codes">
+                    <field name="company_registry" placeholder="Registry Number" />
+                </div>
+                <label for="vat"/>
+                <div name="vat_info" class="o_row">
+                    <field name="vat" placeholder="VAT Number"/>
+                </div>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_res_partner_filter_l">
+        <field name="name">res.partner.select_l1</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <search>
+                <field name="vat"/>
+                <field name="company_registry"/>
+            </search>
+        </field>
+    </record>
+</odoo>
