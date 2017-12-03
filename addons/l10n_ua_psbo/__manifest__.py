@@ -17,7 +17,7 @@ Ukrainian accounting based on national standards
         'data/account.account.template.csv',
         'data/account_tax_template.xml',
         'data/account_chart_template_config.xml',
-        'data/account_chart_template.yml',
+        'data/account_chart_template_data.xml',
     ],
     'auto_install': True,
 }
