@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common
+from odoo.tests import common, Form
 
 
 class TestProcurementException(common.TransactionCase):
@@ -9,39 +9,35 @@ class TestProcurementException(common.TransactionCase):
     def test_00_procurement_exception(self):
 
         # I create a product with no supplier define for it.
-        product_with_no_seller = self.env['product.product'].create({
-            "name": 'product with no seller',
-            'list_price': 20.00,
-            'standard_price': 15.00,
-            'categ_id': self.env.ref('product.product_category_1').id,
-        })
+        product_form = Form(self.env['product.product'])
+        product_form.name = 'product with no seller'
+        product_form.lst_price = 20.00
+        product_form.standard_price = 15.00
+        product_form.categ_id = self.env.ref('product.product_category_1')
+        product_with_no_seller = product_form.save()
 
         # I create a sales order with this product with route dropship.
-        sale_order_route_dropship01 = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
-            'partner_invoice_id': self.env.ref('base.res_partner_address_3').id,
-            'partner_shipping_id': self.env.ref('base.res_partner_address_3').id,
-            'note': 'crossdock route',
-            'payment_term_id': self.env.ref('account.account_payment_term').id,
-            'order_line': [(0, 0, {
-                'product_id': product_with_no_seller.id,
-                'product_uom_qty': 1,
-                'route_id': self.env.ref('stock_dropshipping.route_drop_shipping').id,
-            })]
-        })
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.env.ref('base.res_partner_2')
+        so_form.partner_invoice_id = self.env.ref('base.res_partner_address_3')
+        so_form.partner_shipping_id = self.env.ref('base.res_partner_address_3')
+        so_form.payment_term_id = self.env.ref('account.account_payment_term')
+        with so_form.order_line.new() as line:
+            line.product_id = product_with_no_seller
+            line.product_uom_qty = 1
+            line.route_id = self.env.ref('stock_dropshipping.route_drop_shipping')
+        sale_order_route_dropship01 = so_form.save()
 
         # I confirm the sales order, but it will raise an error
         with self.assertRaises(Exception):
             sale_order_route_dropship01.action_confirm()
 
         # I set the at least one supplier on the product.
-        product_with_no_seller.write({
-            'seller_ids': [(0, 0, {
-                'delay': 1,
-                'name': self.env.ref('base.res_partner_2').id,
-                'min_qty': 2.0
-            })]
-        })
+        with Form(product_with_no_seller) as f:
+            with f.seller_ids.new() as seller:
+                seller.delay = 1
+                seller.name = self.env.ref('base.res_partner_2')
+                seller.min_qty = 2.0
 
         # I confirm the sales order, no error this time
         sale_order_route_dropship01.action_confirm()
