@@ -1197,6 +1197,11 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
                 this.$el.append(" " + this.filename_value);
             }
         }
+        if (!this.res_id) {
+            this.$el.css('cursor', 'not-allowed');
+        } else {
+            this.$el.css('cursor', 'pointer');
+        }
     },
     _renderEdit: function () {
         if (this.value) {
@@ -1221,7 +1226,7 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
         if (!this.value) {
             this.do_warn(_t("Save As..."), _t("The field is empty, there's nothing to save !"));
             ev.stopPropagation();
-        } else {
+        } else if (this.res_id) {
             framework.blockUI();
             var c = crash_manager;
             var filename_fieldname = this.attrs.filename;
