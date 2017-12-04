@@ -106,7 +106,7 @@ class StockPicking(models.Model):
     def do_transfer(self):
         # TDE FIXME: should work in batch
         self.ensure_one()
-        res = super(StockPicking, self).do_transfer()
+        res = super(StockPicking, self).action_done()
 
         if self.carrier_id and self.carrier_id.integration_level == 'rate_and_ship':
             self.send_to_shipper()
