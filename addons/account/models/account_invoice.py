@@ -1830,6 +1830,8 @@ class AccountPaymentTerm(models.Model):
 
     @api.multi
     def unlink(self):
+        if self.env['account.invoice'].search([('payment_term_id', 'in', self.ids)]):
+            raise UserError(_('You can not delete payment terms as other records still reference it. However, you can archive it.'))
         property_recs = self.env['ir.property'].search([('value_reference', 'in', ['account.payment.term,%s'%payment_term.id for payment_term in self])])
         property_recs.unlink()
         return super(AccountPaymentTerm, self).unlink()
