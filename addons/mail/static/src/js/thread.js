@@ -2,6 +2,7 @@ odoo.define('mail.ChatThread', function (require) {
 "use strict";
 
 var core = require('web.core');
+var time = require('web.time');
 var DocumentViewer = require('mail.DocumentViewer');
 var Widget = require('web.Widget');
 
@@ -111,6 +112,7 @@ var Thread = Widget.extend({
             messages: msgs,
             options: options,
             ORDER: ORDER,
+            date_format: time.getLangDatetimeFormat(),
         }));
 
         this.attachments = _.uniq(_.flatten(_.map(messages, 'attachment_ids')));

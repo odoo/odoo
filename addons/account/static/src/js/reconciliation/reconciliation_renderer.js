@@ -113,7 +113,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
         if (state.valuenow === state.valuemax && !this.$('.done_message').length) {
             var dt = Date.now()-this.time;
             var $done = $(qweb.render("reconciliation.done", {
-                'duration': moment(dt).utc().format(time.strftime_to_moment_format(_t.database.parameters.time_format)),
+                'duration': moment(dt).utc().format(time.getLangTimeFormat()),
                 'number': state.valuenow,
                 'timePerTransaction': Math.round(dt/1000/state.valuemax),
                 'context': state.context,

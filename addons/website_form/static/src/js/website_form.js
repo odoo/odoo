@@ -40,12 +40,12 @@ odoo.define('website_form.animation', function (require) {
                     down: 'fa fa-chevron-down',
                    },
                 locale : moment.locale(),
-                format : time.strftime_to_moment_format(l10n.date_format +' '+ l10n.time_format),
+                format : time.getLangDatetimeFormat(),
             };
             this.$target.find('.o_website_form_datetime').datetimepicker(datepickers_options);
 
             // Adapt options to date-only pickers
-            datepickers_options.format = time.strftime_to_moment_format(l10n.date_format);
+            datepickers_options.format = time.getLangDateFormat();
             this.$target.find('.o_website_form_date').datetimepicker(datepickers_options);
 
             return this._super.apply(this, arguments);
@@ -209,8 +209,8 @@ odoo.define('website_form.animation', function (require) {
 
         // This is a stripped down version of format.js parse_value function
         parse_date: function (value, type_of_date, value_if_empty) {
-            var date_pattern = time.strftime_to_moment_format(_t.database.parameters.date_format),
-                time_pattern = time.strftime_to_moment_format(_t.database.parameters.time_format);
+            var date_pattern = time.getLangDateFormat(),
+                time_pattern = time.getLangTimeFormat();
             var date_pattern_wo_zero = date_pattern.replace('MM','M').replace('DD','D'),
                 time_pattern_wo_zero = time_pattern.replace('HH','H').replace('mm','m').replace('ss','s');
             switch (type_of_date) {

@@ -279,6 +279,27 @@ var normalize_format_table = {
 };
 var inverse_normalize_format_table = _.invert(normalize_format_table);
 
+/**
+ * Get date format of the user's language
+ */
+function getLangDateFormat() {
+    return this.strftime_to_moment_format(_t.database.parameters.date_format);
+}
+
+/**
+ * Get time format of the user's language
+ */
+function getLangTimeFormat() {
+    return this.strftime_to_moment_format(_t.database.parameters.time_format);
+}
+
+/**
+ * Get date time format of the user's language
+ */
+function getLangDatetimeFormat() {
+    return this.strftime_to_moment_format(_t.database.parameters.date_format + " " + _t.database.parameters.time_format);
+}
+
 
 
 return {
@@ -293,6 +314,9 @@ return {
     auto_date_to_str: auto_date_to_str,
     strftime_to_moment_format: strftime_to_moment_format,
     moment_to_strftime_format: moment_to_strftime_format,
+    getLangDateFormat: getLangDateFormat,
+    getLangTimeFormat: getLangTimeFormat,
+    getLangDatetimeFormat: getLangDatetimeFormat,
 };
 
 });
