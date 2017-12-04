@@ -419,5 +419,5 @@ odoo.define('payment.payment_form', function (require) {
         form.attachTo($elem);
     });
 
-
+    return PaymentForm;
 });
