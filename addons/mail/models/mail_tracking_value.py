@@ -3,7 +3,7 @@
 
 from datetime import datetime
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models, tools, _
 from odoo.tools.misc import formatLang
 
 
@@ -104,7 +104,7 @@ class MailTracking(models.Model):
                 else:
                     result.append(record['%s_value_datetime' % type])
             elif record.field_type == 'boolean':
-                result.append(bool(record['%s_value_integer' % type]))
+                result.append(_('True') if record['%s_value_integer' % type] else _('False'))
             else:
                 result.append(record['%s_value_char' % type])
         return result
