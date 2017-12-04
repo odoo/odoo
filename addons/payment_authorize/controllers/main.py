@@ -3,7 +3,7 @@ import pprint
 import logging
 from werkzeug import urls, utils
 
-from odoo import http
+from odoo import http, _
 from odoo.http import request
 from odoo.exceptions import ValidationError
 
@@ -45,8 +45,21 @@ class AuthorizeController(http.Controller):
         try:
             token = acquirer.s2s_process(kwargs)
         except ValidationError as e:
+            message = e.args[0]
+            if isinstance(message, dict) and 'missing_field' in message:
+                msg = _("The transaction cannot be processed because some contact details are missing or invalid: ")
+                message = msg + ', '.join(message['missing_field'])
+                if request.env.user == request.env.ref('base.public_user'):
+                    message += _("</br>Please <a href='/my/account'>sign in</a> to complete your profile.")
+                    # update message if portal mode = b2b
+                    get_param = request.env['ir.config_parameter'].sudo().get_param
+                    if get_param('auth_signup.allow_uninvited', 'False').lower() == 'false':
+                        message += _("</br>If you don't have any account, please ask your salesperson to update your profile.")
+                else:
+                    message += _("</br>Please <a href='/my/account'>complete your profile.</a>")
+
             return {
-                'error': e.args[0]
+                'error': message
             }
 
         if not token:
