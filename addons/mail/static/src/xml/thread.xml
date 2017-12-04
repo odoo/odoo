@@ -145,7 +145,7 @@
                         t-att-src="message.avatar_src"
                         class="o_thread_message_avatar img-circle"/>
                 </t>
-                <span t-if="!message.display_author" t-att-title="message.date" class="o_thread_message_side_date">
+                <span t-if="!message.display_author" t-att-title="message.date.format(date_format)" class="o_thread_message_side_date">
                     <t t-esc="message.date.format('hh:mm')"/>
                 </span>
                 <i t-if="!message.display_author and options.display_stars and message.message_type != 'notification'"
@@ -172,7 +172,7 @@
                         <t t-esc="message.displayed_author"/>
                     </strong>
 
-                    - <small class="o_mail_timestamp" t-att-title="message.date"><t t-esc="message.hour"/></small>
+                    - <small class="o_mail_timestamp" t-att-title="message.date.format(date_format)"><t t-esc="message.hour"/></small>
                     <t t-if="message.model and (message.model != 'mail.channel') and options.display_document_link">
                         <a t-att-href="message.url" t-att-data-oe-model="message.model" t-att-data-oe-id="message.res_id" class="o_document_link">on <t t-esc="message.record_name"/></a>
                     </t>
