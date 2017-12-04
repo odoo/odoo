@@ -1995,7 +1995,7 @@ class Many2one(_Relational):
             # access rights, and not the value's access rights.
             try:
                 # performance: value.sudo() prefetches the same records as value
-                return value.sudo().name_get()[0]
+                return (value.id, value.sudo().display_name)
             except MissingError:
                 # Should not happen, unless the foreign key is missing.
                 return False
@@ -2112,17 +2112,22 @@ class _RelationalMulti(_Relational):
         # return the recordset value as a list of commands; the commands may
         # give all fields values, the client is responsible for figuring out
         # which fields are actually dirty
+        vals = {record: {} for record in value}
+        for name, subnames in names.items():
+            if name == 'id':
+                continue
+            field = value._fields[name]
+            # read all values before converting them (better prefetching)
+            rec_vals = [(rec, rec[name]) for rec in value]
+            for rec, val in rec_vals:
+                vals[rec][name] = field.convert_to_onchange(val, rec, subnames)
+
         result = [(5,)]
         for record in value:
-            vals = {
-                name: value._fields[name].convert_to_onchange(record[name], record, subnames)
-                for name, subnames in names.items()
-                if name != 'id'
-            }
             if not record.id:
-                result.append((0, record.id.ref or 0, vals))
-            elif vals:
-                result.append((1, record.id, vals))
+                result.append((0, record.id.ref or 0, vals[record]))
+            elif vals[record]:
+                result.append((1, record.id, vals[record]))
             else:
                 result.append((4, record.id))
         return result
