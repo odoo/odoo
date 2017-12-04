@@ -1106,6 +1106,7 @@
                                             <t t-foreach="shippings" t-as="ship">
                                                 <div class="col-sm-12 col-md-6 one_kanban">
                                                     <t t-call="website_sale.address_kanban">
+                                                        <t t-set="actual_partner" t-value="order.partner_id" />
                                                         <t t-set='contact' t-value="ship"/>
                                                         <t t-set='selected' t-value="order.partner_shipping_id==ship"/>
                                                         <t t-set='readonly' t-value="bool(len(shippings)==1)"/>
@@ -1139,7 +1140,7 @@
                 </t>
                 <input type='submit'/>
             </form>
-            <a class='btn btn-link pull-right fa fa-edit js_edit_address no-decoration' title="Edit this address"></a>
+            <a t-if="not actual_partner or (ship.id in actual_partner.ids + actual_partner.child_ids.ids)" class='btn btn-link pull-right fa fa-edit js_edit_address no-decoration' title="Edit this address"></a>
             <div t-att-class="'panel panel-default %s' % (selected and 'border_primary' or 'js_change_shipping')">
                 <div class='panel-body' style='min-height: 130px;'>
                     <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
@@ -1175,7 +1176,9 @@
                                 <t t-if="mode == ('new', 'billing')">
                                     <h3 class="page-header mt32 ml16">Your Address
                                         <small> or </small>
-                                        <t t-set='connect' t-value="request.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited') == 'True' and ('signup', 'Sign Up') or ('login', 'Log In')"/>
+                                        <t t-set="signup_text">Sign Up</t>
+                                        <t t-set="login_text">Log In</t>
+                                        <t t-set='connect' t-value="request.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited') == 'True' and ('signup', signup_text) or ('login', login_text)"/>
                                         <a t-attf-href='/web/{{connect[0]}}?redirect=/shop/checkout' class='btn btn-primary' style="margin-top: -11px"><t t-esc='connect[1]'/></a>
                                     </h3>
                                 </t>

@@ -68,7 +68,7 @@ class ChangeProductionQty(models.TransientModel):
                                  cycle_number * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency)
                 quantity = wo.qty_production - wo.qty_produced
                 if production.product_id.tracking == 'serial':
-                    quantity = 1.0 if float_is_zero(quantity, precision_digits=precision) else 0.0
+                    quantity = 1.0 if not float_is_zero(quantity, precision_digits=precision) else 0.0
                 else:
                     quantity = quantity if (quantity > 0) else 0
                 if float_is_zero(quantity, precision_digits=precision):

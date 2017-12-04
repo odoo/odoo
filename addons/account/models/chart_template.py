@@ -726,7 +726,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
             if company_id:
                 company = self.env['res.company'].browse(company_id)
                 currency_id = company.on_change_country(company.country_id.id)['value']['currency_id']
-                res.update({'currency_id': currency_id})
+                res.update({'currency_id': currency_id.id})
 
         chart_templates = account_chart_template.search([('visible', '=', True)])
         if chart_templates:
