@@ -1207,9 +1207,23 @@ class AccountInvoice(models.Model):
         for inv in self:
             if inv.move_id:
                 moves += inv.move_id
-            #unreconcile all journal items of the invoice, since the cancellation will unlink them anyway
             inv.move_id.line_ids.filtered(lambda x: x.account_id.reconcile).remove_move_reconcile()
-
+            if inv.payment_move_line_ids:
+                raise UserError(_('You cannot cancel an invoice which is partially paid. You need to unreconcile related payment entries first.'))
+            if inv.date_invoice and inv.state != 'draft':
+                invoice_date = fields.Date.from_string(inv.date_invoice)
+                fiscal_dates = inv.company_id.compute_fiscalyear_dates(invoice_date)
+                date_from = fiscal_dates['date_from']
+                date_to = fiscal_dates['date_to']
+                last_invoice_of_year = self.search([('type', '=', inv.type), ('date_invoice', '>=', date_from), ('date_invoice', '<=', date_to)], order='id desc', limit=1)
+                if last_invoice_of_year == inv:
+                    if inv.type in ('in_refund', 'out_refund') and inv.journal_id.refund_sequence:
+                        sequence = inv.journal_id.refund_sequence_id
+                    else:
+                        sequence = inv.journal_id.sequence_id
+                    seq_range = self.env['ir.sequence.date_range'].search([('sequence_id', '=', sequence.id), ('date_to', '>=', inv.date_invoice), ('date_from', '<=', inv.date_invoice)], order='date_from desc', limit=1)
+                    if seq_range.number_next:
+                        seq_range.number_next = seq_range.number_next - 1
         # First, set the invoices as cancelled and detach the move ids
         self.write({'state': 'cancel', 'move_id': False})
         if moves:
