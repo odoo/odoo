@@ -22,6 +22,10 @@ return ChatWindow.extend({
                     source: function(request, response) {
                         chat_manager.search_partner(request.term, 10).done(response);
                     },
+                    // If we applied zIndex on main ui-Autocomplete then it will display dropdown on blockui(zindex > blockui-zindex) and that's not good so only apply zindex on chat window ui-Autocomplete.
+                    open: function () {
+                        $(this).autocomplete('widget').css('z-index', 1101);
+                    },
                     select: function(event, ui) {
                         self.trigger('open_dm_session', ui.item.id);
                     },
