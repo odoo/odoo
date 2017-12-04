@@ -639,6 +639,7 @@ class Field(object):
     _related_readonly = property(attrgetter('readonly'))
     _related_groups = property(attrgetter('groups'))
     _related_group_operator = property(attrgetter('group_operator'))
+    _related_manual = property(attrgetter('manual'))
 
     @property
     def base_field(self):
