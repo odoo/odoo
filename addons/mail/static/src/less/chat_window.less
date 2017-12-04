@@ -6,6 +6,8 @@
 @o-chat-window-zindex: @zindex-modal + 1;
 
 .o_chat_window {
+    direction: @lng-direction;
+    .right(0);
     .o-flex-display();
     .o-flex-flow(column, nowrap);
     position: fixed;
@@ -48,7 +50,7 @@
             border-radius: 0px;
             .o_chat_title {
                 font-size: 16px;
-                margin-left: 10px;
+                .margin-left(10px);
             }
 
             .o_chat_window_close {
@@ -62,17 +64,15 @@
             .o-flex(1, 1, auto);
             .o-text-overflow();
         }
-
         .o_chat_window_buttons {
             .o-flex(0, 0, auto);
             .o_chat_window_close, .o_chat_window_expand {
                 color: white;
                 padding: 3px;
-                margin-left: 5px;
+                .margin-left(5px);
                 .o-hover-opacity(0.7, 1);
             }
         }
-
     }
 
     .o_mail_thread {
@@ -88,7 +88,7 @@
         .o_thread_message {
             padding: 4px 5px;
             .o_thread_message_sidebar {
-                margin-right: 5px;
+                .margin-right(5px);
             }
         }
     }

@@ -40,7 +40,7 @@
             .o_thread_message_sidebar {
                 .o_avatar_stack {
                     position: relative;
-                    text-align: left;
+                    .text-align(left);
                     margin-bottom: 8px;
 
                     img {
@@ -65,7 +65,7 @@
                     vertical-align: baseline;
                     padding: 4px 6px;
                     background: @gray-lighter;
-                    border-radius: 2px 2px 0 0;
+                    .border-radius(2px, 2px, 0, 0);
                     .o-hover-opacity(1, 1);
 
                     &.collapsed {
@@ -83,7 +83,7 @@
                     max-width: 80px;
                 }
                 dd {
-                    margin-left: 95px;
+                    .margin-left(95px);
                 }
             }
 
@@ -96,7 +96,7 @@
                     padding: 0 @padding-base-horizontal;
                 }
                 .o_activity_done {
-                    padding-left: 0;
+                    .padding-left(0);
                 }
             }
         }
@@ -174,7 +174,7 @@
                     }
 
                     &.o_schedule_activity {
-                        padding: 8px 10px 8px 0px;
+                        .padding(8px, 10px, 8px, 0px);
                         vertical-align: middle;
                         &:hover {
                             background-color: @gray-lighter;
@@ -185,7 +185,7 @@
 
                         .o_activity_title {
                             width: 85%;
-                            padding: 0px 5px 0px 10px;
+                            .padding(0px, 5px, 0px, 10px);
                             white-space: nowrap;
                             overflow: hidden;
                             text-overflow: ellipsis;

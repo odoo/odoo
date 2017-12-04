@@ -7,7 +7,7 @@
     padding: @padding-base @odoo-horizontal-padding;
 
     @media (min-width: @screen-lg-min) {
-        padding-left: @odoo-horizontal-padding*2;;
+        .padding-left(@odoo-horizontal-padding*2);
     }
 }
 
@@ -110,7 +110,7 @@
 
             .tab {
                 .o-flex-display();
-                padding: 0 @odoo-horizontal-padding*2 0 @odoo-horizontal-padding;
+                .padding(0, @odoo-horizontal-padding*2, 0, @odoo-horizontal-padding);
                 height: 40px;
                 color: @gray-lighter-darker;
                 font-size: 13px;
@@ -119,7 +119,7 @@
 
                 .icon {
                     width: 23px;
-                    margin-right: 10px;
+                    .margin-right(10px);
                 }
 
                 // Mobile Tabs
@@ -150,11 +150,11 @@
                     }
 
                     &.previous, &.before {
-                        left: 0% - @o-base-settings-mobile-tabs-overflow-gap;
+                        .left(0% - @o-base-settings-mobile-tabs-overflow-gap);
                     }
 
                     &.current {
-                        left: 50%;
+                        .left(50%);
                         color: white;
 
                         // Reset default style for 'selected' tabs
@@ -167,7 +167,7 @@
                     }
 
                     &.next, &.after {
-                        left: 100% + @o-base-settings-mobile-tabs-overflow-gap;
+                        .left(100% + @o-base-settings-mobile-tabs-overflow-gap);
                     }
                 }
             }
@@ -207,7 +207,7 @@
 
                 .icon {
                     .square(25px);
-                    margin-right: 10px;
+                    .margin-right(10px);
                 }
 
                 .appName {

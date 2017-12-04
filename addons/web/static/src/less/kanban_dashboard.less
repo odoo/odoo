@@ -13,7 +13,7 @@
     padding: 0;
 
     > a {
-        margin: auto auto auto -@link-padding-gap;
+        .margin(auto, auto, auto, -@link-padding-gap);
         padding: 3px @link-padding-gap;
         color: @text-color;
         display: block;
@@ -65,11 +65,10 @@
             top: @o-kanban-manage-toggle-height - 1;
 
             > div:not(.o_project_kanban_colorpicker) {
-                padding: 3px 0 3px 20px;
+                .padding(3px, 0, 3px, 20px);
                 visibility: visible;
                 margin-bottom: 5px;
             }
-
             > .o_kanban_card_manage_section {
                 border-bottom: 1px solid @gray-lighter-dark;
                 margin-bottom: 10px;
@@ -88,16 +87,16 @@
                     .o-flex-display();
                     .o-flex-flow(row, nowrap);
                     .o-justify-content(space-between);
-                    margin-left: 0;
-                    margin-right: 0;
-                    padding-left: @o-kanban-dashboard-dropdown-complex-gap*2;
-                    padding-right: @o-kanban-dashboard-dropdown-complex-gap*2;
+                    .margin-left(0);
+                    .margin-right(0);
+                    .padding-left(@o-kanban-dashboard-dropdown-complex-gap*2);
+                    .padding-right(@o-kanban-dashboard-dropdown-complex-gap*2);
                 }
 
                 div[class*="col-"] {
                     .o-flex(1, 1, percentage(100/3));
-                    padding-left: @o-kanban-dashboard-dropdown-complex-gap;
-                    padding-right: @o-kanban-dashboard-dropdown-complex-gap;
+                    .padding-left(@o-kanban-dashboard-dropdown-complex-gap);
+                    .padding-right(@o-kanban-dashboard-dropdown-complex-gap);
 
                     > .o_kanban_card_manage_title {
                         .h5;
@@ -118,16 +117,16 @@
                     }
 
                     div[class*="col-"] + div[class*="col-"] {
-                        border-left: 1px solid @gray-lighter-dark;
+                        .border-left(1px solid @gray-lighter-dark);
                     }
 
                     // Default options box
                     div.text-right {
-                        text-align: left; // :/
+                        .text-align(left); // :/
                         .o-kanban-dashboard-dropdown-link(0);
                         > a {
-                            margin-left: 40px;
-                            padding-left: 20px;
+                            .margin-left(40px);
+                            .padding-left(20px);
                         }
                     }
                 }
@@ -150,7 +149,7 @@
 
         // Provide enough room for the dropdown-toggle
         .o_primary {
-            padding-right: @o-kanban-dashboard-hpadding*2;
+            .padding-right(@o-kanban-dashboard-hpadding*2);
         }
 
         // Uniform titles
@@ -170,7 +169,7 @@
 
         // Provide enough room to add an icon before the title
         &.o_has_icon .o_primary {
-            padding-left: @o-kanban-record-margin*1.5;
+            .padding-left(@o-kanban-record-margin*1.5);
         }
 
         // -------  Kanban Content -------
@@ -186,8 +185,8 @@
             .o-flex-flow(column, nowrap);
             .o-justify-content(space-between);
             margin-top: @o-kanban-dashboard-vpadding * 2;
-            padding-right: 0;
-            padding-left: 0;
+            .padding-right(0);
+            .padding-left(0);
 
             &::before, &::after {
                 content: normal; // so that space-between works
@@ -223,8 +222,8 @@
     }
 
     .o_favorite {
-        left: 0;
-        right: auto;
+        .left(0);
+        .right(auto);
     }
 
     // Emphasize records' colors when necessary

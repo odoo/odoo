@@ -36,9 +36,9 @@
     }
     #o_employee_right {
         .o-flex(0, 1, 35%);
-        margin-left: 2%;
-        padding-left: 2%;
-        border-left: 1px solid @o-org-chart-border-color;
+        .margin-left(2%);
+        .padding-left(2%);
+        .border-left(1px solid @o-org-chart-border-color);
 
         .o_org_chart_title {
             color: @gray-light
@@ -71,7 +71,7 @@
     .o_org_chart_group_up {
         &:before {
             .o-org-chart-line();
-            border-left-width: @o-org-chart-entry-line-w;
+            .border-left-width(@o-org-chart-entry-line-w);
             height: calc(100% ~'+' @o-org-chart-entry-pic-size*0.5) ;
             .o-position-absolute(
                 @top: @o-org-chart-entry-pic-size*0.1 + 5px,
@@ -92,19 +92,19 @@
     }
 
     .o_org_chart_group_up + .o_org_chart_entry_self {
-        margin-left: @tmp-gap-base;
+        .margin-left(@tmp-gap-base);
 
         & + .o_org_chart_group_down {
-            margin-left: @tmp-gap-base*2;
+            .margin-left(@tmp-gap-base*2);
         }
     }
 
     .o_org_chart_group_down {
-        margin-left: @tmp-gap-base;
+        .margin-left(@tmp-gap-base);
 
         &:before {
             .o-org-chart-line();
-            border-left-width: @o-org-chart-entry-line-w;
+            .border-left-width(@o-org-chart-entry-line-w);
             height: 100%;
             .o-position-absolute(
                 @top: @o-org-chart-entry-v-gap*-1,
@@ -154,9 +154,9 @@
             vertical-align: middle;
 
             .badge {
-                float: right;
+                .float(right);
                 cursor: pointer;
-                margin-right: 5px;
+                .margin-right(5px);
                 color: @gray-light;
                 background: @o-org-chart-bg;
                 border: 1px solid @gray-light;
@@ -205,10 +205,10 @@
 
         &.o_org_chart_entry_manager, &.o_org_chart_entry_sub {
             .media-left {
-                padding-right: 0;
+                .padding-right(0);
             }
             .media-body > a {
-                padding-left: 10px;
+                .padding-left(10px);
                 max-width: calc(100% ~'-' 40px);
                 display: block;
 
@@ -263,7 +263,7 @@
     .popover-title {
         height: 47px;
         line-height: 33px;
-        padding-right: 50px;
+        .padding-right(50px);
 
         > a {
             .o-position-absolute(@right: 14px);
@@ -271,11 +271,11 @@
 
         span {
             .size(30px, 30px);
-            margin-right: 10px;
+            .margin-right(10px);
             border-radius: 100%;
             background-position: center;
             background-size: cover;
-            float: left;
+            .float(left);
             box-shadow: 0 1px 1px;
         }
     }

@@ -39,7 +39,8 @@
             &::before {
                 font-family: FontAwesome;
                 content: "";
-                margin-right: 8px;
+                .margin-right(8px);
+                display: inline-flex;
             }
         }
 
@@ -48,25 +49,26 @@
             &::before {
                 font-family: FontAwesome;
                 content: "";
-                margin-right: 8px;
+                .margin-right(8px);
+                display: inline-flex;
             }
         }
 
         .o_pivot_measure_row_sorted_asc::after {
             .o-caret-down;
-            margin-left: 5px;
+            .margin-left(5px);
         }
 
         .o_pivot_measure_row_sorted_desc::after {
             .o-caret-up;
-            margin-left: 5px;
+            .margin-left(5px);
         }
     }
 
     .o_pivot_field_selection::after {
         .o-caret-right;
         position: absolute;
-        right: 6px;
+        .right(6px);
         top: 9px;
     }
 }

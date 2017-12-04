@@ -34,18 +34,18 @@
       &.next,
       &.active.right {
         .translate3d(100%, 0, 0);
-        left: 0;
+        .left(0);
       }
       &.prev,
       &.active.left {
         .translate3d(-100%, 0, 0);
-        left: 0;
+        .left(0);
       }
       &.next.left,
       &.prev.right,
       &.active {
         .translate3d(0, 0, 0);
-        left: 0;
+        .left(0);
       }
     }
   }
@@ -57,7 +57,7 @@
   }
 
   > .active {
-    left: 0;
+    .left(0);
   }
 
   > .next,
@@ -68,21 +68,21 @@
   }
 
   > .next {
-    left: 100%;
+    .left(100%);
   }
   > .prev {
-    left: -100%;
+    .left(-100%);
   }
   > .next.left,
   > .prev.right {
-    left: 0;
+    .left(0);
   }
 
   > .active.left {
-    left: -100%;
+    .left(-100%);
   }
   > .active.right {
-    left: 100%;
+    .left(100%);
   }
 
 }
@@ -93,7 +93,7 @@
 .carousel-control {
   position: absolute;
   top: 0;
-  left: 0;
+  .left(0);
   bottom: 0;
   width: @carousel-control-width;
   .opacity(@carousel-control-opacity);
@@ -109,8 +109,8 @@
     #gradient > .horizontal(@start-color: rgba(0,0,0,.5); @end-color: rgba(0,0,0,.0001));
   }
   &.right {
-    left: auto;
-    right: 0;
+    .left(auto);
+    .right(0);
     #gradient > .horizontal(@start-color: rgba(0,0,0,.0001); @end-color: rgba(0,0,0,.5));
   }
 
@@ -136,13 +136,13 @@
   }
   .icon-prev,
   .glyphicon-chevron-left {
-    left: 50%;
-    margin-left: -10px;
+    .left(50%);
+    .margin-left(-10px);
   }
   .icon-next,
   .glyphicon-chevron-right {
-    right: 50%;
-    margin-right: -10px;
+    .right(50%);
+    .margin-right(-10px);
   }
   .icon-prev,
   .icon-next {
@@ -174,11 +174,11 @@
 .carousel-indicators {
   position: absolute;
   bottom: 10px;
-  left: 50%;
+  .left(50%);
   z-index: 15;
   width: 60%;
-  margin-left: -30%;
-  padding-left: 0;
+  .margin-left(-30%);
+  .padding-left(0);
   list-style: none;
   text-align: center;
 
@@ -217,8 +217,8 @@
 // Hidden by default for smaller viewports
 .carousel-caption {
   position: absolute;
-  left: 15%;
-  right: 15%;
+  .left(15%);
+  .right(15%);
   bottom: 20px;
   z-index: 10;
   padding-top: 20px;
@@ -248,18 +248,18 @@
     }
     .glyphicon-chevron-left,
     .icon-prev {
-      margin-left: -15px;
+      .margin-left(-15px);
     }
     .glyphicon-chevron-right,
     .icon-next {
-      margin-right: -15px;
+      .margin-right(-15px);
     }
   }
 
   // Show and left align the captions
   .carousel-caption {
-    left: 20%;
-    right: 20%;
+    .left(20%);
+    .right(20%);
     padding-bottom: 30px;
   }
 

@@ -209,6 +209,7 @@ var Activity = AbstractActivityField.extend({
                 title : _t('Feedback'),
                 html: 'true',
                 trigger:'click',
+                placement: _t.database.parameters.direction === 'rtl' ? 'left' : 'right',
                 content : function() {
                     var $popover = $(QWeb.render("mail.activity_feedback_form", {'previous_activity_type_id': previous_activity_type_id}));
                     $popover.on('click', '.o_activity_popover_done_next', function () {
