@@ -355,8 +355,8 @@ var RTE = Widget.extend({
                 var $el = $(this);
 
                 $el.find('[class]').filter(function () {
-                    if (!this.className.match(/\S/)) {
-                        this.removeAttribute("class");
+                    if (!this.getAttribute('class').match(/\S/)) {
+                        this.removeAttribute('class');
                     }
                 });
 
