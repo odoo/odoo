@@ -241,7 +241,8 @@ class Project(models.Model):
         project = super(Project, self).copy(default)
         for follower in self.message_follower_ids:
             project.message_subscribe(partner_ids=follower.partner_id.ids, subtype_ids=follower.subtype_ids.ids)
-        self.map_tasks(project.id)
+        if 'tasks' not in default:
+            self.map_tasks(project.id)
         return project
 
     @api.model
