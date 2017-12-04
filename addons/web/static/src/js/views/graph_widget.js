@@ -99,7 +99,7 @@ return Widget.extend({
             }));
         } else {
             var chart = this['display_' + this.mode]();
-            if (chart) {
+            if (chart && chart.tooltip.chartContainer) {
                 chart.tooltip.chartContainer(this.$el[0]);
             }
         }

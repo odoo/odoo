@@ -321,7 +321,7 @@ var PosDB = core.Class.extend({
     search_partner: function(query){
         try {
             query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g,'.');
-            query = query.replace(' ','.+');
+            query = query.replace(/ /g,'.+');
             var re = RegExp("([0-9]+):.*?"+query,"gi");
         }catch(e){
             return [];
