@@ -1176,7 +1176,7 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
     template: 'FieldBinaryFile',
     events: _.extend({}, AbstractFieldBinary.prototype.events, {
         'click': function (event) {
-            if (this.mode === 'readonly' && this.value) {
+            if (this.mode === 'readonly' && this.value && this.recordData.id) {
                 this.on_save_as(event);
             }
         },
@@ -1193,6 +1193,11 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
         this.do_toggle(!!this.value);
         if (this.value) {
             this.$el.empty().append($("<span/>").addClass('fa fa-download'));
+            if (this.recordData.id) {
+                this.$el.css('cursor', 'pointer');
+            } else {
+                this.$el.css('cursor', 'not-allowed');
+            }
             if (this.filename_value) {
                 this.$el.append(" " + this.filename_value);
             }

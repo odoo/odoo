@@ -1125,12 +1125,15 @@ var ClientListScreenWidget = ScreenWidget.extend({
         var self = this;
         var order = this.pos.get_order();
         if( this.has_client_changed() ){
-            if ( this.new_client ) {
+            var default_fiscal_position_id = _.find(this.pos.fiscal_positions, function(fp) {
+                return fp.id === self.pos.config.default_fiscal_position_id[0];
+            });
+            if ( this.new_client && this.new_client.property_account_position_id ) {
                 order.fiscal_position = _.find(this.pos.fiscal_positions, function (fp) {
                     return fp.id === self.new_client.property_account_position_id[0];
-                });
+                }) || default_fiscal_position_id;
             } else {
-                order.fiscal_position = undefined;
+                order.fiscal_position = default_fiscal_position_id;
             }
 
             order.set_client(this.new_client);

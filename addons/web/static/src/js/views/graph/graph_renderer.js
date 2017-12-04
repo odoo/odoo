@@ -81,7 +81,7 @@ return AbstractRenderer.extend({
             setTimeout(function () {
                 self.$el.empty();
                 var chart = self['_render' + _.str.capitalize(self.state.mode) + 'Chart']();
-                if (chart) {
+                if (chart && chart.tooltip.chartContainer) {
                     self.to_remove = chart.update;
                     nv.utils.onWindowResize(chart.update);
                     chart.tooltip.chartContainer(self.el);
