@@ -4,6 +4,7 @@
 from datetime import datetime
 
 from odoo import api, fields, models, tools
+from odoo.tools.misc import formatLang
 
 
 class MailTracking(models.Model):
@@ -36,10 +37,17 @@ class MailTracking(models.Model):
         tracked = True
         values = {'field': col_name, 'field_desc': col_info['string'], 'field_type': col_info['type']}
 
-        if col_info['type'] in ['integer', 'float', 'char', 'text', 'datetime', 'monetary']:
+        if col_info['type'] in ['integer', 'float', 'char', 'text', 'datetime']:
             values.update({
                 'old_value_%s' % col_info['type']: initial_value,
                 'new_value_%s' % col_info['type']: new_value
+            })
+        elif col_info['type'] == 'monetary':
+            values.update({
+                'old_value_monetary': initial_value and initial_value['val'],
+                'new_value_monetary': new_value['val'],
+                'old_value_integer': initial_value and initial_value['currency_id'],
+                'new_value_integer': new_value['currency_id']
             })
         elif col_info['type'] == 'date':
             values.update({
@@ -75,8 +83,14 @@ class MailTracking(models.Model):
         assert type in ('new', 'old')
         result = []
         for record in self:
-            if record.field_type in ['integer', 'float', 'char', 'text', 'monetary']:
+            if record.field_type in ['integer', 'float', 'char', 'text']:
                 result.append(getattr(record, '%s_value_%s' % (type, record.field_type)))
+            elif record.field_type == 'monetary':
+                currency = self.env['res.currency'].browse(record['%s_value_integer' % type])
+                if currency:
+                    result.append(formatLang(self.env, record['%s_value_monetary' % type], currency_obj=currency))
+                else:
+                    result.append(getattr(record, '%s_value_%s' % (type, record.field_type)))
             elif record.field_type == 'datetime':
                 if record['%s_value_datetime' % type]:
                     new_datetime = getattr(record, '%s_value_datetime' % type)

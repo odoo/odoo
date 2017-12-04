@@ -18,7 +18,7 @@ try:
 except ImportError:
     import xmlrpclib
 
-from collections import namedtuple
+from collections import namedtuple, defaultdict
 from email.message import Message
 from email.utils import formataddr
 from lxml import etree
@@ -270,8 +270,16 @@ class MailThread(models.AbstractModel):
         if not self._context.get('mail_notrack'):
             tracked_fields = track_self._get_tracked_fields(list(values))
         if tracked_fields:
-            initial_values = dict((record.id, dict((key, getattr(record, key)) for key in tracked_fields))
-                                  for record in track_self)
+            initial_values = defaultdict(dict)
+            for record in track_self:
+                for col_name, col_info in tracked_fields.items():
+                    if col_info['type'] == 'monetary':
+                        initial_values[record.id][col_name] = {
+                            'val': getattr(record, col_name),
+                            'currency_id': getattr(record, col_info['currency_field']).id
+                        }
+                    else:
+                        initial_values[record.id][col_name] = getattr(record, col_name)
 
         # Perform write
         result = super(MailThread, self).write(values)
@@ -453,6 +461,12 @@ class MailThread(models.AbstractModel):
             track_visibility = getattr(self._fields[col_name], 'track_visibility', 'onchange')
             initial_value = initial[col_name]
             new_value = getattr(self, col_name)
+
+            if col_info['type'] == 'monetary' and new_value is not False:
+                new_value = {
+                    'val': new_value,
+                    'currency_id': getattr(self, col_info['currency_field']).id
+                }
 
             if new_value != initial_value and (new_value or initial_value):  # because browse null != False
                 tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info)
