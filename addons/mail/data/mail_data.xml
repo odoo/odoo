@@ -70,12 +70,12 @@
             <field name="subject">${object.subject or (object.record_name and 'Re: %s' % object.record_name) or (object.parent_id and object.parent_id.subject and 'Re: %s' % object.parent_id.subject) or (object.parent_id and object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}</field>
             <field name="model_id" ref="mail.model_mail_message"/>
             <field name="auto_delete" eval="True"/>
-            <field name="body_html"><![CDATA[
-% set company = ctx.get('company', user.company_id)
+            <field name="body_html" type="xml">
 <div>
+% set company = ctx.get('company', user.company_id)
 % if ctx.get('has_button_access'):
-<div itemscope itemtype="http://schema.org/EmailMessage">
-    <div itemprop="potentialAction" itemscope itemtype="http://schema.org/ViewAction">
+<div itemscope="itemscope" itemtype="http://schema.org/EmailMessage">
+    <div itemprop="potentialAction" itemscope="itemscope" itemtype="http://schema.org/ViewAction">
         <link itemprop="target" href="${ctx['button_access']['url']}"/>
         <link itemprop="url" href="${ctx['button_access']['url']}"/>
         <meta itemprop="name" content="View ${ctx['model_name']}"/>
@@ -111,13 +111,13 @@
         % endif
     </td>
     <td valign="center" align="right">
-        <img src="/logo.png?company=${company.id}" style="padding: 0px; margin: 0px; height: auto; max-width: 80px; max-height: 40px;" alt="${company.name}">
+        <img src="/logo.png?company=${company.id}" style="padding: 0px; margin: 0px; height: auto; max-width: 80px; max-height: 40px;" alt="${company.name}"/>
     </td>
 </tr>
 <tr>
     <td colspan="2" style="text-align:center;">
         <hr width="100%"
-            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:10px 0;">
+            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:10px 0;"/>
         % if ctx.get('subtype') and ctx.get('subtype').internal:
         <p style="background-color: #f2dede; padding: 5px; margin-bottom: 16px;">
             <strong>Internal communication</strong>: Replying will post an internal note. Followers won't receive any email notification.
@@ -155,7 +155,7 @@
     using
     <a target="_blank" href="https://www.odoo.com" style="text-decoration:none; color: #875A7B;">Odoo</a>.
 </p>
-</div>]]></field>
+</div></field>
         </record>
 
     </data>
