@@ -26,6 +26,7 @@ class DeliveryCarrier(models.Model):
        <my_provider>_send_shipping
        <my_provider>_get_tracking_link
        <my_provider>_cancel_shipment
+       _<my_provider>_get_default_custom_package_code
        (they are documented hereunder)
     '''
 
@@ -182,6 +183,16 @@ class DeliveryCarrier(models.Model):
                               'line': 1})
             except psycopg2.Error:
                 pass
+
+    def _get_default_custom_package_code(self):
+        """ Some delivery carriers require a prefix to be sent in order to use custom
+        packages (ie not official ones). This optional method will return it as a string.
+        """
+        self.ensure_one()
+        if hasattr(self, '_%s_get_default_custom_package_code' % self.delivery_type):
+            return getattr(self, '_%s_get_default_custom_package_code' % self.delivery_type)()
+        else:
+            return False
 
     # ------------------------------------------------ #
     # Fixed price shipping, aka a very simple provider #
