@@ -71,6 +71,9 @@ class AccountInvoice(models.Model):
         if not self.partner_id:
             self.partner_id = self.purchase_id.partner_id.id
 
+        if not self.invoice_line_ids:
+            #as there's no invoice line yet, we keep the currency of the PO
+            self.currency_id = self.purchase_id.currency_id
         new_lines = self.env['account.invoice.line']
         for line in self.purchase_id.order_line - self.invoice_line_ids.mapped('purchase_line_id'):
             data = self._prepare_invoice_line_from_po_line(line)
@@ -104,7 +107,8 @@ class AccountInvoice(models.Model):
             self.payment_term_id = payment_term_id
         if not self.env.context.get('default_journal_id') and self.partner_id and self.currency_id and\
                 self.type in ['in_invoice', 'in_refund'] and\
-                self.currency_id != self.partner_id.property_purchase_currency_id:
+                self.currency_id != self.partner_id.property_purchase_currency_id and\
+                self.partner_id.property_purchase_currency_id.id:
             journal_domain = [
                 ('type', '=', 'purchase'),
                 ('company_id', '=', self.company_id.id),
@@ -113,6 +117,8 @@ class AccountInvoice(models.Model):
             default_journal_id = self.env['account.journal'].search(journal_domain, limit=1)
             if default_journal_id:
                 self.journal_id = default_journal_id
+            if self.env.context.get('default_currency_id'):
+                self.currency_id = self.env.context['default_currency_id']
         return res
 
     @api.model
