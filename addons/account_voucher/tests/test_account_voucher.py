@@ -3,7 +3,7 @@
 
 from odoo import tools
 from odoo.modules.module import get_resource_path
-from odoo.tests import common
+from odoo.tests import common, Form
 import time
 
 
@@ -18,49 +18,38 @@ class TestAccountVoucher(common.TransactionCase):
         """ Create Account Voucher for Customer and Vendor """
         self._load('account', 'test', 'account_minimal_test.xml')
 
-        # Models
-        Voucher = self.env['account.voucher']
-
         # User-groups and References
-        company_id = self.ref('base.main_company')
-        partner_id = self.ref('base.res_partner_12')
-        account_id = self.ref('account_voucher.cash')
-        cash_journal_id = self.ref('account_voucher.cash_journal')
-        sales_journal_id = self.ref('account_voucher.sales_journal')
-        account_receivable_id = self.ref('account_voucher.a_recv')
+        partner_id = self.env.ref('base.res_partner_12')
+        cash_journal_id = self.env.ref('account_voucher.cash_journal')
+        sales_journal_id = self.env.ref('account_voucher.sales_journal')
+        account_receivable_id = self.env.ref('account_voucher.a_recv')
 
         # Create a Account Voucher User
-        res_users_account_voucher_user = self.env['res.users'].create({
+        voucher_user = self.env['res.users'].create({
             'name': 'Voucher Accountant',
             'login': 'vacc',
             'password': 'vacc',
             'email': 'accountant@yourcompany.com',
-            'company_id': company_id,
+            'company_id': self.env.ref('base.main_company').id,
             'groups_id': [(6, 0, [
                 self.ref('base.group_partner_manager'),
                 self.ref('account.group_account_user'),
-                self.ref('account.group_account_invoice')
-                ])]
-            })
+                self.ref('account.group_account_invoice'),
+            ])]
+        })
+        Voucher = self.env['account.voucher'].sudo(voucher_user)
 
         # Create Customer Voucher
-        account_voucher_customer = Voucher.sudo(res_users_account_voucher_user).create({
-            'voucher_type': 'sale',
-            'partner_id': partner_id,
-            'company_id': company_id,
-            'account_id': account_id,
-            'journal_id': sales_journal_id,
-            'date': time.strftime('%Y-%m-%d'),
-            'name': 'Voucher for Axelor',
-            'amount': 1000.0,
-            'narration': 'Basic Pc',
-            'line_ids': [
-                (0, 0, {
-                    'account_id': account_receivable_id,
-                    'price_unit': 1000.0,
-                    'name': 'Voucher for Axelor',
-                    })]
-        })
+        c = Form(Voucher.with_context(default_voucher_type="sale", voucher_type="sale"),
+                 view='account_voucher.view_sale_receipt_form')
+        c.partner_id = partner_id
+        c.journal_id = sales_journal_id
+        with c.line_ids.new() as line:
+            line.name = "Voucher for Axelor"
+            line.account_id = account_receivable_id
+            line.price_unit = 1000.0
+        account_voucher_customer = c.save()
+
         # Check Customer Voucher status.
         self.assertEquals(account_voucher_customer.state, 'draft', 'Initially customer voucher should be in the "Draft" state')
 
@@ -74,30 +63,22 @@ class TestAccountVoucher(common.TransactionCase):
         # Check state of Account move line.
         self.assertEquals(customer_voucher_move.state, 'posted', 'Account move state is incorrect.')
         # Check partner of Account move line.
-        self.assertEquals(customer_voucher_move.partner_id.id, partner_id, 'Partner is incorrect on account move.')
+        self.assertEquals(customer_voucher_move.partner_id, partner_id, 'Partner is incorrect on account move.')
         # Check journal in Account move line.
-        self.assertEquals(customer_voucher_move.journal_id.id, sales_journal_id, 'Journal is incorrect on account move.')
+        self.assertEquals(customer_voucher_move.journal_id, sales_journal_id, 'Journal is incorrect on account move.')
         # Check amount in Account move line.
         self.assertEquals(customer_voucher_move.amount, 1000.0, 'Amount is incorrect in account move.')
 
         # Create Vendor Voucher
-        account_voucher_vendor = Voucher.sudo(res_users_account_voucher_user).create({
-            'voucher_type': 'purchase',
-            'partner_id': partner_id,
-            'company_id': company_id,
-            'account_id': account_id,
-            'journal_id': cash_journal_id,
-            'date': time.strftime('%Y-%m-%d'),
-            'name': 'Voucher Axelor',
-            'amount': 1000.0,
-            'narration': 'PC Assemble SC234',
-            'line_ids': [
-                (0, 0, {
-                    'account_id': account_receivable_id,
-                    'price_unit': 1000.0,
-                    'name': 'Voucher Axelor',
-                    })]
-        })
+        v = Form(Voucher.with_context(default_voucher_type="purchase", voucher_type="purchase"))
+        v.partner_id = partner_id
+        v.journal_id = cash_journal_id
+        with v.line_ids.new() as line:
+            line.name = "Voucher Axelor"
+            line.account_id = account_receivable_id
+            line.price_unit = 1000.0
+        account_voucher_vendor = v.save()
+
         # Check Vendor Voucher status.
         self.assertEquals(account_voucher_vendor.state, 'draft', 'Initially vendor voucher should be in the "Draft" state')
 
@@ -111,8 +92,8 @@ class TestAccountVoucher(common.TransactionCase):
         # Check state of Account move line.
         self.assertEquals(vendor_voucher_move.state, 'posted', 'Account move state is incorrect.')
         # Check partner of Account move line.
-        self.assertEquals(vendor_voucher_move.partner_id.id, partner_id, 'Partner is incorrect on account move.')
+        self.assertEquals(vendor_voucher_move.partner_id, partner_id, 'Partner is incorrect on account move.')
         # Check journal in Account move line.
-        self.assertEquals(vendor_voucher_move.journal_id.id, cash_journal_id, 'Journal is incorrect on account move.')
+        self.assertEquals(vendor_voucher_move.journal_id, cash_journal_id, 'Journal is incorrect on account move.')
         # Check amount in Account move line.
         self.assertEquals(vendor_voucher_move.amount, 1000.0, 'Amount is incorrect in acccount move.')

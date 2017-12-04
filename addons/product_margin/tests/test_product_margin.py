@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import tools
-from odoo.tests import common
+from odoo.tests import common, Form
 from odoo.modules.module import get_resource_path
 
 
@@ -9,24 +9,17 @@ class TestProductMargin(common.TransactionCase):
 
     def create_account_invoice(self, invoice_type, partner, product, quantity=0.0, price_unit=0.0):
         """ Create an invoice as in a view by triggering its onchange methods"""
-        default_get_vals = self.env['account.invoice'].default_get(list(self.env['account.invoice'].fields_get()))
-        account_invoice = self.env['account.invoice'].new(default_get_vals)
-        account_invoice.type = invoice_type
-        account_invoice._onchange_journal_id()
-        account_invoice.partner_id = partner.id
-        account_invoice._onchange_partner_id()
-        account_invoice.invoice_line_ids = [(0, 0, {
-            'quantity': quantity,
-            'product_id': product.id,
-            'uom_id': self.ref('product.product_uom_unit'),
-            'invoice_id': account_invoice,  # This value is required for '_onchange_product_id' to work correctly
-        })]
-        account_invoice.invoice_line_ids._onchange_product_id()
-        account_invoice.invoice_line_ids.price_unit = price_unit
-        account_invoice._onchange_invoice_line_ids()
-        vals = account_invoice._convert_to_write(account_invoice._cache)
-        account_invoice = self.env['account.invoice'].create(vals)
-        account_invoice.action_invoice_open()
+
+        invoice_form = Form(self.env['account.invoice'].with_context(type=invoice_type))
+        invoice_form.partner_id = partner
+        with invoice_form.invoice_line_ids.new() as line:
+            line.product_id = product
+            line.quantity = quantity
+            line.price_unit = price_unit
+
+        invoice = invoice_form.save()
+        invoice.action_invoice_open()
+        return invoice
 
     def test_product_margin(self):
         ''' In order to test the product_margin module '''
