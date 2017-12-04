@@ -9,6 +9,7 @@ from odoo.osv import expression
 
 import odoo.addons.decimal_precision as dp
 
+#rebuild ME
 
 class ProductCategory(models.Model):
     _name = "product.category"
