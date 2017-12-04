@@ -19,7 +19,6 @@ class ResConfigSettings(models.TransientModel):
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
     chart_template_id = fields.Many2one('account.chart.template', string='Template',
         domain="[('visible','=', True)]")
-    code_digits = fields.Integer(string='# of Digits *', related='company_id.accounts_code_digits', help="No. of digits to use for account code")
     sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", related='company_id.account_sale_tax_id')
     purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax", related='company_id.account_purchase_tax_id')
     tax_calculation_rounding_method = fields.Selection([
@@ -69,7 +68,6 @@ class ResConfigSettings(models.TransientModel):
                 'company_id': self.company_id.id,
                 'chart_template_id': self.chart_template_id.id,
                 'transfer_account_id': self.chart_template_id.transfer_account_id.id,
-                'code_digits': self.code_digits or 6,
                 'sale_tax_rate': 15.0,
                 'purchase_tax_rate': 15.0,
                 'complete_tax_set': self.chart_template_id.complete_tax_set,
@@ -122,12 +120,8 @@ class ResConfigSettings(models.TransientModel):
         # related values, including the currency_id field on res_company. This in turn will trigger the recomputation
         # of account_move_line related field company_currency_id which can be slow depending on the number of entries
         # in the database. Thus, if we do not explicitly change the currency_id, we should not write it on the company
-        # Same for the field `code_digits` which will trigger a write on all the account.account to complete the
-        # code the missing characters to complete the desired number of digit, leading to a sql_constraint.
         if ('company_id' in values and 'currency_id' in values):
             company = self.env['res.company'].browse(values.get('company_id'))
             if company.currency_id.id == values.get('currency_id'):
                 values.pop('currency_id')
-            if company.accounts_code_digits == values.get('code_digits'):
-                values.pop('code_digits')
         return super(ResConfigSettings, self).create(values)

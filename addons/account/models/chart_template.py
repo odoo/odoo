@@ -885,7 +885,6 @@ class WizardMultiChartsAccounts(models.TransientModel):
 
         company = self.company_id
         self.company_id.write({'currency_id': self.currency_id.id,
-                               'accounts_code_digits': self.code_digits,
                                'anglo_saxon_accounting': self.use_anglo_saxon,
                                'bank_account_code_prefix': self.bank_account_code_prefix,
                                'cash_account_code_prefix': self.cash_account_code_prefix,
