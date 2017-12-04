@@ -61,7 +61,7 @@ def encode_header(header_text):
     header_text = ustr(header_text) # FIXME: require unicode higher up?
     if is_ascii(header_text):
         return pycompat.to_native(header_text)
-    Header(header_text, 'utf-8')
+    return Header(header_text, 'utf-8')
 
 def encode_header_param(param_text):
     """Returns an appropriate RFC2047 encoded representation of the given
