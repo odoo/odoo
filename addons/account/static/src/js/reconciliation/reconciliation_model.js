@@ -602,9 +602,14 @@ var StatementModel = BasicModel.extend({
             var line = self.getLine(handle);
             var props = _.filter(line.reconciliation_proposition, function (prop) {return !prop.is_tax && !prop.invalid;});
             if (props.length === 0) {
+                // Usability: if user has not choosen any lines and click validate, it has the same behavior
+                // as creating a write-off of the same amount.
                 props.push(self._formatQuickCreate(line, {
                     account_id: [line.st_line.open_balance_account_id, self.accounts[line.st_line.open_balance_account_id]],
                 }));
+                // update balance of line otherwise it won't be to zero and another line will be added
+                line.reconciliation_proposition.push(props[0]);
+                self._computeLine(line);
             }
             ids.push(line.id);
             var values_dict = {
