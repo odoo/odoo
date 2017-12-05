@@ -170,7 +170,7 @@ class TestHeavyMailPerformance(TestPerformance):
             self.env.ref('test_mail.st_mail_test_child_full').id]
         )
 
-    # test_mail only: 211 - 227
+    # test_mail only: 211 - 227 // 212 - 229
     @queryCount(admin=218, emp=254)
     def test_create_tracking_subscription(self):
         """ Create record using most features: auto subscription, tracking
