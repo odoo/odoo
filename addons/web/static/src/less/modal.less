@@ -79,6 +79,9 @@
 
 // Temporary fix for modals which are not instantiated thanks to the Dialog
 // JS classes (deprecated case) (see bootstrap_overridden.less) + Frontend.
-:not(body) > .modal {
-    z-index: @zindex-modal-background + 1;
-}
+//
+// TODO the following code was disabled because it is saas-incompatible
+//
+// :not(body) > .modal {
+//     z-index: @zindex-modal-background + 1;
+// }
