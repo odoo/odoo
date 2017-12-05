@@ -76,6 +76,9 @@ class TestPerformance(TransactionCase):
             self.cr.sql_log = sql_log
             sql_logger.setLevel(level)
 
+
+class TestBasePerformance(TestPerformance):
+
     @queryCount(admin=3, demo=3)
     def test_read_base(self):
         """ Read records. """
