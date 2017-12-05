@@ -123,6 +123,10 @@ class AdvancedFollowersTest(common.BaseFunctionalTest):
         })
 
         Subtype = cls.env['mail.message.subtype']
+
+        # clean demo data to avoid interferences
+        Subtype.search([('res_model', 'in', ['mail.test', 'mail.test.track'])]).unlink()
+
         cls.sub_nodef = Subtype.create({'name': 'Sub NoDefault', 'default': False, 'res_model': 'mail.test'})
         cls.sub_umb1 = Subtype.create({'name': 'Sub Umbrella1', 'default': False, 'res_model': 'mail.test.track'})
         cls.sub_umb2 = Subtype.create({'name': 'Sub Umbrella2', 'default': False, 'res_model': 'mail.test.track'})
@@ -187,7 +191,7 @@ class AdvancedFollowersTest(common.BaseFunctionalTest):
             'umbrella_id': umbrella.id,
         })
 
-        all_defaults = self.env['mail.message.subtype'].search([('default', '=', True), '|', ('res_model', '=', 'mail.test.full'), ('res_model', '=', False)])
+        all_defaults = self.env['mail.message.subtype'].search([('default', '=', True), '|', ('res_model', '=', 'mail.test.track'), ('res_model', '=', False)])
         external_defaults = all_defaults.filtered(lambda subtype: not subtype.internal)
 
         self.assertEqual(sub1.message_partner_ids, self.user_portal.partner_id | self.user_employee.partner_id)

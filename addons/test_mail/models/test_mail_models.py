@@ -62,13 +62,13 @@ class MailTestFull(models.Model):
         if 'customer_id' in changes and record.mail_template:
             res['customer_id'] = (record.mail_template, {'composition_mode': 'mass_mail'})
         elif 'datetime' in changes:
-            res['datetime'] = ('mail.track_template', {'composition_mode': 'mass_mail'})
+            res['datetime'] = ('test_mail.mail_test_full_tracking_view', {'composition_mode': 'mass_mail'})
         return res
 
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'umbrella_id' in init_values and self.umbrella_id:
-            return 'mail.track_subtype_umbrella'
+            return 'test_mail.st_mail_test_full_umbrella_upd'
         return super(MailTestFull, self)._track_subtype(init_values)
 
 
