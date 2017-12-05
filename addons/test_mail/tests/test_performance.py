@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase, users, warmup
+from odoo.tools import mute_logger
 
 
 class TestMailPerformance(TransactionCase):
@@ -101,12 +102,13 @@ class TestAdvMailPerformance(TransactionCase):
 
     def setUp(self):
         super(TestAdvMailPerformance, self).setUp()
-        self.user_employee = self.env['res.users'].with_context({
+        self._quick_create_ctx = {
             'no_reset_password': True,
             'mail_create_nolog': True,
             'mail_create_nosubscribe': True,
             'mail_notrack': True,
-        }).create({
+        }
+        self.user_employee = self.env['res.users'].with_context(self._quick_create_ctx).create({
             'name': 'Ernest Employee',
             'login': 'emp',
             'email': 'e.e@example.com',
@@ -135,4 +137,134 @@ class TestAdvMailPerformance(TransactionCase):
             model.create({
                 'summary': 'Test Activity',
                 'res_id': record.id,
+                'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
             })
+
+
+class TestHeavyMailPerformance(TransactionCase):
+
+    def setUp(self):
+        super(TestHeavyMailPerformance, self).setUp()
+        self._quick_create_ctx = {
+            'no_reset_password': True,
+            'mail_create_nolog': True,
+            'mail_create_nosubscribe': True,
+            'mail_notrack': True,
+        }
+        self.user_employee = self.env['res.users'].with_context(self._quick_create_ctx).create({
+            'name': 'Ernest Employee',
+            'login': 'emp',
+            'email': 'e.e@example.com',
+            'signature': '--\nErnest',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+        })
+        self.user_portal = self.env['res.users'].with_context(self._quick_create_ctx).create({
+            'name': 'Olivia Portal',
+            'login': 'port',
+            'email': 'p.p@example.com',
+            'signature': '--\nOlivia',
+            'notification_type': 'email',
+            'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
+        })
+
+        self.admin = self.env.user
+        self.admin.login = 'admin'
+
+        self.customer = self.env['res.partner'].with_context(self._quick_create_ctx).create({
+            'name': 'Test Customer',
+            'email': 'test@example.com'
+        })
+        self.umbrella = self.env['mail.test'].with_context(mail_create_nosubscribe=True).create({
+            'name': 'Test Umbrella',
+            'customer_id': self.customer.id,
+            'alias_name': 'test',
+        })
+
+        Partners = self.env['res.partner'].with_context(self._quick_create_ctx)
+        self.partners = self.env['res.partner']
+        for x in range(0, 10):
+            self.partners |= Partners.create({'name': 'Test %s' % x, 'email': 'test%s@example.com' % x})
+        self.umbrella.message_subscribe(self.partners.ids, subtype_ids=[
+            self.env.ref('mail.mt_comment').id,
+            self.env.ref('test_mail.st_mail_test_child_full').id]
+        )
+
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    @users('admin', 'emp')
+    @warmup
+    def test_mail_mail_send(self):
+        self.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', 'example.com')
+        self.env['ir.config_parameter'].sudo().set_param('mail.catchall.alias', 'test-catchall')
+        self.env['ir.config_parameter'].sudo().set_param('mail.bounce.alias', 'test-bounce')
+        message = self.env['mail.message'].sudo().with_context(message_create_from_mail_mail=True).create({
+            'subject': 'Test',
+            'body': '<p>Test</p>',
+            'author_id': self.env.user.partner_id.id,
+            'email_from': self.env.user.partner_id.email,
+            'model': 'mail.test',
+            'res_id': self.umbrella.id,
+        })
+        mail = self.env['mail.mail'].sudo().create({
+            'mail_message_id': message.id,
+            'recipient_ids': [(4, pid) for pid in self.partners.ids],
+        })
+        mail_ids = mail.ids
+
+        with self.assertQueryCount(admin=24, emp=48):
+            self.env['mail.mail'].browse(mail_ids).send()
+
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    @users('admin', 'emp')
+    @warmup
+    def test_message_post(self):
+        self.umbrella.message_subscribe(self.user_portal.partner_id.ids)
+        record = self.umbrella.sudo(self.env.user)
+
+        with self.assertQueryCount(admin=112, emp=143):
+            record.message_post(
+                body='<p>Test Post Performances</p>',
+                message_type='comment', subtype='mail.mt_comment')
+
+        self.assertEqual(record.message_ids[0].body, '<p>Test Post Performances</p>')
+        self.assertEqual(record.message_ids[0].needaction_partner_ids, self.partners | self.user_portal.partner_id)
+
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    @users('admin', 'emp')
+    @warmup
+    def test_message_post_template(self):
+        self.umbrella.message_subscribe(self.user_portal.partner_id.ids)
+        record = self.umbrella.sudo(self.env.user)
+        template = self.env.ref('test_mail.mail_test_tpl')
+
+        with self.assertQueryCount(admin=170, emp=211):
+            record.message_post_with_template(template.id, message_type='comment', composition_mode='comment')
+
+        self.assertEqual(record.message_ids[0].body, '<p>Adding stuff on %s</p>' % record.name)
+        self.assertEqual(record.message_ids[0].needaction_partner_ids, self.partners | self.user_portal.partner_id | self.customer)
+
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    @users('admin', 'emp')
+    @warmup
+    def test_create_tracking_subscription(self):
+        """ Create record using most features: auto subscription, tracking
+        and templates. """
+        umbrella_id = self.umbrella.id
+        customer_id = self.customer.id
+        user_id = self.user_portal.id
+
+        with self.assertQueryCount(admin=316, emp=380):
+            rec = self.env['mail.test.full'].create({
+                'name': 'Test',
+                'umbrella_id': umbrella_id,
+                'customer_id': customer_id,
+                'user_id': user_id,
+            })
+
+        self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
+        # tracking message
+        self.assertEqual(rec.message_ids[0].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
+        self.assertEqual(rec.message_ids[0].needaction_partner_ids, self.partners | self.user_portal.partner_id)
+        # creation message
+        self.assertEqual(rec.message_ids[1].subtype_id, self.env.ref('mail.mt_note'))
+        self.assertEqual(rec.message_ids[1].needaction_partner_ids, self.env['res.partner'])
