@@ -236,8 +236,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
      */
     _onValidateName: function () {
         var name = this.model.get(this.handleNameRecord).data.name;
-        this.trigger_up('change_name', {'data': name});
-        this.$('.statement_name, .statement_name_edition').toggle();
+        this.trigger_up('change_name', {'data': name});  
     },
     /**
      * Save title on enter key pressed

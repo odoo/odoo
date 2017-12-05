@@ -13,7 +13,7 @@ var core = require('web.core');
  * Widget used as action for 'account.bank.statement' reconciliation
  */
 var StatementAction = AbstractAction.extend(ControlPanelMixin, {
-    title: core._t('Bank reconciliation'),
+    title: core._t('Bank Reconciliation'),
     template: 'reconciliation',
     custom_events: {
         change_mode: '_onAction',
@@ -240,6 +240,7 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
                 'valuemax': self.model.valuemax,
                 'title': title,
             });
+            self.renderer.$('.statement_name, .statement_name_edition').toggle();
         });
     },
     /**
