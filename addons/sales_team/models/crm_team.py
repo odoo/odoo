@@ -19,7 +19,7 @@ class CrmTeam(models.Model):
         if 'default_team_id' in self.env.context:
             team_id = self.env['crm.team'].browse(self.env.context.get('default_team_id'))
         if not team_id or not team_id.exists():
-            company_id = self.sudo(user_id).company_id.id
+            company_id = self.sudo(user_id).env.user.company_id.id
             team_id = self.env['crm.team'].sudo().search([
                 '|', ('user_id', '=', user_id), ('member_ids', '=', user_id),
                 '|', ('company_id', '=', False), ('company_id', 'child_of', [company_id])
