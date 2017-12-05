@@ -238,8 +238,14 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
     },
 
     on_reverse_breadcrumb: function() {
+        var self = this;
         web_client.do_push_state({});
         this.update_cp();
+        this.fetch_data().then(function() {
+            self.$('.o_website_dashboard').empty();
+            self.render_dashboards();
+            self.render_graphs();
+        });
     },
 
     on_dashboard_action: function (ev) {
