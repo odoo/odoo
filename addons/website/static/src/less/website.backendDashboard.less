@@ -8,7 +8,7 @@
             color: @odoo-main-color-muted;
             background-color: @odoo-view-background-color;
             background-size: cover;
-            margin-bottom: @odoo-horizontal-padding;
+            margin-top: @odoo-horizontal-padding;
             position: static;
             box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
 
@@ -20,7 +20,7 @@
 
             h4 { margin: 0 0 0 8px; }
 
-            .col-md-6, .col-md-12 {
+            .col-md-7, .col-xs-12 {
                 padding: 15px;
 
                 .js_field_selection {
@@ -36,7 +36,11 @@
 
                 table {
 
-                    tr:nth-child(even) {
+                    tr:first-child {
+                        background: white;
+                    }
+
+                    tr:nth-child(even):not(:hover) {
                         background: #f5f6f7;
                     }
 
@@ -52,6 +56,9 @@
                         &:first-child {
                             text-align: left;
                         }
+                    }
+                    .o_tooltip_key {
+                        text-align: left;
                     }
                 }
 
@@ -75,23 +82,26 @@
                         opacity: 0 !important;
                     }
 
-                    [class*="nv-series-"] {
-                        stroke-width: 3 !important;
-                        fill: @odoo-main-color-muted !important;
-                    }
-
-                    .nv-groups .nv-point, g circle {
-                        fill: @odoo-brand-optional;
-                    }
-
-                    .nv-groups .nv-point {
-                        fill-opacity: 1 !important;
-                        stroke-opacity: 1 !important;
-                        stroke: @odoo-brand-optional;
-                    }
-
-                    .nv-groups .nv-point.hover, .nv-group.nv-noninteractive .nv-point.hover {
-                        stroke: darken(@odoo-brand-optional, 10%);
+                    .nv-groups {
+                        .nv-series-0 {
+                            stroke-width: 3 !important;
+                            .nv-point {
+                                stroke: @odoo-brand-optional;
+                                stroke-opacity: 1 !important;
+                                &.hover {
+                                    stroke: darken(@odoo-brand-optional, 10%);
+                                }
+                            }
+                        }
+                        .nv-series-1 {
+                            .nv-point {
+                                stroke: @odoo-main-color-muted !important;
+                                stroke-opacity: 1 !important;
+                                &.hover {
+                                    stroke: darken(@odoo-main-color-muted, 10%);
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -118,7 +128,7 @@
                 display: flex;
                 flex-flow: row wrap;
                 justify-content: flex-start;
-                > .o_box_item {
+                > .o_inner_box {
                     @media (max-width: @screen-sm-min) {
                         flex: 1 1 200px;
                         display: block !important;
@@ -136,15 +146,12 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
-                &.o_main {
-                    background-color: @odoo-brand-optional;
+                cursor: pointer;
+                color: white;
+                background-color: @odoo-brand-optional;
                     &:hover {
                         background-color: darken(@odoo-brand-optional, 10%);
                     }
-                    a {
-                        color: white;
-                    }
-                }
                 &.o_primary {
                     background-color: @odoo-brand-primary;
                     color: white;
@@ -155,6 +162,15 @@
                 .o_highlight {
                     font-size: 27px;
                 }
+            }
+        }
+
+        .o_graph_sales {
+            .o_legend0 {
+                background-color: @odoo-brand-optional;
+            }
+            .o_legend1 {
+                background-color: @odoo-main-color-muted;
             }
         }
 
