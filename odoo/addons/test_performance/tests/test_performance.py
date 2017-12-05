@@ -33,7 +33,8 @@ def queryCount(**counters):
                 self._round = True
                 self.resetQueryCount()
                 func(self)
-                self.assertQueryCount(self.cr.sql_log_count - self._count,
+                self.resumeQueryCount()
+                self.assertQueryCount(self.cr.sql_log_count - (self._count + self._count_halted),
                                       counters[user.login], user.login)
 
         return wrapper
@@ -46,6 +47,10 @@ class TestPerformance(TransactionCase):
     def setUp(self):
         super(TestPerformance, self).setUp()
         self._round = False
+        self._count = 0
+        self._halted = False
+        self._count_halted_start = 0
+        self._count_halted = 0
 
     def assertQueryCount(self, actual, expected, message):
         self.assertLessEqual(actual, expected, message)
@@ -55,6 +60,17 @@ class TestPerformance(TransactionCase):
     def resetQueryCount(self):
         """ Reset the query counter. """
         self._count = self.cr.sql_log_count
+
+    def haltQueryCount(self):
+        """ Halt the query counter. """
+        self._halted = True
+        self._count_halted_start = self.cr.sql_log_count
+
+    def resumeQueryCount(self):
+        """ Resume query counter """
+        if self._halted:
+            self._count_halted += self.cr.sql_log_count - self._count_halted_start
+            self._halted = False
 
     def str(self, value):
         """ Return a value different from run to run. """
@@ -75,6 +91,9 @@ class TestPerformance(TransactionCase):
         finally:
             self.cr.sql_log = sql_log
             sql_logger.setLevel(level)
+
+
+class TestBasePerformance(TestPerformance):
 
     @queryCount(admin=3, demo=3)
     def test_read_base(self):
