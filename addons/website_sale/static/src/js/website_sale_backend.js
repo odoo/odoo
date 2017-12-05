@@ -18,11 +18,11 @@ WebsiteBackend.include({
     on_product_template: function (ev) {
         ev.preventDefault();
 
-        var product_id = $(ev.currentTarget).data('productId');
+        var product_tmpl_id = $(ev.currentTarget).data('productId');
         this.do_action({
             type: 'ir.actions.act_window',
-            res_model: 'product.product',
-            res_id: product_id,
+            res_model: 'product.template',
+            res_id: product_tmpl_id,
             views: [[false, 'form']],
             target: 'current',
         }, {
