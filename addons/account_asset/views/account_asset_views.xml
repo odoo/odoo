@@ -169,7 +169,7 @@
                             <field name="date" help="Date of asset"/>
                             <field name="date_first_depreciation"
                                    attrs="{'invisible': [('prorata', '=', True)], 'required': [('prorata', '=', False)]}"/>
-                            <field name="manual_date_first_depreciation"
+                            <field name="first_depreciation_manual_date"
                                    attrs="{'invisible': [('date_first_depreciation', '!=', 'manual')], 'required': [('date_first_depreciation', '=', 'manual')]}"/>
                             <field name="type" invisible="1"/>
                         </group>
