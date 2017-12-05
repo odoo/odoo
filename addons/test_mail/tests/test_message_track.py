@@ -26,17 +26,6 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
     def setUp(self):
         super(TestTracking, self).setUp()
 
-        self.track_subtype_umbrella = self.env['mail.message.subtype'].create({
-            'name': 'Umbrella',
-            'description': 'Umbrella Changed',
-        })
-        self.env['ir.model.data'].create({
-            'name': 'track_subtype_umbrella',
-            'model': 'mail.message.subtype',
-            'module': 'mail',
-            'res_id': self.track_subtype_umbrella.id
-        })
-
         record = self.env['mail.test.full'].sudo(self.user_employee).with_context(self._quick_create_ctx).create({
             'name': 'Test',
         })
@@ -78,10 +67,10 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
         """ Update some tracked fields linked to some subtype -> message with onchange + always tracked values """
         self.record.message_subscribe(
             partner_ids=[self.user_admin.partner_id.id],
-            subtype_ids=[self.track_subtype_umbrella.id]
+            subtype_ids=[self.env.ref('test_mail.st_mail_test_full_umbrella_upd').id]
         )
 
-        umbrella = self.env['mail.test'].create({'name': 'Umbrella'})
+        umbrella = self.env['mail.test'].with_context(mail_create_nosubscribe=True).create({'name': 'Umbrella'})
         self.record.write({
             'name': 'Test2',
             'email_from': 'noone@example.com',
@@ -89,7 +78,7 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
         })
         # one new message containing tracking; subtype linked to tracking
         self.assertEqual(len(self.record.message_ids), 1)
-        self.assertEqual(self.record.message_ids.subtype_id, self.track_subtype_umbrella)
+        self.assertEqual(self.record.message_ids.subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
 
         # no specific recipients except those following umbrella
         self.assertEqual(self.record.message_ids.partner_ids, self.env['res.partner'])
@@ -104,13 +93,7 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
 
     def test_message_track_template(self):
         """ Update some tracked fields linked to some template -> message with onchange + always tracked values """
-        mail_template = self.env['mail.template'].create({
-            'model_id': self.env.ref('test_mail.model_mail_test_full').id,
-            'body_html': '<p>Hello ${object.name}</p>',
-            'subject': 'Test Template',
-            'partner_to': '${object.customer_id.id | safe}',
-        })
-        self.record.write({'mail_template': mail_template.id})
+        self.record.write({'mail_template': self.env.ref('test_mail.mail_test_full_tracking_tpl').id})
         self.assertEqual(self.record.message_ids, self.env['mail.message'])
 
         self.record.write({

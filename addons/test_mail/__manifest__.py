@@ -15,6 +15,8 @@ tests independently to functional aspects of other models. """,
     ],
     'demo': [
         'data/demo.xml',
+        'data/subtype_demo.xml',
+        'data/template_demo.xml',
     ],
     'installable': True,
     'application': False,
