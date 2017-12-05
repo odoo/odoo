@@ -10,8 +10,6 @@ var session = require('web.session');
 var web_client = require('web.web_client');
 var Widget = require('web.Widget');
 
-var local_storage = require('web.local_storage');
-
 var _t = core._t;
 var QWeb = core.qweb;
 
@@ -29,7 +27,6 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         'click .js_link_analytics_settings': 'on_link_analytics_settings',
         'click .o_dashboard_action': 'on_dashboard_action',
         'click .o_dashboard_action_form': 'on_dashboard_action_form',
-        'click .o_dashboard_hide_panel': 'on_dashboard_hide_panel',
     },
 
     init: function(parent, context) {
@@ -38,9 +35,8 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         this.date_range = 'week';  // possible values : 'week', 'month', year'
         this.date_from = moment().subtract(1, 'week');
         this.date_to = moment();
-        this.hidden_apps = JSON.parse(local_storage.getItem('website_dashboard_hidden_app_ids') || '[]');
 
-        this.dashboards_templates = ['website.dashboard_visits'];
+        this.dashboards_templates = ['website.dashboard_header', 'website.dashboard_content'];
         this.graphs = [];
     },
 
@@ -55,7 +51,6 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         var self = this;
         return this._super().then(function() {
             self.update_cp();
-            self.render_dashboards();
             self.render_graphs();
             self.$el.parent().addClass('oe_background_grey');
         });
@@ -130,7 +125,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
     render_dashboards: function() {
         var self = this;
         _.each(this.dashboards_templates, function(template) {
-            self.$('.o_website_dashboard_content').append(QWeb.render(template, {widget: self}));
+            self.$('.o_website_dashboard').append(QWeb.render(template, {widget: self}));
         });
     },
 
@@ -156,6 +151,14 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
                 .tickValues(_.map(tick_values, function(d) { return self.getDate(d); }))
                 .rotateLabels(-45);
 
+            chart.interactiveLayer.tooltip.contentGenerator(function(data) {
+                return QWeb.render('website.SalesChartTooltip', {
+                    format: field_utils.format,
+                    chartData: data,
+                    dateRange: self.date_range
+                });
+            });
+
             chart.yAxis
                 .tickFormat(d3.format('.02f'));
 
@@ -176,7 +179,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         var self = this;
         _.each(this.graphs, function(e) {
             if (self.groups[e.group]) {
-                self.render_graph('#o_graph_' + e.name, self.dashboards_data[e.name].graph);
+                self.render_graph('.o_graph_' + e.name, self.dashboards_data[e.name].graph);
             }
         });
         this.render_graph_analytics(this.dashboards_data.visits.ga_client_id);
@@ -234,7 +237,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
 
         var self = this;
         $.when(this.fetch_data()).then(function() {
-            self.$('.o_website_dashboard_content').empty();
+            self.$('.o_website_dashboard').empty();
             self.render_dashboards();
             self.render_graphs();
         });
@@ -242,8 +245,14 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
     },
 
     on_reverse_breadcrumb: function() {
+        var self = this;
         web_client.do_push_state({});
         this.update_cp();
+        this.fetch_data().then(function() {
+            self.$('.o_website_dashboard').empty();
+            self.render_dashboards();
+            self.render_graphs();
+        });
     },
 
     on_dashboard_action: function (ev) {
@@ -277,18 +286,6 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         });
     },
 
-    on_dashboard_hide_panel: function (ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        var $action = $(ev.currentTarget);
-        // update hidden module list
-        this.hidden_apps = JSON.parse(local_storage.getItem('website_dashboard_hidden_app_ids') || '[]');
-        this.hidden_apps.push(JSON.parse($action.data('module_id')));
-        local_storage.setItem('website_dashboard_hidden_app_ids', JSON.stringify(this.hidden_apps));
-        // remove box
-        $action.closest(".o_box_item").remove();
-    },
-
     update_cp: function() {
         var self = this;
         if (!this.$searchview) {
@@ -304,6 +301,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         this.update_control_panel({
             cp_content: {
                 $searchview: this.$searchview,
+                $buttons: QWeb.render("website.GoToButtons"),
             },
             breadcrumbs: this.getParent().get_breadcrumbs(),
         });

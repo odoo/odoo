@@ -40,18 +40,17 @@ class WebsiteSaleBackend(WebsiteBackend):
         # Product-based computation
         report_product_lines = request.env['sale.report'].read_group(
             domain=[
-                ('product_id.website_published', '=', True),
                 ('team_id.team_type', '=', 'website'),
                 ('state', 'in', ['sale', 'done']),
-                ('date', '>=', date_from),
-                ('date', '<=', date_to)],
-            fields=['product_id', 'product_uom_qty', 'price_subtotal'],
-            groupby='product_id', orderby='product_uom_qty desc', limit=5)
+                ('confirmation_date', '>=', date_from),
+                ('confirmation_date', '<=', fields.Datetime.now())],
+            fields=['product_tmpl_id', 'product_uom_qty', 'price_subtotal'],
+            groupby='product_tmpl_id', orderby='product_uom_qty desc', limit=5)
         for product_line in report_product_lines:
-            product_id = request.env['product.product'].browse(product_line['product_id'][0])
+            product_tmpl_id = request.env['product.template'].browse(product_line['product_tmpl_id'][0])
             sales_values['best_sellers'].append({
-                'id': product_id.id,
-                'name': product_id.name,
+                'id': product_tmpl_id.id,
+                'name': product_tmpl_id.name,
                 'qty': product_line['product_uom_qty'],
                 'sales': product_line['price_subtotal'],
             })
@@ -113,8 +112,8 @@ class WebsiteSaleBackend(WebsiteBackend):
         sales_domain = [
             ('team_id.team_type', '=', 'website'),
             ('state', 'in', ['sale', 'done']),
-            ('date', '>=', date_from),
-            ('date', '<=', date_to)
+            ('confirmation_date', '>=', date_from),
+            ('confirmation_date', '<=', fields.Datetime.now())
         ]
         sales_values['graph'] += [{
             'values': self._compute_sale_graph(date_date_from, date_date_to, sales_domain),
@@ -133,10 +132,10 @@ class WebsiteSaleBackend(WebsiteBackend):
 
         daily_sales = request.env['sale.report'].read_group(
             domain=sales_domain,
-            fields=['date', 'price_subtotal'],
-            groupby='date:day')
+            fields=['confirmation_date', 'price_subtotal'],
+            groupby='confirmation_date:day')
 
-        daily_sales_dict = {p['date:day']: p['price_subtotal'] for p in daily_sales}
+        daily_sales_dict = {p['confirmation_date:day']: p['price_subtotal'] for p in daily_sales}
 
         sales_graph = [{
             '0': fields.Date.to_string(d) if not previous else fields.Date.to_string(d + timedelta(days=days_between)),

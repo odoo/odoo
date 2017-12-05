@@ -93,6 +93,24 @@
         <field name="binding_model_id" ref="sale.model_sale_order"/>
     </record>
 
+    <record id="action_view_unpaid_quotation_tree" model="ir.actions.act_window">
+        <field name="name">Unpaid Orders</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('state', '=', 'sent'), ('team_id.team_type', '=', 'website')]</field>
+        <field name="context" eval="{'show_sale': True, 'create': False}"/>
+        <field name="view_id" ref="sale.view_quotation_tree"/>
+    </record>
+
+    <record id="action_view_abandoned_tree" model="ir.actions.act_window">
+        <field name="name">Abandoned Carts</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('state', '=', 'draft'), ('order_line', '!=', False), ('partner_id', '!=', context.get('public_partner_id')), ('team_id.team_type', '=', 'website'), ('date_order', '&lt;=', (datetime.datetime.utcnow() - datetime.timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S'))]</field>
+        <field name="context" eval="{'show_sale': True, 'create': False, 'public_partner_id': ref('base.public_partner')}"/>
+        <field name="view_id" ref="sale.view_quotation_tree"/>
+    </record>
+
     <!-- Main website sale menu items -->
     <menuitem id="menu_orders" name="Orders"
         parent="website.menu_website_configuration" sequence="2"
@@ -117,10 +135,10 @@
         action="action_orders_ecommerce"
         parent="menu_orders" sequence="1"/>
     <menuitem id="menu_orders_unpaid_orders" name="Unpaid Orders"
-        action="action_unpaid_orders_ecommerce"
+        action="action_view_unpaid_quotation_tree"
         parent="menu_orders" sequence="2"/>
     <menuitem id="menu_orders_abandoned_orders" name="Abandoned Carts"
-        action="action_abandoned_orders_ecommerce"
+        action="action_view_abandoned_tree"
         parent="menu_orders" sequence="3"/>
     <menuitem id="menu_orders_customers" name="Customers"
         action="base.action_partner_customer_form"
