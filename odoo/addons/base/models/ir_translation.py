@@ -161,7 +161,8 @@ class IrTranslationImport(object):
         cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
                        SELECT name, lang, res_id, src, type, value, module, state, comments
                        FROM %s AS ti
-                       WHERE NOT EXISTS(SELECT 1 FROM ONLY %s AS irt WHERE %s);
+                       WHERE NOT EXISTS(SELECT 1 FROM ONLY %s AS irt WHERE %s)
+                       ON CONFLICT DO NOTHING;
                    """ % (self._model_table, self._table, self._model_table, find_expr),
                    (tuple(src_relevant_fields), tuple(src_relevant_fields)))
 
