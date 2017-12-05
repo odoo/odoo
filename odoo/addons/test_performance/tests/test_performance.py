@@ -12,7 +12,8 @@ sql_logger = logging.getLogger('odoo.sql_db')
 
 
 def queryCount(**counters):
-    """ Decorate a method to check the number of queries it makes. """
+    """ Decorate a method to check the number of queries it makes. Counters
+    is a dict { 'user_login': expected_query_count } """
     def decorate(func):
         @functools.wraps(func)
         def wrapper(self):
@@ -20,7 +21,6 @@ def queryCount(**counters):
                 users = self.test_users.filtered(lambda user: user.login in counters.keys())
             else:
                 users = self.env['res.users'].search([('login', 'in', list(counters.keys()))])
-            # for user in self.env.user + self.env.ref('base.user_demo'):
             for user in users:
                 # switch user
                 self.uid = user.id
@@ -42,6 +42,10 @@ def queryCount(**counters):
 
 
 class TestPerformance(TransactionCase):
+
+    def setUp(self):
+        super(TestPerformance, self).setUp()
+        self._round = False
 
     def assertQueryCount(self, actual, expected, message):
         self.assertLessEqual(actual, expected, message)
