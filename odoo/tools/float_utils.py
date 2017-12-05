@@ -180,24 +180,6 @@ def float_split(value, precision_digits):
     return int(units), int(cents)
 
 
-class float_precision(float):
-    """ A class for float values that carry precision digits. This is a thin
-        layer on top of ``float``, and the precision digits are not propagated
-        to the result of arithmetic operations. This class is used when
-        converting monetary values to cache, and for serializing them to the
-        database.
-    """
-    __slots__ = ['precision_digits']
-
-    def __new__(cls, value, precision_digits):
-        obj = super(float_precision, cls).__new__(cls, value)
-        obj.precision_digits = precision_digits
-        return obj
-
-    def float_repr(self):
-        return _float_repr(self, self.precision_digits)
-
-
 if __name__ == "__main__":
 
     import time
