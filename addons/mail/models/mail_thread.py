@@ -233,7 +233,7 @@ class MailThread(models.AbstractModel):
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not self._context.get('mail_create_nolog'):
             doc_name = self.env['ir.model']._get(self._name).name
-            thread.message_post(body=_('%s created') % doc_name)
+            thread.message_notify(_('%s created') % doc_name, _('New'), [], model=self._name, res_id=thread.id)
 
         # auto_subscribe: take values and defaults into account
         create_values = dict(values)
@@ -1764,6 +1764,32 @@ class MailThread(models.AbstractModel):
                 message_data['body'] = body
 
         return m2m_attachment_ids
+
+    def message_notify(self, body, subject, partner_ids, **kwargs):
+        if kwargs.get('author_id'):
+            author = self.env['res.partner'].sudo().browse(kwargs['author_id'])
+            email_from = formataddr((author.name, author.email))
+        else:
+            author = self.env.user.partner_id
+            email_from = formataddr((author.name, author.email))
+
+        message_values = {
+            'subject': subject,
+            'body': body,
+            'author_id': author.id,
+            'email_from': email_from,
+            'partner_ids': [(4, partner_id) for partner_id in partner_ids],
+            'message_type': 'notification',
+            'model': False,
+            'res_id': False,
+            'subtype_id': False,
+            'record_name': False,
+            'reply_to': self.env['mail.thread'].sudo().message_get_reply_to([0])[0],
+            'message_id': tools.generate_tracking_message_id('message-notify'),
+        }
+        message_values.update(kwargs)
+        message = self.env['mail.message'].sudo().create(message_values)
+        return message
 
     @api.multi
     @api.returns('self', lambda value: value.id)

@@ -170,7 +170,7 @@ class TestHeavyMailPerformance(TestPerformance):
             self.env.ref('test_mail.st_mail_test_child_full').id]
         )
 
-    # test_mail only: 211 - 227 // 212 - 229
+    # test_mail only: 211 - 227 // 212 - 229 // 207 - 219
     @queryCount(admin=218, emp=254)
     def test_create_tracking_subscription(self):
         """ Create record using most features: auto subscription, tracking
@@ -194,5 +194,5 @@ class TestHeavyMailPerformance(TestPerformance):
         else:
             self.assertEqual(rec.message_ids[0].needaction_partner_ids, self.partners | self.user_employee.partner_id)
         # creation message
-        self.assertEqual(rec.message_ids[1].subtype_id, self.env.ref('mail.mt_note'))
+        self.assertEqual(rec.message_ids[1].subtype_id, self.env['mail.message.subtype'])
         self.assertEqual(rec.message_ids[1].needaction_partner_ids, self.env['res.partner'])
