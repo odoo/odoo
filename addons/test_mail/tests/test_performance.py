@@ -93,12 +93,13 @@ class TestAdvMailPerformance(TestPerformance):
 
     def setUp(self):
         super(TestAdvMailPerformance, self).setUp()
-        self.user_employee = self.env['res.users'].with_context({
+        self._quick_create_ctx = {
             'no_reset_password': True,
             'mail_create_nolog': True,
             'mail_create_nosubscribe': True,
             'mail_notrack': True,
-        }).create({
+        }
+        self.user_employee = self.env['res.users'].with_context(self._quick_create_ctx).create({
             'name': 'Ernest Employee',
             'login': 'emp',
             'email': 'e.e@example.com',
@@ -127,3 +128,71 @@ class TestAdvMailPerformance(TestPerformance):
             'summary': self.str('Test Activity'),
             'res_id': res_id,
         })
+
+
+class TestHeavyMailPerformance(TestPerformance):
+
+    def setUp(self):
+        super(TestHeavyMailPerformance, self).setUp()
+        self._quick_create_ctx = {
+            'no_reset_password': True,
+            'mail_create_nolog': True,
+            'mail_create_nosubscribe': True,
+            'mail_notrack': True,
+        }
+        self.user_employee = self.env['res.users'].with_context(self._quick_create_ctx).create({
+            'name': 'Ernest Employee',
+            'login': 'emp',
+            'email': 'e.e@example.com',
+            'signature': '--\nErnest',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+        })
+
+        self.admin = self.env.user
+        self.admin.login = 'admin'
+
+        self.customer = self.env['res.partner'].with_context(self._quick_create_ctx).create({
+            'name': 'Test Customer',
+            'email': 'test@example.com'
+        })
+        self.umbrella = self.env['mail.test'].with_context(self._quick_create_ctx).create({
+            'name': 'Test Umbrella',
+            'alias_name': 'test',
+        })
+
+        Partners = self.env['res.partner'].with_context(self._quick_create_ctx)
+        self.partners = self.env['res.partner']
+        for x in range(0, 10):
+            self.partners |= Partners.create({'name': 'Test %s' % x, 'email': 'test%s@example.com' % x})
+        self.umbrella.message_subscribe(self.partners.ids, subtype_ids=[
+            self.env.ref('mail.mt_comment').id,
+            self.env.ref('test_mail.st_mail_test_child_full').id]
+        )
+
+    # test_mail only: 211 - 227
+    @queryCount(admin=218, emp=254)
+    def test_create_tracking_subscription(self):
+        """ Create record using most features: auto subscription, tracking
+        and templates. """
+        self.resetQueryCount()
+
+        rec = self.env['mail.test.full'].create({
+            'name': self.str('X'),
+            'umbrella_id': self.umbrella.id,
+            'customer_id': self.customer.id,
+            'user_id': self.user_employee.id,
+        })
+
+        self.haltQueryCount()
+
+        self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id | self.user_employee.partner_id)
+        # tracking message
+        self.assertEqual(rec.message_ids[0].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
+        if self.env.user == self.user_employee:
+            self.assertEqual(rec.message_ids[0].needaction_partner_ids, self.partners)
+        else:
+            self.assertEqual(rec.message_ids[0].needaction_partner_ids, self.partners | self.user_employee.partner_id)
+        # creation message
+        self.assertEqual(rec.message_ids[1].subtype_id, self.env.ref('mail.mt_note'))
+        self.assertEqual(rec.message_ids[1].needaction_partner_ids, self.env['res.partner'])
