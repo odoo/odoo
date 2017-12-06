@@ -980,6 +980,7 @@ var FieldX2Many = AbstractField.extend({
      */
     _onEditLine: function (ev) {
         ev.stopPropagation();
+        this.trigger_up('freeze_order', {id: this.value.id});
         var editedRecord = this.value.data[ev.data.index];
         this.renderer.setRowMode(editedRecord.id, 'edit')
             .done(ev.data.onSuccess);
@@ -1066,6 +1067,7 @@ var FieldX2Many = AbstractField.extend({
      */
     _onResequence: function (event) {
         var self = this;
+        this.trigger_up('freeze_order', {id: this.value.id});
         var rowIDs = event.data.rowIDs.slice();
         var rowID = rowIDs.pop();
         var defs = _.map(rowIDs, function (rowID, index) {
@@ -1083,10 +1085,16 @@ var FieldX2Many = AbstractField.extend({
         });
         $.when.apply($, defs).then(function () {
             // trigger only once the onchange for parent record
-            self._setValue({
+            return self._setValue({
                 operation: 'UPDATE',
                 id: rowID,
                 data: _.object([event.data.handleField], [event.data.offset + rowIDs.length]),
+            }).always(function () {
+                self.trigger_up('toggle_column_order', {
+                    id: self.value.id,
+                    field: self.name,
+                    name: event.data.handleField
+                });
             });
         });
     },
@@ -1193,6 +1201,7 @@ var FieldOne2Many = FieldX2Many.extend({
                 }
             } else if (!this.creatingRecord) {
                 this.creatingRecord = true;
+                this.trigger_up('freeze_order', {id: this.value.id});
                 this._setValue({
                     operation: 'CREATE',
                     position: this.editable,

@@ -485,8 +485,10 @@ var ListController = BasicController.extend({
         if (!data.groupedBy) {
             this.pager.updateState({current_min: 1});
         }
-        this.model.setSort(data.id, event.data.name);
-        this.update({});
+        var self = this;
+        this.model.setSort(data.id, event.data.name).then(function () {
+            self.update({});
+        });
     },
     /**
      * In a grouped list view, each group can be clicked on to open/close them.
