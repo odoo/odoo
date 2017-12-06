@@ -115,7 +115,7 @@ class TestAdvMailPerformance(TestPerformance):
     def test_activity(self):
         self.env['mail.test.activity'].create({'name': self.str('Test')})
 
-    @queryCount(admin=45, emp=50)
+    @queryCount(admin=46, emp=51)
     def test_activity_full(self):
         test_record_activity = self.env['mail.test.activity'].create({'name': self.str('Test')})
         res_id = test_record_activity.id
