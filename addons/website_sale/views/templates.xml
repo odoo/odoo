@@ -897,7 +897,7 @@
                                     </div>
                                     <t t-call="website_sale.cart_lines" />
                                     <div class="clearfix" />
-                                    <a t-if="not optional_products and website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32 mr8" href="/shop/checkout">
+                                    <a t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32 mr8" href="/shop/checkout">
                                         <span class="hidden-xs">Process Checkout</span>
                                         <span class="visible-xs-inline">Checkout</span>
                                         <span class="fa fa-long-arrow-right" />
