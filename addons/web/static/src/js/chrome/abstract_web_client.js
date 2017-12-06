@@ -437,7 +437,12 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
         var data = e.data || {};
         var type = data.type || 'rainbow_man';
         if (type === 'rainbow_man') {
-            new RainbowMan(data).appendTo(this.$el);
+            if (session.show_effect) {
+                new RainbowMan(data).appendTo(this.$el);
+            } else {
+                // For instance keep title blank, as we don't have title in data
+                this.notification_manager.notify('', data.message, true);
+            }
         } else {
             throw new Error('Unknown effect type: ' + type);
         }
