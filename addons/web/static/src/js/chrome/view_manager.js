@@ -542,7 +542,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             stateChanged = true;
         }
         if (stateChanged) {
-            this.switch_mode(state.view_type);
+            return this.switch_mode(state.view_type);
         }
     },
     /**

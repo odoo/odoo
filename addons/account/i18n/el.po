@@ -5787,7 +5787,7 @@ msgstr "Ο Αριθμός Τιμολογίου θα πρέπει να είναι
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Invoice Number:"
-msgstr ""
+msgstr "Αριθμός Τιμολογίου:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_invoice_id
@@ -5807,7 +5807,7 @@ msgstr "Φόρος Τιμολογίου"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_invoice_id
 msgid "Invoice for which this invoice is the credit note"
-msgstr ""
+msgstr "Τιμολόγιο για το οποίο το τιμολόγιο αυτό είναι το πιστωτικό "
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:747
@@ -6092,7 +6092,7 @@ msgstr "Εγγραφή Ημερολογίου"
 #: model:ir.model.fields,field_description:account.field_account_invoice_move_name
 #: model:ir.model.fields,field_description:account.field_account_payment_move_name
 msgid "Journal Entry Name"
-msgstr ""
+msgstr "Όνομα Kαταχώρησης Hμερολογίου"
 
 #. module: account
 #: selection:account.print.journal,sort_selection:0
@@ -6223,7 +6223,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Keep empty for no control"
-msgstr ""
+msgstr "Κρατήστε κενό για κανένα έλεγχο"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_date_invoice
@@ -7138,7 +7138,7 @@ msgstr "Κανονικό Κείμενο"
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter_inherit_credit_notes
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter_inherit_invoices
 msgid "Not Draft"
-msgstr ""
+msgstr "Όχι Προσχέδιο"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -7846,27 +7846,27 @@ msgstr "Εξήγηση όρων πληρωμής για τον πελάτη..."
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_15days
 msgid "Payment terms: 15 Days"
-msgstr "Όροι Πληρωμής: 15 Ημέρες"
+msgstr "Πίστωση 15 Ημερών"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_net
 msgid "Payment terms: 30 Net Days"
-msgstr "Όροι πληρωμής: 30 Καθαρές Ημέρες"
+msgstr "Πίστωση 30 Ημερών"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_advance
 msgid "Payment terms: 30% Advance End of Following Month"
-msgstr "Όροι πληρωμής: 30% Προκαταβολή στο τέλος του επόμενου μήνα"
+msgstr "30% Προκαταβολή στο τέλος του επόμενου μήνα"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term
 msgid "Payment terms: End of Following Month"
-msgstr "Όροι πληρωμής: Τέλος του επόμενου μήνα"
+msgstr "Τέλος του επόμενου μήνα"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_immediate
 msgid "Payment terms: Immediate Payment"
-msgstr "Όροι πληρωμής: Άμεση Πληρωμή"
+msgstr "Άμεση Πληρωμή"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_payment_id
@@ -9129,7 +9129,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_show_on_dashboard
 msgid "Show journal on dashboard"
-msgstr ""
+msgstr "Εμφάνιση ημερολογίου στο Ταμπλό"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_sign
@@ -10639,7 +10639,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_invoice_amount_total_signed
 msgid ""
 "Total amount in the currency of the invoice, negative for credit notes."
-msgstr ""
+msgstr "Συνολικό ποσό στο νόμισμα του τιμολογίου, αρνητικό για τα πιστωτικά."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_credit
@@ -10671,7 +10671,7 @@ msgstr "Σύνολο σε Νόμισμα Εταιρίας"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_total_signed
 msgid "Total in Invoice Currency"
-msgstr ""
+msgstr "Σύνολο στο Νόμισμα του Τιμολογίου"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_total_entry_encoding
@@ -10886,7 +10886,7 @@ msgstr "Αφορολόγητο Ποσό"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed_signed
 msgid "Untaxed Amount in Company Currency"
-msgstr ""
+msgstr "Αφορολόγητο Ποσό στο Νόμισμα της Εταιρείας"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11456,6 +11456,8 @@ msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "
 "create a credit note instead."
 msgstr ""
+"Δεν μπορείτε να διαγράψετε ένα τιμολόγιο που δεν είναι προσχέδιο ή "
+"ακυρωμένο. Θα πρέπει να δημιουργήσετε ένα πιστωτικό σημείωμα αντ 'αυτού."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:132

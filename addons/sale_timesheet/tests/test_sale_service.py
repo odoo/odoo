@@ -175,3 +175,58 @@ class TestSaleService(CommonTest):
         # try to update timesheets, catch error 'You cannot modify invoiced timesheet'
         with self.assertRaises(UserError):
             task_serv2.write({'sale_line_id': False})
+
+    def test_delivered_quantity(self):
+        # create SO and confirm it
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_usd.id,
+            'partner_invoice_id': self.partner_usd.id,
+            'partner_shipping_id': self.partner_usd.id,
+            'pricelist_id': self.pricelist_usd.id,
+        })
+        so_line_deliver_new_task_project = self.env['sale.order.line'].create({
+            'name': self.product_delivery_timesheet3.name,
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 10,
+            'product_uom': self.product_delivery_timesheet3.uom_id.id,
+            'price_unit': self.product_delivery_timesheet3.list_price,
+            'order_id': sale_order.id,
+        })
+        so_line_deliver_new_task_project.product_id_change()
+        sale_order.action_confirm()
+        task_serv2 = self.env['project.task'].search([('sale_line_id', '=', so_line_deliver_new_task_project.id)])
+
+        # add a timesheet
+        timesheet1 = self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': task_serv2.project_id.id,
+            'task_id': task_serv2.id,
+            'unit_amount': 4,
+            'employee_id': self.employee_user.id,
+        })
+        self.assertEqual(so_line_deliver_new_task_project.qty_delivered, timesheet1.unit_amount, 'Delivered quantity should be the same then its only related timesheet.')
+
+        # remove the only timesheet
+        timesheet1.unlink()
+        self.assertEqual(so_line_deliver_new_task_project.qty_delivered, 0.0, 'Delivered quantity should be reset to zero, since there is no more timesheet.')
+
+        # log 2 new timesheets
+        timesheet2 = self.env['account.analytic.line'].create({
+            'name': 'Test Line 2',
+            'project_id': task_serv2.project_id.id,
+            'task_id': task_serv2.id,
+            'unit_amount': 4,
+            'employee_id': self.employee_user.id,
+        })
+        timesheet3 = self.env['account.analytic.line'].create({
+            'name': 'Test Line 3',
+            'project_id': task_serv2.project_id.id,
+            'task_id': task_serv2.id,
+            'unit_amount': 2,
+            'employee_id': self.employee_user.id,
+        })
+        self.assertEqual(so_line_deliver_new_task_project.qty_delivered, timesheet2.unit_amount + timesheet3.unit_amount, 'Delivered quantity should be the sum of the 2 timesheets unit amounts.')
+
+        # remove timesheet2
+        timesheet2.unlink()
+        self.assertEqual(so_line_deliver_new_task_project.qty_delivered, timesheet3.unit_amount, 'Delivered quantity should be reset to the sum of remaining timesheets unit amounts.')
