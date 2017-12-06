@@ -46,7 +46,7 @@ from . import tools
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
 from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
-                   Collector, LastOrderedSet, OrderedSet
+                   safe_eval, Collector, LastOrderedSet, OrderedSet
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
@@ -5076,7 +5076,7 @@ env['account.invoice.line'].search([]).grouped(['partner_id.country_id.name', 'p
             funcname = match.group(1)
             fieldname = match.group(2)
             try:
-                func = eval(funcname)
+                func = safe_eval(funcname)
             except NameError:
                 raise ValueError("Unknown aggregate function: " + funcname)
             return func, fieldname
