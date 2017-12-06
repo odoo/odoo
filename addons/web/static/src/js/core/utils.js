@@ -349,6 +349,23 @@ var utils = {
         ].join(';');
     },
     /**
+     * Sort an array in place, keeping the initial order for identical values.
+     *
+     * @param {Array} array
+     * @param {function} iteratee
+     */
+    stableSort: function (array, iteratee) {
+        var stable = array.slice();
+        return array.sort(function stableCompare (a, b) {
+            var order = iteratee(a, b);
+            if (order !== 0) {
+                return order;
+            } else {
+                return stable.indexOf(a) - stable.indexOf(b);
+            }
+        });
+    },
+    /**
      * @param {any} array
      * @param {any} elem1
      * @param {any} elem2
