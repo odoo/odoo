@@ -16,19 +16,19 @@ class ResConfigSettings(models.TransientModel):
     group_discount_per_so_line = fields.Boolean("Discounts", implied_group='sale.group_discount_per_so_line')
     module_sale_margin = fields.Boolean("Margins")
     group_sale_layout = fields.Boolean("Sections on Sales Orders", implied_group='sale.group_sale_layout')
-    group_warning_sale = fields.Boolean("Warnings", implied_group='sale.group_warning_sale')
+    group_warning_sale = fields.Boolean("Warnings for Sale", implied_group='sale.group_warning_sale')
     portal_confirmation = fields.Boolean('Online Signature & Payment')
     portal_confirmation_options = fields.Selection([
         ('sign', 'Signature'),
         ('pay', 'Payment')], string="Online Signature & Payment options")
-    module_sale_payment = fields.Boolean("Online Signature & Payment", help='Technical field implied by user choice of online_confirmation')
+    module_sale_payment = fields.Boolean("Sale Payment", help='Technical field implied by user choice of online_confirmation')
     module_website_quote = fields.Boolean("Quotations Templates")
     group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='sale.group_delivery_invoice_address')
     multi_sales_price = fields.Boolean("Multiple Sales Prices per Product")
     multi_sales_price_method = fields.Selection([
         ('percentage', 'Multiple prices per product (e.g. customer segments, currencies)'),
         ('formula', 'Prices computed from formulas (discounts, margins, roundings)')
-        ], default='percentage', string="Pricelists")
+        ], default='percentage', string="Pricelists Method")
     sale_pricelist_setting = fields.Selection([
         ('fixed', 'A single sales price per product'),
         ('percentage', 'Multiple prices per product (e.g. customer segments, currencies)'),
@@ -60,7 +60,7 @@ class ResConfigSettings(models.TransientModel):
         domain="[('type', '=', 'service')]",
         oldname='deposit_product_id_setting',
         help='Default product used for payment advances')
-    auto_done_setting = fields.Boolean("Lock Confirmed Orders")
+    auto_done_setting = fields.Boolean("Auto Done Setting")
     module_website_sale_digital = fields.Boolean("Sell digital products - provide downloadable content on your customer portal")
 
     auth_signup_uninvited = fields.Selection([
