@@ -9,4 +9,4 @@ class Attachment(models.Model):
     _inherit = "ir.attachment"
 
     # related for backward compatibility with saas-6
-    website_url = fields.Char(string="Attachment URL", related='local_url', deprecated=True)
+    website_url = fields.Char(string="Website URL", related='local_url', deprecated=True)

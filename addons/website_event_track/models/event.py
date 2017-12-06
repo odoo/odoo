@@ -30,10 +30,10 @@ class Event(models.Model):
     _inherit = "event.event"
 
     track_ids = fields.One2many('event.track', 'event_id', 'Tracks')
-    track_count = fields.Integer('Tracks', compute='_compute_track_count')
+    track_count = fields.Integer('# of tracks', compute='_compute_track_count')
 
     sponsor_ids = fields.One2many('event.sponsor', 'event_id', 'Sponsors')
-    sponsor_count = fields.Integer('Sponsors', compute='_compute_sponsor_count')
+    sponsor_count = fields.Integer('# of Sponsors', compute='_compute_sponsor_count')
 
     website_track = fields.Boolean('Tracks on Website')
     website_track_proposal = fields.Boolean('Proposals on Website')
