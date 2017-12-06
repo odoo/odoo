@@ -118,6 +118,7 @@
             <field name="reference_type">none</field>
             <field name="payment_term_id" ref="account.account_payment_term"/>
             <field name="type">in_invoice</field>
+            <field name="journal_id" search="[('type', '=', 'purchase')]"/>
             <field name="date_invoice" eval="time.strftime('%Y-%m')+'-01'"/>
         </record>
         <record id="demo_invoice_0_line_1" model="account.invoice.line">
@@ -141,6 +142,7 @@
             <field name="partner_id" ref="base.res_partner_12"/>
             <field name="type">in_invoice</field>
             <field name="date_invoice" eval="time.strftime('%Y-%m')+'-01'"/>
+            <field name="journal_id" search="[('type', '=', 'purchase')]"/>
         </record>
 
         <record id="ceo_wages_line" model="account.invoice.line">
@@ -160,6 +162,7 @@
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="type">in_invoice</field>
             <field name="date_invoice" eval="time.strftime('%Y-%m')+'-15'"/>
+            <field name="journal_id" search="[('type', '=', 'purchase')]"/>
         </record>
 
         <record id="coffee_machine_line" model="account.invoice.line">
