@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<!-- Layout add nav and footer -->
-<template id="footer_custom" inherit_id="website.footer_default" name="Footer Associations Link">
-    <xpath expr="//div[@id='info']/ul" position="inside">
-        <li><a href="/members">Members</a></li>
-    </xpath>
-</template>
-
 <template id="index" name="Members">
     <t t-call="website.layout">
         <t t-set="additional_title">Members</t>
