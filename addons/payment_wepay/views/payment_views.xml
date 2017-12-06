@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="payment_acquirer_view_form_inherit_payment_wepay" model="ir.ui.view">
+        <field name="name">payment.acquirer.view.form.inherit.payment.wepay</field>
+        <field name="model">payment.acquirer</field>
+        <field name="inherit_id" ref="payment.acquirer_form"/>
+        <field name="arch" type="xml">
+            <xpath expr='//group[@name="acquirer"]' position='after'>
+                <group attrs="{'invisible': [('provider', '!=', 'wepay')]}">
+                    <field name="wepay_account_id"/>
+                    <field name="wepay_client_id"/>
+                    <field name="wepay_access_token"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
