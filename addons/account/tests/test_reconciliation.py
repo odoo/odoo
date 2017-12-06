@@ -409,6 +409,11 @@ class TestReconciliation(AccountingTestCase):
         # create a bank statement in USD bank journal with a bank statement line of 85 USD
         # Reconcile bank statement with payment and put the remaining 5 USD in bank fees or another account.
 
+        # Hacky hack hack
+        # When a localization defines a default receivable account on partners (like l10n_do does) test breaks
+        # on non-crucial side-effects
+        self.env['res.partner'].browse(self.partner_agrolait_id).write({'property_account_receivable_id': self.account_rcv.id})
+
         invoice = self.create_invoice(type='out_invoice', invoice_amount=80, currency_id=self.currency_usd_id)
         # register payment on invoice
         payment = self.env['account.payment'].create({'payment_type': 'inbound',
@@ -487,6 +492,11 @@ class TestReconciliation(AccountingTestCase):
         # Debit = 147.91            | Credit = 166.66
         # Balance Debit = 18.75
         # Counterpart Credit goes in Exchange diff
+
+        # Hacky hack hack
+        # When a localization defines a default payable account on partners (like l10n_do does) test breaks
+        # on non-crucial side-effects
+        self.env['res.partner'].browse(self.partner_agrolait_id).write({'property_account_payable_id': self.account_rsa.id})
 
         dest_journal_id = self.env['account.journal'].search([('type', '=', 'purchase'), ('company_id', '=', self.env.ref('base.main_company').id)], limit=1)
         account_expenses = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_expenses').id)], limit=1)
