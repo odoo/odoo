@@ -2,13 +2,6 @@
 <odoo>
 
     <!-- Account Template -->
-    <record id="l10n_hk_1" model="account.account.template">
-        <field name="name">Assets</field>
-        <field name="code">1</field>
-        <field name="reconcile" eval="False" />
-        <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
-        <field name="chart_template_id" ref="l10n_hk_chart_template" />
-    </record>
     <record id="l10n_hk_11" model="account.account.template">
         <field name="name">Fixed Assets</field>
         <field name="code">11</field>
@@ -72,13 +65,6 @@
         <field name="user_type_id" ref="account.data_account_type_receivable" />
         <field name="chart_template_id" ref="l10n_hk_chart_template" />
     </record>
-    <record id="l10n_hk_1243" model="account.account.template">
-        <field name="name">Payment in Advance</field>
-        <field name="code">1243</field>
-        <field name="reconcile" eval="True" />
-        <field name="user_type_id" ref="account.data_account_type_receivable" />
-        <field name="chart_template_id" ref="l10n_hk_chart_template" />
-    </record>
     <record id="l10n_hk_1245" model="account.account.template">
         <field name="name">Sundry Deposits</field>
         <field name="code">1245</field>
@@ -114,11 +100,11 @@
         <field name="user_type_id" ref="account.data_account_type_current_assets" />
         <field name="chart_template_id" ref="l10n_hk_chart_template" />
     </record>
-    <record id="l10n_hk_2" model="account.account.template">
-        <field name="name">Liabilities</field>
-        <field name="code">2</field>
+    <record id="l10n_hk_21" model="account.account.template">
+        <field name="name">Non-current Liabilities</field>
+        <field name="code">21</field>
         <field name="reconcile" eval="False" />
-        <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities" />
         <field name="chart_template_id" ref="l10n_hk_chart_template" />
     </record>
     <record id="l10n_hk_22" model="account.account.template">
@@ -170,13 +156,6 @@
         <field name="user_type_id" ref="account.data_account_type_payable" />
         <field name="chart_template_id" ref="l10n_hk_chart_template" />
     </record>
-    <record id="l10n_hk_3" model="account.account.template">
-        <field name="name">Net Worth</field>
-        <field name="code">3</field>
-        <field name="reconcile" eval="False" />
-        <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
-        <field name="chart_template_id" ref="l10n_hk_chart_template" />
-    </record>
     <record id="l10n_hk_31" model="account.account.template">
         <field name="name">Paid Capital</field>
         <field name="code">31</field>
@@ -198,14 +177,6 @@
         <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
         <field name="chart_template_id" ref="l10n_hk_chart_template" />
     </record>
-    <record id="l10n_hk_4" model="account.account.template">
-        <field name="name">Revenues</field>
-        <field name="code">4</field>
-        <field name="reconcile" eval="False" />
-        <field name="user_type_id" ref="account.data_account_type_revenue" />
-        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
-        <field name="chart_template_id" ref="l10n_hk_chart_template" />
-    </record>
     <record id="l10n_hk_41" model="account.account.template">
         <field name="name">Trade Income</field>
         <field name="code">41</field>
@@ -215,7 +186,7 @@
         <field name="chart_template_id" ref="l10n_hk_chart_template" />
     </record>
     <record id="l10n_hk_42" model="account.account.template">
-        <field name="name">General income</field>
+        <field name="name">Other Income and Gains</field>
         <field name="code">42</field>
         <field name="reconcile" eval="False" />
         <field name="user_type_id" ref="account.data_account_type_revenue" />
@@ -255,7 +226,7 @@
         <field name="chart_template_id" ref="l10n_hk_chart_template" />
     </record>
     <record id="l10n_hk_51" model="account.account.template">
-        <field name="name">Cost</field>
+        <field name="name">Costs</field>
         <field name="code">51</field>
         <field name="reconcile" eval="False" />
         <field name="user_type_id" ref="account.data_account_type_expenses" />
@@ -263,7 +234,7 @@
         <field name="chart_template_id" ref="l10n_hk_chart_template" />
     </record>
     <record id="l10n_hk_5101" model="account.account.template">
-        <field name="name">Trade Cost</field>
+        <field name="name">Trade Costs</field>
         <field name="code">5101</field>
         <field name="reconcile" eval="False" />
         <field name="user_type_id" ref="account.data_account_type_expenses" />
@@ -271,7 +242,7 @@
         <field name="chart_template_id" ref="l10n_hk_chart_template" />
     </record>
     <record id="l10n_hk_5105" model="account.account.template">
-        <field name="name">Misc Cost</field>
+        <field name="name">Misc. Costs</field>
         <field name="code">5105</field>
         <field name="reconcile" eval="False" />
         <field name="user_type_id" ref="account.data_account_type_expenses" />
@@ -279,7 +250,7 @@
         <field name="chart_template_id" ref="l10n_hk_chart_template" />
     </record>
     <record id="l10n_hk_5106" model="account.account.template">
-        <field name="name">Cost Of Transportation</field>
+        <field name="name">Costs of Transportation</field>
         <field name="code">5106</field>
         <field name="reconcile" eval="False" />
         <field name="user_type_id" ref="account.data_account_type_expenses" />
@@ -367,7 +338,7 @@
         <field name="chart_template_id" ref="l10n_hk_chart_template" />
     </record>
     <record id="l10n_hk_5209" model="account.account.template">
-        <field name="name">SVC For Telephone</field>
+        <field name="name">Telecommunication Expenses</field>
         <field name="code">5209</field>
         <field name="reconcile" eval="False" />
         <field name="user_type_id" ref="account.data_account_type_expenses" />
@@ -383,7 +354,7 @@
         <field name="chart_template_id" ref="l10n_hk_chart_template" />
     </record>
     <record id="l10n_hk_5211" model="account.account.template">
-        <field name="name">Computer Information</field>
+        <field name="name">IT Expenses</field>
         <field name="code">5211</field>
         <field name="reconcile" eval="False" />
         <field name="user_type_id" ref="account.data_account_type_expenses" />
@@ -415,7 +386,7 @@
         <field name="chart_template_id" ref="l10n_hk_chart_template" />
     </record>
     <record id="l10n_hk_5217" model="account.account.template">
-        <field name="name">Contribution For MPF</field>
+        <field name="name">MPF Contribution</field>
         <field name="code">5217</field>
         <field name="reconcile" eval="False" />
         <field name="user_type_id" ref="account.data_account_type_expenses" />
@@ -541,7 +512,7 @@
         <field name="transfer_account_id" ref="l10n_hk_transfer" />
         <field name="property_account_receivable_id" ref="l10n_hk_1240" />
         <field name="property_account_payable_id" ref="l10n_hk_2211" />
-        <field name="property_account_income_categ_id" ref="l10n_hk_4" />
+        <field name="property_account_income_categ_id" ref="l10n_hk_41" />
         <field name="property_account_expense_categ_id" ref="l10n_hk_51" />
         <field name="expense_currency_exchange_account_id" ref="l10n_hk_5240" />
         <field name="income_currency_exchange_account_id" ref="l10n_hk_4240" />
