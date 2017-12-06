@@ -37,7 +37,7 @@ class MaintenanceEquipmentCategory(models.Model):
     equipment_ids = fields.One2many('maintenance.equipment', 'category_id', string='Equipments', copy=False)
     equipment_count = fields.Integer(string="Equipment", compute='_compute_equipment_count')
     maintenance_ids = fields.One2many('maintenance.request', 'category_id', copy=False)
-    maintenance_count = fields.Integer(string="Maintenance", compute='_compute_maintenance_count')
+    maintenance_count = fields.Integer(string="# of Maintenance", compute='_compute_maintenance_count')
     alias_id = fields.Many2one(
         'mail.alias', 'Alias', ondelete='restrict', required=True,
         help="Email alias for this equipment category. New emails will automatically "
@@ -137,7 +137,7 @@ class MaintenanceEquipment(models.Model):
     color = fields.Integer('Color Index')
     scrap_date = fields.Date('Scrap Date')
     maintenance_ids = fields.One2many('maintenance.request', 'equipment_id')
-    maintenance_count = fields.Integer(compute='_compute_maintenance_count', string="Maintenance", store=True)
+    maintenance_count = fields.Integer(compute='_compute_maintenance_count', string="Maintenance Count", store=True)
     maintenance_open_count = fields.Integer(compute='_compute_maintenance_count', string="Current Maintenance", store=True)
     period = fields.Integer('Days between each preventive maintenance')
     next_action_date = fields.Date(compute='_compute_next_maintenance', string='Date of the next preventive maintenance', store=True)
@@ -275,7 +275,7 @@ class MaintenanceRequest(models.Model):
     description = fields.Text('Description')
     request_date = fields.Date('Request Date', track_visibility='onchange', default=fields.Date.context_today,
                                help="Date requested for the maintenance to happen")
-    owner_user_id = fields.Many2one('res.users', string='Created by', default=lambda s: s.env.uid)
+    owner_user_id = fields.Many2one('res.users', string='Created by User', default=lambda s: s.env.uid)
     category_id = fields.Many2one('maintenance.equipment.category', related='equipment_id.category_id', string='Category', store=True, readonly=True)
     equipment_id = fields.Many2one('maintenance.equipment', string='Equipment', index=True)
     technician_user_id = fields.Many2one('res.users', string='Owner', track_visibility='onchange', oldname='user_id')
