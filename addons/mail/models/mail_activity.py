@@ -70,7 +70,7 @@ class MailActivity(models.Model):
     # owner
     res_id = fields.Integer('Related Document ID', index=True, required=True)
     res_model_id = fields.Many2one(
-        'ir.model', 'Related Document Model',
+        'ir.model', 'Document Model',
         index=True, ondelete='cascade', required=True)
     res_model = fields.Char(
         'Related Document Model',
@@ -299,13 +299,13 @@ class MailActivityMixin(models.AbstractModel):
     activity_state = fields.Selection([
         ('overdue', 'Overdue'),
         ('today', 'Today'),
-        ('planned', 'Planned')], string='State',
+        ('planned', 'Planned')], string='Activity State',
         compute='_compute_activity_state',
         groups="base.group_user",
         help='Status based on activities\nOverdue: Due date is already passed\n'
              'Today: Activity date is today\nPlanned: Future activities.')
     activity_user_id = fields.Many2one(
-        'res.users', 'Responsible',
+        'res.users', 'Responsible Person',
         related='activity_ids.user_id',
         search='_search_activity_user_id',
         groups="base.group_user")
