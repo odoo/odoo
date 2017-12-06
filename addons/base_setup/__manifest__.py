@@ -13,8 +13,10 @@ Shows you a list of applications features to install from.
     """,
     'depends': ['base', 'web'],
     'data': [
+        'security/base_setup_security.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
+        'views/base_setup_templates.xml',
     ],
     'demo': [],
     'installable': True,

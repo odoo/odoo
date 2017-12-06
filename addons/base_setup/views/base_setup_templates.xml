@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="base_setup_assets_backned" inherit_id="web.assets_backend" name="Base Setup Backend Assets">
+        <xpath expr="//script[contains(@src, 'rainbow_effect.js')]" position="attributes">
+            <attribute name="groups">base_setup.group_rainbowman</attribute>
+        </xpath>
+    </template>
+</odoo>

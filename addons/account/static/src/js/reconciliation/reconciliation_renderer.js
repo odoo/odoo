@@ -31,6 +31,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
         this._super(parent);
         this.model = model;
         this._initialState = state;
+        this.show_rainbowman = state.show_rainbowman;
     },
     /**
      * display iniial state and create the name statement field
@@ -122,12 +123,16 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             $done.find('.button_back_to_statement').click(this._onGoToBankStatement.bind(this));
             this.$el.children().hide();
             // display rainbowman after full reconciliation
-            this.trigger_up('show_effect', {
-                type: 'rainbow_man',
-                fadeout: 'no',
-                message: $done,
-            });
-            this.$el.css('min-height', '450px');
+            if (this.show_rainbowman) {
+                this.trigger_up('show_effect', {
+                    type: 'rainbow_man',
+                    fadeout: 'no',
+                    message: $done,
+                });
+                this.$el.css('min-height', '450px');
+            } else {
+                $done.appendTo(this.$el);
+            }
         }
 
         if (state.notifications) {

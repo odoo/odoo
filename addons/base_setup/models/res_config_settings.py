@@ -40,6 +40,7 @@ class ResConfigSettings(models.TransientModel):
             help="Allows to work in a multi currency environment")
     paperformat_id = fields.Many2one(related="company_id.paperformat_id", string='Paper format')
     external_report_layout = fields.Selection(related="company_id.external_report_layout")
+    group_rainbow_man = fields.Boolean(string="Rainbow Gamification", implied_group='base_setup.group_rainbowman')
 
     @api.model
     def get_values(self):

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_rainbowman" model="res.groups">
+        <field name="name">Rainbowman User</field>
+    </record>
+
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('base_setup.group_rainbowman'))]"/>
+    </record>
+</odoo>
