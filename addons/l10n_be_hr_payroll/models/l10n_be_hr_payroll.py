@@ -36,7 +36,7 @@ class HrContract(models.Model):
     company_car_total_depreciated_cost = fields.Monetary()
     public_transport_reimbursed_amount = fields.Monetary(string='Reimbursed amount',
         compute='_compute_public_transport_reimbursed_amount', readonly=False, store=True)
-    others_reimbursed_amount = fields.Monetary(string='Reimbursed amount')
+    others_reimbursed_amount = fields.Monetary(string='Other Reimbursed amount')
     transport_employer_cost = fields.Monetary(compute='_compute_transport_employer_cost', string="Employer cost from employee transports")
     warrants_cost = fields.Monetary(compute='_compute_warrants_cost')
 
