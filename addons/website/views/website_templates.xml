@@ -210,16 +210,25 @@
 
 <template id="layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
     <xpath expr="//footer" position="inside">
-        <div class="container mt16 mb8">
-            <div class="pull-right" t-ignore="true" t-if="not editable">
-                Create a <a target="_blank" href="http://www.odoo.com/page/website-builder">free website</a> with
-                <a target="_blank" class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>
-            </div>
-            <div class="pull-left text-muted" itemscope="itemscope" itemtype="http://schema.org/Organization">
-                Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span>
+        <div class="container o_footer_copyright">
+            <div class="row">
+                <div class="col-md-6 text-muted text-center-xs">
+                    <span>Copyright &amp;copy;</span> <span t-field="res_company.name" itemprop="name">Company name</span>
+                    <t t-call="website.language_selector"/>
+                </div>
+                <div class="col-md-6 text-right o_not_editable" t-if="not editable">
+                    <t t-call="website.brand_promotion"/>
+                </div>
             </div>
         </div>
     </xpath>
+</template>
+
+<template id="brand_promotion" name="Brand Promotion">
+    <div class="o_brand_promotion">
+        Create a <a target="_blank" href="http://www.odoo.com/page/website-builder">free website</a> with
+        <a target="_blank" class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>
+    </div>
 </template>
 
 <template id="layout_logo_show" inherit_id="website.layout" customize_show="True" name="Show Logo">
@@ -257,26 +266,45 @@
 
 <template id="footer_custom" inherit_id="website.layout" name="Footer">
     <xpath expr="//div[@id='footer']" position="replace">
-        <div class="oe_structure" id="footer" t-if='not no_footer'>
-            <section>
+        <div id="footer" class="oe_structure" t-ignore="true" t-if="not no_footer">
+            <section class="s_text_block pt16 pb8">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-4">
-                            <h4 class="mt16">Subtitle</h4>
-                            <p>
-                                <a href="/">Homepage</a>
-                            </p>
+                            <h4>Our Products &amp; Services</h4>
+                            <ul class="list-unstyled">
+                                <li><a href="/">Home</a></li>
+                            </ul>
                         </div>
                         <div class="col-md-4">
-                            <h4 class="mt16">Subtitle 2</h4>
-                            <p>
-                                ...
-                            </p>
+                            <h4>Connect with us</h4>
+                            <ul class="list-unstyled">
+                                <li><a href="/contactus">Contact us</a></li>
+                                <li><i class="fa fa-phone"/> <span t-field="res_company.phone"/></li>
+                                <li><i class="fa fa-envelope"/>  <span t-field="res_company.email"/></li>
+                            </ul>
+                            <div class="btn-group">
+                                <a t-if="website.social_facebook" t-att-href="website.social_facebook" class="btn btn-xs btn-link"><i class="fa fa-2x fa-facebook-square"/></a>
+                                <a t-if="website.social_twitter" t-att-href="website.social_twitter" class="btn btn-xs btn-link"><i class="fa fa-2x fa-twitter"/></a>
+                                <a t-if="website.social_linkedin" t-att-href="website.social_linkedin" class="btn btn-xs btn-link"><i class="fa fa-2x fa-linkedin"/></a>
+                                <a t-if="website.social_youtube" t-att-href="website.social_youtube" class="btn btn-xs btn-link"><i class="fa fa-2x fa-youtube-play"/></a>
+                                <a t-if="website.social_googleplus" t-att-href="website.social_googleplus" class="btn btn-xs btn-link" rel="publisher"><i class="fa fa-2x fa-google-plus-square"/></a>
+                                <a t-if="website.social_github" t-att-href="website.social_github" class="btn btn-xs btn-link"><i class="fa fa-2x fa-github"/></a>
+                            </div>
                         </div>
                         <div class="col-md-4">
-                            <h4 class="mt16">Subtitle 3</h4>
+                            <h4>
+                                <span t-field="res_company.name"/>
+                                <small> - <a href="/aboutus">About us</a></small>
+                            </h4>
                             <p>
-                                ...
+                                We are a team of passionate people whose goal is to improve everyone's
+                                life through disruptive products. We build great products to solve your
+                                business problems.
+                            </p>
+                            <p>
+                                Our products are designed for small to medium size companies willing to optimize
+                                their performance.
                             </p>
                         </div>
                     </div>
@@ -287,16 +315,23 @@
 </template>
 
 <template id="language_selector">
-    <ul class="list-inline js_language_selector mt16" t-if="(request and request.is_frontend_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
-        <li t-foreach="languages" t-as="lg">
-          <a
-            t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
-            t-att-data-default-lang="(editable or translatable) and 'true' if website and lg[0] == website.default_lang_code else None"
-            t-att-data-lang="lg[0]"
-            class="js_change_lang"
-          >
-            <t t-esc="lg[1].split('/').pop()"/>
-          </a>
+    <ul class="js_language_selector mb0 list-inline" t-if="(request and request.is_frontend_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
+        <li>
+            <div class="dropup">
+                <button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span t-esc="list(filter(lambda lg : lg[0] == lang, languages))[0][1].split('/').pop()"/>
+                    <span class="caret ml4"/>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li t-foreach="languages" t-as="lg">
+                        <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
+                           t-att-data-default-lang="(editable or translatable) and 'true' if website and lg[0] == website.default_lang_code else None"
+                           t-att-data-lang="lg[0]" class="js_change_lang">
+                            <t t-esc="lg[1].split('/').pop()"/>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </li>
         <li groups="website.group_website_publisher">
             <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
@@ -306,57 +341,6 @@
             </a>
         </li>
     </ul>
-</template>
-
-<template id="footer_default" inherit_id="website.footer_custom" customize_show="True" name="Automatic Footer">
-    <xpath expr="//div[@id='footer']" position="replace" >
-        <div id="footer" class="container hidden-print" t-if='not no_footer'>
-            <div class="row">
-                <div class="col-md-4 col-lg-3">
-                    <h4>Our Products &amp; Services</h4>
-                    <ul class="list-unstyled" id="products">
-                        <li><a href="/">Home</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4  col-lg-3" id="info">
-                    <h4>Connect with us</h4>
-                    <ul class="list-unstyled">
-                        <li><a href="/contactus">Contact us</a></li>
-                    </ul>
-                    <ul class="list-unstyled">
-                        <li t-ignore="true"><i class="fa fa-phone"></i> <span t-field="res_company.phone"></span></li>
-                        <li t-ignore="true"><i class="fa fa-envelope"></i>  <span t-field="res_company.email"></span></li>
-                    </ul>
-                    <h2>
-                        <a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="fa fa-facebook-square"/></a>
-                        <a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="fa fa-twitter"/></a>
-                        <a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="fa fa-linkedin"/></a>
-                        <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="fa fa-youtube-play"/></a>
-                        <a t-att-href="website.social_googleplus" t-if="website.social_googleplus" rel="publisher"><i class="fa fa-google-plus-square"/></a>
-                        <a t-att-href="website.social_github" t-if="website.social_github"><i class="fa fa-github"/></a>
-                    </h2>
-                </div>
-                <div class="col-md-4 col-lg-5 col-lg-offset-1">
-                    <h4>
-                        <span t-field="res_company.name" />
-                        <small> - <a href="/aboutus">About us</a></small>
-                    </h4>
-                    <div>
-                        <p>
-                            We are a team of passionate people whose goal is to improve everyone's
-                            life through disruptive products. We build great products to solve your
-                            business problems.
-                        </p>
-                        <p>
-                            Our products are designed for small to medium size companies willing to optimize
-                            their performance.
-                        </p>
-                    </div>
-                    <t t-call="website.language_selector"/>
-                </div>
-            </div>
-        </div>
-    </xpath>
 </template>
 
 <!-- Util template -->

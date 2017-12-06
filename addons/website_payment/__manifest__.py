@@ -13,7 +13,6 @@
     ],
     'data': [
         'views/website_payment_view.xml',
-        'views/website_payment_templates.xml',
     ],
     'auto_install': False,
 }

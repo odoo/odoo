@@ -540,3 +540,19 @@ div.carousel {
         }
     }
 }
+
+// COPYRIGHT
+.o_footer_copyright {
+    padding: 8px;
+    .js_language_selector {
+        display: inline-block;
+    }
+    @media (min-width: $screen-sm-min) {
+        .row {
+            @include o-flex-display;
+            > div {
+                margin: auto 0;
+            }
+        }
+    }
+}
