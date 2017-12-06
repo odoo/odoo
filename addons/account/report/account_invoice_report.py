@@ -42,9 +42,9 @@ class AccountInvoiceReport(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
     price_total = fields.Float(string='Total Without Tax', readonly=True)
-    user_currency_price_total = fields.Float(string="Total Without Tax", compute='_compute_amounts_in_user_currency', digits=0)
+    user_currency_price_total = fields.Float(string="Total Without Tax User Currency", compute='_compute_amounts_in_user_currency', digits=0)
     price_average = fields.Float(string='Average Price', readonly=True, group_operator="avg")
-    user_currency_price_average = fields.Float(string="Average Price", compute='_compute_amounts_in_user_currency', digits=0)
+    user_currency_price_average = fields.Float(string="Average Price User currency", compute='_compute_amounts_in_user_currency', digits=0)
     currency_rate = fields.Float(string='Currency Rate', readonly=True, group_operator="avg", groups="base.group_multi_currency")
     nbr = fields.Integer(string='# of Lines', readonly=True)  # TDE FIXME master: rename into nbr_lines
     type = fields.Selection([
