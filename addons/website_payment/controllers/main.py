@@ -15,7 +15,7 @@ class WebsitePayment(http.Controller):
         values = {
             'pms': payment_tokens,
             'acquirers': acquirers,
-            'error_message': [kwargs.get('error')],
+            'error_message': [kwargs['error']] if kwargs.get('error') else False,
         }
         return_url = request.params.get('redirect', '/my/payment_method')
         for acquirer in acquirers:
