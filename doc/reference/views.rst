@@ -194,6 +194,9 @@ root can have the following attributes:
     <reference/views/form>`'s fields and buttons are thus accepted by list
     views although they may not have any meaning if the list view is
     non-editable
+
+    .. note:: if the ``edit`` attribute is set to ``false``, the ``editable`` option will be ignored.
+
 ``default_order``
     overrides the ordering of the view, replacing the model's default order.
     The value is a comma-separated list of fields, postfixed by ``desc`` to
