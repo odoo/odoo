@@ -51,6 +51,9 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
             var layoutInfo = this.$textarea.data('layoutInfo');
             $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
         }
+        if (this._getValue() !== this.value) {
+            this._isDirty = true;
+        }
         this._super.apply(this, arguments);
     },
     /**
