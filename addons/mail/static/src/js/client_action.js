@@ -470,6 +470,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.$buttons.on('click', '.o_mail_chat_button_mark_read', this._onMarkAllReadClicked.bind(this));
         this.$buttons.on('click', '.o_mail_chat_button_unstar_all', this._onUnstarAllClicked.bind(this));
         this.$buttons.on('click', '.o_mail_chat_button_moderate_all', this._onModerateAll.bind(this));
+        this.$buttons.on('click', '.o_mail_chat_button_select_all', this._onSelectAll.bind(this));
     },
     /**
      * @private
@@ -1027,6 +1028,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         } else {
             chat_manager.moderate_selected_messages(messageIDs, moderatorAction);
         }
+    },
+        /**
+     * @private
+     */
+    _onSelectAll: function (event) {
+        
     },
     /**
      * @private

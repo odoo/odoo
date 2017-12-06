@@ -398,15 +398,6 @@ function remove_message_from_channel (channel_id, message) {
     });
 }
 
-// function remove_message_from_cache(message) {
-//     _.each(message.channel_ids, function(channel_id) {
-//         var channel = _.findWhere(channels, { id: channel_id });
-//         if (channel) {
-//             channel.cache.messages = _.without(channel.cache.messages, message);
-//         }
-//     });
-// }
-
 function update_channel_unread_counter (channel, counter) {
     if (channel.unread_counter > 0 && counter === 0) {
         unread_conversation_counter = Math.max(0, unread_conversation_counter-1);
