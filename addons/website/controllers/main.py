@@ -3,6 +3,8 @@ import datetime
 from itertools import islice
 import json
 import xml.etree.ElementTree as ET
+import functools
+from cStringIO import StringIO
 
 import logging
 import re
@@ -16,6 +18,7 @@ from openerp.addons.base.ir.ir_qweb import AssetsBundle
 from openerp.addons.web.controllers.main import WebClient, Binary
 from openerp.addons.web import http
 from openerp.http import request
+from openerp.modules import get_module_resource
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +26,8 @@ logger = logging.getLogger(__name__)
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 LOC_PER_SITEMAP = 45000
 SITEMAP_CACHE_TIME = datetime.timedelta(hours=12)
+
+db_monodb = http.db_monodb
 
 class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
@@ -44,6 +49,48 @@ class Website(openerp.addons.web.controllers.main.Home):
                     return request.registry['ir.http'].reroute(first_menu.url)
         return self.page(page)
 
+    #------------------------------------------------------
+    # Logo - overwrite of the web logo to show the appropriate logo if multicompany/multidomain
+    #------------------------------------------------------
+    @http.route([
+        '/web/binary/company_logo',
+        '/logo',
+        '/logo.png',
+    ], type='http', auth="none", cors="*")
+    def company_logo(self, dbname=None, **kw):
+        imgname = 'logo.png'
+        placeholder = functools.partial(get_module_resource, 'web', 'static', 'src', 'img')
+        if request.session.db:
+            dbname = request.session.db
+        elif dbname is None:
+            dbname = db_monodb()
+
+        if not dbname:
+            response = http.send_file(placeholder(imgname))
+        else:
+            try:
+                # create an empty registry
+                registry = openerp.modules.registry.Registry(dbname)
+                domain_name = request.httprequest.environ.get('HTTP_HOST', '').split(':')[0]
+                with registry.cursor() as cr:
+
+                    cr.execute("""SELECT c.logo_web, c.write_date
+                                    FROM website w
+                               LEFT JOIN res_company c
+                                      ON c.id = w.company_id
+                                   WHERE w.domain = %s
+                               """, (domain_name,))
+
+                    row = cr.fetchone()
+                    if row and row[0]:
+                        image_data = StringIO(str(row[0]).decode('base64'))
+                        response = http.send_file(image_data, filename=imgname, mtime=row[1])
+                    else:
+                        response = http.send_file(placeholder('nologo.png'))
+            except Exception:
+                response = http.send_file(placeholder(imgname))
+
+        return response
     #------------------------------------------------------
     # Login - overwrite of the web login so that regular users are redirected to the backend 
     # while portal users are redirected to the frontend by default
