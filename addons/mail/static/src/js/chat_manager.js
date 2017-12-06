@@ -510,8 +510,6 @@ function on_partner_notification (data) {
         on_mark_as_unread_notification(data);
     } else if (data.type === 'moderation') {
         on_moderator_notification(data);
-    } else if (data.type === 'acceptance') {
-        on_acceptance_notification(data);
     } else if (data.type === 'deletion') {
         on_deletion_notification(data);
     } else if (data.info === 'channel_seen') {
@@ -550,15 +548,6 @@ function on_moderator_notification(data) {
     moderation_counter ++;
     add_message(data.message, {channel_id: 'channel_moderation'});
     chat_manager.bus.trigger('update_moderation_counter');
-}
-
-function on_acceptance_notification(data) {
-    var message = _.findWhere(messages, { id: data.message_id });
-    if (message) {
-        message.needs_moderation = false;
-        message.channel_ids = data.channel_ids;
-        chat_manager.bus.trigger('update_message', message);
-    }
 }
 
 function on_deletion_notification(data) {

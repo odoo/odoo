@@ -118,15 +118,35 @@ class Channel(models.Model):
         if self.mapped('moderator_ids').filtered(lambda moderator: moderator.email == False):
             raise ValidationError("Moderators must have an email address!")
 
+
+    @api.constrains('moderator_ids', 'channel_partner_ids', 'channel_last_seen_partner_ids')
+    def _check_moderators_are_channel_partners(self):
+        for channel in self:
+            if not (channel.mapped('moderator_ids.partner_id') <= channel.channel_partner_ids):
+                raise ValidationError("Moderators must be channel subscribers!")
+
     @api.constrains('moderation', 'email_send')
     def _check_moderation_implies_email_send(self):
         if self.filtered(lambda channel: channel.moderation and not channel.email_send):
             raise ValidationError('Only email lists can be moderated!')
 
+    @api.onchange('moderator_ids')
+    def _add_moderators_to_channel_last_seen_partners(self):
+        ChannelPartner = self.env['mail.channel.partner']
+        for partner in (
+            self.mapped('moderator_ids.partner_id')
+            - self.mapped('channel_last_seen_partner_ids.partner_id')
+        ):
+            channel_partner = ChannelPartner.new({'partner_id': partner.id})
+            self.channel_last_seen_partner_ids += channel_partner
+
     @api.multi
     def send_guidelines_to_partners(self):
-        self._send_guidelines(self.channel_partner_ids, force_send=True)
-        raise UserError("The guidelines have been sent.")
+        """ Send guidelines to all channel followers.
+            Security problems?  
+            If some addresses are bad, bounce emails will not be received, no?
+        """
+        self._send_guidelines(self.channel_partner_ids, force_send=False)
 
     @api.multi
     def _send_guidelines(self, partners, force_send=True):
@@ -134,24 +154,34 @@ class Channel(models.Model):
         template = self.env.ref('mail.guidelines_notification_email', raise_if_not_found=False)
         banned_emails = self.moderated_email_ids.filtered(lambda x: x.decision == 'ban').mapped('email')
         good_partners = partners.filtered(lambda p: not (p.email in banned_emails))
-        #need to change expeditor address
+        expeditor = self.env['ir.config_parameter'].sudo().get_param('mail.catchall.alias') + "@" + self.env['ir.config_parameter'].sudo().get_param('mail.catchall.domain')
         for partner in good_partners:
-            template.with_context(lang=partner.lang, expeditor="dam@openerp.com", channel_name=self.name, guidelines_text=self.guidelines).send_mail(partner.id, force_send=force_send, raise_exception=True)
-
+            template.with_context(lang=partner.lang, expeditor=expeditor, channel_name=self.name, guidelines_text=self.guidelines).send_mail(partner.id, force_send=force_send, raise_exception=True)
 
     @api.multi
-    def _add_to_moderated_email_list(self, email, decision):
-        """ This method will add an email address into either white list of emails or ban list of emails
-            according to the decision of the moderator. 
-            If the email already exists in the list, it should not be allowed to change related decision using this method 
-            (although it is possible, we want to simplify work and not to ask useless repetitive actions from the moderators). 
+    def _add_to_moderated_email_list(self, emails, decision):
+        """ This method will add emails addresses into either white list of 
+            emails or ban list of emails according to the decision of the moderator.
+            Although made possible, if the emails already exist in the list, 
+            it should not be allowed to change related decision using this method.
+            For now, this method is only called on a list of one email but is is designed to allow more emails.
         """
-        email_from = tools.email_split(email)
-        email = email_from[0] if email_from else False
-        #search if already exist
-        moderated_email_id = self.env['channel.moderated.emails'].search([('email', '=', email), ('channel_id', 'in', self.ids)], limit=1).id
-        vals = [(1, moderated_email_id, {'decision': decision})] if moderated_email_id else [(0, _, {'email': email, 'decision': decision})]
-        self.write({'moderated_email_ids': vals})
+        #Put emails in the appropriate format
+        def right_format(email):
+            email_split = tools.email_split(email)
+            if email_split:
+                return email_split[0]
+            else:
+                email
+        emails = [right_format(email) for email in emails]
+        already_moderated_email_ids = self.moderated_email_ids.search([('email', 'in', emails)])
+        not_moderated_emails = [email for email in emails if email not in already_moderated_email_ids.mapped('email')]
+        cmds = set()
+        for record in already_moderated_email_ids:
+                cmds.add((1, record.id, {'decision': decision}))
+        cmds = list(cmds) + [(0, 0, {'email': email, 'decision': decision}) for email in not_moderated_emails]
+        self.write({'moderated_email_ids': cmds})
+        
 
     @api.multi
     def _is_moderated_email(self, email, decision):
@@ -161,7 +191,6 @@ class Channel(models.Model):
         email_from = tools.email_split(email)
         email = email_from[0] if email_from else False
         return bool(self.moderated_email_ids.search([('email', '=', email)], limit=1))
-
 
     @api.one
     @api.depends('channel_partner_ids')
@@ -232,7 +261,8 @@ class Channel(models.Model):
 
     def _subscribe_users(self):
         for mail_channel in self:
-            mail_channel.write({'channel_partner_ids': [(4, pid) for pid in mail_channel.mapped('group_ids').mapped('users').mapped('partner_id').ids]})
+            partner_ids = mail_channel.mapped('group_ids').mapped('users').mapped('partner_id').ids
+            mail_channel.write({'channel_partner_ids': [(4, pid) for pid in partner_ids]})
 
     @api.multi
     def action_follow(self):
@@ -330,7 +360,7 @@ class Channel(models.Model):
                 email_from = kwargs.get('email_from')
                 if email_from:
                     email = tools.email_split(email_from)[0]
-            if self.env['channel.moderated.emails'].search([('email', '=', email), ('decision', '=', 'allow')]):
+            if self.env['channel.moderated.emails'].search([('email', '=', email), ('decision', '=', 'allow')]) or email in self.mapped('moderator_ids.email'):
                 moderation_status = 'accepted'
             elif self.env['channel.moderated.emails'].search([('email', '=', email), ('decision', '=', 'ban')]):
                 moderation_status = 'rejected'

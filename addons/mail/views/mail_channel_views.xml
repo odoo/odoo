@@ -84,7 +84,7 @@
             <field name="arch" type="xml">
                 <form string="Mail Channel Form">
                     <header>
-                        <button name="send_guidelines_to_partners" type="object" string="Send guidelines" attrs="{'invisible':[('send_guidelines','=',False)]}"/>
+                        <button name="send_guidelines_to_partners" type="object" string="Send guidelines" confirm="You are going to send guidelines to all subscribers. Do you confirm action?" attrs="{'invisible':[('send_guidelines','=',False)]}"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box"/>

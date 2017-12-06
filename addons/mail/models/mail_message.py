@@ -883,68 +883,74 @@ class Message(models.Model):
             self.notify_deletion_and_unlink()
         else:
             channel = self.env['mail.channel'].browse(self.res_id)
-            channel._add_to_moderated_email_list(self.email_from, decision)
-            self.accept_message() if decision == 'allow' else self.notify_deletion_and_unlink()
+            channel._add_to_moderated_email_list([self.email_from], decision)
+            self.accept_message(True) if decision == 'allow' else self.notify_deletion_and_unlink(True)
         return True
 
-    def accept_message(self):
-        self.write({'moderation_status': 'accepted', 'moderator_id': self.env.uid})
-        notifications = []
-        for message in self:
+    def accept_message(self, allow=False):
+        messages_to_notify = self
+        if allow:
+            for message in self:
+                messages_to_notify |= self.search([
+                    ('moderation_status', '=', 'pending_moderation'),
+                    ('email_from', '=', message.email_from),
+                    ('model', '=', 'mail.channel'),
+                    ('res_id', '=', message.res_id)
+                    ])
+        messages_to_notify.write({'moderation_status': 'accepted', 'moderator_id': self.env.uid})
+        for message in messages_to_notify:
             message._notify()
-            notifications.append(
-                    [
-                        (self._cr.dbname, 'res.partner', message.author_id.id),
-                        {'type': 'acceptance', 'message_id': message.id, 'channel_ids': message.channel_ids.ids}
-                    ]
-                )
-        self.env['bus.bus'].sendmany(notifications)
 
-
-    def notify_deletion_and_unlink(self):
-        """ Delete messages and notify deletion to all moderators and authors. If messages exist on web client side,
-        they will be effectively removed whenever it is appropriate.
+    def notify_deletion_and_unlink(self, ban=False):
+        """ Notify deletion of messages to their moderators and authors and then delete them. If messages exist on web client side.
         """
-        channel_ids = self.mapped('res_id')
-        moderators = self.env['mail.channel'].browse(channel_ids).mapped('moderator_ids')
-        authors = self.mapped('author_id')
+        messages_to_delete = self
+        if ban:
+            for message in self:
+                messages_to_delete |= self.search([
+                    ('moderation_status', '=', 'pending_moderation'),
+                    ('email_from', '=', message.email_from),
+                    ('model', '=', 'mail.channel'),
+                    ('res_id', '=', message.res_id)
+                    ])           
+
+
+        channel_ids = messages_to_delete.mapped('res_id')
+        moderators = messages_to_delete.env['mail.channel'].browse(channel_ids).mapped('moderator_ids')
+        authors = messages_to_delete.mapped('author_id')
         
         moderators_notifications = [
-            [
-                (self._cr.dbname, 'res.partner', moderator.partner_id.id),
-                {
-                    'type': 'deletion',
-                    'message_ids': [
-                        message.id
-                        for message in self
-                        if message.res_id in moderator.moderated_channel_ids.ids
-                        ]
-                }
-            ]
+            (
+                moderator.partner_id.id,
+                [
+                    message.id
+                    for message in messages_to_delete
+                    if message.res_id in moderator.moderated_channel_ids.ids
+                ]
+            )
             for moderator in moderators
         ]
 
         authors_notifications = [
-            [
-                (self._cr.dbname, 'res.partner', author.id),
-                {
-                    'type': 'deletion',
-                    'message_ids': [
-                        message.id
-                        for message in self
-                        if message.author_id == author
-                        ]
-                }
-            ]
+            (
+                author.id,
+                [
+                    message.id
+                    for message in messages_to_delete
+                    if message.author_id == author
+                ]
+            )
             for author in authors
         ]
 
         brut_notifications = moderators_notifications + authors_notifications
 
+        # The following steps ensures that no message id is sent twice to the same person
+        # (in case the person is both moderator and author of the message).
         dictionary = {}
         for notif in brut_notifications:
-            partner_id = notif[0][2]
-            message_ids = notif[1]['message_ids']
+            partner_id = notif[0]
+            message_ids = notif[1]
             if partner_id in dictionary:
                 dictionary[partner_id] = list(set(dictionary[partner_id]) or set(message_ids))
             else:
@@ -954,16 +960,15 @@ class Message(models.Model):
         for partner_id, message_ids in dictionary.items():
             nice_notifications.append(
                         [
-                            (self._cr.dbname, 'res.partner', partner_id),
+                            (messages_to_delete._cr.dbname, 'res.partner', partner_id),
                             {
                                 'type': 'deletion',
-                                'message_ids': list(dictionary[partner_id])
+                                'message_ids': dictionary[partner_id]
                             }
                         ]
                     )
-
-        self.env['bus.bus'].sendmany(nice_notifications)
-        self.unlink()
+        messages_to_delete.env['bus.bus'].sendmany(nice_notifications)
+        messages_to_delete.unlink()
 
     @api.model
     def notify_moderator(self):
@@ -980,8 +985,9 @@ class Message(models.Model):
         self.env['mail.mail'].create(vals).send()
 
     def _moderator_message_notifications(self, message):
-        """ Generate the bus notifications for the given message
-            :param message : the mail.message to sent
+        """ Generate the bus notifications for the given message and send them
+            to appropriate moderators.
+            :param message : the message to sent
         """
         notifications = [
             [

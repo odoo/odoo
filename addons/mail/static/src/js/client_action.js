@@ -126,13 +126,14 @@ var ModeratorRejectMessageDialog = Dialog.extend({
             }],
         });
     },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
     /**
      * @private
-     * @returns list of emails
+     * @return {string[]} list of emails
      */
     _getEmailTo: function () {
         var messages = _.map(this.messageIDs, function (messageID) {
@@ -141,6 +142,10 @@ var ModeratorRejectMessageDialog = Dialog.extend({
         return _.pluck(messages, 'email_from').join(',');
     },
 
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+  
     /**
      * Bind handler for send notification on rejection of message by moderator
      *
@@ -151,7 +156,7 @@ var ModeratorRejectMessageDialog = Dialog.extend({
         var message = this.$('#reject_message').val();
         var title = this.$('#message_title').val();
         if (message && title) {
-            return this._rpc({
+            this._rpc({
                 model: 'mail.message',
                 method: 'create_notification_email',
                 args: [{
@@ -161,9 +166,7 @@ var ModeratorRejectMessageDialog = Dialog.extend({
                     auto_delete: true
                 }],
             })
-            .then(function () {
-                chat_manager.moderate_selected_messages(self.messageIDs, 'reject');
-            });
+            chat_manager.moderate_selected_messages(self.messageIDs, 'reject');
         }
     }
 });
@@ -358,10 +361,35 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     _onModeration: function (messageID, decision) {
         if (decision === 'reject') {
             this._onRejectMessage([messageID]);
+        } else if (decision === 'discard') {
+            this._onDiscardMessage([messageID]);
+        } else if (decision === 'ban') {
+            this._onBan(messageID);
         } else {
             chat_manager.moderate([messageID], decision);
-        }
+        }    
     },
+
+    _onDiscardMessage: function (messageIDs) {
+        var num = messageIDs.length
+        var options = {
+            confirm_callback: function () {
+                chat_manager.moderate_selected_messages(messageIDs, 'discard')
+            }
+        };
+        Dialog.confirm(this, _t("You are going to discard " + num + " messages. Do you confirm action?"), options);
+    },
+
+    _onBan: function (messageID) {
+        var email = chat_manager.get_message(messageID).email_from;
+        var options = {
+            confirm_callback: function () {
+                chat_manager.moderate_selected_messages([messageID], 'ban')
+            }
+        };
+        Dialog.confirm(this, _t("You are going to ban " + email + ". Do you confirm action?"), options);
+    },
+
     /**
      * Binds handlers on the given $input to make them autocomplete and/or
      * create channels.
@@ -736,6 +764,11 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 .toggleClass('disabled', disabled);
         }
         if (this.channel.id === "channel_moderation") {
+            this.$buttons
+                .find('.o_mail_chat_button_select_all')
+                .toggleClass('disabled', disabled);
+        }
+        if (this.channel.id === "channel_moderation") {
             this.thread.trigger('toggle_decision_button');
         }
     },
@@ -776,7 +809,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             .find('.o_mail_chat_button_unstar_all')
             .toggle(channel.id === "channel_starred")
             .removeClass("o_hidden");
-
+        this.$buttons
+            .find('.o_mail_chat_button_select_all')
+            .toggle(channel.id === "channel_moderation")
+            .removeClass("o_hidden");
         this.$buttons.find('.o_mail_chat_button_moderate_all').hide();
         this.$('.o_mail_chat_channel_item')
             .removeClass('o_active')
@@ -853,6 +889,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     _onRejectMessage: function (messageIDs) {
         new ModeratorRejectMessageDialog(this, messageIDs).open();
     },
+
     /**
      * @private
      */
