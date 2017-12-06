@@ -152,7 +152,7 @@ class hr_salary_rule_category(osv.osv):
     _name = 'hr.salary.rule.category'
     _description = 'Salary Rule Category'
     _columns = {
-        'name':fields.char('Name', required=True, readonly=False),
+        'name':fields.char('Name', required=True, translate=True, readonly=False),
         'code':fields.char('Code', size=64, required=True, readonly=False),
         'parent_id':fields.many2one('hr.salary.rule.category', 'Parent', help="Linking a salary category to its parent is used only for the reporting purpose."),
         'children_ids': fields.one2many('hr.salary.rule.category', 'parent_id', 'Children'),
