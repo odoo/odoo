@@ -13,7 +13,7 @@ class PosConfig(models.Model):
     floor_ids = fields.One2many('restaurant.floor', 'pos_config_id', string='Restaurant Floors', help='The restaurant floors served by this point of sale.')
     printer_ids = fields.Many2many('restaurant.printer', 'pos_config_printer_rel', 'config_id', 'printer_id', string='Order Printers')
     is_table_management = fields.Boolean('Table Management')
-    is_order_printer = fields.Boolean('Order Printers')
+    is_order_printer = fields.Boolean('Order Printer')
     module_pos_restaurant = fields.Boolean(default=True)
 
     @api.onchange('iface_tipproduct')

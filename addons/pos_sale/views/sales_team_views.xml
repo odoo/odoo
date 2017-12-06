@@ -12,7 +12,7 @@
                 <attribute name="attrs">{'invisible': ['|', ('dashboard_graph_model', '=', 'crm.opportunity.report'), ('team_type', '=', 'pos')]}</attribute>
             </xpath>
             <xpath expr="//field[@name='dashboard_graph_group']" position="after">
-                <field name="dashboard_graph_group_pos" attrs="{'invisible': [('team_type', '!=', 'pos')]}"/>
+                <field name="dashboard_graph_group_pos" string="Group by" attrs="{'invisible': [('team_type', '!=', 'pos')]}"/>
             </xpath>
         </field>
     </record>
