@@ -61,18 +61,6 @@ ul.nav-stacked > li > a {
 
 footer {
     background-color: #F8F8F8;
-
-    #footer {
-        padding-top: 32px;
-
-        // TODO This solves a bug that should be solved differently when
-        // possible. When automatic footer option is enabled, <ul/> become non
-        // editable because of <xpath/>. So adding a link does not duplicate the
-        // <li/> elements but the <a/> elements.
-        ul.list-unstyled > li > a {
-            display: block;
-        }
-    }
 }
 
 // Odoo options classes

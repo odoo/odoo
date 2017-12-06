@@ -11,5 +11,11 @@
              <field name="channel_id" ref="website_livechat.im_livechat_channel_data_website"></field>
          </record>
 
+         <record id="menu_livechat" model="website.menu">
+            <field name="name">Live Support</field>
+            <field name="url">/livechat</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence">55</field>
+        </record>
      </data>
 </odoo>

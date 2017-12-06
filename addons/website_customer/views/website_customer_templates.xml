@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<!-- Layout add nav and footer -->
-<template id="footer_custom" inherit_id="website.footer_default" name="Footer Customer References Link">
-    <xpath expr="//div[@id='info']/ul" position="inside">
-        <li><a href="/customers">Our References</a></li>
-    </xpath>
-</template>
-
 <template id="index" name="Our References">
     <t t-call="website.layout">
         <div id="wrap">

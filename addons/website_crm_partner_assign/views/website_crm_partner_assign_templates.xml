@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<!-- Layout add nav and footer -->
-<template id="footer_custom" inherit_id="website.footer_default" name="Footer Partners Link">
-    <xpath expr="//div[@id='info']/ul" position="inside">
-        <li><a href="/partners">Resellers</a></li>
-    </xpath>
-</template>
-
 <!-- Page -->
 <template id="layout" name="Partners Layout">
     <t t-call="website.layout">

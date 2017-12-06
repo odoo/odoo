@@ -15,13 +15,6 @@
     </xpath>
 </template>
 
-<!-- Layout add nav and footer -->
-<template id="header_footer_custom" inherit_id="website.footer_default" name="Footer Events Link">
-    <xpath expr="//ul[@id='products']" position="inside">
-        <li><a href="/event">Events</a></li>
-    </xpath>
-</template>
-
 <!-- Page -->
 <template id="index" name="Events">
     <t t-call="website.layout">
@@ -713,18 +706,13 @@
     </t>
 </template>
 
-<template id="website.layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
-  <xpath expr="//footer" position="inside">
-      <div class="container mt16 mb8">
-          <div class="pull-right" t-ignore="true" t-if="not editable">
+<template id="website_event.brand_promotion" inherit_id="website.brand_promotion">
+    <xpath expr="//div[hasclass('o_brand_promotion')]" position="replace">
+        <div class="o_brand_promotion">
             Powered by <a target="_blank" class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>.
             Try the <a target="_blank" href="http://www.odoo.com/page/website-builder">open source website builder</a>.
-          </div>
-          <div class="pull-left text-muted">
-              Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
-          </div>
-      </div>
-  </xpath>
+        </div>
+    </xpath>
 </template>
 
 
