@@ -47,7 +47,7 @@
                                     <field name="categ_id" string="Product Category"/>
                                 </group>
                                 <group name="group_standard_price">
-                                    <field name="list_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                    <field name="list_price" string="Sales Price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                                     <field name="company_id" groups="base.group_multi_company"
                                         options="{'no_create': True}"/>
                                     <field name="uom_id" groups="product.group_uom" options="{'no_create': True}"/>
