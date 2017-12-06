@@ -14,7 +14,7 @@ class SaleCouponProgram(models.Model):
 
     name = fields.Char(required=True, translate=True)
     active = fields.Boolean('Active', default=True, help="A program is available for the customers when active")
-    rule_id = fields.Many2one('sale.coupon.rule', string="Applicability", ondelete='restrict', required=True)
+    rule_id = fields.Many2one('sale.coupon.rule', string="Coupon Rule", ondelete='restrict', required=True)
     reward_id = fields.Many2one('sale.coupon.reward', string="Reward", ondelete='restrict', required=True, copy=False)
     sequence = fields.Integer(copy=False,
         help="Coupon program will be applied based on given sequence if multiple programs are " +

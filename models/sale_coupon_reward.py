@@ -14,7 +14,7 @@ class SaleCouponReward(models.Model):
     reward_type = fields.Selection([
         ('discount', 'Discount'),
         ('product', 'Free Product'),
-        ], string='Reward', default='discount',
+        ], string='Reward Type', default='discount',
         help="Discount - Reward will be provided as discount.\n" +
         "Free Product - Free product will be provide as reward \n" +
         "Free Shipping - Free shipping will be provided as reward (Need delivery module)")
