@@ -13,6 +13,6 @@ Can Tecim can.tecim@gmail.com https://github.com/cantecim
 List of contributors:
 
 Can Tecim can.tecim@gmail.com https://github.com/cantecim  
-Can Tecim dev@projetgrup.com https://github.com/projetgrup  
+Can Tecim dev@projetgrup.com https://github.com/devprojetgrup  
 Selahattin Ünlü selahattin.unlu@yandex.com https://github.com/selahattinunlu  
 Abdurrahman Işık isikabdurrahman@yahoo.com https://github.com/abdurrahman  
