@@ -7,6 +7,7 @@ var relational_fields = require('web.relational_fields');
 var basic_fields = require('web.basic_fields');
 var core = require('web.core');
 var time = require('web.time');
+var session = require('web.session');
 var qweb = core.qweb;
 var _t = core._t;
 
@@ -121,12 +122,16 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             $done.find('.button_back_to_statement').click(this._onGoToBankStatement.bind(this));
             this.$el.children().hide();
             // display rainbowman after full reconciliation
-            this.trigger_up('show_effect', {
-                type: 'rainbow_man',
-                fadeout: 'no',
-                message: $done,
-            });
-            this.$el.css('min-height', '450px');
+            if (session.show_effect) {
+                this.trigger_up('show_effect', {
+                    type: 'rainbow_man',
+                    fadeout: 'no',
+                    message: $done,
+                });
+                this.$el.css('min-height', '450px');
+            } else {
+                $done.appendTo(this.$el);
+            }
         }
 
         if (state.notifications) {
