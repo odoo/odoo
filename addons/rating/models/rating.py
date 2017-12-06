@@ -48,7 +48,7 @@ class Rating(models.Model):
         ('satisfied', 'Satisfied'),
         ('not_satisfied', 'Not satisfied'),
         ('highly_dissatisfied', 'Highly dissatisfied'),
-        ('no_rating', 'No Rating yet')], string='Rating', store=True, compute='_compute_rating_text', readonly=True)
+        ('no_rating', 'No Rating yet')], string='Rating Text', store=True, compute='_compute_rating_text', readonly=True)
     feedback = fields.Text('Comment', help="Reason of the rating")
     message_id = fields.Many2one('mail.message', string="Linked message", help="Associated message when posting a review. Mainly used in website addons.", index=True)
     access_token = fields.Char('Security Token', default=new_access_token, help="Access token to set the rating of the value")
