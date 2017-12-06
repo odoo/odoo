@@ -17,7 +17,7 @@
 # Fabian Liesch <fabian.liesch@gmail.com>, 2017
 # JackTheHunter <Maximilian.N98@gmail.com>, 2017
 # Tom <github@strohmeier.email>, 2017
-# BT_astauder <andreas.stauder@brain-tec.ch>, 2017
+# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2017
 # Niki Waibel <niki.waibel@gmail.com>, 2017
 # Stefan Hartenfels <stefan.hartenfels@camptocamp.com>, 2017
 # Malte Jansen <work@maltejansen.de>, 2017
@@ -32,8 +32,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"POT-Creation-Date: 2017-11-30 13:12+0000\n"
+"PO-Revision-Date: 2017-11-30 13:12+0000\n"
 "Last-Translator: Katharina Moritz <kmo@e2f.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -752,13 +752,13 @@ msgid "Number of Requests Scheduled"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_high_priority
-msgid "Number of Requests in High Priority"
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_unscheduled
+msgid "Number of Requests Unscheduled"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_unscheduled
-msgid "Number of Requests Unscheduled"
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_high_priority
+msgid "Number of Requests in High Priority"
 msgstr ""
 
 #. module: maintenance
@@ -900,11 +900,6 @@ msgid "Request"
 msgstr "Anfrage"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_ids
-msgid "Requests"
-msgstr ""
-
-#. module: maintenance
 #: model:mail.message.subtype,name:maintenance.mt_req_created
 msgid "Request Created"
 msgstr "Anfrage erstellt"
@@ -928,6 +923,11 @@ msgstr "Angefragt von"
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
 msgid "Requested by :"
 msgstr "Angefragt von:"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_ids
+msgid "Requests"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_technician_user_id

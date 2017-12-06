@@ -1,21 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_geolocalize
-#
-# Translators:
-# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2016
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-04-04 06:34+0000\n"
-"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
-"Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
-"Language: th\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_geolocalize
@@ -26,15 +23,15 @@ msgstr ""
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "<span> : Lat : </span>"
-msgstr "<span> : ละจิจูด : </span>"
+msgstr ""
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "<span> ;  Long:  </span>"
-msgstr "<span> ;  ลองจิจูด:  </span>"
+msgstr ""
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/res_partner.py:17
+#: code:addons/base_geolocalize/models/res_partner.py:18
 #, python-format
 msgid ""
 "Cannot contact geolocation servers. Please make sure that your Internet "
@@ -42,12 +39,19 @@ msgid ""
 msgstr ""
 
 #. module: base_geolocalize
+#: model:ir.model,name:base_geolocalize.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_partner_latitude
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_users_partner_latitude
 msgid "Geo Latitude"
 msgstr ""
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_partner_longitude
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_users_partner_longitude
 msgid "Geo Longitude"
 msgstr ""
 
@@ -58,20 +62,14 @@ msgstr ""
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-#, fuzzy
 msgid "Geolocation"
-msgstr "วันที่ท้องถิ่น"
+msgstr ""
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_date_localization
-#, fuzzy
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_users_date_localization
 msgid "Geolocation Date"
-msgstr "วันที่ท้องถิ่น"
-
-#. module: base_geolocalize
-#: model:ir.model,name:base_geolocalize.model_res_partner
-msgid "Partner"
-msgstr "คู่ค้า"
+msgstr ""
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form

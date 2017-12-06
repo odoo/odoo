@@ -181,9 +181,8 @@ if(!the_form.length) {
     // frontend does not load moment locale at all.
     // so wait until DOM ready with locale then init datetimepicker
     ready_with_locale.then(function(){
-        var l10n = _t.database.parameters;
         $('.form-control.date').datetimepicker({
-            format : time.strftime_to_moment_format(l10n.date_format),
+            format : time.getLangDateFormat(),
             minDate: moment({ y: 1900 }),
             maxDate: moment().add(200, "y"),
             calendarWeeks: true,

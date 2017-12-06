@@ -150,7 +150,7 @@ var PagePropertiesDialog = widget.Dialog.extend({
                 down: 'fa fa-chevron-down',
             },
             locale : moment.locale(),
-            format : time.strftime_to_moment_format(l10n.date_format +' '+ l10n.time_format),
+            format : time.getLangDatetimeFormat(),
             widgetPositioning : {
                 horizontal: 'auto',
                 vertical: 'top',

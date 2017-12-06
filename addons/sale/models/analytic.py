@@ -30,7 +30,7 @@ class AccountAnalyticLine(models.Model):
     def unlink(self):
         sale_order_lines = self.sudo().mapped('so_line')
         res = super(AccountAnalyticLine, self).unlink()
-        sale_order_lines._analytic_compute_delivered_quantity()
+        sale_order_lines.with_context(sale_analytic_force_recompute=True)._analytic_compute_delivered_quantity()
         return res
 
     @api.model
@@ -141,6 +141,8 @@ class AccountAnalyticLine(models.Model):
                 so_line_values = analytic_line._sale_prepare_sale_order_line_values(sale_order, price)
                 so_line = self.env['sale.order.line'].create(so_line_values)
                 so_line._compute_tax_id()
+            else:
+                so_line.write({'qty_delivered': analytic_line.unit_amount})
 
             if so_line:  # if so line found or created, then update AAL (this will trigger the recomputation of qty delivered on SO line)
-                analytic_line.write({'so_line': so_line.id})
+                analytic_line.with_context(sale_analytic_norecompute=True).write({'so_line': so_line.id})

@@ -549,7 +549,7 @@ class MrpProduction(models.Model):
             #order.action_assign()
             consume_move_lines = moves_to_do.mapped('active_move_line_ids')
             for moveline in moves_to_finish.mapped('active_move_line_ids'):
-                if moveline.move_id.has_tracking != 'none':
+                if moveline.product_id == order.product_id and moveline.move_id.has_tracking != 'none':
                     if any([not ml.lot_produced_id for ml in consume_move_lines]):
                         raise UserError(_('You can not consume without telling for which lot you consumed it'))
                     # Link all movelines in the consumed with same lot_produced_id false or the correct lot_produced_id

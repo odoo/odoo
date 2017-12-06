@@ -1,27 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * note
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-02-12 10:20+0000\n"
-"Last-Translator: Oihane Crucelaegui <oihanecruce@gmail.com>\n"
-"Language-Team: Basque (http://www.transifex.com/odoo/odoo-9/language/eu/)\n"
-"Language: eu\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Basque (https://www.transifex.com/odoo/teams/41243/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: eu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_open
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Active"
-msgstr "Gaituta"
+msgstr ""
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
@@ -31,6 +32,11 @@ msgstr ""
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
+msgstr ""
+
+#. module: note
+#: model:ir.actions.act_window,help:note.note_tag_action
+msgid "Click to add a new tag."
 msgstr ""
 
 #. module: note
@@ -47,7 +53,7 @@ msgstr ""
 #. module: note
 #: model:ir.ui.menu,name:note.menu_note_configuration
 msgid "Configuration"
-msgstr "Konfigurazioa"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_create_uid
@@ -87,6 +93,11 @@ msgstr ""
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Future Activities"
+msgstr ""
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
 msgstr "Group By"
 
@@ -119,20 +130,24 @@ msgid "Last Updated on"
 msgstr "Last Updated on"
 
 #. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Late Activities"
+msgstr ""
+
+#. module: note
 #: model:note.stage,name:note.demo_note_stage_03
 #: model:note.stage,name:note.note_stage_03
 msgid "Later"
 msgstr ""
 
 #. module: note
-#: model:note.stage,name:note.note_stage_00
-msgid "New"
-msgstr "Berria"
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "My Activities"
+msgstr ""
 
 #. module: note
-#: code:addons/note/note.py:165
-#, python-format
-msgid "New Note"
+#: model:note.stage,name:note.note_stage_00
+msgid "New"
 msgstr ""
 
 #. module: note
@@ -140,7 +155,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Note"
-msgstr "Oharra"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_memo
@@ -168,7 +183,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:note.stage,name:note.note_stage_04
 msgid "Notes"
-msgstr "Oharrak"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_user_id
@@ -178,7 +193,7 @@ msgstr ""
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
-msgid "Owner of the note stage."
+msgid "Owner of the note stage"
 msgstr ""
 
 #. module: note
@@ -186,6 +201,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:note.field_note_stage_sequence
 msgid "Sequence"
 msgstr "Sekuentzia"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_stage_id
@@ -231,21 +251,29 @@ msgid "Tag name already exists !"
 msgstr ""
 
 #. module: note
+#: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.ui.menu,name:note.notes_tag_menu
+#: model:ir.ui.view,arch_db:note.note_tag_view_form
+#: model:ir.ui.view,arch_db:note.note_tag_view_tree
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
-msgstr "Etiketak"
+msgstr ""
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_04
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
-msgstr "Aste honetan"
+msgstr ""
 
 #. module: note
 #: model:note.stage,name:note.demo_note_stage_01
 #: model:note.stage,name:note.note_stage_01
 msgid "Today"
+msgstr ""
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Today Activities"
 msgstr ""
 
 #. module: note
@@ -257,10 +285,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:note.action_note_note
 msgid ""
 "Use notes to organize personal tasks or notes. All\n"
-"            notes are private; no one else will be able to see them. "
-"However\n"
-"            you can share some notes with other people by inviting "
-"followers\n"
+"            notes are private; no one else will be able to see them. However\n"
+"            you can share some notes with other people by inviting followers\n"
 "            on the note. (Useful for meeting minutes, especially if\n"
 "            you activate the pad feature for collaborative writings)."
 msgstr ""
@@ -273,7 +299,7 @@ msgstr ""
 #. module: note
 #: model:ir.model,name:note.model_res_users
 msgid "Users"
-msgstr "Erabiltzaileak"
+msgstr ""
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
@@ -281,33 +307,3 @@ msgid ""
 "You can customize how you process your notes/tasks by adding,\n"
 "            removing or modifying columns."
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Beharrezko ekintza"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Date of the last message posted on the record."
-
-#~ msgid "Followers"
-#~ msgstr "Followers"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Jarraitzaileak(kanalak)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "If checked new messages require your attention."
-
-#~ msgid "Last Message Date"
-#~ msgstr "Last Message Date"
-
-#~ msgid "Messages"
-#~ msgstr "Mezuak"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Messages and communication history"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Akzioen zenbakia"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Irakurri gabeko mezuak"

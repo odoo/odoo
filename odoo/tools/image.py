@@ -282,6 +282,8 @@ def image_resize_images(vals, big_name='image', medium_name='image_medium', smal
                         return_big=True, return_medium=True, return_small=True,
                         big_name=big_name, medium_name=medium_name, small_name=small_name,
                         avoid_resize_big=True, avoid_resize_medium=True, avoid_resize_small=True))
+    elif big_name in vals or medium_name in vals or small_name in vals:
+        vals[big_name] = vals[medium_name] = vals[small_name] = False
 
 
 if __name__=="__main__":

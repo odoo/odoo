@@ -153,7 +153,7 @@ var Field = Input.extend( /** @lends instance.web.search.Field# */ {
             value_to_domain = function (facetValue) {
                 return Domain.prototype.stringToArray(
                     domain,
-                    {self: self.value_from(facetValue)}
+                    {self: self.value_from(facetValue), raw_value: facetValue.attributes.value}
                 );
             };
         } else {
