@@ -366,7 +366,7 @@ class AccountInvoice(models.Model):
 
     #fields use to set the sequence, on the first invoice of the journal
     sequence_number_next = fields.Char(string='Next Number', compute="_get_sequence_number_next", inverse="_set_sequence_next")
-    sequence_number_next_prefix = fields.Char(string='Next Number', compute="_get_sequence_prefix")
+    sequence_number_next_prefix = fields.Char(string='Next Number Prefix', compute="_get_sequence_prefix")
 
     _sql_constraints = [
         ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
@@ -1500,9 +1500,9 @@ class AccountInvoiceLine(models.Model):
         default=_default_account,
         help="The income or expense account related to the selected product.")
     price_unit = fields.Float(string='Unit Price', required=True, digits=dp.get_precision('Product Price'))
-    price_subtotal = fields.Monetary(string='Amount',
+    price_subtotal = fields.Monetary(string='Amount (without Taxes)',
         store=True, readonly=True, compute='_compute_price', help="Total amount without taxes")
-    price_total = fields.Monetary(string='Amount',
+    price_total = fields.Monetary(string='Amount (with Taxes)',
         store=True, readonly=True, compute='_compute_price', help="Total amount with taxes")
     price_subtotal_signed = fields.Monetary(string='Amount Signed', currency_field='company_currency_id',
         store=True, readonly=True, compute='_compute_price',
@@ -1698,7 +1698,7 @@ class AccountInvoiceTax(models.Model):
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic account')
     amount = fields.Monetary()
     amount_rounding = fields.Monetary()
-    amount_total = fields.Monetary(string="Amount", compute='_compute_amount_total')
+    amount_total = fields.Monetary(string="Amount Total", compute='_compute_amount_total')
     manual = fields.Boolean(default=True)
     sequence = fields.Integer(help="Gives the sequence order when displaying a list of invoice tax.")
     company_id = fields.Many2one('res.company', string='Company', related='account_id.company_id', store=True, readonly=True)
