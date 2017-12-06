@@ -26,7 +26,7 @@ class AccountInvoice(models.Model):
     l10n_ch_isr_valid = fields.Boolean(compute='_compute_l10n_ch_isr_valid', help='Boolean value. True iff all the data required to generate the ISR are present')
 
     l10n_ch_isr_sent = fields.Boolean(defaut=False, help="Boolean value telling whether or not the ISR corresponding to this invoice has already been printed or sent by mail.")
-    l10n_ch_currency_name = fields.Char(related='currency_id.name', help="The name of this invoice's currency") #This field is used in the "invisible" condition field of the 'Print ISR' button.
+    l10n_ch_currency_name = fields.Char(related='currency_id.name', string="Invoice Currency", help="The name of this invoice's currency") #This field is used in the "invisible" condition field of the 'Print ISR' button.
 
     @api.depends('partner_bank_id.bank_id.l10n_ch_postal_eur', 'partner_bank_id.bank_id.l10n_ch_postal_chf')
     def _compute_l10n_ch_isr_postal(self):
