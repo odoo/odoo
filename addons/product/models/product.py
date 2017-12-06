@@ -9,7 +9,7 @@ from odoo.osv import expression
 
 from odoo.addons import decimal_precision as dp
 
-from odoo.tools import pycompat
+from odoo.tools import float_compare, pycompat
 
 
 class ProductCategory(models.Model):
@@ -468,7 +468,9 @@ class ProductProduct(models.Model):
     def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False):
         self.ensure_one()
         if date is None:
-            date = fields.Date.today()
+            date = fields.Date.context_today(self)
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+
         res = self.env['product.supplierinfo']
         for seller in self.seller_ids:
             # Set quantity in UoM of seller
@@ -482,7 +484,7 @@ class ProductProduct(models.Model):
                 continue
             if partner_id and seller.name not in [partner_id, partner_id.parent_id]:
                 continue
-            if quantity_uom_seller < seller.min_qty:
+            if float_compare(quantity_uom_seller, seller.min_qty, precision_digits=precision) == -1:
                 continue
             if seller.product_id and seller.product_id != self:
                 continue
