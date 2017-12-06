@@ -35,17 +35,6 @@
             <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
         </record>
 
-        <record id="product_product_consumable" model="product.product">
-            <field name="name">Miscellaneous</field>
-            <field name="standard_price">13.0</field>
-            <field name="list_price">18.0</field>
-            <field name="type">consu</field>
-            <field name="uom_id" ref="product.product_uom_unit"/>
-            <field name="uom_po_id" ref="product.product_uom_unit"/>
-            <field name="default_code">MISC</field>
-            <field name="image" type="base64" file="point_of_sale/static/img/product_product_49-image.jpg"/>
-        </record>
-
         <record id="pos_sale_journal" model="account.journal">
             <field name="name">POS Sale Journal</field>
             <field name="code">POSS</field>
