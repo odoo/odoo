@@ -31,7 +31,7 @@
                             <field name="invoice_state" />
 
                             <separator string="Sales" colspan="4"/>
-                            <field name="sale_avg_price"/>
+                            <field name="sale_avg_price" string="Avg. Unit Price"/>
                             <field name="list_price" string="Catalog Price" readonly="1"/>
                             <field name="sale_num_invoiced" />
                             <field name="sales_gap" />
@@ -39,7 +39,7 @@
                             <field name="sale_expected" />
 
                             <separator string="Purchases" colspan="4"/>
-                            <field name="purchase_avg_price"/>
+                            <field name="purchase_avg_price" string="Avg. Unit Price"/>
                             <field name="standard_price" string="Standard Price" readonly="1"/>
                             <field name="purchase_num_invoiced" />
                             <field name="purchase_gap" />
@@ -66,7 +66,7 @@
                 <tree string="Product Margins">
                     <field name="name"/>
                     <field name="default_code"/>
-                    <field name="sale_avg_price"/>
+                    <field name="sale_avg_price" string="Avg. Unit Price"/>
                     <field name="sale_num_invoiced"/>
                     <field name="turnover" sum="Turnover"/>
                     <field name="sales_gap" sum="Sales Gap"/>
