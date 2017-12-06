@@ -197,8 +197,8 @@ class Project(models.Model):
         default=lambda self: self.env.user.company_id.resource_calendar_id.id,
         help="Timetable working hours to adjust the gantt diagram report")
     type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages')
-    task_count = fields.Integer(compute='_compute_task_count', string="Tasks")
-    task_needaction_count = fields.Integer(compute='_compute_task_needaction_count', string="Tasks")
+    task_count = fields.Integer(compute='_compute_task_count', string="# of Tasks")
+    task_needaction_count = fields.Integer(compute='_compute_task_needaction_count', string="# of Tasks need action")
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks',
                                domain=['|', ('stage_id.fold', '=', False), ('stage_id', '=', False)])
     color = fields.Integer(string='Color Index')
@@ -482,7 +482,7 @@ class Task(models.Model):
         ('done', 'Green'),
         ('blocked', 'Red')], string='Kanban State',
         copy=False, default='normal', required=True)
-    kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State', track_visibility='onchange')
+    kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State Label', track_visibility='onchange')
     create_date = fields.Datetime(index=True)
     write_date = fields.Datetime(index=True)  #not displayed in the view but it might be useful with base_automation module (and it needs to be defined first for that)
     date_start = fields.Datetime(string='Starting Date',
