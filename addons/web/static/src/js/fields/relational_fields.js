@@ -95,6 +95,7 @@ var FieldMany2One = AbstractField.extend({
     template: 'FieldMany2One',
     custom_events: _.extend({}, AbstractField.prototype.custom_events, {
         'closed_unset': '_onDialogClosedUnset',
+        'field_changed': '_onFieldChanged',
         'quick_create': '_onQuickCreate',
         'search_create_popup': '_onSearchCreatePopup',
     }),
@@ -124,6 +125,12 @@ var FieldMany2One = AbstractField.extend({
         // 'recordParams' is a dict of params used when calling functions
         // 'getDomain' and 'getContext' on this.record
         this.recordParams = {fieldName: this.name, viewType: this.viewType};
+        // We need to know if the widget is dirty (i.e. if the user has changed
+        // the value, and those changes haven't been acknowledged yet by the
+        // environment), to prevent erasing that new value on a reset (e.g.
+        // coming by an onchange on another field)
+        this._isDirty = false;
+        this.lastChangeEvent = undefined;
     },
     start: function () {
         // booleean indicating that the content of the input isn't synchronized
@@ -151,8 +158,30 @@ var FieldMany2One = AbstractField.extend({
      * TODO
      */
     reinitialize: function (value) {
+        this.isDirty = false;
         this.floating = false;
         this._setValue(value);
+    },
+    /**
+     * Re-renders the widget if it isn't dirty. The widget is dirty if the user
+     * changed the value, and that change hasn't been acknowledged yet by the
+     * environment. For example, another field with an onchange has been updated
+     * and this field is updated before the onchange returns. Two '_setValue'
+     * are done (this is sequential), the first one returns and this widget is
+     * reset. However, it has pending changes, so we don't re-render.
+     *
+     * @override
+     */
+    reset: function (record, event) {
+        this._reset(record, event);
+        if (!event || event === this.lastChangeEvent) {
+            this.isDirty = false;
+        }
+        if (this.isDirty) {
+            return $.when();
+        } else {
+            return this._render();
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -236,6 +265,16 @@ var FieldMany2One = AbstractField.extend({
     */
     _getDisplayName: function (value) {
         return value.split('\n')[0];
+    },
+    /**
+     * Listens to events 'field_changed' to keep track of the last event that
+     * has been trigerred. This allows to detect that all changes have been
+     * acknowledged by the environment.
+     *
+     * @param {OdooEvent} event 'field_changed' event
+     */
+    _onFieldChanged: function (event) {
+        this.lastChangeEvent = event;
     },
     /**
      * @private
@@ -475,6 +514,7 @@ var FieldMany2One = AbstractField.extend({
      * @private
      */
     _onDialogClosedUnset: function () {
+        this._isDirty = false;
         this.floating = false;
         this._render();
     },
@@ -543,6 +583,7 @@ var FieldMany2One = AbstractField.extend({
             // confirmation that the many2one is not properly set.
             return;
         }
+        this.isDirty = true;
         if (this.$input.val() === "") {
             this.reinitialize(false);
         } else if (this._getDisplayName(this.m2o_value) !== this.$input.val()) {
