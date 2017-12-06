@@ -88,6 +88,7 @@ var Context = require('web.Context');
 var core = require('web.core');
 var Domain = require('web.Domain');
 var session = require('web.session');
+var utils = require('web.utils');
 
 var _t = core._t;
 
@@ -3825,7 +3826,7 @@ var BasicModel = AbstractModel.extend({
             for (var k = 0; k < list.resIdsOrder.length; k++) {
                 resIdsOrder[list.resIdsOrder[k]] = k;
             }
-            list.res_ids.sort(function compareResIdIndexes (resId1, resId2) {
+            utils.stableSort(list.res_ids, function compareResIdIndexes (resId1, resId2) {
                 if (!(resId1 in resIdsOrder) && !(resId2 in resIdsOrder)) {
                     return 0;
                 }
@@ -3870,7 +3871,7 @@ var BasicModel = AbstractModel.extend({
                 }
                 return compareRecords(record1ID, record2ID, level + 1);
             };
-            list.res_ids.sort(compareRecords);
+            utils.stableSort(list.res_ids, compareRecords);
         }
         this._selectDataList(list);
     },

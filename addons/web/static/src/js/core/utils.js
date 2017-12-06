@@ -349,6 +349,20 @@ var utils = {
         ].join(';');
     },
     /**
+     * sort an array keeping the initial order for identical values
+     * @param {String} name the name of the cookie
+     * @param {String} value the value stored in the cookie
+     * @param {Integer} ttl time to live of the cookie in millis. -1 to erase the cookie.
+     */
+    stableSort: function (array, iteratee) {
+        var stable = array.slice();
+        return array.sort(function stableCompare (a, b) {
+            var order = iteratee(a, b);
+            if (order !== 0) return order;
+            return stable.indexOf(a) - stable.indexOf(b);
+        });
+    },
+    /**
      * @param {any} array
      * @param {any} elem1
      * @param {any} elem2
