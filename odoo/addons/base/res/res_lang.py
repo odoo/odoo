@@ -220,12 +220,11 @@ class Lang(models.Model):
             if self.env['res.users'].search([('lang', 'in', lang_codes)]):
                 raise UserError(_("Cannot unactivate a language that is currently used by users."))
             # delete linked ir.value specifying default partner's language
-            default_lang = self.env['ir.values'].search([
+            self.env['ir.values'].search([
                 ('key', '=', 'default'),
                 ('name', '=', 'lang'),
-                ('model', '=', 'res.partner')])
-            if default_lang and default_lang.value_unpickle in lang_codes:
-                default_lang.unlink()
+                ('model', '=', 'res.partner')
+            ]).filtered(lambda l: l.value_unpickle in lang_codes).unlink()
         self.clear_caches()
         return super(Lang, self).write(vals)
 
