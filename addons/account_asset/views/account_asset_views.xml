@@ -67,8 +67,7 @@
                         <group string="Additional Options">
                             <field name="open_asset"/>
                             <field name="group_entries"/>
-                            <field name="date_first_depreciation"
-                                   attrs="{'invisible': [('prorata', '=', True)], 'required': [('prorata', '=', False)]}"/>
+                            <field name="date_first_depreciation"/>
                         </group>
                         <group attrs="{'invisible': [('type','=','sale')]}" string="Depreciation Method">
                             <field name="method" widget="radio"/>

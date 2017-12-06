@@ -42,8 +42,9 @@ class AccountAssetCategory(models.Model):
     type = fields.Selection([('sale', 'Sale: Revenue Recognition'), ('purchase', 'Purchase: Asset')], required=True, index=True, default='purchase')
     date_first_depreciation = fields.Selection([
         ('first_day_period', 'Based on First Day of Purchase Period'),
-        ('last_day_period', 'Based on Last Day of Period')],
-        string='Depreciation Dates', default='first_day_period',
+        ('last_day_period', 'Based on Last Day of Purchase Period'),
+        ('manual', 'Based on Purchase Date')],
+        string='Depreciation Dates', default='first_day_period', required=True,
         help='The way to compute the date of the first depreciation.\n'
              '  * Based on first day of purchase period: The depreciation dates will be based on the first day of the purchase month/year.\n'
              '  * Based on the last day of period: The depreciation dates will be based on the last day of the purchase month or the last day of the fiscal year if the depreciation periods are in years.')
@@ -113,10 +114,10 @@ class AccountAssetAsset(models.Model):
     type = fields.Selection(related="category_id.type", string='Type', required=True)
     date_first_depreciation = fields.Selection([
         ('first_day_period', 'Based on First Day of Purchase Period'),
-        ('last_day_period', 'Based on Last Day of Period'),
+        ('last_day_period', 'Based on Last Day of Purchase Period'),
         ('manual', 'Manual')],
         string='Depreciation Dates', default='first_day_period',
-        readonly=True, states={'draft': [('readonly', False)]},
+        readonly=True, states={'draft': [('readonly', False)]}, required=True,
         help='The way to compute the date of the first depreciation.\n'
              '  * Based on first day of purchase period: The depreciation dates will be based on the first day of the purchase month/year.\n'
              '  * Based on the last day of period: The depreciation dates will be based on the last day of the purchase month or the last day of the fiscal year if the depreciation periods are in years.\n'
