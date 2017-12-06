@@ -168,6 +168,25 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list with edit="0"', async function (assert) {
+        assert.expect(2);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            viewOptions: {hasSidebar: true},
+            arch: '<tree editable="top" edit="0"><field name="foo"/></tree>',
+        });
+
+        assert.ok(list.$('tbody td.o_list_record_selector').length, 'should have at least one record');
+
+        await testUtils.dom.click(list.$('tr td:not(.o_list_record_selector)').first());
+        assert.containsNone(list, 'tbody tr.o_selected_row', "should not have editable row");
+
+        list.destroy();
+    });
+
     QUnit.test('simple editable rendering', async function (assert) {
         assert.expect(12);
 
