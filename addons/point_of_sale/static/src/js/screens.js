@@ -1166,7 +1166,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
     save_changes: function(){
         var order = this.pos.get_order();
         if( this.has_client_changed() ){
-            var default_fiscal_position_id = _.findWhere(this.pos.fiscal_positions, {'id': self.pos.config.default_fiscal_position_id[0]});
+            var default_fiscal_position_id = _.findWhere(this.pos.fiscal_positions, {'id': this.pos.config.default_fiscal_position_id[0]});
             if ( this.new_client ) {
                 order.fiscal_position = _.findWhere(this.pos.fiscal_positions, {'id': this.new_client.property_account_position_id[0]});
                 order.set_pricelist(_.findWhere(this.pos.pricelists, {'id': this.new_client.property_product_pricelist[0]}) || this.pos.default_pricelist);
