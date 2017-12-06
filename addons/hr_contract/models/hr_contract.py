@@ -21,7 +21,7 @@ class Employee(models.Model):
         string='Home-Work Dist.', help="In kilometers", groups="hr.group_hr_user")
     contract_ids = fields.One2many('hr.contract', 'employee_id', string='Contracts')
     contract_id = fields.Many2one('hr.contract', compute='_compute_contract_id', string='Current Contract', help='Latest contract of the employee')
-    contracts_count = fields.Integer(compute='_compute_contracts_count', string='Contracts')
+    contracts_count = fields.Integer(compute='_compute_contracts_count', string='# of Contracts')
 
     def _compute_contract_id(self):
         """ get the lastest contract """
