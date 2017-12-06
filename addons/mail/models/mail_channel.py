@@ -342,7 +342,8 @@ class Channel(models.Model):
 
     @api.multi
     def _extract_values(self, message_type, **kwargs):
-        """ This method is used to compute moderation status before the creation of a message. For this operation the message's author email address is required.
+        """ This method is used to compute moderation status before the creation of a message. 
+            For this operation the message's author email address is required.
             This address is returned with status for other computations.
         """
         moderation_status = 'accepted'

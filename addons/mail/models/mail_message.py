@@ -868,15 +868,16 @@ class Message(models.Model):
         """ :param decision
                  * accept       - moderate message and broadcast that message to followers of relevant channels.
                  * reject       - message will be deleted from the database without broadcast
-                                  and send a message to the author with an explanation that the moderators can edit.
+                                  an email sent to the author with an explanation that the moderators can edit.
                  * discard      - message will be deleted from the database without broadcast.
                  * allow        - add email address to white list people of specific channel,
-                                  so that next time if mail come from same email address on same channel then,
-                                  it will automatically boradcast to relevant channels without any approvel from moderator.
-                 * ban          - add email adderss to black list people of specific channel,
-                                  so from next time persion holding that email address will never send mail on that channel.
+                                  so that next time if a message come from same email address on same channel,
+                                  it will be automatically broadcasted to relevant channels without any approval from moderator.
+                 * ban          - add email address to black list of emails for the specific channel.
+                                  From next time, a person sending a message using that email address will not need moderation.
+                                  message_post will not create messages with the corresponding expeditor.
         """
-        # This method is called on a singleton when decision is 'ban' or 'allow'
+        # For now, his method is called on a singleton when decision is 'ban' or 'allow'
         if decision == 'accept':
             self.accept_message()
         elif decision in ['reject', 'discard']:
@@ -902,7 +903,7 @@ class Message(models.Model):
             message._notify()
 
     def notify_deletion_and_unlink(self, ban=False):
-        """ Notify deletion of messages to their moderators and authors and then delete them. If messages exist on web client side.
+        """ Notify deletion of messages to their moderators and authors and then delete them.
         """
         messages_to_delete = self
         if ban:
