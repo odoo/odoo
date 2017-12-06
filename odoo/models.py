@@ -5047,10 +5047,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 subtree = subtree[name]
 
         # collect values from dirty fields
-        result['value'] = {
-            name: self._fields[name].convert_to_onchange(record[name], record, subnames[name])
-            for name in dirty
-        }
+        with env.do_in_onchange():
+            result['value'] = {
+                name: self._fields[name].convert_to_onchange(record[name], record, subnames[name])
+                for name in dirty
+            }
 
         return result
 
