@@ -989,7 +989,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('use default_order on editable tree: sort on demand', function (assert) {
-        assert.expect(8);
+        assert.expect(11);
 
         this.data.foo.records[0].o2m = [1, 3];
         this.data.bar.fields = {name: {string: "Name", type: "char", sortable: true}};
@@ -1029,12 +1029,21 @@ QUnit.module('Views', {
             "Value 2 should be third (shouldn't be sorted)");
 
         form.$('.o_form_sheet_bg').click(); // validate the row before sorting
-        $o2m.find('.o_column_sortable').click();
-        assert.ok(form.$('tbody tr:first td:contains(Value 3)').length,
-            "Value 3 should be first");
-        assert.ok(form.$('tbody tr:eq(1) td:contains(Value 2)').length,
+
+        $o2m.find('.o_column_sortable').click(); // resort list after edition
+        assert.strictEqual(form.$('tbody tr:first').text(), 'Value 1',
+            "Value 1 should be first");
+        assert.strictEqual(form.$('tbody tr:eq(1)').text(), 'Value 2',
             "Value 2 should be second (should be sorted after saving)");
-        assert.ok(form.$('tbody tr:eq(2) td:contains(Value 1)').length,
+        assert.strictEqual(form.$('tbody tr:eq(2)').text(), 'Value 3',
+            "Value 3 should be third");
+
+        $o2m.find('.o_column_sortable').click();
+        assert.strictEqual(form.$('tbody tr:first').text(), 'Value 3',
+            "Value 3 should be first");
+        assert.strictEqual(form.$('tbody tr:eq(1)').text(), 'Value 2',
+            "Value 2 should be second (should be sorted after saving)");
+        assert.strictEqual(form.$('tbody tr:eq(2)').text(), 'Value 1',
             "Value 1 should be third");
 
         form.destroy();
@@ -1051,7 +1060,7 @@ QUnit.module('Views', {
             ids.push(id);
             this.data.bar.records.push({
                 id: id,
-                name: "Value " + id,
+                name: "Value " + (id < 10 ? '0' : '') + id,
             });
         }
         this.data.foo.records[0].o2m = ids;
@@ -1074,15 +1083,15 @@ QUnit.module('Views', {
 
         // Change page
         form.$('.o_pager_next').click();
-        assert.ok(form.$('tbody tr:first td:contains(Value 44)').length,
+        assert.strictEqual(form.$('tbody tr:first').text(), 'Value 44',
             "record 44 should be first");
-        assert.ok(form.$('tbody tr:eq(4) td:contains(Value 48)').length,
+        assert.strictEqual(form.$('tbody tr:eq(4)').text(), 'Value 48',
             "record 48 should be last");
 
         form.$('.o_column_sortable').click();
-        assert.ok(form.$('tbody tr:first td:contains(Value 48)').length,
+        assert.strictEqual(form.$('tbody tr:first').text(), 'Value 08',
             "record 48 should be first");
-        assert.ok(form.$('tbody tr:eq(4) td:contains(Value 44)').length,
+        assert.strictEqual(form.$('tbody tr:eq(4)').text(), 'Value 04',
             "record 44 should be first");
 
         form.destroy();
