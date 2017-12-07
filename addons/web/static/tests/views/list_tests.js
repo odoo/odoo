@@ -415,11 +415,12 @@ QUnit.module('Views', {
     QUnit.test('editable list: add a line and discard', function (assert) {
         assert.expect(11);
 
-        var oldDestroy = basicFields.FieldChar.prototype.destroy;
-        basicFields.FieldChar.prototype.destroy = function () {
-            assert.step('destroy');
-            oldDestroy.apply(this, arguments);
-        };
+        testUtils.patch(basicFields.FieldChar, {
+            destroy: function () {
+                assert.step('destroy');
+                this._super.apply(this, arguments);
+            },
+        });
 
         var list = createView({
             View: ListView,
@@ -456,7 +457,7 @@ QUnit.module('Views', {
         assert.verifySteps(['destroy'],
             "should have destroyed the widget of the removed line");
 
-        basicFields.FieldChar.prototype.destroy = oldDestroy;
+        testUtils.unpatch(basicFields.FieldChar);
         list.destroy();
     });
 
