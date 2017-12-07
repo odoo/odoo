@@ -8055,7 +8055,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('fieldmany2many tags in editable list', function (assert) {
-        assert.expect(4);
+        assert.expect(7);
 
         this.data.partner.records[0].timmy = [12];
 
@@ -8063,10 +8063,18 @@ QUnit.module('relational_fields', {
             View: ListView,
             model: 'partner',
             data: this.data,
+            context: {take: 'five'},
             arch:'<tree editable="bottom">' +
                     '<field name="foo"/>' +
                     '<field name="timmy" widget="many2many_tags"/>' +
                 '</tree>',
+            mockRPC: function (route, args) {
+                if (args.method === 'read' && args.model === 'partner_type') {
+                    assert.deepEqual(args.kwargs.context, {take: 'five'},
+                        'The context should be passed to the RPC');
+                }
+            return this._super.apply(this, arguments);
+            }
         });
 
         assert.strictEqual(list.$('.o_data_row:first .o_field_many2manytags .badge').length, 1,

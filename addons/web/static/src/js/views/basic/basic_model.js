@@ -1480,7 +1480,8 @@ var BasicModel = AbstractModel.extend({
                     def = this._rpc({
                         model: list.model,
                         method: 'read',
-                        args: [_.pluck(data, 'id'), fieldNames]
+                        args: [_.pluck(data, 'id'), fieldNames],
+                        context: record.context,
                     }).then(function (records) {
                         _.each(records, function (record) {
                             list_records[record.id].data = record;
@@ -2399,7 +2400,7 @@ var BasicModel = AbstractModel.extend({
                 model: field.relation,
                 method: 'read',
                 args: [ids, fieldNames],
-                context: {}, // FIXME
+                context: list.getContext() || {},
             });
         } else {
             def = $.when(_.map(ids, function (id) {
