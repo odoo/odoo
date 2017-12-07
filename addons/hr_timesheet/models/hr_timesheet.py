@@ -10,7 +10,7 @@ class AccountAnalyticLine(models.Model):
     @api.model
     def default_get(self, field_list):
         result = super(AccountAnalyticLine, self).default_get(field_list)
-        if 'employee_id' in field_list and result.get('user_id'):
+        if not self.env.context.get('default_employee_id') and 'employee_id' in field_list and result.get('user_id'):
             result['employee_id'] = self.env['hr.employee'].search([('user_id', '=', result['user_id'])], limit=1).id
         return result
 
@@ -22,7 +22,8 @@ class AccountAnalyticLine(models.Model):
 
     @api.onchange('project_id')
     def onchange_project_id(self):
-        self.task_id = False
+        if self.project_id and self.project_id != self.task_id.project_id:
+            self.task_id = False
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
