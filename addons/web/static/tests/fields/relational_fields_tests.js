@@ -256,6 +256,31 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('context in many2one and default get', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.int_field.default = 14;
+        this.data.partner.fields.trululu.default = 2;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="int_field"/>' +
+                        '<field name="trululu"  context="{\'blip\':int_field}"/>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'name_get') {
+                    assert.strictEqual(args.kwargs.context.blip, 14,
+                        'context should have been properly sent to the nameget rpc');
+                }
+                return this._super(route, args);
+            },
+        });
+        form.destroy();
+    });
+
     QUnit.test('editing a many2one (with form view opened with external button)', function (assert) {
         assert.expect(1);
         var form = createView({
