@@ -22,7 +22,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
         'click div:first h1.statement_name': '_onClickStatementName',
         "click *[rel='do_action']": "_onDoAction",
         'click button.js_load_more': '_onLoadMore',
-        'focusout .statement_name_edition > input': '_onValidateName',
+        'blur .statement_name_edition > input': '_onValidateName',
         'keyup .statement_name_edition > input': '_onKeyupInput'
     },
     /**
@@ -133,6 +133,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             this._renderNotifications(state.notifications);
         }
 
+        this.$('.statement_name, .statement_name_edition').toggle();
         this.$('h1.statement_name').text(state.title || _t('No Title'));
     },
 
@@ -235,7 +236,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
      * @private
      */
     _onValidateName: function () {
-        var name = this.$('.statement_name_edition input').val();
+        var name = this.$('.statement_name_edition input').val().trim();
         this.trigger_up('change_name', {'data': name});
     },
     /**

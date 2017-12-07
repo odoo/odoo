@@ -240,7 +240,6 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
                 'valuemax': self.model.valuemax,
                 'title': title,
             });
-            self.renderer.$('.statement_name, .statement_name_edition').toggle();
         });
     },
     /**
