@@ -79,7 +79,7 @@ class Serialized(fields.Field):
     _slots = {
         'prefetch': False,              # not prefetched by default
     }
-    column_type = ('text', 'text')
+    column_type = ('jsonb', 'jsonb')
 
     def convert_to_column(self, value, record, values=None):
         return json.dumps(value)

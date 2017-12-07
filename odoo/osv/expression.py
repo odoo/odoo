@@ -277,7 +277,7 @@ def distribute_not(domain):
     Because we don't use SQL semantic for processing a 'left not in right'
     query (i.e. our 'not in' is not simply translated to a SQL 'not in'),
     it means that a '! left in right' can not be simply processed
-    by __leaf_to_sql by first emitting code for 'left in right' then wrapping
+    by _leaf_to_sql by first emitting code for 'left in right' then wrapping
     the result with 'not (...)', as it would result in a 'not in' at the SQL
     level.
 
@@ -1063,7 +1063,7 @@ class expression(object):
                             right and isinstance(right, (tuple, list)) and all(isinstance(item, pycompat.string_types) for item in right):
                         push(create_substitution_leaf(leaf, _get_expression(comodel, left, right, operator), model))
                     else:
-                        # right == [] or right == False and all other cases are handled by __leaf_to_sql()
+                        # right == [] or right == False and all other cases are handled by _leaf_to_sql()
                         push_result(leaf)
 
             # -------------------------------------------------
@@ -1151,7 +1151,7 @@ class expression(object):
             joins |= set(leaf.get_join_conditions())
         self.joins = list(joins)
 
-    def __leaf_to_sql(self, eleaf):
+    def _leaf_to_sql(self, eleaf):
         model = eleaf.model
         leaf = eleaf.leaf
         left, operator, right = leaf
@@ -1236,7 +1236,7 @@ class expression(object):
                 params = []
             else:
                 # '=?' behaves like '=' in other cases
-                query, params = self.__leaf_to_sql(
+                query, params = self._leaf_to_sql(
                     create_substitution_leaf(eleaf, (left, '=', right), model))
 
         else:
@@ -1268,7 +1268,7 @@ class expression(object):
         # Process the domain from right to left, using a stack, to generate a SQL expression.
         for leaf in reversed(self.result):
             if leaf.is_leaf(internal=True):
-                q, ps = self.__leaf_to_sql(leaf)
+                q, ps = self._leaf_to_sql(leaf)
                 stack.append(q)
                 params.extend(reversed(ps))
             elif leaf.leaf == NOT_OPERATOR:
