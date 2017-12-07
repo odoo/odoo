@@ -206,6 +206,9 @@ class PaymentTokenStripe(models.Model):
                               headers=STRIPE_HEADERS)
             token = r.json()
             description = values['cc_holder_name']
+        else:
+            partner_id = self.env['res.partner'].browse(values['partner_id'])
+            description = 'Partner: {} (id: {})'.format(partner_id.name, partner_id.id)
 
         if not token:
             raise Exception('stripe_create: No token provided!')
@@ -236,7 +239,7 @@ class PaymentTokenStripe(models.Model):
 
         customer_params = {
             'source': token['id'],
-            'description': description or 'Partner: {} (id: {})'.format(self.partner_id.name, self.partner_id.id)
+            'description': description or token['email']
         }
 
         r = requests.post(url_customer,
