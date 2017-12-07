@@ -2451,6 +2451,110 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('onchange for embedded one2many, onchange for a record on the second page', function (assert) {
+        assert.expect(6);
+
+        var data = this.data;
+        var ids = [];
+        for (var i=10; i<60; i++) {
+            var id = 10 + i;
+            ids.push(id);
+            data.turtle.records.push({
+                id: id,
+                turtle_int: 0,
+                turtle_foo: "#" + id,
+            });
+        }
+        ids.push(1, 2, 3);
+        data.partner.records[0].turtles = ids;
+        data.partner.onchanges = {
+            turtles: function (obj) {
+                var turtles = obj.turtles.splice(0, 20);
+                turtles.unshift([5]);
+                for (var k in obj.turtles) {
+                    var change = obj.turtles[k];
+                    if (change[0] === 1) {
+                        turtles.push(change);
+                    } else {
+                        var record = _.findWhere(data.turtle.records, {id: change[1]});
+                        turtles.push([1, record.id, record]);
+                    }
+                }
+                obj.turtles = turtles;
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="turtles">' +
+                                '<tree editable="bottom" default_order="turtle_int" limit="10">' +
+                                    '<field name="turtle_int" widget="handle"/>' +
+                                    '<field name="turtle_foo"/>' +
+                                    '<field name="turtle_qux" attrs="{\'readonly\': [(\'turtle_foo\', \'=\', False)]}"/>' +
+                                '</tree>' +
+                            '</field>' +
+                        '</group>' +
+                    '</sheet>' +
+                 '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#21#22#23#24#25#26#27#28#29",
+            "should display the records in order");
+
+        form.$('.o_field_one2many .o_list_view tbody tr:first td:first').click();
+        form.$('.o_field_one2many .o_list_view tbody tr:first input:first').val('blurp').trigger('input');
+
+        // the domain fail if the widget does not use the allready loaded data.
+        form.$buttons.find('.o_form_button_cancel').click();
+
+        assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "blurp#21#22#23#24#25#26#27#28#29",
+            "should display the records in order with the changes");
+
+        $('.modal .modal-footer button:first').click();
+
+        assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#21#22#23#24#25#26#27#28#29",
+            "should cancel change and display the records in order");
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        // Drag and drop the third line in second position
+        testUtils.dragAndDrop(
+            form.$('.ui-sortable-handle').eq(2),
+            form.$('.o_field_one2many tbody tr').eq(1),
+            {position: 'top'}
+        );
+
+        assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#30#31#32#33#34#35#36#37#38",
+            "should display the records in order after resequence (display record with turtle_int=0)");
+
+        // Drag and drop the third line in second position
+        testUtils.dragAndDrop(
+            form.$('.ui-sortable-handle').eq(2),
+            form.$('.o_field_one2many tbody tr').eq(1),
+            {position: 'top'}
+        );
+
+        assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#39#40#41#42#43#44#45#46#47",
+            "should display the records in order after resequence (display record with turtle_int=0)");
+
+        form.$buttons.find('.o_form_button_cancel').click();
+
+        assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#39#40#41#42#43#44#45#46#47",
+            "should display the records in order after resequence");
+
+        $('.modal .modal-footer button:first').click();
+
+        form.destroy();
+    });
+
     QUnit.test('onchange following by edition on the second page', function (assert) {
         assert.expect(20);
 

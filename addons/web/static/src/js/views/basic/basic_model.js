@@ -1022,7 +1022,6 @@ var BasicModel = AbstractModel.extend({
                 args: [resIDs, { active: value }],
             })
             .then(this.reload.bind(this, parentID));
-
     },
     /**
      * Toggle (open/close) a group in a grouped list, then fetches relevant
@@ -1295,6 +1294,7 @@ var BasicModel = AbstractModel.extend({
         var rec;
         viewType = viewType || record.viewType;
         record._changes = record._changes || {};
+
         _.each(values, function (val, name) {
             var field = record.fields[name];
             if (!field) {
@@ -1402,11 +1402,7 @@ var BasicModel = AbstractModel.extend({
                         }
                         if (command[0] === 1 && command[1]) {
                             // updating an existing record
-                            recID = _.find(list.data, function (childID) {
-                                var child = self.localData[childID];
-                                return child.res_id === command[1];
-                            });
-                            rec = self.localData[recID];
+                            rec = self.localData[list._cache[command[1]]];
                         }
                         if (!rec) {
                             var params = {
@@ -1432,9 +1428,13 @@ var BasicModel = AbstractModel.extend({
                         defs.push(self._applyOnChange(command[2], rec));
                     } else if (command[0] === 4) {
                         // LINK TO
+                        rec = self.localData[list._cache[command[1]]];
+                        if (rec) {
+                            self.discardChanges(rec.id);
+                        }
                         // the dataPoint id will be set when the record will be fetched (for now,
                         // this dataPoint doesn't exist yet)
-                        list._changes.push({operation: 'ADD', id: null, resID: command[1]});
+                        list._changes.push({operation: 'ADD', id: rec ? rec.id : null, resID: command[1]});
                     } else if (command[0] === 5) {
                         // DELETE ALL
                         list._changes = [{operation: 'REMOVE_ALL'}];
@@ -2998,10 +2998,15 @@ var BasicModel = AbstractModel.extend({
                 var field = element.fields[fieldName];
                 var fieldInfo = element.fieldsInfo[element.viewType][fieldName];
                 var rawModifiers = fieldInfo.modifiers || {};
-                var modifiers = self._evalModifiers(record, rawModifiers);
-                if (modifiers.required && !self._isFieldSet(recordData[fieldName], field.type)) {
-                    isValid = false;
-                }
+                // if an onchange update x2many with add command, and the datas are not loaded
+                // because the record is on an other page, we can't evaluate the modifiers if
+                // this one use some unloaded data in a domain.
+                try {
+                    var modifiers = self._evalModifiers(record, rawModifiers);
+                    if (modifiers.required && !self._isFieldSet(recordData[fieldName], field.type)) {
+                        isValid = false;
+                    }
+                } catch (e) {}
             });
         });
         return isValid;
