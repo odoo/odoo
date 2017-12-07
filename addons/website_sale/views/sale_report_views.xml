@@ -32,7 +32,7 @@
         <field name="model">sale.report</field>
         <field name="arch" type="xml">
             <pivot string="Sales Report">
-                <field name="date" type="row"/>
+                <field name="date_order" type="row"/>
                 <field name="state" type="col"/>
                 <field name="price_subtotal" type="measure"/>
             </pivot>
@@ -44,7 +44,7 @@
         <field name="model">sale.report</field>
         <field name="arch" type="xml">
             <graph string="Sale Report" type="bar">
-                <field name="date"/>
+                <field name="date_order"/>
                 <field name="price_subtotal" type='measure'/>
             </graph>
         </field>
