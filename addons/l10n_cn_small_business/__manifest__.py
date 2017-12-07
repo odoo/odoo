@@ -7,7 +7,7 @@
 # Copyright (C) 2008-now  开阖软件 jeff@osbzr.com    < PM and LTS >
 
 {
-    'name': '中国小企业会计科目表',
+    'name': 'China - Small Business CoA',
     'version': '1.8',
     'category': 'Localization',
     'author': 'www.openerp-china.org',
