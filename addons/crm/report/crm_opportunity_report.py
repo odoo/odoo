@@ -24,6 +24,7 @@ class OpportunityReport(models.Model):
     delay_open = fields.Float('Days to Assign', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Days to open the case")
     delay_close = fields.Float('Days to Close', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Days to close the case")
     delay_expected = fields.Float('Overpassed Deadline', digits=(16, 2), readonly=True, group_operator="avg")
+    day_close = fields.Float('Day to Close', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Days to close the opportunity")
 
     user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
     team_id = fields.Many2one('crm.team', 'Sales Channel', oldname='section_id', readonly=True)
@@ -82,6 +83,7 @@ class OpportunityReport(models.Model):
             extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
             abs(extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24)) as  delay_expected,
             extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open,
+            extract('epoch' from (current_timestamp-c.create_date))/(3600*24) as  day_close,
             c.lost_reason,
             c.date_conversion as date_conversion
         """
