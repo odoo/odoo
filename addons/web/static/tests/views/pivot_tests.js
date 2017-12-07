@@ -595,6 +595,24 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('remove disabled fields from measures and groupable fields', function (assert) {
+        assert.expect(2);
+
+        var pivot = createView({
+            View: PivotView,
+            model: 'partner',
+            data: this.data,
+            arch: '<pivot>' +
+                    '<field name="foo" disabled="1" />' +
+                '</pivot>',
+        });
+
+        assert.notOk('foo' in pivot.measures, 'should not have disabled field in measures');
+        assert.notOk('foo' in pivot.groupableFields, 'should not have disabled field in groupable');
+
+        pivot.destroy();
+    });
+
     QUnit.test('can sort data in a column by clicking on header', function (assert) {
         assert.expect(3);
 
