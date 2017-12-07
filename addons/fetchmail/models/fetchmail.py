@@ -219,10 +219,10 @@ class FetchmailServer(models.Model):
                                     'active_model': self.env.context.get("thread_model", server.object_id.model)
                                 }).run()
                             self.env.cr.commit()
+                        _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", min(MAX_POP_MESSAGES, num_messages), server.type, server.name, (min(MAX_POP_MESSAGES, num_messages) - failed), failed)
                         if num_messages < MAX_POP_MESSAGES:
                             break
                         pop_server.quit()
-                        _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", num_messages, server.type, server.name, (num_messages - failed), failed)
                 except Exception:
                     _logger.info("General failure when trying to fetch mail from %s server %s.", server.type, server.name, exc_info=True)
                 finally:
