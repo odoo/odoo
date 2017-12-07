@@ -8,7 +8,7 @@
 # Copyright (C) 2017-now  jeffery9@gmail.com
 
 {
-    'name': '会计科目表 - 中国企业会计准则',
+    'name': 'China - Standard CoA',
     'version': '2.0',
     'category': 'Localization',
     'author': ['lvxin@gmail.co', 'oldrev@gmail.co', 'ccdos@intoerp.com', 'jeff@osbzr.com', 'jeffery9@gmail.com'],
