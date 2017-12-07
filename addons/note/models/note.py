@@ -45,7 +45,7 @@ class Note(models.Model):
     memo = fields.Html('Note Content')
     sequence = fields.Integer('Sequence')
     stage_id = fields.Many2one('note.stage', compute='_compute_stage_id',
-        inverse='_inverse_stage_id', string='Stage')
+        inverse='_inverse_stage_id', string='Stage', default=_get_default_stage_id)
     stage_ids = fields.Many2many('note.stage', 'note_stage_rel', 'note_id', 'stage_id',
         string='Stages of Users',  default=_get_default_stage_id)
     open = fields.Boolean(string='Active', default=True)
@@ -62,9 +62,13 @@ class Note(models.Model):
 
     @api.multi
     def _compute_stage_id(self):
+        first_user_stage = self.env['note.stage'].search([('user_id', '=', self.env.uid)], limit=1)
         for note in self:
             for stage in note.stage_ids.filtered(lambda stage: stage.user_id == self.env.user):
                 note.stage_id = stage
+            # note without user's stage
+            if not note.stage_id:
+                note.stage_id = first_user_stage
 
     @api.multi
     def _inverse_stage_id(self):
