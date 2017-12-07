@@ -1094,7 +1094,6 @@ var StatementModel = BasicModel.extend({
      * @returns {object}
      */
     _formatToProcessReconciliation: function (line, prop) {
-        // Do not forward port in master. @CSN will change this
         var amount = -prop.amount;
         if (prop.partial_reconcile === true) {
             amount = -prop.write_off_amount;
