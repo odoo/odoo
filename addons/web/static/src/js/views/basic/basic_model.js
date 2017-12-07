@@ -1724,22 +1724,21 @@ var BasicModel = AbstractModel.extend({
     /**
      * Fetch all name_gets for the many2ones in a group
      *
-     * @param {Object} group a valid resource object
+     * @param {Object[]} groups a list of object with context and record sub keys
      * @returns {Deferred}
      */
-    _fetchMany2OneGroup: function (group) {
-        var ids = _.uniq(_.pluck(group, 'res_id'));
-
+    _fetchMany2OneGroup: function (groups) {
+        var ids = _.uniq(_.pluck(_.pluck(groups, 'record'), 'res_id'));
         return this._rpc({
-                model: group[0].model,
+                model: groups[0].record.model,
                 method: 'name_get',
                 args: [ids],
-                context: group[0].context
+                context: groups[0].context
             })
             .then(function (name_gets) {
-                _.each(group, function (record) {
-                    var nameGet = _.find(name_gets, function (n) { return n[0] === record.res_id;});
-                    record.data.display_name = nameGet[1];
+                _.each(groups, function (obj) {
+                    var nameGet = _.find(name_gets, function (n) { return n[0] === obj.record.res_id;});
+                    obj.record.data.display_name = nameGet[1];
                 });
             });
     },
@@ -2000,14 +1999,17 @@ var BasicModel = AbstractModel.extend({
                 if (!relatedRecord) {
                     return;
                 }
-                toBeFetched.push(relatedRecord);
+                toBeFetched.push({
+                    context: record.getContext({fieldName: name, viewType: record.viewType}),
+                    record: relatedRecord
+                });
             }
         });
 
         // group them by model and context. Using the context as key is
         // necessary to make sure the correct context is used for the rpc;
-        var groups = _.groupBy(toBeFetched, function (rec) {
-            return [rec.model, JSON.stringify(rec.context)].join();
+        var groups = _.groupBy(toBeFetched, function (elem) {
+            return [elem.record.model, JSON.stringify(elem.context)].join();
         });
 
         return $.when.apply($, _.map(groups, this._fetchMany2OneGroup.bind(this)));
