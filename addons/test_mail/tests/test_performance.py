@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.test_performance.tests.test_performance import TestPerformance, queryCount
+from odoo.tests.common import TransactionCase, PerformanceCase, queryCount
 
 
-class TestMailPerformance(TestPerformance):
+class TestMailPerformance(TransactionCase, PerformanceCase):
 
     def setUp(self):
         super(TestMailPerformance, self).setUp()
@@ -30,7 +30,7 @@ class TestMailPerformance(TestPerformance):
         """ Read records inheriting from 'mail.thread'. """
         records = self.env['test_performance.mail'].search([])
         self.assertEqual(len(records), 5)
-        self.resetQueryCount()
+        self.startQueryCount()
 
         # without cache
         for record in records:
@@ -49,7 +49,7 @@ class TestMailPerformance(TestPerformance):
         """ Write records inheriting from 'mail.thread' (no recomputation). """
         records = self.env['test_performance.mail'].search([])
         self.assertEqual(len(records), 5)
-        self.resetQueryCount()
+        self.startQueryCount()
 
         records.write({'name': self.str('X')})
 
@@ -58,7 +58,7 @@ class TestMailPerformance(TestPerformance):
         """ Write records inheriting from 'mail.thread' (with recomputation). """
         records = self.env['test_performance.mail'].search([])
         self.assertEqual(len(records), 5)
-        self.resetQueryCount()
+        self.startQueryCount()
 
         records.write({'value': self.int(20)})
 
@@ -67,7 +67,7 @@ class TestMailPerformance(TestPerformance):
         """ Write records inheriting from 'mail.thread' (with field tracking). """
         record = self.env['test_performance.mail'].search([], limit=1)
         self.assertEqual(len(record), 1)
-        self.resetQueryCount()
+        self.startQueryCount()
 
         record.track = self.str('X')
 
@@ -89,7 +89,7 @@ class TestMailPerformance(TestPerformance):
         self.env['mail.test.simple'].create({'name': self.str('Test')})
 
 
-class TestAdvMailPerformance(TestPerformance):
+class TestAdvMailPerformance(TransactionCase, PerformanceCase):
 
     def setUp(self):
         super(TestAdvMailPerformance, self).setUp()
@@ -119,7 +119,7 @@ class TestAdvMailPerformance(TestPerformance):
     def test_activity_full(self):
         test_record_activity = self.env['mail.test.activity'].create({'name': self.str('Test')})
         res_id = test_record_activity.id
-        self.resetQueryCount()
+        self.startQueryCount()
 
         self.env['mail.activity'].with_context({
             'default_res_model': 'mail.test.activity',

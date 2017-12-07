@@ -1,87 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from contextlib import contextmanager
-import functools
-import logging
-
-from odoo.tests.common import TransactionCase
-
-_logger = logging.getLogger(__name__)
-sql_logger = logging.getLogger('odoo.sql_db')
+from odoo.tests.common import TransactionCase, PerformanceCase, queryCount
 
 
-def queryCount(**counters):
-    """ Decorate a method to check the number of queries it makes. Counters
-    is a dict { 'user_login': expected_query_count } """
-    def decorate(func):
-        @functools.wraps(func)
-        def wrapper(self):
-            if hasattr(self, 'test_users'):
-                users = self.test_users.filtered(lambda user: user.login in counters.keys())
-            else:
-                users = self.env['res.users'].search([('login', 'in', list(counters.keys()))])
-            for user in users:
-                # switch user
-                self.uid = user.id
-                self.env = self.env(user=self.uid)
-                # warm up the caches
-                self._round = False
-                func(self)
-                self.env.cache.invalidate()
-                # test for real, and check query count
-                self._round = True
-                self.resetQueryCount()
-                func(self)
-                self.assertQueryCount(self.cr.sql_log_count - self._count,
-                                      counters[user.login], user.login)
-
-        return wrapper
-
-    return decorate
-
-
-class TestPerformance(TransactionCase):
-
-    def setUp(self):
-        super(TestPerformance, self).setUp()
-        self._round = False
-
-    def assertQueryCount(self, actual, expected, message):
-        self.assertLessEqual(actual, expected, message)
-        if actual < expected:
-            _logger.info("Warning: Got %d queries instead of %d: %s", actual, expected, message)
-
-    def resetQueryCount(self):
-        """ Reset the query counter. """
-        self._count = self.cr.sql_log_count
-
-    def str(self, value):
-        """ Return a value different from run to run. """
-        return value + 'z' if self._round else value
-
-    def int(self, value):
-        """ Return a value different from run to run. """
-        return value + 1 if self._round else value
-
-    @contextmanager
-    def logQueries(self):
-        """ Log the queries that are made in this scope. """
-        sql_log, level = self.cr.sql_log, sql_logger.getEffectiveLevel()
-        try:
-            sql_logger.setLevel(logging.DEBUG)
-            self.cr.sql_log = True
-            yield
-        finally:
-            self.cr.sql_log = sql_log
-            sql_logger.setLevel(level)
+class TestPerformance(TransactionCase, PerformanceCase):
 
     @queryCount(admin=3, demo=3)
     def test_read_base(self):
         """ Read records. """
         records = self.env['test_performance.base'].search([])
         self.assertEqual(len(records), 5)
-        self.resetQueryCount()
+        self.startQueryCount()
 
         # without cache
         for record in records:
@@ -100,7 +30,7 @@ class TestPerformance(TransactionCase):
         """ Write records (no recomputation). """
         records = self.env['test_performance.base'].search([])
         self.assertEqual(len(records), 5)
-        self.resetQueryCount()
+        self.startQueryCount()
 
         records.write({'name': self.str('X')})
 
@@ -109,7 +39,7 @@ class TestPerformance(TransactionCase):
         """ Write records (with recomputation). """
         records = self.env['test_performance.base'].search([])
         self.assertEqual(len(records), 5)
-        self.resetQueryCount()
+        self.startQueryCount()
 
         records.write({'value': self.int(20)})
 

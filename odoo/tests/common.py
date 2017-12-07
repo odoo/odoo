@@ -6,6 +6,7 @@ helpers and classes to write tests.
 """
 import collections
 import errno
+import functools
 import glob
 import importlib
 import itertools
@@ -44,6 +45,7 @@ import odoo
 from odoo import api
 
 _logger = logging.getLogger(__name__)
+sql_logger = logging.getLogger('odoo.sql_db')
 
 # The odoo library is supposed already configured.
 ADDONS_PATH = odoo.tools.config['addons_path']
@@ -467,6 +469,92 @@ class HttpCase(TransactionCase):
         phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
         cmd = ['phantomjs', phantomtest, json.dumps(options)]
         self.phantom_run(cmd, timeout)
+
+
+def queryCount(**counters):
+    """ Decorate a method to check the number of queries it makes. Counters
+        is a dict { 'user_login': expected_query_count }
+    """
+    def decorate(func):
+        @functools.wraps(func)
+        def wrapper(self):
+            users = self.env['res.users'].search([('login', 'in', list(counters))])
+            for user in users:
+                # switch user
+                self.uid = user.id
+                self.env = self.env(user=self.uid)
+                # warm up the ormcaches
+                self._count_round = 0
+                self.startQueryCount()
+                func(self)
+                self.stopQueryCount()
+                self.env.cache.invalidate()
+                # test for real, and check query count
+                self._count_round = 1
+                self.startQueryCount()
+                func(self)
+                self.stopQueryCount()
+                self.assertQueryCount(counters[user.login], user.login)
+
+        return wrapper
+
+    return decorate
+
+
+class PerformanceCase(BaseCase):
+    """ Mixin class for test cases that check the number of queries. """
+
+    def assertQueryCount(self, expected, message):
+        """ Check the number of queries made so far. """
+        actual = self._count_stop - self._count_start
+        self.assertLessEqual(actual, expected, message)
+        if actual < expected:
+            logger = logging.getLogger(type(self).__module__)
+            logger.info("Warning: Got %d queries instead of %d: %s", actual, expected, message)
+
+    def startQueryCount(self):
+        """ Start or restart the query counter.
+            This method is automatically invoked before the test method.
+        """
+        self._counting = True
+        self._count_start = self.cr.sql_log_count
+
+    def stopQueryCount(self):
+        """ Stop the query counter.
+            Queries made after invoking this method are not counted.
+        """
+        if self._counting:
+            self._counting = False
+            self._count_stop = self.cr.sql_log_count
+
+    def resumeQueryCount(self):
+        """ Resume the query counter.
+            This method can only invoked after `stopQueryCount`.
+        """
+        assert not self._counting
+        self._counting = True
+        self._count_start = self.cr.sql_log_count - (self._count_stop - self._count_start)
+
+    def str(self, value):
+        """ Return a value different from run to run. """
+        return value + str(self._count_round)
+
+    def int(self, value):
+        """ Return a value different from run to run. """
+        return value + self._count_round
+
+    @contextmanager
+    def logQueries(self):
+        """ Log the queries that are made in this scope. """
+        sql_log, level = self.cr.sql_log, sql_logger.getEffectiveLevel()
+        try:
+            sql_logger.setLevel(logging.DEBUG)
+            self.cr.sql_log = True
+            yield
+        finally:
+            self.cr.sql_log = sql_log
+            sql_logger.setLevel(level)
+
 
 def can_import(module):
     """ Checks if <module> can be imported, returns ``True`` if it can be,
