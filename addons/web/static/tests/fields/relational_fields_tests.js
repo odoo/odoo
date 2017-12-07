@@ -5,6 +5,7 @@ var AbstractField = require('web.AbstractField');
 var BasicModel = require('web.BasicModel');
 var concurrency = require('web.concurrency');
 var FormView = require('web.FormView');
+var ListRenderer = require('web.ListRenderer');
 var ListView = require('web.ListView');
 var relationalFields = require('web.relational_fields');
 var StandaloneFieldManagerMixin = require('web.StandaloneFieldManagerMixin');
@@ -2271,7 +2272,15 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('embedded one2many with handle widget', function (assert) {
-        assert.expect(8);
+        assert.expect(10);
+
+        var nbConfirmChange = 0;
+        testUtils.patch(ListRenderer, {
+            confirmChange: function () {
+                nbConfirmChange++;
+                return this._super.apply(this, arguments);
+            },
+        });
 
         this.data.partner.records[0].turtles = [1, 2, 3];
 
@@ -2304,8 +2313,10 @@ QUnit.module('relational_fields', {
             "should have the 3 rows in the correct order");
 
         form.$buttons.find('.o_form_button_edit').click();
+
         assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "yopblipkawa",
             "should still have the 3 rows in the correct order");
+        assert.strictEqual(nbConfirmChange, 0, "should not have confirmed any change yet");
 
         // Drag and drop the second line in first position
         testUtils.dragAndDrop(
@@ -2314,6 +2325,7 @@ QUnit.module('relational_fields', {
             {position: 'top'}
         );
 
+        assert.strictEqual(nbConfirmChange, 1, "should have confirmed changes only once");
         assert.verifySteps(["0", "1"],
             "sequences values should be incremental starting from the previous minimum one");
 
@@ -2332,6 +2344,8 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipyopkawa",
             "should still have the 3 rows in the new order");
+
+        testUtils.unpatch(ListRenderer);
 
         form.destroy();
     });
