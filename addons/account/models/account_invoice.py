@@ -803,6 +803,8 @@ class AccountInvoice(models.Model):
         groups = super(AccountInvoice, self)._notification_recipients(message, groups)
 
         for group_name, group_method, group_data in groups:
+            if group_name == 'customer':
+                continue
             group_data['has_button_access'] = True
 
         return groups
