@@ -743,7 +743,7 @@ class AccountMoveLine(models.Model):
             }
             if not all_aml_share_same_currency:
                 writeoff_vals['amount_currency'] = False
-            writeoff_to_reconcile = remaining_moves._create_writeoff(writeoff_vals)
+            writeoff_to_reconcile = remaining_moves._create_writeoff([writeoff_vals])
             #add writeoff line to reconcile algorithm and finish the reconciliation
             remaining_moves = (remaining_moves + writeoff_to_reconcile).auto_reconcile_lines()
         # Check if reconciliation is total or needs an exchange rate entry to be created
@@ -812,7 +812,7 @@ class AccountMoveLine(models.Model):
                 'credit': total < 0 and -total or 0.0,
                 'amount_currency': total_currency,
                 'currency_id': total_currency and writeoff_currency.id or False,
-                'journal': journal_id,
+                'journal_id': journal_id,
                 'account_id': self[0].account_id.id,
                 'partner_id': partner_id
                 })
