@@ -123,7 +123,7 @@ class Channel(models.Model):
     def _check_moderators_are_channel_partners(self):
         for channel in self:
             if not (channel.mapped('moderator_ids.partner_id') <= channel.channel_partner_ids):
-                raise ValidationError("Moderators must be channel subscribers!")
+                raise ValidationError("Moderators cannot unsubscribe from a channel they moderate!")
 
     @api.constrains('moderation', 'email_send')
     def _check_moderation_implies_email_send(self):
@@ -488,6 +488,8 @@ class Channel(models.Model):
                 'channel_type': channel.channel_type,
                 'public': channel.public,
                 'mass_mailing': channel.email_send,
+                'moderation': channel.moderation,
+                'is_moderator': self.env.uid in channel.moderator_ids.ids,
                 'group_based_subscription': bool(channel.group_ids),
             }
             if extra_info:

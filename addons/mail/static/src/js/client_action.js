@@ -537,6 +537,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         });
         this.thread.on('moderate', this, this._onModeration);
         this.thread.on('toggle_decision_button', this, this._updateDecisionButton);
+        this.thread.on('render_select_button', this, this._updateSelectAllButton);
         this.thread.on('select_message', this, this._selectMessage);
         this.thread.on('unselect_message', this, this._unselectMessage);
 
@@ -764,12 +765,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 .find('.o_mail_chat_button_unstar_all')
                 .toggleClass('disabled', disabled);
         }
-        if (this.channel.id === "channel_moderation") {
-            this.$buttons
-                .find('.o_mail_chat_button_select_all')
-                .toggleClass('disabled', disabled);
+        if (this.channel.id === "channel_moderation" || Boolean(this.channel.moderation && this.channel.is_moderator)) {
+            this.thread.trigger('render_select_button');
         }
-        if (this.channel.id === "channel_moderation") {
+        if (this.channel.id === "channel_moderation" || Boolean(this.channel.moderation && this.channel.is_moderator)) {
             this.thread.trigger('toggle_decision_button');
         }
     },
@@ -812,7 +811,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             .removeClass("o_hidden");
         this.$buttons
             .find('.o_mail_chat_button_select_all')
-            .toggle(channel.id === "channel_moderation")
+            .toggle(channel.id === "channel_moderation" || Boolean(channel.moderation && channel.is_moderator))
             .removeClass("o_hidden");
         this.$buttons.find('.o_mail_chat_button_moderate_all').hide();
         this.$('.o_mail_chat_channel_item')
@@ -831,6 +830,21 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             this.$buttons.find('.o_mail_chat_button_moderate_all').hide();
         }
     },
+
+    _updateSelectAllButton: function () {
+        if (this.thread.$('.moderation_checkbox').length) {
+            this.$buttons
+            .find('.o_mail_chat_button_select_all')
+            .toggleClass('disabled', false);
+        } else {
+            this.$buttons
+            .find('.o_mail_chat_button_select_all')
+            .toggleClass('disabled', true)  
+            .text('Select All')
+            .prop('title', 'Select all messages to moderate');
+        }
+    },
+
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -1025,6 +1039,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         var messageIDs = this.thread.$('.moderation_checkbox:checked').map(function () { return $(this).data('message-id'); }).get();
         if (moderatorAction === 'reject' && messageIDs.length) {
             this._onRejectMessage(messageIDs);
+        } else if (moderatorAction === 'discard' && messageIDs.length) {
+            this._onDiscardMessage(messageIDs);
         } else {
             chat_manager.moderate_selected_messages(messageIDs, moderatorAction);
         }
@@ -1033,7 +1049,20 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
      * @private
      */
     _onSelectAll: function (event) {
-        
+        var $button = $(event.target);
+        if (!$button.hasClass('disabled')) {
+            if (!$button.hasClass('o_unselect_all')) {
+               this.thread.$('.moderation_checkbox').prop('checked',true);
+             $button.text('Unselect All');
+             $button.prop('title', 'Unselect all messages to moderate');
+            } else {
+                this.thread.$('.moderation_checkbox').prop('checked',false);
+                $button.text('Select All');
+                $button.prop('title', 'Select all messages to moderate');
+            }
+            this._updateDecisionButton();
+            $button.toggleClass('o_unselect_all');
+        }
     },
     /**
      * @private

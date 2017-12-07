@@ -310,6 +310,8 @@ function make_channel (data, options) {
         hidden: options.hidden,
         display_needactions: options.display_needactions,
         mass_mailing: data.mass_mailing,
+        moderation: data.moderation,
+        is_moderator: data.is_moderator,
         group_based_subscription: data.group_based_subscription,
         needaction_counter: data.message_needaction_counter || 0,
         unread_counter: 0,
