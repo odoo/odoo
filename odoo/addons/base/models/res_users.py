@@ -7,10 +7,11 @@ import logging
 import hmac
 
 from collections import defaultdict
+from hashlib import sha256
 from itertools import chain, repeat
 from lxml import etree
 from lxml.builder import E
-from hashlib import sha256
+import passlib.context
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
@@ -21,7 +22,18 @@ from odoo.tools import partition, pycompat
 _logger = logging.getLogger(__name__)
 
 # Only users who can modify the user (incl. the user herself) see the real contents of these fields
-USER_PRIVATE_FIELDS = ['password']
+USER_PRIVATE_FIELDS = []
+
+DEFAULT_CRYPT_CONTEXT = passlib.context.CryptContext(
+    # kdf which can be verified by the context. The default encryption kdf is
+    # the first of the list
+    ['pbkdf2_sha512', 'plaintext'],
+    # deprecated algorithms are still verified as usual, but ``needs_update``
+    # will indicate that the stored hash should be replaced by a more recent
+    # algorithm. Passlib 1.6 supports an `auto` value which deprecates any
+    # algorithm but the default, but Ubuntu LTS only provides 1.5 so far.
+    deprecated=['plaintext'],
+)
 
 concat = chain.from_iterable
 
@@ -169,10 +181,12 @@ class Users(models.Model):
     partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', auto_join=True,
         string='Related Partner', help='Partner-related data of the user')
     login = fields.Char(required=True, help="Used to log into the system")
-    password = fields.Char(default='', invisible=True, copy=False,
+    password = fields.Char(
+        compute='_compute_password', inverse='_set_password',
+        invisible=True, copy=False,
         help="Keep empty if you don't want the user to be able to connect on the system.")
     new_password = fields.Char(string='Set Password',
-        compute='_compute_password', inverse='_inverse_password',
+        compute='_compute_password', inverse='_set_new_password',
         help="Specify a value only when creating a user or if you're "\
              "changing the user's password, otherwise leave empty. After "\
              "a change of password, the user has to login again.")
@@ -239,11 +253,58 @@ class Users(models.Model):
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
     ]
 
+    def init(self):
+        cr = self.env.cr
+
+        # allow setting plaintext passwords via SQL and have them
+        # automatically encrypted at startup: look for passwords which don't
+        # match the "extended" MCF and pass those through passlib.
+        # Alternative: iterate on *all* passwords and use CryptContext.identify
+        cr.execute("""
+        SELECT id, password FROM res_users
+        WHERE password IS NOT NULL
+          AND password !~ '^\$[^$]+\$[^$]+\$.'
+        """)
+        if self.env.cr.rowcount:
+            Users = self.sudo()
+            for uid, pw in cr.fetchall():
+                Users.browse(uid).password = pw
+
+    def _set_password(self):
+        ctx = self._crypt_context()
+        for user in self:
+            self._set_encrypted_password(user.id, ctx.encrypt(user.password))
+
+    def _set_encrypted_password(self, uid, pw):
+        assert self._crypt_context().identify(pw) != 'plaintext'
+
+        self.env.cr.execute(
+            'UPDATE res_users SET password=%s WHERE id=%s',
+            (pw, uid)
+        )
+        self.invalidate_cache(['password'], [uid])
+
+    @api.model
+    def check_credentials(self, password):
+        """ Override this method to plug additional authentication methods"""
+        self.env.cr.execute(
+            'SELECT password FROM res_users WHERE id=%s',
+            [self.env.user.id]
+        )
+        [hashed] = self.env.cr.fetchone()
+        valid, replacement = self._crypt_context()\
+            .verify_and_update(password, hashed)
+        if replacement is not None:
+            self._set_encrypted_password(self.env.user.id, replacement)
+        if not valid:
+            raise AccessDenied()
+
     def _compute_password(self):
         for user in self:
             user.password = ''
+            user.new_password = ''
 
-    def _inverse_password(self):
+    def _set_new_password(self):
         for user in self:
             if not user.new_password:
                 # Do not update the password if no value is provided, ignore silently.
@@ -446,13 +507,6 @@ class Users(models.Model):
         return check_super(passwd)
 
     @api.model
-    def check_credentials(self, password):
-        """ Override this method to plug additional authentication methods"""
-        user = self.sudo().search([('id', '=', self._uid), ('password', '=', password)])
-        if not user:
-            raise AccessDenied()
-
-    @api.model
     def _update_last_login(self):
         # only create new records to avoid any side-effect on concurrent transactions
         # extra records will be deleted by the periodical garbage collection
@@ -629,6 +683,16 @@ class Users(models.Model):
     @api.model
     def get_company_currency_id(self):
         return self.env.user.company_id.currency_id.id
+
+    def _crypt_context(self):
+        """ Passlib CryptContext instance used to encrypt and verify
+        passwords. Can be overridden if technical, legal or political matters
+        require different kdfs than the provided default.
+
+        Requires a CryptContext as deprecation and upgrade notices are used
+        internally
+        """
+        return DEFAULT_CRYPT_CONTEXT
 
     def _add_missing_default_values(self, vals):
         # Remove the default values of 'group_' and 'has_group' fields at the user creation if
