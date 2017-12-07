@@ -50,8 +50,6 @@ var ImportControllerMixin = {
                     model: self.modelName,
                     context: state.getContext(),
                 }
-            }, {
-                on_reverse_breadcrumb: self.reload.bind(self),
             });
         });
     }
