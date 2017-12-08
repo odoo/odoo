@@ -192,6 +192,7 @@ class MailTemplate(models.Model):
     null_value = fields.Char('Default Value', help="Optional value to use if the target field is empty")
     copyvalue = fields.Char('Placeholder Expression', help="Final placeholder expression, to be copy-pasted in the desired template field.")
     scheduled_date = fields.Char('Scheduled Date', help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Jinja2 placeholders may be used.")
+    template_view = fields.Many2one('ir.ui.view')
 
     @api.onchange('model_id')
     def onchange_model_id(self):
@@ -289,7 +290,7 @@ class MailTemplate(models.Model):
         return html
 
     @api.model
-    def render_template(self, template_txt, model, res_ids, post_process=False):
+    def render_template(self, template_txt, model, res_ids, post_process=False, template_view=False):
         """ Render the given template text, replace mako expressions ``${expr}``
         with the result of evaluating these expressions with an evaluation
         context containing:
@@ -309,13 +310,6 @@ class MailTemplate(models.Model):
 
         results = dict.fromkeys(res_ids, u"")
 
-        # try to load the template
-        try:
-            mako_env = mako_safe_template_env if self.env.context.get('safe') else mako_template_env
-            template = mako_env.from_string(tools.ustr(template_txt))
-        except Exception:
-            _logger.info("Failed to load template %r", template_txt, exc_info=True)
-            return multi_mode and results or results[res_ids[0]]
 
         # prepare template variables
         records = self.env[model].browse(it for it in res_ids if it)  # filter to avoid browsing [None]
@@ -331,20 +325,30 @@ class MailTemplate(models.Model):
         }
         for res_id, record in res_to_rec.items():
             variables['object'] = record
-            try:
-                # compiling template by jinja
-                render_result = template.render(variables)
-            except Exception:
-                _logger.info("Failed to render template %r using values %r" % (template, variables), exc_info=True)
-                raise UserError(_("Failed to render template %r using values %r")% (template, variables))
+            render_result = u""
+            if template_view:
+                variables['record'] = record
+                try:
+                    render_result = template_view.render({'object': record, 'record': record})
+                except Exception:
+                    _logger.info("Failed to render template %r using values %r" % (template_view.name, variables), exc_info=True)
+                    raise UserError(_("Failed to render template %r using values %r")% (template_view.name, variables))
+            else:
+                # try to load the template
+                try:
+                    mako_env = mako_safe_template_env if self.env.context.get('safe') else mako_template_env
+                    template = mako_env.from_string(tools.ustr(template_txt))
+                except Exception:
+                    _logger.info("Failed to load template %r", template_txt, exc_info=True)
+                    return multi_mode and results or results[res_ids[0]]
+                try:
+                    render_result = pycompat.to_text(template.render(variables))
+                except Exception:
+                    _logger.info("Failed to render template %r using values %r" % (template, variables), exc_info=True)
+                    raise UserError(_("Failed to render template %r using values %r")% (template, variables))
             if render_result == u"False":
                 render_result = u""
-            # going to comile it by qweb
-            if render_result != u"":
-                variables['record'] = record
-                tree = lxml.html.fromstring(u'<t>%s</t>' % render_result)
-                render_result = self.env['ir.qweb'].render(tree, variables)
-            results[res_id] = pycompat.to_text(render_result)
+            results[res_id] = render_result
 
         if post_process:
             for res_id, result in results.items():
@@ -443,7 +447,7 @@ class MailTemplate(models.Model):
                 Template = Template.with_context(safe=field in {'subject'})
                 generated_field_values = Template.render_template(
                     getattr(template, field), template.model, template_res_ids,
-                    post_process=(field == 'body_html'))
+                    post_process=(field == 'body_html'), template_view=template.template_view if field == 'body_html' else False)
                 for res_id, field_value in generated_field_values.items():
                     results.setdefault(res_id, dict())[field] = field_value
             # compute recipients
