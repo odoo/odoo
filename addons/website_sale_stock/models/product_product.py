@@ -11,7 +11,7 @@ class ProductProduct(models.Model):
     cart_qty = fields.Integer(compute='_compute_cart_qty')
 
     def _compute_cart_qty(self):
-        website = getattr(request, 'website', None)
+        website = request and getattr(request, 'website', None)
         if not website:
             return
         cart = website.sale_get_order()
