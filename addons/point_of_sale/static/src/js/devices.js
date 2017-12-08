@@ -4,6 +4,7 @@ odoo.define('point_of_sale.devices', function (require) {
 var core = require('web.core');
 var Model = require('web.DataModel');
 var Session = require('web.Session');
+var PosBaseWidget = require('point_of_sale.BaseWidget');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -440,6 +441,7 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
         var self = this;
         new Model('report.point_of_sale.report_saledetails').call('get_sale_details').then(function(result){
             var env = {
+                widget: new PosBaseWidget(self),
                 company: self.pos.company,
                 pos: self.pos,
                 products: result.products,
