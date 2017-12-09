@@ -148,7 +148,8 @@ class Quant(models.Model):
         # split quants if needed
         for quant, qty in quants:
             if qty <= 0.0 or (quant and quant.qty <= 0.0):
-                raise UserError(_('You can not reserve a negative quantity or a negative quant.'))
+                #El siguiente codigo fue modificado por TRESCLOUD
+                raise UserError(_('No puede reservar una cantidad o un quant negativo, el proceso esta fallando con el siguiente producto: %s.') % (quant.product_id.name_get()[0][1]))
             if not quant:
                 continue
             quant._quant_split(qty)
