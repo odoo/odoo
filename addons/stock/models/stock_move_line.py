@@ -340,6 +340,15 @@ class StockMoveLine(models.Model):
             if ml.product_id.type == 'product' and not ml.location_id.should_bypass_reservation() and not float_is_zero(ml.product_qty, precision_digits=precision):
                 self.env['stock.quant']._update_reserved_quantity(ml.product_id, ml.location_id, -ml.product_qty, lot_id=ml.lot_id,
                                                                    package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+
+        # Unlinking must also change the move state
+        for move in self.mapped('move_id'):
+            if move.procure_method == 'make_to_order' and not move.move_orig_ids:
+                move.state = 'waiting'
+            elif move.move_orig_ids and not all(orig.state in ('done', 'cancel') for orig in move.move_orig_ids):
+                move.state = 'waiting'
+            else:
+                move.state = 'confirmed'
         return super(StockMoveLine, self).unlink()
 
     def _action_done(self):
