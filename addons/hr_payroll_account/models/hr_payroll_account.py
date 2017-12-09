@@ -70,8 +70,8 @@ class HrPayslip(models.Model):
                 amount = slip.credit_note and -line.total or line.total
                 if float_is_zero(amount, precision_digits=precision):
                     continue
-                debit_account_id = line.salary_rule_id.account_debit.id
-                #La siguiente línea fue modificada por TRESCLOUD
+                #Las siguientes líneas fueron modificadas por TRESCLOUD
+                debit_account_id = self.get_debit_account_id(line)
                 credit_account_id = self.get_credit_account_id(line)
                 if debit_account_id:
                     debit_line = (0, 0, {
@@ -124,6 +124,14 @@ class HrPayslip(models.Model):
             slip.write({'move_id': move.id, 'date': date})
             move.post()
         return super(HrPayslip, self).action_payslip_done()
+    
+    #El siguiente método fue agregado TRESCLOUD
+    @api.model
+    def get_debit_account_id(self, line):
+        '''
+        Este metodo devuelve la cuenta deudora configurada en la regla salarial, va ser modificado en ecua_hr
+        '''
+        return line.salary_rule_id.account_debit.id
     
     #El siguiente método fue agregado TRESCLOUD
     @api.model

@@ -542,7 +542,7 @@ class HrPayslip(models.Model):
                         'salary_rule_id': rule.id,
                         'contract_id': contract.id,
                         #La siguiente línea fue modificada por TRESCLOUD
-                        'name': self.get_name_rule(rule),
+                        'name': payslip.get_name_rule(rule),
                         'code': rule.code,
                         'category_id': rule.category_id.id,
                         #La siguiente línea fue modificada por TRESCLOUD
