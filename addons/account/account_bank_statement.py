@@ -780,6 +780,38 @@ class account_bank_statement_line(osv.osv):
         }
         return (move_line, move_line_counterpart)
 
+    def get_debit_credit_current_rate(self, cr, uid, st_line, mv_line_dict, context=None):
+        currency_obj = self.pool.get('res.currency')
+        company_currency = st_line.journal_id.company_id.currency_id
+        statement_currency = st_line.journal_id.currency or company_currency
+        st_line_currency = st_line.currency_id or statement_currency
+        st_line_currency_rate = st_line.currency_id and (st_line.amount_currency / st_line.amount) or False
+        if st_line.currency_id and statement_currency.id == company_currency.id and st_line_currency_rate:
+            debit_at_current_rate = currency_obj.round(cr, uid, company_currency, mv_line_dict['debit'] / st_line_currency_rate)
+            credit_at_current_rate = currency_obj.round(cr, uid, company_currency, mv_line_dict['credit'] / st_line_currency_rate)
+        elif st_line.currency_id and st_line_currency_rate:
+            debit_at_current_rate = currency_obj.compute(cr, uid, statement_currency.id, company_currency.id, mv_line_dict['debit'] / st_line_currency_rate, context=context)
+            credit_at_current_rate = currency_obj.compute(cr, uid, statement_currency.id, company_currency.id, mv_line_dict['credit'] / st_line_currency_rate, context=context)
+        else:
+            debit_at_current_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['debit'], context=context)
+            credit_at_current_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['credit'], context=context)
+        return debit_at_current_rate, credit_at_current_rate
+                
+    def get_debit_credit_old_rate(self, cr, uid, st_line, mv_line, mv_line_dict, context=None):
+        currency_obj = self.pool.get('res.currency')
+        company_currency = st_line.journal_id.company_id.currency_id
+        statement_currency = st_line.journal_id.currency or company_currency
+        st_line_currency = st_line.currency_id or statement_currency
+        if mv_line.currency_id.id == mv_line_dict['currency_id'] \
+            and float_is_zero(abs(mv_line.amount_currency) - abs(mv_line_dict['amount_currency']),
+                              precision_rounding=mv_line.currency_id.rounding):
+            debit_at_old_rate = mv_line.credit
+            credit_at_old_rate = mv_line.debit
+        else:
+            debit_at_old_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['debit'], context=context)
+            credit_at_old_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['credit'], context=context)
+        return debit_at_old_rate, credit_at_old_rate           
+    
     def process_reconciliations(self, cr, uid, data, context=None):
         for datum in data:
             self.process_reconciliation(cr, uid, datum[0], datum[1], context=context)
@@ -851,25 +883,11 @@ class account_bank_statement_line(osv.osv):
                 ctx['date'] = st_line.date
                 mv_line_dict['amount_currency'] = mv_line_dict['debit'] - mv_line_dict['credit']
                 mv_line_dict['currency_id'] = st_line_currency.id
-                if st_line.currency_id and statement_currency.id == company_currency.id and st_line_currency_rate:
-                    debit_at_current_rate = self.pool.get('res.currency').round(cr, uid, company_currency, mv_line_dict['debit'] / st_line_currency_rate)
-                    credit_at_current_rate = self.pool.get('res.currency').round(cr, uid, company_currency, mv_line_dict['credit'] / st_line_currency_rate)
-                elif st_line.currency_id and st_line_currency_rate:
-                    debit_at_current_rate = currency_obj.compute(cr, uid, statement_currency.id, company_currency.id, mv_line_dict['debit'] / st_line_currency_rate, context=ctx)
-                    credit_at_current_rate = currency_obj.compute(cr, uid, statement_currency.id, company_currency.id, mv_line_dict['credit'] / st_line_currency_rate, context=ctx)
-                else:
-                    debit_at_current_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['debit'], context=ctx)
-                    credit_at_current_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['credit'], context=ctx)
+                debit_at_current_rate, credit_at_current_rate = self.get_debit_credit_current_rate(cr, uid, st_line, mv_line_dict, context=ctx)
                 if mv_line_dict.get('counterpart_move_line_id'):
                     #post an account line that use the same currency rate than the counterpart (to balance the account) and post the difference in another line
                     ctx['date'] = mv_line.date
-                    if mv_line.currency_id.id == mv_line_dict['currency_id'] \
-                            and float_is_zero(abs(mv_line.amount_currency) - abs(mv_line_dict['amount_currency']), precision_rounding=mv_line.currency_id.rounding):
-                        debit_at_old_rate = mv_line.credit
-                        credit_at_old_rate = mv_line.debit
-                    else:
-                        debit_at_old_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['debit'], context=ctx)
-                        credit_at_old_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['credit'], context=ctx)
+                    debit_at_old_rate, credit_at_old_rate = self.get_debit_credit_old_rate(cr, uid, st_line, mv_line, mv_line_dict, context=ctx)
                     mv_line_dict['credit'] = credit_at_old_rate
                     mv_line_dict['debit'] = debit_at_old_rate
                     if debit_at_old_rate - debit_at_current_rate:
