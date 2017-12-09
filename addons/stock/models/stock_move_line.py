@@ -342,13 +342,7 @@ class StockMoveLine(models.Model):
                                                                    package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
 
         # Unlinking must also change the move state
-        for move in self.mapped('move_id'):
-            if move.procure_method == 'make_to_order' and not move.move_orig_ids:
-                move.state = 'waiting'
-            elif move.move_orig_ids and not all(orig.state in ('done', 'cancel') for orig in move.move_orig_ids):
-                move.state = 'waiting'
-            else:
-                move.state = 'confirmed'
+        self.mapped('move_id')._check_move_state()
         return super(StockMoveLine, self).unlink()
 
     def _action_done(self):
