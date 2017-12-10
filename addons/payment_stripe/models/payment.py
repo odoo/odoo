@@ -239,7 +239,7 @@ class PaymentTokenStripe(models.Model):
 
         customer_params = {
             'source': token['id'],
-            'description': description or token['email']
+            'description': description or token["card"]["name"]
         }
 
         r = requests.post(url_customer,
@@ -254,7 +254,7 @@ class PaymentTokenStripe(models.Model):
 
         values = {
             'acquirer_ref': customer['id'],
-            'name': 'XXXXXXXXXXXX%s - %s' % (token['card']['last4'], token['email'])
+            'name': 'XXXXXXXXXXXX%s - %s' % (token['card']['last4'], customer_params["description"])
         }
 
         return values
