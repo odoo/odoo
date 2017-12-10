@@ -208,7 +208,7 @@ class PaymentTokenStripe(models.Model):
             description = values['cc_holder_name']
         else:
             partner_id = self.env['res.partner'].browse(values['partner_id'])
-            description = 'Partner: {} (id: {})'.format(partner_id.name, partner_id.id)
+            description = 'Partner: %s (id: %s)' % (partner_id.name, partner_id.id)
 
         if not token:
             raise Exception('stripe_create: No token provided!')
