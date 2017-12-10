@@ -31,7 +31,6 @@
 # Malte Jansen <work@maltejansen.de>, 2017
 # Renzo Meister <info@jamotion.ch>, 2017
 # Andreas Stauder <andreas.stauder@brain-tec.ch>, 2017
-# Stefan Hartenfels <stefan.hartenfels@camptocamp.com>, 2017
 # Maik Steinfeld <info@streward.de>, 2017
 # Christopher Westburry <cricsus99@gmail.com>, 2017
 # Markus Mattes <mmattes87@gmail.com>, 2017
@@ -44,13 +43,15 @@
 # David Lehov <KHottend@gmx.de>, 2017
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2017
 # Katharina Moritz <kmo@e2f.com>, 2017
+# Stefan Hartenfels <stefan.hartenfels@camptocamp.com>, 2017
+# Mark Lorenz <bandworm@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-16 08:08+0000\n"
 "PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2017\n"
+"Last-Translator: Mark Lorenz <bandworm@gmail.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -222,6 +223,16 @@ msgid ""
 "</p>\n"
 "</data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Sehr geehrte(r) ${object.partner_id.name},</p>\n"
+"<p>Wir haben Ihre Zahlung dankend erhalten.<br/>Anbei übersenden wir Ihnen die Zahlungsbestätigung <strong>${(object.name or '').replace('/','-')}</strong> für <strong>${object.amount} ${object.currency_id.name}</strong> von ${object.company_id.name}.</p>\n"
+"<p>Wir Rückfragen stehen wir jederzeit zur Verfügung.</p>\n"
+"<p>Mit freundlichen Grüßen,\n"
+"% if user and user.signature:\n"
+"${user.signature | safe}\n"
+"% endif\n"
+"</p>\n"
+"</data>"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_notification_email_account_invoice
@@ -1390,7 +1401,7 @@ msgstr "Finanzberichte"
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
 msgid "Account Rounding"
-msgstr ""
+msgstr "Kontorundung"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template_account_src_id
@@ -1413,7 +1424,7 @@ msgstr "Konto-Schlagwort"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_tag_action
 msgid "Account Tags"
-msgstr ""
+msgstr "Konto Anmerkungen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_tax_form
@@ -2536,7 +2547,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Batch Deposits"
-msgstr ""
+msgstr "Stapelbuchung"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3027,7 +3038,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Checks"
-msgstr "Kontrollen"
+msgstr "Schecks"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_children_tax_ids
@@ -8224,7 +8235,7 @@ msgstr "Eigenschaften"
 #: model:ir.actions.act_window,name:account.product_product_action_purchasable
 #: model:ir.ui.menu,name:account.product_product_menu_purchasable
 msgid "Purchasable Products"
-msgstr ""
+msgstr "Bestellbare Produkte"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -9713,6 +9724,10 @@ msgid ""
 " is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
 msgstr ""
+"Technisches Feld, das verwendet wird, um die Abgleichung der "
+"Steuerzahlungsbasis zu verfolgen, die bei der Stornierung der Quelle "
+"benötigt wird: Es wird die umgekehrte Journalbuchung gebucht, um auch diesen"
+" Teil zu stornieren."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_tax_exigible

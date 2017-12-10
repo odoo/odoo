@@ -1227,7 +1227,7 @@ msgid ""
 "                bank accounts, checks), one purchase journal, one sales journal\n"
 "                and one for miscellaneous information."
 msgstr ""
-"Μια τυπική εταιρεία μπορεί να χρησιμοποιεί ένα ημερολόγιο ανά τρόπο πληρωμής (μετρητά, \n"
+"Μια τυπική εταιρεία μπορεί να χρησιμοποιεί ένα ημερολόγιο ανά μέθοδο πληρωμής (μετρητά, \n"
 "                τραπεζικοί λογαριασμοί, επιταγές), ένα ημερολόγιο αγορών, ένα ημερολόγιο πωλήσεων\n"
 "                και ένα για διάφορες πληροφορίες."
 
@@ -2245,7 +2245,7 @@ msgstr "Απρίλιος"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_search
 msgid "Archived"
-msgstr "Αρχειοθετημένα"
+msgstr "Αρχειοθετήθηκαν"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -2643,7 +2643,7 @@ msgstr "Λογαριασμοί για πληρωμή"
 #. module: account
 #: selection:res.partner,invoice_warn:0
 msgid "Blocking Message"
-msgstr "Μπλοκαρισμένο Μήνυμα"
+msgstr "Μήνυμα Αποκλεισμού"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_type_include_initial_balance
@@ -2750,7 +2750,7 @@ msgstr "Ακύρωση"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: create credit note and reconcile"
-msgstr "Ακύρωση: Δημιουργήστε πιστωτικό τιμολόγιο και συμψηφίστε "
+msgstr "Ακύρωση: Δημιουργήστε πιστωτικό και συμψηφίστε "
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -3584,12 +3584,12 @@ msgstr "Δημιουργία Προμηθευτών"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:131
 #, python-format
 msgid "Create Write-off"
-msgstr "Δημιουργία Παραγραφής"
+msgstr "Δημιουργία Διαγραφής"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Create a draft credit note"
-msgstr "Δημιουργήστε ένα προσχέδιο πιστωτικού τιμολογίου"
+msgstr "Δημιουργήστε ένα προσχέδιο πιστωτικού "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
@@ -4421,7 +4421,7 @@ msgid ""
 "Document: Customer account statement<br/>\n"
 "                    Date:"
 msgstr ""
-"Έγγραφο: Δήλωση λογαριασμού πελάτη<br/>\n"
+"Έγγραφο: Κίνηση λογαριασμού πελάτη<br/>\n"
 "                    Ημερομηνία:"
 
 #. module: account
@@ -5018,6 +5018,10 @@ msgid ""
 "vendors. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"Από αυτήν την αναφορά, μπορείτε να δείτε μια επισκόπηση του ποσού που "
+"τιμολογήθηκε από τους  προμηθευτές σας. Το εργαλείο αναζήτησης μπορεί επίσης"
+" να χρησιμοποιηθεί για να προσαρμόσετε τις εκθέσεις τιμολογίων σας και έτσι,"
+" ταιριάζει την ανάλυση αυτή με τις ανάγκες σας."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -5026,6 +5030,10 @@ msgid ""
 "customers. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"Από αυτήν την αναφορά, μπορείτε να δείτε μια επισκόπηση του ποσού που "
+"τιμολογήθηκε στους πελάτες σας. Το εργαλείο αναζήτησης μπορεί επίσης να "
+"χρησιμοποιηθεί για να προσαρμόσετε τις εκθέσεις τιμολογίων σας και έτσι, "
+"ταιριάζει την ανάλυση αυτή με τις ανάγκες σας."
 
 #. module: account
 #: model:ir.model,name:account.model_account_full_reconcile
@@ -5200,7 +5208,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_has_outstanding
 msgid "Has Outstanding"
-msgstr ""
+msgstr "Έχει Εκκρεμείς"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_has_unreconciled_entries
@@ -5743,7 +5751,7 @@ msgstr "Τιμολόγιο #"
 #: code:addons/account/models/account_invoice.py:438
 #, python-format
 msgid "Invoice - %s"
-msgstr ""
+msgstr "Τιμολόγιο - %s"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_created
@@ -5983,6 +5991,8 @@ msgstr "Δείχνει ότι το τιμολόγιο έχει αποσταλε�
 msgid ""
 "It is mandatory to specify an account and a journal to create a write-off."
 msgstr ""
+"Είναι υποχρεωτικό να καθορίσετε έναν λογαριασμό και ένα ημερολόγιο για να "
+"δημιουργήσετε μια διαγραφή."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:450
@@ -6024,7 +6034,7 @@ msgstr "Είδη"
 #: model:ir.ui.view,arch_db:account.report_generalledger
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 msgid "JRNL"
-msgstr "JRNL"
+msgstr "ΗΜΡΛ"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -6169,7 +6179,7 @@ msgstr "Τιμολόγια Ημερολογίου με περίοδο στην �
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journal items where matching number isn't set"
-msgstr ""
+msgstr "Στοιχεία ημερολογίου όπου ο αριθμός αντιστοίχησης δεν έχει οριστεί"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company_account_opening_journal_id
@@ -6503,6 +6513,10 @@ msgid ""
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
 msgstr ""
+"Την τελευταία φορά πραγματοποιήθηκε η αντιστοίχιση τιμολογίων και πληρωμών "
+"για αυτόν τον συνεργάτη. Ορίζεται είτε εάν δεν υπάρχει τουλάχιστον μια "
+"ασυμψήφιστη χρέωση και μια ασυμψήφιστη πίστωση ή εάν κάνετε κλικ στο κουμπί "
+"\"Τέλος\"."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_last_time_entries_checked
@@ -6511,6 +6525,10 @@ msgid ""
 " is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit Or if you click the \"Done\" button."
 msgstr ""
+"Την τελευταία φορά πραγματοποιήθηκε η αντιστοίχιση τιμολογίων και πληρωμών "
+"για αυτόν τον λογαριασμό. Ορίζεται είτε εάν δεν υπάρχει τουλάχιστον μια "
+"ασυμψήφιστη χρέωση και μια ασυμψήφιστη πίστωση ή εάν κάνετε κλικ στο κουμπί "
+"\"Τέλος\"."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -6522,7 +6540,7 @@ msgstr "Καθυστερημένες Δραστηριότητες "
 #: model:ir.model.fields,field_description:account.field_res_partner_last_time_entries_checked
 #: model:ir.model.fields,field_description:account.field_res_users_last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
-msgstr ""
+msgstr "Τελευταία Ημερομηνία Αντιστοίχισης Τιμολογίων & Πληρωμών"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group_parent_left
@@ -6592,7 +6610,7 @@ msgstr "Λιστα των φόρων που πρέπει να εγκαταστα
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "Litigation"
-msgstr ""
+msgstr "Δικαστικώς"
 
 #. module: account
 #. openerp-web
@@ -6779,24 +6797,24 @@ msgstr "Βασικά Δεδομένα"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_matched_credit_ids
 msgid "Matched Credit"
-msgstr ""
+msgstr "Αντιστοιχισμένη Πίστωση"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_matched_debit_ids
 msgid "Matched Debit"
-msgstr ""
+msgstr "Αντιστοιχισμένη Χρέωση"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_reconciled_line_ids
 #: model:ir.ui.view,arch_db:account.view_full_reconcile_form
 msgid "Matched Journal Items"
-msgstr ""
+msgstr "Αντιστοιχισμένα Στοιχεία Ημερολογίων"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_full_reconcile_form
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Matching"
-msgstr ""
+msgstr "Aντιστοίχιση"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_full_reconcile_id
@@ -6893,8 +6911,8 @@ msgstr ""
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create credit note, reconcile and create a new draft invoice"
 msgstr ""
-"Τροποποίηση: δημιουργία πιστωτικού τιμολογίου, συμψηφισμός και δημιουργία "
-"νέου προσχεδίου "
+"Τροποποίηση: δημιουργία πιστωτικού, συμψηφισμός και δημιουργία νέου "
+"προσχεδίου "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7534,13 +7552,13 @@ msgstr "Εκκρεμείς Συναλλαγές"
 #: code:addons/account/models/account_invoice.py:128
 #, python-format
 msgid "Outstanding credits"
-msgstr ""
+msgstr "Εκκρεμείς πιστώσεις"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:131
 #, python-format
 msgid "Outstanding debits"
-msgstr ""
+msgstr "Εκκρεμείς χρεώσεις"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -7686,7 +7704,7 @@ msgstr "Συνεργάτες"
 #: code:addons/account/models/account_journal_dashboard.py:106
 #, python-format
 msgid "Past"
-msgstr "Περασμένο"
+msgstr "Περασμένα"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7925,7 +7943,7 @@ msgstr "Ποσοστό"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_matched_percentage
 msgid "Percentage Matched"
-msgstr ""
+msgstr "Ποσοστό Αντιστοιχισμένο"
 
 #. module: account
 #: selection:account.tax,amount_type:0
@@ -8055,7 +8073,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_invoice_form
 msgid "Post Difference In"
-msgstr ""
+msgstr "Καταχώρηση Διαφοράς σε"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_validate_account_move
@@ -8113,6 +8131,8 @@ msgstr "Διατήρηση προσήμου ισοζυγίου"
 msgid ""
 "Preset to create journal entries during a invoices and payments matching"
 msgstr ""
+"Προεπιλογή για τη δημιουργία καταχωρήσεων ημερολογίου κατά τη διάρκεια της "
+"αντιστοίχισης τιμολογίων και πληρωμών"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
@@ -8361,7 +8381,7 @@ msgstr "Εγγραφές Συμψηφισμού"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
 msgid "Reconcile With Write-Off"
-msgstr "Συμψηφισμός με Παραγραφή"
+msgstr "Συμψηφισμός με Διαγραφή"
 
 #. module: account
 #: code:addons/account/wizard/account_reconcile.py:86
@@ -8447,7 +8467,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #, python-format
 msgid "Ref"
-msgstr "Αναφ"
+msgstr "Σχετικό"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_ref
@@ -8473,7 +8493,7 @@ msgstr "Σχετική Μονάδα Μέτρησης"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "Reference number"
-msgstr ""
+msgstr "Αριθμός αναφοράς"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_origin
@@ -10059,6 +10079,9 @@ msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
 msgstr ""
+"Ο συνεργάτης έχει τουλάχιστον μία μη συμψηφισμένη χρέωση και πίστωση από την"
+" τελευταία φορά που πραγματοποιήθηκαν η αντιστοίχιση τιμολογίων και "
+"πληρωμών."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1010
@@ -10219,7 +10242,7 @@ msgstr "Αυτόν τον μήνα"
 #: code:addons/account/models/account_journal_dashboard.py:111
 #, python-format
 msgid "This Week"
-msgstr "Αυτή την εβδομάδα"
+msgstr "Της Εβδομάδας"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -10965,6 +10988,10 @@ msgid ""
 "                                with the current invoice. A new draft invoice will be created\n"
 "                                so that you can edit it."
 msgstr ""
+"Χρησιμοποιήστε αυτήν την επιλογή εάν θέλετε να ακυρώσετε ένα παραστατικό και να δημιουργήσετε\n"
+"                                ένα νέο. Το πιστωτικό θα δημιουργηθεί, επικυρωθεί και συμψηφιστεί\n"
+"                                με το τρέχον παραστατικό. Θα δημιουργηθεί ένα νέο προσχέδιο παραστατικού\n"
+"                                ώστε να μπορείτε να το επεξεργαστείτε."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
@@ -10973,6 +11000,9 @@ msgid ""
 "                                have issued. The credit note will be created, validated and reconciled\n"
 "                                with the invoice. You will not be able to modify the credit note."
 msgstr ""
+"Χρησιμοποιήστε αυτήν την επιλογή αν θέλετε να ακυρώσετε ένα παραστατικό που δεν θα έπρεπε\n"
+"                                να εκδώσετε. Το πιστωτικό θα δημιουργηθεί, επικυρωθεί και συμψηφιστεί\n"
+"                                με το παραστατικό. Δεν θα μπορείτε να τροποποιήσετε το πιστωτικό.  "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_type_include_initial_balance
@@ -11061,7 +11091,7 @@ msgstr "Επικυρωμένο"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_value_amount
 msgid "Value"
-msgstr "Αξία"
+msgstr "Τιμή"
 
 #. module: account
 #: selection:account.abstract.payment,partner_type:0
@@ -11293,27 +11323,27 @@ msgstr "Οδηγός για Φορολογικές Προσαρμογές"
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
 #, python-format
 msgid "Write-Off"
-msgstr "Παραγραφή"
+msgstr "Διαγραφή"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_journal_id
 msgid "Write-Off Journal"
-msgstr "Ημερολόγιο Παραγραφών"
+msgstr "Ημερολόγιο Διαγραφών"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_move_line_reconcile_writeoff
 msgid "Write-Off Move"
-msgstr "Κίνηση Παραγραφής"
+msgstr "Κίνηση Διαγραφής"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_writeoff_acc_id
 msgid "Write-Off account"
-msgstr "Λογαριασμός παραγραφών"
+msgstr "Λογαριασμός διαγραφών"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff
 msgid "Write-Off amount"
-msgstr "Ποσό Παραγραφής"
+msgstr "Ποσό Διαγραφής"
 
 #. module: account
 #: sql_constraint:account.move.line:0
@@ -11580,7 +11610,7 @@ msgstr "Δεν ρυθμίσατε κανένα μοντέλο συμψηφισμ
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "You have"
-msgstr ""
+msgstr "Έχετε"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:485
@@ -11822,6 +11852,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "for this customer. You can allocate them to mark this invoice as paid."
 msgstr ""
+"για αυτόν τον πελάτη. Μπορείτε να τις διαθέσετε για να επισημάνετε αυτό το "
+"τιμολόγιο ως πληρωμένο"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -11838,12 +11870,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "outstanding debits"
-msgstr ""
+msgstr "εκκρεμείς χρεώσεις"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "outstanding payments"
-msgstr ""
+msgstr "εκκρεμείς συναλλαγές"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_agedpartnerbalance
