@@ -515,7 +515,7 @@ msgstr "<span>新規</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<span>Not due</span>"
-msgstr ""
+msgstr "<span>将来期日</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -667,7 +667,7 @@ msgstr "<strong>開始日:</strong>"
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "<strong>Date to :</strong>"
-msgstr "<strong>終了日 :</strong>"
+msgstr "<strong>終了日:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -766,7 +766,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<strong>Partner's:</strong>"
-msgstr ""
+msgstr "<strong>取引先の:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
@@ -786,7 +786,7 @@ msgstr "<strong>支払方法: </strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<strong>Period Length (days)</strong>"
-msgstr ""
+msgstr "<strong>期間の長さ (日数)</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -878,7 +878,7 @@ msgstr "<strong>参照元:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<strong>Start Date:</strong>"
-msgstr ""
+msgstr "<strong>開始日:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -899,7 +899,7 @@ msgstr "<strong>小計</strong>"
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "<strong>Target Moves:</strong>"
-msgstr ""
+msgstr "<strong>対象仕訳:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1316,7 +1316,7 @@ msgstr "勘定科目テンプレート"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "Account Total"
-msgstr ""
+msgstr "勘定合計"
 
 #. module: account
 #: selection:account.financial.report,type:0
@@ -1436,7 +1436,7 @@ msgstr "会計"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Accounting App Options"
-msgstr ""
+msgstr "会計アプリオプション"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_wizard_multi_chart
@@ -1584,7 +1584,7 @@ msgstr "アドレス"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_tax_id
 msgid "Adjustment Tax"
-msgstr ""
+msgstr "調整税"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -1629,6 +1629,7 @@ msgid ""
 "you request an interval of 30 days Odoo generates an analysis of creditors "
 "for the past month, past two months, and so on."
 msgstr ""
+"取引先残高年齢表は、売掛金残高を期日超過の期間毎にマッピングした詳細レポートです。Odooは売掛金残高のテーブルを開始日から起算して計算します。インターバルを30日に設定した場合、Odooは期日超過が「30日未満」「30日以上60日未満」という具合にカラムを生成し、それぞれのカラムに売掛金残高を表示します。"
 
 #. module: account
 #: selection:account.balance.report,display_account:0
@@ -2064,12 +2065,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_at_least_one_inbound
 msgid "At Least One Inbound"
-msgstr ""
+msgstr "入金の支払方法あり"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_at_least_one_outbound
 msgid "At Least One Outbound"
-msgstr ""
+msgstr "出金の支払方法あり"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -2267,7 +2268,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_bank_data_done
 msgid "Bank Setup Marked As Done"
-msgstr ""
+msgstr "銀行設定済"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement
@@ -2313,7 +2314,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_account_setup_bank_data_done
 msgid "Bank setup marked as done"
-msgstr ""
+msgstr "銀行設定済"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_statement_line_id
@@ -2378,7 +2379,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_belongs_to_company
 msgid "Belong to the user's current company"
-msgstr ""
+msgstr "ユーザの現在の会社に属する"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2426,7 +2427,7 @@ msgstr "未払仕入先請求書"
 #. module: account
 #: selection:res.partner,invoice_warn:0
 msgid "Blocking Message"
-msgstr "メッセージをブロック"
+msgstr "阻止メッセージ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_type_include_initial_balance
@@ -2436,7 +2437,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
 msgid "Browse available countries."
-msgstr ""
+msgstr "利用可能な勘定科目表を照会"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_budget
@@ -2878,7 +2879,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_out_refund
 msgid "Click to create a credit note."
-msgstr ""
+msgstr "クリックしてクレジットノートを作成してください。"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree1
@@ -3070,7 +3071,7 @@ msgstr "会社の通貨"
 #: code:addons/account/static/src/xml/account_dashboard_setup_bar.xml:25
 #, python-format
 msgid "Company Data"
-msgstr ""
+msgstr "会社データ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_company_data_done
@@ -3149,7 +3150,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_dashboard_setup_bar.xml:29
 #, python-format
 msgid "Configuration Steps:"
-msgstr ""
+msgstr "設定ステップ:"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:460
@@ -3550,7 +3551,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence_id
 msgid "Credit Note Entry Sequence"
-msgstr ""
+msgstr "クレジットノート付番規則"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3854,7 +3855,7 @@ msgstr "12月"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr ""
+msgstr "固有のクレジットノート付番"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_default_credit_account_id
@@ -4443,7 +4444,7 @@ msgstr "費用勘定"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_expense_id
 msgid "Expense Account on Product Template"
-msgstr "製品テンプレート上の経費勘定"
+msgstr "プロダクトテンプレートの費用勘定"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_expenses
@@ -4525,7 +4526,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.report,name:account.action_report_financial
 msgid "Financial report"
-msgstr ""
+msgstr "財務レポート"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op_account_setup_fy_data_done
@@ -4927,7 +4928,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "How do account types affect your reports?"
-msgstr ""
+msgstr "勘定科目タイプは次のようにレポート出力に影響します。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5320,7 +5321,7 @@ msgstr "情報の追加"
 #: code:addons/account/static/src/xml/account_dashboard_setup_bar.xml:9
 #, python-format
 msgid "Initial Balances"
-msgstr ""
+msgstr "開始残高"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_account_input_categ_id
@@ -6505,32 +6506,32 @@ msgstr "請求書のためのメッセージ"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Cost of Revenue"
-msgstr ""
+msgstr "減算 売上原価"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Credit Card Accounts"
-msgstr ""
+msgstr "減算 クレジットカード勘定"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Current Liabilities"
-msgstr ""
+msgstr "減算 流動負債"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Expenses"
-msgstr ""
+msgstr "減算 経費"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Non-Current Liabilities"
-msgstr ""
+msgstr "減算 非流動負債"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Payable Accounts"
-msgstr ""
+msgstr "減算 買掛金/未払金勘定"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -6825,7 +6826,7 @@ msgstr "ノート"
 msgid ""
 "Note that the easiest way to create a credit note is to do it directly form\n"
 "                the customer invoice, to refund it totally or partially."
-msgstr ""
+msgstr "注: 顧客請求書から直接一部/全部返金を作成するのが、クレジットノートを作成する最も簡単な方法です。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_note
@@ -7324,7 +7325,7 @@ msgstr "取引先名"
 #: model:ir.model.fields,field_description:account.field_account_payment_partner_type
 #: model:ir.model.fields,field_description:account.field_account_register_payments_partner_type
 msgid "Partner Type"
-msgstr ""
+msgstr "取引先タイプ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_result_selection
@@ -7796,14 +7797,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move_line_product_id
 #: model:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "Product"
-msgstr "製品"
+msgstr "プロダクト"
 
 #. module: account
 #: model:ir.model,name:account.model_product_category
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_categ_id
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Product Category"
-msgstr "製品カテゴリ"
+msgstr "プロダクトカテゴリ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_product_image
@@ -7813,18 +7814,18 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_product_qty
 msgid "Product Quantity"
-msgstr "製品数量"
+msgstr "プロダクト数量"
 
 #. module: account
 #: model:ir.model,name:account.model_product_template
 msgid "Product Template"
-msgstr "製品テンプレート"
+msgstr "プロダクトテンプレート"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.product_product_action
 #: model:ir.ui.view,arch_db:account.product_product_view_tree
 msgid "Products"
-msgstr "製品"
+msgstr "プロダクト"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:177
@@ -7870,7 +7871,7 @@ msgstr "プロパティ"
 #: model:ir.actions.act_window,name:account.product_product_action_purchasable
 #: model:ir.ui.menu,name:account.product_product_menu_purchasable
 msgid "Purchasable Products"
-msgstr "購買可能製品"
+msgstr "購買可能プロダクト"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -7941,7 +7942,7 @@ msgstr "理由"
 #. module: account
 #: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
 msgid "Reason..."
-msgstr ""
+msgstr "理由..."
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_receivable
@@ -8618,7 +8619,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.product_product_action_sellable
 #: model:ir.ui.menu,name:account.product_product_menu_sellable
 msgid "Sellable Products"
-msgstr "販売可能製品"
+msgstr "販売可能プロダクト"
 
 #. module: account
 #: selection:account.abstract.payment,payment_type:0
@@ -9001,13 +9002,13 @@ msgstr "返金の税勘定"
 #: model:ir.model.fields,field_description:account.field_account_tax_tax_adjustment
 #: model:ir.model.fields,field_description:account.field_account_tax_template_tax_adjustment
 msgid "Tax Adjustment"
-msgstr ""
+msgstr "税調整"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.tax_adjustments_form
 #: model:ir.ui.menu,name:account.menu_action_tax_adjustment
 msgid "Tax Adjustments"
-msgstr ""
+msgstr "税調整"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
@@ -9143,7 +9144,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_tax_src_id
 msgid "Tax on Product"
-msgstr "製品の税"
+msgstr "プロダクトの税"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_tax_dest_id
@@ -9957,7 +9958,7 @@ msgstr ""
 msgid ""
 "This is the accounting dashboard. If you have not yet\n"
 "                installed a chart of account, please install one first."
-msgstr ""
+msgstr "こちらは会計ダッシュボードです。勘定科目表のインストールが済んでいない場合は、初めに勘定科目表をインストールしてください。"
 
 #. module: account
 #: code:addons/account/models/account.py:493
@@ -10687,7 +10688,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_invoice_in_refund
 #: model:ir.ui.menu,name:account.menu_action_invoice_in_refund
 msgid "Vendor Credit Notes"
-msgstr ""
+msgstr "仕入先クレジットノート"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1229
@@ -10843,7 +10844,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_tax_adjustments_wizard
 msgid "Wizard for Tax Adjustments"
-msgstr ""
+msgstr "税調整ウィザード"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1045

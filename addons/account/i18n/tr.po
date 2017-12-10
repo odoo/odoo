@@ -1060,7 +1060,7 @@ msgstr "Bir nakit işleminin tutarı 0 olamaz."
 #: code:addons/account/models/account_invoice.py:1731
 #, python-format
 msgid "A Payment Terms should have its last line of type Balance."
-msgstr "Bir Ödeme Şartları, en son Dengesi türünde olmalıdır."
+msgstr "Bir ödeme koşulunda, son satır dönem tipi Bakiye olmalıdır."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1734
@@ -1480,7 +1480,7 @@ msgstr "Hesap Grupları"
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile
 msgid "Account move line reconcile"
-msgstr "Hesap Hareket Kalemi uzlaştır"
+msgstr "Yevmiye kalemi uzlaştır"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_writeoff
@@ -1660,7 +1660,7 @@ msgstr "Ekle"
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
 msgid "Add Credit Note"
-msgstr ""
+msgstr "İade/Fiyat Farkı Faturası Ekle"
 
 #. module: account
 #: selection:account.cash.rounding,strategy:0
@@ -2764,7 +2764,7 @@ msgstr "Gerçekleşme Esasına Göre Vergi Yevmiyesi"
 #: code:addons/account/models/chart_template.py:192
 #, python-format
 msgid "Cash Basis Tax Journal"
-msgstr ""
+msgstr "Tahsil Esaslı Vergi Yevmiyesi"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:210
@@ -3031,7 +3031,7 @@ msgstr "Yeni bir hesap eklemek için tıklayın."
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_out_refund
 msgid "Click to create a credit note."
-msgstr ""
+msgstr "Bir İade/Fiyat Farkı faturası oluşturmak için tıklayın."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree1
@@ -3709,7 +3709,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_date_invoice
 msgid "Credit Note Date"
-msgstr ""
+msgstr "İade/Fiyat Farkı Faturası Tarihi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence_id
@@ -3829,13 +3829,13 @@ msgstr "Müşteri"
 #: code:addons/account/models/account_payment.py:656
 #, python-format
 msgid "Customer Credit Note"
-msgstr ""
+msgstr "Müşteri İade/Fiyat Farkı Faturası"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_out_refund
 #: model:ir.ui.menu,name:account.menu_action_invoice_out_refund
 msgid "Customer Credit Notes"
-msgstr ""
+msgstr "Müşteri İade/Fiyat Farkı Faturaları"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4963,7 +4963,7 @@ msgstr "Kayıtları Oluştur"
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
 msgid "Generic Statements"
-msgstr ""
+msgstr "US GAAP"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7101,6 +7101,8 @@ msgid ""
 "Note that the easiest way to create a credit note is to do it directly form\n"
 "                the customer invoice, to refund it totally or partially."
 msgstr ""
+"Bir İade/Fiyat Farkı oluşturmanın en kolay yolunun, müşteri faturası "
+"oluşturarak bunun tamamen veya kısmen iadesi olduğuna dikkat edin."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_note
@@ -11180,7 +11182,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_invoice_in_refund
 #: model:ir.ui.menu,name:account.menu_action_invoice_in_refund
 msgid "Vendor Credit Notes"
-msgstr ""
+msgstr "Tedarikçi İade/Fiyat Farkı Faturaları"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1229

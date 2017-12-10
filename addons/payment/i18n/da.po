@@ -10,14 +10,14 @@
 # Jesper Carstensen <info@danodoo.dk>, 2017
 # Morten Schou <ms@msteknik.dk>, 2017
 # Jesper Carstensen <jc@danodoo.dk>, 2017
-# Laerke Mathiasen <lhm@flexerp.dk>, 2017
+# lhmflexerp <lhm@flexerp.dk>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Laerke Mathiasen <lhm@flexerp.dk>, 2017\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +38,7 @@ msgstr "<i class=\"fa fa-arrow-circle-right\"/> Tilbage til Min konto"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-lock\"> Pay</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-lock\"> Betal</i>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -56,7 +56,7 @@ msgstr "<i class=\"fa fa-trash\"/> Slet"
 #: code:addons/payment/static/src/js/payment_form.js:219
 #, python-format
 msgid "<p>Please fill all the inputs required.</p>"
-msgstr ""
+msgstr "<p>Udfyld venligst alle påkrævede felter.</p>"
 
 #. module: payment
 #. openerp-web
@@ -87,7 +87,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:267
 #, python-format
 msgid "<p>We are not able to add your payment method at the moment.</p>"
-msgstr ""
+msgstr "<p>Vi kan i øjeblikket ikke tilføje din betalingsmetode.</p>"
 
 #. module: payment
 #. openerp-web
@@ -95,7 +95,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:333
 #, python-format
 msgid "<p>We are not able to delete your payment method at the moment.</p>"
-msgstr ""
+msgstr "<p>Vi kan i øjeblikket ikke slette din betalingsmetode.</p>"
 
 #. module: payment
 #. openerp-web
@@ -103,14 +103,14 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:161
 #, python-format
 msgid "<p>We are not able to redirect you to the payment form.</p>"
-msgstr ""
+msgstr "<p>Vi kan ikke omdirigere dig til betalingsformularen.</p>"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:169
 #, python-format
 msgid "<p>We're unable to process your payment.</p>"
-msgstr ""
+msgstr "<p>Vi kunne ikke behandle din betaling.</p>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -231,12 +231,12 @@ msgstr "Indløser reference"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon_acquirer_ids
 msgid "Acquirers"
-msgstr ""
+msgstr "Indløsere"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Acquirers list"
-msgstr ""
+msgstr "Indløserliste"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_kanban
@@ -348,7 +348,7 @@ msgstr "Annulleret"
 #: code:addons/payment/static/src/js/payment_form.js:168
 #, python-format
 msgid "Cannot set-up the payment"
-msgstr ""
+msgstr "Kan ikke oprette betalingen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_capture_manually
@@ -379,7 +379,7 @@ msgstr "Klik her for at oprette en betalingsindløser"
 #. module: payment
 #: model:ir.actions.act_window,help:payment.action_payment_icon
 msgid "Click to create a payment icon."
-msgstr ""
+msgstr "Klik for at oprette et betalingsikon."
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
@@ -407,7 +407,7 @@ msgstr "Konfigurer"
 #: code:addons/payment/static/src/js/payment_form.js:322
 #, python-format
 msgid "Confirm Deletion"
-msgstr ""
+msgstr "Bekræft Sletning"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
@@ -627,6 +627,8 @@ msgid ""
 "If you leave it empty, the payment acquirer will be available for all the "
 "countries."
 msgstr ""
+"Hvis du lader den stå tom, vil betalingsindløseren være tilgængelig for alle"
+" landene."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image
@@ -637,7 +639,7 @@ msgstr "Billede"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon_image_payment_form
 msgid "Image displayed on the payment form"
-msgstr ""
+msgstr "Billede vist på betalingsformularen"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ogone
@@ -697,7 +699,7 @@ msgstr "Lad kunden bestemme"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon_acquirer_ids
 msgid "List of Acquirers supporting this payment icon."
-msgstr ""
+msgstr "Liste over Indløsere, der understøtter dette betalingsikon."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
@@ -707,7 +709,7 @@ msgstr "Gør denne betalingskunde tilgængelig (Kundefakturaer osv.)"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_methods
 msgid "Manage your Payment Methods"
-msgstr ""
+msgstr "Administrér dine Betalingsmetoder"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_meth_link
@@ -824,7 +826,7 @@ msgstr "Aldrig"
 #: code:addons/payment/static/src/js/payment_form.js:273
 #, python-format
 msgid "No payment method selected"
-msgstr ""
+msgstr "Ingen betalingsmetode er valgt"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment_payment_token_id
@@ -911,7 +913,7 @@ msgstr "Betalingsindløser"
 #: model:ir.model,name:payment.model_payment_icon
 #: model:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Payment Icon"
-msgstr ""
+msgstr "Betalingsikon"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_icon
@@ -1014,13 +1016,13 @@ msgstr "Telefon"
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_transfer
 msgid "Please use the following transfer details"
-msgstr ""
+msgstr "Anvend venligst de følgende overførselsoplysninger"
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_transfer
 msgid "Please use the order name as communication reference."
-msgstr ""
+msgstr "Anvend venligst ordrenavnet som  kommunikationsreference."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.confirm
@@ -1075,7 +1077,7 @@ msgstr "S2S formularskablelon"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "Gem Kort"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -1126,7 +1128,7 @@ msgstr "Server til server"
 #: code:addons/payment/static/src/js/payment_form.js:266
 #, python-format
 msgid "Server error"
-msgstr ""
+msgstr "Serverfejl"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_short_name
@@ -1158,7 +1160,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_specific_countries
 msgid "Specific Countries"
-msgstr ""
+msgstr "Specifikke Lande"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state
@@ -1174,7 +1176,7 @@ msgstr "Stribe"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_icon_ids
 msgid "Supported Payment Icons"
-msgstr ""
+msgstr "Understøttede Betalingsikoner"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id
@@ -1205,7 +1207,7 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
 msgid "The customer is redirected to the website of the acquirer."
-msgstr ""
+msgstr "Kunden omdirigeres til indløserens hjemmeside."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:563
@@ -1229,6 +1231,8 @@ msgid ""
 "This field holds the image used for this payment icon, limited to "
 "1024x1024px"
 msgstr ""
+"Dette felt indeholder billedet, der anvendes til dette betalingsikon, "
+"begrænset til 1024x1024px"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image
@@ -1295,7 +1299,7 @@ msgstr "Variable internationale gebyrer (i procenter)"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_verified
 msgid "Verified"
-msgstr ""
+msgstr "Bekræftet"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_website_published
@@ -1410,7 +1414,7 @@ msgstr "beløb: transaktionsbeløbet er flydende"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "and more"
-msgstr ""
+msgstr "og mere"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
