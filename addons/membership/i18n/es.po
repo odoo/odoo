@@ -381,6 +381,13 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paid Member: A member who has paid the membership amount."
 msgstr ""
+"Indica el estado de la afiliación.\n"
+"- No miembro: Una empresa que no ha solicitado ninguna afiliación.\n"
+"- Miembro cancelado: Un miembro que ha cancelado su afiliación.\n"
+"- Antiguo miembro: Un miembro cuya afiliación ha expirado.\n"
+"- Miembro en espera: Un miembro que ha solicitado la afiliación y cuya factura va a crearse.\n"
+"- Miembro facturado: Un miembro cuya factura se ha creado.\n"
+"- Miembro pagado: Un miembro que ha pagado su cuota de afiliación."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date
@@ -577,7 +584,7 @@ msgstr "Socio pagado"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_partner
 msgid "Partner"
-msgstr "Contacto"
+msgstr "Empresa"
 
 #. module: membership
 #: code:addons/membership/models/partner.py:181

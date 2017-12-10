@@ -7,9 +7,9 @@
 # e2f_EPV Translator <e2f_EPV@outlook.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 # RGB Consulting <odoo@rgbconsulting.com>, 2017
-# Gustavo Valverde <g.valverde02@gmail.com>, 2017
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 # Alejandro Santana <alejandrosantana@anubia.es>, 2017
+# Gustavo Valverde <g.valverde02@gmail.com>, 2017
 # José Vicente <txusev@gmail.com>, 2017
 # Javier Ramirez <elbomba887@gmail.com>, 2017
 # Carles Antoli <carlesantoli@hotmail.com>, 2017
@@ -116,12 +116,12 @@ msgstr "Opciones adicionales"
 #: code:addons/account_asset/models/account_asset.py:597
 #, python-format
 msgid "Amount"
-msgstr "Monto"
+msgstr "Importe"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_depreciation_value
 msgid "Amount of Depreciation Lines"
-msgstr "Monto de las Lineas de Depreciación"
+msgstr "Importe de las líneas de depreciación"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_installment_value
@@ -700,7 +700,7 @@ msgstr "Línea de factura"
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_salvage_value
 msgid "It is the amount you plan to have that you cannot depreciate."
-msgstr "Es el monto que prevee tener que no puede depreciar."
+msgstr "Es el importe que no puede amortizarse."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -856,7 +856,7 @@ msgstr "Contabilizado"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_posted_value
 msgid "Posted Amount"
-msgstr "Monto Contabilizado"
+msgstr "Importe contabilizado"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -1012,6 +1012,8 @@ msgid ""
 "This depreciation is already linked to a journal entry! Please post or "
 "delete it."
 msgstr ""
+"¡Esta depreciación ya está vinculada a un asiento contable! Por favor, "
+"valídelo o elimínelo."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
@@ -1019,8 +1021,9 @@ msgid ""
 "This wizard will post installment/depreciation lines for the selected month.<br/>\n"
 "                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well."
 msgstr ""
-"Este asistente contabilizará todas las líneas de depreciación previstas para antes de la fecha seleccionada.<br/>\n"
-"Si el diario de los mismos está configurado para saltarse el estado borrador, será contabilizados automáticamente."
+"Este asistente contabilizará los apuntes de amortización para el mes "
+"seleccionado.<br/> Generará los asientos correspondientes a la depreciación "
+"del activo para este periodo."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_time
@@ -1051,7 +1054,7 @@ msgstr "Sin Contabilizar"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_unposted_value
 msgid "Unposted Amount"
-msgstr "Monto sin Contabilizar"
+msgstr "Importe no contabilizado"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -1086,7 +1089,7 @@ msgstr "No puede eliminar un documento en estado %s."
 #: code:addons/account_asset/models/account_asset.py:114
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
-msgstr "No puede eliminar un documento que contiene asientos asentados."
+msgstr "No puede eliminar un documento que contiene asientos validados."
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:608
@@ -1098,7 +1101,7 @@ msgstr "No puede eliminar asientos de depreciación contabilizados."
 #: code:addons/account_asset/models/account_asset.py:610
 #, python-format
 msgid "You cannot delete posted installment lines."
-msgstr "No puede eliminar líneas a plazo contabilizadas"
+msgstr "No puede eliminar líneas de depreciación contabilizadas y validadas."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
