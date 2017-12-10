@@ -880,7 +880,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Añadir un impuesto para las operaciones en efectivo, lo que creará un nuevo asiento durante la reconciliación con el valor del impuesto."
+"Añadir una opción al impuesto para las operaciones en efectivo, lo que permitirá crear un nuevo asiento durante la conciliación con el valor del impuesto."
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp
@@ -913,7 +913,7 @@ msgid ""
 "    Display delivery orders (picking) infos on the website\n"
 msgstr ""
 "\n"
-"Mostrar las órdenes de entrega (picking) en el sitio web\n"
+"Mostrar los albaranes en el sitio web\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays_gantt
@@ -975,6 +975,8 @@ msgid ""
 "* Automatically enables forecasting on projects created from sale orders\n"
 "    "
 msgstr ""
+"\n"
+"Habilita de manera automática la previsión en proyectos creados a partir de pedidos de venta"
 
 #. module: base
 #: model:ir.module.module,description:base.module_report_intrastat
@@ -1508,7 +1510,7 @@ msgid ""
 "invoices from picking, the system is able to add and compute the shipping line.\n"
 msgstr ""
 "\n"
-"Permite agregar métodos de entrega en pedidos de venta y picking.\n"
+"Permite agregar métodos de entrega en pedidos de venta y albaranes.\n"
 "==============================================================\n"
 "\n"
 "Puede definir transportista por precios. Al crear\n"
@@ -2176,6 +2178,17 @@ msgid ""
 "very handy when used in combination with the module 'share'.\n"
 "    "
 msgstr ""
+"\n"
+"Personalice el acceso a su base de datos Odoo para usuarios externos creando portales.\n"
+"=============================================== ===============================\n"
+"Un portal define un menú de usuario específico y derechos de acceso para sus miembros.\n"
+"Este menú puede ser visto por los miembros del portal, por los usuarios públicos y por\n"
+"cualquier otro usuario que tenga habilitadas características técnicas (ej. el administrador).\n"
+"Además, cada miembro del portal es vinculado a una empresa específica.\n"
+"\n"
+"El módulo también asocia grupos de usuarios a los usuarios del portal (agregando un grupo\n"
+" en el portal lo agrega automáticamente a los usuarios del portal, etc.). Esa característica es\n"
+"muy útil cuando se usa en combinación con el módulo 'compartir'."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_delivery
@@ -2212,6 +2225,8 @@ msgid ""
 "Design gorgeous mails\n"
 "    "
 msgstr ""
+"\n"
+"Diseñar correos atractivos"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de
@@ -2712,6 +2727,9 @@ msgid ""
 "Hide hr_timesheet_sheet menu items.\n"
 "    "
 msgstr ""
+"\n"
+"Ocultar entradas de menú de hr_timesheet_sheet.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr
@@ -2894,9 +2912,9 @@ msgid ""
 msgstr ""
 "\n"
 "Gestión de costes en destino\n"
-"============================\n"
+"==========================\n"
 "\n"
-"Este módulo le permite añadir fácilmente costes extra en los albaranes y decidir el reparto de estos costes entre los movimientos de existencia para tenerlo en cuenta en la valoración de existencias.\n"
+"Este módulo le permite añadir fácilmente costes de transporte extra en los albaranes y decidir el reparto de estos costes entre los movimientos de existencia, para tenerlos en cuenta en la valoración de existencias.\n"
 "    "
 
 #. module: base
@@ -5477,8 +5495,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Este módulo añade la opción de  picking wave en la gestión de almacén\n"
-"================================================================\n"
+"Este módulo añade la opción de agrupación de albaranes en la gestión de almacén\n"
+"=========================================================================\n"
 "    "
 
 #. module: base
@@ -6444,9 +6462,9 @@ msgid ""
 "payments acquirer using Worldline SIPS."
 msgstr ""
 "\n"
-"Proveedor de pago en-línea Worldline SIPS\n"
+"Método de pago en-línea Worldline SIPS\n"
 "\n"
-"Funciona con claves Worldline versión 2.0, contiene la implementación del proveedor de pagos Worldline SIPS."
+"Funciona con claves Worldline versión 2.0, contiene la implementación de los métodos de pago que usan Worldline SIPS."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_score
@@ -7403,11 +7421,14 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_mrp_barcode
 msgid "Add barcode scanning facilities to manufacturing"
 msgstr ""
+"Añadir utilidades de escaneo de códigos de barras a la gestión de "
+"fabricación."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event_barcode
 msgid "Add barcode scanning feature to event management."
 msgstr ""
+"Añadir utilidades de escaneo de códigos de barras a la gestión de eventos."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -7674,6 +7695,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_website_helpdesk_form
 msgid "Allow website visitors to submit tickets through a form"
 msgstr ""
+"Permite a los visitantes de la web pedir tickets mediante un formulario"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
@@ -7700,6 +7722,8 @@ msgid ""
 "Also you will find here all the related documents and download it by "
 "clicking on any individual document."
 msgstr ""
+"También encontrará aquí todos los documentos relacionados y podrá "
+"descargarlos haciendo clic en cada uno de ellos."
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:378
@@ -7745,7 +7769,7 @@ msgstr "Contabilidad analítica"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_account
 msgid "Analytic accounting in Manufacturing"
-msgstr ""
+msgstr "Contabilidad analítica en fabricación"
 
 #. module: base
 #: selection:workflow.activity,join_mode:0
@@ -8276,7 +8300,7 @@ msgstr "Vista base"
 #. module: base
 #: model:ir.module.module,summary:base.module_grid
 msgid "Basic 2D Grid view for odoo"
-msgstr ""
+msgstr "Vista de rejilla básica 2D para odoo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_batch_deposit
@@ -8944,7 +8968,7 @@ msgstr "Pulse aquí para crear una vista personalizada"
 #. module: base
 #: model:ir.actions.act_window,help:base.action_attachment
 msgid "Click here to create new documents."
-msgstr ""
+msgstr "Clic aquí para crear nuevos documentos"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
@@ -9299,7 +9323,7 @@ msgstr "Asistentes de configuración"
 #. module: base
 #: model:ir.module.module,summary:base.module_timesheet_grid_sale
 msgid "Configure timesheet invoicing"
-msgstr ""
+msgstr "Configurar facturación de partes de horas"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -10294,7 +10318,7 @@ msgstr "Descripción HTML"
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_themes
 msgid "Design gorgeous mails"
-msgstr ""
+msgstr "Diseñar correos atractivos"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing
@@ -10871,7 +10895,7 @@ msgstr "Tipo de evaluación"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_barcode
 msgid "Event Barcode Scanning"
-msgstr ""
+msgstr "Escaneo códigos de barras para evento"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_event_management
@@ -10987,6 +11011,7 @@ msgstr "Exportar traducciones"
 #: model:ir.module.module,summary:base.module_hr_expense_sepa
 msgid "Export expenses payments as SEPA Credit Transfer files"
 msgstr ""
+"Exportar gastos de pagos como un archivo de transferencia SEPA de crédito"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_sepa
@@ -13964,7 +13989,7 @@ msgstr "Subproductos MRP"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_mrp
 msgid "MRP features for Quality Control"
-msgstr ""
+msgstr "Características MRP para control de calidad"
 
 #. module: base
 #: model:res.country,name:base.mo
@@ -14694,7 +14719,7 @@ msgstr "Sr."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder
 msgid "Mrp Workorder"
-msgstr ""
+msgstr "Orden de trabajo MRP"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_madam
@@ -15643,7 +15668,7 @@ msgstr "Método de pago: Implementación Adyen"
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_authorize
 msgid "Payment Acquirer: Authorize.net Implementation"
-msgstr "Proveedor de pago: Implementación de Authorize.net"
+msgstr "Método de pago: Implementación de Authorize.net"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_buckaroo
@@ -16279,7 +16304,7 @@ msgstr "Control calidad"
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_mrp
 msgid "Quality Management with MRP"
-msgstr ""
+msgstr "Gestión de la calidad con MRP"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_questions
@@ -17836,7 +17861,7 @@ msgstr "Calle2"
 #: model:ir.module.module,description:base.module_payment_stripe
 #: model:ir.module.module,shortdesc:base.module_payment_stripe
 msgid "Stripe Payment Acquirer"
-msgstr "Comprador de pago de franjas"
+msgstr "Método de pago Stripe"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_studio
@@ -19014,7 +19039,7 @@ msgstr "Formaciones, conferencias, reuniones, exhibiciones, inscripciones"
 #: model:ir.module.module,description:base.module_payment_transfer
 #: model:ir.module.module,shortdesc:base.module_payment_transfer
 msgid "Transfer Payment Acquirer"
-msgstr "Método de pago de transferencia"
+msgstr "Método de pago por transferencia"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_search
@@ -19899,7 +19924,7 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:488
 #, python-format
 msgid "View:"
-msgstr ""
+msgstr "Vista:"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view
@@ -20350,7 +20375,7 @@ msgstr "Días laborables"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder
 msgid "Work Orders, Planing, Stock Reports."
-msgstr ""
+msgstr "Ordenes de trabajo, planificación, informes de almacén."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_wkf_id
