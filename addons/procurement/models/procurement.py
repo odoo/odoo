@@ -290,7 +290,7 @@ class ProcurementOrder(models.Model):
 
             # Check done procurements
             procurements = ProcurementSudo.search([('state', '=', 'running')] + (company_id and [('company_id', '=', company_id)] or []))
-            checked_procurements = list()
+            checked_procurements = []
             while procurements:
                 procurements.check(autocommit=use_new_cursor)
                 checked_procurements.extend(procurements.ids)
