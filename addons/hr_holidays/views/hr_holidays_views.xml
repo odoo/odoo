@@ -137,16 +137,27 @@
                 <tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Allocation Requests"
                        decoration-bf="message_needaction == True">
                     <field name="employee_id"/>
-                    <field name="holiday_type"/>
-                    <field name="category_id"/>
-                    <field name="department_id" invisible="1"/>
                     <field name="holiday_status_id"/>
                     <field name="name"/>
                     <field name="number_of_days" string="Allocated Days" sum="Remaining Days"/>
-                    <field name="manager_id" invisible="1"/>
-                    <field name="user_id" invisible="1"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
+                    <field name="message_needaction" invisible="1"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_holidays_view_list_my_allocation" model="ir.ui.view">
+            <field name="name">hr.holidays.my.allocation.tree</field>
+            <field name="model">hr.holidays</field>
+            <field name="arch" type="xml">
+                <tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Allocation Requests"
+                       decoration-bf="message_needaction == True">
+                    <field name="employee_id"/>
+                    <field name="holiday_status_id"/>
+                    <field name="name"/>
+                    <field name="number_of_days" string="Allocated Days" sum="Remaining Days"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="state"/>
                 </tree>
@@ -178,17 +189,12 @@
             <field name="priority">20</field>
             <field name="arch" type="xml">
                 <tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Leaves Summary">
-                    <field name="employee_id"/>
-                    <field name="category_id" invisible="1"/>
-                    <field name="department_id" invisible="1"/>
                     <field name="type"/>
+                    <field name="holiday_status_id" invisible="1"/>
                     <field name="name"/>
                     <field name="number_of_days" string="Number of Days" sum="Remaining Days"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
-                    <field name="holiday_status_id"/>
-                    <field name="manager_id" invisible="1"/>
-                    <field name="user_id" invisible="1"/>
                     <field name="state"/>
                 </tree>
             </field>
