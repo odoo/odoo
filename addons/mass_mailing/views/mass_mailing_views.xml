@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-        <!-- Marketing / Mass Mailing -->
+        <!-- Marketing / Mailing -->
         <menuitem name="Email Marketing" id="mass_mailing_menu_root" sequence="60" web_icon="mass_mailing,static/description/icon.png"/>
         <menuitem name="Mailings" id="mass_mailing_menu"
             parent="mass_mailing_menu_root" sequence="1" groups="mass_mailing.group_mass_mailing_user"/>
-        <menuitem name="Contacts" id="mass_mailing_contact_menu"
+        <menuitem name="Mailing Lists" id="mass_mailing_mailing_list_menu"
             parent="mass_mailing_menu_root" sequence="2" groups="mass_mailing.group_mass_mailing_user"/>
         <!-- Marketing / Configuration -->
         <menuitem name="Configuration" id="mass_mailing_configuration"
             parent="mass_mailing_menu_root" sequence="100"/>
 
-        <!--  MASS MAILING CONTACT -->
+        <!--  MAILING CONTACT -->
 
         <!-- Custom reports (aka filters) -->
         <record id="filter_contact_subscription" model="ir.filters">
@@ -32,7 +32,7 @@
             <field name="name">mail.mass_mailing.contact.search</field>
             <field name="model">mail.mass_mailing.contact</field>
             <field name="arch" type="xml">
-               <search string="Contacts">
+               <search string="Mailing List Contacts">
                     <field name="name" filter_domain="['|','|',('name','ilike',self),('company_name','ilike',self), ('email','ilike',self)]"
                         string="Name / Email"/>
                     <field name="tag_ids"/>
@@ -54,7 +54,7 @@
             <field name="model">mail.mass_mailing.contact</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree string="Contacts">
+                <tree string="Mailing List Contacts">
                     <field name="create_date"/>
                     <field name="name"/>
                     <field name="company_name"/>
@@ -112,7 +112,7 @@
             <field name="model">mail.mass_mailing.contact</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <form string="Contacts">
+                <form string="Mailing List Contacts">
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -153,7 +153,7 @@
             <field name="model">mail.mass_mailing.contact</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <pivot string="Contacts" stacked="True">
+                <pivot string="Mailing List Contacts" stacked="True">
                     <field name="create_date" type="row"/>
                 </pivot>
             </field>
@@ -164,14 +164,14 @@
             <field name="model">mail.mass_mailing.contact</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <graph string="Contacts" stacked="True">
+                <graph string="Mailing List Contacts" stacked="True">
                     <field name="create_date" type="row"/>
                 </graph>
             </field>
         </record>
 
         <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts">
-            <field name="name">Contacts</field>
+            <field name="name">Mailing List Contacts</field>
             <field name="res_model">mail.mass_mailing.contact</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,graph,pivot</field>
@@ -199,11 +199,11 @@
             </field>
         </record>
 
-        <menuitem name="Contacts" id="menu_email_mass_mailing_contacts"
-            parent="mass_mailing_contact_menu" sequence="4"
+        <menuitem name="Mailing List Contacts" id="menu_email_mass_mailing_contacts"
+            parent="mass_mailing_mailing_list_menu" sequence="4"
             action="action_view_mass_mailing_contacts"/>
 
-        <!--  MASS MAILING LIST -->
+        <!--  MAILING LIST -->
         <record model="ir.ui.view" id="view_mail_mass_mailing_list_search">
             <field name="name">mail.mass_mailing.list.search</field>
             <field name="model">mail.mass_mailing.list</field>
@@ -230,32 +230,6 @@
                     <field name="create_date"/>
                     <field name="contact_nbr"/>
                 </tree>
-            </field>
-        </record>
-
-        <record id="view_mail_mass_mailing_list_kanban" model="ir.ui.view">
-            <field name="name">mail.mass_mailing.list.kanban</field>
-            <field name="model">mail.mass_mailing.list</field>
-            <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
-                    <field name="name"/>
-                    <field name="contact_nbr"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_global_click">
-                                <div class="o_kanban_record_top mb0">
-                                    <div class="o_kanban_record_headings mt4">
-                                        <strong class="o_kanban_record_title"><t t-esc="record.name.value"/></strong>
-                                    </div>
-                                    <span class="badge">
-                                        <i class="fa fa-user"/>
-                                        <t t-esc="record.contact_nbr.value"/>
-                                    </span>
-                                </div>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
             </field>
         </record>
 
@@ -287,33 +261,119 @@
             </field>
         </record>
 
+        <record id="view_mail_mass_mailing_list_form_simplified" model="ir.ui.view">
+            <field name="name">mail.mass_mailing.list.form.simplified</field>
+            <field name="model">mail.mass_mailing.list</field>
+            <field name="arch" type="xml">
+                <form string="Contact List">
+                    <group>
+                        <group>
+                            <div class="oe_title">
+                                <label for="name" class="oe_edit_only"/>
+                                <h1>
+                                    <field name="name" placeholder="e.g. Consumer Newsletter"/>
+                                </h1>
+                            </div>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Create" name="close_dialog" type="object" class="btn-primary"/>
+                        <button string="Discard" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="open_create_mass_mailing_list" model="ir.actions.act_window">
+            <field name="name">Create a Mass Mailing List</field>
+            <field name="res_model">mail.mass_mailing.list</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_mail_mass_mailing_list_form_simplified"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="view_mail_mass_mailing_list_kanban" model="ir.ui.view">
+            <field name="name">mail.mass_mailing.list.kanban</field>
+            <field name="model">mail.mass_mailing.list</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile" on_create="mass_mailing.open_create_mass_mailing_list">
+                    <field name="name"/>
+                    <field name="contact_nbr"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="o_mass_mailing_kanban_main">
+                                    <div class="o_kanban_card_content">
+                                        <div class="o_kanban_primary_left">
+                                            <div class="o_primary">
+                                                <span><t t-esc="record.name.value"/></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="o_kanban_card_manage_pane">
+                                        <div class="o_kanban_card_manage_section o_dropdown_kanban dropdown">
+                                            <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                                <span class="fa fa-ellipsis-v"/>
+                                            </a>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li t-if="widget.editable">
+                                                    <a type="edit">Edit</a>
+                                                </li>
+                                                <li t-if="widget.deletable">
+                                                    <a type="delete">Delete</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_mailing_list_kanban_boxes">
+                                    <a class="o_project_kanban_box" name="%(action_view_mass_mailing_contacts_from_list)d" type="action">
+                                        <div>
+                                            <span class="badge">
+                                                <i class="fa fa-user"/>
+                                                <t t-esc="record.contact_nbr.value"/>
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_view_mass_mailing_lists">
             <field name="name">Mailing Lists</field>
             <field name="res_model">mail.mass_mailing.list</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new mailing list
               </p><p>
-                Mailing lists allow you to manage customers and
-                contacts easily and to send to mailings in a single click.
+                No need of importing your mailing lists, you can easily
+                send emails to any contact saved in other Odoo apps.
               </p>
             </field>
         </record>
 
         <menuitem name="Mailing Lists" id="menu_email_mass_mailing_lists"
-            parent="mass_mailing_contact_menu" sequence="3"
+            parent="mass_mailing_mailing_list_menu" sequence="3"
             action="action_view_mass_mailing_lists"/>
 
-        <!--  MASS MAILING !-->
+        <!--  MAILING !-->
         <record model="ir.ui.view" id="view_mail_mass_mailing_search">
             <field name="name">mail.mass_mailing.search</field>
             <field name="model">mail.mass_mailing</field>
             <field name="arch" type="xml">
-               <search string="Mass Mailings">
+               <search string="Mailings">
                     <field name="name" string="Mailings"/>
                     <field name="mass_mailing_campaign_id"/>
+                    <filter string="My Mailings" name="assigned_to_me"
+                            domain="[('user_id', '=', uid)]"
+                            help="Mailings that are assigned to me"/>
                     <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Status" name="group_state"
@@ -333,7 +393,7 @@
             <field name="model">mail.mass_mailing</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree string="Mass Mailings">
+                <tree string="Mailings">
                     <field name="name"/>
                     <field name="sent"/>
                     <field name="delivered"/>
@@ -349,7 +409,7 @@
             <field name="name">mail.mass_mailing.form</field>
             <field name="model">mail.mass_mailing</field>
             <field name="arch" type="xml">
-                <form string="Mass Mailing">
+                <form string="Mailing">
                     <header style="min-height:31px;">
                         <button name="action_test_mailing" type="object" class="oe_highlight" string="Test Mailing"/>
                         <button name="put_in_queue" type="object" attrs="{'invisible': ['|', ('state', 'in', ('in_queue', 'done'))]}" class="oe_highlight" string="Send to All"
@@ -360,26 +420,41 @@
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
                     <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('scheduled', '=', 0)]}">
-                        <p><strong>
-                            <field name="scheduled" class="oe_inline"/>
-                            emails are in queue and will be sent soon.
-                        </strong></p>
+                        <p>
+                            <button class="btn-link"
+                                    name="%(action_view_mail_mail_statistics_mailing_list)d"
+                                    type="action"
+                                    context="{'search_default_filter_scheduled': True}">
+                                <strong>
+                                    <field name="scheduled" class="oe_inline"/>
+                                    email(s) are in queue and will be sent soon.
+                                </strong>
+                            </button>
+                        </p>
                     </div>
-                    <div class="oe_form_box_info oe_text_center" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}">
-                        <p><strong>
-                            <field name="failed" class="oe_inline"/>
-                            emails could not be sent.
-                        </strong></p>
+                    <div class="oe_form_box_info oe_text_center alert-info" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}">
+                        <p>
+                            <button class="btn-link"
+                                    name="%(action_view_mail_mail_statistics_mailing_list)d"
+                                    type="action"
+                                    context="{'search_default_filter_failed': True}">
+                                <strong>
+                                    <field name="failed" class="oe_inline"/>
+                                    email(s) could not be sent.
+                                </strong>
+                            </button>
+                        </p>
                     </div>
                     <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('state', '!=', 'in_queue')]}">
                         <p><strong>
-                            This mass mailing is scheduled for
-                            <field name="next_departure" class="oe_inline"/>
+                            This mailing is scheduled for
+                            <field name="next_departure" class="oe_inline"/>.
                         </strong></p>
                     </div>
                     <sheet>
                         <div class="oe_button_box" name="button_box" attrs="{'invisible': [('state', 'in', ('draft','test'))]}">
                             <button name="%(action_view_mail_mail_statistics_mailing_list)d" type="action"
+                                context="{'search_default_filter_sent': True}"
                                 icon="fa-envelope-o" class="oe_stat_button"
                                 attrs="{'invisible': [('sent', '=', 0)]}" >
                                 <field name="sent" string="Emails Sent" widget="statinfo"/>
@@ -389,12 +464,12 @@
                                     type="action" class="oe_stat_button">
                                 <field name="received_ratio" string="Received" widget="percentpie"/>
                             </button>
-                            <button name="%(action_view_mail_mail_statistics_mailing)d"
+                            <button name="%(action_view_mail_mail_statistics_mailing_list)d"
                                     context="{'search_default_filter_opened': True}"
                                     type="action" class="oe_stat_button">
                                 <field name="opened_ratio" string="Opened" widget="percentpie"/>
                             </button>
-                            <button name="%(action_view_mail_mail_statistics_mailing)d"
+                            <button name="%(action_view_mail_mail_statistics_mailing_list)d"
                                     context="{'search_default_filter_replied': True}"
                                     type="action" class="oe_stat_button">
                                 <field name="replied_ratio" string="Replied" widget="percentpie"/>
@@ -416,7 +491,6 @@
                         </div>
 
                         <group>
-                            <field name="email_from"/>
                             <label for="name" string="Subject"/>
                             <div>
                                 <field name="name" nolabel="1"/>
@@ -429,7 +503,8 @@
                                 <field name="mailing_domain" widget="domain"
                                     attrs="{'invisible': [('mailing_model_name', '=', 'mail.mass_mailing.list')]}"
                                     options="{'model': 'mailing_model_real'}"
-                                    context="{'search_default_not_opt_out':1}"/>
+                                    context="{'search_default_not_opt_out':1}">
+                                </field>
                                 <div attrs="{'invisible': [('mailing_model_name', '!=', 'mail.mass_mailing.list')]}">
                                     <label for="contact_list_ids" string="Select mailing lists:" class="oe_edit_only"/>
                                     <field name="contact_list_ids" widget="many2many_tags"
@@ -439,24 +514,25 @@
                         </group>
                         <notebook>
                             <page string="Mail Body">
-                                <field name="body_html" widget="html_frame" options="{'editor_url': '/mass_mailing/field/email_template'}"/>
+                                <field name="body_html" class="o_mail_body" widget="html_frame" options="{'editor_url': '/mass_mailing/field/email_template'}"/>
                             </page>
                             <page string="Options">
                                 <group>
                                     <group string="Mailing">
+                                        <field name="email_from"/>
+                                        <label for="reply_to"/>
+                                        <div>
+                                            <field name="reply_to_mode" widget="radio"
+                                                attrs="{'invisible': [('mailing_model_name', 'in', ['mail.mass_mailing.contact', 'res.partner', 'mail.mass_mailing.list'])]}"/>
+                                            <field name="reply_to"
+                                                attrs="{'required': [('reply_to_mode', '=', 'email')], 'invisible': [('reply_to_mode', '=', 'thread')]}"/>
+                                        </div>
                                         <label for="attachment_ids"/>
                                         <div>
                                             <field name="attachment_ids"  widget="many2many_binary" string="Attach a file" class="oe_inline"/>
                                         </div>
-                                        <field name="keep_archives" groups="base.group_no_one"/>
-                                        <label for="reply_to"/>
-                                        <div>
-                                            <field name="reply_to_mode" widget="radio"
-                                                attrs="{'invisible': [('mailing_model_name', 'in', ['mail.mass_mailing.contact', 'res.partner'])]}"/>
-                                            <field name="reply_to"
-                                                attrs="{'required': [('reply_to_mode', '=', 'email')]}"/>
-                                        </div>
                                         <field name="schedule_date" />
+                                        <field name="keep_archives" groups="base.group_no_one"/>
                                         <field name="create_date" readonly="1" attrs="{'invisible': [('create_date', '=', False)]}"/>
                                         <field name="sent_date" readonly="1" attrs="{'invisible': [('sent_date', '=', False)]}"/>
                                     </group>
@@ -557,98 +633,108 @@
             <field name="name">mail.mass_mailing.graph</field>
             <field name="model">mail.mass_mailing</field>
             <field name="arch" type="xml">
-                <graph string="Mass Mailing" type="bar">
+                <graph string="Mailing" type="bar">
                     <field name="state" type="row"/>
                 </graph>
             </field>
         </record>
 
         <record id="action_view_mass_mailings" model="ir.actions.act_window">
-            <field name="name">Mass Mailings</field>
+            <field name="name">Mailings</field>
             <field name="res_model">mail.mass_mailing</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form,graph</field>
+            <field name="context">{
+                    'search_default_assigned_to_me': 1,
+                    'default_user_id': uid,
+            }</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Create a new mailing list
+                Create a new mailing
               </p><p>
-                Mailing lists allow you to manage customers and
-                contacts easily and to send to mailings in a single click.
+                No need of importing your mailing lists, you can easily
+                send emails to any contact saved in other Odoo apps.
               </p>
             </field>
         </record>
 
         <record id="action_view_mass_mailings_from_campaign" model="ir.actions.act_window">
-            <field name="name">Mass Mailings</field>
+            <field name="name">Mailings</field>
             <field name="res_model">mail.mass_mailing</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{
+                'search_default_assigned_to_me': 1,
                 'search_default_mass_mailing_campaign_id': [active_id],
                 'default_mass_mailing_campaign_id': active_id,
+                'default_user_id': uid,
             }
             </field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Create a new mailing list
+                Create a new mailing
               </p><p>
-                Mailing lists allow you to manage customers and
-                contacts easily and to send to mailings in a single click.
+                No need of importing your mailing lists, you can easily
+                send emails to any contact saved in other Odoo apps.
               </p>
             </field>
         </record>
 
         <record id="action_create_mass_mailings_from_campaign" model="ir.actions.act_window">
-            <field name="name">Mass Mailings</field>
+            <field name="name">Mailings</field>
             <field name="res_model">mail.mass_mailing</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,kanban,tree</field>
             <field name="context">{
+                'search_default_assigned_to_me': 1,
                 'search_default_mass_mailing_campaign_id': [active_id],
                 'default_mass_mailing_campaign_id': active_id,
+                'default_user_id': uid,
             }
             </field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Create a new mailing list
+                Create a new mailing
               </p><p>
-                Mailing lists allow you to manage customers and
-                contacts easily and to send to mailings in a single click.
+                No need of importing your mailing lists, you can easily
+                send emails to any contact saved in other Odoo apps.
               </p>
             </field>
         </record>
 
         <record id="action_create_ab_mass_mailings_from_campaign" model="ir.actions.act_window">
-            <field name="name">Mass Mailings</field>
+            <field name="name">Mailings</field>
             <field name="res_model">mail.mass_mailing</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,kanban,tree</field>
             <field name="context">{
+                'search_default_assigned_to_me': 1,
                 'search_default_mass_mailing_campaign_id': [active_id],
                 'default_mass_mailing_campaign_id': active_id,
                 'default_contact_ab_pc': 10,
+                'default_user_id': uid,
             }
             </field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Create a new mailing list
+                Create a new mailing
               </p><p>
-                Mailing lists allow you to manage customers and
-                contacts easily and to send to mailings in a single click.
+                No need of importing your mailing lists, you can easily
+                send emails to any contact saved in other Odoo apps.
               </p>
             </field>
         </record>
 
-        <menuitem name="Mass Mailings" id="menu_email_mass_mailings"
+        <menuitem name="Mailings" id="menu_email_mass_mailings"
             parent="mass_mailing_menu" sequence="2"
             action="action_view_mass_mailings"/>
 
-        <!--  MASS MAILING CAMPAIGN STAGE !-->
+        <!--  MAILING CAMPAIGN STAGE !-->
         <record model="ir.ui.view" id="view_mail_mass_mailing_stage_search">
             <field name="name">mail.mass_mailing.stage.search</field>
             <field name="model">mail.mass_mailing.stage</field>
             <field name="arch" type="xml">
-               <search string="Mass Mailings">
+               <search string="Mailings">
                     <field name="name"/>
                 </search>
             </field>
@@ -659,14 +745,14 @@
             <field name="model">mail.mass_mailing.stage</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree string="Mass Mailings" editable="top">
+                <tree string="Mailings" editable="top">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                 </tree>
             </field>
         </record>
         <record id="action_view_mass_mailing_stages" model="ir.actions.act_window">
-            <field name="name">Mass Mailing Stages</field>
+            <field name="name">Mailing Stages</field>
             <field name="res_model">mail.mass_mailing.stage</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -685,7 +771,7 @@
             groups="base.group_no_one,mass_mailing.group_mass_mailing_campaign"
             action="action_view_mass_mailing_stages"/>
 
-        <!--  MASS MAILING CAMPAIGN TAGS !-->
+        <!--  MAILING CAMPAIGN TAGS !-->
         <record id="mail_mass_mailing_tag_view_form" model="ir.ui.view">
             <field name="name">mail.mass_mailing.tag.form</field>
             <field name="model">mail.mass_mailing.tag</field>
@@ -711,12 +797,12 @@
         <menuitem id="mass_mailing_tag_menu" parent="menu_mass_mailing_configuration" action="mass_mailing_tag_action" sequence="2" groups="base.group_no_one"/>
 
 
-        <!--  MASS MAILING CAMPAIGNS !-->
+        <!--  MAILING CAMPAIGNS !-->
         <record model="ir.ui.view" id="view_mail_mass_mailing_campaign_search">
             <field name="name">mail.mass_mailing.campaign.search</field>
             <field name="model">mail.mass_mailing.campaign</field>
             <field name="arch" type="xml">
-               <search string="Mass Mailing Campaigns">
+               <search string="Mailing Campaigns">
                     <field name="name" string="Campaigns"/>
                     <field name="tag_ids"/>
                     <field name="user_id"/>
@@ -735,7 +821,7 @@
             <field name="model">mail.mass_mailing.campaign</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree string="Mass Mailing Campaigns">
+                <tree string="Mailing Campaigns">
                     <field name="name"/>
                     <field name="user_id"/>
                     <field name="stage_id"/>
@@ -748,10 +834,10 @@
             <field name="name">mail.mass_mailing.campaign.form</field>
             <field name="model">mail.mass_mailing.campaign</field>
             <field name="arch" type="xml">
-                <form string="Mass Mailing Campaign">
+                <form string="Mailing Campaign">
                     <header style="min-height:31px;">
-                        <button name="%(action_create_mass_mailings_from_campaign)d" type="action" class="oe_highlight" string="Send new Mass Mailing"/>
-                        <button name="%(action_create_ab_mass_mailings_from_campaign)d" type="action" class="oe_highlight" string="Send new A/B Testing Mass Mailing"/>
+                        <button name="%(action_create_mass_mailings_from_campaign)d" type="action" class="oe_highlight" string="Send new Mailing"/>
+                        <button name="%(action_create_ab_mass_mailings_from_campaign)d" type="action" class="oe_highlight" string="Send new A/B Testing Mailing"/>
                         <span><field name="stage_id" widget="statusbar" clickable="True"/></span>
                     </header>
                     <sheet>
@@ -883,15 +969,15 @@
         </record>
 
         <record id="action_view_mass_mailing_campaigns" model="ir.actions.act_window">
-            <field name="name">Mass Mailing Campaigns</field>
+            <field name="name">Mailing Campaigns</field>
             <field name="res_model">mail.mass_mailing.campaign</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Create a campaign
+                Create a new mailing campaign
               </p><p>
-                Create a campaign to structure mass mailing and get analysis from email status.
+                Create a campaign to structure mailing and get analysis from email status.
               </p>
             </field>
         </record>

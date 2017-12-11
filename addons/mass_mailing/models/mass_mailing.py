@@ -131,6 +131,10 @@ class MassMailingList(models.Model):
         if archive:
             (src_lists - self).write({'active': False})
 
+    @api.multi
+    def close_dialog(self):
+        return {'type': 'ir.actions.act_window_close'}
+
 
 class MassMailingContact(models.Model):
     """Model of a contact. This model is different from the partner model
@@ -387,10 +391,10 @@ class MassMailing(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('in_queue', 'In Queue'), ('sending', 'Sending'), ('done', 'Sent')],
         string='Status', required=True, copy=False, default='draft')
     color = fields.Integer(string='Color Index')
+    user_id = fields.Many2one('res.users', string='Mailing Manager', default=lambda self: self.env.user)
     # mailing options
     reply_to_mode = fields.Selection(
-        [('thread', 'Followers of leads/applicants'), ('email', 'Specified Email Address')],
-        string='Reply-To Mode', required=True)
+        [('thread', 'Recipient Followers'), ('email', 'Specified Email Address')], string='Reply-To Mode', required=True)
     reply_to = fields.Char(string='Reply To', help='Preferred Reply-To Address',
         default=lambda self: self.env['mail.message']._get_default_from())
     # recipients
@@ -514,13 +518,20 @@ class MassMailing(models.Model):
 
     @api.onchange('mailing_model_id', 'contact_list_ids')
     def _onchange_model_and_list(self):
-        if self.mailing_model_name == 'mail.mass_mailing.list':
-            if self.contact_list_ids:
-                self.mailing_domain = "[('list_ids', 'in', [%s]), ('opt_out', '=', False)]" % (','.join(str(id) for id in self.contact_list_ids.ids),)
-            else:
-                self.mailing_domain = "[(0, '=', 1)]"
-        elif self.mailing_model_name and 'opt_out' in self.env[self.mailing_model_name]._fields and not self.mailing_domain:
-            self.mailing_domain = "[('opt_out', '=', False)]"
+        str_tuples = ""
+        if self.mailing_model_name:
+            if self.mailing_model_name == 'mail.mass_mailing.list':
+                if self.contact_list_ids:
+                    str_tuples += "('list_ids', 'in', {}),".format(','.join(str(id) for id in self.contact_list_ids.ids))
+                else:
+                    str_tuples += "(0, '=', 1),"
+            elif self.mailing_model_name == 'res.partner':
+                str_tuples += "('customer', '=', True),"
+            elif 'opt_out' in self.env[self.mailing_model_name]._fields and not self.mailing_domain:
+                str_tuples += "('opt_out', '=', False),"
+        else:
+            str_tuples += "(0, '=', 1),"
+        self.mailing_domain = "[{}]".format(str_tuples)
         self.body_html = "on_change_model_and_list"
 
     #------------------------------------------------------
