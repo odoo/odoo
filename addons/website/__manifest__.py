@@ -12,7 +12,6 @@
     'depends': [
         'web',
         'web_editor',
-        'web_planner',
         'http_routing',
         'portal',
         'social_media',
