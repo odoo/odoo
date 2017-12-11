@@ -466,14 +466,7 @@ class StockMove(models.Model):
     def _do_unreserve(self):
         if any(move.state in ('done', 'cancel') for move in self):
             raise UserError(_('Cannot unreserve a done move'))
-        for move in self:
-            move.move_line_ids.unlink()
-            if move.procure_method == 'make_to_order' and not move.move_orig_ids:
-                move.state = 'waiting'
-            elif move.move_orig_ids and not all(orig.state in ('done', 'cancel') for orig in move.move_orig_ids):
-                move.state = 'waiting'
-            else:
-                move.state = 'confirmed'
+        self.mapped('move_line_ids').unlink()
         return True
 
     def _push_apply(self):
@@ -1136,7 +1129,9 @@ class StockMove(models.Model):
             elif move.reserved_availability and move.reserved_availability <= move.product_uom_qty:
                 move.state = 'partially_available'
             else:
-                if move.move_orig_ids:
+                if move.procure_method == 'make_to_order' and not move.move_orig_ids:
+                    move.state = 'waiting'
+                elif move.move_orig_ids and not all(orig.state in ('done', 'cancel') for orig in move.move_orig_ids):
                     move.state = 'waiting'
                 else:
                     move.state = 'confirmed'
