@@ -775,8 +775,9 @@ class purchase_order(osv.osv):
         product_uom = self.pool.get('product.uom')
         price_unit = order_line.price_unit
         if order_line.taxes_id:
+            ctx = dict(context or {}, round=False)
             taxes = self.pool['account.tax'].compute_all(cr, uid, order_line.taxes_id, price_unit, 1.0,
-                                                             order_line.product_id, order.partner_id)
+                                                             order_line.product_id, order.partner_id, context=ctx)
             price_unit = taxes['total']
         if order_line.product_uom.id != order_line.product_id.uom_id.id:
             price_unit *= order_line.product_uom.factor / order_line.product_id.uom_id.factor

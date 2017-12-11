@@ -2069,7 +2069,7 @@ class account_tax(osv.osv):
         return self.compute_all(cr, uid, [tax], amount, 1) # TOCHECK may use force_exclude parameter
 
     @api.v7
-    def compute_all(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, force_excluded=False):
+    def compute_all(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, force_excluded=False, context=None):
         """
         :param force_excluded: boolean used to say that we don't want to consider the value of field price_include of
             tax. It's used in encoding by line where you don't matter if you encoded a tax with that boolean to True or
@@ -2092,9 +2092,10 @@ class account_tax(osv.osv):
         # rounding after the sum of the tax amounts of each line
         precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
         tax_compute_precision = precision
-        if taxes and taxes[0].company_id.tax_calculation_rounding_method == 'round_globally':
+        context = context or {}
+        if taxes and taxes[0].company_id.tax_calculation_rounding_method == 'round_globally' or not bool(context.get("round", True)):
             tax_compute_precision += 5
-        totalin = totalex = round(price_unit * quantity, precision)
+        totalin = totalex = round(price_unit * quantity, tax_compute_precision)
         tin = []
         tex = []
         for tax in taxes:
@@ -2123,7 +2124,7 @@ class account_tax(osv.osv):
     def compute_all(self, price_unit, quantity, product=None, partner=None, force_excluded=False):
         return account_tax.compute_all(
             self._model, self._cr, self._uid, self, price_unit, quantity,
-            product=product, partner=partner, force_excluded=force_excluded)
+            product=product, partner=partner, force_excluded=force_excluded, context=self._context)
 
     def compute(self, cr, uid, taxes, price_unit, quantity,  product=None, partner=None):
         _logger.warning("Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included.")
