@@ -345,10 +345,6 @@
             <field name="context">{
                 'default_type': 'remove',
                 'search_default_my_leaves': 1,
-                'needaction_menu_ref':
-                [
-                    'hr_holidays.menu_open_company_allocation',
-                ]
             }</field>
             <field name="domain">[('type','=','remove')]</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
@@ -398,12 +394,6 @@
             <field name="context">{
                 'default_type': 'remove',
                 'search_default_approve':1,
-                'needaction_menu_ref':
-                [
-                    'hr_holidays.menu_open_ask_holidays_new',
-                    'hr_holidays.menu_open_company_allocation',
-                    'hr_holidays.menu_open_employee_leave',
-                ]
             }</field>
             <field name="domain">[('type','=','remove')]</field>
             <field name="view_id" ref="edit_holiday_new"/>
@@ -432,10 +422,6 @@
             <field name="context">{
                 'default_type':'add',
                 'search_default_my_leaves': 1,
-                'needaction_menu_ref':
-                [
-                    'hr_holidays.menu_open_company_allocation',
-                ]
             }</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
@@ -474,11 +460,6 @@
             <field name="context">{
                 'default_type': 'add',
                 'search_default_approve':1,
-                'needaction_menu_ref':
-                [
-                    'hr_holidays.menu_open_allocation_holidays',
-                    'hr_holidays.menu_open_company_allocation'
-                ]
             }</field>
             <field name="domain">[('type','=','add')]</field>
             <field name="view_id" ref="edit_holiday_new"/>
@@ -509,13 +490,6 @@
                 'search_default_group_type': 1,
                 'search_default_year': 1 ,
                 'search_default_my_leaves': 1,
-                'needaction_menu_ref':
-                [
-                    'hr_holidays.menu_open_ask_holidays_new',
-                    'hr_holidays.menu_open_allocation_holidays',
-                    'hr_holidays.menu_request_approve_allocation',
-                    'hr_holidays.menu_open_employee_leave',
-                ]
             }</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
