@@ -21,4 +21,12 @@
             </xpath>
         </field>
     </record>
+
+    <record id="hr_expense_action_from_sale_order" model="ir.actions.act_window">
+        <field name="name">Expenses</field>
+        <field name="res_model">hr.expense</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('sale_order_id', '=', active_id), ('state', '=', 'done')]</field>
+    </record>
+
 </odoo>
