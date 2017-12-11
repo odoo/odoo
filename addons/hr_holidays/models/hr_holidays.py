@@ -197,11 +197,12 @@ class Holidays(models.Model):
              "\nChoose 'Allocation Request' if you want to increase the number of leaves available for someone")
     parent_id = fields.Many2one('hr.holidays', string='Parent')
     linked_request_ids = fields.One2many('hr.holidays', 'parent_id', string='Linked Requests')
-    department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department', readonly=True, store=True)
+    department_id = fields.Many2one('hr.department', string='Department', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     category_id = fields.Many2one('hr.employee.category', string='Employee Tag', readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, help='Category of Employee')
     holiday_type = fields.Selection([
         ('employee', 'By Employee'),
+        ('department', 'By Department'),
         ('category', 'By Employee Tag')
     ], string='Allocation Mode', readonly=True, required=True, default='employee',
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
@@ -260,8 +261,8 @@ class Holidays(models.Model):
                                         'Please verify also the leaves waiting for validation.'))
 
     _sql_constraints = [
-        ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL))",
-         "The employee or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
+        ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL) or (holiday_type='department' AND department_id IS NOT NULL) )",
+         "The employee, department or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
         ('date_check2', "CHECK ( (type='add') OR (date_from <= date_to))", "The start date must be anterior to the end date."),
         ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0."),
     ]
@@ -269,13 +270,18 @@ class Holidays(models.Model):
     @api.onchange('holiday_type')
     def _onchange_type(self):
         if self.holiday_type == 'employee' and not self.employee_id:
-            self.employee_id = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
-        elif self.holiday_type != 'employee':
+            self.employee_id = self.env.user.employee_ids[0]
+        elif self.holiday_type == 'department':
             self.employee_id = None
+            self.department_id = self.department_id or self.env.user.employee_ids[0].department_id
+        elif self.holiday_type == 'category':
+            self.employee_id = None
+            self.department_id = None
 
     @api.onchange('employee_id')
     def _onchange_employee(self):
-        self.department_id = self.employee_id.department_id
+        if self.holiday_type == 'employee':
+            self.department_id = self.employee_id.department_id
 
     def _get_number_of_days(self, date_from, date_to, employee_id):
         """ Returns a float equals to the timedelta between two dates given as string."""
@@ -375,6 +381,10 @@ class Holidays(models.Model):
             raise UserError(_('You cannot delete a leave which is in %s state.') % (holiday.state,))
         return super(Holidays, self).unlink()
 
+    @api.multi
+    def copy_data(self, default=None):
+        raise UserError(_('A leave cannot be duplicated.'))
+
     ####################################################
     # Business methods
     ####################################################
@@ -442,7 +452,7 @@ class Holidays(models.Model):
         return True
 
     @api.multi
-    def _prepare_create_by_category(self, employee):
+    def _prepare_holiday_values(self, employee):
         self.ensure_one()
         values = {
             'name': self.name,
@@ -481,10 +491,11 @@ class Holidays(models.Model):
                 holiday.write({'first_approver_id': current_employee.id})
             if holiday.holiday_type == 'employee' and holiday.type == 'remove':
                 holiday._validate_leave_request()
-            elif holiday.holiday_type == 'category':
+            elif holiday.holiday_type in ['category', 'department']:
                 leaves = self.env['hr.holidays']
-                for employee in holiday.category_id.employee_ids:
-                    values = holiday._prepare_create_by_category(employee)
+                employees = holiday.category_id.employee_ids if holiday.holiday_type == 'category' else holiday.department_id.member_ids
+                for employee in employees:
+                    values = holiday._prepare_holiday_values(employee)
                     leaves += self.with_context(mail_notify_force_send=False).create(values)
                 # TODO is it necessary to interleave the calls?
                 leaves.action_approve()
