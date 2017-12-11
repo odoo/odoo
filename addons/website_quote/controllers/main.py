@@ -79,6 +79,7 @@ class sale_quote(http.Controller):
             'tx_id': Transaction.id if Transaction else False,
             'tx_state': Transaction.state if Transaction else False,
             'tx_post_msg': Transaction.acquirer_id.post_msg if Transaction else False,
+            'payment_tx': Transaction,
             'need_payment': order_sudo.invoice_status == 'to invoice' and Transaction.state in ['draft', 'cancel', 'error'],
             'token': token,
             'return_url': '/shop/payment/validate',

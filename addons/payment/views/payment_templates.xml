@@ -79,7 +79,7 @@
                         </ul>
                     </div>
                     <div t-attf-id="o_payment_add_token_acq_{{acq.id}}" t-attf-class="panel-footer {{'hidden' if (len(s2s_acquirers)&gt;1 and len(pms)==0 and s2s_acquirers[0]!=acq) else 'hidden' if len(pms)&gt;0 else ''}}">
-                        <div class="clearfix">
+                        <div t-att-class="'row' if bootstrap_formatting else 'clearfix'">
                             <t t-call="{{acq.sudo().get_s2s_form_xml_id()}}">
                                 <t t-set="id" t-value="acq.id"/>
                                 <t t-set="partner_id" t-value="partner_id"/>
@@ -144,11 +144,11 @@
                         <t t-esc="submit_txt"/>
                     </t>
                     <t t-else="">
-                        <i class="fa fa-lock"> Pay</i>
+                        <i class="fa fa-lock"/> Pay
                     </t>
                 </button>
                 <button t-if="mode == 'manage'" id="o_payment_form_add_pm" class="btn btn-primary btn-lg mb8 mt8">
-                    <i class="fa fa-plus-circle"> Add new card</i>
+                    <i class="fa fa-plus-circle"/> Add new card
                 </button>
             </div>
         </form>

@@ -24,6 +24,12 @@ $(document).ready(function () {
         }
     });
 
+    // set default focus on cc_number (fix the issue of not setting cc_brand when redirect)
+    var $cc_number = $('input[name="cc_number"]:visible');
+    if ($cc_number.length && $cc_number.val()) {
+        $cc_number.trigger('focusout');
+    }
+
     $('input#cc_cvc').on('focusout', function (e) {
         var cc_nbr = $(this).parents('.oe_cc').find('#cc_number').val();
         var card_type = $.payment.cardType(cc_nbr);

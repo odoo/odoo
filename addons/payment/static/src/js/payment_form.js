@@ -57,13 +57,13 @@ odoo.define('payment.payment_form', function (require) {
                         console.warn('payment_form: unset partner_id when adding new token; things could go wrong');
                     }
                     var form_data = this.getFormData(inputs_form);
-                    var empty_inputs = false;
+                    var empty_inputs = [];
 
                     inputs_form.toArray().forEach(function (element) {
                         if (element.dataset.isRequired) {
                             if (element.value.length === 0) {
                                 $(element).closest('div.form-group').addClass('has-error');
-                                empty_inputs = true;
+                                empty_inputs.push(element.placeholder);
                             }
                             else {
                                 $(element).closest('div.form-group').removeClass('has-error');
@@ -71,17 +71,16 @@ odoo.define('payment.payment_form', function (require) {
                         }
                     });
 
-                    if (empty_inputs) {
+                    if (empty_inputs.length) {
+                        this.updatePaymentBtn();
                         this.displayError(
-                            _t('Missing values'),
-                            _t('<p>Please fill all the inputs required.</p>')
+                            _t('The following field(s) are invalid or missing'),
+                            '<p>' + empty_inputs.join('<br/>') + '</p>'
                         );
                         return;
                     }
 
-                    $(button).attr('disabled', true);
-                    $(button).prepend('<span class="o_loader"><i class="fa fa-refresh fa-spin"></i>&nbsp;</span>');
-
+                    this.updatePaymentBtn();
                     var verify_validity = this.$el.find('input[name="verify_validity"]');
 
                     if (verify_validity.length>0) {
@@ -102,20 +101,16 @@ odoo.define('payment.payment_form', function (require) {
                                 form.submit();
                             }
                         }
-                        // if the server has returned false, we display an error
-                        else {
+                        // if the server has returned false/error, we display an error
+                        if (data.error || (!data.result && !data.error)) {
+                            self.updatePaymentBtn();
                             self.displayError(
                                 _t('Server Error'),
-                                _t("<p>We are not able to add your payment method at the moment.</p>"));
+                                _t(data.error ? data.error : 'e.g. Your credit card details are wrong. Please verify.')
+                            );
                         }
-                        // here we remove the 'processing' icon from the 'add a new payment' button
-                        $(button).attr('disabled', false);
-                        $(button).find('span.o_loader').remove();
                     }).fail(function (message, data) {
-                        // if the rpc fails, pretty obvious
-                        $(button).attr('disabled', false);
-                        $(button).find('span.o_loader').remove();
-
+                        self.updatePaymentBtn();
                         self.displayError(
                             _t('Server Error'),
                             _t("<p>We are not able to add your payment method at the moment.</p>") +
@@ -157,12 +152,14 @@ odoo.define('payment.payment_form', function (require) {
                                 }
                             }
                             else {
+                                self.updatePaymentBtn();
                                 self.displayError(
                                     _t('Server Error'),
                                     _t("<p>We are not able to redirect you to the payment form.</p>")
                                 );
                             }
                         }).fail(function (message, data) {
+                            self.updatePaymentBtn();
                             self.displayError(
                                 _t('Server Error'),
                                 _t("<p>We are not able to redirect you to the payment form.</p>") +
@@ -174,6 +171,7 @@ odoo.define('payment.payment_form', function (require) {
                     }
                     else {
                         // we append the form to the body and send it.
+                        this.updatePaymentBtn();
                         this.displayError(
                             _t("Cannot set-up the payment"),
                             _t("<p>We're unable to process your payment.</p>")
@@ -185,6 +183,7 @@ odoo.define('payment.payment_form', function (require) {
                 }
             }
             else {
+                this.updatePaymentBtn();
                 this.displayError(
                     _t('No payment method selected'),
                     _t('<p>Please select a payment method.</p>')
@@ -209,13 +208,13 @@ odoo.define('payment.payment_form', function (require) {
                 var inputs_form = $('input', acquirer_form);
                 var form_data = this.getFormData(inputs_form);
                 var ds = $('input[name="data_set"]', acquirer_form)[0];
-                var empty_inputs = false;
+                var empty_inputs = [];
 
                 inputs_form.toArray().forEach(function (element) {
                     if (element.dataset.isRequired) {
                         if (element.value.length === 0) {
                             $(element).closest('div.form-group').addClass('has-error');
-                            empty_inputs = true;
+                            empty_inputs.push(element.placeholder);
                         }
                         else {
                             $(element).closest('div.form-group').removeClass('has-error');
@@ -223,16 +222,16 @@ odoo.define('payment.payment_form', function (require) {
                     }
                 });
 
-                if (empty_inputs) {
+                if (empty_inputs.length) {
+                    this.updatePaymentBtn();
                     this.displayError(
-                        _t('Missing values'),
-                        _t('<p>Please fill all the inputs required.</p>')
+                        _t('The following field(s) invalid or missing'),
+                        '<p>' + empty_inputs.join('<br/>') + '</p>'
                     );
                     return;
                 }
                 // We add a 'processing' icon into the 'add a new payment' button
-                $(button).attr('disabled', true);
-                $(button).prepend('<span class="o_loader"><i class="fa fa-refresh fa-spin"></i>&nbsp;</span>');
+                this.updatePaymentBtn();
 
                 // we force the check when adding a card trough here
                 form_data.verify_validity = true;
@@ -257,21 +256,16 @@ odoo.define('payment.payment_form', function (require) {
                             }
                         }
                     }
-                    // if the server has returned false, we display an error
-                    else {
+                    // if the server has returned false/error, we display an error
+                    if (data.error || (!data.result && !data.error)) {
+                        self.updatePaymentBtn();
                         self.displayError(
                             _t('Server Error'),
-                            _t("<p>We are not able to add your payment method at the moment.</p>")
+                            _t(data.error ? data.error : 'e.g. Your credit card details are wrong. Please verify.')
                         );
                     }
-                    // here we remove the 'processing' icon from the 'add a new payment' button
-                    $(button).attr('disabled', false);
-                    $(button).find('span.o_loader').remove();
                 }).fail(function (message, data) {
-                    // if the rpc fails, pretty obvious
-                    $(button).attr('disabled', false);
-                    $(button).find('span.o_loader').remove();
-
+                    self.updatePaymentBtn();
                     self.displayError(
                         _t('Server error'),
                         _t("<p>We are not able to add your payment method at the moment.</p>") +
@@ -282,6 +276,7 @@ odoo.define('payment.payment_form', function (require) {
                 });
             }
             else {
+                this.updatePaymentBtn();
                 this.displayError(
                     _t('No payment method selected'),
                     _t('<p>Please select the option to add a new payment method.</p>')
@@ -390,13 +385,33 @@ odoo.define('payment.payment_form', function (require) {
         getAcquirerIdFromRadio: function (element) {
             return $(element).data('acquirer-id');
         },
+        updatePaymentBtn: function (reset) {
+            var $button = this.$('button#o_payment_form_add_pm, button#o_payment_form_pay'),
+                $icon = $button.find('i');
+            if (!$button.length) {
+                return ;
+            }
+            $button.attr('disabled', !reset);
+            $icon.removeClass();
+            if (!reset) {
+                $icon.addClass('fa fa-refresh fa-spin');
+            } else if ($button.attr('id') === 'o_payment_form_add_pm') {
+                $icon.addClass('fa fa-plus-circle');
+            } else {
+                $icon.addClass('fa fa-lock');
+            }
+        },
         displayError: function (title, message) {
-            return new Dialog(null, {
-                title: _t('Error: ') + title,
-                size: 'medium',
-                $content: message || "",
-                buttons: [
-                {text: _t('Ok'), close: true}]}).open();
+            var $checkedRadio = this.$('input[type="radio"]:checked'),
+                acquirerID = this.getAcquirerIdFromRadio($checkedRadio[0]),
+                $acquirerForm = this.$('#o_payment_add_token_acq_' + acquirerID);
+
+            // removed if exist error message
+            this.$('#payment_error').remove();
+            message = '<div class="alert alert-danger mb4" id="payment_error">' + '<b>' + title + ':</b></br>'  + message + '</div>';
+            $acquirerForm.append(message);
+            // here we remove the 'processing' icon from the 'add a new payment/ pay now' button
+            this.updatePaymentBtn(true);
         },
         getFormData: function ($form) {
             var unindexed_array = $form.serializeArray();

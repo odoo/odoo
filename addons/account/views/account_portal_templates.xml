@@ -46,7 +46,7 @@
                         </td>
                         <td><span t-field="invoice.date_invoice"/></td>
                         <td class='hidden-xs'><span t-field="invoice.date_due"/></td>
-                        <td>
+                        <td id="tx_status">
                             <t t-if="invoice.state == 'open'">
                                 <span class="label label-info"><i class="fa fa-fw fa-clock-o"></i><span class="hidden-xs"> Waiting for Payment</span></span>
                             </t>
@@ -96,6 +96,7 @@
                     <div class="panel-body">
                         <t t-if="error or warning" t-call="account.portal_invoice_error"/>
                         <t t-if="success and (not error and not warning)" t-call="account.portal_invoice_success"/>
+                        <div id="payment_status"></div>
                         <t t-call="account.portal_invoice_report"/>
                     </div>
                 </div>
@@ -254,7 +255,7 @@
 
     <template id="portal_invoice_error" name="Invoice error/warning display">
         <div class="row">
-            <div t-att-class="'col-md-6 col-md-offset-3 text-center alert alert-dismissable %s' % ('alert-danger' if error else 'alert-warning')">
+            <div t-attf-class="'col-md-12 mr16 ml16 alert alert-dismissable' #{'alert-danger' if error else 'alert-warning'}">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
                 <t t-if="error == 'generic'" name="generic">
                     There was an error processing this page.
@@ -265,7 +266,7 @@
 
     <template id="portal_invoice_success" name="Invoice success display">
         <div class="row">
-            <div class="col-md-6 col-md-offset-3 text-center alert alert-dismissable alert-success">
+            <div class="col-md-12 mr16 ml16 alert alert-dismissable alert-success">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
             </div>
         </div>

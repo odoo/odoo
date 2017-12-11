@@ -1,6 +1,6 @@
 .o_payment_form {
     label > input[type="radio"], input[type="checkbox"]{
-        vertical-align: bottom;
+        vertical-align: top;
         margin-right: 5px;
     }
 
@@ -14,6 +14,7 @@
 
     label {
         font-weight: normal;
+        margin-top: 5px;
     }
 
     .panel-body:first-child {
@@ -35,12 +36,14 @@
     }
 
     .payment_icon_list {
+        position: relative;
         li {
             padding-left: 5px !important;
             padding-right: 0px !important;
         }
 
         .more_option {
+            .o-position-absolute(@right: 0px, @bottom: -10px);
             font-size:10px;
         }
 

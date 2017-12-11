@@ -41,6 +41,7 @@ odoo.define('portal.signature_form', function (require){
                 'color': '#000',
                 'background-color': '#fff',
                 'height': '142px',
+                'width': '100%',
             });
             this.empty_sign = this.$("#o_portal_signature").jSignature('getData', 'image');
         },
@@ -110,6 +111,10 @@ odoo.define('portal.signature_form', function (require){
             var $elem = $(this);
             var form = new SignatureForm(null, $elem.data());
             form.appendTo($elem);
+        });
+        // FIX: signature is not responsive when it used in bs modal
+        $('#modalaccept').on('shown.bs.modal', function (ev) {
+            $('.o_portal_signature_form').trigger('resize');
         });
     });
 
