@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase, PerformanceCase, queryCount
+from odoo.tests.common import TransactionCase, users
 
 
-class TestMailPerformance(TransactionCase, PerformanceCase):
+class TestMailPerformance(TransactionCase):
 
     def setUp(self):
         super(TestMailPerformance, self).setUp()
@@ -21,75 +21,108 @@ class TestMailPerformance(TransactionCase, PerformanceCase):
             'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
         })
 
-        # for performances test
-        self.admin = self.env.user
-        self.admin.login = 'admin'
-
-    @queryCount(admin=3, demo=3)
+    @users('admin', 'demo')
     def test_read_mail(self):
         """ Read records inheriting from 'mail.thread'. """
         records = self.env['test_performance.mail'].search([])
         self.assertEqual(len(records), 5)
-        self.startQueryCount()
 
-        # without cache
-        for record in records:
-            record.partner_id.country_id.name
+        # warm up ormcache
+        records.mapped('partner_id.country_id.name')
+        self.env.cache.invalidate()
 
-        # with cache
-        for record in records:
-            record.partner_id.country_id.name
+        with self.assertQueryCount(admin=3, demo=3):
+            # without cache
+            for record in records:
+                record.partner_id.country_id.name
 
-        # value_pc must have been prefetched, too
-        for record in records:
-            record.value_pc
+        with self.assertQueryCount(0):
+            # with cache
+            for record in records:
+                record.partner_id.country_id.name
 
-    @queryCount(admin=4, demo=4)
+        with self.assertQueryCount(0):
+            # value_pc must have been prefetched, too
+            for record in records:
+                record.value_pc
+
+    @users('admin', 'demo')
     def test_write_mail(self):
         """ Write records inheriting from 'mail.thread' (no recomputation). """
         records = self.env['test_performance.mail'].search([])
         self.assertEqual(len(records), 5)
-        self.startQueryCount()
 
-        records.write({'name': self.str('X')})
+        # warm up ormcache
+        records.write({'name': 'X'})
+        self.env.cache.invalidate()
 
-    @queryCount(admin=6, demo=6)
+        with self.assertQueryCount(admin=4, demo=4):
+            records.write({'name': 'Y'})
+
+    @users('admin', 'demo')
     def test_write_mail_with_recomputation(self):
         """ Write records inheriting from 'mail.thread' (with recomputation). """
         records = self.env['test_performance.mail'].search([])
         self.assertEqual(len(records), 5)
-        self.startQueryCount()
 
-        records.write({'value': self.int(20)})
+        # warm up ormcache
+        records.write({'value': 21})
+        self.env.cache.invalidate()
 
-    @queryCount(admin=20, demo=31)
+        with self.assertQueryCount(admin=6, demo=6):
+            records.write({'value': 42})
+
+    @users('admin', 'demo')
     def test_write_mail_with_tracking(self):
         """ Write records inheriting from 'mail.thread' (with field tracking). """
         record = self.env['test_performance.mail'].search([], limit=1)
         self.assertEqual(len(record), 1)
-        self.startQueryCount()
 
-        record.track = self.str('X')
+        # warm up ormcache
+        record.track = 'X'
+        self.env.cache.invalidate()
 
-    @queryCount(admin=3, demo=3)
+        with self.assertQueryCount(admin=20, demo=31):
+            record.track = 'Y'
+
+    @users('admin', 'demo')
     def test_create_mail(self):
         """ Create records inheriting from 'mail.thread' (without field tracking). """
         model = self.env['test_performance.mail']
-        model.with_context(tracking_disable=True).create({'name': self.str('X')})
 
-    @queryCount(admin=38, demo=54)
+        # warm up ormcache
+        model.with_context(tracking_disable=True).create({'name': 'X'})
+        self.env.cache.invalidate()
+
+        with self.assertQueryCount(admin=3, demo=3):
+            model.with_context(tracking_disable=True).create({'name': 'Y'})
+
+    @users('admin', 'demo')
     def test_create_mail_with_tracking(self):
         """ Create records inheriting from 'mail.thread' (with field tracking). """
         model = self.env['test_performance.mail']
-        model.create({'name': self.str('Y')})
 
-    @queryCount(admin=22, emp=29)
+        # warm up ormcache
+        model.create({'name': 'X'})
+        self.env.cache.invalidate()
+
+        with self.assertQueryCount(admin=38, demo=54):
+            model.create({'name': 'Y'})
+
+    @users('admin', 'emp')
     def test_simple(self):
         """ Create records inheriting from 'mail.thread' (simple models) """
-        self.env['mail.test.simple'].create({'name': self.str('Test')})
+        model = self.env['mail.test.simple']
+
+        # warm up ormcache
+        model.create({'name': 'Warm up'})
+        self.env.cache.invalidate()
+
+        with self.assertQueryCount(admin=22, emp=29):
+            model.create({'name': 'Test'})
 
 
-class TestAdvMailPerformance(TransactionCase, PerformanceCase):
+class TestAdvMailPerformance(TransactionCase):
 
     def setUp(self):
         super(TestAdvMailPerformance, self).setUp()
@@ -107,23 +140,33 @@ class TestAdvMailPerformance(TransactionCase, PerformanceCase):
             'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
         })
 
-        # for performances test
-        self.admin = self.env.user
-        self.admin.login = 'admin'
-
-    @queryCount(admin=25, emp=32)
+    @users('admin', 'emp')
     def test_activity(self):
-        self.env['mail.test.activity'].create({'name': self.str('Test')})
+        model = self.env['mail.test.activity']
 
-    @queryCount(admin=46, emp=51)
+        # warm up ormcache
+        model.create({'name': 'Test 0'})
+        self.env.cache.invalidate()
+
+        with self.assertQueryCount(admin=25, emp=32):
+            model.create({'name': 'Test'})
+
+    @users('admin', 'emp')
     def test_activity_full(self):
-        test_record_activity = self.env['mail.test.activity'].create({'name': self.str('Test')})
-        res_id = test_record_activity.id
-        self.startQueryCount()
-
-        self.env['mail.activity'].with_context({
+        record = self.env['mail.test.activity'].create({'name': 'Test'})
+        model = self.env['mail.activity'].with_context({
             'default_res_model': 'mail.test.activity',
-        }).create({
-            'summary': self.str('Test Activity'),
-            'res_id': res_id,
         })
+
+        # warm up ormcache
+        model.create({
+            'summary': 'Test Activity 0',
+            'res_id': record.id,
+        })
+        self.env.cache.invalidate()
+
+        with self.assertQueryCount(admin=46, emp=51):
+            model.create({
+                'summary': 'Test Activity',
+                'res_id': record.id,
+            })
