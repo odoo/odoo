@@ -2,8 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import calendar
-import math
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
@@ -41,13 +40,12 @@ class AccountAssetCategory(models.Model):
     group_entries = fields.Boolean(string='Group Journal Entries', help="Check this if you want to group the generated entries by categories.")
     type = fields.Selection([('sale', 'Sale: Revenue Recognition'), ('purchase', 'Purchase: Asset')], required=True, index=True, default='purchase')
     date_first_depreciation = fields.Selection([
-        ('first_day_period', 'Based on First Day of Purchase Period'),
         ('last_day_period', 'Based on Last Day of Purchase Period'),
         ('manual', 'Based on Purchase Date')],
-        string='Depreciation Dates', default='first_day_period', required=True,
+        string='Depreciation Dates', default='manual', required=True,
         help='The way to compute the date of the first depreciation.\n'
-             '  * Based on first day of purchase period: The depreciation dates will be based on the first day of the purchase month/year.\n'
-             '  * Based on the last day of period: The depreciation dates will be based on the last day of the purchase month or the last day of the fiscal year if the depreciation periods are in years.')
+             '  * Based on the last day of period: The depreciation dates will be based on the last day of the purchase month or the last day of the fiscal year if the depreciation periods are in years.\n'
+             '  * Based on purchase date: The depreciation journal entries will start on the purchase day.')
 
     @api.onchange('account_asset_id')
     def onchange_account_asset(self):
@@ -106,25 +104,24 @@ class AccountAssetAsset(models.Model):
              "  * Number of Entries: Fix the number of entries and the time between 2 depreciations.\n"
              "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond.")
     prorata = fields.Boolean(string='Prorata Temporis', readonly=True, states={'draft': [('readonly', False)]},
-        help='Indicates that the first depreciation entry for this asset have to be done from the purchase date instead of the first January / Start date of fiscal year')
+        help='Indicates that the first depreciation entry for this asset have to be done from the asset date (purchase date) instead of the first January / Start date of fiscal year')
     depreciation_line_ids = fields.One2many('account.asset.depreciation.line', 'asset_id', string='Depreciation Lines', readonly=True, states={'draft': [('readonly', False)], 'open': [('readonly', False)]})
     salvage_value = fields.Float(string='Salvage Value', digits=0, readonly=True, states={'draft': [('readonly', False)]},
         help="It is the amount you plan to have that you cannot depreciate.")
     invoice_id = fields.Many2one('account.invoice', string='Invoice', states={'draft': [('readonly', False)]}, copy=False)
     type = fields.Selection(related="category_id.type", string='Type', required=True)
     date_first_depreciation = fields.Selection([
-        ('first_day_period', 'Based on First Day of Purchase Period'),
         ('last_day_period', 'Based on Last Day of Purchase Period'),
         ('manual', 'Manual')],
-        string='Depreciation Dates', default='first_day_period',
+        string='Depreciation Dates', default='manual',
         readonly=True, states={'draft': [('readonly', False)]}, required=True,
         help='The way to compute the date of the first depreciation.\n'
-             '  * Based on first day of purchase period: The depreciation dates will be based on the first day of the purchase month/year.\n'
              '  * Based on the last day of period: The depreciation dates will be based on the last day of the purchase month or the last day of the fiscal year if the depreciation periods are in years.\n'
-             '  * Manual: The first depreciation date will be based on a date defined manually.')
+             '  * Manual: The first depreciation date will be based on a date defined manually which, by default, is the purchase day.\n')
     first_depreciation_manual_date = fields.Date(
         string='First Depreciation Date',
-        readonly=True, states={'draft': [('readonly', False)]}
+        readonly=True, states={'draft': [('readonly', False)]},
+        help='Note that this date does not alter the computation of the first journal entry in case of prorata temporis assets. It simply changes its accounting date'
     )
 
     @api.multi
@@ -167,25 +164,25 @@ class AccountAssetAsset(models.Model):
                 if self.prorata:
                     amount = amount_to_depr / self.method_number
                     if sequence == 1:
+                        date = datetime.strptime(self.date, DF)
                         if self.method_period % 12 != 0:
-                            date = datetime.strptime(self.date, '%Y-%m-%d')
                             month_days = calendar.monthrange(date.year, date.month)[1]
                             days = month_days - date.day + 1
                             amount = (amount_to_depr / self.method_number) / month_days * days
                         else:
-                            days = (self.company_id.compute_fiscalyear_dates(depreciation_date)['date_to'] - depreciation_date).days + 1
+                            days = (self.company_id.compute_fiscalyear_dates(date)['date_to'] - date).days + 1
                             amount = (amount_to_depr / self.method_number) / total_days * days
             elif self.method == 'degressive':
                 amount = residual_amount * self.method_progress_factor
                 if self.prorata:
                     if sequence == 1:
+                        date = datetime.strptime(self.date, DF)
                         if self.method_period % 12 != 0:
-                            date = datetime.strptime(self.date, '%Y-%m-%d')
                             month_days = calendar.monthrange(date.year, date.month)[1]
                             days = month_days - date.day + 1
                             amount = (residual_amount * self.method_progress_factor) / month_days * days
                         else:
-                            days = (self.company_id.compute_fiscalyear_dates(depreciation_date)['date_to'] - depreciation_date).days + 1
+                            days = (self.company_id.compute_fiscalyear_dates(date)['date_to'] - date).days + 1
                             amount = (residual_amount * self.method_progress_factor) / total_days * days
         return amount
 
@@ -200,66 +197,6 @@ class AccountAssetAsset(models.Model):
         if self.prorata:
             undone_dotation_number += 1
         return undone_dotation_number
-
-    #@api.model
-    #def _compute_depreciation_purchase_date(self):
-    ##def _compute_depreciation_date_prorata(self):
-    #    '''Compute the first depreciation date using the Prorata Temporis.
-
-    #    :return: first depreciation date
-    #    '''
-    #    self.ensure_one()
-    #    self.env.cr.execute("""
-    #        SELECT a.id as id, COALESCE(MAX(m.date),a.date) AS date
-    #        FROM account_asset_asset a
-    #        LEFT JOIN account_asset_depreciation_line rel ON (rel.asset_id = a.id)
-    #        LEFT JOIN account_move m ON (rel.move_id = m.id)
-    #        WHERE a.id IN %s
-    #        GROUP BY a.id, m.date """, (tuple(self.ids),))
-    #    date_str = dict(self.env.cr.fetchall())[self.id]
-    #    return datetime.strptime(date_str, DF).date()
-
-    #@api.model
-    #def _compute_depreciation_purchase_date(self):
-    #    '''Compute the first depreciation date based on the purchase date
-    #    and set at the first day of the month.
-
-    #    :return: first depreciation date
-    #    '''
-    #    self.ensure_one()
-    #    asset_date = datetime.strptime(self.date[:7] + '-01', DF).date()
-    #    return asset_date + relativedelta(months=+self.method_period)
-
-    #@api.model
-    #def _compute_depreciation_last_day_period(self):
-    #    '''Compute the first depreciation date based on fiscal year accordingly to
-    #    the number of period in one year set. If the period is not per year, computed
-    #    from the purchase date and set at the last day of the month.
-
-    #    :return: first depreciation date
-    #    '''
-    #    self.ensure_one()
-    #    if self.method_period % 12 == 0:
-    #        company_id = self.invoice_id and self.invoice_id.company_id or self.env.user.company_id
-    #        fiscal_year = self.date[:4] + '-' + str(company_id.fiscalyear_last_month) + '-' + str(company_id.fiscalyear_last_day)
-    #        fiscal_year_date = datetime.strptime(fiscal_year, DF).date()
-    #        purchase_date = datetime.strptime(self.date, DF).date()
-    #        if purchase_date > fiscal_year_date:
-    #            # Next fiscal year date
-    #            fiscal_year_date += relativedelta(months=12)
-    #        return fiscal_year_date
-    #    asset_date = self._compute_depreciation_purchase_date()
-    #    days_in_month = calendar.monthrange(asset_date.year, asset_date.month)[1]
-    #    return asset_date.replace(day=days_in_month)
-
-    #@api.model
-    #def _compute_depreciation_manual(self):
-    #    '''Return the first depreciation date set manually.
-
-    #    :return: first depreciation date
-    #    '''
-    #    self.ensure_one()
-    #    return datetime.strptime(self.first_depreciation_manual_date, DF)
 
     @api.multi
     def compute_depreciation_board(self):
@@ -281,23 +218,18 @@ class AccountAssetAsset(models.Model):
             else:
                 # depreciation_date computed from the purchase date
                 depreciation_date = self.date
-                if self.date_first_depreciation == 'first_day_period':
-                    # depreciation_date = 1st of January of purchase year if annual valuation, 1st of
-                    # purchase month in other cases
-                    depreciation_date = datetime.strptime(depreciation_date, DF).replace(day=1)
-                    if self.method_period == 12:
-                        depreciation_date.replace(month=1)
-                    depreciation_date = depreciation_date.date()
-                elif self.date_first_depreciation == 'last_day_period':
+                depreciation_date = datetime.strptime(depreciation_date, DF)
+                if self.date_first_depreciation == 'last_day_period':
                     # depreciation_date = the last day of the month or fiscalyear depending the number of period
-                    depreciation_date = datetime.strptime(depreciation_date, DF).replace(day=31)
                     if self.method_period == 12:
-                        depreciation_date.replace(month=12)
-                    depreciation_date = depreciation_date.date()
-                else:
+                        depreciation_date = depreciation_date + relativedelta(month=self.company_id.fiscalyear_last_month)
+                    depreciation_date = depreciation_date + relativedelta(day=31)
+                elif self.first_depreciation_manual_date and self.first_depreciation_manual_date != self.date:
                     # depreciation_date set manually from the 'first_depreciation_manual_date' field
                     depreciation_date = self.first_depreciation_manual_date
+                    depreciation_date = datetime.strptime(depreciation_date, DF)
 
+            depreciation_date = depreciation_date.date()
             total_days = (depreciation_date.year % 4) and 365 or 366
             undone_dotation_number = self._compute_board_undone_dotation_nb(depreciation_date, total_days)
 
@@ -433,7 +365,8 @@ class AccountAssetAsset(models.Model):
     @api.onchange('date_first_depreciation')
     def onchange_date_first_depreciation(self):
         for record in self:
-            record.first_depreciation_manual_date = None
+            if record.date_first_depreciation == 'manual':
+                record.first_depreciation_manual_date = record.date
 
     @api.multi
     @api.depends('depreciation_line_ids.move_id')

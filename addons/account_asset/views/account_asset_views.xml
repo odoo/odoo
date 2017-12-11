@@ -166,8 +166,7 @@
                             <field name="category_id" string="Asset Category" domain="[('type', '=', 'purchase')]" context="{'default_type': 'purchase'}" help="Category of asset"/>
                             <field name="code"/>
                             <field name="date" help="Date of asset"/>
-                            <field name="date_first_depreciation"
-                                   attrs="{'invisible': [('prorata', '=', True)], 'required': [('prorata', '=', False)]}"/>
+                            <field name="date_first_depreciation"/>
                             <field name="first_depreciation_manual_date"
                                    attrs="{'invisible': [('date_first_depreciation', '!=', 'manual')], 'required': [('date_first_depreciation', '=', 'manual')]}"/>
                             <field name="type" invisible="1"/>
