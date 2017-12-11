@@ -156,7 +156,7 @@ class StockMove(models.Model):
         '''
         Hook sera manejado en un modulo superior
         '''
-        if any(move.quantity_done for move in self):
+        if any(move.quantity_done  and (move.raw_material_production_id or move.production_id)  for move in self):
             raise exceptions.UserError(_('You cannot cancel a move move having already consumed material'))
         
 
