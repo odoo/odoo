@@ -4385,15 +4385,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     def _mapped_func(self, func):
         """ Apply function ``func`` on all records in ``self``, and return the
             result as a list or a recordset (if ``func`` returns recordsets).
+            When called on an empty recordset it just returns it.
         """
         if self:
             vals = [func(rec) for rec in self]
             if isinstance(vals[0], BaseModel):
                 return vals[0].union(*vals)         # union of all recordsets
             return vals
-        else:
-            vals = func(self)
-            return vals if isinstance(vals, BaseModel) else []
+        return self
 
     def mapped(self, func):
         """ Apply ``func`` on all records in ``self``, and return the result as a
