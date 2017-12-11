@@ -608,6 +608,45 @@ class TestPickShip(TestStockCommon):
         picking_client.action_confirm()
         self.assertEqual(len(picking_client.move_lines), 2, 'Moves should not be merged')
 
+    def test_mto_cancel_move_line(self):
+        """ Create a pick ship situation. Then process the pick picking
+        with a backorder. Then try to unlink the move line created on
+        the ship and check if the picking and move state are updated.
+        Then validate the backorder and unlink the ship move lines in
+        order to check again if the picking and state are updated.
+        """
+        picking_pick, picking_client = self.create_pick_ship()
+        location = self.env['stock.location'].browse(self.stock_location)
+
+        # make some stock
+        self.env['stock.quant']._update_available_quantity(self.productA, location, 10.0)
+        picking_pick.move_lines.quantity_done = 5.0
+        backorder_wizard_values = picking_pick.button_validate()
+        backorder_wizard = self.env[(backorder_wizard_values.get('res_model'))].browse(backorder_wizard_values.get('res_id'))
+        backorder_wizard.process()
+
+        self.assertTrue(picking_client.move_line_ids, 'A move line should be created.')
+        self.assertEqual(picking_client.move_line_ids.product_uom_qty, 5, 'The move line should have 5 unit reserved.')
+
+        # Directly delete the move lines on the picking. (Use show detail operation on picking type)
+        # Should do the same behavior than unreserve
+        picking_client.move_line_ids.unlink()
+
+        self.assertEqual(picking_client.move_lines.state, 'waiting', 'The move state should be waiting since nothing is reserved and another origin move still in progess.')
+        self.assertEqual(picking_client.state, 'waiting', 'The picking state should not be ready anymore.')
+
+        picking_client.action_assign()
+
+        back_order = self.env['stock.picking'].search([('backorder_id', '=', picking_pick.id)])
+        back_order.move_lines.quantity_done = 5
+        back_order.button_validate()
+
+        self.assertEqual(picking_client.move_lines.reserved_availability, 10, 'The total quantity should be reserved since everything is available.')
+        picking_client.move_line_ids.unlink()
+
+        self.assertEqual(picking_client.move_lines.state, 'confirmed', 'The move should be confirmed since all the origin moves are processed.')
+        self.assertEqual(picking_client.state, 'confirmed', 'The picking should be confirmed since all the moves are confirmed.')
+
 
 class TestSinglePicking(TestStockCommon):
     def test_backorder_1(self):

@@ -348,7 +348,11 @@ class StockMoveLine(models.Model):
             if ml.product_id.type == 'product' and not ml.location_id.should_bypass_reservation() and not float_is_zero(ml.product_qty, precision_digits=precision):
                 self.env['stock.quant']._update_reserved_quantity(ml.product_id, ml.location_id, -ml.product_qty, lot_id=ml.lot_id,
                                                                    package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
-        return super(StockMoveLine, self).unlink()
+        moves = self.mapped('move_id')
+        res = super(StockMoveLine, self).unlink()
+        if moves:
+            moves._recompute_state()
+        return res
 
     def _action_done(self):
         """ This method is called during a move's `action_done`. It'll actually move a quant from
