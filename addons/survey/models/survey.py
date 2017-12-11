@@ -364,7 +364,7 @@ class Survey(models.Model):
 
     @api.multi
     def action_test_survey(self):
-        """ Open the website page with the survey form into test mode"""
+        ''' Open the website page with the survey form into test mode'''
         self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
