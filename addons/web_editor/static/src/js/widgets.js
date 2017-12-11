@@ -876,7 +876,7 @@ var VideoDialog = Widget.extend({
         this.$iframe = this.$("iframe");
         var $media = $(this.media);
         if ($media.hasClass("media_iframe_video")) {
-            var src = $media.data('src');
+            var src = $media.data('oe-expression') || $media.data('src');
             this.$("input#urlvideo").val(src);
             this.$("input#autoplay").prop("checked", (src || "").indexOf("autoplay") >= 0);
             this.get_video();
