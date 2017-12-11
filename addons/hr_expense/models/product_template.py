@@ -16,3 +16,8 @@ class ProductTemplate(models.Model):
         if vals.get('can_be_expensed', False):
             vals.update({'supplier_taxes_id': False})
         return super(ProductTemplate, self).create(vals)
+
+    @api.onchange('type')
+    def _onchange_type_for_expense(self):
+        if self.type not in ['consu', 'service']:  # stockable can not be expensed.
+            self.can_be_expensed = False

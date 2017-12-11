@@ -56,9 +56,7 @@ class ProductTemplate(models.Model):
 
     @api.onchange('type')
     def _onchange_type(self):
+        super(ProductTemplate, self)._onchange_type()
         if self.type == 'service':
             self.invoice_policy = 'order'
             self.service_type = 'timesheet'
-        elif self.type == 'consu':
-            self.invoice_policy = 'order'
-            self.service_type = 'manual'
