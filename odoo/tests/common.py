@@ -122,6 +122,7 @@ class BaseCase(TreeCase):
     """
 
     longMessage = True      # more verbose error message by default: https://www.odoo.com/r/Vmh
+    warm = True             # False during warm-up phase (see :func:`warmup`)
 
     def cursor(self):
         return self.registry.cursor()
@@ -176,16 +177,21 @@ class BaseCase(TreeCase):
 
             The second form is convenient when used with :func:`users`.
         """
-        login = self.env.user.login
-        expected = counters.get(login, default)
-        count0 = self.cr.sql_log_count
-        yield
-        count = self.cr.sql_log_count - count0
-        if not count <= expected:
-            self.fail("Query count for user %s: got %d instead of %d" % (login, count, expected))
-        elif count < expected:
-            logger = logging.getLogger(type(self).__module__)
-            logger.info("Query count for user %s: got %d instead of %d", login, count, expected)
+        if self.warm:
+            login = self.env.user.login
+            expected = counters.get(login, default)
+            count0 = self.cr.sql_log_count
+            yield
+            count = self.cr.sql_log_count - count0
+            if not count <= expected:
+                msg = "Query count for user %s: got %d instead of %d"
+                self.fail(msg % (login, count, expected))
+            elif count < expected:
+                logger = logging.getLogger(type(self).__module__)
+                msg = "Query count for user %s: got %d instead of %d"
+                logger.info(msg, login, count, expected)
+        else:
+            yield
 
     def shortDescription(self):
         doc = self._testMethodDoc
@@ -513,6 +519,22 @@ def users(*logins):
             func(*args, **kwargs)
 
     return wrapper
+
+
+@decorator
+def warmup(func, *args, **kwargs):
+    """ Decorate a test method to run it twice: once for a warming up phase, and
+        a second time for real. The test attribute ``warm`` is set to ``False``
+        during warm up, and ``True`` once the test is warmed up.
+    """
+    self = args[0]
+    # run once to warm up the caches
+    self.warm = False
+    func(*args, **kwargs)
+    self.env.cache.invalidate()
+    # run once for real
+    self.warm = True
+    func(*args, **kwargs)
 
 
 def can_import(module):
