@@ -140,7 +140,7 @@ class Web_Editor(http.Controller):
     # add attachment (images or link)
     #------------------------------------------------------
     @http.route('/web_editor/attachment/add', type='http', auth='user', methods=['POST'])
-    def attach(self, upload=None, url=None, disable_optimization=None, **kwargs):
+    def attach(self, upload=None, url=None, disable_optimization=None, filters=None, **kwargs):
         # the upload argument doesn't allow us to access the files if more than
         # one file is uploaded, as upload references the first file
         # therefore we have to recover the files from the request object
@@ -150,8 +150,12 @@ class Web_Editor(http.Controller):
         message = None
         if not upload: # no image provided, storing the link and the image name
             name = url.split("/").pop()                       # recover filename
+            datas_fname = name
+            if filters:
+                datas_fname = filters + '_' + datas_fname
             attachment = Attachments.create({
                 'name': name,
+                'datas_fname': datas_fname,
                 'type': 'url',
                 'url': url,
                 'public': True,
@@ -175,10 +179,14 @@ class Web_Editor(http.Controller):
                     except IOError as e:
                         pass
 
+                    name = c_file.filename
+                    datas_fname = name
+                    if filters:
+                        datas_fname = filters + '_' + datas_fname
                     attachment = Attachments.create({
-                        'name': c_file.filename,
+                        'name': name,
                         'datas': base64.b64encode(data),
-                        'datas_fname': c_file.filename,
+                        'datas_fname': datas_fname,
                         'public': True,
                         'res_model': 'ir.ui.view',
                     })

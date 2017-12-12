@@ -47,10 +47,10 @@
     <!-- Media Dialog (allows to choose an img/pictogram/video) -->
     <div t-name="web_editor.dialog.media">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#editor-media-image" data-toggle="tab">Image</a></li>
-            <li><a href="#editor-media-document" data-toggle="tab" t-att-class="widget.onlyImages ? 'hidden' : ''">Document</a></li>
-            <li><a href="#editor-media-icon" data-toggle="tab" t-att-class="widget.onlyImages ? 'hidden' : ''">Pictogram</a></li>
-            <li><a href="#editor-media-video" data-toggle="tab" t-att-class="widget.onlyImages ? 'hidden' : ''">Video</a></li>
+            <li class="active"><a href="#editor-media-image" data-toggle="tab" t-att-class="widget.noImages ? 'hidden' : ''">Image</a></li>
+            <li><a href="#editor-media-document" data-toggle="tab" t-att-class="widget.noDocuments ? 'hidden' : ''">Document</a></li>
+            <li><a href="#editor-media-icon" data-toggle="tab" t-att-class="widget.noIcons ? 'hidden' : ''">Pictogram</a></li>
+            <li><a href="#editor-media-video" data-toggle="tab" t-att-class="widget.noVideos ? 'hidden' : ''">Video</a></li>
             <li class="search pull-right">
                 <ul class="pager mb0 mt0">
                     <li class="previous">
@@ -85,6 +85,7 @@
             enctype="multipart/form-data"
             target="fileframe">
             <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
+            <input type="hidden" name="filters" t-att-value="widget.firstFilters.join('_')"/>
             <div class="well">
                 <div class="form-group pull-left">
                     <input type="file" class="hidden" name="upload" t-att-accept="widget.accept" multiple="multiple"/>
@@ -234,7 +235,7 @@
     <div t-name="web_editor.dialog.link" class="o_link_dialog">
         <div class="row">
             <form class="col-md-8 form-horizontal">
-                <div class="form-group">
+                <div t-attf-class="form-group#{widget.needLabel ? '' : ' hidden'}">
                     <label class="control-label col-sm-3" for="o_link_dialog_label_input">Link Label</label>
                     <div class="col-sm-9">
                         <input type="text" name="label" class="form-control" id="o_link_dialog_label_input" required="required" t-att-value="widget.data.text"/>

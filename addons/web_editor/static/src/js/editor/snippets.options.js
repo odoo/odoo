@@ -715,7 +715,7 @@ registry.colorpicker = SnippetOption.extend({
         this.$el.find('.colorpicker button.selected').removeClass('selected');
         $(ev.currentTarget).addClass('selected');
         this.$target.closest('.o_editable').trigger('content_changed');
-        this.$target.trigger('background-color-event', ev.type);
+        this.$target.trigger('background-color-event', false);
     },
     /**
      * Called when a color button is entered -> preview the background color.
@@ -729,7 +729,7 @@ registry.colorpicker = SnippetOption.extend({
         if (color) {
             this.$target.addClass(this.colorPrefix + color);
         }
-        this.$target.trigger('background-color-event', ev.type);
+        this.$target.trigger('background-color-event', true);
     },
     /**
      * Called when a color button is left -> cancel the preview.
@@ -744,7 +744,7 @@ registry.colorpicker = SnippetOption.extend({
         if (color) {
             this.$target.addClass(this.colorPrefix + color);
         }
-        this.$target.trigger('background-color-event', ev.type);
+        this.$target.trigger('background-color-event', 'reset');
     },
     /**
      * Called when the color reset button is clicked -> remove all background
@@ -813,10 +813,10 @@ registry.background = SnippetOption.extend({
         // Put fake image in the DOM, edit it and use it as background-image
         var $image = $('<img/>', {class: 'hidden', src: value}).appendTo(this.$target);
 
-        var _editor = new weWidgets.MediaDialog(this, {}, null, $image[0]).open();
-        _editor.opened(function () {
-            _editor.$('[href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
-        });
+        var _editor = new weWidgets.MediaDialog(this, {
+            onlyImages: true,
+            firstFilters: ['background'],
+        }, null, $image[0]).open();
 
         _editor.on('save', this, function () {
             this._setCustomBackground($image.attr('src'));
@@ -836,10 +836,13 @@ registry.background = SnippetOption.extend({
      */
     bindBackgroundEvents: function () {
         this.$target.off('.background-option')
-            .on('background-color-event.background-option', (function (e, type) {
+            .on('background-color-event.background-option', (function (e, previewMode) {
                 e.stopPropagation();
                 if (e.currentTarget !== e.target) return;
-                this.$el.find('li[data-background=""] > a').trigger(type);
+                if (previewMode === false) {
+                    this.__customImageSrc = undefined;
+                }
+                this.background(previewMode);
             }).bind(this));
     },
     /**
