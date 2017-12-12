@@ -534,13 +534,16 @@ def users(*logins):
 @decorator
 def warmup(func, *args, **kwargs):
     """ Decorate a test method to run it twice: once for a warming up phase, and
-        a second time for real. The test attribute ``warm`` is set to ``False``
-        during warm up, and ``True`` once the test is warmed up.
+        a second time for real.  The test attribute ``warm`` is set to ``False``
+        during warm up, and ``True`` once the test is warmed up.  Note that the
+        effects of the warmup phase are rolled back thanks to a savepoint.
     """
     self = args[0]
     # run once to warm up the caches
     self.warm = False
+    self.cr.execute('SAVEPOINT test_warmup')
     func(*args, **kwargs)
+    self.cr.execute('ROLLBACK TO SAVEPOINT test_warmup')
     self.env.cache.invalidate()
     # run once for real
     self.warm = True
