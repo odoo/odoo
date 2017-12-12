@@ -127,6 +127,16 @@ class BaseCase(TreeCase):
     def cursor(self):
         return self.registry.cursor()
 
+    @property
+    def uid(self):
+        """ Get the current uid. """
+        return self.env.uid
+
+    @uid.setter
+    def uid(self, user):
+        """ Set the uid by changing the test's environment. """
+        self.env = self.env(user=user)
+
     def ref(self, xid):
         """ Returns database ID for the provided :term:`external identifier`,
         shortcut for ``get_object_reference``
@@ -213,9 +223,8 @@ class TransactionCase(BaseCase):
         self.registry = odoo.registry(get_db_name())
         #: current transaction's cursor
         self.cr = self.cursor()
-        self.uid = odoo.SUPERUSER_ID
         #: :class:`~odoo.api.Environment` for the current test case
-        self.env = api.Environment(self.cr, self.uid, {})
+        self.env = api.Environment(self.cr, odoo.SUPERUSER_ID, {})
 
         @self.addCleanup
         def reset():
@@ -250,8 +259,7 @@ class SingleTransactionCase(BaseCase):
         super(SingleTransactionCase, cls).setUpClass()
         cls.registry = odoo.registry(get_db_name())
         cls.cr = cls.registry.cursor()
-        cls.uid = odoo.SUPERUSER_ID
-        cls.env = api.Environment(cls.cr, cls.uid, {})
+        cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
 
     @classmethod
     def tearDownClass(cls):
@@ -505,18 +513,20 @@ def users(*logins):
     @decorator
     def wrapper(func, *args, **kwargs):
         self = args[0]
-        # retrieve users
-        login_user = {
-            user.login: user
-            for user in self.env['res.users'].search([('login', 'in', list(logins))])
-        }
-        for login in logins:
-            # switch user
-            user = login_user[login]
-            self.uid = user.id
-            self.env = self.env(user=self.uid)
-            # execute func
-            func(*args, **kwargs)
+        old_uid = self.uid
+        try:
+            # retrieve users
+            user_id = {
+                user.login: user.id
+                for user in self.env['res.users'].search([('login', 'in', list(logins))])
+            }
+            for login in logins:
+                # switch user
+                self.uid = user_id[login]
+                # execute func
+                func(*args, **kwargs)
+        finally:
+            self.uid = old_uid
 
     return wrapper
 
