@@ -143,8 +143,9 @@ ListRenderer.include({
         }
 
         var oldData = this.state.data;
+        var options = {mode: currentRowID === id ? 'edit': 'readonly'};
         this.state = state;
-        return this.confirmChange(state, id, fields, ev).then(function () {
+        return this.confirmChange(state, id, fields, ev, options).then(function () {
             // If no record with 'id' can be found in the state, the
             // confirmChange method will have rerendered the whole view already,
             // so no further work is necessary.

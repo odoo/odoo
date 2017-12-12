@@ -87,7 +87,7 @@ var BasicRenderer = AbstractRenderer.extend({
      * @returns {Deferred<AbstractField[]>} resolved with the list of widgets
      *                                      that have been reset
      */
-    confirmChange: function (state, id, fields, ev) {
+    confirmChange: function (state, id, fields, ev, options) {
         this.state = state;
 
         var record = state.id === id ? state : _.findWhere(state.data, {id: id});
@@ -111,7 +111,7 @@ var BasicRenderer = AbstractRenderer.extend({
         // The modifiers update is done after widget resets as modifiers
         // associated callbacks need to have all the widgets with the proper
         // state before evaluation
-        defs.push(this._updateAllModifiers(record));
+        defs.push(this._updateAllModifiers(record, options));
 
         return $.when.apply($, defs).then(function () {
             return resetWidgets;
@@ -236,8 +236,10 @@ var BasicRenderer = AbstractRenderer.extend({
      * @param {Object} modifiersData
      * @param {Object} record
      * @param {Object} [element] - do the update only on this element if given
+     * @param {Object} [options]
+     * @param {Object} [options.mode] - widget mode
      */
-    _applyModifiers: function (modifiersData, record, element) {
+    _applyModifiers: function (modifiersData, record, element, options) {
         var self = this;
         var modifiers = modifiersData.evaluatedModifiers[record.id] || {};
 
@@ -253,6 +255,7 @@ var BasicRenderer = AbstractRenderer.extend({
             // its "readonly" state, we have to re-render it completely
             if ('readonly' in modifiers
                 && self.mode === "edit"
+                && (!options || options.mode !== 'readonly')
                 && element.widget
                 && (element.widget.mode === 'readonly') !== modifiers.readonly)
             {
@@ -409,6 +412,7 @@ var BasicRenderer = AbstractRenderer.extend({
      * @param {Object} [options]
      * @param {Object} [options.callback] - the callback to call on registration
      *                                    and on modifiers updates
+     * @param {Object} [options.mode] - widget mode
      * @returns {Object} for code efficiency, returns the last evaluated
      *                   modifiers for the given node and record.
      */
@@ -454,7 +458,7 @@ var BasicRenderer = AbstractRenderer.extend({
             }
             modifiersData.elementsByRecord[record.id].push(newElement);
 
-            this._applyModifiers(modifiersData, record, newElement);
+            this._applyModifiers(modifiersData, record, newElement, _.pick(options, 'mode'));
         }
 
         return modifiersData.evaluatedModifiers[record.id];
@@ -534,6 +538,7 @@ var BasicRenderer = AbstractRenderer.extend({
                         && !element.widget.isSet()
                     ));
                 },
+                mode: options && options.mode,
             }, modifiersOptions || {}));
             self._postProcessField(widget, node);
         });
@@ -651,14 +656,14 @@ var BasicRenderer = AbstractRenderer.extend({
      * @param {Object} record
      * @returns {Deferred} resolved once finished
      */
-    _updateAllModifiers: function (record) {
+    _updateAllModifiers: function (record, options) {
         var self = this;
 
         var defs = [];
         this.defs = defs; // Potentially filled by widget rerendering
         _.each(this.allModifiersData, function (modifiersData) {
             modifiersData.evaluatedModifiers[record.id] = record.evalModifiers(modifiersData.modifiers);
-            self._applyModifiers(modifiersData, record);
+            self._applyModifiers(modifiersData, record, null, options);
         });
         delete this.defs;
 

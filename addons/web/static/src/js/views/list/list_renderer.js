@@ -261,7 +261,7 @@ var ListRenderer = BasicRenderer.extend({
 
         // We register modifiers on the <td> element so that it gets the correct
         // modifiers classes (for styling)
-        var modifiers = this._registerModifiers(node, record, $td);
+        var modifiers = this._registerModifiers(node, record, $td, options);
         // If the invisible modifiers is true, the <td> element is left empty.
         // Indeed, if the modifiers was to change the whole cell would be
         // rerendered anyway.
