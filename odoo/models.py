@@ -4528,11 +4528,11 @@ env['account.invoice.line'].search([]).grouped(['partner_id.country_id.name', 'p
 
 
         # Fix argument groupby
-        uniform_groupby = map(uniform_attrgetter, groupby)
+        uniform_groupby = [uniform_attrgetter(attr) for attr in groupby]
 
         # Fix argument orderby
         # We choose default order by id
-        uniform_orderby = map(uniform_attrgetter, orderby if orderby else [attrgetter('group_name')])
+        uniform_orderby = [uniform_attrgetter(attr) for attr in orderby] if orderby else [uniform_attrgetter('group_name')]
         if len(uniform_orderby) == 1 and len(uniform_groupby) > 1:
             uniform_orderby = [uniform_orderby[0] for i in range(len(uniform_groupby))]
 
