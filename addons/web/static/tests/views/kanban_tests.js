@@ -1071,7 +1071,7 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.o_kanban_group:last').data('id'), 3,
             'last column should now be [3, "hello"]');
         assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should still have two columns");
-        assert.ok(!kanban.$('.o_kanban_group:first').data('id'),
+        assert.ok(!_.isNumber(kanban.$('.o_kanban_group:first').data('id')),
             'first column should have no id (Undefined column)');
         // check available actions on 'Undefined' column
         assert.ok(kanban.$('.o_kanban_group:first .o_kanban_toggle_fold').length,
