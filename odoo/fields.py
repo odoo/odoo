@@ -932,11 +932,11 @@ class Field(object):
             spec = self.modified_draft(record)
 
             # set value in cache, inverse field, and mark record as dirty
-            record._cache[self] = value
+            env.cache[self][record.id] = value
             if env.in_onchange:
                 for invf in record._field_inverses[self]:
                     invf._update(record[self.name], record)
-                record._set_dirty(self.name)
+                env.dirty[record].add(self.name)
 
             # determine more dependent fields, and invalidate them
             if self.relational:
@@ -949,7 +949,7 @@ class Field(object):
             record.write({self.name: write_value})
             # Update the cache unless value contains a new record
             if not (self.relational and not all(value)):
-                record._cache[self] = value
+                env.cache[self][record.id] = value
 
     ############################################################################
     #
