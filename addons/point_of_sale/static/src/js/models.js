@@ -276,6 +276,7 @@ exports.PosModel = Backbone.Model.extend({
                 // replace the current user with its updated version
                 if (user.id === self.user.id) {
                     self.user = user;
+                    self.set_cashier(user);
                 }
             }
             self.users = pos_users;
