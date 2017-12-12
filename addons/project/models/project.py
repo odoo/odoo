@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
 from lxml import etree
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
@@ -41,6 +42,15 @@ class ProjectTaskType(models.Model):
         help="If set an email will be sent to the customer when the task or issue reaches this step.")
     fold = fields.Boolean(string='Folded in Kanban',
         help='This stage is folded in the kanban view when there are no records in that stage to display.')
+    rating_template_id = fields.Many2one(
+        'mail.template',
+        string='Rating Email Template',
+        domain=[('model', '=', 'project.task')],
+        help="If set and if the project's rating configuration is 'Rating when changing stage', then an email will be sent to the customer when the task reaches this step.")
+    auto_validation_kanban_state = fields.Boolean('Automatic kanban status', default=False,
+        help="Automatically modify the kanban state when the customer replies to the feedback for this stage.\n"
+            " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
+            " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n")
 
 
 class Project(models.Model):
@@ -214,6 +224,22 @@ class Project(models.Model):
     date = fields.Date(string='Expiration Date', index=True, track_visibility='onchange')
     subtask_project_id = fields.Many2one('project.project', string='Sub-task Project', ondelete="restrict",
         help="Choosing a sub-tasks project will both enable sub-tasks and set their default project (possibly the project itself)")
+    # rating fields
+    percentage_satisfaction_task = fields.Integer(
+        compute='_compute_percentage_satisfaction_task', string="Happy % on Task", store=True, default=-1)
+    percentage_satisfaction_project = fields.Integer(
+        compute="_compute_percentage_satisfaction_project", string="Happy % on Project", store=True, default=-1)
+    rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True)
+    rating_status = fields.Selection([('stage', 'Rating when changing stage'), ('periodic', 'Periodical Rating'), ('no','No rating')], 'Customer(s) Ratings', help="How to get the customer's feedbacks?\n"
+                    "- Rating when changing stage: Email will be sent when a task/issue is pulled in another stage\n"
+                    "- Periodical Rating: Email will be sent periodically\n\n"
+                    "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks.", default="no", required=True)
+    rating_status_period = fields.Selection([
+        ('daily', 'Daily'), ('weekly', 'Weekly'), ('bimonthly', 'Twice a Month'),
+        ('monthly', 'Once a Month'), ('quarterly', 'Quarterly'), ('yearly', 'Yearly')
+    ], 'Rating Frequency')
+
+    portal_show_rating = fields.Boolean('Rating visible publicly', copy=False, oldname='website_published')
 
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', 'Error! project start-date must be lower than project end-date.')
@@ -223,6 +249,26 @@ class Project(models.Model):
         super(Project, self)._compute_portal_url()
         for project in self:
             project.portal_url = '/my/project/%s' % project.id
+
+    @api.depends('percentage_satisfaction_task')
+    def _compute_percentage_satisfaction_project(self):
+        domain = [('create_date', '>=', fields.Datetime.to_string(fields.datetime.now() - timedelta(days=30)))]
+        for project in self:
+            activity = project.tasks.rating_get_grades(domain)
+            project.percentage_satisfaction_project = activity['great'] * 100 / sum(activity.values()) if sum(activity.values()) else -1
+
+    #TODO JEM: Only one field can be kept since project only contains task
+    @api.depends('tasks.rating_ids.rating')
+    def _compute_percentage_satisfaction_task(self):
+        for project in self:
+            activity = project.tasks.rating_get_grades()
+            project.percentage_satisfaction_task = activity['great'] * 100 / sum(activity.values()) if sum(activity.values()) else -1
+
+    @api.depends('rating_status', 'rating_status_period')
+    def _compute_rating_request_deadline(self):
+        periods = {'daily': 1, 'weekly': 7, 'bimonthly': 15, 'monthly': 30, 'quarterly': 90, 'yearly': 365}
+        for project in self:
+            project.rating_request_deadline = fields.datetime.now() + timedelta(days=periods.get(project.rating_status_period, 0))
 
     @api.multi
     def map_tasks(self, new_project_id):
@@ -325,6 +371,10 @@ class Project(models.Model):
 
         return groups
 
+    # ---------------------------------------------------
+    #  Actions
+    # ---------------------------------------------------
+
     @api.multi
     def toggle_favorite(self):
         favorite_projects = not_fav_projects = self.env['project.project'].sudo()
@@ -354,12 +404,40 @@ class Project(models.Model):
             'context': ctx
         }
 
+    @api.multi
+    def action_view_all_rating(self):
+        """ return the action to see all the rating of the project, and activate default filters """
+        if self.portal_show_rating:
+            return {
+                'type': 'ir.actions.act_url',
+                'name': "Redirect to the Website Projcet Rating Page",
+                'target': 'self',
+                'url': "/project/rating/%s" % (self.id,)
+            }
+        action = self.env['ir.actions.act_window'].for_xml_id('project', 'rating_rating_action_view_project_rating')
+        action['name'] = _('Ratings of %s') % (self.name,)
+        action_context = safe_eval(action['context']) if action['context'] else {}
+        action_context.update(self._context)
+        action_context['search_default_parent_res_name'] = self.name
+        return dict(action, context=action_context)
+
+    # ---------------------------------------------------
+    # Rating business
+    # ---------------------------------------------------
+
+    # This method should be called once a day by the scheduler
+    @api.model
+    def _send_rating_all(self):
+        projects = self.search([('rating_status', '=', 'periodic'), ('rating_request_deadline', '<=', fields.Datetime.now())])
+        projects.mapped('task_ids')._send_task_rating_mail()
+        projects._compute_rating_request_deadline()
+
 
 class Task(models.Model):
     _name = "project.task"
     _description = "Task"
     _date_name = "date_start"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin', 'rating.mixin']
     _mail_post_access = 'read'
     _order = "priority desc, sequence, date_start, name, id"
 
@@ -656,7 +734,9 @@ class Task(models.Model):
             vals['date_assign'] = now
 
         result = super(Task, self).write(vals)
-
+        # rating on stage
+        if 'stage_id' in vals and vals.get('stage_id'):
+            self.filtered(lambda x: x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
         return result
 
     def update_date_end(self, stage_id):
@@ -864,6 +944,32 @@ class Task(models.Model):
             'res_id': self.parent_id.id,
             'type': 'ir.actions.act_window'
         }
+
+    # ---------------------------------------------------
+    # Rating business
+    # ---------------------------------------------------
+
+    def _send_task_rating_mail(self, force_send=False):
+        for task in self:
+            rating_template = task.stage_id.rating_template_id
+            if rating_template:
+                task.rating_send_request(rating_template, lang=task.partner_id.lang, force_send=force_send)
+
+    def rating_get_partner_id(self):
+        res = super(Task, self).rating_get_partner_id()
+        if not res and self.project_id.partner_id:
+            return self.project_id.partner_id
+        return res
+
+    @api.multi
+    def rating_apply(self, rate, token=None, feedback=None, subtype=None):
+        return super(Task, self).rating_apply(rate, token=token, feedback=feedback, subtype="project.mt_task_rating")
+
+    def rating_get_parent_model_name(self, vals):
+        return 'project.project'
+
+    def rating_get_parent_id(self):
+        return self.project_id.id
 
 
 class ProjectTags(models.Model):

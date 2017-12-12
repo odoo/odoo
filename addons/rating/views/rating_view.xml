@@ -134,9 +134,9 @@
                     <field name="rated_partner_id"/>
                     <field name="rating"/>
                     <field name="partner_id"/>
-                    <field name="res_name"/>
+                    <field name="res_name" filter_domain="[('res_name','ilike',self)]"/>
                     <field name="res_id"/>
-                    <field name="parent_res_name"/>
+                    <field name="parent_res_name" filter_domain="[('parent_res_name','ilike',self)]"/>
                     <filter string="Satisfied" name="rating_happy" domain="[('rating_text', '=', 'satisfied')]"/>
                     <filter string="Not satisfied" name="rating_okay" domain="[('rating_text', '=', 'not_satisfied')]"/>
                     <filter string="Highly dissatisfied" name="rating_unhappy" domain="[('rating_text', '=', 'highly_dissatisfied')]"/>
