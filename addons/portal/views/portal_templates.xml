@@ -23,7 +23,7 @@
             <t t-set="head" t-value="head_website + (head or '')"/>
 
             <t t-set="direction" t-value="request.env['res.lang'].search([('code', '=', request.env.lang)]).direction"/>
-            <div id="wrapwrap" t-att-class="(pageName or '') + ' ' + (direction == 'rtl' and 'o_rtl' or '')">
+            <div id="wrapwrap" t-attf-class="#{pageName or ''} #{direction == 'rtl' and 'o_rtl' or ''}">
                 <header>
                     <nav class="navbar navbar-expand-md navbar-light bg-light">
                         <div class="container">
