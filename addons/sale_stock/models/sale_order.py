@@ -94,15 +94,15 @@ class SaleOrderLine(models.Model):
     @api.multi
     @api.depends('product_id.type')
     def _compute_qty_delivered_method(self):
-        """ Stock module compute delivered qty for product [('type', 'in', ['consu', 'product'])] """
+        """ Stock module compute delivered qty for product [('type', 'in', ['consu', 'product'])]
+            For SO line coming from expense, no picking should be generate: we don't manage stock for
+            thoses lines, even if the product is a stockable.
+        """
         super(SaleOrderLine, self)._compute_qty_delivered_method()
 
         for line in self:
-            if line.product_id.type in ['consu', 'product']:
-                if line.product_id.expense_policy == 'no':
-                    line.qty_delivered_method = 'stock_move'
-                else:
-                    line.qty_delivered_method = 'analytic'
+            if not line.is_expense and line.product_id.type in ['consu', 'product']:
+                line.qty_delivered_method = 'stock_move'
 
     @api.multi
     @api.depends('move_ids.state', 'move_ids.scrapped', 'move_ids.product_uom_qty', 'move_ids.product_uom')
@@ -133,12 +133,11 @@ class SaleOrderLine(models.Model):
         if 'product_uom_qty' in values:
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             lines = self.filtered(
-                lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
+                lambda r: r.state == 'sale' and not r.is_expense and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
         res = super(SaleOrderLine, self).write(values)
         if lines:
             lines._action_launch_procurement_rule()
         return res
-
 
     @api.depends('order_id.state')
     def _compute_invoice_status(self):

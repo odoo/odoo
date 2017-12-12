@@ -13,7 +13,7 @@ class SaleOrderLine(models.Model):
         super(SaleOrderLine, self)._compute_qty_delivered()
 
         for line in self:
-            if line.qty_delivered_method == 'stock_move' and line.product_id.expense_policy == 'no':
+            if line.qty_delivered_method == 'stock_move':
                 # In the case of a kit, we need to check if all components are shipped. Since the BOM might
                 # have changed, we don't compute the quantities but verify the move state.
                 bom = self.env['mrp.bom']._bom_find(product=line.product_id)

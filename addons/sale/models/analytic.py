@@ -28,9 +28,11 @@ class AccountAnalyticLine(models.Model):
         result = super(AccountAnalyticLine, self).write(values)
         if 'so_line' not in values:  # allow to force a False value for so_line
             self.sudo().filtered(lambda aal: not aal.so_line and aal.product_id and aal.product_id.expense_policy != 'no')._sale_determine_order_line()
+        return result
 
-    # NOTE JEM: thoses method are used in vendor bills to reinvoice at cost (see test `test_cost_invoicing`)
-    # some cleaning are still necessary
+    # ----------------------------------------------------------
+    # Vendor Bill / Expense : determine the Sale Order to reinvoice
+    # ----------------------------------------------------------
 
     @api.multi
     def _sale_get_invoice_price(self, order):
@@ -75,7 +77,7 @@ class AccountAnalyticLine(models.Model):
             'product_id': self.product_id.id,
             'product_uom': self.product_uom_id.id,
             'product_uom_qty': 0.0,
-            'qty_delivered': self.unit_amount,
+            'is_expense': True,
         }
 
     @api.multi
@@ -107,14 +109,14 @@ class AccountAnalyticLine(models.Model):
             if sale_order.state != 'sale':
                 raise UserError(_('The Sales Order %s linked to the Analytic Account must be validated before registering expenses.') % sale_order.name)
 
-            price = analytic_line._sale_get_invoice_price(sale_order)
             so_line = None
+            price = analytic_line._sale_get_invoice_price(sale_order)
             if analytic_line.product_id.expense_policy == 'sales_price' and analytic_line.product_id.invoice_policy == 'delivery':
                 so_line = self.env['sale.order.line'].search([
                     ('order_id', '=', sale_order.id),
                     ('price_unit', '=', price),
                     ('product_id', '=', self.product_id.id),
-                    ('qty_delivered_method', '=', 'analytic'),
+                    ('is_expense', '=', True),
                 ], limit=1)
 
             if not so_line:
@@ -122,8 +124,6 @@ class AccountAnalyticLine(models.Model):
                 so_line_values = analytic_line._sale_prepare_sale_order_line_values(sale_order, price)
                 so_line = self.env['sale.order.line'].create(so_line_values)
                 so_line._compute_tax_id()
-            else:
-                so_line.write({'qty_delivered': so_line.qty_delivered + analytic_line.unit_amount})
 
             if so_line:  # if so line found or created, then update AAL (this will trigger the recomputation of qty delivered on SO line)
                 value_to_write.setdefault(so_line.id, self.env['account.analytic.line'])
