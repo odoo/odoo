@@ -1223,4 +1223,97 @@ options.registry.gallery_img = options.Class.extend({
         });
     },
 });
+
+options.registry.topMenuTransparency = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Handles the toggling between normal and overlay positions of the header.
+     *
+     * @see this.selectClass for params
+     */
+    transparent: function (previewMode, value, $li) {
+        var self = this;
+        this.trigger_up('action_demand', {
+            actionName: 'toggle_page_option',
+            params: [{name: 'header_overlay'}],
+            onSuccess: function () {
+                self.trigger_up('action_demand', {
+                    actionName: 'toggle_page_option',
+                    params: [{name: 'header_color', value: ''}],
+                });
+            },
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _setActive: function () {
+        this._super.apply(this, arguments);
+
+        var enabled;
+        this.trigger_up('action_demand', {
+            actionName: 'get_page_option',
+            params: ['header_overlay'],
+            onSuccess: function (value) {
+                enabled = value;
+            },
+        });
+        this.$el.find('[data-transparent]').addBack('[data-transparent]').toggleClass('active', !!enabled);
+    },
+});
+
+options.registry.topMenuColor = options.registry.colorpicker.extend({
+    /**
+     * @override
+     */
+    start: function () {
+        var self = this;
+        var def = this._super.apply(this, arguments);
+        this.$target.on('snippet-option-change', function () {
+            self.onFocus();
+        });
+        return def;
+    },
+    /**
+     * @override
+     */
+    onFocus: function () {
+        var enabled;
+        this.trigger_up('action_demand', {
+            actionName: 'get_page_option',
+            params: ['header_overlay'],
+            onSuccess: function (value) {
+                enabled = value;
+            },
+        });
+        this.$el.toggleClass('d-none', !enabled);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _onColorButtonClick: function () {
+        this._super.apply(this, arguments);
+        var bgs = this.$target.attr('class').match(/bg-(\w|-)+/g);
+        var allowedBgs = this.classes.split(' ');
+        var color = _.intersection(bgs, allowedBgs).join(' ');
+        this.trigger_up('action_demand', {
+            actionName: 'toggle_page_option',
+            params: [{name: 'header_color', value: color}],
+        });
+    },
+});
 });

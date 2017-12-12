@@ -227,6 +227,21 @@
             ga('send','pageview');
         </script>
     </xpath>
+
+    <!-- Page options -->
+    <xpath expr="//div[@id='wrapwrap']" position="before">
+        <t groups="website.group_website_publisher">
+            <t t-foreach="['header_overlay', 'header_color']" t-as="optionName">
+                <input t-if="optionName in main_object" type="hidden" class="o_page_option_data" t-att-name="optionName" t-att-value="main_object[optionName]"/>
+            </t>
+        </t>
+    </xpath>
+    <xpath expr="//div[@id='wrapwrap']" position="attributes">
+        <attribute name="t-attf-class" add="#{'o_header_overlay' if 'header_overlay' in main_object and main_object.header_overlay else ''}" separator=" "/>
+    </xpath>
+    <xpath expr="//header" position="attributes">
+        <attribute name="t-attf-class" add="#{main_object.header_color if 'header_color' in main_object else ''}" separator=" "/>
+    </xpath>
 </template>
 
 <template id="layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
