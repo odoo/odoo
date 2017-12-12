@@ -9,6 +9,7 @@
         'data/website_form_data.xml',
         'views/assets.xml',
         'views/res_config_view.xml',
+        'views/website_form_templates.xml',
     ],
     'installable': True,
     'auto_install': True,

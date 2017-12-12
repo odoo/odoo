@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="contactus_form" name="Contact Form" inherit_id="website.contactus" customize_show="True">
+        <xpath expr="//div[@name='mail_button']" position="replace">
+            <div id="contactus_form">
+                <span class="hidden" data-for="contactus_form" t-att-data-values="{'email_to': res_company.email or ''}" />
+                <div>
+                    <form id="contactus_form" action="/website_form/" method="post" data-model_name="mail.mail" class="s_website_form form-horizontal container-fluid mt32" enctype="multipart/form-data">
+                        <div class="form-group form-field o_website_form_custom o_website_form_required_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="Name">Your Name</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="text" class="form-control o_website_form_input" name="Name" required=""/>
+                            </div>
+                        </div>
+                        <div class="form-group form-field o_website_form_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="Phone">Phone Number</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="text" class="form-control o_website_form_input" name="Phone"/>
+                            </div>
+                        </div>
+                        <div class="form-group form-field o_website_form_required_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="email_from">Email</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="email" class="form-control o_website_form_input" name="email_from" required=""/>
+                            </div>
+                        </div>
+                        <div class="form-group form-field o_website_form_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="Partner Name">Your Company</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="text" class="form-control o_website_form_input" name="Partner Name"/>
+                            </div>
+                        </div>
+                        <div class="form-group form-field o_website_form_required_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="subject">Subject</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="text" class="form-control o_website_form_input" name="subject" required=""/>
+                            </div>
+                        </div>
+                        <div class="form-group form-field o_website_form_custom o_website_form_required_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="Description">Your Question</label>
+                            <div class="col-md-7 col-sm-8">
+                                <textarea class="form-control o_website_form_input" name="Description" required=""></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
+                                <a href="#" class="btn btn-primary btn-lg o_website_form_send">Send</a>
+                                <span id="o_website_form_result"></span>
+                            </div>
+                        </div>
+                        <div class="form-group form-field hidden">
+                            <label class="col-md-3 col-sm-4 control-label" for="email_to"/>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="text" class="form-control o_website_form_input" name="email_to"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>
