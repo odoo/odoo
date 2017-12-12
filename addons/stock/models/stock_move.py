@@ -179,10 +179,13 @@ class StockMove(models.Model):
         else:
             self.lot_ids = self.mapped('reserved_quant_ids').mapped('lot_id').ids
 
-    @api.one
+    @api.multi
     @api.depends('reserved_quant_ids.qty')
     def _compute_reserved_availability(self):
-        self.reserved_availability = sum(self.mapped('reserved_quant_ids').mapped('qty'))
+        result = {data['reservation_id'][0]: data['qty'] for data in 
+            self.env['stock.quant'].read_group([('reservation_id', 'in', self.ids)], ['reservation_id','qty'], ['reservation_id'])}
+        for rec in self:
+            rec.reserved_availability = result.get(rec.id, 0.0)
 
     @api.one
     @api.depends('state', 'product_id', 'product_qty', 'location_id')
