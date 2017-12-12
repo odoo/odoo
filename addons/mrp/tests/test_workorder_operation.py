@@ -185,7 +185,7 @@ class TestWorkOrderProcess(common.TransactionCase):
         finished_lot = self.env['stock.production.lot'].create({'product_id': production_table.product_id.id})
         workorders[0].write({'final_lot_id': finished_lot.id, 'qty_producing': 1.0})
         workorders[0].button_start()
-        workorders[0].active_move_lot_ids[0].write({'lot_id': lot_sheet.id, 'quantity_done': 1})
+        workorders[0].active_move_line_ids[0].write({'lot_id': lot_sheet.id, 'quantity_done': 1})
         self.assertEqual(workorders[0].state, 'progress')
         workorders[0].record_production()
 
@@ -197,7 +197,7 @@ class TestWorkOrderProcess(common.TransactionCase):
         # ---------------------------------------------------------
         workorders[1].button_start()
         workorders[1].qty_producing = 1.0
-        workorders[1].active_move_lot_ids[0].write({'lot_id': lot_leg.id, 'quantity_done': 4})
+        workorders[1].active_move_line_ids[0].write({'lot_id': lot_leg.id, 'quantity_done': 4})
         workorders[1].record_production()
         move_leg = production_table.move_raw_ids.filtered(lambda x : x.product_id == product_table_leg)
         #self.assertEqual(workorders[1].state, 'done')
@@ -208,7 +208,7 @@ class TestWorkOrderProcess(common.TransactionCase):
         # ---------------------------------------------------------
         workorders[2].button_start()
         workorders[2].qty_producing = 1.0
-        move_lot = workorders[2].active_move_lot_ids[0]
+        move_lot = workorders[2].active_move_line_ids[0]
         move_lot.write({'lot_id': lot_bolt.id, 'quantity_done': 4})
         move_table_bolt = production_table.move_raw_ids.filtered(lambda x : x.product_id.id == product_bolt.id)
         workorders[2].record_production()
