@@ -27,6 +27,7 @@ import collections
 import dateutil
 import functools
 import itertools
+import io
 import logging
 import operator
 import pytz
@@ -53,7 +54,8 @@ from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
                    Collector, LastOrderedSet, OrderedSet, pycompat
 from .tools.config import config
 from .tools.func import frame_codeinfo
-from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
+from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, \
+    DEFAULT_SERVER_DATE_FORMAT, split_every
 from .tools.safe_eval import safe_eval
 from .tools.translate import _
 
@@ -649,10 +651,19 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         try:
             # try "bulk"-setting all xids
             with cr.savepoint():
-                for record in missing:
-                    name = '%s_%s' % (self._table, record.id)
-                    cr.execute("EXECUTE export_plan(%s, %s, %s)", (self._name, name, record.id))
-                    xids[record.id] = '__export__.' + name
+                for records in split_every(1000, missing):
+                    cr.copy_from(io.StringIO(
+                        '\n'.join(
+                            "__export__\t{r._name}\t{r._table}_{r.id}\t{r.id}".format(r=record)
+                            for record in records
+                        )),
+                        table='ir_model_data',
+                        columns=['module', 'model', 'name', 'res_id']
+                    )
+                xids.update(
+                    (record.id, '__export__.%s_%s' % (record._table, record.id))
+                    for record in missing
+                )
 
         except psycopg2.Error as e:
             if e.pgcode != errorcodes.UNIQUE_VIOLATION:
@@ -668,8 +679,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                             name = '%s_%s_%d' % (self._table, record.id, postfix)
                         else:
                             name = '%s_%s' % (self._table, record.id)
-                        cr.execute("EXECUTE export_plan(%s, %s, %s",
-                                   (self._name, name, record.id))
+                        cr.execute("""
+                        INSERT INTO ir_model_data (module, model, name, res_id)
+                             VALUES ('__export__', %s, %s, %s)
+                        """, (self._name, name, record.id))
                         xids[record.id] = '__export__.' + name
                     except psycopg2.Error as e2:
                         if e2.pgcode != errorcodes.UNIQUE_VIOLATION:
