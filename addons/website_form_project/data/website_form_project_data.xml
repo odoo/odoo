@@ -3,6 +3,18 @@
         <record id="project.model_project_task" model="ir.model">
             <field name="website_form_default_field_id" ref="project.field_project_task__description" />
             <field name="website_form_access">True</field>
-            <field name="website_form_label">Create a task</field>
+            <field name="website_form_label">Create a Task</field>
+            <field name="website_form_default_template">website_form_project.default_project_task_form</field>
         </record>
+
+        <function model="ir.model.fields" name="formbuilder_whitelist">
+            <value>project.task</value>
+            <value eval="[
+                'name',
+                'email_from',
+                'description',
+                'partner_id',
+            ]"/>
+        </function>
+
 </odoo>
