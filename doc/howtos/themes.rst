@@ -37,56 +37,60 @@ From common CMS to Odoo
 
 This is usually the first question from a web designer used to working with Wordpress or Joomla and coming to Odoo for the first time.
 
-.. container:: col-sm-4
+.. container:: row
 
-   .. image:: theme_tutorial_assets/img/cms.jpg
+  .. container:: col-sm-4
 
-.. container:: col-sm-7
+     .. image:: theme_tutorial_assets/img/cms.jpg
 
-  Indeed, when using common CMSs, you have to code several files (like header.php, page.php, post.php, etc.) in order to create a basic structure for your website. With those systems, this base structure acts as a design foundation that you have to update over time to ensure compatibility within your CMS. So, even after you have spent hours coding the files, you have not even started on the design yet.
+  .. container:: col-sm-7
 
-  This **does not** apply to creating Odoo themes.
+    Indeed, when using common CMSs, you have to code several files (like header.php, page.php, post.php, etc.) in order to create a basic structure for your website. With those systems, this base structure acts as a design foundation that you have to update over time to ensure compatibility within your CMS. So, even after you have spent hours coding the files, you have not even started on the design yet.
+
+    This **does not** apply to creating Odoo themes.
 
 
 .. note::
-   :class: col-sm-12
-
    We think that theme design should be simple (and powerful). When we created our Website Builder, we decided to start from scratch instead of relying on what already existed. This approach gave us the freedom to focus on the things that are really important for designers: styles, content and the logic behind them. No more struggling with technical stuff.
 
 Odoo default theme structure
 ----------------------------
 
-.. container:: col-sm-8
+.. container:: row
 
-  Odoo comes with a default theme structure.
-  It is a very basic “theme” that provides minimal structure and layout. When you create a new theme, you are actually extending this.
-  Indeed it’s always enabled in your setup and it acts exactly like the CMS’s base structure we mentioned above, except that you don’t have to create or maintain it.
-  It will upgrade automatically within your Odoo installation and, since it is included in the Website Builder module, everything is smoothly integrated by default.
+  .. container:: col-sm-8
 
-  As a result, you are totally free to focus on design while this structure does the job of providing integrations and functionality.
+    Odoo comes with a default theme structure.
+    It is a very basic “theme” that provides minimal structure and layout. When you create a new theme, you are actually extending this.
+    Indeed it’s always enabled in your setup and it acts exactly like the CMS’s base structure we mentioned above, except that you don’t have to create or maintain it.
+    It will upgrade automatically within your Odoo installation and, since it is included in the Website Builder module, everything is smoothly integrated by default.
 
-.. container:: col-sm-4
+    As a result, you are totally free to focus on design while this structure does the job of providing integrations and functionality.
 
-   .. image:: theme_tutorial_assets/img/def_structure.jpg
+  .. container:: col-sm-4
 
-.. container:: col-md-6
+     .. image:: theme_tutorial_assets/img/def_structure.jpg
 
-   **Main features:**
+.. container:: row
 
-   * Basic layouts for pages, blog and eCommerce
-   * Website Builder integration
-   * Basic Snippets
-   * Automatic Less/Sass compiling
-   * Automatic Js and CSS minification and combination
+  .. container:: col-md-6
 
-.. container:: col-md-6
+     **Main features:**
 
-   **Main technologies:**
+     * Basic layouts for pages, blog and eCommerce
+     * Website Builder integration
+     * Basic Snippets
+     * Automatic Less/Sass compiling
+     * Automatic Js and CSS minification and combination
 
-   * Twitter Bootstrap
-   * jQuery
-   * jQuery UI
-   * underscore.js
+  .. container:: col-md-6
+
+     **Main technologies:**
+
+     * Twitter Bootstrap
+     * jQuery
+     * jQuery UI
+     * underscore.js
 
 Thinking "modular"
 ==================
@@ -103,42 +107,42 @@ As a designer, your goal is to style these elements in order to achieve a wonder
 
 Let’s take a tour of our “list” elements:
 
-.. row
+.. container:: row
 
-.. figure:: theme_tutorial_assets/img/snippet.jpg
-   :figclass: col-sm-6
+  .. figure:: theme_tutorial_assets/img/snippet.jpg
+     :figclass: col-sm-6
 
-   Snippets (or building-blocks)
+     Snippets (or building-blocks)
 
-   A piece of HTML code.  The user  will  drag&drop, modify and combine them using our built-in Website Builder interface. You can define sets of options and styles for each snippet. The user will choose from them according to their needs.
+     A piece of HTML code.  The user  will  drag&drop, modify and combine them using our built-in Website Builder interface. You can define sets of options and styles for each snippet. The user will choose from them according to their needs.
 
-.. figure:: theme_tutorial_assets/img/page.jpg
-   :figclass: col-sm-6
+  .. figure:: theme_tutorial_assets/img/page.jpg
+     :figclass: col-sm-6
 
-   Pages
+     Pages
 
-   These are normal web pages, except that they will be editable by the final user and that you can define an empty area that the user can “fill” by dragging snippets into it.
+     These are normal web pages, except that they will be editable by the final user and that you can define an empty area that the user can “fill” by dragging snippets into it.
 
-.. /row
 .. raw:: html
 
     <div class="clearfix themes"></div>
 
-.. figure:: theme_tutorial_assets/img/styles.jpg
-   :figclass: col-sm-6
+.. container:: row
 
-   Styles
+  .. figure:: theme_tutorial_assets/img/styles.jpg
+     :figclass: col-sm-6
 
-   Styles are defined using standard CSS files (or Less/Sass). You can define a style as **default** or **optional**. The default styles are always active in your theme, the optional styles can be enabled or disabled by the user.
+     Styles
 
-.. figure:: theme_tutorial_assets/img/functionalities.jpg
-   :figclass: col-sm-6
+     Styles are defined using standard CSS files (or Less/Sass). You can define a style as **default** or **optional**. The default styles are always active in your theme, the optional styles can be enabled or disabled by the user.
 
-   Functionalities
+  .. figure:: theme_tutorial_assets/img/functionalities.jpg
+     :figclass: col-sm-6
 
-   Thanks to Odoo’s modularity, everything can be personalized even more. This means there are endless possibilities for your creativity. Adding functionalities is easy and it’s simple to provide the end user with customizable options.
+     Functionalities
 
-.. /row
+     Thanks to Odoo’s modularity, everything can be personalized even more. This means there are endless possibilities for your creativity. Adding functionalities is easy and it’s simple to provide the end user with customizable options.
+
 
 Odoo's XML files, an overview
 -----------------------------
@@ -182,17 +186,19 @@ Keep reading the tutorial to learn to how properly extend it with your own code.
 Update your theme
 -----------------
 
-.. container:: col-sm-6
+.. container:: row
 
-  Since XML files are only loaded when you install the theme, you will have to force reloading every time you make changes on an xml file.
+  .. container:: col-sm-6
 
-  To do that, click on the Upgrade button in the module’s page.
+    Since XML files are only loaded when you install the theme, you will have to force reloading every time you make changes on an xml file.
 
-  .. image:: theme_tutorial_assets/img/restart.png
+    To do that, click on the Upgrade button in the module’s page.
 
-.. container:: col-sm-5
+    .. image:: theme_tutorial_assets/img/restart.png
 
-  .. image:: theme_tutorial_assets/img/upgrade_module.png
+  .. container:: col-sm-5
+
+    .. image:: theme_tutorial_assets/img/upgrade_module.png
 
 
 
@@ -659,13 +665,13 @@ Options group properties
 
 Options are wrapped in groups. Groups can have properties that define how the included options will interact with the user interface.
 
-``data-selector=" css selector(s) "``
+``data-selector="[css selector(s)]"``
   Bind all the options included into the group to a particular element.
 ``data-js=" custom method name "``
   Is used to bind custom Javascript methods.
-``data-drop-in=" css selector(s) "``
+``data-drop-in="[css selector(s)]"``
   Defines the list of elements where the snippet can be dropped into.
-``data-drop-near=" css selector(s) "``
+``data-drop-near="[css selector(s)]"``
   Defines the list of elements that the snippet can be dropped beside.
 
 Default option methods
@@ -673,10 +679,10 @@ Default option methods
 
 Options apply standard CSS classes to the snippet. Depending on the method that you choose, the UI will behave differently.
 
-``data-select-class=" class name "``
+``data-select-class="[class name]"``
   More data-select-class in the same group defines a list of classes that the user can choose to apply. Only one option can be enabled at a time.
 
-``data-toggle-class=" class name "``
+``data-toggle-class="[class name]"``
   The data-toggle-class is used to apply one or more CSS classes from the list to a snippet. Multiple selections can be applied at once.
 
 Let's demonstrate how default options work with a basic example.
@@ -903,27 +909,29 @@ As content is so important for SEO, you should concentrate on giving publishers 
 
 Let’s have a look to this example of a classic two column snippet, implemented in two different ways.
 
+.. container:: row
 
-.. container:: col-sm-7
+  .. container:: col-sm-7
 
-  .. image:: theme_tutorial_assets/img/seo_snippet_wrong.png
+    .. image:: theme_tutorial_assets/img/seo_snippet_wrong.png
 
-.. container:: col-sm-5
+  .. container:: col-sm-5
 
-  Bad
+    **Bad**
 
-  Using fixed image, the publisher will be forced to limit the text in order to follow the layout.
+    Using fixed image, the publisher will be forced to limit the text in order to follow the layout.
 
+.. container:: row
 
-.. container:: col-sm-7
+  .. container:: col-sm-7
 
-  .. image:: theme_tutorial_assets/img/seo_snippet_good.png
+    .. image:: theme_tutorial_assets/img/seo_snippet_good.png
 
-.. container:: col-sm-5
+  .. container:: col-sm-5
 
-  Good
+    **Good**
 
-  Using background images that fit the column height, the publisher will be free to add the content regardless of the image’s height.
+    Using background images that fit the column height, the publisher will be free to add the content regardless of the image’s height.
 
 
 

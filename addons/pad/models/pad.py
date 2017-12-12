@@ -106,6 +106,8 @@ class PadCommon(models.AbstractModel):
 
         # In case the pad is created programmatically, the content is not filled in yet since it is
         # normally initialized by the JS layer
+        if self.env.context.get('pad_no_create', False):
+            return pad
         for k, field in self._fields.items():
             if hasattr(field, 'pad_content_field') and k not in vals:
                 ctx = {
@@ -141,6 +143,9 @@ class PadCommon(models.AbstractModel):
             default = {}
         for k, field in self._fields.items():
             if hasattr(field, 'pad_content_field'):
-                pad = self.pad_generate_url()
-                default[k] = pad.get('url')
+                if self.env.context.get('pad_no_create', False):
+                    default[k] = ''
+                else:
+                    pad = self.pad_generate_url()
+                    default[k] = pad.get('url')
         return super(PadCommon, self).copy(default)

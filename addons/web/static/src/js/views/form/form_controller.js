@@ -485,6 +485,7 @@ var FormController = BasicController.extend({
      * @param {OdooEvent} event
      */
     _onOpenRecord: function (event) {
+        event.stopPropagation();
         var self = this;
         var record = this.model.get(event.data.id, {raw: true});
         new dialogs.FormViewDialog(self, {

@@ -40,8 +40,7 @@ def migrate_tags_on_taxes(cr, registry):
             ('type_tax_use', '=', tax_template.type_tax_use),
             ('description', '=', tax_template.description)
         ])
-        if len(tax_id.ids) == 1:
-            tax_id.sudo().write({'tag_ids': [(6, 0, tax_template.tag_ids.ids)]})
+        tax_id.sudo().write({'tag_ids': [(6, 0, tax_template.tag_ids.ids)]})
 
 def preserve_existing_tags_on_taxes(cr, registry, module):
     ''' This is a utility function used to preserve existing previous tags during upgrade of the module.'''
@@ -770,7 +769,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
             if company_id:
                 company = self.env['res.company'].browse(company_id)
                 currency_id = company.on_change_country(company.country_id.id)['value']['currency_id']
-                res.update({'currency_id': currency_id})
+                res.update({'currency_id': currency_id.id})
 
         chart_templates = account_chart_template.search([('visible', '=', True)])
         if chart_templates:
@@ -911,13 +910,10 @@ class WizardMultiChartsAccounts(models.TransientModel):
 
         # write values of default taxes for product as super user and write in the config
         IrDefault = self.env['ir.default']
-        IrConfig = self.env['ir.config_parameter']
         if self.sale_tax_id and taxes_ref:
             IrDefault.sudo().set('product.template', "taxes_id", [taxes_ref[self.sale_tax_id.id]], company_id=company.id)
-            IrConfig.sudo().set_param("account.default_sale_tax_id", taxes_ref[self.sale_tax_id.id])
         if self.purchase_tax_id and taxes_ref:
             IrDefault.sudo().set('product.template', "supplier_taxes_id", [taxes_ref[self.purchase_tax_id.id]], company_id=company.id)
-            IrConfig.sudo().set_param("account.default_purchase_tax_id", taxes_ref[self.purchase_tax_id.id])
 
         # Create Bank journals
         self._create_bank_journals_from_o2m(company, acc_template_ref)

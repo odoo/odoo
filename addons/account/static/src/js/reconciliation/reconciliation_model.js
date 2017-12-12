@@ -605,9 +605,14 @@ var StatementModel = BasicModel.extend({
             var line = self.getLine(handle);
             var props = _.filter(line.reconciliation_proposition, function (prop) {return !prop.is_tax && !prop.invalid;});
             if (props.length === 0) {
+                // Usability: if user has not choosen any lines and click validate, it has the same behavior
+                // as creating a write-off of the same amount.
                 props.push(self._formatQuickCreate(line, {
                     account_id: [line.st_line.open_balance_account_id, self.accounts[line.st_line.open_balance_account_id]],
                 }));
+                // update balance of line otherwise it won't be to zero and another line will be added
+                line.reconciliation_proposition.push(props[0]);
+                self._computeLine(line);
             }
             ids.push(line.id);
             var values_dict = {
@@ -773,6 +778,8 @@ var StatementModel = BasicModel.extend({
                                 '__focus': false
                             });
 
+                            prop.computed_with_tax = tax.price_include
+                            prop.tax_amount = tax.amount
                             prop.amount = tax.base;
                             prop.amount_str = field_utils.format.monetary(Math.abs(prop.amount), {}, formatOptions);
                             prop.invalid = !self._isValid(prop);
@@ -1042,7 +1049,8 @@ var StatementModel = BasicModel.extend({
      * @returns {object}
      */
     _formatToProcessReconciliation: function (line, prop) {
-        var amount = -prop.amount;
+        // Do not forward port in master. @CSN will change this
+        var amount = prop.computed_with_tax && -prop.base_amount || -prop.amount;
         if (prop.partial_reconcile === true) {
             amount = -line.st_line.amount;
         }
@@ -1050,6 +1058,10 @@ var StatementModel = BasicModel.extend({
             name : prop.label,
             debit : amount > 0 ? amount : 0,
             credit : amount < 0 ? -amount : 0,
+            // This one isn't usefull for the server,
+            // But since we need to change the amount (and thus its semantics) into base_amount
+            // It might be useful to have a trace in the RPC for debugging purposes
+            computed_with_tax: prop.computed_with_tax,
         };
         if (!isNaN(prop.id)) {
             result.counterpart_aml_id = prop.id;

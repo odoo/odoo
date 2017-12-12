@@ -72,6 +72,22 @@
 @modal-inner-padding: @odoo-horizontal-padding;
 @modal-title-padding: @odoo-horizontal-padding;
 
+// Change the z-index of the modal-backdrop elements to be equal to the
+// modal elements' ones. Bootstrap does not support multi-modals, and without
+// this rule all the modal-backdrops are below all the opened modals.
+// Indeed, bootstrap forces them to a lower z-index as the modal-backdrop
+// element (unique in their supported cases) might be put after the modal
+// element (if the modal is already in the DOM, hidden, then opened). This
+// cannot happen in odoo though as modals are not hidden but removed from
+// the DOM and are always put at the end of the body when opened.
+//
+// Note that the variable @zindex-modal-background may be renamed/removed in
+// newer versions of bootstrap.
+//
+// TODO the following code was disabled because it is saas-incompatible
+//
+// @zindex-modal-background: @zindex-modal;
+
 //== Navs
 @nav-link-padding: 10px 15px;
 @nav-pills-border-radius: 0;

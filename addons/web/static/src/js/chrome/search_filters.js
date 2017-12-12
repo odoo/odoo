@@ -187,7 +187,10 @@ var DateTime = Field.extend({
         {value: "∄", text: _lt("is not set")}
     ],
     get_value: function (index) {
-        return this["datewidget_" + (index || 0)].getValue();
+        // retrieve the datepicker value
+        var value = this["datewidget_" + (index || 0)].getValue();
+        // convert to utc
+        return value.add(-this.getSession().getTZOffset(value), 'minutes');
     },
     get_domain: function (field, operator) {
         switch (operator.value) {
@@ -244,6 +247,10 @@ var DateTime = Field.extend({
 var Date = DateTime.extend({
     attributes: {
         type: 'date'
+    },
+    get_value: function (index) {
+        // retrieve the datepicker value
+        return this["datewidget_" + (index || 0)].getValue();
     },
     _get_widget_class: function () {
         return datepicker.DateWidget;

@@ -234,3 +234,13 @@ class ProductCategory(models.Model):
         'account.account', 'Stock Valuation Account', company_dependent=True,
         domain=[('deprecated', '=', False)],
         help="When real-time inventory valuation is enabled on a product, this account will hold the current value of the products.",)
+
+    @api.onchange('property_cost_method')
+    def onchange_property_valuation(self):
+        return {
+            'warning': {
+                'title': _("Warning"),
+                'message': _("Changing your cost method is an important change that will impact your inventory valuation. Are you sure you want to make that change?"),
+            }
+        }
+

@@ -73,12 +73,21 @@ var ScreenWidget = PosBaseWidget.extend({
     // - if there's a user with a matching barcode, put it as the active 'cashier', go to cashier mode, and return true
     // - else : do nothing and return false. You probably want to extend this to show and appropriate error popup... 
     barcode_cashier_action: function(code){
+        var self = this;
         var users = this.pos.users;
         for(var i = 0, len = users.length; i < len; i++){
             if(users[i].barcode === code.code){
-                this.pos.set_cashier(users[i]);
-                this.chrome.widget.username.renderElement();
-                return true;
+                if (users[i].id !== this.pos.get_cashier().id && users[i].pos_security_pin) {
+                    return this.gui.ask_password(users[i].pos_security_pin).then(function(){
+                        self.pos.set_cashier(users[i]);
+                        self.chrome.widget.username.renderElement();
+                        return true;
+                    });
+                } else {
+                    this.pos.set_cashier(users[i]);
+                    this.chrome.widget.username.renderElement();
+                    return true;
+                }
             }
         }
         this.barcode_error_action(code);
@@ -1087,10 +1096,10 @@ var ClientListScreenWidget = ScreenWidget.extend({
         this.$('.searchbox input').on('keypress',function(event){
             clearTimeout(search_timeout);
 
-            var query = this.value;
+            var searchbox = this;
 
             search_timeout = setTimeout(function(){
-                self.perform_search(query,event.which === 13);
+                self.perform_search(searchbox.value, event.which === 13);
             },70);
         });
 
@@ -1157,11 +1166,12 @@ var ClientListScreenWidget = ScreenWidget.extend({
     save_changes: function(){
         var order = this.pos.get_order();
         if( this.has_client_changed() ){
+            var default_fiscal_position_id = _.findWhere(this.pos.fiscal_positions, {'id': this.pos.config.default_fiscal_position_id[0]});
             if ( this.new_client ) {
                 order.fiscal_position = _.findWhere(this.pos.fiscal_positions, {'id': this.new_client.property_account_position_id[0]});
                 order.set_pricelist(_.findWhere(this.pos.pricelists, {'id': this.new_client.property_product_pricelist[0]}) || this.pos.default_pricelist);
             } else {
-                order.fiscal_position = undefined;
+                order.fiscal_position = default_fiscal_position_id;
                 order.set_pricelist(this.pos.default_pricelist);
             }
 
@@ -1878,11 +1888,18 @@ var PaymentScreenWidget = ScreenWidget.extend({
         this.reset_input();
         this.render_paymentlines();
         this.order_changes();
+        // that one comes from BarcodeEvents
+        $('body').keypress(this.keyboard_handler);
+        // that one comes from the pos, but we prefer to cover all the basis
+        $('body').keydown(this.keyboard_keydown_handler);
+        // legacy vanilla JS listeners
         window.document.body.addEventListener('keypress',this.keyboard_handler);
         window.document.body.addEventListener('keydown',this.keyboard_keydown_handler);
         this._super();
     },
     hide: function(){
+        $('body').off('keypress', this.keyboard_handler);
+        $('body').off('keydown', this.keyboard_keydown_handler);
         window.document.body.removeEventListener('keypress',this.keyboard_handler);
         window.document.body.removeEventListener('keydown',this.keyboard_keydown_handler);
         this._super();
