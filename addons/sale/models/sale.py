@@ -892,6 +892,7 @@ class SaleOrderLine(models.Model):
     order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     analytic_line_ids = fields.One2many('account.analytic.line', 'so_line', string="Analytic lines")
+    is_expense = fields.Boolean('Is expense', help="Is true if the sales order line comes from an expense or a vendor bills")
     is_downpayment = fields.Boolean(
         string="Is a down payment", help="Down payments are made when creating invoices from a sales order."
         " They are not copied when duplicating a sales order.")
@@ -912,7 +913,7 @@ class SaleOrderLine(models.Model):
     # TODO: remove layout_category_sequence in master or make it work properly
 
     @api.multi
-    @api.depends('state', 'product_id.expense_policy')
+    @api.depends('state', 'is_expense')
     def _compute_qty_delivered_method(self):
         """ Sale module compute delivered qty for product [('type', 'in', ['consu']), ('service_type', '=', 'manual')]
                 - consu + expense_policy : analytic (sum of analytic unit_amount)
@@ -923,16 +924,10 @@ class SaleOrderLine(models.Model):
             and sale_timesheet implements the behavior of 'service' + service_type=timesheet.
         """
         for line in self:
-            if line.product_id.type == 'consu':
-                if line.product_id.expense_policy == 'no':
-                    line.qty_delivered_method = 'manual'
-                else:
-                    line.qty_delivered_method = 'analytic'
-            else:  # NOTE: line.product_id.type == 'service' and line.product_id.service_type == 'manual':
-                if line.product_id.expense_policy == 'no':
-                    line.qty_delivered_method = 'manual'  # ultimate fallback
-                else:
-                    line.qty_delivered_method = 'analytic'
+            if line.is_expense:
+                line.qty_delivered_method = 'analytic'
+            else:  # service and consu
+                line.qty_delivered_method = 'manual'
 
     @api.multi
     @api.depends('qty_delivered_method', 'qty_delivered_manual', 'analytic_line_ids.so_line', 'analytic_line_ids.unit_amount', 'analytic_line_ids.product_uom_id')
