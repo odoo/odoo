@@ -301,16 +301,15 @@ class Registry(Mapping):
         """
         Clean up every model in the registry if necessary,
 
-        This method calls every model's cleanup function, which by default
-        does nothing but can be overridden for very model-specific cases, it
-        can be though of as a garbage collector of sorts.
+        This method calls every model's expunge_bad_records method,
+        which by default does nothing but can be overridden for very
+        specific cases, it can be thought of as a garbage collector of sorts.
         """
         env = odoo.api.Environment(cr, SUPERUSER_ID, {})
         models = env.values()
 
         for model in models:
-            if model.cleanup():
-                _logger.warning("cleaned up model %s" % model._name)
+            model.expunge_bad_records()
 
     def init_models(self, cr, model_names, context):
         """ Initialize a list of models (given by their name). Call methods

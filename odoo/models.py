@@ -5526,11 +5526,27 @@ class BaseModel(object):
     #
 
     @api.multi
-    def cleanup(self):
+    def expunge_bad_records(self):
         """
-        Cleans up the current model, to be overridden.
+        Expunge bad records from the current model.
+
+        This method, when overridden, is used to remove records of models
+        which may have database constraints and could not be removed normally
+        through the unlink method.
+
+        E.g.: Model A and Model B both override the unlink method, Model B
+              inherits from Model A and thus in its unlink override, it calls
+              Model A's unlink. If Model B's unlink fails (i.e. raises an 
+              exception) before calling Model A's unlink, there could be
+              some records that still reference Model B left behind, even
+              though Model B has been removed, and those records
+              could be troublesome.
+
+        This method serves as an interface to solve such issues by overriding
+        it in the model whose unlink fails to be called during some other
+        model's unlink method.
         """
-        return False
+        pass
 
 
 class RecordCache(MutableMapping):

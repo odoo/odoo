@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 from odoo import api, fields, models
+
+_logger = logging.getLogger(__name__)
 
 
 class Followers(models.Model):
@@ -127,14 +131,14 @@ class Followers(models.Model):
         return res
 
     @api.multi
-    def cleanup(self):
-        models = self.env.keys()
+    def expunge_bad_records(self):
         self._cr.execute(
             "DELETE FROM mail_followers WHERE res_model NOT IN %s",
-            [tuple(models)]
+            [tuple(self.env)]
         )
+        if self._cr.rowcount:
+            _logger.info("Mail followers were cleaned up")
         self._cr.commit()
-        return True
 
     @api.multi
     def write(self, vals):
