@@ -463,17 +463,23 @@ class StockMove(models.Model):
             ),
         }
 
-    def _do_unreserve(self):
-        if any(move.state in ('done', 'cancel') for move in self):
-            raise UserError(_('Cannot unreserve a done move'))
+    def _check_move_state(self):
         for move in self:
-            move.move_line_ids.unlink()
             if move.procure_method == 'make_to_order' and not move.move_orig_ids:
                 move.state = 'waiting'
             elif move.move_orig_ids and not all(orig.state in ('done', 'cancel') for orig in move.move_orig_ids):
                 move.state = 'waiting'
             else:
                 move.state = 'confirmed'
+
+    def _do_unreserve(self):
+        if any(move.state in ('done', 'cancel') for move in self):
+            raise UserError(_('Cannot unreserve a done move'))
+        moves = self
+        move_lines = moves.mapped('move_line_ids')
+        # Not sure if it should be possible to have a situation where you do not have a stock move line and you need to change the move state
+        (moves - move_lines.mapped('move_id'))._check_move_state()
+        move_lines.unlink()
         return True
 
     def _push_apply(self):
