@@ -9,7 +9,7 @@
 </t>
 
 <t t-name="KanbanView.Group">
-    <div t-attf-class="o_kanban_group#{widget.data_records.length == 0 ? ' o_kanban_no_records' : ''}" t-att-data-id="widget.id">
+    <div t-attf-class="o_kanban_group#{widget.data_records.length == 0 ? ' o_kanban_no_records' : ''}" t-att-data-id="widget.id or widget.db_id">
         <div class="o_kanban_header">
             <div class="o_kanban_header_title" t-att-title="widget.data_records.length + ' records'" data-delay="500">
                 <span class="o_column_title"><t t-esc="widget.title"/></span>
@@ -112,7 +112,7 @@
 <t t-name="KanbanView.MobileTabs">
     <div class="o_kanban_mobile_tabs">
         <t t-foreach="data" t-as="group">
-            <div class="o_kanban_mobile_tab" t-att-data-id="group.res_id">
+            <div class="o_kanban_mobile_tab" t-att-data-id="group.res_id or group.id">
                 <span class="o_column_title"><t t-esc="group.value"/></span>
             </div>
         </t>
