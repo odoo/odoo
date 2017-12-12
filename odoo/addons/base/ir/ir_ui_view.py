@@ -872,9 +872,22 @@ actual arch.
 
     def get_attrs_symbols(self):
         """ Return a set of predefined symbols for evaluating attrs. """
-        return {'self', 'parent', 'id', 'uid', 'context', 'context_today',
-                'active_id', 'active_ids', 'active_model',
-                'time', 'datetime', 'relativedelta', 'current_date'}
+        return {
+            'True', 'False', 'None',    # those are identifiers in Python 2.7
+            'self',
+            'parent',
+            'id',
+            'uid',
+            'context',
+            'context_today',
+            'active_id',
+            'active_ids',
+            'active_model',
+            'time',
+            'datetime',
+            'relativedelta',
+            'current_date',
+        }
 
     def get_attrs_field_names(self, arch):
         """ Retrieve the field names appearing in context, domain and attrs, and
