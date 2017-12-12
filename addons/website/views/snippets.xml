@@ -989,5 +989,27 @@
     <div data-js="company_data"
          data-selector="[data-oe-expression='res_company.partner_id']"
          data-no-check="true"/>
+
+    <div data-js="topMenuTransparency"
+         data-selector="#wrapwrap > header"
+         data-no-check="true">
+        <li data-transparent="true" data-no-preview="true">
+            <a tabindex="-1" href="#" ><i class="fa fa-eye-slash"/>Transparent</a>
+        </li>
+    </div>
+
+    <div data-js="topMenuColor"
+        data-selector="#wrapwrap > header"
+        data-palette-exclude="theme,grayscale,ui"
+        data-palette-default="transparent_grayscale"
+        data-palette-title="Top Menu Color"
+        data-no-check="true">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Background Color</a>
+            <ul class="dropdown-menu">
+                <li></li>
+            </ul>
+        </li>
+    </div>
 </template>
 </odoo>

@@ -1,6 +1,7 @@
 odoo.define('website.contentMenu', function (require) {
 'use strict';
 
+var Class = require('web.Class');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var time = require('web.time');
@@ -594,12 +595,83 @@ var EditMenuDialog = widget.Dialog.extend({
     },
 });
 
+var PageOption = Class.extend({
+    /**
+     * @constructor
+     * @param {string} name
+     *        the option's name = the field's name in website.page model
+     * @param {*} value
+     * @param {function} setValueCallback
+     *        a function which simulates an option's value change without
+     *        asking the server to change it
+     */
+    init: function (name, value, setValueCallback) {
+        this.name = name;
+        this.value = value;
+        this.isDirty = false;
+        this.setValueCallback = setValueCallback;
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Sets the new option's value thanks to the related callback.
+     *
+     * @param {*} [value]
+     *        by default: consider the current value is a boolean and toggle it
+     */
+    setValue: function (value) {
+        if (value === undefined) {
+            value = !this.value;
+        }
+        this.setValueCallback.call(this, value);
+        this.value = value;
+        this.isDirty = true;
+    },
+});
+
 var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     xmlDependencies: ['/website/static/src/xml/website.xml'],
     actions: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.actions || {}, {
         edit_menu: '_editMenu',
+        get_page_option: '_getPageOption',
+        on_save: '_onSave',
         page_properties: '_pageProperties',
+        toggle_page_option: '_togglePageOption',
     }),
+    pageOptionsSetValueCallbacks: {
+        header_overlay: function (value) {
+            $('#wrapwrap').toggleClass('o_header_overlay', value);
+        },
+        header_color: function (value) {
+            $('#wrapwrap > header').removeClass(this.value)
+                                   .addClass(value);
+        },
+    },
+
+    /**
+     * @override
+     */
+    start: function () {
+        var self = this;
+        this.pageOptions = {};
+        _.each($('.o_page_option_data'), function (el) {
+            var value = el.value;
+            if (value === "True") {
+                value = true;
+            } else if (value === "False") {
+                value = false;
+            }
+            self.pageOptions[el.name] = new PageOption(
+                el.name,
+                value,
+                self.pageOptionsSetValueCallbacks[el.name]
+            );
+        });
+        return this._super.apply(this, arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -671,6 +743,38 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         return def;
     },
     /**
+     * Retrieves the value of a page option.
+     *
+     * @private
+     * @param {string} name
+     * @returns {Deferred<*>}
+     */
+    _getPageOption: function (name) {
+        var option = this.pageOptions[name];
+        if (!option) {
+            return $.Deferred().reject();
+        }
+        return $.when(option.value);
+    },
+    /**
+     * On save, simulated page options have to be server-saved.
+     *
+     * @private
+     * @returns {Deferred}
+     */
+    _onSave: function () {
+        var self = this;
+        var defs = _.map(this.pageOptions, function (option, optionName) {
+            if (option.isDirty) {
+                return self._togglePageOption({
+                    name: optionName,
+                    value: option.value,
+                }, true, true);
+            }
+        });
+        return $.when.apply($, defs);
+    },
+    /**
      * Opens the page properties dialog.
      *
      * @private
@@ -680,6 +784,55 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         var moID = this._getMainObject().id;
         var dialog = new PagePropertiesDialog(this, moID, {}).open();
         return dialog.opened();
+    },
+    /**
+     * Toggles a page option.
+     *
+     * @private
+     * @param {Object} params
+     * @param {string} params.name
+     * @param {*} [params.value] (change value by default true -> false -> true)
+     * @param {boolean} [forceSave=false]
+     * @param {boolean} [noReload=false]
+     * @returns {Deferred}
+     */
+    _togglePageOption: function (params, forceSave, noReload) {
+        // First check it is a website page
+        var mo = this._getMainObject();
+        if (mo.model !== 'website.page') {
+            return $.Deferred().reject();
+        }
+
+        // Check if this is a valid option
+        var option = this.pageOptions[params.name];
+        if (!option) {
+            return $.Deferred().reject();
+        }
+
+        // Toggle the value
+        option.setValue(params.value);
+
+        // If simulate is true, it means we want the option to be toggled but
+        // not saved on the server yet
+        if (!forceSave) {
+            return $.when();
+        }
+
+        // If not, write on the server page and reload the current location
+        var vals = {};
+        vals[params.name] = option.value;
+        var def = this._rpc({
+            model: 'website.page',
+            method: 'write',
+            args: [[mo.id], vals],
+        });
+        if (noReload) {
+            return def;
+        }
+        return def.then(function () {
+            window.location.reload();
+            return $.Deferred();
+        });
     },
 });
 
