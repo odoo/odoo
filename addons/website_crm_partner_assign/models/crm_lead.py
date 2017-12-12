@@ -3,9 +3,9 @@
 
 import random
 
-from odoo.addons.base_geolocalize.models.res_partner import geo_find, geo_query_address
 from odoo import api, fields, models, _
-
+from odoo.addons.base_geolocalize.models.res_partner import geo_find, geo_query_address
+from odoo.exceptions import AccessDenied
 
 class CrmLead(models.Model):
     _inherit = "crm.lead"
@@ -254,9 +254,10 @@ class CrmLead(models.Model):
 
     @api.model
     def create_opp_portal(self, values):
-        if self.env.user.partner_id.grade_id or self.env.user.commercial_partner_id.grade_id:
-            user = self.env.user
-            self = self.sudo()
+        if not (self.env.user.partner_id.grade_id or self.env.user.commercial_partner_id.grade_id):
+            raise AccessDenied()
+        user = self.env.user
+        self = self.sudo()
         if not (values['contact_name'] and values['description'] and values['title']):
             return {
                 'errors': _('All fields are required !')

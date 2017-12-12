@@ -57,7 +57,7 @@
                                 <h4 class="media-heading">
                                     <a itemprop="url" t-att-class="event.state == 'done' and 'text-success'" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register' or ''}"><span itemprop="name" t-field="event.name"> </span></a>
                                     <small t-if="event.is_participating" class="label label-info">Participating</small>
-                                    <small t-if="not event.is_online" class="label label-info">Online</small>
+                                    <small t-if="event.is_online" class="label label-info">Online</small>
                                     <small t-if="not event.website_published" class="label label-danger">unpublished</small>
                                 </h4>
                                 <div>
@@ -542,7 +542,7 @@
                         <h4 class="modal-title" id="myModalLabel"><strong>Attendees</strong></h4>
                     </div>
                     <div class="modal-body">
-                        <div class="">
+                        <div class="container">
                             <t t-set="counter_type" t-value="1"/>
                             <t t-set="counter" t-value="0"/>
                             <t t-foreach="tickets" t-as="ticket">

@@ -326,9 +326,6 @@
                                 <select class="form-control" name="attrib">
                                     <option value="" />
                                     <t t-foreach="a.value_ids" t-as="v">
-                                        <label t-attf-style="background-color:#{v.html_color or v.name}" t-attf-class="css_attribute_color #{'active' if v.id in attrib_set else ''}">
-                                            <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" t-att-title="v.name" />
-                                        </label>
                                         <option t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="v.id in attrib_set" />
                                     </t>
                                 </select>
@@ -1058,6 +1055,7 @@
                                             <t t-foreach="shippings" t-as="ship">
                                                 <div class="col-sm-12 col-md-6 one_kanban">
                                                     <t t-call="website_sale.address_kanban">
+                                                        <t t-set="actual_partner" t-value="order.partner_id" />
                                                         <t t-set='contact' t-value="ship"/>
                                                         <t t-set='selected' t-value="order.partner_shipping_id==ship"/>
                                                         <t t-set='readonly' t-value="bool(len(shippings)==1)"/>
@@ -1091,7 +1089,7 @@
                 </t>
                 <input type='submit'/>
             </form>
-            <a class='btn btn-link pull-right fa fa-edit js_edit_address no-decoration' title="Edit this address"></a>
+            <a t-if="not actual_partner or (ship.id in actual_partner.ids + actual_partner.child_ids.ids)" class='btn btn-link pull-right fa fa-edit js_edit_address no-decoration' title="Edit this address"></a>
             <div t-att-class="'panel panel-default %s' % (selected and 'border_primary' or 'js_change_shipping')">
                 <div class='panel-body' style='min-height: 130px;'>
                     <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>

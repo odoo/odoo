@@ -20,8 +20,7 @@ var setDelayLabel = function(activities){
     var today = moment().startOf('day');
     _.each(activities, function(activity){
         var to_display = '';
-        var deadline = moment(activity.date_deadline + ' 00:00:00');
-        var diff = deadline.diff(today, 'days', true); // true means no rounding
+        var diff = activity.date_deadline.diff(today, 'days', true); // true means no rounding
         if(diff === 0){
             to_display = _t('Today');
         }else{
@@ -72,10 +71,17 @@ var AbstractActivityField = AbstractField.extend({
                 });
         }
         return $.when(fetch_def).then(function (results) {
+            // convert create_date and date_deadline to moments
+            _.each(results, function (activity) {
+                activity.create_date = moment(time.auto_str_to_date(activity.create_date));
+                activity.date_deadline = moment(time.auto_str_to_date(activity.date_deadline));
+            });
+
             // filter out activities that are no longer linked to this record
             self.activities = _.filter(self.activities.concat(results || []), function (activity) {
                 return _.contains(self.value.res_ids, activity.id);
             });
+
             // sort activities by due date
             self.activities = _.sortBy(self.activities, 'date_deadline');
         });
@@ -122,7 +128,6 @@ var Activity = AbstractActivityField.extend({
         var fetch_def = this.dp.add(this._readActivities());
         return fetch_def.then(function () {
             _.each(self.activities, function (activity) {
-                activity.time_ago = moment(time.auto_str_to_date(activity.create_date)).fromNow();
                 if (activity.note) {
                     activity.note = utils.parse_and_transform(activity.note, utils.add_link);
                 }
@@ -135,6 +140,7 @@ var Activity = AbstractActivityField.extend({
                     nbPlannedActivities: nbActivities.planned,
                     nbTodayActivities: nbActivities.today,
                     nbOverdueActivities: nbActivities.overdue,
+                    date_format: time.getLangDatetimeFormat(),
                 }));
             } else {
                 self.$el.empty();

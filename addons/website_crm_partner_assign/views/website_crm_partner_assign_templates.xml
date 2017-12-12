@@ -272,7 +272,7 @@
             <h3>
                 My Opportunities
                 <t t-call="portal.portal_searchbar"/>
-                <button name='new_opp' data-toggle="modal" data-target=".modal_new_opp" class="btn btn-default pull-right mr8"><i class="fa fa-plus fa-lg" /></button>
+                <button t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id" name='new_opp' data-toggle="modal" data-target=".modal_new_opp" class="btn btn-default pull-right mr8"><i class="fa fa-plus fa-lg" /></button>
             </h3>
             <div class="modal fade modal_new_opp" role="form" aria-hidden="true">
                 <div class="modal-dialog">

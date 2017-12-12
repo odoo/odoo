@@ -608,7 +608,7 @@ var ActionManager = Widget.extend({
                 });
         }
 
-        return $.when(action_loaded || null).done(function() {
+        return $.when(action_loaded || null).then(function() {
             if (self.inner_widget && self.inner_widget.do_load_state) {
                 return self.inner_widget.do_load_state(state, warm);
             }

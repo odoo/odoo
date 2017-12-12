@@ -6,6 +6,7 @@ var core = require('web.core');
 var time = require('web.time');
 var ajax = require('web.ajax');
 var base = require('web_editor.base');
+var context = require('web_editor.context');
 var field_utils = require('web.field_utils');
 
 var _t = core._t;
@@ -171,7 +172,7 @@ if(!the_form.length) {
     // });
 
     function load_locale(){
-        var url = "/web/webclient/locale/" + base.get_context().lang || 'en_US';
+        var url = "/web/webclient/locale/" + context.get().lang || 'en_US';
         return ajax.loadJS(url);
     }
 
@@ -180,9 +181,8 @@ if(!the_form.length) {
     // frontend does not load moment locale at all.
     // so wait until DOM ready with locale then init datetimepicker
     ready_with_locale.then(function(){
-        var l10n = _t.database.parameters;
         $('.form-control.date').datetimepicker({
-            format : time.strftime_to_moment_format(l10n.date_format),
+            format : time.getLangDateFormat(),
             minDate: moment({ y: 1900 }),
             maxDate: moment().add(200, "y"),
             calendarWeeks: true,

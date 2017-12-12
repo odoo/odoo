@@ -37,3 +37,4 @@ class StockImmediateTransfer(models.TransientModel):
             pick_to_do.action_done()
         if pick_to_backorder:
             return pick_to_backorder.action_generate_backorder_wizard()
+        return False

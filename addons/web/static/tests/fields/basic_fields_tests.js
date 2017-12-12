@@ -738,6 +738,38 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('setting a char field to empty string is saved as a false value', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {mode: 'edit'},
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.strictEqual(args.args[1].foo, false,
+                        'the foo value should be false');
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        form.$('input[type="text"].o_field_widget').val('').trigger('input');
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        form.destroy();
+    });
+
     QUnit.test('char field with size attribute', function (assert) {
         assert.expect(1);
 
@@ -1357,6 +1389,51 @@ QUnit.module('basic_fields', {
         session.get_file = oldGetFile;
     });
 
+    QUnit.test('binary fields that are readonly in create mode do not download', function (assert) {
+        assert.expect(2);
+
+        // save the session function
+        var oldGetFile = session.get_file;
+        session.get_file = function (option) {
+            assert.step('We shouldn\'t be getting the file.');
+            return oldGetFile.bind(session)(option);
+        };
+
+        this.data.partner.onchanges = {
+            product_id: function (obj) {
+                obj.document = "onchange==\n";
+            },
+        };
+
+        this.data.partner.fields.document.readonly = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="product_id"/>' +
+                    '<field name="document" filename="\'yooo\'"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_create').click();
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+
+        form.$('.o_field_many2one input').click();
+        $dropdown.find('li:not(.o_m2o_dropdown_option):contains(xphone)').click();
+
+        assert.strictEqual(form.$('a.o_field_widget[name="document"] > .fa-download').length, 1,
+            'The link to download the binary should be present');
+
+        form.$('a.o_field_widget[name="document"]').click();
+
+        assert.verifySteps([]); // We shoudln't have passed through steps
+
+        form.destroy();
+        session.get_file = oldGetFile;
+    });
 
     QUnit.test('text field rendering in list view', function (assert) {
         assert.expect(1);
@@ -1500,6 +1577,55 @@ QUnit.module('basic_fields', {
             "the image should correctly set its attributes");
         form.destroy();
 
+    });
+
+    QUnit.test('image fields in subviews are loaded correctly', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
+        this.data.partner.records[0].document = 'myimage';
+        this.data.partner_type.fields.image = {name: 'image', type: 'binary'};
+        this.data.partner_type.records[0].image = 'product_image';
+        this.data.partner.records[0].timmy = [12];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="document" widget="image" options="{\'size\': [90, 90]}"/>' +
+                    '<field name="timmy" widget="many2many">' +
+                        '<tree>' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="image" widget="image"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === 'data:image/png;base64,myimage') {
+                    assert.step("The view's image should have been fetched");
+                    return $.when('wow');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        assert.verifySteps(["The view's image should have been fetched"]);
+
+        assert.strictEqual(form.$('tr.o_data_row').length, 1,
+            'There should be one record in the many2many');
+
+        // Actual flow: click on an element of the m2m to get its form view
+        form.$('tbody td:contains(gold)').click();
+        assert.strictEqual($('.modal-dialog').length, 1,
+            'The modal should have opened');
+        assert.strictEqual($('.modal-dialog').find('.o_field_image > img')[0].src,
+            'data:image/png;base64,product_image',
+            'The image of the many2many in its form view should be present');
+
+        form.destroy();
     });
 
     QUnit.module('JournalDashboardGraph', {
