@@ -17,6 +17,8 @@ var WebsiteNavbar = rootWidget.RootWidget.extend({
     custom_events: _.extend({}, rootWidget.RootWidget.prototype.custom_events || {}, {
         action_demand: '_onActionDemand',
         edit_mode: '_onEditMode',
+        main_object_request: '_onMainObjectRequest',
+        ready_to_save: '_onSave',
     }),
 
     //--------------------------------------------------------------------------
@@ -114,6 +116,20 @@ var WebsiteNavbar = rootWidget.RootWidget.extend({
         }, 800);
     },
     /**
+     * Checks information about the page main object.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onMainObjectRequest: function (ev) {
+        var repr = $('html').data('main-object');
+        var m = repr.match(/(.+)\((\d+),(.*)\)/);
+        ev.data.callback({
+            model: m[1],
+            id: m[2] | 0,
+        });
+    },
+    /**
      * Called when a submenu is hovered -> automatically opens it if another
      * menu was already opened.
      *
@@ -135,6 +151,16 @@ var WebsiteNavbar = rootWidget.RootWidget.extend({
      */
     _onMobileMenuToggleClick: function () {
         this.$el.parent().toggleClass('o_mobile_menu_opened');
+    },
+    /**
+     * Called in response to edit mode saving -> checks if action-capable
+     * children have something to save.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSave: function (ev) {
+        ev.data.defs.push(this._handleAction('on_save'));
     },
 });
 

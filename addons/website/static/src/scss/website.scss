@@ -976,3 +976,28 @@ table.table_desc tr td {
         }
     }
 }
+
+#wrapwrap.o_header_overlay {
+    > header:not(.o_header_affix) {
+        @include o-position-absolute(0, 0, auto, 0);
+        z-index: 1000;
+
+        > .navbar {
+            background-color: transparent !important;
+            border-color: transparent;
+
+            .nav-item {
+                > .nav-link {
+                    background-color: transparent;
+                    color: inherit;
+                }
+                &.show, &.active {
+                    > .nav-link {
+                        background-color: white;
+                        color: black;
+                    }
+                }
+            }
+        }
+    }
+}
