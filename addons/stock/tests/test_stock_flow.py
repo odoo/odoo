@@ -1796,6 +1796,6 @@ class TestStockFlow(TestStockCommon):
         move_with_ancestors._do_unreserve()
         other_move._do_unreserve()
 
-        self.assertEquals(move_mto_alone.state, "waiting")
+        self.assertEquals(move_mto_alone.state, "draft")
         self.assertEquals(move_with_ancestors.state, "waiting")
         self.assertEquals(other_move.state, "confirmed")

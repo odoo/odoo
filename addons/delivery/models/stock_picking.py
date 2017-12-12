@@ -13,10 +13,13 @@ class StockQuantPackage(models.Model):
     @api.one
     @api.depends('quant_ids')
     def _compute_weight(self):
-        smls = self.env['stock.move.line'].search([('product_id', '!=', False), ('result_package_id', '=', self.id)])
         weight = 0.0
-        for sml in smls:
-            weight += sml.product_uom_id._compute_quantity(sml.qty_done, sml.product_id.uom_id) * sml.product_id.weight
+        if self.env.context.get('picking_id'):
+            for ml in self.current_picking_move_line_ids:
+                weight += ml.product_uom_id._compute_quantity(ml.qty_done,ml.product_id.uom_id) * ml.product_id.weight
+        else:
+            for quant in self.quant_ids:
+                weight += quant.quantity * quant.product_id.weight
         self.weight = weight
 
     weight = fields.Float(compute='_compute_weight')

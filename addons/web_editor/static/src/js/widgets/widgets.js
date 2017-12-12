@@ -654,7 +654,7 @@ var VideoDialog = Widget.extend({
 
         var $media = $(this.media);
         if ($media.hasClass('media_iframe_video')) {
-            var src = $media.data('src') || '';
+            var src = $media.data('oe-expression') || $media.data('src') || '';
             this.$('textarea#o_video_text').val(src);
 
             this.$('input#o_video_autoplay').prop('checked', src.indexOf('autoplay=1') >= 0);
