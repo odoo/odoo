@@ -243,10 +243,12 @@ class MailTemplate(models.Model):
         # saving it
         if vals.get('body_html'):
             # render_template can return empty results if the mako rendering
-            # crashes or if the body_html is empty, therefore we will only perform
-            # this check if the new body_html is non-empty
+            # crashes or if the body_html is empty, therefore we will only
+            # perform this check if the new body_html is non-empty
             if vals.get('model_id'):
-                _model = self.env['ir.model'].browse(vals['model_id']).model
+                _model = self.env['ir.model'].sudo().browse(
+                    vals['model_id']
+                ).model
             else:
                 _model = self.model
 
@@ -255,14 +257,18 @@ class MailTemplate(models.Model):
             if not Model._abstract:
                 # Get the latest record so as to not use older, potentially
                 # deprecated/obsolete records
-                res_ids = Model.search([], limit=1, order='id DESC')
-                res_ids = res_ids[0].id if res_ids else None
+                res_ids = Model.search([], limit=1, order='id DESC').ids[:1]
 
                 try:
-                    if res_ids is not None:
-                        self.render_template(vals['body_html'], _model, res_ids)
+                    if res_ids:
+                        self.render_template(
+                            vals['body_html'], _model, res_ids
+                        )
                 except Exception as e:
-                    raise e
+                    raise UserError(_(
+                        "Template rendering failed, this could mean that your "
+                        "template contains python syntax errors"
+                    ))
 
         return super(MailTemplate, self).write(vals)
 
@@ -380,10 +386,7 @@ class MailTemplate(models.Model):
             template = mako_env.from_string(tools.ustr(template_txt))
         except Exception:
             _logger.info("Failed to load template %r", template_txt, exc_info=True)
-            raise UserError(_(
-                "Template rendering failed, this could mean that your "
-                "template contains python syntax errors"
-            ))
+            return multi_mode and results or results[res_ids[0]]
 
         # prepare template variables
         records = self.env[model].browse(it for it in res_ids if it)  # filter to avoid browsing [None]
