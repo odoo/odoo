@@ -269,5 +269,8 @@ class MailController(http.Controller):
             'mention_partner_suggestions': request.env['res.partner'].get_static_mention_suggestions(),
             'shortcodes': request.env['mail.shortcode'].sudo().search_read([], ['shortcode_type', 'source', 'unicode_source', 'substitution', 'description']),
             'menu_id': request.env['ir.model.data'].xmlid_to_res_id('mail.mail_channel_menu_root_chat'),
+            'is_moderator': request.env.user.is_moderator,
+            'moderation_counter': request.env.user.messages_to_moderate_count,
+            'moderated_channel_ids': request.env.user.moderated_channel_ids.ids,
         }
         return values

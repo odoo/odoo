@@ -32,6 +32,9 @@ var emoji_substitutions = {};
 var emoji_unicodes = {};
 var needaction_counter = 0;
 var starred_counter = 0;
+var moderation_counter = 0;
+var moderated_channel_ids = [];
+var is_moderator = false;
 var mention_partner_suggestions = [];
 var canned_responses = [];
 var commands = [];
@@ -74,7 +77,6 @@ function notify_incoming_message (msg, options) {
 function add_message (data, options) {
     options = options || {};
     var msg = _.findWhere(messages, { id: data.id });
-
     if (!msg) {
         msg = chat_manager.make_message(data);
         // Keep the array ordered by id when inserting the new message
@@ -111,11 +113,20 @@ function add_message (data, options) {
                 }
             }
         });
+
         if (!options.silent) {
             chat_manager.bus.trigger('new_message', msg);
         }
     } else if (options.domain && options.domain !== []) {
         add_to_cache(msg, options.domain);
+    } else if (data.moderation_status === 'accepted') {
+        msg.channel_ids = data.channel_ids
+        if (msg.is_moderator) {
+            moderation_counter --;
+            remove_message_from_channel("channel_moderation", msg);
+            chat_manager.bus.trigger('update_moderation_counter');
+        }
+        chat_manager.bus.trigger('update_message', msg);
     }
     return msg;
 }
@@ -129,6 +140,7 @@ function make_message (data) {
         message_type: data.message_type,
         subtype_description: data.subtype_description,
         is_author: data.author_id && data.author_id[0] === session.partner_id,
+        is_moderator: data.model === 'mail.channel' && _.contains(moderated_channel_ids,data.res_id),
         is_note: data.is_note,
         is_system_notification: (data.message_type === 'notification' && data.model === 'mail.channel')
             || data.info === 'transient_message',
@@ -171,6 +183,7 @@ function make_message (data) {
     Object.defineProperties(msg, {
         is_starred: property_descr("channel_starred"),
         is_needaction: property_descr("channel_inbox"),
+        needs_moderation: property_descr("channel_moderation"),
     });
 
     if (_.contains(data.needaction_partner_ids, session.partner_id)) {
@@ -179,8 +192,12 @@ function make_message (data) {
     if (_.contains(data.starred_partner_ids, session.partner_id)) {
         msg.is_starred = true;
     }
+    if (data.moderation_status === 'pending_moderation') {
+        msg.needs_moderation = true;
+        msg.channel_ids.push(msg.res_id);
+    }
     if (msg.model === 'mail.channel') {
-        var real_channels = _.without(msg.channel_ids, 'channel_inbox', 'channel_starred');
+        var real_channels = _.without(msg.channel_ids, 'channel_inbox', 'channel_starred', 'channel_moderation');
         var origin = real_channels.length === 1 ? real_channels[0] : undefined;
         var channel = origin && chat_manager.get_channel(origin);
         if (channel) {
@@ -293,6 +310,8 @@ function make_channel (data, options) {
         hidden: options.hidden,
         display_needactions: options.display_needactions,
         mass_mailing: data.mass_mailing,
+        moderation: data.moderation,
+        is_moderator: data.is_moderator,
         group_based_subscription: data.group_based_subscription,
         needaction_counter: data.message_needaction_counter || 0,
         unread_counter: 0,
@@ -482,6 +501,10 @@ function on_partner_notification (data) {
         on_mark_as_read_notification(data);
     } else if (data.type === 'mark_as_unread') {
         on_mark_as_unread_notification(data);
+    } else if (data.type === 'moderation') {
+        on_moderator_notification(data);
+    } else if (data.type === 'deletion') {
+        on_deletion_notification(data);
     } else if (data.info === 'channel_seen') {
         on_channel_seen_notification(data);
     } else if (data.info === 'transient_message') {
@@ -512,6 +535,29 @@ function on_toggle_star_notification (data) {
         }
     });
     chat_manager.bus.trigger('update_starred', starred_counter);
+}
+
+function on_moderator_notification(data) {
+    moderation_counter ++;
+    add_message(data.message, {channel_id: 'channel_moderation'});
+    chat_manager.bus.trigger('update_moderation_counter');
+}
+
+function on_deletion_notification(data) {
+    _.each(data.message_ids, function (msg_id) {
+        var message = _.findWhere(messages, { id: msg_id });
+        if (message) {
+            if (message.is_moderator)
+            {
+                remove_message_from_channel("channel_moderation", message);
+                moderation_counter --;
+            }
+            message.needs_moderation = false //line not necessary in principle
+            remove_message_from_channel(message.res_id, message);
+            chat_manager.bus.trigger('update_message',message);
+            }
+        });
+    chat_manager.bus.trigger('update_moderation_counter');
 }
 
 function on_mark_as_read_notification (data) {
@@ -669,6 +715,17 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         });
         needaction_counter = result.needaction_inbox_counter;
         starred_counter = result.starred_counter;
+        moderation_counter = result.moderation_counter;
+        moderated_channel_ids = result.moderated_channel_ids;
+        chat_manager.is_moderator = result.is_moderator;
+        //if user is moderator then add moderation channel
+        if (chat_manager.is_moderator) {
+            add_channel({
+                id: "channel_moderation",
+                name: _lt("Moderate Messages"),
+                type: "static"
+            });
+        }
         commands = _.map(result.commands, function (command) {
             return _.extend({ id: command.name }, command);
         });
@@ -694,10 +751,37 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
     // options: domain, load_more
     _fetchFromChannel: function (channel, options) {
         options = options || {};
-        var domain =
-            (channel.id === "channel_inbox") ? [['needaction', '=', true]] :
-            (channel.id === "channel_starred") ? [['starred', '=', true]] :
-                                                [['channel_ids', 'in', channel.id]];
+        var domain;
+        if (channel.id === "channel_inbox") {
+            domain = [['needaction', '=', true]];
+        } else if (channel.id === "channel_starred") {
+            domain = [['starred', '=', true]];
+        } else if (channel.id === "channel_moderation") {
+            domain = [
+                ['model', '=', 'mail.channel'],
+                ['res_id', 'in', moderated_channel_ids], 
+                ['message_type', 'in', ['email','comment']],
+                ['moderation_status', '=', 'pending_moderation']
+            ];
+        } else {
+            domain = [
+                '|',
+                    ['channel_ids', 'in', channel.id],
+                    '&',
+                        '&',
+                            ['message_type', 'in', ['email','comment']],
+                            '&',
+                                ['model', '=', 'mail.channel'],
+                                ['res_id', '=', channel.id],
+                        '|',
+                            ['author_id', '=', session.partner_id],
+                            '&',
+                                ['model', '=', 'mail.channel'],
+                                ['res_id', 'in', moderated_channel_ids]
+            ];  
+        } 
+        /*faire fonctionner author_id */
+
         var cache = get_channel_cache(channel, options.domain);
 
         if (options.domain) {
@@ -797,7 +881,22 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
                         subtype: 'mail.mt_comment',
                         command: data.command,
                     }),
+                })
+                .then(function (msg_id) {
+                    if (msg_id) {
+                        return self._rpc({
+                                model: 'mail.message',
+                                method: 'message_format',
+                                args: [msg_id],
+                            })
+                            .then(function (msgs) {
+                                if (msgs[0].moderation_status === 'pending_moderation') {
+                                    add_message(msgs[0]);
+                                }
+                            });
+                    }
                 });
+
         }
         if ('model' in options && 'res_id' in options) {
             // post a message in a chatter
@@ -808,7 +907,6 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
                 subtype: data.subtype,
                 subtype_id: data.subtype_id,
             });
-
             return this._rpc({
                     model: options.model,
                     method: 'message_post',
@@ -879,6 +977,18 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
                 method: 'toggle_message_starred',
                 args: [[message_id]],
             });
+    },
+    moderate: function (message_ids, decision) {
+        if (message_ids.length && decision) {
+            return this._rpc({
+                model: 'mail.message',
+                method: 'moderate',
+                args: [message_ids, decision]
+            });
+        }
+    },
+    moderate_selected_messages: function(message_ids, decision) {
+        chat_manager.moderate(message_ids, decision);
     },
     unstar_all: function () {
         return this._rpc({
@@ -987,6 +1097,9 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
     },
     get_starred_counter: function () {
         return starred_counter;
+    },
+    get_moderation_counter: function () {
+        return moderation_counter;
     },
     get_chat_unread_counter: function () {
         return chat_unread_counter;

@@ -4,7 +4,7 @@
 from odoo import _, api, exceptions, fields, models, modules
 from odoo.tools import pycompat
 from odoo.addons.base.models.res_users import is_selection_groups
-
+from odoo.exceptions import ValidationError
 
 class Users(models.Model):
     """ Update of res.users class
@@ -12,7 +12,7 @@ class Users(models.Model):
         - make a new user follow itself
         - add a welcome message
         - add suggestion preference
-        - if adding groups to an user, check mail.channels linked to this user
+        - if adding groups to a user, check mail.channels linked to this user
           group, and the user. This is done by overriding the write method.
     """
     _name = 'res.users'
@@ -32,6 +32,24 @@ class Users(models.Model):
         help="Policy on how to handle Chatter notifications:\n"
              "- Emails: notifications are sent to your email\n"
              "- Odoo: notifications appear in your Odoo Inbox")
+
+    is_moderator = fields.Boolean(string="Is moderator", compute="_compute_is_moderator")
+    messages_to_moderate_count = fields.Integer(string="Count of messages to moderate", compute="_compute_messages_to_moderate_count")
+    moderated_channel_ids = fields.Many2many('mail.channel', 'mail_channel_moderator_rel', string="User moderated channels")
+
+    @api.multi
+    def _compute_is_moderator(self):
+        for user in self:
+            user.is_moderator = bool(self.env['mail.channel'].search([('moderation', '=', True), ('moderator_ids', 'in', user.id)]))
+
+    @api.multi
+    def _compute_messages_to_moderate_count(self):
+        for user in self:
+            user.messages_to_moderate_count = self.env['mail.message'].search_count([
+                ('moderation_status', '=', 'pending_moderation'),
+                ('message_type', 'in', ['email', 'comment']),
+                ('res_id', 'in', user.moderated_channel_ids.ids)
+                ])
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights on notification_email_send
@@ -53,11 +71,18 @@ class Users(models.Model):
             action = self.env.ref('base.action_res_users')
             msg = _("You cannot create a new user from here.\n To create new user please go to configuration panel.")
             raise exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
+        
+        if values.get('groups_id'):
+            # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
+            user_group_ids = [command[1] for command in values['groups_id'] if command[0] == 4]
+            user_group_ids += [id for command in values['groups_id'] if command[0] == 6 for id in command[2]]
+            self.env['mail.channel'].search([('group_ids', 'in', user_group_ids)])._subscribe_users()
 
         user = super(Users, self).create(values)
 
         # create a welcome message
         user._create_welcome_message()
+
         return user
 
     @api.multi
@@ -154,6 +179,12 @@ class Users(models.Model):
 
         return list(user_activities.values())
 
+    @api.multi
+    def _compute_is_moderator(self):
+        for user in self:
+            user.is_moderator = bool(self.env['mail.channel'].search_count([('moderation', '=', True), ('moderator_ids', 'in', user.id)]))
+
+
 
 class res_groups_mail_channel(models.Model):
     """ Update of res.groups class
@@ -171,4 +202,5 @@ class res_groups_mail_channel(models.Model):
             user_ids = [command[1] for command in vals['users'] if command[0] == 4]
             user_ids += [id for command in vals['users'] if command[0] == 6 for id in command[2]]
             self.env['mail.channel'].search([('group_ids', 'in', self._ids)])._subscribe_users()
+
         return write_res

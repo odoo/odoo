@@ -103,6 +103,74 @@ var PartnerInviteDialog = Dialog.extend({
     },
 });
 
+/**
+ * Widget : Moderator reject message dialog
+ *
+ * Popup containing message title and reject message body.
+ */
+var ModeratorRejectMessageDialog = Dialog.extend({
+    template: "mail.ModeratorRejectMessageDialog",
+    /**
+     * @override
+     */
+    init: function (parent, messageIDs) {
+        this.messageIDs = messageIDs;
+        this._super(parent, {
+            title: _t('Send Mail to Author'),
+            size: "medium",
+            buttons: [{
+                text: _t("Send"),
+                close: true,
+                classes: "btn-primary",
+                click: _.bind(this._onSendClicked, this),
+            }],
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @return {string[]} list of emails
+     */
+    _getEmailTo: function () {
+        var messages = _.map(this.messageIDs, function (messageID) {
+            return chat_manager.get_message(messageID);
+        });
+        return _.pluck(messages, 'email_from').join(',');
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+  
+    /**
+     * Bind handler for send notification on rejection of message by moderator
+     *
+     * @private
+     */
+    _onSendClicked: function () {
+        var self = this;
+        var message = this.$('#reject_message').val();
+        var title = this.$('#message_title').val();
+        if (message && title) {
+            this._rpc({
+                model: 'mail.message',
+                method: 'create_notification_email',
+                args: [{
+                    subject: title,
+                    body_html: message,
+                    email_to: this._getEmailTo(),
+                    auto_delete: true
+                }],
+            })
+            chat_manager.moderate_selected_messages(self.messageIDs, 'reject');
+        }
+    }
+});
+
 var ChatAction = Widget.extend(ControlPanelMixin, {
     template: 'mail.client_action',
     custom_events: {
@@ -262,7 +330,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             squash_close_messages: this.channel.type !== 'static' && !this.channel.mass_mailing,
             display_empty_channel: !messages.length && !this.domain.length,
             display_no_match: !messages.length && this.domain.length,
-            display_subject: this.channel.mass_mailing || this.channel.id === "channel_inbox",
+            display_subject: this.channel.mass_mailing || this.channel.id === "channel_inbox" || this.channel.id === "channel_moderation",
             display_email_icon: false,
             display_reply_icon: true,
         };
@@ -287,6 +355,41 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 self.thread.scroll_to({offset: offset});
             });
     },
+    /**
+     * @private
+     */
+    _onModeration: function (messageID, decision) {
+        if (decision === 'reject') {
+            this._onRejectMessage([messageID]);
+        } else if (decision === 'discard') {
+            this._onDiscardMessage([messageID]);
+        } else if (decision === 'ban') {
+            this._onBan(messageID);
+        } else {
+            chat_manager.moderate([messageID], decision);
+        }    
+    },
+
+    _onDiscardMessage: function (messageIDs) {
+        var num = messageIDs.length
+        var options = {
+            confirm_callback: function () {
+                chat_manager.moderate_selected_messages(messageIDs, 'discard')
+            }
+        };
+        Dialog.confirm(this, _t("You are going to discard " + num + " messages. Do you confirm action?"), options);
+    },
+
+    _onBan: function (messageID) {
+        var email = chat_manager.get_message(messageID).email_from;
+        var options = {
+            confirm_callback: function () {
+                chat_manager.moderate_selected_messages([messageID], 'ban')
+            }
+        };
+        Dialog.confirm(this, _t("You are going to ban " + email + ". Do you confirm action?"), options);
+    },
+
     /**
      * Binds handlers on the given $input to make them autocomplete and/or
      * create channels.
@@ -366,6 +469,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.$buttons.on('click', '.o_mail_chat_button_settings', this._onSettingsButtonClicked.bind(this));
         this.$buttons.on('click', '.o_mail_chat_button_mark_read', this._onMarkAllReadClicked.bind(this));
         this.$buttons.on('click', '.o_mail_chat_button_unstar_all', this._onUnstarAllClicked.bind(this));
+        this.$buttons.on('click', '.o_mail_chat_button_moderate_all', this._onModerateAll.bind(this));
+        this.$buttons.on('click', '.o_mail_chat_button_select_all', this._onSelectAll.bind(this));
     },
     /**
      * @private
@@ -430,6 +535,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.thread.on('toggle_star_status', this, function (message_id) {
             chat_manager.toggle_star_status(message_id);
         });
+        this.thread.on('moderate', this, this._onModeration);
+        this.thread.on('toggle_decision_button', this, this._updateDecisionButton);
+        this.thread.on('render_select_button', this, this._updateSelectAllButton);
         this.thread.on('select_message', this, this._selectMessage);
         this.thread.on('unselect_message', this, this._unselectMessage);
 
@@ -572,6 +680,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         chat_manager.bus.on('update_channel_unread_counter', this, this.throttledUpdateChannels);
         chat_manager.bus.on('update_dm_presence', this, this.throttledUpdateChannels);
         chat_manager.bus.on('activity_updated', this, this.throttledUpdateChannels);
+        chat_manager.bus.on('update_moderation_counter', this, this.throttledUpdateChannels);
     },
     /**
      * Stores the scroll position and composer state of the current channel
@@ -623,6 +732,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             channels: chat_manager.get_channels(),
             needaction_counter: chat_manager.get_needaction_counter(),
             starred_counter: chat_manager.get_starred_counter(),
+            moderation_counter: chat_manager.get_moderation_counter(),
+            is_moderator: chat_manager.is_moderator,
         });
         this.$(".o_mail_chat_sidebar").html($sidebar.contents());
         _.each(['dm', 'public', 'private'], function (type) {
@@ -653,6 +764,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             this.$buttons
                 .find('.o_mail_chat_button_unstar_all')
                 .toggleClass('disabled', disabled);
+        }
+        if (this.channel.id === "channel_moderation" || Boolean(this.channel.moderation && this.channel.is_moderator)) {
+            this.thread.trigger('render_select_button');
+        }
+        if (this.channel.id === "channel_moderation" || Boolean(this.channel.moderation && this.channel.is_moderator)) {
+            this.thread.trigger('toggle_decision_button');
         }
     },
     /**
@@ -692,13 +809,42 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             .find('.o_mail_chat_button_unstar_all')
             .toggle(channel.id === "channel_starred")
             .removeClass("o_hidden");
-
+        this.$buttons
+            .find('.o_mail_chat_button_select_all')
+            .toggle(channel.id === "channel_moderation" || Boolean(channel.moderation && channel.is_moderator))
+            .removeClass("o_hidden");
+        this.$buttons.find('.o_mail_chat_button_moderate_all').hide();
         this.$('.o_mail_chat_channel_item')
             .removeClass('o_active')
             .filter('[data-channel-id=' + channel.id + ']')
             .removeClass('o_unread_message')
             .addClass('o_active');
     },
+    /**
+     * @private
+     */
+    _updateDecisionButton: function () {
+        if (this.thread.$('.moderation_checkbox:checked').length) {
+            this.$buttons.find('.o_mail_chat_button_moderate_all').show();
+        } else {
+            this.$buttons.find('.o_mail_chat_button_moderate_all').hide();
+        }
+    },
+
+    _updateSelectAllButton: function () {
+        if (this.thread.$('.moderation_checkbox').length) {
+            this.$buttons
+            .find('.o_mail_chat_button_select_all')
+            .toggleClass('disabled', false);
+        } else {
+            this.$buttons
+            .find('.o_mail_chat_button_select_all')
+            .toggleClass('disabled', true)  
+            .text('Select All')
+            .prop('title', 'Select all messages to moderate');
+        }
+    },
+
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -751,6 +897,14 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         composer.mention_set_enabled_commands(commands);
         composer.mention_set_prefetched_partners(partners);
     },
+
+    /**
+     * @private
+     */
+    _onRejectMessage: function (messageIDs) {
+        new ModeratorRejectMessageDialog(this, messageIDs).open();
+    },
+
     /**
      * @private
      */
@@ -766,6 +920,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         var self = this;
         var current_channel_id = this.channel.id;
         if ((current_channel_id === "channel_starred" && !message.is_starred) ||
+            (current_channel_id === "channel_moderation" && !message.needs_moderation) ||
             (current_channel_id === "channel_inbox" && !message.is_needaction)) {
             chat_manager.get_messages({channel_id: this.channel.id, domain: this.domain}).then(function (messages) {
                 var options = self._getThreadRenderingOptions(messages);
@@ -773,7 +928,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                     self._updateButtonStatus(messages.length === 0, type);
                 });
             });
-        } else if (_.contains(message.channel_ids, current_channel_id)) {
+        } else if (_.contains(message.channel_ids, current_channel_id) || (message.res_id === current_channel_id)) {
             this._fetchAndRenderThread();
         }
     },
@@ -837,7 +992,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 }
             })
             .fail(function () {
-                // todo: display notification
+                // todo: display notifications
             });
     },
     /**
@@ -874,6 +1029,39 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     _onKeydown: function (event) {
         if (event.which === $.ui.keyCode.ESCAPE && this.selected_message) {
             this._unselectMessage();
+        }
+    },
+    /**
+     * @private
+     */
+    _onModerateAll: function (event) {
+        var moderatorAction = $(event.target).data('decision');
+        var messageIDs = this.thread.$('.moderation_checkbox:checked').map(function () { return $(this).data('message-id'); }).get();
+        if (moderatorAction === 'reject' && messageIDs.length) {
+            this._onRejectMessage(messageIDs);
+        } else if (moderatorAction === 'discard' && messageIDs.length) {
+            this._onDiscardMessage(messageIDs);
+        } else {
+            chat_manager.moderate_selected_messages(messageIDs, moderatorAction);
+        }
+    },
+        /**
+     * @private
+     */
+    _onSelectAll: function (event) {
+        var $button = $(event.target);
+        if (!$button.hasClass('disabled')) {
+            if (!$button.hasClass('o_unselect_all')) {
+               this.thread.$('.moderation_checkbox').prop('checked',true);
+             $button.text('Unselect All');
+             $button.prop('title', 'Unselect all messages to moderate');
+            } else {
+                this.thread.$('.moderation_checkbox').prop('checked',false);
+                $button.text('Select All');
+                $button.prop('title', 'Select all messages to moderate');
+            }
+            this._updateDecisionButton();
+            $button.toggleClass('o_unselect_all');
         }
     },
     /**

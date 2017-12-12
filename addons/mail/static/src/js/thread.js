@@ -38,6 +38,15 @@ var Thread = Widget.extend({
             var message_id = $(event.currentTarget).data('message-id');
             this.trigger("mark_as_read", message_id);
         },
+        "click .o_thread_message_moderation": function (event) {
+            var $button = $(event.currentTarget);
+            var message_id = $button.data('message-id');
+            var decision = $button.data('decision');
+            this.trigger("moderate", message_id, decision);
+        },
+        "change .moderation_checkbox": function (event) {
+            this.trigger("toggle_decision_button");
+        },
         "click .o_thread_message_star": function (event) {
             var message_id = $(event.currentTarget).data('message-id');
             this.trigger("toggle_star_status", message_id);
@@ -107,7 +116,6 @@ var Thread = Widget.extend({
             }
             prev_msg = msg;
         });
-
         this.$el.html(QWeb.render('mail.ChatThread', {
             messages: msgs,
             options: options,

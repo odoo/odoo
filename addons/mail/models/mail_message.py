@@ -7,7 +7,7 @@ import re
 from email.utils import formataddr
 
 from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
-from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
@@ -107,6 +107,8 @@ class Message(models.Model):
     message_id = fields.Char('Message-Id', help='Message unique identifier', index=True, readonly=1, copy=False)
     reply_to = fields.Char('Reply-To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
+    moderation_status = fields.Selection([('pending_moderation', 'Pending Moderation'), ('accepted', 'Accepted'), ('rejected', 'Rejected')], string="Status")
+    moderator_id = fields.Many2one('res.users', string="Moderated By")
 
     @api.multi
     def _get_needaction(self):
@@ -266,6 +268,7 @@ class Message(models.Model):
         notification = {'type': 'toggle_star', 'message_ids': [self.id], 'starred': starred}
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
 
+
     #------------------------------------------------------
     # Message loading for web interface
     #------------------------------------------------------
@@ -404,6 +407,7 @@ class Message(models.Model):
                     'id': 59,
                     'subject': False
                     'is_note': True # only if the subtype is internal
+                    'moderation_status': 'pending_moderation'
                 }
         """
         message_values = self.read([
@@ -413,6 +417,7 @@ class Message(models.Model):
             'channel_ids', 'partner_ids',  # recipients
             'needaction_partner_ids',  # list of partner ids for whom the message is a needaction
             'starred_partner_ids',  # list of partner ids for whom the message is starred
+            'moderation_status',
         ])
         message_tree = dict((m.id, m) for m in self.sudo())
         self._message_read_dict_postprocess(message_values, message_tree)
@@ -758,6 +763,11 @@ class Message(models.Model):
 
         message._invalidate_documents()
 
+        if 'moderation_status' in values and values['moderation_status'] == 'pending_moderation':
+            # Notify moderators of the new message
+            self._moderator_message_notifications(message)
+            return message
+
         if not self.env.context.get('message_create_from_mail_mail'):
             message._notify(force_send=self.env.context.get('mail_notify_force_send', True),
                             user_signature=self.env.context.get('mail_notify_user_signature', True))
@@ -822,7 +832,7 @@ class Message(models.Model):
         # remove author from notified partners
         if not self._context.get('mail_notify_author', False) and self_sudo.author_id:
             partners_sudo = partners_sudo - self_sudo.author_id
-
+        
         # update message, with maybe custom values
         message_values = {}
         if channels_sudo:
@@ -833,7 +843,6 @@ class Message(models.Model):
             message_values.update(self.env[self.model].browse(self.res_id).message_get_message_notify_values(self, message_values))
         if message_values:
             self.write(message_values)
-
         # notify partners and channels
         # those methods are called as SUPERUSER because portal users posting messages
         # have no access to partner model. Maybe propagating a real uid could be necessary.
@@ -845,12 +854,147 @@ class Message(models.Model):
                 ('id', 'in', (partners_sudo - notif_partners).ids),
                 ('channel_ids', 'in', email_channels.ids),
                 ('email', '!=', self_sudo.author_id.email or self_sudo.email_from),
-            ])._notify(self, force_send=force_send, send_after_commit=send_after_commit, user_signature=user_signature)
+                ])._notify(self, force_send=force_send, send_after_commit=send_after_commit, user_signature=user_signature)
         channels_sudo._notify(self)
-
         # Discard cache, because child / parent allow reading and therefore
         # change access rights.
         if self.parent_id:
             self.parent_id.invalidate_cache()
 
         return True
+
+    @api.multi
+    def moderate(self, decision):
+        """ :param decision
+                 * accept       - moderate message and broadcast that message to followers of relevant channels.
+                 * reject       - message will be deleted from the database without broadcast
+                                  an email sent to the author with an explanation that the moderators can edit.
+                 * discard      - message will be deleted from the database without broadcast.
+                 * allow        - add email address to white list people of specific channel,
+                                  so that next time if a message come from same email address on same channel,
+                                  it will be automatically broadcasted to relevant channels without any approval from moderator.
+                 * ban          - add email address to black list of emails for the specific channel.
+                                  From next time, a person sending a message using that email address will not need moderation.
+                                  message_post will not create messages with the corresponding expeditor.
+        """
+        # For now, his method is called on a singleton when decision is 'ban' or 'allow'
+        if decision == 'accept':
+            self.accept_message()
+        elif decision in ['reject', 'discard']:
+            self.notify_deletion_and_unlink()
+        else:
+            channel = self.env['mail.channel'].browse(self.res_id)
+            channel._add_to_moderated_email_list([self.email_from], decision)
+            self.accept_message(True) if decision == 'allow' else self.notify_deletion_and_unlink(True)
+        return True
+
+    def accept_message(self, allow=False):
+        messages_to_notify = self
+        if allow:
+            for message in self:
+                messages_to_notify |= self.search([
+                    ('moderation_status', '=', 'pending_moderation'),
+                    ('email_from', '=', message.email_from),
+                    ('model', '=', 'mail.channel'),
+                    ('res_id', '=', message.res_id)
+                    ])
+        messages_to_notify.write({'moderation_status': 'accepted', 'moderator_id': self.env.uid})
+        for message in messages_to_notify:
+            message._notify()
+
+    def notify_deletion_and_unlink(self, ban=False):
+        """ Notify deletion of messages to their moderators and authors and then delete them.
+        """
+        messages_to_delete = self
+        if ban:
+            for message in self:
+                messages_to_delete |= self.search([
+                    ('moderation_status', '=', 'pending_moderation'),
+                    ('email_from', '=', message.email_from),
+                    ('model', '=', 'mail.channel'),
+                    ('res_id', '=', message.res_id)
+                    ])           
+
+
+        channel_ids = messages_to_delete.mapped('res_id')
+        moderators = messages_to_delete.env['mail.channel'].browse(channel_ids).mapped('moderator_ids')
+        authors = messages_to_delete.mapped('author_id')
+        
+        moderators_notifications = [
+            (
+                moderator.partner_id.id,
+                [
+                    message.id
+                    for message in messages_to_delete
+                    if message.res_id in moderator.moderated_channel_ids.ids
+                ]
+            )
+            for moderator in moderators
+        ]
+
+        authors_notifications = [
+            (
+                author.id,
+                [
+                    message.id
+                    for message in messages_to_delete
+                    if message.author_id == author
+                ]
+            )
+            for author in authors
+        ]
+
+        brut_notifications = moderators_notifications + authors_notifications
+
+        # The following steps ensures that no message id is sent twice to the same person
+        # (in case the person is both moderator and author of the message).
+        dictionary = {}
+        for notif in brut_notifications:
+            partner_id = notif[0]
+            message_ids = notif[1]
+            if partner_id in dictionary:
+                dictionary[partner_id] = list(set(dictionary[partner_id]) or set(message_ids))
+            else:
+                dictionary[partner_id] = message_ids
+
+        nice_notifications = []
+        for partner_id, message_ids in dictionary.items():
+            nice_notifications.append(
+                        [
+                            (messages_to_delete._cr.dbname, 'res.partner', partner_id),
+                            {
+                                'type': 'deletion',
+                                'message_ids': dictionary[partner_id]
+                            }
+                        ]
+                    )
+        messages_to_delete.env['bus.bus'].sendmany(nice_notifications)
+        messages_to_delete.unlink()
+
+    @api.model
+    def notify_moderator(self):
+        """ This method alerts by email the moderators of the existence of messages that need moderation.
+            This method is called once a day by a cron.
+            """
+        moderators_to_notify = self.search([('moderation_status', '=', 'pending_moderation')]).mapped('channel_ids.moderator_ids')
+        template = self.env.ref('mail.moderator_notification_email', raise_if_not_found=False)
+        for moderator in moderators_to_notify:
+            template.with_context(lang=moderator.lang).send_mail(moderator.id, raise_exception=True)
+
+    @api.model
+    def create_notification_email(self, vals):
+        self.env['mail.mail'].create(vals).send()
+
+    def _moderator_message_notifications(self, message):
+        """ Generate the bus notifications for the given message and send them
+            to appropriate moderators.
+            :param message : the message to sent
+        """
+        notifications = [
+            [
+                (self._cr.dbname, 'res.partner', moderator.partner_id.id),
+                {'type': 'moderation', 'message': message.message_format()[0]}
+            ]
+            for moderator in self.env['mail.channel'].browse(message.res_id).mapped('moderator_ids')
+        ]
+        self.env['bus.bus'].sendmany(notifications)
