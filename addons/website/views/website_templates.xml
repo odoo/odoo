@@ -153,7 +153,8 @@
                     is_frontend: true,
                     translationURL: '/website/translations',
                     is_website_user: <t t-esc="json.dumps(request.env.user.id == request.website.user_id.id)" />,
-                    user_id: <t t-esc="json.dumps(request.env.user.id)" />
+                    user_id: <t t-esc="json.dumps(request.env.user.id)" />,
+                    enable_rainbow: <t t-esc="json.dumps(bool(request.env['ir.config_parameter'].sudo().get_param('base_setup.rainbow_gamification')))"/>,
                 };
             </script>
 
