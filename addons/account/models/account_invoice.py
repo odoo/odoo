@@ -248,7 +248,7 @@ class AccountInvoice(models.Model):
     move_name = fields.Char(string='Journal Entry Name', readonly=False,
         default=False, copy=False,
         help="Technical field holding the number given to the invoice, automatically set when the invoice is validated then stored to set the same number again if the invoice is cancelled, set to draft and re-validated.")
-    reference = fields.Char(string='Vendor Reference',
+    reference = fields.Char(string='Vendor Reference', copy=False,
         help="The partner reference of this invoice.", readonly=True, states={'draft': [('readonly', False)]})
     reference_type = fields.Selection('_get_reference_type', string='Payment Reference',
         required=True, readonly=True, states={'draft': [('readonly', False)]},
@@ -1582,9 +1582,6 @@ class AccountInvoiceLine(models.Model):
                 self.price_unit = 0.0
             domain['uom_id'] = []
         else:
-            # Use the purchase uom by default
-            self.uom_id = self.product_id.uom_po_id
-
             if part.lang:
                 product = self.product_id.with_context(lang=part.lang)
             else:
