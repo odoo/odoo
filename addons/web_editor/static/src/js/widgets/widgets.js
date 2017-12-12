@@ -215,6 +215,9 @@ var ImageWidget = MediaWidget.extend({
             ];
         this.multiImages = options.multiImages;
 
+        this.firstFilters = options.firstFilters || [];
+        this.lastFilters = options.lastFilters || [];
+
         this.images = [];
     },
     /**
@@ -321,16 +324,35 @@ var ImageWidget = MediaWidget.extend({
             args: [],
             kwargs: {
                 domain: domain,
-                fields: ['name', 'mimetype', 'checksum', 'url', 'type'],
+                fields: ['name', 'datas_fname', 'mimetype', 'checksum', 'url', 'type'],
                 order: [{name: 'id', asc: false}],
                 context: weContext.get(),
             },
         }).then(function (records) {
-            self.records = _.uniq(_.filter(records, function (r) {
-                return (r.type === "binary" || r.url && r.url.length > 0);
-            }), function (r) {
-                return (r.url || r.id);
-            });
+            self.records = _.chain(records)
+                .filter(function (r) {
+                    return (r.type === "binary" || r.url && r.url.length > 0);
+                })
+                .uniq(function (r) {
+                    return (r.url || r.id);
+                })
+                .sortBy(function (r) {
+                    if (_.any(self.firstFilters, function (filter) {
+                        var regex = new RegExp(filter, 'i');
+                        return r.name.match(regex) || r.datas_fname.match(regex);
+                    })) {
+                        return -1;
+                    }
+                    if (_.any(self.lastFilters, function (filter) {
+                        var regex = new RegExp(filter, 'i');
+                        return r.name.match(regex) || r.datas_fname.match(regex);
+                    })) {
+                        return 1;
+                    }
+                    return 0;
+                })
+                .value();
+
             _.each(self.records, function (record) {
                 record.src = record.url || _.str.sprintf('/web/image/%s/%s', record.id, record.name); // Name is added for SEO purposes
                 record.isDocument = !(/gif|jpe|jpg|png/.test(record.mimetype));
@@ -1045,12 +1067,22 @@ var MediaDialog = Dialog.extend({
         this.range = range.create();
 
         this.multiImages = options.multiImages;
-        this.onlyImages = options.onlyImages || this.multiImages || (this.media && (this.$media.parent().data('oeField') === 'image' || this.$media.parent().data('oeType') === 'image'));
+        var onlyImages = options.onlyImages || this.multiImages || (this.media && (this.$media.parent().data('oeField') === 'image' || this.$media.parent().data('oeType') === 'image'));
+        this.noImages = options.noImages;
+        this.noDocuments = onlyImages || options.noDocuments;
+        this.noIcons = onlyImages || options.noIcons;
+        this.noVideos = onlyImages || options.noVideos;
 
-        this.imageDialog = new ImageWidget(this, this.media, options);
-        this.documentDialog = new ImageWidget(this, this.media, _.extend({}, options, {document: true}));
-        if (!this.onlyImages) {
+        if (!this.noImages) {
+            this.imageDialog = new ImageWidget(this, this.media, options);
+        }
+        if (!this.noDocuments) {
+            this.documentDialog = new ImageWidget(this, this.media, _.extend({}, options, {document: true}));
+        }
+        if (!this.noIcons) {
             this.iconDialog = new IconWidget(this, this.media, options);
+        }
+        if (!this.noVideos) {
             this.videoDialog = new VideoWidget(this, this.media, options);
         }
 
@@ -1245,16 +1277,20 @@ var LinkDialog = Dialog.extend({
         this._super(parent, _.extend({
             title: _t("Link to"),
         }, options || {}));
+
         this.editable = editable;
         this.data = linkInfo || {};
 
         this.data.className = "";
+
+        var r = this.data.range;
+        this.needLabel = !r || (r.sc === r.ec && r.so === r.eo);
+
         if (this.data.range) {
             this.data.iniClassName = $(this.data.range.sc).filter("a").attr("class") || "";
             this.data.className = this.data.iniClassName.replace(/(^|\s+)btn(-[a-z0-9_-]*)?/gi, ' ');
 
             var is_link = this.data.range.isOnAnchor();
-            var r = this.data.range;
 
             var sc = r.sc;
             var so = r.so;

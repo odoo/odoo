@@ -395,6 +395,9 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
     core.bus.trigger('media_dialog_demand', {
         $editable: $editable,
         media: media,
+        options: {
+            lastFilters: ['background'],
+        },
     });
     return new $.Deferred().reject();
 };
