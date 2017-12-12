@@ -157,7 +157,7 @@ tour.register('rte', {
     trigger: '#editor-media-icon.active span.fa:first',
 }, {
     content: "save pictogram",
-    trigger: 'button.o_save_button',
+    trigger: '.modal-footer > .btn-primary',
     extra_trigger: '#editor-media-icon.active span.o_selected',
 }, {
     content: "select a size for the pictogram",
@@ -176,7 +176,7 @@ tour.register('rte', {
     extra_trigger: 'a#link-preview:containsRegex(/^<span [^>]+><\\/span>$/) > span.fa.fa-3x.pull-right',
 }, {
     content: "insert a link url",
-    trigger: '#o_link_dialog_url_input',
+    trigger: 'input[name="url"]',
     extra_trigger: 'a#link-preview.btn',
     run: "text http://www.odoo.com",
 }, {
@@ -185,7 +185,7 @@ tour.register('rte', {
     run: "text ABC[IMG] DEF",
 }, {
     content: "save link",
-    trigger: 'button.o_save_button',
+    trigger: '.modal-footer > .btn-primary',
     extra_trigger: 'a#link-preview.btn:containsRegex(/^ABC<span [^>]+><\\/span> DEF$/)',
 }, {
     content: "click on other picture",
@@ -201,12 +201,12 @@ tour.register('rte', {
     extra_trigger: 'a#link-preview:containsRegex(/^<img [^>]+>$/) img',
 }, {
     content: "insert an email",
-    trigger: '#o_link_dialog_url_input',
+    trigger: 'input[name="url"]',
     extra_trigger: 'a#link-preview.btn',
     run: "text test@test.test",
 }, {
     content: "save link",
-    trigger: 'button.o_save_button',
+    trigger: '.modal-footer > .btn-primary',
     extra_trigger: 'a#link-preview.btn[href="mailto:test@test.test"]',
 }, {
     content: "select for triple enter then double backspace",

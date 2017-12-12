@@ -1,12 +1,12 @@
 odoo.define('web_editor.rte', function (require) {
 'use strict';
 
+var base = require('web_editor.base');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Widget = require('web.Widget');
 var weContext = require('web_editor.context');
 var summernote = require('web_editor.summernote');
-var weWidgets = require('web_editor.widget');
 
 var _t = core._t;
 
@@ -257,7 +257,7 @@ var RTEWidget = Widget.extend({
 
         this._getConfig = getConfig || this._getDefaultConfig;
 
-        weWidgets.computeFonts();
+        base.computeFonts();
     },
     /**
      * @override
