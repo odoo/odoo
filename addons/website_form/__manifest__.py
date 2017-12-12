@@ -6,6 +6,7 @@
     'version': '1.0',
     'depends': ['website', 'mail'],
     'data': [
+        'data/website_form_data.xml',
         'views/assets.xml',
         'views/res_config_view.xml',
     ],
