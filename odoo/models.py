@@ -5521,6 +5521,17 @@ class BaseModel(object):
 
         return result
 
+    #
+    # Cleanup
+    #
+
+    @api.multi
+    def cleanup(self):
+        """
+        Cleans up the current model, to be overridden.
+        """
+        return False
+
 
 class RecordCache(MutableMapping):
     """ Implements a proxy dictionary to read/update the cache of a record.

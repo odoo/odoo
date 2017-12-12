@@ -127,6 +127,16 @@ class Followers(models.Model):
         return res
 
     @api.multi
+    def cleanup(self):
+        models = self.env.keys()
+        self._cr.execute(
+            "DELETE FROM mail_followers WHERE res_model NOT IN %s",
+            [tuple(models)]
+        )
+        self._cr.commit()
+        return True
+
+    @api.multi
     def write(self, vals):
         if 'res_model' in vals or 'res_id' in vals:
             self._invalidate_documents()
