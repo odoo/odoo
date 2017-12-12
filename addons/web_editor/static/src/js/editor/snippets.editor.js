@@ -110,14 +110,16 @@ var SnippetEditor = Widget.extend({
     /**
      * Notifies all the associated snippet options that the template which
      * contains the snippet is about to be saved.
+     *
+     * @returns {Deferred}
      */
     cleanForSave: function () {
         if (this.isDestroyed()) {
-            return;
+            return $.when();
         }
-        _.each(this.styles, function (option) {
-            option.cleanForSave();
-        });
+        return $.when.apply($, _.map(this.styles, function (option) {
+            return option.cleanForSave();
+        }));
     },
     /**
      * Makes the editor overlay cover the associated snippet.
@@ -353,6 +355,11 @@ var SnippetEditor = Widget.extend({
      */
     _onDragAndDropStart: function () {
         var self = this;
+
+        this.$target.attr('data-on-move-target', 'true');
+        this._previousDOM = document.body.outerHTML;
+        this.$target.removeAttr('data-on-move-target');
+
         self.size = {
             width: self.$target.width(),
             height: self.$target.height()
@@ -432,7 +439,7 @@ var SnippetEditor = Widget.extend({
             }
 
             for (var i in this.styles) {
-                this.styles[i].onMove();
+                this.styles[i].onMove(this._previousDOM);
             }
         }
 
@@ -620,15 +627,18 @@ var SnippetsMenu = Widget.extend({
      * Prepares the page so that it may be saved:
      * - Asks the snippet editors to clean their associated snippet
      * - Remove the 'contentEditable' attributes
+     *
+     * @returns {Deferred}
      */
     cleanForSave: function () {
         this.trigger_up('ready_to_clean_for_save');
-        _.each(this.snippetEditors, function (snippetEditor) {
-            snippetEditor.cleanForSave();
+        var defs = _.map(this.snippetEditors, function (snippetEditor) {
+            return snippetEditor.cleanForSave();
         });
         this.$editable.find('[contentEditable]')
             .removeAttr('contentEditable')
             .removeProp('contentEditable');
+        return $.when.apply($, defs);
     },
 
     //--------------------------------------------------------------------------

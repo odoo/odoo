@@ -991,5 +991,29 @@
     <div data-js="company_data"
          data-selector="[data-oe-expression='res_company.partner_id']"
          data-no-check="true"/>
+
+    <div data-js="moveToTop"
+         data-selector="#wrapwrap > main > #wrap > section.s_text_block_image_fw">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"><i class="fa fa-hand-o-up"/>Position</a>
+            <ul class="dropdown-menu" data-no-preview="true">
+                <li data-move-to-top="false"><a href="#">Normal</a></li>
+                <li data-move-to-top="true"><a href="#">Below the Top Menu</a></li>
+            </ul>
+        </li>
+    </div>
+
+    <div data-js="topMenuColor"
+        data-selector="#wrapwrap > main > #wrap > section.s_text_block_image_fw"
+        data-palette-exclude="theme,grayscale,ui"
+        data-palette-default="transparent_grayscale"
+        data-palette-title="Top Menu Color">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Top Menu Color</a>
+            <ul class="dropdown-menu">
+                <li></li>
+            </ul>
+        </li>
+    </div>
 </template>
 </odoo>

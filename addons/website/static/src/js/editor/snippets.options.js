@@ -1138,4 +1138,124 @@ options.registry.gallery_img = options.Class.extend({
         });
     },
 });
+
+options.registry.moveToTop = options.Class.extend({
+    /**
+     * @override
+     */
+    onMove: function (previousDOM) {
+        var prevIndex = $(previousDOM).find('[data-on-move-target]').index();
+        if (prevIndex === 0 && this.$target.index() !== 0) {
+            // If moved from the first position to another, disable absolute top
+            // menu
+            this.moveToTop(false, false);
+            this._setActive();
+        }
+    },
+    /**
+     * @override
+     */
+    onRemove: function () {
+        if (this.$target.index() === 0) {
+            // If removed while on the first position, disable absolute top menu
+            this.moveToTop(false, false);
+            this._setActive();
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Handles the toggling between normal an below-header positions.
+     */
+    moveToTop: function (previewMode, value, $li) {
+        var self = this;
+        value = (value === 'true');
+        this.trigger_up('action_demand', {
+            actionName: 'toggle_page_option',
+            params: [{name: 'has_top_content', value: value}],
+            onSuccess: function () {
+                if (value) {
+                    self.$target.prependTo(self.$target.parent());
+                }
+                self.trigger_up('action_demand', {
+                    actionName: 'toggle_page_option',
+                    params: [{name: 'header_color', value: ''}],
+                });
+            },
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _setActive: function () {
+        var optionValue;
+        this.trigger_up('action_demand', {
+            actionName: 'get_page_option',
+            params: ['has_top_content'],
+            onSuccess: function (value) {
+                optionValue = value;
+            },
+        });
+        var enabled = (this.$target.index() === 0 && optionValue);
+        this.$el.find('li[data-move-to-top]').removeClass('active')
+            .filter('li[data-move-to-top="' + (enabled ? 'true' : 'false') + '"]').addClass('active');
+    },
+});
+
+options.registry.topMenuColor = options.registry.colorpicker.extend({
+    /**
+     * @override
+     */
+    start: function () {
+        var self = this;
+        var def = this._super.apply(this, arguments);
+        this.$target.on('snippet-option-change', function () {
+            self.onFocus();
+        });
+        this.$relatedTarget = this.$target;
+        this.setTarget($('#wrapwrap > header'));
+        return def;
+    },
+    /**
+     * @override
+     */
+    onFocus: function () {
+        var optionValue;
+        this.trigger_up('action_demand', {
+            actionName: 'get_page_option',
+            params: ['has_top_content'],
+            onSuccess: function (value) {
+                optionValue = value;
+            },
+        });
+        var enabled = (this.$relatedTarget.index() === 0 && optionValue);
+        this.$el.toggleClass('hidden', !enabled);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _onColorButtonClick: function () {
+        this._super.apply(this, arguments);
+        var bgs = this.$target.attr('class').match(/bg-(\w|-)+/g);
+        var allowedBgs = this.classes.split(' ');
+        var color = _.intersection(bgs, allowedBgs).join(' ');
+        this.trigger_up('action_demand', {
+            actionName: 'toggle_page_option',
+            params: [{name: 'header_color', value: color}],
+        });
+    },
+});
 });

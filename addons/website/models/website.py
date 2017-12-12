@@ -630,6 +630,10 @@ class Page(models.Model):
     is_homepage = fields.Boolean(compute='_compute_homepage', inverse='_set_homepage', string='Homepage')
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
 
+    # Page options
+    has_top_content = fields.Boolean()
+    header_color = fields.Char()
+
     @api.one
     def _compute_homepage(self):
         self.is_homepage = self == self.env['website'].get_current_website().homepage_id

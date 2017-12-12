@@ -92,8 +92,11 @@ var SnippetOption = Widget.extend({
      * Called when the associated snippet is moved to another DOM location.
      *
      * @abstract
+     * @param {string} previousDOM
+     *        the <body/> outerHTML before the move, with the $target element
+     *        marked with data-on-move-target="true" attribute
      */
-    onMove: function () {},
+    onMove: function (previousDOM) {},
     /**
      * Called when the associated snippet is about to be removed from the DOM.
      *
@@ -105,6 +108,7 @@ var SnippetOption = Widget.extend({
      * to be saved.
      *
      * @abstract
+     * @returns {Deferred|undefined}
      */
     cleanForSave: function () {},
 
@@ -761,7 +765,7 @@ registry.colorpicker = SnippetOption.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Private
+    // Handlers
     //--------------------------------------------------------------------------
 
     /**
