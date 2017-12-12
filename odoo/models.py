@@ -41,6 +41,7 @@ import dateutil.relativedelta
 import psycopg2
 from lxml import etree
 from lxml.builder import E
+from psycopg2 import errorcodes
 
 import odoo
 from . import SUPERUSER_ID
@@ -615,33 +616,77 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     def _is_an_ordinary_table(self):
         return tools.table_kind(self.env.cr, self._table) == 'r'
 
-    def __export_xml_id(self):
-        """ Return a valid xml_id for the record ``self``. """
+    def __ensure_xml_id(self, skip=False):
+        if skip:
+            return ((record, None) for record in self)
+
+        if not self:
+            return iter([])
+
         if not self._is_an_ordinary_table():
             raise Exception(
                 "You can not export the column ID of model %s, because the "
                 "table %s is not an ordinary table."
                 % (self._name, self._table))
-        ir_model_data = self.sudo().env['ir.model.data']
-        data = ir_model_data.search([('model', '=', self._name), ('res_id', '=', self.id)])
-        if data:
-            if data[0].module:
-                return '%s.%s' % (data[0].module, data[0].name)
-            else:
-                return data[0].name
-        else:
-            postfix = 0
-            name = '%s_%s' % (self._table, self.id)
-            while ir_model_data.search([('module', '=', '__export__'), ('name', '=', name)]):
-                postfix += 1
-                name = '%s_%s_%s' % (self._table, self.id, postfix)
-            ir_model_data.create({
-                'model': self._name,
-                'res_id': self.id,
-                'module': '__export__',
-                'name': name,
-            })
-            return '__export__.' + name
+
+        cr = self.env.cr
+        cr.execute("""
+            SELECT res_id, module, name
+            FROM ir_model_data
+            WHERE model = %s AND res_id in %s
+        """, (self._name, tuple(self.ids)))
+        xids = {
+            res_id: ("%s.%s" % (module, name)) if module else name
+            for res_id, module, name in cr.fetchall()
+        }
+
+        missing = [record for record in self if record.id not in xids]
+        cr.execute(""" 
+            PREPARE export_plan (text, text, int) AS
+                INSERT INTO ir_model_data (module, model, name, res_id)
+                        VALUES('__export__', $1, $2, $3)
+        """)
+        try:
+            # try "bulk"-setting all xids
+            with cr.savepoint():
+                for record in missing:
+                    name = '%s_%s' % (self._table, record.id)
+                    cr.execute("EXECUTE export_plan(%s, %s, %s)", (self._name, name, record.id))
+                    xids[record.id] = '__export__.' + name
+
+        except psycopg2.Error as e:
+            if e.pgcode != errorcodes.UNIQUE_VIOLATION:
+                raise
+
+            # fallback: full-cost individual creation, still assume most records will go through
+            for record in missing:
+                for postfix in itertools.count():
+                    # inline savepoint to reduce nesting
+                    cr.execute("SAVEPOINT export_xid_create")
+                    try:
+                        if postfix:
+                            name = '%s_%s_%d' % (self._table, record.id, postfix)
+                        else:
+                            name = '%s_%s' % (self._table, record.id)
+                        cr.execute("EXECUTE export_plan(%s, %s, %s",
+                                   (self._name, name, record.id))
+                        xids[record.id] = '__export__.' + name
+                    except psycopg2.Error as e2:
+                        if e2.pgcode != errorcodes.UNIQUE_VIOLATION:
+                            raise
+                        cr.execute("ROLLBACK TO SAVEPOINT export_xid_create")
+                    else:
+                        cr.execute("RELEASE SAVEPOINT export_xid_create")
+                        break
+
+        self.env['ir.model.data'].invalidate_cache()
+
+        cr.execute("""DEALLOCATE export_plan""")
+
+        return (
+            (record, xids[record.id])
+            for record in self
+        )
 
     @api.multi
     def _export_rows(self, fields):
@@ -651,7 +696,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             :return: list of lists of corresponding values
         """
         lines = []
-        for record in self:
+
+        for record, xid in self.__ensure_xml_id(skip=['id'] not in fields):
             # main line of record, initially empty
             current = [''] * len(fields)
             lines.append(current)
@@ -671,7 +717,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 if name == '.id':
                     current[i] = str(record.id)
                 elif name == 'id':
-                    current[i] = record.__export_xml_id()
+                    assert xid, "no xid was generated for the record %s" % record
+                    current[i] = xid
                 else:
                     field = record._fields[name]
                     value = record[name]
@@ -685,7 +732,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
                         # This is a special case, its strange behavior is intended!
                         if field.type == 'many2many' and len(path) > 1 and path[1] == 'id':
-                            xml_ids = [r.__export_xml_id() for r in value]
+                            xml_ids = [xid for _, xid in value.__ensure_xml_id()]
                             current[i] = ','.join(xml_ids) or False
                             continue
 
