@@ -8,7 +8,6 @@
 # Miguel Orueta <mo@landoo.es>, 2017
 # Gustavo Valverde <g.valverde02@gmail.com>, 2017
 # Rafael Blasco <rafabn@antiun.com>, 2017
-# Eduardo Magdalena <emagdalena@close2circle.com>, 2017
 # José Vicente <txusev@gmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 # Daniel Blanco <daniel@blancomartin.com.ar>, 2017
@@ -22,6 +21,7 @@
 # Amaia Bastida <amaiatrainer@gmail.com>, 2017
 # Ivan Nieto <ivan.n.s@tuta.io>, 2017
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
+# Eduardo Magdalena <emagdalena@close2circle.com>, 2017
 # Nicole Kist <nki@odoo.com>, 2017
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 msgid ""
@@ -180,7 +180,7 @@ msgstr "Activo"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_amount
 msgid "Amount"
-msgstr "Monto"
+msgstr "Importe"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_amount
@@ -823,8 +823,8 @@ msgid ""
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
 "Estos métodos permiten calcular automáticamente el precio de la entrega\n"
-"                de acuerdo a su configuración; en el pedido de venta (basada en la\n"
-"                presupuesto) o la factura (basada en las órdenes de entrega)."
+"                de acuerdo a su configuración; en el pedido de venta (basada en el\n"
+"                presupuesto) o en la factura (basada en los albaranes)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner_property_delivery_carrier_id
@@ -957,12 +957,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_from
 msgid "Zip From"
-msgstr "Zip desde"
+msgstr "C.P. desde"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_to
 msgid "Zip To"
-msgstr "Zip hasta"
+msgstr "C.P. hasta"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form

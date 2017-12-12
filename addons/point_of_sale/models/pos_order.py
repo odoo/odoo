@@ -1030,6 +1030,7 @@ class ReportSaleDetails(models.AbstractModel):
             payments = []
 
         return {
+            'currency_precision': user_currency.decimal_places,
             'total_paid': user_currency.round(total),
             'payments': payments,
             'company_name': self.env.user.company_id.name,

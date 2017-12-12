@@ -204,8 +204,11 @@ class Team(models.Model):
     def _get_graph(self):
         graph_datas = super(Team, self)._get_graph()
         if self.dashboard_graph_model == 'crm.opportunity.report' and self.dashboard_graph_group_pipeline == 'stage':
-            stage_data = self.env['crm.stage'].browse([d['label'] for d in graph_datas[0]['values']]).read(['sequence', 'name'])
+            stage_ids = [d['label'] for d in graph_datas[0]['values'] if d['label'] is not None]
+            stage_data = self.env['crm.stage'].browse(stage_ids).read(['sequence', 'name'])
             stage_data = {d['id']: {'name': d['name'], 'sequence': d['sequence']} for d in stage_data}
+            # use "Undefined" stage for unset stage records
+            stage_data[None] = {'name': _('Undefined'), 'sequence': -1}
             graph_datas[0]['values'] = sorted(graph_datas[0]['values'], key=lambda el: stage_data[el['label']]['sequence'])
             for gdata in graph_datas[0]['values']:
                 gdata['label'] = stage_data[gdata['label']]['name']

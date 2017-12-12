@@ -121,7 +121,7 @@
                                     <field name="needs_lots" readonly="1" groups="stock.group_production_lot"/>
                                     <field name="is_done" invisible="1"/>
                                     <field name="sequence" invisible="1"/>
-                                    <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" invisible="1"/>
+                                    <field name="location_id" invisible="1"/>
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
                                     <field name="state" invisible="1" force_save="1"/>
                                     <field name="product_uom_qty" string="To Consume"/>

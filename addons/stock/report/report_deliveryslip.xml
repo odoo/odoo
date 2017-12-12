@@ -91,9 +91,6 @@
                                     <p t-if="o.picking_type_code == 'incoming'">
                                         <span t-field="move_line.product_id.sudo().description_pickingin"/>
                                     </p>
-                                    <t t-if="not move_line.product_id and move_line.package_id">
-                                        <span  t-field="move_line.package_id"/>
-                                    </t>
                                 </td>
                                 <t t-if="has_serial_number">
                                    <td>
@@ -115,8 +112,6 @@
                                   </td>
                                 </t>
                                 <td class="text-center">
-                                    <span t-field="move_line.package_id"/>
-                                    <span t-if="move_line.package_id">:</span>
                                     <span t-field="move_line.ordered_qty"/>
                                     <span t-field="move_line.product_uom_id"/>
                                 </td>

@@ -138,19 +138,19 @@ msgstr "Подія"
 #: code:addons/google_calendar/static/src/js/google_calendar.js:84
 #, python-format
 msgid "Event disconnection error"
-msgstr ""
+msgstr "Помилка відключення події"
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:80
 #, python-format
 msgid "Event disconnection success"
-msgstr ""
+msgstr "Подія успішно відключена"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee_google_internal_event_id
 msgid "Google Calendar Event Id"
-msgstr ""
+msgstr "ID події Google календаря "
 
 #. module: google_calendar
 #: model:ir.actions.server,name:google_calendar.ir_cron_sync_all_cals_ir_actions_server
@@ -162,7 +162,7 @@ msgstr ""
 #. module: google_calendar
 #: sql_constraint:calendar.attendee:0
 msgid "Google ID should be unique!"
-msgstr ""
+msgstr "Google ID повинен бути унікальним!"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_calendar.py:687
@@ -172,6 +172,9 @@ msgid ""
 "\n"
 " %s"
 msgstr ""
+"Google втрачається ... наступна синхронізація буде повністю синхронізована.\n"
+"\n"
+" %s"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_id
@@ -186,6 +189,8 @@ msgid ""
 "In order to do this, you first need to disconnect all existing events from "
 "the old account."
 msgstr ""
+"Щоб це зробити, вам спочатку потрібно від'єднати всі існуючі події від "
+"старого облікового запису."
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_res_users_google_calendar_cal_id
@@ -193,6 +198,8 @@ msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
 msgstr ""
+"ID останнього календаря, який був синхронізований. Якщо він буде змінений, "
+"ми видалимо всі посилання між GoogleID і Odoo Google Internal ID"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar___last_update
