@@ -75,7 +75,7 @@ odoo.define('payment_stripe.stripe', function(require) {
             $(this).attr('disabled','disabled');
 
         var $form = $(e.currentTarget).parents('form');
-        var acquirer_id = $(e.currentTarget).closest('div.oe_sale_acquirer_button,div.oe_quote_acquirer_button,div.o_website_payment_new_payment');
+        var acquirer_id = $(e.currentTarget).closest('div.oe_sale_acquirer_button,div.oe_quote_acquirer_button,div.o_website_payment_new_payment,div.website_contract_acquirer_button');
         acquirer_id = acquirer_id.data('id') || acquirer_id.data('acquirer_id');
         if (! acquirer_id) {
             return false;
@@ -106,6 +106,16 @@ odoo.define('payment_stripe.stripe', function(require) {
             var url = _.str.sprintf("/quote/%s/transaction/%s/%s", so_id, acquirer_id, so_token);
             var create_tx = ajax.jsonRpc(url, 'call', {}).then(function (data) {
                 try { $form.html(data); } catch (e) {};
+            });
+        }
+        else if($('.oe_website_contract').length !== 0) {
+            var href = $(location).attr("href");
+            var contract_id = href.match('/my/contract/([0-9]+)/')[1];
+            var uuid = href.match('/my/contract/[0-9]+/([a-zA-Z0-9-]+)');
+            uuid = uuid ? uuid[1] : '';
+            var url = _.str.sprintf('/my/contract/transaction/%s/%s/%s', acquirer_id, contract_id, uuid);
+            var create_tx = ajax.jsonRpc(url, 'call', {}).then(function (data) {
+                try { $form.html(data); } catch (e) {}
             });
         }
         else {
