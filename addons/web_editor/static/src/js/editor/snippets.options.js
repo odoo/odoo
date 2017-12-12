@@ -5,7 +5,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var weContext = require('web_editor.context');
-var widget = require('web_editor.widget');
+var weWidgets = require('web_editor.widget');
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -813,7 +813,7 @@ registry.background = SnippetOption.extend({
         // Put fake image in the DOM, edit it and use it as background-image
         var $image = $('<img/>', {class: 'hidden', src: value}).appendTo(this.$target);
 
-        var _editor = new widget.MediaDialog(this, {}, null, $image[0]).open();
+        var _editor = new weWidgets.MediaDialog(this, {}, null, $image[0]).open();
         _editor.opened(function () {
             _editor.$('[href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
         });

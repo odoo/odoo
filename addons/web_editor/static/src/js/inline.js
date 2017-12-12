@@ -4,11 +4,11 @@ odoo.define('web_editor.inline', function (require) {
 var core = require('web.core');
 var editor = require('web_editor.editor');
 var rte = require('web_editor.rte');
-var widget = require('web_editor.widget');
+var weWidgets = require('web_editor.widget');
 var transcoder = require('web_editor.transcoder');
 var snippet_editor = require('web_editor.snippet.editor');
 
-widget.MediaDialog.include({
+weWidgets.MediaDialog.include({
     start: function () {
         this.$('[href="#editor-media-video"]').addClass('hidden');
         return this._super.apply(this, arguments);

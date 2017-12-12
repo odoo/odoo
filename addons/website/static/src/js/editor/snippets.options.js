@@ -3,7 +3,7 @@ odoo.define('website.snippets.options', function (require) {
 
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var widgets = require('web_editor.widget');
+var weWidgets = require('web_editor.widget');
 var options = require('web_editor.snippets.options');
 
 var _t = core._t;
@@ -397,12 +397,12 @@ options.registry.parallax = options.Class.extend({
     },
 });
 
-var FacebookPageDialog = widgets.Dialog.extend({
-    xmlDependencies: widgets.Dialog.prototype.xmlDependencies.concat(
+var FacebookPageDialog = weWidgets.Dialog.extend({
+    xmlDependencies: weWidgets.Dialog.prototype.xmlDependencies.concat(
         ['/website/static/src/xml/website.facebook_page.xml']
     ),
     template: 'website.facebook_page_dialog',
-    events: _.extend({}, widgets.Dialog.prototype.events || {}, {
+    events: _.extend({}, weWidgets.Dialog.prototype.events || {}, {
         'change': '_onOptionChange',
     }),
 
@@ -793,7 +793,7 @@ options.registry.gallery = options.Class.extend({
     addImages: function (previewMode) {
         var self = this;
         var $container = this.$('.container:first');
-        var dialog = new widgets.MediaDialog(this, {select_images: true}, this.$target.closest('.o_editable'), null);
+        var dialog = new weWidgets.MediaDialog(this, {multiImages: true}, this.$target.closest('.o_editable'), null);
         var lastImage = _.last(this._getImages());
         var index = lastImage ? this._getIndex(lastImage) : -1;
         dialog.on('save', this, function (attachments) {

@@ -5,6 +5,7 @@ var ajax = require('web.ajax');
 var Class = require('web.Class');
 var core = require('web.core');
 var mixins = require('web.mixins');
+var base = require('web_editor.base');
 var weContext = require('web_editor.context');
 var rte = require('web_editor.rte');
 var weWidgets = require('web_editor.widget');
@@ -427,8 +428,8 @@ dom.isImgFont = function (node) {
     var className = (node && node.className || "");
     if (node && (nodeName === "SPAN" || nodeName === "I") && className.length) {
         var classNames = className.split(/\s+/);
-        for (var k=0; k<weWidgets.fontIcons.length; k++) {
-            if (_.intersection(weWidgets.fontIcons[k].alias, classNames).length) {
+        for (var k=0; k<base.fontIcons.length; k++) {
+            if (_.intersection(base.fontIcons[k].alias, classNames).length) {
                 return true;
             }
         }
@@ -1029,7 +1030,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
             return;
         }
         data.__alreadyDone = true;
-        var altDialog = new weWidgets.alt(this,
+        var altDialog = new weWidgets.AltDialog(this,
             data.options || {},
             data.$editable,
             data.media

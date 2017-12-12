@@ -5,7 +5,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var time = require('web.time');
 var weContext = require('web_editor.context');
-var widget = require('web_editor.widget');
+var weWidgets = require('web_editor.widget');
 var websiteNavbarData = require('website.navbar');
 var websiteRootData = require('website.WebsiteRoot');
 var Widget = require('web.Widget');
@@ -13,12 +13,12 @@ var Widget = require('web.Widget');
 var _t = core._t;
 var qweb = core.qweb;
 
-var PagePropertiesDialog = widget.Dialog.extend({
+var PagePropertiesDialog = weWidgets.Dialog.extend({
     template: 'website.pagesMenu.page_info',
-    xmlDependencies: widget.Dialog.prototype.xmlDependencies.concat(
+    xmlDependencies: weWidgets.Dialog.prototype.xmlDependencies.concat(
         ['/website/static/src/xml/website.pageProperties.xml']
     ),
-    events: _.extend({}, widget.Dialog.prototype.events, {
+    events: _.extend({}, weWidgets.Dialog.prototype.events, {
         'keyup input#page_name': '_onNameChanged',
         'keyup input#page_url': '_onUrlChanged',
         'change input#create_redirect': '_onCreateRedirectChanged',
@@ -42,7 +42,7 @@ var PagePropertiesDialog = widget.Dialog.extend({
         this.page_id = page_id;
 
         var buttons = [
-            {text: _t("Save"), classes: 'btn-primary o_save_button', click: this.save},
+            {text: _t("Save"), classes: 'btn-primary', click: this.save},
             {text: _t("Discard"), close: true},
         ];
         if (options.fromPageManagement) {
@@ -314,14 +314,16 @@ var PagePropertiesDialog = widget.Dialog.extend({
     },
 });
 
-var MenuEntryDialog = widget.LinkDialog.extend({
-    xmlDependencies: widget.LinkDialog.prototype.xmlDependencies.concat(
+var MenuEntryDialog = weWidgets.LinkDialog.extend({
+    xmlDependencies: weWidgets.LinkDialog.prototype.xmlDependencies.concat(
         ['/website/static/src/xml/website.contentMenu.xml']
     ),
+    events: _.extend({}, weWidgets.LinkDialog.prototype.events || {}, {
+        'change input[name="link_menu_options"]': '_onNewMenuOptionChange',
+    }),
 
     /**
      * @constructor
-     * @override
      */
     init: function (parent, options, editor, data) {
         data.text = data.name || '';
@@ -336,23 +338,29 @@ var MenuEntryDialog = widget.LinkDialog.extend({
      * @override
      */
     start: function () {
-        var self = this;
+        // Remove style related elements
         this.$('.o_link_dialog_preview').remove();
-        this.$('.window-new, .link-style').closest('.form-group').remove();
-        this.$('label[for="o_link_dialog_label_input"]').text(_t("Menu Label"));
-        if (this.menu_link_options) { // add menu link option only when adding new menu
-            self.$('#o_link_dialog_url_input').closest('.form-group').hide();
-            this.$('#o_link_dialog_label_input').closest('.form-group').after(qweb.render('website.contentMenu.dialog.edit.link_menu_options'));
-            // remove the label that is automatically added before
-            this.$('#o_link_dialog_url_input').parent().siblings().html('');
-            this.$('input[name=link_menu_options]').on('change', function () {
-                self.$('#o_link_dialog_url_input').closest('.form-group').toggle();
-            });
-        }
+        this.$('input[name="is_new_window"], .link-style').closest('.form-group').remove();
         this.$modal.find('.modal-lg').removeClass('modal-lg')
                    .find('.col-md-8').removeClass('col-md-8').addClass('col-xs-12');
+
+        // Adapt URL label
+        this.$('label[for="o_link_dialog_label_input"]').text(_t("Menu Label"));
+
+        // If new menu, adapt URL field to new page / existing page
+        if (this.menu_link_options) {
+            this.$('input[name="label"]').closest('.form-group').after(qweb.render('website.contentMenu.dialog.edit.link_menu_options'));
+            this.$('input[name="url"]').closest('.form-group').addClass('hidden');
+            this.$('label[for="o_link_dialog_url_input"]').html('');
+        }
+
         return this._super.apply(this, arguments);
     },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
     /**
      * @override
      */
@@ -369,11 +377,22 @@ var MenuEntryDialog = widget.LinkDialog.extend({
         }
         return this._super.apply(this, arguments);
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onNewMenuOptionChange: function () {
+        this.$('input[name="url"]').closest('.form-group').toggleClass('hidden');
+    },
 });
 
-var SelectEditMenuDialog = widget.Dialog.extend({
+var SelectEditMenuDialog = weWidgets.Dialog.extend({
     template: 'website.contentMenu.dialog.select',
-    xmlDependencies: widget.Dialog.prototype.xmlDependencies.concat(
+    xmlDependencies: weWidgets.Dialog.prototype.xmlDependencies.concat(
         ['/website/static/src/xml/website.contentMenu.xml']
     ),
 
@@ -401,12 +420,12 @@ var SelectEditMenuDialog = widget.Dialog.extend({
     },
 });
 
-var EditMenuDialog = widget.Dialog.extend({
+var EditMenuDialog = weWidgets.Dialog.extend({
     template: 'website.contentMenu.dialog.edit',
-    xmlDependencies: widget.Dialog.prototype.xmlDependencies.concat(
+    xmlDependencies: weWidgets.Dialog.prototype.xmlDependencies.concat(
         ['/website/static/src/xml/website.contentMenu.xml']
     ),
-    events: _.extend({}, widget.Dialog.prototype.events, {
+    events: _.extend({}, weWidgets.Dialog.prototype.events, {
         'click a.js_add_menu': '_onAddMenuButtonClick',
         'click button.js_delete_menu': '_onDeleteMenuButtonClick',
         'click button.js_edit_menu': '_onEditMenuButtonClick',

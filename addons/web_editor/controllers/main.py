@@ -140,7 +140,7 @@ class Web_Editor(http.Controller):
     # add attachment (images or link)
     #------------------------------------------------------
     @http.route('/web_editor/attachment/add', type='http', auth='user', methods=['POST'])
-    def attach(self, func, upload=None, url=None, disable_optimization=None, **kwargs):
+    def attach(self, upload=None, url=None, disable_optimization=None, **kwargs):
         # the upload argument doesn't allow us to access the files if more than
         # one file is uploaded, as upload references the first file
         # therefore we have to recover the files from the request object
@@ -189,8 +189,9 @@ class Web_Editor(http.Controller):
                 message = pycompat.text_type(e)
 
         return """<script type='text/javascript'>
-            window.parent['%s'](%s, %s);
-        </script>""" % (func, json.dumps(uploads), json.dumps(message))
+            window.attachments = %s;
+            window.error = %s;
+        </script>""" % (json.dumps(uploads), json.dumps(message))
 
     #------------------------------------------------------
     # remove attachment (images or link)
