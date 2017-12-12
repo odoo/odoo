@@ -221,7 +221,7 @@ class HrEmployee(models.Model):
     disabled_children_bool = fields.Boolean(string='Disabled Children', help='if recipient children is/are declared disabled by law')
     resident_bool = fields.Boolean(string='Nonresident', help='if recipient lives in a foreign country')
     disabled_children_number = fields.Integer('Number of disabled children')
-    dependent_children = fields.Integer(compute='_compute_dependent_children', string='Considered number of dependent children')
+    dependent_children = fields.Integer(compute='_compute_dependent_children', string='Considered number of dependent children', groups="hr.group_hr_user")
     other_dependent_people = fields.Boolean(string="Other Dependent People", help="If other people are dependent on the employee")
     other_senior_dependent = fields.Integer('# seniors (>=65)', help="Number of seniors dependent on the employee, including the disabled ones")
     other_disabled_senior_dependent = fields.Integer('# disabled seniors (>=65)')
