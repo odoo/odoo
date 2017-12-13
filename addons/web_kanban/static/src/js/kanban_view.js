@@ -102,6 +102,7 @@ var KanbanView = View.extend({
                 // on the fields_view, so that we can retrieve them later. A better fix would be to
                 // stop modifying shared resources in place.
                 this.fields_view.many2manys = this.many2manys;
+                child.attrs['t-translation'] = 'off';
                 this.qweb.add_template(utils.json_node_to_xml(child));
                 break;
             } else if (child.tag === 'field') {
