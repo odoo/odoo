@@ -60,7 +60,8 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
      * @override
      */
     isSet: function () {
-        return this.value && this.value !== "<p><br/></p>" && this.value.match(/\S/);
+        // Remove inline style with regex because when if field has style-inline option then <p> element css is apply in element
+        return this.value && this.value.replace(/ style="([^"]*)"|&nbsp;|\s/g,'') !== "<p><br></p>" && this.value.match(/\S/);
     },
     /**
      * @override
