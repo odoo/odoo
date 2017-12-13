@@ -1209,6 +1209,8 @@ instance.web.Sidebar = instance.web.Widget.extend({
         self.$("[title]").tooltip({
             delay: { show: 500, hide: 0}
         });
+        this.$('.oe_sidebar_add_attachment .oe_form_binary_file').change(this.on_attachment_changed);
+        this.$el.find('.oe_sidebar_delete_item').click(this.on_attachment_delete);
     },
     /**
      * For each item added to the section:
@@ -1335,8 +1337,6 @@ instance.web.Sidebar = instance.web.Widget.extend({
         });
         self.items['files'] = attachments;
         self.redraw();
-        this.$('.oe_sidebar_add_attachment .oe_form_binary_file').change(this.on_attachment_changed);
-        this.$el.find('.oe_sidebar_delete_item').click(this.on_attachment_delete);
     },
     on_attachment_changed: function(e) {
         var $e = $(e.target);
