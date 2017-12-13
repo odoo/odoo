@@ -32,7 +32,10 @@ data.dom_ready = dom_ready;
 var all_ready;
 data.ready = function () {
     if (!all_ready) {
-        all_ready = $.when(dom_ready, ajax.loadXML()).then(translations);
+        all_ready = $.when(dom_ready, ajax.loadXML());
+        if (!odoo._modules) {
+            all_ready.then(translations);
+        }
     } else if(all_ready.state() === "resolved") { // can add async template
         all_ready = $.when(dom_ready, ajax.loadXML());
     }
