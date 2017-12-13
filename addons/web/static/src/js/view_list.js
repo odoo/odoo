@@ -695,6 +695,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         if ('confirm' in action && !window.confirm(action.confirm)) {
             return;
         }
+        if (action.name == 'activate' && action.type=='special') {
+            this.do_activate_record(this.dataset.index, id, this.dataset, this)
+        }
 
         var c = new instance.web.CompoundContext();
         c.set_eval_context(_.extend({
