@@ -882,10 +882,12 @@ class pos_order(osv.osv):
                 
             if picking_id:
                 picking_obj.action_confirm(cr, uid, [picking_id], context=context)
+                picking_obj.action_assign(cr, uid, [picking_id], context=context)
                 picking_obj.force_assign(cr, uid, [picking_id], context=context)
                 picking_obj.action_done(cr, uid, [picking_id], context=context)
             elif move_list:
                 move_obj.action_confirm(cr, uid, move_list, context=context)
+                move_obj.action_assign(cr, uid, move_list, context=context)
                 move_obj.force_assign(cr, uid, move_list, context=context)
                 move_obj.action_done(cr, uid, move_list, context=context)
         return True
