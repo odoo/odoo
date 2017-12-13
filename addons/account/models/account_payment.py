@@ -338,6 +338,14 @@ class account_payment(models.Model):
             raise UserError(_('It is not allowed to delete a payment that already created a journal entry since it would create a gap in the numbering. You should create the journal entry again and cancel it thanks to a regular revert.'))
         return super(account_payment, self).unlink()
 
+    #Metodo agregado por TRESCLOUD
+    @api.multi
+    def payment_sequence(self, payment_date, sequence_code):
+        '''
+        Este metodo devuelve la secuencia del pago, su logica va ser modificada en modulos superiores
+        '''
+        return self.env['ir.sequence'].with_context(ir_sequence_date=payment_date).next_by_code(sequence_code)
+
     @api.multi
     def post(self):
         """ Create the journal items for the payment and update the payment's state to 'posted'.
@@ -368,7 +376,8 @@ class account_payment(models.Model):
                         sequence_code = 'account.payment.supplier.refund'
                     if rec.payment_type == 'outbound':
                         sequence_code = 'account.payment.supplier.invoice'
-            rec.name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.payment_date).next_by_code(sequence_code)
+            #La siguiente linea fue modificada por TRESCLOUD
+            rec.name = self.payment_sequence(rec.payment_date, sequence_code)
             if not rec.name and rec.payment_type != 'transfer':
                 raise UserError(_("You have to define a sequence for %s in your company.") % (sequence_code,))
 
