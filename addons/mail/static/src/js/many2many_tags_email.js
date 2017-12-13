@@ -82,6 +82,21 @@ var FieldMany2ManyTagsEmail = form_relational.FieldMany2ManyTags.extend({
                 });
             });
     },
+
+    /**
+     * Override for res.partner
+     * name_get is dynamic (based on context) while display_name is static
+     * (stored)
+     */
+    get_render_data: function(ids){
+        this.dataset.cancel_read();
+        return this.dataset.name_get(ids).then(function (names) {
+            return _.map(names, function(name) {
+                return {id: name[0], display_name: name[1]};
+            });
+        });
+    },
+
 });
 
 
