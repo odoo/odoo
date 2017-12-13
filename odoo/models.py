@@ -4613,7 +4613,8 @@ env['account.invoice.line'].search([]).grouped(['partner_id.country_id.name', 'p
             for group in groups:
                 group.items = group._all_records._grouped(groupby[1:], orderby[1:], **aggregate_functions)
 
-            return sorted(groups, key=orderby[0])
+            sort_f = lambda x:str(orderby[0](x))
+            return sorted(groups, key=sort_f)
 
     @api.multi
     def update(self, values):
