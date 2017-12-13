@@ -216,7 +216,11 @@ class account_payment(models.Model):
 
     def open_payment_matching_screen(self):
         # Open reconciliation view for customers/suppliers
-        action_context = {'company_ids': [self.company_id.id], 'partner_ids': [self.partner_id.commercial_partner_id.id]}
+        action_context = {
+            'company_ids': [self.company_id.id],
+            'partner_ids': [self.partner_id.commercial_partner_id.id],
+            'account_move_ids': self.env.context.get('account_move_ids'),
+        }
         if self.partner_type == 'customer':
             action_context.update({'mode': 'customers'})
         elif self.partner_type == 'supplier':
