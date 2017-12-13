@@ -213,8 +213,12 @@ class AuthorizeAPI():
         etree.SubElement(tx, "refTransId").text = transaction_id
         response = self._authorize_request(root)
         res = dict()
+        (has_error, error_msg) = error_check(response)
+        if has_error:
+            res['x_response_code'] = self.AUTH_ERROR_STATUS
+            res['x_response_reason_text'] = error_msg
         res['x_response_code'] = response.find('transactionResponse/responseCode').text
-        res['x_trans_id'] = transaction_id
+        res['x_trans_id'] = '%s,%s' %(transaction_id, response.find('transactionResponse/transId').text)
         res['x_type'] = 'refund'
         return res
 
