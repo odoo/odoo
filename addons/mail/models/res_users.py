@@ -30,9 +30,8 @@ class Users(models.Model):
         ('inbox', 'Handle in Odoo')],
         'Notification Management', required=True, default='email',
         help="Policy on how to handle Chatter notifications:\n"
-             "- Emails: notifications are sent to your email\n"
-             "- Odoo: notifications appear in your Odoo Inbox")
-
+             "- Handle by Emails: notifications are sent to your email address\n"
+             "- Handle in Odoo: notifications appear in your Odoo Inbox")
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights on notification_email_send
             and alias fields. Access rights are disabled by default, but allowed
