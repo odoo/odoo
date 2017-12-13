@@ -669,7 +669,8 @@ class StockMove(models.Model):
         self.ensure_one()
         if self.move_dest_id:
             if self.propagate:
-                self.move_dest_id.action_cancel()
+                if self.move_dest_id.state not in ('done', 'cancel'):
+                    self.move_dest_id.action_cancel()
             elif self.move_dest_id.state == 'waiting':
                 # If waiting, the chain will be broken and we are not sure if we can still wait for it (=> could take from stock instead)
                 self.move_dest_id.write({'state': 'confirmed'})
