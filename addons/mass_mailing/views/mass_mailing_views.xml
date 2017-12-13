@@ -531,6 +531,7 @@
                                         <div>
                                             <field name="attachment_ids"  widget="many2many_binary" string="Attach a file" class="oe_inline"/>
                                         </div>
+                                        <field name="mail_server_id" groups="base.group_no_one" options="{'no_create': True, 'no_open': True}"/>
                                         <field name="schedule_date" />
                                         <field name="keep_archives" groups="base.group_no_one"/>
                                         <field name="create_date" readonly="1" attrs="{'invisible': [('create_date', '=', False)]}"/>
