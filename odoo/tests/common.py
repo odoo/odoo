@@ -24,6 +24,7 @@ from datetime import datetime, timedelta, date
 from pprint import pformat
 
 import requests
+from decorator import decorator
 from lxml import etree, html
 
 from odoo.models import BaseModel
@@ -121,9 +122,20 @@ class BaseCase(TreeCase):
     """
 
     longMessage = True      # more verbose error message by default: https://www.odoo.com/r/Vmh
+    warm = True             # False during warm-up phase (see :func:`warmup`)
 
     def cursor(self):
         return self.registry.cursor()
+
+    @property
+    def uid(self):
+        """ Get the current uid. """
+        return self.env.uid
+
+    @uid.setter
+    def uid(self, user):
+        """ Set the uid by changing the test's environment. """
+        self.env = self.env(user=user)
 
     def ref(self, xid):
         """ Returns database ID for the provided :term:`external identifier`,
@@ -162,6 +174,35 @@ class BaseCase(TreeCase):
         else:
             return self._assertRaises(exception)
 
+    @contextmanager
+    def assertQueryCount(self, default=0, **counters):
+        """ Context manager that counts queries. It may be invoked either with
+            one value, or with a set of named arguments like ``login=value``::
+
+                with self.assertQueryCount(42):
+                    ...
+
+                with self.assertQueryCount(admin=3, demo=5):
+                    ...
+
+            The second form is convenient when used with :func:`users`.
+        """
+        if self.warm:
+            login = self.env.user.login
+            expected = counters.get(login, default)
+            count0 = self.cr.sql_log_count
+            yield
+            count = self.cr.sql_log_count - count0
+            if not count <= expected:
+                msg = "Query count for user %s: got %d instead of %d"
+                self.fail(msg % (login, count, expected))
+            elif count < expected:
+                logger = logging.getLogger(type(self).__module__)
+                msg = "Query count for user %s: got %d instead of %d"
+                logger.info(msg, login, count, expected)
+        else:
+            yield
+
     def shortDescription(self):
         doc = self._testMethodDoc
         return doc and ' '.join(l.strip() for l in doc.splitlines() if not l.isspace()) or None
@@ -182,9 +223,8 @@ class TransactionCase(BaseCase):
         self.registry = odoo.registry(get_db_name())
         #: current transaction's cursor
         self.cr = self.cursor()
-        self.uid = odoo.SUPERUSER_ID
         #: :class:`~odoo.api.Environment` for the current test case
-        self.env = api.Environment(self.cr, self.uid, {})
+        self.env = api.Environment(self.cr, odoo.SUPERUSER_ID, {})
 
         @self.addCleanup
         def reset():
@@ -219,8 +259,7 @@ class SingleTransactionCase(BaseCase):
         super(SingleTransactionCase, cls).setUpClass()
         cls.registry = odoo.registry(get_db_name())
         cls.cr = cls.registry.cursor()
-        cls.uid = odoo.SUPERUSER_ID
-        cls.env = api.Environment(cls.cr, cls.uid, {})
+        cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
 
     @classmethod
     def tearDownClass(cls):
@@ -467,6 +506,49 @@ class HttpCase(TransactionCase):
         phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
         cmd = ['phantomjs', phantomtest, json.dumps(options)]
         self.phantom_run(cmd, timeout)
+
+
+def users(*logins):
+    """ Decorate a method to execute it once for each given user. """
+    @decorator
+    def wrapper(func, *args, **kwargs):
+        self = args[0]
+        old_uid = self.uid
+        try:
+            # retrieve users
+            user_id = {
+                user.login: user.id
+                for user in self.env['res.users'].search([('login', 'in', list(logins))])
+            }
+            for login in logins:
+                # switch user
+                self.uid = user_id[login]
+                # execute func
+                func(*args, **kwargs)
+        finally:
+            self.uid = old_uid
+
+    return wrapper
+
+
+@decorator
+def warmup(func, *args, **kwargs):
+    """ Decorate a test method to run it twice: once for a warming up phase, and
+        a second time for real.  The test attribute ``warm`` is set to ``False``
+        during warm up, and ``True`` once the test is warmed up.  Note that the
+        effects of the warmup phase are rolled back thanks to a savepoint.
+    """
+    self = args[0]
+    # run once to warm up the caches
+    self.warm = False
+    self.cr.execute('SAVEPOINT test_warmup')
+    func(*args, **kwargs)
+    self.cr.execute('ROLLBACK TO SAVEPOINT test_warmup')
+    self.env.cache.invalidate()
+    # run once for real
+    self.warm = True
+    func(*args, **kwargs)
+
 
 def can_import(module):
     """ Checks if <module> can be imported, returns ``True`` if it can be,

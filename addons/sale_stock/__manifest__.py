@@ -33,6 +33,7 @@ You can choose flexible invoicing methods:
         'views/stock_views.xml',
         'views/res_config_settings_views.xml',
         'views/account_invoice_views.xml',
+        'views/sale_stock_portal_template.xml',
         'report/sale_order_report_templates.xml',
         'report/stock_report_deliveryslip.xml',
         'data/sale_stock_data.xml',
