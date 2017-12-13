@@ -902,8 +902,12 @@ class account_bank_statement_line(osv.osv):
         # If the reconciliation is performed in another currency than the company currency, the amounts are converted to get the right debit/credit.
         # If there is more than 1 debit and 1 credit, this can induce a rounding error, which we put in the foreign exchane gain/loss account.
         if st_line_currency.id != company_currency.id:
-            diff_amount = bank_st_move_vals['debit'] - bank_st_move_vals['credit'] \
-                + sum(aml['debit'] for aml in to_create) - sum(aml['credit'] for aml in to_create)
+            diff_amount = (
+                company_currency.round(bank_st_move_vals['debit']) -
+                company_currency.round(bank_st_move_vals['credit']) +
+                sum(company_currency.round(aml['debit']) for aml in to_create)
+                - sum(company_currency.round(aml['credit']) for aml in
+                      to_create))
             if not company_currency.is_zero(diff_amount):
                 diff_aml = self.get_currency_rate_line(cr, uid, st_line, diff_amount, move_id, context=context)
                 diff_aml['name'] = _('Rounding error from currency conversion')
