@@ -641,7 +641,7 @@ class mail_message(osv.Model):
         cr.execute("""SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, n.partner_id
             FROM "%s" m LEFT JOIN "mail_notification" n
             ON n.message_id=m.id AND n.partner_id = (%%s)
-            WHERE m.id = ANY (%%s)""" % self._table, (pid, ids,))
+            WHERE m.id = ANY (VALUES %s)""" % (self._table, ','.join(['(%d)' % (x) for x in ids])), (pid,))
         for id, rmod, rid, author_id, partner_id in cr.fetchall():
             if author_id == pid:
                 author_ids.add(id)
@@ -694,6 +694,8 @@ class mail_message(osv.Model):
 
         if uid == SUPERUSER_ID:
             return
+        if not ids:
+            return
         if isinstance(ids, (int, long)):
             ids = [ids]
         not_obj = self.pool.get('mail.notification')
@@ -702,7 +704,7 @@ class mail_message(osv.Model):
 
         # Read mail_message.ids to have their values
         message_values = dict((res_id, {}) for res_id in ids)
-        cr.execute('SELECT DISTINCT id, model, res_id, author_id, parent_id FROM "%s" WHERE id = ANY (%%s)' % self._table, (ids,))
+        cr.execute('SELECT DISTINCT id, model, res_id, author_id, parent_id FROM "%s" WHERE id = ANY (VALUES %s)' % (self._table, ','.join(['(%d)' % (x) for x in ids])))
         for id, rmod, rid, author_id, parent_id in cr.fetchall():
             message_values[id] = {'model': rmod, 'res_id': rid, 'author_id': author_id, 'parent_id': parent_id}
 
