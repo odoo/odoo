@@ -4588,8 +4588,7 @@ env['account.invoice.line'].search([]).grouped(['partner_id.country_id.name', 'p
         else:
             group_f = groupby[0]
             
-            
-            group_names = set(map(group_f, self))
+            group_names = set([group_f(rec) for rec in self])
             # don't use self.mapped(). It could return a recordset, and lose "None"
             #if not False in group_names:
             #    group_names = set(x for x in group_names)
