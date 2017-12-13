@@ -340,6 +340,9 @@ it uses the values of other *fields*, it should specify those fields using
         for record in self:
             record.total = sum(line.value for line in record.line_ids)
 
+.. danger::
+    If a method depends on another computed or a related field, the other field MUST have store=True
+
 * computed fields are not stored by default, they are computed and
   returned when requested. Setting ``store=True`` will store them in the
   database and automatically enable searching
