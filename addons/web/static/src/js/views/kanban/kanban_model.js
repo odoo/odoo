@@ -284,7 +284,7 @@ var KanbanModel = BasicModel.extend({
             method: 'read_progress_bar',
             kwargs: {
                 domain: list.domain,
-                group_by: list.groupedBy[0],
+                group_by: list.groupedBy[0].split(':')[0],
                 progress_bar: list.progressBar,
                 context: list.context,
             },
