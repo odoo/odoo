@@ -502,11 +502,29 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 self.push_breadcrumb({
                     widget: widget,
                     title: action.name,
-                    on_reverse_breadcrumb: options.on_reverse_breadcrumb,
+                    on_reverse_breadcrumb: function()
+                    {
+                        jQuery('.oe_view_manager_breadcrumb_client_action').remove();
+                        return options.on_reverse_breadcrumb.apply(this, arguments);
+                    },
                     hide_breadcrumb: options.hide_breadcrumb,
                 });
                 if (action.tag !== 'reload') {
                     self.do_push_state({});
+                }
+                if(!options.hide_breadcrumb && self.breadcrumbs.length > 1)
+                {
+                    jQuery('.oe_breadcrumb_title').html(self.get_title());
+                    jQuery('.oe_view_manager_breadcrumb_client_action').remove();
+                    jQuery('<div />')
+                        .addClass('oe_view_manager')
+                        .addClass('oe_view_manager_breadcrumb_client_action')
+                        .append(
+                            jQuery('<table />')
+                            .addClass('oe_view_manager_header')
+                            .append(
+                                jQuery('.oe_view_manager_current > .oe_view_manager_header .oe_header_row_top').clone()))
+                        .prependTo(jQuery('.oe_view_manager').parent());
                 }
             }
         }, options);
