@@ -1023,7 +1023,8 @@ class AccountInvoice(models.Model):
         args = args or []
         recs = self.browse()
         if name:
-            recs = self.search([('number', '=', name)] + args, limit=limit)
+            #El operador usado en la siguiente linea fue modificado por TRESCLOUD
+            recs = self.search([('number', operator, name)] + args, limit=limit)
         if not recs:
             recs = self.search([('name', operator, name)] + args, limit=limit)
         return recs.name_get()
