@@ -920,6 +920,7 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             move_ids = [x.id for x in pick.move_lines if x.state in ['confirmed', 'waiting']]
             self.pool.get('stock.move').force_assign(cr, uid, move_ids, context=context)
+            pick.message_post(_("Force Availability"))
         #pack_operation might have changed and need to be recomputed
         self.write(cr, uid, ids, {'recompute_pack_op': True}, context=context)
         return True
