@@ -12,6 +12,7 @@ var config = require('web.config');
 var core = require('web.core');
 var KanbanRenderer = require('web.KanbanRenderer');
 
+var _t = core._t;
 var qweb = core.qweb;
 
 if (!config.device.isMobile) {
@@ -138,8 +139,19 @@ KanbanRenderer.include({
      * @private
      */
     _renderGrouped: function (fragment) {
+        var data = [];
+        _.each(this.state.data, function (group) {
+            if (!group.value) {
+                group = _.extend({}, group, {value: _t('Undefined')});
+                data.unshift(group);
+            }
+            else {
+                data.push(group);
+            }
+        });
+
         var $tabs = $(qweb.render('KanbanView.MobileTabs', {
-            data: this.state.data,
+            data: data,
         }));
         $tabs.appendTo(fragment);
         return this._super.apply(this, arguments);

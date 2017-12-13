@@ -56,7 +56,7 @@ QUnit.module('Views', {
     QUnit.module('KanbanView Mobile');
 
     QUnit.test('mobile grouped rendering', function (assert) {
-        assert.expect(8);
+        assert.expect(9);
 
         var kanban = createView({
             View: KanbanView,
@@ -96,6 +96,38 @@ QUnit.module('Views', {
         kanban.$buttons.find('.o-kanban-button-new').click();
         assert.ok(kanban.$('.o_kanban_group:nth(1) >  div:nth(1)').hasClass('o_kanban_quick_create'),
             "clicking on create should open the quick_create in the second column");
+
+        // kanban column should match kanban mobile tabs
+        var column_ids = kanban.$('.o_kanban_group').map(function(){ return $(this).data('id') }).get();
+        var tab_ids = kanban.$('.o_kanban_mobile_tab').map(function(){ return $(this).data('id') }).get();
+        assert.deepEqual(column_ids, tab_ids, "all columns data-id should match mobile tabs data-id");
+
+        kanban.destroy();
+    });
+    QUnit.test('mobile grouped with undefined column', function (assert) {
+        assert.expect(3);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test o_kanban_small_column">' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['product_id'],
+        });
+
+        // first column should be undefined with framework unique identifier
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 3, "should have 3 columns" );
+        assert.strictEqual(kanban.$('.o_kanban_group:first-child[data-id^="partner_"]').length, 1,
+            "Undefined column should be first and have unique framework identifier as data-id")
+
+        // kanban column should match kanban mobile tabs
+        var column_ids = kanban.$('.o_kanban_group').map(function(){ return $(this).data('id') }).get();
+        var tab_ids = kanban.$('.o_kanban_mobile_tab').map(function(){ return $(this).data('id') }).get();
+        assert.deepEqual(column_ids, tab_ids, "all columns data-id should match mobile tabs data-id");
 
         kanban.destroy();
     });
