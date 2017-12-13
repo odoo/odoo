@@ -161,7 +161,7 @@ class res_partner(osv.osv):
 
 
     __check_vat_ch_re1 = re.compile(r'(MWST|TVA|IVA)[0-9]{6}$')
-    __check_vat_ch_re2 = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)$')
+    __check_vat_ch_re2 = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)?$')
 
     def check_vat_ch(self, vat):
         '''
@@ -180,9 +180,11 @@ class res_partner(osv.osv):
         #     CHE#########MWST
         #     CHE#########TVA
         #     CHE#########IVA
+        #     CHE#########
         #     CHE-###.###.### MWST
         #     CHE-###.###.### TVA
         #     CHE-###.###.### IVA
+        #     CHE-###.###.###
         #     
         if self.__check_vat_ch_re1.match(vat):
             return True
