@@ -3,8 +3,9 @@ import pprint
 import logging
 from werkzeug import urls, utils
 
-from odoo import http
+from odoo import http, _
 from odoo.http import request
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -39,7 +40,27 @@ class AuthorizeController(http.Controller):
 
     @http.route(['/payment/authorize/s2s/create_json_3ds'], type='json', auth='public', csrf=False)
     def authorize_s2s_create_json_3ds(self, verify_validity=False, **kwargs):
-        token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
+        token = False
+        acquirer = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id')))
+        
+        try:
+            token = acquirer.s2s_process(kwargs)
+        except ValidationError as e:
+            message = e.args[0]
+            if isinstance(message, dict) and 'missing_fields' in message:
+                msg = _("The transaction cannot be processed because some contact details are missing or invalid: ")
+                message = msg + ', '.join(message['missing_fields']) + '. '
+                if request.env.user._is_public():
+                    message += _("Please sign in to complete your profile.")
+                    # update message if portal mode = b2b
+                    if request.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited', 'False').lower() == 'false':
+                        message += _("If you don't have any account, please ask your salesperson to update your profile. ")
+                else:
+                    message += _("Please complete your profile. ")
+
+            return {
+                'error': message
+            }
 
         if not token:
             res = {
