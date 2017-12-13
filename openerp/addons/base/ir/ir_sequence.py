@@ -105,7 +105,7 @@ class ir_sequence(models.Model):
 
     def _set_number_next_actual(self):
         for record in self:
-            record.write({'number_next': record.number_next_actual or 0})
+            record.write({'number_next': record.number_next_actual or 1})
 
     name = fields.Char(required=True)
     code = fields.Char('Sequence Code')

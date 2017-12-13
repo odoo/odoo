@@ -2532,7 +2532,8 @@ class stock_move(osv.osv):
             else:
                 if move.move_dest_id:
                     if move.propagate:
-                        self.action_cancel(cr, uid, [move.move_dest_id.id], context=context)
+                        if move.move_dest_id.state not in ('done', 'cancel'):
+                            self.action_cancel(cr, uid, [move.move_dest_id.id], context=context)
                     elif move.move_dest_id.state == 'waiting':
                         #If waiting, the chain will be broken and we are not sure if we can still wait for it (=> could take from stock instead)
                         self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'}, context=context)
