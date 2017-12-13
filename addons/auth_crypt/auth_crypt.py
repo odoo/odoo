@@ -47,6 +47,8 @@ class res_users(osv.osv):
     }
 
     def check_credentials(self, cr, uid, password):
+        if not password:
+            raise openerp.exceptions.AccessDenied()
         # convert to base_crypt if needed
         cr.execute('SELECT password, password_crypt FROM res_users WHERE id=%s AND active', (uid,))
         encrypted = None
