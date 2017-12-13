@@ -13,7 +13,7 @@
             </t>
         </xpath>
         <xpath expr="//div[@id='portal_sign']" position="after">
-            <div class="row" t-if="not invoices and order.state in ('sent', 'sale') and portal_confirmation == 'pay'" id="portal_pay">
+            <div class="row" t-if="not invoices and order.state in ('sent') and portal_confirmation == 'pay'" id="portal_pay">
                 <div class="col-md-offset-3 col-md-6">
                     <div t-if="pms or s2s_acquirers or form_acquirers" id="payment_method" class="text-left col-md-13">
                         <h4 class="mb24">Pay with</h4>
