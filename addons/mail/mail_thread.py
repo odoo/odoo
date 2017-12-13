@@ -1385,6 +1385,7 @@ class mail_thread(osv.AbstractModel):
         msg_dict['to'] = decode(message.get('to'))
         msg_dict['cc'] = decode(message.get('cc'))
         msg_dict['email_from'] = decode(message.get('from'))
+        msg_dict['reply_to'] = decode(message.get('reply-to'))
         partner_ids = self._message_find_partners(cr, uid, message, ['To', 'Cc'], context=context)
         msg_dict['partner_ids'] = [(4, partner_id) for partner_id in partner_ids]
 
