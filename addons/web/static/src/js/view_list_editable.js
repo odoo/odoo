@@ -177,13 +177,21 @@
         make_editor: function () {
             return new instance.web.list.Editor(this);
         },
-        do_button_action: function (name, id, callback) {
+        do_button_action: function(name, id, callback) {
             var self = this, args = arguments;
             this.ensure_saved().done(function (done) {
                 if (!id && done.created) {
                     id = done.record.get('id');
                 }
-                self.handle_button(name, id, callback);
+                var attrs = self.fields_view.arch.attrs;
+                var reload_on_button = ('reload_on_button' in attrs) ? JSON.parse(attrs['reload_on_button']) : false;
+                if (!reload_on_button) {
+                    self.handle_button(name, id, callback);
+                } else {
+                    self.handle_button(name, id, callback).done(function (done) {
+                        self.reload();
+                    });
+                }
             });
         },
         /**
