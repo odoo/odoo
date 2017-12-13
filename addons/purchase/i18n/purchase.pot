@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2017-12-13 14:36+0000\n"
+"PO-Revision-Date: 2017-12-13 14:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -72,7 +72,7 @@ msgid "\n"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:79
+#: code:addons/purchase/models/stock.py:121
 #, python-format
 msgid " Buy"
 msgstr ""
@@ -301,9 +301,17 @@ msgid "<strong>Your Order Reference:</strong>"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:83
+#: code:addons/purchase/models/stock.py:95
 #, python-format
 msgid "A sale order that generated this purchase order has been deleted. Check if an action is needed."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_line_product_type
+msgid "A stockable product is a product for which you manage stock. The \"Inventory\" app has to be installed.\n"
+"A consumable product, on the other hand, is a product for which stock is not managed.\n"
+"A service is a non-material product you provide.\n"
+"A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
 
 #. module: purchase
@@ -420,7 +428,7 @@ msgid "Blocking Message"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:73
+#: code:addons/purchase/models/stock.py:115
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -447,7 +455,7 @@ msgid "Calls for tenders are used when you want to generate requests for quotati
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:76
+#: code:addons/purchase/models/stock.py:118
 #, python-format
 msgid "Can't find any generic Buy route."
 msgstr ""
@@ -466,7 +474,7 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:737
+#: code:addons/purchase/models/purchase.py:739
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr ""
@@ -521,7 +529,7 @@ msgid "Company"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:313
+#: code:addons/purchase/models/purchase.py:314
 #, python-format
 msgid "Compose Email"
 msgstr ""
@@ -568,6 +576,7 @@ msgid "Created Purchase Order Line"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_create_uid
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_create_uid
 msgid "Created by"
 msgstr ""
@@ -685,11 +694,6 @@ msgid "Dropshipping"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr ""
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
 msgid "Encoding help. When selected, the associated purchase order lines are added to the vendor bill. Several PO can be selected."
 msgstr ""
@@ -705,7 +709,7 @@ msgid "Extended Filters"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:577
+#: code:addons/purchase/models/purchase.py:566
 #, python-format
 msgid "Extra line with %s "
 msgstr ""
@@ -975,6 +979,11 @@ msgid "My Activities"
 msgstr ""
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "My Purchases"
+msgstr ""
+
+#. module: purchase
 #: code:addons/purchase/controllers/portal.py:44
 #, python-format
 msgid "Name"
@@ -1191,6 +1200,11 @@ msgid "Product Template"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_type
+msgid "Product Type"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_uom
 msgid "Product Unit of Measure"
 msgstr ""
@@ -1224,7 +1238,6 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-#: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Purchase"
 msgstr ""
 
@@ -1249,11 +1262,6 @@ msgid "Purchase Analytics"
 msgstr ""
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
-msgid "Purchase Bills"
-msgstr ""
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_lead
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_po_lead
 msgid "Purchase Lead Time"
@@ -1273,7 +1281,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
 #: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
-#: model:res.request.link,name:purchase.req_link_purchase_order
 #, python-format
 msgid "Purchase Order"
 msgstr ""
@@ -1300,6 +1307,7 @@ msgid "Purchase Order Line"
 msgstr ""
 
 #. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_tree
 msgid "Purchase Order Lines"
@@ -1346,6 +1354,14 @@ msgid "Purchase Orders Statistics"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_user_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_user_id
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Purchase Representative"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Purchase orders that have been invoiced."
 msgstr ""
@@ -1366,7 +1382,6 @@ msgid "Purchase-Standard Price"
 msgstr ""
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
 #: model:ir.ui.menu,name:purchase.menu_purchase_root
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 #: model:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
@@ -1515,13 +1530,6 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_move_ids
 msgid "Reservation"
-msgstr ""
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_create_uid
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_user_id
-#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
-msgid "Responsible"
 msgstr ""
 
 #. module: purchase
@@ -1686,7 +1694,7 @@ msgid "The product form contains detailed information to improve the\n"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:649
+#: code:addons/purchase/models/purchase.py:651
 #, python-format
 msgid "The quantities on your purchase order indicate less than billed. You should ask for a refund. "
 msgstr ""
@@ -1706,7 +1714,7 @@ msgid "The request for quotation is the first step of the purchases flow. Once\n
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:878
+#: code:addons/purchase/models/purchase.py:880
 #, python-format
 msgid "There is no vendor associated to the product %s. Please define a vendor for this product."
 msgstr ""
@@ -1750,13 +1758,13 @@ msgid "This note will show up on purchase orders."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:203
+#: code:addons/purchase/models/account_invoice.py:209
 #, python-format
 msgid "This vendor bill has been created from: %s"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:217
+#: code:addons/purchase/models/account_invoice.py:223
 #, python-format
 msgid "This vendor bill has been modified from: %s"
 msgstr ""
@@ -1813,13 +1821,13 @@ msgid "Transfer"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:362
+#: code:addons/purchase/models/purchase.py:370
 #, python-format
 msgid "Unable to cancel purchase order %s as some receptions have already been done."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:365
+#: code:addons/purchase/models/purchase.py:373
 #, python-format
 msgid "Unable to cancel this purchase order. You must first cancel related vendor bills."
 msgstr ""
@@ -1960,7 +1968,7 @@ msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:268
-#: code:addons/purchase/models/purchase.py:808
+#: code:addons/purchase/models/purchase.py:810
 #, python-format
 msgid "Warning for %s"
 msgstr ""
@@ -1997,6 +2005,13 @@ msgid "You can control the invoice from your vendor according to\n"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:643
+#, python-format
+msgid "You cannot decrease the ordered quantity below the received quantity.\n"
+"Create a return first."
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_product_action
 msgid "You must define a product for everything you purchase, whether\n"
 "                it's a physical product, a consumable or services you buy to\n"
@@ -2011,7 +2026,7 @@ msgid "You must define a product for everything you purchase, whether\n"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:395
+#: code:addons/purchase/models/purchase.py:412
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr ""

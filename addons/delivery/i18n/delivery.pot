@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:12+0000\n"
-"PO-Revision-Date: 2017-11-30 13:12+0000\n"
+"POT-Creation-Date: 2017-12-13 14:36+0000\n"
+"PO-Revision-Date: 2017-12-13 14:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -169,11 +169,6 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_weight_bulk
 msgid "Bulk Weight"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_stock_quant_package_shipping_weight
-msgid "Can be changed during the 'put in pack' to adjust the weight of the shipping."
 msgstr ""
 
 #. module: delivery
@@ -559,12 +554,6 @@ msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
 
 #. module: delivery
-#: model:product.product,name:delivery.product_product_delivery_normal
-#: model:product.template,name:delivery.product_product_delivery_normal_product_template
-msgid "Normal Delivery Charges"
-msgstr ""
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_number_of_packages
 msgid "Number of Packages"
 msgstr ""
@@ -753,12 +742,6 @@ msgid "Stock Move"
 msgstr ""
 
 #. module: delivery
-#: model:product.product,name:delivery.product_product_delivery_poste
-#: model:product.template,name:delivery.product_product_delivery_poste_product_template
-msgid "The Poste"
-msgstr ""
-
-#. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "These methods allow to automatically compute the delivery price\n"
 "                according to your settings; on the sales order (based on the\n"
@@ -850,8 +833,18 @@ msgid "Weight Unit of Measure"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_quant_package_weight
+msgid "Weight computed based on the sum of the weights of the products."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
 msgid "Weight for Shipping"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_quant_package_shipping_weight
+msgid "Weight used to compute the price of the delivery (if applicable)."
 msgstr ""
 
 #. module: delivery
