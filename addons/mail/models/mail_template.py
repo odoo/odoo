@@ -259,16 +259,16 @@ class MailTemplate(models.Model):
                 # deprecated/obsolete records
                 res_ids = Model.search([], limit=1, order='id DESC').ids[:1]
 
-                try:
-                    if res_ids:
-                        self.render_template(
-                            vals['body_html'], _model, res_ids
-                        )
-                except Exception as e:
-                    raise UserError(_(
-                        "Template rendering failed, this could mean that your "
-                        "template contains python syntax errors"
-                    ))
+                if res_ids:
+                    render = self.render_template(
+                        vals['body_html'], _model, res_ids
+                    )
+
+                    if not any(render.values()):
+                        raise UserError(_(
+                            "Template rendering failed, this could mean that "
+                            "your template contains python syntax errors"
+                        ))
 
         return super(MailTemplate, self).write(vals)
 
