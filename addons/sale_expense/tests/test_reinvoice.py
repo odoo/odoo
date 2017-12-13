@@ -1,25 +1,22 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.hr_expense.tests.common import CommonTest
+from odoo.addons.hr_expense.tests.common import TestExpenseCommon
+from odoo.addons.sale.tests.test_sale_common import TestCommonSaleNoChart
 
 
-class TestReInvoice(CommonTest):
+class TestReInvoice(TestExpenseCommon, TestCommonSaleNoChart):
 
     @classmethod
     def setUpClass(cls):
         super(TestReInvoice, cls).setUpClass()
 
-        cls.partner_customer = cls.env['res.partner'].create({
-            'name': 'Ze Client',
-            'email': 'client@agrolait.com',
-            'property_account_payable_id': cls.account_payable.id,
-        })
+        cls.setUpExpenseProducts()
 
         cls.sale_order = cls.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
-            'partner_id': cls.partner_customer.id,
-            'partner_invoice_id': cls.partner_customer.id,
-            'partner_shipping_id': cls.partner_customer.id,
+            'partner_id': cls.partner_customer_usd.id,
+            'partner_invoice_id': cls.partner_customer_usd.id,
+            'partner_shipping_id': cls.partner_customer_usd.id,
         })
 
     def test_at_cost(self):
