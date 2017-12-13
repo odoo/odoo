@@ -36,6 +36,7 @@ import werkzeug.routing
 import werkzeug.wrappers
 import werkzeug.wsgi
 from werkzeug.wsgi import wrap_file
+import redis
 
 try:
     import psutil
@@ -48,6 +49,7 @@ from openerp.service.server import memory_info
 from openerp.service import security, model as service_model
 from openerp.tools.func import lazy_property
 from openerp.tools import ustr
+from openerp.tools import redis_session
 
 _logger = logging.getLogger(__name__)
 rpc_request = logging.getLogger(__name__ + '.rpc.request')
@@ -1281,9 +1283,16 @@ class Root(object):
     @lazy_property
     def session_store(self):
         # Setup http sessions
+        redis_host = openerp.tools.config.redis_host
+        if redis_host:
+            _logger.debug('HTTP sessions stored in: %s', redis)
+            redis = redis.Redis(host=redis_host, port=6379, db=0)
+            return redis_session.RedisSessionStore(redis, session_class=OpenERPSession)
+            
         path = openerp.tools.config.session_dir
         _logger.debug('HTTP sessions stored in: %s', path)
         return werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
+       
 
     @lazy_property
     def nodb_routing_map(self):

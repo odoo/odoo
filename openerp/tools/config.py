@@ -146,6 +146,7 @@ class configmanager(object):
 
         group.add_option("-D", "--data-dir", dest="data_dir", my_default=_get_default_datadir(),
                          help="Directory where to store Odoo data")
+        group.add_option("--redis-server", dest="redis_host", my_default=False, help="Redis Server where to store Odoo Session")
         parser.add_option_group(group)
 
         # XML-RPC / HTTP
