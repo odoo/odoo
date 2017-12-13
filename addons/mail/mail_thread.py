@@ -959,6 +959,11 @@ class mail_thread(osv.AbstractModel):
         references = decode_header(message, 'References')
         in_reply_to = decode_header(message, 'In-Reply-To').strip()
         thread_references = references or in_reply_to
+        is_forwarded = message.get('Subject', '').startswith('Fwd:')
+
+        # forwarded mail shouldn't have a parent
+        if is_forwarded:
+            message_dict.pop('parent_id', False)
 
         # 0. First check if this is a bounce message or not.
         #    See http://datatracker.ietf.org/doc/rfc3462/?include_text=1
@@ -974,7 +979,7 @@ class mail_thread(osv.AbstractModel):
         ref_match = thread_references and tools.reference_re.search(thread_references)
         msg_references = mail_header_msgid_re.findall(thread_references)
         mail_message_ids = mail_msg_obj.search(cr, uid, [('message_id', 'in', msg_references)], context=context)
-        if ref_match and mail_message_ids:
+        if ref_match and mail_message_ids and not is_forwarded:
             original_msg = mail_msg_obj.browse(cr, SUPERUSER_ID, mail_message_ids[0], context=context)
             model, thread_id = original_msg.model, original_msg.res_id
             alias_ids = mail_alias.search(cr, uid, [('alias_name', '=', (tools.email_split(email_to) or [''])[0].split('@', 1)[0].lower())])
@@ -994,7 +999,7 @@ class mail_thread(osv.AbstractModel):
                 return []
 
         # 2. message is a reply to an existign thread (6.1 compatibility)
-        if ref_match:
+        if ref_match and not is_forwarded:
             reply_thread_id = int(ref_match.group(1))
             reply_model = ref_match.group(2) or fallback_model
             reply_hostname = ref_match.group(3)
@@ -1026,7 +1031,7 @@ class mail_thread(osv.AbstractModel):
                             return []
 
         # 3. Reply to a private message
-        if in_reply_to:
+        if in_reply_to and not is_forwarded:
             mail_message_ids = mail_msg_obj.search(cr, uid, [
                                 ('message_id', '=', in_reply_to),
                                 '!', ('message_id', 'ilike', 'reply_to')
