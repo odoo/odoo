@@ -108,9 +108,15 @@ odoo.define('payment.payment_form', function (require) {
                         }
                         // if the server has returned false, we display an error
                         else {
-                            self.displayError(
-                                _t('Server Error'),
-                                _t('e.g. Your credit card details are wrong. Please verify.'));
+                            if (data.error) {
+                                self.displayError(
+                                    '',
+                                    data.error);
+                            } else { // if the server doesn't provide an error message
+                                self.displayError(
+                                    _t('Server Error'),
+                                    _t('e.g. Your credit card details are wrong. Please verify.'));
+                            }
                         }
                         // here we remove the 'processing' icon from the 'add a new payment' button
                         $(button).attr('disabled', false);
@@ -265,10 +271,15 @@ odoo.define('payment.payment_form', function (require) {
                     }
                     // if the server has returned false, we display an error
                     else {
-                        self.displayError(
-                            _t('Server Error'),
-                            _t("<p>We are not able to add your payment method at the moment.</p>")
-                        );
+                        if (data.error) {
+                            self.displayError(
+                                '',
+                                data.error);
+                        } else { // if the server doesn't provide an error message
+                            self.displayError(
+                                _t('Server Error'),
+                                _t('e.g. Your credit card details are wrong. Please verify.'));
+                        }
                     }
                     // here we remove the 'processing' icon from the 'add a new payment' button
                     $(button).attr('disabled', false);
