@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common
+from odoo.tests import common, Form
 from odoo import fields
 
 
@@ -72,3 +72,69 @@ class TestPurchaseRequisition(common.TransactionCase):
         po_dict = purchase_order._convert_to_write({name: purchase_order[name] for name in purchase_order._cache})
         self.po_requisition = PurchaseOrder.create(po_dict)
         self.assertEqual(len(self.po_requisition.order_line), 1, 'Purchase order should have one line')
+
+    def test_call_for_tender_mto(self):
+        """ Simulate a mto sale order with a call for tender. This
+        should create the following objects in this order:
+        customer move -> purchase tender -> purchase -> supplier move
+        Also this test checks that the supplier move is linked to The
+        customer move and the user should able to proccess the
+        delivery order to the end.
+        In order to check more scenario. This test will generate 2 po
+        from the same requisition (purchase tender).
+        requisition -> PO1 -> Picking1 -> customer picking
+                    -> PO2 -> Picking2 /
+        """
+        stock_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_stock')
+        customer_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_customers')
+        product = self.env['product.product'].create({
+            'name': 'Baby Mop',
+            'type': 'product',
+            'route_ids': [
+                (4, self.ref('stock.route_warehouse0_mto')),
+                (4, self.ref('purchase.route_warehouse0_buy'))
+            ],
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'purchase_requisition': 'tenders',
+        })
+        customer_move = self.env['stock.move'].create({
+            'name': 'move out',
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'product_uom_qty': 100.0,
+            'procure_method': 'make_to_order',
+        })
+        customer_move._action_confirm()
+
+        purchase_requisition_line = self.env['purchase.requisition.line'].search([('product_id', '=', product.id)])
+        purchase_requisition = purchase_requisition_line.requisition_id
+
+        self.assertTrue(purchase_requisition, 'A purchase requisition should created')
+        self.assertEqual(purchase_requisition_line.move_dest_id, customer_move, 'The customer move should be fixed on the requisition line.')
+
+        purchase_requisition.action_in_progress()
+
+        # Create two partner for the two purchase order.
+        partner_1 = self.env['res.partner'].create({'name': 'Mother Annabelle'})
+
+        purchase_form = Form(self.env['purchase.order'].with_context(default_requisition_id=purchase_requisition.id))
+        # Since there is no vendor on the requisition we have to manually set one.
+        purchase_form.partner_id = partner_1
+        purchase = purchase_form.save()
+
+        self.assertEqual(len(purchase.order_line), 1, 'One order line should be created from the purchase requisition line.')
+        self.assertEqual(purchase.order_line.product_id, customer_move.product_id, 'The product should be the same than the product on the move.')
+        self.assertEqual(purchase.origin, purchase_requisition.name)
+        self.assertEqual(purchase.order_line.move_dest_ids, customer_move, 'The customer move should be fixed on the order line.')
+
+        self.assertEqual(purchase.partner_id, partner_1, 'Partner on the first purchase order should not be modify.')
+
+        # Confirm the purchase order and generate the associated pickings.
+        purchase.button_confirm()
+
+        picking = purchase.picking_ids
+        self.assertTrue(picking.move_lines, 'A picking should be created for the purchase order with one stock move.')
+
+        self.assertEqual(picking.move_lines, customer_move.move_orig_ids, 'The supplier moves and customer move should be linked.')
