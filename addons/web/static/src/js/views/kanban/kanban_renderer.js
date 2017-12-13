@@ -235,6 +235,10 @@ var KanbanRenderer = BasicRenderer.extend({
             }
         });
 
+        // remove previous sorting
+        if(this.$el.sortable('instance') !== undefined) {
+            this.$el.sortable('destroy');
+        }
         if (this.groupedByM2O) {
             // Enable column sorting
             this.$el.sortable({
