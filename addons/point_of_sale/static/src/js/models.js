@@ -442,10 +442,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         load_new_partners: function(){
             var self = this;
             var def  = new $.Deferred();
-            var fields = _.find(this.models,function(model){ return model.model === 'res.partner'; }).fields;
+            var model = _.find(this.models,function(model){ return model.model === 'res.partner'; });
+            var domain = model.domain;
+            domain.push(['write_date','>',this.db.get_partner_write_date()]);
             new instance.web.Model('res.partner')
-                .query(fields)
-                .filter([['write_date','>',this.db.get_partner_write_date()]])
+                .query(model.fields)
+                .filter(domain)
                 .all({'timeout':3000, 'shadow': true})
                 .then(function(partners){
                     if (self.db.add_partners(partners)) {   // check if the partners we got were real updates
