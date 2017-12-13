@@ -1267,6 +1267,9 @@ class mail_thread(osv.AbstractModel):
             self.write(cr, uid, ids, update_vals, context=context)
         return True
 
+    def _get_attachment_data(self, filename, part):
+        return (filename or 'attachment', part.get_payload(decode=True))
+
     def _message_extract_payload(self, message, save_original=False):
         """Extract body as HTML and attachments from the mail message"""
         attachments = []
@@ -1314,7 +1317,8 @@ class mail_thread(osv.AbstractModel):
                 encoding = part.get_content_charset()  # None if attachment
                 # 1) Explicit Attachments -> attachments
                 if filename or part.get('content-disposition', '').strip().startswith('attachment'):
-                    attachments.append((filename or 'attachment', part.get_payload(decode=True)))
+                    attachments.append(
+                        self._get_attachment_data(filename, part))
                     continue
                 # 2) text/plain -> <pre/>
                 if part.get_content_type() == 'text/plain' and (not alternative or not body):
@@ -1332,7 +1336,8 @@ class mail_thread(osv.AbstractModel):
                         body = tools.append_content_to_html(body, html, plaintext=False)
                 # 4) Anything else -> attachment
                 else:
-                    attachments.append((filename or 'attachment', part.get_payload(decode=True)))
+                    attachments.append(
+                        self._get_attachment_data(filename, part))
         return body, attachments
 
     def message_parse(self, cr, uid, message, save_original=False, context=None):
