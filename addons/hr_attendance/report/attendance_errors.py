@@ -25,6 +25,12 @@ from openerp.osv import osv
 from openerp.report import report_sxw
 
 
+def format_timedelta(td):
+    if td < datetime.timedelta(0):
+        return '-' + format_timedelta(-td)
+    else:
+        return str(td).split('.')[0]
+
 class attendance_print(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
@@ -44,11 +50,16 @@ class attendance_print(report_sxw.rml_parse):
         self.cr.execute("select name as date, create_date, action, create_date-name as delay from hr_attendance where employee_id=%s and to_char(name,'YYYY-mm-dd')<=%s and to_char(name,'YYYY-mm-dd')>=%s and action IN (%s,%s) order by name", (employee_id, dt_to, dt_from, 'sign_in', 'sign_out'))
         res = self.cr.dictfetchall()
         for r in res:
-            if r['action'] == 'sign_out':
-                r['delay'] = -r['delay']
-            temp = r['delay'].seconds
+            delay = r['delay']
+            # Remove microseconds from the delay
+            delay = datetime.timedelta(delay.days, delay.seconds, 0)
 
-            r['delay'] = str(r['delay']).split('.')[0]
+            temp = delay.total_seconds()
+            if r['action'] == 'sign_out':
+                delay = -delay
+
+            r['delay'] = format_timedelta(delay)
+
             if abs(temp) < max*60:
                 r['delay2'] = r['delay']
             else:
@@ -63,17 +74,22 @@ class attendance_print(report_sxw.rml_parse):
         total2 = datetime.timedelta(seconds = 0, minutes = 0, hours = 0)
         total = datetime.timedelta(seconds = 0, minutes = 0, hours = 0)
         for r in res:
-            if r['action'] == 'sign_out':
-                r['delay'] = -r['delay']
-            total += r['delay']
-            if abs(r['delay'].seconds) < max*60:
-                total2 += r['delay']
+            delay = r['delay']
+            # Remove the microseconds from the delay
+            delay = datetime.timedelta(delay.days, delay.seconds, 0)
+
+            if r['action'] == 'sign_out' and delay != datetime.timedelta(0):
+                delay = -delay
+            total += delay
+            if abs(delay.total_seconds()) < max*60:
+                total2 += delay
 
         result_dict = {
-                'total': total and str(total).split('.')[0],
-                'total2': total2  and str(total2).split('.')[0]
+                'total': format_timedelta(total),
+                'total2': format_timedelta(total2)
                 }
         return [result_dict]
+
 
 
 class report_hr_attendanceerrors(osv.AbstractModel):
