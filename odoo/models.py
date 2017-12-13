@@ -4496,7 +4496,7 @@ env['account.invoice.line'].search([]).grouped(['partner_id.country_id.name', 'p
                 """
                 Take a field name, or an attrgetter, or a list of such, and return the corresponding lambda
                 """
-                if isinstance(arg, basestring):
+                if isinstance(arg, str):
                     return attrgetter(arg)
                 elif callable(arg):
                     return arg
@@ -4544,8 +4544,8 @@ env['account.invoice.line'].search([]).grouped(['partner_id.country_id.name', 'p
 
         # Fix argument aggregate_functions
         uniform_aggregate_functions = {}
-        for fname, x in aggregate_functions.iteritems():
-            if isinstance(x, basestring):
+        for fname, x in iter(aggregate_functions.items()):
+            if isinstance(x, str):
                 func, fieldname = parse_aggregate_function(x)
                 uniform_aggregate_functions[fname] = lambda recs,fieldname=fieldname:func([attrgetter(fieldname)(rec) for rec in recs])
             elif callable(x):
@@ -4607,7 +4607,7 @@ env['account.invoice.line'].search([]).grouped(['partner_id.country_id.name', 'p
                 groups.append(group)
 
             for group in groups:
-                for fname, f in aggregate_functions.iteritems():
+                for fname, f in iter(aggregate_functions.items()):
                     group.__dict__[fname] = f(group._all_records)
 
             for group in groups:
