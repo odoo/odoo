@@ -1510,6 +1510,41 @@ class procurement_order(osv.osv):
 
         return qty, price
 
+    def _get_available_draft_po_domain(self, cr, uid, procurement, partner,
+                                       context=None):
+        return [('partner_id', '=', partner.id),
+                ('state', '=', 'draft'),
+                ('picking_type_id', '=', procurement.rule_id.picking_type_id.id),
+                ('location_id', '=', procurement.location_id.id),
+                ('company_id', '=', procurement.company_id.id),
+                ('dest_address_id', '=', procurement.partner_dest_id.id)]
+
+    def _get_available_draft_po_ids(self, cr, uid, procurement, partner,
+                                   context=None):
+        """ 
+            Return a list of existing draft po ids we can use to avoid 
+            creating a new one.
+        """
+        po_obj = self.pool['purchase.order']
+        available_draft_po_ids = po_obj.search(cr, uid,
+            self._get_available_draft_po_domain(cr, uid, procurement, partner, context),
+            context=context)
+        return available_draft_po_ids
+
+    def _get_available_draft_po_line_domain(self, cr, uid, po_id, line_vals, context=None):
+        return [
+            ('order_id', '=', po_id),
+            ('product_id', '=', line_vals['product_id']),
+            ('product_uom', '=', line_vals['product_uom']),
+            ]
+
+    def _get_available_draft_po_line_ids(self, cr, uid, po_id, line_vals,
+                                         context=None):
+        po_line_obj = self.pool.get('purchase.order.line')
+        domain = self._get_available_draft_po_line_domain(
+            cr, uid, po_id, line_vals, context=context)
+        return po_line_obj.search(cr, uid, domain, context=context)
+
     def update_origin_po(self, cr, uid, po, proc, context=None):
         pass
 
@@ -1538,9 +1573,9 @@ class procurement_order(osv.osv):
                 purchase_date = self._get_purchase_order_date(cr, uid, procurement, company, schedule_date, context=context) 
                 line_vals = self._get_po_line_values_from_proc(cr, uid, procurement, partner, company, schedule_date, context=ctx_company)
                 #look for any other draft PO for the same supplier, to attach the new line on instead of creating a new draft one
-                available_draft_po_ids = po_obj.search(cr, uid, [
-                    ('partner_id', '=', partner.id), ('state', '=', 'draft'), ('picking_type_id', '=', procurement.rule_id.picking_type_id.id),
-                    ('location_id', '=', procurement.location_id.id), ('company_id', '=', procurement.company_id.id), ('dest_address_id', '=', procurement.partner_dest_id.id)], context=context)
+                available_draft_po_ids = self._get_available_draft_po_ids(
+                                                cr, uid, procurement, partner,
+                                                context=context)
                 if available_draft_po_ids:
                     po_id = available_draft_po_ids[0]
                     po_rec = po_obj.browse(cr, uid, po_id, context=context)
@@ -1551,7 +1586,8 @@ class procurement_order(osv.osv):
                         po_to_update.update({'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
                     po_obj.write(cr, uid, [po_id], po_to_update, context=context)
                     #look for any other PO line in the selected PO with same product and UoM to sum quantities instead of creating a new po line
-                    available_po_line_ids = po_line_obj.search(cr, uid, [('order_id', '=', po_id), ('product_id', '=', line_vals['product_id']), ('product_uom', '=', line_vals['product_uom'])], context=context)
+                    available_po_line_ids = self._get_available_draft_po_line_ids(
+                        cr, uid, po_id, line_vals, context=context)
                     if available_po_line_ids:
                         po_line = po_line_obj.browse(cr, uid, available_po_line_ids[0], context=context)
                         po_line_id = po_line.id
