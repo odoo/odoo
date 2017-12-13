@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import shutil
+import six
 import tempfile
 import threading
 import traceback
@@ -212,7 +213,11 @@ def dump_db(db_name, stream, backup_format='zip'):
 def exp_restore(db_name, data, copy=False):
     data_file = tempfile.NamedTemporaryFile(delete=False)
     try:
-        data_file.write(data.decode('base64'))
+        if isinstance(data, six.string_types):
+            data_file.write(data.decode('base64'))
+        else:
+            for chunk in data:
+                data_file.write(chunk.decode('base64'))
         data_file.close()
         restore_db(db_name, data_file.name, copy=copy)
     finally:
