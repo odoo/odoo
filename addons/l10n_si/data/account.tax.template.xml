@@ -1,0 +1,1017 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="account_tax_D01b" model="account.tax.template">
+            <field name="price_include" eval="1"/>
+            <field name="description">D01b</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref="account_account_260000"/>
+            <field name="base_code_id" ref="account_tax_code_11-01"/>
+            <field name="account_paid_id" ref="account_account_260000"/>
+            <field name="name">Prodaja SLO 22% - bruto</field>
+            <field name="tax_code_id" ref="account_tax_code_21-01"/>
+            <field name="ref_base_code_id" ref="account_tax_code_11-01"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_21-01"/>
+            <field name="sequence">1</field>
+            <field name="amount">0.22</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D01n" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D01n</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref="account_account_260000"/>
+            <field name="base_code_id" ref="account_tax_code_11-01"/>
+            <field name="account_paid_id" ref="account_account_260000"/>
+            <field name="name">Prodaja SLO 22% - neto</field>
+            <field name="tax_code_id" ref="account_tax_code_21-01"/>
+            <field name="ref_base_code_id" ref="account_tax_code_11-01"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_21-01"/>
+            <field name="sequence">1</field>
+            <field name="amount">0.22</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D02b" model="account.tax.template">
+            <field name="price_include" eval="1"/>
+            <field name="description">D02b</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref="account_account_260001"/>
+            <field name="base_code_id" ref="account_tax_code_11-02"/>
+            <field name="account_paid_id" ref="account_account_260001"/>
+            <field name="name">Prodaja SLO 9,5% - bruto</field>
+            <field name="tax_code_id" ref="account_tax_code_22-02"/>
+            <field name="ref_base_code_id" ref="account_tax_code_11-02"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_22-02"/>
+            <field name="sequence">1</field>
+            <field name="amount">0.095</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D02n" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D02n</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref="account_account_260001"/>
+            <field name="base_code_id" ref="account_tax_code_11-02"/>
+            <field name="account_paid_id" ref="account_account_260001"/>
+            <field name="name">Prodaja SLO 9,5% - neto</field>
+            <field name="tax_code_id" ref="account_tax_code_22-02"/>
+            <field name="ref_base_code_id" ref="account_tax_code_11-02"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_22-02"/>
+            <field name="sequence">1</field>
+            <field name="amount">0.095</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D03" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D03</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref=""/>
+            <field name="base_code_id" ref="account_tax_code_11-03"/>
+            <field name="account_paid_id" ref=""/>
+            <field name="name">DDV ni obračunan po 1.točki 52.čl. ZDDV-1. (Izvoz)</field>
+            <field name="tax_code_id" ref=""/>
+            <field name="ref_base_code_id" ref="account_tax_code_11-03"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref=""/>
+            <field name="sequence">1</field>
+            <field name="amount"></field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D04" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D04</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref=""/>
+            <field name="base_code_id" ref="account_tax_code_12-04"/>
+            <field name="account_paid_id" ref=""/>
+            <field name="name">DDV ni obračunan po 1.točki 46.čl. ZDDV-1. (Dobave storitev EU)</field>
+            <field name="tax_code_id" ref=""/>
+            <field name="ref_base_code_id" ref="account_tax_code_12-04"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref=""/>
+            <field name="sequence">1</field>
+            <field name="amount"></field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D05" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D05</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref=""/>
+            <field name="base_code_id" ref="account_tax_code_12-05"/>
+            <field name="account_paid_id" ref=""/>
+            <field name="name">DDV ni obračunan po 1.točki 46.čl. ZDDV-1. (Dobave blaga v EU)</field>
+            <field name="tax_code_id" ref=""/>
+            <field name="ref_base_code_id" ref="account_tax_code_12-05"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref=""/>
+            <field name="sequence">1</field>
+            <field name="amount"></field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D06" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D06</field>
+            <field name="child_depend" eval="1"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref=""/>
+            <field name="base_code_id" ref=""/>
+            <field name="account_paid_id" ref=""/>
+            <field name="name">DDV ni obračunan po 76a. čl. ZDDV-1. (Obrnjena davčna obveznost)</field>
+            <field name="tax_code_id" ref=""/>
+            <field name="ref_base_code_id" ref=""/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">balance</field>
+            <field name="ref_tax_code_id" ref=""/>
+            <field name="sequence">1</field>
+            <field name="amount"></field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D061" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D061</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref="account_tax_D06"/>
+            <field name="account_collected_id" ref=""/>
+            <field name="base_code_id" ref="account_tax_code_11a-06"/>
+            <field name="account_paid_id" ref=""/>
+            <field name="name">DDV ni obračunan po 76a. čl. ZDDV-1. (Obrnjena davčna obveznost) – osnova</field>
+            <field name="tax_code_id" ref=""/>
+            <field name="ref_base_code_id" ref="account_tax_code_11a-06"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref=""/>
+            <field name="sequence">1</field>
+            <field name="amount">0.22</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D062" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D062</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref="account_tax_D06"/>
+            <field name="account_collected_id" ref=""/>
+            <field name="base_code_id" ref=""/>
+            <field name="account_paid_id" ref=""/>
+            <field name="name">DDV ni obračunan po 76a. čl. ZDDV-1. (Obrnjena davčna obveznost) – davek</field>
+            <field name="tax_code_id" ref=""/>
+            <field name="ref_base_code_id" ref=""/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref=""/>
+            <field name="sequence">2</field>
+            <field name="amount">-0.22</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D07" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D07</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref=""/>
+            <field name="base_code_id" ref="account_tax_code_11-07"/>
+            <field name="account_paid_id" ref=""/>
+            <field name="name">DDV ni obračunan po 2. odstavku 49.čl. ZDDV-1. (Mednarodni prevoz)</field>
+            <field name="tax_code_id" ref=""/>
+            <field name="ref_base_code_id" ref="account_tax_code_11-07"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref=""/>
+            <field name="sequence">1</field>
+            <field name="amount"></field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D20b" model="account.tax.template">
+            <field name="price_include" eval="1"/>
+            <field name="description">D20b</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref="account_account_160000"/>
+            <field name="base_code_id" ref="account_tax_code_31-20"/>
+            <field name="account_paid_id" ref="account_account_160000"/>
+            <field name="name">Nabava SLO 22% - bruto</field>
+            <field name="tax_code_id" ref="account_tax_code_41-20"/>
+            <field name="ref_base_code_id" ref="account_tax_code_31-20"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_41-20"/>
+            <field name="sequence">1</field>
+            <field name="amount">0.22</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D20n" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D20n</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref="account_account_160000"/>
+            <field name="base_code_id" ref="account_tax_code_31-20"/>
+            <field name="account_paid_id" ref="account_account_160000"/>
+            <field name="name">Nabava SLO 22% - neto</field>
+            <field name="tax_code_id" ref="account_tax_code_41-20"/>
+            <field name="ref_base_code_id" ref="account_tax_code_31-20"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_41-20"/>
+            <field name="sequence">1</field>
+            <field name="amount">0.22</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D21b" model="account.tax.template">
+            <field name="price_include" eval="1"/>
+            <field name="description">D21b</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref="account_account_160001"/>
+            <field name="base_code_id" ref="account_tax_code_31-21"/>
+            <field name="account_paid_id" ref="account_account_160001"/>
+            <field name="name">Nabava SLO 9,5% - bruto</field>
+            <field name="tax_code_id" ref="account_tax_code_42-21"/>
+            <field name="ref_base_code_id" ref="account_tax_code_31-21"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_42-21"/>
+            <field name="sequence">1</field>
+            <field name="amount">0.095</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D21n" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D21n</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref="account_account_160001"/>
+            <field name="base_code_id" ref="account_tax_code_31-21"/>
+            <field name="account_paid_id" ref="account_account_160001"/>
+            <field name="name">Nabava SLO 9,5% - neto</field>
+            <field name="tax_code_id" ref="account_tax_code_42-21"/>
+            <field name="ref_base_code_id" ref="account_tax_code_31-21"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_42-21"/>
+            <field name="sequence">1</field>
+            <field name="amount">0.095</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D22b" model="account.tax.template">
+            <field name="price_include" eval="1"/>
+            <field name="description">D22b</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref="account_account_160004"/>
+            <field name="base_code_id" ref="account_tax_code_31-22"/>
+            <field name="account_paid_id" ref="account_account_160004"/>
+            <field name="name">ECL 22% - bruto</field>
+            <field name="tax_code_id" ref="account_tax_code_41-22"/>
+            <field name="ref_base_code_id" ref="account_tax_code_31-22"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_41-22"/>
+            <field name="sequence">1</field>
+            <field name="amount">0.22</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D22n" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D22n</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref="account_account_160004"/>
+            <field name="base_code_id" ref="account_tax_code_31-22"/>
+            <field name="account_paid_id" ref="account_account_160004"/>
+            <field name="name">ECL 22% - neto</field>
+            <field name="tax_code_id" ref="account_tax_code_41-22"/>
+            <field name="ref_base_code_id" ref="account_tax_code_31-22"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_41-22"/>
+            <field name="sequence">1</field>
+            <field name="amount">0.22</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D23b" model="account.tax.template">
+            <field name="price_include" eval="1"/>
+            <field name="description">D23b</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref="account_account_160005"/>
+            <field name="base_code_id" ref="account_tax_code_31-23"/>
+            <field name="account_paid_id" ref="account_account_160005"/>
+            <field name="name">ECL 9,5% - bruto</field>
+            <field name="tax_code_id" ref="account_tax_code_42-23"/>
+            <field name="ref_base_code_id" ref="account_tax_code_31-23"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_42-23"/>
+            <field name="sequence">1</field>
+            <field name="amount">0.095</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D23n" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D23n</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref="account_account_160005"/>
+            <field name="base_code_id" ref="account_tax_code_31-23"/>
+            <field name="account_paid_id" ref="account_account_160005"/>
+            <field name="name">ECL 9,5% - neto</field>
+            <field name="tax_code_id" ref="account_tax_code_42-23"/>
+            <field name="ref_base_code_id" ref="account_tax_code_31-23"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_42-23"/>
+            <field name="sequence">1</field>
+            <field name="amount">0.095</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D24b" model="account.tax.template">
+            <field name="price_include" eval="1"/>
+            <field name="description">D24b</field>
+            <field name="child_depend" eval="1"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref=""/>
+            <field name="base_code_id" ref=""/>
+            <field name="account_paid_id" ref=""/>
+            <field name="name">Nabava EU 22% - bruto</field>
+            <field name="tax_code_id" ref=""/>
+            <field name="ref_base_code_id" ref=""/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">balance</field>
+            <field name="ref_tax_code_id" ref=""/>
+            <field name="sequence">1</field>
+            <field name="amount"></field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D24b1" model="account.tax.template">
+            <field name="price_include" eval="1"/>
+            <field name="description">D24b1</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref="account_tax_D24b"/>
+            <field name="account_collected_id" ref="account_account_160002"/>
+            <field name="base_code_id" ref="account_tax_code_32-24"/>
+            <field name="account_paid_id" ref="account_account_160002"/>
+            <field name="name">Nabava EU 22% - bruto – vstopni</field>
+            <field name="tax_code_id" ref="account_tax_code_41-24"/>
+            <field name="ref_base_code_id" ref="account_tax_code_32-24"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_41-24"/>
+            <field name="sequence">1</field>
+            <field name="amount">0.22</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D24b2" model="account.tax.template">
+            <field name="price_include" eval="1"/>
+            <field name="description">D24b2</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref="account_tax_D24b"/>
+            <field name="account_collected_id" ref="account_account_260000"/>
+            <field name="base_code_id" ref=""/>
+            <field name="account_paid_id" ref="account_account_260000"/>
+            <field name="name">Nabava EU 22% - bruto – izstopni</field>
+            <field name="tax_code_id" ref="account_tax_code_23-24"/>
+            <field name="ref_base_code_id" ref=""/>
+            <field name="ref_tax_sign">1.0</field>
+            <field name="tax_sign">-1.0</field>
+            <field name="base_sign">-1.0</field>
+            <field name="ref_base_sign">1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_23-24"/>
+            <field name="sequence">2</field>
+            <field name="amount">-0.22</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D24n" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D24n</field>
+            <field name="child_depend" eval="1"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref=""/>
+            <field name="base_code_id" ref=""/>
+            <field name="account_paid_id" ref=""/>
+            <field name="name">Nabava EU 22% - neto</field>
+            <field name="tax_code_id" ref=""/>
+            <field name="ref_base_code_id" ref=""/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">balance</field>
+            <field name="ref_tax_code_id" ref=""/>
+            <field name="sequence">1</field>
+            <field name="amount"></field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D24n1" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D24n1</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref="account_tax_D24n"/>
+            <field name="account_collected_id" ref="account_account_160002"/>
+            <field name="base_code_id" ref="account_tax_code_32-24"/>
+            <field name="account_paid_id" ref="account_account_160002"/>
+            <field name="name">Nabava EU 22% - neto – vstopni</field>
+            <field name="tax_code_id" ref="account_tax_code_41-24"/>
+            <field name="ref_base_code_id" ref="account_tax_code_32-24"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_41-24"/>
+            <field name="sequence">1</field>
+            <field name="amount">0.22</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D24n2" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D24n2</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref="account_tax_D24n"/>
+            <field name="account_collected_id" ref="account_account_260000"/>
+            <field name="base_code_id" ref=""/>
+            <field name="account_paid_id" ref="account_account_260000"/>
+            <field name="name">Nabava EU 22% - neto – izstopni</field>
+            <field name="tax_code_id" ref="account_tax_code_23-24"/>
+            <field name="ref_base_code_id" ref=""/>
+            <field name="ref_tax_sign">1.0</field>
+            <field name="tax_sign">-1.0</field>
+            <field name="base_sign">-1.0</field>
+            <field name="ref_base_sign">1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_23-24"/>
+            <field name="sequence">2</field>
+            <field name="amount">-0.22</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D25b" model="account.tax.template">
+            <field name="price_include" eval="1"/>
+            <field name="description">D25b</field>
+            <field name="child_depend" eval="1"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref=""/>
+            <field name="base_code_id" ref=""/>
+            <field name="account_paid_id" ref=""/>
+            <field name="name">Nabava EU 9,5% - bruto</field>
+            <field name="tax_code_id" ref=""/>
+            <field name="ref_base_code_id" ref=""/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">balance</field>
+            <field name="ref_tax_code_id" ref=""/>
+            <field name="sequence">1</field>
+            <field name="amount"></field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D25b1" model="account.tax.template">
+            <field name="price_include" eval="1"/>
+            <field name="description">D25b1</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref="account_tax_D25b"/>
+            <field name="account_collected_id" ref="account_account_160003"/>
+            <field name="base_code_id" ref="account_tax_code_32-25"/>
+            <field name="account_paid_id" ref="account_account_160003"/>
+            <field name="name">Nabava EU 9,5% - bruto – vstopni</field>
+            <field name="tax_code_id" ref="account_tax_code_42-25"/>
+            <field name="ref_base_code_id" ref="account_tax_code_32-25"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_42-25"/>
+            <field name="sequence">1</field>
+            <field name="amount">0.095</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D25b2" model="account.tax.template">
+            <field name="price_include" eval="1"/>
+            <field name="description">D25b2</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref="account_tax_D25b"/>
+            <field name="account_collected_id" ref="account_account_260001"/>
+            <field name="base_code_id" ref=""/>
+            <field name="account_paid_id" ref="account_account_260001"/>
+            <field name="name">Nabava EU 9,5% - bruto – izstopni</field>
+            <field name="tax_code_id" ref="account_tax_code_24-25"/>
+            <field name="ref_base_code_id" ref=""/>
+            <field name="ref_tax_sign">1.0</field>
+            <field name="tax_sign">-1.0</field>
+            <field name="base_sign">-1.0</field>
+            <field name="ref_base_sign">1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_24-25"/>
+            <field name="sequence">2</field>
+            <field name="amount">-0.095</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D25n" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D25n</field>
+            <field name="child_depend" eval="1"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref=""/>
+            <field name="base_code_id" ref=""/>
+            <field name="account_paid_id" ref=""/>
+            <field name="name">Nabava EU 9,5% - neto</field>
+            <field name="tax_code_id" ref=""/>
+            <field name="ref_base_code_id" ref=""/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">balance</field>
+            <field name="ref_tax_code_id" ref=""/>
+            <field name="sequence">1</field>
+            <field name="amount"></field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D25n1" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D25n1</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref="account_tax_D25n"/>
+            <field name="account_collected_id" ref="account_account_160003"/>
+            <field name="base_code_id" ref="account_tax_code_32-25"/>
+            <field name="account_paid_id" ref="account_account_160003"/>
+            <field name="name">Nabava EU 9,5% - neto – vstopni</field>
+            <field name="tax_code_id" ref="account_tax_code_42-25"/>
+            <field name="ref_base_code_id" ref="account_tax_code_32-25"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_42-25"/>
+            <field name="sequence">1</field>
+            <field name="amount">0.095</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D25n2" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D25n2</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref="account_tax_D25n"/>
+            <field name="account_collected_id" ref="account_account_260001"/>
+            <field name="base_code_id" ref=""/>
+            <field name="account_paid_id" ref="account_account_260001"/>
+            <field name="name">Nabava EU 9,5% - neto – izstopni</field>
+            <field name="tax_code_id" ref="account_tax_code_24-25"/>
+            <field name="ref_base_code_id" ref=""/>
+            <field name="ref_tax_sign">1.0</field>
+            <field name="tax_sign">-1.0</field>
+            <field name="base_sign">-1.0</field>
+            <field name="ref_base_sign">1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_24-25"/>
+            <field name="sequence">2</field>
+            <field name="amount">-0.095</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D26b" model="account.tax.template">
+            <field name="price_include" eval="1"/>
+            <field name="description">D26b</field>
+            <field name="child_depend" eval="1"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref=""/>
+            <field name="base_code_id" ref=""/>
+            <field name="account_paid_id" ref=""/>
+            <field name="name">Nabava 76a. čl. 22% - bruto</field>
+            <field name="tax_code_id" ref=""/>
+            <field name="ref_base_code_id" ref=""/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">balance</field>
+            <field name="ref_tax_code_id" ref=""/>
+            <field name="sequence">1</field>
+            <field name="amount"></field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D26b1" model="account.tax.template">
+            <field name="price_include" eval="1"/>
+            <field name="description">D26b1</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref="account_tax_D26b"/>
+            <field name="account_collected_id" ref="account_account_160002"/>
+            <field name="base_code_id" ref="account_tax_code_31a-26"/>
+            <field name="account_paid_id" ref="account_account_160002"/>
+            <field name="name">Nabava 76a. čl. 22% - bruto – vstopni</field>
+            <field name="tax_code_id" ref="account_tax_code_41-26"/>
+            <field name="ref_base_code_id" ref="account_tax_code_31a-26"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_41-26"/>
+            <field name="sequence">1</field>
+            <field name="amount">0.22</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D26b2" model="account.tax.template">
+            <field name="price_include" eval="1"/>
+            <field name="description">D26b2</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref="account_tax_D26b"/>
+            <field name="account_collected_id" ref="account_account_260000"/>
+            <field name="base_code_id" ref=""/>
+            <field name="account_paid_id" ref="account_account_260000"/>
+            <field name="name">Nabava 76a. čl. 22% - bruto – izstopni</field>
+            <field name="tax_code_id" ref="account_tax_code_25-26"/>
+            <field name="ref_base_code_id" ref=""/>
+            <field name="ref_tax_sign">1.0</field>
+            <field name="tax_sign">-1.0</field>
+            <field name="base_sign">-1.0</field>
+            <field name="ref_base_sign">1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_25-26"/>
+            <field name="sequence">2</field>
+            <field name="amount">-0.22</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D26n" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D26n</field>
+            <field name="child_depend" eval="1"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref=""/>
+            <field name="base_code_id" ref=""/>
+            <field name="account_paid_id" ref=""/>
+            <field name="name">Nabava 76a. čl. 22% - neto</field>
+            <field name="tax_code_id" ref=""/>
+            <field name="ref_base_code_id" ref=""/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">balance</field>
+            <field name="ref_tax_code_id" ref=""/>
+            <field name="sequence">1</field>
+            <field name="amount"></field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D26n1" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D26n1</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref="account_tax_D26n"/>
+            <field name="account_collected_id" ref="account_account_160002"/>
+            <field name="base_code_id" ref="account_tax_code_31a-26"/>
+            <field name="account_paid_id" ref="account_account_160002"/>
+            <field name="name">Nabava 76a. čl. 22% - neto – vstopni</field>
+            <field name="tax_code_id" ref="account_tax_code_41-26"/>
+            <field name="ref_base_code_id" ref="account_tax_code_31a-26"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_41-26"/>
+            <field name="sequence">1</field>
+            <field name="amount">0.22</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D26n2" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D26n2</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref="account_tax_D26n"/>
+            <field name="account_collected_id" ref="account_account_260000"/>
+            <field name="base_code_id" ref=""/>
+            <field name="account_paid_id" ref="account_account_260000"/>
+            <field name="name">Nabava 76a. čl. 22% - neto – izstopni</field>
+            <field name="tax_code_id" ref="account_tax_code_25-26"/>
+            <field name="ref_base_code_id" ref=""/>
+            <field name="ref_tax_sign">1.0</field>
+            <field name="tax_sign">-1.0</field>
+            <field name="base_sign">-1.0</field>
+            <field name="ref_base_sign">1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref="account_tax_code_25-26"/>
+            <field name="sequence">2</field>
+            <field name="amount">-0.22</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D27b" model="account.tax.template">
+            <field name="price_include" eval="1"/>
+            <field name="description">D27b</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref=""/>
+            <field name="base_code_id" ref="account_tax_code_31-27"/>
+            <field name="account_paid_id" ref=""/>
+            <field name="name">Neodbitni DDV 22% - bruto</field>
+            <field name="tax_code_id" ref=""/>
+            <field name="ref_base_code_id" ref="account_tax_code_31-27"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref=""/>
+            <field name="sequence">1</field>
+            <field name="amount">0.22</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D27n" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D27n</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref=""/>
+            <field name="base_code_id" ref="account_tax_code_31-27"/>
+            <field name="account_paid_id" ref=""/>
+            <field name="name">Neodbitni DDV 22% - neto</field>
+            <field name="tax_code_id" ref=""/>
+            <field name="ref_base_code_id" ref="account_tax_code_31-27"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref=""/>
+            <field name="sequence">1</field>
+            <field name="amount">0.22</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D28b" model="account.tax.template">
+            <field name="price_include" eval="1"/>
+            <field name="description">D28b</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref=""/>
+            <field name="base_code_id" ref="account_tax_code_31-28"/>
+            <field name="account_paid_id" ref=""/>
+            <field name="name">Neodbitni DDV 9,5% - bruto</field>
+            <field name="tax_code_id" ref=""/>
+            <field name="ref_base_code_id" ref="account_tax_code_31-28"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref=""/>
+            <field name="sequence">1</field>
+            <field name="amount">0.095</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D28n" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D28n</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref=""/>
+            <field name="base_code_id" ref="account_tax_code_31-28"/>
+            <field name="account_paid_id" ref=""/>
+            <field name="name">Neodbitni DDV 9,5% - neto</field>
+            <field name="tax_code_id" ref=""/>
+            <field name="ref_base_code_id" ref="account_tax_code_31-28"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref=""/>
+            <field name="sequence">1</field>
+            <field name="amount">0.095</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D29" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D29</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref=""/>
+            <field name="base_code_id" ref="account_tax_code_33-29"/>
+            <field name="account_paid_id" ref=""/>
+            <field name="name">Oproščen neobdavčen promet</field>
+            <field name="tax_code_id" ref=""/>
+            <field name="ref_base_code_id" ref="account_tax_code_33-29"/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref=""/>
+            <field name="sequence">1</field>
+            <field name="amount"></field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D30" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D30</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref=""/>
+            <field name="base_code_id" ref=""/>
+            <field name="account_paid_id" ref=""/>
+            <field name="name">Neobdavčen promet – izstopni</field>
+            <field name="tax_code_id" ref=""/>
+            <field name="ref_base_code_id" ref=""/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref=""/>
+            <field name="sequence">1</field>
+            <field name="amount"></field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="account_tax_D31" model="account.tax.template">
+            <field name="price_include" eval="0"/>
+            <field name="description">D31</field>
+            <field name="child_depend" eval="0"/>
+            <field name="parent_id" ref=""/>
+            <field name="account_collected_id" ref=""/>
+            <field name="base_code_id" ref=""/>
+            <field name="account_paid_id" ref=""/>
+            <field name="name">Neobdavčen promet – vstopni</field>
+            <field name="tax_code_id" ref=""/>
+            <field name="ref_base_code_id" ref=""/>
+            <field name="ref_tax_sign">-1.0</field>
+            <field name="tax_sign">1.0</field>
+            <field name="base_sign">1.0</field>
+            <field name="ref_base_sign">-1.0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="include_base_amount" eval="0"/>
+            <field name="type">percent</field>
+            <field name="ref_tax_code_id" ref=""/>
+            <field name="sequence">1</field>
+            <field name="amount"></field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+   </data>
+</openerp>
