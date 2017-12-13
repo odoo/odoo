@@ -6,7 +6,7 @@ import datetime
 import pprint
 
 from odoo import api, exceptions, fields, models, _
-from odoo.tools import consteq, float_round, image_resize_images, image_resize_image, ustr
+from odoo.tools import consteq, float_round, image_resize_images, ustr
 from odoo.addons.base.models import ir_module
 from odoo.exceptions import ValidationError
 
@@ -437,22 +437,23 @@ class PaymentIcon(models.Model):
     image = fields.Binary(
         "Image", attachment=True,
         help="This field holds the image used for this payment icon, limited to 1024x1024px")
-
-    image_payment_form = fields.Binary(
-        "Image displayed on the payment form", attachment=True)
+    image_medium = fields.Binary("Medium-sized image", attachment=True,
+       help="Medium-sized image of this provider. It is automatically "
+            "resized as a 128x128px image, with aspect ratio preserved. "
+            "Use this field in form views or some kanban views.")
+    image_small = fields.Binary("Small-sized image", attachment=True,
+       help="Small-sized image of this provider. It is automatically "
+            "resized as a 64x64px image, with aspect ratio preserved. "
+            "Use this field anywhere a small image is required.")
 
     @api.model
     def create(self, vals):
-        if 'image' in vals:
-            vals['image_payment_form'] = image_resize_image(vals['image'], size=(45,30))
-            vals['image'] = image_resize_image(vals['image'], size=(64,64))
+        image_resize_images(vals)
         return super(PaymentIcon, self).create(vals)
 
     @api.multi
     def write(self, vals):
-        if 'image' in vals:
-           vals['image_payment_form'] = image_resize_image(vals['image'], size=(45,30))
-           vals['image'] = image_resize_image(vals['image'], size=(64,64))
+        image_resize_images(vals)
         return super(PaymentIcon, self).write(vals)
 
 class PaymentTransaction(models.Model):
