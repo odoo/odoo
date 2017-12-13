@@ -152,7 +152,7 @@ class ir_rule(osv.osv):
             # involve objects on which the real uid has no acces rights.
             # This means also there is no implicit restriction (e.g. an object
             # references another object the user can't see).
-            query = self.pool[model_name]._where_calc(cr, SUPERUSER_ID, dom, active_test=False)
+            query = self.pool[model_name]._where_calc(cr, SUPERUSER_ID, dom, active_test=False, context=context)
             return query.where_clause, query.where_clause_params, query.tables
         return [], [], ['"' + self.pool[model_name]._table + '"']
 
