@@ -97,6 +97,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             if (col_group_by.length) {
                 this.widget_config.col_groupby = col_group_by;
             }
+            measures = this.widget_config.context.measures || measures;
             if (measures.length) {
                 this.widget_config.measures = measures;
             }
