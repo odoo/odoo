@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+from collections import Counter
+
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
@@ -75,13 +77,14 @@ class stock_return_picking(osv.osv_memory):
                 if move.move_dest_id:
                     chained_move_exist = True
                 #Sum the quants in that location that can be returned (they should have been moved by the moves that were included in the returned picking)
-                qty = 0
+                lot_quantities = Counter()
                 quant_search = quant_obj.search(cr, uid, [('history_ids', 'in', move.id), ('qty', '>', 0.0), ('location_id', 'child_of', move.location_dest_id.id)], context=context)
                 for quant in quant_obj.browse(cr, uid, quant_search, context=context):
                     if not quant.reservation_id or quant.reservation_id.origin_returned_move_id.id != move.id:
-                        qty += quant.qty
-                qty = uom_obj._compute_qty(cr, uid, move.product_id.uom_id.id, qty, move.product_uom.id)
-                result1.append({'product_id': move.product_id.id, 'quantity': qty, 'move_id': move.id})
+                        lot_quantities += Counter({quant.lot_id.id: quant.qty})
+                for lot_id, qty in lot_quantities.items():
+                    qty = uom_obj._compute_qty(cr, uid, move.product_id.uom_id.id, qty, move.product_uom.id)
+                    result1.append({'product_id': move.product_id.id, 'quantity': qty, 'move_id': move.id, 'lot_id': lot_id})
 
             if len(result1) == 0:
                 raise osv.except_osv(_('Warning!'), _("No products to return (only lines in Done state and not fully returned yet can be returned)!"))
