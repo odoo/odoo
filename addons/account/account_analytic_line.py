@@ -52,7 +52,17 @@ class account_analytic_line(osv.osv):
             args.append(['date','<=', context['to_date']])
         return super(account_analytic_line, self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
-
+    
+    def read_group(self, cr, uid, args, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
+        if context is None:
+            context = {}
+        if context.get('from_date',False):
+            args.append(['date', '>=', context['from_date']])
+        if context.get('to_date',False):
+            args.append(['date','<=', context['to_date']])
+        return super(account_analytic_line, self).read_group(cr, uid, domain, fields,
+                groupby, offset, limit, context=context, orderby=orderby, lazy=lazy)
+    
     def _check_company(self, cr, uid, ids, context=None):
         lines = self.browse(cr, uid, ids, context=context)
         for l in lines:
