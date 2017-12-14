@@ -21,7 +21,7 @@ The module adds following features:
 
     Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)
 """,
-    'depends': ['l10n_fr_certification', 'point_of_sale'],
+    'depends': ['l10n_fr_sale_closing', 'point_of_sale'],
     'installable': True,
     'auto_install': False,
     'application': False,
