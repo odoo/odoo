@@ -36,7 +36,7 @@ data.ready = function () {
         if (!odoo._modules) {
             all_ready.then(translations);
         }
-    } else if(all_ready.state() === "resolved") { // can add async template
+    } else { // can add async template
         all_ready = $.when(dom_ready, ajax.loadXML());
     }
     return all_ready;
