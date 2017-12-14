@@ -965,13 +965,15 @@ class Form(object):
             # out of onchange, m2o are name-gotten
             return value[0]
         elif descr['type'] == 'one2many':
-            # ignore o2ms nested in o2ms
-            if not descr['views']:
-                return []
-
             v = []
-            # which view should this be???
-            subfields = descr['views']['edition']['fields']
+            if not descr['views']:
+                # O2Ms nested in O2Ms: allow (4) commands...
+                # or maybe allow 0 & 1 and just accept everything?
+                # or properly implement sub-sub-view deref?
+                subfields = None
+            else:
+                # which view should this be???
+                subfields = descr['views']['edition']['fields']
             for command in value:
                 # TODO: get existing sub-values so we can pass them along?
                 if command[0] in (0, 1):
@@ -982,7 +984,18 @@ class Form(object):
                         for k, v in command[2].items()
                         if k in subfields
                     }))
-                    # TODO: should reuse existing values if not 5?
+                elif command[0] == 4:
+                    v.append((4, command[1], False))
+                elif command[0] == 5:
+                    # remove all CREATE commands
+                    # replace all UPDATE by DELETE
+                    v = [
+                        (2, i, 0)
+                        for (c, i, _) in v
+                        if c != 1
+                    ]
+                else:
+                    raise ValueError("Unsupported O2M command %d" % command[0])
             return v
         elif descr['type'] == 'many2many':
             # onchange result is a bunch of commands, normalize to single 6
