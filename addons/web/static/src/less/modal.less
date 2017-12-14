@@ -1,10 +1,11 @@
 .modal.o_technical_modal {
 
     .modal-content {
+        direction: @lng-direction;
         border-radius: 0;
 
         .modal-header .o_subtitle {
-            margin-left: 10px;
+            .margin-left(10px);
         }
 
         .modal-body {
@@ -20,7 +21,7 @@
                     display: inline-block;
                 }
                 .o_pager {
-                    float: right;
+                    .float(right);
                 }
             }
 
@@ -30,7 +31,7 @@
         }
 
         .modal-footer {
-            text-align: left;
+            .text-align(left);
         }
     }
 

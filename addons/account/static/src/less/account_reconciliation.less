@@ -9,9 +9,9 @@
 .o_reconciliation {
     h1 {
         width: 48%;
-        padding: 0 0 0 15px;
-        margin: 0 0 25px 0;
-        float: left;
+        .padding(0, 0, 0, 15px);
+        .margin(0, 0, 25px, 0);
+        .float(left);
         font-size: 2em;
         height: 1.5em;
         &.statement_name_edition input {
@@ -21,8 +21,8 @@
 
     .progress {
         width: 49%;
-        margin: 10px 15px 0 0;
-        float: right;
+        .margin(10px, 15px, 0, 0);
+        .float(right);
         position: relative;
         display: inline-block;
         .progress-bar {
@@ -50,21 +50,21 @@
         width: 100%;
 
         .cell_left {
-            border-right: 1px solid #333;
-            padding-right: 5px;
+            .border-right(1px solid #333);
+            .padding-right(5px);
         }
         .do_partial_reconcile_true {
             color: #7c7bad;
-            padding-right: 5px;
+            .padding-right(5px);
         }
         .do_partial_reconcile_false {
             color: #f0eeee;
-            padding-right: 5px;
+            .padding-right(5px);
         }
     }
 
     .o_multi_currency {
-        margin-right: 5px;
+        .margin-right(5px);
         &.o_multi_currency_color_0 {
             color: #dd6666;
         }
@@ -144,14 +144,14 @@
             width: auto;
         }
         .cell_left {
-            padding-right: 5px;
+            .padding-right(5px);
         }
         .cell_right, .cell_left {
-            text-align: right;
+            .text-align(right);
             width: 120px;
         }
         .cell_info_popover {
-            text-align: right;
+            .text-align(right);
             width: 15px;
             color: #ccc;
             background: #fff;
@@ -164,7 +164,7 @@
             vertical-align: top;
             td:first-child {
                 vertical-align: top;
-                padding-right: 10px;
+                .padding-right(10px);
                 font-weight: bold;
             }
         }
@@ -232,7 +232,7 @@
             content: "\f067";
         }
         .match_controls {
-            padding: 0 0 5px (@actionColWidth+@mainTableBordersPadding);
+            .padding(0, 0, 5px, (@actionColWidth+@mainTableBordersPadding));
 
             .filter {
                 width: 240px;
@@ -245,7 +245,7 @@
             }
 
             .fa-chevron-left {
-                margin-right: 10px;
+                .margin-right(10px);
             }
 
             .fa-chevron-left.disabled, .fa-chevron-right.disabled {
@@ -255,7 +255,7 @@
         }
         .show_more {
             display: inline-block;
-            margin-left: (@actionColWidth+@mainTableBordersPadding);
+            .margin-left((@actionColWidth+@mainTableBordersPadding));
             margin-top: 5px;
         }
     }
@@ -276,15 +276,15 @@
         }
         td {
             width: 99%;
-            padding-left: 8px;
+            .padding-left(8px);
         }
         tr .o_td_label {
             vertical-align: top;
             line-height: 26px;
             font-weight: bold;
-            padding-right: 8px;
+            .padding-right(8px);
             min-width: 100px;
-            border-right: 1px solid #ddd;
+            .border-right(1px solid #ddd);
             white-space: nowrap;
             width: 1%;
         }

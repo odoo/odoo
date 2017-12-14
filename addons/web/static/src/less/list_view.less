@@ -16,7 +16,8 @@
         color: @odoo-main-text-color;
         border-bottom: 1px solid #cacaca;
         > tr > th {
-            border-left: 1px solid #dfdfdf;
+            .text-align(left);
+            .border-left(1px solid #dfdfdf);
             &:not(.o_column_sortable):hover {
                 cursor: default;
             }
@@ -37,7 +38,7 @@
         .user-select(none);  // Prevent unwanted selection while sorting
 
         &::after {
-            margin-left: 6px;
+            .margin-left(6px);
             position: absolute;
             font-family: FontAwesome;
             content: "\f0d7";
@@ -91,7 +92,7 @@
         .o_group_pager {
             cursor: text;
             .user-select(none);
-            text-align: right;
+            .text-align(right);
             padding-top: 0;
             padding-bottom: 0;
             .o_pager_previous, .o_pager_next {
@@ -102,7 +103,7 @@
             }
         }
         > td.oe_number{
-            text-align: right;
+            .text-align(right);
         }
     }
     tbody + tbody {
@@ -111,7 +112,7 @@
 
     // Values styling
     .o_list_number {
-        text-align: right;
+        .text-align(right);
         white-space: nowrap;
     }
     .o_list_text {
@@ -188,7 +189,7 @@
         }
         .o_input_dropdown, .o_datepicker {
             > .o_input {
-                padding-right: 15px; // To prevent caret overlapping
+                .padding-right(15px); // To prevent caret overlapping
             }
             > .o_dropdown_button, .o_datepicker_button {
                 .o-position-absolute(20%, 5px);
@@ -197,7 +198,7 @@
         .o_field_widget > .o_external_button {
             padding: 0;
             background-color: inherit;
-            margin-left: 3px;
+            .margin-left(3px);
         }
         .o_row_handle {
             visibility: hidden; // Hide sequence when editing

@@ -18,15 +18,15 @@
                 color: @odoo-brand-primary;
             }
 
-            h4 { margin: 0 0 0 8px; }
+            h4 { .margin(0, 0, 0, 8px); }
 
             .col-md-5, .col-md-7, .col-md-12 {
                 padding: 15px;
 
                 .js_field_selection {
                     width: 30%;
-                    margin: 0 0 20px 0;
-                    float: right;
+                    .margin(0, 0, 20px, 0);
+                    .float(right);
                     border-radius: 0;
                 }
 
@@ -46,11 +46,11 @@
                         border-top-width: 0px;
                     }
                     td, th {
-                        text-align: right;
-                        border-left: none;
+                        .text-align(right);
+                        .border-left(none);
 
                         &:first-child {
-                            text-align: left;
+                            .text-align(left);
                         }
                     }
                 }
@@ -65,7 +65,7 @@
 
                 svg {
                     padding-top: 2px;
-                    float: left;
+                    .float(left);
 
                     g.nvd3.nv-wrap.nv-lineChart {
                         .translate(45; 30) !important;
@@ -161,7 +161,7 @@
                         &.o_dashboard_hide_panel {
                             position: absolute;
                             top: 0px;
-                            right: 0px;
+                            .right(0px);
                             background: @brand-danger;
                             padding: 6px;
                         }
@@ -209,7 +209,7 @@
                     background-color: rgba(255,255,255,.3);
                     position: absolute;
                     top: 0;
-                    left: 0;
+                    .left(0);
                     width: 100%;
                     height: 100%;
                 }
@@ -231,9 +231,9 @@
 
             .ActiveUsers {
                 position: relative;
-                float: right;
+                .float(right);
                 top: -60px;
-                right: 10px;
+                .right(10px);
                 border: 1px solid @gray-lighter;
                 font-weight: 300;
                 white-space: nowrap;
@@ -244,7 +244,7 @@
 
             .ActiveUsers-value {
               font-weight: 300;
-              margin-right: -.25em;
+              .margin-right(-.25em);
             }
 
             .ActiveUsers.is-increasing {

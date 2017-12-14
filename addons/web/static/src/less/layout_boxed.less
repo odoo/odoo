@@ -45,7 +45,7 @@
             tr {
                 td {
                     border-top: none;
-                    border-right: 1px solid @gray;
+                    .border-right(1px solid @gray);
                 }
                 td:last-child {
                     background-color: @gray-lighter;
@@ -56,7 +56,7 @@
     /*Total table*/
     .row > .col-xs-4 > table {
         td {
-            border-right: none;
+            .border-right(none);
         }
         tr:last-child td, tr:first-child td {
             /*we could get rid of this rule if .border-black td would be terminated in report.less*/

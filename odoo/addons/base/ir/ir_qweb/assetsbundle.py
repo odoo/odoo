@@ -106,7 +106,7 @@ class AssetsBundle(object):
         response = []
         if debug == 'assets':
             if css and self.stylesheets:
-                is_css_preprocessed, old_attachments = self.is_css_preprocessed()
+                is_css_preprocessed, old_attachments = self.is_css_preprocessed(debug=debug)
                 if not is_css_preprocessed:
                     self.preprocess_css(debug=debug, old_attachments=old_attachments)
                     if self.css_errors:
@@ -307,9 +307,12 @@ class AssetsBundle(object):
             })("%s");
         """ % message.replace('"', '\\"').replace('\n', '&NewLine;')
 
-    def is_css_preprocessed(self):
+    def is_css_preprocessed(self, debug=False):
         preprocessed = True
         attachments = None
+        if debug == 'assets':
+            user_direction = self.env['res.lang'].search([('code', '=', self.env.user.lang)]).direction
+
         for atype in (SassStylesheetAsset, LessStylesheetAsset):
             outdated = False
             assets = dict((asset.html_url, asset) for asset in self.stylesheets if isinstance(asset, atype))
@@ -317,6 +320,15 @@ class AssetsBundle(object):
                 assets_domain = [('url', 'in', list(assets))]
                 attachments = self.env['ir.attachment'].sudo().search(assets_domain)
                 for attachment in attachments:
+                    if debug == 'assets':
+                        # To invalidate css on rtl to ltr transition in debug
+                        url_path = "/%s.less.css" % user_direction
+                        if attachment.url.endswith(url_path):
+                            alternate_direction = 'rtl' if user_direction == 'ltr' else 'ltr'
+                            att = self.env['ir.attachment'].sudo().search([('url', '=ilike', attachment.url.replace(user_direction, alternate_direction))], order='write_date desc', limit=1)
+                            if att and att.write_date > attachment.write_date:
+                                preprocessed = False
+
                     asset = assets[attachment.url]
                     if asset.last_modified > fields.Datetime.from_string(attachment['__last_update']):
                         outdated = True

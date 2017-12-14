@@ -60,6 +60,7 @@ var ListRenderer = BasicRenderer.extend({
         this.hasSelectors = params.hasSelectors;
         this.selection = [];
         this.pagers = []; // instantiated pagers (only for grouped lists)
+        this.isRTL = _t.database.parameters.direction === 'rtl';
     },
 
     //--------------------------------------------------------------------------
@@ -425,8 +426,8 @@ var ListRenderer = BasicRenderer.extend({
                     .addClass('o_group_name')
                     .text(name + ' (' + group.count + ')');
         var $arrow = $('<span>')
-                            .css('padding-left', (groupLevel * 20) + 'px')
-                            .css('padding-right', '5px')
+                            .css(this.isRTL ? 'padding-right' : 'padding-left', (groupLevel * 20) + 'px')
+                            .css(this.isRTL ? 'padding-left' : 'padding-right', '5px')
                             .addClass('fa');
         if (group.count > 0) {
             $arrow.toggleClass('fa-caret-right', !group.isOpen)
@@ -541,7 +542,7 @@ var ListRenderer = BasicRenderer.extend({
             .addClass(field.sortable && 'o_column_sortable');
 
         if (field.type === 'float' || field.type === 'integer' || field.type === 'monetary') {
-            $th.css({textAlign: 'right'});
+            $th.css({textAlign: this.isRTL ? 'left' : 'right'});
         }
 
         if (config.debug) {

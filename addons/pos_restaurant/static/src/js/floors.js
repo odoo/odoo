@@ -191,17 +191,32 @@ var TableWidget = PosBaseWidget.extend({
     table_style: function(){
         var table = this.table;
         function unit(val){ return '' + val + 'px'; }
-        var style = {
-            'width':        unit(table.width),
-            'height':       unit(table.height),
-            'line-height':  unit(table.height),
-            'margin-left':  unit(-table.width/2),
-            'margin-top':   unit(-table.height/2),
-            'top':          unit(table.position_v + table.height/2),
-            'left':         unit(table.position_h + table.width/2),
-            'border-radius': table.shape === 'round' ?
-                    unit(Math.max(table.width,table.height)/2) : '3px',
-        };
+        var style = {};
+        if (_t.database.parameters.direction === 'rtl') {
+            style = {
+                'width':        unit(table.width),
+                'height':       unit(table.height),
+                'line-height':  unit(table.height),
+                'margin-right':  unit(-table.width/2),
+                'margin-top':   unit(-table.height/2),
+                'top':          unit(table.position_v + table.height/2),
+                'right':         unit(table.position_h + table.width/2),
+                'border-radius': table.shape === 'round' ?
+                        unit(Math.max(table.width,table.height)/2) : '3px',
+            };
+        } else {
+            style = {
+                'width':        unit(table.width),
+                'height':       unit(table.height),
+                'line-height':  unit(table.height),
+                'margin-left':  unit(-table.width/2),
+                'margin-top':   unit(-table.height/2),
+                'top':          unit(table.position_v + table.height/2),
+                'left':         unit(table.position_h + table.width/2),
+                'border-radius': table.shape === 'round' ?
+                        unit(Math.max(table.width,table.height)/2) : '3px',
+            };
+        }
         if (table.color) {
             style.background = table.color;
         }

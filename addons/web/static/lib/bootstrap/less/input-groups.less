@@ -12,8 +12,8 @@
   // Undo padding and float of grid classes
   &[class*="col-"] {
     float: none;
-    padding-left: 0;
-    padding-right: 0;
+    .padding-left(0);
+    .padding-right(0);
   }
 
   .form-control {
@@ -123,7 +123,7 @@
   .border-left-radius(0);
 }
 .input-group-addon:last-child {
-  border-left: 0;
+  .border-left(0);
 }
 
 // Button input groups
@@ -140,7 +140,7 @@
   > .btn {
     position: relative;
     + .btn {
-      margin-left: -1px;
+      .margin-left(-1px);
     }
     // Bring the "active" button to the front
     &:hover,
@@ -154,14 +154,14 @@
   &:first-child {
     > .btn,
     > .btn-group {
-      margin-right: -1px;
+      .margin-right(-1px);
     }
   }
   &:last-child {
     > .btn,
     > .btn-group {
       z-index: 2;
-      margin-left: -1px;
+      .margin-left(-1px);
     }
   }
 }

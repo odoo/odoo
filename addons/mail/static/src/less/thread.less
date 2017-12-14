@@ -31,7 +31,7 @@
     .o_thread_new_messages_separator {
         margin-bottom: 15px;
         border-bottom: solid lighten(@odoo-brand-primary, 15%) 1px;
-        text-align: right;
+        .text-align(right);
         .o_thread_separator_label {
             position: relative;
             top: 8px;
@@ -49,7 +49,7 @@
 
         .o_thread_message_sidebar {
             .o-flex(0, 0, @mail-thread-avatar-size);
-            margin-right: 10px;
+            .margin-right(10px);
             margin-top: 2px;
             text-align: center;
             font-size: smaller;
@@ -63,10 +63,10 @@
                 max-width: @mail-thread-avatar-size;
             }
             .o_thread_message_side_date {
-                margin-left: -5px;
+                .margin-left(-5px);
             }
             .o_thread_message_star {
-                margin-right: -5px;
+                .margin-right(-5px);
             }
 
             .o_thread_message_side_date {

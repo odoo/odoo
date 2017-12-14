@@ -52,7 +52,7 @@
         width: 15%;
     }
     .o_event_title {
-        margin-left: 20%;
+        .margin-left(20%);
 
         h2 {
             margin-top: 0;
@@ -63,10 +63,10 @@
         margin: 15px 0 0;
 
         th {
-            padding-right: 15px;
+            .padding-right(15px);
         }
         ul {
-            padding-left: 0;
+            .padding-left(0);
         }
     }
 
@@ -75,5 +75,16 @@
     }
     .o_declined {
         color: @brand-danger;
+    }
+}
+
+//for language rtl display ui datepicker button for next and previous in right direction beacuse it is not fontawesome icon
+.ui-datepicker {
+    .ui-datepicker-prev {
+        .scaleX(1);
+    }
+
+    .ui-datepicker-next {
+        .scaleX(1);
     }
 }

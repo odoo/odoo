@@ -1,8 +1,8 @@
 .o_hr_attendance_sign_in_out_icon {
     font-size: 15em;
     cursor: pointer;
-    margin: 20px 0px 20px 0px;
-    padding: 0px 15px 0px 15px;
+    .margin(20px, 0px, 20px, 0px);
+    .padding(0px, 15px, 0px, 15px);
     border-radius: 10%;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);
 }
@@ -10,7 +10,7 @@
 
 .o_kanban_view #oe_hr_attendance_status {
     font-size: 1.2em;
-    margin-right: .3em;
+    .margin-right(.3em);
 }
 
 #oe_hr_attendance_status {
@@ -30,8 +30,8 @@
     height: 1.7em;
     width: 1.7em;
     position: absolute;
-    left: auto;
-    right: 0px;
+    .left(auto);
+    .right(0px);
     top: 0px;
     bottom: auto;
 
@@ -49,14 +49,14 @@
 }
 
 .o_hr_attendance_pin_pad_border {
-    margin: 10px 0px 10px 0px;
+    .margin(10px, 0px, 10px, 0px);
 }
 
 .o_hr_attendance_PINbox {
     background: white;
     border: 1px solid #d5d5d5;
     text-align: center;
-    margin: 5px 0px 5px 0px;
+    .margin(5px, 0px, 5px, 0px);
 }
 
 .o_hr_attendance_kiosk_mode_container {
@@ -84,7 +84,7 @@
     padding: 2em;
 
     h1 {
-        margin: 0 0 2rem 0;
+        .margin(0, 0, 2rem, 0);
     }
 
     .message_demo_barcodes {
@@ -99,7 +99,7 @@
     }
 
     p {
-        text-align: left;
+        .text-align(left);
         margin: 3rem 0;
     }
 
@@ -129,13 +129,13 @@
     text-align: center;
     position: absolute;
     top: 20px;
-    right: 20px;
+    .right(20px);
 
     @media (min-width: @screen-sm-min) {
         flex: 0 0 auto;
         border-radius: 3px;
         background-color: rgba(255,255,255,0.5);
-        padding: 3px 10px 3px 10px;
+        .padding(3px, 10px, 3px, 10px);
     }
 }
 
@@ -157,7 +157,7 @@
     padding: 2em;
 
     h1 {
-        margin: 0 0 2rem 0;
+        .margin(0, 0, 2rem, 0);
     }
 
     .message_demo_barcodes {
@@ -172,7 +172,7 @@
     }
 
     p {
-        text-align: left;
+        .text-align(left);
         margin: 3rem 0;
     }
 

@@ -106,6 +106,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
             inlinemedia: ['p'],
             lang: "odoo",
             onChange: this._doDebouncedAction.bind(this),
+            direction: _t.database.parameters.direction === 'rtl' ? 'rtl' : 'ltr',
         };
         if (config.debug) {
             summernoteConfig.toolbar.splice(7, 0, ['view', ['codeview']]);

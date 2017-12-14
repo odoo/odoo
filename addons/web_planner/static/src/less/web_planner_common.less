@@ -56,7 +56,7 @@
 
             > .modal-header, > .modal-footer {
                 .o-flex(0, 0, auto);
-                text-align: left;
+                .text-align(left);
                 padding: 15px;
             }
 
@@ -98,9 +98,9 @@
             }
 
             > .modal-footer {
-                padding-left: 25%;
+                .padding-left(25%);
                 > :first-child {
-                    margin-left: 25px;
+                    .margin-left(25px);
                 }
             }
 
@@ -109,28 +109,28 @@
                 padding: 0;
 
                 > .o_planner_menu {
-                    float: left;
+                    .float(left);
                     width: 25%;
                     height: 100%;
                     overflow: auto;
-                    border-right: 1px solid #e6e6e6;
+                    .border-right(1px solid #e6e6e6);
                     margin: 0;
                     padding-top: 10px;
-                    padding-left: 18px;
-                    padding-right: 18px;
+                    .padding-left(18px);
+                    .padding-right(18px);
                     list-style-type: none;
                     line-height: 1.6;
 
                     > li {
                         // align multi lines li
                         text-indent: -18px;
-                        padding-left: 18px;
+                        .padding-left(18px);
 
                         position: relative;
 
                         > a {
                             color: #666666;
-                            padding-left: 18px;
+                            .padding-left(18px);
                             font-weight: 600;
                             font-size: 14px;
 
@@ -148,16 +148,16 @@
                     }
 
                     > h4 {
-                        padding-left: 27px;
+                        .padding-left(27px);
                         font-size: 12px;
                         color: #a8a8a8;
                         border-top: 1px solid #e6e6e6;
-                        margin-left: -15px;
+                        .margin-left(-15px);
                         margin-bottom: 15px;
                         padding-top: 20px;
 
                         > i.fa {
-                            margin-right: 10px;
+                            .margin-right(10px);
                             font-size: 14px;
                         }
                     }
@@ -167,7 +167,7 @@
                     display: none;
                     height: 100%;
                     overflow: auto;
-                    margin-left: 25%;
+                    .margin-left(25%);
                     padding: 0 25px;
 
                     > h1 {
@@ -203,9 +203,9 @@
                     .fa-lightbulb-o {
                         padding-top: 5px;
                         &:before {
-                            float: left;
+                            .float(left);
                             font-size: 20px;
-                            padding-right: 10px;
+                            .padding-right(10px);
                         }
                     }
 
@@ -233,23 +233,23 @@
                             }
 
                             input[type="radio"],input[type="checkbox"] {
-                                margin-right: 5px;
+                                .margin-right(5px);
                             }
 
                             > li {
                                 list-style: none;
                                 border-bottom: 1px dashed #C1D6DA;
-                                padding: 10px 10px 5px 55px;
+                                .padding(10px, 10px, 5px, 55px);
                                 text-transform: capitalize;
                                 margin: 0;
 
                                 .indented {
-                                    padding-left: 32px;
+                                    .padding-left(32px);
                                 }
 
                                 span {
                                     position: absolute;
-                                    left: 9px;
+                                    .left(9px);
                                     color: rgb(199, 180, 146);
                                     font-size: 20px;
                                     font-weight: bold;
@@ -258,7 +258,7 @@
 
                             > li.row {
                                 span {
-                                    left: -50px; // make up for the li's left padding
+                                    .left(-50px); // make up for the li's left padding
                                 }
                             }
 
@@ -269,13 +269,13 @@
                             .o_planner_notebook_header {
                                 div.dropdown {
                                     display: inline;
-                                    float:right;
+                                    .float(right);
                                 }
                                 a {
                                     color: #C4A87A;
                                     position: absolute;
                                     top: 13px;
-                                    right: 13px;
+                                    .right(13px);
                                     &:hover {
                                         text-decoration: none;
                                         color: #9C855D;
@@ -295,14 +295,14 @@
                                 background-color: #F5EFD0;
                             }
                             .o_planner_notebook_line_separator {
-                                border-left: 1px solid #ffaa9f;
-                                border-right: 1px solid #ffaa9f;
+                                .border-left(1px solid #ffaa9f);
+                                .border-right(1px solid #ffaa9f);
                                 background: transparent;
                                 position: absolute;
                                 width: 3px;
                                 height: 100%;
                                 top: 0;
-                                left: 42px;
+                                .left(42px);
                                 border-bottom: 0;
                                 border-top: 0;
                             }
@@ -336,12 +336,12 @@
                     }
                     .info_icon {
                         position: relative;
-                        padding-left: 5em;
+                        .padding-left(5em);
                         min-height: 6em;
                         .fa {
                             position: absolute;
                             font-size: 5em;
-                            left: 0.2em;
+                            .left(0.2em);
                             opacity: 0.6;
                         }
                     }
