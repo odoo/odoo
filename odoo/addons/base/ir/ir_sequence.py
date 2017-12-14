@@ -96,7 +96,7 @@ class IrSequence(models.Model):
 
     def _set_number_next_actual(self):
         for seq in self:
-            seq.write({'number_next': seq.number_next_actual or 0})
+            seq.write({'number_next': seq.number_next_actual or 1})
 
     name = fields.Char(required=True)
     code = fields.Char(string='Sequence Code')
@@ -309,7 +309,7 @@ class IrSequenceDateRange(models.Model):
 
     def _set_number_next_actual(self):
         for seq in self:
-            seq.write({'number_next': seq.number_next_actual or 0})
+            seq.write({'number_next': seq.number_next_actual or 1})
 
     @api.model
     def default_get(self, fields):
