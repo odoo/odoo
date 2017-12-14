@@ -145,12 +145,10 @@ class AccountConfigSettings(models.TransientModel):
             '-This installs the module account_bank_statement_import_csv.')
     overdue_msg = fields.Text(related='company_id.overdue_msg', string='Overdue Payments Message *')
 
-
     @api.model
     def _default_has_default_company(self):
         count = self.env['res.company'].search_count([])
         return bool(count == 1)
-
 
     @api.onchange('company_id')
     def onchange_company_id(self):
