@@ -4,7 +4,7 @@
 
         <record id="lu_2011_account_517" model="account.account.template">
             <field name="code">517</field>
-            <field name="name">Virements internes</field>
+            <field name="name">Internal transfers</field>
             <field name="reconcile" eval='True'/>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         </record>
@@ -15,6 +15,7 @@
             <field name="code_digits">6</field>
             <field name="currency_id" ref="base.EUR"/>
             <field name="transfer_account_id" ref="lu_2011_account_517"/>
+            <field name="spoken_languages" eval="'fr_FR;de_DE'"/>
         </record>
         <record id="lu_2011_account_517" model="account.account.template">
             <field name="chart_template_id" ref="lu_2011_chart_1"/>
