@@ -473,7 +473,6 @@ class StockMoveLine(models.Model):
                 ('owner_id', '=', owner_id.id if owner_id else False),
                 ('package_id', '=', package_id.id if package_id else False),
                 ('product_qty', '>', 0.0),
-                ('qty_done', '=', 0.0),
                 ('id', '!=', self.id),
             ]
             oudated_candidates = self.env['stock.move.line'].search(oudated_move_lines_domain)
@@ -487,7 +486,10 @@ class StockMoveLine(models.Model):
                 if float_compare(candidate.product_qty, quantity, precision_rounding=rounding) <= 0:
                     quantity -= candidate.product_qty
                     move_to_recompute_state |= candidate.move_id
-                    candidate.unlink()
+                    if candidate.qty_done:
+                        candidate.product_uom_qty = 0.0
+                    else:
+                        candidate.unlink()
                 else:
                     # split this move line and assign the new part to our extra move
                     quantity_split = float_round(
