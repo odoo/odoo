@@ -845,7 +845,7 @@ class WebsiteSale(http.Controller):
             return request.redirect('/shop/?error=invalid_token_id')
 
         # We retrieve the token the user want to use to pay
-        token = request.env['payment.token'].browse(pm_id)
+        token = request.env['payment.token'].sudo().browse(pm_id)
         if not token:
             return request.redirect('/shop/?error=token_not_found')
 
