@@ -622,7 +622,7 @@ class mrp_production(osv.osv):
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
     ]
 
-    _order = 'priority desc, date_planned asc'
+    _order = 'priority desc, date_planned asc, id'
 
     def _check_qty(self, cr, uid, ids, context=None):
         for order in self.browse(cr, uid, ids, context=context):
