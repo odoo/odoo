@@ -1,0 +1,8 @@
+<odoo> 
+    <record model="ir.rule" id="account_sale_closing_multi_company">
+      <field name="name">Sale Closing multi-company</field>
+      <field name="model_id" ref="model_account_sale_closing"/>
+      <field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+</odoo>
