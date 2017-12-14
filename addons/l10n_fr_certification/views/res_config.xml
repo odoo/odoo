@@ -2,17 +2,15 @@
     <record id="view_general_fr_inalterability_inherit_config" model="ir.ui.view">
         <field name="name">Inalterability settings</field>
         <field name="model">base.config.settings</field>
-        <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+        <field name="inherit_id" ref="base_setup.base_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='company_share_ressources']" position="before">
-                <group>
-                    <label for="id" string="Data Inalterability"/>
-                    <div>
-                        <button name="%(l10n_fr_certification.action_check_hash_integrity)d" type="action" string="Data Inalterability Check" class="oe_link"/>
-                        <button name="%(l10n_fr_certification.odoo_french_certification)d" type="action" string="Get the certification now!" class="oe_link"/>
-                    </div>
-                </group>
-            </xpath>
+          <xpath expr="//field[@name='group_multi_company']/../../.." position="after">
+            <h2>Data Inalterability</h2>
+            <div class="row mt16 o_settings_container">
+              <button name="%(l10n_fr_certification.action_check_hash_integrity)d" type="action" string="Data Inalterability Check" class="oe_link"/>
+              <button name="%(l10n_fr_certification.odoo_french_certification)d" type="action" string="Get the certification now!" class="oe_link"/>
+            </div>
+          </xpath>
         </field>
     </record>
 </odoo>
