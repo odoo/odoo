@@ -234,9 +234,10 @@ class AccountBankStatement(models.Model):
         for statement in statements:
             moves = self.env['account.move']
             for st_line in statement.line_ids:
-                if st_line.account_id and not st_line.journal_entry_ids.ids:
-                    st_line.fast_counterpart_creation()
-                elif not st_line.journal_entry_ids.ids and not statement.currency_id.is_zero(st_line.amount):
+                #upon bank statement confirmation, look if some lines have the account_id set. It would trigger a journal entry
+                #creation towards that account, with the wanted side-effect to skip that line in the bank reconciliation widget.
+                st_line.fast_counterpart_creation()
+                if not st_line.account_id and not st_line.journal_entry_ids.ids and not st_line.statement_id.currency_id.is_zero(st_line.amount):
                     raise UserError(_('All the account entries lines must be processed in order to close the statement.'))
                 for aml in st_line.journal_entry_ids:
                     moves |= aml.move_id
@@ -823,15 +824,20 @@ class AccountBankStatementLine(models.Model):
             st_line.with_context(ctx).process_reconciliation(datum.get('counterpart_aml_dicts', []), payment_aml_rec, datum.get('new_aml_dicts', []))
 
     def fast_counterpart_creation(self):
+        """This function is called when confirming a bank statement and will allow to automatically process lines without
+        going in the bank reconciliation widget. By setting an account_id on bank statement lines, it will create a journal
+        entry using that account to counterpart the bank account
+        """
         for st_line in self:
             # Technical functionality to automatically reconcile by creating a new move line
-            vals = {
-                'name': st_line.name,
-                'debit': st_line.amount < 0 and -st_line.amount or 0.0,
-                'credit': st_line.amount > 0 and st_line.amount or 0.0,
-                'account_id': st_line.account_id.id,
-            }
-            st_line.process_reconciliation(new_aml_dicts=[vals])
+            if st_line.account_id and not st_line.journal_entry_ids.ids:
+                vals = {
+                    'name': st_line.name,
+                    'debit': st_line.amount < 0 and -st_line.amount or 0.0,
+                    'credit': st_line.amount > 0 and st_line.amount or 0.0,
+                    'account_id': st_line.account_id.id,
+                }
+                st_line.process_reconciliation(new_aml_dicts=[vals])
 
     def _get_communication(self, payment_method_id):
         return self.name or ''
