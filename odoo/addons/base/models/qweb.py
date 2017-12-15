@@ -1162,8 +1162,7 @@ class QWeb(object):
         content = self._compile_widget(el, el.attrib.pop('t-raw'), field_options)
         return content + self._compile_widget_value(el, options)
 
-    # escape attribute is deprecated and will remove after v11
-    def _compile_widget(self, el, expression, field_options, escape=None):
+    def _compile_widget(self, el, expression, field_options):
         if field_options:
             return [
                 # value = t-(esc|raw)
