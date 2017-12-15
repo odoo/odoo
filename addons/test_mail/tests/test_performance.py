@@ -68,8 +68,12 @@ class TestMailPerformance(TransactionCase):
     @warmup
     def test_write_mail_with_tracking(self):
         """ Write records inheriting from 'mail.thread' (with field tracking). """
-        record = self.env['test_performance.mail'].search([], limit=1)
-        self.assertEqual(len(record), 1)
+        record = self.env['test_performance.mail'].create({
+            'name': 'Test',
+            'track': 'Y',
+            'value': 40,
+            'partner_id': self.env.ref('base.res_partner_12').id,
+        })
 
         with self.assertQueryCount(admin=20, demo=31):
             record.track = 'X'
