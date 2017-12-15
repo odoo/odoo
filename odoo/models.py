@@ -5525,8 +5525,8 @@ class BaseModel(object):
     # Cleanup
     #
 
-    @api.multi
-    def expunge_bad_records(self):
+    @api.model
+    def _expunge_bad_records(self):
         """
         Expunge bad records from the current model.
 

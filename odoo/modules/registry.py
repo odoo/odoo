@@ -299,7 +299,7 @@ class Registry(Mapping):
 
     def cleanup_models(self, cr):
         """
-        Clean up every model in the registry if necessary,
+        Clean up every model in the registry if necessary.
 
         This method calls every model's expunge_bad_records method,
         which by default does nothing but can be overridden for very
@@ -309,7 +309,7 @@ class Registry(Mapping):
         models = env.values()
 
         for model in models:
-            model.expunge_bad_records()
+            model._expunge_bad_records()
 
     def init_models(self, cr, model_names, context):
         """ Initialize a list of models (given by their name). Call methods

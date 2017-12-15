@@ -130,8 +130,8 @@ class Followers(models.Model):
         res._invalidate_documents()
         return res
 
-    @api.multi
-    def expunge_bad_records(self):
+    @api.model
+    def _expunge_bad_records(self):
         self._cr.execute(
             "DELETE FROM mail_followers WHERE res_model NOT IN %s",
             [tuple(self.env)]
