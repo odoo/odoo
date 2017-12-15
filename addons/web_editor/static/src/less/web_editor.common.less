@@ -299,3 +299,14 @@ a.o_underline {
 .o-create-color-classes(~'white-25', @color-white-25);
 .o-create-color-classes(~'white-50', @color-white-50);
 .o-create-color-classes(~'white-75', @color-white-75);
+
+// Convert HTML to CSS styles in browsers using those
+.o-align-fix(@align) {
+    [align="@{align}"] {
+        text-align: @align !important;
+    }
+}
+.o-align-fix(left);
+.o-align-fix(center);
+.o-align-fix(right);
+.o-align-fix(justify);
