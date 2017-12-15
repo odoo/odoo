@@ -399,6 +399,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 registry = odoo.modules.registry.Registry.new(
                     cr.dbname, force_demo, status, update_module)
                 registry.cleanup_models(cr)
+                cr.commit()
                 return registry
 
 

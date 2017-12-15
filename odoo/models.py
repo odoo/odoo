@@ -5526,21 +5526,32 @@ class BaseModel(object):
     #
 
     @api.model
-    def _expunge_bad_records(self):
+    def _cleanup_model(self):
         """
-        Expunge bad records from the current model.
+        Clean up the data from the current model after module uninstallation.
 
-        This method, when overridden, is used to remove records of models
-        which may have database constraints and could not be removed normally
-        through the unlink method.
+        This method, when overridden, may be used to clean up or remove records
+        that were related to other data that is gone because of some module
+        uninstallation. It typically fixes failed removals because of
+        database constraints or the absence of such constraints.
 
-        E.g.: Model A and Model B both override the unlink method, Model B
-              inherits from Model A and thus in its unlink override, it calls
-              Model A's unlink. If Model B's unlink fails (i.e. raises an 
-              exception) before calling Model A's unlink, there could be
-              some records that still reference Model B left behind, even
-              though Model B has been removed, and those records
-              could be troublesome.
+        E.g.:
+
+            MyModel contains a couple of fields which have a unicity
+            constraint, MyModel overrides the unlink method to clean up those
+            fields, since they cannot be automatically removed.
+
+            MyOtherModel inherits from MyModel and creates some MyModel
+            records. MyOtherModel also overrides the unlink method, and at the
+            end, calls MyModel's unlink through a super() call.
+
+            It is possible that during MyOtherModel's unlink, an error happens
+            before the call to MyModel's unlink, meaning that MyModel records
+            created by MyOtherModel will linger in the database, and since
+            they have a unicity constraint, upon reinstallation of MyOtherModel
+            the registry will crash, because it will try to recreate those
+            records when they already exist, making them non-unique.
+
 
         This method serves as an interface to solve such issues by overriding
         it in the model whose unlink fails to be called during some other
