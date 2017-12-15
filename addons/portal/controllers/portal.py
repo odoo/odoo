@@ -7,8 +7,9 @@ from werkzeug import urls
 
 from odoo import fields as odoo_fields, tools, _
 from odoo.osv import expression
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, AccessError
 from odoo.http import Controller, request, route
+from odoo.tools import consteq
 from odoo.addons.web.controllers.main import WebClient
 
 # --------------------------------------------------
@@ -75,8 +76,8 @@ def pager(url, total, page=1, step=30, scope=5, url_args=None):
 
 
 def get_records_pager(ids, current):
-    if current.id in ids and (hasattr(current, 'website_url') or hasattr(current, 'portal_url')):
-        attr_name = 'portal_url' if hasattr(current, 'portal_url') else 'website_url'
+    if current.id in ids and (hasattr(current, 'website_url') or hasattr(current, 'access_url')):
+        attr_name = 'access_url' if hasattr(current, 'access_url') else 'website_url'
         idx = ids.index(current.id)
         return {
             'prev_record': idx != 0 and getattr(current.browse(ids[idx - 1]), attr_name),
@@ -228,3 +229,38 @@ class CustomerPortal(Controller):
             error_message.append("Unknown field '%s'" % ','.join(unknown))
 
         return error, error_message
+
+    def _document_check_access(self, model_name, document_id, access_token=None):
+        document = request.env[model_name].browse([document_id])
+        document_sudo = document.sudo()
+        try:
+            document.check_access_rights('read')
+            document.check_access_rule('read')
+        except AccessError:
+            if not access_token or not consteq(document_sudo.access_token, access_token):
+                raise
+        return document_sudo
+
+    def _get_page_view_values(self, document, access_token, values, session_history, no_breadcrumbs, **kwargs):
+        if access_token:
+            # if no_breadcrumbs = False -> force breadcrumbs even if access_token to `invite` users to register if they click on it
+            values['no_breadcrumbs'] = no_breadcrumbs
+            values['access_token'] = access_token
+
+        # Those are used notably whenever the payment form is implied in the portal.
+        if kwargs.get('error'):
+            values['error'] = kwargs['error']
+        if kwargs.get('warning'):
+            values['warning'] = kwargs['warning']
+        if kwargs.get('success'):
+            values['success'] = kwargs['success']
+        # Email token for posting messages in portal view with identified author
+        if kwargs.get('pid'):
+            values['pid'] = kwargs['pid']
+        if kwargs.get('hash'):
+            values['hash'] = kwargs['hash']
+
+        history = request.session.get(session_history, [])
+        values.update(get_records_pager(history, document))
+
+        return values

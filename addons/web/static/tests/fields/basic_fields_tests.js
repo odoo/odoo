@@ -1366,10 +1366,10 @@ QUnit.module('basic_fields', {
         }
     });
 
-    QUnit.test('im_livechat: Copy to clipboard button', function (assert) {
+    QUnit.test('Char & Text Fields: Copy to clipboard button', function (assert) {
         assert.expect(2);
-
-        var form = createView({
+        var done = assert.async();
+        testUtils.createAsyncView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -1381,10 +1381,12 @@ QUnit.module('basic_fields', {
                             '</div>' +
                     '</sheet>' +
                 '</form>',
+        }).then(function (form) {
+            assert.strictEqual(form.$('.o_clipboard_button.o_btn_text_copy').length, 1,"Should have copy button on text type field");
+            assert.strictEqual(form.$('.o_clipboard_button.o_btn_char_copy').length, 1,"Should have copy button on char type field");
+            form.destroy();
+            done();
         });
-        assert.strictEqual(form.$('.o_clipboard_button.o_btn_text_copy').length, 1,"Should have copy button on text type field");
-        assert.strictEqual(form.$('.o_clipboard_button.o_btn_char_copy').length, 1,"Should have copy button on char type field");
-        form.destroy();
     });
 
     QUnit.module('FieldText');

@@ -208,7 +208,7 @@ class Project(models.Model):
             ('portal', _('Visible by following customers')),
         ],
         string='Privacy', required=True,
-        default='employees',
+        default='portal',
         help="Holds visibility of the tasks or issues that belong to the current project:\n"
                 "- On invitation only: Employees may only see the followed project, tasks or issues\n"
                 "- Visible by all employees: Employees may see all project, tasks or issues\n"
@@ -242,10 +242,16 @@ class Project(models.Model):
         ('project_date_greater', 'check(date >= date_start)', 'Error! project start-date must be lower than project end-date.')
     ]
 
-    def _compute_portal_url(self):
-        super(Project, self)._compute_portal_url()
+    def _compute_access_url(self):
+        super(Project, self)._compute_access_url()
         for project in self:
-            project.portal_url = '/my/project/%s' % project.id
+            project.access_url = '/my/project/%s' % project.id
+
+    def _compute_access_warning(self):
+        super(Project, self)._compute_access_warning()
+        for project in self.filtered(lambda x: x.privacy_visibility != 'portal'):
+            project.access_warning = _(
+                "The project cannot be shared with the recipient(s) because the privacy of the project is too restricted. Set the privacy to 'Visible by following customers' in order to make it accessible by the recipient(s).")
 
     @api.depends('percentage_satisfaction_task')
     def _compute_percentage_satisfaction_project(self):
@@ -318,30 +324,6 @@ class Project(models.Model):
             for project in self.filtered(lambda project: project.privacy_visibility == 'portal'):
                 project.message_subscribe(project.partner_id.ids)
         return res
-
-    @api.multi
-    def get_access_action(self, access_uid=None):
-        """ Instead of the classic form view, redirect to website for portal users
-        that can read the project. """
-        self.ensure_one()
-        user, record = self.env.user, self
-        if access_uid:
-            user = self.env['res.users'].sudo().browse(access_uid)
-            record = self.sudo(user)
-
-        if user.share:
-            try:
-                record.check_access_rule('read')
-            except AccessError:
-                pass
-            else:
-                return {
-                    'type': 'ir.actions.act_url',
-                    'url': '/my/project/%s' % self.id,
-                    'target': 'self',
-                    'res_id': self.id,
-                }
-        return super(Project, self).get_access_action(access_uid)
 
     @api.multi
     def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None):
@@ -568,10 +550,16 @@ class Task(models.Model):
             else:
                 task.kanban_state_label = task.legend_done
 
-    def _compute_portal_url(self):
-        super(Task, self)._compute_portal_url()
+    def _compute_access_url(self):
+        super(Task, self)._compute_access_url()
         for task in self:
-            task.portal_url = '/my/task/%s' % task.id
+            task.access_url = '/my/task/%s' % task.id
+
+    def _compute_access_warning(self):
+        super(Task, self)._compute_access_warning()
+        for task in self.filtered(lambda x: x.project_id.privacy_visibility != 'portal'):
+            task.access_warning = _(
+                "The task cannot be shared with the recipient(s) because the privacy of the project is too restricted. Set the privacy of the project to 'Visible by following customers' in order to make it accessible by the recipient(s).")
 
     @api.depends('child_ids.planned_hours')
     def _compute_subtask_planned_hours(self):
@@ -770,30 +758,6 @@ class Task(models.Model):
         if project_task_type.fold:
             return {'date_end': fields.Datetime.now()}
         return {'date_end': False}
-
-    @api.multi
-    def get_access_action(self, access_uid=None):
-        """ Instead of the classic form view, redirect to website for portal users
-        that can read the task. """
-        self.ensure_one()
-        user, record = self.env.user, self
-        if access_uid:
-            user = self.env['res.users'].sudo().browse(access_uid)
-            record = self.sudo(user)
-
-        if user.share:
-            try:
-                record.check_access_rule('read')
-            except AccessError:
-                pass
-            else:
-                return {
-                    'type': 'ir.actions.act_url',
-                    'url': '/my/task/%s' % self.id,
-                    'target': 'self',
-                    'res_id': self.id,
-                }
-        return super(Task, self).get_access_action(access_uid)
 
     # ---------------------------------------------------
     # Subtasks

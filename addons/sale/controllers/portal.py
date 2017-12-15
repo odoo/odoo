@@ -6,7 +6,6 @@ import base64
 from odoo import http, _
 from odoo.exceptions import AccessError
 from odoo.http import request
-from odoo.tools import consteq
 from odoo.addons.portal.controllers.mail import _message_post_helper
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager, get_records_pager
 
@@ -37,39 +36,14 @@ class CustomerPortal(CustomerPortal):
     # Quotations and Sales Orders
     #
 
-    def _order_check_access(self, order_id, access_token=None):
-        order = request.env['sale.order'].browse([order_id])
-        order_sudo = order.sudo()
-        try:
-            order.check_access_rights('read')
-            order.check_access_rule('read')
-        except AccessError:
-            if not access_token or not consteq(order_sudo.access_token, access_token):
-                raise
-        return order_sudo
-
     def _order_get_page_view_values(self, order, access_token, **kwargs):
         order_invoice_lines = {il.product_id.id: il.invoice_id for il in order.invoice_ids.mapped('invoice_line_ids')}
         values = {
             'order': order,
             'order_invoice_lines': order_invoice_lines,
+            'portal_confirmation': order.get_portal_confirmation_action(),
         }
-        if access_token:
-            values['no_breadcrumbs'] = True
-            values['access_token'] = access_token
-        values['portal_confirmation'] = order.get_portal_confirmation_action()
-
-        if kwargs.get('error'):
-            values['error'] = kwargs['error']
-        if kwargs.get('warning'):
-            values['warning'] = kwargs['warning']
-        if kwargs.get('success'):
-            values['success'] = kwargs['success']
-
-        history = request.session.get('my_orders_history', [])
-        values.update(get_records_pager(history, order))
-
-        return values
+        return self._get_page_view_values(order, access_token, values, 'my_orders_history', True, **kwargs)
 
     @http.route(['/my/quotes', '/my/quotes/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_quotes(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
@@ -174,10 +148,10 @@ class CustomerPortal(CustomerPortal):
         })
         return request.render("sale.portal_my_orders", values)
 
-    @http.route(['/my/orders/<int:order>'], type='http', auth="public", website=True)
-    def portal_order_page(self, order=None, access_token=None, **kw):
+    @http.route(['/my/orders/<int:order_id>'], type='http', auth="public", website=True)
+    def portal_order_page(self, order_id=None, access_token=None, **kw):
         try:
-            order_sudo = self._order_check_access(order, access_token=access_token)
+            order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
         except AccessError:
             return request.redirect('/my')
 
@@ -187,7 +161,7 @@ class CustomerPortal(CustomerPortal):
     @http.route(['/my/orders/pdf/<int:order_id>'], type='http', auth="public", website=True)
     def portal_order_report(self, order_id, access_token=None, **kw):
         try:
-            order_sudo = self._order_check_access(order_id, access_token)
+            order_sudo = self._document_check_access('sale.order', order_id, access_token)
         except AccessError:
             return request.redirect('/my')
 
@@ -206,7 +180,7 @@ class CustomerPortal(CustomerPortal):
     @http.route(['/my/quotes/accept'], type='json', auth="public", website=True)
     def portal_quote_accept(self, res_id, access_token=None, partner_name=None, signature=None):
         try:
-            order_sudo = self._order_check_access(res_id, access_token=access_token)
+            order_sudo = self._document_check_access('sale.order', res_id, access_token=access_token)
         except AccessError:
             return {'error': _('Invalid order')}
         if order_sudo.state != 'sent':
