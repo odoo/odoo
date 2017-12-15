@@ -58,6 +58,43 @@ var TranslatableFieldMixin = {
     },
 };
 
+var CopyClipboard = {
+
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super.apply(this, arguments);
+        this.clipboard.destroy();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Instatiates the Clipboad lib.
+     */
+    _initClipboard: function () {
+        var self = this;
+        var $clipboardBtn = this.$('.o_clipboard_button');
+        $clipboardBtn.tooltip({title: _t('Copied !'), trigger: 'manual', placement: 'right'});
+        this.clipboard = new Clipboard($clipboardBtn.get(0), {
+            text: function () {
+                return self.value.trim();
+            }
+        });
+        this.clipboard.on('success', function () {
+            _.defer(function () {
+                $clipboardBtn.tooltip('show');
+                _.delay(function () {
+                    $clipboardBtn.tooltip('hide');
+                }, 800);
+            });
+        });
+    },
+};
+
 var DebouncedField = AbstractField.extend({
     /**
      * For field widgets that may have a large number of field changes quickly,
@@ -370,6 +407,23 @@ var FieldChar = InputField.extend(TranslatableFieldMixin, {
         }
         return this._super(value, options);
     },
+});
+
+var CharCopyClipboard = FieldChar.extend(CopyClipboard, {
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _render: function () {
+        this._super.apply(this, arguments);
+        this.$el.addClass('o_field_copy');
+        this.$el.append($(qweb.render('CopyClipboardChar')));
+        this._initClipboard();
+    }
 });
 
 
@@ -918,6 +972,23 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
         }
         this._super.apply(this, arguments);
     },
+});
+
+var TextCopyClipboard = FieldText.extend(CopyClipboard, {
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _render: function () {
+        this._super.apply(this, arguments);
+        this.$el.addClass('o_field_copy');
+        this.$el.append($(qweb.render('CopyClipboardText')));
+        this._initClipboard();
+    }
 });
 
 /**
@@ -2652,6 +2723,8 @@ return {
     UrlWidget: UrlWidget,
     JournalDashboardGraph: JournalDashboardGraph,
     AceEditor: AceEditor,
+    TextCopyClipboard: TextCopyClipboard,
+    CharCopyClipboard: CharCopyClipboard,
 };
 
 });
