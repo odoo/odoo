@@ -839,7 +839,7 @@ var FieldX2Many = AbstractField.extend({
             this.currentColInvisibleFields = this._evalColumnInvisibleFields();
             this.renderer = new ListRenderer(this, this.value, {
                 arch: arch,
-                mode: this.mode,
+                editable: this.mode === 'edit' && arch.attrs.editable,
                 addCreateLine: !this.isReadonly && this.activeActions.create,
                 addTrashIcon: !this.isReadonly && this.activeActions.delete,
                 viewType: viewType,
