@@ -146,7 +146,7 @@ class FleetVehicleModel(models.Model):
         for res_item in res:
             model = self.browse(res_item[0])
             if model.default_total_depreciated_cost != 0.0:
-                new_res.append((res_item[0], res_item[1] + u" \u2022 " + str(model.default_total_depreciated_cost)))
+                new_res.append((res_item[0], res_item[1] + u" \u2022 " + str(round(model.default_total_depreciated_cost, 2))))
             else:
                 new_res.append(res_item)
         return new_res
