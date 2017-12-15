@@ -126,8 +126,7 @@
                             <t t-foreach="team" t-as="user" class="media">
                                 <div class="media">
                                     <div class="pull-left" t-if='user.image_small'>
-                                        <img t-att-src="user.image_small and ('data:image/png;base64,' + to_text(user.image_small)) or '/web/static/src/img/placeholder.png'"
-                                            class="img-rounded" t-att-alt="user.name"/>
+                                        <span itemprop="image" t-field="user.image_small" t-options="{'widget': 'image', 'class': 'img-rounded'}" t-att-alt="user.name"/>
                                     </div>
                                     <div class="media-body">
                                         <h5><t t-esc="user.name"/></h5>
@@ -159,7 +158,7 @@
                                     <t t-foreach="channels" t-as="channel">
                                         <div class="media">
                                             <a class="pull-left" t-attf-href="/livechat/channel/#{ slug(channel)}">
-                                                <img t-att-src="channel.image_small and ('data:image/png;base64,' + to_text(channel.image_small)) or '/web/static/src/img/placeholder.png'" t-att-alt="channel.name" />
+                                                <span itemprop="image" t-field="channel.image_small" t-options="{'widget': 'image'}" t-att-alt="channel.name"/>
                                             </a>
                                             <div class="media-body">
                                                 <h4 class="media-heading"><t t-esc="channel.name"/></h4>
