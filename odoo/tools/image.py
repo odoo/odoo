@@ -51,6 +51,8 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
     """
     if not base64_source:
         return False
+    if isinstance(base64_source, pycompat.text_type):
+        base64_source = base64_source.encode('ascii')
     if size == (None, None):
         return base64_source
     image_stream = io.BytesIO(codecs.decode(base64_source, encoding))
