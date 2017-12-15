@@ -229,7 +229,7 @@
 
         <!-- Information on model to use this notification template
           * if the record has an online access defined in get_access_action, having
-            a get_mail_url methods is required (like sale order and invoice);
+            a _get_share_url methods is required (like sale order and invoice);
           * this template works best with portal-enable models although it is not
             a complete requirement currently;
         -->
@@ -242,7 +242,7 @@
         <td align="center" style="min-width: 590px;">
             <t t-set="access_action" t-value="record.with_context(force_website=True).get_access_action()"/>
             <t t-set="is_online" t-value="access_action and access_action['type'] == 'ir.actions.act_url'"/>
-            <t t-set="access_url" t-value="is_online and record.get_mail_url() or ''"/>
+            <t t-set="access_url" t-value="is_online and record._get_share_url(redirect=True, signup_partner=True) or ''"/>
             <t t-set="access_code" t-value="'view'"/>
             <t t-set="access_name" t-value="'View %s' % (record._description.lower())"/>
             <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">

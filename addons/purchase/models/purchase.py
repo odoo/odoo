@@ -14,7 +14,7 @@ from odoo.addons import decimal_precision as dp
 
 class PurchaseOrder(models.Model):
     _name = "purchase.order"
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _description = "Purchase Order"
     _order = 'date_order desc, id desc'
 
@@ -125,13 +125,10 @@ class PurchaseOrder(models.Model):
     user_id = fields.Many2one('res.users', string='Purchase Representative', index=True, track_visibility='onchange', default=lambda self: self.env.user)
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, states=READONLY_STATES, default=lambda self: self.env.user.company_id.id)
 
-    website_url = fields.Char(
-        'Website URL', compute='_website_url',
-        help='The full URL to access the document through the website.')
-
-    def _website_url(self):
+    def _compute_access_url(self):
+        super(PurchaseOrder, self)._compute_access_url()
         for order in self:
-            order.website_url = '/my/purchase/%s' % (order.id)
+            order.access_url = '/my/purchase/%s' % (order.id)
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
