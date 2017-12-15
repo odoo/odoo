@@ -54,7 +54,7 @@ ListRenderer.include({
      * @returns {Deferred}
      */
     start: function () {
-        if (this.mode === 'edit') {
+        if (this._isEditable()) {
             this.$el.css({height: '100%'});
             core.bus.on('click', this, this._onWindowClicked.bind(this));
         }
@@ -295,12 +295,7 @@ ListRenderer.include({
             renderInvisible: editMode,
             renderWidgets: editMode,
         };
-        if (!editMode) {
-            // Force 'readonly' mode for widgets in readonly rows as
-            // otherwise they default to the view mode which is 'edit' for
-            // an editable list view
-            options.mode = 'readonly';
-        }
+        options.mode = editMode ? 'edit' : 'readonly';
 
         // Switch each cell to the new mode; note: the '_renderBodyCell'
         // function might fill the 'this.defs' variables with multiple deferred
@@ -417,7 +412,7 @@ ListRenderer.include({
      * @returns {boolean}
      */
     _isEditable: function () {
-        return this.mode === 'edit' && !this.state.groupedBy.length && this.arch.attrs.editable;
+        return !this.state.groupedBy.length && this.editable;
     },
     /**
      * Move the cursor on the end of the previous line, if possible.
