@@ -91,9 +91,6 @@ class SaleOrder(models.Model):
         )
         return super(SaleOrder, self).get_empty_list_help(help)
 
-    def _get_default_access_token(self):
-        return str(uuid.uuid4())
-
     @api.model
     def _default_note(self):
         return self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note') and self.env.user.company_id.sale_note or ''
@@ -113,9 +110,6 @@ class SaleOrder(models.Model):
     name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, states={'draft': [('readonly', False)]}, index=True, default=lambda self: _('New'))
     origin = fields.Char(string='Source Document', help="Reference of the document that generated this sales order request.")
     client_order_ref = fields.Char(string='Customer Reference', copy=False)
-    access_token = fields.Char(
-        'Security Token', copy=False,
-        default=_get_default_access_token)
     state = fields.Selection([
         ('draft', 'Quotation'),
         ('sent', 'Quotation Sent'),
@@ -163,10 +157,10 @@ class SaleOrder(models.Model):
     signature = fields.Binary('Signature', help='Signature received through the portal.', copy=False, attachment=True)
     signed_by = fields.Char('Signed by', help='Name of the person that signed the SO.', copy=False)
 
-    def _compute_portal_url(self):
-        super(SaleOrder, self)._compute_portal_url()
+    def _compute_access_url(self):
+        super(SaleOrder, self)._compute_access_url()
         for order in self:
-            order.portal_url = '/my/orders/%s' % (order.id)
+            order.access_url = '/my/orders/%s' % (order.id)
 
     def _compute_is_expired(self):
         now = datetime.now()
@@ -343,27 +337,6 @@ class SaleOrder(models.Model):
                 order_ids = self._search(domain, limit=limit, access_rights_uid=name_get_uid)
                 return self.browse(order_ids).name_get()
         return super(SaleOrder, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
-
-    @api.model_cr_context
-    def _init_column(self, column_name):
-        """ Initialize the value of the given column for existing rows.
-
-            Overridden here because we need to generate different access tokens
-            and by default _init_column calls the default method once and applies
-            it for every record.
-        """
-        if column_name != 'access_token':
-            super(SaleOrder, self)._init_column(column_name)
-        else:
-            query = """UPDATE %(table_name)s
-                          SET %(column_name)s = md5(md5(random()::varchar || id::varchar) || clock_timestamp()::varchar)::uuid::varchar
-                        WHERE %(column_name)s IS NULL
-                    """ % {'table_name': self._table, 'column_name': column_name}
-            self.env.cr.execute(query)
-
-    def _generate_access_token(self):
-        for order in self:
-            order.access_token = self._get_default_access_token()
 
     @api.multi
     def _prepare_invoice(self):
@@ -622,43 +595,6 @@ class SaleOrder(models.Model):
         res = sorted(res.items(), key=lambda l: l[0].sequence)
         res = [(l[0].name, l[1]['amount'], l[1]['base'], len(res)) for l in res]
         return res
-
-    @api.multi
-    def get_access_action(self, access_uid=None):
-        """ Instead of the classic form view, redirect to the online order for
-        portal users or if force_website=True in the context. """
-        # TDE note: read access on sales order to portal users granted to followed sales orders
-        self.ensure_one()
-
-        if self.state != 'cancel' and (self.state != 'draft' or self.env.context.get('mark_so_as_sent')):
-            user, record = self.env.user, self
-            if access_uid:
-                user = self.env['res.users'].sudo().browse(access_uid)
-                record = self.sudo(user)
-            if user.share or self.env.context.get('force_website'):
-                try:
-                    record.check_access_rule('read')
-                except AccessError:
-                    if self.env.context.get('force_website'):
-                        return {
-                            'type': 'ir.actions.act_url',
-                            'url': '/my/orders/%s' % self.id,
-                            'target': 'self',
-                            'res_id': self.id,
-                        }
-                    else:
-                        pass
-                else:
-                    return {
-                        'type': 'ir.actions.act_url',
-                        'url': '/my/orders/%s?access_token=%s' % (self.id, self.access_token),
-                        'target': 'self',
-                        'res_id': self.id,
-                    }
-        return super(SaleOrder, self).get_access_action(access_uid)
-
-    def get_mail_url(self):
-        return self.get_share_url()
 
     def get_portal_confirmation_action(self):
         if self.company_id.portal_confirmation_sign and not self.signature:

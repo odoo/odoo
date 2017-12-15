@@ -234,6 +234,9 @@
                 <div class="col-lg-10 offset-lg-1 mt16">
                     <t t-call="portal.message_thread">
                         <t t-set="object" t-value="task"/>
+                        <t t-set="token" t-value="task.access_token"/>
+                        <t t-set="pid" t-value="pid"/>
+                        <t t-set="hash" t-value="hash"/>
                     </t>
                 </div>
             </div>

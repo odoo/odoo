@@ -406,13 +406,16 @@
     // Copy to clipboard
     &.o_field_copy {
         position: relative;
+        width: 100% !important;
         border-radius: 5px;
         border: 1px solid $primary;
         font-size: $font-size-sm;
         color: $o-brand-primary;
         font-weight: $badge-font-weight;
         text-align: center;
+        padding-right: 100px;
         .o_clipboard_button {
+            @include o-position-absolute($top: 0, $right: 0);
             &.o_btn_text_copy {
                 position: absolute;
                 top: 0;
@@ -420,6 +423,7 @@
             }
             &.o_btn_char_copy {
                 padding-top: 2px;
+                height: 100%;
             }
         }
     }

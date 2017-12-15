@@ -14,15 +14,15 @@ from odoo.osv import expression
 class CustomerPortal(CustomerPortal):
 
     @http.route()
-    def portal_order_page(self, order=None, access_token=None, **kw):
+    def portal_order_page(self, order_id=None, access_token=None, **kw):
         try:
-            order_sudo = self._order_check_access(order, access_token=access_token)
+            order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
         except exceptions.AccessError:
             pass
         else:
             if order_sudo.template_id and order_sudo.template_id.active:
-                return request.redirect('/quote/%s/%s' % (order, access_token or ''))
-        return super(CustomerPortal, self).portal_order_page(order=order, access_token=access_token, **kw)
+                return request.redirect('/quote/%s/%s' % (order_id, access_token or ''))
+        return super(CustomerPortal, self).portal_order_page(order_id=order_id, access_token=access_token, **kw)
 
     def _portal_quote_user_can_accept(self, order):
         result = super(CustomerPortal, self)._portal_quote_user_can_accept(order)
@@ -46,7 +46,7 @@ class sale_quote(http.Controller):
         else:
             Order = request.env['sale.order'].search([('id', '=', order_id)])
         # Log only once a day
-        if Order and request.session.get('view_quote_%s' % Order.id) != now and request.env.user.share:
+        if Order and request.session.get('view_quote_%s' % Order.id) != now and request.env.user.share and token:
             request.session['view_quote_%s' % Order.id] = now
             body = _('Quotation viewed by customer')
             _message_post_helper(res_model='sale.order', res_id=Order.id, message=body, token=Order.access_token, message_type='notification', subtype="mail.mt_note", partner_ids=Order.user_id.sudo().partner_id.ids)

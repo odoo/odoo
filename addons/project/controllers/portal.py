@@ -5,6 +5,7 @@ from collections import OrderedDict
 from operator import itemgetter
 
 from odoo import http, _
+from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.addons.portal.controllers.portal import get_records_pager, CustomerPortal, pager as portal_pager
 from odoo.tools import groupby as groupbyelem
@@ -23,6 +24,16 @@ class CustomerPortal(CustomerPortal):
         values['project_count'] = Project.search_count([('id', 'in', projects.ids)])
         values['task_count'] = Task.search_count([('project_id', 'in', projects.ids)])
         return values
+
+    # ------------------------------------------------------------
+    # My Project
+    # ------------------------------------------------------------
+    def _project_get_page_view_values(self, project, access_token, **kwargs):
+        values = {
+            'page_name': 'project',
+            'project': project,
+        }
+        return self._get_page_view_values(project, access_token, values, 'my_projects_history', False, **kwargs)
 
     @http.route(['/my/projects', '/my/projects/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_projects(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
@@ -70,13 +81,26 @@ class CustomerPortal(CustomerPortal):
         })
         return request.render("project.portal_my_projects", values)
 
-    @http.route(['/my/project/<int:project_id>'], type='http', auth="user", website=True)
-    def portal_my_project(self, project_id=None, **kw):
-        project = request.env['project.project'].browse(project_id)
-        vals = {'project': project}
-        history = request.session.get('my_projects_history', [])
-        vals.update(get_records_pager(history, project))
-        return request.render("project.portal_my_project", vals)
+    @http.route(['/my/project/<int:project_id>'], type='http', auth="public", website=True)
+    def portal_my_project(self, project_id=None, access_token=None, **kw):
+        try:
+            project_sudo = self._document_check_access('project.project', project_id, access_token)
+        except AccessError:
+            return request.redirect('/my')
+
+        values = self._project_get_page_view_values(project_sudo, access_token, **kw)
+        return request.render("project.portal_my_project", values)
+
+    # ------------------------------------------------------------
+    # My Task
+    # ------------------------------------------------------------
+    def _task_get_page_view_values(self, task, access_token, **kwargs):
+        values = {
+            'page_name': 'task',
+            'task': task,
+            'user': request.env.user
+        }
+        return self._get_page_view_values(task, access_token, values, 'my_tasks_history', False, **kwargs)
 
     @http.route(['/my/tasks', '/my/tasks/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='content', groupby='project', **kw):
@@ -177,16 +201,12 @@ class CustomerPortal(CustomerPortal):
         })
         return request.render("project.portal_my_tasks", values)
 
-    @http.route(['/my/task/<int:task_id>'], type='http', auth="user", website=True)
-    def portal_my_task(self, task_id=None, **kw):
-        task = request.env['project.task'].browse(task_id)
-        task.check_access_rights('read')
-        task.check_access_rule('read')
+    @http.route(['/my/task/<int:task_id>'], type='http', auth="public", website=True)
+    def portal_my_task(self, task_id, access_token=None, **kw):
+        try:
+            task_sudo = self._document_check_access('project.task', task_id, access_token)
+        except AccessError:
+            return request.redirect('/my')
 
-        vals = {
-            'task': task,
-            'user': request.env.user
-        }
-        history = request.session.get('my_tasks_history', [])
-        vals.update(get_records_pager(history, task))
-        return request.render("project.portal_my_task", vals)
+        values = self._task_get_page_view_values(task_sudo, access_token, **kw)
+        return request.render("project.portal_my_task", values)

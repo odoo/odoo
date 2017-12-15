@@ -49,7 +49,9 @@ class MailController(http.Controller):
         return comparison, record, redirect
 
     @classmethod
-    def _redirect_to_record(cls, model, res_id, access_token=None):
+    def _redirect_to_record(cls, model, res_id, access_token=None, **kwargs):
+        # access_token and kwargs are used in the portal controller override for the Send by email or Share Link
+        # to give access to the record to a recipient that has normally no access.
         uid = request.session.uid
 
         # no model / res_id, meaning no possible record -> redirect to login
@@ -178,7 +180,7 @@ class MailController(http.Controller):
         """
         if res_id and isinstance(res_id, pycompat.string_types):
             res_id = int(res_id)
-        return self._redirect_to_record(model, res_id, access_token)
+        return self._redirect_to_record(model, res_id, access_token, **kwargs)
 
     @http.route('/mail/assign', type='http', auth='user', methods=['GET'])
     def mail_action_assign(self, model, res_id, token=None):

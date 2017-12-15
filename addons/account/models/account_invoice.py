@@ -45,8 +45,6 @@ class AccountInvoice(models.Model):
     _description = "Invoice"
     _order = "date_invoice desc, number desc, id desc"
 
-    def _get_default_access_token(self):
-        return str(uuid.uuid4())
 
     def _get_default_incoterm(self):
         return self.env.user.company_id.incoterm_id
@@ -243,9 +241,6 @@ class AccountInvoice(models.Model):
         ], readonly=True, states={'draft': [('readonly', False)]}, index=True, change_default=True,
         default=lambda self: self._context.get('type', 'out_invoice'),
         track_visibility='always')
-    access_token = fields.Char(
-        'Security Token', copy=False,
-        default=_get_default_access_token)
 
     refund_invoice_id = fields.Many2one('account.invoice', string="Invoice for which this invoice is the credit note")
     number = fields.Char(related='move_id.name', store=True, readonly=True, copy=False)
@@ -428,10 +423,10 @@ class AccountInvoice(models.Model):
         domain += [('journal_id', '=', self.journal_id.id), ('state', 'not in', ['draft', 'cancel'])]
         return journal_sequence, domain
 
-    def _compute_portal_url(self):
-        super(AccountInvoice, self)._compute_portal_url()
+    def _compute_access_url(self):
+        super(AccountInvoice, self)._compute_access_url()
         for order in self:
-            order.portal_url = '/my/invoices/%s' % (order.id)
+            order.access_url = '/my/invoices/%s' % (order.id)
 
     @api.depends('state', 'journal_id', 'date_invoice')
     def _get_sequence_prefix(self):
@@ -563,27 +558,6 @@ class AccountInvoice(models.Model):
                 elif partner.customer and not partner.supplier:
                     view_id = get_view_id('invoice_form', 'account.invoice.form').id
         return super(AccountInvoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-
-    @api.model_cr_context
-    def _init_column(self, column_name):
-        """ Initialize the value of the given column for existing rows.
-
-            Overridden here because we need to generate different access tokens
-            and by default _init_column calls the default method once and applies
-            it for every record.
-        """
-        if column_name != 'access_token':
-            super(AccountInvoice, self)._init_column(column_name)
-        else:
-            query = """UPDATE %(table_name)s
-                          SET %(column_name)s = md5(md5(random()::varchar || id::varchar) || clock_timestamp()::varchar)::uuid::varchar
-                        WHERE %(column_name)s IS NULL
-                    """ % {'table_name': self._table, 'column_name': column_name}
-            self.env.cr.execute(query)
-
-    def _generate_access_token(self):
-        for invoice in self:
-            invoice.access_token = self._get_default_access_token()
 
     @api.multi
     def invoice_print(self):
@@ -945,40 +919,6 @@ class AccountInvoice(models.Model):
                 group_data['has_button_access'] = True
 
         return groups
-
-    @api.multi
-    def get_access_action(self, access_uid=None):
-        """ Instead of the classic form view, redirect to the online invoice for portal users. """
-        self.ensure_one()
-        user, record = self.env.user, self
-        if access_uid:
-            user = self.env['res.users'].sudo().browse(access_uid)
-            record = self.sudo(user)
-
-        if user.share or self.env.context.get('force_website'):
-            try:
-                record.check_access_rule('read')
-            except exceptions.AccessError:
-                if self.env.context.get('force_website'):
-                    return {
-                        'type': 'ir.actions.act_url',
-                        'url': '/my/invoices/%s' % self.id,
-                        'target': 'self',
-                        'res_id': self.id,
-                    }
-                else:
-                    pass
-            else:
-                return {
-                    'type': 'ir.actions.act_url',
-                    'url': '/my/invoices/%s?access_token=%s' % (self.id, self.access_token),
-                    'target': 'self',
-                    'res_id': self.id,
-                }
-        return super(AccountInvoice, self).get_access_action(access_uid)
-
-    def get_mail_url(self):
-        return self.get_share_url()
 
     @api.multi
     def get_formview_id(self, access_uid=None):

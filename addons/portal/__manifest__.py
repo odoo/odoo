@@ -20,6 +20,7 @@ a dependency towards website edition and customization capabilities.""",
         'data/portal_data.xml',
         'views/assets.xml',
         'views/portal_templates.xml',
+        'wizard/portal_share_views.xml',
         'wizard/portal_wizard_views.xml',
     ],
     'qweb': [

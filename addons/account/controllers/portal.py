@@ -8,7 +8,6 @@ from odoo import http, _
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager, get_records_pager
 from odoo.exceptions import AccessError
 from odoo.http import request
-from odoo.tools import consteq
 
 
 class PortalAccount(CustomerPortal):
@@ -32,38 +31,13 @@ class PortalAccount(CustomerPortal):
     # My Invoices
     # ------------------------------------------------------------
 
-    def _invoice_check_access(self, invoice_id, access_token=None):
-        invoice = request.env['account.invoice'].browse([invoice_id])
-        invoice_sudo = invoice.sudo()
-        try:
-            invoice.check_access_rights('read')
-            invoice.check_access_rule('read')
-        except AccessError:
-            if not access_token or not consteq(invoice_sudo.access_token, access_token):
-                raise
-        return invoice_sudo
-
     def _invoice_get_page_view_values(self, invoice, access_token, **kwargs):
         values = {
             'page_name': 'invoice',
             'invoice': invoice,
         }
-        if access_token:
-            # force breadcrumbs even if access_token to `invite` users to register if they click on it
-            values['no_breadcrumbs'] = False
-            values['access_token'] = access_token
+        return self._get_page_view_values(invoice, access_token, values, 'my_invoices_history', False, **kwargs)
 
-        if kwargs.get('error'):
-            values['error'] = kwargs['error']
-        if kwargs.get('warning'):
-            values['warning'] = kwargs['warning']
-        if kwargs.get('success'):
-            values['success'] = kwargs['success']
-
-        history = request.session.get('my_invoices_history', [])
-        values.update(get_records_pager(history, invoice))
-
-        return values
 
     @http.route(['/my/invoices', '/my/invoices/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_invoices(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
@@ -117,7 +91,7 @@ class PortalAccount(CustomerPortal):
     @http.route(['/my/invoices/<int:invoice_id>'], type='http', auth="public", website=True)
     def portal_my_invoice_detail(self, invoice_id, access_token=None, **kw):
         try:
-            invoice_sudo = self._invoice_check_access(invoice_id, access_token)
+            invoice_sudo = self._document_check_access('account.invoice', invoice_id, access_token)
         except AccessError:
             return request.redirect('/my')
 
@@ -130,7 +104,7 @@ class PortalAccount(CustomerPortal):
     ], type='http', auth="public", website=True)
     def portal_my_invoice_report(self, invoice_id, access_token=None, **kw):
         try:
-            invoice_sudo = self._invoice_check_access(invoice_id, access_token)
+            invoice_sudo = self._document_check_access('account.invoice', invoice_id, access_token)
         except AccessError:
             return request.redirect('/my')
 
