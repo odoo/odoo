@@ -442,15 +442,15 @@ class PaymentIcon(models.Model):
     @api.model
     def create(self, vals):
         if 'image' in vals:
-            vals['image_payment_form'] = image_resize_image(vals['image'], size=(45,30))
-            vals['image'] = image_resize_image(vals['image'], size=(64,64))
+            vals['image_payment_form'] = image_resize_image(vals['image'].encode('utf-8'), size=(45,30))
+            vals['image'] = image_resize_image(vals['image'].encode('utf-8'), size=(64,64))
         return super(PaymentIcon, self).create(vals)
 
     @api.multi
     def write(self, vals):
         if 'image' in vals:
-           vals['image_payment_form'] = image_resize_image(vals['image'], size=(45,30))
-           vals['image'] = image_resize_image(vals['image'], size=(64,64))
+           vals['image_payment_form'] = image_resize_image(vals['image'].encode('utf-8'), size=(45,30))
+           vals['image'] = image_resize_image(vals['image'].encode('utf-8'), size=(64,64))
         return super(PaymentIcon, self).write(vals)
 
 class PaymentTransaction(models.Model):
