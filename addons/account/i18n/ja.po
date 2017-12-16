@@ -730,7 +730,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Purchases</strong>"
-msgstr ""
+msgstr "<strong>購買</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -902,7 +902,7 @@ msgstr ""
 msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
-msgstr ""
+msgstr "1つの仕訳には複数の仕訳明細が含まれます。各仕訳明細には借方または貸方に金額が保持されます。"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
@@ -1927,7 +1927,7 @@ msgstr "8月"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Auto-detect"
-msgstr ""
+msgstr "自動検出"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -3440,7 +3440,7 @@ msgstr "日付"
 #. module: account
 #: selection:account.payment.term.line,option:0
 msgid "Day(s) after the end of the invoice month (Net EOM)"
-msgstr ""
+msgstr "請求月末起算"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
@@ -3768,6 +3768,8 @@ msgid ""
 "Document: Customer account statement<br/>\n"
 "                    Date:"
 msgstr ""
+"ドキュメント: 滞納明細書\n"
+"日付:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4018,7 +4020,7 @@ msgstr "Excelテンプレート"
 #: code:addons/account/models/chart_template.py:185
 #, python-format
 msgid "Exchange Difference"
-msgstr ""
+msgstr "為替差"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_currency_exchange_journal_id
@@ -6377,6 +6379,7 @@ msgid ""
 "                etc. So, you should record journal entries manually only/mainly\n"
 "                for miscellaneous operations."
 msgstr ""
+"Odooは、請求書、返金、仕入先支払、銀行取引明細書等、各会計関連ドキュメントにつき1つの仕訳を生成します。ここでは、これら会計関連ドキュメントが存在しない場合のみ、マニュアルで仕訳を作成します。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8614,7 +8617,7 @@ msgstr "税テンプレート"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "Term Type"
-msgstr ""
+msgstr "条件タイプ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_ids
