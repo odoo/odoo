@@ -323,6 +323,6 @@ tour.register('rte_inline', {
     trigger: '#wrapwrap img:eq(1)[height]:not([class*="fa"])',
 }, {
     content: "check the second font class to css",
-    trigger: '#wrapwrap img:eq(2)[style*="float: right"]',
+    trigger: '#wrapwrap img:eq(2)[style*="float: right"],#wrapwrap img:eq(2)[style*="float:right"]',
 }]);
 });
