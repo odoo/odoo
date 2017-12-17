@@ -7,7 +7,7 @@
 # Aleksander <aleksander@provendo.no>, 2016
 # Mari Løken <inactive+mari123@transifex.com>, 2016
 # Henrik Norlin <henrik@appstogrow.net>, 2016
-# Joachim Flottorp <joachimflottorp@gmail.com>, 2016
+# Joachim Flottorp (Joachim flottorp) <joachimflottorp@gmail.com>, 2016
 # Eirik Halvorsen <eirik386@gmail.com>, 2017
 # Jorunn D. Newth <jdn@eyenetworks.no>, 2017
 msgid ""
@@ -31,6 +31,9 @@ msgid ""
 "                - Click on the <span class=\"fa fa-check text-success\"></span> to announce that the order is received <br>\n"
 "                - Click on the <span class=\"fa fa-times-circle text-danger\"></span> red X to announce that the order isn't available"
 msgstr ""
+"- Klikk på <span class=\"fa fa-phone text-success\"></span> for å annonsere at ordren er bestilt <br>\n"
+"                - Klikk på <span class=\"fa fa-check text-success\"></span> for å annonsere at ordren er mottatt <br>\n"
+"                - Klikk på <span class=\"fa fa-times-circle text-danger\"></span> rød X for å annonsere at ordren ikke er tilgjengelig"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
@@ -39,6 +42,9 @@ msgid ""
 "                - Click on the <span class=\"fa fa-check text-success\"></span> to announce that the order is received <br>\n"
 "                - Click on the <span class=\"fa fa-times-circle text-danger\"></span> to announce that the order isn't available"
 msgstr ""
+"- Klikk på <span class=\"fa fa-phone text-success\"></span> for å annonsere at ordren er bestilt<br>\n"
+"                - Klikk på <span class=\"fa fa-check text-success\"></span> for å annonsere at ordren er mottatt<br>\n"
+"                - Klikk på <span class=\"fa fa-times-circle text-danger\"></span> for å annonsere at ordren ikke er tilgjengelig"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -365,7 +371,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_category_action
 msgid "Here you can access all categories for the lunch products."
-msgstr ""
+msgstr "Her har du tilgang til alle kategoriene for lunsjprodukter."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
@@ -377,7 +383,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
 msgid "Here you can see today's orders grouped by vendors."
-msgstr ""
+msgstr "Her kan du se dagens bestillinger, gruppert etter leverandør."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_account
@@ -491,7 +497,7 @@ msgstr "Leder"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_max_budget
 msgid "Max Budget"
-msgstr ""
+msgstr "Maksimalt budsjett"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_message
@@ -507,7 +513,7 @@ msgstr "Mandag"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "My Account grouped"
-msgstr ""
+msgstr "Kontoen min gruppert"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_title
@@ -539,7 +545,7 @@ msgstr "Ny ordre"
 #: code:addons/lunch/wizard/lucky_order.py:39
 #, python-format
 msgid "No product is matching your request. Now you will starve to death."
-msgstr ""
+msgstr "Ingen produkter passer til forespørselen. Nå vil du sulte ihjel."
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
@@ -555,19 +561,19 @@ msgstr "Notat"
 #: code:addons/lunch/models/lunch.py:194
 #, python-format
 msgid "Only your lunch manager cancels the orders."
-msgstr ""
+msgstr "Bare lunsjleder kan kansellere ordrer."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:163
 #, python-format
 msgid "Only your lunch manager processes the orders."
-msgstr ""
+msgstr "Bare lunsjleder behandler bestillinger."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:183
 #, python-format
 msgid "Only your lunch manager sets the orders as received."
-msgstr ""
+msgstr "Bare lunsjleder kan sette ordrer til mottatt."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_order_id
@@ -723,12 +729,12 @@ msgstr "Lørdag"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "Schedule Date"
-msgstr ""
+msgstr "Planlegg dato"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "Schedule Hour"
-msgstr ""
+msgstr "Planlegg time"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_alert_view_search
@@ -767,7 +773,7 @@ msgstr "Status"
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
 msgid "Summary of all lunch orders, grouped by vendor and by date."
-msgstr ""
+msgstr "Sammendrag av alle lunsjordrer, gruppert etter leverandør og dato"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_sunday
