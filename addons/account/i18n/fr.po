@@ -62,7 +62,7 @@
 # Stanislas Sodonon <stanislas.sodonon@gmail.com>, 2017
 # Jeanjean Noname <monsieur.spock@gmail.com>, 2017
 # Paul-Hervé Meyer <paulherve.meyer@mail.novancia.fr>, 2017
-# Florent de Labarre <florent@iguanayachts.com>, 2017
+# Elliot DRAKE <monsieur.byte@gmail.com>, 2017
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2017
 # Davy <cottet_davy@yahoo.fr>, 2017
 # fr trans <e2ftrans1@yahoo.com>, 2017
@@ -70,13 +70,14 @@
 # FR R4 <e2ffr1111@hotmail.com>, 2017
 # fr rev <e2ffr04@hotmail.com>, 2017
 # Elias Alouane <e.alouane@ahktunis.org>, 2017
+# Florent de Labarre <florent@iguanayachts.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-16 08:08+0000\n"
 "PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Elias Alouane <e.alouane@ahktunis.org>, 2017\n"
+"Last-Translator: Florent de Labarre <florent@iguanayachts.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,7 +96,7 @@ msgid ""
 msgstr ""
 "* L'état \"Brouillon\" est utilisé lorsqu'un utilisateur est en train de saisir ou de modifier une nouvelle facture non confirmée.\n"
 "* L'état \"Pro-forma\" est utilisé lorsque la facture n'a pas de numéro de facture.\n"
-"* L'état 'Ouvert' est utilisé lorsque l'utilisateur crée une facture, celle-ci a alors un numéro de facture. La facture reste dans ce statut \"Ouvert\" jusqu'à ce qu'elle soit payée.\n"
+"* L'état 'Ouvert' est utilisé lorsque l'utilisateur crée une facture, un numéro de facture est généré. La facture reste dans ce statut \"Ouvert\" jusqu'à ce qu'elle soit payée.\n"
 "* L'état 'Payé' est affecté automatiquement lorsque la facture est payée. Ses écritures dans les journaux connexes peuvent ou non être réconciliées.\n"
 "* L'état \"Annulé\" est utilisé lorsque l'utilisateur annule la facture."
 
@@ -233,7 +234,7 @@ msgstr ": Avoir"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid ": Trial Balance"
-msgstr ": Balance des comptes"
+msgstr ": Balance générale"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -249,6 +250,16 @@ msgid ""
 "</p>\n"
 "</data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Chèr(e) ${object.partner_id.name},</p>\n"
+"<p>Merci pour votre règlement. <br/> Voici le reçu de votre paiement <strong>${(object.name or '').replace('/','-')}</strong> d'un montant de <strong>${object.amount} ${object.currency_id.name}</strong> de ${object.company_id.name}.</p>\n"
+"<p>Si vous avez des questions, pensez à nous contacter.</p>\n"
+"<p>Sincères salutations,\n"
+"% if user and user.signature:\n"
+"${user.signature | safe}\n"
+"% endif\n"
+"</p>\n"
+"</data>"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_notification_email_account_invoice
@@ -3901,7 +3912,7 @@ msgstr "Différence de taux de change"
 #: model:account.account.type,name:account.data_account_type_current_assets
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Current Assets"
-msgstr "Actifs actuels"
+msgstr "Actifs circulants"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_liabilities
