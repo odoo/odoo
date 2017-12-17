@@ -4,36 +4,35 @@
 # 
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Andi <flimflam@salasar.de>, 2017
-# Stefan Hartenfels <stefan.hartenfels@camptocamp.com>, 2017
+# Thomas Neu <t.neu@runbox.com>, 2017
+# Philipp Hug <philipp@hug.cx>, 2017
 # Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
-# Gab_Odoo <gab@odoo.com>, 2017
-# Dejan Dinic <dejan.dinic@bluewin.ch>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# Marco Broscheit <marco.broscheit@posteo.de>, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
+# Andi <flimflam@salasar.de>, 2017
+# Magdalena Zimprich <magdalena.zimprich@camadeus.at>, 2017
+# Renzo Meister <info@jamotion.ch>, 2017
+# Ralf Hilgenstock <rh@dialoge.info>, 2017
 # Henry Mineehen <info@mineehen.de>, 2017
 # darenkster <inactive+darenkster@transifex.com>, 2017
 # Fabian Liesch <fabian.liesch@gmail.com>, 2017
-# Magdalena Zimprich <magdalena.zimprich@camadeus.at>, 2017
-# Thomas Neu <t.neu@runbox.com>, 2017
-# Renzo Meister <info@jamotion.ch>, 2017
-# Marco Broscheit <marco.broscheit@posteo.de>, 2017
-# Ralf Hilgenstock <rh@dialoge.info>, 2017
+# Stefan Hartenfels <stefan.hartenfels@camptocamp.com>, 2017
 # JackTheHunter <Maximilian.N98@gmail.com>, 2017
 # Rudolf Schnapka <rs@techno-flex.de>, 2017
-# Philipp Hug <philipp@hug.cx>, 2017
 # Niki Waibel <niki.waibel@gmail.com>, 2017
 # Christopher Bendlin <inactive+cbeodoo@transifex.com>, 2017
 # DE T1 <e2f8846@yahoo.com>, 2017
 # Katharina Moritz <kmo@e2f.com>, 2017
+# Dejan Dinic <dejan.dinic@bluewin.ch>, 2017
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:12+0000\n"
-"PO-Revision-Date: 2017-11-30 13:12+0000\n"
+"POT-Creation-Date: 2017-12-13 14:36+0000\n"
+"PO-Revision-Date: 2017-12-13 14:36+0000\n"
 "Last-Translator: AppleMentalist <felix.schnatbaum@gmail.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -279,15 +278,6 @@ msgid "Bulk Weight"
 msgstr "Schüttgewicht"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_stock_quant_package_shipping_weight
-msgid ""
-"Can be changed during the 'put in pack' to adjust the weight of the "
-"shipping."
-msgstr ""
-"Kann während des Einpackens zum Anpassen des Versandgewichts geändert "
-"werden."
-
-#. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -395,7 +385,7 @@ msgstr "Auslieferungsmethoden"
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_package
 msgid "Delivery Package Selection Wizard"
-msgstr "Auswahlassistent für Lieferungen"
+msgstr "Auswahlassistent für Lieferpakete"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_packaging_view
@@ -511,7 +501,7 @@ msgstr "Kostenfrei, wenn Bestellmenge größer ist als"
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate"
-msgstr "Preis abrufen"
+msgstr "Bewertung erhalten"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
@@ -636,7 +626,7 @@ msgstr "Marge"
 #. module: delivery
 #: sql_constraint:delivery.carrier:0
 msgid "Margin cannot be lower than -100%"
-msgstr "Die Marge kann nicht geringer als -100 % sein."
+msgstr "Die Marge kann nicht geringer als -100% sein."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -673,7 +663,7 @@ msgstr "Name"
 #. module: delivery
 #: selection:product.packaging,package_carrier_type:0
 msgid "No carrier integration"
-msgstr "Keine Frachtführerintegration"
+msgstr "Keine Spediteurintegration"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:73
@@ -688,12 +678,6 @@ msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
 "Für diese Bestellung existiert keine Preisregel. Die Versandkosten können "
 "nicht berechnet werden."
-
-#. module: delivery
-#: model:product.product,name:delivery.product_product_delivery_normal
-#: model:product.template,name:delivery.product_product_delivery_normal_product_template
-msgid "Normal Delivery Charges"
-msgstr "Standard Lieferkosten"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_number_of_packages
@@ -842,7 +826,7 @@ msgstr "An Versender liefern"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sequence
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_sequence
 msgid "Sequence"
-msgstr "Nummernfolge"
+msgstr "Reihenfolge"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
@@ -853,8 +837,8 @@ msgstr "Preis festlegen"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_prod_environment
 msgid "Set to True if your credentials are certified for production."
 msgstr ""
-"Aktivieren Sie „Wahr“, wenn Ihre Legitimation für die Fertigung zertifiziert"
-" ist."
+"Aktivieren Sie „Wahr“, wenn Ihre Legitimation für die Produktion "
+"zertifiziert ist."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:168
@@ -863,7 +847,7 @@ msgid ""
 "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
 "%.2f %s"
 msgstr ""
-"Sendung ist auf dem Weg zum Frachtführer %s, Nachverfolgungsnummer %s<br/> "
+"Sendung ist auf dem Weg zum Spediteur %s, Nachverfolgungsnummer %s<br/> "
 "Kosten: %.2f%s"
 
 #. module: delivery
@@ -893,12 +877,6 @@ msgstr "Bundesländer"
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
 msgstr "Lagerbuchung"
-
-#. module: delivery
-#: model:product.product,name:delivery.product_product_delivery_poste
-#: model:product.template,name:delivery.product_product_delivery_poste_product_template
-msgid "The Poste"
-msgstr "The Poste"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -999,9 +977,19 @@ msgid "Weight Unit of Measure"
 msgstr "Gewichtseinheit"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_quant_package_weight
+msgid "Weight computed based on the sum of the weights of the products."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
 msgid "Weight for Shipping"
 msgstr "Gewicht für den Versand"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_quant_package_shipping_weight
+msgid "Weight used to compute the price of the delivery (if applicable)."
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_width

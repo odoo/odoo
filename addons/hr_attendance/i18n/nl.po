@@ -3,16 +3,16 @@
 # * hr_attendance
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2017
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2017-12-13 14:36+0000\n"
+"PO-Revision-Date: 2017-12-13 14:36+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -127,7 +127,7 @@ msgid ""
 "resources."
 msgstr ""
 "Kan checkout niet uitvoeren op %(empl_name)s, kon geen overeenkomende "
-"checkin vinden. Uw urenstaten zijn mogelijk handmatig gewijzigd door HR."
+"checkin vinden. Uw urenstaten zijn mogelijk manueel gewijzigd door HR."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_in
@@ -212,7 +212,7 @@ msgstr "Bedrijfslogo"
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_settings
 msgid "Configuration"
-msgstr "Configuratie"
+msgstr "Instellingen"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -593,6 +593,16 @@ msgid "Settings"
 msgstr "Instellingen"
 
 #. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.view_employee_filter_inherit_hr_attendance
+msgid "Signed In"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.view_employee_filter_inherit_hr_attendance
+msgid "Signed Out"
+msgstr ""
+
+#. module: hr_attendance
 #: sql_constraint:hr.employee:0
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
@@ -642,7 +652,7 @@ msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
 "company screen."
 msgstr ""
-"De gebruiker moet deze PIN ingeven om handmatig in en uit te checken in het "
+"De gebruiker moet deze PIN ingeven om manueel in en uit te checken in het "
 "bedrijfsscherm."
 
 #. module: hr_attendance

@@ -3,31 +3,31 @@
 # * purchase_requisition
 # 
 # Translators:
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Gustavo Valverde <g.valverde02@gmail.com>, 2017
-# Eduardo Magdalena <emagdalena@close2circle.com>, 2017
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
-# Miguel Orueta <mo@landoo.es>, 2017
-# José Vicente <txusev@gmail.com>, 2017
-# Antonio Trueba <atgayol@gmail.com>, 2017
-# Cristóbal Martí Oliver <info@moblesmarti.com>, 2017
-# Alejandro Santana <alejandrosantana@anubia.es>, 2017
-# Luis M. Triana <luis.triana@jarsa.com.mx>, 2017
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# Carles Antoli <carlesantoli@hotmail.com>, 2017
-# RGB Consulting <odoo@rgbconsulting.com>, 2017
-# Sergio Flores <vitavitae1@gmail.com>, 2017
-# Ana Juaristi <ajuaristio@gmail.com>, 2017
-# Ivan Nieto <ivan.n.s@tuta.io>, 2017
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
+# oihane <oihanecruce@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# José Vicente <txusev@gmail.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
+# David Perez <david@closemarketing.es>, 2016
+# Cristóbal Martí Oliver <info@moblesmarti.com>, 2016
+# Antonio Trueba <atgayol@gmail.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# Alejandro Santana <alejandrosantana@anubia.es>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Sergio Flores <vitavitae1@gmail.com>, 2016
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
+# Miguel Orueta <mo@landoo.es>, 2016
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2017-12-13 14:37+0000\n"
+"PO-Revision-Date: 2017-12-13 14:37+0000\n"
 "Last-Translator: Christopher Ormaza <chris.ormaza@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -39,7 +39,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Call for Tender Reference:</strong><br/>"
-msgstr "<strong>Referencia de convocatoria de licitación:</strong><br/>"
+msgstr "<strong>Referencia de Licitación:</strong><br/>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -74,7 +74,7 @@ msgstr "<strong>Fecha planificada</strong>"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Scheduled Ordering Date:</strong><br/>"
-msgstr "<strong>Fecha de orden programada:</strong><br/>"
+msgstr "<strong>Fecha de pedido programada:</strong><br/>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -107,7 +107,7 @@ msgid "Agreement Selection Type"
 msgstr "Selección del tipo de acuerdo"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10513
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10747
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_name
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
@@ -122,7 +122,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_account_analytic_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_account_analytic_id
 msgid "Analytic Account"
-msgstr "Cuenta Analítica"
+msgstr "Cuenta analítica"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
@@ -132,13 +132,13 @@ msgstr "Selección del licitador"
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_single
 msgid "Blanket Order"
-msgstr "Pedido abierto"
+msgstr "Contrato marco"
 
 #. module: purchase_requisition
 #: model:ir.actions.report,name:purchase_requisition.action_report_purchase_requisitions
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Call for Tenders"
-msgstr "Convocatoria de licitación"
+msgstr "Licitación"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -200,7 +200,7 @@ msgstr "Creado el"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Data for new quotations"
-msgstr "Datos para nuevas cotizaciones."
+msgstr "Datos para nuevos presupuestos"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_schedule_date
@@ -217,7 +217,7 @@ msgstr "Descripción"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_display_name
 msgid "Display Name"
-msgstr "Nombre a Mostrar"
+msgstr "Nombre a mostrar"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
@@ -252,7 +252,7 @@ msgstr "Mes final"
 msgid ""
 "Example of purchase agreements include call for tenders and blanket orders."
 msgstr ""
-"Los acuerdos de compra incluyen las licitaciones y los pedidos abiertos."
+"Los acuerdos de compra incluyen las licitaciones y los acuerdos marco."
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -261,14 +261,14 @@ msgid ""
 "            (e.g. a year) and you order products within this agreement, benefiting\n"
 "            from the negociated prices."
 msgstr ""
-"Para un pedido abierto, se debe de indicar un período específico\n"
+"Para un acuerdo marco, se debe de indicar un período específico\n"
 "            (por ejemplo, un año) , los productos negociados y\n"
 "            sus precios acordados."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Group By"
-msgstr "Agrupar Por"
+msgstr "Agrupar por"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_id
@@ -286,9 +286,9 @@ msgid ""
 "            validate some and cancel others."
 msgstr ""
 "En una licitación, puede incluir los productos que necesita comprar\n"
-"            y generar las RFQs a los proveedores. Una vez que las ofertas hayan\n"
-"            sido registradas, se pueden revisar, comparar, confirmar,\n"
-"            y cancelar."
+"            and generate the creation of RfQs to vendors. Once the tenders have\n"
+"            been registered, you can review and compare them and you can\n"
+"            validate some and cancel others."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -300,21 +300,21 @@ msgstr "En negociación"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line___last_update
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type___last_update
 msgid "Last Modified on"
-msgstr "Última Modificación en"
+msgstr "Última modificación en"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_write_uid
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_write_uid
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_write_uid
 msgid "Last Updated by"
-msgstr "Última Actualización por"
+msgstr "Última actualización por"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_write_date
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_write_date
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_write_date
 msgid "Last Updated on"
-msgstr "Última Actualización el"
+msgstr "Última actualización el"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_line_copy
@@ -325,6 +325,11 @@ msgstr "Líneas"
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Multiple Requisitions"
 msgstr "Solicitudes múltiples"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "My Agreements"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -339,7 +344,7 @@ msgstr "Nuevo Presupuesto"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_order_count
 msgid "Number of Orders"
-msgstr "Número de Ordenes"
+msgstr "Numero de ordenes"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_picking_type_id
@@ -355,7 +360,7 @@ msgstr "Cantidades pedidas"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_ordering_date
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Ordering Date"
-msgstr "Fecha de la orden "
+msgstr "Fecha de pedido"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_product_purchase_requisition
@@ -403,7 +408,7 @@ msgstr "Proponer una licitación"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_requisition_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_requisition_id
 msgid "Purchase Agreement"
-msgstr "Acuerdo de compra"
+msgstr "Acuerdos de compra"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
@@ -416,7 +421,7 @@ msgstr "Tipo de acuerdo de compra"
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_tree
 msgid "Purchase Agreement Types"
-msgstr "Tipos de acuerdos de compra"
+msgstr "Tipo de acuerdo de compra"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
@@ -430,7 +435,7 @@ msgstr "Acuerdos de compra"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
 msgid "Purchase Order"
-msgstr "Órden de compra"
+msgstr "Pedido de compra"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order_line
@@ -440,12 +445,18 @@ msgstr "Línea de orden de compra"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_purchase_ids
 msgid "Purchase Orders"
-msgstr "Ordenes de compra"
+msgstr "Pedidos de compra"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
 msgid "Purchase Orders with requisition"
-msgstr "Ordenes de compra con solicitud"
+msgstr "Pedidos de compra con solicitud"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_user_id
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Purchase Representative"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
@@ -465,7 +476,7 @@ msgstr "Licitación de compra"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
 msgid "Purchase orders"
-msgstr "Ordenes de compra"
+msgstr "Pedidos de compra"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_quantity_copy
@@ -510,13 +521,7 @@ msgstr "Solicitud"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Reset to Draft"
-msgstr "Cambiar a Borrador"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_user_id
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "Responsible"
-msgstr "Responsable"
+msgstr "Cambiar a borrador"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_schedule_date
@@ -562,7 +567,7 @@ msgstr "Establecer cantidades manualmente"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Source"
-msgstr "Origen"
+msgstr "Texto original"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_origin

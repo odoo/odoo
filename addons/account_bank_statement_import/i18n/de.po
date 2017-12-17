@@ -3,27 +3,27 @@
 # * account_bank_statement_import
 # 
 # Translators:
-# Gab_Odoo <gab@odoo.com>, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Mathias Neef <mn@copado.de>, 2017
-# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# Anja Funk <anja.funk@afimage.de>, 2017
 # Rudolf Schnapka <rs@techno-flex.de>, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# JackTheHunter <Maximilian.N98@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Anja Funk <anja.funk@afimage.de>, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
 # Andi <flimflam@salasar.de>, 2017
+# JackTheHunter <Maximilian.N98@gmail.com>, 2017
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
 # Niki Waibel <niki.waibel@gmail.com>, 2017
+# Mathias Neef <mn@copado.de>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
+# darenkster <inactive+darenkster@transifex.com>, 2017
 # Henry Mineehen <info@mineehen.de>, 2017
+# Gab_Odoo <gab@odoo.com>, 2017
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
+"POT-Creation-Date: 2017-12-13 14:36+0000\n"
+"PO-Revision-Date: 2017-12-13 14:36+0000\n"
 "Last-Translator: AppleMentalist <felix.schnatbaum@gmail.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -31,6 +31,13 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_bank_statement_import
+#. openerp-web
+#: code:addons/account_bank_statement_import/static/src/js/account_bank_statement_import.js:13
+#, python-format
+msgid " Import Template for Bank Statements"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:241
@@ -105,7 +112,7 @@ msgstr "Bankkonto"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_statements_source
 msgid "Bank Feeds"
-msgstr "Bank Datenübertragungen"
+msgstr "Bank Datenübertragung"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -115,12 +122,12 @@ msgstr "Bank Journal Name"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_data_file
 msgid "Bank Statement File"
-msgstr "Bankauszugsdatei"
+msgstr "Datei Bankauszug"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "Bankauszugsbuchung"
+msgstr "Kontoauszugszeile"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_account_setup_bank_data_done
@@ -191,8 +198,8 @@ msgid ""
 "Could not make sense of the given file.\n"
 "Did you install the module to support this type of file ?"
 msgstr ""
-"Die angegebene Datei kann nicht erkannt werden.\n"
-"Haben Sie das diesen Dateityp unterstützende Modul installiert?"
+"Die angegebene Datei macht keinen Sinn.\n"
+"Haben Sie das, diesem Dateityp unterstützende, Modul installiert?"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_create_uid
@@ -234,7 +241,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_credit_account_id
 msgid "Default Credit Account"
-msgstr "Standard Habenkonto"
+msgstr "Standard-Habenkonto"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_debit_account_id
@@ -328,14 +335,12 @@ msgstr "Bankauszug importieren"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_credit_account_id
 msgid "It acts as a default account for credit amount"
-msgstr ""
-"Fungiert als Standardkonto für die Kreditorenbuchungen in diesem Journal"
+msgstr "Fungiert als Standardkonto für die Haben-Buchung in diesem Journal"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_debit_account_id
 msgid "It acts as a default account for debit amount"
-msgstr ""
-"Fungiert als Standardkonto für die Debitorenbuchungen in diesem Journal"
+msgstr "Dieses Konto fungiert als Standard Debitorenkonto"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_journal
@@ -361,7 +366,7 @@ msgid ""
 "Just click OK to create the account/journal and finish the import. If this "
 "was a mistake, hit cancel to abort the import."
 msgstr ""
-"Klicken Sie auf OK, um das Konto/Journal anzulegen und den Import "
+"Klicken Sie einfach auf OK, um das Konto/Journal anzulegen und den Import "
 "abzuschließen. Sollte dies unerwünscht sein, brechen Sie mit Abbrechen den "
 "Import ab."
 
@@ -461,7 +466,7 @@ msgstr "Wählen Sie eine zu importierende Kontoauszugsdatei aus."
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence
 msgid "Sequence"
-msgstr "Nummernfolge"
+msgstr "Reihenfolge"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_active
