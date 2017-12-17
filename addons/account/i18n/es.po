@@ -1660,6 +1660,8 @@ msgid ""
 "Account used as counterpart for the journal entry, for taxes eligible based "
 "on payments."
 msgstr ""
+"Cuenta utilizada como contraparte para el asiento diario, para impuestos "
+"aplicables basados en pagos."
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_account_menu
@@ -2272,7 +2274,7 @@ msgstr "Aplicar solo si el país del envío o la factura coincide con el grupo"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template_country_group_id
 msgid "Apply only if delivery or invoicing country match the group."
-msgstr ""
+msgstr "Aplicar solo si el país del envío o la factura coincide con el grupo"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_country_id
@@ -6842,6 +6844,9 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
+"Manual: se les paga en efectivo, con cheque o cualquier otro método fuera de Odoo.\n"
+"Electrónico: se le paga automáticamente a través de un adquirente de pagos al solicitar una transacción en una tarjeta guardada por el cliente al comprar o suscribirse en línea (token de pago).\n"
+"Depósito por lotes: realiza varios cheques de clientes a la vez al generar un depósito por lotes para enviar a su banco. Al codificar el extracto bancario en Odoo, se sugiere conciliar la transacción con el depósito por lotes. Habilite esta opción desde la configuración."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment_payment_method_id
@@ -6854,6 +6859,11 @@ msgid ""
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit,module account_batch_deposit must be installed.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed "
 msgstr ""
+"Manual: se les paga en efectivo, con cheque o cualquier otro método fuera de Odoo.\n"
+"Electrónico: se le paga automáticamente a través de un adquirente de pagos al solicitar una transacción en una tarjeta guardada por el cliente al comprar o suscribirse en línea (token de pago).\n"
+"Check: pague factura con cheque e imprima desde Odoo.\n"
+"Depósito por lotes: realiza varios cheques de clientes a la vez al generar un depósito por lotes para enviar a su banco. Al codificar el extracto bancario en Odoo, se sugiere conciliar la transacción con el depósito por lotes. Para habilitar el depósito por lotes, se debe instalar el módulo account_batch_deposit.\n"
+"Transferencia SEPA: Pague la factura de un archivo de Transferencia SEPA que envíe a su banco. Para habilitar la transferencia de crédito por separado, se debe instalar el módulo account_sepa"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_outbound_payment_method_ids
@@ -7209,6 +7219,8 @@ msgid ""
 "No miscellaneous journal could be found. Please create one before "
 "proceeding."
 msgstr ""
+"No se pudo encontrar ningún diario misceláneo. Por favor crea uno antes de "
+"continuar"
 
 #. module: account
 #: code:addons/account/models/account.py:116
@@ -8364,6 +8376,8 @@ msgstr "Ganancias y Pérdidas"
 msgid ""
 "Programming error: wizard action executed without active_ids in context."
 msgstr ""
+"Error de programación: acción del asistente ejecutada sin active_ids en "
+"contexto."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_form
@@ -11853,6 +11867,8 @@ msgid ""
 "You cannot have a receivable/payable account that is not reconcilable. "
 "(account code: %s)"
 msgstr ""
+"No puede tener una cuenta pendiente de cobro/a pagar que no sea conciliable."
+" (Código de cuenta: %s)"
 
 #. module: account
 #. openerp-web

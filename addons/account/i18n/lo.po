@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
+# Ki Dvd <laopinyin@gmail.com>, 2017
+# ki dvd <soutsakhone.d@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-16 08:08+0000\n"
 "PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Last-Translator: ki dvd <soutsakhone.d@gmail.com>, 2017\n"
 "Language-Team: Lao (https://www.transifex.com/odoo/teams/41243/lo/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,17 +29,22 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+"* ສະຖານະການ 'ຮ່າງ' ແມ່ນໃຊ້ໃນເວລາທີ່ຜູ້ໃຊ້ກໍານົດລະຫັດໃຫມ່ແລະບໍ່ໄດ້ຮັບການຢືນຢັນ\n"
+"  * ສະຖານະ 'Pro-forma' ແມ່ນໃຊ້ໃນເວລາທີ່ໃບແຈ້ງຫນີ້ບໍ່ມີຈໍານວນເງິນໃບປິວ\n"
+"  * ສະຖານະ 'ເປີດ' ຈະຖືກນໍາໃຊ້ເມື່ອຜູ້ໃຊ້ສ້າງໃບເກັບເງິນ, ຈໍານວນໃບເກັບເງິນຖືກສ້າງຂື້ນ. ມັນຢູ່ໃນສະຖານະເປີດຈົນກ່ວາຜູ້ໃຊ້ຈ່າຍຄ່າໃບສະຫມັກ\n"
+"  * ສະຖານະ \"ຈ່າຍເງິນ\" ຖືກກໍານົດອັດຕະໂນມັດເມື່ອໃບແຈ້ງຫນີ້ຖືກຈ່າຍ. ບັນດາວາລະສານທີ່ກ່ຽວຂ້ອງຂອງມັນອາດຈະບໍ່ໄດ້ຮັບການຄືນດີ\n"
+"  * ສະຖານະ 'ຍົກເລີກ' ຖືກໃຊ້ເມື່ອຜູ້ໃຊ້ຍົກເລີກໃບເກັບເງິນ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_code_digits
 msgid "# of Digits"
-msgstr ""
+msgstr "# ຂອງໂຕເລກ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_code_digits
 msgid "# of Digits *"
-msgstr ""
+msgstr "# ຂອງໂຕເລກ*"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
@@ -47,12 +54,12 @@ msgstr "# ຂອງລາຍການ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_trans_nbr
 msgid "# of Transaction"
-msgstr ""
+msgstr "# ຂອງການເຮັດທຸລະກໍາ"
 
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
 msgid "${(object.name or '').replace('/','-')}"
-msgstr ""
+msgstr "${(object.name or '').ແທນທີີ່('/','-')}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
@@ -74,13 +81,13 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:462
 #, python-format
 msgid "%d transactions were automatically reconciled."
-msgstr ""
+msgstr "%dການໂອນໄດ້ຖືກຄຶນອັດຕະໂນມັດ."
 
 #. module: account
 #: code:addons/account/models/account.py:794
 #, python-format
 msgid "%s (Copy)"
-msgstr ""
+msgstr "%s(ຄັດສຳເນົາ)"
 
 #. module: account
 #: code:addons/account/models/account.py:211
@@ -88,59 +95,59 @@ msgstr ""
 #: code:addons/account/models/account.py:485
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s(ຄັດສຳເນົາ)"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "&amp;nbsp;<span>on</span>"
-msgstr ""
+msgstr "&amp;nbsp;<span>ໃນ</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ", if accounting or purchase is installed"
-msgstr ""
+msgstr ", ຖ້າຫາກ ການບັນຊີ ຫຼື ການສັ່ງຊື້ໄດ້ຮັບການຕິດຕັ້ງແລ້ວ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "- First Number:"
-msgstr ""
+msgstr "- ໝາຍເລກທຳອິດ:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "-> Reconcile"
-msgstr ""
+msgstr "-> ປອງດອງ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr ""
+msgstr "-> ເບິ່ງລາຍະການທີ່ປັບຍອດບາງສ່ວນ"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:463
 #, python-format
 msgid "1 transaction was automatically reconciled."
-msgstr ""
+msgstr "1 ທຸລະກໍາຖືກປັບຍອດອັດຕະໂນມັດ."
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
 msgid "15 Days"
-msgstr ""
+msgstr "15 ວັນ"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_net
 msgid "30 Net Days"
-msgstr ""
+msgstr "30 ວັນສຸດທິ"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
 msgid "30% Advance End of Following Month"
-msgstr ""
+msgstr "30% ທ້າຍເດືອນຖັດໄປ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

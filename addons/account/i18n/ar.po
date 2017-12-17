@@ -8,6 +8,7 @@
 # Martin Trigaux <mat@odoo.com>, 2017
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2017
 # Shaima Safar <shaima.safar@open-inside.com>, 2017
+# Majeed Alsamarraie <majeed.hatim@gmail.com>, 2017
 # hoxhe Aits <hoxhe0@gmail.com>, 2017
 # Khaled Menof <kifcaliph@hotmail.com>, 2017
 # amrnegm <amrnegm.01@gmail.com>, 2017
@@ -333,6 +334,17 @@ msgid ""
 "</p>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"<p>السيد ${object.partner_id.name}% set access_action = object.with_context(force_website=True).get_access_action()% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'% set access_url = object.get_mail_url()\n"
+"% if object.partner_id.parent_id:    (<i>${object.partner_id.parent_id.name}</i>)% endif,</p><p>هذه فاتورتكم % if object.number:invoice <strong>${object.number}</strong>% else:invoice% endif% if object.origin:(with reference: ${object.origin})% endifالبالغة قيمتها<strong>${object.amount_total} ${object.currency_id.name}</strong>from ${object.company_id.name}.</p>\n"
+"\n"
+"% if is_online:    <br/><br/>\n"
+"    <center>      <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">معاينة الفاتورة</a>    </center>% endif    <br/><br/>\n"
+"\n"
+"% if object.state=='paid':    <p>هذه الفاتورة مدفوعة مسبقاً</p>% else:    <p>فضلا بادر بالسداد بأقرب فرصة</p>% endif\n"
+"<p>مع جزيل الشكر</p><p style=\"color:#888888\">\n"
+"% if object.user_id and object.user_id.signature:    ${object.user_id.signature | safe}% endif</p>\n"
+"</div>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -350,6 +362,8 @@ msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-check\"/><span "
 "class=\"hidden-xs\"> Paid</span></span>"
 msgstr ""
+"<span class=\"label label-default\"><i class=\"fa fa-fw fa-check\"/><span "
+"class=\"hidden-xs\"> مدفوعة</span></span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -357,6 +371,8 @@ msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/><span "
 "class=\"hidden-xs\"> Cancelled</span></span>"
 msgstr ""
+"<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/><span "
+"class=\"hidden-xs\"> ملغاة</span></span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -364,6 +380,8 @@ msgid ""
 "<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
 "class=\"hidden-xs\"> Waiting for Payment</span></span>"
 msgstr ""
+"<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
+"class=\"hidden-xs\"> بانتظار الدفعة </span></span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
@@ -1902,7 +1920,7 @@ msgstr "يسمح لك باستخدام المحاسبة التحليلية"
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 #, python-format
 msgid "Amount"
-msgstr "الزمن"
+msgstr "المبلغ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_amount_currency
@@ -3841,7 +3859,7 @@ msgstr "شروط السداد للزبائن"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Customer Payments"
-msgstr ""
+msgstr "دفعات العملاء"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product_taxes_id
@@ -4096,7 +4114,7 @@ msgstr "الوصف على الفاتورة"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_destination_account_id
 msgid "Destination Account"
-msgstr ""
+msgstr "حساب الوجهة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_auto_apply

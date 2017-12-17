@@ -51,6 +51,32 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <p>Kære ${object.name},</p>\n"
+"    <p>Der er anmodet om en nulstilling af password'et til Odoo kontoen, som er forbundet med denne email.</p>\n"
+"    <p>Du kan ændre dit password ved at følge linket, som vil være gyldigt i 24 timer:</p>\n"
+"    <div style=\"text-align: center; margin-top: 16px;\">\n"
+"        <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Skift password</a>\n"
+"    </div>\n"
+"    <p>Har du ikke anmodet om nyt password, kan du bare se bort fra denne email.</p>\n"
+"    <p>Venlig hilsen,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
+"    ${user.signature | safe}\n"
+"    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
+"        <strong>Sendt af ${user.company_id.name} vha. <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
+"    </p>\n"
+"</div>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -245,7 +271,7 @@ msgstr "Tillad ikke nulstilling af adgangskode fra log ind siden."
 #. module: auth_signup
 #: selection:res.config.settings,auth_signup_uninvited:0
 msgid "Free sign up (B2C)"
-msgstr ""
+msgstr "Gratis tilmelding (B2C)"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_http
@@ -266,7 +292,7 @@ msgstr "Ugyldigt tilmeldings token"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
-msgstr ""
+msgstr "Lad dine kunder logge ind for at se deres dokumenter"
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -282,7 +308,7 @@ msgstr ""
 #. module: auth_signup
 #: selection:res.config.settings,auth_signup_uninvited:0
 msgid "On invitation (B2B)"
-msgstr ""
+msgstr "Ved invitation (B2B)"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -403,7 +429,7 @@ msgstr "Brugere"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to ${object.company_id.name}!"
-msgstr ""
+msgstr "Velkommen til ${object.company_id.name}!"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields

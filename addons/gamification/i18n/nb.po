@@ -261,6 +261,242 @@ msgid ""
 "            \n"
 "\n"
 msgstr ""
+"\n"
+"                 \n"
+"% set record = ctx.get('record')\n"
+"% set company = record and record.company_id or user.company_id\n"
+"% set challenge_lines = ctx.get('challenge_lines', [])     \n"
+"<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"font-family: 'Helvetica'; background-color: #EEE; border-collapse: collapse;\">\n"
+"<tr>\n"
+"    <td valign=\"top\" align=\"center\">\n"
+"        <table cellspacing=\"0\" cellpadding=\"0\" width=\"600\" style=\"margin: 0 auto; width: 600px;\">\n"
+"            <tr><td>\n"
+"                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
+"                    <tr>\n"
+"                        <td valign=\"middle\" align=\"left\" style=\"padding:30px 15px;\">\n"
+"                            <img width=\"90\" src=\"/logo.png?company=${user.company_id.id}\" style=\"width:80px;\"/>\n"
+"                        </td>\n"
+"                        % if object.visibility_mode == 'ranking':\n"
+"                            <td style=\"padding:15px;\">\n"
+"                                <p style=\"font-size:20px;color:#666666;\" align=\"right\">Toppliste</p>\n"
+"                            </td>\n"
+"                        % endif\n"
+"                    </tr>\n"
+"                </table>\n"
+"                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" bgcolor=\"#fff\" style=\"background-color:#fff;\">\n"
+"                    <tr><td style=\"padding: 15px;\">\n"
+"                        % if object.visibility_mode == 'personal':\n"
+"                            <span style=\"color:#666666;font-size:13px;\">Din fremdrift i utfordringen <strong>${object.name}</strong>.</span>\n"
+"                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:20px;\">\n"
+"                                <tr>\n"
+"                                    <td align=\"center\">\n"
+"                                        <p style=\"font-size:27px;color:#666666;\">Personlige prestasjoner</p>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:30px;color:#666666;\">\n"
+"                                <thead>\n"
+"                                    <tr style=\"color:#9A6C8E; font-size:12px;\">\n"
+"                                        <th align=\"left\" style=\"padding-bottom: 0px;width:40%;text-align:left;\">Mål</th>\n"
+"                                        <th style=\"width:20%;text-align:right;\" align=\"left\">Sluttmål</th>\n"
+"                                        <th style=\"width:20%;text-align:right;\" align=\"right\">Nå</th>\n"
+"                                        <th style=\"width:20%;text-align:right;\" align=\"right\">Fullføringsgrad</th>\n"
+"                                    </tr>\n"
+"                                    <tr>\n"
+"                                        <td colspan=\"5\" style=\"height:1px;background-color:#9A6C8E;\"></td>\n"
+"                                    </tr>\n"
+"                                </thead>\n"
+"                                <tbody>\n"
+"                                % for line in challenge_lines:\n"
+"                                    <tr\n"
+"                                        % if line['completeness'] >= 100:\n"
+"                                            style=\"font-weight:bold;\"\n"
+"                                        % endif\n"
+"                                        >\n"
+"                                        <td style=\"padding: 20px 0;\" align=\"left\">\n"
+"                                            ${line['name']}\n"
+"                                            % if line['suffix'] or line['monetary']:\n"
+"                                                (${line['full_suffix']})\n"
+"                                            % endif\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 20px 0;\" align=\"right\">${\"%.2f\" % line['target']}\n"
+"                                            % if line['suffix']:\n"
+"                                                ${line['suffix']}\n"
+"                                            % endif\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 20px 0;\" align=\"right\">${\"%.2f\" % line['current']}\n"
+"                                            % if line['suffix']:\n"
+"                                                ${line['suffix']}\n"
+"                                            % endif\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 20px 0;font-size:25px;color:#9A6C8E;\" align=\"right\"><strong>${line['completeness']| int}%</strong></td>\n"
+"                                    </tr>\n"
+"                                    <tr>\n"
+"                                        <td colspan=\"5\" style=\"height:1px;background-color:#e3e3e3;\"></td>\n"
+"                                    </tr>\n"
+"                                % endfor        \n"
+"                                </tbody>\n"
+"                            </table>                   \n"
+"                        % else: \n"
+"                            <span style=\"color:#A8A8A8;font-size:13px;\">\n"
+"                                Utfordring: <strong>${object.name}</strong>.\n"
+"                            </span> \n"
+"                            % for line in challenge_lines:\n"
+"                                <!-- Header + Button table -->\n"
+"                                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"style=\"margin-top:35px;\">\n"
+"                                    <tr>\n"
+"                                        <td width=\"50%\">\n"
+"                                            <p style=\"font-size:22px;color:#666666;\">Topp-prestasjoner for målet <strong>${line['name']}</strong></p>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                                <!-- Podium -->\n"
+"                                % if len(line['goals'])>2:\n"
+"                                    <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:10px;\">\n"
+"                                        <tr><td style=\"padding:0 30px;\">\n"
+"                                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"table-layout: fixed;\">\n"
+"                                                <tr>\n"
+"                                                    % set top_goals = [line['goals'][1], line['goals'][0], line['goals'][2]]\n"
+"                                                    % for goal in top_goals:\n"
+"                                                        <td align=\"center\" style=\"width:32%;\">\n"
+"                                                            % if loop.index == 1:\n"
+"                                                                % set extra_div = '<div style=\"height:40px;\"></div>'\n"
+"                                                                % set heightA = 95\n"
+"                                                                % set heightB = 75\n"
+"                                                                % set bgColor = '#b898b0'\n"
+"                                                                % set fontSize = 50\n"
+"                                                                % set podiumPosition = '2'\n"
+"                                                            % elif loop.index == 2:\n"
+"                                                                % set extra_div = ''\n"
+"                                                                % set heightA = 55\n"
+"                                                                % set heightB = 115\n"
+"                                                                % set bgColor = '#9A6C8E'\n"
+"                                                                % set fontSize = 85\n"
+"                                                                % set podiumPosition = '1'\n"
+"                                                            % elif loop.index == 3:\n"
+"                                                                % set extra_div = '<div style=\"height:60px;\"></div>'\n"
+"                                                                % set heightA = 115\n"
+"                                                                % set heightB = 55\n"
+"                                                                % set bgColor = '#c8afc1'\n"
+"                                                                % set fontSize = 35\n"
+"                                                                % set podiumPosition = '3'\n"
+"                                                            % endif\n"
+"                                                            <div style=\"margin:0 3px 0 3px;height:220px;\">\n"
+"                                                                <div style=\"height:${heightA}px;\">\n"
+"                                                                    ${extra_div | safe}   \n"
+"                                                                    <div style=\"height:55px;\">\n"
+"                                                                        % set path = object.env['res.users'].browse(goal['user_id']).partner_id.image_small\n"
+"                                                                        <img style=\"margin-bottom:5px;width:50px;height:50px;border-radius:50%;\" src=\"data:image/jpeg;base64,${path}\" alt=\"${goal['name']}\"/>\n"
+"                                                                    </div> \n"
+"                                                                    <div align=\"center\" style =\"color:${bgColor};height:20px\">\n"
+"                                                                        ${goal['name']}\n"
+"                                                                    </div \n"
+"                                                                </div>\n"
+"                                                                <div style=\"background-color:${bgColor | safe};height:${heightB}px;\">\n"
+"                                                                    <strong><span style=\"color:#fff;font-size:${fontSize}px;\">${podiumPosition | safe}</span></strong>\n"
+"                                                                </div>\n"
+"                                                                <div style=\"height:30px;\">\n"
+"                                                                    <p style=\"color:#9A6C8E;font-size:20px;margin-top:10px;\">\n"
+"                                                                        ${\"%.2f\" % goal['current']}\n"
+"                                                                        % if line['suffix'] or line['monetary']:\n"
+"                                                                            ${line['full_suffix']}\n"
+"                                                                        % endif\n"
+"                                                                    </p>\n"
+"                                                                </div>\n"
+"                                                            </div>\n"
+"                                                        </td>\n"
+"                                                    % endfor\n"
+"                                                </tr>\n"
+"                                            </table>\n"
+"                                            </td>\n"
+"                                        </tr>\n"
+"                                    </table>\n"
+"                                % endif\n"
+"                                <!-- data table -->\n"
+"                                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-bottom:5px\">\n"
+"                                    <tr>\n"
+"                                        <td>\n"
+"                                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:30px;margin-bottom:5px;color:#666666;\">\n"
+"                                                <thead>\n"
+"                                                    <tr style=\"color:#9A6C8E; font-size:12px;\">\n"
+"                                                        <th style=\"width:15%;text-align:center;\">Rangering</th>\n"
+"                                                        <th style=\"width:25%;text-align:left;\">Navn</th>\n"
+"                                                        <th style=\"width:30%;text-align:right;\">Ytelse \n"
+"                                                            % if line['suffix']:\n"
+"                                                                (${line['suffix']})\n"
+"                                                            % elif line['monetary']:\n"
+"                                                                (${company.currency_id.symbol})\n"
+"                                                            % endif\n"
+"                                                        </th>\n"
+"                                                        <th style=\"width:30%;text-align:right;\"\">Fullføringsgrad</th>\n"
+"                                                    </tr>\n"
+"                                                    <tr>\n"
+"                                                        <td colspan=\"5\" style=\"height:1px;background-color:#9A6C8E;\"></td>\n"
+"                                                    </tr>\n"
+"                                                </thead>\n"
+"                                                <tbody>\n"
+"                                                    % for goal in line['goals']:\n"
+"                                                        <tr>\n"
+"                                                            % set tdBgColor = '#fff'\n"
+"                                                            % set tdColor = 'gray'\n"
+"                                                            % set mutedColor = '#AAAAAA'\n"
+"                                                            % set tdPercentageColor = '#9A6C8E'\n"
+"                                                            <td width=\"15%\" align=\"center\" valign=\"middle\" style=\"background-color:${tdBgColor};padding :5px 0;font-size:20px;\">${goal['rank']+1}\n"
+"                                                            </td>\n"
+"                                                            <td width=\"25%\" align=\"left\" valign=\"middle\" style=\"background-color:${tdBgColor};padding :5px 0;font-size:13px;\">${goal['name']}</td>\n"
+"                                                            <td width=\"30%\" align=\"right\" style=\"background-color:${tdBgColor};padding:5px 0;line-height:1;\">${\"%.2f\" % goal['current']}<br/><span style=\"font-size:13px;color:${mutedColor};\">on ${\"%.2f\" % line['target']}</span>\n"
+"                                                            </td>\n"
+"                                                            <td width=\"30%\" style=\"color:${tdPercentageColor};background-color:${tdBgColor};padding-right:15px;font-size:22px;\" align=\"right\"><strong>${goal['completeness'] | int}%</strong></td>\n"
+"                                                        </tr>\n"
+"                                                        <tr>\n"
+"                                                            <td colspan=\"5\" style=\"height:1px;background-color:#DADADA;\"></td>\n"
+"                                                        </tr>\n"
+"                                                    % endfor\n"
+"                                                </tbody>\n"
+"                                            </table>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table> \n"
+"                            % endfor\n"
+"                        % endif\n"
+"                    </td></tr>\n"
+"                </table>\n"
+"                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"padding: 15px; color: #666666;margin-bottom: 5px;\">\n"
+"                    <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                            <table width=\"580\" border=\"0\" cellpadding=\"0\" style=\"min-width: 580px; font-size: 12px;\">\n"
+"                                <tr>\n"
+"                                    <td valign=\"middle\" align=\"left\" style=\"padding-top: 10px; padding-bottom: 10px;\">\n"
+"                                        ${company.name}<br/>\n"
+"                                        ${company.phone or ''}\n"
+"                                    </td>\n"
+"                                    <td valign=\"middle\" align=\"right\" style=\"padding-top: 10px; padding-bottom: 10px;\">\n"
+"                                        % if company.email:\n"
+"                                            <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: #666666;\">${company.email}</a><br/>\n"
+"                                        % endif\n"
+"                                        % if company.website:\n"
+"                                            <a href=\"${company.website}\" style=\"text-decoration:none; color: #666666;\">\n"
+"                                               ${company.website}\n"
+"                                            </a>\n"
+"                                        % endif\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr> \n"
+"                    <tr>\n"
+"                        <td align=\"center\">\n"
+"                            Drevet av <a target=\"_blank\" href=\"https://www.odoo.com\">Odoo</a>.\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            </td></tr>\n"
+"        </table>\n"
+"    </td>\n"
+"</tr>\n"
+"</table>\n"
+"            \n"
+"\n"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_goal_reminder
@@ -273,6 +509,13 @@ msgid ""
 "    <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>\n"
 "            "
 msgstr ""
+"\n"
+"    <p>\n"
+"        <strong>Påminnelse ${object.name}</strong>\n"
+"    </p>\n"
+"    \n"
+"    <p>Du har ikke oppdatert fremdriften din for målet ${object.definition_id.name} (nåværende fullføringsgrad ${object.completeness}%) på minst ${object.remind_update_delay} dager. Ikke glem å gjøre det.</p>\n"
+"            "
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:589
@@ -322,6 +565,38 @@ msgid ""
 "</div>\n"
 "</data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><div>\n"
+"    <p>Gratulerer, ${object.user_id.name}!</p>\n"
+"    <p>Du mottok nettopp medaljen <strong>${object.badge_id.name}</strong> !</p>\n"
+"</div>\n"
+"<div>\n"
+"% if object.badge_id.description\n"
+"<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 600px; margin-top: 5px;\">\n"
+"<tbody><tr>\n"
+"    <td valign=\"center\">\n"
+"        <img src=\"/web/image/gamification.badge/${object.badge_id.id}/image/80x80\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"    </td>\n"
+"    <td valign=\"center\">\n"
+"        <cite>${object.badge_id.description}</cite>\n"
+"    </td>\n"
+"</tr></tbody>\n"
+"</table>\n"
+"% endif\n"
+"</div>\n"
+"<div>\n"
+"    <p>\n"
+"% if object.sender_id\n"
+"        Medaljen ble gitt av <strong>${object.sender_id.name}</strong>.\n"
+"% endif\n"
+"    </p>\n"
+"    <p>\n"
+"% if object.comment\n"
+"        <em>${object.comment}</em>\n"
+"% endif\n"
+"    </p>\n"
+"</div>\n"
+"</data>"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:655
@@ -336,6 +611,8 @@ msgid ""
 "<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this"
 " challenge."
 msgstr ""
+"<br/>Ingen har lykkes i å nå alle målene, ingen medalje deles ut for denne "
+"utfordringen."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:650
@@ -350,6 +627,8 @@ msgid ""
 "<br/>Special rewards were sent to the top competing users. The ranking for "
 "this challenge is :"
 msgstr ""
+"<br/>Spesielle belønninger ble sendt de beste brukerne som deltok. "
+"Rangeringen for denne utfordringen er:"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -681,7 +960,7 @@ msgstr "Opprettet"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_create_uid
 msgid "Creator"
-msgstr ""
+msgstr "Laget av"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_current
@@ -712,7 +991,7 @@ msgstr "Datofelt"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_category
 msgid "Define the visibility of the challenge through menus"
-msgstr ""
+msgstr "Definer hvor synlig utfordringen skal være via menyer"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_computation_mode
@@ -725,7 +1004,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description_3119
 msgid "Definition Description"
-msgstr ""
+msgstr "Definisjonsbeskrivelse"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -738,6 +1017,8 @@ msgstr ""
 msgid ""
 "Describe the challenge: what is does, who it targets, why it matters..."
 msgstr ""
+"Beskriv utfordringen: Hva den gjør, hvem den retter seg mot, hvorfor det har"
+" betydning..."
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
@@ -766,7 +1047,7 @@ msgstr "Visningsmodus"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_display_name
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_display_name
 msgid "Display Name"
-msgstr "Visnings navn"
+msgstr "Visningsnavn"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_display
@@ -840,22 +1121,22 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_domain
 msgid "Filter Domain"
-msgstr ""
+msgstr "Filtrer domene"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_first_id
 msgid "For 1st user"
-msgstr ""
+msgstr "For første bruker"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_second_id
 msgid "For 2nd user"
-msgstr ""
+msgstr "For andre bruker"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_third_id
 msgid "For 3rd user"
-msgstr ""
+msgstr "For tredje bruker"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_id
@@ -900,7 +1181,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal_definition
 msgid "Gamification goal definition"
-msgstr ""
+msgstr "Definisjon av gamifiseringsmål"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal
@@ -1072,7 +1353,7 @@ msgstr "ID-felt for bruker"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_remaining_sending
 msgid "If a maximum is set"
-msgstr ""
+msgstr "Hvis et maksimum er satt"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user_challenge_id
@@ -1196,12 +1477,12 @@ msgstr "Linjer"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line_ids
 msgid "List of goals that will be set"
-msgstr ""
+msgstr "Liste over mål som vil bli satt"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_user_ids
 msgid "List of users participating to the challenge"
-msgstr ""
+msgstr "Brukere som deltar i utfordringen"
 
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_nbr_following
@@ -1243,7 +1524,7 @@ msgstr "Månedlig total"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "My Goals"
-msgstr ""
+msgstr "Målene mine"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_my_monthly_sending
@@ -1319,7 +1600,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Notification Messages"
-msgstr ""
+msgstr "Varslingsmeldinger"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_count_distinct
@@ -1344,7 +1625,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Optimisation"
-msgstr ""
+msgstr "Optimalisering"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_owner_ids
@@ -1371,7 +1652,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_period
 msgid "Periodicity"
-msgstr ""
+msgstr "Periodisering"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_problem_solver
@@ -1398,7 +1679,7 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.goal,state:0
 msgid "Reached"
-msgstr ""
+msgstr "Nådd"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
@@ -1408,7 +1689,7 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
 msgid "Recorded manually"
-msgstr ""
+msgstr "Manuelt registrert"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
@@ -1423,7 +1704,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.goals_from_challenge_act
 msgid "Related Goals"
-msgstr ""
+msgstr "Tilknyttede mål"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user_wizard_user_id
@@ -1443,12 +1724,12 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Reminders for Manual Goals"
-msgstr ""
+msgstr "Påminnelser for manuelle mål"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_report_message_frequency
 msgid "Report Frequency"
-msgstr ""
+msgstr "Rapporteringsfrekvens"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_report_template_id
@@ -1458,12 +1739,12 @@ msgstr "Rapportmal"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_auth_badge_ids
 msgid "Required Badges"
-msgstr ""
+msgstr "Påkrevde medaljer"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reset Completion"
-msgstr ""
+msgstr "Tilbakestill fullføring"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_manager_id
@@ -1484,12 +1765,12 @@ msgstr "Belønning"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_failure
 msgid "Reward Bests if not Succeeded?"
-msgstr ""
+msgstr "Belønne de beste selv om ikke i mål?"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_realtime
 msgid "Reward as soon as every goal is reached"
-msgstr ""
+msgstr "Belønn så snart hvert mål er nådd"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_challenge_ids
@@ -1499,7 +1780,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_goal_definition_ids
 msgid "Rewarded by"
-msgstr ""
+msgstr "Belønnet av"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
@@ -1514,7 +1795,7 @@ msgstr "Kjører"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Running Challenges"
-msgstr ""
+msgstr "Pågående utfordringer"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
@@ -1524,17 +1805,17 @@ msgstr "Book"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Search Challenges"
-msgstr ""
+msgstr "Søk i utfordringer"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Search Goal Definitions"
-msgstr ""
+msgstr "Søk i måldefinisjoner"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Search Goals"
-msgstr ""
+msgstr "Søk i mål"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
@@ -1577,7 +1858,7 @@ msgstr ""
 #: model:gamification.challenge.line,name:gamification.line_base_admin1
 #: model:gamification.goal.definition,name:gamification.definition_base_company_data
 msgid "Set your Company Data"
-msgstr ""
+msgstr "Sett firmadata"
 
 #. module: gamification
 #: model:gamification.challenge.line,name:gamification.line_base_admin2
@@ -1594,12 +1875,12 @@ msgstr "Sett tidssone"
 #. module: gamification
 #: selection:gamification.challenge,category:0
 msgid "Settings / Gamification Tools"
-msgstr ""
+msgstr "Innstillinger/gamifiseringsverktøy"
 
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_configure
 msgid "Setup your Company"
-msgstr ""
+msgstr "Sett opp firmaet ditt"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -1728,7 +2009,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_unique_owner_ids
 msgid "The list of unique users having received this badge."
-msgstr ""
+msgstr "Listen over unike brukere som har mottatt denne medaljen."
 
 #. module: gamification
 #: selection:gamification.goal.definition,condition:0
@@ -1780,17 +2061,17 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_stat_my
 msgid "The number of time the current user has received this badge."
-msgstr ""
+msgstr "Antall ganger gjeldende bruker har mottatt  denne medaljen."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_stat_my_monthly_sending
 msgid "The number of time the current user has sent this badge this month."
-msgstr ""
+msgstr "Antall ganger gjeldende bruker har gitt denne medaljen denne måneden."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_stat_count_distinct
 msgid "The number of time this badge has been received by unique users."
-msgstr ""
+msgstr "Antall ganger denne medaljen er mottatt av unike brukere."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_stat_this_month
@@ -1800,7 +2081,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_stat_count
 msgid "The number of time this badge has been received."
-msgstr ""
+msgstr "Antall ganger denne medaljen er mottatt."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line_definition_monetary
@@ -1817,19 +2098,19 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_manager_id
 msgid "The user responsible for the challenge."
-msgstr ""
+msgstr "Brukeren som er ansvarlig for denne utfordringen."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user_sender_id
 msgid "The user who has send the badge"
-msgstr ""
+msgstr "Brukeren som har sendt medaljen"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_goal_definition_ids
 msgid ""
 "The users that have succeeded theses goals will receive automatically the "
 "badge."
-msgstr ""
+msgstr "Brukerne som har nådd disse målene, vil automatisk motta medaljen."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_batch_user_expression
@@ -1861,6 +2142,7 @@ msgstr "Denne medaljen kan ikke sendes av brukere."
 #: model:ir.model.fields,help:gamification.field_gamification_badge_image
 msgid "This field holds the image used for the badge, limited to 256x256"
 msgstr ""
+"Dette feltet inneholder bilde av medaljen, avgrenset til 256x256 piksler"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -1870,7 +2152,7 @@ msgstr "Til"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_target_goal
 msgid "To Reach"
-msgstr ""
+msgstr "Å nå"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_to_update
@@ -1986,7 +2268,7 @@ msgstr "Du kan fortsat gi"
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_good_job
 msgid "You did great at your job."
-msgstr ""
+msgstr "Du gjorde jobben din veldig bra."
 
 #. module: gamification
 #: code:addons/gamification/models/badge.py:214
