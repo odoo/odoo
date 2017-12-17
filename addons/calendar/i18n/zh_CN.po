@@ -3,30 +3,20 @@
 # * calendar
 # 
 # Translators:
-# fausthuang <faust_huang@hotmail.com>, 2017
-# Jeffery CHEN <jeffery9@gmail.com>, 2017
-# Ma XiaoXiao <junmaing@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Talway <9010446@qq.com>, 2017
-# liulixia <liu.lixia@elico-corp.com>, 2017
-# Gary Wei <Gary.wei@elico-corp.com>, 2017
-# xiaobin wu <bd5dml@gmail.com>, 2017
-# Rona Lin <ssauapw@qq.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # 苏州远鼎 <tiexinliu@126.com>, 2017
-# 卓忆科技 <zhanghao@jointd.com>, 2017
-# Xu Lei <xulei8@qq.com>, 2017
-# Joray <13637815@qq.com>, 2017
-# waveyeung <waveyeung@qq.com>, 2017
-# Yaorong Li <55yaorong.li@gmail.com>, 2017
+# liAnGjiA <liangjia@qq.com>, 2017
+# Talway <9010446@qq.com>, 2017
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:12+0000\n"
 "PO-Revision-Date: 2017-11-30 13:12+0000\n"
-"Last-Translator: Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017\n"
+"Last-Translator: Gary Wei <Gary.wei@elico-corp.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -434,7 +424,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_is_attendee
 msgid "Attendee"
-msgstr "与会者"
+msgstr "出席者"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_attendee_status
@@ -527,7 +517,7 @@ msgstr "已确认"
 #: model:ir.model,name:calendar.model_res_partner
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_partner_id
 msgid "Contact"
-msgstr "联系人"
+msgstr "联系"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_create_uid
@@ -551,18 +541,18 @@ msgstr "创建时间"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_display_start
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Date"
-msgstr "日期   "
+msgstr "日期"
 
 #. module: calendar
 #: selection:calendar.event,month_by:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_day
 msgid "Date of month"
-msgstr "月日期"
+msgstr "日期"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Day of Month"
-msgstr "月天数"
+msgstr "天"
 
 #. module: calendar
 #: selection:calendar.event,month_by:0
@@ -572,7 +562,7 @@ msgstr "日期"
 #. module: calendar
 #: selection:calendar.alarm,interval:0 selection:calendar.event,rrule_type:0
 msgid "Day(s)"
-msgstr "天"
+msgstr "天(s)"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -595,7 +585,7 @@ msgstr "说明"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:18
 #, python-format
 msgid "Details"
-msgstr "细节"
+msgstr "详细信息"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_display_name
@@ -632,7 +622,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_duration
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Duration"
-msgstr "时长"
+msgstr "持续时间"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_duration_minutes
@@ -644,7 +634,7 @@ msgstr "时长（分钟）"
 #: selection:calendar.alarm,type:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_email
 msgid "Email"
-msgstr "电子邮箱"
+msgstr "Email"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee_email
@@ -670,7 +660,7 @@ msgstr "结束日期时间"
 #. module: calendar
 #: selection:calendar.event,end_type:0
 msgid "End date"
-msgstr "终止日期"
+msgstr "截止日期"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -844,7 +834,7 @@ msgstr "最后"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event___last_update
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type___last_update
 msgid "Last Modified on"
-msgstr "最后修改时间"
+msgstr "最后修改日"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_write_uid
@@ -853,7 +843,7 @@ msgstr "最后修改时间"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type_write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_write_uid
 msgid "Last Updated by"
-msgstr "最后更新者"
+msgstr "最后更新人"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_write_date
@@ -879,7 +869,7 @@ msgstr "让事件在该时间间隔自动重复"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_location
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Location"
-msgstr "位置"
+msgstr "地点"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_location
@@ -983,7 +973,7 @@ msgstr "名称"
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
 msgid "Needs Action"
-msgstr "需要采取行动"
+msgstr "待处理"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1005,7 +995,7 @@ msgstr "收件人数量"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:17
 #, python-format
 msgid "OK"
-msgstr "OK"
+msgstr "Ok"
 
 #. module: calendar
 #: selection:calendar.event,privacy:0
@@ -1254,7 +1244,7 @@ msgstr "标签名已存在!"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_categ_ids
 msgid "Tags"
-msgstr "摘要"
+msgstr "标签"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form

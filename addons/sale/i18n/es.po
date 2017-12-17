@@ -3,15 +3,44 @@
 # * sale
 # 
 # Translators:
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
+# Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# José Vicente <txusev@gmail.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# Alejandro Die Sanchis <marketing@domatix.com>, 2016
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
+# Antonio Trueba <atgayol@gmail.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
+# Denis Ledoux <dle@odoo.com>, 2016
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# David Perez <david@closemarketing.es>, 2016
+# Daniel Santibáñez Polanco <dansanti@gmail.com>, 2016
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2016
+# Kiko <kiko@comunitea.com>, 2016
+# Miguel Orueta <mo@landoo.es>, 2016
+# Cristian Salamea <ovnicraft@gmail.com>, 2017
+# Gustavo Orozco H. <gustavo.orozco.h@app-247.com>, 2017
+# maitaoriana <maitaoriana@gmail.com>, 2017
+# RGB Consulting <odoo@rgbconsulting.com>, 2017
+# Alejandro Santana <alejandrosantana@anubia.es>, 2017
+# Raquel Iciarte <ric@odoo.com>, 2017
+# Fernando San Martín Woerner <fsnmartin@gmail.com>, 2017
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 # Eduardo Magdalena <emagdalena@close2circle.com>, 2017
+# Cristóbal Martí Oliver <info@moblesmarti.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: Eduardo Magdalena <emagdalena@close2circle.com>, 2017\n"
+"POT-Creation-Date: 2017-12-13 14:37+0000\n"
+"PO-Revision-Date: 2017-12-13 14:37+0000\n"
+"Last-Translator: Cristóbal Martí Oliver <info@moblesmarti.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -118,12 +147,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_product_product_sales_count
 #: model:ir.model.fields,field_description:sale.field_product_template_sales_count
 msgid "# Sales"
-msgstr "# Ventas"
+msgstr "Nº ventas"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_invoice_count
 msgid "# of Invoices"
-msgstr "# de Facturas"
+msgstr "Nº de facturas"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_nbr
@@ -133,13 +162,13 @@ msgstr "# de líneas"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_count
 msgid "# of Orders"
-msgstr "# de Pedidos"
+msgstr "Nº de pedido de venta"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner_sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_users_sale_order_count
 msgid "# of Sales Order"
-msgstr "# de Pedido de Venta"
+msgstr "Nº de pedido de venta"
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
@@ -156,8 +185,8 @@ msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name} ${object.state en ('draft', 'sent') y  "
-"'Presupuesto' o 'Pedido'} (Ref ${object.name or 'n/a' })"
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
+"'Presupuesto' or 'Pedido'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_data_notification_email_sale_order
@@ -357,7 +386,7 @@ msgid ""
 "<span class=\"hidden-xs\">Sales Order #</span>\n"
 "                      <span class=\"visible-xs\">Ref.</span>"
 msgstr ""
-"<span class=\"hidden-xs\">Orden de Venta #</span>\n"
+"<span class=\"hidden-xs\">Pedido de Venta #</span>\n"
 "                      <span class=\"visible-xs\">Ref.</span>"
 
 #. module: sale
@@ -461,7 +490,7 @@ msgstr "<strong>Fecha de caducidad:</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr "<strong>Posición Fiscal:</strong>"
+msgstr "<strong>Posición fiscal:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -476,7 +505,7 @@ msgstr "<strong>Dirección de Facturación</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Payment Terms:</strong>"
-msgstr "<strong>Términos de Pago:</strong>"
+msgstr "<strong>Términos de pago:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -491,7 +520,7 @@ msgstr "<strong>Cantidad</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Quotation Date:</strong>"
-msgstr "<strong>Fecha del presupuesto:</strong>"
+msgstr "<strong>Fecha de cotización:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -507,7 +536,7 @@ msgstr "<strong>Dirección de Envío</strong>"
 #: model:ir.ui.view,arch_db:sale.report_invoice_document_inherit_sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Shipping address:</strong>"
-msgstr "<strong>Dirección de envío</strong>"
+msgstr "<strong>Dirección de Envío</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -535,7 +564,7 @@ msgstr "<strong>Precio Unidad</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference:</strong>"
-msgstr "<strong>Su referencia:</strong>"
+msgstr "<strong>Su Referencia:</strong>"
 
 #. module: sale
 #: selection:res.config.settings,sale_pricelist_setting:0
@@ -564,7 +593,7 @@ msgstr "Aceptar &amp; Firma"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Account used for deposits"
-msgstr "Cuenta utilizada para los depósitos"
+msgstr "Cuenta utilizada para depósitos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_pagebreak
@@ -579,10 +608,10 @@ msgstr "Añadir subtotal"
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr "Direcciones en Pedidos de Venta"
+msgstr "Direcciones en los pedidos de venta"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:156
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:158
 #, python-format
 msgid "Advance: %s"
 msgstr "Anticipo: %s"
@@ -597,7 +626,7 @@ msgstr "Pedidos de venta de todos los canales"
 #: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
 #: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
 msgid "All Channels Sales Orders Analysis"
-msgstr "Análisis de Todos los canales de órdenes de venta"
+msgstr "Análisis de Todos los canales de pedidos de venta"
 
 #. module: sale
 #: model:ir.model,name:sale.model_report_all_channels_sales
@@ -622,19 +651,17 @@ msgstr "Le permite enviar una factura pro-forma."
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Amount"
-msgstr "Monto"
+msgstr "Importe"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line_amt_invoiced
-#: model:ir.model.fields,field_description:sale.field_sale_report_amt_invoiced
+#: model:ir.model.fields,field_description:sale.field_sale_report_amount_invoiced
 msgid "Amount Invoiced"
-msgstr "Monto facturado"
+msgstr "Importe facturado"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line_amt_to_invoice
-#: model:ir.model.fields,field_description:sale.field_sale_report_amt_to_invoice
+#: model:ir.model.fields,field_description:sale.field_sale_report_amount_to_invoice
 msgid "Amount To Invoice"
-msgstr "Monto a facturar"
+msgstr "Importe a facturar"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_quotations_amount
@@ -661,7 +688,7 @@ msgstr "Línea Analítica"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_analytic_tag_ids
 msgid "Analytic Tags"
-msgstr "Etiquetas Analíticas"
+msgstr "Etiquetas analíticas"
 
 #. module: sale
 #: selection:product.template,expense_policy:0
@@ -737,11 +764,6 @@ msgstr "Cancelar"
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Cancelled"
 msgstr "Cancelado"
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.product_menu_catalog
-msgid "Catalog"
-msgstr "Catálogo"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_use_quotations
@@ -828,6 +850,7 @@ msgstr "Confirmar venta"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_confirmation_date
 #: model:ir.model.fields,field_description:sale.field_sale_report_confirmation_date
+#: model:ir.ui.view,arch_db:sale.view_order_tree
 msgid "Confirmation Date"
 msgstr "Fecha confirmación"
 
@@ -894,6 +917,7 @@ msgstr "Ventas del año actual"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_order_partner_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_partner_id
+#: model:ir.model.fields,field_description:sale.field_sale_report_partner_id
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Customer"
@@ -956,7 +980,7 @@ msgid "Delivered"
 msgstr "Entregado"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:824
+#: code:addons/sale/models/sale.py:816
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Delivered Quantity"
@@ -987,12 +1011,6 @@ msgstr "Dirección de entrega de la factura actual."
 #: model:ir.model.fields,help:sale.field_sale_order_partner_shipping_id
 msgid "Delivery address for current sales order."
 msgstr "Dirección de envío para el pedido de ventas actual."
-
-#. module: sale
-#: model:product.product,name:sale.advance_product_0
-#: model:product.template,name:sale.advance_product_0_product_template
-msgid "Deposit"
-msgstr "Depósito"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_default_deposit_product_id
@@ -1056,23 +1074,23 @@ msgstr "Descuentos"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_display_name
 #: model:ir.model.fields,field_description:sale.field_sale_report_display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre a mostrar"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:84
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:86
 #, python-format
 msgid "Down Payment"
-msgstr "Pago anticipado"
+msgstr "Depósito"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_amount
 msgid "Down Payment Amount"
-msgstr "Cantidad de pago anticipado"
+msgstr "Cantidad del Depósito"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_product_id
 msgid "Down Payment Product"
-msgstr "Producto de pago anticipado"
+msgstr "Producto de Depósito"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1082,18 +1100,18 @@ msgstr "Pagos anticipados"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (fixed amount)"
-msgstr "Pago anticipado (cantidad fija)"
+msgstr "Depósito (cantidad fija)"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (percentage)"
-msgstr "Pago anticipado (porcentaje)"
+msgstr "Depósito (porcentaje)"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:81
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:83
 #, python-format
 msgid "Down payment of %s%%"
-msgstr "Pago anticipado de %s%%"
+msgstr "Depósito de %s%%"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_is_downpayment
@@ -1112,12 +1130,7 @@ msgstr "Descargar"
 #. module: sale
 #: selection:sale.report,state:0
 msgid "Draft Quotation"
-msgstr "Presupuesto Borrador"
-
-#. module: sale
-#: model:ir.model,name:sale.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr "Asistente de redacción de correo electrónico."
+msgstr "Presupuesto borrador"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_validity_date
@@ -1130,7 +1143,7 @@ msgid "Extended Filters"
 msgstr "Filtro avanzado"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:807
+#: code:addons/sale/models/sale.py:799
 #, python-format
 msgid "Extra line with %s "
 msgstr "Linea extra con %s"
@@ -1247,7 +1260,7 @@ msgstr "Factura %s pagada"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_partner_invoice_id
 msgid "Invoice Address"
-msgstr "Dirección de Factura"
+msgstr "Dirección de factura"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_confirmed
@@ -1319,7 +1332,7 @@ msgstr "Líneas de factura"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines (deduct down payments)"
-msgstr "Líneas a facturar (deducir pagos anticipados)"
+msgstr "Líneas a facturar (deducir pagos por adelantado)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_invoiced
@@ -1327,7 +1340,7 @@ msgid "Invoiced"
 msgstr "Facturado"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:825
+#: code:addons/sale/models/sale.py:817
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Invoiced Quantity"
@@ -1354,7 +1367,7 @@ msgstr "Análisis de facturas"
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr "Estadísticas de facturación"
+msgstr "Estadísticas de facturas"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -1372,7 +1385,6 @@ msgid "Invoices: Untaxed Total"
 msgstr "Facturas: Total sin impuestos"
 
 #. module: sale
-#: model:ir.ui.menu,name:sale.menu_sale_invoicing
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.product_template_form_view_invoice_policy
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1421,7 +1433,7 @@ msgstr "Esta expirado"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_report___last_update
 msgid "Last Modified on"
-msgstr "Última Modificación en"
+msgstr "Última modificación en"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_write_uid
@@ -1429,7 +1441,7 @@ msgstr "Última Modificación en"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_write_uid
 msgid "Last Updated by"
-msgstr "Última actualización de"
+msgstr "Última actualización por"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_write_date
@@ -1437,7 +1449,7 @@ msgstr "Última actualización de"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_write_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_write_date
 msgid "Last Updated on"
-msgstr "Última Actualización el"
+msgstr "Última actualización el"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1509,7 +1521,7 @@ msgid ""
 "the date automatically based on the template if online quotation is "
 "installed."
 msgstr ""
-"Indique manualmente la fecha de caducidad de su presupuesto (oferta), o se "
+"Indique manualmente la fecha de caducidad de su oferta (oferta), o se "
 "cargará la fecha automáticamente en función de la plantilla."
 
 #. module: sale
@@ -1601,7 +1613,7 @@ msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
 msgstr ""
-"Tenga en cuenta que una vez que un presupuesto se convierte en una orden de venta, se moverá\n"
+"Tenga en cuenta que una vez que una cotización se convierte en una orden de venta, se moverá\n"
 "                 de la lista de cotizaciones a la lista de orden de venta."
 
 #. module: sale
@@ -1656,7 +1668,7 @@ msgid ""
 "                    From the <i>Sales Orders</i> menu, you can track delivery\n"
 "                    orders or services."
 msgstr ""
-"Una vez confirmado el presupuesto, se convierte en un pedido de venta.\n"
+"Una vez confirmada la cotización, se convierte en un pedido de venta.\n"
 "                    Podrá facturarlo y cobrar los pagos.\n"
 "                   En el menú <i>Pedidos de venta</ i>, puede realizar el seguimiento de los albaranes\n"
 "                    o servicios."
@@ -1690,7 +1702,7 @@ msgstr "Operacion no permitida"
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Order"
-msgstr "Pedir"
+msgstr "Pedido"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1703,7 +1715,6 @@ msgstr "Pedido #"
 #: model:ir.model.fields,field_description:sale.field_sale_order_date_order
 #: model:ir.ui.view,arch_db:sale.portal_my_orders
 #: model:ir.ui.view,arch_db:sale.portal_my_quotations
-#: model:ir.ui.view,arch_db:sale.view_order_tree
 #, python-format
 msgid "Order Date"
 msgstr "Fecha de pedido"
@@ -1767,11 +1778,11 @@ msgid "Ordered Qty"
 msgstr "Ctdad pedida"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:821
+#: code:addons/sale/models/sale.py:813
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Ordered Quantity"
-msgstr "Quantitat demanada"
+msgstr "Cantidad Pedida"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product_invoice_policy
@@ -1835,7 +1846,6 @@ msgstr "Factura PRO-FORMA"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_partner_id
-#: model:ir.model.fields,field_description:sale.field_sale_report_partner_id
 msgid "Partner"
 msgstr "Empresa"
 
@@ -1877,7 +1887,7 @@ msgid "Please define an accounting sales journal for this company."
 msgstr "Defina un diario de ventas de contabilidad para esta empresa."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:916
+#: code:addons/sale/models/sale.py:905
 #, python-format
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
@@ -1904,7 +1914,7 @@ msgstr "Precio reducido sin IVA"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr "Impuestos incluidos en el precio reducido"
+msgstr "Precio reducido sin IVA"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_price_subtotal
@@ -2017,6 +2027,7 @@ msgstr "Producto usado para pagos anticipados"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_template_action
 #: model:ir.ui.menu,name:sale.prod_config_main
+#: model:ir.ui.menu,name:sale.product_menu_catalog
 msgid "Products"
 msgstr "Productos"
 
@@ -2086,7 +2097,7 @@ msgstr "Presupuesto / Pedido"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Quotation Date"
-msgstr "Fecha de presupuesto"
+msgstr "Fecha de cotización"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
@@ -2124,7 +2135,7 @@ msgstr "Presupuesto enviado"
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 #, python-format
 msgid "Quotations"
-msgstr "Cotizaciones"
+msgstr "Presupuestos"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2134,22 +2145,22 @@ msgstr "Cotizaciones &amp; Ordenes"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
-msgstr "Análisis de cotizaciones"
+msgstr "Análisis de presupuestos"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "Quotations Sent"
-msgstr "Cotizaciones Enviadas"
+msgstr "Presupuestos enviados"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_quote
 msgid "Quotations Templates"
-msgstr "Plantillas de cotizaciones"
+msgstr "Plantillas de presupuestos"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Quotations and Sales"
-msgstr "Cotizaciones y pedidos"
+msgstr "Presupuestos y pedidos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_expense_policy
@@ -2186,7 +2197,7 @@ msgstr "Categorías de impresión del informe"
 #: model:ir.ui.menu,name:sale.menu_sale_report
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Reporting"
-msgstr "Informes"
+msgstr "Informando"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
@@ -2194,9 +2205,9 @@ msgstr "Informes"
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
-#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Sales"
 msgstr "Ventas"
@@ -2258,10 +2269,9 @@ msgstr "Información de ventas"
 #: model:ir.model.fields,field_description:sale.field_res_users_sale_warn
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-#: model:res.request.link,name:sale.req_link_sale_order
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Sales Order"
-msgstr "Pedido de venta"
+msgstr "Aviso para pedido de venta"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
@@ -2674,32 +2684,32 @@ msgstr ""
 " el costo establecido en su forma detallada."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:149
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:151
 #, python-format
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
 msgstr ""
-"El producto usado para facturar un pago anticipado debe de ser de tipo "
+"El producto usado para facturar un adelanto de pago debe de ser de tipo "
 "'Servicio'. Por favor use otro producto o actualice éste."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:147
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:149
 #, python-format
 msgid ""
 "The product used to invoice a down payment should have an invoice policy set"
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
 msgstr ""
-"El producto usado para facturar un pago anticipado debe tener una política "
+"El producto usado para facturar un adelanto de pago debe tener una política "
 "de facturación configurada como \"Cantidad pedida\". Por favor actualice su "
-"producto para poder crear la factura de anticipo."
+"producto para poder crear la factura de depósito."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:78
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:80
 #, python-format
 msgid "The value of the down payment amount must be positive."
-msgstr "El valor del importe del pago anticipado debe ser positivo."
+msgstr "El valor del importe por adelantado debe ser positivo."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_orders
@@ -2709,7 +2719,7 @@ msgstr "Actualmente no tiene pedidos de su cuenta."
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
-msgstr "Actualmente no hay cotizaciones para su cuenta."
+msgstr "Actualmente no hay presupuestos para su cuenta."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2724,7 +2734,7 @@ msgstr ""
 "establecerse en la lista de precios."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:74
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:76
 #, python-format
 msgid ""
 "There is no income account defined for this product: \"%s\". You may have to"
@@ -2737,8 +2747,8 @@ msgstr ""
 #. module: sale
 #: code:addons/sale/models/sale.py:430 code:addons/sale/models/sale.py:434
 #, python-format
-msgid "There is no invoicable line."
-msgstr "No hay líneas para facturar"
+msgid "There is no invoiceable line."
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_error
@@ -2748,7 +2758,7 @@ msgstr "Hubo un error al procesar esta página."
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "This Year"
-msgstr "Este Año"
+msgstr "Este año"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2768,7 +2778,7 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
-"Este informe realiza un análisis de sus cotizaciones y pedidos de venta. El "
+"Este informe realiza un análisis de sus presupuestos y pedidos de venta. El "
 "análisis verifica los ingresos de sus ventas y las ordena por diferentes "
 "grupos de criterios (comercial, empresa, producto, etc.). Utilice este "
 "informe para realizar un análisis sobre sus ventas todavía no facturadas. Si"
@@ -2814,6 +2824,7 @@ msgstr "Planilla de horas en el proyecto (una tarifa por PV/Proyecto)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
+#: model:ir.ui.menu,name:sale.menu_sale_invoicing
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 #: selection:sale.order,invoice_status:0
@@ -2896,12 +2907,12 @@ msgstr "Desbloquear"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Unread Messages"
-msgstr "Mensajes sin leer"
+msgstr "Mensajes por leer"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_untaxed
 msgid "Untaxed Amount"
-msgstr "Monto Imponible"
+msgstr "Base imponible"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_price_subtotal
@@ -2936,7 +2947,7 @@ msgid "Warning"
 msgstr "Aviso"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1006
+#: code:addons/sale/models/sale.py:993
 #, python-format
 msgid "Warning for %s"
 msgstr "Aviso para %s"
@@ -2976,18 +2987,16 @@ msgid ""
 "You can not delete a sent quotation or a sales order! Try to cancel it "
 "before."
 msgstr ""
-"¡No puede eliminar un presupuesto enviado o un pedido de cliente! Intente "
+"¡No puede eliminar una oferta enviada o un pedido de cliente! Intente "
 "cancelarlo antes."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1069
+#: code:addons/sale/models/sale.py:1056
 #, python-format
 msgid ""
-"You can not remove a sales order line.\n"
-"Discard changes and try setting the quantity to 0."
+"You can not remove an order line once the sales order is confirmed.\n"
+"You should rather set the quantity to 0."
 msgstr ""
-"No puede eliminar una línea de orden de venta.\n"
-"Deseche los cambios e intente configurar la cantidad a 0."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -3016,7 +3025,7 @@ msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sales Order, then create the Invoice and collect the Payment."
 msgstr ""
-"Sus próximas acciones deberían fluir de manera eficiente: confirme el presupuesto\n"
+"Sus próximas acciones deberían fluir de manera eficiente: confirme la cotización\n"
 "                 a una orden de venta, luego crea la factura y recoge el pago."
 
 #. module: sale
@@ -3025,7 +3034,7 @@ msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "            to a Sales Order, then create the Invoice and collect the Payment."
 msgstr ""
-"Sus próximas acciones deberían fluir de manera eficiente: confirme el presupuesto\n"
+"Sus próximas acciones deberían fluir de manera eficiente: confirme la cotización\n"
 "            a una orden de venta, luego crea la factura y recoge el pago."
 
 #. module: sale
@@ -3035,8 +3044,8 @@ msgid ""
 "Your next actions should flow efficiently: confirm the Quotation to a Sales "
 "Order, then create the Invoice and collect the Payment."
 msgstr ""
-"Sus próximas acciones deberían fluir de manera eficiente: confirme el "
-"presupuesto a una orden de venta, luego cree la factura y recoja el pago."
+"Sus próximas acciones deberían fluir de manera eficiente: confirme la "
+"cotización a una orden de venta, luego crea la factura y recoge el pago."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_error

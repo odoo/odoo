@@ -3,19 +3,19 @@
 # * account_bank_statement_import
 # 
 # Translators:
-# e2f_nl_c4 <e2f_nl_c4@hotmail.com>, 2017
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2017
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
-# Eric Geens <ericgeens@yahoo.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
 # Melroy van den Berg <webmaster1989@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
+"POT-Creation-Date: 2017-12-13 14:36+0000\n"
+"PO-Revision-Date: 2017-12-13 14:36+0000\n"
 "Last-Translator: Melroy van den Berg <webmaster1989@gmail.com>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -25,23 +25,30 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_bank_statement_import
+#. openerp-web
+#: code:addons/account_bank_statement_import/static/src/js/account_bank_statement_import.js:13
+#, python-format
+msgid " Import Template for Bank Statements"
+msgstr ""
+
+#. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:241
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
-msgstr "%d transacties waren al geïmporteerd en zijn overgeslagen"
+msgstr "%d transacties werden reeds geïmporteerd en werden genegeerd."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:241
 #, python-format
 msgid "1 transaction had already been imported and was ignored."
-msgstr "1 transactie was al geïmporteerd en werd genegeerd."
+msgstr "1 transactie werd reeds geïmporteerd en werd genegeerd."
 
 #. module: account_bank_statement_import
 #: sql_constraint:account.bank.statement.line:0
 msgid "A bank account transactions can be imported only once !"
 msgstr ""
 "De transacties van een bankrekening kunnen slechts eenmaal geïmporteerd "
-"worden!"
+"worden !"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_acc_number
@@ -66,7 +73,7 @@ msgstr "Actief"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
 msgid "Allow Cancelling Entries"
-msgstr "Maak het annuleren boekingen mogelijk"
+msgstr "Maak het annuleren van boekingen mogelijk"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:243
@@ -99,12 +106,12 @@ msgstr "Bankrekening"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_statements_source
 msgid "Bank Feeds"
-msgstr "Bank feeds"
+msgstr "Bank Feeds"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid "Bank Journal Name"
-msgstr "Bank dagboek naam"
+msgstr "Bankboek naam"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_data_file
@@ -130,7 +137,7 @@ msgstr "Behoort bij het huidige bedrijf van de gebruiker"
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Cancel"
-msgstr "Annuleren"
+msgstr "Annuleer"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:167
@@ -294,7 +301,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.actions.act_window,name:account_bank_statement_import.action_account_bank_statement_import
 msgid "Import"
-msgstr "Importeer"
+msgstr "Importeren"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import
@@ -335,7 +342,7 @@ msgstr "Dit is de standaard rekening voor het debet bedrag"
 #: model:ir.model,name:account_bank_statement_import.model_account_journal
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_journal_id
 msgid "Journal"
-msgstr "Dagboek"
+msgstr "Kasboek"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:69
@@ -356,7 +363,7 @@ msgid ""
 "was a mistake, hit cancel to abort the import."
 msgstr ""
 "Klik op OK om een rekening/dagboek aan te maken en de import af te ronden. "
-"Heeft u een fout gemaakt, druk dan op annulleren om de import af te breken."
+"Heeft u een fout gemaakt, druk dan op cancel om de import af te breken."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard
@@ -460,7 +467,7 @@ msgstr "Selecteer een bankafschrift om te importeren"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence
 msgid "Sequence"
-msgstr "Volgorde"
+msgstr "Reeks"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_active
@@ -522,7 +529,7 @@ msgstr "De gebruikte valuta"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
 msgid "The journal entries of this journal will be named using this prefix."
-msgstr "De boekingen van dit dagboek worden aangeduid met deze prefix."
+msgstr "De boekingen van dit dagboek worden genaamd met de prefix."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_number_next
@@ -567,7 +574,7 @@ msgstr "Dit bestand bevat geen enkele transactie."
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
 msgid "Type"
-msgstr "Type"
+msgstr "Soort"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence

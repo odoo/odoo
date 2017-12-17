@@ -3,24 +3,26 @@
 # * auth_signup
 # 
 # Translators:
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Quentin THEURET <odoo@kerpeo.com>, 2016
+# Olivier Dony <odo@odoo.com>, 2016
+# Clo <clo@odoo.com>, 2016
+# Lucas Deliege <lud@odoo.com>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Miguel Vidali <mvidali129@gmail.com>, 2016
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Eloïse Stilmant <est@odoo.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Quentin THEURET <odoo@kerpeo.com>, 2017
-# Jérémy Donas <LeDistordu@users.noreply.github.com>, 2017
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
-# Lucas Deliege <lud@odoo.com>, 2017
-# Xavier Belmere <Info@cartmeleon.com>, 2017
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
-# Clo <clo@odoo.com>, 2017
-# fr rev <e2ffr04@hotmail.com>, 2017
 # Florian Hatat <mininet@wanadoo.fr>, 2017
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
+# fr rev <e2ffr04@hotmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Florian Hatat <mininet@wanadoo.fr>, 2017\n"
+"Last-Translator: fr rev <e2ffr04@hotmail.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,7 +77,7 @@ msgstr ""
 "    <div style=\"text-align: center; margin-top: 16px;\">\n"
 "        <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Changer le mot de passe</a>\n"
 "    </div>\n"
-"    <p>Si vous n'attendiez pas cet email, vous pouvez l'ignorer.</p>\n"
+"    <p>Si vous n'attendiez pas ce courriel, vous pouvez l'ignorer.</p>\n"
 "    <p>Salutations,</p>\n"
 "</div>\n"
 "<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
@@ -169,7 +171,8 @@ msgid ""
 "containing the following link has been sent:</strong>"
 msgstr ""
 "<strong>Une réinitialisation du mot de passe a été demandée pour cet "
-"utilisateur. Un email lui a été envoyé, contenant le lien suivant :</strong>"
+"utilisateur. Un courriel lui a été envoyé, contenant le lien suivant "
+":</strong>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -177,7 +180,7 @@ msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
 msgstr ""
-"<strong>Une invitation a été envoyée par email. Elle contient le lien "
+"<strong>Une invitation a été envoyée par courriel. Elle contient le lien "
 "suivant pour s'abonner :</strong>"
 
 #. module: auth_signup
@@ -190,14 +193,14 @@ msgstr ""
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr ""
-"Un email a été envoyé avec les informations pour réinitialiser votre mot de "
-"passe"
+"Un courriel a été envoyé avec les informations pour réinitialiser votre mot "
+"de passe"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:52
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr "Un autre utilisateur est déjà enregistré avec cette adresse email."
+msgstr "Un autre utilisateur est déjà enregistré avec cette adresse courriel."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:133
@@ -215,7 +218,8 @@ msgstr "Retour à la page d'authentification"
 #, python-format
 msgid "Cannot send email: user %s has no email address."
 msgstr ""
-"Impossible d'envoyer l'email : l'utilisateur %s n'a pas d'adresse spécifiée."
+"Impossible d'envoyer le courriel : l'utilisateur %s n'a pas d'adresse "
+"courriel."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -230,7 +234,7 @@ msgstr "Confirmez le mot de passe"
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Confirmed"
-msgstr "Confirmé"
+msgstr "Confirmée"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -353,7 +357,7 @@ msgstr "Réinitialiser le mot de passe"
 msgid "Reset password: invalid username or email"
 msgstr ""
 "Veuillez réinitialiser votre mot de passe : nom d'utilisateur ou adresse "
-"email incorrect"
+"courriel incorrecte"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -363,7 +367,7 @@ msgstr "Envoyer les instructions de réinitialisation de mot de passe"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr "Inviter par email"
+msgstr "Inviter par courriel"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.signup
@@ -421,7 +425,7 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
 msgid "Status"
-msgstr "État"
+msgstr "Statut"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_template_user_id
@@ -449,12 +453,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:auth_signup.fields
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr "Votre Email"
+msgstr "Votre courriel"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Your Name"
-msgstr "Votre Nom"
+msgstr "Votre nom"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields

@@ -3,26 +3,25 @@
 # * mrp
 # 
 # Translators:
-# falexandresilva <falexandresilva@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# grazziano <gra.negocia@gmail.com>, 2017
-# Mateus Lopes <mateus1@gmail.com>, 2017
-# danimaribeiro <danimaribeiro@gmail.com>, 2017
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
+# grazziano <gra.negocia@gmail.com>, 2016
+# Mateus Lopes <mateus1@gmail.com>, 2016
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# falexandresilva <falexandresilva@gmail.com>, 2016
+# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2016
+# danimaribeiro <danimaribeiro@gmail.com>, 2016
+# Adriel Kotviski <kotviski@gmail.com>, 2016
+# Ademílson F. Tonato <apraqueisso@gmail.com>, 2016
+# Clemilton Clementino <clemylton@hotmail.com>, 2016
+# Anderson Fratuci <ander.frat@gmail.com>, 2016
 # Silmar <pinheirosilmar@gmail.com>, 2017
-# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2017
-# Adriel Kotviski <kotviski@gmail.com>, 2017
-# Ademílson F. Tonato <apraqueisso@gmail.com>, 2017
-# Clemilton Clementino <clemylton@hotmail.com>, 2017
-# Anderson Fratuci <ander.frat@gmail.com>, 2017
-# André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2017
 # Yannick Belot <yannickbh@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2017-12-13 14:36+0000\n"
+"PO-Revision-Date: 2017-12-13 14:36+0000\n"
 "Last-Translator: Yannick Belot <yannickbh@gmail.com>, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -74,18 +73,6 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_template_used_in_bom_count
 msgid "# of BoM Where is Used"
-msgstr ""
-
-#. module: mrp
-#: model:product.product,description:mrp.product_product_computer_desk_leg
-#: model:product.template,description:mrp.product_product_computer_desk_leg_product_template
-msgid "18″ x 2½″ Square Leg"
-msgstr ""
-
-#. module: mrp
-#: model:product.product,description:mrp.product_product_laptop_charger
-#: model:product.template,description:mrp.product_product_laptop_charger_product_template
-msgid "19v,5.5 x 2.5 mm Pin Type Adapter (Power Cord Included)"
 msgstr ""
 
 #. module: mrp
@@ -261,7 +248,7 @@ msgid "<strong>WorkCenter</strong>"
 msgstr "<strong>Centro de Trabalho</strong>"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:472
+#: code:addons/mrp/models/mrp_workorder.py:486
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled!"
 msgstr ""
@@ -309,6 +296,11 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
+msgid "Add quality checks to your work orders"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "All"
 msgstr "Tudo"
@@ -347,12 +339,6 @@ msgstr "Aprovar"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
 msgstr "Arquivado"
-
-#. module: mrp
-#: model:product.product,name:mrp.product_assembly
-#: model:product.template,name:mrp.product_assembly_product_template
-msgid "Assembly Service Cost"
-msgstr "Custo de Montagem"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_name
@@ -396,11 +382,9 @@ msgstr "Disponível"
 #: model:ir.model.fields,help:mrp.field_product_product_produce_delay
 #: model:ir.model.fields,help:mrp.field_product_template_produce_delay
 msgid ""
-"Average delay in days to produce this product. In the case of multi-level "
-"BOM, the manufacturing lead times of the components will be added."
+"Average lead time in days to manufacture this product. In the case of multi-"
+"level BOM, the manufacturing lead times of the components will be added."
 msgstr ""
-"Atraso médio em dias para produzir este produto. No caso de múltiplos níveis"
-" BOM, os tempos de fabricação de componentes serão adicionados."
 
 #. module: mrp
 #: model:ir.actions.report,name:mrp.action_report_bom_price
@@ -562,12 +546,6 @@ msgid "BoM line product %s should not be same as BoM product."
 msgstr ""
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_computer_desk_bolt
-#: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
-msgid "Bolt"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings_module_mrp_byproduct
 msgid "By-Products"
 msgstr "Por Produtos"
@@ -592,7 +570,7 @@ msgid "Cancelled"
 msgstr "Cancelado"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:316
+#: code:addons/mrp/models/mrp_production.py:317
 #, python-format
 msgid "Cannot delete a manufacturing order not in cancel state"
 msgstr ""
@@ -945,7 +923,7 @@ msgstr "Descartar"
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_mrp_bom_structure_report_display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild_display_name
 msgid "Display Name"
-msgstr "Nome exibido"
+msgstr "Nome para Exibição"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_qty_done
@@ -1166,12 +1144,6 @@ msgid "Group by..."
 msgstr "Agrupar por..."
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_19
-#: model:product.template,name:mrp.product_product_19_product_template
-msgid "HDD on Demand"
-msgstr "HDD on Demand"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_has_attachments
 msgid "Has Attachments"
 msgstr ""
@@ -1373,26 +1345,6 @@ msgid "Kit"
 msgstr ""
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_laptop_charger
-#: model:product.template,name:mrp.product_product_laptop_charger_product_template
-#: model:stock.inventory.line,product_name:mrp.stock_inventory_line_product_laptop_charger
-msgid "Laptop Charger"
-msgstr ""
-
-#. module: mrp
-#: model:stock.inventory.line,product_name:mrp.stock_inventory_product_27_lot0
-#: model:stock.inventory.line,product_name:mrp.stock_inventory_product_27_lot1
-msgid "Laptop Customized"
-msgstr "Laptop Personalizado"
-
-#. module: mrp
-#: model:product.product,name:mrp.product_product_laptop_keypad
-#: model:product.template,name:mrp.product_product_laptop_keypad_product_template
-#: model:stock.inventory.line,product_name:mrp.stock_inventory_line_product_laptop_keypad
-msgid "Laptop Keypad"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty___last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom___last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line___last_update
@@ -1412,7 +1364,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_mrp_bom_structure_report___last_update
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild___last_update
 msgid "Last Modified on"
-msgstr "Última modificação em"
+msgstr "Última Modificação em"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_write_uid
@@ -1455,6 +1407,11 @@ msgid "Last Updated on"
 msgstr "Última atualização em"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_last_working_user_id
+msgid "Last user that worked on this work order."
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1470,7 +1427,7 @@ msgid "Late Activities"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:432
+#: code:addons/mrp/models/mrp_production.py:433
 #, python-format
 msgid ""
 "Lines need to be deleted, but can not as you still have some quantities to "
@@ -1498,7 +1455,7 @@ msgid "Lock"
 msgstr "Trancar"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_8239
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_8384
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Loss Reason"
 msgstr ""
@@ -1603,9 +1560,9 @@ msgid "Manufacturing Operation Type"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_production
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_mo_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_mo_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_production_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_production_id
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap_production_id
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -1778,8 +1735,8 @@ msgstr "Nome"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:46
-#: code:addons/mrp/models/mrp_production.py:302
-#: code:addons/mrp/models/mrp_production.py:306
+#: code:addons/mrp/models/mrp_production.py:303
+#: code:addons/mrp/models/mrp_production.py:307
 #: code:addons/mrp/models/mrp_routing.py:18
 #: code:addons/mrp/models/mrp_routing.py:34
 #: code:addons/mrp/models/mrp_routing.py:35
@@ -1791,12 +1748,6 @@ msgid "New"
 msgstr "Novo"
 
 #. module: mrp
-#: model:product.product,description:mrp.product_product_laptop_keypad
-#: model:product.template,description:mrp.product_product_laptop_keypad_product_template
-msgid "New Original Laptop Keyboard Part No 9GT99"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_batch
 msgid "Next Operation"
 msgstr ""
@@ -1804,6 +1755,11 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_next_work_order_id
 msgid "Next Work Order"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_production_lot_use_next_on_work_order_id
+msgid "Next Work Order to Use"
 msgstr ""
 
 #. module: mrp
@@ -1913,12 +1869,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_oee
 msgid "Oee"
 msgstr ""
-
-#. module: mrp
-#: model:product.product,description:mrp.product_product_19
-#: model:product.template,description:mrp.product_product_19_product_template
-msgid "On demand hard-disk having capacity based on requirement."
-msgstr "Disco rígido On demand com capacidade com base na exigência."
 
 #. module: mrp
 #: selection:mrp.routing.workcenter,batch:0
@@ -2079,7 +2029,7 @@ msgid "Please enter a lot or serial number for %s !"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:288
+#: code:addons/mrp/models/mrp_workorder.py:296
 #, python-format
 msgid ""
 "Please set the quantity you are currently producing. It should be different "
@@ -2099,9 +2049,7 @@ msgstr "Prioridade"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-msgid ""
-"Process operations at specific work centers based on the routing\n"
-"                                        and carry out quality checks."
+msgid "Process operations at specific work centers based on the routing"
 msgstr ""
 
 #. module: mrp
@@ -2160,7 +2108,7 @@ msgid "Product Lifecycle Management (PLM)"
 msgstr ""
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.action_mrp_unbuild_moves
+#: model:ir.actions.act_window,name:mrp.action_mrp_unbuild_move_line
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Product Moves"
 msgstr ""
@@ -2205,6 +2153,7 @@ msgid "Product:"
 msgstr "Produto:"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_mrp_production
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_production_id
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
@@ -2311,7 +2260,7 @@ msgid "Pushed Flow"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_res_config_settings_module_quality_mrp
+#: model:ir.model.fields,field_description:mrp.field_res_config_settings_module_quality_control
 #: selection:mrp.workcenter.productivity.loss,loss_type:0
 msgid "Quality"
 msgstr "Qualidade"
@@ -2592,8 +2541,8 @@ msgid "Scheduled Month"
 msgstr "Agendado Mensalmente"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:590
-#: code:addons/mrp/models/mrp_workorder.py:481
+#: code:addons/mrp/models/mrp_production.py:591
+#: code:addons/mrp/models/mrp_workorder.py:495
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_scrap_ids
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -2615,12 +2564,6 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_scrap_ids
 msgid "Scraps"
-msgstr ""
-
-#. module: mrp
-#: model:product.product,name:mrp.product_product_computer_desk_screw
-#: model:product.template,name:mrp.product_product_computer_desk_screw_product_template
-msgid "Screw"
 msgstr ""
 
 #. module: mrp
@@ -2674,18 +2617,6 @@ msgid "Select"
 msgstr "Selecionar"
 
 #. module: mrp
-#: model:product.product,name:mrp.product_product_build_kit
-#: model:product.template,name:mrp.product_product_build_kit_product_template
-msgid "Self Build Kit"
-msgstr ""
-
-#. module: mrp
-#: model:product.product,description:mrp.product_product_build_kit
-#: model:product.template,description:mrp.product_product_build_kit_product_template
-msgid "Self Build kit."
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_sequence
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_sequence
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_sequence
@@ -2733,33 +2664,9 @@ msgid "Show all records which has next action date is before today"
 msgstr ""
 
 #. module: mrp
-#: model:product.product,description:mrp.product_product_computer_desk_head
-#: model:product.template,description:mrp.product_product_computer_desk_head_product_template
-msgid "Solid wood is a durable natural material."
-msgstr ""
-
-#. module: mrp
-#: model:product.product,description:mrp.product_product_computer_desk
-#: model:product.template,description:mrp.product_product_computer_desk_product_template
-msgid "Solid wood table."
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_origin
 msgid "Source"
 msgstr "Origem"
-
-#. module: mrp
-#: model:product.product,description:mrp.product_product_computer_desk_screw
-#: model:product.template,description:mrp.product_product_computer_desk_screw_product_template
-msgid "Stainless steel screw"
-msgstr ""
-
-#. module: mrp
-#: model:product.product,description:mrp.product_product_computer_desk_bolt
-#: model:product.template,description:mrp.product_product_computer_desk_bolt_product_template
-msgid "Stainless steel screw full (dia - 5mm, Length - 10mm)"
-msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_start
@@ -2799,6 +2706,11 @@ msgid "Stock Movements of Produced Goods"
 msgstr ""
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_mrp_unbuild_moves
+msgid "Stock Moves"
+msgstr "Movimentos de Estoque"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_store_fname
 msgid "Stored Filename"
 msgstr "Nome do Arquivo Armazenado"
@@ -2816,24 +2728,6 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss
 msgid "TPM Big Losses"
-msgstr ""
-
-#. module: mrp
-#: model:product.product,name:mrp.product_product_computer_desk
-#: model:product.template,name:mrp.product_product_computer_desk_product_template
-msgid "Table"
-msgstr "Tabela"
-
-#. module: mrp
-#: model:product.product,name:mrp.product_product_computer_desk_head
-#: model:product.template,name:mrp.product_product_computer_desk_head_product_template
-msgid "Table Head"
-msgstr ""
-
-#. module: mrp
-#: model:product.product,name:mrp.product_product_computer_desk_leg
-#: model:product.template,name:mrp.product_product_computer_desk_leg_product_template
-msgid "Table Leg"
 msgstr ""
 
 #. module: mrp
@@ -3054,7 +2948,7 @@ msgid "Time Tracking"
 msgstr "Monitoramento de Tempo"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:402
+#: code:addons/mrp/models/mrp_workorder.py:416
 #, python-format
 msgid "Time Tracking: "
 msgstr ""
@@ -3287,11 +3181,6 @@ msgid "Url"
 msgstr "Url"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_stock_production_lot_use_next_on_work_order_id
-msgid "Use Next On Work Order"
-msgstr ""
-
-#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid ""
 "Use the Produce button or process the work orders to create some finished "
@@ -3518,17 +3407,14 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_todo
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workorder_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_workorder_ids
+#: model:ir.model.fields,field_description:mrp.field_res_config_settings_group_mrp_routings
+#: model:ir.model.fields,field_description:mrp.field_res_config_settings_module_mrp_workorder
 #: model:ir.ui.menu,name:mrp.menu_mrp_work_order_report
 #: model:ir.ui.menu,name:mrp.menu_mrp_workorder_todo
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_tree_view_inherit
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 msgid "Work Orders"
 msgstr "Ordens de Serviço"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_res_config_settings_group_mrp_routings
-msgid "Work Orders & Quality"
-msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_delta_report
@@ -3576,7 +3462,7 @@ msgid "Work Sheet"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:567
+#: code:addons/mrp/models/mrp_production.py:568
 #, python-format
 msgid "Work order %s is still running"
 msgstr ""
@@ -3622,6 +3508,11 @@ msgid "Working Time"
 msgstr "Tempo de Trabalho"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_working_user_ids
+msgid "Working user on this work order."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_production_messages
 msgid "Workorder Message"
 msgstr "Mensagem de trabalho"
@@ -3639,20 +3530,20 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:521
+#: code:addons/mrp/models/mrp_production.py:522
 #, python-format
 msgid ""
 "You can not cancel production order, a work order is still in progress."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:240
+#: code:addons/mrp/models/mrp_workorder.py:248
 #, python-format
 msgid "You can not change the finished work order."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:553
+#: code:addons/mrp/models/mrp_production.py:554
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
 msgstr ""
@@ -3686,7 +3577,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/wizard/change_production_qty.py:44
+#: code:addons/mrp/wizard/change_production_qty.py:46
 #, python-format
 msgid "You have already processed %d. Please input a quantity higher than %d "
 msgstr ""
@@ -3699,7 +3590,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:392
+#: code:addons/mrp/models/mrp_workorder.py:406
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
@@ -3708,7 +3599,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:388
+#: code:addons/mrp/models/mrp_workorder.py:402
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
@@ -3717,7 +3608,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:446
+#: code:addons/mrp/models/mrp_workorder.py:460
 #, python-format
 msgid ""
 "You need to define at least one unactive productivity loss in the category "
@@ -3732,13 +3623,13 @@ msgid "You need to provide a lot for the finished product"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:314
+#: code:addons/mrp/models/mrp_workorder.py:322
 #, python-format
 msgid "You should provide a lot/serial number for a component"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:291
+#: code:addons/mrp/models/mrp_workorder.py:299
 #, python-format
 msgid "You should provide a lot/serial number for the final product"
 msgstr ""

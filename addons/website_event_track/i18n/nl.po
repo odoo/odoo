@@ -3,18 +3,18 @@
 # * website_event_track
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
-# Cas Vissers <casvissers@brahoo.nl>, 2017
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
-# Eric Geens <ericgeens@yahoo.com>, 2017
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2017\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,7 +46,7 @@ msgstr ""
 "<?xml version=\"1.0\"?>\n"
 "<div>\n"
 "    <p>\n"
-"        Beste<t t-esc=\"object.partner_name\"/>\n"
+"        Beste <t t-esc=\"object.partner_name\"/>\n"
 "    </p><p>\n"
 "        We zijn blij om u te kunnen informeren dat uw voorstel ${object.name} is geaccepteerd en bevestigd voor het evenement ${object.event_id.name}.\n"
 "    </p><p>\n"
@@ -69,12 +69,12 @@ msgstr "<b>Datum</b><br/>"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Mail</b>:"
-msgstr "<b>E-Mail</b>:"
+msgstr "<b>Mail</b>:"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Phone</b>:"
-msgstr "<b>Bel</b>:"
+msgstr "<b>Telefoon</b>:"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -154,6 +154,10 @@ msgid ""
 " * Red indicates something is preventing the progress of this track\n"
 " * Green indicates the track is ready to be pulled to the next stage"
 msgstr ""
+"De kanban status van een track geeft speciale situaties aan die van invloed zijn:\n"
+"* Grijs is de standaard situatie\n"
+"* Rood geeft aan dat iets de voortgang van deze track belemmert\n"
+"* Groen geeft aan dat de track gereed is om naar de volgende fase te worden getrokken"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -209,7 +213,7 @@ msgstr "Aangekondigd"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Application"
-msgstr "Sollicitatie"
+msgstr "Toepassing"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -310,7 +314,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "Delete"
-msgstr "Verwijderen"
+msgstr "Verwijder"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track6
@@ -370,7 +374,7 @@ msgstr "E-mailsjabloon"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_event_id
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Event"
-msgstr "Evenement"
+msgstr "Gebeurtenis"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_type
@@ -636,7 +640,7 @@ msgstr "Beheer uw evenementen met Odoo, de nieuwe training modules"
 #. module: website_event_track
 #: selection:event.track,priority:0
 msgid "Medium"
-msgstr "Gemiddeld"
+msgstr "Kanaal"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_sponsor_image_medium

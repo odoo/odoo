@@ -3,26 +3,26 @@
 # * maintenance
 # 
 # Translators:
-# Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2017
-# Cem Uygur <cemuygur.beb@gmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
-# Murat Kaplan <muratk@projetgrup.com>, 2017
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
-# UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2017
-# gezgin biri <gezginbiri@hotmail.com>, 2017
-# Esin Kandemir <esaykandemir@gmail.com>, 2017
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
+# tanerhasret <tanerhasret@gmail.com>, 2017
 # Ediz Duman <neps1192@gmail.com>, 2017
+# Murat Kaplan <muratk@projetgrup.com>, 2017
+# Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2017
+# Esin Kandemir <esaykandemir@gmail.com>, 2017
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
+# gezgin biri <gezginbiri@hotmail.com>, 2017
+# UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2017
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2017
+# Cem Uygur <cemuygur.beb@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:12+0000\n"
 "PO-Revision-Date: 2017-11-30 13:12+0000\n"
-"Last-Translator: Ramiz Deniz Öner <deniz@denizoner.com>, 2017\n"
+"Last-Translator: Cem Uygur <cemuygur.beb@gmail.com>, 2017\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,7 +81,7 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Bir Python sözlüğü, bu rumuz için yeni kayıtlar oluştururken varsayılan "
+"Bir Piton sözlüğü, bu rumuz için yeni kayıtlar oluştururken varsayılan "
 "değerleri sağlamak için değerlendirilir."
 
 #. module: maintenance
@@ -113,7 +113,7 @@ msgstr "Rumuz Adı"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_domain
 msgid "Alias domain"
-msgstr "Rumuz alanı"
+msgstr "Rumuz etki alanı"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_model_id
@@ -133,12 +133,12 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_archive
 msgid "Archive"
-msgstr "Arşiv"
+msgstr "Arşivle"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Archived"
-msgstr "Arşivlendi"
+msgstr "Arşivlenmiş"
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_equipment_category
@@ -172,7 +172,7 @@ msgstr "Uygun"
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 #: selection:maintenance.request,kanban_state:0
 msgid "Blocked"
-msgstr "Engellendi"
+msgstr "Bloklanmış"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -184,7 +184,7 @@ msgstr "İptal"
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Category"
-msgstr "Kategori"
+msgstr "Kategorisi"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_name
@@ -327,7 +327,7 @@ msgstr "Her bir önleyici bakımlar arasındaki gün"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_defaults
 msgid "Default Values"
-msgstr "Öntanımlı Değer"
+msgstr "Varsayılan Değerler"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
@@ -339,7 +339,7 @@ msgstr "Sil"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_description
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Description"
-msgstr "Açıklama"
+msgstr "Tanım"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_display_name
@@ -487,7 +487,9 @@ msgstr "ID"
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
-msgstr "Takma tutan üst kayıt ID (örnek: proje görev oluşturma takma tutarak)"
+msgstr ""
+"Rumuzu barındıran ata kaydın IDsi (örnek: görev oluşturma rumuzunu "
+"barındıran proje)"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -495,7 +497,7 @@ msgstr "Takma tutan üst kayıt ID (örnek: proje görev oluşturma takma tutara
 #: selection:maintenance.request,kanban_state:0
 #: model:maintenance.stage,name:maintenance.stage_1
 msgid "In Progress"
-msgstr "Sürüyor..."
+msgstr "Devam Eden"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -537,7 +539,7 @@ msgstr "Son Güncelleme"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Late Activities"
-msgstr "Gecikmiş Aktiviteler"
+msgstr "Geciken Aktiviteler"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_location
@@ -780,7 +782,7 @@ msgstr "Üst Model"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "Üst kayıt iş parçacığı kimliği"
+msgstr "Üst Kayıt Konu ID"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_parent_model_id
@@ -809,7 +811,7 @@ msgstr ""
 "Mail gateway'i kullanarak gönderilecek mesajların kurallarını belirleyin\n"
 "- herkes: herkes e-posta alır\n"
 "- iş ortakları: sadece yetkili iş ortakları\n"
-"- takipçiler: sadece ilgili doküman ceya konunun takipçileri\n"
+"- takipçiler: sadece ilgili doküman veya konunun takipçileri\n"
 
 #. module: maintenance
 #: selection:maintenance.request,maintenance_type:0
@@ -1111,7 +1113,7 @@ msgstr "Yapılacak"
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Today Activities"
-msgstr "Bugünkü Aktiviteler"
+msgstr "Bu Gunkü Aktiviteler"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search

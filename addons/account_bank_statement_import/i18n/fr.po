@@ -3,39 +3,38 @@
 # * account_bank_statement_import
 # 
 # Translators:
-# Bertrand LATOUR <divoir@gmail.com>, 2017
-# nthnnl <nathan070@me.com>, 2017
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
-# Saad Thaifa <saad.thaifa@gmail.com>, 2017
-# Quentin THEURET <odoo@kerpeo.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Cyrille de Lambert <cdelambert@teclib.com>, 2017
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
-# Clo <clo@odoo.com>, 2017
-# Eloïse Stilmant <est@odoo.com>, 2017
-# Xavier Belmere <Info@cartmeleon.com>, 2017
-# Lucas Deliege <lud@odoo.com>, 2017
-# Micky Jault <micky037@hotmail.fr>, 2017
-# Olivier Dony <odo@odoo.com>, 2017
-# leemannd <denis.leemann@camptocamp.com>, 2017
-# Nancy Bolognesi <nb@microcom.ca>, 2017
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Cyrille de Lambert <cdelambert@teclib.com>, 2016
+# Clo <clo@odoo.com>, 2016
+# Nancy Bolognesi <nb@microcom.ca>, 2016
+# Daniel & Delphine <dd2013@leschoupinous.net>, 2016
+# Melanie Bernard <mbe@odoo.com>, 2016
+# Fabien Pinckaers <fp@openerp.com>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Olivier Dony <odo@odoo.com>, 2016
+# Quentin THEURET <odoo@kerpeo.com>, 2016
+# Lucas Deliege <lud@odoo.com>, 2016
+# Florian Hatat <mininet@wanadoo.fr>, 2016
+# Xavier Symons <xsy@openerp.com>, 2016
 # Omar Mezga <omar.mezgrane@aldaway.com>, 2017
 # Lucas Deliege <lud@openerp.com>, 2017
-# Florian Hatat <mininet@wanadoo.fr>, 2017
-# Fabien Pinckaers <fp@openerp.com>, 2017
-# Daniel & Delphine <dd2013@leschoupinous.net>, 2017
-# Xavier Symons <xsy@openerp.com>, 2017
-# Melanie Bernard <mbe@odoo.com>, 2017
-# fr rev <e2ffr04@hotmail.com>, 2017
-# fr rev <e2ffr02@hotmail.com>, 2017
+# Eloïse Stilmant <est@odoo.com>, 2017
+# Bertrand LATOUR <divoir@gmail.com>, 2017
+# Micky Jault <micky037@hotmail.fr>, 2017
 # fr trans <e2ftrans1@yahoo.com>, 2017
+# fr rev <e2ffr02@hotmail.com>, 2017
+# fr rev <e2ffr04@hotmail.com>, 2017
+# Saad Thaifa <saad.thaifa@gmail.com>, 2017
+# FR R4 <e2ffr1111@hotmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: fr trans <e2ftrans1@yahoo.com>, 2017\n"
+"POT-Creation-Date: 2017-12-13 14:36+0000\n"
+"PO-Revision-Date: 2017-12-13 14:36+0000\n"
+"Last-Translator: FR R4 <e2ffr1111@hotmail.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,23 +43,30 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_bank_statement_import
+#. openerp-web
+#: code:addons/account_bank_statement_import/static/src/js/account_bank_statement_import.js:13
+#, python-format
+msgid " Import Template for Bank Statements"
+msgstr ""
+
+#. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:241
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
-msgstr "%d transactions avaient déjà été importées et ont été ignorées."
+msgstr "%d transactions ont déjà été importées et ont été ignorées."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:241
 #, python-format
 msgid "1 transaction had already been imported and was ignored."
-msgstr "1 transaction avait déjà été importée et a été ignorée."
+msgstr "1 transaction a déjà été importée et a été ignorée."
 
 #. module: account_bank_statement_import
 #: sql_constraint:account.bank.statement.line:0
 msgid "A bank account transactions can be imported only once !"
 msgstr ""
 "Les transactions d'un compte bancaire ne peuvent être importées qu'une seule"
-" fois !"
+" fois!"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_acc_number
@@ -138,12 +144,12 @@ msgstr "Ligne de relevé bancaire"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_account_setup_bank_data_done
 msgid "Bank setup marked as done"
-msgstr "Configuration de la banque marquée « terminée »"
+msgstr "Configuration de la banque marquée comme terminée"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_belongs_to_company
 msgid "Belong to the user's current company"
-msgstr "Appartient à la société de l'utilisateur"
+msgstr "Appartient à la Société de l'utilisateur en cours"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -260,7 +266,7 @@ msgstr "Compte de débit par défaut"
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_display_name
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_display_name
 msgid "Display Name"
-msgstr "Nom à afficher"
+msgstr "Nom affiché"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -268,8 +274,8 @@ msgid ""
 "Download a bank statement from your bank and import it here. Supported "
 "formats:"
 msgstr ""
-"Télécharger un extrait de votre banque et importez-le ici. Formats "
-"supportés:"
+"Téléchargez un relevé bancaire depuis votre banque et importez-le ici. "
+"Formats acceptés:"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
@@ -391,7 +397,7 @@ msgstr "Tableau de bord graphique Kanban"
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import___last_update
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation___last_update
 msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr "Dernière Modification le"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_write_uid
@@ -448,7 +454,7 @@ msgstr "OK"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_outbound_payment_method_ids
 msgid "Payment Methods"
-msgstr "Moyens de paiement"
+msgstr "Méthodes de paiements"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_profit_account_id
@@ -573,7 +579,7 @@ msgstr ""
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:113
 #, python-format
 msgid "This file doesn't contain any statement."
-msgstr "Ce fichier ne contient aucun extrait."
+msgstr "Ce fichier ne contient aucun relevé."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:121

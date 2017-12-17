@@ -3,29 +3,28 @@
 # * account_voucher
 # 
 # Translators:
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# Gustavo Valverde <g.valverde02@gmail.com>, 2017
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
-# José Vicente <txusev@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Daniel Blanco <daniel@blancomartin.com.ar>, 2017
-# David Perez <david@closemarketing.es>, 2017
-# Luis M. Triana <luis.triana@jarsa.com.mx>, 2017
-# Javier Ramirez <elbomba887@gmail.com>, 2017
-# RGB Consulting <odoo@rgbconsulting.com>, 2017
-# Carles Antoli <carlesantoli@hotmail.com>, 2017
-# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
-# Antonio Trueba <atgayol@gmail.com>, 2017
-# Rafael Blasco <rafabn@antiun.com>, 2017
-# Ivan Nieto <ivan.n.s@tuta.io>, 2017
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
+# Christopher Ormaza <chris.ormaza@gmail.com>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# José Vicente <txusev@gmail.com>, 2016
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# David Perez <david@closemarketing.es>, 2016
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
+# Javier Ramirez <elbomba887@gmail.com>, 2016
+# Antonio Trueba <atgayol@gmail.com>, 2016
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:52+0000\n"
 "PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017\n"
+"Last-Translator: Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,7 +42,7 @@ msgid ""
 msgstr ""
 "* El estado 'Borrador' se usa cuando un usuario está introduciendo un nuevo y no confirmado comprobante. \n"
 "* 'Pro-forma' se establece cuando el comprobante está en estado pro-forma. El comprobante aún no tiene un número de comprobante. \n"
-"* El estado 'Validado' se usa cuando el usuario confirma el comprobante, asignándole un número de comprobante y creándose los asientos contables. \n"
+"* El estado 'Asentado' se usa cuando el usuario confirma el comprobante, asignándole un número de comprobante y creándose los asientos contables. \n"
 "* El estado 'Cancelado' se usa cuando el usuario cancela el comprobante."
 
 #. module: account_voucher
@@ -75,7 +74,7 @@ msgstr "Importe"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_analytic_id
 msgid "Analytic Account"
-msgstr "Cuenta Analítica"
+msgstr "Cuenta analítica"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -88,7 +87,7 @@ msgstr "¿Está seguro de que desea cancelar este recibo?"
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Bill Date"
-msgstr "Fecha de factura"
+msgstr "Fecha factura"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -182,7 +181,7 @@ msgstr "Descripción"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_display_name
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_display_name
 msgid "Display Name"
-msgstr "Nombre a Mostrar"
+msgstr "Nombre a mostrar"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -219,7 +218,7 @@ msgstr "Da la secuencia de esta línea cuando se visualiza en el comprobante."
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Group By"
-msgstr "Agrupar Por"
+msgstr "Agrupar por"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_id
@@ -264,19 +263,19 @@ msgstr "Apuntes contables"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher___last_update
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line___last_update
 msgid "Last Modified on"
-msgstr "Última Modificación en"
+msgstr "Última modificación en"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_uid
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_uid
 msgid "Last Updated by"
-msgstr "Última Actualización por"
+msgstr "Última actualización por"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_date
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_date
 msgid "Last Updated on"
-msgstr "Última Actualización el"
+msgstr "Última actualización el"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_narration
@@ -342,14 +341,14 @@ msgstr "Por favor, defina una secuencia para el diario."
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Posted"
-msgstr "Validado"
+msgstr "Publicado"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Posted Vouchers"
-msgstr "Comprobantes validados"
+msgstr "Comprobantes asentados"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -390,7 +389,7 @@ msgstr "Cantidad"
 #. module: account_voucher
 #: selection:account.voucher,voucher_type:0
 msgid "Sale"
-msgstr "Oferta"
+msgstr "Venta"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
@@ -457,7 +456,7 @@ msgstr "Importe impuesto"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
 msgid "Tax Correction"
-msgstr ""
+msgstr "Corrección del impuesto"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
@@ -517,7 +516,7 @@ msgstr "Proveedor"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Vendor Voucher"
-msgstr "Pago de proveedor"
+msgstr "Comprobante del vendedor"
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:97

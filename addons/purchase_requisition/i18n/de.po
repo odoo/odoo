@@ -3,27 +3,26 @@
 # * purchase_requisition
 # 
 # Translators:
-# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
 # Renzo Meister <info@jamotion.ch>, 2017
-# Gab_Odoo <gab@odoo.com>, 2017
-# Andi <flimflam@salasar.de>, 2017
-# Henry Mineehen <info@mineehen.de>, 2017
+# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
 # darenkster <inactive+darenkster@transifex.com>, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# Philipp Hug <philipp@hug.cx>, 2017
-# Niki Waibel <niki.waibel@gmail.com>, 2017
 # Rudolf Schnapka <rs@techno-flex.de>, 2017
+# Niki Waibel <niki.waibel@gmail.com>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
 # Dejan Dinic <dejan.dinic@bluewin.ch>, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
+# Henry Mineehen <info@mineehen.de>, 2017
+# Philipp Hug <philipp@hug.cx>, 2017
+# Andi <flimflam@salasar.de>, 2017
 # DE T1 <e2f8846@yahoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2017-12-13 14:37+0000\n"
+"PO-Revision-Date: 2017-12-13 14:37+0000\n"
 "Last-Translator: DE T1 <e2f8846@yahoo.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -90,7 +89,7 @@ msgstr "<strong>Lieferant</strong>"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_date_end
 msgid "Agreement Deadline"
-msgstr "Vertragsfrist"
+msgstr "Vereinbarungsfrist"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_name
@@ -100,14 +99,14 @@ msgstr "Vertragsreferenz"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_exclusive
 msgid "Agreement Selection Type"
-msgstr "Vertrag Auswahltyp"
+msgstr "Vereinbarung Auswahltyp"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10513
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10747
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_name
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
-msgstr "Vertragsart"
+msgstr "Vereinbarungsart"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.res_config_settings_view_form
@@ -118,7 +117,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_account_analytic_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_account_analytic_id
 msgid "Analytic Account"
-msgstr "Kostenstelle"
+msgstr "Analysekonto"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
@@ -218,7 +217,7 @@ msgstr "Anzeigename"
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
 msgid "Do not create RfQ lines automatically"
-msgstr "Anfragepositionen nicht automatisch anlegen"
+msgstr "RfQ-Zeilen nicht automatisch anlegen"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -316,8 +315,13 @@ msgstr "Multiple Bestellmeldung"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "My Agreements"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "New Agreements"
-msgstr "Neue Verträge"
+msgstr "Neue Vereinbarungen"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -436,6 +440,12 @@ msgid "Purchase Orders with requisition"
 msgstr "Einkauf durch Bestellmeldung"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_user_id
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Purchase Representative"
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
 msgid "Purchase Requisition"
 msgstr "Bestellmeldung"
@@ -483,7 +493,7 @@ msgstr "Angebotsanfrage"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_list
 msgid "Request for Quotations"
-msgstr "Angebotanfragen"
+msgstr "Angebot anfordern"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -499,12 +509,6 @@ msgstr "Bestellmeldung"
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Reset to Draft"
 msgstr "Zurücksetzen"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_user_id
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "Responsible"
-msgstr "Verantwortlich"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_schedule_date
@@ -537,7 +541,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_sequence
 msgid "Sequence"
-msgstr "Nummernfolge"
+msgstr "Reihenfolge"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
@@ -591,7 +595,7 @@ msgstr "Preis pro ME"
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
 msgid "Use lines of agreement"
-msgstr "Vertragspositionen verwenden"
+msgstr "Vereinbarungspositionen verwenden"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0

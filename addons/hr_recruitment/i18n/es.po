@@ -3,44 +3,42 @@
 # * hr_recruitment
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# Antonio Trueba <atgayol@gmail.com>, 2017
-# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2017
-# Alejandro Die Sanchis <marketing@domatix.com>, 2017
-# Ivan Nieto <ivan.n.s@tuta.io>, 2017
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
-# Raquel Iciarte <ric@odoo.com>, 2017
-# Cristóbal Martí Oliver <info@moblesmarti.com>, 2017
-# José Vicente <txusev@gmail.com>, 2017
-# Ana Juaristi <ajuaristio@gmail.com>, 2017
-# Gelo Joga Landoo <gj@landoo.es>, 2017
-# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2017
-# oihane <oihanecruce@gmail.com>, 2017
-# Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>, 2017
-# Vicent Cubells <vicent.cubells@tecnativa.com>, 2017
-# Carles Antoli <carlesantoli@hotmail.com>, 2017
-# Alejandro Santana <alejandrosantana@anubia.es>, 2017
-# Gustavo Valverde <g.valverde02@gmail.com>, 2017
-# Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2017
-# Miguel Orueta <mo@landoo.es>, 2017
-# Luis M. Triana <luis.triana@jarsa.com.mx>, 2017
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2017
-# Sergio Flores <vitavitae1@gmail.com>, 2017
-# Roberto Lizana <robertolizana@trey.es>, 2017
-# RGB Consulting <odoo@rgbconsulting.com>, 2017
-# David de León <leceda09@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2016
+# Antonio Trueba <atgayol@gmail.com>, 2016
+# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
+# Roberto Lizana <robertolizana@trey.es>, 2016
+# Sergio Hevia <sah@talleresbernesga.com>, 2016
+# Alejandro Die Sanchis <marketing@domatix.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# Cristóbal Martí Oliver <info@moblesmarti.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# José Vicente <txusev@gmail.com>, 2016
+# David Perez <david@closemarketing.es>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
+# Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# Alejandro Santana <alejandrosantana@anubia.es>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
+# Sergio Flores <vitavitae1@gmail.com>, 2016
+# Miguel Orueta <mo@landoo.es>, 2016
 # José Antonio Cuello <inactive+Yopli2k@transifex.com>, 2017
+# David de León <leceda09@gmail.com>, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2017
+# Gelo Joga Landoo <gj@landoo.es>, 2017
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
-# Fernando San Martin Woerner <fsnmartin@gmail.com>, 2017
+# Fernando San Martín Woerner <fsnmartin@gmail.com>, 2017
+# Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-16 08:08+0000\n"
 "PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Fernando San Martin Woerner <fsnmartin@gmail.com>, 2017\n"
+"Last-Translator: Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -422,6 +420,14 @@ msgid ""
 ".</p>\n"
 "<p>Please welcome him/her and help him/her finding his/her marks.</p>"
 msgstr ""
+"\n"
+"<p>Hola a todos,</p>\n"
+"<p>Es un placer anunciar que <strong> ${object.name} </strong> se incorporará como ${object.job_id.name}\n"
+"%if object.department_id:\n"
+"    al ${object.department_id.name}.\n"
+"%endif\n"
+".</p>\n"
+"<p>Por favor, darle la bien venida y ayudarle en sus primeros pasos.</p>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -446,7 +452,7 @@ msgstr "<span class=\"o_stat_text\">Reuniones</span>"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "<span class=\"o_stat_text\">Trackers</span>"
-msgstr "<span class=\"o_stat_text\">Seguidores</span>"
+msgstr "Id del alias"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
@@ -490,6 +496,8 @@ msgid ""
 "Add columns to define the <b>interview stages</b>.<br/><i>e.g. New &gt; "
 "Qualified &gt; First Interview &gt; Recruited</i>"
 msgstr ""
+"Añadir columnas para definir las <b>etapas de selección</b>.<br/><i>ej. "
+"Nuevo &gt; Cualificado &gt; Primera entrevista &gt; Contratado</i>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_address_id
@@ -541,7 +549,7 @@ msgstr "Candidato"
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_hired
 msgid "Applicant Hired"
-msgstr "Candidato contratado"
+msgstr "Solicitante contratado"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_stage_changed
@@ -556,7 +564,7 @@ msgstr "Candidato creado"
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
 msgid "Applicant hired"
-msgstr "Candidato contratado"
+msgstr "Solicitante contratado"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_name
@@ -578,7 +586,7 @@ msgid ""
 msgstr ""
 "Los solicitantes y su CV adjunto se crean automáticamente cuando se envía un correo electrónico.\n"
 "Si instala los módulos de gestión de documentos, todos los CV se indexarán automáticamente,\n"
-"de manera que puede buscar fácilmente a través de su contenido."
+"de modo que puede buscar fácilmente a través de su contenido."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -790,6 +798,8 @@ msgstr "Crear seudónimo"
 msgid ""
 "Create some aliases that will allow you to track where applicants come from."
 msgstr ""
+"Crear algunos alias que le permitirán analizar la procedencia de la "
+"solicitudes."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_create_uid
@@ -927,7 +937,7 @@ msgstr "Descartar"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_display_name
 msgid "Display Name"
-msgstr "Nombre a Mostrar"
+msgstr "Nombre a mostrar"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
@@ -1080,7 +1090,7 @@ msgstr "Diplomado/Licenciado"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Group By"
-msgstr "Agrupar Por"
+msgstr "Agrupar por"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_department
@@ -1169,7 +1179,7 @@ msgstr "Campaña de empleo"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Job Email"
-msgstr ""
+msgstr "Correo del trabajo"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_job_id
@@ -1212,7 +1222,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Job Specific"
-msgstr ""
+msgstr "Empleo específico"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1236,7 +1246,7 @@ msgstr "Fuentes de empleos"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source___last_update
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage___last_update
 msgid "Last Modified on"
-msgstr "Última Modificación en"
+msgstr "Última modificación en"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_last_stage_id
@@ -1247,7 +1257,7 @@ msgstr "Última etapa"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_last_stage_update
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Last Stage Update"
-msgstr "Última actualización de la etapa"
+msgstr "última actualización de la etapa"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_write_uid
@@ -1256,7 +1266,7 @@ msgstr "Última actualización de la etapa"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_write_uid
 msgid "Last Updated by"
-msgstr "Última Actualización por"
+msgstr "Última actualización por"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_write_date
@@ -1264,7 +1274,7 @@ msgstr "Última Actualización por"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_write_date
 msgid "Last Updated on"
-msgstr "Última Actualización el"
+msgstr "Última actualización el"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1278,6 +1288,7 @@ msgstr "Actividades tardías"
 msgid ""
 "Let's have a look at the <b>applications pipeline</b> for this job position."
 msgstr ""
+"Echa un vistazo al <b>proceso seguido</b> para este puesto de trabajo."
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_manager
@@ -1381,7 +1392,7 @@ msgstr "Sin asunto"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
 msgid "No document yet."
-msgstr ""
+msgstr "Sin documento aun."
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -1440,11 +1451,14 @@ msgid ""
 "                  and manage the recruitment process related to the job\n"
 "                  position."
 msgstr ""
+"Una vez creado el puesto de trabajo, puede hacer seguimiento de las solicitudes\n"
+"                relacionadas y gestionar el proceso de selección relativo al puesto\n"
+"                de trabajo."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Ongoing"
-msgstr ""
+msgstr "En proceso"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings_module_website_hr_recruitment
@@ -1542,7 +1556,7 @@ msgstr "Id. del hijo de registro"
 #: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Recruitment"
-msgstr "Proceso de selección"
+msgstr "Proceso de Selección"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_job_stage_act
@@ -1597,12 +1611,12 @@ msgstr "Rechazada"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Reopen Application"
-msgstr ""
+msgstr "Reabrir solicitud"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
 msgid "Reports"
-msgstr "Informes"
+msgstr "Notas"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_requirements
@@ -1674,7 +1688,7 @@ msgstr "Secuencia"
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_global_settings
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Settings"
-msgstr "Ajustes"
+msgstr "Configuración"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1686,7 +1700,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_source_id
 msgid "Source"
-msgstr "Origen"
+msgstr "Texto original"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_name
@@ -1709,6 +1723,8 @@ msgstr "Orígen de los solicitantes"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Specific job that uses this stage. Other jobs will not use this stage."
 msgstr ""
+"Empleo específico que utiliza esta etapa. Otros empleos no utilizarán esta "
+"etapa."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_stage_id
@@ -1840,6 +1856,8 @@ msgid ""
 "These aliases can be emails or urls for every source. When the applicant "
 "arrives here through one of these you'll know where he came from."
 msgstr ""
+"Estos alias pueden ser correos o direcciones url, para cada fuente. Cuando "
+"la solicitud llegue a través de uno de éstos conocerá su procedencia."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_cc
@@ -1860,7 +1878,7 @@ msgstr "Estas personas recibirán correo electronico."
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "This Year"
-msgstr "Este Año"
+msgstr "Este año"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
@@ -1870,6 +1888,9 @@ msgid ""
 "                files so that you can search keywords from the content of these\n"
 "                files."
 msgstr ""
+"Este menú le ayuda a buscar en CVs y cartas de presentación.\n"
+"               Odoo indexa automáticamente archivos .PDF, .DOC, .DOCX, .TXT\n"
+"               por lo que podrá hacer búsquedas por el contenido de estos archivos."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_fold
@@ -1893,6 +1914,8 @@ msgid ""
 "Try to send an email to this address, it will create an application "
 "automatically."
 msgstr ""
+"Pruebe a enviar un correo a esta dirección, se creará una solicitud "
+"automáticamente."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1905,7 +1928,7 @@ msgstr "No asignado"
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 #: model:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
 msgid "Unread Messages"
-msgstr "Mensajes sin leer"
+msgstr "Mensajes por leer"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_write_date
@@ -1930,7 +1953,7 @@ msgstr ""
 #: code:addons/hr_recruitment/static/src/js/tour.js:25
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to the dashboard</b>."
-msgstr ""
+msgstr "Use la barra de migas para <b>volver al tablero</b>."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_user_email
@@ -1948,6 +1971,8 @@ msgstr "Muy bueno"
 #, python-format
 msgid "Want to <b>start recruiting</b> like a pro? <i>Start here.</i>"
 msgstr ""
+"¿Quiere <b>seleccionar personal</b> como un profesional? <i>Empiece por "
+"aquí.</i>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_email_cc
@@ -1957,7 +1982,7 @@ msgstr "Email de los observadores"
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_employee
 msgid "Welcome ${object.name} "
-msgstr ""
+msgstr "Bienvenido/a ${object.name} "
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee

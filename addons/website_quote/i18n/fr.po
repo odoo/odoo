@@ -3,41 +3,39 @@
 # * website_quote
 # 
 # Translators:
-# Eloïse Stilmant <est@odoo.com>, 2017
-# Hubert TETARD <htetard@apik-conseils.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Fabri Yohann <psn@fabri.pw>, 2017
-# Clo <clo@odoo.com>, 2017
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
-# Frédéric Fleurial Monfils <ffm@cetic.be>, 2017
-# Xavier Belmere <Info@cartmeleon.com>, 2017
-# Saad Thaifa <saad.thaifa@gmail.com>, 2017
-# Loic <loic.richard2@gmail.com>, 2017
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
-# ShevAbam <shevabam@gmail.com>, 2017
-# Melanie Bernard <mbe@odoo.com>, 2017
-# Florian Hatat <mininet@wanadoo.fr>, 2017
-# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
-# Richard Mathot <rim@odoo.com>, 2017
-# Micky Jault <micky037@hotmail.fr>, 2017
-# Xavier Symons <xsy@openerp.com>, 2017
-# Nancy Bolognesi <nb@microcom.ca>, 2017
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
-# Fabien Pinckaers <fp@openerp.com>, 2017
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Clo <clo@odoo.com>, 2016
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
+# Fabri Yohann <psn@fabri.pw>, 2016
+# Saad Thaifa <saad.thaifa@gmail.com>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Loic <loic.richard2@gmail.com>, 2016
+# ShevAbam <shevabam@gmail.com>, 2016
+# Melanie Bernard <mbe@odoo.com>, 2016
+# Florian Hatat <mininet@wanadoo.fr>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Nancy Bolognesi <nb@microcom.ca>, 2016
+# Fabien Pinckaers <fp@openerp.com>, 2016
+# Xavier Symons <xsy@openerp.com>, 2016
+# Fabien Bourgeois <fabien@yaltik.com>, 2016
+# Hubert TETARD <htetard@apik-conseils.com>, 2016
 # Damien Bouvy <dbo@odoo.com>, 2017
-# Olivier Dony <odo@odoo.com>, 2017
-# Fabien Bourgeois <fabien@yaltik.com>, 2017
+# Frédéric Fleurial Monfils <ffm@cetic.be>, 2017
+# Richard Mathot <rim@odoo.com>, 2017
+# Eloïse Stilmant <est@odoo.com>, 2017
+# fr rev <e2ffr02@hotmail.com>, 2017
+# Micky Jault <micky037@hotmail.fr>, 2017
+# fr trans <e2ffr05@hotmail.com>, 2017
 # fr rev <e2ffr04@hotmail.com>, 2017
 # Lucas Deliege <lud@odoo.com>, 2017
-# fr trans <e2ffr05@hotmail.com>, 2017
-# fr rev <e2ffr02@hotmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-24 09:00+0000\n"
 "PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: fr rev <e2ffr02@hotmail.com>, 2017\n"
+"Last-Translator: Lucas Deliege <lud@odoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -121,7 +119,7 @@ msgstr ""
 "        <tbody><tr>\n"
 "            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
 "                <p>Cher/chère ${object.partner_id.name},</p><br/>\n"
-"                <p>Votre commande <a href=\"/quote/${object.id}/${object.access_token}\">${object.name}</a> a été validée.</p><br/>\n"
+"                <p>Votre commande <a href=\"/quote/${object.id}/${object.access_token}\">${object.name}</a> a été validée !</p><br/>\n"
 "                \n"
 "                % if object.partner_id.user_ids\n"
 "                <p>Vous pouvez consulter vos devis, vos bons de commande et vos factures sur notre\n"
@@ -129,7 +127,7 @@ msgstr ""
 "                % endif\n"
 "\n"
 "                <p>Si vous avez des questions, n'hésitez pas à nous contacter.</p><br/>\n"
-"                <p>Merci d'avoir choisi ${object.company_id.name}.</p>\n"
+"                <p>Merci d'avoir choisi ${object.company_id.name or \"us\"} !</p>\n"
 "            </td>\n"
 "        </tr><tr>\n"
 "            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
@@ -176,7 +174,7 @@ msgstr "&amp;nbsp;"
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "&amp;times;"
-msgstr "&amp;times;"
+msgstr "&times;"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
@@ -470,7 +468,7 @@ msgstr "Un partenaire officiel d'Odoo s'engage à :"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_search
 msgid "Archived"
-msgstr "Archivé/s"
+msgstr "Archivé"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -487,9 +485,9 @@ msgid ""
 "                                       we know that success is all about the\n"
 "                                       commitment we put on strong services."
 msgstr ""
-"En tant qu'entreprise de services professionnels de premier\n"
-"                                       plan, nous savons que la réussite dépend\n"
-"                                       de notre engagement qualitatif."
+"En tant qu'entreprise de services professionnels de pointe,\n"
+"                                       nous savons que la réussite dépend\n"
+"                                       de notre engagement envers des services de qualité."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.chatter
@@ -737,7 +735,7 @@ msgstr "Remise (%)"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_display_name
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_display_name
 msgid "Display Name"
-msgstr "Nom à afficher"
+msgstr "Nom affiché"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -813,11 +811,6 @@ msgid ""
 "                                your references, your methodology or\n"
 "                                guarantees, your team, SLA, terms and conditions, etc."
 msgstr ""
-"Des modèles de devis travaillés augmenteront de manière\n"
-"                                <strong>significative votre taux de réussite</strong>. La\n"
-"                                première partie concerne généralement votre entreprise,\n"
-"                                vos références, votre méthodologie ou\n"
-"                                vos garanties, votre équipe, vos accords de niveau de service, vos conditions générales, etc."
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -968,7 +961,7 @@ msgstr "Maîtrise parfaitement Odoo"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option___last_update
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template___last_update
 msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr "Dernière Modification le"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_write_uid
@@ -1494,7 +1487,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "Terms &amp; Conditions"
-msgstr "Conditions générales"
+msgstr "Termes et conditions"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_note
@@ -1570,8 +1563,8 @@ msgid ""
 "                                application, using the menu: Configuration /\n"
 "                                Quotation Templates."
 msgstr ""
-"Il s'agit d'un <strong>modèle de devis</strong>. Vous\n"
-"                                pouvez l'adapter à vos besoins depuis l'application <i>Vente</i>\n"
+"Il s'agit d'un <strong>modèle de devis</strong>. Vous devez\n"
+"                                l'adapter à vos besoins depuis l'application <i>Vente</i>\n"
 "                                à l'aide du menu : Configuration /\n"
 "                                Modèles de devis."
 

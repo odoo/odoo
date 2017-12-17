@@ -3,20 +3,22 @@
 # * website_sale
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Cas Vissers <casvissers@brahoo.nl>, 2017
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
-# Eric Geens <ericgeens@yahoo.com>, 2017
-# Melroy van den Berg <webmaster1989@gmail.com>, 2017
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
 # Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
+# Jean-Paul Ladage <j.ladage@zestsoftware.nl>, 2017
+# Melroy van den Berg <webmaster1989@gmail.com>, 2017
+# e2f_nl_c4 <e2f_nl_c4@hotmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 08:59+0000\n"
-"PO-Revision-Date: 2017-10-24 08:59+0000\n"
-"Last-Translator: Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017\n"
+"POT-Creation-Date: 2017-12-13 14:36+0000\n"
+"PO-Revision-Date: 2017-12-13 14:36+0000\n"
+"Last-Translator: e2f_nl_c4 <e2f_nl_c4@hotmail.com>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +32,7 @@ msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.reduction_code
+#: model:ir.ui.view,arch_db:website_sale.cart_lines
 msgid "/shop/cart"
 msgstr "/shop/cart"
 
@@ -49,15 +51,6 @@ msgstr ""
 "30 dagen geld terug garantie<br/>\n"
 "Gratis verzending in de V.S..<br/>\n"
 "Koop nu, ontvang in 2 dagen"
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
-msgid "75 percent less reflection."
-msgstr "75 procent minder reflectie."
 
 #. module: website_sale
 #: model:mail.template,body_html:website_sale.mail_template_sale_cart_recovery
@@ -135,15 +128,6 @@ msgstr ""
 "                                <strong>Betalingsstatus:</strong>"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<br/>\n"
-"                                e.g. for computers:"
-msgstr ""
-"<br/>\n"
-"bijv. voor computers"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "<i class=\"fa fa-arrow-right\" aria-hidden=\"true\"/> Add payment acquirers"
 msgstr ""
@@ -154,11 +138,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.address_kanban
 msgid "<i class=\"fa fa-check\"/> Ship to this address"
 msgstr "<i class=\"fa fa-check\"/> Verzend naar dit adres"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<i class=\"fa fa-envelope-o\"/> Ask Our Experts"
-msgstr "<i class=\"fa fa-envelope-o\"/> Vraag onze experts"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.checkout
@@ -190,7 +169,7 @@ msgid ""
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                         Vind hier de niet achtergelaten winkelmandjes, bijv. de winkelmandjes welke zijn aangemaakt door uw website bezoekers, meer dan en uur geleden en niet bevestigd.</p>\n"
-"                        <p>Stuur ze een e-mail om ze te overtuigen!</p>\n"
+"                        <p>U zou een e-mail moeten sturen naar de klant om ze aan te moedigen!</p>\n"
 "                    "
 
 #. module: website_sale
@@ -218,8 +197,8 @@ msgid ""
 "<span class=\"col-xs-6 text-right text-muted\" title=\"Taxes may be updated "
 "after providing shipping address\"> Taxes:</span>"
 msgstr ""
-"<span class=\"col-xs-6 text-right text-muted\" title=\"BTW worden mogelijk "
-"geüpdate nadat u het verzenadres ingeeft\"> BTW:</span>"
+"<span class=\"col-xs-6 text-right text-muted\" title=\"Belastingen worden "
+"mogelijk geüpdate nadat u het verzenadres ingeeft\"> Belastingen:</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.total
@@ -243,33 +222,6 @@ msgid ""
 msgstr ""
 "<span class=\"fa fa-chevron-right\" aria-hidden=\"true\"/>\n"
 "<span class=\"sr-only\">Volgende</span>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
-"                                Everything is editable in your Odoo website. Feel free to edit any page title, field or button label. Simply hit *Edit* in upper-right corner to start editing the page."
-msgstr ""
-"<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
-"Alles is bewerkbaar in uw Odoo website. Voel je vrij om elke pagina titel, veld of knop te bewerken. Druk eenvoudig op *Bewerken* in de rechterbovenhoek om te beginnen met het bewerken van de pagina."
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
-"                                Offering free delivery with a minimum amount or minimum number of items should drive up your average order value and help to compensate for the delivery costs."
-msgstr ""
-"<span class=\"fa fa-lightbulb-o fa-2x\"/> \n"
-"Gratis levering aanbieden met een minimum aantal of minimum hoeveelheid van items drijft uw gemiddelde order waarde omhoog en helpt u te compenseren voor de verzendkosten."
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
-"                                You can create different rates based on order amount ranges (e.g. $10 up to a $50 order, then $5 beyond)."
-msgstr ""
-"<span class=\"fa fa-lightbulb-o fa-2x\"/> \n"
-"U kan verschillende tarieven aanmaken gebaseerd op order hoeveelheden, (bijvoorbeeld 10€ voor een order van minder dan 50€, bij meer dan 50€ wordt dit 5€)."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.continue_shopping
@@ -307,205 +259,6 @@ msgstr ""
 "<span class=\"hidden-xs\">Verwerk Checkout</span>\n"
 "                                        <span class=\"visible-xs-inline\">Checkout</span>\n"
 "                                        <span class=\"fa fa-long-arrow-right\"/>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"panel-title\">\n"
-"                                        <span class=\"fa\" data-icon=\"\"/>\n"
-"                                        <strong>Import a file</strong><br/>\n"
-"                                        <span class=\"small\">Recommended if &gt;50 items</span>\n"
-"                                    </span>"
-msgstr ""
-"<span class=\"panel-title\">\n"
-"                                        <span class=\"fa\" data-icon=\"\"/>\n"
-"                                        <strong>Importeer een bestand</strong><br/>\n"
-"                                        <span class=\"small\">Aanbevoelen indien &gt;50 items</span>\n"
-"                                    </span>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"panel-title\">\n"
-"                                        <span class=\"fa\" data-icon=\"\"/>\n"
-"                                        <strong> Create manually</strong><br/>\n"
-"                                        <span class=\"small\">Recommended if &lt;50 items</span>\n"
-"                                    </span>"
-msgstr ""
-"<span class=\"panel-title\">\n"
-"                                        <span class=\"fa\" data-icon=\"\"/>\n"
-"                                        <strong> Handmatig aanmaken</strong><br/>\n"
-"                                        <span class=\"small\">Aanbevolen indien &lt;50 items</span>\n"
-"                                    </span>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"panel-title\">\n"
-"                                        <strong> Cross-selling</strong>\n"
-"                                    </span>"
-msgstr ""
-"<span class=\"panel-title\">\n"
-"<strong> Cross-selling</strong>\n"
-"</span>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"panel-title\">\n"
-"                                        <strong> Rules &amp; Formulas</strong>\n"
-"                                    </span>"
-msgstr ""
-"<span class=\"panel-title\">\n"
-"                                        <strong> Regels &amp; formules</strong>\n"
-"                                    </span>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"panel-title\">\n"
-"                                        <strong>Average baskets are &gt; 5 items?</strong><br/>\n"
-"                                            <span class=\"small\"/>\n"
-"                                    </span>"
-msgstr ""
-"<span class=\"panel-title\">\n"
-"<strong>Gemiddelde winkelwagen bevat &gt; 5 items?</strong><br/>\n"
-"<span class=\"small\"/>\n"
-"</span></span>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"panel-title\">\n"
-"                                        <strong>Several Prices</strong>\n"
-"                                    </span>"
-msgstr ""
-"<span class=\"panel-title\">\n"
-"<strong>Verschillende prijzen</strong>\n"
-"</span>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"panel-title\">\n"
-"                                        <strong>Unique Price</strong>\n"
-"                                    </span>"
-msgstr ""
-"<span class=\"panel-title\">\n"
-"<strong>Unieke prijs</strong>\n"
-"</span>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"panel-title\">\n"
-"                                        <strong>Upselling</strong>\n"
-"                                    </span>"
-msgstr ""
-"<span class=\"panel-title\">\n"
-"<strong>Upselling</strong>\n"
-"</span>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"panel-title\">\n"
-"                                        <strong>You have a broad catalog?</strong><br/>\n"
-"                                    </span>"
-msgstr ""
-"<span class=\"panel-title\">\n"
-"<strong>Heeft u een breede catalogus?</strong><br/>\n"
-"</span>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"panel-title\">\n"
-"                                    <span class=\"fa fa-check-square-o\"/>\n"
-"                                    <strong>Customize you product catalog</strong><br/>\n"
-"                                        <span class=\"small\"/>\n"
-"                                </span>"
-msgstr ""
-"<span class=\"panel-title\">\n"
-"<span class=\"fa fa-check-square-o\"/>\n"
-"<strong>Pas uw product catalogus aan</strong><br/>\n"
-"<span class=\"small\"/>\n"
-"</span></span></span>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"panel-title\">\n"
-"                                <span class=\"fa fa-check-square-o\"/>\n"
-"                                <strong>Customize the checkout process</strong><br/>\n"
-"                                    <span class=\"small\"/>\n"
-"                            </span>"
-msgstr ""
-"<span class=\"panel-title\">\n"
-"<span class=\"fa fa-check-square-o\"/>\n"
-"<strong>Pas het bestel proces aan</strong><br/>\n"
-"<span class=\"small\"/>\n"
-"</span></span></span>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"panel-title\"><span class=\"fa fa-cc-paypal\"/><strong> Paypal</strong>\n"
-"                                    <span class=\"small\">Recommended for Starters</span>\n"
-"                                    </span>"
-msgstr ""
-"<span class=\"panel-title\"><span class=\"fa fa-cc-paypal\"/><strong> Paypal</strong>\n"
-"<span class=\"small\">Aanbevolen voor starters</span>\n"
-"</span>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"panel-title\"><span class=\"fa fa-credit-card\"/><strong> "
-"Authorize.net, Ingenico, etc.</strong></span>"
-msgstr ""
-"<span class=\"panel-title\"><span class=\"fa fa-credit-card\"/><strong> "
-"Authorize.net, Ingenico, etc.</strong></span>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"panel-title\"><span class=\"fa fa-lock\"/><strong>Wire "
-"transfer</strong> (slow and inefficient)</span>"
-msgstr ""
-"<span class=\"panel-title\"><span class=\"fa fa-"
-"lock\"/><strong>Overschrijving</strong> (traag en niet effiënt)</span>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"panel-title\"><span class=\"fa fa-shopping-cart\"/><strong> At cost price</strong> (customer pays what you pay)<br/>\n"
-"                            <span class=\"small\">Advised if your packs vary in size/weight and/or if you ship worldwide</span>\n"
-"                            </span>"
-msgstr ""
-"<span class=\"panel-title\"><span class=\"fa fa-shopping-cart\"/><strong> Tegen kostprijs</strong> (klanten betalen wat u betaalt)<br/></span>\n"
-"<span class=\"small\">Geadviseerd als uw pakketten variëren in grootte/gewicht en/of u verzend naar de hele wereld.</span>\n"
-"</span>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"panel-title\"><span class=\"fa fa-smile-o\"/><strong> Free delivery</strong><br/>\n"
-"                            </span>"
-msgstr ""
-"<span class=\"panel-title\"><span class=\"fa fa-smile-o\"/><strong> Gratis levering</strong><br/>\n"
-"</span></span>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"panel-title\"><span class=\"fa fa-table\"/><strong> Flat rates</strong> (everybody pays the same)<br/>\n"
-"                            <span class=\"small\">Advised if you target a local audience</span>\n"
-"                            </span>"
-msgstr ""
-"<span class=\"panel-title\"><span class=\"fa fa-table\"/><strong> Vaste tarieven</strong> (iedereen betaald hetzelfde)<br/></span>\n"
-"<span class=\"small\">Geadviseerd wanneer uw zich op lokaal publiek richt</span>\n"
-"</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -552,93 +305,6 @@ msgid "<strong>Add to Cart</strong>"
 msgstr "<strong>Toevoegen aan winkelmandje</strong>"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<strong>Bonuses:</strong> what you get on top of the offer"
-msgstr "<strong>Bonussen:</strong> wat u krijgt bovenop het aanbod"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<strong>Call-to-action</strong> short and clear: Add to Cart, Ask for quote,"
-" etc."
-msgstr ""
-"<strong>Oproep tot actie</strong> kort en helder: Toevoegen aan "
-"winkelmandje, Vraag om offerte, etc."
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<strong>Cons:</strong>"
-msgstr "<strong>Nadelen:</strong>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<strong>Cons:</strong> customers have to check out to find out the delivery "
-"price."
-msgstr ""
-"<strong>Nadelen:</strong> klanten moeten wachten tot de bestelling voor ze "
-"de leverprijs weten."
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<strong>Cons:</strong> may be discouraging for your cheapest items"
-msgstr ""
-"<strong>Nadelen:</strong> de leveringskosten kunnen ontmoedigend zijn voor "
-"de goedkoopste producten."
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<strong>Cons:</strong> will require you to either absorb the cost or "
-"slightly increase your prices to cover it."
-msgstr ""
-"<strong>Nadelen:</strong> vereist dat u of de kost en opneemt of lichtjes uw"
-" prijzen verhoogt om dit te dekken."
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<strong>Features and benefits:</strong> what the product does and why that "
-"is good"
-msgstr ""
-"<strong>Opties en voordelen:</strong> wat het product doet en waarom het "
-"goed is"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<strong>For complex imports</strong> (&gt;5000 items, product variants, "
-"pictures, etc.):"
-msgstr ""
-"<strong>Voor complexe imports</strong> (>5000 items, product varianten, "
-"afbeeldingen, etc.):"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<strong>High-quality pictures</strong>"
-msgstr "<strong>Hoge kwaliteitsfoto's</strong>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<strong>Key features, emotional and commercial content</strong><br/>\n"
-"                            Recommended for at least your top products, because it may have a big impact on your sales and conversion rates."
-msgstr ""
-"<strong>Belangrijkste mogelijkheden, emotionele en commerciële "
-"inhoud</strong><br/> Ten minste aanbevolen voor uw top producten, omdat het "
-"een grote impact kan hebben op uw verkopen en conversie."
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<strong>Mandatory content</strong><br/>"
-msgstr "<strong>Verplichte inhoud</strong><br/>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<strong>Next actions:</strong>"
-msgstr "<strong>Volgende acties:</strong>"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<strong>Order Details:</strong>"
 msgstr "<strong>Order gegevens:</strong>"
@@ -654,99 +320,9 @@ msgid "<strong>Payment Information:</strong>"
 msgstr "<strong>Betalingsinformatie:</strong>"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<strong>Price</strong> with currency"
-msgstr "<strong>Prijs</strong> met valuta"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<strong>Product/Service name</strong>"
-msgstr "<strong>Product/Dienst naam</strong>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<strong>Pros:</strong>"
-msgstr "<strong>Pros:</strong>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<strong>Pros:</strong> being transparent about your charges can help you "
-"gain the trust of your customers."
-msgstr ""
-"<strong>Voordelen:</strong> transparant zijn over uw kosten kan u het "
-"vertrouwen van uw klant opleveren."
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<strong>Pros:</strong> gives you a significant advantage over any "
-"competitors that don't offer the same perk."
-msgstr ""
-"<strong>Voordelen:</strong> geeft u een aanzienlijk voordeel over "
-"concurrenten die niet dezelfde voordelen bieden."
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<strong>Pros:</strong> simple to understand"
-msgstr "<strong>Voordeel:</strong> simpel te begrijpen"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<strong>Reassurance arguments</strong><br/>\n"
-"                            Anticipate your customers questions &amp; worries on practical details like shipping rates &amp; policies, return &amp; replacement policies, payment acquirers &amp; security and your"
-msgstr ""
-"<strong>Geruststellende argumenten</strong><br/>\n"
-"Anticipeer op uw klant zijn vragen &amp; zorgen over praktische informatie zoals verzendkosten &amp; beleidsregels &amp; retouren, betalingsmethodes &amp; algemene condities, etc."
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<strong>See it in action in Odoo</strong><br/>"
-msgstr "<strong>Zie het in actie in Odoo</strong><br/>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<strong>Short description</strong>"
-msgstr "<strong>Korte omschrijving</strong>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<strong>Technical information:</strong> what do you get and how does it "
-"work?"
-msgstr ""
-"<strong>Technische informatie:</strong> wat krijgt u en hoe werkt het?"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<strong>Tip for B2B users:</strong> you can create new manually-processed "
-"payment acquirers (check, purchase order, etc.) by renaming 'Wire Transfer' "
-"or duplicating it."
-msgstr ""
-"<strong>Tip voor B2B gebruikers:</strong> u kunt nieuwe handmatig verwerkte "
-"betaalmethoden (cheque, inkoop order, etc.) door de naam 'overboeking' te "
-"hernoemen of dupliceren."
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<strong>Total:</strong>"
 msgstr "<strong>Totaal:</strong>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<strong>Value proposition:</strong> what’s the end-benefit of this product "
-"and who is it for?"
-msgstr ""
-"<strong>Waardevoorstel:</strong> wat is het eindvoordeel van dit product en "
-"waar is het voor?"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<strong>Variants</strong> like size or color"
-msgstr "<strong>Varianten</strong> zoals maat of kleur"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -807,33 +383,13 @@ msgid "A document to provide"
 msgstr "Een document om aan te leveren"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"A few % discount can bring you twice more customers! Here are a few kinds of"
-" discounts to boost your sales:"
-msgstr ""
-"Een paar % korting kan twee keer zoveel klanten opleveren! Hier zijn een "
-"aantal soorten kortingen om verkoop te stimuleren:"
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_12
-msgid "A great Keyboard. Cordless."
-msgstr "Een geweldig toetsenbord. Draadloos."
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "A rounding per line is advised if your prices are tax-included. That way, "
 "the sum of line subtotals equals the total with taxes."
 msgstr ""
-"Een afronding per lijn is aanbevolen indien uw prijzen inclusief belastingen"
-" zijn. Hierdoor is de som van de regels gelijk aan de totale som met "
-"belastingen."
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
-msgid "A screen worthy of iPad."
-msgstr "Een scherm waardig voor de iPad."
+"Een afronding per regel is aanbevolen indien uw prijzen inclusief BTW zijn. "
+"Hierdoor is de som van de regels gelijk aan de totale bedrag inclusief BTW."
 
 #. module: website_sale
 #. openerp-web
@@ -848,18 +404,18 @@ msgid "Abandoned Cart"
 msgstr "Achtergelaten winkelmandje"
 
 #. module: website_sale
+#. openerp-web
 #: code:addons/website_sale/models/crm_team.py:45
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:19
 #: model:ir.actions.act_window,name:website_sale.action_abandoned_orders_ecommerce
+#: model:ir.actions.act_window,name:website_sale.action_view_abandoned_tree
 #: model:ir.ui.menu,name:website_sale.menu_orders_abandoned_orders
 #, python-format
 msgid "Abandoned Carts"
 msgstr "Achtergelaten winkelmandjes"
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:21
 #: model:ir.ui.view,arch_db:website_sale.crm_team_salesteams_view_kanban_inherit_website_sale
-#, python-format
 msgid "Abandoned Carts to Recover"
 msgstr "Achtergelaten winkelmandjes herstel"
 
@@ -867,17 +423,6 @@ msgstr "Achtergelaten winkelmandjes herstel"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_cart_abandoned_delay
 msgid "Abandoned Delay"
 msgstr "Vertraging voor achterlaten"
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
-msgid ""
-"About the size of a credit card — and just 5.4 mm thin — iPod nano is the thinnest iPod ever made.\n"
-"                                    The 2.5-inch Multi-Touch display is nearly twice as big as the display on the previous iPod nano,\n"
-"                                    so you can see more of the music, photos, and videos you love."
-msgstr ""
-"Ongeveer de grootte van een creditcard - en slechts 5.4 mm dun - iPod nano is de dunste iPod ooit gemaakt.\n"
-"Het 2.5-inch multi-touch scherm is bijna tweemaal zo groot als het scherm van de vorige iPod nano,\n"
-"zodat u meer kan zien van de muziek, foto's en video's waar u zo van houdt."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_accessory_product_ids
@@ -893,37 +438,15 @@ msgstr ""
 "accessoires op basis van alle aan het winkelmandje toegevoegde producten."
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Accessories: screen, mouse"
-msgstr "Accessoires: scherm, muis"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_accessory_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_accessory_product_ids
 msgid "Accessory Products"
 msgstr "Product accessoires"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Add a step to request some extra customer data (picking preferences, etc.)"
-msgstr ""
-"Voeg een stap om extra klant data te vragen (picking voorkeuren, etc.)"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
 msgid "Add to Cart"
 msgstr "Voeg toe aan mandje"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Add to Cart button"
-msgstr "Voeg toe aan mandje knop"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Address"
-msgstr "Adres"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.option_collapse_products_categories
@@ -951,7 +474,7 @@ msgstr "Sta toe om te gebruiken op"
 #: model:ir.model.fields,field_description:website_sale.field_product_product_alternative_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_alternative_product_ids
 msgid "Alternative Products"
-msgstr "Alternatieve producten"
+msgstr "Alternatieve Producten"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.recommended_products
@@ -964,36 +487,9 @@ msgid "Amount of Abandoned Carts"
 msgstr "Aantal achtergelaten winkelmandjes"
 
 #. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
-msgid ""
-"And at the Apple Online Store, you can configure your iMac with an even more"
-" powerful Intel Core i7 processor, up to 3.5GHz."
-msgstr ""
-"En in de Apple webwinkel kan u uw iMac configureren met een nog krachtigere "
-"Intel Core i7 processor, tot 3.5GHz."
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_2
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_3
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_5
-msgid "And because it’s so easy to use, it’s easy to love."
-msgstr ""
-"En omdat het zo gemakkelijk te gebruiken is het gemakkelijk om van te "
-"houden."
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "Apply"
 msgstr "Toepassen"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Apply multi-currencies"
-msgstr "Toestaan meerdere valuta"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1040,32 +536,8 @@ msgid "Average Order"
 msgstr "Gemiddelde order"
 
 #. module: website_sale
-#: model:res.country.group,name:website_sale.benelux
-msgid "BeNeLux"
-msgstr "BeNeLux"
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
-msgid "Beautiful 7.9‑inch display."
-msgstr "Prachtig 7.9 inch scherm."
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
-msgid "Beautiful widescreen display."
-msgstr "Prachtige breedscherm display."
-
-#. module: website_sale
-#: model:product.pricelist,name:website_sale.list_benelux
-msgid "Benelux"
-msgstr "Benelux"
-
-#. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:104
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:106
 #, python-format
 msgid "Best Sellers"
 msgstr "Beste verkopers"
@@ -1087,26 +559,10 @@ msgid ""
 "codes. Specific conditions can be set (products, customers, minimum purchase"
 " amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
-msgid "Brilliance onscreen. And behind it."
-msgstr "Pracht op het scherm. En erachter."
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
-msgid ""
-"Buttons let you quickly play, pause, change songs, or adjust the volume.\n"
-"                                    The smooth anodized aluminum design makes iPod nano feel as good as it sounds.\n"
-"                                    And iPod nano wouldn’t be iPod nano without gorgeous, hard-to-choose-from color."
-msgstr ""
-"Knoppen laten u snel afspelen, pauzeren, liedjes wijzigen, of het volume wijzigen.\n"
-"Het gladde geanodiseerde aluminium ontwerp doet de iPod nano aanvoelen zoals hij klinkt.\n"
-"En iPod nano zou geen iPod nano zijn zonder de prachtige, moeilijk te kiezen kleur."
+"Verhoog uw verkopen met twee soorten kortingsprogramma's: promoties en "
+"coupon codes. Specifieke condities kunnen worden ingesteld (producten, "
+"klanten, minimaal bestel bedrag, periode). Beloningen kunnen kortingen (% of"
+" bedrag) of gratis producten zijn."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_can_directly_mark_as_paid
@@ -1114,13 +570,8 @@ msgid "Can be directly marked as paid"
 msgstr "Kan direct worden gemarkeerd als betaald"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Can take up to several days to receive the money"
-msgstr "Kan tot enkele dagen duren voor het geld ontvangen is"
-
-#. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:12
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:14
 #, python-format
 msgid "Capture order payments when the delivery is completed."
 msgstr "Ontvang betalingen voor order wanneer de levering compleet is."
@@ -1154,13 +605,7 @@ msgid "Carts"
 msgstr "Winkelmandjes"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Cash amount or percentage discounts"
-msgstr "Vast bedrag of percentage korting"
-
-#. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_catalog
-#: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Catalog"
 msgstr "Catalogus"
 
@@ -1199,11 +644,6 @@ msgstr ""
 "verschillende categorieën."
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Change"
-msgstr "Wijzigen"
-
-#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_sale_order_can_directly_mark_as_paid
 msgid ""
 "Checked if the sales order can directly be marked as paid, i.e. if the quotation\n"
@@ -1219,21 +659,16 @@ msgid "Children Categories"
 msgstr "Onderliggende categorien"
 
 #. module: website_sale
-#: model:product.pricelist,name:website_sale.list_christmas
-msgid "Christmas"
-msgstr "Kerstmis"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "City"
-msgstr "Plaats"
+msgstr "Gemeente"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.products
 msgid ""
 "Click <i>'New'</i> in the top-right corner to create your first product."
 msgstr ""
-"Klik op <i>'Nieuw'</i> in de rechter bovenhoek om uw eerste product aan te "
+"Klik op <i>'Nieuw'</i> in de rechter bovenhoek om uw eerst product aan te "
 "maken."
 
 #. module: website_sale
@@ -1247,11 +682,6 @@ msgstr "Klik hier"
 #, python-format
 msgid "Click here to set an image describing your product."
 msgstr "Klik hier om een afbeelding in te stellen die je product omschrijft."
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Click here to unfold a Good Product Page"
-msgstr "Klik hier om een goede product pagina te maken"
 
 #. module: website_sale
 #. openerp-web
@@ -1278,29 +708,14 @@ msgid "Color"
 msgstr "Kleur"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Community &amp; Enterprise users:"
-msgstr "Community &amp; Enterprise gebruikers:"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Company Details"
-msgstr "Bedrijfsgegevens"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "Company Name"
 msgstr "Bedrijfsnaam"
 
 #. module: website_sale
-#: model:product.public.category,name:website_sale.Components
-msgid "Components"
-msgstr "Componenten"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr "Bereken verzendkosten en verstuur met DHL."
+msgstr "Bereken verzendkosten en verstuur met DHL"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1328,26 +743,6 @@ msgid "Compute shipping costs on orders"
 msgstr "Bereken afleverkosten op orders"
 
 #. module: website_sale
-#: model:product.public.category,name:website_sale.Computer_all_in_one
-msgid "Computer all-in-one"
-msgstr "Computer all-in-one"
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.sub_computers
-msgid "Computers"
-msgstr "Computers"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Configure your delivery methods (pricing, destinations)"
-msgstr "Configureer uw leveringsmethodes (prijs, bestemmingen)"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Configure your pricelists"
-msgstr "Stel uw prijslijst in"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.checkout
 msgid "Confirm <span class=\"fa fa-long-arrow-right\"/>"
 msgstr "Bevestig <span class=\"fa fa-long-arrow-right\"/>"
@@ -1364,7 +759,7 @@ msgstr "Bevestig order <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:5
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:6
 #, python-format
 msgid "Confirm orders when you get paid."
 msgstr "Bevestig orders wanneer u betaald wordt."
@@ -1372,7 +767,7 @@ msgstr "Bevestig orders wanneer u betaald wordt."
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Confirmation Email"
-msgstr "Bevestiging e-mailadres"
+msgstr "Bevestigingsemailadres"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -1409,11 +804,6 @@ msgid "Country..."
 msgstr "Land..."
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Create your product items"
-msgstr "Maak uw producten aan"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_create_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_create_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_style_create_uid
@@ -1428,26 +818,7 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
-msgid ""
-"Creating such a stunningly thin design took some equally stunning feats of "
-"technological innovation. We refined,re-imagined,or re-engineered everything"
-" about iMac from the inside out. The result is an advanced, elegant all-in-"
-"one computer that’s as much a work of art as it is state of the art."
-msgstr ""
-"Zo een prachtig dun design ontwerpen vroeg ook voor even prachtige "
-"technologische innovatie. We hebben alles aan de iMac verfijnd, her-bedacht "
-"of her-ontwikkelt van de binnenkant uit. Het resultaat is een geavanceerde, "
-"elegante alles in één computer die net zoveel een kunstwerk is als het "
-"nieuwste van het nieuwste."
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-#: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Currencies"
 msgstr "Valuta"
 
@@ -1457,19 +828,9 @@ msgid "Customer Experience"
 msgstr "Klant ervaring"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Customer Segments"
-msgstr "Klantsegmenten"
-
-#. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
 msgid "Customers"
 msgstr "Klanten"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Customers review:"
-msgstr "Klanten review:"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1492,11 +853,6 @@ msgid "Default Sales Tax"
 msgstr "Standaard verkoop BTW"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Default mode"
-msgstr "Standaard modus"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Default recovery email to send when a cart is abandoned"
 msgstr ""
@@ -1507,11 +863,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Default sales tax applied to local transactions"
 msgstr "Standaard verkoop BTW toegepast op lokale transacties"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Delivery Strategy"
-msgstr "Afleverstrategie"
 
 #. module: website_sale
 #: selection:res.config.settings,sale_delivery_settings:0
@@ -1529,28 +880,13 @@ msgid ""
 "shipping costs"
 msgstr ""
 "Leveringsmethoden zijn selecteerbaar op de website: de klant betaalt "
-"verzendkosten"
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
-msgid "Design. The thinnest iPod ever."
-msgstr "Design, de dunste iPod ooit."
+"verzondkosten"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_website_sequence
 #: model:ir.model.fields,help:website_sale.field_product_template_website_sequence
 msgid "Determine the display order in the Website E-commerce"
 msgstr "Bepaald de weergave volgorde  in de E-commerce website"
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.devices
-msgid "Devices"
-msgstr "Apparaten"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Discount % or amounts, margins, roundings, periods, etc."
-msgstr "Kortingen % of vaste bedragen, marges, afrondingen, periodes etc."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_display_name
@@ -1582,16 +918,6 @@ msgid "E-commerce Promotional Code"
 msgstr "E-commerce promotiecode"
 
 #. module: website_sale
-#: model:product.pricelist,name:website_sale.list_europe
-msgid "EUR"
-msgstr "EUR"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Ease the product browsing with:"
-msgstr "Vereenvoudig het product zoeken met:"
-
-#. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:32
 #, python-format
@@ -1602,13 +928,6 @@ msgstr "Wijzig de prijs van dit artikel door te klikken op het bedrag."
 #: model:ir.ui.view,arch_db:website_sale.address_kanban
 msgid "Edit this address"
 msgstr "Wijzig het adres"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Edit your payment policies and security to reassure your visitors"
-msgstr ""
-"Bewerk uw betalingsbeleid en de beveiliging om uw bezoekers gerust te "
-"stellen"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -1623,7 +942,7 @@ msgstr "E-mailsjabloon"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "E-mail samenstellen wizard"
+msgstr "Wizard e-mail opstellen"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1633,7 +952,7 @@ msgstr "E-mail voor achtergelaten orders"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings_order_mail_template
 msgid "Email sent to customer at the end of the checkout process"
-msgstr "E-mail verstuurd naar de klant aan het eind van het bestel proces."
+msgstr "E-mail verstuurt naar de klant aan het eind van het bestel proces."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1654,53 +973,6 @@ msgid "Error ! You cannot create recursive categories."
 msgstr "Fout! het is niet mogelijk recursieve categorieën te maken!"
 
 #. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
-msgid ""
-"Everything you love about iPad — the beautiful\n"
-"                                    screen, fast Colors are vivid and text is sharp on the iPad mini display.\n"
-"                                    But what really makes it stand out is its size. At 7.9 inches,\n"
-"                                    it’s perfectly sized to deliver an experience every bit as big as iPad."
-msgstr ""
-"Alles waar u van zal houden bij de iPad - het prachtige\n"
-"scherm, snelle kleuren zijn levendig en tekst is scherp op het iPad mini scherm.\n"
-"Maar wat het er echt doet uitstaan is zijn grootte. Met 7.9 inch,\n"
-"is het perfect van grootte om een even grote ervaring te leveren als de iPad."
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_2
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_3
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_5
-msgid ""
-"Everything you love about iPad — the beautiful\n"
-"                                    screen, fast and fluid performance, FaceTime and\n"
-"                                    iSight cameras, thousands of amazing apps, 10-hour\n"
-"                                    battery life* — is everything you’ll love about\n"
-"                                    iPad mini, too. And you can hold it in one hand."
-msgstr ""
-"Alles waar u van zal houden bij de iPad - het prachtige scherm, snelle en vlotte performantie, FaceTime en\n"
-"ISight camera's, duizenden geweldige apps, 10-uur\n"
-"batterij levensduur - is alles waar u van zal houden bij de\n"
-"iPad mini. En u kan het vasthouden in één hand."
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
-msgid ""
-"Everything you love about iPad — the beautiful screen,\n"
-"                                        fast and fluid performance, FaceTime and iSight cameras, \n"
-"                                        thousands of amazing apps, 10-hour battery life* — is everything\n"
-"                                        you’ll love about iPad mini, too. And you can hold it in one hand."
-msgstr ""
-"Alles waar u van zal houden bij de iPad - het prachtige scherm, snelle en vlotte performantie, FaceTime en\n"
-"ISight camera's, duizenden geweldige apps, 10-uur\n"
-"batterij levensduur - is alles waar u van zal houden bij de\n"
-"iPad mini. En u kan het vasthouden in één hand."
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.External_Hard_Drive
-msgid "External Hard Drive"
-msgstr "Externe hard schijf"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info_option
 msgid "Extra Info<span class=\"chevron\"/>"
 msgstr "Extra Info<span class=\"chevron\"/>"
@@ -1709,11 +981,6 @@ msgstr "Extra Info<span class=\"chevron\"/>"
 #: model:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Extra Step"
 msgstr "Extra stap"
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
-msgid "Fast connections.The world over."
-msgstr "Snelle connecties. De wereld over."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1731,28 +998,9 @@ msgid ""
 "Find here all the abandoned carts, i.e. the carts generated by your "
 "website's visitors more than one hour ago and not confirmed."
 msgstr ""
-"Vind hier de niet achtergelaten winkelmandjes, bijv. de winkelmandjes welke "
-"zijn aangemaakt door uw website bezoekers, meer dan en uur geleden en niet "
+"Vind hier de niet afgeronde orders, bijv.. de winkelmandjes welke zijn "
+"aangemaakt door uw website bezoekers, meer dan en uur geleden en niet "
 "bevestigd."
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Free and no setup"
-msgstr "Gratis en zonder op te zetten"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Free delivery (see Delivery Strategy section)"
-msgstr "Gratis verzending (zie verzending strategie sectie)"
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
-msgid "Friendly to the environment."
-msgstr "Vriendelijk voor het milieu."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -1760,14 +1008,16 @@ msgid "From Website"
 msgstr "Van website"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:10
+#, python-format
+msgid "Generate an invoice from orders ready for invoicing."
+msgstr "Facturen genereren voor geleverde orders."
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Generate the invoice automatically when the order is confirmed"
 msgstr "Maak de factuur automatisch aan als de order is bevestigd"
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
-msgid "Genius. Your own personal DJ."
-msgstr "Geniaal. Uw eigen persoonlijke DJ."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
@@ -1779,15 +1029,6 @@ msgstr "Geef ons uw feedback..."
 msgid "Gives the sequence order when displaying a list of product categories."
 msgstr ""
 "Geeft de volgorde weer waarin de product categorieën worden weergegeven."
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Go through the checkout process and make sure every single step is tailored "
-"to your activity:"
-msgstr ""
-"Ga door het betalingsproces en zorg ervoor dat elke stap is afgestemd op uw "
-"activiteit:"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_style_html_class
@@ -1805,26 +1046,9 @@ msgid "HTTP routing"
 msgstr "HTTP routing"
 
 #. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
-msgid "Have Genius call the tunes."
-msgstr "Laat Genius de muziek kiezen."
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.payment
 #: model:ir.ui.view,arch_db:website_sale.reduction_code
 msgid "Have a promo code? Fill in this field and apply."
 msgstr "Heeft u een promo code? Vul dit veld en pas toe."
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.Headset
-msgid "Headset"
-msgstr "Headset"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Here are <strong>some pros and cons</strong> to help you decide:<br/>"
-msgstr ""
-"Hier zijn wat <strong>pro's en cons'</strong> om u te helpen kiezen:<br/>"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_attribute_value_html_color
@@ -1834,37 +1058,6 @@ msgid ""
 msgstr ""
 "Hier kunt u een specifieke HTML kleurindex instellen (b.v. #ff0000) om de "
 "kleur weer te geven op de website als de attribuut type 'Kleur' is."
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
-msgid "Highly rated designs."
-msgstr "Hoog beoordeelde designs."
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
-msgid ""
-"How did we make an already gorgeous widescreen display even better? By "
-"making it 75 percent less reflective. And by re-architecting the LCD and "
-"moving it right up against the cover glass. So you see your photos, games, "
-"movies, and everything else in vivid, lifelike detail."
-msgstr ""
-"Hoe hebben we een al prachtige breedbeeldscherm nog beter gemaakt? Door het "
-"75 procent minder reflecterend te maken. En door de LCD opnieuw te ontwerpen"
-" en het te te verplaatsen tot net tegen het afdekglas. Zodat u uw foto's, "
-"spellen, films, en al de rest in levendige, realistisch detail kan zien."
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
-msgid "How to get your groove on."
-msgstr "Hoe u de 'groove' krijgt."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1882,21 +1075,6 @@ msgstr "Ik ga akkoord met de"
 #: model:ir.model.fields,field_description:website_sale.field_product_style_id
 msgid "ID"
 msgstr "ID"
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
-msgid "If it's made for iPad, it's made for iPad mini."
-msgstr "Als het gemaakt is voor de iPad, is het gemaakt voor de iPad mini."
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"If you deal with a major shipper (UPS, FedEx, DHL, etc.), activate the "
-"related connector in Odoo to compute accurate costs and print labels."
-msgstr ""
-"Als u samenwerkt met grote transporteurs (UPS,FedEx, DHL, etc.) activeer dan"
-" de gerelateerde connector in Odoo om de verzendkosten acuraat te berekenen "
-"en de labels te printen."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1961,44 +1139,12 @@ msgid "Images"
 msgstr "Afbeeldingen"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Imagine a new customer adds a product to cart and leaves your website "
-"because of shipping costs... Defining a good delivery strategy is difficult."
-" You don't want to cut into your margins, but you want to remain price-"
-"competitive."
-msgstr ""
-"Stelt u zich voor een nieuwe klant voegt een product aan de winkelwagen en "
-"verlaat uw website vanwege de verzendkosten ... definiëren van een uitlever "
-"strategie is moeilijk. U wilt niet in uw marges  snijden, maar u wilt prijs-"
-"concurrerend blijven."
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
-msgid "Individually calibrated for true-to-life color."
-msgstr "Individueel gekalibreerd voor levensechte kleuren."
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Install Optional Products (cross-selling)"
-msgstr "Installeer optionele producten (cross-selling)"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Install shipping connectors"
-msgstr "Installeer vervoerder connector"
-
-#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings_module_website_sale_stock
 msgid "Installs *e-Commerce Inventory*"
 msgstr "Installeert \"E-commerce voorraad\""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:502
+#: code:addons/website_sale/controllers/main.py:501
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "Foutieve e-mail! Graag een geldig e-mailadres in te geven."
@@ -2025,40 +1171,12 @@ msgid "Issue invoices to customers"
 msgstr "Uitgifte van facturen aan klanten"
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:146
+#: code:addons/website_sale/models/sale_order.py:157
 #, python-format
 msgid "It is forbidden to modify a sales order which is not in draft status"
 msgstr ""
 "Het is verboden om een verkooporder te wijzigen dat zich niet in de concept "
 "fase bevind"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"It's difficult to recommend one over the others. So, simply pick the one "
-"that is more popular in your country!"
-msgstr ""
-"Het is moeilijk één aan te bevelen over de andere. Dus kies er gewoon één "
-"die populairder is in uw land!"
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
-msgid "Key Features"
-msgstr "Hoofd eigenschappen"
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.Keyboard_Mouse
-msgid "Keyboard / Mouse"
-msgstr "Toetsenbord / Muis"
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.laptops
-msgid "Laptops"
-msgstr "Laptops"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image___last_update
@@ -2103,11 +1221,6 @@ msgid "Last Year"
 msgstr "Vorige jaar"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Legal Name"
-msgstr "Legale naam"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Let returning shoppers save products in a whishlist"
 msgstr "Laat terugkerende winkelaars producten opslaan in een wenslijst"
@@ -2116,11 +1229,6 @@ msgstr "Laat terugkerende winkelaars producten opslaan in een wenslijst"
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Let the customer enter a shipping address"
 msgstr "Laat de klant een verzendadres ingeven"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Let them buy straight from catalog with:"
-msgstr "Laat ze direct uit de catalogus kopen met:"
 
 #. module: website_sale
 #. openerp-web
@@ -2141,35 +1249,9 @@ msgstr ""
 "klaar te maken."
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "List displaying"
-msgstr "Lijstweergave"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "Log In"
 msgstr "Login"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Logo"
-msgstr "Logo"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Main Currency"
-msgstr "Hoofdvaluta"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Make sure your customers can go through the shopping process in a very short"
-" time, otherwise they will leave your website. Here are some actions to "
-"tailor the process to your business."
-msgstr ""
-"Zorg ervoor dat uw klanten in een zeer korte tijd door het winkel proces "
-"kunnen gaan, anders zullen ze uw website verlaten. Hier zijn een aantal "
-"acties om het proces aan te passen aan uw bedrijf."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2203,37 +1285,9 @@ msgstr ""
 "formulierweergaves en sommige kanban weergaves"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Min. qty or period"
-msgstr "Min. hvh of periode"
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
-msgid "More energy efficient."
-msgstr "Meer energie efficiëntie."
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_group_website_multiimage
 msgid "Multi-Images"
 msgstr "Meerdere afbeeldingen"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Multi-buy offers (2 products sold together for less than their individual "
-"price)"
-msgstr ""
-"Multi-koop acties (2 producten samen verkocht voor minder dan de losse "
-"prijs)"
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
-msgid "Music. It's what beats inside."
-msgstr "Muziek. Het is wat vanbinnen klopt."
 
 #. module: website_sale
 #. openerp-web
@@ -2260,13 +1314,8 @@ msgid "Name - Z to A"
 msgstr "Naam - Z tot A"
 
 #. module: website_sale
-#: model:product.public.category,name:website_sale.network
-msgid "Network"
-msgstr "Netwerk"
-
-#. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:967
+#: code:addons/website_sale/controllers/main.py:955
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:32
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
@@ -2277,11 +1326,6 @@ msgstr "Nieuw product"
 #: model:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Next <span class=\"fa fa-long-arrow-right\"/>"
 msgstr "Volgende <span class=\"fa fa-long-arrow-right\"/>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "No monthly fees for standard offer"
-msgstr "Geen maandelijkse kosten voor standaard aanbod"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.products
@@ -2338,11 +1382,6 @@ msgid "Online Sales"
 msgstr "Online verkopen"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Online users: we do it for you!"
-msgstr "Online gebruikers: wij doen het voor u!"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_only_services
 msgid "Only Services"
 msgstr "Alleen diensten"
@@ -2358,11 +1397,6 @@ msgstr "Open uw website app hier."
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_module_website_sale_options
 msgid "Optional Products"
 msgstr "Optionele producten"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Options: warranty, software"
-msgstr "Opties: garantie, software"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_order_mail_template
@@ -2402,6 +1436,13 @@ msgstr "Orders naar facturen"
 
 #. module: website_sale
 #. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:11
+#, python-format
+msgid "Orders to Invoice"
+msgstr "Orders om te factureren"
+
+#. module: website_sale
+#. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:88
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:89
 #, python-format
@@ -2409,20 +1450,9 @@ msgid "Orders/Day"
 msgstr "Orders/Dag"
 
 #. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
-msgid "Over 375,000 apps."
-msgstr "Over 375,000 apps."
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_parent_id
 msgid "Parent Category"
 msgstr "Hoofdcategorie"
-
-#. module: website_sale
-#: code:addons/website_sale/controllers/main.py:755
-#, python-format
-msgid "Pay Now"
-msgstr "Betaal nu"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
@@ -2436,19 +1466,13 @@ msgstr "Betaal met"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_acquirers
-#: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Payment Acquirers"
 msgstr "Betaling verwervers"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
 msgid "Payment Information"
-msgstr "Betaalinformatie"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Payment must be reconciled manually"
-msgstr "De betaling dient handmatig afgeletterd te worden"
+msgstr "Betalingsinformatie"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info_option
@@ -2463,15 +1487,10 @@ msgstr "Te capteren betalingen"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:14
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:15
 #, python-format
 msgid "Payments to Capture"
 msgstr "Te capteren betalingen"
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.Pen_Drive
-msgid "Pen Drive"
-msgstr "Pen-drive"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -2479,54 +1498,24 @@ msgid "Phone"
 msgstr "Telefoon"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Pictures gallery:"
-msgstr "Afbeelding galerij:"
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
-msgid "Playlists. The perfect mix for every mood."
-msgstr "Afspeellijsten. De perfecte mix voor elke stemming."
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "Please proceed your current cart."
 msgstr "Ga door met uw huidige bestelling"
 
 #. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
-msgid ""
-"Powered by fourth-generation Intel Core processors, this iMac is the fastest"
-" yet. Every model in the lineup comes standard with a quad-core Intel Core "
-"i5 processor, starting at 2.7GHz and topping out at 3.4GHz."
-msgstr ""
-"Aangedreven door vierde generatie Intel Core processoren, deze iMad is de "
-"snelste tot hiertoe. Elk model in de lijn komt standaard met een quad-core "
-"Intel Core I5 processor, startend vanaf 2.7GHz tot en met 3.4GHz."
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Prefered by some customers"
-msgstr "Voorkeur voor sommige klanten"
-
-#. module: website_sale
-#: code:addons/website_sale/controllers/backend.py:109
+#: code:addons/website_sale/controllers/backend.py:108
 #, python-format
 msgid "Previous Month"
 msgstr "Vorige maand"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/backend.py:107
+#: code:addons/website_sale/controllers/backend.py:106
 #, python-format
 msgid "Previous Week"
 msgstr "Vorige week"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/backend.py:111
+#: code:addons/website_sale/controllers/backend.py:110
 #, python-format
 msgid "Previous Year"
 msgstr "Vorig jaar"
@@ -2560,18 +1549,8 @@ msgid "Pricing"
 msgstr "Prijzen"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Pricing &amp; Discounts"
-msgstr "Prijstelling &amp; Kortingen"
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.printer
-msgid "Printer"
-msgstr "Printer"
-
-#. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:107
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:109
 #: model:ir.model,name:website_sale.model_product_product
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -2607,11 +1586,6 @@ msgid "Product Name"
 msgstr "Productnaam"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Product Pages"
-msgstr "Productpagina's"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product Prices"
 msgstr "Productprijzen"
@@ -2619,7 +1593,7 @@ msgstr "Productprijzen"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_public_category_tree_view
 msgid "Product Public Categories"
-msgstr "Openbare product categorieën"
+msgstr "Publieke product categorieën"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template
@@ -2630,21 +1604,6 @@ msgstr "Productsjabloon"
 #: model:ir.ui.menu,name:website_sale.product_catalog_variants
 msgid "Product Variants"
 msgstr "Productvarianten"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Product attributes filter"
-msgstr "Product kenmerk filter"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Product categories list"
-msgstr "Productcategorie lijst"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Product descriptions"
-msgstr "Product omschrijvingen"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_price
@@ -2670,11 +1629,6 @@ msgid "Products"
 msgstr "Producten"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.reduction_code
-msgid "Promo Code"
-msgstr "Promo code"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale
 msgid "Promote"
 msgstr "Promoot"
@@ -2687,6 +1641,9 @@ msgid ""
 "do so, attach some files to a product using the new Files button and publish"
 " them."
 msgstr ""
+"Geef klanten een product-specifieke link of downloadbare gegevens in de "
+"bevestigingspagina van het bestel proces als dat de betaling verwerkt is. Om"
+" dit te doen, voeg enkele bestanden toe aan het product en publiceer ze."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_template_search_view_website
@@ -2714,38 +1671,19 @@ msgid "Push up"
 msgstr "Naar boven duwen"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Put the practical details (shipping, payment acquirers, etc.) as links in the footer; That way, they will be accessible \n"
-"                            all your product pages."
-msgstr ""
-"Plaats de praktische gegevens (verzending, betalingsmogelijkheden, etc.) als een link in de voettekst, op deze manier zijn ze toegankelijk vanuit\n"
-"al uw productpagina's."
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "Qty:"
 msgstr "Hvh:"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:108
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:110
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 #: model:ir.ui.view,arch_db:website_sale.payment
 #, python-format
 msgid "Quantity"
 msgstr "Hoeveelheid"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Quantity-based discounts (B2B)"
-msgstr "Hoeveelheid gebaseerde korting (B2B)"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Quick and easy to set up"
-msgstr "Snel en gemakkelijk om op te zetten"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_sale_order
@@ -2780,7 +1718,7 @@ msgstr "Beoordeling laatste waarde"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_rating_count
 msgid "Rating count"
-msgstr "Aantal beoordelingen"
+msgstr "Beoordeling teller"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_rating_last_feedback
@@ -2808,54 +1746,6 @@ msgid "Return to the product list."
 msgstr "Terugkeren naar de productlijst"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Review your catalog"
-msgstr "Controleer uw catalogus"
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
-msgid ""
-"Right from the start, apps made for iPad also work with iPad mini.\n"
-"                                    They’re immersive, full-screen apps that let you do almost anything\n"
-"                                    you can imagine. And with automatic updates,\n"
-"                                    you're always getting the best experience possible."
-msgstr ""
-"Apps gemaakt voor de iPad werken ook voor de iPad mini, direct vanaf het begint.\n"
-"Het zijn overweldigende, full-screen apps die u ongeveer alles laten doen\n"
-"wat u kan inbeelden. En met automatische updates,\n"
-"krijgt u altijd de best mogelijke ervaring."
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_2
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_3
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_5
-msgid ""
-"Right from the start, there’s a lot to love about\n"
-"                                    iPad. It’s simple yet powerful. Thin and light yet\n"
-"                                    full-featured. It can do just about everything and\n"
-"                                    be just about anything."
-msgstr ""
-"Direct van het begin is er veel om van te houden bij de\n"
-"iPad. Het is simpel maar krachtig. Dun en licht maar\n"
-"met alle opties. Het kan ongeveer alles doen en\n"
-"ongeveer alles zijn."
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
-msgid ""
-"Right from the start, there’s a lot to love about iPad.\n"
-"                                   It’s simple yet powerful. Thin and light yet full-\n"
-"                                   featured. It can do just about everything and be just\n"
-"                                   about anything.And because it’s so easy to use, it’s\n"
-"                                   easy to love."
-msgstr ""
-"Direct van het begin is er veel om van te houden bij de\n"
-"iPad. Het is simpel maar krachtig. Dun en licht maar\n"
-"met alle opties. Het kan ongeveer alles doen en\n"
-"ongeveer alles zijn. En omdat het gemakkelijk te gebruiken is, is\n"
-"het gemakkelijk om van te houden."
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Rounding Method"
 msgstr "Afrondingsmethode"
@@ -2872,15 +1762,15 @@ msgstr "Verkoop rapport"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:37
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:49
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:34
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:46
 #: model:ir.actions.act_window,name:website_sale.sale_report_action_carts
 #: model:ir.actions.act_window,name:website_sale.sale_report_action_dashboard
 #: model:ir.ui.menu,name:website_sale.menu_report_sales
 #: model:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 #, python-format
 msgid "Sales"
-msgstr "Verkoop"
+msgstr "Verkopen"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_crm_team
@@ -2897,8 +1787,8 @@ msgstr "Verkoop rapport"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:35
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:47
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:32
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:44
 #, python-format
 msgid "Sales Since Last"
 msgstr "Verkopen sinds laatste"
@@ -2910,51 +1800,9 @@ msgid "Salesperson"
 msgstr "Verkoper"
 
 #. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
-msgid ""
-"Say you’re listening to a song you love and you want to stay in the mood.\n"
-"                                        Just tap Genius. It finds other songs on iPod nano that go great together\n"
-"                                        and makes a Genius playlist for you. For more song combinations\n"
-"                                        you wouldn’t have thought of yourself, create Genius Mixes in iTunes\n"
-"                                        and sync the ones you like to iPod nano. Then tap Genius Mixes and\n"
-"                                        rediscover songs you haven’t heard in a while — or find music you forgot you even had."
-msgstr ""
-"Stel dat u aan het luisteren bent naar liedje waar u van houdt en u wilt in dezelfde mood blijven.\n"
-"Klik gewoon op Genius. Het vind andere liedjes op uw iPod nano die geweldig samen passen\n"
-"en maakt een Genius afspeellijst voor u. Voor nog meer liedjes combinaties\n"
-"waar u zelf niet aan had gedacht, maak Genius Mixes in iTunes\n"
-"en synchroniseer degene die u leuk vind op uw iPod nano. Klik vervolgens Genius Mixes aan en her-ontdek muziek die u al een tijdje niet meer heeft gehoord - of vind muziek die u vergeten was."
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.Screen
-msgid "Screen"
-msgstr "Beeldscherm"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "See how to configure delivery methods and shipping connectors"
-msgstr ""
-"Zie hoe levermethoden en verzend connectors geconfigureerd kunnen worden"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "See how to configure payment acquirers"
-msgstr "Laat zien hoe betalingscondities geconfigureerd worden"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "See how to configure pricing &amp; discounts"
-msgstr "Zie hoe prijzen &amp; kortingen geconfigureerd kunnen worden"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "See how to customize your catalog page"
-msgstr "Zie hoe u catalogus pagina aangepast kan worden"
-
-#. module: website_sale
 #: selection:product.attribute,type:0
 msgid "Select"
-msgstr "Selecteren"
+msgstr "Selecteer"
 
 #. module: website_sale
 #. openerp-web
@@ -2965,7 +1813,7 @@ msgid ""
 "your sales."
 msgstr ""
 "Selecteer <b>Nieuw product</b> om het aan te maken en beheer zijn "
-"eigenschappen om uw verkoop te boosten."
+"eigenschappen om uw verkoop te boosten"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2982,29 +1830,9 @@ msgid "Select this address"
 msgstr "Selecteer dit adres"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Select your pricing preference and allow discounts"
-msgstr "Stel uw prijsstelling voorkeur in en sta kortingen toe"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Select your shipping management policy"
-msgstr "Selecteer uw verzendkosten beleid"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist_selectable
 msgid "Selectable"
 msgstr "Kiesbaar"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Sell"
-msgstr "Verkoop"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Sell More"
-msgstr "Verkoop meer"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3033,7 +1861,7 @@ msgstr "Stuur een herstel e-mail naar de geauthentificeerde bestellers"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:19
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:18
 #, python-format
 msgid "Send a recovery email to visitors who haven't completed their order."
 msgstr ""
@@ -3046,29 +1874,10 @@ msgid "Sequence"
 msgstr "Reeks"
 
 #. module: website_sale
-#: model:product.public.category,name:website_sale.server
-msgid "Server"
-msgstr "Server"
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.services
-msgid "Services"
-msgstr "Diensten"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Set alternatives, accessories and options in product detail form (in Sales "
-"tab)"
-msgstr ""
-"Stel alternatieven in, accessories  en opties op de productenkaart, tabblad "
-"verkopen"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Set product attributes (e.g. color, size) to sell variants"
 msgstr ""
-"Stel productkenmerken in (bijvoorbeeld kleur, grootte) om varianten te "
+"Stel productattributen in (bijvoorbeeld kleur, grootte) om varianten te "
 "verkopen"
 
 #. module: website_sale
@@ -3079,7 +1888,7 @@ msgstr "Verzenden naar:"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Shipping"
-msgstr "Verzending"
+msgstr "Afleveradres"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_group_delivery_invoice_address
@@ -3126,11 +1935,6 @@ msgid "Shopping Cart"
 msgstr "Winkelmandje"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Shopping Experience"
-msgstr "Winkel ervaring"
-
-#. module: website_sale
 #: model:res.groups,name:website_sale.group_website_multi_image
 msgid "Show multi image on eCommerce"
 msgstr "Laat meerdere afbeeldingen zien in eCommerce"
@@ -3174,29 +1978,15 @@ msgstr ""
 "dit veld overal waar een kleine afbeelding vereist is."
 
 #. module: website_sale
-#: model:product.public.category,name:website_sale.Software
-msgid "Software"
-msgstr "Software"
-
-#. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:76
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:109
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:111
 #, python-format
 msgid "Sold"
 msgstr "Verkocht"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Some acquirers like Authorize.net and Ingenico can be used as payment "
-"gateways with your own payment processor."
-msgstr ""
-"Sommige verwerkers zoals Authorize.net en Ingenico kunnen worden gebruikt "
-"als betaling gateways met uw eigen payment verwerker."
-
-#. module: website_sale
-#: code:addons/website_sale/controllers/main.py:520
+#: code:addons/website_sale/controllers/main.py:519
 #, python-format
 msgid "Some required fields are empty."
 msgstr "Sommige verplichte velden zijn leeg."
@@ -3207,24 +1997,9 @@ msgid "Sorry, this product is not available anymore."
 msgstr "Sorry, dit product is niet meer beschikbaar."
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Sort by price"
-msgstr "Sorteer op prijs"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
 msgid "Sorting by :"
 msgstr "Sorteren op:"
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.Speakers
-msgid "Speakers"
-msgstr "Sprekers"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Start your online shop by creating 3 products pages.<br/>"
-msgstr "Start uw online shop door het aanmaken van 3 productpagina's.<br/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -3284,47 +2059,14 @@ msgid "Suggest optional products when adding to cart"
 msgstr "Stel optionele producten voor bij toevoegen aan winkelmandje"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Suggest options and accessories"
-msgstr "Stel opties en accessories voor"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Suggest pricier alternatives"
-msgstr "Stel duurdere alternatieven voor"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.suggested_products_list
 msgid "Suggested Accessories:"
 msgstr "Voorgestelde accessoires:"
 
 #. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
-msgid "Sync to your heart’s content."
-msgstr "Sync zoals u hart dat wenst."
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "TIN / VAT"
 msgstr "BTW"
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
-msgid ""
-"Tap to play your favorite songs. Or entire albums.\n"
-"                                    Or everything by one artist. You can even browse by genres or composers.\n"
-"                                    Flip through your music: Album art looks great on the bigger screen.\n"
-"                                    Or to keep things fresh, give iPod nano a shake and it shuffles to a different song in your music library."
-msgstr ""
-"Klik om uw favoriete liedjes af te spelen. Of hele albums.\n"
-"Of alles van een artiest. U kan zelfs genres doorzoeken en samenstellen.\n"
-"Blader door uw muziek: Album kunst ziet er geweldig uit op het groter scherm.\n"
-"Of om de dingen fris te houden, schudt u de iPod nano en het start automatisch een ander liedje uit uw muziekbibliotheek."
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Tax ID"
-msgstr "BTW Nr."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3334,12 +2076,7 @@ msgstr "BTW"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Taxes:"
-msgstr "BTW:"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Terms &amp; Conditions"
-msgstr "Algemene Voorwaarden"
+msgstr "Belastingen:"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -3363,48 +2100,9 @@ msgstr ""
 "en wordt beschermd door het auteursrecht."
 
 #. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
-msgid "The desktop. In its most advanced form ever"
-msgstr "Het bureaublad. In zijn meest geavanceerde vorm ooit"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"The first step is to set up your company's information. This is used in "
-"several places: Contact us page, website header &amp; footer, printed "
-"business documents like orders and invoices, etc."
-msgstr ""
-"Eerst moet u uw bedrijfsinformatie invoeren. Dit wordt gebruikt op meerder "
-"locaties: Contact pagina, website kop- &amp; voettekst, afgedrukte "
-"documenten zoals orders en facturen, etc."
-
-#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_website_url
 msgid "The full URL to access the document through the website."
 msgstr "De volledige URL om het document te kunnen raadplegen via de website."
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_2
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_3
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_5
-msgid "The full iPad experience."
-msgstr "De volle iPad ervaring."
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_12
-msgid ""
-"The incredibly thin Apple Wireless Keyboard uses Bluetooth technology,\n"
-"                                    which makes it compatible with iPad. And you’re free to type wherever\n"
-"                                    you like — with the keyboard in front of your iPad or on your lap."
-msgstr ""
-"Het ongelooflijke dunne draadloze Apple toetsenbord gebruikt bluetooth technologie,\n"
-"wat het compatibel maakt met de iPad. U bent vrij om te typen waar\n"
-"u wilt - met het toestenbord voor uw iPad of op uw schoot."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3416,7 +2114,7 @@ msgstr ""
 " product, maar niet voor bestaande producten."
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:247
+#: code:addons/website_sale/models/sale_order.py:258
 #, python-format
 msgid ""
 "The quote should be sent and the payment acquirer type should be manual or "
@@ -3426,41 +2124,11 @@ msgstr ""
 "handmatig of overmaken."
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "There are two strategies to sell more to a customer:"
-msgstr "Er zijn twee strategieën om meer te verkopen aan een klant:"
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_2
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_3
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_5
-msgid "There is less of it, but no less to it."
-msgstr "Er is minder van, maar niet minder aan."
-
-#. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:53
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:51
 #, python-format
 msgid "There is no recent confirmed order."
 msgstr "Er is geen recentelijk bevestigde order."
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
-msgid "There's less of it, but no less to it."
-msgstr "Er is minder van, maar niet minder aan."
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
-msgid ""
-"There’s another way to get a good mix of music on iPod: Let Genius do the work.\n"
-"                                        Activate Genius in iTunes on your computer, and it automatically finds songs that sound\n"
-"                                        great together. Then it creates Genius Mixes, which you can easily sync to your iPod.\n"
-"                                        It’s the perfect way to rediscover songs you haven’t listened to in forever."
-msgstr ""
-"Er is nog een manier om een goede mix van muziek op op uw iPod te krijgen: Laat Genius het werk doen.\n"
-"Activeer Genius in iTunes op uw computer, en het vind automatisch liedjes die\n"
-"samen geweldig klinken. Het maakt vervolgens Genius Mixes, die u gemakkelijk kan synchroniseren nar uw iPod.\n"
-"Het is de perfecte manier om liedjes opnieuw te ontdekken waar u al heel lang niet meer naar heeft geluisterd."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3499,26 +2167,14 @@ msgstr ""
 " catelogus."
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"To collect payments, you can either request your customers to process it manually (wire transfer, etc.) or redirect them to payment acquirers.<br/>\n"
-"                        Using payment acquirers costs you money, so take some time to compare them."
-msgstr ""
-"Om betalingen te ontvangen, kunt u vragen aan klanten om het handmatig te verwerken (overschrijving, etc.) of u kunt ze naar een betaalverwerker te sturen.<br/>\n"
-"Gebruik maken van betaalverwerkers kost u geld, dus neem de tijd om ze te vergelijken."
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"To do so, take the most out of Odoo's <strong>pricing options</strong>:<br/>"
-msgstr ""
-"Door dit te doen, haalt u het meeste uit Odoo '<strong>prijzen "
-"opties</strong>:<br/>"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
 msgid "Total"
 msgstr "Totaal"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.cart_popover
+msgid "True"
+msgstr "Waar"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_type
@@ -3536,20 +2192,6 @@ msgid "USPS"
 msgstr "USPS"
 
 #. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
-msgid "Ultrafast wireless."
-msgstr "Supersnel draadloos."
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
-msgid "Ultrathin design"
-msgstr "Ultradun design"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Unit Price"
 msgstr "Prijs"
@@ -3558,6 +2200,7 @@ msgstr "Prijs"
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:7
 #: model:ir.actions.act_window,name:website_sale.action_unpaid_orders_ecommerce
+#: model:ir.actions.act_window,name:website_sale.action_view_unpaid_quotation_tree
 #: model:ir.ui.menu,name:website_sale.menu_orders_unpaid_orders
 #, python-format
 msgid "Unpaid Orders"
@@ -3568,7 +2211,7 @@ msgstr "Onbetaalde orders"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:75
 #, python-format
 msgid "Untaxed Total Sold"
-msgstr "Totaal excl. BTW verkocht"
+msgstr "Onbelast totaal verkocht"
 
 #. module: website_sale
 #. openerp-web
@@ -3576,11 +2219,6 @@ msgstr "Totaal excl. BTW verkocht"
 #, python-format
 msgid "Upload an image from your local library."
 msgstr "Upload een afbeelding vanaf uw lokale opslag."
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Use our import templates to get your catalog ready in no time!"
-msgstr "Gebruik onze import sjablonen om uw catalogus eenvoudig in te laden!"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
@@ -3594,7 +2232,6 @@ msgstr "Zichtbaar in website"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website
-#: model:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Website"
 msgstr "Website"
 
@@ -3608,7 +2245,7 @@ msgstr "Website productcategorie"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_public_category_form_view
 msgid "Website Public Categories"
-msgstr "Openbare websitecategorieën"
+msgstr "Publieke websitecategorieën"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_sequence
@@ -3629,12 +2266,12 @@ msgstr "Website URL"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_meta_description
 msgid "Website meta description"
-msgstr "Website Meta omschrijving"
+msgstr "Website meta omschrijving"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_meta_keywords
 msgid "Website meta keywords"
-msgstr "Website meta keywords"
+msgstr "Website meta trefwoorden"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_meta_title
@@ -3670,37 +2307,9 @@ msgid "Websites using this sales channel"
 msgstr "Websites die dit verkoopkanaal gebruiken"
 
 #. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
-msgid "When one playlist isn’t enough."
-msgstr "Wanneer één afspeellijst niet genoeg is."
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_2
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_3
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_5
-msgid "Why you'll love an iPad."
-msgstr "Waarom u van een iPad zal houden."
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_module_website_sale_wishlist
 msgid "Wishlists"
 msgstr "Wenslijsten"
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
-msgid ""
-"With advanced Wi‑Fi that’s up to twice as fast as\n"
-"                                   any previous-generation iPad and access to fast\n"
-"                                   cellular data networks around the world, iPad mini\n"
-"                                   lets you download content, stream video,\n"
-"                                   and browse the web at amazing speeds."
-msgstr ""
-"Met geavanceerd Wi-Fi die tot twee keer zo snel is\n"
-"als eender welke vorige generatie iPad en toegang tot snelle\n"
-"mobiele data netwerken over de wereld, iPad mini\n"
-"laat u inhoud downloaden, video's streamen,\n"
-"en het web doorzoeken aan ongelooflijke snelheden."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3712,11 +2321,6 @@ msgstr ""
 "Met de eerste optie kunt u meerder prijzen in stellen op het product "
 "configuratie formulier (verkoop tab). Met de tweede optie, kunt prijzen en "
 "rekenregels instellen op prijslijsten."
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "You can setup 3 types of <strong>payment acquirers in Odoo:</strong>"
-msgstr "U kan 3 types van <strong>betaalverwervers opzetten in Odoo:</strong>"
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.action_orders_ecommerce
@@ -3744,21 +2348,6 @@ msgstr "U heeft geen onbetaald order van de website."
 #: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery
 msgid "You left items in your cart."
 msgstr "U heeft items in uw winkelmandje gehouden."
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
-msgid ""
-"You probably have multiple playlists in iTunes on your computer.\n"
-"                                        One for your commute. One for the gym. Sync those playlists\n"
-"                                        to iPod, and you can play the perfect mix for whatever\n"
-"                                        mood strikes you. VoiceOver tells you the name of each playlist,\n"
-"                                        so it’s easy to switch between them and find the one you want without looking."
-msgstr ""
-"U heeft waarschijnlijk verschillende afspeellijsten in iTunes op uw computer.\n"
-"Een voor het reizen. Een voor de gym. Sync de afspeellijsten\n"
-"naar uw iPod en u kan de perfecte mix afspelen wanneer\n"
-"u in de mood bent. VoiceOver vertelt u de naam van elke afspeellijst,\n"
-"zodat het gemakkelijk is om te wisselen ertussen en vind diegene waar u naar zoekt."
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
@@ -3801,11 +2390,6 @@ msgid "Zip Code"
 msgstr "Postcode"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "all angles, detailed view, package, etc."
-msgstr "alle hoeken, gedetailleerde weergave, pakket, etc."
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "bpost"
 msgstr "bpost"
@@ -3817,6 +2401,7 @@ msgstr "code..."
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_settings
+#: model:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce"
 msgstr "eCommerce"
 
@@ -3836,16 +2421,6 @@ msgstr "gevonden)"
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "hours"
 msgstr "uren"
-
-#. module: website_sale
-#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
-msgid ""
-"iTunes on your Mac or PC makes it easy to load up\n"
-"                                        your iPod. Just choose the playlists, audiobooks,\n"
-"                                        podcasts, and other audio files you want, then sync."
-msgstr ""
-"iTunes op uw Mac of PC maakt het gemakkelijk om naar uw iPod\n"
-"te uploaden. Kies gewoon de afspeellijst, audioboeken, podcasts, en andere audio bestanden die u wilt en sync vervolgens."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
@@ -3873,11 +2448,6 @@ msgid "number of hours after which the cart is considered abandoned"
 msgstr "aantal uren waarna het winkelmandje als verlaten wordt aanzien"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "product's availability (In Stock, Not Available, etc.)"
-msgstr "product beschikbaar (in voorraad, niet beschikbaar, etc.)"
-
-#. module: website_sale
 #: model:ir.model,name:website_sale.model_product_attribute_value
 msgid "product.attribute.value"
 msgstr "product.attribute.value"
@@ -3898,26 +2468,11 @@ msgid "res.config.settings"
 msgstr "res.config.settings"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "set company logo"
-msgstr "stel bedrijfslogo in"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment_sale_note
 msgid "terms &amp; conditions"
 msgstr "algemene voorwaarden"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "use Odoo API to import through scripts"
-msgstr "gebruik de Odoo API om te importeren via scripts"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist_website_id
 msgid "website"
 msgstr "website"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "what do the customers think of the product"
-msgstr "wat denken de klanten van het product"

@@ -3,28 +3,21 @@
 # * payment
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# max_xu <wangzhanwh@163.com>, 2016
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
-# liulixia <liu.lixia@elico-corp.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
+# liAnGjiA <liangjia@qq.com>, 2017
 # glovebx <ruinning@163.com>, 2017
-# Talway <9010446@qq.com>, 2017
-# 钟小华 <mackz@sina.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2017
 # fausthuang <faust_huang@hotmail.com>, 2017
-# waveyeung <waveyeung@qq.com>, 2017
-# Connie Xiao <connie.xiao@elico-corp.com>, 2017
-# THL <wt39181819@gmail.com>, 2017
-# Zamba Lee <zambalee@gmail.com>, 2017
-# Eddie Lim <bhweelim@yahoo.com>, 2017
-# Si Ling Lau <happy8645@hotmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Si Ling Lau <happy8645@hotmail.com>, 2017\n"
+"Last-Translator: fausthuang <faust_huang@hotmail.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +28,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
 msgid "3D Secure HTML"
-msgstr "3D 安全HTML"
+msgstr "3D Secure HTML"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.confirm
@@ -165,7 +158,7 @@ msgstr "<span><i>取消,</i> 你的付款已被取消.</span>"
 msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
-msgstr "<span><i>完成,</i> 你的在线付款已成功完成. 感谢你的订单.</span>"
+msgstr "<span><i>完成,</i> 你的在线支付已成功完成. 感谢你的订单.</span>"
 
 #. module: payment
 #: model:payment.acquirer,error_msg:payment.payment_acquirer_adyen
@@ -198,7 +191,7 @@ msgstr ""
 msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
-msgstr "<span><i>待定,</i> 你的在线付款已完成. 但是你的订单还验证.</span>"
+msgstr "<span><i>待定,</i> 你的在线支付已完成. 但是你的订单还未确认.</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
@@ -210,22 +203,22 @@ msgstr "<span><i>待定</i>... 订单将在付款后被验证.</span>"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
 msgid "Acquirer"
-msgstr "收单"
+msgstr "收单方"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_id
 msgid "Acquirer Account"
-msgstr "收单帐号"
+msgstr "收单方帐号"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_ref
 msgid "Acquirer Ref."
-msgstr "收单参照"
+msgstr "收单方参照"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_reference
 msgid "Acquirer Reference"
-msgstr "收单参照"
+msgstr "收单方参考"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon_acquirer_ids
@@ -250,7 +243,7 @@ msgstr "有效"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_active
 msgid "Add Extra Fees"
-msgstr "添加额外费用"
+msgstr "添加额外的费用"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_address
@@ -291,7 +284,7 @@ msgstr "Authorize.Net"
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Authorized"
-msgstr "已授权"
+msgstr "授权"
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
@@ -384,7 +377,7 @@ msgstr ""
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_transfer
 msgid "Communication"
-msgstr "沟通"
+msgstr "附言"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_company_id
@@ -422,7 +415,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users_payment_token_count
 msgid "Count Payment Token"
-msgstr "付款令牌个数"
+msgstr "付款令牌计数"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_country_ids
@@ -458,7 +451,7 @@ msgstr "创建日期"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Credentials"
-msgstr "证明"
+msgstr "授权认证"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -468,7 +461,7 @@ msgstr "信用卡"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_currency_id
 msgid "Currency"
-msgstr "货币"
+msgstr "币种"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_custom
@@ -526,7 +519,7 @@ msgstr "电子"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_email
 msgid "Email"
-msgstr "电子邮箱"
+msgstr "Email"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_environment
@@ -574,12 +567,12 @@ msgstr "用来存储错误或信息的验证信息领域"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_fixed
 msgid "Fixed domestic fees"
-msgstr "固定国内费用"
+msgstr "国内固定费用"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_fixed
 msgid "Fixed international fees"
-msgstr "固定国际费用"
+msgstr "固定的手续费"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -589,7 +582,7 @@ msgstr "表单"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_view_template_id
 msgid "Form Button Template"
-msgstr "表单按钮模板"
+msgstr "Form按钮模板"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -669,7 +662,7 @@ msgstr "语言"
 #: model:ir.model.fields,field_description:payment.field_payment_token___last_update
 #: model:ir.model.fields,field_description:payment.field_payment_transaction___last_update
 msgid "Last Modified on"
-msgstr "最后修改时间"
+msgstr "最后修改日"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_uid
@@ -677,7 +670,7 @@ msgstr "最后修改时间"
 #: model:ir.model.fields,field_description:payment.field_payment_token_write_uid
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_write_uid
 msgid "Last Updated by"
-msgstr "最后更新者"
+msgstr "最后更新人"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_date
@@ -700,7 +693,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
-msgstr "使此付款收单可用(客户发票等)"
+msgstr "使此付款收单方可用(客户发票等)"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_methods
@@ -773,7 +766,7 @@ msgstr "如果在付款后订单还是打开的状态，会有消息提示"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Messages"
-msgstr "消息"
+msgstr "信息"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:395
@@ -887,14 +880,14 @@ msgstr "付款"
 #: model:ir.model,name:payment.model_payment_acquirer
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Acquirer"
-msgstr "收单"
+msgstr "付款收单方"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
 #: model:ir.ui.menu,name:payment.payment_acquirer_menu
 #: model:ir.ui.view,arch_db:payment.acquirer_list
 msgid "Payment Acquirers"
-msgstr "收单"
+msgstr "付款收单方"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_icon
@@ -964,7 +957,7 @@ msgstr "付款交易失败 (%s)"
 #: model:ir.ui.menu,name:payment.root_payment_menu
 #: model:ir.ui.view,arch_db:payment.payment_token_form_view
 msgid "Payments"
-msgstr "收付款"
+msgstr "付款"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_journal_id
@@ -987,7 +980,7 @@ msgstr "贝宝"
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Pending"
-msgstr "待定"
+msgstr "暂停"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pending_msg
@@ -1034,7 +1027,7 @@ msgstr "服务商"
 #: model:ir.ui.view,arch_db:payment.confirm
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "Reference"
-msgstr "参照"
+msgstr "参考"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_acquirer_reference
@@ -1085,12 +1078,12 @@ msgstr "保存的付款令牌"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_token_implemented
 msgid "Saving Card Data supported"
-msgstr "支持保存卡片数据"
+msgstr "支持保存卡片资料"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_sequence
 msgid "Sequence"
-msgstr "序列"
+msgstr "序号"
 
 #. module: payment
 #. openerp-web
@@ -1267,12 +1260,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_var
 msgid "Variable domestic fees (in percents)"
-msgstr "可变国内费用(百分比)"
+msgstr "动态内部费用(百分比)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_var
 msgid "Variable international fees (in percents)"
-msgstr "可变国际费用（百分比）"
+msgstr "可变的交易费用（百分比）"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_verified
@@ -1294,7 +1287,7 @@ msgstr "无效交易"
 #: code:addons/payment/static/src/js/payment_form.js:318
 #, python-format
 msgid "Warning!"
-msgstr "警告!"
+msgstr "警告！"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
@@ -1312,7 +1305,7 @@ msgstr ""
 msgid ""
 "You will be redirected to the Adyen website after clicking on the payment "
 "button."
-msgstr "点击支付按钮后你将被重定向到 Adyen 网站。"
+msgstr "点击支付按钮后您将被重定向到 Adyen 网站。"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_authorize
@@ -1347,13 +1340,13 @@ msgstr ""
 msgid ""
 "You will be redirected to the Paypal website after clicking on the payment "
 "button."
-msgstr "点击支付按钮后你将被重定向到Paypal网站。"
+msgstr "点击支付按钮后您将被重定向到Paypal网站。"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_sips
 msgid ""
 "You will be redirected to the Sips website after clicking on payment button."
-msgstr "点击支付按钮后你将被重定向到Sips网站。"
+msgstr "点击支付按钮后您将被重定向到Sips网站。"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
@@ -1388,7 +1381,7 @@ msgstr "context:当前上下相关字典"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
-msgstr "currency:交易币种浏览记录"
+msgstr "currency: 交易币种浏览记录"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -1400,7 +1393,7 @@ msgstr "partner:客户浏览历史(不完全)"
 msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
-msgstr "partner_values:关于购买的运费需要参考具体的货运方法,如航空等"
+msgstr "partner_values: 关于购买的运费需要参考具体的货运方法,如航空等"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
@@ -1410,7 +1403,7 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "reference: the transaction reference number"
-msgstr "reference:交易参考号码"
+msgstr "reference:  交易参考号码"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -1425,4 +1418,4 @@ msgstr "tx_values:交易价值"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
-msgstr "user:当前用户浏览记录"
+msgstr "user: 当前用户浏览记录"
