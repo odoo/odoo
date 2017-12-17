@@ -411,18 +411,20 @@ class HrExpenseSheet(models.Model):
 
     @api.multi
     def check_consistency(self):
-        if any(sheet.employee_id != self[0].employee_id for sheet in self):
-            raise UserError(_("Expenses must belong to the same Employee."))
-
-        expense_lines = self.mapped('expense_line_ids')
-        if expense_lines and any(expense.payment_mode != expense_lines[0].payment_mode for expense in expense_lines):
-            raise UserError(_("Expenses must have been paid by the same entity (Company or employee)"))
+        for rec in self:
+            expense_lines = rec.expense_line_ids
+            if not expense_lines:
+                continue
+            if any(expense.employee_id != rec.employee_id for expense in expense_lines):
+                raise UserError(_("Expenses must belong to the same Employee."))
+            if any(expense.payment_mode != expense_lines[0].payment_mode for expense in expense_lines):
+                raise UserError(_("Expenses must have been paid by the same entity (Company or employee)"))
 
     @api.model
     def create(self, vals):
         self._create_set_followers(vals)
         sheet = super(HrExpenseSheet, self).create(vals)
-        self.check_consistency()
+        sheet.check_consistency()
         return sheet
 
     @api.multi
