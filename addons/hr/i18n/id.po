@@ -6,9 +6,9 @@
 # Bonny Useful <bonny.useful@gmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
+# Ryanto The <ry.the77@gmail.com>, 2017
 # William Surya Permana <zarambie_game@yahoo.com>, 2017
 # Ngalim Siregar <ngalim.siregar@gmail.com>, 2017
-# Deddy Ddr <deddy.ddr@gmail.com>, 2017
 # Muhammad Herdiansyah <herdiansyah@openmailbox.org>, 2017
 # oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2017
 # Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2017
@@ -46,17 +46,17 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>Reporting</span>"
-msgstr "<span>Pelaporan</span>"
+msgstr "<span>Laporan</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>To Approve</span>"
-msgstr "<span>Untuk menyetujui</span>"
+msgstr "<span>Akan Disetujui</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>To Do</span>"
-msgstr "<span>Untuk melakukan</span>"
+msgstr "<span>Akan Dilakukan</span>"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_active
@@ -88,7 +88,7 @@ msgstr "Direktur Utama"
 #. module: hr
 #: model:hr.job,name:hr.job_cto
 msgid "Chief Technical Officer"
-msgstr "Chief Technical Officer"
+msgstr "Direktur Teknis"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_child_ids
@@ -98,7 +98,7 @@ msgstr "Departemen Anak"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Citizenship & Other Information"
-msgstr "Kewarganegaraan & informasi lainnya"
+msgstr "Kewarganegaraan & Informasi Lainnya"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
@@ -109,18 +109,18 @@ msgstr "Klik untuk menambahkan karyawan baru."
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Click to create a department."
-msgstr "Klik untuk menciptakan Departemen."
+msgstr "Klik untuk membuat departemen baru."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
 msgid "Click to define a new job position."
-msgstr "Klik untuk menentukan posisi pekerjaan baru."
+msgstr "Klik untuk menambah jabatan baru."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_coach_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Coach"
-msgstr "Pelatih"
+msgstr "Mentor"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_color
@@ -170,7 +170,7 @@ msgstr "Kontak"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Contact Information"
-msgstr "Kontak Informasi"
+msgstr "Informasi Kontak"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
@@ -230,12 +230,12 @@ msgstr "Nama Tampilan"
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Divorced"
-msgstr "Cerai"
+msgstr "Duda/Janda"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_alias
 msgid "Email Aliases"
-msgstr "Email alias"
+msgstr "Alias Email"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
@@ -251,14 +251,14 @@ msgstr "Kategori Karyawan"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_name
 msgid "Employee Tag"
-msgstr "Karyawan(s) baru yang diharapkan"
+msgstr "Tag Karyawan"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
 #: model:ir.ui.view,arch_db:hr.view_employee_category_form
 msgid "Employee Tags"
-msgstr "Karyawan Tags"
+msgstr "Tag Karyawan"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_bank_account_id
@@ -294,7 +294,7 @@ msgstr "Struktur Karyawan"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_category_list
 msgid "Employees Tags"
-msgstr "Tags karyawan"
+msgstr "Tag Karyawan"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_address_home_id
@@ -302,36 +302,37 @@ msgid ""
 "Enter here the private address of the employee, not the one linked to your "
 "company."
 msgstr ""
+"Masukkan di sini alamat pribadi karyawan, bukan yang terkait dengan "
+"perusahaan Anda."
 
 #. module: hr
 #: code:addons/hr/models/hr.py:303
 #, python-format
 msgid "Error! You cannot create recursive departments."
-msgstr "Kesalahan! Anda tidak dapat membuat Departemen rekursif."
+msgstr "Eror! Anda tidak dapat membuat departemen rekursif."
 
 #. module: hr
 #: code:addons/hr/models/hr.py:184
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr "Kesalahan! Anda tidak dapat membuat hierarki rekursif Karyawan(s)."
+msgstr "Eror! Anda tidak dapat membuat hierarki karyawan rekursif."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
 msgid "Expected New Employees"
-msgstr "Karyawan baru yang diharapkan"
+msgstr "Karyawan Baru yang Diharapkan"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_expected_employees
 msgid ""
 "Expected number of employees for this job position after new recruitment."
 msgstr ""
-"Diharapkan jumlah Karyawan untuk posisi pekerjaan ini setelah baru "
-"perekrutan."
+"Jumlah karyawan yang diharapkan untuk jabatan ini setelah perekrutan baru."
 
 #. module: hr
 #: model:hr.job,name:hr.job_developer
 msgid "Experienced Developer"
-msgstr "Pengembang berpengalaman"
+msgstr "Pengembang Berpengalaman"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -357,7 +358,7 @@ msgstr "Jenis kelamin"
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Group By"
-msgstr "Dikelompokkan berdasarkan"
+msgstr "Dikelompokkan menurut"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
@@ -367,12 +368,12 @@ msgstr "Departemen HR"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "HR Settings"
-msgstr "HR Settings"
+msgstr "Pengaturan HR"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_hired_employee
 msgid "Hired Employees"
-msgstr "Karyawan yang disarankan"
+msgstr "Karyawan yang Direkrut"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -382,7 +383,7 @@ msgstr "Sumber Daya Manusia"
 #. module: hr
 #: model:hr.job,name:hr.job_hrm
 msgid "Human Resources Manager"
-msgstr "Manajer sumber daya manusia"
+msgstr "Manajer Sumber Daya Manusia"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_id
@@ -403,8 +404,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Jika bidang aktif diatur ke False, itu akan memungkinkan Anda untuk "
-"menyembunyikan catatan sumber daya tanpa menghapusnya."
+"Jika kolom aktif diatur ke False, itu akan memungkinkan Anda untuk "
+"menyembunyikan catatan SDM tanpa menghapusnya."
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_job_filter
@@ -434,12 +435,12 @@ msgstr "Deskripsi Pekerjaan"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_name
 msgid "Job Position"
-msgstr "Posisi"
+msgstr "Jabatan"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
 msgid "Job Positions"
-msgstr "Posisi Pekerjaan"
+msgstr "Jabatan"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -449,8 +450,8 @@ msgid ""
 "                position and follow the evolution according to what you planned\n"
 "                for the future."
 msgstr ""
-"Posisi pekerjaan yang digunakan untuk mendefinisikan pekerjaan dan kebutuhan mereka.\n"
-"                Anda dapat melacak dari jumlah karyawan Anda per posisi pekerjaan dan mengikuti evolusi sesuai dengan apa yang Anda rencanakan untuk masa depan."
+"Jabatan digunakan untuk mendefinisikan pekerjaan dan persyaratannya.\n"
+"                Anda dapat melacak jumlah karyawan Anda tiap posisi pekerjaan dan mengikuti evolusinya sesuai dengan apa yang Anda rencanakan untuk masa depan."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_jobs_ids
@@ -485,7 +486,7 @@ msgstr "Terakhir diperbarui pada"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Launch Recruitment"
-msgstr "Berhenti perekrutan"
+msgstr "Mulai Perekrutan"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -508,12 +509,12 @@ msgstr "Status Pernikahan"
 #. module: hr
 #: model:hr.job,name:hr.job_marketing
 msgid "Marketing and Community Manager"
-msgstr "Pemasaran dan manajer komunitas"
+msgstr "Manajer Pemasaran dan Komunitas"
 
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Married (or similar)"
-msgstr ""
+msgstr "Sudah Kawin"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_image_medium
@@ -527,9 +528,9 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
-"Menengah foto dari Karyawan. Itu adalah secara otomatis diubah ukurannya "
-"sebagai gambar 128x128px, dengan rasio aspek yang diawetkan. Gunakan bidang "
-"ini dalam bentuk pemandangan atau beberapa kanban."
+"Foto ukuran sedang karyawan. Secara otomatis diubah ukurannya sebagai gambar"
+" 128x128px, dengan aspek rasio yang dipertahankan. Gunakan kolom ini untuk "
+"tampilan formulir atau kanban."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_member_ids
@@ -569,20 +570,19 @@ msgstr "Catatan"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_employee
 msgid "Number of employees currently occupying this job position."
-msgstr "Jumlah Karyawan saat ini menduduki posisi pekerjaan ini."
+msgstr "Jumlah karyawan yang saat ini melamar jabatan ini."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_hired_employee
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
 msgstr ""
-"Jumlah Karyawan yang dipekerjakan untuk posisi pekerjaan ini selama fase "
-"perekrutan."
+"Jumlah karyawan yang direkrut untuk jabatan ini selama fase perekrutan."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_recruitment
 msgid "Number of new employees you expect to recruit."
-msgstr "Jumlah Karyawan baru yang Anda mengharapkan untuk merekrut."
+msgstr "Jumlah karyawan baru yang Anda harapkan untuk direkrut."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -591,6 +591,9 @@ msgid ""
 "                related to employees by departments: expenses, timesheets,\n"
 "                leaves, recruitments, etc."
 msgstr ""
+"Struktur departemen Odoo digunakan untuk mengelola semua dokumen yang "
+"berhubungan dengan karyawan menurut departemen: pengeluaran, lembar kerja, "
+"cuti, perekrutan, dll."
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
@@ -605,7 +608,7 @@ msgstr "Lainnya"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Other Information ..."
-msgstr "Info Lain"
+msgstr "Info Lain ..."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_parent_id
@@ -630,12 +633,12 @@ msgstr "Posisi"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
 msgid "Private Address"
-msgstr ""
+msgstr "Alamat Pribadi"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Information"
-msgstr ""
+msgstr "Informasi Pribadi"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -645,27 +648,27 @@ msgstr "Perekrutan"
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Recruitment in Progress"
-msgstr "Berhenti perekrutan"
+msgstr "Proses Perekrutan"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Related User"
-msgstr "Relasi Pengguna"
+msgstr "Pengguna Terkait"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users_employee_ids
 msgid "Related employees"
-msgstr "Relasi karyawan"
+msgstr "Karyawan terkait"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "Terkait nama pengguna untuk sumber daya untuk mengelola aksesnya."
+msgstr "Nama pengguna terkait untuk dikelola oleh HR aksesnya."
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
 msgid "Reporting"
-msgstr "pelaporan."
+msgstr "Laporan"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_requirements
@@ -688,14 +691,15 @@ msgid ""
 "Set default calendar used to compute time allocation for leaves, timesheets,"
 " ..."
 msgstr ""
+"Set kalendar standar digunakan untuk menghitung alokasi waktu untuk cuti, "
+"lembar kerja, ..."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_state
 msgid ""
 "Set whether the recruitment process is open or closed for this job position."
 msgstr ""
-"Menetapkan apakah proses rekrutmen terbuka atau tertutup untuk posisi "
-"pekerjaan ini."
+"Menetapkan apakah proses rekrutmen terbuka atau tertutup untuk jabatan ini."
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
@@ -712,17 +716,17 @@ msgstr "Tampilkan Struktur Organisasi"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form"
-msgstr ""
+msgstr "Tampilkan struktur organisasi pada formulir karyawan"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form."
-msgstr ""
+msgstr "Tampilkan struktur organisasi pada formulir karyawan."
 
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Single"
-msgstr "Single"
+msgstr "Belum Kawin"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_image_small
@@ -736,14 +740,14 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
-"Foto berukuran kecil dari Karyawan. Itu adalah secara otomatis diubah "
-"ukurannya sebagai gambar 64x64px, dengan rasio aspek yang diawetkan. Gunakan"
-" field ini di mana saja gambar kecil yang diperlukan."
+"Foto berukuran kecil dari Karyawan. Secara otomatis diubah ukurannya menjadi"
+" 64x64px, dengan aspek rasio yang dipertahankan. Gunakan kolom ini ketika "
+"gambar kecil yang diperlukan."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_sinid
 msgid "Social Insurance Number"
-msgstr "Nomor Sosial Asuransi"
+msgstr "Nomor Asuransi Sosial"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_ssnid
@@ -760,12 +764,12 @@ msgstr "Status"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Stop Recruitment"
-msgstr "Berhenti perekrutan"
+msgstr "Hentikan Perekrutan"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_employee_action_subordinate_hierachy
 msgid "Subordinate Hierarchy"
-msgstr "Subordinat hirarki"
+msgstr "Hirarki Bawahan"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_child_ids
@@ -775,7 +779,7 @@ msgstr "Bawahan"
 #. module: hr
 #: sql_constraint:hr.employee.category:0
 msgid "Tag name already exists !"
-msgstr "Nama tag sudah ada!"
+msgstr "Tag nama sudah ada !"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_ids
@@ -785,12 +789,12 @@ msgstr "Tag"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_is_address_home_a_company
 msgid "The employee adress has a company linked"
-msgstr ""
+msgstr "Alamat karyawan memiliki perusahaan terkait"
 
 #. module: hr
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per department in company!"
-msgstr "Nama Lowongan Kerja harus unik per departemen di perusahaan!"
+msgstr "Nama jabatan harus unik tiap departemen di perusahaan!"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_image
@@ -798,13 +802,13 @@ msgid ""
 "This field holds the image used as photo for the employee, limited to "
 "1024x1024px."
 msgstr ""
-"Bidang ini memegang gambar yang digunakan sebagai foto untuk Karyawan, "
-"terbatas pada 1024x1024px."
+"Kolom ini menyimpan gambar yang digunakan sebagai foto untuk karyawan, "
+"dibatasi pada 1024x1024px."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_expected_employees
 msgid "Total Forecasted Employees"
-msgstr "Total diperkirakan Karyawan"
+msgstr "Total Perkiraan Karyawan"
 
 #. module: hr
 #: model:hr.job,name:hr.job_trainee
@@ -826,6 +830,9 @@ msgid ""
 "                                            This private address is used in the expense report reimbursement document.\n"
 "                                            It should be different from the work address."
 msgstr ""
+"Gunakan di sini alamat rumah karyawan.\n"
+"Alamat pribadi ini digunakan pada dokumen laporan pengeluaran.\n"
+"Harus berbeda dari alamat tempat kerja."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
@@ -840,22 +847,22 @@ msgstr "Pengguna"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "Vacancies :"
-msgstr ""
+msgstr "Lowongan :"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_visa_expire
 msgid "Visa Expire Date"
-msgstr "Visa berakhir tanggal"
+msgstr "Visa Berlaku Hingga"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_visa_no
 msgid "Visa No"
-msgstr "Visa No"
+msgstr "No. Visa"
 
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Widower"
-msgstr "Duda"
+msgstr "Duda/Janda"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
@@ -865,13 +872,13 @@ msgid ""
 "                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc."
 msgstr ""
-"Dengan hanya sekilas pada layar karyawan Odoo, Anda dapat dengan mudah menemukan semua informasi yang Anda butuhkan untuk setiap orang;\n"
-"                data kontak, lowongan kerja, ketersediaan, dll."
+"Dengan melihat tampilan karyawan Odoo, Anda dapat dengan mudah menemukan semua informasi yang Anda butuhkan untuk setiap orang;\n"
+"                data kontak, jabatan, ketersediaan, dll."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_id
 msgid "Work Address"
-msgstr ""
+msgstr "Alamat Tempat Kerja"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_email
@@ -881,12 +888,12 @@ msgstr "Email Kantor"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Information"
-msgstr ""
+msgstr "Informasi Tempat Kerja"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_location
 msgid "Work Location"
-msgstr "Lokasi kerja"
+msgstr "Lokasi Kerja"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_mobile_phone
@@ -896,7 +903,7 @@ msgstr "Nomor HP"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Work Organization"
-msgstr ""
+msgstr "Organisasi Pekerjaan"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -906,7 +913,7 @@ msgstr "Ijin Kerja"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_permit_no
 msgid "Work Permit No"
-msgstr "Ijin Kerja"
+msgstr "No. Ijin Kerja"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_phone
@@ -920,9 +927,8 @@ msgid ""
 "                the recruitment process to evaluate the applicants for this job\n"
 "                position."
 msgstr ""
-"Anda dapat melampirkan sebuah survei ke posisi pekerjaan. Ini akan digunakan"
-" dalam proses perekrutan untuk mengevaluasi pelamar untuk posisi pekerjaan "
-"ini."
+"Anda dapat melampirkan survei ke jabatan. Survei ini akan digunakan dalam "
+"proses perekrutan untuk mengevaluasi pelamar untuk jabatan ini."
 
 #. module: hr
 #: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
@@ -936,14 +942,14 @@ msgid ""
 "recognized. Please send emails with the email address recorded on your "
 "employee information, or contact your HR manager."
 msgstr ""
-"Dokumen Anda belum dibuat dikarenakan alamat surel tidak dikenali. Silahkan "
-"mengirim surel dengan alamat surel yang terdaftar pada informasi kepegawaian"
-" Anda, atau hubungi Manajer HR Anda."
+"Dokumen Anda belum dibuat dikarenakan alamat email tidak dikenali. Silahkan "
+"mengirim email dengan alamat email yang terdaftar pada informasi kepegawaian"
+" Anda, atau hubungi manajer HR Anda."
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
-msgstr "Departemen"
+msgstr "departemen"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -976,5 +982,4 @@ msgid ""
 "the user will have an access to the human resources configuration as well as"
 " statistic reports."
 msgstr ""
-"pengguna akan memiliki akses ke konfigurasi sumber daya manusia serta "
-"laporan statistik."
+"pengguna akan memiliki akses ke konfigurasi HR serta laporan statistik."

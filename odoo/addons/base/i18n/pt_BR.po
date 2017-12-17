@@ -47,6 +47,14 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"    Módulo de compatibilização\n"
+"    de acordo com\n"
+"\n"
+"    as regras chinesas\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_reprint
@@ -158,6 +166,73 @@ msgid ""
 "11010101 Caja General\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Localization Module for Dominican Republic\n"
+"===========================================\n"
+"\n"
+"Catálogo de Cuentas e Impuestos para República Dominicana, Compatible para\n"
+"**Internacionalización** con **NIIF** y alineado a las normas y regulaciones\n"
+"de la Dirección General de Impuestos Internos (**DGII**).\n"
+"\n"
+"**Este módulo consiste de:**\n"
+"\n"
+"- Catálogo de Cuentas Estándar (alineado a DGII y NIIF)\n"
+"- Catálogo de Impuestos con la mayoría de Impuestos Preconfigurados\n"
+"        - ITBIS para compras y ventas\n"
+"        - Retenciones de ITBIS\n"
+"        - Retenciones de ISR\n"
+"        - Grupos de Impuestos y Retenciones:\n"
+"                - Telecomunicaiones\n"
+"                - Proveedores de Materiales de Construcción\n"
+"                - Personas Físicas Proveedoras de Servicios\n"
+"        - Otros impuestos\n"
+"- Secuencias Preconfiguradas para manejo de todos los NCF\n"
+"        - Facturas con Valor Fiscal (para Ventas)\n"
+"        - Facturas para Consumidores Finales\n"
+"        - Notas de Débito y Crédito\n"
+"        - Registro de Proveedores Informales\n"
+"        - Registro de Ingreso Único\n"
+"        - Registro de Gastos Menores\n"
+"        - Gubernamentales\n"
+"- Posiciones Fiscales para automatización de impuestos y retenciones\n"
+"        - Cambios de Impuestos a Exenciones (Ej. Ventas al Estado)\n"
+"        - Cambios de Impuestos a Retenciones (Ej. Compra Servicios al Exterior)\n"
+"        - Entre otros\n"
+"\n"
+"**Nota:**\n"
+"Esta localización, aunque posee las secuencias para NCF, las mismas no pueden\n"
+"ser utilizadas sin la instalación de módulos de terceros o desarrollo\n"
+"adicional.\n"
+"\n"
+"Estructura de Codificación del Catálogo de Cuentas:\n"
+"===================================================\n"
+"\n"
+"**Un dígito** representa la categoría/tipo de cuenta del del estado financiero.\n"
+"**1** - Activo        **4** - Cuentas de Ingresos y Ganancias\n"
+"**2** - Pasivo        **5** - Costos, Gastos y Pérdidas\n"
+"**3** - Capital       **6** - Cuentas Liquidadoras de Resultados\n"
+"\n"
+"**Dos dígitos** representan los rubros de agrupación:\n"
+"11- Activo Corriente\n"
+"21- Pasivo Corriente\n"
+"31- Capital Contable\n"
+"\n"
+"**Cuatro dígitos** se asignan a las cuentas de mayor: cuentas de primer orden\n"
+"1101- Efectivo y Equivalentes de Efectivo\n"
+"2101- Cuentas y Documentos por pagar\n"
+"3101- Capital Social\n"
+"\n"
+"**Seis dígitos** se asignan a las sub-cuentas: cuentas de segundo orden\n"
+"110101 - Caja\n"
+"210101 - Proveedores locales\n"
+"\n"
+"**Ocho dígitos** son para las cuentas de tercer orden (las visualizadas\n"
+"en Odoo):\n"
+"1101- Efectivo y Equivalentes\n"
+"110101- Caja\n"
+"11010101 Caja General\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp
@@ -207,6 +282,13 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Reconhecimentos de receita\n"
+"===================\n"
+"Gerencie reconhecimentos de receitas na venda de produtos.\n"
+"Mantenha o controle das parcelas de reconhecimento de receitas, e crie entradas de diário correspondentes.\n"
+"    "
 
 #. module: base
 #: code:addons/base/res/res_config.py:315
@@ -227,6 +309,9 @@ msgid ""
 "\n"
 "This module adds a custom Sales Channel for the point of sale to be able to view and manage your point of sale sales with more ease.\n"
 msgstr ""
+"\n"
+"\n"
+"Esse módulo adiciona um Canal de Compra para o ponto de vendas para ser capaz de ver e gerenciar seu ponto de vendas com maior facilidade.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -239,6 +324,13 @@ msgid ""
 "- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Este módulo adiciona diversas funcionalidades específicas para restaurantes no Ponto de Venda:\n"
+"- Impressão de Conta: Permite que você imprima um recibo antes que o pedido seja pago\n"
+"- Repartir a conta: Permite separar uma conta em outras contas diferentes\n"
+"- Impressão de Pedido de Cozinha: permite que você imprima atualizações das ordens de cozinha ou impressoras de bar\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_discount
@@ -249,6 +341,11 @@ msgid ""
 "sale discount to a customer.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Este permite ao caixa a rapidamente dar um desconto baseado em porcentagem\n"
+"para um cliente\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_loyalty
@@ -260,6 +357,12 @@ msgid ""
 "and get rewards.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Este módulo permite que você defina um programa de lealdade no\n"
+"Ponto de vendas, onde os clientes ganham pontos de lealtade\n"
+"podendo obter recompensas.\n"
+"\n"
 
 #. module: base
 #: code:addons/model.py:136
@@ -328,6 +431,10 @@ msgid ""
 "        - Track timesheet for task from ticket\n"
 "    "
 msgstr ""
+"\n"
+"        - Permitir definição de projeto para o time Helpdesk\n"
+"        - Rastrear planilha de tempo para tarefa de ticket\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_tax_python
@@ -390,6 +497,11 @@ msgid ""
 "        Also add DATEV export options to general ledger\n"
 "    "
 msgstr ""
+"\n"
+"        Relatórios de contabilidade para a Alemanha\n"
+"        Contém folhas de Balanço, Lucro e perda, IVA e relatórios sobre IVA de Parceitos\n"
+"        Também adiciona opções para exportar DATEV para o para o livro-razão geral\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu_reports
@@ -475,6 +587,9 @@ msgid ""
 "        Accounting reports for US\n"
 "    "
 msgstr ""
+"\n"
+"        Relatórios contábeis para os EUA\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy_reports
@@ -508,6 +623,9 @@ msgid ""
 "        Allow to make call from next activities or with click-to-dial.\n"
 "    "
 msgstr ""
+"\n"
+"        Permita fazer chamaddas de próximas atividades ou com clique para discar.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_tax_python
@@ -525,6 +643,9 @@ msgid ""
 "        Bill timesheets logged on helpdesk tickets.\n"
 "    "
 msgstr ""
+"\n"
+"        Faturar planilhas de tempo logadas em tickets de helpdesk.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_maintenance
@@ -552,6 +673,9 @@ msgid ""
 "        Compute sales tax automatically using TaxCloud based on customer address in United States.\n"
 "    "
 msgstr ""
+"\n"
+"        Computar taxas de vendas automaticamente utilizando  TaxCloud baseado em endereço de cliente nos Estados Unidos.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -563,6 +687,12 @@ msgid ""
 "        DIOT Report\n"
 "    "
 msgstr ""
+"\n"
+"        Relatórios de contabilidade eletronica\n"
+"            - CDA\n"
+"            - Balanço de Trial\n"
+"        Relatório DIOT\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_cache
@@ -580,6 +710,9 @@ msgid ""
 "        Enable the SEPA features in the payments of expenses\n"
 "    "
 msgstr ""
+"\n"
+"        Habilidar os mecanismos do Sistema Europeu de Pagamentos(SEPA) no pagamento de despesas\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa
@@ -591,6 +724,12 @@ msgid ""
 "        For more informations about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
+"\n"
+"Gerar ordens de pagamento como mensagens como recomendado pela norma europeia SEPA graças às mensagens pain.001. Versões pain (países) suportados são pain.001.001.03 (genérico), pain.001.001.03.ch.02 (Suíça) e pain.001.003.03(Alemanha). O arquivo XML gerado pode então ser enviado para o seu banco.\n"
+"\n"
+"Este módulo segue as diretrizes de implementação emanadas do Conselho Europeu de Pagamentos.\n"
+"Para mais informações sobre as normas SEPA : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip
@@ -598,6 +737,8 @@ msgid ""
 "\n"
 "        Make Call from all modules using the VOIP system."
 msgstr ""
+"\n"
+"        Fazer chamadas de todos os módulos usando o sistema de VOIP. "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_quote_subscription
@@ -605,6 +746,8 @@ msgid ""
 "\n"
 "        Online Quotes for subscriptions products"
 msgstr ""
+"\n"
+"        Citações online para subscrição de produtos."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_expense_check
@@ -613,6 +756,9 @@ msgid ""
 "        Print amount in words on checks issued for expenses\n"
 "    "
 msgstr ""
+"\n"
+"        Imprimir montante em palavras  nos cheques para despesas\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_sparse_field
@@ -624,6 +770,12 @@ msgid ""
 "        fields are stored in a \"serialized\" field in the form of a JSON mapping.\n"
 "    "
 msgstr ""
+"\n"
+"        O propósito desse módulo é implementar campos \"esparsos\" e.g,. campos que\n"
+"        são quase sempre null. Essa implementação faz contorno à limitação de números \n"
+"        de colunas em uma tabela do PostgreSQL. Esses valores são todos campos esparsos\n"
+"        armazenados em um campo \"serializado\" na forma de um mapeamento JSON.\n"
+"            "
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_barcode
@@ -632,6 +784,9 @@ msgid ""
 "        This module adds support for barcodes scanning to the delivery packages.\n"
 "    "
 msgstr ""
+"\n"
+"        Este módulo adiciona o suporte para escaneamento de códigods de barras para entregas de pacotes.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode
@@ -838,6 +993,9 @@ msgid ""
 "    Resource management for Project\n"
 "    "
 msgstr ""
+"\n"
+"    Gerenciamento de recursos para Projeto\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_ebay
@@ -920,6 +1078,10 @@ msgid ""
 "==================\n"
 "    "
 msgstr ""
+"\n"
+"Relatórios Contábeis\n"
+"==================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_reports
@@ -1056,6 +1218,10 @@ msgid ""
 "=================================\n"
 "    "
 msgstr ""
+"\n"
+"Relatórios  de Contabilidade para Luxemburgo\n"
+"=================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ma_reports
@@ -1600,6 +1766,41 @@ msgid ""
 "2011). Those modules are also strictly licensed under AGPL V3 and today don't \n"
 "come with any additional paid permission for online use of 'private modules'.\n"
 msgstr ""
+"\n"
+"Módulo Base para a Localização Brasileira\n"
+"==========================================\n"
+"\n"
+"Este módulo consiste de:\n"
+"\n"
+" - Plano de Contas Genérico Brasileiro\n"
+" - Impostos Brasileiros como:\n"
+"\n"
+"        - IPI\n"
+"        - ICMS\n"
+"        - PIS\n"
+"        - COFINS\n"
+"        - ISS\n"
+"        - IR\n"
+"        - IRPJ\n"
+"        - CSLL\n"
+"\n"
+"O campo tax_discount também foi adicionado no account.tax.template e\n"
+"account.tax objects para permitir o cálculo correto de alguns impostos Brasileiros \n"
+"como o ICMS. O assistente de criação do plano de contas foi extentido para \n"
+"propagar estes novos dados corretamente.\n"
+"\n"
+"É importante observar entretanto que ainda faltam neste módulo muitas implementações\n"
+"para usar o Odoo adequadamente no Brasil. Estas implementações (como a NF-e Nota Fiscal Eletrônica\n"
+"que já está operacional) funciona através de mais de 15 módulos adicionais do projeto da Localização Brasileira\n"
+"no Launchpad\n"
+"https://launchpad.net/openerp.pt-br-localiz e suas dependências na branch extra addons.\n"
+"Estes módulos visam não quebrar com a notável modularidade do Odoo, por isso são\n"
+"vários, porém pequenos. Uma das razões para manter estes módulos separados é por que \n"
+"os líderes da Localização Brasileira necessitam de permissões de escrita para agilizar \n"
+"o término da localização e financiar o restante dos requisitos legais como\n"
+"(livros fiscais, SPED Contábil, SPED Fiscal e o PAF ECF que ainda estão incompletos em Setembro de\n"
+"2011). Estes módulos também estão estritamente licenciados sob a licença AGPL V3 e hoje não estão  \n"
+"com nenhuma permissão paga adicional para o uso de 'módulos privados'.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_batch_deposit
@@ -7428,7 +7629,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_binding_type_275
 #: model:ir.model.fields,field_description:base.field_ir_cron_binding_type
 msgid "Binding Type"
-msgstr ""
+msgstr "Tipo de Ligação"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_blackbox_be

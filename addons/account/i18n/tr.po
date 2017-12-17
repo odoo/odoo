@@ -670,7 +670,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.report_journal
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 msgid "<strong>Company:</strong>"
-msgstr "<strong>Firma:</strong>"
+msgstr "<strong>Şirket:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1096,7 +1096,7 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Bir yevmiye girişi, her biri bir borç veya bir alacak işlemi olan birkaç yevmiye\n"
+"Bir yevmiye kaydı, her biri bir borç veya bir alacak işlemi olan birkaç yevmiye\n"
 "öğesinden oluşur."
 
 #. module: account
@@ -1267,7 +1267,7 @@ msgstr "Hesap Hedefi"
 #: model:ir.model,name:account.model_account_move
 #: model:ir.ui.view,arch_db:account.view_move_form
 msgid "Account Entry"
-msgstr "Hesap Girişi"
+msgstr "Muhasebe Kaydı"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_group_form
@@ -2455,7 +2455,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_statement_line_id
 msgid "Bank statement line reconciled with this entry"
-msgstr "Banka hesap özeti satırı bu giriş ile uzlaştırılmış"
+msgstr "Banka hesap özeti satırı bu kayıt ile uzlaştırılmış"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_bank_statement
@@ -2710,7 +2710,7 @@ msgstr "Farklı şirketler için hareketler oluşturulamıyor."
 #: code:addons/account/models/account_move.py:227
 #, python-format
 msgid "Cannot create unbalanced journal entry."
-msgstr "Borç-Alacak eşitliği olmayan bir yevmiye girişi oluşturulamaz"
+msgstr "Borç-Alacak eşitliği olmayan bir yevmiye kaydı oluşturulamaz"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:635
@@ -2719,8 +2719,8 @@ msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
 "Please go to Account Configuration."
 msgstr ""
-"Bu firma için bir hesap planı bulunamadı. Bir tane yapılandırmalısınız. \n"
-"Lütfen Muhasebe Yapılandırmasın gidin."
+"Bu şirket için bir hesap planı bulunamadı. Bir tane yapılandırmalısınız. \n"
+"Lütfen Muhasebe Yapılandırmasına gidin."
 
 #. module: account
 #: code:addons/account/models/account.py:579
@@ -3041,7 +3041,7 @@ msgstr "Yeni bir müşteri faturası oluşturmak için tıklayın."
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
 msgid "Click to create a journal entry."
-msgstr "Yeni bir yevmiye girdisi oluşturmak için tıklayın."
+msgstr "Yeni bir yevmiye kaydı oluşturmak için tıklayın."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -3207,7 +3207,7 @@ msgstr "İş Ortağını ilgilendiren şirketler"
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Company"
-msgstr "Firma"
+msgstr "Şirket"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_company_currency_id
@@ -3215,7 +3215,7 @@ msgstr "Firma"
 #: model:ir.model.fields,field_description:account.field_account_move_line_company_currency_id
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_company_currency_id
 msgid "Company Currency"
-msgstr "Firma Para Birimi"
+msgstr "Şirket Para Birimi"
 
 #. module: account
 #. openerp-web
@@ -3223,7 +3223,7 @@ msgstr "Firma Para Birimi"
 #: code:addons/account/static/src/xml/account_dashboard_setup_bar.xml:25
 #, python-format
 msgid "Company Data"
-msgstr "Firma Bilgileri"
+msgstr "Şirket Bilgileri"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_company_data_done
@@ -3244,7 +3244,7 @@ msgstr "Şirketin bir hesap planı var"
 #: model:ir.model.fields,help:account.field_account_payment_company_id
 #: model:ir.model.fields,help:account.field_account_register_payments_company_id
 msgid "Company related to this journal"
-msgstr "Bu yevmiyeyle ilişkili firma"
+msgstr "Bu yevmiyeyle ilişkili şirket"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3385,8 +3385,8 @@ msgid ""
 "Confirming this will create automatically a journal entry with the "
 "difference in the profit/loss account set on the cash journal."
 msgstr ""
-"Bunu teyit etmek, banka/kasa yevmiyesinde belirlenen kar / zarar hesabındaki"
-" fark için otomatik olarak bir yevmiye girişi oluşturacaktır."
+"Bunu doğrulamak, banka/kasa yevmiyesinde belirlenen kar / zarar hesabındaki "
+"fark için otomatik olarak bir yevmiye kaydı oluşturacaktır."
 
 #. module: account
 #. openerp-web
@@ -3788,7 +3788,7 @@ msgstr "Para Birimi Çevrim Oranı"
 #. module: account
 #: model:ir.model.fields,help:account.field_wizard_multi_charts_accounts_currency_id
 msgid "Currency as per company's country."
-msgstr "Firma Para Birimi Kuru"
+msgstr "Şirket Para Birimi Kuru"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1589
@@ -5227,7 +5227,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_reversal_journal_id
 msgid "If empty, uses the journal of the journal entry to be reversed."
-msgstr "Boş ise, geri alınacak yevmiye girişinin yevmiye ayarını kullanır."
+msgstr "Boş ise, geri alınacak yevmiye kaydının yevmiye ayarını kullanır."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_include_base_amount
@@ -5699,7 +5699,7 @@ msgstr "Fatura Numarası"
 #. module: account
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr "Fatura numarası her firma için benzersiz olmalıdır!"
+msgstr "Fatura numarası her şirket için benzersiz olmalıdır!"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -7291,7 +7291,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Once your company information is correct, you should"
-msgstr "Firma bilgileriniz doğru olduğunda,"
+msgstr "Şirket bilgileriniz doğru olduğunda,"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7366,7 +7366,7 @@ msgstr "Devir Yevmiyesi"
 #: model:ir.model.fields,field_description:account.field_res_company_account_opening_move_id
 #, python-format
 msgid "Opening Journal Entry"
-msgstr "Devir Fişi"
+msgstr "Açılış Yevmiye Kaydı"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_opening_opening_move_line_ids
@@ -7953,7 +7953,7 @@ msgstr "Banka Hesap Özetinde 'Yevmiye' alanının ayarlandığından emin olun"
 #, python-format
 msgid "Please check that the field 'Transfer Account' is set on the company."
 msgstr ""
-"Lütfen 'Transfer Hesabı' alanının firma ayarlarında tanımlandığına emin "
+"Lütfen 'Transfer Hesabı' alanının şirket ayarlarında tanımlandığına emin "
 "olun."
 
 #. module: account
@@ -9876,7 +9876,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company_chart_template_id
 msgid "The chart template for the company (if any)"
-msgstr "Firma için grafik şablonu (varsa)"
+msgstr "Şirket için grafik şablonu (varsa)"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
@@ -10043,7 +10043,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_currency_id
 #: model:ir.model.fields,help:account.field_account_move_line_currency_id
 msgid "The optional other currency if it is a multi-currency entry."
-msgstr "Eğer çok para birimli ise seçmeli diğer para birimi girişi."
+msgstr "Eğer çok para birimli ise seçmeli diğer para biriminin kaydı."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_quantity
@@ -10101,7 +10101,7 @@ msgid ""
 "The residual amount on a journal item expressed in its currency (possibly "
 "not the company currency)."
 msgstr ""
-"Bir yevmiye öğesinin para biriminde (muhtemelen firma para birimi değil) "
+"Bir yevmiye öğesinin para biriminde (muhtemelen şirket para birimi değil) "
 "ifade edilen kalıntı tutarı."
 
 #. module: account
@@ -10109,7 +10109,8 @@ msgstr ""
 msgid ""
 "The residual amount on a journal item expressed in the company currency."
 msgstr ""
-"Firma para birimi cinsinden ifade edilen bir yevmiye öğesinin kalan miktarı."
+"Şirket para birimi cinsinden ifade edilen bir yevmiye öğesinin kalan "
+"miktarı."
 
 #. module: account
 #: code:addons/account/models/account_move.py:489
@@ -10185,7 +10186,7 @@ msgid ""
 "There is no tax cash basis journal defined for this company: \"%s\" \n"
 "Configure it in Accounting/Configuration/Settings"
 msgstr ""
-"Bu firma için tanımlanmış bir vergi matrahı yok: \\ \" %s \" \\ nAyar "
+"Bu şirket için tanımlanmış bir vergi matrahı yok: \" %s \"\n"
 "Muhasebe / Yapılandırma / Ayarlar bölümünde yapılandırın"
 
 #. module: account
@@ -10600,7 +10601,7 @@ msgstr "Öde"
 #: code:addons/account/models/account_move.py:1004
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries!"
-msgstr "Kayıtları eşitlemek için firma tüm kayıtlar için aynı olmalıdır!"
+msgstr "Kayıtları eşitlemek için şirket tüm kayıtlar için aynı olmalıdır!"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10711,7 +10712,7 @@ msgstr "Bu tedarikçiye ödenmesi gereken toplam meblağ."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_total_company_signed
 msgid "Total in Company Currency"
-msgstr "Firma Para Birimi Toplamı"
+msgstr "Şirket Para Birimi Toplamı"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_total_signed
@@ -10931,7 +10932,7 @@ msgstr "Vergisiz Tutar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed_signed
 msgid "Untaxed Amount in Company Currency"
-msgstr "Firma Para Biriminde Tutulmayan Miktar"
+msgstr "Şirket Para Biriminde Vergi Hariç Tutar"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11462,7 +11463,7 @@ msgid ""
 "Check the company settings or ask someone with the 'Adviser' role"
 msgstr ""
 "Kilit tarihi %s öncesinde ve bu tarihin kapsanmadığı girdileri ekleyemez / "
-"değiştiremezsiniz. Firma ayarlarını kontrol edin veya 'Danışman' rolüyle "
+"değiştiremezsiniz. Şirket ayarlarını kontrol edin veya 'Danışman' rolüyle "
 "birine sorun"
 
 #. module: account
@@ -11544,9 +11545,8 @@ msgid ""
 "You cannot do this modification on a posted journal entry, you can just change some non legal fields. You must revert the journal entry to cancel it.\n"
 "%s."
 msgstr ""
-"Bu değişikliği gönderilen yevmiye girişinde yapamazsınız, yasal olmayan bazı"
-" alanları değiştirebilirsiniz. İptal etmek için yevmiye girişini geri "
-"almalısınız. \\ N %s ."
+"Bu değişikliği uzlaştırılmış yevmiye kaydında yapamazsınız, diğer bazı alanları değiştirebilirsiniz. İptal etmek için yevmiye kaydını geri almalısınız. \n"
+"%s ."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1346
@@ -11555,7 +11555,7 @@ msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
 msgstr ""
-"Uzlaştırılmış bir giriş için bu değişikliği yapamazsınız! Yalnızca bazı yasal olmayan alanları değiştirebilirsiniz ya da önce uzlaşmayı kaldırmalısınız\n"
+"Uzlaştırılmış bir kayıt için bu değişikliği yapamazsınız! Diğer bazı alanları değiştirebilirsiniz ya da önce uzlaşmayı kaldırmalısınız\n"
 "%s"
 
 #. module: account
@@ -11587,7 +11587,7 @@ msgid ""
 "First you should set the journal to allow cancelling entries."
 msgstr ""
 "Bu yevmiyeye ait işlenmiş bir kaydı değiştiremezsiniz !\n"
-"Bunu yapmak istiyorsanız ilgili yevmiye üzerinden yevmiye girişlerinin iptaline izin vermelisiniz."
+"Bunu yapmak istiyorsanız ilgili yevmiye üzerinden yevmiye kayıtlarının iptaline izin vermelisiniz."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:783
@@ -11757,7 +11757,7 @@ msgstr "Banka Hesaplarınız"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Your Company"
-msgstr "Firmanız"
+msgstr "Şirketiniz"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -11867,7 +11867,7 @@ msgstr "kod"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "create a journal entry"
-msgstr "bir yevmiye girişi oluştur"
+msgstr "bir yevmiye kaydı oluştur"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -11986,7 +11986,7 @@ msgstr "bize bir e-posta gönderin"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "set company logo"
-msgstr "firma logosunu ayarlayın"
+msgstr "şirket logosunu ayarlayın"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
