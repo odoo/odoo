@@ -324,7 +324,7 @@
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban" on_create="quick_create" quick_create_view="crm.quick_create_opportunity_form">
-                    <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description", "legend_priority": "Use of stars"}}'/>
+                    <field name="stage_id" options='{"conversion_rate_tooltip": True, "group_by_tooltip": {"requirements": "Description", "legend_priority": "Use of stars"}}'/>
                     <field name="color"/>
                     <field name="priority"/>
                     <field name="planned_revenue"/>

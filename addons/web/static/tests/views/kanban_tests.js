@@ -2966,6 +2966,36 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('conversion_rate_tooltip option for kanban tooltip', function (assert) {
+        assert.expect(5);
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" default_group_by="state">' +
+                        '<field name="state" ' +
+                            'options=\'{"conversion_rate_tooltip": True}\'/>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+        });
+
+        assert.ok(kanban.$('.o_kanban_view').hasClass('o_kanban_grouped'),
+                        "should have classname 'o_kanban_grouped'");
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 3, "should have " + 3 + " columns");
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_header_title').data('original-title'),
+            "<p>1 records</p><div>100.00 % conversion</div>",
+            "first column should have a tooltip with the number of records, and conversion rate 100.00 %");
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_header_title').data('original-title'),
+            "<p>1 records</p><div>75.00 % conversion</div>",
+            "second column should have a tooltip with the number of records, and conversion rate 75.00 %");
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(2) .o_kanban_header_title').data('original-title'),
+            "<p>2 records</p><div>50.00 % conversion</div>",
+            "third column should have a tooltip with the number of records, and conversion rate 50.00 %");
+
+        kanban.destroy();
+    });
+
     QUnit.test('move a record then put it again in the same column', function (assert) {
         assert.expect(6);
 

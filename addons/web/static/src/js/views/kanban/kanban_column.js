@@ -146,8 +146,7 @@ var KanbanColumn = Widget.extend({
         this.$header.find('.o_column_title').text(title);
 
         this.$el.toggleClass('o_column_folded', this.folded && !config.device.isMobile);
-        var tooltip = this.data.count + _t(' records');
-        tooltip = '<p>' + tooltip + '</p>' + this.tooltipInfo;
+        var tooltip = this.getTooltip()
         this.$header.find('.o_kanban_header_title').tooltip({html: true}).attr('data-original-title', tooltip);
         if (!this.remaining) {
             this.$('.o_kanban_load_more').remove();
@@ -211,10 +210,26 @@ var KanbanColumn = Widget.extend({
         }
     },
     /**
+     * Generate the tooltip.
+     */
+    getTooltip: function() {
+        var tooltip = this.data.count + _t(' records');
+        return '<p>' + tooltip + '</p>' + this.tooltipInfo;;
+    },
+    /**
      * @returns {Boolean} true iff the column is empty
      */
     isEmpty: function () {
         return !this.records.length;
+    },
+    /**
+     * Update current tooltip with conversion rate.
+     * @param {integer} rate percentage of conversion rate
+     */
+    updateConversionTooltip: function(rate) {
+        var tooltip = this.getTooltip();
+        tooltip += _.str.sprintf('<div>%s %% %s</div>', rate, _t('conversion'));
+        this.$header.find('.o_kanban_header_title').attr('data-original-title', tooltip);
     },
 
     //--------------------------------------------------------------------------
