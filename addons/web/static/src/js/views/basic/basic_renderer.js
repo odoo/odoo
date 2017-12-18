@@ -251,13 +251,12 @@ var BasicRenderer = AbstractRenderer.extend({
         function _apply(element) {
             // If the view is in edit mode and that a widget have to switch
             // its "readonly" state, we have to re-render it completely
-            if ('readonly' in modifiers
-                && self.mode === "edit"
-                && element.widget
-                && (element.widget.mode === 'readonly') !== modifiers.readonly)
-            {
-                self._rerenderFieldWidget(element.widget, record);
-                return; // Rerendering already applied the modifiers, no need to go further
+            if ('readonly' in modifiers && element.widget) {
+                var mode = modifiers.readonly ? 'readonly' : modifiersData.baseMode;
+                if (mode !== element.widget.mode) {
+                    self._rerenderFieldWidget(element.widget, record, mode);
+                    return; // Rerendering already applied the modifiers, no need to go further
+                }
             }
 
             // Toggle modifiers CSS classes if necessary
@@ -429,6 +428,12 @@ var BasicRenderer = AbstractRenderer.extend({
                 this.allModifiersData.push(modifiersData);
             }
         }
+        // we register here the base mode of the node.  This is a field widget
+        // specific settings which represents the generic mode for the widget,
+        // regardless of its modifiers.  The interesting case is the list view:
+        // all widgets are supposed to be in the baseMode 'readonly', except the
+        // ones that are in the line that is currently being edited.
+        modifiersData.baseMode = (options && options.mode) || this.mode;
 
         // Evaluate if necessary
         if (!modifiersData.evaluatedModifiers[record.id]) {
@@ -454,7 +459,7 @@ var BasicRenderer = AbstractRenderer.extend({
             }
             modifiersData.elementsByRecord[record.id].push(newElement);
 
-            this._applyModifiers(modifiersData, record, newElement);
+            this._applyModifiers(modifiersData, record, newElement, options);
         }
 
         return modifiersData.evaluatedModifiers[record.id];
@@ -490,22 +495,20 @@ var BasicRenderer = AbstractRenderer.extend({
      * @param {Object} node
      * @param {Object} record
      * @param {Object} [options]
-     * @param {Object} [modifiersOptions]
      * @returns {AbstractField}
      */
-    _renderFieldWidget: function (node, record, options, modifiersOptions) {
+    _renderFieldWidget: function (node, record, options) {
         var fieldName = node.attrs.name;
-
         // Register the node-associated modifiers
-        var modifiers = this._registerModifiers(node, record);
-
+        var mode = options && options.mode || this.mode;
+        var modifiers = this._registerModifiers(node, record, null, options);
         // Initialize and register the widget
         // Readonly status is known as the modifiers have just been registered
         var Widget = record.fieldsInfo[this.viewType][fieldName].Widget;
-        var widget = new Widget(this, fieldName, record, _.extend({
-            mode: modifiers.readonly ? 'readonly' : this.mode,
+        var widget = new Widget(this, fieldName, record, {
+            mode: modifiers.readonly ? 'readonly' : mode,
             viewType: this.viewType,
-        }, options || {}));
+        });
 
         // Register the widget so that it can easily be found again
         if (this.allFieldWidgets[record.id] === undefined) {
@@ -526,15 +529,16 @@ var BasicRenderer = AbstractRenderer.extend({
         // associated to new widget)
         var self = this;
         def.then(function () {
-            self._registerModifiers(node, record, widget, _.extend({
+            self._registerModifiers(node, record, widget, {
                 callback: function (element, modifiers, record) {
                     element.$el.toggleClass('o_field_empty', !!(
                         record.data.id
-                        && (modifiers.readonly || self.mode === 'readonly')
+                        && (modifiers.readonly || mode === 'readonly')
                         && !element.widget.isSet()
                     ));
                 },
-            }, modifiersOptions || {}));
+                mode: mode
+            });
             self._postProcessField(widget, node);
         });
 
@@ -602,11 +606,12 @@ var BasicRenderer = AbstractRenderer.extend({
      * @private
      * @param {Widget} widget
      * @param {Object} record
+     * @param {string} mode either 'readonly' or 'edit'
      * @returns {AbstractField}
      */
-    _rerenderFieldWidget: function (widget, record) {
+    _rerenderFieldWidget: function (widget, record, mode) {
         // Render the new field widget
-        var newWidget = this._renderFieldWidget(widget.__node, record);
+        var newWidget = this._renderFieldWidget(widget.__node, record, {mode: mode});
         widget.$el.replaceWith(newWidget.$el);
 
         // Destroy the old widget and position the new one at the old one's

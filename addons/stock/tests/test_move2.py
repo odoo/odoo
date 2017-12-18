@@ -576,6 +576,7 @@ class TestPickShip(TestStockCommon):
         picking_pack.button_validate()
         self.assertEqual(first_pack.location_id, output_sub_location)
         self.assertEqual(second_pack.location_id, output_sub_location)
+        self.assertEqual(len(picking_pack.entire_package_ids), 2)
         picking_ship.action_assign()
         self.assertEqual(picking_ship.move_line_ids[:1].location_id, output_sub_location)
         for move_line in picking_ship.move_line_ids:

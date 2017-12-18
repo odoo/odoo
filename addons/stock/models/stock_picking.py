@@ -407,7 +407,7 @@ class Picking(models.Model):
             packages = self.env['stock.quant.package']
             for ml in picking.move_line_ids:
                 if ml.package_id.id == ml.result_package_id.id:
-                    if picking._check_move_lines_map_quant_package(ml.package_id):
+                    if picking.state in ('done', 'cancel') or picking._check_move_lines_map_quant_package(ml.package_id):
                         packages |= ml.package_id
             picking.entire_package_ids = packages
             picking.entire_package_detail_ids = packages
