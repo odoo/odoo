@@ -131,7 +131,7 @@ odoo.define('payment.payment_form', function (require) {
                     // if there's a prepare tx url set
                     if ($tx_url.length === 1) {
                         // if the user wants to save his credit card info
-                        var form_save_token = $('input[name="o_payment_form_save_token"]').checked === true;
+                        var form_save_token = $('input[name="o_payment_form_save_token"]').prop('checked');
                         // then we call the route to prepare the transaction
                         ajax.jsonRpc($tx_url[0].value, 'call', {
                             'acquirer_id': parseInt(acquirer_id),
