@@ -72,6 +72,11 @@ def jsonrpc(url, method='call', params=None):
 #----------------------------------------------------------
 # Helpers for proxy
 #----------------------------------------------------------
+class IapTransaction(object):
+
+    def __init__(self):
+        self.credit = None
+
 @contextlib.contextmanager
 def charge(env, key, account_token, credit, description=None, credit_template=None):
     """
@@ -107,7 +112,9 @@ def charge(env, key, account_token, credit, description=None, credit_template=No
             e.args = (json.dumps(arguments),)
         raise e
     try:
-        yield
+        transaction = IapTransaction()
+        transaction.credit = credit
+        yield transaction
     except Exception as e:
         params = {
             'token': transaction_token,
@@ -119,6 +126,7 @@ def charge(env, key, account_token, credit, description=None, credit_template=No
         params = {
             'token': transaction_token,
             'key': key,
+            'credit_to_capture': transaction.credit,
         }
         r = jsonrpc(endpoint + '/iap/1/capture', params=params) # noqa
 
