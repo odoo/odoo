@@ -171,7 +171,7 @@ class Inventory(models.Model):
     def action_check(self):
         """ Checks the inventory and computes the stock move to do """
         # tde todo: clean after _generate_moves
-        for inventory in self.filtered(lambda x: x.state not in ('done','cancel')):
+        for inventory in self.filtered(lambda x: x.state not in ('draft', 'done','cancel')):
             # first remove the existing stock moves linked to this inventory
             inventory.mapped('move_ids').unlink()
             inventory.line_ids._generate_moves()
