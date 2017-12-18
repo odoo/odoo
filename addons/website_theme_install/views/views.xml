@@ -67,7 +67,7 @@
         <field name="view_id" ref="theme_view_kanban"/>
         <field name="search_view_id" ref="theme_view_search"/>
         <field name="domain" eval="[
-            '|', ('category_id', 'not in', [ref('base.module_category_hidden', False), ref('base.module_category_theme_hidden', False)]), ('name', '=', 'theme_default'),
+            ('category_id', 'not in', [ref('base.module_category_hidden', False), ref('base.module_category_theme_hidden', False)]),
             '|', ('category_id', '=', ref('base.module_category_theme', False)), ('category_id.parent_id', '=', ref('base.module_category_theme', False))
         ]"/>
     </record>

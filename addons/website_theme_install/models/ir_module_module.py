@@ -51,7 +51,7 @@ class IrModuleModule(models.Model):
 
         self.search([ # Uninstall the theme(s) which is (are) installed
             ('state', '=', 'installed'),
-            '|', ('category_id', 'not in', hidden_categories_ids), ('name', '=', 'theme_default'),
+            ('category_id', 'not in', hidden_categories_ids),
             '|', ('category_id', '=', theme_category_id), ('category_id.parent_id', '=', theme_category_id)
         ]).button_immediate_uninstall()
 
