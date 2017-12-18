@@ -77,33 +77,25 @@ class Employee(models.Model):
     current_leave_id = fields.Many2one('hr.holidays.status', compute='_compute_leave_status', string="Current Leave Type")
     leave_date_from = fields.Date('From Date', compute='_compute_leave_status')
     leave_date_to = fields.Date('To Date', compute='_compute_leave_status')
-    leaves_count = fields.Float('Number of Leaves', compute='_compute_leaves_count')
+    leaves_count = fields.Float('Leaves Left', compute='_compute_remaining_leaves')
     show_leaves = fields.Boolean('Able to see Remaining Leaves', compute='_compute_show_leaves')
     is_absent_totay = fields.Boolean('Absent Today', compute='_compute_absent_employee', search='_search_absent_employee')
 
     def _get_remaining_leaves(self):
-        """ Helper to compute the remaining leaves for the current employees
-            :returns dict where the key is the employee id, and the value is the remain leaves
-        """
-        self._cr.execute("""
-            SELECT
-                sum(h.number_of_days) AS days,
-                h.employee_id
-            FROM
-                hr_holidays h
-                join hr_holidays_status s ON (s.id=h.holiday_status_id)
-            WHERE
-                h.state='validate' AND
-                s.limit=False AND
-                h.employee_id in %s
-            GROUP BY h.employee_id""", (tuple(self.ids),))
-        return dict((row['employee_id'], row['days']) for row in self._cr.dictfetchall())
+        leaves = self.env['hr.holidays'].read_group([
+            ('employee_id', 'in', self.ids),
+            ('holiday_status_id.limit', '=', False),
+            ('state', '=', 'validate')
+        ], fields=['number_of_days', 'employee_id'], groupby=['employee_id'])
+        return dict([(leave['employee_id'][0], leave['number_of_days']) for leave in leaves])
 
     @api.multi
     def _compute_remaining_leaves(self):
-        remaining = self._get_remaining_leaves()
+        actual_remaining = self._get_remaining_leaves()
         for employee in self:
-            employee.remaining_leaves = remaining.get(employee.id, 0.0)
+            value = actual_remaining.get(employee.id, 0.0)
+            employee.remaining_leaves = value
+            employee.leaves_count = value
 
     @api.multi
     def _inverse_remaining_leaves(self):
@@ -162,17 +154,6 @@ class Employee(models.Model):
             employee.leave_date_to = leave_data.get(employee.id, {}).get('leave_date_to')
             employee.current_leave_state = leave_data.get(employee.id, {}).get('current_leave_state')
             employee.current_leave_id = leave_data.get(employee.id, {}).get('current_leave_id')
-
-    @api.multi
-    def _compute_leaves_count(self):
-        leaves = self.env['hr.holidays'].read_group([
-            ('employee_id', 'in', self.ids),
-            ('holiday_status_id.limit', '=', False),
-            ('state', '=', 'validate')
-        ], fields=['number_of_days', 'employee_id'], groupby=['employee_id'])
-        mapping = dict([(leave['employee_id'][0], leave['number_of_days']) for leave in leaves])
-        for employee in self:
-            employee.leaves_count = mapping.get(employee.id)
 
     @api.multi
     def _compute_show_leaves(self):
