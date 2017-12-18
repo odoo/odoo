@@ -409,14 +409,18 @@ odoo.define('payment.payment_form', function (require) {
         },
     });
 
-    require('web.dom_ready'); // only start this when dom is ready
-    if (!$('.o_payment_form').length) {
-        return $.Deferred().reject("DOM doesn't contain '.o_payment_form'");
-    }
-    $('.o_payment_form').each(function () {
-        var $elem = $(this);
-        var form = new PaymentForm(null, $elem.data());
-        form.attachTo($elem);
+    $(function () {
+        // TODO move this to another module, requiring dom_ready and rejecting
+        // the returned deferred to get the proper message
+        if (!$('.o_payment_form').length) {
+            console.log("DOM doesn't contain '.o_payment_form'");
+            return;
+        }
+        $('.o_payment_form').each(function () {
+            var $elem = $(this);
+            var form = new PaymentForm(null, $elem.data());
+            form.attachTo($elem);
+        });
     });
 
     return PaymentForm;
