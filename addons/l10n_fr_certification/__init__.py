@@ -3,7 +3,7 @@
 
 from . import models
 from odoo import api, SUPERUSER_ID
-from models.res_company import UNALTERABLE_COUNTRIES
+from .models.res_company import UNALTERABLE_COUNTRIES
 
 
 def _setup_inalterability(cr, registry):

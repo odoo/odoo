@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import models
+from . import models
 from openerp import api, SUPERUSER_ID
 from ..l10n_fr_certification.models.res_company import UNALTERABLE_COUNTRIES
 

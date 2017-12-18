@@ -1,3 +1,3 @@
-import account_bank_statement
-import res_company
-import pos
+from . import account_bank_statement
+from . import res_company
+from . import pos
