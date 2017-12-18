@@ -37,7 +37,7 @@ CrashManager.include({
                     title: error_data.title || _t("Insufficient Balance"),
                     $content: content,
                     buttons: [
-                        {text: 'Buy credits at Odoo', classes : "btn-primary", click: function() {
+                        {text: _t('Buy credits at Odoo'), classes : "btn-primary", click: function() {
                             window.open(url, '_blank');
                         }, close:true},
                         {text: _t("Cancel"), close: true}
