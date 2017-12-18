@@ -538,7 +538,7 @@ class IrModelFields(models.Model):
                 raise UserError(_("Model %s does not exist!") % vals['relation'])
 
             if vals.get('ttype') == 'one2many':
-                if not self.search([('model_id', '=', vals['relation']), ('name', '=', vals['relation_field']), ('ttype', '=', 'many2one')]):
+                if not self.search([('model', '=', vals['relation']), ('name', '=', vals['relation_field']), ('ttype', '=', 'many2one')]):
                     raise UserError(_("Many2one %s on model %s does not exist!") % (vals['relation_field'], vals['relation']))
 
             self.pool.clear_manual_fields()
