@@ -411,11 +411,16 @@ function dragAndDrop($el, $to, options) {
     elementCenter.top += $el.outerHeight()/2;
 
     var toOffset = $to.offset();
+    toOffset.top += $to.outerHeight()/2;
     toOffset.left += $to.outerWidth()/2;
-    if (position === 'center') {
-        toOffset.top += $to.outerHeight()/2;
+    if (position === 'top') {
+        toOffset.top -= $to.outerHeight()/2;
     } else if (position === 'bottom') {
-        toOffset.top += $to.outerHeight();
+        toOffset.top += $to.outerHeight()/2;
+    } else if (position === 'left') {
+        toOffset.left -= $to.outerWidth()/2;
+    } else if (position === 'right') {
+        toOffset.left += $to.outerWidth()/2;
     }
 
     $el.trigger($.Event("mousedown", {
