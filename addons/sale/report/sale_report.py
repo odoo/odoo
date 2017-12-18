@@ -34,7 +34,7 @@ class SaleReport(models.Model):
     pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True)
     team_id = fields.Many2one('crm.team', 'Sales Channel', readonly=True, oldname='section_id')
-    country_id = fields.Many2one('res.country', 'Partner Country', readonly=True)
+    country_id = fields.Many2one('res.country', 'Customer Country', readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', 'Commercial Entity', readonly=True)
     state = fields.Selection([
         ('draft', 'Draft Quotation'),
