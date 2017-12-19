@@ -785,7 +785,11 @@ class PurchaseOrderLine(models.Model):
         fpos = self.order_id.fiscal_position_id
         #Código agregado por TRESCLOUD
         ctx = self.env.context.copy()
-        ctx.update({'origin': 'purchase_order_line'})
+        module_ids = self.env['ir.module.module'].sudo().search([('name','=','ecua_invoice_type'), ('state','=','installed')])
+        if module_ids:
+            document_invoice_type = self.env['account.invoice'].with_context(type='in_invoice')._doc_type()
+            ctx.update({'document_invoice_type': document_invoice_type})
+
         if self.env.uid == SUPERUSER_ID:
             company_id = self.env.user.company_id.id
             #Código modificado por TRESCLOUD
