@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
 "PO-Revision-Date: 2015-08-25 10:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: Spanish (Panama) (http://www.transifex.com/odoo/odoo-9/"
@@ -55,25 +55,8 @@ msgid "Created on"
 msgstr "Creado en"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,help:mrp_byproduct.field_mrp_subproduct_subproduct_type
-msgid ""
-"Define how the quantity of byproducts will be set on the production orders "
-"using this BoM.  'Fixed' depicts a situation where the quantity of created "
-"byproduct is always equal to the quantity set on the BoM, regardless of how "
-"many are created in the production order.  By opposition, 'Variable' means "
-"that the quantity will be computed as    '(quantity of byproduct set on the "
-"BoM / quantity of manufactured product set on the BoM * quantity of "
-"manufactured product in the production order.)'"
-msgstr ""
-
-#. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_display_name
 msgid "Display Name"
-msgstr ""
-
-#. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Fixed"
 msgstr ""
 
 #. module: mrp_byproduct
@@ -97,6 +80,11 @@ msgid "Last Updated on"
 msgstr "Última actualización en"
 
 #. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_operation_id
+msgid "Produced at Operation"
+msgstr ""
+
+#. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_id
 msgid "Product"
 msgstr "Producto"
@@ -107,23 +95,32 @@ msgid "Product Qty"
 msgstr ""
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_uom
-msgid "Product Unit of Measure"
-msgstr ""
-
-#. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_production
-#, fuzzy
 msgid "Production"
-msgstr "Producto"
-
-#. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_subproduct_type
-msgid "Quantity Type"
 msgstr ""
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:45
+#: model:ir.model,name:mrp_byproduct.model_mrp_product_produce
+msgid "Record Production"
+msgstr ""
+
+#. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_stock_move
+msgid "Stock Move"
+msgstr ""
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_stock_move_subproduct_id
+msgid "Subproduct"
+msgstr ""
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,help:mrp_byproduct.field_stock_move_subproduct_id
+msgid "Subproduct line that generated the move in a manufacturing order"
+msgstr ""
+
+#. module: mrp_byproduct
+#: code:addons/mrp_byproduct/models/mrp_subproduct.py:32
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -131,12 +128,12 @@ msgid ""
 msgstr ""
 
 #. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Variable"
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_uom_id
+msgid "Unit of Measure"
 msgstr ""
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:45
+#: code:addons/mrp_byproduct/models/mrp_subproduct.py:31
 #, python-format
 msgid "Warning"
 msgstr ""

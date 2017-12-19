@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2015-09-07 18:22+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Panama) (http://www.transifex.com/odoo/odoo-9/"
@@ -50,17 +50,12 @@ msgid "Configuration"
 msgstr ""
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.inherit_view_general_configuration
-msgid "Configure the incoming email gateway"
-msgstr ""
-
-#. module: fetchmail
 #: selection:fetchmail.server,state:0
 msgid "Confirmed"
 msgstr "Confirmado"
 
 #. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:150
+#: code:addons/fetchmail/models/fetchmail.py:137
 #, python-format
 msgid "Connection test failed: %s"
 msgstr ""
@@ -78,13 +73,11 @@ msgid "Create a New Record"
 msgstr ""
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
 msgid "Created by"
 msgstr "Creado por"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
 msgid "Created on"
 msgstr "Creado en"
@@ -95,7 +88,6 @@ msgid "Defines the order of processing, lower values mean higher priority"
 msgstr ""
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_display_name
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
 msgid "Display Name"
 msgstr ""
@@ -111,7 +103,6 @@ msgid "Hostname or IP of the mail server"
 msgstr ""
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_id
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
 msgid "ID"
 msgstr "ID"
@@ -134,6 +125,11 @@ msgstr ""
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_mail_mail_fetchmail_server_id
 msgid "Inbound Mail Server"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
+msgid "Incoming Email Servers"
 msgstr ""
 
 #. module: fetchmail
@@ -164,19 +160,16 @@ msgid "Last Fetch Date"
 msgstr ""
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings___last_update
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
 msgid "Last Modified on"
 msgstr ""
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
 msgid "Last Updated by"
 msgstr "Última actualización de"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
 msgid "Last Updated on"
 msgstr "Última actualización en"
@@ -189,6 +182,13 @@ msgstr ""
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Login Information"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.actions.server,name:fetchmail.ir_cron_mail_gateway_action_ir_actions_server
+#: model:ir.cron,cron_name:fetchmail.ir_cron_mail_gateway_action
+#: model:ir.cron,name:fetchmail.ir_cron_mail_gateway_action
+msgid "Mail: Fetchmail Service"
 msgstr ""
 
 #. module: fetchmail
@@ -212,6 +212,11 @@ msgstr ""
 msgid ""
 "Optional custom server action to trigger for each incoming mail, on the "
 "record that was created or updated by this mail"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
+msgid "Outgoing Email Servers"
 msgstr ""
 
 #. module: fetchmail
@@ -350,9 +355,4 @@ msgstr ""
 msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
-msgstr ""
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
-msgid "fetchmail.config.settings"
 msgstr ""

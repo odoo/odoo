@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
 "PO-Revision-Date: 2015-10-06 08:56+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Chile) (http://www.transifex.com/odoo/odoo-9/"
@@ -29,9 +29,15 @@ msgid "Active"
 msgstr "Activo"
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:68
+#: code:addons/website_customer/controllers/main.py:80
 #, python-format
 msgid "All Countries"
+msgstr ""
+
+#. module: website_customer
+#: code:addons/website_customer/controllers/main.py:61
+#, python-format
+msgid "All Sectors of Activity"
 msgstr ""
 
 #. module: website_customer
@@ -52,6 +58,11 @@ msgstr ""
 #. module: website_customer
 #: model:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid "Click to create a new partner tag."
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model,name:website_customer.model_res_partner
+msgid "Contact"
 msgstr ""
 
 #. module: website_customer
@@ -115,11 +126,6 @@ msgid "Our References"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model,name:website_customer.model_res_partner
-msgid "Partner"
-msgstr "Empresa"
-
-#. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.view_partner_tag_form
 msgid "Partner Tag"
 msgstr ""
@@ -147,6 +153,11 @@ msgid "References by Country"
 msgstr ""
 
 #. module: website_customer
+#: model:ir.ui.view,arch_db:website_customer.opt_industry_list
+msgid "References by Sectors of Activity"
+msgstr ""
+
+#. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.opt_tag_list
 msgid "References by Tag"
 msgstr ""
@@ -162,6 +173,11 @@ msgid "Trusted by millions worldwide"
 msgstr ""
 
 #. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_website_published
+msgid "Visible in Website"
+msgstr ""
+
+#. module: website_customer
 #: model:ir.actions.act_window,name:website_customer.action_partner_tag_form
 #: model:ir.ui.menu,name:website_customer.menu_partner_tag_form
 #: model:ir.ui.view,arch_db:website_customer.view_partner_tag_list
@@ -171,6 +187,7 @@ msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_website_tag_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_users_website_tag_ids
 msgid "Website tags"
 msgstr ""
 
@@ -183,6 +200,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_customer.implemented_by_block
 msgid "reference(s))"
 msgstr ""
-
-#~ msgid "Tags"
-#~ msgstr "Etiquetas"
