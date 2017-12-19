@@ -236,10 +236,19 @@ class HrPayslip(models.Model):
         self.compute_sheet()
         return self.write({'state': 'done'})
 
+    #Metodo agregado por TRESCLOUD
     @api.multi
-    def action_payslip_cancel(self):
+    def check_payslip_state(self):
+        '''
+        Este metodo sera modificado en ecua_hr por el estado paid que agregamos
+        '''
         if self.filtered(lambda slip: slip.state == 'done'):
             raise UserError(_("Cannot cancel a payslip that is done."))
+        
+    @api.multi
+    def action_payslip_cancel(self):
+        #La siguiente linea fue modificada por TRESCLOUD
+        self.check_payslip_state()
         return self.write({'state': 'cancel'})
 
     @api.multi
