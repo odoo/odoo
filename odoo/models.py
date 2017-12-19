@@ -5521,6 +5521,44 @@ class BaseModel(object):
 
         return result
 
+    #
+    # Cleanup
+    #
+
+    @api.model
+    def _cleanup_model(self):
+        """
+        Clean up the data from the current model after module uninstallation.
+
+        This method, when overridden, may be used to clean up or remove records
+        that were related to other data that is gone because of some module
+        uninstallation. It typically fixes failed removals because of
+        database constraints or the absence of such constraints.
+
+        E.g.:
+
+            MyModel contains a couple of fields which have a unicity
+            constraint, MyModel overrides the unlink method to clean up those
+            fields, since they cannot be automatically removed.
+
+            MyOtherModel inherits from MyModel and creates some MyModel
+            records. MyOtherModel also overrides the unlink method, and at the
+            end, calls MyModel's unlink through a super() call.
+
+            It is possible that during MyOtherModel's unlink, an error happens
+            before the call to MyModel's unlink, meaning that MyModel records
+            created by MyOtherModel will linger in the database, and since
+            they have a unicity constraint, upon reinstallation of MyOtherModel
+            the registry will crash, because it will try to recreate those
+            records when they already exist, making them non-unique.
+
+
+        This method serves as an interface to solve such issues by overriding
+        it in the model whose unlink fails to be called during some other
+        model's unlink method.
+        """
+        pass
+
 
 class RecordCache(MutableMapping):
     """ Implements a proxy dictionary to read/update the cache of a record.

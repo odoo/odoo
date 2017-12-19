@@ -297,6 +297,20 @@ class Registry(Mapping):
         for model in models:
             model._setup_complete()
 
+    def cleanup_models(self, cr):
+        """
+        Clean up every model in the registry if necessary.
+
+        This method calls every model's cleanup_model method,
+        which by default does nothing but can be overridden for very
+        specific cases, it can be thought of as a garbage collector of sorts.
+        """
+        env = odoo.api.Environment(cr, SUPERUSER_ID, {})
+        models = env.values()
+
+        for model in models:
+            model._cleanup_model()
+
     def init_models(self, cr, model_names, context):
         """ Initialize a list of models (given by their name). Call methods
             ``_auto_init``, ``init``, and ``_auto_end`` on each model to create
