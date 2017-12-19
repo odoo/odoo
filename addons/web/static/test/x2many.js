@@ -463,6 +463,11 @@ Tour.register({
         },
 
         {
+            title:      "delay to remove race condition",
+            wait: 250, // next step triggers an onchange before the return of the fields_view_get
+        },
+
+        {
             title:      "edit title",
             waitFor:    ".oe_form_editable",
             element:    '.oe_form_required:first input',

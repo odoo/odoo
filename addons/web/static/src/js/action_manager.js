@@ -352,7 +352,7 @@ var ActionManager = Widget.extend({
         return this.inner_widget;
     },
     history_back: function() {
-        var nb_views = this.inner_action.get_nb_views();
+        var nb_views = this.inner_action && this.inner_action.get_nb_views();
         if (nb_views > 1) {
             // Stay on this action, but select the previous view
             return this.select_action(this.inner_action, nb_views - 2);
@@ -802,6 +802,7 @@ var ActionManager = Widget.extend({
             window.open(url, '_blank');
             options.on_close();
         }
+        options.on_close();
         return $.when();
     },
 });
