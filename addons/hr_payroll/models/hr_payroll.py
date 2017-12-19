@@ -247,7 +247,7 @@ class HrPayslip(models.Model):
         
     @api.multi
     def action_payslip_cancel(self):
-        #La siguiente línea fue modificada por TRESCLOUD
+        #La siguiente linea fue modificada por TRESCLOUD
         self.check_payslip_state()
         return self.write({'state': 'cancel'})
 
