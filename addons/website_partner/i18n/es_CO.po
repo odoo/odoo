@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
 "PO-Revision-Date: 2015-10-23 19:44+0000\n"
 "Last-Translator: Mateo Tibaquirá <nestormateo@gmail.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/"
@@ -25,12 +25,7 @@ msgstr ""
 
 #. module: website_partner
 #: model:ir.model,name:website_partner.model_res_partner
-msgid "Partner"
-msgstr "Asociado"
-
-#. module: website_partner
-#: model:ir.model.fields,field_description:website_partner.field_res_partner_self
-msgid "Self"
+msgid "Contact"
 msgstr ""
 
 #. module: website_partner
@@ -39,35 +34,43 @@ msgid "Short Description for List View"
 msgstr "Descripción Corta para la Vista de Listado"
 
 #. module: website_partner
+#: model:ir.model.fields,help:website_partner.field_res_users_website_url
+msgid "The full URL to access the document through the website."
+msgstr ""
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_users_website_published
+msgid "Visible in Website"
+msgstr ""
+
+#. module: website_partner
 #: model:ir.model.fields,field_description:website_partner.field_res_partner_website_description
+#: model:ir.model.fields,field_description:website_partner.field_res_users_website_description
 msgid "Website Partner Full Description"
 msgstr "Descripción Completa del Sitio Web del Asociado"
 
 #. module: website_partner
 #: model:ir.model.fields,field_description:website_partner.field_res_partner_website_short_description
+#: model:ir.model.fields,field_description:website_partner.field_res_users_website_short_description
 msgid "Website Partner Short Description"
 msgstr "Descripción Corta del Sitio Web del Asociado"
 
-#~ msgid "Private Profile"
-#~ msgstr "Perfil Privado"
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_users_website_url
+msgid "Website URL"
+msgstr ""
 
-#~ msgid "The full URL to access the document through the website."
-#~ msgstr "La URL completa para acceder al documento a través del sitio web."
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_users_website_meta_description
+msgid "Website meta description"
+msgstr ""
 
-#~ msgid "Visible in Website"
-#~ msgstr "Visible en el Sitio Web"
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_users_website_meta_keywords
+msgid "Website meta keywords"
+msgstr ""
 
-#~ msgid "Website URL"
-#~ msgstr "URL del Sitio Web"
-
-#~ msgid "Website meta description"
-#~ msgstr "Meta descripción del sitio web"
-
-#~ msgid "Website meta keywords"
-#~ msgstr "Meta palabras clave del sitio web"
-
-#~ msgid "Website meta title"
-#~ msgstr "Meta título del sitio web"
-
-#~ msgid "unknown"
-#~ msgstr "desconocido(a)"
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_users_website_meta_title
+msgid "Website meta title"
+msgstr ""

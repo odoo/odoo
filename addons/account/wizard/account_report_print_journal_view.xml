@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="account_report_print_journal_view" model="ir.ui.view">
-        <field name="name">Sale/Purchase Journal</field>
+        <field name="name">Journals Audit</field>
         <field name="model">account.print.journal</field>
         <field name="inherit_id" ref="account.account_common_report_view"/>
         <field name="arch" type="xml">
@@ -12,15 +12,12 @@
             <field name="sort_selection" widget="radio"/>
             <newline/>
         </xpath>
-        <xpath expr="//field[@name='journal_ids']" position="attributes">
-            <attribute name="domain">[('type', 'in', ('sale', 'purchase'))]</attribute>
-        </xpath>
         </data>
         </field>
     </record>
 
     <record id="action_account_print_journal_menu" model="ir.actions.act_window">
-        <field name="name">Sale/Purchase Journal</field>
+        <field name="name">Journals Audit</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">account.print.journal</field>
         <field name="view_type">form</field>
@@ -31,7 +28,7 @@
 
     <menuitem
         id="menu_print_journal"
-        name="Sale/Purchase Journal"
+        name="Journals Audit"
         parent="account.menu_finance_legal_statement"
         action="action_account_print_journal_menu"
         groups="account.group_account_manager,account.group_account_user"

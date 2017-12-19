@@ -253,7 +253,10 @@ var KanbanRenderer = BasicRenderer.extend({
                 stop: function () {
                     var ids = [];
                     self.$('.o_kanban_group').each(function (index, u) {
-                        ids.push($(u).data('id'));
+                        // Ignore 'Undefined' column
+                        if (_.isNumber($(u).data('id'))) {
+                            ids.push($(u).data('id'));
+                        }
                     });
                     self.trigger_up('resequence_columns', {ids: ids});
                 },
