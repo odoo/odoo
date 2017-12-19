@@ -1306,13 +1306,20 @@ class AccountInvoiceLine(models.Model):
         if type in ('out_invoice', 'out_refund'):
             return accounts['income']
         return accounts['expense']
+    
+    #El siguiente metodo fue agregado por TRESCLOUD
+    def get_supplier_taxes(self):
+        '''
+        Este metodo va ser modificado en ecua_fiscal_positions_core para agregar el impuesto de retencion renta
+        '''
+        return self.product_id.supplier_taxes_id or self.account_id.tax_ids
 
     def _set_taxes(self):
         """ Used in on_change to set taxes and price."""
         if self.invoice_id.type in ('out_invoice', 'out_refund'):
             taxes = self.product_id.taxes_id or self.account_id.tax_ids
         else:
-            taxes = self.product_id.supplier_taxes_id or self.account_id.tax_ids
+            taxes = self.get_supplier_taxes()
 
         # Keep only taxes of the company
         company_id = self.company_id or self.env.user.company_id
