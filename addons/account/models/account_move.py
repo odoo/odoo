@@ -140,8 +140,6 @@ class AccountMove(models.Model):
     def post(self):
         invoice = self._context.get('invoice', False)
         self._post_validate()
-        if not self.user_has_groups('account.group_account_invoice'):
-            raise UserError(_('Your are not an accountant.'))
         for move in self:
             move.line_ids.create_analytic_lines()
             if move.name == '/':
@@ -175,8 +173,6 @@ class AccountMove(models.Model):
         if self.ids:
             self.check_access_rights('write')
             self.check_access_rule('write')
-            if not self.user_has_groups('account.group_account_invoice'):
-                raise UserError(_('Your are not an accountant.'))
             self._check_lock_date()
             self._cr.execute('UPDATE account_move '\
                        'SET state=%s '\
