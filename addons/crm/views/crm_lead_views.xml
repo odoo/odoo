@@ -340,10 +340,11 @@
                     <field name="company_currency"/>
                     <field name="activity_state" />
                     <field name="activity_ids" />
+                    <field name="date_deadline"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' sum_field="planned_revenue" help="This bar allows to filter the opportunities based on scheduled activities."/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
+                            <div t-attf-class="#{(record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())) and 'oe_kanban_color_1' or kanban_color(record.color.raw_value)} oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown">
 
                                     <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
@@ -366,6 +367,9 @@
                                     </div>
                                     <div class="text-muted o_kanban_record_subtitle">
                                         <t t-if="record.planned_revenue.raw_value"><field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/><span t-if="record.partner_id.value">,</span></t> <span t-if="record.partner_id.value"> <t t-esc="record.partner_id.value"/></span>
+                                        <div t-attf-class="#{(record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())) and 'oe_kanban_text_red' or ''}">
+                                            <field name="date_deadline"/>
+                                        </div>
                                     </div>
 
                                     <div class="o_kanban_record_bottom">
