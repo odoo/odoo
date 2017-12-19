@@ -143,7 +143,7 @@ class TestCommonSaleNoChart(TestAccountNoChartCommon):
         # Create an expense journal
         user_type_expense = cls.env.ref('account.data_account_type_expenses')
         cls.account_expense_for_products = cls.env['account.account'].create({
-            'code': 'NC1113',
+            'code': 'EXP_PROD13',
             'name': 'Expense - Test Purchase Account',
             'user_type_id': user_type_expense.id
         })
