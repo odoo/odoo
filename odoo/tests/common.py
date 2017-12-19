@@ -98,6 +98,7 @@ def post_install(flag):
         return obj
     return decorator
 
+
 class TreeCase(unittest.TestCase):
     def __init__(self, methodName='runTest'):
         super(TreeCase, self).__init__(methodName)
@@ -116,7 +117,20 @@ class TreeCase(unittest.TestCase):
         for c1, c2 in izip_longest(n1, n2):
             self.assertEqual(c1, c2, msg)
 
-class BaseCase(TreeCase):
+
+class MetaCase(type):
+    """ Metaclass of test case classes to assign default 'test_tags':
+        'standard' and the name of the module.
+    """
+    def __init__(cls, name, bases, attrs):
+        super(MetaCase, cls).__init__(name, bases, attrs)
+        # assign default test tags
+        if cls.__module__.startswith('odoo.addons.'):
+            module = cls.__module__.split('.')[2]
+            cls.test_tags = {'standard', module}
+
+
+class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
     """
     Subclass of TestCase for common OpenERP-specific code.
 
@@ -214,6 +228,7 @@ class BaseCase(TreeCase):
         # turns out this thing may not be quite as useful as we thought...
         def assertItemsEqual(self, a, b, msg=None):
             self.assertCountEqual(a, b, msg=None)
+
 
 class TransactionCase(BaseCase):
     """ TestCase in which each test method is run in its own transaction,
