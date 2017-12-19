@@ -8,19 +8,22 @@
             <field name="payment_term_id" ref="account.account_payment_term"/>
             <field name="type">out_invoice</field>
             <field name="date_invoice" eval="time.strftime('%Y-%m')+'-01'"/>
-            <field name="invoice_line_ids" model="account.invoice.line" eval="[(5, 0, 0),
-                (0, 0, {
-                    'name': obj().env.ref('product.consu_delivery_02').partner_ref,
-                    'product_id': ref('product.consu_delivery_02'),
-                    'account_id': obj().env.ref('product.consu_delivery_02').categ_id.property_account_income_categ_id.id,
-                    'price_unit': 642.0,
-                    'quantity': 5}),
-                (0, 0, {
-                    'name': obj().env.ref('product.consu_delivery_03').partner_ref,
-                    'product_id': ref('product.consu_delivery_03'),
-                    'account_id': obj().env.ref('product.consu_delivery_03').categ_id.property_account_income_categ_id.id,
-                    'price_unit': 280.0,
-                    'quantity': 5.0})]"/>
+        </record>
+        <record id="demo_invoice_1_line_1" model="account.invoice.line">
+            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_02').partner_ref"/>
+            <field name="invoice_id" ref="demo_invoice_1"/>
+            <field name="product_id" ref="product.consu_delivery_02"/>
+            <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_02').categ_id.property_account_income_categ_id.id"/>
+            <field name="price_unit">642.0</field>
+            <field name="quantity">5</field>
+        </record>
+        <record id="demo_invoice_1_line_2" model="account.invoice.line">
+            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_03').partner_ref"/>
+            <field name="invoice_id" ref="demo_invoice_1"/>
+            <field name="product_id" ref="product.consu_delivery_03"/>
+            <field name="account_id" model="account.invoice.line"  eval="obj().env.ref('product.consu_delivery_03').categ_id.property_account_income_categ_id.id"/>
+            <field name="price_unit">280.0</field>
+            <field name="quantity">5.0</field>
         </record>
 
         <function model="account.invoice" name="action_invoice_open">
@@ -31,19 +34,22 @@
             <field name="partner_id" ref="base.res_partner_2"/>
             <field name="type">out_invoice</field>
             <field name="date_invoice" eval="time.strftime('%Y-%m')+'-08'"/>
-            <field name="invoice_line_ids" model="account.invoice.line" eval="[(5, 0, 0),
-                (0, 0, {
-                    'name': obj().env.ref('product.consu_delivery_03').partner_ref,
-                    'product_id': ref('product.consu_delivery_03'),
-                    'account_id': obj().env.ref('product.consu_delivery_03').categ_id.property_account_income_categ_id.id,
-                    'price_unit': 50.0,
-                    'quantity': 3}),
-                (0, 0, {
-                    'name': obj().env.ref('product.consu_delivery_01').partner_ref,
-                    'product_id': ref('product.consu_delivery_01'),
-                    'account_id': obj().env.ref('product.consu_delivery_01').categ_id.property_account_income_categ_id.id,
-                    'price_unit': 25.0,
-                    'quantity': 20.0})]"/>
+        </record>
+        <record id="demo_invoice_2_line_1" model="account.invoice.line">
+            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_03').partner_ref"/>
+            <field name="invoice_id" ref="demo_invoice_2"/>
+            <field name="product_id" ref="product.consu_delivery_03"/>
+            <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_03').categ_id.property_account_income_categ_id.id"/>
+            <field name="price_unit">50.0</field>
+            <field name="quantity">5</field>
+        </record>
+        <record id="demo_invoice_2_line_2" model="account.invoice.line">
+            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_01').partner_ref"/>
+            <field name="invoice_id" ref="demo_invoice_2"/>
+            <field name="product_id" ref="product.consu_delivery_01"/>
+            <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_01').categ_id.property_account_income_categ_id.id"/>
+            <field name="price_unit">25.0</field>
+            <field name="quantity">20.0</field>
         </record>
 
         <function model="account.invoice" name="action_invoice_open">
@@ -54,19 +60,22 @@
             <field name="partner_id" ref="base.res_partner_2"/>
             <field name="type">out_invoice</field>
             <field name="date_invoice" eval="time.strftime('%Y-%m')+'-08'"/>
-            <field name="invoice_line_ids" model="account.invoice.line" eval="[(5, 0, 0),
-                (0, 0, {
-                    'name': obj().env.ref('product.consu_delivery_01').partner_ref,
-                    'product_id': ref('product.consu_delivery_01'),
-                    'account_id': obj().env.ref('product.consu_delivery_01').categ_id.property_account_income_categ_id.id,
-                    'price_unit': 90.0,
-                    'quantity': 5}),
-                (0, 0, {
-                    'name': obj().env.ref('product.consu_delivery_03').partner_ref,
-                    'product_id': ref('product.consu_delivery_03'),
-                    'account_id': obj().env.ref('product.consu_delivery_03').categ_id.property_account_income_categ_id.id,
-                    'price_unit': 15.0,
-                    'quantity': 5.0})]"/>
+        </record>
+        <record id="demo_invoice_3_line_1" model="account.invoice.line">
+            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_01').partner_ref"/>
+            <field name="invoice_id" ref="demo_invoice_3"/>
+            <field name="product_id" ref="product.consu_delivery_01"/>
+            <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_01').categ_id.property_account_income_categ_id.id"/>
+            <field name="price_unit">90.0</field>
+            <field name="quantity">5</field>
+        </record>
+        <record id="demo_invoice_3_line_2" model="account.invoice.line">
+            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_03').partner_ref"/>
+            <field name="invoice_id" ref="demo_invoice_3"/>
+            <field name="product_id" ref="product.consu_delivery_03"/>
+            <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_03').categ_id.property_account_income_categ_id.id"/>
+            <field name="price_unit">15.0</field>
+            <field name="quantity">5.0</field>
         </record>
 
         <function model="account.invoice" name="action_invoice_open">
@@ -81,19 +90,22 @@
             <field name="payment_term_id" ref="account.account_payment_term_immediate"/>
             <field name="type">out_invoice</field>
             <field name="date_invoice" eval="(datetime.today() + timedelta(days=-15)).strftime('%Y-%m-%d')"/>
-            <field name="invoice_line_ids" model="account.invoice.line" eval="[(5, 0, 0),
-                (0, 0, {
-                    'name': obj().env.ref('product.consu_delivery_02').partner_ref,
-                    'product_id': ref('product.consu_delivery_02'),
-                    'account_id': obj().env.ref('product.consu_delivery_02').categ_id.property_account_income_categ_id.id,
-                    'price_unit': 642.0,
-                    'quantity': 5}),
-                (0, 0, {
-                    'name': obj().env.ref('product.consu_delivery_03').partner_ref,
-                    'product_id': ref('product.consu_delivery_03'),
-                    'account_id': obj().env.ref('product.consu_delivery_03').categ_id.property_account_income_categ_id.id,
-                    'price_unit': 280.0,
-                    'quantity': 5.0})]"/>
+        </record>
+        <record id="demo_invoice_followup_line_1" model="account.invoice.line">
+            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_02').partner_ref"/>
+            <field name="invoice_id" ref="demo_invoice_followup"/>
+            <field name="product_id" ref="product.consu_delivery_02"/>
+            <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_02').categ_id.property_account_income_categ_id.id"/>
+            <field name="price_unit">642.0</field>
+            <field name="quantity">5</field>
+        </record>
+        <record id="demo_invoice_followup_line_2" model="account.invoice.line">
+            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_03').partner_ref"/>
+            <field name="invoice_id" ref="demo_invoice_followup"/>
+            <field name="product_id" ref="product.consu_delivery_03"/>
+            <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_03').categ_id.property_account_income_categ_id.id"/>
+            <field name="price_unit">280.0</field>
+            <field name="quantity">5.0</field>
         </record>
 
         <function model="account.invoice" name="action_invoice_open">
@@ -107,21 +119,22 @@
             <field name="payment_term_id" ref="account.account_payment_term"/>
             <field name="type">in_invoice</field>
             <field name="date_invoice" eval="time.strftime('%Y-%m')+'-01'"/>
-            <field name="invoice_line_ids" model="account.invoice.line" eval="[(5, 0, 0),
-                (0, 0, {
-                    'name': obj().env.ref('product.product_delivery_01').partner_ref,
-                    'product_id': ref('product.product_delivery_01'),
-                    'account_id': obj().env.ref('product.product_delivery_01').categ_id.property_account_income_categ_id.id,
-                    'price_unit': 10.0,
-                    'quantity': 1,
-                    'uom_id': ref('product.product_uom_unit')}),
-                (0, 0, {
-                    'name': obj().env.ref('product.product_order_01').partner_ref,
-                    'product_id': ref('product.product_order_01'),
-                    'account_id': obj().env.ref('product.product_order_01').categ_id.property_account_income_categ_id.id,
-                    'price_unit': 4.0,
-                    'quantity': 1.0,
-                    'uom_id': ref('product.product_uom_unit')})]"/>
+        </record>
+        <record id="demo_invoice_0_line_1" model="account.invoice.line">
+            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_delivery_01').partner_ref"/>
+            <field name="invoice_id" ref="demo_invoice_0"/>
+            <field name="product_id" ref="product.product_delivery_01"/>
+            <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.product_delivery_01').categ_id.property_account_income_categ_id.id"/>
+            <field name="price_unit">10.0</field>
+            <field name="quantity">1</field>
+        </record>
+        <record id="demo_invoice_0_line_2" model="account.invoice.line">
+            <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_order_01').partner_ref"/>
+            <field name="invoice_id" ref="demo_invoice_0"/>
+            <field name="product_id" ref="product.product_order_01"/>
+            <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.product_order_01').categ_id.property_account_income_categ_id.id"/>
+            <field name="price_unit">4.0</field>
+            <field name="quantity">5.0</field>
         </record>
 
         <record id="demo_invoice_january_wages" model="account.invoice">
@@ -160,7 +173,7 @@
             <field name="invoice_line_tax_ids" model="account.tax"
                 eval="[(6, 0, [obj().search([
                     ('type_tax_use', '=', 'purchase'),
-                    ('amount', '>', 0),
+                    ('amount', '&gt;', 0),
                     ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).id])]"/>
         </record>
 
