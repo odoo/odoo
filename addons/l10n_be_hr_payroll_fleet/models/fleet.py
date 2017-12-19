@@ -139,7 +139,7 @@ class FleetVehicleModel(models.Model):
             model.default_total_depreciated_cost = model.co2_fee + model.default_recurring_cost_amount_depreciated
 
     @api.multi
-    @api.depends('name', 'brand_id')
+    @api.depends('name', 'brand_id', 'default_total_depreciated_cost')
     def name_get(self):
         res = super(FleetVehicleModel, self).name_get()
         new_res = []
