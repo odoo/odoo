@@ -201,7 +201,7 @@ class Users(models.Model):
     signature = fields.Html()
     active = fields.Boolean(default=True)
     action_id = fields.Many2one('ir.actions.actions', string='Home Action',
-        help="If specified, this action will be opened at log on for this user, in addition to the standard menu.")
+        help="If specified, this action will be opened at log on for this user, in addition to the standard menu.", domain=lambda self: [('id', '!=', self.env.ref('base.action_open_website').id)])
     groups_id = fields.Many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', string='Groups', default=_default_groups)
     log_ids = fields.One2many('res.users.log', 'create_uid', string='User log entries')
     login_date = fields.Datetime(related='log_ids.create_date', string='Latest connection')
