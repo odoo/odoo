@@ -19,6 +19,7 @@ class MailActivityType(models.Model):
     name = fields.Char('Name', required=True, translate=True)
     summary = fields.Char('Summary', translate=True)
     sequence = fields.Integer('Sequence', default=10)
+    active = fields.Boolean(default=True)
     days = fields.Integer(
         '# Days', default=0,
         help='Number of days before executing the action. It allows to plan the action deadline.')
@@ -71,7 +72,7 @@ class MailActivity(models.Model):
     # activity
     activity_type_id = fields.Many2one(
         'mail.activity.type', 'Activity',
-        domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]")
+        domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]", ondelete='restrict')
     activity_category = fields.Selection(related='activity_type_id.category')
     icon = fields.Char('Icon', related='activity_type_id.icon')
     summary = fields.Char('Summary')
