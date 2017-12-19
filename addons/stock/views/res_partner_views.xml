@@ -31,7 +31,7 @@
                     <separator string="Warning on the Picking" colspan="4"/>
                     <field name="picking_warn" nolabel="1" />
                     <field name="picking_warn_msg" colspan="3" nolabel="1" 
-                            attrs="{'required':[('picking_warn','!=','no-message')],'readonly':[('picking_warn','=','no-message')]}"/>
+                            attrs="{'required':[('picking_warn', '!=', False), ('picking_warn','!=','no-message')],'readonly':[('picking_warn','=','no-message')]}"/>
                 </group>
             </page>
         </field>
