@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2015-09-08 08:03+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Venezuela) (http://www.transifex.com/odoo/odoo-9/"
@@ -53,20 +53,20 @@ msgid "Effective Date"
 msgstr "Fecha efectiva"
 
 #. module: sale_order_dates
+#: model:ir.model,name:sale_order_dates.model_sale_order
+msgid "Quotation"
+msgstr ""
+
+#. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_requested_date
 msgid "Requested Date"
 msgstr "Fecha solicitud"
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:51
+#: code:addons/sale_order_dates/models/sale_order.py:57
 #, python-format
 msgid "Requested date is too soon!"
 msgstr ""
-
-#. module: sale_order_dates
-#: model:ir.model,name:sale_order_dates.model_sale_order
-msgid "Sales Order"
-msgstr "Pedido de venta"
 
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order_line
@@ -74,7 +74,7 @@ msgid "Sales Order Line"
 msgstr "Línea pedido de venta"
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:52
+#: code:addons/sale_order_dates/models/sale_order.py:58
 #, python-format
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "

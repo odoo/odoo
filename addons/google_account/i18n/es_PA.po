@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2016-01-14 10:12+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Panama) (http://www.transifex.com/odoo/odoo-9/"
@@ -54,7 +54,13 @@ msgid "Last Updated on"
 msgstr "Última actualización en"
 
 #. module: google_account
-#: code:addons/google_account/google_account.py:98
+#: code:addons/google_account/models/google_service.py:171
+#, python-format
+msgid "Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!"
+msgstr ""
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:119
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -62,7 +68,7 @@ msgid ""
 msgstr ""
 
 #. module: google_account
-#: code:addons/google_account/google_account.py:37
+#: code:addons/google_account/models/google_service.py:55
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -70,7 +76,7 @@ msgid ""
 msgstr ""
 
 #. module: google_account
-#: code:addons/google_account/google_account.py:128
+#: code:addons/google_account/models/google_service.py:149
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -78,9 +84,15 @@ msgid ""
 msgstr ""
 
 #. module: google_account
-#: code:addons/google_account/google_account.py:173
+#: code:addons/google_account/models/google_service.py:192
 #, python-format
 msgid "Something went wrong with your request to google"
+msgstr ""
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:130
+#, python-format
+msgid "The account for the Google service '%s' is not configured"
 msgstr ""
 
 #. module: google_account
