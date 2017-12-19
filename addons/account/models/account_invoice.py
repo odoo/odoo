@@ -662,7 +662,7 @@ class AccountInvoice(models.Model):
             # If partner has no warning, check its company
             if p.invoice_warn == 'no-message' and p.parent_id:
                 p = p.parent_id
-            if p.invoice_warn != 'no-message':
+            if p.invoice_warn and p.invoice_warn != 'no-message':
                 # Block if partner only has warning but parent company is blocked
                 if p.invoice_warn != 'block' and p.parent_id and p.parent_id.invoice_warn == 'block':
                     p = p.parent_id
