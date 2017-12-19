@@ -33,14 +33,18 @@ function QWeb(debug, default_dict, enableTranslation) {
 
 function preprocess_node() {
     // Note that 'this' is the Qweb Node
+    var template = this.node;
+    while ((template.tagName !== 'templates' && (!template.attributes || !template.attributes['t-translation'])) && template.parentNode) {
+        template = template.parentNode;
+    }
+    var translation = template.attributes['t-translation'];
+    if (translation && translation.value === 'off') {
+        return;
+    }
     switch (this.node.nodeType) {
         case Node.TEXT_NODE:
         case Node.CDATA_SECTION_NODE:
             // Text and CDATAs
-            var translation = this.node.parentNode.attributes['t-translation'];
-            if (translation && translation.value === 'off') {
-                return;
-            }
             var match = /^(\s*)([\s\S]+?)(\s*)$/.exec(this.node.data);
             if (match) {
                 this.node.data = match[1] + _t(match[2]) + match[3];
