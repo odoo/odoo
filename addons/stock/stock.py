@@ -1869,10 +1869,12 @@ class stock_move(osv.osv):
                 res[move.id] = move.product_qty
             else:
                 sublocation_ids = self.pool.get('stock.location').search(cr, uid, [('id', 'child_of', [move.location_id.id])], context=context)
-                quant_ids = quant_obj.search(cr, uid, [('location_id', 'in', sublocation_ids), ('product_id', '=', move.product_id.id), ('reservation_id', '=', False)], context=context)
-                availability = 0
-                for quant in quant_obj.browse(cr, uid, quant_ids, context=context):
-                    availability += quant.qty
+                availability_cpt = quant_obj.read_group(cr, uid, [
+                    ('location_id', 'in', sublocation_ids),
+                    ('product_id', '=', move.product_id.id),
+                    ('reservation_id', '=', False)
+                ], fields=['qty'], groupby=[], context=context)
+                availability = availability_cpt[0].get('qty',0) if availability_cpt else 0.0
                 res[move.id] = min(move.product_qty, availability)
         return res
 
