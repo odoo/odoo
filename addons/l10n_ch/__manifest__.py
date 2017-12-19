@@ -15,7 +15,7 @@ This module defines a chart of account for Switzerland (Swiss PME/KMU 2015), tax
 An ISR will be generated if you specify the information it needs :
     - The bank account you expect to be paid on must be set, and have a valid postal reference.
     - Your invoice must have been set assigned a bank account to receive its payment
-    (this can be done manually, but a default value is automatically set if you have defined a bank account).
+      (this can be done manually, but a default value is automatically set if you have defined a bank account).
     - You must have set the postal references of your bank.
     - Your invoice must be in EUR or CHF (as ISRs do not accept other currencies)
 
