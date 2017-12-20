@@ -182,8 +182,15 @@ class StockMove(models.Model):
     @api.multi
     @api.depends('reserved_quant_ids.qty')
     def _compute_reserved_availability(self):
-        result = {data['reservation_id'][0]: data['qty'] for data in 
-            self.env['stock.quant'].with_context(nomovenameingroup=True).read_group([('reservation_id', 'in', self.ids)], ['reservation_id','qty'], ['reservation_id'])}
+        self.env.cr.execute("""
+        SELECT
+            "stock_quant"."reservation_id" AS "reservation_id",
+            sum ("stock_quant"."qty") AS "qty"
+        FROM "stock_quant"
+        WHERE "stock_quant"."reservation_id" = ANY(%s)
+        GROUP BY "reservation_id"
+        """, (self.ids,))
+        result = {r[0]:r[1] for r in self.env.cr.fetchall()}
         for rec in self:
             rec.reserved_availability = result.get(rec.id, 0.0)
 
@@ -238,15 +245,11 @@ class StockMove(models.Model):
     @api.multi
     def name_get(self):
         res = []
-        if self.env.context.get('nomovenameingroup', False):
-            for move in self:
-                res.append((move.id, 'Move %s' % move.id))
-        else:
-            for move in self:
-                res.append((move.id, '%s%s%s>%s' % (
-                    move.picking_id.origin and '%s/' % move.picking_id.origin or '',
-                    move.product_id.code and '%s: ' % move.product_id.code or '',
-                    move.location_id.name, move.location_dest_id.name)))
+        for move in self:
+            res.append((move.id, '%s%s%s>%s' % (
+                move.picking_id.origin and '%s/' % move.picking_id.origin or '',
+                move.product_id.code and '%s: ' % move.product_id.code or '',
+                move.location_id.name, move.location_dest_id.name)))
         return res
 
     @api.model
