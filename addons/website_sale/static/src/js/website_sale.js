@@ -190,7 +190,7 @@ $('.oe_website_sale').each(function () {
             }
             else {
                 $q.parent().parent().addClass("hidden");
-                $('a[href^="/shop/checkout"]').addClass("hidden")
+                $('a[href*="/shop/checkout"]').addClass("hidden");
             }
             $q.html(data.cart_quantity).hide().fadeIn(600);
 
