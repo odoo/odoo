@@ -735,10 +735,6 @@ registry.colorpicker = SnippetOption.extend({
 
             this.$el.find('li').append($pt);
         }
-        if (this.$el.data('area')) {
-            this.$target = this.$target.find(this.$el.data('area'));
-            this.$el.removeData('area').removeAttr('area');
-        }
 
         var classes = [];
         this.$el.find('.colorpicker button').each(function () {
