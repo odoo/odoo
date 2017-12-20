@@ -114,7 +114,10 @@ class Product(models.Model):
     @api.multi
     def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
         domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self._get_domain_locations()
-        domain_quant = [('product_id', 'in', self.ids)] + domain_quant_loc
+        if 'location' in self._context:
+            domain_quant = [('location_id.id', '=', self._context['location']), ('product_id', 'in', self.ids)]
+        else:
+            domain_quant = [('product_id', 'in', self.ids)] + domain_quant_loc
         dates_in_the_past = False
         if to_date and to_date < fields.Datetime.now(): #Only to_date as to_date will correspond to qty_available
             dates_in_the_past = True
