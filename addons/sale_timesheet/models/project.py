@@ -41,16 +41,16 @@ class Project(models.Model):
 
     @api.multi
     def action_view_timesheet_plan(self):
-        return {
-            'name': _('Overview'),
-            'type': 'ir.actions.client',
-            'tag': 'timesheet.plan',
-            'context': {
-                'active_id': self.id,
-                'active_ids': self.ids,
-                'search_default_project_id': self.id,
-            }
+        action = self.env.ref('sale_timesheet.project_timesheet_action_client_timesheet_plan').read()[0]
+        action['params'] = {
+            'project_ids': self.ids,
         }
+        action['context'] = {
+            'active_id': self.id,
+            'active_ids': self.ids,
+            'search_default_display_name': self.name,
+        }
+        return action
 
 
 class ProjectTask(models.Model):

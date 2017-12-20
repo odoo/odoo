@@ -33,7 +33,7 @@ var ProjectPlan = AbstractAction.extend(ControlPanelMixin, {
         var self = this;
         var view_id = this.action && this.action.search_view_id && this.action.search_view_id[0];
         var def = this
-            .loadViews('account.analytic.line', this.action.context || {}, [[view_id, 'search']])
+            .loadViews('project.project', this.action.context || {}, [[view_id, 'search']])
             .then(function (result) {
                 self.fields_view = result.search;
             });
@@ -63,7 +63,7 @@ var ProjectPlan = AbstractAction.extend(ControlPanelMixin, {
             search_defaults: search_defaults,
         };
 
-        var dataset = new data.DataSetSearch(this, 'account.analytic.line');
+        var dataset = new data.DataSetSearch(this, 'project.project');
         this.searchview = new SearchView(this, dataset, this.fields_view, options);
         this.searchview.on('search', this, this._onSearch);
 
