@@ -164,6 +164,7 @@ class XmlDeclaration(models.TransientModel):
         lines = self.env.cr.fetchall()
         invoicelines_ids = [rec[0] for rec in lines]
         invoicelines = self.env['account.invoice.line'].browse(invoicelines_ids)
+
         for inv_line in invoicelines:
 
             #Check type of transaction
@@ -189,6 +190,8 @@ class XmlDeclaration(models.TransientModel):
                 #comes from purchase
                 po_lines = self.env['purchase.order.line'].search([('invoice_lines', 'in', inv_line.id)], limit=1)
                 if po_lines:
+                    if self._is_situation_triangular(company, po_line=po_lines):
+                        continue
                     location = self.env['stock.location'].browse(po_lines.order_id._get_destination_location())
                     region_id = self.env['stock.warehouse'].get_regionid_from_locationid(location)
                     if region_id:
@@ -197,6 +200,8 @@ class XmlDeclaration(models.TransientModel):
                 #comes from sales
                 so_lines = self.env['sale.order.line'].search([('invoice_lines', 'in', inv_line.id)], limit=1)
                 if so_lines:
+                    if self._is_situation_triangular(company, so_line=so_lines):
+                        continue
                     saleorder = so_lines.order_id
                     if saleorder and saleorder.warehouse_id and saleorder.warehouse_id.region_id:
                         exreg = IntrastatRegion.browse(saleorder.warehouse_id.region_id.id).code
@@ -286,3 +291,24 @@ class XmlDeclaration(models.TransientModel):
         dim = ET.SubElement(item, 'Dim')
         dim.set('prop', prop)
         dim.text = value
+
+    def _is_situation_triangular(self, company, po_line=False, so_line=False):
+        # Ignoring what is purchased and sold by us with a dropshipping route
+        # outside of our country, or completely within it
+        # https://www.nbb.be/doc/dq/f_pdf_ex/intra2017fr.pdf (§ 4.x)
+        dropship_pick_type = self.env.ref('stock_dropshipping.picking_type_dropship', raise_if_not_found=False)
+        if not dropship_pick_type:
+            return False
+        stock_move_domain = [('picking_type_id', '=', dropship_pick_type.id)]
+
+        if po_line:
+            stock_move_domain.append(('purchase_line_id', '=', po_line.id))
+        if so_line:
+            stock_move_domain.append(('procurement_id.sale_line_id', '=', so_line.id))
+
+        stock_move = self.env['stock.move'].search(stock_move_domain, limit=1)
+        return stock_move and (
+            (stock_move.partner_id.country_id.code != company.country_id.code and
+                stock_move.picking_partner_id.country_id.code != company.country_id.code) or
+            (stock_move.partner_id.country_id.code == company.country_id.code and
+                stock_move.picking_partner_id.country_id.code == company.country_id.code))
