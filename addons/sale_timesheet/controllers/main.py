@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import babel
+from dateutil.relativedelta import relativedelta
 
-from odoo import http, _
+from odoo import http, fields, _
 from odoo.http import request
-from odoo.osv import expression
 
 from odoo.tools import float_round
 
@@ -12,47 +13,49 @@ class SaleTimesheetController(http.Controller):
 
     @http.route('/timesheet/plan', type='json', auth="user")
     def plan(self, domain):
-        domain = expression.AND([domain, [('project_id', '!=', False)]])  # force timesheet and not AAL
-        values = self._prepare_plan_values(domain)
+        """ Get the HTML of the project plan for projects matching the given domain
+            :param domain: a domain for project.project
+        """
+        projects = request.env['project.project'].search(domain)
+        values = self._plan_prepare_values(projects)
         view = request.env.ref('sale_timesheet.timesheet_plan')
         return {
             'html_content': view.render(values)
         }
 
-    def _prepare_plan_values(self, domain):
+    def _plan_prepare_values(self, projects):
 
-        timesheet_lines = request.env['account.analytic.line'].search(domain)
         currency = request.env.user.company_id.currency_id
-
-        values = {
-            'currency': currency,
-            'timesheet_lines': timesheet_lines,
-            'domain': domain,
-        }
-        hour_rounding = request.env.ref('uom.product_uom_hour').rounding
+        hour_rounding = request.env.ref('product.product_uom_hour').rounding
         billable_types = ['non_billable', 'non_billable_project', 'billable_time', 'billable_fixed']
 
-        # -- Stat Buttons
-        values['stat_buttons'] = self._plan_get_stat_button(timesheet_lines)
+        values = {
+            'projects': projects,
+            'currency': currency,
+            'timesheet_domain': [('project_id', 'in', projects.ids)],
+            'stat_buttons': self._plan_get_stat_button(projects),
+        }
 
-        # -- Dashboard (per billable type)
+        #
+        # Hours, Rates and Profitability
+        #
         dashboard_values = {
             'hours': dict.fromkeys(billable_types + ['total'], 0.0),
             'rates': dict.fromkeys(billable_types + ['total'], 0.0),
-            'money_amount': {
+            'profit': {
                 'invoiced': 0.0,
-                'to_invoiced': 0.0,
+                'to_invoice': 0.0,
                 'cost': 0.0,
                 'total': 0.0,
             }
         }
-        dashboard_domain = domain + [('timesheet_invoice_type', '!=', False)]  # force billable type
-        dashboard_data = request.env['account.analytic.line'].read_group(dashboard_domain, ['unit_amount', 'timesheet_revenue', 'timesheet_invoice_type'], ['timesheet_invoice_type'])
 
+        # hours (from timesheet) and rates (by billable type)
+        dashboard_domain = [('project_id', 'in', projects.ids), ('timesheet_invoice_type', '!=', False)]  # force billable type
+        dashboard_data = request.env['account.analytic.line'].read_group(dashboard_domain, ['unit_amount', 'timesheet_revenue', 'timesheet_invoice_type'], ['timesheet_invoice_type'])
         dashboard_total_hours = sum([data['unit_amount'] for data in dashboard_data])
         for data in dashboard_data:
             billable_type = data['timesheet_invoice_type']
-            # hours
             dashboard_values['hours'][billable_type] = float_round(data.get('unit_amount'), precision_rounding=hour_rounding)
             dashboard_values['hours']['total'] += float_round(data.get('unit_amount'), precision_rounding=hour_rounding)
             # rates
@@ -60,26 +63,37 @@ class SaleTimesheetController(http.Controller):
             dashboard_values['rates'][billable_type] = rate
             dashboard_values['rates']['total'] += rate
 
-        # profitability
-        project_ids = values['timesheet_lines'].mapped('project_id').ids
-        money_amount = dict.fromkeys(['invoiced', 'to_invoice', 'cost', 'total'], 0.0)
-
-        profitability_raw_data = request.env['project.profitability.report'].read_group([('project_id', 'in', project_ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_cost'], ['project_id'])
+        # profitability, using profitability SQL report
+        profit = dict.fromkeys(['invoiced', 'to_invoice', 'cost', 'total'], 0.0)
+        profitability_raw_data = request.env['project.profitability.report'].read_group([('project_id', 'in', projects.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_cost'], ['project_id'])
         for data in profitability_raw_data:
-            money_amount['invoiced'] += data.get('amount_untaxed_invoiced', 0.0)
-            money_amount['to_invoice'] += data.get('amount_untaxed_to_invoice', 0.0)
-            money_amount['cost'] += data.get('timesheet_cost', 0.0)
-        money_amount['total'] = sum([money_amount[item] for item in money_amount.keys()])
-        dashboard_values['money_amount'] = money_amount
+            profit['invoiced'] += data.get('amount_untaxed_invoiced', 0.0)
+            profit['to_invoice'] += data.get('amount_untaxed_to_invoice', 0.0)
+            profit['cost'] += data.get('timesheet_cost', 0.0)
+        profit['total'] = sum([profit[item] for item in profit.keys()])
+        dashboard_values['profit'] = profit
 
         values['dashboard'] = dashboard_values
 
-        # -- Time Repartition (per employee)
-        repartition_domain = domain + [('employee_id', '!=', False), ('timesheet_invoice_type', '!=', False)]  # force billable type
+        #
+        # Time Repartition (per employee per billable types)
+        #
+        employees = projects.mapped('tasks.user_id.employee_ids') | request.env['account.analytic.line'].search([('project_id', 'in', projects.ids)]).mapped('employee_id')
+        repartition_domain = [('project_id', 'in', projects.ids), ('employee_id', '!=', False), ('timesheet_invoice_type', '!=', False)]  # force billable type
         repartition_data = request.env['account.analytic.line'].read_group(repartition_domain, ['employee_id', 'timesheet_invoice_type', 'unit_amount'], ['employee_id', 'timesheet_invoice_type'], lazy=False)
 
         # set repartition per type per employee
         repartition_employee = {}
+        for employee in employees:
+            repartition_employee[employee.id] = dict(
+                employee_id=employee.id,
+                employee_name=employee.name,
+                non_billable_project=0.0,
+                non_billable=0.0,
+                billable_time=0.0,
+                billable_fixed=0.0,
+                total=0.0,
+            )
         for data in repartition_data:
             employee_id = data['employee_id'][0]
             repartition_employee.setdefault(employee_id, dict(
@@ -91,7 +105,7 @@ class SaleTimesheetController(http.Controller):
                 billable_fixed=0.0,
                 total=0.0,
             ))[data['timesheet_invoice_type']] = float_round(data.get('unit_amount', 0.0), precision_rounding=hour_rounding)
-            repartition_employee[employee_id]['__domain_'+data['timesheet_invoice_type']] = data['__domain']
+            repartition_employee[employee_id]['__domain_' + data['timesheet_invoice_type']] = data['__domain']
 
         # compute total
         for employee_id, vals in repartition_employee.items():
@@ -103,21 +117,102 @@ class SaleTimesheetController(http.Controller):
 
         return values
 
-    def _plan_get_stat_button(self, timesheet_lines):
+    def _table_header(self, projects):
+        initial_date = fields.Date.from_string(fields.Date.today())
+        ts_months = sorted([fields.Date.to_string(initial_date - relativedelta(months=i, day=1)) for i in range(0, DEFAULT_MONTH_RANGE)])  # M1, M2, M3
+
+        def _to_short_month_name(date):
+            month_index = fields.Date.from_string(date).month
+            return babel.dates.get_month_names('abbreviated', locale=request.env.context.get('lang', 'en_US'))[month_index]
+
+        header = [_('Name'), _('Before')] + [_to_short_month_name(date) for date in ts_months] + [_('Done'), _('Sold'), _('Remaining')]
+        return header
+
+    def _table_row_default(self, projects):
+        lenght = self._table_header(projects)
+        return [0.0] * (lenght - 1)  # before, M1, M2, M3, Done, Sold, Remaining
+
+    def _table_rows_sql_query(self, projects):
+        initial_date = fields.Date.from_string(fields.Date.today())
+        ts_months = sorted([fields.Date.to_string(initial_date - relativedelta(months=i, day=1)) for i in range(0, DEFAULT_MONTH_RANGE)])  # M1, M2, M3
+        # build query
+        query = """
+            SELECT
+                'timesheet' AS type,
+                date_trunc('month', date)::date AS month_date,
+                E.id AS employee_id,
+                S.order_id AS sale_order_id,
+                A.so_line AS sale_line_id,
+                SUM(A.unit_amount) AS number_hours
+            FROM account_analytic_line A
+                JOIN hr_employee E ON E.id = A.employee_id
+                LEFT JOIN sale_order_line S ON S.id = A.so_line
+            WHERE A.project_id IS NOT NULL
+                AND A.project_id IN %s
+                AND A.date < %s
+            GROUP BY date_trunc('month', date)::date, S.order_id, A.so_line, E.id
+        """
+
+        last_ts_month = fields.Date.to_string(fields.Date.from_string(ts_months[-1]) + relativedelta(months=1))
+        query_params = (tuple(projects.ids), last_ts_month)
+        return query, query_params
+
+    def _table_rows_get_employee_lines(self, projects, data_from_db):
+        initial_date = fields.Date.from_string(fields.Date.today())
+        ts_months = sorted([fields.Date.to_string(initial_date - relativedelta(months=i, day=1)) for i in range(0, DEFAULT_MONTH_RANGE)])  # M1, M2, M3
+        default_row_vals = self._table_row_default(projects)
+
+        # extract employee names
+        employee_ids = set()
+        for data in data_from_db:
+            employee_ids.add(data['employee_id'])
+        map_empl_names = {empl.id: empl.name for empl in request.env['hr.employee'].sudo().browse(employee_ids)}
+
+        # extract rows data for employee, sol and so rows
+        rows_employee = {}  # (so, sol, employee) -> [INFO, before, M1, M2, M3, Done, M3, M4, M5, After, Forecasted]
+        for data in data_from_db:
+            sale_line_id = data['sale_line_id']
+            sale_order_id = data['sale_order_id']
+            # employee row
+            row_key = (data['sale_order_id'], sale_line_id, data['employee_id'])
+            if row_key not in rows_employee:
+                meta_vals = {
+                    'label': map_empl_names.get(row_key[2]),
+                    'sale_line_id': sale_line_id,
+                    'sale_order_id': sale_order_id,
+                    'res_id': row_key[2],
+                    'res_model': 'hr.employee',
+                    'type': 'hr_employee'
+                }
+                rows_employee[row_key] = [meta_vals] + default_row_vals[:]  # INFO, before, M1, M2, M3, Done, M3, M4, M5, After, Forecasted
+
+            index = False
+            if data['type'] == 'timesheet':
+                if data['month_date'] in ts_months:
+                    index = ts_months.index(data['month_date']) + 2
+                elif data['month_date'] < ts_months[0]:
+                    index = 1
+                rows_employee[row_key][index] += data['number_hours']
+                rows_employee[row_key][5] += data['number_hours']
+        return rows_employee
+
+    # --------------------------------------------------
+    # Actions: Stat buttons, ...
+    # --------------------------------------------------
+
+    def _plan_get_stat_button(self, projects):
         stat_buttons = []
         stat_buttons.append({
             'name': _('Timesheets'),
             'res_model': 'account.analytic.line',
-            'domain': [('id', 'in', timesheet_lines.ids)],
+            'domain': [('project_id', 'in', projects.ids)],
             'icon': 'fa fa-calendar',
         })
-        stat_project_ids = timesheet_lines.mapped('project_id').ids
-        stat_task_domain = [('project_id', 'in', stat_project_ids), '|', ('stage_id', '=', False), ('stage_id.fold', '=', False)]
         stat_buttons.append({
             'name': _('Tasks'),
-            'count': request.env['project.task'].search_count(stat_task_domain),
+            'count': sum(projects.mapped('task_count')),
             'res_model': 'project.task',
-            'domain': stat_task_domain,
+            'domain': [('project_id', 'in', projects.ids)],
             'icon': 'fa fa-tasks',
         })
         return stat_buttons

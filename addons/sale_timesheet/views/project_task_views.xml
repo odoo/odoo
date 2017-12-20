@@ -16,6 +16,17 @@
         </field>
     </record>
 
+    <record id="project_project_view_search" model="ir.ui.view">
+        <field name="name">project.project.search.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_project_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="display_name" filter_domain="[('name','=',self)]" string="Exact name"/>
+            </xpath>
+        </field>
+    </record>
+
         <record id="view_sale_service_inherit_form2" model="ir.ui.view">
             <field name="name">sale.service.form.view.inherit</field>
             <field name="model">project.task</field>
@@ -47,4 +58,12 @@
                 </xpath>
             </field>
         </record>
+
+    <record id="project_timesheet_action_client_timesheet_plan" model="ir.actions.client">
+        <field name="name">Overview</field>
+        <field name="tag">timesheet.plan</field>
+        <field name="res_model">project.project</field>
+        <field name="params" eval="{}"/>
+    </record>
+
 </odoo>
