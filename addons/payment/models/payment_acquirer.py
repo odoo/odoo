@@ -416,14 +416,9 @@ class PaymentAcquirer(models.Model):
         # TDE FIXME: remove that brol
         if self.module_id and self.module_state != 'installed':
             self.module_id.button_immediate_install()
-            context = dict(self._context, active_id=self.ids[0])
             return {
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'payment.acquirer',
-                'type': 'ir.actions.act_window',
-                'res_id': self.ids[0],
-                'context': context,
+                'type': 'ir.actions.client',
+                'tag': 'reload',
             }
 
 class PaymentIcon(models.Model):
