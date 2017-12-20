@@ -42,7 +42,7 @@
                 </a>
             </t>
         </xpath>
-        <xpath expr="//t[@id='payment_success']" position="after">
+        <xpath expr="//t[@t-call='sale.portal_order_success']" position="after">
             <div t-if="order.payment_tx_ids and not invoices and order.state in ('sent', 'sale') and portal_confirmation == 'pay' and not success and not error" class="o_sale_payment_tx_status" t-att-data-order-id="order.id">
                 <t t-set="payment_tx_id" t-value="order.payment_tx_id"/>
                 <t t-call="sale_payment.payment_confirmation_status"/>

@@ -95,7 +95,7 @@
                     </div>
                     <div class="panel-body">
                         <t t-if="error or warning" t-call="account.portal_invoice_error"/>
-                        <t id="payment_success" t-if="success and (not error and not warning)" t-call="account.portal_invoice_success"/>
+                        <t t-if="success and (not error and not warning)" t-call="account.portal_invoice_success"/>
                         <t t-call="account.portal_invoice_report"/>
                     </div>
                 </div>

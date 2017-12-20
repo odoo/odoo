@@ -172,7 +172,7 @@
             </div>
             <div class="panel-body">
               <t t-if="error or warning" t-call="sale.portal_order_error"/>
-              <t id="payment_success" t-if="success and (not error and not warning)" t-call="sale.portal_order_success"/>
+              <t t-if="success and (not error and not warning)" t-call="sale.portal_order_success"/>
               <div class="mb8">
                   <strong>Date:</strong> <span t-field="order.create_date" t-options='{"widget": "date"}'/>
               </div>
