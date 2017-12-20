@@ -231,6 +231,7 @@ class AccountAssetAsset(models.Model):
 
             depreciation_date = depreciation_date.date()
             total_days = (depreciation_date.year % 4) and 365 or 366
+            month_day = depreciation_date.day
             undone_dotation_number = self._compute_board_undone_dotation_nb(depreciation_date, total_days)
 
             for x in range(len(posted_depreciation_line_ids), undone_dotation_number):
@@ -252,6 +253,10 @@ class AccountAssetAsset(models.Model):
                 commands.append((0, False, vals))
 
                 depreciation_date = depreciation_date + relativedelta(months=+self.method_period)
+
+                if month_day > 28 and self.date_first_depreciation == 'manual':
+                    max_day_in_month = calendar.monthrange(depreciation_date.year, depreciation_date.month)[1]
+                    depreciation_date = depreciation_date.replace(day=min(max_day_in_month, month_day))
 
                 # datetime doesn't take into account that the number of days is not the same for each month
                 if not self.prorata and self.method_period % 12 != 0 and self.date_first_depreciation == 'last_day_period':
