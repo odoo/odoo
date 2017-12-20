@@ -516,7 +516,17 @@ class AccountTax(models.Model):
     type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('none', 'None')], string='Tax Scope', required=True, default="sale",
         help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group.")
     amount_type = fields.Selection(default='percent', string="Tax Computation", required=True, oldname='type',
-        selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')])
+        selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')],
+        help="""
+    - Group of Taxes: The tax is a set of sub taxes.
+    - Fixed: The tax amount stays the same whatever the price.
+    - Percentage of Price: The tax amount is a % of the price:
+        e.g 100 * 10% = 110 (not price included)
+        e.g 110 / (1 + 10%) = 100 (price included)
+    - Percentage of Price Tax Included: The tax amount is a division of the price:
+        e.g 180 / (1 - 10%) = 200 (not price included)
+        e.g 200 * (1 - 10%) = 180 (price included)
+        """)
     active = fields.Boolean(default=True, help="Set active to false to hide the tax without removing it.")
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
     children_tax_ids = fields.Many2many('account.tax', 'account_tax_filiation_rel', 'parent_tax', 'child_tax', string='Children Taxes')
@@ -633,12 +643,18 @@ class AccountTax(models.Model):
                 return math.copysign(quantity, base_amount) * self.amount
             else:
                 return quantity * self.amount
-        if (self.amount_type == 'percent' and not price_include) or (self.amount_type == 'division' and price_include):
+        # base * (1 + tax_amount) = new_base
+        if self.amount_type == 'percent' and not price_include:
             return base_amount * self.amount / 100
+        # <=> new_base = base / (1 + tax_amount)
         if self.amount_type == 'percent' and price_include:
             return base_amount - (base_amount / (1 + self.amount / 100))
+        # base / (1 - tax_amount) = new_base
         if self.amount_type == 'division' and not price_include:
             return base_amount / (1 - self.amount / 100) - base_amount
+        # <=> new_base * (1 - tax_amount) = base
+        if self.amount_type == 'division' and price_include:
+            return base_amount - (base_amount * (self.amount / 100))
 
     @api.v8
     def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None):
@@ -770,8 +786,10 @@ class AccountTax(models.Model):
                     incl_percent_amount += tax.amount
                 elif tax.amount_type == 'division':
                     incl_division_amount += tax.amount
+                elif tax.amount_type == 'fixed':
+                    incl_fixed_amount += quantity * tax.amount
                 else:
-                    # tax.amount_type == 'fixed' or other (python)
+                    # tax.amount_type == other (python)
                     tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
                     incl_fixed_amount += tax_amount
                     # Avoid unecessary re-computation
@@ -784,13 +802,6 @@ class AccountTax(models.Model):
         total_excluded = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount)
 
         # 5) Iterate the taxes in the sequence order to compute missing tax amounts.
-        def compute_amount(tax):
-            # Compute the amount of the tax but don't deal with the price_include because we're always
-            # passing the tax excluded base.
-            amount = tax.with_context(force_price_exclude=True)._compute_amount(
-                base, price_unit, quantity, product, partner)
-            return amount
-
         # Start the computation of accumulated amounts at the total_excluded value.
         base = total_included = total_excluded
 
@@ -804,7 +815,8 @@ class AccountTax(models.Model):
                 tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount)
                 cumulated_tax_included_amount = 0
             else:
-                tax_amount = compute_amount(tax)
+                tax_amount = tax.with_context(force_price_exclude=True)._compute_amount(
+                    base, price_unit, quantity, product, partner)
 
             # Round the tax_amount
             if not round_tax:

@@ -73,8 +73,7 @@ class TestTax(AccountTestUsers):
         self.bank_account = self.bank_journal.default_debit_account_id
         self.expense_account = self.env['account.account'].search([('user_type_id.type', '=', 'payable')], limit=1) #Should be done by onchange later
 
-    def _check_compute_all_results(self, base, total_included, total_excluded, taxes, res):
-        #self.assertAlmostEqual(res['base'], base)
+    def _check_compute_all_results(self, total_included, total_excluded, taxes, res):
         self.assertAlmostEqual(res['total_included'], total_included)
         self.assertAlmostEqual(res['total_excluded'], total_excluded)
         for i in range(0, len(taxes)):
@@ -83,44 +82,109 @@ class TestTax(AccountTestUsers):
 
     def test_tax_group_of_group_tax(self):
         self.fixed_tax.include_base_amount = True
-        self.group_tax.include_base_amount = True
-        self.group_of_group_tax.include_base_amount = True
         res = self.group_of_group_tax.compute_all(200.0)
-        self.assertEquals(res['total_excluded'], 200.0)
-        # After calculation of first group
-        # base = 210
-        # total_included = 231
-        # Base of the first grouped is passed
-        # Base after the second group (220) is dropped.
-        # Base of the group of groups is passed out,
-        # so we obtain base as after first group
-        self.assertEquals(res['total_included'], 263.0)
+        self._check_compute_all_results(
+            263,    # 'total_included'
+            200,    # 'total_excluded'
+            [
+                # base , amount     | seq | amount | incl | incl_base
+                # ---------------------------------------------------
+                (200.0, 10.0),    # |  1  |    10  |      |     t
+                (210.0, 21.0),    # |  3  |    10% |      |
+                (210.0, 10.0),    # |  1  |    10  |      |     t
+                (220.0, 22.0),    # |  3  |    10% |      |
+                # ---------------------------------------------------
+            ],
+            res
+        )
 
     def test_tax_group(self):
         res = self.group_tax.compute_all(200.0)
-        self.assertEquals(res['total_excluded'], 200.0)
-        self.assertEquals(res['total_included'], 230.0)
-        self.assertEquals(len(res['taxes']), 2)
-        self.assertEquals(res['taxes'][0]['amount'], 10.0)
-        self.assertEquals(res['taxes'][1]['amount'], 20.0)
+        self._check_compute_all_results(
+            230,    # 'total_included'
+            200,    # 'total_excluded'
+            [
+                # base , amount     | seq | amount | incl | incl_base
+                # ---------------------------------------------------
+                (200.0, 10.0),    # |  1  |    10  |      |
+                (200.0, 20.0),    # |  3  |    10% |      |
+                # ---------------------------------------------------
+            ],
+            res
+        )
 
     def test_tax_percent_division(self):
         self.division_tax.price_include = True
         self.division_tax.include_base_amount = True
+        res_division = self.division_tax.compute_all(200.0)
+        self._check_compute_all_results(
+            200,    # 'total_included'
+            180,    # 'total_excluded'
+            [
+                # base , amount     | seq | amount | incl | incl_base
+                # ---------------------------------------------------
+                (180.0, 20.0),    # |  4  |    10/ |   t  |     t
+                # ---------------------------------------------------
+            ],
+            res_division
+        )
         self.percent_tax.price_include = False
         self.percent_tax.include_base_amount = False
-        res_division = self.division_tax.compute_all(200.0)
-        res_percent = self.percent_tax.compute_all(200.0)
-        self.assertEquals(res_division['taxes'][0]['amount'], 20.0)
-        self.assertEquals(res_percent['taxes'][0]['amount'], 20.0)
+        res_percent = self.percent_tax.compute_all(100.0)
+        self._check_compute_all_results(
+            110,    # 'total_included'
+            100,    # 'total_excluded'
+            [
+                # base , amount     | seq | amount | incl | incl_base
+                # ---------------------------------------------------
+                (100.0, 10.0),    # |  3  |    10% |      |
+                # ---------------------------------------------------
+            ],
+            res_percent
+        )
         self.division_tax.price_include = False
         self.division_tax.include_base_amount = False
+        res_division = self.division_tax.compute_all(180.0)
+        self._check_compute_all_results(
+            200,    # 'total_included'
+            180,    # 'total_excluded'
+            [
+                # base, amount     | seq | amount | incl | incl_base
+                # ---------------------------------------------------
+                (180.0, 20.0),   # |  4  |    10/ |      |
+                # ---------------------------------------------------
+            ],
+            res_division
+        )
         self.percent_tax.price_include = True
         self.percent_tax.include_base_amount = True
-        res_division = self.division_tax.compute_all(200.0)
-        res_percent = self.percent_tax.compute_all(200.0)
-        self.assertEquals(res_division['taxes'][0]['amount'], 22.22)
-        self.assertEquals(res_percent['taxes'][0]['amount'], 18.18)
+        res_percent = self.percent_tax.compute_all(110.0)
+        self._check_compute_all_results(
+            110,    # 'total_included'
+            100,    # 'total_excluded'
+            [
+                # base, amount     | seq | amount | incl | incl_base
+                # ---------------------------------------------------
+                (100.0, 10.0),   # |  3  |    10% |   t  |     t
+                # ---------------------------------------------------
+            ],
+            res_percent
+        )
+        self.percent_tax_bis.price_include = True
+        self.percent_tax_bis.include_base_amount = True
+        self.percent_tax_bis.amount = 21
+        res_percent = self.percent_tax_bis.compute_all(7.0)
+        self._check_compute_all_results(
+            7.0,   # 'total_included'
+            5.79,  # 'total_excluded'
+            [
+                # base , amount     | seq | amount | incl | incl_base
+                # ---------------------------------------------------
+                (5.79, 1.21),     # |  3  |    21% |   t  |     t
+                # ---------------------------------------------------
+            ],
+            res_percent
+        )
 
     def test_tax_sequence_normalized_set(self):
         self.division_tax.sequence = 1
@@ -128,15 +192,24 @@ class TestTax(AccountTestUsers):
         self.percent_tax.sequence = 3
         taxes_set = (self.group_tax | self.division_tax)
         res = taxes_set.compute_all(200.0)
-        self.assertEquals(res['taxes'][0]['amount'], 22.22)
-        self.assertEquals(res['taxes'][1]['amount'], 10.0)
-        self.assertEquals(res['taxes'][2]['amount'], 20.0)
+        self._check_compute_all_results(
+            252.22,  # 'total_included'
+            200,     # 'total_excluded'
+            [
+                # base , amount     | seq | amount | incl | incl_base
+                # ---------------------------------------------------
+                (200.0, 22.22),   # |  1  |    10/ |      |
+                (200.0, 10.0),    # |  2  |    10  |      |
+                (200.0, 20.0),    # |  3  |    10% |      |
+                # ---------------------------------------------------
+            ],
+            res
+        )
 
     def test_fixed_tax_include_base_amount(self):
         self.fixed_tax.include_base_amount = True
         res = self.group_tax.compute_all(200.0)
         self._check_compute_all_results(
-            210,     # 'base'
             231,     # 'total_included'
             200,     # 'total_excluded'
             [
@@ -153,7 +226,6 @@ class TestTax(AccountTestUsers):
         self.fixed_tax.include_base_amount = False
         res = self.fixed_tax.compute_all(100.0, quantity=2.0)
         self._check_compute_all_results(
-            180,     # 'base'
             200,     # 'total_included'
             180,     # 'total_excluded'
             [
@@ -170,7 +242,6 @@ class TestTax(AccountTestUsers):
         self.percent_tax.amount = 21.0
         res = self.percent_tax.compute_all(7.0)
         self._check_compute_all_results(
-            5.79,     # 'base'
             7.0,      # 'total_included'
             5.79,     # 'total_excluded'
             [
@@ -186,7 +257,6 @@ class TestTax(AccountTestUsers):
         self.percent_tax.amount = 20.0
         res = self.percent_tax.compute_all(399.99)
         self._check_compute_all_results(
-            333.33,     # 'base'
             399.99,     # 'total_included'
             333.33,     # 'total_excluded'
             [
@@ -211,7 +281,6 @@ class TestTax(AccountTestUsers):
         self.percent_tax.amount = 21.0
         res = self.percent_tax.compute_all(7.0)
         self._check_compute_all_results(
-            5.785124,     # 'base'
             7.0,          # 'total_included'
             5.785124,     # 'total_excluded'
             [
@@ -227,7 +296,6 @@ class TestTax(AccountTestUsers):
         self.percent_tax.amount = 20.0
         res = self.percent_tax.compute_all(399.999999)
         self._check_compute_all_results(
-            333.333333,     # 'base'
             399.999999,     # 'total_included'
             333.333333,     # 'total_excluded'
             [
@@ -322,7 +390,6 @@ class TestTax(AccountTestUsers):
         taxes = tax_1 + tax_2 + tax_3 + tax_4 + tax_5
         res = taxes.compute_all(132.0)
         self._check_compute_all_results(
-            110,     # 'base'
             154,     # 'total_included'
             100,     # 'total_excluded'
             [
