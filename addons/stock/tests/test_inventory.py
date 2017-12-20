@@ -135,7 +135,9 @@ class TestInventory(TransactionCase):
             'product_qty': 10,
             'location_id': self.stock_location.id,
         })
-        inventory.action_done()
+        res_dict_for_warning_lot = inventory.action_validate()
+        wizard_warning_lot = self.env[(res_dict_for_warning_lot.get('res_model'))].browse(res_dict_for_warning_lot.get('res_id'))
+        wizard_warning_lot.action_confirm()
 
         # check
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot1, strict=True), 1.0)

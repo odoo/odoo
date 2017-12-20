@@ -114,7 +114,7 @@
             <form string="Inventory Adjustment">
             <header>
                 <button name="action_start" states="draft" string="Start Inventory" type="object" class="oe_highlight" groups="stock.group_stock_user"/>
-                <button name="action_done" states="confirm" string="Validate Inventory" type="object" class="oe_highlight" groups="stock.group_stock_manager"/>
+                <button name="action_validate" states="confirm" string="Validate Inventory" type="object" class="oe_highlight" groups="stock.group_stock_manager"/>
                 <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
                 <button name="action_cancel_draft" states="confirm" string="Cancel Inventory" type="object"/>
                 <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
