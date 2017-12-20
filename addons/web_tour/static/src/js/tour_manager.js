@@ -457,7 +457,7 @@ return core.Class.extend({
         this._stop_running_tour_timeout();
         this.running_tour_timeout = setTimeout((function() {
             this._consume_tour(tour_name, _.str.sprintf("Tour %s failed at step %s", tour_name, step.trigger));
-        }).bind(this), RUNNING_TOUR_TIMEOUT + this.running_step_delay);
+        }).bind(this), (step.timeout || RUNNING_TOUR_TIMEOUT) + this.running_step_delay);
     },
     _stop_running_tour_timeout: function () {
         clearTimeout(this.running_tour_timeout);
