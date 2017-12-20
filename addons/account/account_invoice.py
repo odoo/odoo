@@ -1468,6 +1468,7 @@ class account_invoice_line(models.Model):
                         continue
                     res.append(dict(mres))
                     res[-1]['price'] = 0.0
+                    res[-1]['quantity'] = 0.0  # should be 0.0 for correct 'entries analysis' reporting
                     res[-1]['account_analytic_id'] = False
                 elif not tax_code_id:
                     continue
