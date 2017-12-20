@@ -805,9 +805,7 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def action_invoice_cancel(self):
-        if self.filtered(lambda inv: inv.state not in ['draft', 'open']):
-            raise UserError(_("Invoice must be in draft or open state in order to be cancelled."))
-        return self.action_cancel()
+        return self.filtered(lambda inv: inv.state == 'cancel').action_cancel()
 
     @api.multi
     def _notification_recipients(self, message, groups):
