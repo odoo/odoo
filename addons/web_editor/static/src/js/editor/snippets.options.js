@@ -126,7 +126,11 @@ var SnippetOption = Widget.extend({
      * @param {jQuery} $li - the related DOMElement option
      */
     selectClass: function (previewMode, value, $li) {
-        var $lis = this.$el.find('[data-select-class]').addBack('[data-select-class]');
+        var $group = $li.closest('.dropdown-submenu');
+        if (!$group.length) {
+            $group = this.$el;
+        }
+        var $lis = $group.find('[data-select-class]').addBack('[data-select-class]');
         var classes = $lis.map(function () {return $(this).data('selectClass');}).get().join(' ');
 
         this.$target.removeClass(classes);
