@@ -858,7 +858,7 @@ class WebsiteSale(http.Controller):
         # we proceed the s2s payment
         res = tx.confirm_sale_token()
         # we then redirect to the page that validates the payment by giving it error if there's one
-        if res is not True:
+        if res is not True and res != 'authorized_sale':
             return request.redirect('/shop/payment/validate?success=False&error=%s' % res)
         return request.redirect('/shop/payment/validate?success=True')
 
