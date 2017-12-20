@@ -227,7 +227,12 @@ var SnippetEditor = Widget.extend({
 
             var optionName = val.option;
             var $el = val.$el.children('li').clone(true).addClass('snippet-option-' + optionName);
-            var option = new (options.registry[optionName] || options.Class)(self, self.$target, self.$el, val.data);
+            var option = new (options.registry[optionName] || options.Class)(
+                self,
+                val.base_target ? self.$target.find(val.base_target).eq(0) : self.$target,
+                self.$el,
+                val.data
+            );
             self.styles[optionName || _.uniqueId('option')] = option;
             option.__order = i++;
             return option.attachTo($el);
@@ -849,6 +854,9 @@ var SnippetsMenu = Widget.extend({
      * @param {string} exclude
      *        jQuery selector that DOM elements must *not* match the be
      *        considered as potential snippet.
+     * @param {string|false} target
+     *        jQuery selector that at least one child of a DOM element must
+     *        match to that DOM element be considered as a potential snippet.
      * @param {boolean} noCheck
      *        true if DOM elements which are technically not in an editable
      *        environment may be considered.
@@ -857,7 +865,7 @@ var SnippetsMenu = Widget.extend({
      *        considered (@see noCheck), this is true if the DOM elements'
      *        parent must also be in an editable environment to be considered.
      */
-    _computeSelectorFunctions : function (include, exclude, noCheck, isChildren) {
+    _computeSelectorFunctions : function (include, exclude, target, noCheck, isChildren) {
         var self = this;
 
         // Convert the selector for elements to include into a list
@@ -873,6 +881,9 @@ var SnippetsMenu = Widget.extend({
         var selectorConditions = _.map(excludeList, function (exc) {
             return ':not(' + exc + ')';
         }).join('');
+        if (target) {
+            selectorConditions += ':has(' + target + ')';
+        }
         if (!noCheck) {
             selectorConditions = ':o_editable' + selectorConditions;
         }
@@ -943,16 +954,18 @@ var SnippetsMenu = Widget.extend({
             var $style = $(this);
             var selector = $style.data('selector');
             var exclude = $style.data('exclude') || '';
+            var target = $style.data('target');
             var noCheck = $style.data('no-check');
             var option_id = $style.data('js');
             var option = {
                 'option': option_id,
                 'base_selector': selector,
                 'base_exclude': exclude,
-                'selector': self._computeSelectorFunctions(selector, exclude, noCheck),
+                'base_target': target,
+                'selector': self._computeSelectorFunctions(selector, exclude, target, noCheck),
                 '$el': $style,
-                'drop-near': $style.data('drop-near') && self._computeSelectorFunctions($style.data('drop-near'), '', noCheck, true),
-                'drop-in': $style.data('drop-in') && self._computeSelectorFunctions($style.data('drop-in'), '', noCheck),
+                'drop-near': $style.data('drop-near') && self._computeSelectorFunctions($style.data('drop-near'), '', false, noCheck, true),
+                'drop-in': $style.data('drop-in') && self._computeSelectorFunctions($style.data('drop-in'), '', false, noCheck),
                 'data': $style.data(),
             };
             self.templateOptions.push(option);
