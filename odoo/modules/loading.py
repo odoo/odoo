@@ -393,6 +393,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 Module.browse(modules_to_remove.values()).module_uninstall()
                 # Recursive reload, should only happen once, because there should be no
                 # modules to remove next time
+                delete_followers(cr)
                 cr.commit()
                 _logger.info('Reloading registry once more after uninstalling modules')
                 api.Environment.reset()
@@ -452,3 +453,33 @@ def reset_modules_state(db_name):
             "UPDATE ir_module_module SET state='uninstalled' WHERE state='to install'"
         )
         _logger.warning("Transient module states were reset")
+
+
+def delete_followers(cr):
+    """
+    Delete mail.followers from the database <db_name>.
+
+    This method will delete mail.followers records from the database specified
+    by the db_name parameter for models which no longer exist in the database.
+    """
+    # FIXME /!\ Remove in versions other than 10.0 /!\
+    try:
+        # Easier to ask for forgiveness than permission!
+        cr.execute("SELECT DISTINCT res_model FROM mail_followers")
+        follower_models = {rec[0] for rec in cr.fetchall()}
+    except Exception:
+        # No mail_followers table found, no problem
+        return
+
+    cr.execute("SELECT model FROM ir_model")
+    installed_models = {rec[0] for rec in cr.fetchall()}
+
+    to_delete = follower_models - installed_models
+    if to_delete:
+        cr.execute("DELETE FROM mail_followers WHERE res_model IN %s",
+                   (tuple(to_delete),))
+    else:
+        return
+
+    if cr.rowcount:
+        _logger.info("mail followers were cleaned up")
