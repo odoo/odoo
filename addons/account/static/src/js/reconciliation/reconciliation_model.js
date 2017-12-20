@@ -111,7 +111,7 @@ var StatementModel = BasicModel.extend({
         this.valuemax = 0;
         this.alreadyDisplayed = [];
         this.defaultDisplayQty = 10;
-        this.limitMoveLines = options && options.limitMoveLines || 5;
+        this.limitMoveLines = options && options.limitMoveLines || 40;
     },
 
     //--------------------------------------------------------------------------
@@ -221,7 +221,6 @@ var StatementModel = BasicModel.extend({
                 args: [this.bank_statement_id.id, {name: name}],
             });
     },
-
     /**
      * change the offset for the matched lines, and fetch the new matched lines
      *
@@ -1083,12 +1082,12 @@ var StatementModel = BasicModel.extend({
             });
         })));
         var filter = line.filter || "";
-        var offset = options.offset ? line.offset : 0;
+        line.offset = options.offset ? line.offset : 0;
         var limit = this.limitMoveLines + 1;
         return this._rpc({
                 model: 'account.reconciliation.widget',
                 method: 'get_move_lines_for_bank_statement_line',
-                args: [line.id, line.st_line.partner_id, excluded_ids, filter, offset, limit],
+                args: [line.id, line.st_line.partner_id, excluded_ids, filter, line.offset, limit],
             }).then(function (move_lines) {
                 line.showMore = move_lines.length > line.limitMoveLines ? true : false;
                 move_lines.splice(line.limitMoveLines);

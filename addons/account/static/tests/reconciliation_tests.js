@@ -563,6 +563,7 @@ QUnit.module('account', {
 
         assert.strictEqual(widget.$('thead').text().replace(/[\n\r\s]+/g, ' '), " 101401 2017-01-01 SAJ/2014/002 and SAJ/2014/003 $ 1,175.00 ", "should display the line information");
         assert.ok(widget.$('caption .o_field_many2one').length, "should display the many2one with to select a partner");
+
         assert.strictEqual(clientAction.$('[data-mode="inactive"]').length, 3, "should be as 'inactive' mode by default");
         assert.strictEqual(widget.$el.data('mode'), 'match', "the first one should automatically switch to match mode");
 
@@ -638,6 +639,7 @@ QUnit.module('account', {
             " 101200 2017-02-07 INV/2017/0002 $ 650.00 101200 2017-02-07 INV/2017/0003 $ 525.00 ",
             "should display 4 account move lines who contains the account_code, due_date, label and the credit");
         assert.strictEqual(widget.$('.mv_line .cell_right:not(:empty)').length, 2, "should display only the credit account move lines (hide the debit)");
+
         clientAction.widgets[1].$('.accounting_view thead td:first').trigger('click');
         assert.strictEqual(clientAction.widgets[1].$('.mv_line').length, 5, "should display 5 account move lines");
         assert.strictEqual(clientAction.widgets[1].$('.mv_line .cell_right:not(:empty)').length, 4, "should display only the credit account move lines (hide the debit)");
@@ -646,7 +648,6 @@ QUnit.module('account', {
             " 101401 2017-01-23 ASUSTeK: BNK1/2017/0002: SUPP.OUT/2017/0002 : BILL/2017/0003 $ 376.00 101401 2017-01-23 Agrolait: BNK1/2017/0003: CUST.IN/2017/0001 $ 100.00 101401 2017-01-23 Agrolait: BNK1/2017/0004: CUST.IN/2017/0002 : INV/2017/0003 $ 525.50 101200 2017-02-07 Agrolait: INV/2017/0002 $ 650.00 101200 2017-02-22 Agrolait: INV/2017/0004 $ 525.00 ",
             "should display 4 account move lines who contains the account_code, due_date, label and the credit");
         assert.strictEqual(clientAction.widgets[1].$('.mv_line .cell_left:not(:empty)').length, 1, "should display only 1 debit account move lines");
-
         clientAction.widgets[1].$('.match a.show_more').trigger('click');
         assert.strictEqual(clientAction.widgets[1].$('.mv_line').text().replace(/[\n\r\s]+/g, ' '),
             " 101401 2017-01-23 ASUSTeK: BNK1/2017/0002: SUPP.OUT/2017/0002 : BILL/2017/0003 $ 376.00 101401 2017-01-23 Agrolait: BNK1/2017/0003: CUST.IN/2017/0001 $ 100.00 101401 2017-01-23 Agrolait: BNK1/2017/0004: CUST.IN/2017/0002 : INV/2017/0003 $ 525.50 101200 2017-02-07 Agrolait: INV/2017/0002 $ 650.00 101200 2017-02-22 Agrolait: INV/2017/0004 $ 525.00 " +
@@ -656,6 +657,7 @@ QUnit.module('account', {
         assert.ok(clientAction.widgets[0].$('caption button.btn-default:visible').length, "should display the 'validate' button");
         assert.ok(clientAction.widgets[1].$('caption .text-danger:visible').length, "should display the 'Select a partner or choose a counterpart' message");
         assert.ok(clientAction.widgets[2].$('caption button.btn-primary:visible').length, "should display the 'Reconcile' button");
+
         clientAction.widgets[3].$('.accounting_view thead td:first').trigger('click');
         assert.strictEqual(clientAction.widgets[3].$el.data('mode'), 'create', "should switch to 'create' mode instead 'match' mode when 'match' mode is empty");
 

@@ -697,14 +697,13 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             break;
         }
     },
-    // Trigger load more account move lines
     /**
+     * Trigger load more account move lines
      * @private
      */
     _onLoadMoreLines: function () {
         this.trigger_up('change_offset');
     },
-    // Trigger load more
     /**
      * @private
      * @param {MouseEvent} event

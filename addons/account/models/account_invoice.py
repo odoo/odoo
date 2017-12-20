@@ -369,7 +369,8 @@ class AccountInvoice(models.Model):
     sequence_number_next_prefix = fields.Char(string='Next Number Prefix', compute="_get_sequence_prefix")
 
     _sql_constraints = [
-        ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
+        ('number_uniq', 'unique(number, company_id, journal_id, type)', 'The invoice number must be unique per company. varify on your journal its '
+            'sequence and make sure that the next sequence number is not already attributed.'),
     ]
 
     def _get_seq_number_next_stuff(self):
@@ -1224,6 +1225,8 @@ class AccountInvoice(models.Model):
                     seq_range = self.env['ir.sequence.date_range'].search([('sequence_id', '=', sequence.id), ('date_to', '>=', inv.date_invoice), ('date_from', '<=', inv.date_invoice)], order='date_from desc', limit=1)
                     if seq_range.number_next:
                         seq_range.number_next = seq_range.number_next - 1
+                        inv.move_name = False
+
         # First, set the invoices as cancelled and detach the move ids
         self.write({'state': 'cancel', 'move_id': False})
         if moves:
