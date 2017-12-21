@@ -281,6 +281,13 @@ class Users(models.Model):
             raise ValidationError(_('The chosen company is not in the allowed companies for this user'))
 
     @api.multi
+    @api.constrains('action_id')
+    def _check_action_id(self):
+        action_open_website = self.env.ref('base.action_open_website', raise_if_not_found=False)
+        if action_open_website and any(user.action_id.id == action_open_website.id for user in self):
+            raise ValidationError(_('The "App Switcher" action cannot be selected as home action.'))
+
+    @api.multi
     def read(self, fields=None, load='_classic_read'):
         if fields and self == self.env.user:
             for key in fields:

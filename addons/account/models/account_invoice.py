@@ -700,7 +700,7 @@ class AccountInvoice(models.Model):
         total_currency = 0
         for line in invoice_move_lines:
             if self.currency_id != company_currency:
-                currency = self.currency_id.with_context(date=self.date or self.date_invoice or fields.Date.context_today(self))
+                currency = self.currency_id.with_context(date=self._get_currency_rate_date() or fields.Date.context_today(self))
                 if not (line.get('currency_id') and line.get('amount_currency')):
                     line['currency_id'] = currency.id
                     line['amount_currency'] = currency.round(line['price'])
@@ -848,7 +848,7 @@ class AccountInvoice(models.Model):
             if inv.payment_term_id:
                 totlines = inv.with_context(ctx).payment_term_id.with_context(currency_id=company_currency.id).compute(total, inv.date_invoice)[0]
                 res_amount_currency = total_currency
-                ctx['date'] = inv.date or inv.date_invoice
+                ctx['date'] = inv._get_currency_rate_date()
                 for i, t in enumerate(totlines):
                     if inv.currency_id != company_currency:
                         amount_currency = company_currency.with_context(ctx).compute(t[1], inv.currency_id)
@@ -1028,6 +1028,9 @@ class AccountInvoice(models.Model):
     def _get_refund_copy_fields(self):
         copy_fields = ['company_id', 'user_id', 'fiscal_position_id']
         return self._get_refund_common_fields() + self._get_refund_prepare_fields() + copy_fields
+
+    def _get_currency_rate_date(self):
+        return self.date or self.date_invoice
 
     @api.model
     def _prepare_refund(self, invoice, date_invoice=None, date=None, description=None, journal_id=None):
