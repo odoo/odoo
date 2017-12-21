@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class AccountAnalyticDefault(models.Model):
@@ -19,6 +20,11 @@ class AccountAnalyticDefault(models.Model):
     company_id = fields.Many2one('res.company', string='Company', ondelete='cascade', help="Select a company which will use analytic account specified in analytic default (e.g. create new customer invoice or Sales order if we select this company, it will automatically take this as an analytic account)")
     date_start = fields.Date(string='Start Date', help="Default start date for this Analytic Account.")
     date_stop = fields.Date(string='End Date', help="Default end date for this Analytic Account.")
+
+    @api.constrains('analytic_id', 'analytic_tag_ids')
+    def _check_account_or_tags(self):
+        if any(not default.analytic_id and not default.analytic_tag_ids for default in self):
+            raise ValidationError(_('An analytic default requires at least an analytic account or an analytic tag.'))
 
     @api.model
     def account_get(self, product_id=None, partner_id=None, user_id=None, date=None, company_id=None):
