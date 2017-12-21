@@ -8,15 +8,20 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='tag_ids']" position="after">
-                        <field name="general_account_id"/>
                         <field name="ref"/>
                         <field name="partner_id"/>
-                        <field name="move_id" readonly="1"/>
                     </xpath>
                     <xpath expr="//field[@name='amount']" position="after">
                         <field name="product_id"/>
                         <field name="product_uom_id" class="oe_inline"/>
                     </xpath>
+                    <group name="amount" position="after">
+                        <group/> <!-- put Accounting group under Amount group -->
+                        <group name="accounting" string="Accounting">
+                            <field name="general_account_id"/>
+                            <field name="move_id" readonly="1"/>
+                        </group>
+                    </group>
                 </data>
             </field>
         </record>

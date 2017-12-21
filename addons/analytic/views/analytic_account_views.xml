@@ -279,22 +279,20 @@
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Analytic Entry">
-                    <sheet string="Analytic Entry">
-                        <group>
-                            <group>
-                                <field name="name"/>
-                                <field name="account_id"/>
-                                <field name="tag_ids" widget="many2many_tags"/>
-                                <field name="date"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
-                            </group>
-                            <group string="Amount">
-                                <field name="amount"/>
-                                <field name="unit_amount"/>
-                                <field name="currency_id" invisible="1"/>
-                            </group>
+                    <group>
+                        <group name="analytic_entry" string="Analytic Entry">
+                            <field name="name"/>
+                            <field name="account_id"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                            <field name="date"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
-                    </sheet>
+                        <group name="amount" string="Amount">
+                            <field name="amount"/>
+                            <field name="unit_amount"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
                 </form>
             </field>
         </record>
