@@ -34,7 +34,7 @@ class AccountAccountTag(models.Model):
 
     name = fields.Char(required=True)
     applicability = fields.Selection([('accounts', 'Accounts'), ('taxes', 'Taxes')], required=True, default='accounts')
-    color = fields.Integer('Color Index', default=10)
+    color = fields.Integer('Color Index')
     active = fields.Boolean(default=True, help="Set active to false to hide the Account Tag without removing it.")
 
 #----------------------------------------------------------
@@ -176,8 +176,7 @@ class AccountAccount(models.Model):
 
     @api.onchange('internal_type')
     def onchange_internal_type(self):
-        if self.internal_type in ('receivable', 'payable'):
-            self.reconcile = True
+        self.reconcile = self.internal_type in ('receivable', 'payable')
 
     @api.onchange('code')
     def onchange_code(self):
@@ -225,6 +224,43 @@ class AccountAccount(models.Model):
                 company._auto_balance_opening_move()
         return rslt
 
+    def _toggle_reconcile_to_true(self):
+        '''Toggle the `reconcile´ boolean from False -> True
+
+        Note that: lines with debit = credit = amount_currency = 0 are set to `reconciled´ = True
+        '''
+        query = """
+            UPDATE account_move_line SET
+                reconciled = CASE WHEN debit = 0 AND credit = 0 AND amount_currency = 0
+                    THEN true ELSE false END,
+                amount_residual = (debit-credit),
+                amount_residual_currency = amount_currency
+            WHERE full_reconcile_id IS NULL and account_id IN %s
+        """
+        self.env.cr.execute(query, [tuple(self.ids)])
+
+    def _toggle_reconcile_to_false(self):
+        '''Toggle the `reconcile´ boolean from True -> False
+
+        Note that it is disallowed if some lines are partially reconciled.
+        '''
+        partial_lines_count = self.env['account.move.line'].search_count([
+            ('account_id', 'in', self.ids),
+            ('full_reconcile_id', '=', False),
+            ('|'),
+            ('matched_debit_ids', '!=', False),
+            ('matched_credit_ids', '!=', False),
+        ])
+        if partial_lines_count > 0:
+            raise UserError(_('You cannot switch an account to not allow the reconciliation'
+                              'if some partial reconciliations are still pending.'))
+        query = """
+            UPDATE account_move_line
+                SET amount_residual = 0, amount_residual_currency = 0
+            WHERE full_reconcile_id = NULL AND account_id IN %s
+        """
+        self.env.cr.execute(query, [tuple(self.ids)])
+
     @api.multi
     def write(self, vals):
         # Do not allow changing the company_id when account_move_line already exist
@@ -233,13 +269,11 @@ class AccountAccount(models.Model):
             for account in self:
                 if (account.company_id.id != vals['company_id']) and move_lines:
                     raise UserError(_('You cannot change the owner company of an account that already contains journal items.'))
-        # If user change the reconcile flag, all aml should be recomputed for that account and this is very costly.
-        # So to prevent some bugs we add a constraint saying that you cannot change the reconcile field if there is any aml existing
-        # for that account.
-        if vals.get('reconcile'):
-            move_lines = self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1)
-            if len(move_lines):
-                raise UserError(_('You cannot change the value of the reconciliation on this account as it already has some moves'))
+        if 'reconcile' in vals:
+            if vals['reconcile']:
+                self.filtered(lambda r: not r.reconcile)._toggle_reconcile_to_true()
+            else:
+                self.filtered(lambda r: r.reconcile)._toggle_reconcile_to_false()
         return super(AccountAccount, self).write(vals)
 
     @api.multi
@@ -563,15 +597,17 @@ class AccountJournal(models.Model):
         :return: mapping of field names and values
         :rtype: dict
         '''
-
+        digits = 6
+        acc = self.env['account.account'].search([('company_id', '=', company.id)], limit=1)
+        if acc:
+            digits = len(acc.code)
         # Seek the next available number for the account code
-        code_digits = company.accounts_code_digits or 0
         if type == 'bank':
             account_code_prefix = company.bank_account_code_prefix or ''
         else:
             account_code_prefix = company.cash_account_code_prefix or company.bank_account_code_prefix or ''
         for num in range(1, 100):
-            new_code = str(account_code_prefix.ljust(code_digits - 1, '0')) + str(num)
+            new_code = str(account_code_prefix.ljust(digits - 1, '0')) + str(num)
             rec = self.env['account.account'].search([('code', '=', new_code), ('company_id', '=', company.id)], limit=1)
             if not rec:
                 break
@@ -721,7 +757,7 @@ class AccountTaxGroup(models.Model):
 class AccountTax(models.Model):
     _name = 'account.tax'
     _description = 'Tax'
-    _order = 'sequence'
+    _order = 'sequence,id'
 
     @api.model
     def _default_tax_group(self):
@@ -764,23 +800,11 @@ class AccountTax(models.Model):
         'account.account',
         string='Tax Received Account',
         domain=[('deprecated', '=', False)],
-        help='Account used as counterpart for the journal entry, for taxes exigible based on payments.')
+        help='Account used as counterpart for the journal entry, for taxes eligible based on payments.')
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, type_tax_use)', 'Tax names must be unique !'),
     ]
-
-    @api.multi
-    def unlink(self):
-        company_id = self.env.user.company_id.id
-        IrDefault = self.env['ir.default']
-        taxes = self.browse(IrDefault.get('product.template', 'taxes_id', company_id=company_id) or [])
-        if self & taxes:
-            IrDefault.sudo().set('product.template', 'taxes_id', (taxes - self).ids, company_id=company_id)
-        taxes = self.browse(IrDefault.get('product.template', 'supplier_taxes_id', company_id=company_id) or [])
-        if self & taxes:
-            IrDefault.sudo().set('product.template', 'supplier_taxes_id', (taxes - self).ids, company_id=company_id)
-        return super(AccountTax, self).unlink()
 
     @api.one
     @api.constrains('children_tax_ids', 'type_tax_use')
@@ -848,7 +872,6 @@ class AccountTax(models.Model):
             price_unit * quantity eventually affected by previous taxes (if tax is include_base_amount XOR price_include)
         """
         self.ensure_one()
-        price_include = self._context.get('force_price_include', self.price_include)
         if self.amount_type == 'fixed':
             # Use copysign to take into account the sign of the base amount which includes the sign
             # of the quantity and the sign of the price_unit
@@ -862,11 +885,11 @@ class AccountTax(models.Model):
                 return math.copysign(quantity, base_amount) * self.amount
             else:
                 return quantity * self.amount
-        if (self.amount_type == 'percent' and not price_include) or (self.amount_type == 'division' and self.price_include):
+        if (self.amount_type == 'percent' and not self.price_include) or (self.amount_type == 'division' and self.price_include):
             return base_amount * self.amount / 100
-        if self.amount_type == 'percent' and price_include:
+        if self.amount_type == 'percent' and self.price_include:
             return base_amount - (base_amount / (1 + self.amount / 100))
-        if self.amount_type == 'division' and not price_include:
+        if self.amount_type == 'division' and not self.price_include:
             return base_amount / (1 - self.amount / 100) - base_amount
 
     @api.multi
@@ -900,58 +923,13 @@ class AccountTax(models.Model):
                 'analytic': boolean,
             }]
         } """
-
-        # 1) Flatten the taxes.
-
-        def collect_taxes(self, all_taxes=None):
-            # Collect all the taxes recursively ordered by the sequence.
-            # Example:
-            # group | seq | sub-group |
-            # ------------|-----------|
-            #       |  1  |           |
-            # ------------|-----------|
-            #   t   |  2  |  | seq |  |
-            #       |     |  |  4  |  |
-            #       |     |  |  5  |  |
-            #       |     |  |  6  |  |
-            #       |     |           |
-            # ------------|-----------|
-            #       |  3  |           |
-            # ------------|-----------|
-            # Result: 1-4-5-6-3
-            if not all_taxes:
-                all_taxes = self.env['account.tax']
-            for tax in self.sorted(key=lambda r: r.sequence):
-                if tax.amount_type == 'group':
-                    all_taxes = collect_taxes(tax.children_tax_ids, all_taxes)
-                else:
-                    all_taxes += tax
-            return all_taxes
-
-        taxes = collect_taxes(self)
-
-        # 2) Avoid dealing with taxes mixing price_include=False && include_base_amount=True
-        # with price_include=True
-
-        base_excluded_flag = False  # price_include=False && include_base_amount=True
-        included_flag = False  # price_include=True
-        for tax in taxes:
-            if tax.price_include:
-                included_flag = True
-            elif tax.include_base_amount:
-                base_excluded_flag = True
-            if base_excluded_flag and included_flag:
-                raise UserError(_('Unable to mix any taxes being price included with taxes affecting the base amount but not included in price.'))
-
-        # 3) Deal with the rounding methods
-
         if len(self) == 0:
             company_id = self.env.user.company_id
         else:
             company_id = self[0].company_id
         if not currency:
             currency = company_id.currency_id
-
+        taxes = []
         # By default, for each tax, tax amount will first be computed
         # and rounded at the 'Account' decimal precision for each
         # PO/SO/invoice line and then these rounded amounts will be
@@ -976,107 +954,62 @@ class AccountTax(models.Model):
         if not round_tax:
             prec += 5
 
-        # 4) Iterate the taxes in the reversed sequence order to retrieve the initial base of the computation.
-        #     tax  |  base  |  amount  |
-        # /\ ----------------------------
-        # || tax_1 |  XXXX  |          | <- we are looking for that, it's the total_excluded
-        # || tax_2 |        |          |
-        # || tax_3 |        |          |
-        # ||  ...  |   ..   |    ..    |
-        #    ----------------------------
-
-        def recompute_base(base_amount, fixed_amount, percent_amount):
-            # Recompute the new base amount based on included fixed/percent amount and the current base amount.
-            # Example:
-            #  tax  |  amount  |
-            # ------------------
-            # tax_1 |   10%    |
-            # tax_2 |   15     |
-            # tax_3 |   20%    |
-            # ------------------
-            # if base_amount = 145, the new base is computed as:
-            # (145 - 15) / (1.0 + ((10 + 20) / 100.0)) = 130 / 1.3 = 100
-            if fixed_amount == 0.0 and percent_amount == 0.0:
-                return base_amount
-            return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0)
-
-        base = round(price_unit * quantity, prec)
-
-        # For the computation of move lines, we could have a negative base value.
-        # In this case, compute all with positive values and negative them at the end.
-        if base < 0:
-            base = -base
-            sign = -1
+        base_values = self.env.context.get('base_values')
+        if not base_values:
+            total_excluded = total_included = base = round(price_unit * quantity, prec)
         else:
-            sign = 1
+            total_excluded, total_included, base = base_values
 
-        # Keep track of the accumulated included fixed/percent amount.
-        incl_fixed_amount = incl_percent_amount = 0
-        for tax in reversed(taxes):
-            if tax.include_base_amount:
-                base = recompute_base(base, incl_fixed_amount, incl_percent_amount)
-                incl_fixed_amount = incl_percent_amount = 0
-            if self._context.get('force_price_include', tax.price_include):
-                if tax.amount_type == 'fixed':
-                    incl_fixed_amount += tax.amount
-                elif tax.amount_type == 'percent':
-                    incl_percent_amount += tax.amount
-        # Start the computation of accumulated amounts at the total_excluded value.
-        total_excluded = total_included = base = recompute_base(base, incl_fixed_amount, incl_percent_amount)
+        # Sorting key is mandatory in this case. When no key is provided, sorted() will perform a
+        # search. However, the search method is overridden in account.tax in order to add a domain
+        # depending on the context. This domain might filter out some taxes from self, e.g. in the
+        # case of group taxes.
+        for tax in self.sorted(key=lambda r: r.sequence):
+            if tax.amount_type == 'group':
+                children = tax.children_tax_ids.with_context(base_values=(total_excluded, total_included, base))
+                ret = children.compute_all(price_unit, currency, quantity, product, partner)
+                total_excluded = ret['total_excluded']
+                base = ret['base'] if tax.include_base_amount else base
+                total_included = ret['total_included']
+                tax_amount = total_included - total_excluded
+                taxes += ret['taxes']
+                continue
 
-        # 5) Iterate the taxes in the sequence order to fill missing base/amount values.
-        #      tax  |  base  |  amount  |
-        # ||  ----------------------------
-        # ||  tax_1 |   OK   |   XXXX   |
-        # ||  tax_2 |  XXXX  |   XXXX   |
-        # ||  tax_3 |  XXXX  |   XXXX   |
-        # \/  ...  |   ..   |    ..    |
-        #     ----------------------------
-        taxes_vals = []
-        for tax in taxes:
-            # Compute the amount of the tax but don't deal with the price_include because it's already
-            # took into account on the base amount except for 'division' tax:
-            # (tax.amount_type == 'percent' && not tax.price_include)
-            # == (tax.amount_type == 'division' && tax.price_include)
-            # N.B: don't use the with_context if force_price_include already False in context
-            if 'force_price_include' not in self._context or self._context['force_price_include']:
-                tax = tax.with_context(force_price_include=False)
             tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
             if not round_tax:
                 tax_amount = round(tax_amount, prec)
             else:
                 tax_amount = currency.round(tax_amount)
 
-            # Suppose:
-            # seq | amount | incl | incl_base | base | amount
-            # -----------------------------------------------
-            #  1  |   10 % |   t  |     t     | 100.0 | 10.0
-            # -----------------------------------------------
-            # ... the next computation must be done using 100.0 + 10.0 = 110.0 as base but
-            # the tax base of this tax will be 100.0.
+            if tax.price_include:
+                total_excluded -= tax_amount
+                base -= tax_amount
+            else:
+                total_included += tax_amount
+
+            # Keep base amount used for the current tax
             tax_base = base
+
             if tax.include_base_amount:
                 base += tax_amount
 
-            # The total_included amount is computed as the sum of total_excluded with all tax_amount
-            total_included += tax_amount
-
-            taxes_vals.append({
+            taxes.append({
                 'id': tax.id,
                 'name': tax.with_context(**{'lang': partner.lang} if partner else {}).name,
-                'amount': sign * tax_amount,
-                'base': round(sign * tax_base, prec),
+                'amount': tax_amount,
+                'base': tax_base,
                 'sequence': tax.sequence,
                 'account_id': tax.account_id.id,
                 'refund_account_id': tax.refund_account_id.id,
                 'analytic': tax.analytic,
+                'price_include': tax.price_include,
             })
 
         return {
-            'taxes': taxes_vals,
-            'total_excluded': sign * (currency.round(total_excluded) if round_total else total_excluded),
-            'total_included': sign * (currency.round(total_included) if round_total else total_included),
-            'base': round(sign * base, prec),
+            'taxes': sorted(taxes, key=lambda k: k['sequence']),
+            'total_excluded': currency.round(total_excluded) if round_total else total_excluded,
+            'total_included': currency.round(total_included) if round_total else total_included,
+            'base': base,
         }
 
     @api.model
@@ -1114,7 +1047,7 @@ class AccountReconcileModel(models.Model):
         ('percentage', 'Percentage of balance')
         ], required=True, default='percentage')
     amount = fields.Float(digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
-    tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
+    tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null')
 
     second_account_id = fields.Many2one('account.account', string='Second Account', ondelete='cascade', domain=[('deprecated', '=', False)])

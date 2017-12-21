@@ -65,6 +65,7 @@
 
         <record id="view_finisehd_move_line" model="ir.ui.view">
             <field name="name">mrp.finished.move.line.form</field>
+            <field name="priority">1000</field>
             <field name="model">stock.move.line</field>
             <field name="arch" type="xml">
                 <form string="Finished Product">
@@ -79,6 +80,7 @@
                                 <span><field name="product_uom_id" attrs="{'readonly': [('id', '!=', False)]}" nolabel="1"/></span>
                             </div>
                             <field name="lot_id" string="Lot/Serial number" groups="stock.group_production_lot" readonly="1" attrs="{'invisible': [('lots_visible', '=', False)]}"/>
+                            <field name="lots_visible" invisible="1"/>
                         </group>
                     </group>
                 </form>

@@ -718,6 +718,79 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('prevent drag and drop of record if grouped by readonly', function (assert) {
+        assert.expect(12);
+
+        this.data.partner.fields.foo.readonly = true;
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                        '<templates>' +
+                            '<t t-name="kanban-box"><div>' +
+                                '<field name="foo"/>' +
+                                '<field name="state" readonly="1"/>' +
+                            '</div></t>' +
+                        '</templates>' +
+                    '</kanban>',
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/resequence') {
+                    return $.when();
+                }
+                if (args.model === 'partner' && args.method === 'write') {
+                    throw new Error('should not be draggable');
+                }
+                return this._super(route, args);
+            },
+        });
+        // simulate an update coming from the searchview, with another groupby given
+        kanban.update({groupBy: ['state']});
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 1,
+                        "column should contain 1 record(s)");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length, 1,
+                        "column should contain 1 record(s)");
+        // drag&drop a record in another column
+        var $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
+        var $group = kanban.$('.o_kanban_group:nth-child(2)');
+        testUtils.dragAndDrop($record, $group);
+        // should not be draggable
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 1,
+                        "column should now contain 1 record(s)");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length, 1,
+                        "column should contain 1 record(s)");
+
+        // simulate an update coming from the searchview, with another groupby given
+        kanban.update({groupBy: ['foo']});
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 1,
+                        "column should contain 1 record(s)");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length, 2,
+                        "column should contain 2 record(s)");
+        // drag&drop a record in another column
+        $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
+        $group = kanban.$('.o_kanban_group:nth-child(2)');
+        testUtils.dragAndDrop($record, $group);
+        // should not be draggable
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 1,
+                        "column should now contain 1 record(s)");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length, 2,
+                        "column should contain 2 record(s)");
+
+        // drag&drop a record in the same column
+        var $record1 = kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record:eq(0)');
+        var $record2 = kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record:eq(1)');
+        assert.strictEqual($record1.text(), "blipDEF", "first record should be DEF");
+        assert.strictEqual($record2.text(), "blipGHI", "second record should be GHI");
+        testUtils.dragAndDrop($record2, $record1, {position: 'top'});
+        // should still be able to resequence
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record:eq(0)').text(), "blipGHI",
+            "records should have been resequenced");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record:eq(1)').text(), "blipDEF",
+            "records should have been resequenced");
+
+        kanban.destroy();
+    });
+
     QUnit.test('kanban view with default_group_by', function (assert) {
         assert.expect(7);
         this.data.partner.records.product_id = 1;
@@ -2129,55 +2202,6 @@ QUnit.module('Views', {
                 "quick create should have been added in the first column");
         }
     });
-
-    QUnit.skip('mobile grouped rendering', function (assert) {
-        // Temporarily disable this test until we introduce a mobile test suite, as
-        // the code of the kanban renderer for mobile is in a specific file which isn't
-        // executed in desktop (so setting 'isMobile: True' in the test is useless).
-        // So to re-activate this test, it will need to be moved in another file
-        // included in the bundle of the mobile test suite.
-        assert.expect(8);
-        var done = assert.async();
-
-        createAsyncView({
-            View: KanbanView,
-            model: 'partner',
-            data: this.data,
-            arch: '<kanban class="o_kanban_test o_kanban_small_column" on_create="quick_create">' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div><field name="foo"/></div>' +
-                    '</t></templates>' +
-                '</kanban>',
-            groupBy: ['product_id'],
-            config: {device: {isMobile: true}},
-        }).then(function (kanban) {
-
-            // Dummy dom update trigger for activate mobile tabs and move to first column
-            core.bus.trigger("DOM_updated");
-
-            assert.equal(kanban.$el.find('.o_kanban_group').length, 2, "2 colomns are created" );
-
-            kanban.$buttons.find('.o-kanban-button-new').click(); // Click on 'Create'
-            assert.ok(kanban.$('.o_kanban_group:nth(0) > div:nth(1)').hasClass('o_kanban_quick_create'),
-                "clicking on create should open the quick_create in the first column");
-
-            assert.equal(kanban.$el.find('.o_kanban_mobile_tab.current > span').html(), "hello", "First tab 'hello' is active tab with class 'current'" );
-            assert.equal(kanban.$el.find('.o_kanban_group.current > div.o_kanban_record').length, "2", "there is 2 record in active 'hello' tab" );
-            assert.equal(kanban.$el.find('.o_kanban_group.next > div.o_kanban_record').length, "0", "there is 0 record in next tab. Records will load when click on next tab");
-
-            kanban.$el.find('.o_kanban_mobile_tab.next').trigger('click'); // Moving to next tab
-            assert.equal(kanban.$el.find('.o_kanban_mobile_tab.current > span').html(), "xmo", "Second tab 'xmo' is active with class 'current'" );
-            assert.equal(kanban.$el.find('.o_kanban_group.current > div.o_kanban_record').length, "2", "there is 2 record in active 'xmo' tab. Records are loaded after click on tab");
-
-            kanban.$buttons.find('.o-kanban-button-new').click(); // Click on 'Create'
-            assert.ok(kanban.$('.o_kanban_group:nth(1) >  div:nth(1)').hasClass('o_kanban_quick_create'),
-                "clicking on create should open the quick_create in the second column");
-
-            kanban.destroy();
-            done();
-        });
-    });
-
 });
 
 });

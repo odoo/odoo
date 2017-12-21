@@ -31,7 +31,7 @@ class PickingType(models.Model):
         help="This is the default destination location when you create a picking manually with this operation type. It is possible however to change it or that the routes put another location. If it is empty, it will check for the customer location on the partner. ")
     code = fields.Selection([('incoming', 'Vendors'), ('outgoing', 'Customers'), ('internal', 'Internal')], 'Type of Operation', required=True)
     return_picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type for Returns')
-    show_entire_packs = fields.Boolean('Allow moving packs', help="If checked, this shows the packs to be moved as a whole in the Operations tab all the time, even if there was no entire pack reserved.")
+    show_entire_packs = fields.Boolean('Move Entire Packages', help="If checked, this shows the packs to be moved as a whole in the Operations tab all the time, even if there was no entire pack reserved.")
     warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse', ondelete='cascade',
         default=lambda self: self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1))
@@ -453,7 +453,7 @@ class Picking(models.Model):
             self.location_id = location_id
             self.location_dest_id = location_dest_id
         # TDE CLEANME move into onchange_partner_id
-        if self.partner_id:
+        if self.partner_id and self.partner_id.picking_warn:
             if self.partner_id.picking_warn == 'no-message' and self.partner_id.parent_id:
                 partner = self.partner_id.parent_id
             elif self.partner_id.picking_warn not in ('no-message', 'block') and self.partner_id.parent_id.picking_warn == 'block':
@@ -480,7 +480,7 @@ class Picking(models.Model):
         # As it is a create the format will be a list of (0, 0, dict)
         if vals.get('move_lines') and vals.get('location_id') and vals.get('location_dest_id'):
             for move in vals['move_lines']:
-                if len(move) == 3:
+                if len(move) == 3 and move[0] == 0:
                     move[2]['location_id'] = vals['location_id']
                     move[2]['location_dest_id'] = vals['location_dest_id']
         res = super(Picking, self).create(vals)
@@ -665,8 +665,11 @@ class Picking(models.Model):
 
             for line in lines_to_check:
                 product = line.product_id
-                if product and product.tracking != 'none' and (line.qty_done == 0 or (not line.lot_name and not line.lot_id)):
-                    raise UserError(_('You need to supply a lot/serial number for %s.') % product.name)
+                if product and product.tracking != 'none':
+                    if not line.lot_name and not line.lot_id:
+                        raise UserError(_('You need to supply a lot/serial number for %s.') % product.display_name)
+                    elif line.qty_done == 0:
+                        raise UserError(_('You cannot validate a transfer if you have not processed any quantity for %s.') % product.display_name)
 
         if no_quantities_done:
             view = self.env.ref('stock.view_immediate_transfer')
@@ -808,9 +811,11 @@ class Picking(models.Model):
                             operation.product_uom_qty - operation.qty_done,
                             precision_rounding=operation.product_uom_id.rounding,
                             rounding_method='UP')
+                        done_to_keep = operation.qty_done
                         new_operation = operation.copy(
-                            default={'product_uom_qty': operation.qty_done, 'qty_done': operation.qty_done})
+                            default={'product_uom_qty': 0, 'qty_done': operation.qty_done})
                         operation.write({'product_uom_qty': quantity_left_todo, 'qty_done': 0.0})
+                        new_operation.write({'product_uom_qty': done_to_keep})
                         operation_ids |= new_operation
 
                 operation_ids.write({'result_package_id': package.id})

@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from datetime import datetime
 import uuid
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 
 
 class AccountCashboxLine(models.Model):
@@ -125,6 +128,7 @@ class PosConfig(models.Model):
     last_session_closing_date = fields.Date(compute='_compute_last_session')
     pos_session_username = fields.Char(compute='_compute_current_session_user')
     pos_session_state = fields.Char(compute='_compute_current_session_user')
+    pos_session_duration = fields.Char(compute='_compute_current_session_user')
     group_by = fields.Boolean(string='Group Journal Items', default=True,
         help="Check this if you want to group the Journal Items by Product while closing a Session.")
     pricelist_id = fields.Many2one('product.pricelist', string='Default Pricelist', required=True, default=_default_pricelist,
@@ -206,8 +210,16 @@ class PosConfig(models.Model):
     def _compute_current_session_user(self):
         for pos_config in self:
             session = pos_config.session_ids.filtered(lambda s: s.state in ['opening_control', 'opened', 'closing_control'] and not s.rescue)
-            pos_config.pos_session_username = session and session[0].user_id.name or False
-            pos_config.pos_session_state = session and session[0].state or False
+            if session:
+                pos_config.pos_session_username = session[0].user_id.name
+                pos_config.pos_session_state = session[0].state
+                pos_config.pos_session_duration = (
+                    datetime.now() - datetime.strptime(session[0].start_at, DATETIME_FORMAT)
+                ).days if session[0].start_at else 0
+            else:
+                pos_config.pos_session_username = False
+                pos_config.pos_session_state = False
+                pos_config.pos_session_duration = 0
 
     @api.constrains('company_id', 'stock_location_id')
     def _check_company_location(self):

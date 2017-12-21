@@ -42,7 +42,7 @@ Notes:
         'data/account.fiscal.position.tax.template-2015.csv',
         # configuration wizard, views, reports...
         'data/account.chart.template.csv',
-        'data/account_chart_template_data.yml',
+        'data/account_chart_template_data.xml',
     ],
     'post_init_hook': '_preserve_tag_on_taxes',
 }

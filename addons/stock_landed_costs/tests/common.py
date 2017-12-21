@@ -1,8 +1,16 @@
 # -*- coding: utf-8 -*-
 
+from odoo import tools
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.modules.module import get_module_resource
+
 
 class TestStockLandedCostsCommon(AccountingTestCase):
+
+    def _load(self, module, *args):
+        tools.convert_file(self.cr, 'stock_landed_costs',
+                           get_module_resource(module, *args),
+                           {}, 'init', False, 'test', self.registry._assertion_report)
 
     def setUp(self):
         super(TestStockLandedCostsCommon, self).setUp()

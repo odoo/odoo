@@ -321,6 +321,9 @@ class Lead(models.Model):
         # Set date_open to today if it is an opp
         default = default or {}
         default['date_open'] = fields.Datetime.now() if self.type == 'opportunity' else False
+        # Do not assign to an archived user
+        if not self.user_id.active:
+            default['user_id'] = False
         return super(Lead, self.with_context(context)).copy(default=default)
 
     @api.model
@@ -1217,7 +1220,7 @@ class Tag(models.Model):
     _description = "Category of lead"
 
     name = fields.Char('Name', required=True, translate=True)
-    color = fields.Integer('Color Index', default=10)
+    color = fields.Integer('Color Index')
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag name already exists !"),

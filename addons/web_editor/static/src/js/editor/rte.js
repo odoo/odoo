@@ -405,7 +405,7 @@ var RTEWidget = Widget.extend({
             var $el = $(el);
 
             $el.find('[class]').filter(function () {
-                if (!this.className.match(/\S/)) {
+                if (!this.getAttribute('class').match(/\S/)) {
                     this.removeAttribute('class');
                 }
             });
@@ -654,7 +654,7 @@ var RTEWidget = Widget.extend({
         // whitespace characters (so Tripleclicking then typing text will remove
         // the whole paragraph instead of its content).
         // http://stackoverflow.com/questions/38467334/why-does-google-chrome-always-add-space-after-selected-text
-        if ($.browser.chrome === true && event.originalEvent.detail === 3) {
+        if ($.browser.chrome === true && ev.originalEvent.detail === 3) {
             var currentSelection = range.create();
             if (currentSelection.sc.parentNode === currentSelection.ec) {
                 _selectSC(currentSelection);
@@ -670,17 +670,6 @@ var RTEWidget = Widget.extend({
         }
         function _selectSC(selection) {
             range.create(selection.sc, selection.so, selection.sc, selection.sc.length).select();
-        }
-
-        // To Fix Google Chrome Tripleclick Issue, which selects the ending
-        // whitespace characters (so Tripleclicking then typing text will remove
-        // the whole paragraph instead of its content).
-        // http://stackoverflow.com/questions/38467334/why-does-google-chrome-always-add-space-after-selected-text
-        if ($.browser.chrome === true && ev.originalEvent.detail === 3) {
-            var currentSelection = range.create();
-            if (currentSelection.sc.parentNode === currentSelection.ec) {
-                range.create(currentSelection.sc, currentSelection.so, currentSelection.sc, currentSelection.sc.length).select();
-            }
         }
     },
 });

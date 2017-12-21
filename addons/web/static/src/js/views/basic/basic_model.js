@@ -896,6 +896,9 @@ var BasicModel = AbstractModel.extend({
                 return def.resolve(changedFields);
             }
 
+            def.then(function () {
+                record._isDirty = false;
+            });
             // in the case of a write, only perform the RPC if there are changes to save
             if (method === 'create' || changedFields.length) {
                 var args = method === 'write' ? [[record.data.id], changes] : [changes];
@@ -917,7 +920,6 @@ var BasicModel = AbstractModel.extend({
 
                         // Erase changes as they have been applied
                         record._changes = {};
-                        record._isDirty = false;
 
                         // Update the data directly or reload them
                         if (shouldReload) {
@@ -947,8 +949,8 @@ var BasicModel = AbstractModel.extend({
      */
     addFieldsInfo: function (recordID, viewInfo) {
         var record = this.localData[recordID];
-        record.fields = _.defaults(record.fields, viewInfo.fields);
-        record.fieldsInfo = _.defaults(record.fieldsInfo, viewInfo.fieldsInfo);
+        record.fields = _.extend({}, record.fields, viewInfo.fields);
+        record.fieldsInfo = _.extend({}, record.fieldsInfo, viewInfo.fieldsInfo);
     },
     /**
      * Manually sets a resource as dirty. This is used to notify that a field
@@ -1586,7 +1588,9 @@ var BasicModel = AbstractModel.extend({
         return $.when.apply($, defs).then(function () {
             // ensure to fetch up to 'limit' records (may be useful if records of
             // the current page have been removed)
-            return self._readUngroupedList(list);
+            return self._readUngroupedList(list).then(function () {
+                return self._fetchX2ManysBatched(list);
+            });
         });
     },
     /**
@@ -2514,6 +2518,8 @@ var BasicModel = AbstractModel.extend({
                 changes[fieldName] = value ?
                     this.localData[value].model + ',' + this.localData[value].res_id :
                     false;
+            } else if (type === 'char' && changes[fieldName] === '') {
+                changes[fieldName] = false;
             } else if (changes[fieldName] === null) {
                 changes[fieldName] = false;
             }
@@ -3456,6 +3462,7 @@ var BasicModel = AbstractModel.extend({
                 domain: list.domain,
                 context: list.context,
                 groupBy: list.groupedBy,
+                orderBy: list.orderedBy,
                 lazy: true,
             })
             .then(function (groups) {

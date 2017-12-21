@@ -9,7 +9,7 @@
 // o_reward
 .o_reward {
     will-change: transform;
-    z-index: @zindex-modal + 1;
+    z-index: @zindex-modal;
     padding: 50px;
     margin: -5% auto 0 -(@reward-size / 2);
     @media (max-width: @screen-xs-max) {
@@ -146,9 +146,6 @@
             // Reset margins for first and penultimate childs (the last one is shadow)
             *:first-child {
                 margin-top: 0;
-            }
-            *:nth-last-child(2) {
-                margin-bottom: 0;
             }
         }
 

@@ -95,7 +95,7 @@ return core.Class.extend({
                 kwargs: {
                     views: views_descr,
                     options: options,
-                    context: context.eval(),
+                    context: context,
                 },
                 model: model,
                 method: 'load_views',
@@ -423,8 +423,12 @@ return core.Class.extend({
                 if (fieldsInfo[node.attrs.name].fieldDependencies) {
                     var deps = fieldsInfo[node.attrs.name].fieldDependencies;
                     for (var dependency_name in deps) {
+                        var dependency_dict = {name: dependency_name, type: deps[dependency_name].type};
                         if (!(dependency_name in fieldsInfo)) {
-                            fieldsInfo[dependency_name] = {'name': dependency_name, 'type': deps[dependency_name].type};
+                            fieldsInfo[dependency_name] = _.extend({}, dependency_dict, {options: deps[dependency_name].options || {}});
+                        }
+                        if (!(dependency_name in fields)) {
+                            fields[dependency_name] = dependency_dict;
                         }
                     }
                 }

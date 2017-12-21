@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 08:59+0000\n"
-"PO-Revision-Date: 2017-10-24 08:59+0000\n"
+"POT-Creation-Date: 2017-11-16 08:08+0000\n"
+"PO-Revision-Date: 2017-11-16 08:08+0000\n"
 "Last-Translator: Tolga Han Duyuler <peccavi01@hotmail.com>, 2017\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -44,7 +44,6 @@ msgstr "# Ürün Ağacı"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product_used_in_bom_count
-#: model:ir.model.fields,field_description:mrp.field_product_template_used_in_bom_count
 msgid "# BoM Where Used"
 msgstr ""
 
@@ -70,6 +69,11 @@ msgstr "# İş Emirlerini Oku"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_count
 msgid "# Work Orders"
 msgstr "# İş Emirleri"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_product_template_used_in_bom_count
+msgid "# of BoM Where is Used"
+msgstr ""
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_leg
@@ -330,6 +334,16 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_post_visible
+msgid "Allowed to Post Inventory"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_unreserve_visible
+msgid "Allowed to Unreserve Inventory"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
 msgid "Approve"
 msgstr "Onayla"
@@ -541,12 +555,6 @@ msgid "BoM Type"
 msgstr "BoM Türü"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
-#: model:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
-msgid "BoM Where Used"
-msgstr ""
-
-#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "BoM details"
 msgstr "BoM detayları"
@@ -738,11 +746,6 @@ msgid "Confirmed"
 msgstr "Onaylandı"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_unbuild_id
-msgid "Consumed Disassembly Order"
-msgstr ""
-
-#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.production_message
 msgid "Consumed"
@@ -751,6 +754,11 @@ msgstr "Tüketilen"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_consume_line_ids
 msgid "Consumed Disassembly Lines"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_consume_unbuild_id
+msgid "Consumed Disassembly Order"
 msgstr ""
 
 #. module: mrp
@@ -777,21 +785,6 @@ msgstr "Üretime Devam"
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
 msgid "Cost Structure"
 msgstr "Maliyet Yapısı"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_late
-msgid "Count Mo Late"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_todo
-msgid "Count Mo Todo"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_waiting
-msgid "Count Mo Waiting"
-msgstr ""
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -926,9 +919,7 @@ msgid "Destination Location"
 msgstr "Hedef Konum"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_unbuild
 #: model:ir.model.fields,field_description:mrp.field_stock_move_unbuild_id
-#: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Disassembly Order"
 msgstr ""
 
@@ -1122,7 +1113,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Future Activities"
-msgstr ""
+msgstr "Sonraki Aktiviteler"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -1332,16 +1323,6 @@ msgid "Inventory Moves"
 msgstr "Stok Hareketleri"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_post_visible
-msgid "Inventory Post Visible"
-msgstr "Stok Kaydı Görünür"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_unreserve_visible
-msgid "Inventory Unreserve Visible"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_move_line_ids
 msgid ""
 "Inventory moves for which you must scan a lot number at this work order"
@@ -1489,7 +1470,7 @@ msgstr "Geciken"
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "Gecikmiş Aktiviteler"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:432
@@ -1605,6 +1586,7 @@ msgstr "Bu ürünü üretin"
 #: model:ir.ui.menu,name:mrp.menu_mrp_root
 #: model:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
 #: model:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
+#: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 #: model:stock.picking.type,name:mrp.picking_type_manufacturing
 #, python-format
 msgid "Manufacturing"
@@ -1624,6 +1606,7 @@ msgid "Manufacturing Operation Type"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_mrp_production
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_mo_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_mo_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_production_id
@@ -1885,6 +1868,21 @@ msgid "Notes"
 msgstr "Notlar"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_late
+msgid "Number of Manufacturing Orders Late"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_waiting
+msgid "Number of Manufacturing Orders Waiting"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_todo
+msgid "Number of Manufacturing Orders to Process"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_capacity
 msgid "Number of pieces that can be produced in parallel."
@@ -2108,6 +2106,11 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_produce_line_ids
+msgid "Processed Disassembly Lines"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_procurement_group_id
 msgid "Procurement Group"
 msgstr "Tedarik Grubu"
@@ -2123,11 +2126,6 @@ msgstr "Tedarik Kuralı"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "Produce"
 msgstr "Üret"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_produce_line_ids
-msgid "Processed Disassembly Lines"
-msgstr ""
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -2166,7 +2164,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.action_mrp_unbuild_moves
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Product Moves"
-msgstr ""
+msgstr "Ürün Haraketleri"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_product_produce_id
@@ -2208,7 +2206,6 @@ msgid "Product:"
 msgstr "Ürün:"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_production
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_production_id
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
@@ -2614,7 +2611,7 @@ msgstr "Hurda Hareketi"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_scrap
 msgid "Scrap Orders"
-msgstr ""
+msgstr "Hurdaya Ayırma"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_scrap_ids
@@ -2913,12 +2910,6 @@ msgstr ""
 "sahiptir."
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:94
-#, python-format
-msgid "The production order for '%s' has no quantity specified"
-msgstr ""
-
-#. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:156
 #, python-format
 msgid "The capacity must be strictly positive."
@@ -2986,6 +2977,12 @@ msgstr ""
 "Bu BoM için üretim işlemleri. Bir rota belirtildiğinde, üretim emirleri iş "
 "emirleri vasıtasıyla yürütülecektir, aksi halde her şey üretim emrinde "
 "kendiliğinden işlenir."
+
+#. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:94
+#, python-format
+msgid "The production order for '%s' has no quantity specified"
+msgstr ""
 
 #. module: mrp
 #: sql_constraint:mrp.production:0
@@ -3208,6 +3205,12 @@ msgid "Unbuild"
 msgstr "Parçala"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_mrp_unbuild
+#: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
+msgid "Unbuild Order"
+msgstr "Üretim Parçalama"
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:77
 #, python-format
 msgid "Unbuild Order product quantity has to be strictly positive."
@@ -3304,6 +3307,12 @@ msgstr ""
 msgid ""
 "Use the Produce button or process the work orders to create some finished "
 "products."
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
+#: model:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
+msgid "Used In"
 msgstr ""
 
 #. module: mrp

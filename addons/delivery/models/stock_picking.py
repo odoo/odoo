@@ -19,8 +19,8 @@ class StockQuantPackage(models.Model):
             weight += sml.product_uom_id._compute_quantity(sml.qty_done, sml.product_id.uom_id) * sml.product_id.weight
         self.weight = weight
 
-    weight = fields.Float(compute='_compute_weight')
-    shipping_weight = fields.Float(string='Shipping Weight', help="Can be changed during the 'put in pack' to adjust the weight of the shipping.")
+    weight = fields.Float(compute='_compute_weight', help="Weight computed based on the sum of the weights of the products.")
+    shipping_weight = fields.Float(string='Shipping Weight', help="Weight used to compute the price of the delivery (if applicable).")
 
 
 class StockMoveLine(models.Model):

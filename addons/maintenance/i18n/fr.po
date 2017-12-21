@@ -32,8 +32,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"POT-Creation-Date: 2017-11-30 13:12+0000\n"
+"PO-Revision-Date: 2017-11-30 13:12+0000\n"
 "Last-Translator: Florian Hatat <mininet@wanadoo.fr>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -675,7 +675,7 @@ msgstr "Type de maintenance"
 #: model:ir.cron,cron_name:maintenance.maintenance_requests_cron
 #: model:ir.cron,name:maintenance.maintenance_requests_cron
 msgid "Maintenance: generate preventive maintenance requests"
-msgstr "Maintenance : générez des demandes de maintenance préventive"
+msgstr "Maintenance : générer des demandes de maintenance préventive"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_model
@@ -753,13 +753,13 @@ msgid "Number of Requests Scheduled"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_high_priority
-msgid "Number of Requests in High Priority"
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_unscheduled
+msgid "Number of Requests Unscheduled"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_unscheduled
-msgid "Number of Requests Unscheduled"
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_high_priority
+msgid "Number of Requests in High Priority"
 msgstr ""
 
 #. module: maintenance
@@ -871,7 +871,7 @@ msgstr "Prêt pour la prochaine étape"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Record Colour"
-msgstr "Couleur d'enregistrement"
+msgstr "Couleur de l'enregistrement"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_force_thread_id
@@ -901,11 +901,6 @@ msgid "Request"
 msgstr "Requête"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_ids
-msgid "Requests"
-msgstr ""
-
-#. module: maintenance
 #: model:mail.message.subtype,name:maintenance.mt_req_created
 msgid "Request Created"
 msgstr "Demande créée"
@@ -929,6 +924,11 @@ msgstr "Demande effectuée par"
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
 msgid "Requested by :"
 msgstr "Demande effectuée par :"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_ids
+msgid "Requests"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_technician_user_id
@@ -990,8 +990,8 @@ msgstr "Numéro de série"
 msgid ""
 "Set archive to true to hide the maintenance request without deleting it."
 msgstr ""
-"Définissez la valeur de l'archive sur Faux pour masquer la demande de "
-"maintenance sans la supprimer."
+"Définissez la valeur de l'archive sur True (Vrai) pour masquer la demande de"
+" maintenance sans la supprimer."
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -1115,7 +1115,7 @@ msgid ""
 "                an employee or department. You will manage allocations, issues\n"
 "                and maintenance of equipment."
 msgstr ""
-"Cette application aide à suivre les équipements utilisés par les employés.\n"
+"Cette application vous aide à suivre les équipements utilisés par les employés.\n"
 "                Créez des ordinateurs portables, une imprimante ou un téléphone et associez chaque équipement\n"
 "                à un employé ou à un service. Cela permettra de gérer les affectations, les incidents\n"
 "                et la maintenance des équipements."
@@ -1127,7 +1127,7 @@ msgid ""
 "                Create some laptop, printer or phone and link each equipment to an employee or department.\n"
 "                You will manage allocations, issues and maintenance of equipment."
 msgstr ""
-"Cette application aide à suivre les équipements utilisés par les employés.\n"
+"Cette application vous aide à suivre les équipements utilisés par les employés.\n"
 "                Créez des ordinateurs portables, une imprimante ou un téléphone et associez chaque équipement à un employé ou à un service.\n"
 "                 Cela permettra de gérer les affectations, les incidents et la maintenance des équipements."
 
@@ -1173,7 +1173,7 @@ msgstr "Messages non lus"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Unscheduled"
-msgstr "Non programmé"
+msgstr "Non programmée"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search

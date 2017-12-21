@@ -122,3 +122,13 @@ table.editorbar-panel {
 .editor_enable .js_language_selector {
     display: none;
 }
+
+// Facebook Page
+.editor_enable .o_facebook_page:not(.o_facebook_preview) {
+    iframe {
+        pointer-events: none;
+    }
+    .o_facebook_alert .o_add_facebook_page {
+        cursor: pointer;
+    }
+}

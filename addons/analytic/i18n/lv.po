@@ -1,41 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * analytic
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-09-30 09:24+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Latvian (http://www.transifex.com/odoo/odoo-9/language/lv/)\n"
-"Language: lv\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
-"2);\n"
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "(Keep empty to open the current situation)"
-msgstr "(Atstāt tukšu, lai atvērtu esošo stāvokli)"
-
-#. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_chart
-msgid "Account Analytic Chart"
-msgstr "Analītiskais Kontu Plāns"
+"Language: lv\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_currency_id
 msgid "Account Currency"
-msgstr "Konta valūta"
+msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,account_type:0
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_active
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_active
 msgid "Active"
 msgstr ""
 
@@ -43,7 +33,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_amount
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Amount"
-msgstr "Summa"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_account
@@ -56,20 +46,22 @@ msgid "Analytic Account"
 msgstr "Analītiskais Konts"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "Analytic Account Charts"
-msgstr "Analītiskais Kontu Plāns"
-
-#. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
-msgstr "Analītiskā Uzskaite"
+msgstr ""
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Analytic Accounts"
-msgstr "Analītiskie Konti"
+msgstr ""
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_tag_action
+#: model:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
+#: model:ir.ui.view,arch_db:analytic.account_analytic_tag_tree_view
+msgid "Analytic Accounts Tags"
+msgstr ""
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
@@ -77,17 +69,22 @@ msgstr "Analītiskie Konti"
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Analytic Entries"
-msgstr "Analītiskie Ieraksti"
+msgstr ""
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Entry"
-msgstr "Analītiskais Ieraksts"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_line
+msgid "Analytic Line"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_line_ids
 msgid "Analytic Lines"
-msgstr "Analītiskās Rindas"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_name
@@ -100,30 +97,34 @@ msgid "Analytic Tags"
 msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,account_type:0
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Archived"
 msgstr ""
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Associated Partner"
-msgstr "Saistītais Partneris"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_balance
 msgid "Balance"
-msgstr "Bilance"
+msgstr ""
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "Cancel"
-msgstr "Atcelt"
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_kanban
+msgid "Balance:"
+msgstr ""
 
 #. module: analytic
-#: model:ir.actions.act_window,name:analytic.action_account_analytic_chart
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
 msgid "Chart of Analytic Accounts"
-msgstr "Analītisko Kontu Plāns"
+msgstr ""
+
+#. module: analytic
+#: model:ir.actions.act_window,help:analytic.account_analytic_tag_action
+msgid "Click to add a new tag."
+msgstr ""
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.action_analytic_account_form
@@ -133,7 +134,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_color
 msgid "Color Index"
-msgstr "Krāsas Indekss"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_company_id
@@ -161,7 +162,6 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_uid
 msgid "Created by"
@@ -169,7 +169,6 @@ msgstr "Izveidoja"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_date
 msgid "Created on"
@@ -178,7 +177,7 @@ msgstr "Izveidots"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_credit
 msgid "Credit"
-msgstr "Kredīts"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_currency_id
@@ -193,12 +192,12 @@ msgstr "Klients"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_date
 msgid "Date"
-msgstr "Datums"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_debit
 msgid "Debit"
-msgstr "Debets"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_name
@@ -207,44 +206,42 @@ msgstr "Apraksts"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_display_name
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_display_name
 msgid "Display Name"
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_from_date
-msgid "From"
-msgstr "No"
-
-#. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Group By..."
-msgstr "Grupēt pēc..."
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_id
 msgid "ID"
 msgstr "ID"
 
 #. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the account "
+"without removing it."
+msgstr ""
+
+#. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
-"In Odoo, sale orders and projects are implemented using\n"
-"                analytic accounts. You can track costs and revenues to "
-"analyse\n"
+"In Odoo, sales orders and projects are implemented using\n"
+"                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag___last_update
 msgid "Last Modified on"
@@ -252,7 +249,6 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_uid
 msgid "Last Updated by"
@@ -260,7 +256,6 @@ msgstr "Pēdējo reizi atjaunoja"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_date
 msgid "Last Updated on"
@@ -277,11 +272,6 @@ msgid "No activity yet."
 msgstr ""
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "Open Charts"
-msgstr "Aktīvie Kontu Plāni"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_partner_id
 msgid "Partner"
 msgstr "Partneris"
@@ -295,40 +285,33 @@ msgstr "Daudzums"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_code
 msgid "Reference"
-msgstr "Atsauksme"
+msgstr ""
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sale "
-"orders\n"
-"                (fixed price invoices), on timesheets (based on the work "
-"done) or\n"
+"                invoices. Customer invoices can be created based on sales orders\n"
+"                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
-msgstr "Meklēt Analītiskajos Ierakstos"
+msgstr ""
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "Select the Period for Analysis"
-msgstr "Izvēlēties Analīzes Periodu"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
-msgid "State"
+#: model:ir.model.fields,help:analytic.field_account_analytic_tag_active
+msgid "Set active to false to hide the Analytic Tag without removing it."
 msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_tag_ids
 msgid "Tags"
-msgstr "Birkas"
+msgstr ""
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
@@ -338,12 +321,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_line_currency_id
 msgid "The related account currency if not equal to the company one."
-msgstr "Saistītā konta valūta, ja nav vienāda ar uzņēmuma valūtu."
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_to_date
-msgid "To"
-msgstr "Kam"
+msgstr ""
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
@@ -353,39 +331,9 @@ msgstr "Summa"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_user_id
 msgid "User"
-msgstr "Lietotājs"
-
-#. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_line
-#, fuzzy
-msgid "account analytic line"
-msgstr "Analītiskais Kontu Plāns"
+msgstr ""
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
 msgstr ""
-
-#~ msgid "Analytic Line"
-#~ msgstr "Analītiskā Rinda"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Pēdējā ierakstam piesaistītā ziņojuma datums."
-
-#~ msgid "Followers"
-#~ msgstr "Sekotāji"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ja atzīmēts, tad jauni ziņojumi pieprasīs jūsu uzmanību."
-
-#~ msgid "Last Message Date"
-#~ msgstr "Pēdēja ziņojuma datums"
-
-#~ msgid "Messages"
-#~ msgstr "Ziņojumi"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Ziņojumu un komunikācijas vēsture"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Neizlasīti ziņojumi"

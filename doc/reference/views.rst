@@ -171,6 +171,8 @@ root can have the following attributes:
 ``create``, ``edit``, ``delete``
     allows *dis*\ abling the corresponding action in the view by setting the
     corresponding attribute to ``false``
+``limit``
+    the default size of a page. It should be a positive integer
 ``on_write``
     only makes sense on an ``editable`` list. Should be the name of a method
     on the list's model. The method will be called with the ``id`` of a record
@@ -1058,6 +1060,9 @@ take the following attributes:
   .. warning::
       The dictionnary definition must use double-quotes, ``{'user_id': 100}`` is
       not a valid value
+``create``, ``edit``
+    allows *dis*\ abling the corresponding action in the view by setting the
+    corresponding attribute to ``false``
 ``string``
   string to display next to the consolidation value, if not specified, the label
   of the consolidation field will be used

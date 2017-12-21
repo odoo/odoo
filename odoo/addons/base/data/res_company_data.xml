@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="main_company" model="res.company">
+            <field name="name">My Company</field>
+            <field name="partner_id" ref="main_partner"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+
+        <record id="main_partner" model="res.partner">
+            <field name="company_id" ref="main_company"/>
+        </record>
+    </data>
+</odoo>

@@ -37,10 +37,11 @@ var SnippetOption = Widget.extend({
      *
      * @constructor
      */
-    init: function (parent, $target, $overlay) {
+    init: function (parent, $target, $overlay, data) {
         this._super.apply(this, arguments);
         this.$target = $target;
         this.$overlay = $overlay;
+        this.data = data;
         this.__methodNames = [];
     },
     /**
@@ -50,7 +51,6 @@ var SnippetOption = Widget.extend({
      * @override
      */
     start: function () {
-        this.data = this.$el.data();
         this._setActive();
         return this._super.apply(this, arguments);
     },
@@ -126,7 +126,11 @@ var SnippetOption = Widget.extend({
      * @param {jQuery} $li - the related DOMElement option
      */
     selectClass: function (previewMode, value, $li) {
-        var $lis = this.$el.find('[data-select-class]').addBack('[data-select-class]');
+        var $group = $li.closest('.dropdown-submenu');
+        if (!$group.length) {
+            $group = this.$el;
+        }
+        var $lis = $group.find('[data-select-class]').addBack('[data-select-class]');
         var classes = $lis.map(function () {return $(this).data('selectClass');}).get().join(' ');
 
         this.$target.removeClass(classes);
@@ -665,6 +669,7 @@ registry.colorpicker = SnippetOption.extend({
         'mouseleave .colorpicker button': '_onColorButtonLeave',
         'click .note-color-reset': '_onColorResetButtonClick',
     }),
+    colorPrefix: 'bg-',
 
     /**
      * @override
@@ -672,6 +677,10 @@ registry.colorpicker = SnippetOption.extend({
     start: function () {
         var self = this;
         var res = this._super.apply(this, arguments);
+
+        if (this.data.colorPrefix) {
+            this.colorPrefix = this.data.colorPrefix;
+        }
 
         if (!this.$el.find('.colorpicker').length) {
             var $pt = $(qweb.render('web_editor.snippet.option.colorpicker'));
@@ -735,22 +744,18 @@ registry.colorpicker = SnippetOption.extend({
 
             this.$el.find('li').append($pt);
         }
-        if (this.$el.data('area')) {
-            this.$target = this.$target.find(this.$el.data('area'));
-            this.$el.removeData('area').removeAttr('area');
-        }
 
         var classes = [];
         this.$el.find('.colorpicker button').each(function () {
             var $color = $(this);
-            if (!$color.data('color')) {
+            var color = $color.data('color');
+            if (!color) {
                 return;
             }
 
-            var className = 'bg-' + $color.data('color');
-            $color.addClass(className);
+            $color.addClass('bg-' + color);
+            var className = self.colorPrefix + color;
             if (self.$target.hasClass(className)) {
-                self.color = className;
                 $color.addClass('selected');
             }
             classes.push(className);
@@ -786,7 +791,7 @@ registry.colorpicker = SnippetOption.extend({
         this.$target.removeClass(this.classes);
         var color = $(ev.currentTarget).data('color');
         if (color) {
-            this.$target.addClass('bg-' + color);
+            this.$target.addClass(this.colorPrefix + color);
         }
         this.$target.trigger('background-color-event', ev.type);
     },
@@ -801,7 +806,7 @@ registry.colorpicker = SnippetOption.extend({
         var $selected = this.$el.find('.colorpicker button.selected');
         var color = $selected.length && $selected.data('color');
         if (color) {
-            this.$target.addClass('bg-' + color);
+            this.$target.addClass(this.colorPrefix + color);
         }
         this.$target.trigger('background-color-event', ev.type);
     },

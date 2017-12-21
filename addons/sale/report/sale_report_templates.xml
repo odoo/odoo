@@ -137,9 +137,9 @@
             </t>
 
             <div class="clearfix">
-                <div class="row pull-right" name="total">
-                    <div>
-                        <table class="table-condensed" style="min-width: 200px;max-width: 350px;">
+                <div class="row" name="total">
+                    <div class="col-xs-4 pull-right">
+                        <table class="table table-condensed" style="min-width: 200px;max-width: 350px;">
                             <tr class="border-black" style="border-bottom:1px solid #dddddd;">
                                 <td><strong>Subtotal</strong></td>
                                 <td class="text-right">
@@ -147,7 +147,6 @@
                                         t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
                                 </td>
                             </tr>
-                            <t t-set="tax_groups_length" t-value="len(doc._get_tax_amount_by_group())"/>
                             <t t-foreach="doc._get_tax_amount_by_group()" t-as="amount_by_group">
                                 <tr style="border-bottom:1px solid #dddddd;">
                                     <t t-if="amount_by_group[3] == 1 and doc.amount_untaxed == amount_by_group[2]">

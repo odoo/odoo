@@ -275,7 +275,7 @@ class FleetVehicleOdometer(models.Model):
                 name = record.date
             elif record.date:
                 name += ' / ' + record.date
-            self.name = name
+            record.name = name
 
     @api.onchange('vehicle_id')
     def _onchange_vehicle(self):
@@ -297,7 +297,7 @@ class FleetVehicleTag(models.Model):
     _name = 'fleet.vehicle.tag'
 
     name = fields.Char(required=True, translate=True)
-    color = fields.Integer('Color Index', default=10)
+    color = fields.Integer('Color Index')
 
     _sql_constraints = [('name_uniq', 'unique (name)', "Tag name already exists !")]
 
@@ -310,4 +310,4 @@ class FleetServiceType(models.Model):
     category = fields.Selection([
         ('contract', 'Contract'),
         ('service', 'Service')
-        ], 'Category', required=True, help='Choose wheter the service refer to contracts, vehicle services or both')
+        ], 'Category', required=True, help='Choose whether the service refer to contracts, vehicle services or both')

@@ -11,10 +11,10 @@
 # Volluta <volluta@tutanota.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:25+0000\n"
-"PO-Revision-Date: 2017-10-02 11:25+0000\n"
+"POT-Creation-Date: 2017-11-16 08:08+0000\n"
+"PO-Revision-Date: 2017-11-16 08:08+0000\n"
 "Last-Translator: Volluta <volluta@tutanota.com>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -128,6 +128,107 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
+"\n"
+"            <div style=\"margin: 10px auto;\">\n"
+"            % set last_created_project = user.env['project.project'].search([('alias_id','!=',False)], order=\"create_date desc\")[0]\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>Uw Odoo applicatie is klaar en draait</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold;\">Wat nu?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                % if last_created_project:\n"
+"                                    <li dir=\"ltr\">\n"
+"                                        <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                            <span>Probeer een taak aan te maken door te e-mailen naar </span>\n"
+"                                            <a href=\"mailto:${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                                <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}</span>\n"
+"                                            </a>\n"
+"                                        </p>\n"
+"                                    </li>\n"
+"                                % endif\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span><a href=\"/web#view_type=list&model=res.users&action=base.action_res_users\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">Nodig nieuwe gebruikers uit</span></a></span>\n"
+"                                        <span>om samen te werken</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Ontdek de </span>\n"
+"                                <span><a href=\"/web#view_type=kanban&model=project.project&action=project.open_view_project_all\">\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">project planner</span></a></span>\n"
+"                                <span> om extra opties te activeren</span>\n"
+"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_project')}% done)</span>\n"
+"                            </p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Volg werkuren op met Urenstaten,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Plan taken en resources met voorspellingen,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Krijg slimme rapportering en accurate dashboards,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Factureer tijd op taken of issues,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>En nog veel meer...</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Hulp nodig?</span>\n"
+"                                <span style=\"font-style:italic;\">U bent niet alleen</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>We zouden het geweldig vinden om u onderweg te ondersteunen. Neem contact op via ons\n"
+"                                <a href=\"https://www.odoo.com/help\">support formulier</a> indien u vragen heeft.\n"
+"                                U kan ook ontdekken hoe u het beste haalt uit Odoo Projecten met onzer </span>\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
+"                                <span style=\"text-decoration:underline;\">Gebruikersdocumentatie</span></a>\n"
+"                                </span><span> of met onze </span>\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation\">\n"
+"                                <span style=\"text-decoration:underline;\">API documentatie</span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Geniet van uw Odoo ervaring,</span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>Het Odoo Team<br/>PS: Mensen houden van Odoo, bekijk </span><a target=\"_blank\" href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">wat ze over Odoo zeggen.</span></a></span>\n"
+"            </div>\n"
+"        </div>"
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -635,6 +736,8 @@ msgid ""
 "<strong>Create tasks by email</strong><br/>\n"
 "                                In Odoo, every project has an email alias. If you send an email to this alias, it will automatically create a task in the first stage of the project, with all the email recipients as its default followers."
 msgstr ""
+"<strong>Maak taken via e-mail</strong><br/>\n"
+"In Odoo heeft elk project een e-mail alias. Als u een e-mail verstuurt naar deze alias wordt er automatisch een taak aangemaakt in de eerste fase van het project, met alle e-mail ontvangers als standaard volgers."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_project
@@ -681,6 +784,8 @@ msgid ""
 "<strong>Exercise:</strong> Try to create a graph with the monthly evolution "
 "of the 'Average delay to close'  of Tasks."
 msgstr ""
+"<strong>Oefening:</strong> Probeer een grafiek te maken met de maandelijkse "
+"evolutie van de 'Gemiddelde vertraging tot afsluiten' voor taken."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -697,6 +802,8 @@ msgid ""
 "<strong>Follow every meeting with a recap email</strong>\n"
 "                                    As soon as the meeting is over, publish meeting minutes and distribute them along with the updated project schedule, task/action item matrix, and  any other appropriate documents. Try to use the same template throughout meetings and improve it continuously."
 msgstr ""
+"<strong>Volg elke afspraak met een samenvatting e-mail</strong>\n"
+"Publiceer gespreksverslagen direct nadat de meeting voorbij is en deel ze samen met de bijgewerkte project planningen, taak/actie matrix, en alle andere  benodigde documenten. Probeer hetzelfde sjabloon te gebruiken en te verbeteren, voor iedere afspraak."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -704,6 +811,8 @@ msgid ""
 "<strong>Follow only what you need</strong><br/>\n"
 "                                    The simplest way to use notifications is to follow a whole project: you will receive notifications for all the new and existing tasks of a project."
 msgstr ""
+"<strong>Volg alleen wat u nodig heeft</strong><br/>\n"
+"De gemakkelijkste weg om notificaties te gebruiken is door een heel project te volgen: u ontvangt dan al de geselecteerde notificaties voor alle bestaande en nieuwe taken van een project."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1440,11 +1549,6 @@ msgid "Configuration options are available in the Settings app."
 msgstr "Configuratie mogelijkheden zijn beschikbaar in de Instellingen app."
 
 #. module: project
-#: model:ir.actions.act_window,name:project.project_config_settings_action
-msgid "Configure Project"
-msgstr "Project configureren"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Congratulations on choosing Odoo Project to help running your company more "
@@ -1576,6 +1680,8 @@ msgid ""
 "Creating Tasks is the next step in managing your Projects.<br/>\n"
 "                        In Odoo, it is pretty straightforward, but here are some explanations you may find useful."
 msgstr ""
+"Het aanmaken van taken  is de volgende stap in het beheren van projecten.<br/>\n"
+"In Odoo ligt dit voor de hand, maar hier wat uitleg die u mogelijk handig vind."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -1630,7 +1736,7 @@ msgstr "Klant"
 #: code:addons/project/models/project.py:818
 #, python-format
 msgid "Customer Email"
-msgstr "Klant email"
+msgstr "Klant e-mail"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1930,7 +2036,7 @@ msgid ""
 "                    Odoo allows you to customize every application and it's usually a good idea to customize screens to fit your project needs."
 msgstr ""
 "Elke organisatie is anders.<br/>\n"
-"Odoo staat u toe om elke applicatie te personaliseren en het is vaak een goed idee om schermen te personaliseren om aan uw project noden te voldoen."
+"Odoo staat u toe om elke applicatie te personaliseren en het is vaak een goed idee om schermen te personaliseren om aan uw projectbehoeftes te voldoen."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1955,6 +2061,8 @@ msgid ""
 "Explanation text to help users using the star on tasks or issues in this "
 "stage."
 msgstr ""
+"Uitleg om de gebruikers op weg te helpen bij het gebruik van sterren bij "
+"taken in deze fase."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -2015,6 +2123,8 @@ msgid ""
 "For example, risk and task owners should come prepared to share the status "
 "of their item and, ideally, a path to resolution."
 msgstr ""
+"Bijvoorbeeld, risico- en taakeigenaren moeten voorbereid komen om de status "
+"van hun item voor te stellen en, ideaal, een weg naar een oplossing hebben."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2279,6 +2389,9 @@ msgid ""
 "extract a Timesheet of the tasks to invoice directly to the customer. To do "
 "that:"
 msgstr ""
+"Als u werkt aan een Tijd &amp; Materiaal project wilt u waarschijnlijk een "
+"urenstaat maken van de taken om direct aan de klant te factureren. Om dat te"
+" doen:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2375,9 +2488,9 @@ msgid ""
 "automatically synchronized with Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
 msgstr ""
-"Interne e-mail verbonden met dit project. Incomende email worden automatisch"
-" gesynchroniseerd met Taken (of optioneel problemen als de Problemen volg "
-"module is geïnstalleerd)."
+"Interne e-mail verbonden met dit project. Inkomende e-mail worden "
+"automatisch gesynchroniseerd met Taken (of optioneel problemen als de "
+"Problemen volg module is geïnstalleerd)."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2428,6 +2541,8 @@ msgid ""
 "It is time to think about how you will transform your activities into real projects in Odoo.<br/>\n"
 "                        For that, the most important part is defining the stages of your projects. Stages are the different steps a task can go through, from its creation to its ending. They will appear in what we call the 'Kanban' view of your projects."
 msgstr ""
+"Het is tijd om na te denken over hoe u uw activiteiten wilt omvormen naar echte projecten in Odoo.<br/>\n"
+"Het belangrijkste deel is om de fases te definiëren voor uw projecten. Fases zijn de verschillende stappen die een taak kan doorgaan, van begin tot einde. Deze worden getoond bij projecten in wat wij de 'Kanban' weergave noemen."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2453,6 +2568,9 @@ msgid ""
 "Here are some KPIs you should take a look at. Ask yourself 'How can they be "
 "improved?'"
 msgstr ""
+"Het is vaak een goed idee om eenmaal per jaar de tijd te nemen om uw taken "
+"te analyseren. Hier zijn een paar KPI's waar u naar zou kunnen kijken. Vraag"
+" uzelf af 'Hoe kunnen deze verbeterd worden?'"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_blocked
@@ -2547,6 +2665,8 @@ msgid ""
 "Learn how to better organize your company using Projects, Tasks and "
 "Timesheets."
 msgstr ""
+"Leer hoe u beter uw bedrijf kan organiseren door projecten, taken en "
+"urenstaten te gebruiken."
 
 #. module: project
 #. openerp-web
@@ -2561,6 +2681,8 @@ msgid ""
 "Lets the company customize which Pad installation should be used to link to "
 "new pads (for example: http://etherpad.com/)."
 msgstr ""
+"Geeft het bedrijf de mogelijkheid om te kiezen welke Pad installatie wordt "
+"gebruikt (bijvoorbeeld: http://etherpad.com/)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_analytic_account_id
@@ -3003,6 +3125,7 @@ msgstr "Product of software versie"
 #: model:ir.ui.menu,name:project.menu_main_pm
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
+#: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 #: model:res.request.link,name:project.req_link_project
@@ -3019,7 +3142,7 @@ msgstr "Project -"
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_project_count
 #: model:ir.model.fields,field_description:project.field_project_project_project_count
 msgid "Project Count"
-msgstr "Project teller"
+msgstr "Aantal projecten"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_user_id
@@ -3348,6 +3471,8 @@ msgstr ""
 msgid ""
 "Send an automatic confirmation to all emails sent to your customer support"
 msgstr ""
+"Verzend een automatische bevestiging naar alle e-mails die verzonden zijn "
+"naar uw klantenondersteuning"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_sequence
@@ -3374,6 +3499,7 @@ msgid "Set a Cover Image"
 msgstr "Stel een voorkant afbeelding in"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.project_config_settings_action
 #: model:ir.ui.menu,name:project.project_config_settings_menu_action
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
@@ -3519,7 +3645,7 @@ msgstr "Sub-taak project"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_subtask_count
 msgid "Sub-task count"
-msgstr "Sub-taak teller"
+msgstr "Antal ub-taken"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_sub_task
@@ -3836,12 +3962,12 @@ msgid ""
 "        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
 msgstr ""
 "Deze e-mail adressen worden toegevoegd aan het CC veld bij alle inkomende\n"
-"en uitgaande e-mails voor dit record voorafgaand aan versturen. Scheidt verschillende email adressen met een komma."
+"en uitgaande e-mails voor dit record voorafgaand aan versturen. Scheidt verschillende e-mail adressen met een komma."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_email_from
 msgid "These people will receive email."
-msgstr "Deze personen zullen email ontvangen."
+msgstr "Deze personen zullen e-mail ontvangen."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3850,6 +3976,9 @@ msgid ""
 "from customers will be transformed into a task that you'll be able to track "
 "easily!"
 msgstr ""
+"Dit is voornamelijk handig om help en ondersteuning te beheren: alle "
+"inkomende e-mail van klanten wordt omgevormd in een taak die u gemakkelijk "
+"kunt opvolgen!"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -3857,6 +3986,9 @@ msgid ""
 "This replaces task's description text field by a collaborative rich text "
 "pad. This is advised if tasks involve several people."
 msgstr ""
+"Dit vervangt de omschrijving van de taak door een samenwerk pad met tekst "
+"welke je kan opmaken. Dit is geadviseerd als een taak door meerdere personen"
+" wordt uitgevoerd."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_project_task_user_tree

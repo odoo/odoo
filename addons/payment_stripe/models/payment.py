@@ -2,6 +2,7 @@
 
 import logging
 import requests
+import pprint
 
 from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
@@ -116,11 +117,15 @@ class PaymentTransactionStripe(models.Model):
             charge_params['card'] = str(tokenid)
         if email:
             charge_params['receipt_email'] = email.strip()
+
+        _logger.info('_create_stripe_charge: Sending values to URL %s, values:\n%s', api_url_charge, pprint.pformat(charge_params))
         r = requests.post(api_url_charge,
                           auth=(self.acquirer_id.stripe_secret_key, ''),
                           params=charge_params,
                           headers=STRIPE_HEADERS)
-        return r.json()
+        res = r.json()
+        _logger.info('_create_stripe_charge: Values received:\n%s', pprint.pformat(res))
+        return res
 
     @api.multi
     def stripe_s2s_do_transaction(self, **kwargs):
@@ -138,11 +143,14 @@ class PaymentTransactionStripe(models.Model):
             'metadata[reference]': self.reference,
         }
 
+        _logger.info('_create_stripe_refund: Sending values to URL %s, values:\n%s', api_url_refund, pprint.pformat(refund_params))
         r = requests.post(api_url_refund,
                             auth=(self.acquirer_id.stripe_secret_key, ''),
                             params=refund_params,
                             headers=STRIPE_HEADERS)
-        return r.json()
+        res = r.json()
+        _logger.info('_create_stripe_refund: Values received:\n%s', pprint.pformat(res))
+        return res
 
     @api.multi
     def stripe_s2s_do_refund(self, **kwargs):

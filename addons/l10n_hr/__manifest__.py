@@ -54,7 +54,7 @@ Izvori podataka:
         'data/account.tax.group.csv',
         'data/account.tax.template.csv',
         'data/account_tax_fiscal_position_data.xml',
-        'data/account_chart_template_data.yml',
+        'data/account_chart_template_data.xml',
     ],
     "active": False,
 }

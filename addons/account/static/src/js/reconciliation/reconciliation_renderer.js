@@ -113,7 +113,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
         if (state.valuenow === state.valuemax && !this.$('.done_message').length) {
             var dt = Date.now()-this.time;
             var $done = $(qweb.render("reconciliation.done", {
-                'duration': moment(dt).utc().format(time.strftime_to_moment_format(_t.database.parameters.time_format)),
+                'duration': moment(dt).utc().format(time.getLangTimeFormat()),
                 'number': state.valuenow,
                 'timePerTransaction': Math.round(dt/1000/state.valuemax),
                 'context': state.context,
@@ -794,10 +794,10 @@ var ManualLineRenderer = LineRenderer.extend({
 
             return $.when.apply($, defs).then(function () {
                 if (!self.fields.title_account_id) {
-                    self.fields.partner_id.$el.prependTo(self.$('.accounting_view thead td:eq(1) span:first'));
+                    return self.fields.partner_id.prependTo(self.$('.accounting_view thead td:eq(1) span:first'));
                 } else {
                     self.fields.partner_id.destroy();
-                    self.fields.title_account_id.appendTo(self.$('.accounting_view thead td:eq(1) span:first'));
+                    return self.fields.title_account_id.appendTo(self.$('.accounting_view thead td:eq(1) span:first'));
                 }
             });
         });

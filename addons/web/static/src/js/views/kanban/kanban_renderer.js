@@ -323,13 +323,18 @@ var KanbanRenderer = BasicRenderer.extend({
         var groupByFieldInfo = state.fieldsInfo.kanban[state.groupedBy[0]];
         // Deactivate the drag'n'drop if the groupedBy field:
         // - is a date or datetime since we group by month or
-        // - is readonly
+        // - is readonly (on the field attrs or in the view)
         var draggable = true;
         if (groupByFieldAttrs) {
             if (groupByFieldAttrs.type === "date" || groupByFieldAttrs.type === "datetime") {
                 draggable = false;
             } else if (groupByFieldAttrs.readonly !== undefined) {
                 draggable = !(groupByFieldAttrs.readonly);
+            }
+        }
+        if (groupByFieldInfo) {
+            if (draggable && groupByFieldInfo.readonly !== undefined) {
+                draggable = !(groupByFieldInfo.readonly);
             }
         }
         this.groupedByM2O = groupByFieldAttrs && (groupByFieldAttrs.type === 'many2one');

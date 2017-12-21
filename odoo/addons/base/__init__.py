@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import ir
-from . import module
-from . import res
+from . import models
+from . import report
+from . import wizard
+
 
 def post_init(cr, registry):
     """Rewrite ICP's to force groups"""

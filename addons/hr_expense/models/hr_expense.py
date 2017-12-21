@@ -4,7 +4,7 @@
 import re
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import email_split, float_is_zero
 
 from odoo.addons import decimal_precision as dp
@@ -27,7 +27,7 @@ class HrExpense(models.Model):
     tax_ids = fields.Many2many('account.tax', 'expense_tax', 'expense_id', 'tax_id', string='Taxes', states={'done': [('readonly', True)], 'post': [('readonly', True)]})
     untaxed_amount = fields.Float(string='Subtotal', store=True, compute='_compute_amount', digits=dp.get_precision('Account'))
     total_amount = fields.Monetary("Total", compute='_compute_amount', store=True, currency_field='currency_id', digits=dp.get_precision('Account'))
-    total_amount_company = fields.Monetary("Total submitted amount in company currency", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id', digits=dp.get_precision('Account'))
+    total_amount_company = fields.Monetary("Total (Company Currency)", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id', digits=dp.get_precision('Account'))
     company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.user.company_id)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.user.company_id.currency_id)
     company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='sheet_id.currency_id', store=True)
@@ -541,6 +541,8 @@ class HrExpenseSheet(models.Model):
 
     @api.multi
     def refuse_sheet(self, reason):
+        if not self.user_has_groups('hr_expense.group_hr_expense_user'):
+            raise UserError(_("Only HR Officers can refuse expenses"))
         self.write({'state': 'cancel'})
         for sheet in self:
             sheet.message_post_with_view('hr_expense.hr_expense_template_refuse_reason',
@@ -548,6 +550,8 @@ class HrExpenseSheet(models.Model):
 
     @api.multi
     def approve_expense_sheets(self):
+        if not self.user_has_groups('hr_expense.group_hr_expense_user'):
+            raise UserError(_("Only HR Officers can approve expenses"))
         self.write({'state': 'approve', 'responsible_id': self.env.user.id})
 
     @api.multi
@@ -598,3 +602,10 @@ class HrExpenseSheet(models.Model):
         employee_ids = self.expense_line_ids.mapped('employee_id')
         if len(employee_ids) > 1 or (len(employee_ids) == 1 and employee_ids != self.employee_id):
             raise ValidationError(_('You cannot add expense lines of another employee.'))
+
+    @api.one
+    @api.constrains('expense_line_ids')
+    def _check_payment_mode(self):
+        payment_mode = set(self.expense_line_ids.mapped('payment_mode'))
+        if len(payment_mode) > 1:
+            raise ValidationError(_('You cannot report expenses with different payment modes.'))

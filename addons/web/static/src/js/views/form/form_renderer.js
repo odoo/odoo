@@ -200,6 +200,26 @@ var FormRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Add a tooltip on a button
+     *
+     * @private
+     * @param {Object} node
+     * @param {jQuery} $button
+     */
+    _addButtonTooltip: function (node, $button) {
+        var self = this;
+        $button.tooltip({
+            delay: { show: 1000, hide: 0 },
+            title: function () {
+                return qweb.render('WidgetButton.tooltip', {
+                    debug: config.debug,
+                    state: self.state,
+                    node: node,
+                });
+            },
+        });
+    },
+    /**
      * @private
      * @param {jQueryElement} $el
      * @param {Object} node
@@ -225,6 +245,17 @@ var FormRenderer = BasicRenderer.extend({
             this.idsForLabels[name] = idForLabel;
         }
         return idForLabel;
+    },
+    /**
+     * @override
+     * @private
+     */
+    _postProcessField: function (widget, node) {
+        this._setIDForLabel(widget, this._getIDForLabel(node.attrs.name));
+        this._handleAttributes(widget.$el, node);
+        if (JSON.parse(node.attrs.default_focus || "0")) {
+            this.defaultFocusField = widget;
+        }
     },
     /**
      * @private
@@ -288,23 +319,6 @@ var FormRenderer = BasicRenderer.extend({
         return $result;
     },
     /**
-     * @override
-     * @private
-     * @param {string} node
-     * @param {Object} record
-     * @param {Object} [options]
-     * @returns {AbstractField}
-     */
-    _renderFieldWidget: function (node, record, options, modifiersOptions) {
-        var widget = this._super.apply(this, arguments);
-        this._setIDForLabel(widget, this._getIDForLabel(node.attrs.name));
-        this._handleAttributes(widget.$el, node);
-        if (JSON.parse(node.attrs.default_focus || "0")) {
-            this.defaultFocusField = widget;
-        }
-        return widget;
-    },
-    /**
      * @private
      * @param {Object} node
      * @returns {jQueryElement}
@@ -322,7 +336,6 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderHeaderButton: function (node) {
-        var self = this;
         var $button = $('<button>')
                         .text(node.attrs.string)
                         .addClass('btn btn-sm btn-default');
@@ -332,16 +345,7 @@ var FormRenderer = BasicRenderer.extend({
 
         // Display tooltip
         if (config.debug || node.attrs.help) {
-            $button.tooltip({
-                delay: { show: 1000, hide: 0 },
-                title: function () {
-                    return qweb.render('WidgetButton.tooltip', {
-                        debug: config.debug,
-                        state: self.state,
-                        node: node,
-                    });
-                },
-            });
+            this._addButtonTooltip(node, $button);
         }
         return $button;
     },
@@ -439,8 +443,8 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderInnerGroupField: function (node) {
-        var widget = this._renderFieldWidget(node, this.state);
-        var $tds = $('<td/>').append(widget.$el);
+        var $el = this._renderFieldWidget(node, this.state);
+        var $tds = $('<td/>').append($el);
 
         if (node.attrs.nolabel !== '1') {
             var $labelTd = this._renderInnerGroupLabel(node);
@@ -552,6 +556,12 @@ var FormRenderer = BasicRenderer.extend({
         this._addOnClickAction($button, node);
         this._handleAttributes($button, node);
         this._registerModifiers(node, this.state, $button);
+
+        // Display tooltip
+        if (config.debug || node.attrs.help) {
+            this._addButtonTooltip(node, $button);
+        }
+
         return $button;
     },
     /**
@@ -560,7 +570,7 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderTagField: function (node) {
-        return this._renderFieldWidget(node, this.state).$el;
+        return this._renderFieldWidget(node, this.state);
     },
     /**
      * @private
@@ -614,10 +624,12 @@ var FormRenderer = BasicRenderer.extend({
         $statusbar.append(this._renderHeaderButtons(node));
         _.each(node.children, function (child) {
             if (child.tag === 'field') {
-                var widget = self._renderFieldWidget(child, self.state);
-                $statusbar.append(widget.$el);
+                var $el = self._renderFieldWidget(child, self.state);
+                $statusbar.append($el);
             }
         });
+        this._handleAttributes($statusbar, node);
+        this._registerModifiers(node, this.state, $statusbar);
         return $statusbar;
     },
     /**

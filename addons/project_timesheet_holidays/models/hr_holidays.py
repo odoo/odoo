@@ -8,9 +8,17 @@ from odoo.exceptions import ValidationError
 class HolidaysType(models.Model):
     _inherit = "hr.holidays.status"
 
+    def _default_project_id(self):
+        company = self.company_id if self.company_id else self.env.user.company_id
+        return company.leave_timesheet_project_id.id
+
+    def _default_task_id(self):
+        company = self.company_id if self.company_id else self.env.user.company_id
+        return company.leave_timesheet_task_id.id
+
     timesheet_generate = fields.Boolean('Generate Timesheet', default=True, help="If checked, when validating a leave, timesheet will be generated in the Vacation Project of the company.")
-    timesheet_project_id = fields.Many2one('project.project', string="Internal Project", help="The project will contain the timesheet generated when a leave is validated.")
-    timesheet_task_id = fields.Many2one('project.task', string="Internal Task for timesheet", domain="[('project_id', '=', timesheet_project_id)]")
+    timesheet_project_id = fields.Many2one('project.project', string="Internal Project", default=_default_project_id, help="The project will contain the timesheet generated when a leave is validated.")
+    timesheet_task_id = fields.Many2one('project.task', string="Internal Task for timesheet", default=_default_task_id, domain="[('project_id', '=', timesheet_project_id)]")
 
     @api.onchange('timesheet_generate')
     def _onchange_timesheet_generate(self):

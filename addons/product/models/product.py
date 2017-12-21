@@ -42,10 +42,13 @@ class ProductCategory(models.Model):
                 category.complete_name = category.name
 
     def _compute_product_count(self):
-        read_group_res = self.env['product.template'].read_group([('categ_id', 'in', self.ids)], ['categ_id'], ['categ_id'])
+        read_group_res = self.env['product.template'].read_group([('categ_id', 'child_of', self.ids)], ['categ_id'], ['categ_id'])
         group_data = dict((data['categ_id'][0], data['categ_id_count']) for data in read_group_res)
         for categ in self:
-            categ.product_count = group_data.get(categ.id, 0)
+            product_count = 0
+            for sub_categ_id in categ.search([('id', 'child_of', categ.id)]).ids:
+                product_count += group_data.get(sub_categ_id, 0)
+            categ.product_count = product_count
 
     @api.constrains('parent_id')
     def _check_category_recursion(self):
@@ -553,7 +556,7 @@ class ProductPackaging(models.Model):
     name = fields.Char('Package Type', required=True)
     sequence = fields.Integer('Sequence', default=1, help="The first in the sequence is the default one.")
     product_id = fields.Many2one('product.product', string='Product')
-    qty = fields.Float('Quantity per Package', help="The total number of products you can have per pallet or box.")
+    qty = fields.Float('Contained Quantity', help="The total number of products you can have per pallet or box.")
     barcode = fields.Char('Barcode', copy=False, help="Barcode used for packaging identification.")
 
 

@@ -24,7 +24,7 @@ class CrmTeam(models.Model):
     def _get_default_team_id(self, user_id=None):
         if not user_id:
             user_id = self.env.uid
-        company_id = self.sudo(user_id).company_id.id
+        company_id = self.sudo(user_id).env.user.company_id.id
         team_id = self.env['crm.team'].sudo().search([
             '|', ('user_id', '=', user_id), ('member_ids', '=', user_id),
             '|', ('company_id', '=', False), ('company_id', 'child_of', [company_id])
@@ -115,7 +115,7 @@ class CrmTeam(models.Model):
         # we take the start of the following month/week/day if we group by month/week/day
         # (to avoid having twice the same month/week/day from different years/month/week)
         if self.dashboard_graph_group == 'month':
-            start_date = date(start_date.year + start_date.month / 12, start_date.month % 12 + 1, 1)
+            start_date = date(start_date.year + start_date.month // 12, start_date.month % 12 + 1, 1)
             # handle period=week, grouping=month for silly managers
             if self.dashboard_graph_period == 'week':
                 start_date = today.replace(day=1)

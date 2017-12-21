@@ -474,7 +474,7 @@ var ServicesMixin = {
         return def ? def.promise() : $.Deferred().promise();
     },
     loadFieldView: function (dataset, view_id, view_type, options) {
-        return this.loadViews(dataset.model, dataset.get_context(), [[view_id, view_type]], options).then(function (result) {
+        return this.loadViews(dataset.model, dataset.get_context().eval(), [[view_id, view_type]], options).then(function (result) {
             return result[view_type];
         });
     },

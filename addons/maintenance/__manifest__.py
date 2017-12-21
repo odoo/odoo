@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name': 'Equipments',
+    'name': 'Maintenance',
     'version': '1.0',
     'sequence': 125,
     'category': 'Human Resources',

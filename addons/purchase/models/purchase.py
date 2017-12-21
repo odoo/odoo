@@ -9,7 +9,7 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_is_zero, float_compare
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.misc import formatLang
-from odoo.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
+from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.addons import decimal_precision as dp
 
 
@@ -307,7 +307,8 @@ class PurchaseOrder(models.Model):
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
             'custom_layout': "purchase.mail_template_data_notification_email_purchase_order",
-            'force_email': True
+            'force_email': True,
+            'mark_rfq_as_sent': True,
         })
         return {
             'name': _('Compose Email'),
@@ -320,6 +321,13 @@ class PurchaseOrder(models.Model):
             'target': 'new',
             'context': ctx,
         }
+
+    @api.multi
+    @api.returns('self', lambda value: value.id)
+    def message_post(self, **kwargs):
+        if self.env.context.get('mark_rfq_as_sent'):
+            self.filtered(lambda o: o.state == 'draft').write({'state': 'sent'})
+        return super(PurchaseOrder, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
 
     @api.multi
     def print_quotation(self):
@@ -363,6 +371,15 @@ class PurchaseOrder(models.Model):
             for inv in order.invoice_ids:
                 if inv and inv.state not in ('cancel', 'draft'):
                     raise UserError(_("Unable to cancel this purchase order. You must first cancel related vendor bills."))
+
+            # If the product is MTO, change the procure_method of the the closest move to purchase to MTS.
+            # The purpose is to link the po that the user will manually generate to the existing moves's chain.
+            if order.state in ('draft', 'sent', 'to approve'):
+                for order_line in order.order_line:
+                    if order_line.move_dest_ids:
+                        siblings_states = (order_line.move_dest_ids.mapped('move_orig_ids')).mapped('state')
+                        if all(state in ('done', 'cancel') for state in siblings_states):
+                            order_line.move_dest_ids.write({'procure_method': 'make_to_stock'})
 
             for pick in order.picking_ids.filtered(lambda r: r.state != 'cancel'):
                 pick.action_cancel()
@@ -484,21 +501,12 @@ class PurchaseOrder(models.Model):
         result = action.read()[0]
 
         #override the context to get rid of the default filtering
-        result['context'] = {'type': 'in_invoice', 'default_purchase_id': self.id}
-
-        if not self.invoice_ids:
-            # Choose a default account journal in the same currency in case a new invoice is created
-            journal_domain = [
-                ('type', '=', 'purchase'),
-                ('company_id', '=', self.company_id.id),
-                ('currency_id', '=', self.currency_id.id),
-            ]
-            default_journal_id = self.env['account.journal'].search(journal_domain, limit=1)
-            if default_journal_id:
-                result['context']['default_journal_id'] = default_journal_id.id
-        else:
-            # Use the same account journal than a previous invoice
-            result['context']['default_journal_id'] = self.invoice_ids[0].journal_id.id
+        result['context'] = {'type': 'in_invoice',
+            'default_purchase_id': self.id,
+            'default_currency_id': self.currency_id.id,
+            'default_company_id': self.company_id.id,
+            'company_id': self.company_id.id
+        }
 
         #choose the view_mode accordingly
         if len(self.invoice_ids) != 1:
@@ -550,25 +558,6 @@ class PurchaseOrderLine(models.Model):
                         qty -= inv_line.uom_id._compute_quantity(inv_line.quantity, line.product_uom)
             line.qty_invoiced = qty
 
-    @api.depends('order_id.state', 'move_ids.state', 'move_ids.product_uom_qty')
-    def _compute_qty_received(self):
-        for line in self:
-            if line.order_id.state not in ['purchase', 'done']:
-                line.qty_received = 0.0
-                continue
-            if line.product_id.type not in ['consu', 'product']:
-                line.qty_received = line.product_qty
-                continue
-            total = 0.0
-            for move in line.move_ids:
-                if move.state == 'done':
-                    if move.location_dest_id.usage == "supplier":
-                        if move.to_refund:
-                            total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
-                    else:
-                        total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
-            line.qty_received = total
-
     @api.model
     def create(self, values):
         line = super(PurchaseOrderLine, self).create(values)
@@ -606,6 +595,7 @@ class PurchaseOrderLine(models.Model):
     product_image = fields.Binary(
         'Product Image', related="product_id.image",
         help="Non-stored related field to allow portal user to see the image of the product he has ordered")
+    product_type = fields.Selection(related='product_id.type')
     move_ids = fields.One2many('stock.move', 'purchase_line_id', string='Reservation', readonly=True, ondelete='set null', copy=False)
     price_unit = fields.Float(string='Unit Price', required=True, digits=dp.get_precision('Product Price'))
 
@@ -623,7 +613,7 @@ class PurchaseOrderLine(models.Model):
 
     # Replace by invoiced Qty
     qty_invoiced = fields.Float(compute='_compute_qty_invoiced', string="Billed Qty", digits=dp.get_precision('Product Unit of Measure'), store=True)
-    qty_received = fields.Float(compute='_compute_qty_received', string="Received Qty", digits=dp.get_precision('Product Unit of Measure'), store=True)
+    qty_received = fields.Float(string="Received Qty", digits=dp.get_precision('Product Unit of Measure'))
 
     partner_id = fields.Many2one('res.partner', related='order_id.partner_id', string='Partner', readonly=True, store=True)
     currency_id = fields.Many2one(related='order_id.currency_id', store=True, string='Currency', readonly=True)
@@ -632,14 +622,26 @@ class PurchaseOrderLine(models.Model):
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Orderpoint')
     move_dest_ids = fields.One2many('stock.move', 'created_purchase_line_id', 'Downstream Moves')
 
+    def _update_received_qty(self):
+        for line in self:
+            total = 0.0
+            for move in line.move_ids:
+                if move.state == 'done':
+                    if move.location_dest_id.usage == "supplier":
+                        if move.to_refund:
+                            total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
+                    else:
+                        total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
+            line.qty_received = total
+
     @api.multi
     def _create_or_update_picking(self):
         for line in self:
             if line.product_id.type in ('product', 'consu'):
                 # Prevent decreasing below received quantity
                 if float_compare(line.product_qty, line.qty_received, line.product_uom.rounding) < 0:
-                    raise UserError('You cannot decrease the ordered quantity below the received quantity.\n'
-                                    'Create a return first.')
+                    raise UserError(_('You cannot decrease the ordered quantity below the received quantity.\n'
+                                      'Create a return first.'))
 
                 if float_compare(line.product_qty, line.qty_invoiced, line.product_uom.rounding) == -1:
                     # If the quantity is now below the invoiced quantity, create an activity on the vendor bill
@@ -1089,16 +1091,3 @@ class ProductCategory(models.Model):
         'account.account', string="Price Difference Account",
         company_dependent=True,
         help="This account will be used to value price difference between purchase price and accounting cost.")
-
-
-class MailComposeMessage(models.TransientModel):
-    _inherit = 'mail.compose.message'
-
-    @api.multi
-    def send_mail(self, auto_commit=False):
-        if self._context.get('default_model') == 'purchase.order' and self._context.get('default_res_id'):
-            if not self.filtered('subtype_id.internal'):
-                order = self.env['purchase.order'].browse([self._context['default_res_id']])
-                if order.state == 'draft':
-                    order.state = 'sent'
-        return super(MailComposeMessage, self.with_context(mail_post_autofollow=True)).send_mail(auto_commit=auto_commit)

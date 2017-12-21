@@ -28,6 +28,7 @@ var CalendarView = AbstractView.extend({
         Controller: CalendarController,
         Renderer: CalendarRenderer,
     },
+    viewType: 'calendar',
     init: function (viewInfo, params) {
         this._super.apply(this, arguments);
         var arch = viewInfo.arch;

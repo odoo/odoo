@@ -347,6 +347,20 @@ var FieldChar = InputField.extend(TranslatableFieldMixin, {
         this.$el = this.$el.add(this._renderTranslateButton());
         return def;
     },
+    /**
+     * Trim the value input by the user.
+     *
+     * @override
+     * @private
+     * @param {any} value
+     * @param {Object} [options]
+     */
+    _setValue: function (value, options) {
+        if (this.field.trim) {
+            value = value.trim();
+        }
+        return this._super(value, options);
+    },
 });
 
 
@@ -424,7 +438,7 @@ var FieldDate = InputField.extend({
             def = this.datewidget.appendTo('<div>').done(function () {
                 self.datewidget.$el.addClass(self.$el.attr('class'));
                 self._prepareInput(self.datewidget.$input);
-                self.replaceElement(self.datewidget.$el);
+                self._replaceElement(self.datewidget.$el);
             });
         }
         return $.when(def, this._super.apply(this, arguments));
@@ -638,6 +652,7 @@ var FieldMonetary = InputField.extend({
         var currencyField = this.nodeOptions.currency_field || this.field.currency_field || 'currency_id';
         var currencyID = this.record.data[currencyField] && this.record.data[currencyField].res_id;
         this.currency = session.get_currency(currencyID);
+        this.formatOptions.currency = this.currency; // _formatValue() uses formatOptions
     },
 });
 
@@ -1218,7 +1233,7 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
     template: 'FieldBinaryFile',
     events: _.extend({}, AbstractFieldBinary.prototype.events, {
         'click': function (event) {
-            if (this.mode === 'readonly' && this.value) {
+            if (this.mode === 'readonly' && this.value && this.recordData.id) {
                 this.on_save_as(event);
             }
         },
@@ -1235,9 +1250,19 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
         this.do_toggle(!!this.value);
         if (this.value) {
             this.$el.empty().append($("<span/>").addClass('fa fa-download'));
+            if (this.recordData.id) {
+                this.$el.css('cursor', 'pointer');
+            } else {
+                this.$el.css('cursor', 'not-allowed');
+            }
             if (this.filename_value) {
                 this.$el.append(" " + this.filename_value);
             }
+        }
+        if (!this.res_id) {
+            this.$el.css('cursor', 'not-allowed');
+        } else {
+            this.$el.css('cursor', 'pointer');
         }
     },
     _renderEdit: function () {
@@ -1263,7 +1288,7 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
         if (!this.value) {
             this.do_warn(_t("Save As..."), _t("The field is empty, there's nothing to save !"));
             ev.stopPropagation();
-        } else {
+        } else if (this.res_id) {
             framework.blockUI();
             var c = crash_manager;
             var filename_fieldname = this.attrs.filename;
@@ -2023,7 +2048,12 @@ var JournalDashboardGraph = AbstractField.extend({
         return this._super.apply(this, arguments);
     },
     destroy: function () {
-        nv.utils.offWindowResize(this._onResize);
+        if ('nv' in window) {
+            // if the widget is destroyed before the lazy loaded libs (nv) are
+            // actually loaded (i.e. after the widget has actually started),
+            // nv is undefined, but the handler isn't bound yet anyway
+            nv.utils.offWindowResize(this._onResize);
+        }
         this._super.apply(this, arguments);
     },
 

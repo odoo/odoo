@@ -91,7 +91,7 @@
         <field name="code">SALARY</field>
         <field name="condition_select">none</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = contract.wage * 1.08</field>
+        <field name="amount_python_compute">result = categories.BASIC * 1.08</field>
     </record>
     <record id="hr_payroll_rules_employee" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_salary"/> 
@@ -100,9 +100,11 @@
         <field name="condition_select">none</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
-result = contract.wage + contract.mobile + contract.mobile_plus + contract.internet
-if contract.transport_mode == 'company_car':
-    result += contract.car_atn
+result = categories.BASIC
+if contract.internet:
+    result += 5.0
+if contract.mobile:
+    result += 12.0
         </field>
         <field name="sequence">20</field>
         <field name="appears_on_payslip" eval="False"/>
@@ -161,14 +163,15 @@ elif salary &lt;= 2461.27:
         <field name="condition_python">result = (((employee.marital=='single') or (employee.marital=='married' and employee.spouse_fiscal_status=='without income')) and (employee.resident_bool!=True))</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
-if contract.wage &gt;= 0.01 and contract.wage &lt;= 1095.09:
+wage = categories.BASIC
+if wage &gt;= 0.01 and wage &lt;= 1095.09:
     result = 0.0
-elif contract.wage &gt;= 1095.10 and contract.wage &lt;= 1945.38:
+elif wage &gt;= 1095.10 and wage &lt;= 1945.38:
     result = 0.0
-elif contract.wage &gt;= 1945.39 and contract.wage &lt;= 2190.18:
-    result = -min((contract.wage - 1945.38) * 0.076, 18.60)
-elif contract.wage &gt;= 2190.19 and contract.wage &lt;= 6038.82:
-    result = -min(18.60 + (contract.wage - 2190.18) * 0.011, 60.94)
+elif wage &gt;= 1945.39 and wage &lt;= 2190.18:
+    result = -min((wage - 1945.38) * 0.076, 18.60)
+elif wage &gt;= 2190.19 and wage &lt;= 6038.82:
+    result = -min(18.60 + (wage - 2190.18) * 0.011, 60.94)
 else:
     result = -60.94
         </field>
@@ -184,14 +187,15 @@ else:
         <field name="condition_python">result = (((employee.marital=='married' and employee.spouse_fiscal_status=='with income')) and (employee.resident_bool!=True))</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
-if contract.wage &gt;= 0.01 and contract.wage &lt;= 1095.09:
+wage = categories.BASIC
+if wage &gt;= 0.01 and wage &lt;= 1095.09:
     result = 0.0
-elif contract.wage &gt;= 1095.10 and contract.wage &lt;= 1945.38:
+elif wage &gt;= 1095.10 and wage &lt;= 1945.38:
     result = -9.30
-elif contract.wage &gt;= 1945.39 and contract.wage &lt;= 2190.18:
-    result = -min(max((contract.wage - 1945.38) * 0.076, 9.30), 18.60)
-elif contract.wage &gt;= 2190.19 and contract.wage &lt;= 6038.82:
-    result = -min(18.60 + (contract.wage - 2190.18) * 0.011, 51.64)
+elif wage &gt;= 1945.39 and wage &lt;= 2190.18:
+    result = -min(max((wage - 1945.38) * 0.076, 9.30), 18.60)
+elif wage &gt;= 2190.19 and wage &lt;= 6038.82:
+    result = -min(18.60 + (wage - 2190.18) * 0.011, 51.64)
 else:
     result = -51.64
         </field>
@@ -399,7 +403,7 @@ elif salary &lt;= 2461.27:
         <field name="category_id" ref="hr_payroll_head_div_impos"/>
         <field name="name">ATN Company Car</field>
         <field name="code">ATN.CAR</field>
-        <field name="sequence">15</field>
+        <field name="sequence">70</field>
         <field name="condition_select">python</field>
         <field name="condition_python">
 result = bool(contract.transport_mode == 'company_car' and contract.car_atn)
@@ -619,7 +623,7 @@ result = -contract.car_atn
         <record id="hr_contract_advantage_template_commission_on_target" model="hr.contract.advantage.template">
             <field name="name">Commission on target</field>
             <field name="code">commission_on_target</field>
-            <field name="default_value">1000.0</field>
+            <field name="default_value">0.0</field>
         </record>
         <record id="hr_contract_advantage_template_fuel_card" model="hr.contract.advantage.template">
             <field name="name">Fuel card</field>
@@ -633,7 +637,7 @@ result = -contract.car_atn
             <field name="code">holidays</field>
             <field name="default_value">20.0</field>
             <field name="lower_bound">0.0</field>
-            <field name="upper_bound">30.0</field>
+            <field name="upper_bound">35.0</field>
         </record>
         <record id="hr_contract_advantage_template_representation_fees" model="hr.contract.advantage.template">
             <field name="name">Representation fees</field>

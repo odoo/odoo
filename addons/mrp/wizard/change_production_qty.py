@@ -67,12 +67,12 @@ class ChangeProductionQty(models.TransientModel):
                                  cycle_number * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency)
                 quantity = wo.qty_production - wo.qty_produced
                 if production.product_id.tracking == 'serial':
-                    quantity = 1.0 if float_is_zero(quantity, precision_digits=precision) else 0.0
+                    quantity = 1.0 if not float_is_zero(quantity, precision_digits=precision) else 0.0
                 else:
                     quantity = quantity if (quantity > 0) else 0
                 if float_is_zero(quantity, precision_digits=precision):
                     wo.final_lot_id = False
-                    wo.active_move_lot_ids.unlink()
+                    wo.active_move_line_ids.unlink()
                 wo.qty_producing = quantity
                 if wo.qty_produced < wo.qty_production and wo.state == 'done':
                     wo.state = 'progress'

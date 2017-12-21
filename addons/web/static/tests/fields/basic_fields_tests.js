@@ -24,7 +24,7 @@ QUnit.module('basic_fields', {
                     date: {string: "A date", type: "date", searchable: true},
                     datetime: {string: "A datetime", type: "datetime", searchable: true},
                     display_name: {string: "Displayed name", type: "char", searchable: true},
-                    foo: {string: "Foo", type: "char", default: "My little Foo Value", searchable: true},
+                    foo: {string: "Foo", type: "char", default: "My little Foo Value", searchable: true, trim: true},
                     bar: {string: "Bar", type: "boolean", default: true, searchable: true},
                     txt: {string: "txt", type: "text", default: "My little txt Value\nHo-ho-hoooo Merry Christmas"},
                     int_field: {string: "int_field", type: "integer", sortable: true, searchable: true},
@@ -738,6 +738,38 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('setting a char field to empty string is saved as a false value', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {mode: 'edit'},
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.strictEqual(args.args[1].foo, false,
+                        'the foo value should be false');
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        form.$('input[type="text"].o_field_widget').val('').trigger('input');
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        form.destroy();
+    });
+
     QUnit.test('char field with size attribute', function (assert) {
         assert.expect(1);
 
@@ -872,6 +904,43 @@ QUnit.module('basic_fields', {
         form.$buttons.find('.o_form_button_save').click();
         assert.strictEqual(form.$('.o_field_widget').text(), '<script>throw Error();</script>',
             'the value should have been properly escaped');
+
+        form.destroy();
+    });
+
+    QUnit.test('char field trim (or not) characters', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.foo2 = {string: "Foo2", type: "char", trim: false};
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                            '<field name="foo2"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('input[name="foo"]').val('  abc  ').trigger('input');
+        form.$('input[name="foo2"]').val('  def  ').trigger('input');
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        // edit mode
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'abc', 'Foo value should have been trimmed');
+        assert.strictEqual(form.$('input[name="foo2"]').val(), '  def  ', 'Foo2 value should not have been trimmed');
 
         form.destroy();
     });
@@ -1357,6 +1426,51 @@ QUnit.module('basic_fields', {
         session.get_file = oldGetFile;
     });
 
+    QUnit.test('binary fields that are readonly in create mode do not download', function (assert) {
+        assert.expect(2);
+
+        // save the session function
+        var oldGetFile = session.get_file;
+        session.get_file = function (option) {
+            assert.step('We shouldn\'t be getting the file.');
+            return oldGetFile.bind(session)(option);
+        };
+
+        this.data.partner.onchanges = {
+            product_id: function (obj) {
+                obj.document = "onchange==\n";
+            },
+        };
+
+        this.data.partner.fields.document.readonly = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="product_id"/>' +
+                    '<field name="document" filename="\'yooo\'"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_create').click();
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+
+        form.$('.o_field_many2one input').click();
+        $dropdown.find('li:not(.o_m2o_dropdown_option):contains(xphone)').click();
+
+        assert.strictEqual(form.$('a.o_field_widget[name="document"] > .fa-download').length, 1,
+            'The link to download the binary should be present');
+
+        form.$('a.o_field_widget[name="document"]').click();
+
+        assert.verifySteps([]); // We shoudln't have passed through steps
+
+        form.destroy();
+        session.get_file = oldGetFile;
+    });
 
     QUnit.test('text field rendering in list view', function (assert) {
         assert.expect(1);
@@ -1502,43 +1616,94 @@ QUnit.module('basic_fields', {
 
     });
 
-    QUnit.module('JournalDashboardGraph');
+    QUnit.test('image fields in subviews are loaded correctly', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
+        this.data.partner.records[0].document = 'myimage';
+        this.data.partner_type.fields.image = {name: 'image', type: 'binary'};
+        this.data.partner_type.records[0].image = 'product_image';
+        this.data.partner.records[0].timmy = [12];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="document" widget="image" options="{\'size\': [90, 90]}"/>' +
+                    '<field name="timmy" widget="many2many">' +
+                        '<tree>' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="image" widget="image"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === 'data:image/png;base64,myimage') {
+                    assert.step("The view's image should have been fetched");
+                    return $.when('wow');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        assert.verifySteps(["The view's image should have been fetched"]);
+
+        assert.strictEqual(form.$('tr.o_data_row').length, 1,
+            'There should be one record in the many2many');
+
+        // Actual flow: click on an element of the m2m to get its form view
+        form.$('tbody td:contains(gold)').click();
+        assert.strictEqual($('.modal-dialog').length, 1,
+            'The modal should have opened');
+        assert.strictEqual($('.modal-dialog').find('.o_field_image > img')[0].src,
+            'data:image/png;base64,product_image',
+            'The image of the many2many in its form view should be present');
+
+        form.destroy();
+    });
+
+    QUnit.module('JournalDashboardGraph', {
+        beforeEach: function () {
+            _.extend(this.data.partner.fields, {
+                graph_data: { string: "Graph Data", type: "text" },
+                graph_type: {
+                    string: "Graph Type",
+                    type: "selection",
+                    selection: [['line', 'Line'], ['bar', 'Bar']]
+                },
+            });
+            this.data.partner.records[0].graph_type = "bar";
+            this.data.partner.records[1].graph_type = "line";
+            var graph_values = [
+                {'value': 300, 'label': '5-11 Dec'},
+                {'value': 500, 'label': '12-18 Dec'},
+                {'value': 100, 'label': '19-25 Dec'},
+            ];
+            this.data.partner.records[0].graph_data = JSON.stringify([{
+                color: 'red',
+                title: 'Partner 0',
+                values: graph_values,
+                key: 'A key',
+                area: true,
+            }]);
+            this.data.partner.records[1].graph_data = JSON.stringify([{
+                color: 'blue',
+                title: 'Partner 1',
+                values: graph_values,
+                key: 'A key',
+                area: true,
+            }]);
+        },
+    });
 
     QUnit.test('graph dashboard widget is rendered correctly', function (assert) {
         var done = assert.async();
         assert.expect(4);
 
-        var graph_key = "";
-        _.extend(this.data.partner.fields, {
-            graph_data: { string: "Graph Data", type: "text" },
-            graph_type: {
-                string: "Graph Type",
-                type: "selection",
-                selection: [['line', 'Line'], ['bar', 'Bar']]
-            },
-        });
-        this.data.partner.records[0].graph_type = "bar";
-        this.data.partner.records[1].graph_type = "line";
-        var graph_values = [
-            {'value': 300, 'label': '5-11 Dec'},
-            {'value': 500, 'label': '12-18 Dec'},
-            {'value': 100, 'label': '19-25 Dec'},
-        ];
-        this.data.partner.records[0].graph_data = JSON.stringify([{
-            color: 'red',
-            title: 'Partner 0',
-            values: graph_values,
-            key: 'A key',
-            area: true,
-        }]);
-        graph_key = JSON.parse(this.data.partner.records[0].graph_data)[0].key
-        this.data.partner.records[1].graph_data = JSON.stringify([{
-            color: 'blue',
-            title: 'Partner 1',
-            values: graph_values,
-            key: 'A key',
-            area: true,
-        }]);
+        var graph_key = JSON.parse(this.data.partner.records[0].graph_data)[0].key;
         var kanban = createView({
             View: KanbanView,
             model: 'partner',
@@ -1571,7 +1736,7 @@ QUnit.module('basic_fields', {
             evt.initMouseEvent("mouseover", true, true, window, 0, 0, 0, 80, 20, false, false, false, false, 0, null);
             $('.discreteBar')[0].dispatchEvent(evt);
             var tooltip = $('.nvtooltip').find('table').find('.key')[0].innerText;
-            assert.equal(tooltip,graph_key, "graph tooltip should be generated ");
+            assert.equal(tooltip, graph_key, "graph tooltip should be generated ");
             $('.nvtooltip').remove();
 
             // force a re-rendering of the first record (to check if the
@@ -1588,6 +1753,41 @@ QUnit.module('basic_fields', {
             done();
         });
 
+    });
+
+    QUnit.test('graph dashboard widget does not need nv to be destroyed', function (assert) {
+        // this test ensures that the JournalDashboardGraph widget doesn't crash
+        // when being destroyed before nv has been loaded
+        assert.expect(2);
+
+        var destroy = basicFields.JournalDashboardGraph.prototype.destroy;
+        basicFields.JournalDashboardGraph.prototype.destroy = function () {
+            assert.step('destroy');
+            var nv = window.nv;
+            delete window.nv;
+            destroy.apply(this, arguments);
+            window.nv = nv;
+        };
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                    '<field name="graph_type"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                        '<field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>' +
+                        '</div>' +
+                    '</t>' +
+                '</templates></kanban>',
+            domain: [['id', 'in', [1]]],
+        });
+
+        kanban.destroy();
+        basicFields.JournalDashboardGraph.prototype.destroy = destroy;
+
+        assert.verifySteps(['destroy']);
     });
 
     QUnit.module('AceEditor');
@@ -2310,9 +2510,14 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('monetary field with real monetary field in model', function (assert) {
-        assert.expect(4);
+        assert.expect(7);
 
         this.data.partner.fields.qux.type = "monetary";
+        this.data.partner.fields.quux = {
+            string: "Quux", type: "monetary", digits: [16,1], searchable: true, readonly: true,
+        };
+
+        (_.find(this.data.partner.records, function (record) { return record.id === 5 })).quux = 4.2;
 
         this.data.partner.onchanges = {
             bar: function (obj) {
@@ -2327,6 +2532,7 @@ QUnit.module('basic_fields', {
             arch:'<form string="Partners">' +
                     '<sheet>' +
                         '<field name="qux"/>' +
+                        '<field name="quux"/>' +
                         '<field name="currency_id"/>' +
                         '<field name="bar"/>' +
                     '</sheet>' +
@@ -2337,7 +2543,9 @@ QUnit.module('basic_fields', {
             },
         });
 
-        assert.strictEqual(form.$('.o_field_monetary').html(), "$&nbsp;9.10",
+        assert.strictEqual(form.$('.o_field_monetary').first().html(), "$&nbsp;9.10",
+            "readonly value should contain the currency");
+        assert.strictEqual(form.$('.o_field_monetary').first().next().html(), "$&nbsp;4.20",
             "readonly value should contain the currency");
 
         form.$buttons.find('.o_form_button_edit').click();
@@ -2348,12 +2556,16 @@ QUnit.module('basic_fields', {
         form.$('input[type="checkbox"]').click(); // Change the field on which the monetary depends
         assert.strictEqual(form.$('.o_field_monetary > input').length, 1,
             "After the onchange, the monetary <input/> should not have been duplicated");
+        assert.strictEqual(form.$('.o_field_monetary[name=quux]').length, 1,
+            "After the onchange, the monetary readonly field should not have been duplicated");
 
         var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
         form.$('.o_field_many2one input').click();
         $dropdown.find('li:not(.o_m2o_dropdown_option):last').mouseenter().click();
         assert.strictEqual(form.$('.o_field_monetary > span').html(), "€",
             "After currency change, the monetary field currency should have been updated");
+        assert.strictEqual(form.$('.o_field_monetary').first().next().html(), "4.20&nbsp;€",
+            "readonly value should contain the updated currency");
 
         form.destroy();
     });

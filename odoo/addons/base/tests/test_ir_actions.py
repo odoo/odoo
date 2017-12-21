@@ -130,7 +130,7 @@ class TestServerActions(TestServerActionsBase):
         self.assertEqual(len(partner), 1, 'ir_actions_server: TODO')
         self.assertEqual(partner.city, 'OrigCity', 'ir_actions_server: TODO')
 
-    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_40_multi(self):
         # Data: 2 server actions that will be nested
         action1 = self.action.create({

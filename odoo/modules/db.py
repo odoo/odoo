@@ -17,12 +17,12 @@ def is_initialized(cr):
 def initialize(cr):
     """ Initialize a database with for the ORM.
 
-    This executes base/base.sql, creates the ir_module_categories (taken
-    from each module descriptor file), and creates the ir_module_module
+    This executes base/data/base_data.sql, creates the ir_module_categories
+    (taken from each module descriptor file), and creates the ir_module_module
     and ir_model_data entries.
 
     """
-    f = odoo.modules.get_module_resource('base', 'base.sql')
+    f = odoo.modules.get_module_resource('base', 'data', 'base_data.sql')
     if not f:
         m = "File not found: 'base.sql' (provided by module 'base')."
         _logger.critical(m)

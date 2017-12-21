@@ -483,6 +483,13 @@
                                 <field name='supplier' invisible="1"/>
                                 <field name="state" invisible="1"/>
                             </tree>
+                            <form string='Lunch Order Form'>
+                                <group>
+                                    <field name='product_id'/>
+                                    <field name='note' />
+                                    <field name='price'/>
+                                </group>
+                            </form>
                         </field>
                         <group class='oe_subtotal_footer oe_right'>
                             <field name='total' widget='monetary' options="{'currency_field': 'currency_id'}"/>
@@ -562,7 +569,7 @@
                     <field name="description"/>
                     <group expand="0" string="Group By">
                         <filter name="supplier" string="Vendor" context="{'group_by': 'supplier'}"/>
-                        <filter name="category" string="Category" context="{'group_by': 'category_id'}"/>
+                        <filter name="category" string="Product Category" context="{'group_by': 'category_id'}"/>
                         <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
                     </group>
                 </search>

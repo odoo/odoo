@@ -15,7 +15,9 @@
                 <script type="text/javascript" src="/mail/static/src/js/chatter.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/chatter_composer.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/followers.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/form_controller.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/form_renderer.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/basic_model.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/basic_view.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/thread.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/thread_field.js"></script>
@@ -81,6 +83,18 @@
     <div t-field="activity.feedback" style="margin-left: 8px;"></div>
     </div>
 </div>
+        </template>
+
+        <template id="mail_bounce_catchall">
+<div>
+    <p>Hello <t t-esc="message['email_from']"/>,</p>
+    <p>The email sent to <t t-esc="message['to']"/> cannot be processed. This address
+    is used to collect replies and should not be used to directly contact <t t-esc="res_company.name"/>.</p>
+    <p>Please contact us instead using <a t-att-href="'mailto:%s' % res_company.email"><t t-esc="res_company.email"/></a></p>
+    <p>Regards,</p>
+    <p>The <t t-esc="res_company.name"/> team.</p>
+</div>
+<blockquote><t t-esc="message['body']"/></blockquote>
         </template>
 
     </data>

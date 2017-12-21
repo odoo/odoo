@@ -143,6 +143,27 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('list with delete="0"', function (assert) {
+        assert.expect(4);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            viewOptions: {sidebar: true},
+            arch: '<tree delete="0"><field name="foo"/></tree>',
+        });
+
+        assert.ok(list.sidebar.$el.hasClass('o_hidden'), 'sidebar should be invisible');
+        assert.ok(list.$('tbody td.o_list_record_selector').length, 'should have at least one record');
+
+        list.$('tbody td.o_list_record_selector:first input').click();
+        assert.ok(!list.sidebar.$el.hasClass('o_hidden'), 'sidebar should be visible');
+        assert.notOk(list.sidebar.$('a:contains(Delete)').length, 'sidebar should not have Delete button');
+
+        list.destroy();
+    });
+
     QUnit.test('simple editable rendering', function (assert) {
         assert.expect(12);
 
@@ -394,11 +415,12 @@ QUnit.module('Views', {
     QUnit.test('editable list: add a line and discard', function (assert) {
         assert.expect(11);
 
-        var oldDestroy = basicFields.FieldChar.prototype.destroy;
-        basicFields.FieldChar.prototype.destroy = function () {
-            assert.step('destroy');
-            oldDestroy.apply(this, arguments);
-        };
+        testUtils.patch(basicFields.FieldChar, {
+            destroy: function () {
+                assert.step('destroy');
+                this._super.apply(this, arguments);
+            },
+        });
 
         var list = createView({
             View: ListView,
@@ -435,7 +457,7 @@ QUnit.module('Views', {
         assert.verifySteps(['destroy'],
             "should have destroyed the widget of the removed line");
 
-        basicFields.FieldChar.prototype.destroy = oldDestroy;
+        testUtils.unpatch(basicFields.FieldChar);
         list.destroy();
     });
 
@@ -634,6 +656,42 @@ QUnit.module('Views', {
 
         assert.strictEqual(list.$('td[title="Sum"]').text(), "37",
             "current total should now be 37");
+        list.destroy();
+    });
+
+    QUnit.test('groups can be sorted on aggregates', function (assert) {
+        assert.expect(10);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            groupBy: ['foo'],
+            arch: '<tree editable="bottom"><field name="int_field" sum="Sum"/></tree>',
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    assert.step(args.kwargs.orderby || 'default order');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(list.$('tbody .o_list_number').text(), '10517',
+            "initial order should be 10, 5, 17");
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '32', "total should be 32");
+
+        list.$('.o_column_sortable').click(); // sort (int_field ASC)
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '32', "total should still be 32");
+        assert.strictEqual(list.$('tbody .o_list_number').text(), '51017',
+            "order should be 5, 10, 17");
+
+        list.$('.o_column_sortable').click(); // sort (int_field DESC)
+        assert.strictEqual(list.$('tbody .o_list_number').text(), '17105',
+            "initial order should be 17, 10, 5");
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '32', "total should still be 32");
+
+        assert.verifySteps(['default order', 'int_field ASC', 'int_field DESC']);
+
         list.destroy();
     });
 
@@ -1031,7 +1089,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('can display button in edit mode', function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var list = createView({
             View: ListView,
@@ -1039,10 +1097,11 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<tree editable="bottom">' +
                     '<field name="foo"/>' +
-                    '<button name="notafield" type="object" icon="fa-asterisk"/>' +
+                    '<button name="notafield" type="object" icon="fa-asterisk" class="o_yeah"/>' +
                 '</tree>',
         });
         assert.ok(list.$('tbody button').length, "should have a button");
+        assert.ok(list.$('tbody button').hasClass('o_yeah'), "class should be set on the button");
         list.destroy();
     });
 
@@ -1695,7 +1754,7 @@ QUnit.module('Views', {
         // close first level group
         nbRPCs = {readGroup: 0, searchRead: 0};
         envIDs = []; // the group being closed, there is no more record in the environment
-        list.$('.o_group_header:first').click();
+        list.$('.o_group_header:nth(1)').click();
         assert.strictEqual(nbRPCs.readGroup, 0, "should have done no read_group");
         assert.strictEqual(nbRPCs.searchRead, 0, "should have done no search_read");
 
@@ -2628,7 +2687,7 @@ QUnit.module('Views', {
         // Editable grouped list views are not supported, so the purpose of this
         // test is to check that when a list view is grouped, its editable
         // attribute is ignored
-        assert.expect(4);
+        assert.expect(5);
 
         var list = createView({
             View: ListView,
@@ -2636,8 +2695,9 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<tree editable="top"><field name="foo"/><field name="bar"/></tree>',
             intercepts: {
-                switch_view: function () {
-                    assert.step('switch view');
+                switch_view: function (event) {
+                    var resID = event.data.res_id || false;
+                    assert.step('switch view ' + event.data.view_type + ' ' + resID);
                 },
             },
         });
@@ -2649,9 +2709,15 @@ QUnit.module('Views', {
 
         // reload with groupBy
         list.reload({groupBy: ['bar']});
+
+        // clicking on record should open the form view
         list.$('.o_group_header:first').click();
         list.$('.o_data_cell:first').click();
-        assert.verifySteps(['switch view'], 'one switch view should have been requested');
+
+        // clicking on create button should open the form view
+        list.$buttons.find('.o_list_button_add').click();
+        assert.verifySteps(['switch view form 1', 'switch view form false'],
+            'two switch view to form should have been requested');
 
         list.destroy();
     });
@@ -3125,6 +3191,30 @@ QUnit.module('Views', {
         list.destroy();
         delete widgetRegistry.map.test;
     });
+
+    QUnit.test('use the limit attribute in arch', function (assert) {
+        assert.expect(3);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree limit="2"><field name="foo"/></tree>',
+            mockRPC: function (route, args) {
+                assert.strictEqual(args.limit, 2,
+                    'should use the correct limit value');
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(list.pager.$el.text().trim(), '1-2 / 4',
+            "pager should be correct");
+
+        assert.strictEqual(list.$('.o_data_row').length, 2,
+            'should display 2 data rows');
+        list.destroy();
+    });
+
 });
 
 });

@@ -3,14 +3,21 @@
 
 from datetime import datetime
 
-from odoo.addons.mail.tests.common import TestMail
 from odoo.tools import mute_logger
+from .test_sale_common import TestCommonSaleNoChart
 
 
-class TestSale(TestMail):
-    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.osv.orm')
+class TestSaleToInvoice(TestCommonSaleNoChart):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestSaleToInvoice, cls).setUpClass()
+        cls.setUpAdditionalAccounts()
+        cls.setUpAccountJournal()
+
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.osv.orm')
     def setUp(self):
-        super(TestSale, self).setUp()
+        super(TestSaleToInvoice, self).setUp()
 
     def test_sale_to_invoice(self):
         """ Testing for invoice create,validate and pay with invoicing and payment user."""
@@ -18,23 +25,17 @@ class TestSale(TestMail):
         IrModelData = self.env['ir.model.data']
         partner_obj = self.env['res.partner']
         journal_obj = self.env['account.journal']
-        account_obj = self.env['account.account']
         # Usefull record id
         group_id = IrModelData.xmlid_to_res_id('account.group_account_invoice') or False
         company_id = IrModelData.xmlid_to_res_id('base.main_company') or False
 
         # Usefull accounts
-        user_type_id = IrModelData.xmlid_to_res_id('account.data_account_type_revenue')
-        account_rev_id = account_obj.create({'code': 'X2020', 'name': 'Sales - Test Sales Account', 'user_type_id': user_type_id, 'reconcile': True})
-        user_type_id = IrModelData.xmlid_to_res_id('account.data_account_type_receivable')
-        account_recv_id = account_obj.create({'code': 'X1012', 'name': 'Sales - Test Reicv Account', 'user_type_id': user_type_id, 'reconcile': True})
+        account_recv_id = self.account_receivable
+        account_rev_id = self.account_revenue
 
         # Add account to product
         product_template_id = self.env.ref('sale.advance_product_0').product_tmpl_id
         product_template_id.write({'property_account_income_id': account_rev_id})
-
-        # Create Sales Journal
-        journal_obj.create({'name': 'Sales Journal - Test', 'code': 'STSJ', 'type': 'sale', 'company_id': company_id})
 
         # In order to test, I create new user and applied Invoicing & Payments group.
         user = self.env['res.users'].create({

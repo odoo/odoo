@@ -19,7 +19,6 @@ from . import assertion_report, pycompat
 from .config import config
 from .misc import file_open, unquote, ustr, SKIPPED_ELEMENT_TYPES
 from .translate import _
-from .yaml_import import convert_yaml_import
 from odoo import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
@@ -618,7 +617,11 @@ form: module.record_id""" % (xml_id,)
             f_val = False
 
             if f_search:
-                q = safe_eval(f_search, self.idref)
+                context = self.get_context(data_node, rec, {'ref': self.id_get})
+                uid = self.get_uid(data_node, rec)
+                env = self.env(user=uid, context=context)
+                idref2 = _get_idref(self, env, f_model, self.idref)
+                q = safe_eval(f_search, idref2)
                 assert f_model, 'Define an attribute model="..." in your .XML file !'
                 # browse the objects searched
                 s = self.env[f_model].search(q)
@@ -782,8 +785,6 @@ def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kin
             convert_csv_import(cr, module, pathname, fp.read(), idref, mode, noupdate)
         elif ext == '.sql':
             convert_sql_import(cr, fp)
-        elif ext == '.yml':
-            convert_yaml_import(cr, module, fp, kind, idref, mode, noupdate, report)
         elif ext == '.xml':
             convert_xml_import(cr, module, fp, idref, mode, noupdate, report)
         elif ext == '.js':

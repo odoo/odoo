@@ -30,7 +30,7 @@ class AccountAnalyticLine(models.Model):
     def unlink(self):
         sale_order_lines = self.sudo().mapped('so_line')
         res = super(AccountAnalyticLine, self).unlink()
-        sale_order_lines._analytic_compute_delivered_quantity()
+        sale_order_lines.with_context(sale_analytic_force_recompute=True)._analytic_compute_delivered_quantity()
         return res
 
     @api.model
@@ -41,7 +41,7 @@ class AccountAnalyticLine(models.Model):
     @api.multi
     def _sale_postprocess(self, values, additional_so_lines=None):
         if 'so_line' not in values:  # allow to force a False value for so_line
-            self.with_context(sale_analytic_norecompute=True)._sale_determine_order_line()
+            self.sudo().filtered(lambda aal: not aal.so_line and aal.product_id and aal.product_id.expense_policy != 'no').with_context(sale_analytic_norecompute=True)._sale_determine_order_line()
 
         if any(field_name in values for field_name in self._sale_get_fields_delivered_qty()):
             if not self._context.get('sale_analytic_norecompute'):
@@ -68,8 +68,8 @@ class AccountAnalyticLine(models.Model):
 
         # Prevent unnecessary currency conversion that could be impacted by exchange rate
         # fluctuations
-        if self.currency_id and self.amount_currency and self.currency_id == order.currency_id:
-            return abs(self.amount_currency / self.unit_amount)
+        if self.currency_id and self.amount and self.currency_id == order.currency_id:
+            return abs(self.amount / self.unit_amount)
 
         price_unit = abs(self.amount / self.unit_amount)
         currency_id = self.company_id.currency_id
@@ -102,7 +102,7 @@ class AccountAnalyticLine(models.Model):
     @api.multi
     def _sale_determine_order(self):
         mapping = {}
-        for analytic_line in self.sudo().filtered(lambda aal: not aal.so_line and aal.product_id and aal.product_id.expense_policy != 'no'):
+        for analytic_line in self:
             sale_order = self.env['sale.order'].search([('analytic_account_id', '=', analytic_line.account_id.id), ('state', '=', 'sale')], limit=1)
             if not sale_order:
                 sale_order = self.env['sale.order'].search([('analytic_account_id', '=', analytic_line.account_id.id)], limit=1)
@@ -119,7 +119,7 @@ class AccountAnalyticLine(models.Model):
         # determine SO : first SO open linked to AA
         sale_order_map = self._sale_determine_order()
         # determine so line
-        for analytic_line in self.sudo().filtered(lambda aal: not aal.so_line and aal.product_id and aal.product_id.expense_policy != 'no'):
+        for analytic_line in self:
             sale_order = sale_order_map.get(analytic_line.id)
             if not sale_order:
                 continue
@@ -141,6 +141,8 @@ class AccountAnalyticLine(models.Model):
                 so_line_values = analytic_line._sale_prepare_sale_order_line_values(sale_order, price)
                 so_line = self.env['sale.order.line'].create(so_line_values)
                 so_line._compute_tax_id()
+            else:
+                so_line.write({'qty_delivered': analytic_line.unit_amount})
 
             if so_line:  # if so line found or created, then update AAL (this will trigger the recomputation of qty delivered on SO line)
-                analytic_line.write({'so_line': so_line.id})
+                analytic_line.with_context(sale_analytic_norecompute=True).write({'so_line': so_line.id})

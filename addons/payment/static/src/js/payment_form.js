@@ -15,7 +15,8 @@ odoo.define('payment.payment_form', function (require) {
             'click #o_payment_form_pay': 'payEvent',
             'click #o_payment_form_add_pm': 'addPmEvent',
             'click button[name="delete_pm"]': 'deletePmEvent',
-            'click input[type="radio"]': 'radioClickEvent'
+            'click input[type="radio"]': 'radioClickEvent',
+            'click .o_payment_form_pay_icon_more': 'onClickMorePaymentIcon',
         },
 
         init: function(parent, options) {
@@ -118,7 +119,10 @@ odoo.define('payment.payment_form', function (require) {
 
                         self.displayError(
                             _t('Server Error'),
-                            _t("<p>We are not able to add your payment method at the moment.</p>") + (config.debug ? data.data.message : '')
+                            _t("<p>We are not able to add your payment method at the moment.</p>") +
+                               "<p>" +
+                               (config.debug ? (data.data.message.replace(/\n/g, "<br />")): '') +
+                               "</p>"
                         );
                     });
                 }
@@ -162,7 +166,10 @@ odoo.define('payment.payment_form', function (require) {
                         }).fail(function (message, data) {
                             self.displayError(
                                 _t('Server Error'),
-                                _t("<p>We are not able to redirect you to the payment form.</p>") + (config.debug ? data.data.message : '')
+                                _t("<p>We are not able to redirect you to the payment form.</p>") +
+                                   "<p>" +
+                                   (config.debug ? (data.data.message.replace(/\n/g, "<br />")): '') +
+                                   "</p>"
                             );
                         });
                     }
@@ -209,11 +216,11 @@ odoo.define('payment.payment_form', function (require) {
                     if (element.dataset.isRequired) {
                         if (element.value.length === 0) {
                             $(element).closest('div.form-group').addClass('has-error');
+                            empty_inputs = true;
                         }
                         else {
                             $(element).closest('div.form-group').removeClass('has-error');
                         }
-                        empty_inputs = true;
                     }
                 });
 
@@ -268,7 +275,10 @@ odoo.define('payment.payment_form', function (require) {
 
                     self.displayError(
                         _t('Server error'),
-                        _t("<p>We are not able to add your payment method at the moment.</p>") + (config.debug ? data.data.message : '')
+                        _t("<p>We are not able to add your payment method at the moment.</p>") +
+                           "<p>" +
+                           (config.debug ? (data.data.message.replace(/\n/g, "<br />")): '') +
+                           "</p>"
                     );
                 });
             }
@@ -338,6 +348,16 @@ odoo.define('payment.payment_form', function (require) {
                 );
             });
         },
+
+        // event handler when clicking on 'and more' to show more payment icon
+        onClickMorePaymentIcon: function (ev) {
+            ev.preventDefault();
+            var $listItems = $(ev.currentTarget).parents('ul').children('li');
+            var $moreItem = $(ev.currentTarget).parents('li');
+            $listItems.removeClass('hidden');
+            $moreItem.addClass('hidden');
+        },
+
         // event handler when clicking on a radio button
         radioClickEvent: function (ev) {
             this.updateNewPaymentDisplayStatus();
@@ -400,5 +420,5 @@ odoo.define('payment.payment_form', function (require) {
         form.attachTo($elem);
     });
 
-
+    return PaymentForm;
 });

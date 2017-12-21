@@ -67,17 +67,17 @@ class AccountInvoice(models.Model):
                     if invoice_line.product_id.invoice_policy == 'delivery':
                         invoiced_price_per_hour = invoice_line.currency_id.round(invoice_line.price_subtotal / float(sum(uninvoiced_timesheet_lines.mapped('unit_amount'))))
                         # invoicing analytic lines of different currency
-                        total_revenue_per_currency = dict.fromkeys(uninvoiced_timesheet_lines.mapped('company_currency_id').ids, 0.0)
+                        total_revenue_per_currency = dict.fromkeys(uninvoiced_timesheet_lines.mapped('currency_id').ids, 0.0)
                         for index, timesheet_line in enumerate(uninvoiced_timesheet_lines.sorted(key=lambda ts: (ts.date, ts.id))):
                             if index+1 != len(uninvoiced_timesheet_lines):
-                                line_revenue = invoice_line.currency_id.compute(invoiced_price_per_hour, timesheet_line.company_currency_id) * timesheet_line.unit_amount
-                                total_revenue_per_currency[timesheet_line.company_currency_id.id] += line_revenue
+                                line_revenue = invoice_line.currency_id.compute(invoiced_price_per_hour, timesheet_line.currency_id) * timesheet_line.unit_amount
+                                total_revenue_per_currency[timesheet_line.currency_id.id] += line_revenue
                             else:  # last line: add the difference to avoid rounding problem
-                                total_revenue = sum([self.env['res.currency'].browse(currency_id).compute(amount, timesheet_line.company_currency_id) for currency_id, amount in total_revenue_per_currency.items()])
-                                line_revenue = invoice_line.currency_id.compute(invoice_line.price_subtotal, timesheet_line.company_currency_id) - total_revenue
+                                total_revenue = sum([self.env['res.currency'].browse(currency_id).compute(amount, timesheet_line.currency_id) for currency_id, amount in total_revenue_per_currency.items()])
+                                line_revenue = invoice_line.currency_id.compute(invoice_line.price_subtotal, timesheet_line.currency_id) - total_revenue
                             timesheet_line.write({
                                 'timesheet_invoice_id': invoice.id,
-                                'timesheet_revenue': timesheet_line.company_currency_id.round(line_revenue),
+                                'timesheet_revenue': timesheet_line.currency_id.round(line_revenue),
                             })
 
                     # ordered : update revenue with the prorata of theorical revenue
@@ -89,20 +89,20 @@ class AccountInvoice(models.Model):
                         zero_timesheet_revenue.write({'timesheet_invoice_id': invoice.id})
 
                         # invoicing analytic lines of different currency
-                        total_revenue_per_currency = dict.fromkeys(no_zero_timesheet_revenue.mapped('company_currency_id').ids, 0.0)
+                        total_revenue_per_currency = dict.fromkeys(no_zero_timesheet_revenue.mapped('currency_id').ids, 0.0)
 
                         for index, timesheet_line in enumerate(no_zero_timesheet_revenue.sorted(key=lambda ts: (ts.date, ts.id))):
                             if index+1 != len(no_zero_timesheet_revenue):
-                                price_subtotal_inv = invoice_line.currency_id.compute(invoice_line.price_subtotal, timesheet_line.company_currency_id)
-                                price_subtotal_sol = timesheet_line.so_line.currency_id.compute(timesheet_line.so_line.price_subtotal, timesheet_line.company_currency_id)
+                                price_subtotal_inv = invoice_line.currency_id.compute(invoice_line.price_subtotal, timesheet_line.currency_id)
+                                price_subtotal_sol = timesheet_line.so_line.currency_id.compute(timesheet_line.so_line.price_subtotal, timesheet_line.currency_id)
                                 line_revenue = timesheet_line.timesheet_revenue * price_subtotal_inv / price_subtotal_sol
-                                total_revenue_per_currency[timesheet_line.company_currency_id.id] += line_revenue
+                                total_revenue_per_currency[timesheet_line.currency_id.id] += line_revenue
                             else:  # last line: add the difference to avoid rounding problem
-                                last_price_subtotal_inv = invoice_line.currency_id.compute(invoice_line.price_subtotal, timesheet_line.company_currency_id)
-                                total_revenue = sum([self.env['res.currency'].browse(currency_id).compute(amount, timesheet_line.company_currency_id) for currency_id, amount in total_revenue_per_currency.items()])
+                                last_price_subtotal_inv = invoice_line.currency_id.compute(invoice_line.price_subtotal, timesheet_line.currency_id)
+                                total_revenue = sum([self.env['res.currency'].browse(currency_id).compute(amount, timesheet_line.currency_id) for currency_id, amount in total_revenue_per_currency.items()])
                                 line_revenue = last_price_subtotal_inv - total_revenue
 
                             timesheet_line.write({
                                 'timesheet_invoice_id': invoice.id,
-                                'timesheet_revenue': timesheet_line.company_currency_id.round(line_revenue),
+                                'timesheet_revenue': timesheet_line.currency_id.round(line_revenue),
                             })

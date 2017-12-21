@@ -13,9 +13,10 @@ class ResConfigSettings(models.TransientModel):
     module_mrp_mps = fields.Boolean("Master Production Schedule")
     module_mrp_plm = fields.Boolean("Product Lifecycle Management (PLM)")
     module_mrp_maintenance = fields.Boolean("Maintenance")
-    module_quality_mrp = fields.Boolean("Quality")
+    module_mrp_workorder = fields.Boolean("Work Orders")
     module_mrp_repair = fields.Boolean("Repair")
-    group_mrp_routings = fields.Boolean("Work Orders & Quality",
+    module_quality_control = fields.Boolean("Quality")
+    group_mrp_routings = fields.Boolean("Work Orders",
         implied_group='mrp.group_mrp_routings')
 
     @api.model
@@ -38,4 +39,4 @@ class ResConfigSettings(models.TransientModel):
 
     @api.onchange('group_mrp_routings')
     def _onchange_group_mrp_routings(self):
-        self.module_quality_mrp = self.group_mrp_routings
+        self.module_mrp_workorder = self.group_mrp_routings

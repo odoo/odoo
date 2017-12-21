@@ -336,7 +336,7 @@
             </field>
         </record>
 
-        <record id="action_approved_expense" model="ir.actions.act_window">
+        <record id="action_unsubmitted_expense" model="ir.actions.act_window">
             <field name="name">Unreported Expenses</field>
             <field name="res_model">hr.expense</field>
             <field name="view_type">form</field>
@@ -673,7 +673,7 @@
             <field name="res_model">hr.expense.sheet</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
-            <field name="context">{'search_default_submitted': 1, 'needaction_menu_ref': 'hr_expense.menu_hr_expense_all'}</field>
+            <field name="context">{'search_default_submitted': 1}</field>
             <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
             <field name="view_id" ref="view_hr_expense_sheet_tree"/>
             <field name="help" type="html">
@@ -690,7 +690,7 @@
             <field name="res_model">hr.expense.sheet</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
-            <field name="context">{'search_default_to_post': 1, 'needaction_menu_ref': 'hr_expense.menu_hr_expense_all'}</field>
+            <field name="context">{'search_default_to_post': 1}</field>
             <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
             <field name="view_id" ref="view_hr_expense_sheet_tree"/>
             <field name="help" type="html">
@@ -707,7 +707,7 @@
             <field name="res_model">hr.expense.sheet</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
-            <field name="context">{'search_default_approved': 1, 'needaction_menu_ref': 'hr_expense.menu_hr_expense_all'}</field>
+            <field name="context">{'search_default_approved': 1}</field>
             <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
             <field name="view_id" ref="view_hr_expense_sheet_tree"/>
             <field name="help" type="html">

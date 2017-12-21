@@ -19,7 +19,8 @@ class ResConfigSettings(models.TransientModel):
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
     chart_template_id = fields.Many2one('account.chart.template', string='Template',
         domain="[('visible','=', True)]")
-    code_digits = fields.Integer(string='# of Digits *', related='company_id.accounts_code_digits', help="No. of digits to use for account code")
+    sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", related='company_id.account_sale_tax_id')
+    purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax", related='company_id.account_purchase_tax_id')
     tax_calculation_rounding_method = fields.Selection([
         ('round_per_line', 'Round calculation of taxes per line'),
         ('round_globally', 'Round globally calculation of taxes '),
@@ -35,10 +36,6 @@ class ResConfigSettings(models.TransientModel):
     module_account_payment = fields.Boolean(string='Online Payment')
     module_account_reports = fields.Boolean("Dynamic Reports")
     module_account_reports_followup = fields.Boolean("Enable payment followup management")
-    default_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax",
-        company_dependent=True, oldname="default_sale_tax")
-    default_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax",
-        company_dependent=True, oldname="default_purchase_tax")
     module_l10n_us_check_printing = fields.Boolean("Allow check printing and deposits")
     module_account_batch_deposit = fields.Boolean(string='Use batch deposit',
         help='This allows you to group received checks before you deposit them to the bank.\n'
@@ -60,34 +57,17 @@ class ResConfigSettings(models.TransientModel):
     tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal")
     account_hide_setup_bar = fields.Boolean(string='Hide Setup Bar', related='company_id.account_setup_bar_closed',help="Tick if you wish to hide the setup bar on the dashboard")
 
-    @api.model
-    def get_values(self):
-        res = super(ResConfigSettings, self).get_values()
-        params = self.env['ir.config_parameter'].sudo()
-        res.update(
-            default_purchase_tax_id=int(params.get_param('account.default_purchase_tax_id', default=False)) or False,
-            default_sale_tax_id=int(params.get_param('account.default_sale_tax_id', default=False)) or False
-        )
-        return res
-
     @api.multi
     def set_values(self):
         super(ResConfigSettings, self).set_values()
-        self.env['ir.config_parameter'].sudo().set_param("account.default_purchase_tax_id", self.default_purchase_tax_id.id)
-        self.env['ir.config_parameter'].sudo().set_param("account.default_sale_tax_id", self.default_sale_tax_id.id)
         if self.group_multi_currency:
             self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_sale_pricelist').id)]})
-        """ Set the product taxes if they have changed """
-        IrDefault = self.env['ir.default'].sudo()
-        IrDefault.set('product.template', "taxes_id", self.default_sale_tax_id.ids, company_id=self.company_id.id)
-        IrDefault.set('product.template', "supplier_taxes_id", self.default_purchase_tax_id.ids, company_id=self.company_id.id)
         """ install a chart of accounts for the given company (if required) """
         if self.chart_template_id and self.chart_template_id != self.company_id.chart_template_id:
             wizard = self.env['wizard.multi.charts.accounts'].create({
                 'company_id': self.company_id.id,
                 'chart_template_id': self.chart_template_id.id,
                 'transfer_account_id': self.chart_template_id.transfer_account_id.id,
-                'code_digits': self.code_digits or 6,
                 'sale_tax_rate': 15.0,
                 'purchase_tax_rate': 15.0,
                 'complete_tax_set': self.chart_template_id.complete_tax_set,
@@ -140,12 +120,8 @@ class ResConfigSettings(models.TransientModel):
         # related values, including the currency_id field on res_company. This in turn will trigger the recomputation
         # of account_move_line related field company_currency_id which can be slow depending on the number of entries
         # in the database. Thus, if we do not explicitly change the currency_id, we should not write it on the company
-        # Same for the field `code_digits` which will trigger a write on all the account.account to complete the
-        # code the missing characters to complete the desired number of digit, leading to a sql_constraint.
         if ('company_id' in values and 'currency_id' in values):
             company = self.env['res.company'].browse(values.get('company_id'))
             if company.currency_id.id == values.get('currency_id'):
                 values.pop('currency_id')
-            if company.accounts_code_digits == values.get('code_digits'):
-                values.pop('code_digits')
         return super(ResConfigSettings, self).create(values)

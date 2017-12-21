@@ -7,7 +7,7 @@ import time
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import ValidationError
-from odoo.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
+from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 class AccountFiscalPosition(models.Model):
     _name = 'account.fiscal.position'
@@ -297,10 +297,16 @@ class ResPartner(models.Model):
             partner.total_invoiced = sum(price['total'] for price in price_totals if price['partner_id'] in child_ids)
 
     @api.multi
-    def _journal_item_count(self):
+    def _compute_journal_item_count(self):
+        AccountMoveLine = self.env['account.move.line']
         for partner in self:
-            partner.journal_item_count = self.env['account.move.line'].search_count([('partner_id', '=', partner.id)])
-            partner.contracts_count = self.env['account.analytic.account'].search_count([('partner_id', '=', partner.id)])
+            partner.journal_item_count = AccountMoveLine.search_count([('partner_id', '=', partner.id)])
+
+    @api.multi
+    def _compute_contracts_count(self):
+        AccountAnalyticAccount = self.env['account.analytic.account']
+        for partner in self:
+            partner.contracts_count = AccountAnalyticAccount.search_count([('partner_id', '=', partner.id)])
 
     def get_followup_lines_domain(self, date, overdue_only=False, only_unblocked=False):
         domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable'), '|', ('debit', '!=', 0), ('credit', '!=', 0), ('company_id', '=', self.env.user.company_id.id)]
@@ -374,9 +380,8 @@ class ResPartner(models.Model):
         groups='account.group_account_invoice')
     currency_id = fields.Many2one('res.currency', compute='_get_company_currency', readonly=True,
         string="Currency", help='Utility field to express amount currency')
-
-    contracts_count = fields.Integer(compute='_journal_item_count', string="Contracts", type='integer')
-    journal_item_count = fields.Integer(compute='_journal_item_count', string="Journal Items", type="integer")
+    contracts_count = fields.Integer(compute='_compute_contracts_count', string="Contracts", type='integer')
+    journal_item_count = fields.Integer(compute='_compute_journal_item_count', string="Journal Items", type="integer")
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Payable", oldname="property_account_payable",
         domain="[('internal_type', '=', 'payable'), ('deprecated', '=', False)]",
@@ -409,7 +414,7 @@ class ResPartner(models.Model):
     contract_ids = fields.One2many('account.analytic.account', 'partner_id', string='Contracts', readonly=True)
     bank_account_count = fields.Integer(compute='_compute_bank_count', string="Bank")
     trust = fields.Selection([('good', 'Good Debtor'), ('normal', 'Normal Debtor'), ('bad', 'Bad Debtor')], string='Degree of trust you have in this debtor', default='normal', company_dependent=True)
-    invoice_warn = fields.Selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP, required=True, default="no-message")
+    invoice_warn = fields.Selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP, default="no-message")
     invoice_warn_msg = fields.Text('Message for Invoice')
 
     @api.multi

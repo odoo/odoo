@@ -8,6 +8,7 @@
         <field name="name">Capital social</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_100" />
     </record>
     <record id="account_full_1030" model="account.account.template">
         <field name="code">1030</field>
@@ -15,6 +16,7 @@
         <field name="name">Socios por desembolsos no exigidos, capital social</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_103" />
     </record>
     <record id="account_full_1034" model="account.account.template">
         <field name="code">1034</field>
@@ -22,6 +24,7 @@
         <field name="name">Socios por desembolsos no exigidos, capital pendiente de inscripción</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_103" />
     </record>
     <record id="account_full_1040" model="account.account.template">
         <field name="code">1040</field>
@@ -29,6 +32,7 @@
         <field name="name">Socios por aportaciones no dinerarias pendientes, capital social</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_104" />
     </record>
     <record id="account_full_1044" model="account.account.template">
         <field name="code">1044</field>
@@ -36,6 +40,7 @@
         <field name="name">Socios por aportaciones no dinerarias pendientes, capital pendiente de inscripción</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_104" />
     </record>
     <record id="account_full_1110" model="account.account.template">
         <field name="code">1110</field>
@@ -43,6 +48,7 @@
         <field name="name">Patrimonio neto por emision de instrumentos financieros compuestos</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_111" />
     </record>
     <record id="account_full_1111" model="account.account.template">
         <field name="code">111100</field>
@@ -50,6 +56,7 @@
         <field name="name">Resto de instrumentos de patrimonio neto</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_111" />
     </record>
     <record id="account_full_1143" model="account.account.template">
         <field name="code">1143</field>
@@ -57,6 +64,7 @@
         <field name="name">Reserva por fondo de comercio</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_114" />
     </record>
     <record id="account_full_115" model="account.account.template">
         <field name="code">115</field>
@@ -64,6 +72,7 @@
         <field name="name">Reservas por pérdidas y ganancias actuariales y otros ajustes</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_115" />
     </record>
     <record id="account_full_120" model="account.account.template">
         <field name="code">120</field>
@@ -71,6 +80,7 @@
         <field name="name">Remanente</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_120" />
     </record>
     <record id="account_full_121" model="account.account.template">
         <field name="code">121</field>
@@ -78,13 +88,15 @@
         <field name="name">Resultados negativos de ejercicios anteriores</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_121" />
     </record>
     <record id="account_full_129" model="account.account.template">
         <field name="code">129</field>
         <field name="reconcile" eval="False"/>
         <field name="name">Resultado del ejercicio</field>
-        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="user_type_id" ref="account.data_unaffected_earnings"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_129" />
     </record>
     <record id="account_full_130" model="account.account.template">
         <field name="code">130</field>
@@ -92,6 +104,7 @@
         <field name="name">Subvenciones oficiales de capital</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_130" />
     </record>
     <record id="account_full_132" model="account.account.template">
         <field name="code">132</field>
@@ -99,6 +112,7 @@
         <field name="name">Otras subvenciones, donaciones y legados</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_132" />
     </record>
     <record id="account_full_133" model="account.account.template">
         <field name="code">133</field>
@@ -106,6 +120,7 @@
         <field name="name">Ajustes por valoración en activos financieros disponibles para la venta</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_133" />
     </record>
     <record id="account_full_1340" model="account.account.template">
         <field name="code">1340</field>
@@ -113,6 +128,7 @@
         <field name="name">Cobertura de flujos de efectivo</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_134" />
     </record>
     <record id="account_full_1341" model="account.account.template">
         <field name="code">1341</field>
@@ -120,6 +136,7 @@
         <field name="name">Cobertura de una inversión neta en un negocio en el extranjero</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_134" />
     </record>
     <record id="account_full_135" model="account.account.template">
         <field name="code">135</field>
@@ -127,6 +144,7 @@
         <field name="name">Diferencias de conversión</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_135" />
     </record>
     <record id="account_full_136" model="account.account.template">
         <field name="code">136</field>
@@ -134,6 +152,7 @@
         <field name="name">Ajustes por valoración de activos no corrientes y grupos enajenables de elementos, mantenidos para la venta</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_136" />
     </record>
     <record id="account_full_140" model="account.account.template">
         <field name="code">140</field>
@@ -141,6 +160,7 @@
         <field name="name">Provisión por retribuciones del personal</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_140" />
     </record>
     <record id="account_full_146" model="account.account.template">
         <field name="code">146</field>
@@ -148,6 +168,7 @@
         <field name="name">Provisión para reestructuraciones</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_146" />
     </record>
     <record id="account_full_147" model="account.account.template">
         <field name="code">147</field>
@@ -155,6 +176,7 @@
         <field name="name">Provisión por transacciones con pagos basados en instrumentos de patrimonio</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_147" />
     </record>
     <record id="account_full_1765" model="account.account.template">
         <field name="code">1765</field>
@@ -162,6 +184,7 @@
         <field name="name">Pasivos por derivados financieros, carter de negociación</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_176" />
     </record>
     <record id="account_full_1768" model="account.account.template">
         <field name="code">1768</field>
@@ -169,6 +192,7 @@
         <field name="name">Pasivos por derivados financieros, instrumentos de cobertura</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_176" />
     </record>
     <record id="account_full_178" model="account.account.template">
         <field name="code">178</field>
@@ -176,6 +200,7 @@
         <field name="name">Obligaciones y bonos convertibles</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_178" />
     </record>
     <record id="account_full_189" model="account.account.template">
         <field name="code">189</field>
@@ -183,6 +208,7 @@
         <field name="name">Garantías financieras</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_189" />
     </record>
     <record id="account_full_204" model="account.account.template">
         <field name="code">204</field>
@@ -190,6 +216,7 @@
         <field name="name">Fondo de comercio</field>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_204" />
     </record>
     <record id="account_full_2403" model="account.account.template">
         <field name="code">2403</field>
@@ -197,6 +224,7 @@
         <field name="name">Participaciones en empresas del grupo</field>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_240" />
     </record>
     <record id="account_full_2404" model="account.account.template">
         <field name="code">2404</field>
@@ -204,6 +232,7 @@
         <field name="name">Participaciones en empresas asociadas</field>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_240" />
     </record>
     <record id="account_full_2405" model="account.account.template">
         <field name="code">2405</field>
@@ -211,6 +240,7 @@
         <field name="name">Participaciones en otras partes vinculadas</field>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_240" />
     </record>
     <record id="account_full_2493" model="account.account.template">
         <field name="code">2493</field>
@@ -218,6 +248,7 @@
         <field name="name">Desembolsos pendientes sobre participaciones en empresas del grupo</field>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_249" />
     </record>
     <record id="account_full_2494" model="account.account.template">
         <field name="code">2494</field>
@@ -225,6 +256,7 @@
         <field name="name">Desembolsos pendientes sobre participaciones en empresas asociadas</field>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_249" />
     </record>
     <record id="account_full_2495" model="account.account.template">
         <field name="code">2495</field>
@@ -232,6 +264,7 @@
         <field name="name">Desembolsos pendientes sobre participaciones en otras partes vinculadas</field>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_249" />
     </record>
     <record id="account_full_2550" model="account.account.template">
         <field name="code">2550</field>
@@ -239,6 +272,7 @@
         <field name="name">Activos por derivados financieros, cartera de negociación</field>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_255" />
     </record>
     <record id="account_full_2553" model="account.account.template">
         <field name="code">2553</field>
@@ -246,6 +280,7 @@
         <field name="name">Activos por derivados financieros, instrumentos de cobertura</field>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_255" />
     </record>
     <record id="account_full_257" model="account.account.template">
         <field name="code">257</field>
@@ -253,6 +288,7 @@
         <field name="name">Derechos de reembolso derivados de contratos de seguro relativos a retribuciones al personal</field>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_257" />
     </record>
     <record id="account_full_466" model="account.account.template">
         <field name="code">466</field>
@@ -260,6 +296,7 @@
         <field name="name">Remuneraciones mediante sistemas de aportación definida pendientes de pago</field>
         <field name="user_type_id" ref="account.data_account_type_payable"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_466" />
     </record>
     <record id="account_full_490" model="account.account.template">
         <field name="code">490</field>
@@ -267,6 +304,7 @@
         <field name="name">Deterioro de valor de créditos por operaciones comerciales</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_490" />
     </record>
     <record id="account_full_501" model="account.account.template">
         <field name="code">501</field>
@@ -274,6 +312,7 @@
         <field name="name">Obligaciones y bonos convertibles a corto plazo</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_501" />
     </record>
     <record id="account_full_5091" model="account.account.template">
         <field name="code">5091</field>
@@ -281,6 +320,7 @@
         <field name="name">Obligaciones y bonos convertibles amortizados</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_509" />
     </record>
     <record id="account_full_5296" model="account.account.template">
         <field name="code">5296</field>
@@ -288,6 +328,7 @@
         <field name="name">Provisión a corto plazo para reestructuraciones de patrimonio</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_529" />
     </record>
     <record id="account_full_5297" model="account.account.template">
         <field name="code">5297</field>
@@ -295,6 +336,7 @@
         <field name="name">Provisión a corto plazo por transacciones con pagos basados en instrumentos</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_529" />
     </record>
     <record id="account_full_551" model="account.account.template">
         <field name="code">551</field>
@@ -302,6 +344,7 @@
         <field name="name">Cuenta corriente con socios y administradores</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_551" />
     </record>
     <record id="account_full_5530" model="account.account.template">
         <field name="code">5530</field>
@@ -309,6 +352,7 @@
         <field name="name">Socios de sociedad disuelta</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_553" />
     </record>
     <record id="account_full_5531" model="account.account.template">
         <field name="code">5531</field>
@@ -316,6 +360,7 @@
         <field name="name">Socios, cuenta de fusión</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_553" />
     </record>
     <record id="account_full_5532" model="account.account.template">
         <field name="code">5532</field>
@@ -323,6 +368,7 @@
         <field name="name">Socios de sociedad escindida</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_553" />
     </record>
     <record id="account_full_5533" model="account.account.template">
         <field name="code">5533</field>
@@ -330,6 +376,7 @@
         <field name="name">Socios, cuenta de escisión</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_553" />
     </record>
     <record id="account_full_5593" model="account.account.template">
         <field name="code">5593</field>
@@ -337,6 +384,7 @@
         <field name="name">Activos por derivados financieros a corto plazo, instrumentos de cobertura</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_559" />
     </record>
     <record id="account_full_5598" model="account.account.template">
         <field name="code">5598</field>
@@ -344,6 +392,7 @@
         <field name="name">Pasivos por derivados financieros a corto plazo, instrumentos de cobertura</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_559" />
     </record>
     <record id="account_full_569" model="account.account.template">
         <field name="code">569</field>
@@ -351,6 +400,7 @@
         <field name="name">Garantías financieras a corto plazo</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_569" />
     </record>
     <record id="account_full_580" model="account.account.template">
         <field name="code">580</field>
@@ -358,6 +408,7 @@
         <field name="name">Inmovilizado</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_580" />
     </record>
     <record id="account_full_581" model="account.account.template">
         <field name="code">581</field>
@@ -365,6 +416,7 @@
         <field name="name">Inversiones con personas y entidades vinculadas</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_581" />
     </record>
     <record id="account_full_582" model="account.account.template">
         <field name="code">582</field>
@@ -372,6 +424,7 @@
         <field name="name">Inversiones financieras</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_582" />
     </record>
     <record id="account_full_583" model="account.account.template">
         <field name="code">583</field>
@@ -379,6 +432,7 @@
         <field name="name">Existencias, deudores comerciales y otras cuentas a cobrar</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_583" />
     </record>
     <record id="account_full_584" model="account.account.template">
         <field name="code">584</field>
@@ -386,6 +440,7 @@
         <field name="name">Otros activos</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_584" />
     </record>
     <record id="account_full_585" model="account.account.template">
         <field name="code">585</field>
@@ -393,6 +448,7 @@
         <field name="name">Provisiones</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_585" />
     </record>
     <record id="account_full_586" model="account.account.template">
         <field name="code">586</field>
@@ -400,6 +456,7 @@
         <field name="name">Deudas con características especiales</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_586" />
     </record>
     <record id="account_full_587" model="account.account.template">
         <field name="code">587</field>
@@ -407,6 +464,7 @@
         <field name="name">Deudas con personas y entidades vinculadas</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_587" />
     </record>
     <record id="account_full_588" model="account.account.template">
         <field name="code">588</field>
@@ -414,6 +472,7 @@
         <field name="name">Acreedores comerciales y otras cuentas a pagar</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_588" />
     </record>
     <record id="account_full_589" model="account.account.template">
         <field name="code">589</field>
@@ -421,6 +480,7 @@
         <field name="name">Otros pasivos</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_589" />
     </record>
     <record id="account_full_5990" model="account.account.template">
         <field name="code">5990</field>
@@ -428,6 +488,7 @@
         <field name="name">Deterioro de valor de inmovilizado no corriente mantenido para la venta</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_599" />
     </record>
     <record id="account_full_5991" model="account.account.template">
         <field name="code">5991</field>
@@ -435,6 +496,7 @@
         <field name="name">Deterioro de valor de inversiones y entidades vinculadas no corrientes mantenidas para la venta</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_599" />
     </record>
     <record id="account_full_5992" model="account.account.template">
         <field name="code">5992</field>
@@ -442,6 +504,7 @@
         <field name="name">Deterioro de valor de inversiones financieras no corrientes mantenidas para la venta</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_599" />
     </record>
     <record id="account_full_5993" model="account.account.template">
         <field name="code">5993</field>
@@ -449,6 +512,7 @@
         <field name="name">Deterioro de valor de existencias, deudores comerciales y otras cuentas a cobrar integrados en un grupo enajenable mantenido para la venta</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_599" />
     </record>
     <record id="account_full_5994" model="account.account.template">
         <field name="code">5994</field>
@@ -456,6 +520,7 @@
         <field name="name">Deterioro de valor de otros activos mantenidos para la venta</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_599" />
     </record>
     <record id="account_full_643" model="account.account.template">
         <field name="code">643</field>
@@ -463,6 +528,7 @@
         <field name="name">Retribuciones mediante sistemas de aportación definida</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_643" />
     </record>
     <record id="account_full_6440" model="account.account.template">
         <field name="code">6440</field>
@@ -470,6 +536,7 @@
         <field name="name">Contribuciones anuales</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_644" />
     </record>
     <record id="account_full_6442" model="account.account.template">
         <field name="code">6442</field>
@@ -477,6 +544,7 @@
         <field name="name">Otros costes</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_644" />
     </record>
     <record id="account_full_6450" model="account.account.template">
         <field name="code">6450</field>
@@ -484,6 +552,7 @@
         <field name="name">Retribuciones al personal liquidados con instrumentos de patrimonio</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_645" />
     </record>
     <record id="account_full_6457" model="account.account.template">
         <field name="code">6457</field>
@@ -491,6 +560,7 @@
         <field name="name">Retribuciones al personal liquidados en efectivo basado en instrumentos de patrimonio</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_645" />
     </record>
     <record id="account_full_650" model="account.account.template">
         <field name="code">650</field>
@@ -498,6 +568,7 @@
         <field name="name">Pérdidas de créditos comerciales incobrables</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_650" />
     </record>
     <record id="account_full_6510" model="account.account.template">
         <field name="code">6510</field>
@@ -505,6 +576,7 @@
         <field name="name">Beneficio transferido (gestor)</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_651" />
     </record>
     <record id="account_full_6511" model="account.account.template">
         <field name="code">6511</field>
@@ -512,6 +584,7 @@
         <field name="name">Pérdida soportada (partícipe o asociado no gestor)</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_651" />
     </record>
     <record id="account_full_659" model="account.account.template">
         <field name="code">659</field>
@@ -519,6 +592,7 @@
         <field name="name">Otras pérdidas en gestión corriente</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_659" />
     </record>
     <record id="account_full_6630" model="account.account.template">
         <field name="code">6630</field>
@@ -526,6 +600,7 @@
         <field name="name">Pérdidas de cartera de negociación</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_663" />
     </record>
     <record id="account_full_6631" model="account.account.template">
         <field name="code">6631</field>
@@ -533,6 +608,7 @@
         <field name="name">Pérdidas de designados por la empresa</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_663" />
     </record>
     <record id="account_full_6632" model="account.account.template">
         <field name="code">6632</field>
@@ -540,6 +616,7 @@
         <field name="name">Pérdidas de disponibles para la venta</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_663" />
     </record>
     <record id="account_full_6633" model="account.account.template">
         <field name="code">6633</field>
@@ -547,6 +624,7 @@
         <field name="name">Pérdidas de instrumentos de cobertura</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_663" />
     </record>
     <record id="account_full_671" model="account.account.template">
         <field name="code">671</field>
@@ -554,6 +632,7 @@
         <field name="name">Pérdidas procedentes del inmovilizado material</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_671" />
     </record>
     <record id="account_full_691" model="account.account.template">
         <field name="code">691</field>
@@ -561,6 +640,7 @@
         <field name="name">Pérdidas por deterioro del inmovilizado material</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_691" />
     </record>
     <record id="account_full_694" model="account.account.template">
         <field name="code">694</field>
@@ -568,6 +648,7 @@
         <field name="name">Pérdidas por deterioro de créditos por operaciones comerciales</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_694" />
     </record>
     <record id="account_full_7630" model="account.account.template">
         <field name="code">7630</field>
@@ -575,6 +656,7 @@
         <field name="name">Beneficios de cartera de negociación</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_763" />
     </record>
     <record id="account_full_7631" model="account.account.template">
         <field name="code">7631</field>
@@ -582,6 +664,7 @@
         <field name="name">Beneficios de designados por la empresa</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_763" />
     </record>
     <record id="account_full_7632" model="account.account.template">
         <field name="code">7632</field>
@@ -589,6 +672,7 @@
         <field name="name">Beneficios de disponibles para la venta</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_763" />
     </record>
     <record id="account_full_7633" model="account.account.template">
         <field name="code">7633</field>
@@ -596,6 +680,7 @@
         <field name="name">Beneficios de instrumentos de cobertura</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_763" />
     </record>
     <record id="account_full_767" model="account.account.template">
         <field name="code">767</field>
@@ -603,6 +688,7 @@
         <field name="name">Ingresos de activos afectos y de derechos de reembolso relativos a retribuciones a largo plazo</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_767" />
     </record>
     <record id="account_full_774" model="account.account.template">
         <field name="code">774</field>
@@ -610,6 +696,7 @@
         <field name="name">Diferencia negativa en combinaciones de negocios</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_774" />
     </record>
     <record id="account_full_791" model="account.account.template">
         <field name="code">791</field>
@@ -617,6 +704,7 @@
         <field name="name">Reversión del deterioro del inmovilizado material</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_791" />
     </record>
     <record id="account_full_794" model="account.account.template">
         <field name="code">794</field>
@@ -624,6 +712,7 @@
         <field name="name">Reversión del deterioro de créditos por operaciones comerciales</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_794" />
     </record>
     <record id="account_full_7950" model="account.account.template">
         <field name="code">7950</field>
@@ -631,6 +720,7 @@
         <field name="name">Exceso de provisión por retribuciones al personal</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_795" />
     </record>
     <record id="account_full_7956" model="account.account.template">
         <field name="code">7956</field>
@@ -638,6 +728,7 @@
         <field name="name">Exceso de provisión para reestructuraciones</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_795" />
     </record>
     <record id="account_full_7957" model="account.account.template">
         <field name="code">7957</field>
@@ -645,6 +736,7 @@
         <field name="name">Exceso de provisión por transacciones con pagos basados en instrumentos de patrimonio</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_795" />
     </record>
     <record id="account_full_800" model="account.account.template">
         <field name="code">800</field>
@@ -652,6 +744,7 @@
         <field name="name">Pérdidas en activos financieros disponibles para la venta</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_800" />
     </record>
     <record id="account_full_802" model="account.account.template">
         <field name="code">802</field>
@@ -659,6 +752,7 @@
         <field name="name">Transferencia de beneficios en activos financieros disponibles para la venta</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_802" />
     </record>
     <record id="account_full_810" model="account.account.template">
         <field name="code">810</field>
@@ -666,6 +760,7 @@
         <field name="name">Pérdidas por coberturas de flujos de efectivo</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_810" />
     </record>
     <record id="account_full_811" model="account.account.template">
         <field name="code">811</field>
@@ -673,6 +768,7 @@
         <field name="name">Pérdidas por coberturas de inversiones netas en un negocio en el extranjero</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_811" />
     </record>
     <record id="account_full_812" model="account.account.template">
         <field name="code">812</field>
@@ -680,6 +776,7 @@
         <field name="name">Transferencia de beneficios por coberturas de flujos de efectivo</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_812" />
     </record>
     <record id="account_full_813" model="account.account.template">
         <field name="code">813</field>
@@ -687,6 +784,7 @@
         <field name="name">Transferencia de beneficios por coberturas de inversiones netas en un negocio en el extranjero</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_813" />
     </record>
     <record id="account_full_820" model="account.account.template">
         <field name="code">820</field>
@@ -694,6 +792,7 @@
         <field name="name">Diferencias de conversión negativas</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_820" />
     </record>
     <record id="account_full_821" model="account.account.template">
         <field name="code">821</field>
@@ -701,6 +800,7 @@
         <field name="name">Transferencia de diferencias de conversión positivas</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_821" />
     </record>
     <record id="account_full_8300" model="account.account.template">
         <field name="code">8300</field>
@@ -708,6 +808,7 @@
         <field name="name">Impuesto corriente</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_830" />
     </record>
     <record id="account_full_8301" model="account.account.template">
         <field name="code">8301</field>
@@ -715,6 +816,7 @@
         <field name="name">Impuesto diferido</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_830" />
     </record>
     <record id="account_full_833" model="account.account.template">
         <field name="code">833</field>
@@ -722,6 +824,7 @@
         <field name="name">Ajustes negativos en la imposición sobre beneficios</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_833" />
     </record>
     <record id="account_full_834" model="account.account.template">
         <field name="code">834</field>
@@ -729,6 +832,7 @@
         <field name="name">Ingresos fiscales por diferencias permanentes</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_834" />
     </record>
     <record id="account_full_835" model="account.account.template">
         <field name="code">835</field>
@@ -736,6 +840,7 @@
         <field name="name">Ingresos fiscales por deducciones y bonificaciones</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_835" />
     </record>
     <record id="account_full_836" model="account.account.template">
         <field name="code">836</field>
@@ -743,6 +848,7 @@
         <field name="name">Transferencia de diferencias permanentes</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_836" />
     </record>
     <record id="account_full_837" model="account.account.template">
         <field name="code">837</field>
@@ -750,6 +856,7 @@
         <field name="name">Transferencia de deducciones y bonificaciones</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_837" />
     </record>
     <record id="account_full_838" model="account.account.template">
         <field name="code">838</field>
@@ -757,6 +864,7 @@
         <field name="name">Ajustes positivos en la imposición sobre beneficios</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_838" />
     </record>
     <record id="account_full_840" model="account.account.template">
         <field name="code">840</field>
@@ -764,6 +872,7 @@
         <field name="name">Transferencia de subvenciones oficiales de capital</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_840" />
     </record>
     <record id="account_full_841" model="account.account.template">
         <field name="code">841</field>
@@ -771,6 +880,7 @@
         <field name="name">Transferencia de donaciones y legados de capital</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_841" />
     </record>
     <record id="account_full_842" model="account.account.template">
         <field name="code">842</field>
@@ -778,6 +888,7 @@
         <field name="name">Transferencia de otras subvenciones, donaciones y legados</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_842" />
     </record>
     <record id="account_full_850" model="account.account.template">
         <field name="code">850</field>
@@ -785,6 +896,7 @@
         <field name="name">Pérdidas actuariales</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_850" />
     </record>
     <record id="account_full_851" model="account.account.template">
         <field name="code">851</field>
@@ -792,6 +904,7 @@
         <field name="name">Ajustes negativos en activos por retribuciones a largo plazo de prestación definida</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_851" />
     </record>
     <record id="account_full_860" model="account.account.template">
         <field name="code">860</field>
@@ -799,6 +912,7 @@
         <field name="name">Pérdidas en activos no corrientes y grupos enajenables de elementos mantenidos para la venta</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_860" />
     </record>
     <record id="account_full_862" model="account.account.template">
         <field name="code">862</field>
@@ -806,6 +920,7 @@
         <field name="name">Transferencia de beneficios en activos no corrientes y grupos enajenables de elementos mantenidos para la venta</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_862" />
     </record>
     <record id="account_full_891" model="account.account.template">
         <field name="code">891</field>
@@ -813,6 +928,7 @@
         <field name="name">Deterioro de participaciones en el patrimonio, empresas del grupo</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_891" />
     </record>
     <record id="account_full_892" model="account.account.template">
         <field name="code">892</field>
@@ -820,6 +936,7 @@
         <field name="name">Deterioro de participaciones en el patrimonio, empresas asociadas</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_892" />
     </record>
     <record id="account_full_900" model="account.account.template">
         <field name="code">900</field>
@@ -827,6 +944,7 @@
         <field name="name">Beneficios en activos financieros disponibles para la venta</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_900" />
     </record>
     <record id="account_full_902" model="account.account.template">
         <field name="code">902</field>
@@ -834,6 +952,7 @@
         <field name="name">Transferencia de pérdidas en activos financieros disponibles para la venta</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_902" />
     </record>
     <record id="account_full_910" model="account.account.template">
         <field name="code">910</field>
@@ -841,6 +960,7 @@
         <field name="name">Beneficios por coberturas de flujos de efectivo</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_910" />
     </record>
     <record id="account_full_911" model="account.account.template">
         <field name="code">911</field>
@@ -848,6 +968,7 @@
         <field name="name">Beneficios por coberturas de inversiones netas en un negocio en el extranjero</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_911" />
     </record>
     <record id="account_full_912" model="account.account.template">
         <field name="code">912</field>
@@ -855,6 +976,7 @@
         <field name="name">Transferencia de pérdidas por coberturas de flujos de efectivo</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_912" />
     </record>
     <record id="account_full_913" model="account.account.template">
         <field name="code">913</field>
@@ -862,6 +984,7 @@
         <field name="name">Transferencia de pérdidas por coberturas de inversiones netas en un negocio en el extranjero</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_913" />
     </record>
     <record id="account_full_920" model="account.account.template">
         <field name="code">920</field>
@@ -869,6 +992,7 @@
         <field name="name">Diferencias de conversión positivas</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_920" />
     </record>
     <record id="account_full_921" model="account.account.template">
         <field name="code">921</field>
@@ -876,6 +1000,7 @@
         <field name="name">Transferencia de diferencias de conversión negativas</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_921" />
     </record>
     <record id="account_full_940" model="account.account.template">
         <field name="code">940</field>
@@ -883,6 +1008,7 @@
         <field name="name">Ingresos de subvenciones oficiales de capital</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_940" />
     </record>
     <record id="account_full_941" model="account.account.template">
         <field name="code">941</field>
@@ -890,6 +1016,7 @@
         <field name="name">Ingresos de donaciones y legados de capital</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_941" />
     </record>
     <record id="account_full_942" model="account.account.template">
         <field name="code">942</field>
@@ -897,6 +1024,7 @@
         <field name="name">Ingresos de otras subvenciones, donaciones y legados</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_942" />
     </record>
     <record id="account_full_950" model="account.account.template">
         <field name="code">950</field>
@@ -904,6 +1032,7 @@
         <field name="name">Ganancias actuariales</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_950" />
     </record>
     <record id="account_full_951" model="account.account.template">
         <field name="code">951</field>
@@ -911,6 +1040,7 @@
         <field name="name">Ajustes positivos en activos por retribuciones a largo plazo de prestación definida</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_951" />
     </record>
     <record id="account_full_960" model="account.account.template">
         <field name="code">960</field>
@@ -918,6 +1048,7 @@
         <field name="name">Beneficios en activos no corrientes y grupos enajenables de elementos mantenidos para la venta</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_960" />
     </record>
     <record id="account_full_962" model="account.account.template">
         <field name="code">962</field>
@@ -925,6 +1056,7 @@
         <field name="name">Transferencia de pérdidas en activos no corrientes y grupos enajenables de elementos mantenidos para la venta</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_962" />
     </record>
     <record id="account_full_991" model="account.account.template">
         <field name="code">991</field>
@@ -932,6 +1064,7 @@
         <field name="name">Recuperación de ajustes valorativos negativos previos, empresas del grupo</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_991" />
     </record>
     <record id="account_full_992" model="account.account.template">
         <field name="code">992</field>
@@ -939,6 +1072,7 @@
         <field name="name">Recuperación de ajustes valorativos negativos previos, empresas asociadas</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_992" />
     </record>
     <record id="account_full_993" model="account.account.template">
         <field name="code">993</field>
@@ -946,6 +1080,7 @@
         <field name="name">Transferencia por deterioro de ajustes valorativos negativos previos, empresas del grupo</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_993" />
     </record>
     <record id="account_full_994" model="account.account.template">
         <field name="code">994</field>
@@ -953,6 +1088,7 @@
         <field name="name">Transferencia por deterioro de ajustes valorativos negativos previos, empresas asociadas</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="account_chart_template_full"/>
+        <field name="group_id" ref="l10n_es.account_group_994" />
     </record>
 
     </data>

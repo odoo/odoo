@@ -27,6 +27,7 @@ var PivotView = AbstractView.extend({
         Controller: PivotController,
         Renderer: PivotRenderer,
     },
+    viewType: 'pivot',
     /**
      * @override
      * @param {Object} params

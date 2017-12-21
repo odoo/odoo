@@ -154,13 +154,13 @@ class configmanager(object):
         # Testing Group
         group = optparse.OptionGroup(parser, "Testing Configuration")
         group.add_option("--test-file", dest="test_file", my_default=False,
-                         help="Launch a python or YML test file.")
+                         help="Launch a python test file.")
         group.add_option("--test-report-directory", dest="test_report_directory", my_default=False,
                          help="If set, will save sample of all reports in this directory.")
         group.add_option("--test-enable", action="store_true", dest="test_enable",
-                         my_default=False, help="Enable YAML and unit tests.")
+                         my_default=False, help="Enable unit tests.")
         group.add_option("--test-commit", action="store_true", dest="test_commit",
-                         my_default=False, help="Commit database changes performed by YAML or XML tests.")
+                         my_default=False, help="Commit database changes performed by XML tests.")
         parser.add_option_group(group)
 
         # Logging Group

@@ -403,9 +403,9 @@ def scan_languages():
     :returns: a list of (lang_code, lang_name) pairs
     :rtype: [(str, unicode)]
     """
-    csvpath = odoo.modules.module.get_resource_path('base', 'res', 'res.lang.csv')
+    csvpath = odoo.modules.module.get_resource_path('base', 'data', 'res.lang.csv')
     try:
-        # read (code, name) from languages in base/res/res.lang.csv
+        # read (code, name) from languages in base/data/res.lang.csv
         with open(csvpath, 'rb') as csvfile:
             reader = pycompat.csv_reader(csvfile, delimiter=',', quotechar='"')
             fields = next(reader)
@@ -1077,7 +1077,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
     if isinstance(value, pycompat.string_types) and not value:
         return ''
 
-    lang = env.user.company_id.partner_id.lang or 'en_US'
+    lang = env.context.get('lang') or env.user.company_id.partner_id.lang or 'en_US'
     lang_objs = env['res.lang'].search([('code', '=', lang)])
     if not lang_objs:
         lang_objs = env['res.lang'].search([], limit=1)
@@ -1133,8 +1133,11 @@ consteq = getattr(passlib.utils, 'consteq', _consteq)
 class Unpickler(pickle_.Unpickler, object):
     find_global = None # Python 2
     find_class = None # Python 3
-def _pickle_load(stream, errors=False):
-    unpickler = Unpickler(stream)
+def _pickle_load(stream, encoding='ASCII', errors=False):
+    if sys.version_info[0] == 3:
+        unpickler = Unpickler(stream, encoding=encoding)
+    else:
+        unpickler = Unpickler(stream)
     try:
         return unpickler.load()
     except Exception:
@@ -1143,6 +1146,6 @@ def _pickle_load(stream, errors=False):
         return errors
 pickle = types.ModuleType(__name__ + '.pickle')
 pickle.load = _pickle_load
-pickle.loads = lambda text: _pickle_load(io.BytesIO(text))
+pickle.loads = lambda text, encoding='ASCII': _pickle_load(io.BytesIO(text), encoding=encoding)
 pickle.dump = pickle_.dump
 pickle.dumps = pickle_.dumps

@@ -130,11 +130,11 @@ class SaleOrder(models.Model):
         help="Manually set the expiration date of your quotation (offer), or it will set the date automatically based on the template if online quotation is installed.")
     is_expired = fields.Boolean(compute='_compute_is_expired', string="Is expired")
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
-    confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sales order is confirmed.", oldname="date_confirm")
+    confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sales order is confirmed.", oldname="date_confirm", copy=False)
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, index=True, track_visibility='always')
-    partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Invoice address for current sales order.")
-    partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Delivery address for current sales order.")
+    partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]}, help="Invoice address for current sales order.")
+    partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]}, help="Delivery address for current sales order.")
 
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current sales order.")
     currency_id = fields.Many2one("res.currency", related='pricelist_id.currency_id', string="Currency", readonly=True, required=True)
@@ -427,11 +427,11 @@ class SaleOrder(models.Model):
                     references[invoice] = references[invoice] | order
 
         if not invoices:
-            raise UserError(_('There is no invoicable line.'))
+            raise UserError(_('There is no invoiceable line.'))
 
         for invoice in invoices.values():
             if not invoice.invoice_line_ids:
-                raise UserError(_('There is no invoicable line.'))
+                raise UserError(_('There is no invoiceable line.'))
             # If invoice is negative, do a refund invoice instead
             if invoice.amount_untaxed < 0:
                 invoice.type = 'out_refund'
@@ -495,6 +495,13 @@ class SaleOrder(models.Model):
             'target': 'new',
             'context': ctx,
         }
+
+    @api.multi
+    @api.returns('self', lambda value: value.id)
+    def message_post(self, **kwargs):
+        if self.env.context.get('mark_so_as_sent'):
+            self.filtered(lambda o: o.state == 'draft').write({'state': 'sent'})
+        return super(SaleOrder, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
 
     @api.multi
     def force_quotation_send(self):
@@ -711,26 +718,6 @@ class SaleOrderLine(models.Model):
         for line in self:
             line.qty_delivered_updateable = (line.order_id.state == 'sale') and (line.product_id.service_type == 'manual') and (line.product_id.expense_policy == 'no')
 
-    @api.depends('invoice_lines',
-                 'invoice_lines.price_total',
-                 'invoice_lines.invoice_id',
-                 'invoice_lines.invoice_id.state',
-                 'invoice_lines.invoice_id.refund_invoice_ids',
-                 'invoice_lines.invoice_id.refund_invoice_ids.state',
-                 'invoice_lines.invoice_id.refund_invoice_ids.amount_total')
-    def _compute_invoice_amount(self):
-        for line in self:
-            # Invoice lines referenced by this line
-            invoice_lines = line.invoice_lines.filtered(lambda l: l.invoice_id.state in ('open', 'paid'))
-            # Refund invoices linked to invoice_lines
-            refund_invoices = invoice_lines.mapped('invoice_id.refund_invoice_ids').filtered(lambda inv: inv.state in ('open', 'paid'))
-            # Total invoiced amount
-            invoiced_amount_total = sum(invoice_lines.mapped('price_total'))
-            # Total refunded amount
-            refund_amount_total = sum(refund_invoices.mapped('amount_total'))
-            line.amt_invoiced = invoiced_amount_total - refund_amount_total
-            line.amt_to_invoice = line.price_total - invoiced_amount_total
-
     @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'order_id.state')
     def _get_to_invoice_qty(self):
         """
@@ -900,9 +887,6 @@ class SaleOrderLine(models.Model):
     customer_lead = fields.Float(
         'Delivery Lead Time', required=True, default=0.0,
         help="Number of days between the order confirmation and the shipping of the products to the customer", oldname="delay")
-    amt_to_invoice = fields.Monetary(string='Amount To Invoice', compute='_compute_invoice_amount', store=True)
-    amt_invoiced = fields.Monetary(string='Amount Invoiced', compute='_compute_invoice_amount', store=True)
-
     layout_category_id = fields.Many2one('sale.layout_category', string='Section')
     layout_category_sequence = fields.Integer(string='Layout Sequence')
     # TODO: remove layout_category_sequence in master or make it work properly
@@ -1061,7 +1045,7 @@ class SaleOrderLine(models.Model):
             if operator in ('ilike', 'like', '=', '=like', '=ilike'):
                 domain = expression.AND([
                     args or [],
-                    ['|', ('order_id.name', operator, name), ('product_id.name', operator, name)]
+                    ['|', ('order_id.name', operator, name), ('name', operator, name)]
                 ])
                 return self.search(domain, limit=limit).name_get()
         return super(SaleOrderLine, self).name_search(name, args, operator, limit)
@@ -1176,9 +1160,12 @@ class SaleOrderLine(models.Model):
             domain,
             ['so_line', 'unit_amount', 'product_uom_id'], ['product_uom_id', 'so_line'], lazy=False
         )
-
-        # convert uom and sum all unit_amount of analytic lines to get the delivered qty of SO lines
+        # Force recompute for the "unlink last line" case: if remove the last AAL link to the SO, the read_group
+        # will give no value for the qty of the SOL, so we need to reset it to 0.0
         value_to_write = {}
+        if self._context.get('sale_analytic_force_recompute'):
+            value_to_write = dict.fromkeys([sol for sol in self], 0.0)
+        # convert uom and sum all unit_amount of analytic lines to get the delivered qty of SO lines
         for item in data:
             if not item['product_uom_id']:
                 continue

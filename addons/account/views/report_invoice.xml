@@ -24,23 +24,23 @@
                     </h2>
 
                     <div class="row mt32 mb32">
-                        <div class="col-xs-2" t-if="o.name">
+                        <div class="col-xs-2" t-if="o.name" name="description">
                             <strong>Description:</strong>
                             <p t-field="o.name"/>
                         </div>
-                        <div class="col-xs-2" t-if="o.date_invoice">
+                        <div class="col-xs-2" t-if="o.date_invoice" name="invoice_date">
                             <strong>Invoice Date:</strong>
                             <p t-field="o.date_invoice"/>
                         </div>
-                        <div class="col-xs-2" t-if="o.date_due and o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">
+                        <div class="col-xs-2" t-if="o.date_due and o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')" name="due_date">
                             <strong>Due Date:</strong>
                             <p t-field="o.date_due"/>
                         </div>
-                        <div class="col-xs-2" t-if="o.origin">
+                        <div class="col-xs-2" t-if="o.origin" name="origin">
                             <strong>Source:</strong>
                             <p t-field="o.origin"/>
                         </div>
-                        <div class="col-xs-2" t-if="o.partner_id.ref">
+                        <div class="col-xs-2" t-if="o.partner_id.ref" name="customer_code">
                             <strong>Customer Code:</strong>
                             <p t-field="o.partner_id.ref"/>
                         </div>
@@ -100,33 +100,32 @@
                     </table>
 
                     <div class="clearfix">
-                        <div id="total" class="row pull-right">
-                            <div>
-                                <table class="table-condensed" style="min-width: 250px;max-width: 400px;">
+                        <div id="total" class="row">
+                            <div class="col-xs-4 pull-right">
+                                <table class="table table-condensed" style="min-width: 250px;max-width: 400px;">
                                     <tr class="border-black" style="border-bottom:1px solid #dddddd;">
                                         <td><strong>Subtotal</strong></td>
                                         <td class="text-right">
                                             <span t-field="o.amount_untaxed" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                         </td>
                                     </tr>
-                                    <t t-set="tax_groups_length" t-value="len(o._get_tax_amount_by_group())"/>
                                     <t t-foreach="o._get_tax_amount_by_group()" t-as="amount_by_group">
                                         <tr style="border-bottom:1px solid #dddddd;">
                                             <t t-if="len(o.tax_line_ids) == 1 and o.amount_untaxed == amount_by_group[2]">
                                                 <td><span t-esc="amount_by_group[0]"/></td>
                                                 <td class="text-right">
-                                                    <span t-esc="amount_by_group[1]" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                                    <span t-esc="amount_by_group[3]"/>
                                                 </td>
                                             </t>
                                             <t t-else="">
                                                 <td>
                                                     <span t-esc="amount_by_group[0]"/>
                                                     <span>&amp;nbsp;<span>on</span>
-                                                        <t t-esc="amount_by_group[2]" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                                        <t t-esc="amount_by_group[4]"/>
                                                     </span>
                                                 </td>
                                                 <td class="text-right">
-                                                    <span t-esc="amount_by_group[1]" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                                    <span t-esc="amount_by_group[3]" />
                                                 </td>
                                             </t>
                                         </tr>
@@ -141,13 +140,13 @@
                             </div>
                         </div>
                     </div>
-                    <p t-if="o.comment">
+                    <p t-if="o.comment" name="comment">
                         <span t-field="o.comment"/>
                     </p>
-                    <p t-if="o.payment_term_id">
+                    <p t-if="o.payment_term_id" name="payment_term">
                         <span t-field="o.payment_term_id.note"/>
                     </p>
-                    <p t-if="o.fiscal_position_id.note">
+                    <p t-if="o.fiscal_position_id.note" name="note">
                         <span t-field="o.fiscal_position_id.note"/>
                     </p>
                 </div>

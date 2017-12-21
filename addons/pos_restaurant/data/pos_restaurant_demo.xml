@@ -14,6 +14,8 @@
         <!-- Pos Config -->
 
         <record id="point_of_sale.pos_config_main" model="pos.config">
+            <field name="module_pos_restaurant">True</field>
+            <field name="is_table_management">True</field>
             <field name="iface_splitbill">True</field>
             <field name="iface_printbill">True</field>
             <field name="iface_orderline_notes">True</field>

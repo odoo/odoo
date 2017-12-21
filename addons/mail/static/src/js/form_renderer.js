@@ -51,6 +51,15 @@ FormRenderer.include({
      */
     _renderNode: function (node) {
         if (node.tag === 'div' && node.attrs.class === 'oe_chatter') {
+            if (this.chatter) {
+                // Detach the chatter before updating the $el.
+                // This is important because if the view is now in create mode
+                // (edit mode with no res_id), the chatter will be removed from
+                // the DOM, and its handlers will be unbound. By detaching it
+                // beforehand, we ensure to keep its handlers alive so that if
+                // it is re-appended later, everything will still work properly
+                this.chatter.$el.detach();
+            }
             if (this.mode === 'edit' && !this.state.data.id) {
                 // there is no chatter in create mode
                 var $div = $('<div>');
@@ -71,22 +80,6 @@ FormRenderer.include({
         } else {
             return this._super.apply(this, arguments);
         }
-    },
-    /**
-     * Detaches the chatter before updating the $el. This is important because
-     * if the view is now in create mode (edit mode with no res_id), the chatter
-     * will be removed from the DOM, and its handlers will be unbound. By
-     * detaching it beforehand, we ensure to keep its handlers alive so that if
-     * it is re-appended later, everything will still work properly.
-     *
-     * @override
-     * @private
-     */
-    _updateView: function () {
-        if (this.chatter) {
-            this.chatter.$el.detach();
-        }
-        return this._super.apply(this, arguments);
     },
 });
 

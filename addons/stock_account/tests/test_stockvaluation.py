@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase
 
 
@@ -1018,6 +1019,118 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move4.remaining_qty, 3.0)
         self.assertEqual(move5.remaining_qty, 0.0)  # unused in out moves
 
+    def test_fifo_perpetual_4(self):
+        """ Fifo and return handling.
+        """
+        self.product1.cost_method = 'fifo'
+
+        # in 8 @ 10
+        move1 = self.env['stock.move'].create({
+            'name': 'in 8 @ 10',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 8.0,
+            'price_unit': 10,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.move_line_ids.qty_done = 8.0
+        move1._action_done()
+
+        self.assertEqual(move1.value, 80.0)
+        self.assertEqual(move1.remaining_value, 80.0)
+        self.assertEqual(move1.remaining_qty, 8.0)
+
+        # in 4 @ 16
+        move2 = self.env['stock.move'].create({
+            'name': 'in 4 @ 16',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 4.0,
+            'price_unit': 16,
+        })
+        move2._action_confirm()
+        move2._action_assign()
+        move2.move_line_ids.qty_done = 4.0
+        move2._action_done()
+
+
+        self.assertEqual(move2.value, 64)
+        self.assertEqual(move2.remaining_value, 64)
+        self.assertEqual(move2.remaining_qty, 4.0)
+
+        # out 10
+        out_pick = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'partner_id': self.env['res.partner'].search([], limit=1).id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        move3 = self.env['stock.move'].create({
+            'name': 'out 10',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'picking_id': out_pick.id,
+        })
+        move3._action_confirm()
+        move3._action_assign()
+        move3.move_line_ids.qty_done = 10.0
+        move3._action_done()
+
+
+        # note: it' ll have to get 8 units from move1 and 2 from move2
+        # so its value should be -((8*10) + (2*16)) = -116
+        self.assertEqual(move3.value, -112.0)
+
+        self.assertEqual(move1.remaining_qty, 0)
+        self.assertEqual(move2.remaining_qty, 2)
+        self.assertEqual(move3.remaining_qty, 0.0)  # unused in out moves
+
+        # in 2 @ 6
+        move4 = self.env['stock.move'].create({
+            'name': 'in 2 @ 6',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+            'price_unit': 6,
+        })
+        move4._action_confirm()
+        move4._action_assign()
+        move4.move_line_ids.qty_done = 2.0
+        move4._action_done()
+
+        self.assertEqual(move4.value, 12.0)
+
+        self.assertEqual(move1.remaining_qty, 0)
+        self.assertEqual(move2.remaining_qty, 2)
+        self.assertEqual(move3.remaining_qty, 0.0)  # unused in out moves
+        self.assertEqual(move4.remaining_qty, 2.0)
+
+        self.assertEqual(self.product1.standard_price, 16)
+
+        # return
+        stock_return_picking = self.env['stock.return.picking']\
+            .with_context(active_ids=[out_pick.id], active_id=out_pick.id)\
+            .create({})
+        stock_return_picking.product_return_moves.quantity = 1.0 # Return only 2
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick.move_lines[0].move_line_ids[0].qty_done = 1.0
+        return_pick.do_transfer()
+
+        self.assertEqual(self.product1.standard_price, 16)
+
+        self.assertEqual(return_pick.move_lines.price_unit, 16)
+
     def test_fifo_negative_1(self):
         """ Send products that you do not have. Value the first outgoing move to the standard
         price, receive in multiple times the delivered quantity and run _fifo_vacuum to compensate.
@@ -2027,7 +2140,6 @@ class TestStockValuation(TransactionCase):
         move1._action_done()
 
         self.assertEqual(move1.value, 900.0)
-        self.assertEqual(move1.remaining_qty, 0.0)  # unusedin average move
 
         # Purchase 140 units @ 15.50 per unit
         move2 = self.env['stock.move'].create({
@@ -2294,7 +2406,6 @@ class TestStockValuation(TransactionCase):
         move1.quantity_done = 10.0
         move1._action_done()
         self.assertEqual(move1.value, -990.0)  # as no move out were done for this product, fallback on the standard price
-        self.assertEqual(move1.remaining_qty, 0.0)  # unused in average move
 
     def test_average_negative_3(self):
         """ Send goods that you don't have in stock but received and send some units before.
@@ -2320,7 +2431,6 @@ class TestStockValuation(TransactionCase):
         move1._action_done()
 
         self.assertEqual(move1.value, 100.0)
-        self.assertEqual(move1.remaining_qty, 0.0)  # unused in average move
 
         # send 10 products
         move2 = self.env['stock.move'].create({
@@ -2354,7 +2464,6 @@ class TestStockValuation(TransactionCase):
         move3._action_done()
 
         self.assertEqual(move3.value, -100.0)  # as no move out were done for this product, fallback on latest cost
-        self.assertEqual(move3.remaining_qty, 0.0)  # unused in average move
 
     def test_average_negative_4(self):
         self.product1.product_tmpl_id.cost_method = 'average'
@@ -2378,7 +2487,6 @@ class TestStockValuation(TransactionCase):
         move1._action_done()
 
         self.assertEqual(move1.value, 100.0)
-        self.assertEqual(move1.remaining_qty, 0.0)  # unused in average move
 
     def test_average_negative_5(self):
         self.product1.product_tmpl_id.cost_method = 'average'
@@ -2565,7 +2673,7 @@ class TestStockValuation(TransactionCase):
         # ---------------------------------------------------------------------
         # Change the production valuation to AVCO
         # ---------------------------------------------------------------------
-        self.product1.with_context(debug=True).product_tmpl_id.cost_method = 'average'
+        self.product1.product_tmpl_id.cost_method = 'average'
 
         # valuation should stay to ~240
         self.assertAlmostEqual(self.product1.stock_value, 240, delta=0.03)
@@ -2643,3 +2751,179 @@ class TestStockValuation(TransactionCase):
         # the cost should now be 12,65
         # (9 * 10) + (15 * 10) / 19
         self.assertEqual(self.product1.standard_price, 12.63)
+
+    def test_fifo_sublocation_valuation_1(self):
+        """ Set the main stock as a view location. Receive 2 units of a
+        product, put 1 unit in an internal sublocation and the second
+        one in a scrap sublocation. Only a single unit, the one in the
+        internal sublocation, should be valued. Then, send these two
+        quants to a customer, only the one in the internal location
+        should be valued.
+        """
+        self.product1.product_tmpl_id.cost_method = 'fifo'
+
+        view_location = self.env['stock.location'].create({'name': 'view', 'usage': 'view'})
+        subloc1 = self.env['stock.location'].create({
+            'name': 'internal',
+            'usage': 'internal',
+            'location_id': view_location.id,
+        })
+        # sane settings for a scrap location, company_id doesn't matter
+        subloc2 = self.env['stock.location'].create({
+            'name': 'scrap',
+            'usage': 'inventory',
+            'location_id': view_location.id,
+            'scrap_location': True,
+        })
+
+        move1 = self.env['stock.move'].create({
+            'name': '2 units @ 10.00 per unit',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+            'price_unit': 10,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+
+        move1.write({'move_line_ids': [
+            (0, None, {
+                'product_id': self.product1.id,
+                'qty_done': 1,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': subloc1.id,
+                'product_uom_id': self.uom_unit.id
+            }),
+            (0, None, {
+                'product_id': self.product1.id,
+                'qty_done': 1,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': subloc2.id,
+                'product_uom_id': self.uom_unit.id
+            }),
+        ]})
+
+        move1._action_done()
+        self.assertEqual(move1.value, 10)
+        self.assertEqual(move1.remaining_value, 10)
+        self.assertEqual(move1.remaining_qty, 1)
+        self.assertEqual(self.product1.stock_value, 10)
+        self.assertTrue(len(move1.account_move_ids), 1)
+
+        move2 = self.env['stock.move'].create({
+            'name': '2 units out',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+        })
+        move2._action_confirm()
+        move2._action_assign()
+
+        move2.write({'move_line_ids': [
+            (0, None, {
+                'product_id': self.product1.id,
+                'qty_done': 1,
+                'location_id': subloc1.id,
+                'location_dest_id': self.supplier_location.id,
+                'product_uom_id': self.uom_unit.id
+            }),
+            (0, None, {
+                'product_id': self.product1.id,
+                'qty_done': 1,
+                'location_id': subloc2.id,
+                'location_dest_id': self.supplier_location.id,
+                'product_uom_id': self.uom_unit.id
+            }),
+        ]})
+        move2._action_done()
+        self.assertEqual(move2.value, -10)
+
+    def test_move_in_or_out(self):
+        """ Test a few combination of move and their move lines and
+        check their valuation. A valued move should be IN or OUT.
+        Creating a move that is IN and OUT should be forbidden.
+        """
+        # an internal move should be considered as OUT if any of its move line
+        # is moved in a scrap location
+        scrap = self.env['stock.location'].create({
+            'name': 'scrap',
+            'usage': 'inventory',
+            'location_id': self.stock_location.id,
+            'scrap_location': True,
+        })
+
+        move1 = self.env['stock.move'].create({
+            'name': 'internal but out move',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.write({'move_line_ids': [
+            (0, None, {
+                'product_id': self.product1.id,
+                'qty_done': 1,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_uom_id': self.uom_unit.id
+            }),
+            (0, None, {
+                'product_id': self.product1.id,
+                'qty_done': 1,
+                'location_id': self.stock_location.id,
+                'location_dest_id': scrap.id,
+                'product_uom_id': self.uom_unit.id
+            }),
+        ]})
+        self.assertEqual(move1._is_out(), True)
+
+        # a move should be considered as invalid if some of its move lines are
+        # entering the company and some are leaving
+        customer1 = self.env['stock.location'].create({
+            'name': 'customer',
+            'usage': 'customer',
+            'location_id': self.stock_location.id,
+        })
+        supplier1 = self.env['stock.location'].create({
+            'name': 'supplier',
+            'usage': 'supplier',
+            'location_id': self.stock_location.id,
+        })
+        move2 = self.env['stock.move'].create({
+            'name': 'internal but in and out move',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+        })
+        move2._action_confirm()
+        move2._action_assign()
+        move2.write({'move_line_ids': [
+            (0, None, {
+                'product_id': self.product1.id,
+                'qty_done': 1,
+                'location_id': customer1.id,
+                'location_dest_id': self.stock_location.id,
+                'product_uom_id': self.uom_unit.id
+            }),
+            (0, None, {
+                'product_id': self.product1.id,
+                'qty_done': 1,
+                'location_id': self.stock_location.id,
+                'location_dest_id': customer1.id,
+                'product_uom_id': self.uom_unit.id
+            }),
+        ]})
+        self.assertEqual(move2._is_in(), True)
+        self.assertEqual(move2._is_out(), True)
+        with self.assertRaises(UserError):
+            move2._action_done()
+

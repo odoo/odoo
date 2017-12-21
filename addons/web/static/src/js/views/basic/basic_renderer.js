@@ -357,6 +357,17 @@ var BasicRenderer = AbstractRenderer.extend({
         return this.state.count !== 0;
     },
     /**
+     * This function is called each time a field widget is created, when it is
+     * ready (after its willStart and Start methods are complete).  This is the
+     * place where work having to do with $el should be done.
+     *
+     * @private
+     * @param {Widget} widget the field widget instance
+     * @param {Object} node the attrs coming from the arch
+     */
+    _postProcessField: function (widget, node) {
+    },
+    /**
      * Registers or updates the modifiers data associated to the given node.
      * This method is quiet complex as it handles all the needs of the basic
      * renderers:
@@ -472,15 +483,18 @@ var BasicRenderer = AbstractRenderer.extend({
      * rendering of the widget will be started and the associated deferred will
      * be added to the 'defs' attribute. This is supposed to be created and
      * deleted by the calling code if necessary.
-     * Note: for this implementation to work, AbstractField willStart methods
-     * *must* be synchronous.
+     *
+     * Note: we always return a $el.  If the field widget is asynchronous, this
+     * $el will be replaced by the real $el, whenever the widget is ready (start
+     * method is done).  This means that this is not the correct place to make
+     * changes on the widget $el.  For this, @see _postProcessField method
      *
      * @private
      * @param {Object} node
      * @param {Object} record
      * @param {Object} [options]
      * @param {Object} [modifiersOptions]
-     * @returns {AbstractField}
+     * @returns {jQueryElement}
      */
     _renderFieldWidget: function (node, record, options, modifiersOptions) {
         var fieldName = node.attrs.name;
@@ -505,25 +519,34 @@ var BasicRenderer = AbstractRenderer.extend({
         widget.__node = node; // TODO get rid of this if possible one day
 
         // Prepare widget rendering and save the related deferred
-        var def = widget.__widgetRenderAndInsert(function () {});
-        if (def.state() === 'pending') {
+        var def = widget._widgetRenderAndInsert(function () {});
+        var async = def.state() === 'pending';
+        var $el = async ? $('<div>') : widget.$el;
+        if (async) {
             this.defs.push(def);
         }
 
         // Update the modifiers registration by associating the widget and by
         // giving the modifiers options now (as the potential callback is
         // associated to new widget)
-        this._registerModifiers(node, record, widget, _.extend({
-            callback: (function (element, modifiers, record) {
-                element.$el.toggleClass('o_field_empty', !!(
-                    record.data.id
-                    && (modifiers.readonly || this.mode === 'readonly')
-                    && !element.widget.isSet()
-                ));
-            }).bind(this),
-        }, modifiersOptions || {}));
+        var self = this;
+        def.then(function () {
+            if (async) {
+                $el.replaceWith(widget.$el);
+            }
+            self._registerModifiers(node, record, widget, _.extend({
+                callback: function (element, modifiers, record) {
+                    element.$el.toggleClass('o_field_empty', !!(
+                        record.data.id
+                        && (modifiers.readonly || self.mode === 'readonly')
+                        && !element.widget.isSet()
+                    ));
+                },
+            }, modifiersOptions || {}));
+            self._postProcessField(widget, node);
+        });
 
-        return widget;
+        return $el;
     },
     /**
      * Renders the nocontent helper.
@@ -568,7 +591,7 @@ var BasicRenderer = AbstractRenderer.extend({
         var widget = new Widget(this, record);
 
         // Prepare widget rendering and save the related deferred
-        var def = widget.__widgetRenderAndInsert(function () {});
+        var def = widget._widgetRenderAndInsert(function () {});
         if (def.state() === 'pending') {
             this.defs.push(def);
         }
@@ -587,20 +610,17 @@ var BasicRenderer = AbstractRenderer.extend({
      * @private
      * @param {Widget} widget
      * @param {Object} record
-     * @returns {AbstractField}
      */
     _rerenderFieldWidget: function (widget, record) {
         // Render the new field widget
-        var newWidget = this._renderFieldWidget(widget.__node, record);
-        widget.$el.replaceWith(newWidget.$el);
+        var $el = this._renderFieldWidget(widget.__node, record);
+        widget.$el.replaceWith($el);
 
         // Destroy the old widget and position the new one at the old one's
         var oldIndex = this._destroyFieldWidget(record.id, widget);
         var recordWidgets = this.allFieldWidgets[record.id];
+        var newWidget = recordWidgets.pop();
         recordWidgets.splice(oldIndex, 0, newWidget);
-        recordWidgets.pop();
-
-        return newWidget;
     },
     /**
      * Unregisters an element of the modifiers data associated to the given

@@ -843,7 +843,7 @@
                             <group>
                                 <field name="account_id" domain="[('company_id', '=', company_id)]"/>
                                 <field name="amount_type"/>
-                                <field name="tax_id" domain="[('company_id', '=', company_id)]" widget="selection" />
+                                <field name="tax_id" domain="[('company_id', '=', company_id)]" options="{'no_create': True}" />
                                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', company_id)]"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
@@ -1434,6 +1434,13 @@
                     <sheet>
                         <field name="id" invisible="1"/>
                         <div class="oe_button_box">
+                            <button name="action_view_reverse_entry"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-refresh"
+                                attrs="{'invisible': [('reverse_entry_id', '=', False)]}"
+                                string="Reversed entry">
+                            </button>
                             <button name="open_reconcile_view"
                                 class="oe_stat_button"
                                 icon="fa-bars"
@@ -1477,6 +1484,13 @@
                                 </tree>
                             </field>
                             <field name="narration" colspan="4" placeholder="Add an internal note..." nolabel="1" height="50"/>
+                        </page>
+                        <page string="Other Info">
+                            <group>
+                                <field name="auto_reverse" attrs="{'readonly':[('reverse_entry_id', '!=', False)]}"/>
+                                <field name="reverse_date" attrs="{'invisible':[('auto_reverse', '=', False)], 'required':[('auto_reverse', '=', True)],'readonly':[('reverse_entry_id', '!=', False)]}"/>
+                                <field name="reverse_entry_id" attrs="{'invisible':True}"/>    
+                            </group>
                         </page>
                     </notebook>
                     </sheet>
@@ -1586,6 +1600,7 @@
                     <field name="value_amount" attrs="{'readonly':[('value','=','balance')]}"/>
                     <field name="days"/>
                     <field name="option" string=""/>
+                    <field name="day_of_the_month" string="Day of the month"/>
                 </tree>
             </field>
         </record>
@@ -1594,27 +1609,36 @@
             <field name="model">account.payment.term.line</field>
             <field name="arch" type="xml">
                 <form string="Payment Terms">
+                    <h2>Term Type</h2>
                     <group>
-                        <group string="Term Type">
+                        <group>
                             <field name="value" widget="radio"/>
-                            <label for="value_amount" attrs="{'invisible':[('value','=', 'balance')]}"/>
-                            <div attrs="{'invisible':[('value','=', 'balance')]}">
+                        </group>
+
+                        <group>
+                            <div attrs="{'invisible':[('value','=', 'balance')]}" class="o_row">
+                                <label for="value_amount" attrs="{'invisible':[('value','=', 'balance')]}"/>
                                 <field name="value_amount" class="oe_inline"/>
                                 <label string="%" class="oe_inline" attrs="{'invisible':[('value','!=','percent')]}"/>
                             </div>
-                            <field name="sequence" invisible="1"/>
-                        </group>
-                        <group string="Due Date Computation">
-                            <label for="days"/>
-                            <div>
-                                <field name="option" widget="radio"/>
-                                <div class="o_row" attrs="{'invisible': [('option', 'in', ['last_day_following_month', 'last_day_current_month'])]}">
-                                    <field name="days"/>
-                                    days
-                                </div>
-                            </div>
                         </group>
                     </group>
+
+                    <field name="sequence" invisible="1"/>
+
+                    <h2>Due Date Computation</h2>
+                    <div colspan="2">
+                        <label for="days" string="Due" attrs="{'invisible': [('option','not in',('day_after_invoice_date','after_invoice_month'))]}"/>
+                        <label for="days" string="Due the" attrs="{'invisible': [('option','in',('day_after_invoice_date','after_invoice_month'))]}"/>
+                        <field name="days" class="oe_inline"/>
+                        <label for="option" string=""/> <!--Empty label to force space between elements-->
+                        <field name="option" class="oe_inline"/>
+                    </div>
+                    <div colspan="2" attrs="{'invisible': [('option','!=', 'day_after_invoice_date')]}">
+                        <label for="day_of_the_month" string="On the"/>
+                        <field name="day_of_the_month" class="oe_inline"/>
+                        <label string="of the month"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -1643,18 +1667,27 @@
             <field name="model">account.payment.term</field>
             <field name="arch" type="xml">
                 <form string="Payment Terms">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="active"/>
-                        <field name="company_id" invisible="1"/>
-                    </group>
-                    <label for="note"/>
-                    <field name="note" placeholder="Payment terms explanation for the customer..."/>
-                    <separator string="Terms"/>
-                    <p class="text-muted">
-                        The last line's computation type should be "Balance" to ensure that the whole amount will be allocated.
-                    </p>
-                    <field name="line_ids"/>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="company_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <label for="note"/>
+                        <field name="note" placeholder="Payment term explanation for the customer..."/>
+                        <separator string="Terms"/>
+                        <p class="text-muted">
+                            The last line's computation type should be "Balance" to ensure that the whole amount will be allocated.
+                        </p>
+                        <field name="line_ids"/>
+                    </sheet>
                 </form>
             </field>
         </record>

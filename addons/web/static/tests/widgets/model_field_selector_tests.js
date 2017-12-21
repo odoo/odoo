@@ -50,7 +50,7 @@ QUnit.module('ModelFieldSelector', {
 }, function () {
 
     QUnit.test("creating a field chain from scratch", function (assert) {
-        assert.expect(13);
+        assert.expect(14);
 
         var $target = $("#qunit-fixture");
 
@@ -89,6 +89,14 @@ QUnit.module('ModelFieldSelector', {
             "field selector popover should be closed now");
         assert.strictEqual(getValueFromDOM($value), "Bar",
             "field selector value should be displayed with a 'Bar' tag");
+
+        assert.deepEqual(fieldSelector.getSelectedField(), {
+            model: "partner",
+            name: "bar",
+            searchable: true,
+            string: "Bar",
+            type: "boolean",
+        }, "the selected field should be correctly set");
 
         // Focusing the input again should open the same popover
         fieldSelector.$el.trigger('focusin');

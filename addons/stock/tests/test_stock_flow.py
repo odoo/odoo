@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 class TestStockFlow(TestStockCommon):
 
-    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_00_picking_create_and_transfer_quantity(self):
         """ Basic stock operation on incoming and outgoing shipment. """
         LotObj = self.env['stock.production.lot']

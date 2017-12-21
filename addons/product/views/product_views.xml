@@ -44,7 +44,7 @@
                             <group>
                                 <group name="group_general">
                                     <field name="type"/>
-                                    <field name="categ_id" string="Category"/>
+                                    <field name="categ_id" string="Product Category"/>
                                 </group>
                                 <group name="group_standard_price">
                                     <field name="list_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
@@ -117,7 +117,7 @@
         <field name="arch" type="xml">
             <search string="Product">
                 <field name="name" string="Product" filter_domain="['|','|',('default_code','ilike',self),('name','ilike',self),('barcode','ilike',self)]"/>
-                <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
+                <field name="categ_id" filter_domain="[('categ_id', 'child_of', raw_value)]"/>
                 <separator/>
                 <filter string="Services" name="services" domain="[('type','=','service')]"/>
                 <filter string="Products" name="consumable" domain="[('type', 'in', ['consu', 'product'])]"/>
@@ -454,10 +454,10 @@
             <field name="name">product.packaging.tree.view</field>
             <field name="model">product.packaging</field>
             <field name="arch" type="xml">
-                <tree string="Product Packages">
+                <tree string="Product Packagings">
                     <field name="sequence" widget="handle"/>
                     <field name="product_id"/>
-                    <field name="name"/>
+                    <field name="name" string="Packaging"/>
                     <field name="qty"/>
                 </tree>
             </field>
@@ -469,7 +469,7 @@
             <field name="arch" type="xml">
                 <form string="Product Packaging">
                     <sheet>
-                        <label for="name"/>
+                        <label for="name" string="Packaging"/>
                         <h1>
                             <field name="name"/>
                         </h1>
@@ -489,7 +489,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_packaging_view">
-            <field name="name">Product Packages</field>
+            <field name="name">Product Packagings</field>
             <field name="res_model">product.packaging</field>
             <field name="domain">[('product_id', '!=', False)]</field>
             <field name="view_ids" eval="[(5, 0, 0),
@@ -560,7 +560,7 @@
                 <tree string="Vendor Information">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
-                    <field name="product_id" invisible="context.get('product_template_invisible_variant', False)"/>
+                    <field name="product_id" invisible="context.get('product_template_invisible_variant', False)" groups="product.group_product_variant"/>
                     <field name="product_tmpl_id" string="Product" invisible="context.get('visible_product_tmpl_id', True)"/>
                     <field name="min_qty"/>
                     <field name="price" string="Price"/>

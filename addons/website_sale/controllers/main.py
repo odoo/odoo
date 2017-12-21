@@ -6,7 +6,7 @@ from werkzeug.exceptions import Forbidden
 
 from odoo import http, tools, _
 from odoo.http import request
-from odoo.addons.base.ir.ir_qweb.fields import nl2br
+from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.exceptions import ValidationError
@@ -383,8 +383,8 @@ class WebsiteSale(http.Controller):
     def cart_update(self, product_id, add_qty=1, set_qty=0, **kw):
         request.website.sale_get_order(force_create=1)._cart_update(
             product_id=int(product_id),
-            add_qty=float(add_qty),
-            set_qty=float(set_qty),
+            add_qty=add_qty,
+            set_qty=set_qty,
             attributes=self._filter_attributes(**kw),
         )
         return request.redirect("/shop/cart")
@@ -398,7 +398,6 @@ class WebsiteSale(http.Controller):
         if order.state != 'draft':
             request.website.sale_reset()
             return {}
-
         value = order._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty)
 
         if not order.cart_quantity:
@@ -446,7 +445,7 @@ class WebsiteSale(http.Controller):
             Partner = order.partner_id.with_context(show_address=1).sudo()
             shippings = Partner.search([
                 ("id", "child_of", order.partner_id.commercial_partner_id.ids),
-                '|', ("type", "=", "delivery"), ("id", "=", order.partner_id.commercial_partner_id.id)
+                '|', ("type", "in", ["delivery", "other"]), ("id", "=", order.partner_id.commercial_partner_id.id)
             ], order='id desc')
             if shippings:
                 if kw.get('partner_id') or 'use_billing' in kw:
@@ -751,18 +750,6 @@ class WebsiteSale(http.Controller):
         values['tokens'] = request.env['payment.token'].search(
             [('partner_id', '=', order.partner_id.id),
             ('acquirer_id', 'in', [acq.id for acq in values['s2s_acquirers']])])
-
-        for acq in values['form_acquirers']:
-            acq.form = acq.with_context(submit_class='btn btn-primary', submit_txt=_('Pay Now')).sudo().render(
-                '/',
-                order.amount_total,
-                order.pricelist_id.currency_id.id,
-                values={
-                    'return_url': '/shop/payment/validate',
-                    'partner_id': shipping_partner_id,
-                    'billing_partner_id': order.partner_invoice_id.id,
-                }
-            )
 
         return values
 

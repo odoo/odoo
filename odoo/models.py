@@ -689,8 +689,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                             current[i] = ','.join(xml_ids) or False
                             continue
 
-                        # recursively export the fields that follow name
-                        fields2 = [(p[1:] if p and p[0] == name else []) for p in fields]
+                        # recursively export the fields that follow name; use
+                        # 'display_name' where no subfield is exported
+                        fields2 = [(p[1:] or ['display_name'] if p and p[0] == name else [])
+                                   for p in fields]
                         lines2 = value._export_rows(fields2)
                         if lines2:
                             # merge first line with record's main line
@@ -741,7 +743,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """
         # determine values of mode, current_module and noupdate
         mode = self._context.get('mode', 'init')
-        current_module = self._context.get('module', '')
+        current_module = self._context.get('module', '__import__')
         noupdate = self._context.get('noupdate', False)
 
         # add current module in context for the conversion of xml ids
@@ -1649,7 +1651,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     order = '"%s" %s' % (order_field, '' if len(order_split) == 1 else order_split[1])
                     orderby_terms.append(order)
             elif order_field in aggregated_fields:
-                orderby_terms.append(order_part)
+                order_split[0] = '"' + order_field + '"'
+                orderby_terms.append(' '.join(order_split))
             else:
                 # Cannot order by a field that will not appear in the results (needs to be grouped or aggregated)
                 _logger.warn('%s: read_group order by `%s` ignored, cannot sort on empty columns (not grouped/aggregated)',

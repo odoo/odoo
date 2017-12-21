@@ -45,7 +45,7 @@ tour.register('crm_tour', {
     content: _t("<p>You will be able to customize your followup activities. Examples:</p><ol><li>introductory email</li><li>call 10 days after</li><li>second call 3 days after, ...</li></ol><p class='mb0'><i>Select a standard activity for now on.</i></p>"),
     position: "bottom",
     run: function (actions) {
-        actions.auto(".modal-footer .btn-default");
+        actions.auto(".modal-footer button[special=cancel]");
     },
 }, {
     trigger: ".o_kanban_record",
@@ -64,7 +64,7 @@ tour.register('crm_tour', {
     extra_trigger: '.o_opportunity_form',
     content: _t("Use the breadcrumbs to <b>go back to your sales pipeline</b>."),
     position: "bottom"
-}, tour.STEPS.TOGGLE_APPSWITCHER,
+}, tour.STEPS.TOGGLE_HOME_MENU,
 tour.STEPS.MENU_MORE, {
     trigger: '.o_app[data-menu-xmlid="base.menu_administration"], .oe_menu_toggler[data-menu-xmlid="base.menu_administration"]',
     content: _t("Configuration options are available in the Settings app."),
@@ -73,7 +73,7 @@ tour.STEPS.MENU_MORE, {
     trigger: ".o_web_settings_dashboard textarea#user_emails",
     content: _t("<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"),
     position: "right"
-}, tour.STEPS.TOGGLE_APPSWITCHER,
+}, tour.STEPS.TOGGLE_HOME_MENU,
 tour.STEPS.MENU_MORE, {
     trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"], .oe_menu_toggler[data-menu-xmlid="crm.crm_menu_root"]',
     content: _t("Good job! Your completed the tour of the CRM."),

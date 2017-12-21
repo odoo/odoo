@@ -16,13 +16,15 @@ tour.register('sale_tour', {
     trigger: ".o_list_button_add",
     extra_trigger: ".o_sale_order",
     content: _t("Let's create a new quotation.<br/><i>Note that colored buttons usually point to the next logical actions.</i>"),
-    position: "right",
+    position: "bottom",
 }, {
-    trigger: ".o_required_modifier input",
+    trigger: ".o_form_editable .o_field_many2one[name='partner_id']",
     extra_trigger: ".o_sale_order",
     content: _t("Write the name of your customer to create one on the fly, or select an existing one."),
-    position: "top",
-    run: "text Agrolait",
+    position: "bottom",
+    run: function (actions) {
+        actions.text("Agrolait", this.$anchor.find("input"));
+    },
 }, {
     trigger: ".ui-menu-item > a",
     auto: true,
@@ -30,14 +32,16 @@ tour.register('sale_tour', {
 }, {
     trigger: ".o_field_x2many_list_row_add > a",
     extra_trigger: ".o_sale_order",
-    content: _t("Click here to add some lines to your quotations."),
+    content: _t("Click here to add some products or services to your quotation."),
     position: "bottom",
 }, {
-    trigger: ".modal-body .o_required_modifier input, .o_list_view .o_required_modifier input",
+    trigger: ".o_form_editable .o_field_many2one[name='product_id']",
     extra_trigger: ".o_sale_order",
-    content: _t("Select a product, or create a new one on the fly. The product will define the default sales price (that you can change), taxes and description automatically."),
+    content: _t("Select a product, or create a new one on the fly."),
     position: "right",
-    run: "text Ipad",
+    run: function (actions) {
+        actions.text("Ipad", this.$anchor.find("input"));
+    },
 }, {
     trigger: ".ui-menu-item > a",
     auto: true,
@@ -69,15 +73,6 @@ tour.register('sale_tour', {
     content: _t("Use this menu to access quotations, sales orders and customers."),
     edition: "enterprise",
     position: "bottom"
-}, tour.STEPS.TOGGLE_APPSWITCHER,
-tour.STEPS.MENU_MORE, {
-    trigger: '.o_app[data-menu-xmlid="base.menu_administration"], .oe_menu_toggler[data-menu-xmlid="base.menu_administration"]',
-    content: _t("Configuration options are available in the Settings app."),
-    position: "bottom"
-}, {
-    trigger: ".o_web_settings_dashboard textarea#user_emails",
-    content: _t("<b>Invite salespeople or managers</b> via email.<br/><i>Enter one email per line.</i>"),
-    position: "right"
 }]);
 
 });

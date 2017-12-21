@@ -95,14 +95,6 @@ class sale_quote(http.Controller):
                 [('partner_id', '=', order_sudo.partner_id.id),
                 ('acquirer_id', 'in', [acq.id for acq in values['s2s_acquirers']])])
 
-            for acq in values['form_acquirers']:
-                acq.form = acq.render('/', order_sudo.amount_total, order_sudo.pricelist_id.currency_id.id,
-                    values={
-                        'return_url': '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
-                        'type': 'form',
-                        'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
-                        'partner_id': order_sudo.partner_id.id,
-                    })
         history = request.session.get('my_quotes_history', [])
         values.update(get_records_pager(history, order_sudo))
         return request.render('website_quote.so_quotation', values)

@@ -10,13 +10,16 @@
 # Fabien Pinckaers <fp@openerp.com>, 2017
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2017
 # Clo <clo@odoo.com>, 2017
+# fr rev <e2ffr02@hotmail.com>, 2017
+# fr trans <e2ftrans1@yahoo.com>, 2017
+# fr trans <e2ffr05@hotmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Clo <clo@odoo.com>, 2017\n"
+"Last-Translator: fr trans <e2ffr05@hotmail.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,18 +32,19 @@ msgstr ""
 #, python-format
 msgid "<%s>  transaction (%s) invoice confirmation failed : <%s>"
 msgstr ""
+"La confirmation de facture de la transaction <%s> (%s) a échoué : <%s>"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:45
 #, python-format
 msgid "<%s> transaction (%s) failed : <%s>"
-msgstr ""
+msgstr "La transaction <%s> (%s) a échoué : <%s>"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:52
 #, python-format
 msgid "<%s> transaction (%s) invalid state : %s"
-msgstr ""
+msgstr "Statut de la transaction <%s> (%s) non valide : %s"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -59,12 +63,12 @@ msgstr ""
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-check-circle\"/> Paid"
-msgstr ""
+msgstr "<i class=\"fa fa-check-circle\"/> Payé"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-check-circle\"/> Pending"
-msgstr ""
+msgstr "<i class=\"fa fa-check-circle\"/> En attente"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
@@ -81,11 +85,13 @@ msgid ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
 "fa-fw fa-check\"/> Done</span>"
 msgstr ""
+"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
+"fa-fw fa-check\"/> Terminé</span>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
 msgid "<strong>Transactions</strong>"
-msgstr ""
+msgstr "<strong>Transactions</strong>"
 
 #. module: account_payment
 #: code:addons/account_payment/controllers/payment.py:53
@@ -106,17 +112,17 @@ msgstr "Facture"
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_success
 msgid "Invoice successfully paid."
-msgstr ""
+msgstr "Facture payée avec succès."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_id
 msgid "Last Transaction"
-msgstr ""
+msgstr "Dernière transaction"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_count
 msgid "Number of payment transactions"
-msgstr ""
+msgstr "Nombre de transactions de paiement"
 
 #. module: account_payment
 #: code:addons/account_payment/controllers/payment.py:50
@@ -134,7 +140,7 @@ msgstr "Payer maintenant"
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "Pay with"
-msgstr ""
+msgstr "Payer avec"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_acquirer_id
@@ -162,16 +168,22 @@ msgstr "État"
 msgid ""
 "There was an error processing your payment: impossible to validate invoice."
 msgstr ""
+"Une erreur s’est produite lors du traitement de votre paiement : impossible "
+"de valider la facture."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice state."
 msgstr ""
+"Une erreur s’est produite lors du traitement de votre paiement : état de "
+"facture non valide."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice."
 msgstr ""
+"Une erreur s’est produite lors du traitement de votre paiement : facture non"
+" valide."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -179,27 +191,37 @@ msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
 msgstr ""
+"Une erreur s’est produite lors du traitement de votre paiement : problème de"
+" validation d’identifiant de la carte bancaire."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid ""
 "There was an error processing your payment: transaction amount issue.<br/>"
 msgstr ""
+"Une erreur s’est produite lors du traitement de votre paiement : problème "
+"avec le montant de la transaction.<br/>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
 msgstr ""
+"Une erreur s’est produite lors du traitement de votre paiement : échec de la"
+" transaction.<br/>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction issue.<br/>"
 msgstr ""
+"Une erreur s’est produite lors du traitement de votre paiement : problème de"
+" transaction.<br/>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
 msgstr ""
+"Une erreur s’est produite lors du traitement de votre paiement : identifiant"
+" de carte bancaire non valide."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_ids

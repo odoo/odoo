@@ -3,10 +3,11 @@ import hashlib
 import hmac
 import logging
 import datetime
+import pprint
 
 from odoo import api, exceptions, fields, models, _
 from odoo.tools import consteq, float_round, image_resize_images, image_resize_image, ustr
-from odoo.addons.base.module import module
+from odoo.addons.base.models import ir_module
 from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -134,7 +135,7 @@ class PaymentAcquirer(models.Model):
 
     # TDE FIXME: remove that brol
     module_id = fields.Many2one('ir.module.module', string='Corresponding Module')
-    module_state = fields.Selection(selection=module.STATES, string='Installation State', related='module_id.state')
+    module_state = fields.Selection(selection=ir_module.STATES, string='Installation State', related='module_id.state')
 
     image = fields.Binary(
         "Image", attachment=True,
@@ -375,6 +376,7 @@ class PaymentAcquirer(models.Model):
         })
         values.setdefault('return_url', False)
 
+        _logger.info('payment.acquirer.render: <%s> values rendered for form payment:\n%s', self.provider, pprint.pformat(values))
         return self.view_template_id.render(values, engine='ir.qweb')
 
     def get_s2s_form_xml_id(self):

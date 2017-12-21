@@ -10,7 +10,7 @@ from odoo.tools import mute_logger
 
 class TestMailSchedule(TestEventCommon):
 
-    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_00_event_mail_schedule(self):
         """ Test mail scheduling for events """
         now = fields.datetime.now()

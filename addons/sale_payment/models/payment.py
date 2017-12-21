@@ -44,7 +44,19 @@ class PaymentTransaction(models.Model):
             _logger.warning('<%s> transaction STATE INCORRECT for order %s (ID %s, state %s)', self.acquirer_id.provider, self.sale_order_id.name, self.sale_order_id.id, self.sale_order_id.state)
             return 'pay_sale_invalid_doc_state'
         if not float_compare(self.amount, self.sale_order_id.amount_total, 2) == 0:
-            _logger.warning('<%s> transaction AMOUNT MISMATCH for order %s (ID %s)', self.acquirer_id.provider, self.sale_order_id.name, self.sale_order_id.id)
+            _logger.warning(
+                '<%s> transaction AMOUNT MISMATCH for order %s (ID %s): expected %r, got %r',
+                self.acquirer_id.provider, self.sale_order_id.name, self.sale_order_id.id,
+                self.sale_order_id.amount_total, self.amount,
+            )
+            self.sale_order_id.message_post(
+                subject=_("Amount Mismatch (%s)") % self.acquirer_id.provider,
+                body=_("The sale order was not confirmed despite response from the acquirer (%s): SO amount is %r but acquirer replied with %r.") % (
+                    self.acquirer_id.provider,
+                    self.sale_order_id.amount_total,
+                    self.amount,
+                )
+            )
             return 'pay_sale_tx_amount'
 
         if self.state == 'authorized' and self.acquirer_id.capture_manually:
@@ -86,10 +98,12 @@ class PaymentTransaction(models.Model):
                 if not default_journal:
                     _logger.warning('<%s> transaction completed, could not auto-generate payment for %s (ID %s) (no journal set on acquirer)',
                                     self.acquirer_id.provider, self.sale_order_id.name, self.sale_order_id.id)
+                    return False
                 self.acquirer_id.journal_id = default_journal
-                created_invoice.with_context(tx_currency_id=self.currency_id.id).pay_and_reconcile(self.acquirer_id.journal_id, pay_amount=created_invoice.amount_total)
-                if created_invoice.payment_ids:
-                    created_invoice.payment_ids[0].payment_transaction_id = self
+            # TDE Note: in post-v11 we could probably add an explicit parameter + update account.payment tx directly at creation, not afterwards
+            created_invoice.with_context(default_currency_id=self.currency_id.id).pay_and_reconcile(self.acquirer_id.journal_id, pay_amount=created_invoice.amount_total)
+            if created_invoice.payment_ids:
+                created_invoice.payment_ids[0].payment_transaction_id = self
         else:
             _logger.warning('<%s> transaction completed, could not auto-generate invoice for %s (ID %s)',
                             self.acquirer_id.provider, self.sale_order_id.name, self.sale_order_id.id)

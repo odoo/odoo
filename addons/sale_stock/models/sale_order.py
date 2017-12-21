@@ -129,7 +129,7 @@ class SaleOrderLine(models.Model):
     @api.depends('move_ids')
     def _compute_product_updatable(self):
         for line in self:
-            if not line.move_ids:
+            if not line.move_ids.filtered(lambda m: m.state != 'cancel'):
                 super(SaleOrderLine, line)._compute_product_updatable()
             else:
                 line.product_updatable = False
@@ -176,9 +176,12 @@ class SaleOrderLine(models.Model):
                             (self.product_uom_qty, self.product_uom.name, product.virtual_available, product.uom_id.name, self.order_id.warehouse_id.name)
                     # We check if some products are available in other warehouses.
                     if float_compare(product.virtual_available, self.product_id.virtual_available, precision_digits=precision) == -1:
-                        message += _('\nThere are %s %s available accross all warehouses.') % \
+                        message += _('\nThere are %s %s available across all warehouses.\n\n') % \
                                 (self.product_id.virtual_available, product.uom_id.name)
-
+                        for warehouse in self.env['stock.warehouse'].search([]):
+                            quantity = self.product_id.with_context(warehouse=warehouse.id).virtual_available
+                            if quantity > 0:
+                                message += "%s: %s %s\n" % (warehouse.name, quantity, self.product_id.uom_id.name)
                     warning_mess = {
                         'title': _('Not enough inventory!'),
                         'message' : message
@@ -239,13 +242,26 @@ class SaleOrderLine(models.Model):
             if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
                 continue
 
-            if not line.order_id.procurement_group_id:
-                line.order_id.procurement_group_id = self.env['procurement.group'].create({
+            group_id = line.order_id.procurement_group_id
+            if not group_id:
+                group_id = self.env['procurement.group'].create({
                     'name': line.order_id.name, 'move_type': line.order_id.picking_policy,
                     'sale_id': line.order_id.id,
                     'partner_id': line.order_id.partner_shipping_id.id,
                 })
-            values = line._prepare_procurement_values(group_id=line.order_id.procurement_group_id)
+                line.order_id.procurement_group_id = group_id
+            else:
+                # In case the procurement group is already created and the order was
+                # cancelled, we need to update certain values of the group.
+                updated_vals = {}
+                if group_id.partner_id != line.order_id.partner_shipping_id:
+                    updated_vals.update({'partner_id': line.order_id.partner_shipping_id.id})
+                if group_id.move_type != line.order_id.picking_policy:
+                    updated_vals.update({'move_type': line.order_id.picking_policy})
+                if updated_vals:
+                    group_id.write(updated_vals)
+
+            values = line._prepare_procurement_values(group_id=group_id)
             product_qty = line.product_uom_qty - qty
             try:
                 self.env['procurement.group'].run(line.product_id, product_qty, line.product_uom, line.order_id.partner_shipping_id.property_stock_customer, line.name, line.order_id.name, values)
@@ -319,8 +335,8 @@ class SaleOrderLine(models.Model):
 
     def _update_line_quantity(self, values):
         if self.mapped('qty_delivered') and values['product_uom_qty'] < max(self.mapped('qty_delivered')):
-            raise UserError('You cannot decrease the ordered quantity below the delivered quantity.\n'
-                            'Create a return first.')
+            raise UserError(_('You cannot decrease the ordered quantity below the delivered quantity.\n'
+                              'Create a return first.'))
         for line in self:
             pickings = self.order_id.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel'))
             for picking in pickings:

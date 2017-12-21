@@ -665,7 +665,7 @@ class MailThread(models.AbstractModel):
 
         if message.model:
             model_name = self.env['ir.model']._get(message.model).display_name
-            view_title = '%s %s' % (_('View'), model_name)
+            view_title = _('View %s') % model_name
         else:
             view_title = _('View')
 
@@ -837,7 +837,7 @@ class MailThread(models.AbstractModel):
             # sender should not see private diagnostics info, just the error
             raise ValueError(short_message)
 
-    def _routing_create_bounce_email(self, email_from, body_html, message):
+    def _routing_create_bounce_email(self, email_from, body_html, message, **mail_values):
         bounce_to = tools.decode_message_header(message, 'Return-Path') or email_from
         bounce_mail_values = {
             'body_html': body_html,
@@ -848,6 +848,7 @@ class MailThread(models.AbstractModel):
         bounce_from = self.env['ir.mail_server']._get_default_bounce_address()
         if bounce_from:
             bounce_mail_values['email_from'] = 'MAILER-DAEMON <%s>' % bounce_from
+        bounce_mail_values.update(mail_values)
         self.env['mail.mail'].create(bounce_mail_values).send()
 
     @api.model
@@ -958,9 +959,10 @@ class MailThread(models.AbstractModel):
                 obj = self.env[alias.alias_parent_model_id.model].browse(alias.alias_parent_thread_id)
             elif model:
                 obj = self.env[model]
-            if not hasattr(obj, '_alias_check_contact'):
-                obj = self.env['mail.alias.mixin']
-            check_result = obj._alias_check_contact(message, message_dict, alias)
+            if hasattr(obj, '_alias_check_contact'):
+                check_result = obj._alias_check_contact(message, message_dict, alias)
+            else:
+                check_result = self.env['mail.alias.mixin']._alias_check_contact_on_record(obj, message, message_dict, alias)
             if check_result is not True:
                 self._routing_warn(_('alias %s: %s') % (alias.alias_name, check_result.get('error_message', _('unknown error'))), _('skipping'), message_id, route, False)
                 self._routing_create_bounce_email(email_from, check_result.get('error_template', _generic_bounce_body_html), message)
@@ -1014,6 +1016,7 @@ class MailThread(models.AbstractModel):
             raise TypeError('message must be an email.message.Message at this point')
         MailMessage = self.env['mail.message']
         Alias, dest_aliases = self.env['mail.alias'], self.env['mail.alias']
+        catchall_alias = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias")
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias")
         fallback_model = model
 
@@ -1133,6 +1136,16 @@ class MailThread(models.AbstractModel):
         if rcpt_tos_localparts:
             # no route found for a matching reference (or reply), so parent is invalid
             message_dict.pop('parent_id', None)
+
+            # check it does not directly contact catchall
+            if catchall_alias and catchall_alias in email_to_localpart:
+                _logger.info('Routing mail from %s to %s with Message-Id %s: direct write to catchall, bounce', email_from, email_to, message_id)
+                body = self.env.ref('mail.mail_bounce_catchall').render({
+                    'message': message,
+                }, engine='ir.qweb')
+                self._routing_create_bounce_email(email_from, body, message, reply_to=self.env.user.company_id.email)
+                return []
+
             dest_aliases = Alias.search([('alias_name', 'in', rcpt_tos_localparts)])
             if dest_aliases:
                 routes = []
@@ -1370,6 +1383,8 @@ class MailThread(models.AbstractModel):
         mail module, and should not contain security or generic html cleaning.
         Indeed those aspects should be covered by the html_sanitize method
         located in tools. """
+        if not body:
+            return body, attachments
         root = lxml.html.fromstring(body)
         postprocessed = False
         to_remove = []
@@ -1405,7 +1420,7 @@ class MailThread(models.AbstractModel):
         # Content-Type: multipart/related;
         #   boundary="_004_3f1e4da175f349248b8d43cdeb9866f1AMSPR06MB343eurprd06pro_";
         #   type="text/html"
-        if not message.is_multipart() or message.get('content-type', '').startswith("text/"):
+        if message.get_content_maintype() == 'text':
             encoding = message.get_content_charset()
             body = message.get_payload(decode=True)
             body = tools.ustr(body, encoding, errors='replace')

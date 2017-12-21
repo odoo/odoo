@@ -12,10 +12,10 @@
 # Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:25+0000\n"
-"PO-Revision-Date: 2017-10-02 11:25+0000\n"
+"POT-Creation-Date: 2017-11-16 08:08+0000\n"
+"PO-Revision-Date: 2017-11-16 08:08+0000\n"
 "Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -597,7 +597,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_project
 msgid "<strong>Customer</strong>"
-msgstr ""
+msgstr "<strong>Клієнт</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
@@ -607,7 +607,7 @@ msgstr "<strong>Дата:</strong>"
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Deadline:</strong>"
-msgstr ""
+msgstr "<strong>Кінцевий термін:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -752,12 +752,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_project
 msgid "<strong>Project Manager</strong>"
-msgstr ""
+msgstr "<strong>Менеджер проекту</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Project:</strong>"
-msgstr ""
+msgstr "<strong>Проект:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1324,11 +1324,6 @@ msgid "Configuration options are available in the Settings app."
 msgstr "Параметри конфігурації доступні в застосунку Налаштування"
 
 #. module: project
-#: model:ir.actions.act_window,name:project.project_config_settings_action
-msgid "Configure Project"
-msgstr "Налаштувати проект"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Congratulations on choosing Odoo Project to help running your company more "
@@ -1485,12 +1480,12 @@ msgstr "Поточний табель"
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "Current stage of the task"
-msgstr ""
+msgstr "Поточний етап завдання"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "Current stage of this task"
-msgstr ""
+msgstr "Поточний етап цього завдання"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.project_task_action_activity
@@ -2647,6 +2642,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"Необов'язковий ID потоку (запису), до якого буде додано всі вхідні "
+"повідомлення, навіть якщо вони не відповіли на нього. Якщо встановлено, це "
+"повністю призведе до вимкнення створення нових записів."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
@@ -2713,7 +2711,7 @@ msgstr "Батьківська модель"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "Запис батьківської теми ID"
 
 #. module: project
 #: code:addons/project/models/project.py:861
@@ -2730,6 +2728,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"Батьківська модель, що містить псевдонім. Модель, яка містить посилання на "
+"псевдонім, не обов'язково являє собою модель, що дається alias_model_id "
+"(наприклад: project (parent_model) і завдання (model))"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2757,6 +2758,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Політика публікації повідомлення на документі за допомогою mailgateway.\n"
+"- всі: кожен може опублікувати\n"
+"- партнери: лише автентифіковані партнери\n"
+"- підписники: лише ті, хто підписаний на відповідний документ або учасники підписаних каналів\n"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2787,6 +2792,7 @@ msgstr ""
 #: model:ir.ui.menu,name:project.menu_main_pm
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
+#: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 #: model:res.request.link,name:project.req_link_project
@@ -2797,7 +2803,7 @@ msgstr "Проект"
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_project
 msgid "Project -"
-msgstr ""
+msgstr "Проект -"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_project_count
@@ -2975,7 +2981,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "Записати тему ID"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
@@ -3156,6 +3162,7 @@ msgid "Set a Cover Image"
 msgstr ""
 
 #. module: project
+#: model:ir.actions.act_window,name:project.project_config_settings_action
 #: model:ir.ui.menu,name:project.project_config_settings_menu_action
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
@@ -3344,7 +3351,7 @@ msgstr "Завдання"
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "Task -"
-msgstr ""
+msgstr "Завдання -"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_tasks
@@ -3547,6 +3554,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"Модель (тип документу Odoo), до якої відповідає цей псевдонім. Будь-яка "
+"вхідна електронна пошта, яка не відповідає існуючому запису, призведе до "
+"створення нового запису цієї моделі (наприклад, завдання проекту)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_name
@@ -3554,6 +3564,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"Ім'я псевдоніма електронної пошти, наприклад, \"Робота\", якщо ви хочете "
+"отримувати повідомлення електронної пошти на <jobs@example.odoo.com>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_user_id
@@ -3563,6 +3575,11 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
+"Власник записів створений при отриманні електронних листів за цим "
+"псевдонімом. Якщо це поле не встановлено, система намагатиметься знайти "
+"потрібного власника на основі адреси відправника (від) або використовувати "
+"обліковий запис адміністратора, якщо для цієї адреси не знайдено системного "
+"користувача."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3572,12 +3589,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_projects
 msgid "There are no projects."
-msgstr ""
+msgstr "Немає жодних проектів."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "There are no tasks."
-msgstr ""
+msgstr "Немає жодних завдань."
 
 #. module: project
 #. openerp-web
@@ -3630,6 +3647,8 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
+"Цей етап складається у канбані, коли на цьому етапі відсутні записи для "
+"відображення."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.mail_template_task_merge
@@ -3659,6 +3678,8 @@ msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
+"Це встановить одиницю вимірювання, що використовується в проектах та завданнях.\n"
+"Якщо ви використовуєте розклад, пов'язаний з проектами, не забувайте встановлювати потрібну одиницю вимірювання вашим співробітникам."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -3893,7 +3914,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "We can automate steps in your workflow, for example:"
-msgstr ""
+msgstr "Ми можемо автоматизувати кроки у вашому робочому процесі, наприклад:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4131,7 +4152,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
 msgid "res.config.settings"
-msgstr ""
+msgstr "res.config.settings"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner

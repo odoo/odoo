@@ -1,32 +1,42 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_analytic_default
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-01-25 08:56+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
-"Language: ko\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_product_product_rules_count
-#: model:ir.model.fields,field_description:account_analytic_default.field_product_template_rules_count
-msgid "# Analytic Rules"
-msgstr "# 분석 규칙"
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "<i class=\"fa fa-calendar\"/> From"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "<strong>Customer</strong>"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "<strong>Product</strong>"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Accounts"
-msgstr "계정"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_analytic_id
@@ -36,25 +46,23 @@ msgstr "분석적 계정"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
-#: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
 #: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
 msgid "Analytic Defaults"
-msgstr "분석 기본값"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr "분석 배분"
+msgstr ""
 
 #. module: account_analytic_default
+#: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
-#: model:ir.ui.view,arch_db:account_analytic_default.product_form_view_default_analytic_button
-#: model:ir.ui.view,arch_db:account_analytic_default.product_template_view_default_analytic_button
 msgid "Analytic Rules"
-msgstr "분석 규칙"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_company_id
@@ -65,7 +73,7 @@ msgstr "회사"
 #. module: account_analytic_default
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
 msgid "Conditions"
-msgstr "조건"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_uid
@@ -78,14 +86,19 @@ msgid "Created on"
 msgstr "작성일"
 
 #. module: account_analytic_default
+#: model:ir.ui.view,arch_db:account_analytic_default.res_config_settings_view_form
+msgid "Default Analytic Values"
+msgstr ""
+
+#. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_stop
 msgid "Default end date for this Analytic Account."
-msgstr "이 분석 계정에 대한 기본 마감일입니다."
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_start
 msgid "Default start date for this Analytic Account."
-msgstr "이 분석 계정에 대한 기본 시작일입니다."
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_display_name
@@ -95,18 +108,13 @@ msgstr "표시 이름"
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_date_stop
 msgid "End Date"
-msgstr "마감일"
-
-#. module: account_analytic_default
-#: model:ir.actions.act_window,name:account_analytic_default.act_account_acount_move_line_open
-msgid "Entries"
-msgstr "기입 항목"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_sequence
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
-msgstr "분석 배분 목록을 표시할 때 순서를 제공"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
@@ -145,16 +153,10 @@ msgid "Partner"
 msgstr "파트너"
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_product_product
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_product_id
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Product"
 msgstr "제품"
-
-#. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_product_template
-msgid "Product Template"
-msgstr "제품 양식"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
@@ -168,8 +170,6 @@ msgid ""
 "default (e.g. create new customer invoice or Sales order if we select this "
 "company, it will automatically take this as an analytic account)"
 msgstr ""
-"분석 기본값으로 지정된 분석 계정을 사용할 회사 선택 (예 : 이 회사를 선택해서 "
-"새 고객 송장이나 판매 주문을 만들면 자동으로 분석 계정으로 이것을 가져옵니다)"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_partner_id
@@ -178,9 +178,6 @@ msgid ""
 "default (e.g. create new customer invoice or Sales order if we select this "
 "partner, it will automatically take this as an analytic account)"
 msgstr ""
-"분석 기본값으로 지정된 분석 계정을 사용할 협력업체 선택 (예 : 이 협력회사를 "
-"선택해서 새 고객 송장이나 판매 주문을 만들면 자동으로 분석 계정으로 이것을 가"
-"져옵니다)"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_product_id
@@ -189,14 +186,12 @@ msgid ""
 "default (e.g. create new customer invoice or Sales order if we select this "
 "product, it will automatically take this as an analytic account)"
 msgstr ""
-"분석 기본값으로 지정된 분석 계정을 사용할 상품 선택 (예 : 이 상품을 선택해서 "
-"새 고객 송장이나 판매 주문을 만들면 자동으로 분석 계정으로 이것을 가져옵니다)"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_user_id
 msgid ""
 "Select a user which will use analytic account specified in analytic default."
-msgstr "분석 기본값으로 지정된 분석 계정을 사용할 사용자 선택"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_sequence
@@ -206,13 +201,15 @@ msgstr "순서"
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_date_start
 msgid "Start Date"
-msgstr "시작일"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_user_id
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "User"
-msgstr "사용자"
+msgstr ""
 
-#~ msgid "Transfer"
-#~ msgstr "출하"
+#. module: account_analytic_default
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "to"
+msgstr ""

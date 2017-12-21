@@ -870,7 +870,6 @@ more details.
 #----------------------------------------------------------
 # Controller and route registration
 #----------------------------------------------------------
-addons_module = {}
 addons_manifest = {}
 controllers_per_module = collections.defaultdict(list)
 
@@ -1305,7 +1304,7 @@ class Root(object):
         statics = {}
         for addons_path in odoo.modules.module.ad_paths:
             for module in sorted(os.listdir(str(addons_path))):
-                if module not in addons_module:
+                if module not in addons_manifest:
                     mod_path = opj(addons_path, module)
                     manifest_path = module_manifest(mod_path)
                     path_static = opj(addons_path, module, 'static')
@@ -1316,11 +1315,6 @@ class Root(object):
                             continue
                         manifest['addons_path'] = addons_path
                         _logger.debug("Loading %s", module)
-                        if 'odoo.addons' in sys.modules:
-                            m = __import__('odoo.addons.' + module)
-                        else:
-                            m = None
-                        addons_module[module] = m
                         addons_manifest[module] = manifest
                         statics['/%s/static' % module] = path_static
 
@@ -1630,15 +1624,9 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
 
 def content_disposition(filename):
     filename = odoo.tools.ustr(filename)
-    escaped = urls.url_quote(filename.encode('utf8'))
-    browser = request.httprequest.user_agent.browser
-    version = int((request.httprequest.user_agent.version or '0').split('.')[0])
-    if browser == 'msie' and version < 9:
-        return "attachment; filename=%s" % escaped
-    elif browser == 'safari' and version < 537:
-        return u"attachment; filename=%s" % filename.encode('ascii', 'replace')
-    else:
-        return "attachment; filename*=UTF-8''%s" % escaped
+    escaped = urls.url_quote(filename)
+
+    return "attachment; filename*=UTF-8''%s" % escaped
 
 #----------------------------------------------------------
 # RPC controller

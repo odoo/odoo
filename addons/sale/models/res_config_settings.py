@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
+
 from odoo import api, fields, models
 
 
@@ -45,7 +47,7 @@ class ResConfigSettings(models.TransientModel):
     sale_show_tax = fields.Selection([
         ('subtotal', 'Tax-Excluded Prices'),
         ('total', 'Tax-Included Prices')], string="Tax Display",
-        required=True)
+        default='subtotal', required=True)
     default_invoice_policy = fields.Selection([
         ('order', 'Invoice what is ordered'),
         ('delivery', 'Invoice what is delivered')
@@ -67,11 +69,11 @@ class ResConfigSettings(models.TransientModel):
     ], string='Customer Account')
 
     module_delivery = fields.Boolean("Shipping Costs")
-    module_delivery_dhl = fields.Boolean("DHL")
-    module_delivery_fedex = fields.Boolean("FedEx")
-    module_delivery_ups = fields.Boolean("UPS")
-    module_delivery_usps = fields.Boolean("USPS")
-    module_delivery_bpost = fields.Boolean("bpost")
+    module_delivery_dhl = fields.Boolean("DHL Connector")
+    module_delivery_fedex = fields.Boolean("FedEx Connector")
+    module_delivery_ups = fields.Boolean("UPS Connector")
+    module_delivery_usps = fields.Boolean("USPS Connector")
+    module_delivery_bpost = fields.Boolean("bpost Connector")
 
     module_product_email_template = fields.Boolean("Specific Email")
     module_sale_coupon = fields.Boolean("Coupons & Promotions")
@@ -136,11 +138,14 @@ class ResConfigSettings(models.TransientModel):
         ICPSudo = self.env['ir.config_parameter'].sudo()
         sale_pricelist_setting = ICPSudo.get_param('sale.sale_pricelist_setting')
         sale_portal_confirmation_options = ICPSudo.get_param('sale.sale_portal_confirmation_options', default='none')
+        default_deposit_product_id = literal_eval(ICPSudo.get_param('sale.default_deposit_product_id', default='False'))
+        if default_deposit_product_id and not self.env['product.product'].browse(default_deposit_product_id).exists():
+            default_deposit_product_id = False
         res.update(
             auth_signup_uninvited='b2c' if ICPSudo.get_param('auth_signup.allow_uninvited', 'False').lower() == 'true' else 'b2b',
             use_sale_note=ICPSudo.get_param('sale.use_sale_note', default=False),
             auto_done_setting=ICPSudo.get_param('sale.auto_done_setting'),
-            default_deposit_product_id=int(ICPSudo.get_param('sale.default_deposit_product_id')),
+            default_deposit_product_id=default_deposit_product_id,
             sale_show_tax=ICPSudo.get_param('sale.sale_show_tax', default='subtotal'),
             multi_sales_price=sale_pricelist_setting in ['percentage', 'formula'],
             multi_sales_price_method=sale_pricelist_setting in ['percentage', 'formula'] and sale_pricelist_setting or False,

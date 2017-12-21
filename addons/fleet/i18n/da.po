@@ -11,13 +11,14 @@
 # jonas jensen <j.jensen@tcomp.dk>, 2017
 # Jesper Carstensen <info@danodoo.dk>, 2017
 # Jesper Carstensen <jc@danodoo.dk>, 2017
+# Laerke Mathiasen <lhm@flexerp.dk>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:54+0000\n"
 "PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Jesper Carstensen <jc@danodoo.dk>, 2017\n"
+"Last-Translator: Laerke Mathiasen <lhm@flexerp.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +36,7 @@ msgstr "%s %s er blevet tilføjet til flåden!"
 #: code:addons/fleet/models/fleet_vehicle_cost.py:274
 #, python-format
 msgid "%s contract(s) will expire soon and should be renewed and/or closed!"
-msgstr ""
+msgstr "%s kontrakt(er) udløber snart og bør fornyes og/eller lukkes!"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -173,7 +174,7 @@ msgstr ""
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_model_brand
-msgid "Brand model of the vehicle"
+msgid "Brand of the vehicle"
 msgstr ""
 
 #. module: fleet
@@ -236,12 +237,13 @@ msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_state
-msgid "Choose wheter the contract is still valid or not"
+msgid "Choose whether the contract is still valid or not"
 msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_service_type_category
-msgid "Choose wheter the service refer to contracts, vehicle services or both"
+msgid ""
+"Choose whether the service refer to contracts, vehicle services or both"
 msgstr ""
 
 #. module: fleet
@@ -391,12 +393,12 @@ msgstr ""
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Contract details"
-msgstr ""
+msgstr "Kontraktdetaljer"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_log_contract
 msgid "Contract information on a vehicle"
-msgstr ""
+msgstr "Kontraktinformation om et køretøj"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -407,12 +409,12 @@ msgstr ""
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 msgid "Contract(s)"
-msgstr ""
+msgstr "Kontrakt(er)"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_purchaser_id
 msgid "Contractor"
-msgstr ""
+msgstr "Entreprenør"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_contract_count
@@ -424,7 +426,7 @@ msgstr "Kontrakter"
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_convertible
 msgid "Convertible"
-msgstr ""
+msgstr "Cabriolet"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_id
@@ -1590,12 +1592,8 @@ msgstr ""
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_service_types_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_service_types_menu
-msgid "Service Types"
-msgstr ""
-
-#. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_service_types_view_tree
-msgid "Service types"
+msgid "Service Types"
 msgstr ""
 
 #. module: fleet
@@ -1678,7 +1676,7 @@ msgstr ""
 #: code:addons/fleet/models/fleet_vehicle.py:220
 #, python-format
 msgid "State: from '%s' to '%s'"
-msgstr ""
+msgstr "Status: fra '%s' til '%s'"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_state

@@ -23,7 +23,8 @@ class ResCompany(models.Model):
     chart_template_id = fields.Many2one('account.chart.template', help='The chart template for the company (if any)')
     bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts', oldname="bank_account_code_char")
     cash_account_code_prefix = fields.Char(string='Prefix of the cash accounts')
-    accounts_code_digits = fields.Integer(string='Number of digits in an account code')
+    account_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax")
+    account_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax")
     tax_cash_basis_journal_id = fields.Many2one('account.journal', string="Cash Basis Journal")
     tax_calculation_rounding_method = fields.Selection([
         ('round_per_line', 'Round per Line'),
@@ -95,20 +96,16 @@ Best Regards,''')
             date_from = date_from.replace(year=date_from.year - 1)
         return {'date_from': date_from, 'date_to': date_to}
 
-    def get_new_account_code(self, current_code, old_prefix, new_prefix, digits):
+    def get_new_account_code(self, current_code, old_prefix, new_prefix):
+        digits = len(current_code)
         return new_prefix + current_code.replace(old_prefix, '', 1).lstrip('0').rjust(digits-len(new_prefix), '0')
 
-    def reflect_code_prefix_change(self, old_code, new_code, digits):
+    def reflect_code_prefix_change(self, old_code, new_code):
         accounts = self.env['account.account'].search([('code', 'like', old_code), ('internal_type', '=', 'liquidity'),
             ('company_id', '=', self.id)], order='code asc')
         for account in accounts:
             if account.code.startswith(old_code):
-                account.write({'code': self.get_new_account_code(account.code, old_code, new_code, digits)})
-
-    def reflect_code_digits_change(self, digits):
-        accounts = self.env['account.account'].search([('company_id', '=', self.id)], order='code asc')
-        for account in accounts:
-            account.write({'code': account.code.rstrip('0').ljust(digits, '0')})
+                account.write({'code': self.get_new_account_code(account.code, old_code, new_code)})
 
     @api.multi
     def _validate_fiscalyear_lock(self, values):
@@ -127,15 +124,12 @@ Best Regards,''')
 
         # Reflect the change on accounts
         for company in self:
-            digits = values.get('accounts_code_digits') or company.accounts_code_digits
-            if values.get('bank_account_code_prefix') or values.get('accounts_code_digits'):
+            if values.get('bank_account_code_prefix'):
                 new_bank_code = values.get('bank_account_code_prefix') or company.bank_account_code_prefix
-                company.reflect_code_prefix_change(company.bank_account_code_prefix, new_bank_code, digits)
-            if values.get('cash_account_code_prefix') or values.get('accounts_code_digits'):
+                company.reflect_code_prefix_change(company.bank_account_code_prefix, new_bank_code)
+            if values.get('cash_account_code_prefix'):
                 new_cash_code = values.get('cash_account_code_prefix') or company.cash_account_code_prefix
-                company.reflect_code_prefix_change(company.cash_account_code_prefix, new_cash_code, digits)
-            if values.get('accounts_code_digits'):
-                company.reflect_code_digits_change(digits)
+                company.reflect_code_prefix_change(company.cash_account_code_prefix, new_cash_code)
         return super(ResCompany, self).write(values)
 
     @api.model

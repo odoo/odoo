@@ -1362,6 +1362,9 @@ class Char(_String):
 
     :param int size: the maximum size of values stored for that field
 
+    :param bool trim: states whether the value is trimmed or not (by default,
+        ``True``). Note that the trim operation is applied only by the web client.
+
     :param translate: enable the translation of the field's values; use
         ``translate=True`` to translate field values as a whole; ``translate``
         may also be a callable such that ``translate(callback, value)``
@@ -1372,6 +1375,7 @@ class Char(_String):
     column_cast_from = ('text',)
     _slots = {
         'size': None,                   # maximum size of values (deprecated)
+        'trim': True,                   # whether value is trimmed (only by web client)
     }
 
     @property
@@ -1388,7 +1392,9 @@ class Char(_String):
         super(Char, self).update_db_column(model, column)
 
     _related_size = property(attrgetter('size'))
+    _related_trim = property(attrgetter('trim'))
     _description_size = property(attrgetter('size'))
+    _description_trim = property(attrgetter('trim'))
 
     def _setup_regular_base(self, model):
         super(Char, self)._setup_regular_base(model)

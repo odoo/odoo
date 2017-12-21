@@ -41,9 +41,9 @@
             <span class="oe_tooltip_technical_title">Domain:</span>
             <t t-esc="widget.attrs.domain || JSON.stringify(widget.field.domain)"/>
         </li>
-        <li t-if="widget.attrs.modifiers and widget.attrs.modifiers != '{}'" data-item="modifiers">
+        <li t-if="widget.attrs.modifiers and !_.isEmpty(widget.attrs.modifiers)" data-item="modifiers">
             <span class="oe_tooltip_technical_title">Modifiers:</span>
-            <t t-esc="widget.attrs.modifiers"/>
+            <t t-esc="JSON.stringify(widget.attrs.modifiers)"/>
         </li>
         <li t-if="widget.field and widget.field.change_default" data-item="change_default">
             <span class="oe_tooltip_technical_title">Change default:</span>
@@ -90,9 +90,9 @@
             <span class="oe_tooltip_technical_title">Context:</span>
             <t t-esc="node.attrs.context || widget.field.context"/>
         </li>
-        <li t-if="node.attrs.modifiers and node.attrs.modifiers != '{}'" data-item="modifiers">
+        <li t-if="node.attrs.modifiers and !_.isEmpty(node.attrs.modifiers)" data-item="modifiers">
             <span class="oe_tooltip_technical_title">Modifiers:</span>
-            <t t-esc="node.attrs.modifiers"/>
+            <t t-esc="JSON.stringify(node.attrs.modifiers)"/>
         </li>
         <li t-if="node.attrs.special" data-item="special">
             <span class="oe_tooltip_technical_title">Special:</span>
@@ -220,6 +220,7 @@
 </t>
 <t t-name="WebClient.DebugManager.Global">
     <li><a href="#" data-action="perform_js_tests">Run JS Tests</a></li>
+    <li><a href="#" data-action="perform_js_mobile_tests">Run JS Mobile Tests</a></li>
     <li><a href="#" data-action="select_view">Open View</a></li>
     <t t-if="manager._events">
         <li class="divider"/>
@@ -791,14 +792,23 @@
     </t>
 </t>
 <t t-name="FieldMany2ManyTag.colorpicker">
-    <div class="o_colorpicker dropdown-menu" role="menu">
+    <div class="o_colorpicker dropdown-menu tagcolor_dropdown_menu" role="menu">
         <ul>
-            <li t-foreach="12" t-as="color">
+            <li t-foreach="11" t-as="color">
                 <a href="#"
                    t-att-data-id="tag_id"
-                   t-att-data-color="color"
-                   t-attf-class="o_tag_color_#{color}"
-                   t-att-title="color === 0 ? 'Not shown in kanban' : ''"/>
+                   t-att-data-color="color+1"
+                   t-attf-class="o_tag_color_#{color+1}"/>
+            </li>
+            <li> <!-- checkbox for tag color 0 -->
+                <div class="o_hide_in_kanban"
+                     t-att-data-id="tag_id"
+                     t-att-data-color="0">
+                    <div class="o_checkbox">
+                        <input type="checkbox"/>
+                        <span/>
+                    </div> Hide in Kanban
+                </div>
             </li>
         </ul>
     </div>

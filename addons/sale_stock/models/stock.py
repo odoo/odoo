@@ -38,7 +38,7 @@ class StockMove(models.Model):
         if 'product_uom_qty' in vals:
             for move in self:
                 if move.state == 'done':
-                    sale_order_lines = self.filtered(lambda move: move.sale_line_id and move.product_id.expense_policy == 'no').mapped('sale_line_id')
+                    sale_order_lines = self.filtered(lambda move: move.sale_line_id).mapped('sale_line_id')
                     for line in sale_order_lines:
                         line.qty_delivered = line._get_delivered_qty()
         return res
@@ -57,6 +57,8 @@ class ProcurementRule(models.Model):
         result = super(ProcurementRule, self)._get_stock_move_values(product_id, product_qty, product_uom, location_id, name, origin, values, group_id)
         if values.get('sale_line_id', False):
             result['sale_line_id'] = values['sale_line_id']
+        if values.get('partner_dest_id'):
+            result['partner_id'] = values['partner_dest_id'].id
         return result
 
 

@@ -57,7 +57,7 @@
                     </div>
                     <field name="monthly_yearly_costs"/>
                 </group>
-                <group string="Monthly Benefits">
+                <group string="Monthly Benefit in Kind">
                     <field name="transport_mode" widget="radio"/>
                     <field name="car_atn" attrs="{'invisible': [('transport_mode', '!=', 'company_car')]}" invisible="1"/>
                     <field name="transport_employer_cost" invisible="1"/>
@@ -93,7 +93,7 @@
                         <span>/ month</span>
                     </div>
                 </group>
-                <group string="Yearly Advantages">
+                <group string="Yearly Advantages" name="yearly_advantages">
                     <label for="eco_checks"/>
                     <div class="o_row">
                         <field name="eco_checks" nolabel="1"/>
@@ -109,7 +109,7 @@
                         <field name="double_holidays" nolabel="1"/>
                         <span>/ year</span>
                     </div>
-                    <field name="holidays_editable"/>
+                    <field name="holidays_editable" invisible="1"/>
                     <label for="holidays"/>
                     <div class="o_row">
                         <field name="holidays" nolabel="1" attrs="{'readonly': [('holidays_editable', '=', False)]}"/>

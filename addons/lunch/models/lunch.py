@@ -231,7 +231,7 @@ class LunchProduct(models.Model):
     _description = 'lunch product'
 
     name = fields.Char('Product', required=True)
-    category_id = fields.Many2one('lunch.product.category', 'Category', required=True)
+    category_id = fields.Many2one('lunch.product.category', 'Product Category', required=True)
     description = fields.Text('Description')
     price = fields.Float('Price', digits=dp.get_precision('Account'))
     supplier = fields.Many2one('res.partner', 'Vendor')
@@ -243,7 +243,7 @@ class LunchProductCategory(models.Model):
     _name = 'lunch.product.category'
     _description = 'lunch product category'
 
-    name = fields.Char('Category', required=True)
+    name = fields.Char('Product Category', required=True)
 
 
 class LunchCashMove(models.Model):
