@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='description']" position="attributes">
-                <attribute name="attrs">{'invisible': [('use_pad', '=', True)]}</attribute>
+                <attribute name="attrs">{'invisible': [('use_pad', '=', True)], 'readonly': [('use_pad', '=', True)]}</attribute>
             </xpath>
             <field name="description" position="after">
                 <field name="use_pad" invisible="1"/>

@@ -7,6 +7,7 @@ var dom = require('web.dom');
 var rpc = require('web.rpc');
 var session = require('web.session');
 var utils = require('web.utils');
+var weContext = require('web_editor.context');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
@@ -66,11 +67,13 @@ var PlannerDialog = Dialog.extend({
      * Fetch the planner's rendered template
      */
     willStart: function() {
+        // fallback context for frontend
+        var context = session.is_frontend ? weContext.get() : session.user_context;
         var def = rpc.query({
                 model: 'web.planner',
                 method: 'render',
                 args: [this.planner.view_id[0], this.planner.planner_application],
-                context: session.user_context,
+                context: context,
             })
             .then((function (template) {
                 this.$template = $(template);
