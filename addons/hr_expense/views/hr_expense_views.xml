@@ -537,8 +537,10 @@
                     <field name="name" string="Expenses"/>
                     <field name="accounting_date"/>
                     <field name="state"/>
+                    <separator />
                     <field name="employee_id"/>
                     <field name="department_id" string="Department"/>
+                    <field name="journal_id"/>
                     <separator />
                     <filter domain="[('state', '=', 'submit')]" string="To Approve" name="submitted" help="Confirmed Expenses"/>
                     <filter domain="[('state', '=', 'approve')]" string="To Post" name="to_post" help="Approved Expenses"/>
@@ -628,21 +630,6 @@
             <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
             <field name="domain">[]</field>
             <field name="context">{'search_default_approved': 1}</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click here to create a new expense report.
-              </p><p>
-                Once you have created your expense, submit it to your manager who will validate it.
-              </p>
-            </field>
-        </record>
-
-        <record id="action_hr_expense_sheet_reports_to_process" model="ir.actions.act_window">
-            <field name="name">Expense Reports To Process</field>
-            <field name="res_model">hr.expense.sheet</field>
-            <field name="view_mode">tree,kanban,form,pivot,graph</field>
-            <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
-            <field name="context">{'search_default_approved': 1,'search_default_to_post': 1}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click here to create a new expense report.
