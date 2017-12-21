@@ -805,7 +805,7 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def action_invoice_cancel(self):
-        return self.filtered(lambda inv: inv.state == 'cancel').action_cancel()
+        return self.filtered(lambda inv: inv.state != 'cancel').action_cancel()
 
     @api.multi
     def _notification_recipients(self, message, groups):
