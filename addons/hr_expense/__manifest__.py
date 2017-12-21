@@ -38,6 +38,7 @@ This module also uses analytic accounting and is compatible with the invoice on 
         'security/ir_rule.xml',
         'report/report_expense_sheet.xml',
         'views/hr_dashboard.xml',
+        'views/account_journal_dashboard.xml',
         'views/hr_expense.xml',
         'views/res_config_settings_views.xml',
     ],
