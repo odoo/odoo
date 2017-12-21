@@ -2,7 +2,6 @@ odoo.define('mail.Chatter', function (require) {
 "use strict";
 
 var Activity = require('mail.Activity');
-var chat_mixin = require('mail.chat_mixin');
 var ChatterComposer = require('mail.ChatterComposer');
 var Followers = require('mail.Followers');
 var ThreadField = require('mail.ThreadField');
@@ -22,7 +21,7 @@ var QWeb = core.qweb;
 // with each other.
 // It synchronizes the rendering of those widgets (as they may be asynchronous), to limitate
 // the flickering when switching between records
-var Chatter = Widget.extend(chat_mixin, {
+var Chatter = Widget.extend({
     template: 'mail.Chatter',
     custom_events: {
         reload_mail_fields: '_onReloadMailFields',
@@ -52,7 +51,7 @@ var Chatter = Widget.extend(chat_mixin, {
         // mention: get the prefetched partners and use them as mention suggestions
         // if there is a follower widget, the followers will be added to the
         // suggestions as well once fetched
-        this.mentionPartnerSuggestions = this._getMentionPartnerSuggestions();
+        this.mentionPartnerSuggestions = this.call('chat_manager', 'getMentionPartnerSuggestions');
         this.mentionSuggestions = this.mentionPartnerSuggestions;
 
         this.fields = {};

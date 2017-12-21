@@ -140,7 +140,9 @@ return Widget.extend({
             };
             this.$input.val('');
             if (content) {
-                this.trigger('post_message', message, this.channel_id);
+                this.trigger('post_message', message, {
+                    channelID: this.channel_id,
+                });
             }
         }
     },

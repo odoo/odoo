@@ -1,7 +1,6 @@
 odoo.define('mail.composer', function (require) {
 "use strict";
 
-var chat_mixin = require('mail.chat_mixin');
 var DocumentViewer = require('mail.DocumentViewer');
 var utils = require('mail.utils');
 
@@ -385,7 +384,7 @@ var MentionManager = Widget.extend({
 
 });
 
-var BasicComposer = Widget.extend(chat_mixin, {
+var BasicComposer = Widget.extend({
     template: "mail.ChatComposer",
     events: {
         "keydown .o_composer_input": "_onKeydown",
@@ -482,7 +481,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
             self.trigger('input_focused');
         });
         this.$input.html(this.options.default_body);
-        this.$input.css('min-height', this.options.input_min_height)
+        this.$input.css('min-height', this.options.input_min_height);
 
         // Attachments
         $(window).on(this.fileupload_id, this.on_attachment_loaded);
@@ -728,7 +727,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
     },
     // remove mention when user try to edit or remove it.
     _removeMention: function (event) {
-        if (window.getSelection().anchorNode.parentNode.tagName == 'A') {
+        if (window.getSelection().anchorNode.parentNode.tagName === 'A') {
             document.getElementById(window.getSelection().anchorNode.parentNode.id).remove();
         }
     },
@@ -790,8 +789,8 @@ var BasicComposer = Widget.extend(chat_mixin, {
         var self = this;
         var def = $.Deferred();
         clearTimeout(this.canned_timeout);
-        this.canned_timeout = setTimeout(function() {
-            var canned_responses = self._getCannedResponses();
+        this.canned_timeout = setTimeout(function () {
+            var canned_responses = self.call('chat_manager', 'getCannedResponses');
             var matches = fuzzy.filter(utils.unaccent(search), _.pluck(canned_responses, 'source'));
             var indexes = _.pluck(matches.slice(0, self.options.mention_fetch_limit), 'index');
             def.resolve(_.map(indexes, function (i) {
@@ -876,7 +875,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
     _onEmojiButtonClick: function () {
         if (!this.$emojisContainer) { // lazy rendering
             this.$emojisContainer = $(QWeb.render('mail.ChatComposer.emojis', {
-                emojis: this._getEmojis(),
+                emojis: this.call('chat_manager', 'getEmojis'),
             }));
         }
         if (this.$emojisContainer.parent().length) {
@@ -938,7 +937,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
      */
     _onEmojiImageClick: function (ev) {
         this.$input.html(this.$input.html() + " " + $(ev.currentTarget).data('emoji') + " ");
-        this._placeCaretAtEnd(this.$input[0])
+        this._placeCaretAtEnd(this.$input[0]);
         this._hideEmojis();
     },
 });

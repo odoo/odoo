@@ -187,17 +187,6 @@ class Message(models.Model):
         return ids
 
     @api.multi
-    def mark_as_unread(self, channel_ids=None):
-        """ Add needactions to messages for the current partner. """
-        partner_id = self.env.user.partner_id.id
-        for message in self:
-            message.write({'needaction_partner_ids': [(4, partner_id)]})
-
-        ids = [m.id for m in self]
-        notification = {'type': 'mark_as_unread', 'message_ids': ids, 'channel_ids': channel_ids}
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
-
-    @api.multi
     def set_message_done(self):
         """ Remove the needaction from messages for the current partner. """
         partner_id = self.env.user.partner_id

@@ -1,9 +1,11 @@
 odoo.define('web.action_manager_tests', function (require) {
 "use strict";
 
+var ReportClientAction = require('report.client_action');
+
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
-var ReportClientAction = require('report.client_action');
+var ReportService = require('web.ReportService');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 
@@ -1338,6 +1340,7 @@ QUnit.module('ActionManager', {
                 }
                 return this._super.apply(this, arguments);
             },
+            services: [ReportService],
             session: {
                 get_file: function (params) {
                     assert.step(params.url);
@@ -1347,7 +1350,9 @@ QUnit.module('ActionManager', {
             },
         });
         actionManager.doAction(7, {
-            on_close: assert.step.bind(assert, 'on_close'),
+            on_close: function () {
+                assert.step('on_close');
+            },
         });
 
         assert.verifySteps([
@@ -1374,6 +1379,7 @@ QUnit.module('ActionManager', {
                 }
                 return this._super.apply(this, arguments);
             },
+            services: [ReportService],
             session: {
                 get_file: function (params) {
                     assert.step(params.url);
@@ -1388,7 +1394,6 @@ QUnit.module('ActionManager', {
             },
         });
         actionManager.doAction(7);
-
         assert.verifySteps([
             '/web/action/load',
             '/report/check_wkhtmltopdf',
@@ -1430,6 +1435,7 @@ QUnit.module('ActionManager', {
                 }
                 return this._super.apply(this, arguments);
             },
+            services: [ReportService],
             session: {
                 get_file: function (params) {
                     assert.step(params.url); // should not be called

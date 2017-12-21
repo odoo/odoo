@@ -19,6 +19,7 @@ var core = require('web.core');
 var dom = require('web.dom');
 var session = require('web.session');
 var MockServer = require('web.MockServer');
+var utils = require('web.utils');
 var Widget = require('web.Widget');
 
 var DebouncedField = basic_fields.DebouncedField;
@@ -97,12 +98,6 @@ var createActionManager = function (params) {
         },
     });
     addMockEnvironment(widget, _.defaults(params, {debounce: false}));
-    intercept(widget, 'call_service', function (event) {
-        if (event.data.service === 'report') {
-            var state = widget._rpc({route: '/report/check_wkhtmltopdf'});
-            event.data.callback(state);
-        }
-    }, true);
     widget.appendTo($target);
     widget.$el.addClass('o_web_client');
 
@@ -330,6 +325,7 @@ function addMockEnvironment(widget, params) {
         currentDate: params.currentDate,
         debug: params.debug,
     });
+
     // make sure the debounce value for input fields is set to 0
     var initialDebounceValue = DebouncedField.prototype.DEBOUNCE;
     DebouncedField.prototype.DEBOUNCE = params.fieldDebounce || 0;
@@ -406,11 +402,53 @@ function addMockEnvironment(widget, params) {
         widgetDestroy.call(this);
     };
 
-    intercept(widget, 'call_service', function (event) {
-        if (event.data.service === 'ajax') {
-            var result = mockServer.performRpc(event.data.args[0], event.data.args[1]);
-            event.data.callback(result);
+    // Dispatch service calls
+    // Note: some services could call other services at init,
+    // Which is why we have to init services after that
+    var services = {};
+    intercept(widget, 'call_service', function (ev) {
+        var args, result;
+        if (ev.data.service === 'ajax') {
+            // ajax service is already mocked by the server
+            var route = ev.data.args[0];
+            args = ev.data.args[1];
+            result = mockServer.performRpc(route, args);
+        } else if (services[ev.data.service]) {
+            var service = services[ev.data.service];
+            args = (ev.data.args || []);
+            result = service[ev.data.method].apply(service, args);
         }
+        ev.data.callback(result);
+    });
+    // Instantiate services
+    // Note: ensure topological sort of services based on their dependencies
+    var sortServices = function (services) {
+        // Create nodes (services), with ajax already loaded
+        var nodes = { ajax: [] };
+        _.each(services, function (Service) {
+            nodes[Service.prototype.name] = Service.prototype.dependencies;
+        });
+        var sorted;
+        try {
+            sorted = utils.topologicalSort(nodes);
+        } catch (err) {
+            console.warn('topologicalSort Error:', err.message);
+            sorted = nodes;
+        }
+        // Remove ajax from sorted
+        sorted = _.without(sorted, 'ajax');
+        // Sort services based on sorted
+        // Note: we convert sorted to an object key=>index for efficiency
+        var sortedObj = _.invert(_.object(_.pairs(sorted)));
+        sorted = _.sortBy(services, function (Service) {
+            return sortedObj[Service.prototype.name];
+        });
+        return sorted;
+    };
+    var sortedServices = sortServices(params.services);
+    _.each(sortedServices, function (Service) {
+        var service = new Service(widget);
+        services[service.name] = service;
     });
 
     intercept(widget, 'load_action', function (event) {

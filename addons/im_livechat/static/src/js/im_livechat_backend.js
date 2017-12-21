@@ -1,11 +1,9 @@
-odoo.define('im_livechat.chat_client_action', function (require) {
+odoo.define('im_livechat.chat_discuss', function (require) {
 "use strict";
 
-require('mail.chat_client_action');
-var chat_manager = require('mail.chat_manager');
-var core = require('web.core');
+var Discuss = require('mail.chat_discuss');
 
-core.action_registry.get('mail.chat.instant_messaging').include({
+Discuss.include({
     _renderSidebar: function (options) {
         // Override to sort livechat channels by last message's date
         var channel_partition = _.partition(options.channels, function (channel) {
@@ -17,15 +15,6 @@ core.action_registry.get('mail.chat.instant_messaging').include({
         options.channels = channel_partition[0].concat(channel_partition[1]);
         return this._super(options);
     },
-});
-
-chat_manager.bus.on('new_message', null, function (msg) {
-    _.each(msg.channel_ids, function (channel_id) {
-        var channel = chat_manager.get_channel(channel_id);
-        if (channel) {
-            channel.last_message_date = msg.date; // update the last message's date of the channel
-        }
-    });
 });
 
 });

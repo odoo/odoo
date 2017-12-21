@@ -1,9 +1,9 @@
 odoo.define('web_editor.BodyManager', function (require) {
 'use strict';
 
-var mixins = require('web.mixins');
-var session = require('web.session');
 var rootWidget = require('web_editor.root_widget');
+var ServiceProviderMixin = require('web.ServiceProviderMixin');
+var session = require('web.session');
 
 /**
  * Element which is designed to be unique and that will be the top-most element
@@ -11,13 +11,13 @@ var rootWidget = require('web_editor.root_widget');
  * this Class instance. Its main role will be to retrieve RPC demands from its
  * children and handle them.
  */
-var BodyManager = rootWidget.RootWidget.extend(mixins.ServiceProvider, {
+var BodyManager = rootWidget.RootWidget.extend(ServiceProviderMixin, {
     /**
      * @constructor
      */
     init: function () {
-        mixins.ServiceProvider.init.call(this);
         this._super.apply(this, arguments);
+        ServiceProviderMixin.init.call(this);
     },
     /**
      * @override

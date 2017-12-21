@@ -7,8 +7,6 @@ var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var Widget = require('web.Widget');
 
-var chat_manager = require('mail.chat_manager');
-
 var QWeb = core.qweb;
 
 /**
@@ -35,16 +33,20 @@ var MessagingMenu = Widget.extend({
         this.$filter_buttons = this.$('.o_filter_button');
         this.$channels_preview = this.$('.o_mail_navbar_dropdown_channels');
         this.filter = false;
-        chat_manager.bus.on("update_needaction", this, this.update_counter);
-        chat_manager.bus.on("update_channel_unread_counter", this, this.update_counter);
-        chat_manager.is_ready.then(this.update_counter.bind(this));
+        var chatBus = this.call('chat_manager', 'getChatBus');
+        chatBus.on("update_needaction", this, this.update_counter);
+        chatBus.on("update_channel_unread_counter", this, this.update_counter);
+        var chatReady = this.call('chat_manager', 'isReady');
+        chatReady.then(this.update_counter.bind(this));
         return this._super();
     },
     is_open: function () {
         return this.$el.hasClass('open');
     },
     update_counter: function () {
-        var counter =  chat_manager.get_needaction_counter() + chat_manager.get_unread_conversation_counter();
+        var needactionCounter = this.call('chat_manager', 'getNeedactionCounter');
+        var unreadConversationCounter = this.call('chat_manager', 'getUnreadConversationCounter');
+        var counter =  needactionCounter + unreadConversationCounter;
         this.$('.o_notification_counter').text(counter);
         this.$el.toggleClass('o_no_notification', !counter);
         if (this.is_open()) {
@@ -56,9 +58,10 @@ var MessagingMenu = Widget.extend({
 
         // Display spinner while waiting for channels preview
         this.$channels_preview.html(QWeb.render('Spinner'));
-
-        chat_manager.is_ready.then(function () {
-            var channels = _.filter(chat_manager.get_channels(), function (channel) {
+        var chatReady = this.call('chat_manager', 'isReady');
+        chatReady.then(function () {
+            var allChannels = self.call('chat_manager', 'getChannels');
+            var channels = _.filter(allChannels, function (channel) {
                 if (self.filter === 'chat') {
                     return channel.is_chat;
                 } else if (self.filter === 'channels') {
@@ -67,7 +70,7 @@ var MessagingMenu = Widget.extend({
                     return channel.type !== 'static';
                 }
             });
-            chat_manager.get_messages({channel_id: 'channel_inbox'}).then(function(result) {
+            self.call('chat_manager', 'getMessages', {channelID: 'channel_inbox'}).then(function (result) {
                 var res = [];
                 _.each(result, function (message) {
                     message.unread_counter = 1;
@@ -82,7 +85,7 @@ var MessagingMenu = Widget.extend({
                 if (self.filter === 'channel_inbox' || !self.filter) {
                     channels = _.union(channels, res);
                 }
-                chat_manager.get_channels_preview(channels).then(self._render_channels_preview.bind(self));
+                self.call('chat_manager', 'getChannelsPreview', channels).then(self._render_channels_preview.bind(self));
             });
         });
     },
@@ -105,7 +108,7 @@ var MessagingMenu = Widget.extend({
         this.update_channels_preview();
     },
     on_click_new_message: function () {
-        chat_manager.bus.trigger('open_chat');
+        this.call('chat_window_manager', 'openChat');
     },
 
     // Handlers
@@ -133,13 +136,13 @@ var MessagingMenu = Widget.extend({
                 this.do_action('mail.mail_channel_action_client_chat', {clear_breadcrumbs: true})
                     .then(function () {
                         self.trigger_up('hide_home_menu'); // we cannot 'go back to previous page' otherwise
-                        core.bus.trigger('change_menu_section', chat_manager.get_discuss_menu_id());
+                        core.bus.trigger('change_menu_section', self.call('chat_manager', 'getDiscussMenuID').bind(self));
                     });
             }
         } else {
-            var channel = chat_manager.get_channel(channelID);
+            var channel = this.call('chat_manager', 'getChannel', channelID);
             if (channel) {
-                chat_manager.open_channel(channel);
+                self.call('chat_manager', 'openChannel', channel);
             }
         }
     },
@@ -156,8 +159,10 @@ var ActivityMenu = Widget.extend({
     },
     start: function () {
         this.$activities_preview = this.$('.o_mail_navbar_dropdown_channels');
-        chat_manager.bus.on("activity_updated", this, this._updateCounter);
-        chat_manager.is_ready.then(this._updateCounter.bind(this));
+        var chatBus = this.call('chat_manager', 'getChatBus');
+        chatBus.on("activity_updated", this, this._updateCounter);
+        var chatReady = this.call('chat_manager', 'isReady');
+        chatReady.then(this._updateCounter.bind(this));
         this._updateActivityPreview();
         return this._super();
     },
@@ -168,7 +173,7 @@ var ActivityMenu = Widget.extend({
      * Make RPC and get current user's activity details
      * @private
      */
-    _getActivityData: function(){
+    _getActivityData: function () {
         var self = this;
 
         return self._rpc({
@@ -179,7 +184,7 @@ var ActivityMenu = Widget.extend({
             },
         }).then(function (data) {
             self.activities = data;
-            self.activityCounter = _.reduce(data, function(total_count, p_data){ return total_count + p_data.total_count; }, 0);
+            self.activityCounter = _.reduce(data, function (total_count, p_data) { return total_count + p_data.total_count; }, 0);
             self.$('.o_notification_counter').text(self.activityCounter);
             self.$el.toggleClass('o_no_notification', !self.activityCounter);
         });

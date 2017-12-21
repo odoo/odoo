@@ -12,6 +12,7 @@ var crash_manager = require('web.crash_manager');
 var framework = require('web.framework');
 var session = require('web.session');
 
+
 var _t = core._t;
 var _lt = core._lt;
 
