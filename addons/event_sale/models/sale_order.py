@@ -17,6 +17,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_cancel(self):
+        """On sale order cancel its registrations are canceled as well"""
         res = super(SaleOrder, self).action_cancel()
         event_so_lines = self.order_line.filtered('event_id')
         self.env['event.registration'].search(
