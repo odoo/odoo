@@ -35,6 +35,15 @@ class AccountInvoice(models.Model):
         if fiscal_position:
             self.fiscal_position_id = fiscal_position
 
+    @api.multi
+    def unlink(self):
+        downpayment_line = self.invoice_line_ids.mapped("sale_line_ids").filtered(lambda x: x.is_downpayment)
+        res = super(AccountInvoice, self).unlink()
+        # remove the downpayment line from SO when invoice of downpayment is deleted
+        if downpayment_line:
+            downpayment_line.unlink()
+        return res
+
     @api.onchange('partner_id', 'company_id')
     def _onchange_delivery_address(self):
         addr = self.partner_id.address_get(['delivery'])
