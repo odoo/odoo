@@ -58,7 +58,7 @@ class Survey(models.Model):
     title = fields.Char('Title', required=True, translate=True)
     page_ids = fields.One2many('survey.page', 'survey_id', string='Pages', copy=True)
     stage_id = fields.Many2one('survey.stage', string="Stage", default=_default_stage,
-                               ondelete="set null", copy=False, group_expand='_read_group_stage_ids')
+                               ondelete="restrict", copy=False, group_expand='_read_group_stage_ids')
     auth_required = fields.Boolean('Login required', help="Users with a public link will be requested to login before taking part to the survey",
         oldname="authenticate")
     users_can_go_back = fields.Boolean('Users can go back', help="If checked, users can go back to previous pages.")
