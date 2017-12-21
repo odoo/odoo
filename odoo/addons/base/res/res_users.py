@@ -201,7 +201,7 @@ class Users(models.Model):
     signature = fields.Html()
     active = fields.Boolean(default=True)
     action_id = fields.Many2one('ir.actions.actions', string='Home Action',
-        help="If specified, this action will be opened at log on for this user, in addition to the standard menu.", domain=lambda self: [('id', '!=', self.env.ref('base.action_open_website').id)])
+        help="If specified, this action will be opened at log on for this user, in addition to the standard menu.")
     groups_id = fields.Many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', string='Groups', default=_default_groups)
     log_ids = fields.One2many('res.users.log', 'create_uid', string='User log entries')
     login_date = fields.Datetime(related='log_ids.create_date', string='Latest connection')
@@ -279,6 +279,13 @@ class Users(models.Model):
     def _check_company(self):
         if any(user.company_ids and user.company_id not in user.company_ids for user in self):
             raise ValidationError(_('The chosen company is not in the allowed companies for this user'))
+
+    @api.multi
+    @api.constrains('action_id')
+    def _check_action_id(self):
+        action_open_website = self.env.ref('base.action_open_website', raise_if_not_found=False)
+        if action_open_website and any(user.action_id.id == action_open_website.id for user in self):
+            raise ValidationError(_('The "App Switcher" action cannot be selected as home action.'))
 
     @api.multi
     def read(self, fields=None, load='_classic_read'):
