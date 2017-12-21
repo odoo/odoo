@@ -537,8 +537,10 @@
                     <field name="name" string="Expenses"/>
                     <field name="accounting_date"/>
                     <field name="state"/>
+                    <separator />
                     <field name="employee_id"/>
                     <field name="department_id" string="Department"/>
+                    <field name="journal_id"/>
                     <separator />
                     <filter domain="[('state', '=', 'submit')]" string="To Approve" name="submitted" help="Confirmed Expenses"/>
                     <filter domain="[('state', '=', 'approve')]" string="To Post" name="to_post" help="Approved Expenses"/>
