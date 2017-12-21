@@ -987,8 +987,6 @@ class AccountInvoice(models.Model):
                 'invoice_id': self.id,
                 'analytic_tag_ids': analytic_tag_ids
             }
-            if line['account_analytic_id']:
-                move_line_dict['analytic_line_ids'] = [(0, 0, line._get_analytic_line())]
             res.append(move_line_dict)
         return res
 
@@ -1433,21 +1431,6 @@ class AccountInvoiceLine(models.Model):
     _name = "account.invoice.line"
     _description = "Invoice Line"
     _order = "invoice_id,sequence,id"
-
-    @api.multi
-    def _get_analytic_line(self):
-        ref = self.invoice_id.number
-        return {
-            'name': self.name,
-            'date': self.invoice_id.date_invoice,
-            'account_id': self.account_analytic_id.id,
-            'unit_amount': self.quantity,
-            'amount': self.price_subtotal_signed,
-            'product_id': self.product_id.id,
-            'product_uom_id': self.uom_id.id,
-            'general_account_id': self.account_id.id,
-            'ref': ref,
-        }
 
     @api.one
     @api.depends('price_unit', 'discount', 'invoice_line_tax_ids', 'quantity',
