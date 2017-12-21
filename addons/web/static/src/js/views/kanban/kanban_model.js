@@ -71,7 +71,7 @@ var KanbanModel = BasicModel.extend({
                     domain: parent.domain.concat([[groupBy,"=",result[0]]]),
                     fields: parent.fields,
                     fieldsInfo: parent.fieldsInfo,
-                    groupedBy: parent.groupedBy,
+                    groupedBy: parent.groupedBy.slice(1),
                     isOpen: true,
                     limit: parent.limit,
                     parentID: parent.id,
