@@ -1,10 +1,15 @@
 odoo.define('mail.chat_window_test', function (require) {
 "use strict";
 
+var ChatManager = require('mail.ChatManager');
+var ChatWindow = require('mail.ExtendedChatWindow');
+var mailTestUtils = require('mail.testUtils');
+
 var framework = require('web.framework');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
-var ChatWindow = require('mail.ExtendedChatWindow');
+
+var createBusService = mailTestUtils.createBusService;
 
 QUnit.module('mail', {}, function () {
 
@@ -88,6 +93,8 @@ QUnit.module('mail', {}, function () {
     QUnit.test('emoji popover should open correctly in chat windows', function (assert) {
         assert.expect(1);
 
+        var BusService = createBusService();
+
         function createParent(params) {
             var widget = new Widget();
 
@@ -100,6 +107,7 @@ QUnit.module('mail', {}, function () {
         }
         var parent = createParent({
             data: {},
+            services: [ChatManager, BusService],
         });
 
         var $dom = $('#qunit-fixture');

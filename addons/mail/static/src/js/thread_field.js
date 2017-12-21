@@ -1,7 +1,6 @@
 odoo.define('mail.ThreadField', function (require) {
 "use strict";
 
-var chat_mixin = require('mail.chat_mixin');
 var ChatThread = require('mail.ChatThread');
 
 var AbstractField = require('web.AbstractField');
@@ -15,14 +14,15 @@ var _t = core._t;
 // -----------------------------------------------------------------------------
 // 'mail_thread' widget: displays the thread of messages
 // -----------------------------------------------------------------------------
-var ThreadField = AbstractField.extend(chat_mixin, {
+var ThreadField = AbstractField.extend({
     // inherited
     init: function () {
         this._super.apply(this, arguments);
         this.msgIDs = this.value.res_ids;
     },
     willStart: function () {
-        return this.alive(this._chatReady());
+        var chatReady = this.call('chat_manager', 'isReady');
+        return this.alive(chatReady);
     },
     start: function () {
         var self = this;
@@ -39,7 +39,9 @@ var ThreadField = AbstractField.extend(chat_mixin, {
         this.thread.on('load_more_messages', this, this._onLoadMoreMessages);
         this.thread.on('redirect', this, this._onRedirect);
         this.thread.on('redirect_to_channel', this, this._onRedirectToChannel);
-        this.thread.on('toggle_star_status', this, this._toggleStarStatus);
+        this.thread.on('toggle_star_status', this, function (messageID) {
+            self.call('chat_manager', 'toggleStarStatus', messageID);
+        });
 
         var def1 = this.thread.appendTo(this.$el);
         var def2 = this._super.apply(this, arguments);
@@ -47,10 +49,9 @@ var ThreadField = AbstractField.extend(chat_mixin, {
         return this.alive($.when(def1, def2)).then(function () {
             // unwrap the thread to remove an unnecessary level on div
             self.setElement(self.thread.$el);
-
-            var bus = self._getBus();
-            bus.on('new_message', self, self._onNewMessage);
-            bus.on('update_message', self, self._onUpdateMessage);
+            var chatBus = self.call('chat_manager', 'getChatBus');
+            chatBus.on('new_message', self, self._onNewMessage);
+            chatBus.on('update_message', self, self._onUpdateMessage);
         });
     },
     _render: function () {
@@ -60,7 +61,7 @@ var ThreadField = AbstractField.extend(chat_mixin, {
         return true;
     },
     destroy: function () {
-        this._removeChatterMessages(this.model);
+        this.call('chat_manager', 'removeChatterMessages', this.model);
         this._super.apply(this, arguments);
     },
     _reset: function (record) {
@@ -82,7 +83,7 @@ var ThreadField = AbstractField.extend(chat_mixin, {
     postMessage: function (message) {
         var self = this;
         var options = {model: this.model, res_id: this.res_id};
-        return this._postMessage(message, options)
+        return this.call('chat_manager', 'postMessage', message, options)
             .then(function () {
                 if (message.partner_ids.length) {
                     self.trigger_up('reload_mail_fields', {followers: true});
@@ -123,7 +124,7 @@ var ThreadField = AbstractField.extend(chat_mixin, {
         var self = this;
         options = options || {};
         options.ids = ids;
-        var fetch_def = this.dp.add(this._getMessages(options));
+        var fetch_def = this.dp.add(this.call('chat_manager', 'getMessages', options));
         return fetch_def.then(function (raw_messages) {
             var isCreateMode = false;
             if (!self.res_id) {
@@ -147,7 +148,7 @@ var ThreadField = AbstractField.extend(chat_mixin, {
      * @returns {Deferred}
      */
     _onLoadMoreMessages: function () {
-        this._fetchAndRenderThread(this.msgIDs, {force_fetch: true});
+        this._fetchAndRenderThread(this.msgIDs, {forceFetch: true});
     },
     _onNewMessage: function (message) {
         if (message.model === this.model && message.res_id === this.res_id) {
@@ -161,7 +162,7 @@ var ThreadField = AbstractField.extend(chat_mixin, {
     },
     _onRedirectToChannel: function (channelID) {
         var self = this;
-        this._joinChannel(channelID).then(function () {
+        this.call('chat_manager', 'joinChannel', channelID).then(function () {
             // Execute Discuss client action with 'channel' as default channel
             self.do_action('mail.mail_channel_action_client_chat', {active_id: channelID});
         });

@@ -7,6 +7,7 @@ var config = require('web.config');
 var core = require('web.core');
 var mixins = require('web.mixins');
 var rpc = require('web.rpc');
+var ServiceProviderMixin = require('web.ServiceProviderMixin');
 var session = require('web.session');
 var TourManager = require('web_tour.TourManager');
 
@@ -16,10 +17,10 @@ if (config.device.isMobile) {
     return $.Deferred().reject();
 }
 
-var CallService = Class.extend(mixins.EventDispatcherMixin, mixins.ServiceProvider, {
+var CallService = Class.extend(mixins.EventDispatcherMixin, ServiceProviderMixin, {
     init: function () {
-        mixins.ServiceProvider.init.call(this);
         mixins.EventDispatcherMixin.init.call(this);
+        ServiceProviderMixin.init.call(this);
     },
 });
 

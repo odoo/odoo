@@ -430,7 +430,7 @@ var MockServer = Class.extend({
         return result;
     },
     /**
-     * Simulate a 'field_get' operation
+     * Simulate a 'fields_get' operation
      *
      * @private
      * @param {string} modelName
@@ -464,7 +464,7 @@ var MockServer = Class.extend({
         if (!action) {
             // when the action doesn't exist, the real server doesn't crash, it
             // simply returns false
-            console.warn("No action found for ID " + event.data.actionID);
+            console.warn("No action found for ID " + kwargs.action_id);
         }
         return action || false;
     },

@@ -301,6 +301,37 @@ var utils = {
         return fn(mod, Math.floor(x));
     },
     /**
+     * Topological sort of nodes
+     *
+     * @param {Object} nodes where key is name of node, and value is list of
+     *                       names of dependent nodes.
+     * @param {string[]} nodes[name] list of named dependencies of node having
+     *                       'name' as its name.
+     * @return {string[]} topological sort of nodes by their names.
+     * @throws {Error} if there is at least one circular
+     *                       dependency between nodes
+     */
+    topologicalSort: function (nodes) {
+        var sorted = [];
+        var unresolved = nodes;
+        while (!_.isEmpty(unresolved)) {
+            // Get all nodes that have no dependency
+            var resolvable = _.pick(unresolved, function (dependencies, name) {
+                return _.isEmpty(_.difference(dependencies, sorted));
+            });
+            if (_.isEmpty(resolvable)) {
+                throw new Error("Circular dependency detected");
+            }
+            // Append them to sorted
+            sorted = _.union(sorted, _.keys(resolvable));
+            // Remove these nodes from unresolved
+            _.each(resolvable, function (dependencies, name) {
+                unresolved = _.omit(unresolved, name);
+            });
+        }
+        return sorted;
+    },
+    /**
      * performs a half up rounding with a fixed amount of decimals, correcting for float loss of precision
      * See the corresponding float_round() in server/tools/float_utils.py for more info
      * @param {Number} value the value to be rounded

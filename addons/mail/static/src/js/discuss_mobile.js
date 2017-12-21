@@ -1,12 +1,10 @@
-odoo.define('mail.chat_client_action_mobile', function (require) {
+odoo.define('mail.chat_discuss_mobile', function (require) {
 "use strict";
 
-var ChatAction = require('mail.chat_client_action');
-var chat_manager = require('mail.chat_manager');
+var Discuss = require('mail.chat_discuss');
 
 var config = require('web.config');
 var core = require('web.core');
-var session = require('web.session');
 
 var QWeb = core.qweb;
 
@@ -14,10 +12,10 @@ if (!config.device.isMobile) {
     return;
 }
 
-ChatAction.include({
-    template: 'mail.client_action_mobile',
+Discuss.include({
+    template: 'mail.discuss_mobile',
     need_control_panel: false, // in mobile, we use a custom control panel
-    events: _.extend(ChatAction.prototype.events, {
+    events: _.extend(Discuss.prototype.events, {
         'click .o_mail_mobile_tab': '_onMobileTabClicked',
         'click .o_channel_inbox_item': '_onMobileInboxButtonClicked',
         'click .o_mail_channel_preview': '_onMobileChannelClicked',
@@ -103,10 +101,11 @@ ChatAction.include({
     /**
      * @override
      * @private
+     * @param {Object} channel
      */
     _setChannel: function (channel) {
         if (channel.type !== 'static') {
-            chat_manager.detach_channel(channel);
+            this.call('chat_manager', 'detachChannel', channel.id);
         } else {
             this._super.apply(this, arguments);
         }
@@ -170,8 +169,9 @@ ChatAction.include({
         if (inInbox) {
             def = this._fetchAndRenderThread();
         } else {
-            var channels = _.where(chat_manager.get_channels(), {type: type});
-            def = chat_manager.get_channels_preview(channels);
+            var allChannels = this.call('chat_manager', 'getChannels');
+            var channels = _.where(allChannels, {type: type});
+            def = this.call('chat_manager', 'getChannelsPreview', channels);
         }
         return $.when(def).then(function (channelsPreview) {
             // update content
@@ -179,19 +179,15 @@ ChatAction.include({
                 if (!previouslyInInbox) {
                     self.$('.o_mail_chat_tab_pane').remove();
                     self.$mainContent.append(self.thread.$el);
-                    self.$mainContent.append(self.extended_composer.$el);
+                    self.$mainContent.append(self.extendedComposer.$el);
                 }
                 self._restoreChannelState();
             } else {
                 self.thread.$el.detach();
-                self.extended_composer.$el.detach();
+                self.extendedComposer.$el.detach();
                 var $content = $(QWeb.render("mail.chat.MobileTabPane", {
                     channels: channelsPreview,
-                    get_message_body_preview: chat_manager.get_message_body_preview,
-                    moment: moment,
-                    partner_id: session.partner_id,
                     type: type,
-                    widget: self,
                 }));
                 self._prepareAddChannelInput($content.find('.o_mail_add_channel input'), type);
                 self.$mainContent.html($content);
@@ -252,7 +248,8 @@ ChatAction.include({
      * @param {MouseEvent}
      */
     _onMobileInboxButtonClicked: function (event) {
-        this._setChannel(chat_manager.get_channel($(event.currentTarget).data('type')));
+        var channel = this.call('chat_manager', 'getChannel', $(event.currentTarget).data('type'));
+        this._setChannel(channel);
         this._updateContent(this.channel.id);
     },
     /**
@@ -264,7 +261,8 @@ ChatAction.include({
     _onMobileTabClicked: function (event) {
         var type = $(event.currentTarget).data('type');
         if (type === 'channel_inbox') {
-            this._setChannel(chat_manager.get_channel('channel_inbox'));
+            var channel = this.call('chat_manager', 'getChannel', 'channel_inbox');
+            this._setChannel(channel);
         }
         this._updateContent(type);
     },
@@ -275,8 +273,8 @@ ChatAction.include({
      * @param {MouseEvent}
      */
     _onMobileChannelClicked: function (event) {
-        var channelId = $(event.currentTarget).data("channel_id");
-        chat_manager.detach_channel(chat_manager.get_channel(channelId));
+        var channelID = $(event.currentTarget).data("channel_id");
+        this.call('chat_manager', 'detachChannel', channelID);
     },
 });
 

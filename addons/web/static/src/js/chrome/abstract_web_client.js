@@ -20,16 +20,16 @@ var data_manager = require('web.data_manager');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
 var Loading = require('web.Loading');
-var mixins = require('web.mixins');
 var NotificationManager = require('web.NotificationManager');
 var RainbowMan = require('web.RainbowMan');
+var ServiceProviderMixin = require('web.ServiceProviderMixin');
 var session = require('web.session');
 var Widget = require('web.Widget');
 
 var _t = core._t;
 var qweb = core.qweb;
 
-var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
+var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
     custom_events: {
         clear_uncommitted_changes: function (e) {
             this.clear_uncommitted_changes().then(e.data.callback);
@@ -90,8 +90,8 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
     },
     init: function (parent) {
         this.client_options = {};
-        mixins.ServiceProvider.init.call(this);
         this._super(parent);
+        ServiceProviderMixin.init.call(this);
         this.origin = undefined;
         this._current_state = null;
         this.menu_dm = new concurrency.DropMisordered();

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <!-- Client Action -->
-    <t t-name="mail.client_action">
+    <!-- Discuss -->
+    <t t-name="mail.discuss">
         <div class="o_mail_chat">
             <div class="o_mail_chat_sidebar"/>
             <div class="o_mail_chat_content">
@@ -147,7 +147,7 @@
 
 
     <!-- Mobile templates -->
-    <t t-name="mail.client_action_mobile">
+    <t t-name="mail.discuss_mobile">
         <div class="o_mail_chat">
             <div class="o_mail_chat_mobile_control_panel"/>
             <div class="o_mail_chat_mobile_inbox_buttons">
@@ -193,7 +193,7 @@
         </div>
     </t>
 
-    <!-- The ChannelPreview template is used by the client action in mobile, and by the systray menu -->
+    <!-- The ChannelPreview template is used by the discuss in mobile, and by the systray menu -->
     <t t-name="mail.chat.ChannelPreview">
         <div t-attf-class="o_mail_channel_preview #{channel.unread_counter ? 'o_channel_unread' : ''}"
              t-att-data-channel_id="channel.id" t-att-data-res_id="channel.res_id" t-att-data-res_model="channel.model">

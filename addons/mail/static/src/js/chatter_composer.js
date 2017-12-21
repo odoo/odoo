@@ -1,7 +1,6 @@
 odoo.define('mail.ChatterComposer', function (require) {
 "use strict";
 
-// var chat_manager = require('mail.chat_manager');
 var composer = require('mail.composer');
 var utils = require('mail.utils');
 

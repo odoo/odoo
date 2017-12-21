@@ -1,15 +1,19 @@
 odoo.define('mail.systray_tests', function (require) {
 "use strict";
 
+var ChatManager = require('mail.ChatManager');
 var systray = require('mail.systray');
+var mailTestUtils = require('mail.testUtils');
+
 var testUtils = require('web.test_utils');
 
+var createBusService = mailTestUtils.createBusService;
 
 QUnit.module('mail', {}, function () {
 
 QUnit.module('ActivityMenu', {
     beforeEach: function () {
-
+        this.BusService = createBusService();
         this.data = {
             'mail.activity.menu': {
                 fields: {
@@ -54,12 +58,13 @@ QUnit.test('activity menu widget: menu with no records', function (assert) {
 
     var activityMenu = new systray.ActivityMenu();
     testUtils.addMockEnvironment(activityMenu, {
-        mockRPC: function (route, args) {
-            if (args.method === 'activity_user_count') {
-                return $.when([]);
-            }
-            return this._super(route, args);
+            mockRPC: function (route, args) {
+                if (args.method === 'activity_user_count') {
+                    return $.when([]);
+                }
+                return this._super(route, args);
             },
+            services: [ChatManager, this.BusService]
         });
     activityMenu.appendTo($('#qunit-fixture'));
     assert.ok(activityMenu.$('.o_no_activity').hasClass('o_no_activity'), "should not have instance of widget");
@@ -76,8 +81,9 @@ QUnit.test('activity menu widget: activity menu with 3 records', function (asser
                 return $.when(self.data['mail.activity.menu']['records']);
             }
             return this._super(route, args);
-            },
-        });
+        },
+        services: [ChatManager, this.BusService],
+    });
     activityMenu.appendTo($('#qunit-fixture'));
     assert.ok(activityMenu.$el.hasClass('o_mail_navbar_item'), 'should be the instance of widget');
     assert.ok(activityMenu.$('.o_mail_channel_preview').hasClass('o_mail_channel_preview'), "should instance of widget");

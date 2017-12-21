@@ -142,7 +142,7 @@ var Thread = Widget.extend({
 
         this.attachments = _.uniq(_.flatten(_.map(messages, 'attachment_ids')));
 
-        _.each(msgs, function(msg) {
+        _.each(msgs, function (msg) {
             var $msg = self.$('.o_thread_message[data-message-id="'+ msg.id +'"]');
             $msg.find('.o_mail_timestamp').data('date', msg.date);
 
@@ -150,7 +150,7 @@ var Thread = Widget.extend({
         });
 
         if (!this.update_timestamps_interval) {
-            this.update_timestamps_interval = setInterval(function() {
+            this.update_timestamps_interval = setInterval(function () {
                 self.update_timestamps();
             }, 1000*60);
         }
@@ -172,17 +172,17 @@ var Thread = Widget.extend({
         // nodeType 1: element_node
         // nodeType 3: text_node
         var $children = $element.contents()
-            .filter(function() {
+            .filter(function () {
                 return this.nodeType === 1 || this.nodeType === 3 && this.nodeValue.trim();
             });
 
-        _.each($children, function(child) {
+        _.each($children, function (child) {
             var $child = $(child);
 
             // Hide Text nodes if "stopSpelling"
             if (child.nodeType === 3 && $child.prevAll("[id*='stopSpelling']").length > 0) {
                 // Convert Text nodes to Element nodes
-                var $child = $('<span>', {
+                $child = $('<span>', {
                     text: child.textContent,
                     "data-o-mail-quote": "1",
                 });
@@ -203,7 +203,7 @@ var Thread = Widget.extend({
             }
         });
 
-        _.each(groups, function(group) {
+        _.each(groups, function (group) {
             // Insert link just before the first node
             var $read_more = $('<a>', {
                 class: "o_mail_read_more",
@@ -213,7 +213,7 @@ var Thread = Widget.extend({
 
             // Toggle All next nodes
             var is_read_more = true;
-            $read_more.click(function(e) {
+            $read_more.click(function (e) {
                 e.preventDefault();
                 is_read_more = !is_read_more;
                 _.each(group, function ($child) {
@@ -226,7 +226,7 @@ var Thread = Widget.extend({
     },
     update_timestamps: function () {
         var isAtBottom = this.is_at_bottom();
-        this.$('.o_mail_timestamp').each(function() {
+        this.$('.o_mail_timestamp').each(function () {
             var date = $(this).data('date');
             $(this).html(time_from_now(date));
         });
