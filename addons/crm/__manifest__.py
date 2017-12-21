@@ -29,11 +29,9 @@
         'data/crm_lead_data.xml',
         'data/mail_template_data.xml',
 
-        'wizard/base_partner_merge_views.xml',
         'wizard/crm_lead_lost_views.xml',
         'wizard/crm_lead_to_opportunity_views.xml',
         'wizard/crm_merge_opportunities_views.xml',
-        'wizard/base_partner_merge_views.xml',
 
         'views/crm_templates.xml',
         'views/res_config_settings_views.xml',
