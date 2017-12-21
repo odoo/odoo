@@ -29,6 +29,7 @@ class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
     l10n_ch_postal = fields.Char(help='The ISR number of the company within the bank', compute='_compute_l10n_ch_postal')
+    l10n_ch_postal_manual = fields.Char(string='ISR Reference Number', help="Manual value set for the ISR number, overwriting its automatic computation. Leave blank to allow automatic computation from acount number.")
 
     @api.depends('acc_number')
     def _compute_acc_type(self):
@@ -41,10 +42,12 @@ class ResPartnerBank(models.Model):
             else:
                 super(ResPartnerBank, record)._compute_acc_type()
 
-    @api.depends('acc_number')
+    @api.depends('acc_number', 'l10n_ch_postal_manual')
     def _compute_l10n_ch_postal(self):
         for record in self:
-            if record.acc_type == 'iban':
+            if record.l10n_ch_postal_manual:
+                record.l10n_ch_postal = record.l10n_ch_postal_manual
+            elif record.acc_type == 'iban':
                 record.l10n_ch_postal = record._retrieve_l10n_ch_postal(record.sanitized_acc_number)
             else:
                 record.l10n_ch_postal = record.sanitized_acc_number
