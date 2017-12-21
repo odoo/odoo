@@ -146,6 +146,8 @@ var ChatterComposer = composer.BasicComposer.extend({
                 var partner_id = partner_info.partner_id;
                 var parsed_email = utils.parse_email(partner_name);
 
+                var saved_complete_partner = false;
+
                 var dialog = new view_dialogs.FormViewDialog(self, {
                     res_model: 'res.partner',
                     res_id: partner_id,
@@ -157,17 +159,18 @@ var ChatterComposer = composer.BasicComposer.extend({
                     },
                     title: _t("Please complete customer's informations"),
                     disable_multiple_selection: true,
+                    on_saved: function () {
+                        saved_complete_partner = true;
+                    },
                 }).open();
                 dialog.on('closed', self, function () {
-                    deferred.resolve();
-                });
-                dialog.opened().then(function () {
-                    dialog.form_view.on('on_button_cancel', self, function () {
+                    if (saved_complete_partner === false) {
                         names_to_remove.push(partner_name);
                         if (partner_id) {
                             recipient_ids_to_remove.push(partner_id);
                         }
-                    });
+                    }
+                    deferred.resolve();
                 });
             });
             $.when.apply($, emails_deferred).then(function () {
@@ -184,7 +187,7 @@ var ChatterComposer = composer.BasicComposer.extend({
                     result = result || [];
                     var recipient_popups = result.concat(recipients_to_check);
                     _.each(recipient_popups, function (partner_info) {
-                        if (partner_info.partner_id && _.indexOf(partner_info.partner_id, recipient_ids_to_remove) === -1) {
+                        if (partner_info.partner_id && _.indexOf(recipient_ids_to_remove, partner_info.partner_id) === -1) {
                             recipient_ids.push(partner_info.partner_id);
                         }
                     });
