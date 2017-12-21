@@ -65,7 +65,7 @@ class Track(models.Model):
     partner_biography = fields.Html('Speaker Biography')
     tag_ids = fields.Many2many('event.track.tag', string='Tags')
     stage_id = fields.Many2one(
-        'event.track.stage', string='Stage',
+        'event.track.stage', string='Stage', ondelete='restrict',
         index=True, copy=False, default=_get_default_stage_id,
         group_expand='_read_group_stage_ids',
         required=True, track_visibility='onchange')
