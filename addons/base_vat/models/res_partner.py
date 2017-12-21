@@ -6,6 +6,8 @@ import logging
 import string
 import re
 
+from suds.client import Client
+
 _logger = logging.getLogger(__name__)
 try:
     import vatnumber
@@ -61,6 +63,7 @@ _ref_vat = {
     'tr': 'TR1234567890 (VERGINO) veya TR12345678901 (TCKIMLIKNO)'  # Levent Karakas @ Eska Yazilim A.S.
 }
 
+VIES_WSDL_URL = 'http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl'
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
@@ -90,18 +93,26 @@ class ResPartner(models.Model):
         return check_func(vat_number)
 
     @api.model
-    def vies_vat_check(self, country_code, vat_number):
+    def vies_vat_check(self, country_code, vat_number, connection_timeout=5, except_to_simple_check=True): #TODO OCO DOC
         try:
             # Validate against  VAT Information Exchange System (VIES)
             # see also http://ec.europa.eu/taxation_customs/vies/
-            return vatnumber.check_vies(country_code.upper() + vat_number)
-        except Exception:
-            # see http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl
-            # Fault code may contain INVALID_INPUT, SERVICE_UNAVAILABLE, MS_UNAVAILABLE,
-            # TIMEOUT or SERVER_BUSY. There is no way we can validate the input
-            # with VIES if any of these arise, including the first one (it means invalid
-            # country code or empty VAT number), so we fall back to the simple check.
-            return self.simple_vat_check(country_code, vat_number)
+
+            # Implemented by directly connecting to the web service instead of
+            # using vatnumber or stdnum so that we can define our own timeout.
+            client = Client(VIES_WSDL_URL, timeout=connection_timeout)
+            response = client.service.checkVat(country_code, vat_number)
+            return response['valid'] and response or False
+
+        except Exception as err:
+            if except_to_simple_check:
+                # see http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl
+                # Fault code may contain INVALID_INPUT, SERVICE_UNAVAILABLE, MS_UNAVAILABLE,
+                # TIMEOUT or SERVER_BUSY. There is no way we can validate the input
+                # with VIES if any of these arise, including the first one (it means invalid
+                # country code or empty VAT number), so we fall back to the simple check.
+                return self.simple_vat_check(country_code, vat_number)
+            raise
 
     @api.model
     def fix_eu_vat_number(self, country_id, vat):

@@ -44,18 +44,14 @@ class ResPartner(models.Model):
                     return (result.group(1), result.group(2))
             return False
 
-        # Equivalent to stdnum_vat.check_vies(partner.vat).
-        # However, we want to add a custom timeout to the suds.client
-        # because by default, it's 120 seconds and this is to long.
         try:
-            client = Client(stdnum_vat.vies_wsdl, timeout=5)
-            partner_vat = stdnum_vat.compact(vat)
-            result = client.service.checkVat(partner_vat[:2], partner_vat[2:])
+            partner_vat = stdnum_vat.compact(partner.vat) 
+            result = partner.vies_vat_check(partner_vat[:2], partner_vat[2:], except_to_simple_check=False)
         except:
             # Avoid blocking the client when the service is unreachable/unavailable
             return False, {}
 
-        if not result['valid']:
+        if not result:
             return False, {}
 
         partner_name = False
