@@ -542,7 +542,19 @@ class Picking(models.Model):
         # call `_action_assign` on every confirmed move which location_id bypasses the reservation
         self.filtered(lambda picking: picking.location_id.usage in ('supplier', 'inventory', 'production') and picking.state == 'confirmed')\
             .mapped('move_lines')._action_assign()
-        return True
+        if self.env.context.get('planned_picking') and len(self) == 1:
+            action = self.env.ref('stock.action_picking_form')
+            result = action.read()[0]
+            result['res_id'] = self.id
+            result['context'] = {
+                'search_default_picking_type_id': [self.picking_type_id.id],
+                'default_picking_type_id': self.picking_type_id.id,
+                'contact_display': 'partner_address',
+                'planned_picking': False,
+            }
+            return result
+        else:
+            return True
 
     @api.multi
     def action_assign(self):
