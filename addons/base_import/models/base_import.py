@@ -249,7 +249,7 @@ class Import(models.TransientModel):
 
     @api.multi
     def _read_csv(self, options):
-        """ Returns a CSV-parsed iterator of all empty lines in the file
+        """ Returns a CSV-parsed iterator of all non-empty lines in the file
             :throws csv.Error: if an error is detected during CSV parsing
             :throws UnicodeDecodeError: if ``options.encoding`` is incorrect
         """
