@@ -160,13 +160,12 @@ class PortalWizardUser(models.TransientModel):
             :returns record of res.users
         """
         company_id = self.env.context.get('company_id')
-        return self.env['res.users'].with_context(no_reset_password=True).create({
+        return self.env['res.users'].with_context(no_reset_password=True)._create_user_from_template({
             'email': extract_email(self.email),
             'login': extract_email(self.email),
             'partner_id': self.partner_id.id,
             'company_id': company_id,
             'company_ids': [(6, 0, [company_id])],
-            'groups_id': [(6, 0, [])],
         })
 
     @api.multi
