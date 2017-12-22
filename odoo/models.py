@@ -256,7 +256,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
-    @api.model:
+    @api.model
     def get_parent_name(self):
         """Expose parent_name to external API. 
         Usage: Infer toposorts in an external ETL session."""
