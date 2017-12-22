@@ -184,7 +184,7 @@ class Inventory(models.Model):
         })
 
     def action_start(self):
-        for inventory in self:
+        for inventory in self.filtered(lambda x: x.state not in ('done','cancel')):
             vals = {'state': 'confirm', 'date': fields.Datetime.now()}
             if (inventory.filter != 'partial') and not inventory.line_ids:
                 vals.update({'line_ids': [(0, 0, line_values) for line_values in inventory._get_inventory_lines_values()]})
@@ -385,7 +385,7 @@ class InventoryLine(models.Model):
         if existings:
             raise UserError(_("You cannot have two inventory adjustements in state 'in Progress' with the same product"
                               "(%s), same location(%s), same package, same owner and same lot. Please first validate"
-                              "the first inventory adjustement with this product before creating another one.") % (res.product_id.name, res.location_id.name))
+                              "the first inventory adjustement with this product before creating another one.") % (res.product_id.display_name, res.location_id.name))
         return res
 
     @api.constrains('product_id')

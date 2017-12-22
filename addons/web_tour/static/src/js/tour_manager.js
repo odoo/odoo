@@ -172,18 +172,18 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     /**
      * Registers a tour described by the following arguments *in order*
      *
-     * @param {string} name - tour's name
-     * @param {Object} [options] - options (optional), available options are:
-     * @param {boolean} [options.test=false] - true if this is only for tests
-     * @param {boolean} [options.skip_enabled=false]
+     * @param [string] name - tour's name
+     * @param [Object] - options (optional), available options are:
+     * @param [boolean] - true if this is only for tests
+     * @param [boolean]
      *        true to add a link in its tips to consume the whole tour
-     * @param {string} [options.url]
+     * @param [string]
      *        the url to load when manually running the tour
-     * @param {boolean} [options.rainbowMan=true]
+     * @param [boolean]
      *        whether or not the rainbowman must be shown at the end of the tour
-     * @param {Deferred} [options.wait_for]
+     * @param [Deferred]
      *        indicates when the tour can be started
-     * @param {Object[]} steps - steps' descriptions, each step being an object
+     * @param [Object] steps - steps' descriptions, each step being an object
      *                     containing a tip description
      */
     register: function() {
