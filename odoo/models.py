@@ -256,6 +256,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
+    @api.model:
+    def get_parent_name(self):
+        """Expose parent_name to external API. 
+        Usage: Infer toposorts in an external ETL session."""
+        return self._parent_name
+
     @api.model
     def view_init(self, fields_list):
         """ Override this method to do specific things when a form view is
