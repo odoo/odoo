@@ -389,18 +389,13 @@ class StockMove(models.Model):
 
     def write(self, vals):
         # FIXME: pim fix your crap
-        receipt_moves_to_reassign = self.env['stock.move']
         if 'product_uom_qty' in vals:
             for move in self.filtered(lambda m: m.state not in ('done', 'draft') and m.picking_id):
                 if vals['product_uom_qty'] != move.product_uom_qty:
                     self.env['stock.move.line']._log_message(move.picking_id, move, 'stock.track_move_template', vals)
             if self.env.context.get('do_not_unreserve') is None:
-                move_to_unreserve = self.filtered(lambda m: m.state not in ['draft', 'done', 'cancel'] and m.reserved_availability > vals.get('product_uom_qty'))
-                move_to_unreserve._do_unreserve()
-                (self - move_to_unreserve).filtered(lambda m: m.state == 'assigned').write({'state': 'partially_available'})
-                # When editing the initial demand, directly run again action assign on receipt moves.
-                receipt_moves_to_reassign |= move_to_unreserve.filtered(lambda m: m.location_id.usage == 'supplier')
-                receipt_moves_to_reassign |= (self - move_to_unreserve).filtered(lambda m: m.location_id.usage == 'supplier' and m.state in ('partially_available', 'assigned'))
+                self.filtered(lambda m: m.state not in ['draft', 'done', 'cancel'] and m.reserved_availability > vals.get('product_uom_qty'))\
+                    ._decrease_reserved_quanity(vals.get('product_uom_qty'))
 
         # TDE CLEANME: it is a gros bordel + tracking
         Picking = self.env['stock.picking']
@@ -442,10 +437,11 @@ class StockMove(models.Model):
             pickings = Picking.browse(to_track_picking_ids)
             initial_values = dict((picking.id, {'state': picking.state}) for picking in pickings)
         res = super(StockMove, self).write(vals)
+        if 'product_uom_qty' in vals and self.env.context.get('do_not_unreserve') is None:
+            self.filtered(lambda m: m.state in ['partially_available', 'assigned'])._recompute_state()
+            self.filtered(lambda m: m.location_id.usage == 'supplier' and m.state in ['partially_available', 'assigned'])._action_assign()
         if track_pickings:
             pickings.message_track(pickings.fields_get(['state']), initial_values)
-        if receipt_moves_to_reassign:
-            receipt_moves_to_reassign._action_assign()
         return res
 
     def action_show_details(self):
@@ -499,6 +495,23 @@ class StockMove(models.Model):
                     raise UserError(_('Cannot unreserve a done move'))
             moves_to_unreserve |= move
         moves_to_unreserve.mapped('move_line_ids').unlink()
+        return True
+
+    def _decrease_reserved_quanity(self, quantity):
+        """ Decrease the reservation on move lines but keeps the
+        all other data.
+        """
+        move_line_to_unlink = self.env['stock.move.line']
+        for move in self:
+            reserved_quantity = quantity
+            for move_line in self.move_line_ids:
+                if move_line.product_uom_qty > reserved_quantity:
+                    move_line.product_uom_qty = reserved_quantity
+                else:
+                    reserved_quantity -= move_line.product_uom_qty
+                if not move_line.product_uom_qty and not move_line.qty_done:
+                    move_line_to_unlink |= move_line
+        move_line_to_unlink.unlink()
         return True
 
     def _push_apply(self):
