@@ -72,5 +72,18 @@
             <field name="groups_id" eval="[(4, ref('base.group_public'))]"/>
         </record>
 
+        <!-- Default template user for new users signing in -->
+        <record id="template_portal_user_id" model="res.users">
+            <field name="name">Portal User Template</field>
+            <field name="login">portaltemplate</field>
+            <field name="active" eval="False"/>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_portal')])]"/>
+        </record>
+
+        <record id="default_template_user_config" model="ir.config_parameter">
+            <field name="key">base.template_portal_user_id</field>
+            <field name="value" ref="template_portal_user_id"/>
+        </record>
+
     </data>
 </odoo>
