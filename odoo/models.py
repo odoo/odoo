@@ -260,7 +260,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     def get_model_info(self):
         """Expose basic model info to external API. 
         Usage: Infer logic in an external ETL session."""
-        return 
         return {
             '_parent_name' : self._parent_name,   # For toposorts
             '_inherits'    : self._inherits,      # For split loading strategy
