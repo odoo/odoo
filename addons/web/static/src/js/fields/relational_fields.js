@@ -418,7 +418,7 @@ var FieldMany2One = AbstractField.extend({
                 var create_enabled = self.can_create && !self.nodeOptions.no_create;
                 // quick create
                 var raw_result = _.map(result, function (x) { return x[1]; });
-                if (create_enabled && !self.nodeOptions.no_quick_create &&
+                if (create_enabled && self.nodeOptions.quick_create &&
                     search_val.length > 0 && !_.contains(raw_result, search_val)) {
                     values.push({
                         label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
