@@ -9373,7 +9373,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:455
 #, python-format
 msgid "The journal %s does not have a sequence, please specify one."
-msgstr "El diario %s no tienen una secuencia, por favor, especifique una."
+msgstr "El diario %s no tienen una secuencia, por favor especifique una."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_code
@@ -9392,7 +9392,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_move_id
 msgid "The move of this entry line."
-msgstr "El apunte de este asiento."
+msgstr "El asiento de este apunte."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9414,7 +9414,7 @@ msgstr "El nombre que se utilizará en los apuntes contables"
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_currency_id
 #: model:ir.model.fields,help:account.field_account_move_line_currency_id
 msgid "The optional other currency if it is a multi-currency entry."
-msgstr "La moneda alterna opcional si se trata de un apunte multi-moneda."
+msgstr "La moneda alternativa opcional si se trata de un asiento multimoneda."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_quantity
@@ -9429,7 +9429,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_account_id
 msgid "The partner account used for this invoice."
-msgstr "La cuenta de asociado utilizada para esta factura."
+msgstr "La cuenta de empresa utilizada para esta factura."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_has_unreconciled_entries
@@ -9438,8 +9438,9 @@ msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
 msgstr ""
-"El asociado tiene al menos un débito o crédito no conciliado desde la última"
-" vez que se realizó la conciliación de facturas y pagos."
+"La empresa tiene al menos una anotación en el debe o en el haber no "
+"conciliada desde la última vez que se realizó la conciliación de facturas y "
+"pagos."
 
 #. module: account
 #: code:addons/account/models/account_move.py:891
@@ -9448,13 +9449,13 @@ msgid ""
 "The partner has to be the same on all lines for receivable and payable "
 "accounts!"
 msgstr ""
-"¡El asociado debe ser el mismo en todos los apuntes de cuentas pendientes de"
-" pago y pagables!"
+"La empresa debe ser la misma en todas las líneas para cuentas a cobrar y a "
+"pagar!"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_reference
 msgid "The partner reference of this invoice."
-msgstr "La referencia de asociado para esta factura."
+msgstr "La referencia de empresa para esta factura."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:55
@@ -9511,8 +9512,8 @@ msgid ""
 "The sequence field is used to define order in which the tax lines are "
 "applied."
 msgstr ""
-"El campo secuencia se utiliza para definir el orden en que se aplican los "
-"apuntes de impuestos."
+"El campo secuencia se utiliza para definir el orden en que se aplican las "
+"líneas de impuestos."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:479
@@ -9567,8 +9568,8 @@ msgid ""
 "These types are defined according to your country. The type contains more "
 "information about the account and its specificities."
 msgstr ""
-"Estos tipos se definien en función de su país. Contienen más información "
-"sobre la cuenta y sus especificidades."
+"Estos tipos se definen en función de su país. Contienen más información "
+"sobre la cuenta y sus particularidades."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9633,8 +9634,8 @@ msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
 msgstr ""
-"Esta cuenta se utilizará en lugar de la cuenta por defecto como la cuenta "
-"pendiente de pago del asociado actual."
+"Este cuenta se utilizará en lugar de la cuenta por defecto como la cuenta a "
+"pagar para la empresa actual."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_account_receivable_id
@@ -9643,8 +9644,8 @@ msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
 msgstr ""
-"Esta cuenta se utilizará en lugar de la cuenta por defecto como la cuenta "
-"pendiente de cobro del asociado actual."
+"Esta cuenta se utilizará en lugar de la cuenta por defecto como la cuenta a "
+"cobrar para la empresa actual."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_budget
@@ -9783,7 +9784,7 @@ msgid ""
 "                installed a chart of account, please install one first."
 msgstr ""
 "Este es el panel contable. Si no ha\n"
-"instalado todavía un plan de cuentas, por favor, hágalo antes que nada."
+"                instalado todavía un plan de cuentas, por favor instale uno primero."
 
 #. module: account
 #: code:addons/account/models/account.py:351
@@ -9792,7 +9793,8 @@ msgid ""
 "This journal already contains items, therefore you cannot modify its "
 "company."
 msgstr ""
-"El diario ya contiene apuntes, por lo tanto, no puede modificar su compañía."
+"El diario ya contiene anotaciones, por lo que no puede modificar su "
+"compañía."
 
 #. module: account
 #: code:addons/account/models/account.py:354
@@ -9801,8 +9803,8 @@ msgid ""
 "This journal already contains items, therefore you cannot modify its short "
 "name."
 msgstr ""
-"Este diario ya contiene apuntes, por lo tanto, no puede modificar su nombre "
-"abreviado."
+"El diario ya contiene anotaciones, por lo que no puede modificar su nombre "
+"corto."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_accounting_report_label_filter
@@ -9821,9 +9823,8 @@ msgid ""
 "This move's amount is higher than the transaction's amount. Click to "
 "register a partial payment and keep the payment balance open."
 msgstr ""
-"La cantidad de este movimiento es mayor que la cantidad de la transacción. "
-"Haga clic para registrar un pago parcial y mantenga el saldo de pago "
-"abierto."
+"El importe de este movimiento es mayor que el importe de la transacción. "
+"Haga clic para registrar un pago parcial y mantener el saldo abierto."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_accounting_report_debit_credit
@@ -9953,7 +9954,7 @@ msgstr "Título 2 (negrita)"
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Title 3 (bold, smaller)"
-msgstr "Título 3 (negrita, pequeño)"
+msgstr "Título 3 (negrita, más pequeño)"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -10219,7 +10220,7 @@ msgid ""
 "customers and vendors you'd like to import."
 msgstr ""
 "A no ser que esté iniciando un nuevo negocio, probablemente tenga una lista "
-"de clientes y proveedores que querrá importar."
+"de clientes y proveedores que quiera importar."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_invoice_opened
@@ -10558,7 +10559,7 @@ msgstr "Aviso en la factura"
 #: code:addons/account/models/account_invoice.py:1324
 #, python-format
 msgid "Warning!"
-msgstr "¡Alerta!"
+msgstr "¡Aviso!"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10717,7 +10718,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You can not change a company chart of account once it has been installed"
-msgstr "No puede cambiar el plan de cuentas de la compañía una vez instalado."
+msgstr "No puede cambiar el plan contable de la compañía una vez instalado"
 
 #. module: account
 #: code:addons/account/models/product.py:51
@@ -10728,8 +10729,8 @@ msgid ""
 "you may deactivate this product."
 msgstr ""
 "No puede cambiar la unidad de medida de un producto que ya se ha utilizado "
-"en un apunte contable de diario. Si necesita cambiar la unidad de medida "
-"deberá desactivar el producto."
+"en un apunte contable. Si necesita cambiar la unidad de medida deberá "
+"desactivar el producto."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:320
@@ -10742,14 +10743,14 @@ msgstr "No puede borrar un pago que ya ha sido validado."
 #, python-format
 msgid "You can only delete an invoice line if the invoice is in draft state."
 msgstr ""
-"Solo puedes borrar una linea de factura si la factura esta en estado "
+"Solo puede borrar una linea de factura si la factura está en estado "
 "borrador."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:128
 #, python-format
 msgid "You can only register payments for open invoices"
-msgstr "Sólo puede registrar pagos en facturas abiertas"
+msgstr "Sólo puede registrar pagos de facturas abiertas"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_report_style_overwrite
@@ -10768,8 +10769,8 @@ msgstr ""
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s"
 msgstr ""
-"No puede añadir/modificar entradas con fecha anterior o inclusiva a la fecha"
-" de bloqueo %s"
+"No puede añadir/modificar asientos con fecha anterior o igual a la fecha de "
+"bloqueo %s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:187
@@ -10778,8 +10779,8 @@ msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
 "Check the company settings or ask someone with the 'Adviser' role"
 msgstr ""
-"No puede añadir/modificar asientos con anterioridad y hasta la fecha de "
-"bloqueo %s. Compruebe la configuración de la compañía o pregunte a alguien "
+"No puede añadir/modificar asientos con con fecha anterior o igual a la de "
+"bloqueo %s. Compruebe la configuración de la compañía o consulte a alguien "
 "con el rol 'Asesor'"
 
 #. module: account
@@ -10790,7 +10791,7 @@ msgid ""
 "unreconcile related payment entries first."
 msgstr ""
 "No puede cancelar una factura parcialmente pagada. Necesita deshacer la "
-"conciliación de los asientos de pago relacionados antes."
+"conciliación de los asientos de pago relacionados primero."
 
 #. module: account
 #: code:addons/account/models/account.py:180
@@ -10799,8 +10800,7 @@ msgid ""
 "You cannot change the owner company of an account that already contains "
 "journal items."
 msgstr ""
-"No puede cambiar la compaía propietaria de una cuenta que ya tiene apuntes "
-"de diario."
+"No puede cambiar la compañía de una cuenta que ya tiene apuntes contables."
 
 #. module: account
 #: code:addons/account/models/account.py:187
@@ -10848,7 +10848,7 @@ msgstr ""
 #: code:addons/account/models/account.py:193
 #, python-format
 msgid "You cannot do that on an account that contains journal items."
-msgstr "No puede hacer esto en una cuenta que contiene apuntes de diario."
+msgstr "No puede hacer esto en una cuenta que contiene apuntes contables."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1157
@@ -10887,8 +10887,8 @@ msgid ""
 "You cannot have a receivable/payable account that is not reconciliable. "
 "(account code: %s)"
 msgstr ""
-"No puede tener una cuenta pendiente de cobro/a pagar que no sea conciliable."
-" (Código de cuenta: %s)"
+"No puede tener una cuenta a cobrar/pagar que no sea conciliable. (código de "
+"cuenta: %s)"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:132
@@ -10901,9 +10901,7 @@ msgstr "No puede mezclar facturas de clientes y proveedores en un único pago."
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1810
 #, python-format
 msgid "You cannot mix items from receivable and payable accounts."
-msgstr ""
-"No puede mezclar apuntes de cuentas pendientes de cobro y pendientes de "
-"pago."
+msgstr "No puede mezclar apuntes de cuentas a pagar y a cobrar."
 
 #. module: account
 #: code:addons/account/models/account_move.py:151
