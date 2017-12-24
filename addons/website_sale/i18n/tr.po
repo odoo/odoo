@@ -18,13 +18,14 @@
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
 # Emre Akayoğlu <emre.akayoglu@mechsoft.com.tr>, 2017
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 08:59+0000\n"
-"PO-Revision-Date: 2017-10-24 08:59+0000\n"
-"Last-Translator: Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017\n"
+"POT-Creation-Date: 2017-11-30 13:11+0000\n"
+"PO-Revision-Date: 2017-11-30 13:11+0000\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2017\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +39,7 @@ msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.reduction_code
+#: model:ir.ui.view,arch_db:website_sale.cart_lines
 msgid "/shop/cart"
 msgstr ""
 
@@ -537,7 +538,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<strong>Payment Information:</strong>"
-msgstr ""
+msgstr "Ödeme Bilgisi"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1116,7 +1117,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "Company Name"
-msgstr "Firma Adı"
+msgstr "Şirket Adı"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.Components
@@ -1605,7 +1606,6 @@ msgid "Have Genius call the tunes."
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.payment
 #: model:ir.ui.view,arch_db:website_sale.reduction_code
 msgid "Have a promo code? Fill in this field and apply."
 msgstr ""
@@ -2025,7 +2025,7 @@ msgstr "Ağ"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:967
+#: code:addons/website_sale/controllers/main.py:968
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:32
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
@@ -2176,7 +2176,7 @@ msgid "Parent Category"
 msgstr "Üst Kategori"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:755
+#: code:addons/website_sale/controllers/main.py:756
 #, python-format
 msgid "Pay Now"
 msgstr "Şimdi Öde"
@@ -2422,11 +2422,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.product
 msgid "Products"
 msgstr "Ürünler"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.reduction_code
-msgid "Promo Code"
-msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale
@@ -3215,6 +3210,11 @@ msgid "Total"
 msgstr "Toplam"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.cart_popover
+msgid "True"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_type
 msgid "Type"
 msgstr "Tür"
@@ -3576,7 +3576,7 @@ msgstr "res.config.settings"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "set company logo"
-msgstr "firma logosunu ayarlayın"
+msgstr "şirket logosunu ayarlayın"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment_sale_note

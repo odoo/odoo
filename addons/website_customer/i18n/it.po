@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_customer
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Paolo Valier <paolo.valier@hotmail.it>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-04-19 14:31+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
-"Language: it\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"Last-Translator: Paolo Valier <paolo.valier@hotmail.it>, 2017\n"
+"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_customer
@@ -28,10 +30,16 @@ msgid "Active"
 msgstr "Attivo"
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:68
+#: code:addons/website_customer/controllers/main.py:80
 #, python-format
 msgid "All Countries"
-msgstr "Tutte le nazionalità"
+msgstr ""
+
+#. module: website_customer
+#: code:addons/website_customer/controllers/main.py:61
+#, python-format
+msgid "All Sectors of Activity"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag_classname
@@ -51,6 +59,11 @@ msgstr ""
 #. module: website_customer
 #: model:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid "Click to create a new partner tag."
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model,name:website_customer.model_res_partner
+msgid "Contact"
 msgstr ""
 
 #. module: website_customer
@@ -76,7 +89,7 @@ msgstr "ID"
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.implemented_by_block
 msgid "Implemented By"
-msgstr "Implementato da"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag___last_update
@@ -97,26 +110,20 @@ msgstr "Ultima modifica il"
 #: model:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid ""
 "Manage the partner tags to better classify them on your website.\n"
-"                    You can add the filter by tag on your website in the "
-"\"Customize\" menu."
+"                    You can add the filter by tag on your website in the \"Customize\" menu."
 msgstr ""
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.index
 msgid "No result found"
-msgstr "Nessun risultato"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.details
 #: model:ir.ui.view,arch_db:website_customer.footer_custom
 #: model:ir.ui.view,arch_db:website_customer.index
 msgid "Our References"
-msgstr "I nostri riferimenti"
-
-#. module: website_customer
-#: model:ir.model,name:website_customer.model_res_partner
-msgid "Partner"
-msgstr "Partner"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.view_partner_tag_form
@@ -133,17 +140,22 @@ msgstr ""
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_partner_ids
 msgid "Partners"
-msgstr "Partner"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.references_block
 msgid "References"
-msgstr "Riferimenti"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.opt_country_list
 msgid "References by Country"
-msgstr "Referenze per Nazioni"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.ui.view,arch_db:website_customer.opt_industry_list
+msgid "References by Sectors of Activity"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.opt_tag_list
@@ -153,12 +165,17 @@ msgstr ""
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.index
 msgid "Search"
-msgstr "Ricerca"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.index
 msgid "Trusted by millions worldwide"
-msgstr "Scelto da milioni di persone in tutto il mondo"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_website_published
+msgid "Visible in Website"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.actions.act_window,name:website_customer.action_partner_tag_form
@@ -170,30 +187,16 @@ msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_website_tag_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_users_website_tag_ids
 msgid "Website tags"
-msgstr "Website tags"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.opt_country
 msgid "World Map"
-msgstr "Mappa del mondo"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.implemented_by_block
 msgid "reference(s))"
-msgstr "referenze(s))"
-
-#~ msgid "Partner Tags"
-#~ msgstr "Tags Partner"
-
-#~ msgid "Tags"
-#~ msgstr "Tags"
-
-#~ msgid "The full URL to access the document through the website."
-#~ msgstr "L'URL completo per accedere al documento attraverso il Sito Web "
-
-#~ msgid "Visible in Website"
-#~ msgstr "Visibile sul sito"
-
-#~ msgid "Website URL"
-#~ msgstr "URL sito web"
+msgstr ""

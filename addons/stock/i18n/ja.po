@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2017-11-30 13:11+0000\n"
+"PO-Revision-Date: 2017-11-30 13:11+0000\n"
 "Last-Translator: Tim Siu Lai <tl@roomsfor.hk>, 2017\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,7 @@ msgid "#Products"
 msgstr "プロダクト数量"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:480
+#: code:addons/stock/models/stock_warehouse.py:481
 #, python-format
 msgid "%s: Supply Product from %s"
 msgstr "%s: 製品はここから供給されています %s"
@@ -616,7 +616,7 @@ msgid "A classic sales flow looks like the following:"
 msgstr "従来型の販売フローは次のようになります:"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:85
+#: code:addons/stock/models/stock_move_line.py:86
 #, python-format
 msgid "A done move line should never have a reserved quantity."
 msgstr ""
@@ -631,7 +631,7 @@ msgstr ""
 "優れた在庫管理は、在庫レベルを最適化することを目指しています。多すぎず(製品が場所を占有し、価値を失う可能性があります)、少なすぎず(在庫切れの可能性もあります)です。"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:75
+#: code:addons/stock/models/stock_quant.py:76
 #, python-format
 msgid "A serial number should only be linked to a single product."
 msgstr ""
@@ -774,7 +774,7 @@ msgid "Allow moving packs"
 msgstr "梱包の移動を許可"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:81
+#: code:addons/stock/models/stock_quant.py:82
 #, python-format
 msgid "An incoming date cannot be set to an untracked product."
 msgstr ""
@@ -797,12 +797,12 @@ msgstr "適用箇所"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_product_selectable
 msgid "Applicable on Product"
-msgstr "製品に適用"
+msgstr "プロダクトに適用可"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_product_categ_selectable
 msgid "Applicable on Product Category"
-msgstr "製品カテゴリに適用"
+msgstr "プロダクトカテゴリに適用可"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_warehouse_selectable
@@ -912,7 +912,7 @@ msgid "Back order <em>%s</em> <b>cancelled</b>."
 msgstr "バックオーダー <em>%s</em> <b>キャンセルされました</b>"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:774
+#: code:addons/stock/models/stock_picking.py:790
 #, python-format
 msgid "Back order <em>%s</em> <b>created</b>."
 msgstr "バックオーダー<em>%s</em> <b>作成済み</b>"
@@ -980,7 +980,7 @@ msgstr "大手ベンダー"
 #. module: stock
 #: selection:res.partner,picking_warn:0
 msgid "Blocking Message"
-msgstr "メッセージをブロック"
+msgstr "阻止メッセージ"
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_15
@@ -1013,7 +1013,7 @@ msgid "By Unique Serial Number"
 msgstr "シリアル番号"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:600
+#: code:addons/stock/models/stock_move.py:612
 #, python-format
 msgid ""
 "By changing this quantity here, you accept the new quantity as complete: "
@@ -1083,7 +1083,7 @@ msgid "Can't find any customer or supplier location."
 msgstr "顧客またはサプライヤの場所を見つけることができません。"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:475
+#: code:addons/stock/models/stock_warehouse.py:476
 #, python-format
 msgid "Can't find any generic Make To Order route."
 msgstr "オーダ基準調達のルートが見つかりません。"
@@ -1130,7 +1130,7 @@ msgstr "連鎖移動が存在"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
-msgstr "製品数量の変更"
+msgstr "プロダクト数量変更"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1446,7 +1446,7 @@ msgid "Create Backorder"
 msgstr "バックオーダを作成"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:699
+#: code:addons/stock/models/stock_picking.py:715
 #, python-format
 msgid "Create Backorder?"
 msgstr "バックオーダを作成しますか？"
@@ -1720,7 +1720,7 @@ msgstr "DELIVERED EX SHIP"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_delivery_dhl
-msgid "DHL USA"
+msgid "DHL"
 msgstr ""
 
 #. module: stock
@@ -2191,7 +2191,7 @@ msgstr ""
 "各レポートは、物理的、パートナーまたは仮想のロケーションにて実行できます。"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:397
+#: code:addons/stock/models/stock_quant.py:407
 #, python-format
 msgid "Everything inside a package should be in the same location"
 msgstr "パッケージ内のすべてが同じロケーションにある必要があります"
@@ -2517,7 +2517,7 @@ msgstr "ロットトラッキングの使い方："
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_id
-#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_6902
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_6904
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_id
@@ -2532,13 +2532,13 @@ msgid "ID"
 msgstr "ID"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:406
+#: code:addons/stock/models/stock_inventory.py:412
 #, python-format
 msgid "INV:"
 msgstr "請求書："
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:94
+#: code:addons/stock/wizard/stock_change_product_qty.py:97
 #, python-format
 msgid "INV: %s"
 msgstr "請求書：%s"
@@ -2739,7 +2739,7 @@ msgid "Immediate Transfer"
 msgstr "今すぐ移動"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:662
+#: code:addons/stock/models/stock_picking.py:678
 #, python-format
 msgid "Immediate Transfer?"
 msgstr "今すぐ移動しますか？"
@@ -3149,15 +3149,17 @@ msgstr ""
 "                         それをしたい場合は、あなたのOdooプロジェクトマネジャーに連絡してください。"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:244
+#: code:addons/stock/models/stock_quant.py:254
 #, python-format
-msgid "It is not possible to reserve more products than you have in stock."
+msgid ""
+"It is not possible to reserve more products of %s than you have in stock."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:246
+#: code:addons/stock/models/stock_quant.py:256
 #, python-format
-msgid "It is not possible to unreserve more products than you have in stock."
+msgid ""
+"It is not possible to unreserve more products of %s than you have in stock."
 msgstr ""
 
 #. module: stock
@@ -3411,6 +3413,7 @@ msgstr "おいてある"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_location_id
+#: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_repair_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_unbuild_location_id
 #: model:ir.ui.view,arch_db:stock.quant_search_view
@@ -3562,7 +3565,7 @@ msgid "MTO rule"
 msgstr "MTO規則"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:473
+#: code:addons/stock/models/stock_warehouse.py:474
 #: model:stock.location.route,name:stock.route_warehouse0_mto
 #, python-format
 msgid "Make To Order"
@@ -3588,12 +3591,12 @@ msgstr "ロット/シリアル番号を管理"
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
 msgid "Manage Multiple Stock Locations"
-msgstr ""
+msgstr "複数在庫ロケーション管理"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
 msgid "Manage Multiple Warehouses"
-msgstr ""
+msgstr "複数倉庫管理"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_lot
@@ -3835,8 +3838,8 @@ msgid "New"
 msgstr "新規"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:172
-#: code:addons/stock/models/stock_picking.py:584
+#: code:addons/stock/models/stock_move_line.py:173
+#: code:addons/stock/models/stock_picking.py:597
 #, python-format
 msgid "New Move:"
 msgstr ""
@@ -3873,7 +3876,7 @@ msgid "No Tracking"
 msgstr "追跡なし"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:388
+#: code:addons/stock/models/stock_move_line.py:389
 #, python-format
 msgid "No negative quantities allowed"
 msgstr "マイナスの量は許可されません"
@@ -3927,7 +3930,7 @@ msgid "Notes"
 msgstr "ノート"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:531
+#: code:addons/stock/models/stock_picking.py:544
 #, python-format
 msgid "Nothing to check the availability for."
 msgstr "可用性をチェックするものはありません。"
@@ -4540,13 +4543,13 @@ msgid "Planner"
 msgstr "プランナー"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:636
+#: code:addons/stock/models/stock_picking.py:649
 #, python-format
 msgid "Please add some lines to move"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:805
+#: code:addons/stock/models/stock_picking.py:823
 #, python-format
 msgid "Please process some quantities to put in the pack first!"
 msgstr "始めに梱包に入れる数量を処理してください。"
@@ -4695,6 +4698,7 @@ msgstr "製品数量"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_product_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_product_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_product_id
+#: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_repair_product_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_product_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_unbuild_product_id
 #: model:ir.ui.view,arch_db:stock.quant_search_view
@@ -4708,7 +4712,7 @@ msgid "Product"
 msgstr "製品"
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:173
+#: code:addons/stock/models/stock_location.py:180
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_categ_ids
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -4816,7 +4820,7 @@ msgid "Production Location"
 msgstr "製造ロケーション"
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:163
+#: code:addons/stock/models/stock_location.py:170
 #: code:addons/stock/wizard/stock_quantity_history.py:29
 #: model:ir.actions.act_window,name:stock.act_product_location_open
 #: model:ir.actions.act_window,name:stock.product_template_action_product
@@ -4931,6 +4935,7 @@ msgstr "品質管理ロケーション"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_quant_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_quant_ids
+#: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_repair_quant_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_quant_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_unbuild_quant_ids
 msgid "Quant"
@@ -4981,10 +4986,16 @@ msgid "Quantity Reserved"
 msgstr "引当済数量"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:77
+#: code:addons/stock/wizard/stock_change_product_qty.py:80
 #, python-format
 msgid "Quantity cannot be negative."
 msgstr "負の数は入力できません。"
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:611
+#, python-format
+msgid "Quantity decreased!"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_availability
@@ -5042,7 +5053,7 @@ msgid "Quants"
 msgstr "保管ロット"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:69
+#: code:addons/stock/models/stock_quant.py:70
 #, python-format
 msgid "Quants cannot be created for consumables or services."
 msgstr ""
@@ -5181,7 +5192,7 @@ msgid "Removal Strategy"
 msgstr "引当方針"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:104
+#: code:addons/stock/models/stock_quant.py:111
 #, python-format
 msgid "Removal strategy %s not implemented."
 msgstr "削除戦略 %s は実装されていません。"
@@ -5427,7 +5438,7 @@ msgid ""
 msgstr "出荷の最初の部分が処理される予定時刻。 ここで手動で値を設定すると、すべての在庫移動の予定日として設定されます。"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:818
+#: code:addons/stock/models/stock_picking.py:836
 #: model:ir.model.fields,field_description:stock.field_stock_move_scrap_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_scrap_id
 #: model:ir.ui.menu,name:stock.menu_stock_scrap
@@ -5534,31 +5545,31 @@ msgid "Sequence"
 msgstr "付番"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:678
+#: code:addons/stock/models/stock_warehouse.py:685
 #, python-format
 msgid "Sequence in"
 msgstr "入荷採番"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:682
+#: code:addons/stock/models/stock_warehouse.py:689
 #, python-format
 msgid "Sequence internal"
-msgstr "出荷採番"
+msgstr "内部移動採番"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:679
+#: code:addons/stock/models/stock_warehouse.py:686
 #, python-format
 msgid "Sequence out"
 msgstr "出荷採番"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:680
+#: code:addons/stock/models/stock_warehouse.py:687
 #, python-format
 msgid "Sequence packing"
 msgstr "パッキング採番"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:681
+#: code:addons/stock/models/stock_warehouse.py:688
 #, python-format
 msgid "Sequence picking"
 msgstr "ピッキング採番"
@@ -6097,7 +6108,7 @@ msgid ""
 msgstr "顧客注文の確認から完成品の配送までの平均遅延日数です。あなたが顧客に約束する時間です。"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1033
+#: code:addons/stock/models/stock_move.py:1065
 #, python-format
 msgid ""
 "The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has"
@@ -6223,7 +6234,7 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:266
-#: code:addons/stock/models/stock_move_line.py:79
+#: code:addons/stock/models/stock_move_line.py:80
 #, python-format
 msgid ""
 "The requested operation cannot be processed because of a programming error "
@@ -6673,7 +6684,7 @@ msgid "Units of Measures"
 msgstr "単位"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:311
+#: code:addons/stock/models/stock_quant.py:321
 #, python-format
 msgid "Unknown Pack"
 msgstr "不明な梱包"
@@ -6922,7 +6933,7 @@ msgid "Warehouse to Propagate"
 msgstr "展開先倉庫"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:704
+#: code:addons/stock/models/stock_warehouse.py:711
 #, python-format
 msgid "Warehouse's Routes"
 msgstr "倉庫ルート"
@@ -6937,7 +6948,7 @@ msgid "Warehouses"
 msgstr "倉庫"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:109
+#: code:addons/stock/models/stock_move_line.py:110
 #: selection:res.partner,picking_warn:0
 #, python-format
 msgid "Warning"
@@ -7113,7 +7124,7 @@ msgid "You are not allowed to create a lot for this picking type"
 msgstr "このピッキングタイプではロットは作成できません。"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:622
+#: code:addons/stock/models/stock_move.py:636
 #, python-format
 msgid ""
 "You are using a unit of measure smaller than the one you are using in order "
@@ -7170,7 +7181,7 @@ msgid ""
 msgstr "すぐにそれを行うことも、将来の処理のために処理準備とすることもできます。 スキャナを使用して、配送された量をより迅速に検証します。"
 
 #. module: stock
-#: code:addons/stock/models/product.py:509
+#: code:addons/stock/models/product.py:511
 #, python-format
 msgid ""
 "You can not change the type of a product that is currently reserved on a "
@@ -7188,7 +7199,7 @@ msgid ""
 msgstr "すでに在庫移動で使用されている製品の計量単位は変更できません。 測定単位を変更する必要がある場合は、この製品を無効にします。"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:337
+#: code:addons/stock/models/stock_move_line.py:338
 #, python-format
 msgid ""
 "You can not delete product moves if the picking is done. You can only "
@@ -7196,25 +7207,25 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:115
+#: code:addons/stock/models/stock_move_line.py:116
 #, python-format
 msgid "You can not enter negative quantities!"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:392
+#: code:addons/stock/models/stock_inventory.py:398
 #, python-format
 msgid "You can only adjust stockable products."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1041
+#: code:addons/stock/models/stock_move.py:1073
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "ドラフト移動のみ削除ができます。"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:125
+#: code:addons/stock/models/stock_move_line.py:126
 #, python-format
 msgid "You can only process 1.0 %s for products with unique serial number."
 msgstr ""
@@ -7225,7 +7236,7 @@ msgid "You can review and edit the predefined units via the"
 msgstr "事前定義されたユニットを確認および編集することができます。 "
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:913
+#: code:addons/stock/models/stock_move.py:936
 #, python-format
 msgid "You cannot cancel a stock move that has been set to 'Done'."
 msgstr "「完了」に設定されている在庫移動を取り消すことはできません。"
@@ -7237,7 +7248,7 @@ msgid "You cannot delete a scrap which is done."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:380
+#: code:addons/stock/models/stock_inventory.py:386
 #, python-format
 msgid ""
 "You cannot have two inventory adjustements in state 'in Progress' with the "
@@ -7257,19 +7268,19 @@ msgstr ""
 "⇥%s - 数量: %s"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1097
+#: code:addons/stock/models/stock_move.py:1101
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
 msgstr "ドラフトの移動を分割することはできません。 最初に確認する必要があります。"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1093
+#: code:addons/stock/models/stock_move.py:1097
 #, python-format
 msgid "You cannot split a move done"
 msgstr "完了した移動を分割することはできません"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:87
+#: code:addons/stock/models/stock_quant.py:88
 #, python-format
 msgid ""
 "You cannot take products from or deliver products to a location of type "
@@ -7283,6 +7294,14 @@ msgstr ""
 msgid ""
 "You cannot use the same serial number twice. Please correct the serial "
 "numbers encoded."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:672
+#, python-format
+msgid ""
+"You cannot validate a transfer if you have not processed any quantity for "
+"%s."
 msgstr ""
 
 #. module: stock
@@ -7301,7 +7320,7 @@ msgstr ""
 "確認するには、予約 ボタンをクリックしてください。"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:131
+#: code:addons/stock/models/stock_move_line.py:132
 #, python-format
 msgid ""
 "You have already assigned this serial number to this product. Please correct"
@@ -7335,7 +7354,7 @@ msgid ""
 msgstr "ロット番号のない商品が在庫されています。 インベントリを実行してシリアル番号を割り当てることができます。"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:788
+#: code:addons/stock/models/stock_warehouse.py:795
 #, python-format
 msgid ""
 "You have to select a product unit of measure in the same category than the "
@@ -7343,7 +7362,7 @@ msgid ""
 msgstr "製品のデフォルトの測定単位と同じカテゴリの製品単位を選択する必要があります"
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:91
+#: code:addons/stock/models/stock_location.py:98
 #, python-format
 msgid "You have to set a name for this location."
 msgstr ""
@@ -7369,19 +7388,20 @@ msgstr "会社に倉庫を設定してください: %s."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:387
-#: code:addons/stock/models/stock_picking.py:669
+#: code:addons/stock/models/stock_picking.py:670
 #, python-format
 msgid "You need to supply a lot/serial number for %s."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1043
+#: code:addons/stock/models/stock_move.py:1047
 #, python-format
 msgid "You should not put the contents of a package in different locations."
 msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/product.py:369
+#: code:addons/stock/models/product.py:504
 #, python-format
 msgid ""
 "You still have some active reordering rules on this product. Please archive "

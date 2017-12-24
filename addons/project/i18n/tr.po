@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2017-11-30 13:11+0000\n"
+"PO-Revision-Date: 2017-11-30 13:11+0000\n"
 "Last-Translator: Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -996,6 +996,11 @@ msgid "Active"
 msgstr "Aktif"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Activities"
+msgstr "Aktiviteler"
+
+#. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
 #: model:ir.ui.menu,name:project.project_menu_config_activity_type
 msgid "Activity Types"
@@ -1408,13 +1413,13 @@ msgstr "Şirketler"
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Company"
-msgstr "Firma"
+msgstr "Şirket"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_company_uom_id
 #: model:ir.model.fields,field_description:project.field_project_project_company_uom_id
 msgid "Company UOM"
-msgstr "Firma Ölçü Birimi"
+msgstr "Şirket Ölçü Birimi"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_config
@@ -1602,7 +1607,7 @@ msgstr "Bu görevin mevcut aşaması"
 #. module: project
 #: model:ir.actions.act_window,help:project.project_task_action_activity
 msgid "Currently there are not any activity scheduled."
-msgstr "Mevcutta planlanan herhangi bir etkinlik yok."
+msgstr "Mevcutta planlanan herhangi bir aktivite yok."
 
 #. module: project
 #: code:addons/project/models/project.py:818
@@ -2790,6 +2795,11 @@ msgstr "Ekli belge sayısı"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
+msgid "Objectives"
+msgstr "Amaçlar"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Odoo Project is a super fast and easy way to make your activities and tasks visible to\n"
 "                        everyone in your company. Follow how things progress, see when things are stuck, know\n"
@@ -2936,7 +2946,7 @@ msgid "Planner"
 msgstr "Planlayıcı"
 
 #. module: project
-#: code:addons/project/models/project.py:925
+#: code:addons/project/models/project.py:887
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -3073,6 +3083,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.portal_layout
 #: model:ir.ui.view,arch_db:project.portal_my_home
 #: model:ir.ui.view,arch_db:project.portal_my_projects
+#: model:ir.ui.view,arch_db:project.project_planner
 #: model:ir.ui.view,arch_db:project.view_project
 msgid "Projects"
 msgstr "Projeler"

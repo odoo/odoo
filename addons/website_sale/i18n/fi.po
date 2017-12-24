@@ -20,13 +20,14 @@
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2017
 # Timo Koukkari <ti.ko@netikka.fi>, 2017
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2017
+# Jukka Paulin <jukka.paulin@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 08:59+0000\n"
-"PO-Revision-Date: 2017-10-24 08:59+0000\n"
-"Last-Translator: Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2017\n"
+"POT-Creation-Date: 2017-11-30 13:11+0000\n"
+"PO-Revision-Date: 2017-11-30 13:11+0000\n"
+"Last-Translator: Jukka Paulin <jukka.paulin@gmail.com>, 2017\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +41,7 @@ msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.reduction_code
+#: model:ir.ui.view,arch_db:website_sale.cart_lines
 msgid "/shop/cart"
 msgstr ""
 
@@ -924,6 +925,10 @@ msgid ""
 "codes. Specific conditions can be set (products, customers, minimum purchase"
 " amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
+"Voit lisätä myyntiäsi kahdella tapaa: alennuskampanjalla ja kupongeilla. "
+"Voit määrittää tarkat ehdot (mitkä tuotteet, asiakkaat, vähimmäisostomäärän,"
+" ja voimassaolon). Hyvitykset voivat olla suoria alennuksia (% tai summa) "
+"tai ilmaisia tuotteita."
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
@@ -996,7 +1001,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_sale.menu_catalog
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Catalog"
-msgstr ""
+msgstr "Luettelo"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
@@ -1122,32 +1127,32 @@ msgstr "Komponentit"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr ""
+msgstr "Laske kuljetuskustannukset ja lähetä DHL:llä"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr ""
+msgstr "Laske kuljetuskustannukset ja lähetä FedEx:llä"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr ""
+msgstr "Laske kuljetuskustannukset ja lähetä UPS:llä"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr ""
+msgstr "Laske kuljetuskustannukset ja lähetä USPS:llä"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr ""
+msgstr "Laske kuljetuskustannukset ja lähetä bpost :lla"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
-msgstr ""
+msgstr "Laske kuljetuskustannukset tilauksille"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.Computer_all_in_one
@@ -1601,7 +1606,6 @@ msgid "Have Genius call the tunes."
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.payment
 #: model:ir.ui.view,arch_db:website_sale.reduction_code
 msgid "Have a promo code? Fill in this field and apply."
 msgstr ""
@@ -2016,7 +2020,7 @@ msgstr "Verkko"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:967
+#: code:addons/website_sale/controllers/main.py:968
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:32
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
@@ -2167,7 +2171,7 @@ msgid "Parent Category"
 msgstr "Ylempi ryhmä"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:755
+#: code:addons/website_sale/controllers/main.py:756
 #, python-format
 msgid "Pay Now"
 msgstr "Maksa nyt"
@@ -2415,11 +2419,6 @@ msgid "Products"
 msgstr "Tuotteet"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.reduction_code
-msgid "Promo Code"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale
 msgid "Promote"
 msgstr "Paranna näkyvyyttä"
@@ -2618,7 +2617,7 @@ msgstr "Myynti"
 #: model:ir.model.fields,field_description:website_sale.field_website_salesteam_id
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Sales Channel"
-msgstr ""
+msgstr "Myyntikanava"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sale_report_view_pivot_website
@@ -3202,6 +3201,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
 msgid "Total"
 msgstr "Yhteensä"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.cart_popover
+msgid "True"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_type

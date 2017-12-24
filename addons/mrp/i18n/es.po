@@ -22,6 +22,7 @@
 # Ana Juaristi <ajuaristio@gmail.com>, 2017
 # David Sanchez <david.sanchez@jarsa.com.mx>, 2017
 # David Arnold <blaggacao@users.noreply.github.com>, 2017
+# Julio Fiallos <jfiallos@vision-estrategica.com>, 2017
 # Sergio Flores <vitavitae1@gmail.com>, 2017
 # Daniel Santibáñez Polanco <dansanti@gmail.com>, 2017
 # Jesus Zapata <jesus@vauxoo.com>, 2017
@@ -57,7 +58,7 @@ msgstr "Nº de listas de materiales"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product_used_in_bom_count
 msgid "# BoM Where Used"
-msgstr ""
+msgstr "# LdM usados donde"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workorder_done_count
@@ -85,7 +86,7 @@ msgstr "# Órdenes de trabajo"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_template_used_in_bom_count
 msgid "# of BoM Where is Used"
-msgstr ""
+msgstr "# de LdM donde son usados"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_leg
@@ -122,6 +123,9 @@ msgid ""
 "['|',('availability', 'in', ('assigned', 'none')), ('state', 'not in', "
 "('confirmed','progress'))]}\">Raw materials not available!</span>"
 msgstr ""
+"<span class=\"label label-danger\" attrs=\"{'invisible': "
+"['|',('availability', 'in', ('assigned', 'none')), ('state', 'not in', "
+"('confirmed','progress'))]}\">Materias Primas no disponibles!</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -172,7 +176,7 @@ msgstr "<span>Nuevo</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>PLAN ORDERS</span>"
-msgstr ""
+msgstr "<span>PLANIFICAR ÓRDENES</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -187,7 +191,7 @@ msgstr "<span>Ver</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>WORK ORDERS</span>"
-msgstr ""
+msgstr "<span>ÓRDENES DE TRABAJO</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -195,11 +199,13 @@ msgid ""
 "<strong attrs=\"{'invisible': [('date_planned_finished', '=', False)]}\" class=\"mr8\">to</strong>\n"
 "                                    <strong class=\"oe_edit_only mr8\" attrs=\"{'invisible': [('date_planned_finished', '!=', False)]}\">to</strong>"
 msgstr ""
+"<strong attrs=\"{'invisible': [('date_planned_finished', '=', False)]}\" class=\"mr8\">a</strong>\n"
+"                                    <strong class=\"oe_edit_only mr8\" attrs=\"{'invisible': [('date_planned_finished', '!=', False)]}\">a</strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "<strong class=\"mr8\">to</strong>"
-msgstr ""
+msgstr "<strong class=\"mr8\">a</strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
@@ -209,7 +215,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
 msgid "<strong>Is a Blocking Reason? </strong>"
-msgstr ""
+msgstr "<strong>¿Es una razón de Bloqueo? </strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -254,7 +260,7 @@ msgstr "<strong>Cantidad</strong>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
 msgid "<strong>Reason: </strong>"
-msgstr ""
+msgstr "<strong>Razón: </strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -280,7 +286,7 @@ msgstr "<strong>Centro de trabajo</strong>"
 #: code:addons/mrp/models/mrp_workorder.py:472
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled!"
-msgstr "¡Una orden de fabricación ya está hecha o cancelada!"
+msgstr "¡Una orden de producción ya está hecha o cancelada!"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
@@ -289,7 +295,7 @@ msgid ""
 "A manufacturing order, based on a bill of materials, will\n"
 "                consume raw materials and produce finished products."
 msgstr ""
-"Una orden de fabricación, basada en una lista de materiales, consumirá\n"
+"Una orden de producción, basada en una lista de materiales, consumirá\n"
 " materias primas y generará productos terminados."
 
 #. module: mrp
@@ -341,6 +347,9 @@ msgid ""
 "Lines with 0 quantities can be used as optional lines. \n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
 msgstr ""
+"Todos las cantidades de producto debe ser superiores o iguales a 0.\n"
+"Líneas con cantidades en 0 pueden ser usadas como líneas opcionales. \n"
+"Usted debe instalar el módulo mrp_byproduct si desea administrar productos extra sobre las LdMs !"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_post_visible
@@ -460,6 +469,8 @@ msgid ""
 "Based on a Bill of Material, a Manufacturing Order will consume raw materials\n"
 "                and produce finished products."
 msgstr ""
+"Basado en una Lista de Materiales, una Órden de Producción consumirá materias primas\n"
+"                y producirá productos terminados."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -516,7 +527,7 @@ msgid ""
 msgstr ""
 "Las listas de materiales te permiten definir una lista de materias primas "
 "necesarias para realizar un producto terminado, a través de una orden de "
-"fabricación o un pack de productos."
+"producción o un pack de productos."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -549,7 +560,7 @@ msgstr "Hora(s) de bloqueo en el último mes"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.product_template_search_view_procurment
 msgid "BoM Components"
-msgstr ""
+msgstr "Componentes de LdM"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_bom_line_id
@@ -612,7 +623,7 @@ msgstr "Cancelado"
 #, python-format
 msgid "Cannot delete a manufacturing order not in cancel state"
 msgstr ""
-"No se puede eliminar una orden de fabricación no esté en estado 'Cancelada'"
+"No se puede eliminar una orden de producción no esté en estado 'Cancelada'"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity
@@ -665,7 +676,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "Click here to create a Manufacturing Order."
-msgstr ""
+msgstr "Click aquí para crear una Órden de Producción."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_unbuild
@@ -897,7 +908,7 @@ msgstr "Duración predeterminada"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings_use_manufacturing_lead
 msgid "Default Manufacturing Lead Time"
-msgstr ""
+msgstr "Tiempo Estándar de Entrega de Producción"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
@@ -1282,6 +1293,8 @@ msgstr ""
 msgid ""
 "If the manufacturing order is unlocked you can add to the initial demand."
 msgstr ""
+"Si la órden de producción esta desbloqueada usted podrá agregarla a la "
+"demanda inicial."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1636,7 +1649,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap_production_id
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 msgid "Manufacturing Order"
-msgstr "Orden de fabricación"
+msgstr "Orden de Producción"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_mrp_production
@@ -1662,6 +1675,8 @@ msgid ""
 "Manufacturing Orders can be generated automatically based on customer\n"
 "                requirements or reordering rules."
 msgstr ""
+"Órdenes de Producción pueden ser generadas automáticamente basadas en los\n"
+"                requerimientos o reglas de reorden del cliente."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter

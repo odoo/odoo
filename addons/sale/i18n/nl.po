@@ -90,12 +90,12 @@ msgstr ""
 "<p>\n"
 "Hier is\n"
 "% if ctx.get('proforma')\n"
-"in de bijlage, uw pro-forma factuur\n"
+"in bijlage, uw pro-forma factuur\n"
 "% else\n"
 "de ${doc_name} <strong>${object.name}</strong>\n"
 "% endif\n"
 "% if object.origin:\n"
-"(with reference: ${object.origin} )\n"
+"(met referentie: ${object.origin} )\n"
 "% endif\n"
 "met een totaal van <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
 "van ${object.company_id.name}.\n"
@@ -558,6 +558,9 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
+"Mogelijkheid om een verpakkingstype in verkooporders te selecteren en een "
+"hoeveelheid te forceren die een veelvoud is van het aantal eenheden per "
+"verpakking."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -695,6 +698,10 @@ msgid ""
 "codes. Specific conditions can be set (products, customers, minimum purchase"
 " amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
+"Verhoog uw verkopen met twee soorten kortingsprogramma's: promoties en "
+"coupon codes. Specifieke condities kunnen worden ingesteld (producten, "
+"klanten, minimaal bestel bedrag, periode). Beloningen kunnen kortingen (% of"
+" bedrag) of gratis producten zijn."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
@@ -1475,7 +1482,7 @@ msgstr "Bevestigde orders vastzetten"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Locked"
-msgstr "Gesloten Inkooporder"
+msgstr "Gesloten verkooporder"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2409,6 +2416,10 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Sales tab)."
 msgstr ""
+"Het verzenden van een e-mail is handig als u specifieke informatie of inhoud"
+" over een product wilt delen (instructies, regels, links, media, etc.). Maak"
+" en stel een e-mailsjabloon in op het productformulier (in het tabblad "
+"Verkoop)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_sequence
@@ -2464,7 +2475,7 @@ msgstr "Instellingen"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Setup default terms and conditions in your sales settings ..."
-msgstr ""
+msgstr "Stel de algemene verkoopvoorwaarden in bij uw verkoopinstellingen ..."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2613,7 +2624,7 @@ msgstr "BTW gebruikt voor aanbetalingen"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings_module_sale_payment
 msgid "Technical field implied by user choice of online_confirmation"
-msgstr ""
+msgstr "Technisch veld welke bepaald wordt door keuze van online_bevestiging"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_sale_note
@@ -2720,8 +2731,8 @@ msgstr ""
 #. module: sale
 #: code:addons/sale/models/sale.py:430 code:addons/sale/models/sale.py:434
 #, python-format
-msgid "There is no invoicable line."
-msgstr "Er is geen factureerbare lijn."
+msgid "There is no invoiceable line."
+msgstr "Er is geen facturabele regel."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_error

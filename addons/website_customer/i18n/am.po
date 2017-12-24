@@ -1,20 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_customer
-#
+# 
 # Translators:
+# Kiros Haregewoine <kirosharegewoine@yahoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-09-08 10:10+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Amharic (http://www.transifex.com/odoo/odoo-9/language/am/)\n"
-"Language: am\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"Last-Translator: Kiros Haregewoine <kirosharegewoine@yahoo.com>, 2017\n"
+"Language-Team: Amharic (https://www.transifex.com/odoo/teams/41243/am/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: am\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_customer
@@ -25,12 +26,18 @@ msgstr ""
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_active
 msgid "Active"
-msgstr "ጥቅም ላይ ማዋል"
+msgstr ""
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:68
+#: code:addons/website_customer/controllers/main.py:80
 #, python-format
 msgid "All Countries"
+msgstr ""
+
+#. module: website_customer
+#: code:addons/website_customer/controllers/main.py:61
+#, python-format
+msgid "All Sectors of Activity"
 msgstr ""
 
 #. module: website_customer
@@ -54,14 +61,19 @@ msgid "Click to create a new partner tag."
 msgstr ""
 
 #. module: website_customer
+#: model:ir.model,name:website_customer.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ፈጣሪው"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_create_date
 msgid "Created on"
-msgstr ""
+msgstr "የተፈጠረበት"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_display_name
@@ -97,8 +109,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid ""
 "Manage the partner tags to better classify them on your website.\n"
-"                    You can add the filter by tag on your website in the "
-"\"Customize\" menu."
+"                    You can add the filter by tag on your website in the \"Customize\" menu."
 msgstr ""
 
 #. module: website_customer
@@ -112,11 +123,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_customer.index
 msgid "Our References"
 msgstr ""
-
-#. module: website_customer
-#: model:ir.model,name:website_customer.model_res_partner
-msgid "Partner"
-msgstr "ተባባሪ"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.view_partner_tag_form
@@ -133,16 +139,21 @@ msgstr ""
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_partner_ids
 msgid "Partners"
-msgstr "ተባባሪ"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.references_block
 msgid "References"
-msgstr "ማመሳከሪያ"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.opt_country_list
 msgid "References by Country"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.ui.view,arch_db:website_customer.opt_industry_list
+msgid "References by Sectors of Activity"
 msgstr ""
 
 #. module: website_customer
@@ -161,6 +172,11 @@ msgid "Trusted by millions worldwide"
 msgstr ""
 
 #. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_website_published
+msgid "Visible in Website"
+msgstr ""
+
+#. module: website_customer
 #: model:ir.actions.act_window,name:website_customer.action_partner_tag_form
 #: model:ir.ui.menu,name:website_customer.menu_partner_tag_form
 #: model:ir.ui.view,arch_db:website_customer.view_partner_tag_list
@@ -170,6 +186,7 @@ msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_website_tag_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_users_website_tag_ids
 msgid "Website tags"
 msgstr ""
 
@@ -182,6 +199,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_customer.implemented_by_block
 msgid "reference(s))"
 msgstr ""
-
-#~ msgid "Tags"
-#~ msgstr "ምልክት"
