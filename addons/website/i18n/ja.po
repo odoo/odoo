@@ -8,13 +8,14 @@
 # Martin Trigaux <mat@odoo.com>, 2017
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2017
 # Manami Hashi <manami@roomsfor.hk>, 2017
+# SHIMIZU Taku <shimizu.taku@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Manami Hashi <manami@roomsfor.hk>, 2017\n"
+"POT-Creation-Date: 2017-11-30 13:11+0000\n"
+"PO-Revision-Date: 2017-11-30 13:11+0000\n"
+"Last-Translator: SHIMIZU Taku <shimizu.taku@gmail.com>, 2017\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,6 +93,15 @@ msgid ""
 "(e.g. business name, location) tends to improve your ranking in search "
 "engines and consequently increases your traffic. Do it:"
 msgstr "(ビジネス名、地域など)は、検索エンジンのランキングを向上させる傾向があり、結果的にトラフィックが増加します。 やりましょう："
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.layout_footer_copyright
+msgid ""
+",\n"
+"                                                      the #1"
+msgstr ""
+",\n"
+"                                                      ・#1"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -544,6 +554,9 @@ msgid ""
 "                                <span class=\"css_publish\">Unpublished</span>\n"
 "                                <span class=\"css_unpublish\">Published</span>"
 msgstr ""
+"<span/>\n"
+"                                <span class=\"css_publish\">未公開</span>\n"
+"                                <span class=\"css_unpublish\">公開済</span>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -1371,7 +1384,7 @@ msgstr "内容"
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Content Delivery Network (CDN)"
-msgstr ""
+msgstr "コンテンツ配信ネットワーク (CDN)"
 
 #. module: website
 #. openerp-web
@@ -1397,11 +1410,6 @@ msgstr "メニューの作成"
 #: model:ir.ui.view,arch_db:website.page_404
 msgid "Create Page"
 msgstr "ページ作成"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid "Create a"
-msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1472,7 +1480,7 @@ msgstr "デフォルト"
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr ""
+msgstr "デフォルトアクセス権"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_default_lang_id
@@ -1495,7 +1503,7 @@ msgstr "デフォルト言語コード"
 #: code:addons/website/static/src/xml/website.seo.xml:41
 #, python-format
 msgid "Define Keywords"
-msgstr ""
+msgstr "キーワード設定"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
@@ -1633,7 +1641,7 @@ msgstr "ダウンタウン"
 #: code:addons/website/static/src/xml/website.contentMenu.xml:45
 #, python-format
 msgid "Drag a menu to the right to create a sub-menu"
-msgstr "メニューを右にドラッグしてサブメニューを作成する"
+msgstr "サブメニューを作成するには、メニューを右にドラッグ"
 
 #. module: website
 #. openerp-web
@@ -1675,7 +1683,7 @@ msgstr "編集"
 #: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "Edit Menu"
-msgstr "編集メニュー"
+msgstr "メニュー編集"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -1749,7 +1757,7 @@ msgstr "例"
 #: code:addons/website/static/src/xml/website.contentMenu.xml:61
 #, python-format
 msgid "Existing Page, URL or Email"
-msgstr ""
+msgstr "既存ページ、URLもしくはEメール"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -1926,7 +1934,7 @@ msgstr "あなたの方法論の理解を得る"
 msgid ""
 "Get this page efficiently referenced in search engines to attract more "
 "visitors."
-msgstr ""
+msgstr "より多くの訪問者を集めるため、このページが検索エンジンに効率よく参照されるようにしましょう。"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1943,7 +1951,7 @@ msgstr "GitHubアカウント"
 #: code:addons/website/static/src/js/menu/content.js:48
 #, python-format
 msgid "Go To Page"
-msgstr ""
+msgstr "ページに移動"
 
 #. module: website
 #. openerp-web
@@ -1990,7 +1998,7 @@ msgstr "Google Adwords"
 #: model:ir.model.fields,field_description:website.field_res_config_settings_has_google_analytics
 #, python-format
 msgid "Google Analytics"
-msgstr "Google Analytics"
+msgstr "Googleアナリティクス"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings_google_analytics_key
@@ -2085,7 +2093,7 @@ msgstr "成長"
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "HTML/CSS Editor"
-msgstr ""
+msgstr "HTML/CSSエディタ"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_http
@@ -2108,7 +2116,7 @@ msgstr "新しいウェブサイトを効率的に立ち上げるためのアク
 #: code:addons/website/static/src/xml/website.pageProperties.xml:110
 #, python-format
 msgid "Hide this page from search results"
-msgstr ""
+msgstr "オフの場合は検索結果に含まれません"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
@@ -2155,7 +2163,7 @@ msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_id
-#: model:ir.model.fields,field_description:website.field_website_menu_id_7239
+#: model:ir.model.fields,field_description:website.field_website_menu_id_7241
 #: model:ir.model.fields,field_description:website.field_website_page_id
 #: model:ir.model.fields,field_description:website.field_website_published_mixin_id
 #: model:ir.model.fields,field_description:website.field_website_redirect_id
@@ -2206,21 +2214,21 @@ msgstr "訪問者から顧客へのコンバージョンを向上させる"
 #: code:addons/website/static/src/xml/website.seo.xml:68
 #, python-format
 msgid "In description"
-msgstr ""
+msgstr "説明に含まれる"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:69
 #, python-format
 msgid "In page's content"
-msgstr ""
+msgstr "ページ内容に含まれる"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:67
 #, python-format
 msgid "In title"
-msgstr ""
+msgstr "タイトルに含まれる"
 
 #. module: website
 #. openerp-web
@@ -2314,7 +2322,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/content/website_root.js:209
+#: code:addons/website/static/src/js/content/website_root.js:212
 #, python-format
 msgid ""
 "It might be possible to edit the relevant items or fix the issue in <a "
@@ -2355,7 +2363,7 @@ msgstr "キー"
 #: code:addons/website/static/src/xml/website.seo.xml:48
 #, python-format
 msgid "Keyword"
-msgstr ""
+msgstr "キーワード"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings_language_ids
@@ -2418,7 +2426,7 @@ msgstr "先週"
 #: code:addons/website/static/src/xml/website.backend.xml:111
 #, python-format
 msgid "Last Year"
-msgstr ""
+msgstr "昨年"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2440,7 +2448,7 @@ msgstr "左側"
 #: code:addons/website/static/src/xml/website.seo.xml:65
 #, python-format
 msgid "Legend:"
-msgstr ""
+msgstr "凡例:"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -2509,17 +2517,17 @@ msgstr "メインメニュー"
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Manage Pages"
-msgstr ""
+msgstr "ページ管理"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.edit_website_pages
 msgid "Manage Your Pages"
-msgstr ""
+msgstr "ページ管理"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Manage Your Website Pages"
-msgstr ""
+msgstr "ウェブサイトのページを管理"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2529,7 +2537,7 @@ msgstr "コンテンツを構成するチャネルを管理する"
 #. module: website
 #: model:ir.ui.view,arch_db:website.edit_website_pages
 msgid "Manage this page"
-msgstr ""
+msgstr "このページを管理"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2563,7 +2571,7 @@ msgstr "メニュー"
 #: code:addons/website/static/src/js/menu/content.js:338
 #, python-format
 msgid "Menu Label"
-msgstr ""
+msgstr "メニューラベル"
 
 #. module: website
 #: code:addons/website/models/website.py:243
@@ -2661,7 +2669,7 @@ msgstr "名称"
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Name and favicon of your website"
-msgstr ""
+msgstr "ウェブサイトの名称とファビコン"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2675,7 +2683,7 @@ msgstr "Namecheap"
 #: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "New Page"
-msgstr "新規ページ"
+msgstr "新しいページ"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu_new_window
@@ -2717,7 +2725,7 @@ msgstr "なし"
 #: code:addons/website/static/src/xml/website.seo.xml:66
 #, python-format
 msgid "Not used"
-msgstr ""
+msgstr "未使用"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -2845,9 +2853,14 @@ msgid "Open Source ERP"
 msgstr "オープンソースERP"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.layout_footer_copyright
+msgid "Open Source eCommerce"
+msgstr "オープンソース eコマース"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Optimize SEO"
-msgstr "SEOを最適化する"
+msgstr "SEO最適化"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -2934,7 +2947,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.pageProperties.xml:46
 #, python-format
 msgid "Page Name"
-msgstr ""
+msgstr "ページ名"
 
 #. module: website
 #. openerp-web
@@ -2942,7 +2955,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "Page Properties"
-msgstr ""
+msgstr "ページプロパティ"
 
 #. module: website
 #. openerp-web
@@ -2958,7 +2971,7 @@ msgstr "ページタイトル"
 #: model:ir.model.fields,field_description:website.field_website_page_url
 #, python-format
 msgid "Page URL"
-msgstr ""
+msgstr "ページURL"
 
 #. module: website
 #: code:addons/website/models/website.py:208
@@ -3047,7 +3060,7 @@ msgstr "プランナー"
 #. module: website
 #: model:ir.ui.view,arch_db:website.theme_customize
 msgid "Please install a theme in order to customize your website."
-msgstr "あなたのウェブサイトをカスタマイズするためにテーマをインストールしてください。"
+msgstr "ウェブサイトをカスタマイズするにはテーマをインストールしてください。"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3055,6 +3068,11 @@ msgid ""
 "Post content on other people blogs, forums, websites, that are related to "
 "your environment."
 msgstr "自分の環境に関連する他の人のブログ、フォーラム、ウェブサイトにコンテンツを投稿する。"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.layout_footer_copyright
+msgid "Powered by"
+msgstr "Powered by"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.kanban_contain
@@ -3077,24 +3095,24 @@ msgstr "プロフェッショナル"
 #: model:ir.ui.view,arch_db:website.user_navbar
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Promote"
-msgstr "宣伝"
+msgstr "プロモート"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/menu/seo.js:339
 #, python-format
 msgid "Promote Page"
-msgstr ""
+msgstr "ページをプロモート"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Promote page on the web"
-msgstr "このウェブ上のページを宣伝する"
+msgstr "このウェブ上のページをプロモートする"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Promote your catalog of services"
-msgstr "サービスカタログを宣伝する"
+msgstr "サービスカタログをプロモートする"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3153,7 +3171,7 @@ msgstr "公開済"
 #: model:ir.model.fields,field_description:website.field_website_page_date_publish
 #, python-format
 msgid "Publishing Date"
-msgstr ""
+msgstr "公開日"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
@@ -3425,7 +3443,7 @@ msgstr "任意の継承として表示"
 #: code:addons/website/static/src/xml/website.pageProperties.xml:86
 #, python-format
 msgid "Show in Top Menu"
-msgstr ""
+msgstr "トップメニューに表示"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3467,13 +3485,13 @@ msgstr "ソーシャルメディア"
 #: code:addons/website/controllers/main.py:218
 #, python-format
 msgid "Sort by Name"
-msgstr ""
+msgstr "名称でソート"
 
 #. module: website
 #: code:addons/website/controllers/main.py:217
 #, python-format
 msgid "Sort by Url"
-msgstr ""
+msgstr "URLでソート"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -3522,7 +3540,7 @@ msgstr "サブタイトル3"
 #: code:addons/website/static/src/xml/website.seo.xml:58
 #, python-format
 msgid "Suggested"
-msgstr ""
+msgstr "提案"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -3890,14 +3908,14 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings_cdn_activated
 msgid "Use a Content Delivery Network (CDN)"
-msgstr "コンテンツデリバリネットワーク (CDN) を使用"
+msgstr "コンテンツ配信ネットワーク (CDN) を使用"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.pageProperties.xml:97
 #, python-format
 msgid "Use as Homepage"
-msgstr ""
+msgstr "ホームページに設定"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4120,7 +4138,7 @@ msgstr "ウェブサイトのテーマ"
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Website Title"
-msgstr ""
+msgstr "ウェブサイトタイトル"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_blog_post_website_url
@@ -4513,7 +4531,7 @@ msgstr "等.."
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "ex: About us"
-msgstr "例: 私たちについて"
+msgstr "例: 会社概要"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4541,11 +4559,6 @@ msgstr "あなたのホームページのユーザビリティを無料で評価
 #, python-format
 msgid "found(s)"
 msgstr "発見(s)"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid "free website"
-msgstr ""
 
 #. module: website
 #. openerp-web
@@ -4720,11 +4733,6 @@ msgstr "website.published.mixin"
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "will help you:"
 msgstr "あなたを助けるでしょう："
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid "with"
-msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500

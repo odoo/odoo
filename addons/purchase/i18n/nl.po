@@ -431,6 +431,16 @@ msgid "<strong>Your Order Reference:</strong>"
 msgstr "<strong>Uw order referentie:</strong>"
 
 #. module: purchase
+#: code:addons/purchase/models/stock.py:83
+#, python-format
+msgid ""
+"A sale order that generated this purchase order has been deleted. Check if "
+"an action is needed."
+msgstr ""
+"Een verkooporder die deze inkooporder heeft gegenereerd is verwijderd. "
+"Controleer of een actie nodig is."
+
+#. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
 msgid "A warning can be set on a product or a customer (Purchase)"
 msgstr ""
@@ -1145,7 +1155,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
-msgstr ""
+msgstr "Verschuif geplande leverdatum vooruit met"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter

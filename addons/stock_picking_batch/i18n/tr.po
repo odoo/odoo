@@ -5,9 +5,9 @@
 # Translators:
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
 # Saban Yildiz <sabany@projetgrup.com>, 2017
+# Murat Kaplan <muratk@projetgrup.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 # Ediz Duman <neps1192@gmail.com>, 2017
-# Murat Kaplan <muratk@projetgrup.com>, 2017
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2017
 msgid ""
@@ -27,12 +27,12 @@ msgstr ""
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
 msgid "Add pickings to a batch picking"
-msgstr ""
+msgstr "Transferleri toplu transfere ekle"
 
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
 msgid "Add pickings to batch"
-msgstr ""
+msgstr "Transferleri toplu transfere ekle"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action
@@ -54,28 +54,28 @@ msgstr "Batch"
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 #, python-format
 msgid "Batch Picking"
-msgstr ""
+msgstr "Toplu Transfer"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_name
 msgid "Batch Picking Name"
-msgstr ""
+msgstr "Toplu Transfer Adı"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_batch_menu
 msgid "Batch Pickings"
-msgstr ""
+msgstr "Toplu Transferler"
 
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Batch Pickings not finished"
-msgstr ""
+msgstr "Bitmeyen toplu transferler"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch_id_8938
 msgid "Batch associated to this picking"
-msgstr ""
+msgstr "Bu transfer ile ilişkili toplu transfer"
 
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -86,7 +86,7 @@ msgstr "İptal"
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Cancel picking"
-msgstr "Toplamayı İptal Et"
+msgstr "Transferi İptal Et"
 
 #. module: stock_picking_batch
 #: selection:stock.picking.batch,state:0
@@ -96,7 +96,7 @@ msgstr "İptal Edildi"
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid "Click to create a Batch Picking."
-msgstr ""
+msgstr "Toplu transfer oluşturmak için tıklayın"
 
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -106,7 +106,7 @@ msgstr "Onayla"
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Confirm picking"
-msgstr "Toplama onaylayın"
+msgstr "Transferi onayla"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_create_uid
@@ -177,7 +177,7 @@ msgstr "Acil Transfer"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:92
 #, python-format
 msgid "Immediate Transfer?"
-msgstr "Hemen Transfer?"
+msgstr "Transfer"
 
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -205,12 +205,12 @@ msgstr "Son Güncelleme"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch_picking_ids
 msgid "List of picking associated to this batch"
-msgstr ""
+msgstr "Bu toplu transfer ile ilişkili transfer listesi"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch_name
 msgid "Name of the batch picking"
-msgstr ""
+msgstr "Toplu transferin adı"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:52
@@ -221,7 +221,7 @@ msgstr "Yazdırılacak bir şey yok."
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch_user_id
 msgid "Person responsible for this batch picking"
-msgstr ""
+msgstr "Bu toplu transferden sorumlu kişi"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_immediate_transfer_pick_to_backorder_ids
@@ -231,13 +231,13 @@ msgstr ""
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_immediate_transfer_pick_to_backorder_ids
 msgid "Picking to backorder"
-msgstr ""
+msgstr "Ön teslimat yapılacak transfer"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_picking_ids
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Pickings"
-msgstr "Toplama Listeleri"
+msgstr "Transferler"
 
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -257,7 +257,7 @@ msgstr "Aktif"
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Search Batch Picking"
-msgstr ""
+msgstr "Toplu Transfer Ara"
 
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
@@ -310,7 +310,7 @@ msgstr "İl/Eyalet"
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_tree
 msgid "Stock Batch Picking"
-msgstr ""
+msgstr "Stok Toplu Transfer"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action

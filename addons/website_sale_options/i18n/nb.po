@@ -1,41 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_sale_options
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
+# Viktor Basso <viktor@voit.no>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-09-08 10:56+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-9/"
-"language/nb/)\n"
-"Language: nb\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Viktor Basso <viktor@voit.no>, 2017\n"
+"Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nb\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: website_sale_options
-#: code:addons/website_sale_options/models/sale_order.py:44
-#: code:addons/website_sale_options/models/sale_order.py:56
-#, python-format
-msgid ""
-"%s\n"
-"Option for: %s"
-msgstr ""
 
 #. module: website_sale_options
 #: model:product.attribute.value,name:website_sale_options.product_attribute_value_1
 msgid "1 year"
-msgstr ""
+msgstr "1 år"
 
 #. module: website_sale_options
 #: model:product.attribute.value,name:website_sale_options.product_attribute_value_2
 msgid "2 year"
-msgstr ""
+msgstr "2 år"
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
@@ -43,50 +36,81 @@ msgid ""
 "<i class=\"fa fa-chevron-left\"/> <span class=\"hidden-xs\">Continue "
 "Shopping</span><span class=\"visible-xs-inline\">Continue</span>"
 msgstr ""
+"<i class=\"fa fa-chevron-left\"/><span class=\"hidden-xs\">Fortsett å "
+"handle</span><span class=\"visible-xs-inline\">Fortsett</span>"
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid ""
 "<i class=\"fa fa-shopping-cart fa-fw\"/> <span class=\"hidden-xs\">Proceed "
-"to checkout</span><span class=\"visible-xs-inline\">Checkout</span>"
+"to Checkout</span><span class=\"visible-xs-inline\">Checkout</span>"
 msgstr ""
+"<i class=\"fa fa-shopping-cart fa-fw\"/><span class=\"hidden-xs\">Fortsett "
+"til utsjekking</span><span class=\"visible-xs-inline\">Utsjekking</span>"
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
-msgid "<small>Remove from cart</small>"
-msgstr ""
+msgid "<small>Remove <span class=\"hidden-xs\"> from Cart</span></small>"
+msgstr "<small>Fjern <span class=\"hidden-xs\"> fra handlevognen</span></small>"
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
-msgid ""
-"<span class=\"js_item\">1 Item</span><span class=\"js_items hidden\">5 "
-"Items</span><br/>"
-msgstr ""
+msgid "<span class=\"js_item\">1 </span><span class=\"js_items hidden\">5 </span>"
+msgstr "<span class=\"js_item\">1</span><span class=\"js_items hidden\">5</span>"
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
-msgid "<strong>Add to Cart</strong>"
-msgstr ""
+msgid "<strong>Add<span class=\"hidden-xs\"> to Cart</span></strong>"
+msgstr "<strong>Legg til <span class=\"hidden-xs\">i handlevognen</span></strong>"
+
+#. module: website_sale_options
+#: model:ir.ui.view,arch_db:website_sale_options.modal
+msgid "Add to Cart"
+msgstr "Legg til i handlevogn"
 
 #. module: website_sale_options
 #: model:product.attribute,name:website_sale_options.product_attribute_1
 msgid "Duration"
-msgstr "Varighet."
+msgstr "Varighet"
 
 #. module: website_sale_options
 #: model:ir.model.fields,field_description:website_sale_options.field_sale_order_line_linked_line_id
 msgid "Linked Order Line"
-msgstr ""
+msgstr "Tilknyttet ordrelinje"
 
 #. module: website_sale_options
+#: code:addons/website_sale_options/models/sale_order.py:46
+#, python-format
+msgid "Option for:"
+msgstr "Tilvalg for:"
+
+#. module: website_sale_options
+#: code:addons/website_sale_options/models/sale_order.py:48
+#, python-format
+msgid "Option:"
+msgstr "Tilvalg:"
+
+#. module: website_sale_options
+#: model:ir.model.fields,field_description:website_sale_options.field_product_product_optional_product_ids
 #: model:ir.model.fields,field_description:website_sale_options.field_product_template_optional_product_ids
 msgid "Optional Products"
+msgstr "Valgfrie produkter"
+
+#. module: website_sale_options
+#: model:ir.model.fields,help:website_sale_options.field_product_product_optional_product_ids
+#: model:ir.model.fields,help:website_sale_options.field_product_template_optional_product_ids
+msgid ""
+"Optional Products are suggested whenever the customer hits *Add to Cart* "
+"(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
 msgstr ""
+"Valgfrie produkter blir foreslått når kunden legger noe til i handlevognen "
+"(cross-sell-strategi, for eksempel kan det for datamaskiner være ekstra "
+"garantitid, programvare, osv.)"
 
 #. module: website_sale_options
 #: model:ir.model.fields,field_description:website_sale_options.field_sale_order_line_option_line_ids
 msgid "Options Linked"
-msgstr ""
+msgstr "Tilknyttede tilvalg"
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
@@ -106,17 +130,7 @@ msgstr "Produktmal"
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid "Product not available"
-msgstr "Produkt er ikke tilgjengelig"
-
-#. module: website_sale_options
-#: model:ir.ui.view,arch_db:website_sale_options.modal
-msgid "Product to add in your shopping cart"
-msgstr ""
-
-#. module: website_sale_options
-#: model:ir.model.fields,help:website_sale_options.field_product_template_optional_product_ids
-msgid "Products to propose when add to cart."
-msgstr ""
+msgstr "Produktet er ikke tilgjengelig"
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
@@ -125,8 +139,8 @@ msgstr "Antall"
 
 #. module: website_sale_options
 #: model:ir.model,name:website_sale_options.model_sale_order
-msgid "Sales Order"
-msgstr "Salgsordre"
+msgid "Quotation"
+msgstr "Pristilbud"
 
 #. module: website_sale_options
 #: model:ir.model,name:website_sale_options.model_sale_order_line
@@ -136,7 +150,7 @@ msgstr "Salgsordrelinje"
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid "Select Your Options:"
-msgstr ""
+msgstr "Velg tilvalg:"
 
 #. module: website_sale_options
 #: model:product.product,name:website_sale_options.product_product_1
@@ -144,7 +158,7 @@ msgstr ""
 #: model:product.template,name:website_sale_options.product_product_1_product_template
 #: model:product.template,name:website_sale_options.service_cost_01_product_template
 msgid "Warranty"
-msgstr ""
+msgstr "Garanti"
 
 #. module: website_sale_options
 #: model:product.product,description_sale:website_sale_options.product_product_1
@@ -156,10 +170,6 @@ msgid ""
 "promising to repair or replace it if necessary within a specified period of "
 "time."
 msgstr ""
-
-#. module: website_sale_options
-#. openerp-web
-#: code:addons/website_sale_options/static/src/js/website_sale.test.js:13
-#, python-format
-msgid "click in modal on 'Proceed to checkout' button"
-msgstr ""
+"Garanti utstedt til kjøperen av et produkt fra produsenten, med løfte om å "
+"reparere eller skifte ut produktet om nødvendig innenfor et avgrenset "
+"tidsrom."

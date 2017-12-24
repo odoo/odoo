@@ -1,123 +1,187 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_mass_mailing
-#
+# 
 # Translators:
+# Viktor Basso <viktor@voit.no>, 2017
+# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-09-08 10:37+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-9/"
-"language/nb/)\n"
-"Language: nb\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"Last-Translator: Jorunn D. Newth <jdn@eyenetworks.no>, 2017\n"
+"Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nb\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp;times;"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
-msgid "<span class=\"oe_snippet_thumbnail_title\">Newsletter Popup</span>"
-msgstr ""
-
-#. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
-msgid "<span class=\"oe_snippet_thumbnail_title\">Newsletter</span>"
-msgstr ""
-
-#. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid ""
 "<strong>Newsletter Popup!</strong> The newsletter popup snippet effect is "
 "active on this page. Click"
 msgstr ""
+"<strong>Nyhetsbrev-popup!</strong> Nyhetsbrev-popup-effekten er aktiv på "
+"denne siden. Klikk"
 
 #. module: website_mass_mailing
 #. openerp-web
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:15
 #, python-format
 msgid "Add a Newsletter Subscribe Button"
-msgstr ""
+msgstr "Legg til en knapp for å abonnere på nyhetsbrev"
 
 #. module: website_mass_mailing
 #. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:49
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:53
 #, python-format
 msgid "Add a Newsletter Subscribe Popup"
-msgstr ""
+msgstr "Legg til en popup for å abonnere på nyhetsbrev"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_options
+#: model:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid "Change Newsletter"
-msgstr ""
+msgstr "Endre nyhetsbrev"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
 msgid "Choose your mailing subscriptions."
-msgstr ""
+msgstr "Velg hva du vil abonnere på"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social_left
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.res_config_settings_view_form
+msgid "Encourage to subscribe to mailing lists with a popup"
+msgstr "Oppfordre til å melde seg på epostlister med en popup"
+
+#. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "Here To Edit Dialog Content"
-msgstr ""
+msgstr "her for å redigere dialoginnhold"
+
+#. module: website_mass_mailing
+#: model:ir.model,name:website_mass_mailing.model_mail_mass_mailing_list
+msgid "Mailing List"
+msgstr "Epostliste"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
 msgid "Mailing Subscriptions"
-msgstr ""
+msgstr "Listeabonnementer"
 
 #. module: website_mass_mailing
 #. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:22
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:21
 #, python-format
 msgid "Newsletter"
 msgstr "Nyhetsbrev"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
+#: model:ir.ui.view,arch_db:website_mass_mailing.view_mail_mass_mailing_list_form
+msgid "Popup Content"
+msgstr "Popup-innhold"
+
+#. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "Subscribe"
 msgstr "Abonner"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "Thanks"
-msgstr ""
+msgstr "Takk"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "Thanks for your subscription!"
+msgstr "Takk for at du abonnerer!"
+
+#. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.res_config_settings_view_form
+msgid ""
+"This adds a new Newsletter Popup snippet to drag & drop on on your website "
+"pages. It triggers a popup when visitors land on the page. This popup "
+"prompts them to enter their email address to join a mailing list."
 msgstr ""
+"Dette lager en ny blokk med en nyhetsbrev-popup, som du kan dra og slippe på"
+" sidene i nettstedet. Den får en popup til å åpne seg når besøkende lander "
+"på siden. Popupen oppfordrer dem til å legge inn epostadressen sin for å "
+"melde seg på en epostliste."
 
 #. module: website_mass_mailing
 #. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:80
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:83
 #, python-format
 msgid "Type Here ..."
-msgstr ""
+msgstr "Skriv her..."
+
+#. module: website_mass_mailing
+#: model:res.groups,name:website_mass_mailing.group_website_popup_on_exit
+msgid "Use subscription pop up on the website"
+msgstr "Bruk abonnements-popup på nettstedet"
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_res_config_settings_group_website_popup_on_exit
+msgid "Website Popup"
+msgstr "Nettsted-popup"
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_mail_mass_mailing_list_popup_content
+msgid "Website Popup Content"
+msgstr "Innhold i nettsted-popup"
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_mail_mass_mailing_list_popup_redirect_url
+msgid "Website Popup Redirect URL"
+msgstr "Omdirigerings-URL for nettsted-popup"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
 msgid "You are not subscribed to any of our mailing list."
-msgstr ""
+msgstr "Du abonnerer ikke på noen av epostlistene våre."
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
-msgid "Your changes have been saved."
-msgstr ""
+msgid "You have been successfully <strong>unsubscribed</strong>!"
+msgstr "Du har <strong>meldt deg av</strong>!"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:168
+#, python-format
+msgid "Your changes have been saved."
+msgstr "Endringene dine er lagret."
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:171
+#, python-format
+msgid "Your changes have not been saved, try again later."
+msgstr "Endringene dine ble ikke lagret, prøv igjen senere."
+
+#. module: website_mass_mailing
+#: model:ir.model,name:website_mass_mailing.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"
+
+#. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "your email..."
-msgstr ""
+msgstr "din epost..."
