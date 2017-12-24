@@ -1,21 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * utm
-#
+# 
 # Translators:
-# Simone Bernini <simone@aperturelabs.it>, 2016
+# Martin Trigaux <mat@odoo.com>, 2017
+# Paolo Valier <paolo.valier@hotmail.it>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-03-03 11:30+0000\n"
-"Last-Translator: Simone Bernini <simone@aperturelabs.it>\n"
-"Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
-"Language: it\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Paolo Valier <paolo.valier@hotmail.it>, 2017\n"
+"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: utm
@@ -34,34 +35,34 @@ msgstr "Attivo"
 #: model:ir.ui.view,arch_db:utm.utm_campaign_form
 #: model:ir.ui.view,arch_db:utm.utm_campaign_tree
 msgid "Campaign"
-msgstr "Campagna"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign_name
 msgid "Campaign Name"
-msgstr "Nome campagna"
+msgstr ""
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_campaign_act
 #: model:ir.ui.menu,name:utm.menu_utm_campaign_act
 msgid "Campaigns"
-msgstr "Campagne"
+msgstr ""
 
 #. module: utm
 #: model:ir.ui.view,arch_db:utm.utm_medium_view_form
 #: model:ir.ui.view,arch_db:utm.utm_source_view_form
 msgid "Channel"
-msgstr "Canale"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium_name
 msgid "Channel Name"
-msgstr "Nome Canale"
+msgstr ""
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_medium
 msgid "Channels"
-msgstr "Canali"
+msgstr ""
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_christmas_special
@@ -101,19 +102,24 @@ msgid "Display Name"
 msgstr "Visualizza Nome"
 
 #. module: utm
+#: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
+msgid "Email Campaign - Products"
+msgstr ""
+
+#. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_services
 msgid "Email Campaign - Services"
-msgstr "Campagna Email - Servizi"
+msgstr ""
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_facebook
 msgid "Facebook"
-msgstr "Facebook"
+msgstr ""
 
 #. module: utm
 #: model:ir.model,name:utm.model_ir_http
 msgid "HTTP routing"
-msgstr "Routing HTTP"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign_id
@@ -148,12 +154,12 @@ msgstr "Ultima modifica il"
 #. module: utm
 #: model:ir.ui.menu,name:utm.menu_link_tracker_root
 msgid "Link Tracker"
-msgstr "Link Tracker"
+msgstr ""
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_mailing
 msgid "Mailing Partner"
-msgstr "Partner mailing"
+msgstr ""
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_medium_action
@@ -167,23 +173,22 @@ msgstr "Partner mailing"
 #: model:ir.ui.view,arch_db:utm.utm_medium_view_tree
 #: model:ir.ui.view,arch_db:utm.utm_source_view_tree
 msgid "Medium"
-msgstr "Canale"
+msgstr ""
 
 #. module: utm
-#: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
 #: model:utm.source,name:utm.utm_source_newsletter
 msgid "Newsletter"
-msgstr "Newsletter"
+msgstr ""
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_fall_drive
 msgid "Sale"
-msgstr "Vendita"
+msgstr ""
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_search_engine
 msgid "Search engine"
-msgstr "Motore di ricerca"
+msgstr ""
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source
@@ -194,12 +199,12 @@ msgstr "Motore di ricerca"
 #: model:ir.model.fields,field_description:utm.field_sale_order_source_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin_source_id
 msgid "Source"
-msgstr "Origine"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source_name
 msgid "Source Name"
-msgstr "Nome Origine"
+msgstr ""
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_source_action
@@ -215,11 +220,9 @@ msgstr ""
 #: model:ir.model.fields,help:utm.field_sale_order_campaign_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_campaign_id
 msgid ""
-"This is a name that helps you keep track of your different campaign efforts "
-"Ex: Fall_Drive, Christmas_Special"
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
 msgstr ""
-"Questo nome puo' aiutarti a tenere traccia di differenti campagne di "
-"vendita. Es. Sconti natalizi, saldi autunnali, ecc.."
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_account_invoice_medium_id
@@ -228,9 +231,8 @@ msgstr ""
 #: model:ir.model.fields,help:utm.field_link_tracker_medium_id
 #: model:ir.model.fields,help:utm.field_sale_order_medium_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_medium_id
-#, fuzzy
-msgid "This is the method of delivery.Ex: Postcard, Email, or Banner Ad"
-msgstr "Rappresenta il metodo di consegna. Es: email, banner, volantini, ecc.."
+msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_account_invoice_source_id
@@ -239,13 +241,10 @@ msgstr "Rappresenta il metodo di consegna. Es: email, banner, volantini, ecc.."
 #: model:ir.model.fields,help:utm.field_link_tracker_source_id
 #: model:ir.model.fields,help:utm.field_sale_order_source_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_source_id
-#, fuzzy
 msgid ""
-"This is the source of the link Ex:Search Engine, another domain,or name of "
-"email list"
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
 msgstr ""
-"Questa è l'origine del link, es.: Motore di ricerca, altro dominio o nome "
-"dell'elenco di email"
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_twitter
@@ -261,6 +260,3 @@ msgstr ""
 #: model:ir.model,name:utm.model_utm_mixin
 msgid "utm.mixin"
 msgstr ""
-
-#~ msgid "Email Campaign - Products"
-#~ msgstr "Campagna Email - Prodotti"

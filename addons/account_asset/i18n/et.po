@@ -8,13 +8,14 @@
 # Wanradt Koell <wanradt@gmail.com>, 2017
 # Egon Raamat <egon@avalah.ee>, 2017
 # Rivo Zängov <eraser@eraser.ee>, 2017
+# Eneli Õigus <enelioigus@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:11+0000\n"
 "PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: Rivo Zängov <eraser@eraser.ee>, 2017\n"
+"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2017\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +38,7 @@ msgstr " (grupeeritud)"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_entry_count
 msgid "# Asset Entries"
-msgstr "Varade sissekanded"
+msgstr "Varade kirjed"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_depreciation_nbr
@@ -54,7 +55,7 @@ msgstr "Osamaksete ridade number"
 #: model:ir.cron,cron_name:account_asset.account_asset_cron
 #: model:ir.cron,name:account_asset.account_asset_cron
 msgid "Account Asset: Generate asset entries"
-msgstr "Konto varad: Loo varade sissekanded"
+msgstr "Konto varad: Loo varade kirjed"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_date
@@ -69,7 +70,7 @@ msgstr "Konto kirje"
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_id
 msgid "Account used in the depreciation entries, to decrease the asset value."
-msgstr "Amortisatsioonikanneteks kasutatud konto, et vähendada vara väärtust."
+msgstr "Amortisatsioonikirjeteks kasutatud konto, et vähendada vara väärtust."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_expense_id
@@ -77,7 +78,7 @@ msgid ""
 "Account used in the periodical entries, to record a part of the asset as "
 "expense."
 msgstr ""
-"Perioodilisteks kanneteks kasutatud konto, et kirjendada osa varast kuluna."
+"Perioodilisteks kirjeteks kasutatud konto, et kirjendada osa varast kuluna."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_asset_id
@@ -90,7 +91,7 @@ msgstr "Konto, mida kasutatakse vara algse hinna kirjeldamiseks."
 #: code:addons/account_asset/static/src/js/account_asset.js:52
 #, python-format
 msgid "Accounting entries waiting for manual verification"
-msgstr "Konto kanded, mis ootavad manuaalset kinnitamist"
+msgstr "Konto kirjed, mis ootavad manuaalset kinnitamist"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
@@ -323,8 +324,8 @@ msgid ""
 "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
 msgstr ""
 "Vali kuupäevade ja numbrite arvutamise meetod.\n"
-"  * Kannete arv: kindel kannete arv ja ajaline vahe kahel kandel.\n"
-"  * Lõppemise kuupäev: vali kahe kande vaheline aeg ja kuupäev, milal lõppeb amortisatsioon."
+"  * Kirjete arv: kindel kirjete arv ja ajaline vahe kahel kandel.\n"
+"  * Lõppemise kuupäev: vali 2 kande vaheline aeg ja kuupäev, milal lõppeb amortisatsioon."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_asset_depreciation_confirmation_wizard_date
@@ -357,12 +358,12 @@ msgstr "Ettevõte"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_method
 msgid "Computation Method"
-msgstr "Arvestusmeetod"
+msgstr "Arvutusmeetod"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
 msgid "Compute Asset"
-msgstr "Arvestus"
+msgstr "Arvuta vara"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form

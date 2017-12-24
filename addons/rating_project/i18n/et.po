@@ -5,13 +5,14 @@
 # Translators:
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
+# Eneli Õigus <enelioigus@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2017-11-30 13:12+0000\n"
+"PO-Revision-Date: 2017-11-30 13:12+0000\n"
+"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2017\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -119,7 +120,7 @@ msgstr ""
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid ""
-"Automatically modify the kanban state when the customer replies to the feedback for this stage.\n"
+"Automatically modify the kanban state when the customer replies to the feedback request for this stage.\n"
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
@@ -133,7 +134,7 @@ msgstr ""
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_task
-msgid "Customer Ratings from task"
+msgid "Customer Ratings on tasks"
 msgstr ""
 
 #. module: rating_project
@@ -253,7 +254,7 @@ msgstr ""
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Quarterly"
-msgstr ""
+msgstr "Kord kvartalis"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_search
@@ -297,14 +298,14 @@ msgid "Ratings"
 msgstr "Hinnangud"
 
 #. module: rating_project
-#: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating_task
-msgid "Ratings for tasks"
-msgstr ""
-
-#. module: rating_project
 #: code:addons/rating_project/models/project.py:107
 #, python-format
 msgid "Ratings of %s"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating_task
+msgid "Ratings on tasks"
 msgstr ""
 
 #. module: rating_project

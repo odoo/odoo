@@ -403,6 +403,14 @@ msgid "<strong>Your Order Reference:</strong>"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/models/stock.py:83
+#, python-format
+msgid ""
+"A sale order that generated this purchase order has been deleted. Check if "
+"an action is needed."
+msgstr ""
+
+#. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
 msgid "A warning can be set on a product or a customer (Purchase)"
 msgstr ""
@@ -648,7 +656,7 @@ msgstr "Confirmă comanda"
 #. module: purchase
 #: selection:res.company,po_double_validation:0
 msgid "Confirm purchase orders in one step"
-msgstr ""
+msgstr "Confirmare comandă de achiziție într-un singur pas"
 
 #. module: purchase
 #: selection:res.company,po_lock:0
@@ -1091,6 +1099,8 @@ msgid ""
 "Most propositions of purchase orders are created automatically\n"
 "                by Odoo based on inventory needs."
 msgstr ""
+"Cele mai multe propuneri de comenzi de achiziție sunt create automat de "
+"către Odoo pe baza necesarului de stoc."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
@@ -1849,6 +1859,8 @@ msgid ""
 "                you had with your vendor. Once confirmed, a request for\n"
 "                quotation is converted into a purchase order."
 msgstr ""
+"Cotația conține istoricul discuțiilor / negocierilor cu furnizorul. După "
+"confirmare o cotație se convertește în comandă de achiziție. "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -1988,6 +2000,8 @@ msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
 "done."
 msgstr ""
+"Nu se poate anula comanda de achiziție  %s deoarece unele recepții au fost "
+"deja efectuate."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:365
@@ -1996,6 +2010,8 @@ msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
 "bills."
 msgstr ""
+"Nu se poate anula această comandă de achiziție. Trebuie mai întâi să anulați"
+" facturile aferente."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
@@ -2054,6 +2070,10 @@ msgid ""
 "                you can track the related discussion with the vendor, control\n"
 "                the products received and control the vendor bills."
 msgstr ""
+"Utilizați acest meniu pentru a căuta în cadrul comenzilor dvs. de achiziție "
+"după referințe, furnizori, produse etc. Pentru fiecare comandă de achiziție,"
+" puteți urmări discuția cu furnizorul, puteți controla produsele primite și "
+"puteți controla facturile furnizorului."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
