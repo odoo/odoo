@@ -329,6 +329,118 @@ options.registry.sizing_x = options.registry.sizing.extend({
     },
 });
 
+options.registry.layout_column = options.Class.extend({
+    /**
+     * @override
+     */
+    start: function () {
+        this.$overlay.find('.o_handle.o_add_column, .o_handle.o_remove_column')
+            .removeClass('readonly')
+            .on('click', this._onButtonClick.bind(this));
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    onFocus: function () {
+        this._toggleButtons();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Adds a new column which is a clone of the last column.
+     *
+     * @private
+     */
+    _addColumn: function () {
+        this.trigger_up('request_history_undo_record', {$target: this.$target});
+        var $lastColumn = this._getColumns().last();
+        $lastColumn.clone().insertAfter($lastColumn);
+        this._updateSnippet();
+    },
+    /**
+     * Returns all the columns.
+     *
+     * @private
+     * @returns {jQuery}
+     */
+    _getColumns: function () {
+        return this.$target.find('.container > .row').children();
+    },
+    /**
+     * Removes the last column.
+     *
+     * @private
+     */
+    _removeColumn: function () {
+        this.trigger_up('request_history_undo_record', {$target: this.$target});
+        var $lastColumn = this._getColumns().last();
+        $lastColumn.remove();
+        this._updateSnippet();
+    },
+    /**
+     * Resize the columns by changing their classes.
+     * Allow to resize upto 6 columns.
+     *
+     * @private
+     */
+    _resizeColumns: function () {
+        var $columns = this._getColumns();
+        var colsLength = $columns.length;
+        if (colsLength <= 6) {
+            var calculateSize = Math.floor(12 / colsLength);
+            var colSize = calculateSize <= 1 ? 2 : calculateSize;
+            _.each($columns, function (column) {
+                var $column = $(column);
+                $column.attr('class', $column.attr('class').replace(/\s*(col-md-|col-md-offset-)([0-9-]+)/g, ''));
+                $column.addClass('col-md-' + colSize);
+            });
+            if (colsLength == 5) {
+                $columns.first().addClass('col-md-offset-1');
+            }
+        }
+    },
+    /**
+     * Toggle plus/minus button
+     *
+     * @private
+     */
+    _toggleButtons: function () {
+        var colsLength = this._getColumns().length;
+        this.$overlay.find('.o_handle.o_add_column').toggleClass('o_disable_btn', colsLength >= 6);
+        this.$overlay.find('.o_handle.o_remove_column').toggleClass('o_disable_btn', 1 >= colsLength);
+    },
+    /**
+     * @private
+     */
+    _updateSnippet: function () {
+        this._resizeColumns();
+        this._toggleButtons();
+        this.trigger_up('cover_update');
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onButtonClick: function (ev) {
+        if (!$(ev.currentTarget).hasClass('o_disable_btn')) {
+            if ($(ev.currentTarget).hasClass('o_add_column')) {
+                this._addColumn();
+            } else {
+                this._removeColumn();
+            }
+        }
+    },
+});
+
 options.registry.parallax = options.Class.extend({
     /**
      * @override

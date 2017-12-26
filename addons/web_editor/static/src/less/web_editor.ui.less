@@ -609,6 +609,30 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                     }
                 }
 
+                &.o_add_column {
+                    .o-position-absolute(@o-handles-offset-to-hide, 0, -@o-handles-offset-to-hide, auto);
+                    width: @odoo-handle-edge-size;
+                    border-right-width: @odoo-handle-border-width;
+                    cursor: pointer;
+                    &:after {
+                        content: "\f067";
+                        .o-position-absolute(@top: 50%, @right: 40%);
+                        margin-top: -@o-handle-btn-size/2;
+                    }
+                }
+                &.o_remove_column {
+                    .o-position-absolute(@o-handles-offset-to-hide, auto, -@o-handles-offset-to-hide, 0);
+                    width: @odoo-handle-edge-size;
+                    border-width: @odoo-handle-border-width;
+                    border-right-width: 0;
+                    cursor: pointer;
+                    &:after {
+                        content: "\f068";
+                        .o-position-absolute(@top: 50%, @left: 40%);
+                        margin-top: -@o-handle-btn-size/2;
+                    }
+                }
+
                 &.w {
                     .o-position-absolute(@o-handles-offset-to-hide, auto, -@o-handles-offset-to-hide, 0);
                     width: @odoo-handle-edge-size;
@@ -653,6 +677,13 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                     }
                 }
 
+                &.o_disable_btn {
+                    cursor: not-allowed;
+                    &:after {
+                        background-color: @o-we-color-text-normal;
+                        border-color: @o-we-color-text-normal;
+                    }
+                }
                 &.readonly {
                     cursor: auto!important;
 
