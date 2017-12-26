@@ -1746,6 +1746,7 @@ class AccountPartialReconcile(models.Model):
                             'debit': rounded_amt if rounded_amt > 0 else 0.0,
                             'credit': abs(rounded_amt) if rounded_amt < 0 else 0.0,
                             'account_id': line.tax_line_id.cash_basis_account.id,
+                            'analytic_account_id': line.analytic_account_id.id,
                             'tax_line_id': line.tax_line_id.id,
                             'tax_exigible': True,
                             'amount_currency': self.amount_currency and line.currency_id.round(line.amount_currency * amount / line.balance) or 0.0,
