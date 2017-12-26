@@ -506,7 +506,7 @@ class stock_quant(osv.osv):
             'qty': float_round(qty, precision_rounding=rounding),
             'cost': price_unit,
             'history_ids': [(4, move.id)],
-            'in_date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            'in_date': datetime.utcnow().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
             'company_id': move.company_id.id,
             'lot_id': lot_id,
             'owner_id': owner_id,
@@ -992,7 +992,7 @@ class stock_picking(osv.osv):
             move_obj.write(cr, uid, backorder_move_ids, {'picking_id': backorder_id}, context=context)
 
             if not picking.date_done:
-                self.write(cr, uid, [picking.id], {'date_done': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+                self.write(cr, uid, [picking.id], {'date_done': datetime.utcnow().strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
             self.action_confirm(cr, uid, [backorder_id], context=context)
             return backorder_id
         return False
@@ -2206,7 +2206,7 @@ class stock_move(osv.osv):
         @return: Move Date
         """
         if not date_expected:
-            date_expected = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            date_expected = datetime.utcnow().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return {'value': {'date': date_expected}}
 
     def attribute_price(self, cr, uid, move, context=None):
@@ -2510,7 +2510,7 @@ class stock_move(osv.osv):
         # Check the packages have been placed in the correct locations
         self._check_package_from_moves(cr, uid, ids, context=context)
         #set the move as done
-        self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+        self.write(cr, uid, ids, {'state': 'done', 'date': datetime.utcnow().strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         self.pool.get('procurement.order').check(cr, uid, list(procurement_ids), context=context)
         #assign destination moves
         if move_dest_ids:
@@ -2521,7 +2521,7 @@ class stock_move(osv.osv):
             if picking.state == 'done' and not picking.date_done:
                 done_picking.append(picking.id)
         if done_picking:
-            picking_obj.write(cr, uid, done_picking, {'date_done': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+            picking_obj.write(cr, uid, done_picking, {'date_done': datetime.utcnow().strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         return True
 
     def unlink(self, cr, uid, ids, context=None):
@@ -2810,7 +2810,7 @@ class stock_inventory(osv.osv):
                 vals = self._get_inventory_lines(cr, uid, inventory, context=context)
                 for product_line in vals:
                     inventory_line_obj.create(cr, uid, product_line, context=context)
-        return self.write(cr, uid, ids, {'state': 'confirm', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        return self.write(cr, uid, ids, {'state': 'confirm', 'date': datetime.utcnow().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
     def _get_inventory_lines(self, cr, uid, inventory, context=None):
         location_obj = self.pool.get('stock.location')
@@ -4446,7 +4446,7 @@ class stock_picking_type(osv.osv):
             'count_picking_waiting': [('state', '=', 'confirmed')],
             'count_picking_ready': [('state', 'in', ('assigned', 'partially_available'))],
             'count_picking': [('state', 'in', ('assigned', 'waiting', 'confirmed', 'partially_available'))],
-            'count_picking_late': [('min_date', '<', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)), ('state', 'in', ('assigned', 'waiting', 'confirmed', 'partially_available'))],
+            'count_picking_late': [('min_date', '<', datetime.utcnow().strftime(DEFAULT_SERVER_DATETIME_FORMAT)), ('state', 'in', ('assigned', 'waiting', 'confirmed', 'partially_available'))],
             'count_picking_backorders': [('backorder_id', '!=', False), ('state', 'in', ('confirmed', 'assigned', 'waiting', 'partially_available'))],
         }
         result = {}
