@@ -464,6 +464,14 @@ odoo.define('website_sale.website_sale', function (require) {
                                         $(".checkout_autoformat .div_" + field.split('_')[0]).toggle($.inArray(field, data.fields)>=0);
                                     });
                                 }
+
+                                if (data.other_mandatory_fields) {
+                                    if (data.other_mandatory_fields.includes('zip')) {
+                                        $('label.control-label[for=zip], label.control-label[for=shipping_zip]').removeClass('label-optional');
+                                    } else {
+                                        $('label.control-label[for=zip], label.control-label[for=shipping_zip]').addClass('label-optional');
+                                    }
+                                }
                             }
                         );
                     }

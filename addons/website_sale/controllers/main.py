@@ -466,6 +466,7 @@ class WebsiteSale(http.Controller):
         # Check if state required
         if data.get('country_id'):
             country = request.env['res.country'].browse(int(data.get('country_id')))
+            required_fields += country._get_specific_mandatory_fields()
             if 'state_code' in country.get_address_fields() and country.state_ids:
                 required_fields += ['state_id']
 
@@ -625,7 +626,7 @@ class WebsiteSale(http.Controller):
         if order.partner_id.id == request.website.user_id.sudo().partner_id.id:
             return request.redirect('/shop/address')
 
-        for f in self._get_mandatory_billing_fields():
+        for f in self._get_mandatory_billing_fields() + order.partner_id.country_id._get_specific_mandatory_fields():
             if not order.partner_id[f]:
                 return request.redirect('/shop/address?partner_id=%d' % order.partner_id.id)
 
@@ -1054,5 +1055,6 @@ class WebsiteSale(http.Controller):
         return dict(
             fields=country.get_address_fields(),
             states=[(st.id, st.name, st.code) for st in country.get_website_sale_states(mode=mode)],
-            phone_code=country.phone_code
+            phone_code=country.phone_code,
+            other_mandatory_fields=country._get_specific_mandatory_fields()
         )
