@@ -238,7 +238,7 @@ class Pricelist(models.Model):
                             price_max_margin = convert_to_price_uom(rule.price_max_margin)
                             price = min(price, price_limit + price_max_margin)
                     suitable_rule = rule
-                break
+                    break
             # Final price conversion into pricelist currency
             if suitable_rule and suitable_rule.compute_price != 'fixed' and suitable_rule.base != 'pricelist':
                 price = product.currency_id.compute(price, self.currency_id, round=False)
