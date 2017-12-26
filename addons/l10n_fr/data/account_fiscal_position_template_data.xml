@@ -69,6 +69,11 @@
             <field name="tax_src_id" ref="tva_normale_encaissement_ttc" />
             <field name="tax_dest_id" ref="tva_intra_0" />
         </record>
+        <record id="fp_tax_template_intraeub2b_vt_intermediaire_encaissement_ttc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_intermediaire_encaissement_ttc" />
+            <field name="tax_dest_id" ref="tva_intra_0" />
+        </record>
 <!-- Taux DOM-TOM -->
         <record id="fp_tax_template_intraeub2b_vt_specifique" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_intraeub2b" />
@@ -216,6 +221,11 @@
         <record id="fp_tax_template_impexp_vt_normale_encaissement_ttc" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_import_export" />
             <field name="tax_src_id" ref="tva_normale_encaissement_ttc" />
+            <field name="tax_dest_id" ref="tva_export_0" />
+        </record>
+        <record id="fp_tax_template_impexp_vt_intermediaire_encaissement_ttc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_intermediaire_encaissement_ttc" />
             <field name="tax_dest_id" ref="tva_export_0" />
         </record>
 <!-- Taux DOM-TOM -->
