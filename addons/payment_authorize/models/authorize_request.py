@@ -150,6 +150,22 @@ class AuthorizeAPI():
         etree.SubElement(creditCard, "cardCode").text = card_code
         etree.SubElement(root, "validationMode").text = 'liveMode'
         response = self._authorize_request(root)
+
+        # If the user didn't set up authorize.net properly then the response
+        # won't contain stuff like customerProfileId and accessing text
+        # will raise a NoneType has no text attribute
+        msg = response.find('messages')
+        if msg is not None:
+            rc = msg.find('resultCode')
+            if rc is not None and rc.text == 'Error':
+                err = msg.find('message')
+                err_code = err.find('code').text
+                err_msg = err.find('text').text
+                raise UserError(
+                    "Authorize.net Error:\nCode: %s\nMessage: %s"
+                    % (err_code, err_msg)
+                )
+
         res = dict()
         res['profile_id'] = response.find('customerProfileId').text
         res['payment_profile_id'] = response.find('customerPaymentProfileIdList/numericString').text
