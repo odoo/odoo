@@ -427,6 +427,7 @@ class Warehouse(models.Model):
                 self.Routing(warehouse.lot_stock_id, warehouse.wh_pack_stock_loc_id, warehouse.pick_type_id),
                 self.Routing(warehouse.wh_pack_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.pack_type_id),
                 self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id)],
+            'company_id': warehouse.company_id.id,
         }) for warehouse in self)
 
     @api.multi
@@ -436,6 +437,7 @@ class Warehouse(models.Model):
             'product_categ_selectable': True,
             'product_selectable': False,
             'sequence': 10,
+            'company_id': self.company_id.id,
         }
 
     @api.model
@@ -455,7 +457,8 @@ class Warehouse(models.Model):
             'product_selectable': True,
             'product_categ_selectable': True,
             'supplied_wh_id': self.id,
-            'supplier_wh_id': supplier_warehouse.id}
+            'supplier_wh_id': supplier_warehouse.id,
+            'company_id': self.company_id.id}
 
     def _get_inter_wh_route(self, supplier_warehouse):
         # FIXME - remove me in master/saas-14
@@ -469,7 +472,8 @@ class Warehouse(models.Model):
             'product_selectable': True,
             'product_categ_selectable': True,
             'active': self.delivery_steps != 'ship_only' and self.reception_steps != 'one_step',
-            'sequence': 20}
+            'sequence': 20,
+            'company_id': self.company_id.id}
 
     def _get_crossdock_route(self, route_name):
         # FIXME - remove me in master/saas-14
