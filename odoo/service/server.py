@@ -52,6 +52,7 @@ except ImportError:
     watchdog = None
 
 SLEEP_INTERVAL = 60     # 1 min
+REGISTRY_LOADED = threading.Event()
 
 def memory_info(process):
     """ psutil < 2.0 does not have memory_info, >= 3.0 does not have
@@ -941,6 +942,7 @@ def preload_registries(dbnames):
         except Exception:
             _logger.critical('Failed to initialize database `%s`.', dbname, exc_info=True)
             return -1
+    REGISTRY_LOADED.set()
     return rc
 
 def start(preload=None, stop=False):
