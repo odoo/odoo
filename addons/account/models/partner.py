@@ -310,7 +310,7 @@ class ResPartner(models.Model):
             partner.contracts_count = AccountAnalyticAccount.search_count([('partner_id', '=', partner.id)])
 
     def get_followup_lines_domain(self, date, overdue_only=False, only_unblocked=False):
-        domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable'), '|', ('debit', '!=', 0), ('credit', '!=', 0), ('company_id', '=', self.env.user.company_id.id)]
+        domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable'), ('balance', '>', 0), ('company_id', '=', self.env.user.company_id.id)]
         if only_unblocked:
             domain += [('blocked', '=', False)]
         if self.ids:
