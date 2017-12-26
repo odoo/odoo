@@ -44,7 +44,7 @@
             <form string="Leads Form">
                 <header>
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
-                            help="Convert to Opportunity" class="oe_highlight"/>
+                            help="Convert to Opportunity" class="oe_highlight" attrs="{'invisible': [('type', '=', 'opportunity')]}"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -384,7 +384,7 @@
                             domain="[('activity_ids.user_id', '=', uid)]"/>
                     <separator/>
                     <filter string="Late Activities" name="activities_overdue"
-                            domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('date_closed', '=', False)]"
+                            domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                             help="Show all records which has next action date is before today"/>
                     <filter string="Today Activities" name="activities_today"
                             domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
@@ -629,7 +629,7 @@
                             domain="[('activity_ids.user_id', '=', uid)]"/>
                     <separator/>
                     <filter string="Late Activities" name="activities_overdue"
-                            domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('date_closed', '=', False)]"
+                            domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                             help="Show all opportunities for which the next action date is before today"/>
                     <filter string="Today Activities" name="activities_today"
                             domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
@@ -729,6 +729,34 @@ if record:
     action_values = env.ref('crm.crm_lead_lost_action').read()[0]
     action_values.update({'context': env.context})
     action = action_values
+            </field>
+        </record>
+
+        <!--
+            'Mark Late Activities as Done' in action dropdown
+        -->
+        <record id="action_mark_late_activities_done" model="ir.actions.server">
+            <field name="name">Mark Late Activities as Done</field>
+            <field name="model_id" ref="model_crm_lead"/>
+            <field name="binding_model_id" ref="crm.model_crm_lead"/>
+            <field name="state">code</field>
+            <field name="code">
+for rec in records:
+    rec.activity_ids.filtered(lambda a: a.state == 'overdue').action_feedback(feedback='Closed automatically in batch')
+            </field>
+        </record>
+
+        <!--
+            'Mark All Activities as Done' in action dropdown
+        -->
+        <record id="action_mark_activities_done" model="ir.actions.server">
+            <field name="name">Mark All Activities as Done</field>
+            <field name="model_id" ref="model_crm_lead"/>
+            <field name="binding_model_id" ref="crm.model_crm_lead"/>
+            <field name="state">code</field>
+            <field name="code">
+for rec in records:
+    rec.activity_ids.action_feedback(feedback='Closed automatically in batch')
             </field>
         </record>
 
