@@ -14,9 +14,9 @@ from odoo.addons.website_portal.controllers.main import website_account, get_rec
 class WebsitePortal(website_account):
 
     def _prepare_portal_layout_values(self):
-        values = super(WebsitePortal, self).sudo()._prepare_portal_layout_values()
+        values = super(WebsitePortal, self)._prepare_portal_layout_values()
         partner = request.env.user.partner_id
-        values['purchase_count'] = request.env['purchase.order'].search_count([
+        values['purchase_count'] = request.env['purchase.order'].sudo().search_count([
             '|',
             ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
             ('partner_id', 'child_of', [partner.commercial_partner_id.id]),
