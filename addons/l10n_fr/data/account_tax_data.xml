@@ -789,6 +789,22 @@
       <field name="tax_group_id" ref="tax_group_tva_20"/>
     </record>
 
+    <record model="account.tax.template" id="tva_acq_encaissement">
+      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
+      <field name="name">TVA à l'encaissement (achat) 20,0%</field>
+      <field name="description">TVA 20%</field>
+      <field name="amount" eval="20.0"/>
+      <field name="amount_type">percent</field>
+      <field name="refund_account_id" ref="pcg_44566"/>
+      <field name="account_id" ref="pcg_445800"/>
+      <field name="tax_exigibility">on_payment</field>
+      <field name="cash_basis_account" ref="pcg_44566" />
+      <field name="sequence" eval="10"/>
+      <field name="type_tax_use">purchase</field>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_20'),ref('l10n_fr.tag_fr_30')])]"/>
+      <field name="tax_group_id" ref="tax_group_tva_20"/>
+    </record>
+
     <record model="account.tax.template" id="tva_acq_specifique">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déductible (achat) 8,5%</field>
