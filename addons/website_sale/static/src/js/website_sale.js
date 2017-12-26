@@ -466,10 +466,20 @@ odoo.define('website_sale.website_sale', function (require) {
                                 }
 
                                 if (data.other_mandatory_fields) {
+                                    var field_required_value = $('input[name=field_required]').val().split(',');
+                                    var index_zip = field_required_value.indexOf('zip');
                                     if (data.other_mandatory_fields.includes('zip')) {
-                                        $('label.control-label[for=zip], label.control-label[for=shipping_zip]').removeClass('label-optional');
+                                        $('label.control-label[for=zip]').removeClass('label-optional');
+                                        if (index_zip === -1) {
+                                            field_required_value.push('zip');
+                                        }
+                                        $('input[name=field_required]').val(field_required_value.join(','));
                                     } else {
-                                        $('label.control-label[for=zip], label.control-label[for=shipping_zip]').addClass('label-optional');
+                                        if (index_zip !== -1) {
+                                            field_required_value.splice(index_zip,1);
+                                        }
+                                        $('input[name=field_required]').val(field_required_value.join(','));
+                                        $('label.control-label[for=zip]').addClass('label-optional');
                                     }
                                 }
                             }
