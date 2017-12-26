@@ -14,8 +14,7 @@ from odoo.addons.payment_authorize.controllers.main import AuthorizeController
 from odoo.tools import mute_logger
 
 
-@odoo.tests.common.at_install(True)
-@odoo.tests.common.post_install(True)
+@odoo.tests.tagged('post_install','-at_install')
 class AuthorizeCommon(PaymentAcquirerCommon):
 
     def setUp(self):
@@ -28,8 +27,7 @@ class AuthorizeCommon(PaymentAcquirerCommon):
         # self.authorize.auto_confirm = 'confirm_so'
 
 
-@odoo.tests.common.at_install(True)
-@odoo.tests.common.post_install(True)
+@odoo.tests.tagged('post_install','-at_install')
 class AuthorizeForm(AuthorizeCommon):
 
     def _authorize_generate_hashing(self, values):

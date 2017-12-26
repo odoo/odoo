@@ -1,8 +1,10 @@
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.tests import tagged
 import time
 import unittest
 
 
+@tagged('post_install', '-at_install')
 class TestReconciliation(AccountingTestCase):
 
     """Tests for reconciliation (account.tax)
