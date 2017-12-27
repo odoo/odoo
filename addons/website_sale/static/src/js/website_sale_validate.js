@@ -21,7 +21,10 @@ $(document).ready(function () {
                     setTimeout(function () { payment_transaction_poll_status(); }, Math.ceil(_poll_nbr / 3) * 1000);
                 }
                 else {
-                    result.message = "<i class='fa fa-warning' />";
+                    var $message = $(result.message);
+                    $message.find('span:first').prepend($(
+                        "<i title='We are waiting the confirmation of the bank or payment provider' class='fa fa-warning' style='margin-right:10px;'>"));
+                    result.message = $message.html();
                 }
             }
             $('div.oe_website_sale_tx_status').html(result.message);
