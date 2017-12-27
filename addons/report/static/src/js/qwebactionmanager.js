@@ -101,6 +101,7 @@ ActionManager.include({
                     var response = [
                         report_urls['qweb-pdf'],
                         action.report_type,
+                        action.context,
                     ];
                     var c = crash_manager;
                     return trigger_download(self.session, response, c, action, options);
