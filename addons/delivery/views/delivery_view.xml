@@ -275,10 +275,11 @@
                 <data>
                   <xpath expr="//field[@name='payment_term_id']" position="after">
                       <field name="id" invisible="1"/>
+                      <field name="available_carrier_ids" invisible="1"/>
                       <label for="carrier_id"/>
                       <div name='carrier_selection'>
                           <div>
-                            <field name="carrier_id" context="{'order_id': id}" class="oe_inline" options="{'no_create': True, 'no_open': True}" attrs="{'readonly':[('state','not in',('draft','sent'))]}"/> <i class="fa fa-check text-success" aria-hidden="true" attrs="{'invisible':['|','|',('carrier_id','=',False),('state','not in',('draft','sent')),('delivery_rating_success','=',False)]}"></i>
+                            <field name="carrier_id" domain="[('id', 'in', available_carrier_ids)]" context="{'order_id': id}" class="oe_inline" options="{'no_create': True, 'no_open': True}" attrs="{'readonly':[('state','not in',('draft','sent'))]}"/> <i class="fa fa-check text-success" aria-hidden="true" attrs="{'invisible':['|','|',('carrier_id','=',False),('state','not in',('draft','sent')),('delivery_rating_success','=',False)]}"></i>
                           </div>
                           <div>
                             <field name='delivery_price' widget='monetary' class="oe_inline" options="{'currency_field': 'currency_id'}" nolabel="1" attrs="{'invisible': [('carrier_id','=', False)]}" force_save="1"/>
