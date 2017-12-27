@@ -239,13 +239,16 @@
             <t t-foreach='message.tracking_value_ids' t-as='value'>
                 <li>
                     <t t-esc="value.changed_field"/>:
-                    <t t-if="value.old_value">
+                    <t t-if="value.old_value || value.field_type === 'boolean'">
                         <span> <t t-esc="value.old_value || ((value.field_type !== 'boolean') and '')"/> </span>
-                        <span t-if="value.old_value != value.new_value" class="fa fa-long-arrow-right"/>
+                        <span t-if="value.old_value != value.new_value">
+                            ➜
+                            <strong><t t-esc="value.new_value || ((value.field_type !== 'boolean') and '')"/></strong>
+                        </span>
                     </t>
-                    <span t-if="value.old_value != value.new_value">
-                        <t t-esc="value.new_value || ((value.field_type !== 'boolean') and '')"/>
-                    </span>
+                    <t t-else="">
+                        <t t-esc="value.new_value || ''"/>
+                    </t>
                 </li>
             </t>
         </ul>

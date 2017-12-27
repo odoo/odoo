@@ -132,11 +132,32 @@
     ${object.body | safe}
 </div>
 % if ctx.get('tracking'):
-    <ul>
-    % for tracking in ctx['tracking']
-        <li>${tracking[0]} : ${tracking[1]} -&gt; ${tracking[2]}</li>
-    % endfor
-    </ul>
+    <table width="600">
+        <tr style="height:30px;font-size:15px;">
+            <td> Notification about : </td>
+            <td> <b> ${object.record_name} </b> </td>
+        </tr>
+        % for tracking in ctx['tracking']
+            <tr style="padding-bottom:10px;">
+                <td width="25%" style="color:#875a7b;">
+                    ${tracking[0]}
+                </td>
+                <td width="75%">
+                    % if tracking[1] or tracking[3] == 'boolean':
+                        ${tracking[1] or ((tracking[3] != 'boolean') and '')}
+                        % if tracking[1] != tracking[2]:
+                            ➜
+                            <strong style="color:#a24689;">
+                                ${tracking[2] or ((tracking[3] != 'boolean') and '')}
+                            </strong>
+                        % endif
+                    % else:
+                        ${tracking[2] or ''}
+                    % endif
+                </td>
+            </tr>
+        % endfor
+    </table>
 % endif
 
 % if ctx.get('signature'):

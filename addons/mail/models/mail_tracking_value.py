@@ -4,6 +4,7 @@
 from datetime import datetime
 
 from odoo import api, fields, models, tools
+from odoo.tools.misc import formatLang
 
 
 class MailTracking(models.Model):
@@ -36,7 +37,7 @@ class MailTracking(models.Model):
         tracked = True
         values = {'field': col_name, 'field_desc': col_info['string'], 'field_type': col_info['type']}
 
-        if col_info['type'] in ['integer', 'float', 'char', 'text', 'datetime', 'monetary']:
+        if col_info['type'] in ['integer', 'float', 'char', 'text', 'datetime']:
             values.update({
                 'old_value_%s' % col_info['type']: initial_value,
                 'new_value_%s' % col_info['type']: new_value
@@ -63,6 +64,13 @@ class MailTracking(models.Model):
                 'old_value_char': initial_value and initial_value.name_get()[0][1] or '',
                 'new_value_char': new_value and new_value.name_get()[0][1] or ''
             })
+        elif col_info['type'] == 'monetary':
+            values.update({
+                'old_value_integer': col_info['currency'],
+                'new_value_integer': col_info['currency'],
+                'old_value_monetary': initial_value,
+                'new_value_monetary': new_value
+            })
         else:
             tracked = False
 
@@ -75,7 +83,7 @@ class MailTracking(models.Model):
         assert type in ('new', 'old')
         result = []
         for record in self:
-            if record.field_type in ['integer', 'float', 'char', 'text', 'monetary']:
+            if record.field_type in ['integer', 'float', 'char', 'text']:
                 result.append(getattr(record, '%s_value_%s' % (type, record.field_type)))
             elif record.field_type == 'datetime':
                 if record['%s_value_datetime' % type]:
@@ -91,6 +99,9 @@ class MailTracking(models.Model):
                     result.append(record['%s_value_datetime' % type])
             elif record.field_type == 'boolean':
                 result.append(bool(record['%s_value_integer' % type]))
+            elif record.field_type == 'monetary':
+                currency = self.env['res.currency'].browse(record['%s_value_integer' % type])
+                result.append(formatLang(self.env, record['%s_value_monetary' % type], currency_obj=currency))
             else:
                 result.append(record['%s_value_char' % type])
         return result
