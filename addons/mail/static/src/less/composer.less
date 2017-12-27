@@ -60,15 +60,14 @@
         }
 
         .o_mail_emoji_container {
-            text-align: left !important;
-            position: absolute;
-            bottom: 100%;
-            overflow-y: auto;
+            .o-position-absolute(auto, 0, 100%, 0);
             max-height: 20vh;
             padding: 0 @o-mail-chatter-gap @o-mail-chatter-gap 0;
             border: 1px solid @gray-lighter-dark;
             border-width: 1px;
             background-color: @gray-lighter;
+            text-align: left !important;
+            overflow-y: auto;
 
             .o_mail_emoji {
                 margin: @o-mail-chatter-gap 0 0 @o-mail-chatter-gap;
