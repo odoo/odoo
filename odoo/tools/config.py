@@ -158,7 +158,7 @@ class configmanager(object):
         group.add_option("--test-enable", action="store_true", dest="test_enable",
                          my_default=False, help="Enable unit tests.")
         group.add_option("--test-tags", dest="test_tags",
-                         default=('+standard'),
+                         default=('standard'),
                          help="Comma separated list of tags to filter which tests to excute")
 
         parser.add_option_group(group)

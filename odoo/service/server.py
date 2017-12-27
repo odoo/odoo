@@ -36,7 +36,7 @@ except ImportError:
     setproctitle = lambda x: None
 
 import odoo
-from odoo.modules.module import run_unit_tests, runs_post_install
+from odoo.modules.module import run_unit_tests
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 from odoo.tools import config
@@ -924,6 +924,7 @@ def preload_registries(dbnames):
 
             # run post-install tests
             if config['test_enable']:
+                _logger.info('Starting post_install tests')
                 t0 = time.time()
                 t0_sql = odoo.sql_db.sql_counter
                 module_names = (registry.updated_modules if update_module else
@@ -931,7 +932,7 @@ def preload_registries(dbnames):
                 with odoo.api.Environment.manage():
                     for module_name in module_names:
                         result = run_unit_tests(module_name, registry.db_name,
-                                                position=runs_post_install)
+                                                position='post_install')
                         registry._assertion_report.record_result(result)
                 _logger.info("All post-tested in %.2fs, %s queries",
                              time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
