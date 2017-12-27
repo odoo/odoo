@@ -115,7 +115,13 @@ class AccountInvoice(models.Model):
                 for i_line in self.invoice_line_ids:
                     res.extend(self._anglo_saxon_purchase_move_lines(i_line, res))
         return res
-
+    #Metodo agregado por Trescloud
+    def validation_adj_price_unit(self, valuation_price_unit, i_line, line, acc):
+        '''
+        Hook sera utilizado en un modulo superior
+        '''
+        return valuation_price_unit != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc
+        
     @api.model
     def _anglo_saxon_purchase_move_lines(self, i_line, res):
         """Return the additional move lines for purchase invoices and refunds.
@@ -157,7 +163,8 @@ class AccountInvoice(models.Model):
                             valuation_price_unit = i_line.product_id.uom_id._compute_price(valuation_price_unit, i_line.uom_id)
                     if inv.currency_id.id != company_currency.id:
                             valuation_price_unit = company_currency.with_context(date=inv.date_invoice).compute(valuation_price_unit, inv.currency_id, round=False)
-                    if valuation_price_unit != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:
+                    # La siguiente linea fue modificada por Trescloud 
+                    if self.validation_adj_price_unit(valuation_price_unit, i_line, line, acc): 
                         # price with discount and without tax included
                         price_unit = i_line.price_unit * (1 - (i_line.discount or 0.0) / 100.0)
                         tax_ids = []
