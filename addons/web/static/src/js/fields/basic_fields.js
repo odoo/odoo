@@ -58,7 +58,7 @@ var TranslatableFieldMixin = {
     },
 };
 
-var CopyClipboard = {
+var CopyClipboardMixin = {
 
     /**
      * @override
@@ -409,7 +409,16 @@ var FieldChar = InputField.extend(TranslatableFieldMixin, {
     },
 });
 
-var CharCopyClipboard = FieldChar.extend(CopyClipboard, {
+var CharCopyClipboard = FieldChar.extend(CopyClipboardMixin, {
+
+    /**
+     * @override
+     */
+    init: function() {
+        this._super.apply(this, arguments);
+        this.string = this.nodeOptions.string || _t('Copy Text');
+        this.icon = 'fa-clipboard'
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -421,7 +430,7 @@ var CharCopyClipboard = FieldChar.extend(CopyClipboard, {
     _render: function () {
         this._super.apply(this, arguments);
         this.$el.addClass('o_field_copy');
-        this.$el.append($(qweb.render('CopyClipboardChar')));
+        this.$el.append($(qweb.render('CopyClipboardChar', {widget:this})));
         this._initClipboard();
     }
 });
@@ -974,7 +983,16 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
     },
 });
 
-var TextCopyClipboard = FieldText.extend(CopyClipboard, {
+var TextCopyClipboard = FieldText.extend(CopyClipboardMixin, {
+
+    /**
+     * @override
+     */
+    init: function() {
+        this._super.apply(this, arguments);
+        this.string = this.nodeOptions.string || _t('Copy Text');
+        this.icon = 'fa-clipboard'
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -986,7 +1004,7 @@ var TextCopyClipboard = FieldText.extend(CopyClipboard, {
     _render: function () {
         this._super.apply(this, arguments);
         this.$el.addClass('o_field_copy');
-        this.$el.append($(qweb.render('CopyClipboardText')));
+        this.$el.append($(qweb.render('CopyClipboardText', {widget:this})));
         this._initClipboard();
     }
 });
