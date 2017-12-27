@@ -292,18 +292,22 @@ class Department(models.Model):
         # the tracking allows to track+subscribe fields linked to a res.user record
         # An update of the limited behavior should come, but not currently done.
         if 'manager_id' in vals:
-            manager_id = vals.get("manager_id")
-            if manager_id:
-                manager = self.env['hr.employee'].browse(manager_id)
-                # subscribe the manager user
-                if manager.user_id:
-                    self.message_subscribe_users(user_ids=manager.user_id.ids)
-            employees = self.env['hr.employee']
-            for department in self:
-                employees = employees | self.env['hr.employee'].search([
-                    ('id', '!=', manager_id),
-                    ('department_id', '=', department.id),
-                    ('parent_id', '=', department.manager_id.id)
-                ])
-            employees.write({'parent_id': manager_id})
+            self.update_department_manager_on_write(vals)
         return super(Department, self).write(vals)
+
+    @api.multi
+    def update_department_manager_on_write(self, values):
+        manager_id = values.get("manager_id")
+        if manager_id:
+            manager = self.env['hr.employee'].browse(manager_id)
+            # subscribe the manager user
+            if manager.user_id:
+                self.message_subscribe_users(user_ids=manager.user_id.ids)
+        employees = self.env['hr.employee']
+        for department in self:
+            employees = employees | self.env['hr.employee'].search([
+                ('id', '!=', manager_id),
+                ('department_id', '=', department.id),
+                ('parent_id', '=', department.manager_id.id)
+            ])
+        employees.write({'parent_id': manager_id})
