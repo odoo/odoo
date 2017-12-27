@@ -635,7 +635,12 @@ class Picking(models.Model):
         self.write({'date_done': fields.Datetime.now()})
         return True
 
-    do_transfer = action_done #TODO:replace later
+    # Backward compatibility
+    # Problem with fixed reference to a function:
+    # it doesn't allow for overriding action_done() through do_transfer
+    # get rid of me in master (and make me private ?)
+    def do_transfer(self):
+        return self.action_done()
 
     def _check_move_lines_map_quant_package(self, package):
         """ This method checks that all product of the package (quant) are well present in the move_line_ids of the picking. """
