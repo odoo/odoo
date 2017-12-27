@@ -5,3 +5,4 @@ from . import common
 from . import test_sale_timesheet
 from . import test_sale_service
 from . import test_timesheet_revenue
+from . import test_reinvoice
