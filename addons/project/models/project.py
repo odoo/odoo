@@ -52,6 +52,18 @@ class ProjectTaskType(models.Model):
             " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
             " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n")
 
+    @api.multi
+    def unlink(self):
+        stages = self
+        default_project_id = self.env.context.get('default_project_id')
+        if default_project_id:
+            shared_stages = self.filtered(lambda x: len(x.project_ids) > 1 and default_project_id in x.project_ids.ids)
+            tasks = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', default_project_id), ('stage_id', 'in', self.ids)])
+            if shared_stages and not tasks:
+                shared_stages.write({'project_ids': [(3, default_project_id)]})
+                stages = self.filtered(lambda x: x not in shared_stages)
+        return super(ProjectTaskType, stages).unlink()
+
 
 class Project(models.Model):
     _name = "project.project"
