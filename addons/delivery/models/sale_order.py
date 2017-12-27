@@ -14,11 +14,18 @@ class SaleOrder(models.Model):
     delivery_message = fields.Char(readonly=True, copy=False)
     delivery_rating_success = fields.Boolean(copy=False)
     invoice_shipping_on_delivery = fields.Boolean(string="Invoice Shipping on Delivery", copy=False)
+    available_carrier_ids = fields.Many2many("delivery.carrier", compute="_compute_available_carrier", string="Available Carriers")
 
     def _compute_amount_total_without_delivery(self):
         self.ensure_one()
         delivery_cost = sum([l.price_total for l in self.order_line if l.is_delivery])
         return self.amount_total - delivery_cost
+
+    @api.depends('partner_id')
+    def _compute_available_carrier(self):
+        carriers = self.env['delivery.carrier'].search([])
+        for rec in self:
+            rec.available_carrier_ids = carriers.available_carriers(rec.partner_id) if rec.partner_id else carriers
 
     def get_delivery_price(self):
         for order in self.filtered(lambda o: o.state in ('draft', 'sent') and len(o.order_line) > 0):
@@ -45,7 +52,7 @@ class SaleOrder(models.Model):
     @api.onchange('partner_id')
     def onchange_partner_id_carrier_id(self):
         if self.partner_id:
-            self.carrier_id = self.partner_id.property_delivery_carrier_id
+            self.carrier_id = self.partner_id.property_delivery_carrier_id.filtered('active')
 
     # TODO onchange sol, clean delivery price
 
