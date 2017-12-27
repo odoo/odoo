@@ -78,7 +78,7 @@ class WebsiteSlides(http.Controller):
 
     @http.route([
         '''/slides/<model("slide.channel"):channel>''',
-        '''/slides/<model("slide.channel):channel>/page/<int:page>''',
+        '''/slides/<model("slide.channel"):channel>/page/<int:page>''',
 
         '''/slides/<model("slide.channel"):channel>/<string:slide_type>''',
         '''/slides/<model("slide.channel"):channel>/<string:slide_type>/page/<int:page>''',
