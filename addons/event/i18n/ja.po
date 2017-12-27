@@ -326,7 +326,7 @@ msgstr ""
 msgid ""
 "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the"
 " event or change the dates on which it is held.)</em>"
-msgstr ""
+msgstr "<em>(チャンバー・ワークスは、イベントを取り消し、再命名または再配置、<br>または開催日を変更する権利を留保します。)</em>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -355,6 +355,8 @@ msgid ""
 "<i class=\"fa fa-clock-o\"/>\n"
 "                                        <b>To</b>"
 msgstr ""
+"<i class=\"fa fa-clock-o\"/>\n"
+"                                        <b>To</b>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -385,7 +387,7 @@ msgstr "<i>HTMLページで簡単な動的コンポーネントを開発する�
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "<i>to</i>"
-msgstr ""
+msgstr "<i>to</i>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1141,7 +1143,7 @@ msgstr "追加情報については、下記までご連絡ください。"
 msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
-msgstr ""
+msgstr "イベントごとに最大座席数（出席者数）を定義することができます。この数を超えると、登録は受け付けられません。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_seats_min
@@ -1150,6 +1152,7 @@ msgid ""
 "attendees), if it does not reach the mentioned registrations the event can "
 "not be confirmed (keep 0 to ignore this rule)"
 msgstr ""
+"各イベントについて、最小予約席(出席者数)を定義することができます。記載されている登録に達していない場合、そのイベントは確認できません(このルールを無視するために0を保持します)"
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -1178,7 +1181,7 @@ msgstr "グループ化"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Having attended this conference, participants should be able to:"
-msgstr ""
+msgstr "この会議に出席した参加者は、次のことができるはずです。"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1228,6 +1231,8 @@ msgid ""
 " status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
 msgstr ""
+"イベントが作成された場合、ステータスは「ドラフト」です。 イベントが特定の日付で確認された場合、ステータスは「確認済」に設定されます。 "
+"イベントが終了すると、ステータスは「完了」に設定されます。 イベントがキャンセルされると、ステータスは「キャンセル」に設定されます。"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -1302,12 +1307,12 @@ msgstr "紹介、CRM、販売管理"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_default_registration_max
 msgid "It will select this default maximum value when you choose this event"
-msgstr ""
+msgstr "このイベントを選択すると、このデフォルトの最大値が選択されます。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_default_registration_min
 msgid "It will select this default minimum value when you choose this event"
-msgstr ""
+msgstr "このイベントを選択すると、このデフォルトの最小値が選択されます"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_color
@@ -1526,11 +1531,13 @@ msgid ""
 "    track registrations and participations, automate the confirmation emails,\n"
 "    sell tickets, etc."
 msgstr ""
+"Odooは、あなたのイベントをスケジュールし、効率的に整理するのに役立ちます：\n"
+"     確認の電子メールを自動化したり、チケットを販売したりすることができます。"
 
 #. module: event
 #: model:event.event,name:event.event_0
 msgid "Open Days in Los Angeles"
-msgstr ""
+msgstr "ロサンゼルスでOpen Days"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_organizer_id
@@ -1554,7 +1561,7 @@ msgstr ""
 msgid ""
 "Participants are expected to have some knowledge in programming. A basic "
 "knowledge of the Python programming is recommended."
-msgstr ""
+msgstr "参加者はプログラミングにある程度の知識が必要です。 Pythonプログラミングの基本知識が推奨されます。"
 
 #. module: event
 #: model:event.event,description:event.event_0

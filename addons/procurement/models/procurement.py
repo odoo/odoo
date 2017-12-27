@@ -282,19 +282,19 @@ class ProcurementOrder(models.Model):
             ProcurementSudo = self.env['procurement.order'].sudo()
             # Run confirmed procurements
             procurements = ProcurementSudo.search([('state', '=', 'confirmed')] + (company_id and [('company_id', '=', company_id)] or []))
+            run_procurements = []
             while procurements:
                 procurements.run(autocommit=use_new_cursor)
+                run_procurements.extend(procurements.ids)
                 if use_new_cursor:
                     self.env.cr.commit()
-                procurements = ProcurementSudo.search([('id', 'not in', procurements.ids), ('state', '=', 'confirmed')] + (company_id and [('company_id', '=', company_id)] or []))
+                procurements = ProcurementSudo.search([('id', 'not in', run_procurements), ('state', '=', 'confirmed')] + (company_id and [('company_id', '=', company_id)] or []))
 
             # Check done procurements
             procurements = ProcurementSudo.search([('state', '=', 'running')] + (company_id and [('company_id', '=', company_id)] or []))
-            while procurements:
-                procurements.check(autocommit=use_new_cursor)
-                if use_new_cursor:
-                    self.env.cr.commit()
-                procurements = ProcurementSudo.search([('id', 'not in', procurements.ids), ('state', '=', 'running')] + (company_id and [('company_id', '=', company_id)] or []))
+            procurements.check(autocommit=use_new_cursor)
+            if use_new_cursor:
+                self.env.cr.commit()
 
         finally:
             if use_new_cursor:

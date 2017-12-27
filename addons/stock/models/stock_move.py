@@ -179,10 +179,13 @@ class StockMove(models.Model):
         else:
             self.lot_ids = self.mapped('reserved_quant_ids').mapped('lot_id').ids
 
-    @api.one
+    @api.multi
     @api.depends('reserved_quant_ids.qty')
     def _compute_reserved_availability(self):
-        self.reserved_availability = sum(self.mapped('reserved_quant_ids').mapped('qty'))
+        result = {data['reservation_id'][0]: data['qty'] for data in 
+            self.env['stock.quant'].read_group([('reservation_id', 'in', self.ids)], ['reservation_id','qty'], ['reservation_id'])}
+        for rec in self:
+            rec.reserved_availability = result.get(rec.id, 0.0)
 
     @api.one
     @api.depends('state', 'product_id', 'product_qty', 'location_id')
@@ -283,7 +286,7 @@ class StockMove(models.Model):
                     if propagated_date_field:
                         current_date = datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT)
                         new_date = datetime.strptime(vals.get(propagated_date_field), DEFAULT_SERVER_DATETIME_FORMAT)
-                        delta = new_date - current_date
+                        delta = relativedelta.relativedelta(new_date, current_date)
                         if abs(delta.days) >= move.company_id.propagation_minimum_delta:
                             old_move_date = datetime.strptime(move.move_dest_id.date_expected, DEFAULT_SERVER_DATETIME_FORMAT)
                             new_move_date = (old_move_date + relativedelta.relativedelta(days=delta.days or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
@@ -651,7 +654,7 @@ class StockMove(models.Model):
             if move.state != 'assigned' and not self.env.context.get('reserve_only_ops'):
                 qty_already_assigned = move.reserved_availability
                 qty = move.product_qty - qty_already_assigned
-                
+
                 quants = Quant.quants_get_preferred_domain(qty, move, domain=main_domain[move.id], preferred_domain_list=[])
                 Quant.quants_reserve(quants, move)
 
@@ -666,7 +669,8 @@ class StockMove(models.Model):
         self.ensure_one()
         if self.move_dest_id:
             if self.propagate:
-                self.move_dest_id.action_cancel()
+                if self.move_dest_id.state not in ('done', 'cancel'):
+                    self.move_dest_id.action_cancel()
             elif self.move_dest_id.state == 'waiting':
                 # If waiting, the chain will be broken and we are not sure if we can still wait for it (=> could take from stock instead)
                 self.move_dest_id.write({'state': 'confirmed'})

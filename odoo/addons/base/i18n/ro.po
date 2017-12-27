@@ -5207,7 +5207,7 @@ msgstr "(editare)"
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
 msgid ", or your preferred text editor"
-msgstr ", sau editorul dumneavoastra de text preferat"
+msgstr ", sau editorul dvs. de text preferat"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
@@ -5367,6 +5367,10 @@ msgid ""
 "env[\"res.partner\"].create({\"name\": partner_name})\n"
 "</code>"
 msgstr ""
+"<code style=\"white-space: pre-wrap\">\n"
+"partner_name = record.name + '_code'\n"
+"env[\"res.partner\"].create({\"name\": partner_name})\n"
+"</code>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -6403,7 +6407,7 @@ msgstr "Module de exportat"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_upgrade_module_info
 msgid "Apps to Update"
-msgstr ""
+msgstr "App de actualizat"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -6637,7 +6641,7 @@ msgstr "Azerbaidjan"
 #: code:addons/translate.py:1069
 #, python-format
 msgid "Bad file format: %s"
-msgstr ""
+msgstr "Format greșit fișier %s"
 
 #. module: base
 #: model:res.country,name:base.bs
@@ -7448,7 +7452,7 @@ msgstr "Click aici pentru a modifica afișarea"
 #. module: base
 #: model:ir.actions.act_window,help:base.action_attachment
 msgid "Click here to create new documents."
-msgstr ""
+msgstr "Clic aici pentru a face un document nou."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
@@ -8838,7 +8842,7 @@ msgstr "Diagramă"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sign
 msgid "Digital Signatures"
-msgstr ""
+msgstr "Semnături digitale"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang_direction
@@ -9733,7 +9737,7 @@ msgstr "Descriere Câmpuri"
 #: code:addons/base/ir/ir_model.py:487
 #, python-format
 msgid "Fields:"
-msgstr ""
+msgstr "Câmpuri:"
 
 #. module: base
 #: model:res.country,name:base.fj
@@ -11424,7 +11428,7 @@ msgstr ""
 #: code:addons/base/res/res_users.py:315
 #, python-format
 msgid "Invalid 'group by' parameter"
-msgstr ""
+msgstr "Parametrul  'group by' e invalid"
 
 #. module: base
 #: code:addons/base/ir/ir_cron.py:70
@@ -11743,7 +11747,7 @@ msgstr "LGPL Versiunea 3"
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_landed_costs
 msgid "Landed Costs"
-msgstr ""
+msgstr "Costuri depozitare"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export_lang
@@ -14784,7 +14788,7 @@ msgstr "Referință"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_ref_object
 msgid "Reference record"
-msgstr ""
+msgstr "Referință înregistrare"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_request_link-act
@@ -15434,7 +15438,7 @@ msgstr "Vezi toate valorile posibile"
 #: code:addons/common.py:42
 #, python-format
 msgid "See http://openerp.com"
-msgstr ""
+msgstr "Vezi http://openerp.com"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_model_object_field
@@ -16536,6 +16540,12 @@ msgstr "Tailanda - Contabilitate"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_th_reports
 msgid "Thailand - Accounting Reports"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_users.py:288
+#, python-format
+msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr ""
 
 #. module: base
@@ -17961,17 +17971,17 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_datetime
 msgid "Value datetime"
-msgstr ""
+msgstr "Valoare datetime"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_float
 msgid "Value float"
-msgstr ""
+msgstr "Valoare float"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_integer
 msgid "Value integer"
-msgstr ""
+msgstr "Valoare integer"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_reference
@@ -17981,7 +17991,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_text
 msgid "Value text"
-msgstr ""
+msgstr "Valoare text"
 
 #. module: base
 #: model:res.country,name:base.vu
@@ -18467,6 +18477,12 @@ msgid ""
 "default value. If you don't do that, your customization will be overwrited "
 "at the next update or upgrade to a future version of Odoo."
 msgstr ""
+"Când personalizați un flux de lucru, asigurați-vă că nu modificați un nod "
+"sau săgeată existentă, ci adăugați noduri sau săgeți noi. Dacă aveți absolut"
+" nevoie să modificați un nod sau o săgeată, puteți modifica numai câmpurile "
+"goale sau setate la valoarea implicită. Dacă nu faceți acest lucru, "
+"personalizarea dvs. va fi suprascrisă la următoarea actualizare sau upgrade "
+"la o versiune viitoare a Odoo."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_sequence
@@ -19011,7 +19027,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_partner_form
 #: model:ir.ui.view,arch_db:base.view_partner_simple_form
 msgid "e.g. Sales Director"
-msgstr ""
+msgstr "ex. Director vânzări"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form

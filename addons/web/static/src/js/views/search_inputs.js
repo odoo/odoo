@@ -152,7 +152,7 @@ var Field = Input.extend( /** @lends instance.web.search.Field# */ {
         if (domain) {
             value_to_domain = function (facetValue) {
                 return new data.CompoundDomain(domain)
-                    .set_eval_context({self: self.value_from(facetValue)});
+                    .set_eval_context({self: self.value_from(facetValue), raw_value: facetValue.attributes.value});
             };
         } else {
             value_to_domain = function (facetValue) {

@@ -9,13 +9,14 @@
 # RGB Consulting <odoo@rgbconsulting.com>, 2016
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Eric Antones <eantones@users.noreply.github.com>, 2016
+# Quim - eccit <quim@eccit.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:58+0000\n"
 "PO-Revision-Date: 2016-09-07 08:58+0000\n"
-"Last-Translator: Eric Antones <eantones@users.noreply.github.com>, 2016\n"
+"Last-Translator: Quim - eccit <quim@eccit.com>, 2017\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +39,17 @@ msgid ""
 "        % endif\n"
 "        "
 msgstr ""
+"\n"
+"        <p>Felicitats, has aconseguit la insígnia <strong>${object.badge_id.name}</strong> !\n"
+"            % if object.sender_id\n"
+"                Aquesta insígnia està garantida per <strong>${object.sender_id.name}</strong>.\n"
+"            % endif\n"
+"        </p>\n"
+"\n"
+"        % if object.comment\n"
+"            <p><em>${object.comment}</em></p>\n"
+"        % endif\n"
+"        "
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_goal_reminder
@@ -50,6 +62,13 @@ msgid ""
 "    <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>\n"
 "            "
 msgstr ""
+"\n"
+"    <p>\n"
+"        <strong>Recordatori ${object.name}</strong>\n"
+"    </p>\n"
+"    \n"
+"    <p>No has actualitzat les teves millores per l'objectiu ${object.definition_id.name} (actualment al ${object.completeness}%) com a mínim des de fa ${object.remind_update_delay} days. No te n'oblidis.</p>\n"
+"            "
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.simple_report_template
@@ -1622,12 +1641,12 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_manager_id
 msgid "The user responsible for the challenge."
-msgstr ""
+msgstr "L'usuari responsable de l'objectiu"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user_sender_id
 msgid "The user who has send the badge"
-msgstr ""
+msgstr "L'usuari que ha enviat la insígnia"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_goal_definition_ids
@@ -1635,6 +1654,8 @@ msgid ""
 "The users that have succeeded theses goals will receive automatically the "
 "badge."
 msgstr ""
+"Els usuaris que han aconseguit aquests objectius obtenen directament la "
+"insígnia"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_batch_user_expression
