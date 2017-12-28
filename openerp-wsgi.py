@@ -20,7 +20,7 @@ import openerp
 openerp.multi_process = True # Nah!
 
 # Equivalent of --load command-line option
-openerp.conf.server_wide_modules = ['web']
+openerp.conf.server_wide_modules = ['web','web_kanban']
 conf = openerp.tools.config
 
 # Path to the OpenERP Addons repository (comma-separated for
