@@ -948,7 +948,8 @@ registry.background = SnippetOption.extend({
             })
             .addClass('active');
 
-        this.$el.find('[data-choose-image]').toggleClass('active', this.$target.hasClass('oe_custom_bg'));
+        this.$el.find('[data-choose-image]').addBack('[data-choose-image]')
+            .toggleClass('active', this.$target.hasClass('oe_custom_bg'));
     },
     /**
      * Sets the given value as custom background image.

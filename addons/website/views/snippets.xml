@@ -14,7 +14,7 @@
 </template>
 
 <template id="s_cover" name="Cover">
-    <section class="s_cover parallax bg-black-50 oe_img_bg oe_custom_bg pt96 pb96" data-scroll-background-ratio="1">
+    <section class="s_cover parallax s_parallax_is_fixed bg-black-50 oe_img_bg oe_custom_bg pt96 pb96" data-scroll-background-ratio="1">
         <span class="s_parallax_bg" style="background-image: url('/web/image/website.s_cover_default_image'); background-position: 50% 0;"/>
         <div class="container">
             <div class="row s_nb_column_fixed">
@@ -1115,18 +1115,18 @@
     </div>
 
     <!-- Parallax -->
-    <div data-js="parallax" data-selector=".parallax">
+    <div data-js="parallax" data-selector="section">
         <div class="dropdown-submenu">
-            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-clock-o"/>Scroll Speed</a>
-            <div class="dropdown-menu" role="menu" name="parallax-scroll">
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="0">No-scroll</a>
+            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-magic"/>Parallax</a>
+            <div class="dropdown-menu" role="menu" data-no-preview="true">
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="0" data-select-class="">None</a>
                 <div class="dropdown-divider" role="separator"/>
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1">Fixed</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1" data-select-class="parallax s_parallax_is_fixed">Fixed</a>
                 <div class="dropdown-divider" role="separator"/>
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="0.6">Very Slow</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1.2">Slow</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1.6">Fast</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="2">Very Fast</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="0.6" data-select-class="parallax">Very Slow</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1.2" data-select-class="parallax">Slow</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1.6" data-select-class="parallax">Fast</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="2" data-select-class="parallax">Very Fast</a>
             </div>
         </div>
     </div>

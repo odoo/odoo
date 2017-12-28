@@ -490,7 +490,7 @@ registry.slider = Animation.extend({
 });
 
 registry.parallax = Animation.extend({
-    selector: '.parallax',
+    selector: '.parallax:has(> .s_parallax_bg)',
     effects: [{
         startEvents: 'scroll',
         update: '_onWindowScroll',
@@ -523,26 +523,20 @@ registry.parallax = Animation.extend({
      * @private
      */
     _rebuild: function () {
-        // Add/find bg DOM element to hold the parallax bg (support old v10.0 parallax)
-        if (!this.$bg || !this.$bg.length) {
-            this.$bg = this.$('> .s_parallax_bg');
-            if (!this.$bg.length) {
-                this.$bg = $('<span/>', {
-                    class: 's_parallax_bg' + (this.$target.hasClass('oe_custom_bg') ? ' oe_custom_bg' : ''),
-                }).prependTo(this.$target);
-            }
-        }
-        var urlTarget = this.$target.css('background-image');
-        if (urlTarget !== 'none') {
-            this.$bg.css('background-image', urlTarget);
-        }
-        this.$target.css('background-image', 'none');
+        // Find the bg DOM element which holds the parallax bg
+        this.$bg = this.$('> .s_parallax_bg');
 
         // Get parallax speed
         this.speed = parseFloat(this.$target.attr('data-scroll-background-ratio') || 0);
+        // Note: speed 0 should not be possible but is kept for compatibility
+        // (now when there is no parallax, the element does not have the
+        // parallax class)
 
+        // Compatibility for parallax <= 12.0
+        if (!this.$target.hasClass('s_parallax_is_fixed') && this.speed === 1) {
+            this.$target.addClass('s_parallax_is_fixed');
+        }
         // Reset offset if parallax effect will not be performed and leave
-        this.$target.toggleClass('s_parallax_is_fixed', this.speed === 1);
         if (this.speed === 0 || this.speed === 1) {
             this.$bg.css({
                 transform: '',
