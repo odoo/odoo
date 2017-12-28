@@ -4,7 +4,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools import pycompat, float_is_zero
-from odoo.tools.misc import formatLang
+from odoo.tools.misc import formatLang, format_date
 
 
 class AccountReconciliation(models.AbstractModel):
@@ -57,13 +57,13 @@ class AccountReconciliation(models.AbstractModel):
             WHERE st_line.id IN %s
                 AND aml.company_id = st_line.company_id
                 AND aml.statement_id IS NULL
-                
+
                 AND (
                     company.account_bank_reconciliation_start IS NULL
                     OR
                     aml.date > company.account_bank_reconciliation_start
                 )
-                
+
                 AND CASE WHEN journal.default_credit_account_id IS NOT NULL
                     AND journal.default_debit_account_id IS NOT NULL
                     THEN
@@ -703,8 +703,8 @@ class AccountReconciliation(models.AbstractModel):
                 'account_code': line.account_id.code,
                 'account_name': line.account_id.name,
                 'account_type': line.account_id.internal_type,
-                'date_maturity': line.date_maturity,
-                'date': line.date,
+                'date_maturity': format_date(self.env, line.date_maturity),
+                'date': format_date(self.env, line.date),
                 'journal_id': [line.journal_id.id, line.journal_id.display_name],
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
@@ -799,7 +799,7 @@ class AccountReconciliation(models.AbstractModel):
             'ref': st_line.ref,
             'note': st_line.note or "",
             'name': st_line.name,
-            'date': st_line.date,
+            'date': format_date(self.env, st_line.date),
             'amount': amount,
             'amount_str': amount_str,  # Amount in the statement line currency
             'currency_id': st_line.currency_id.id or statement_currency.id,
