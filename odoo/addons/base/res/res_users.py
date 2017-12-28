@@ -212,6 +212,17 @@ class Users(models.Model):
     companies_count = fields.Integer(compute='_compute_companies_count', string="Number of Companies", default=_companies_count)
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
 
+    # To Do in master:
+    # Remove this and all overrides
+    # Make the res.config.settings deal better with groups
+    @api.constrains('groups_id')
+    def _group_needed_for_settings(self, msg_list=[]):
+        # Method meant to be overriden in each module that has access rights issues in Settings
+        # the override should check the presence of the settings group necessary for the module
+        # and call super(['your message'])
+        if msg_list and self.has_group('base.group_system'):
+            raise ValidationError('\n'.join(msg_list))
+
     @api.model
     def _get_company(self):
         return self.env.user.company_id

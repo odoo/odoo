@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, _, api
 from odoo.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 
@@ -17,3 +17,14 @@ class Partner(models.Model):
     picking_warn = fields.Selection(WARNING_MESSAGE, 'Stock Picking', help=WARNING_HELP, default='no-message', required=True)
     # TDE FIXME: expand this message / help
     picking_warn_msg = fields.Text('Message for Stock Picking')
+
+
+class User(models.Model):
+    _inherit = 'res.users'
+
+    @api.constrains('groups_id')
+    def _group_needed_for_settings(self, msg_list=[]):
+        group_needed = self.env.ref('stock.group_stock_manager')
+        if group_needed.id not in self.groups_id.ids:
+            msg_list.append(_('This user must have the group "%s" for the module Inventory') % group_needed.name)
+        super(User, self)._group_needed_for_settings(msg_list)
