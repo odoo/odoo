@@ -75,6 +75,9 @@ class PurchaseOrder(models.Model):
             types = type_obj.search([('code', '=', 'incoming'), ('warehouse_id', '=', False)])
         return types[:1]
 
+    @api.depends('order_line.move_ids.returned_move_ids',
+                 'order_line.move_ids.state',
+                 'order_line.move_ids.picking_id')
     def _compute_picking(self):
         for order in self:
             order.picking_ids = order.group_id.picking_ids
@@ -482,6 +485,26 @@ class PurchaseOrder(models.Model):
             res = self.env.ref('stock.view_picking_form', False)
             result['views'] = [(res and res.id or False, 'form')]
             result['res_id'] = pick_ids.id
+        return result
+
+    @api.multi
+    def action_view_incoming_picking(self):
+        '''
+        This function returns an action that display existing incoming picking orders of given purchase order ids.
+        When only one found, show the incoming picking immediately.
+        '''
+        action = self.env.ref('stock.action_picking_tree')
+        result = action.read()[0]
+
+        result['context'] = {}
+        pickings = self.picking_ids.filtered(lambda x: x.picking_type_id.code == 'incoming' and x.state not in ('done', 'cancel'))
+        # choose the view_mode accordingly
+        if len(pickings) == 1:
+            view = self.env.ref('stock.view_picking_form')
+            result['views'] = [(view and view.id, 'form')]
+            result['res_id'] = pickings.id
+        else:
+            result['domain'] = "[('id', 'in', %s)]" % (pickings.ids)
         return result
 
     @api.multi
