@@ -18,7 +18,7 @@ odoo.define('website_form_editor.tour', function(require) {
         {
             content:  "Drop the form snippet",
             trigger:  "#oe_snippets .oe_snippet:has(.s_website_form) .oe_snippet_thumbnail",
-            run:      "drag_and_drop",
+            run:      "drag_and_drop #wrap",
         },
         {
             content:  "Check if the snippet is dropped and if the modal is opened",
