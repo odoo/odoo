@@ -19,7 +19,7 @@ class HrHolidaySummaryReport(models.AbstractModel):
             'end_date': fields.Date.to_string(st_date + relativedelta(days=59)),
             'holiday_type': 'Confirmed and Approved' if holiday_type == 'both' else holiday_type
         }
-    
+
     def _date_is_day_off(self, date):
         return date.weekday() in (calendar.SATURDAY, calendar.SUNDAY,)
 
@@ -58,9 +58,9 @@ class HrHolidaySummaryReport(models.AbstractModel):
                 res[index]['color'] = '#ababab'
         # count and get leave summary details.
         holiday_type = ['confirm','validate'] if holiday_type == 'both' else ['confirm'] if holiday_type == 'Confirmed' else ['validate']
-        holidays = self.env['hr.holidays'].search([
+        holidays = self.env['hr.leave'].search([
             ('employee_id', '=', empid), ('state', 'in', holiday_type),
-            ('type', '=', 'remove'), ('date_from', '<=', str(end_date)),
+            ('date_from', '<=', str(end_date)),
             ('date_to', '>=', str(start_date))
         ])
         for holiday in holidays:
@@ -102,7 +102,7 @@ class HrHolidaySummaryReport(models.AbstractModel):
 
     def _get_holidays_status(self):
         res = []
-        for holiday in self.env['hr.holidays.status'].search([]):
+        for holiday in self.env['hr.leave.type'].search([]):
             res.append({'color': holiday.color_name, 'name': holiday.name})
         return res
 
@@ -112,7 +112,8 @@ class HrHolidaySummaryReport(models.AbstractModel):
             raise UserError(_("Form content is missing, this report cannot be printed."))
 
         holidays_report = self.env['ir.actions.report']._get_report_from_name('hr_holidays.report_holidayssummary')
-        holidays = self.env['hr.holidays'].browse(self.ids)
+        # TODO: See if that is the correct type
+        holidays = self.env['hr.leave'].browse(self.ids)
         return {
             'doc_ids': self.ids,
             'doc_model': holidays_report.model,
