@@ -26,9 +26,32 @@ var SnippetOption = Widget.extend({
     /**
      * When editing a snippet, its options are shown alongside the ones of its
      * parent snippets. The parent options are only shown if the following flag
-     * is set to false (default).
+     * is set to false.
+     *
+     * @type {boolean}
      */
     preventChildPropagation: false,
+    /**
+     * Defines the classes the option might toggle on the target element and
+     * which are to be automatically removed if the target element should
+     * change.
+     *
+     * @type {Object|Array|null}
+     *       Either an array gathering the classes or an object whose values
+     *       gather the classes and whose keys are used as aliases.
+     */
+    CLASSES: null,
+    /**
+     * Defines the css properties the option might tweak (as inline style) on
+     * the target element and which are to be automatically removed if the
+     * target element should change.
+     *
+     * @type {Object|Array|null}
+     *       Either an array gathering the css properties or an object whose
+     *       values gather the css properties and whose keys are used as
+     *       aliases.
+     */
+    STYLES: null,
 
     /**
      * The option `$el` is supposed to be the associated DOM element in the
@@ -180,8 +203,8 @@ var SnippetOption = Widget.extend({
      * @param {*} data
      */
     notify: function (name, data) {
-        if (name === 'target') {
-            this.setTarget(data);
+        if (name === 'target' || name === 'initial_target') {
+            this.setTarget(data, name === 'initial_target');
         }
     },
     /**
@@ -191,11 +214,18 @@ var SnippetOption = Widget.extend({
      * function allows to set the option's target.
      *
      * @param {jQuery} $target - the new target element
+     * @param {boolean} isInitial
      */
-    setTarget: function ($target) {
+    setTarget: function ($target, isInitial) {
+        if (!isInitial) {
+            this._clean();
+        }
         this.$target = $target;
-        this._setActive();
-        this.$target.trigger('snippet-option-change', [this]);
+        if (isInitial) {
+            this._setActive();
+        } else {
+            this._reset(true);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -203,15 +233,27 @@ var SnippetOption = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Reactivate the options that were activated before previews.
+     * Removes all option-related classes and style on the target element.
+     *
+     * @private
      */
-    _reset: function () {
+    _clean: function () {
+        this.$target.removeClass(_.values(this.CLASSES).join(' '));
+        var styles = _.values(this.STYLES);
+        this.$target.css(_.object(styles, _.times(styles.length, _.constant(''))));
+    },
+    /**
+     * Reactivate the options that were activated before previews.
+     *
+     * @param {boolean} [force=false] @see this._select
+     */
+    _reset: function (force) {
         var self = this;
         var $actives = this.$el.find('.active').addBack('.active');
         _.each($actives, function (activeElement) {
             var $activeElement = $(activeElement);
             self.__methodNames = _.without.apply(_, [self.__methodNames].concat(_.keys($activeElement.data())));
-            self._select('reset', $activeElement);
+            self._select('reset', $activeElement, force);
         });
         _.each(this.__methodNames, function (methodName) {
             self[methodName]('reset');
@@ -227,12 +269,14 @@ var SnippetOption = Widget.extend({
      *          that second case, the value is 'reset')
      *        - false if the option should be activated for good
      * @param {jQuery} $opt - the related DOMElement option
+     * @param {boolean} [force=false] if set to true, the no-preview xml data is
+     *                                ignored by the function
      */
-    _select: function (previewMode, $opt) {
+    _select: function (previewMode, $opt, force) {
         var self = this;
 
         // Options can say they respond to strong choice
-        if (previewMode && ($opt.data('noPreview') || $opt.parent().data('noPreview'))) {
+        if (!force && previewMode && ($opt.data('noPreview') || $opt.parent().data('noPreview'))) {
             return;
         }
         // If it is not preview mode, the user selected the option for good
@@ -267,8 +311,14 @@ var SnippetOption = Widget.extend({
         });
         this.__methodNames = _.uniq(this.__methodNames);
 
-        if (!previewMode) {
+        if (force || !previewMode) {
             this._setActive();
+        }
+
+        if (previewMode === true) {
+            this.$target.trigger('snippet-option-preview', [this]);
+        } else if (previewMode === false) {
+            this.$target.trigger('snippet-option-change', [this]);
         }
     },
     /**
@@ -322,7 +372,6 @@ var SnippetOption = Widget.extend({
         }
         this.__click = false;
         this._select(true, $opt);
-        this.$target.trigger('snippet-option-preview', [this]);
     },
     /**
      * Called when an option link is clicked -> activates the related option.
@@ -339,7 +388,6 @@ var SnippetOption = Widget.extend({
         ev.preventDefault();
         this.__click = true;
         this._select(false, $opt);
-        this.$target.trigger('snippet-option-change', [this]);
     },
     /**
      * Called when an option link/menu is left -> reactivate the options that
@@ -761,6 +809,15 @@ registry.background = SnippetOption.extend({
     /**
      * @override
      */
+    CLASSES: ['oe_img_bg', 'oe_custom_bg'],
+    /**
+     * @override
+     */
+    STYLES: ['background-image'],
+
+    /**
+     * @override
+     */
     start: function () {
         var res = this._super.apply(this, arguments);
         this.bindBackgroundEvents();
@@ -785,12 +842,10 @@ registry.background = SnippetOption.extend({
             return;
         }
 
+        this._clean();
         if (value && value.length) {
             this.$target.css('background-image', 'url(\'' + value + '\')');
-            this.$target.removeClass('oe_custom_bg').addClass('oe_img_bg');
-        } else {
-            this.$target.css('background-image', '');
-            this.$target.removeClass('oe_img_bg oe_custom_bg');
+            this.$target.addClass('oe_img_bg');
         }
     },
     /**
@@ -806,6 +861,11 @@ registry.background = SnippetOption.extend({
      * @see this.selectClass for parameters
      */
     chooseImage: function (previewMode, value, $opt) {
+        if (previewMode === 'reset') {
+            this.background(previewMode);
+            return;
+        }
+
         // Put fake image in the DOM, edit it and use it as background-image
         var $image = $('<img/>', {class: 'd-none', src: value}).appendTo(this.$target);
 
@@ -910,6 +970,20 @@ registry.background = SnippetOption.extend({
  */
 registry.background_position = SnippetOption.extend({
     xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
+    /**
+     * @override
+     */
+    CLASSES: {
+        CONTAIN: 'o_bg_img_opt_contain',
+        CUSTOM: 'o_bg_img_opt_custom',
+        REPEAT: 'o_bg_img_opt_repeat',
+        REPEAT_X: 'o_bg_img_opt_repeat_x',
+        REPEAT_Y: 'o_bg_img_opt_repeat_y',
+    },
+    /**
+     * @override
+     */
+    STYLES: ['background-size', 'background-position'],
 
     /**
      * @override
@@ -920,6 +994,7 @@ registry.background_position = SnippetOption.extend({
         this.$target.on('snippet-option-change', function () {
             self.onFocus();
         });
+        this._saveState();
     },
     /**
      * @override
@@ -940,32 +1015,38 @@ registry.background_position = SnippetOption.extend({
     backgroundPosition: function (previewMode, value, $opt) {
         var self = this;
 
-        this.previous_state = [this.$target.attr('class'), this.$target.css('background-size'), this.$target.css('background-position')];
+        if (previewMode === 'reset') {
+            this._discardChanges();
+            return;
+        }
 
-        this.bg_pos = self.$target.css('background-position').split(' ');
-        this.bg_siz = self.$target.css('background-size').split(' ');
+        this.bg_pos = this.$target.css('background-position').split(' ');
+        this.bg_siz = this.$target.css('background-size').split(' ');
 
         this.modal = new Dialog(null, {
             title: _t("Background Image Sizing"),
             $content: $(qweb.render('web_editor.dialog.background_position')),
             buttons: [
-                {text: _t("Ok"), classes: 'btn-primary', close: true, click: _.bind(this._saveChanges, this)},
-                {text: _t("Discard"), close: true, click: _.bind(this._discardChanges, this)},
+                {text: _t("Ok"), classes: 'btn-primary', close: true, click: function () {
+                    self._saveChanges();
+                    self._saveState();
+                }},
+                {text: _t("Discard"), close: true, click: this._discardChanges.bind(this)},
             ],
         }).open();
 
         this.modal.opened().then(function () {
             // Fetch data form $target
-            var value = ((self.$target.hasClass('o_bg_img_opt_contain'))? 'contain' : ((self.$target.hasClass('o_bg_img_opt_custom'))? 'custom' : 'cover'));
+            var value = ((self.$target.hasClass(self.CLASSES.CONTAIN))? 'contain' : ((self.$target.hasClass(self.CLASSES.CUSTOM))? 'custom' : 'cover'));
             self.modal.$('> label > input[value=' + value + ']').prop('checked', true);
 
-            if (self.$target.hasClass('o_bg_img_opt_repeat')) {
+            if (self.$target.hasClass(self.CLASSES.REPEAT)) {
                 self.modal.$('#o_bg_img_opt_contain_repeat').prop('checked', true);
-                self.modal.$('#o_bg_img_opt_custom_repeat').val('o_bg_img_opt_repeat');
-            } else if (self.$target.hasClass('o_bg_img_opt_repeat_x')) {
-                self.modal.$('#o_bg_img_opt_custom_repeat').val('o_bg_img_opt_repeat_x');
-            } else if (self.$target.hasClass('o_bg_img_opt_repeat_y')) {
-                self.modal.$('#o_bg_img_opt_custom_repeat').val('o_bg_img_opt_repeat_y');
+                self.modal.$('#o_bg_img_opt_custom_repeat').val(self.CLASSES.REPEAT);
+            } else if (self.$target.hasClass(self.CLASSES.REPEAT_X)) {
+                self.modal.$('#o_bg_img_opt_custom_repeat').val(self.CLASSES.REPEAT_X);
+            } else if (self.$target.hasClass(self.CLASSES.REPEAT_Y)) {
+                self.modal.$('#o_bg_img_opt_custom_repeat').val(self.CLASSES.REPEAT_Y);
             }
 
             if (self.bg_pos.length > 1) {
@@ -1054,29 +1135,15 @@ registry.background_position = SnippetOption.extend({
         }
     },
     /**
-     * Removes all option-related classes and style on the target element.
-     *
-     * @private
-     */
-    _clean: function () {
-        this.$target.removeClass('o_bg_img_opt_contain o_bg_img_opt_custom o_bg_img_opt_repeat o_bg_img_opt_repeat_x o_bg_img_opt_repeat_y')
-                    .css({
-                        'background-size': '',
-                        'background-position': '',
-                    });
-    },
-    /**
      * Restores the target style before last edition made with the option.
      *
      * @private
      */
     _discardChanges: function () {
         this._clean();
-        if (this.previous_state) {
-            this.$target.addClass(this.previous_state[0]).css({
-                'background-size': this.previous_state[1],
-                'background-position': this.previous_state[2],
-            });
+        if (this.prevState) {
+            this.$target.addClass(this.prevState.classes);
+            this.$target.css(this.prevState.css);
         }
     },
     /**
@@ -1106,11 +1173,11 @@ registry.background_position = SnippetOption.extend({
                 this.$target.css('background-position', this.bg_pos.x + ' ' + this.bg_pos.y);
                 break;
             case 'contain':
-                this.$target.addClass('o_bg_img_opt_contain');
-                this.$target.toggleClass('o_bg_img_opt_repeat', this.modal.$('#o_bg_img_opt_contain_repeat').prop('checked'));
+                this.$target.addClass(this.CLASSES.CONTAIN);
+                this.$target.toggleClass(this.CLASSES.REPEAT, this.modal.$('#o_bg_img_opt_contain_repeat').prop('checked'));
                 break;
             case 'custom':
-                this.$target.addClass('o_bg_img_opt_custom');
+                this.$target.addClass(this.CLASSES.CUSTOM);
                 var sizeX = this.modal.$('#o_bg_img_opt_custom_size_x').val();
                 var sizeY = this.modal.$('#o_bg_img_opt_custom_size_y').val();
                 var posX = this.modal.$('#o_bg_img_opt_custom_pos_x').val();
@@ -1122,6 +1189,18 @@ registry.background_position = SnippetOption.extend({
                             });
                 break;
         }
+    },
+    /**
+     * @private
+     */
+    _saveState: function () {
+        var self = this;
+        this.prevState = {
+            classes: _.intersection(this.$target.attr('class').split(/ +/g), _.values(this.CLASSES)).join(' '),
+            css: _.mapObject(_.object(_.values(this.STYLES), []), function (v, prop) {
+                return self.$target.prop('style')[prop];
+            }),
+        };
     },
 });
 
