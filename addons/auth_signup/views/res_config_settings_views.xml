@@ -19,11 +19,7 @@
                                 <field name="auth_signup_uninvited" class="o_light_label" widget="radio" required="True"/>
                             </div>
                             <div class="content-group" attrs="{'invisible': [('auth_signup_uninvited','=','b2b')]}">
-                                <div class="mt16" groups="base.group_no_one"
-                                        attrs="{'invisible': [('auth_signup_template_user_id', '!=', False)]}">
-                                    Copy access rights from <field name="auth_signup_template_user_id"/>
-                                </div>
-                                <div  class="mt16" attrs="{'invisible': [('auth_signup_template_user_id', '=', False)]}">
+                                <div class="mt16">
                                     <button type="object" name="open_template_user" string="Default Access Rights" icon="fa-arrow-right" class="btn-link"/>
                                 </div>
                             </div>
