@@ -3,28 +3,28 @@
     <data noupdate="1">
 
         <!-- Casual leave -->
-        <record id="holiday_status_cl" model="hr.holidays.status">
+        <record id="holiday_status_cl" model="hr.leave.type">
             <field name="name" eval="'Legal Leaves '+time.strftime('%Y')"/>
             <field name="limit" eval="False"/>
             <field name="color_name">black</field>
         </record>
 
         <!-- Sick leave -->
-        <record id="holiday_status_sl" model="hr.holidays.status">
+        <record id="holiday_status_sl" model="hr.leave.type">
             <field name="name">Sick Leaves</field>
             <field name="limit" eval="True"/>
             <field name="color_name">red</field>
         </record>
 
         <!-- Compensatory Days -->
-        <record id="holiday_status_comp" model="hr.holidays.status">
+        <record id="holiday_status_comp" model="hr.leave.type">
             <field name="name">Compensatory Days</field>
             <field name="limit" eval="False"/>
             <field name="color_name">lavender</field>
         </record>
 
         <!--Unpaid Leave -->
-        <record id="holiday_status_unpaid" model="hr.holidays.status">
+        <record id="holiday_status_unpaid" model="hr.leave.type">
             <field name="name">Unpaid</field>
             <field name="limit" eval="True"/>
             <field name="color_name">brown</field>
@@ -33,26 +33,26 @@
         <!-- Holidays-related subtypes for messaging / Chatter -->
         <record id="mt_holidays_confirmed" model="mail.message.subtype">
             <field name="name">Confirmed</field>
-            <field name="res_model">hr.holidays</field>
+            <field name="res_model">hr.leave</field>
             <field name="description">Request created and waiting confirmation</field>
         </record>
 
         <record id="mt_holidays_first_validated" model="mail.message.subtype">
             <field name="name">Waiting Second Validation</field>
-            <field name="res_model">hr.holidays</field>
+            <field name="res_model">hr.leave</field>
             <field name="default" eval="False"/>
             <field name="description">Request validated, waiting second validation</field>
         </record>
 
         <record id="mt_holidays_approved" model="mail.message.subtype">
             <field name="name">Approved</field>
-            <field name="res_model">hr.holidays</field>
+            <field name="res_model">hr.leave</field>
             <field name="description">Request approved</field>
         </record>
 
         <record id="mt_holidays_refused" model="mail.message.subtype">
             <field name="name">Refused</field>
-            <field name="res_model">hr.holidays</field>
+            <field name="res_model">hr.leave</field>
             <field name="default" eval="False"/>
             <field name="description">Request refused</field>
         </record>
