@@ -70,15 +70,16 @@ class Users(models.Model):
 
     @api.model
     def activity_user_count(self):
-        query = """SELECT m.id, count(*), act.res_model as model,
+        # Reminders don't having any model so here we assign 'mail.activity' as reminder's model.
+        query = """SELECT m.id, count(*), act.res_model AS model,
                         CASE
                             WHEN now()::date - act.date_deadline::date = 0 Then 'today'
                             WHEN now()::date - act.date_deadline::date > 0 Then 'overdue'
                             WHEN now()::date - act.date_deadline::date < 0 Then 'planned'
                         END AS states
                     FROM mail_activity AS act
-                    JOIN ir_model AS m ON act.res_model_id = m.id
-                    WHERE user_id = %s
+                    LEFT OUTER JOIN ir_model AS m ON act.res_model_id = m.id
+                    WHERE user_id = %s AND active = TRUE
                     GROUP BY m.id, states, act.res_model;
                     """
         self.env.cr.execute(query, [self.env.uid])
@@ -86,7 +87,18 @@ class Users(models.Model):
         model_ids = [a['id'] for a in activity_data]
         model_names = {n[0]:n[1] for n in self.env['ir.model'].browse(model_ids).name_get()}
 
-        user_activities = {}
+        # always add default entry for reminders
+        user_activities = {
+            None: {
+                'name': _("Reminder"),
+                'model': None,
+                'icon': '/mail/static/src/img/reminder.png',
+                'total_count': 0,
+                'today_count': 0,
+                'overdue_count': 0,
+                'planned_count': 0
+            }
+        }
         for activity in activity_data:
             if not user_activities.get(activity['model']):
                 user_activities[activity['model']] = {
@@ -96,7 +108,7 @@ class Users(models.Model):
                     'total_count': 0, 'today_count': 0, 'overdue_count': 0, 'planned_count': 0,
                 }
             user_activities[activity['model']]['%s_count' % activity['states']] += activity['count']
-            if activity['states'] in ('today','overdue'):
+            if activity['states'] in ('today', 'overdue'):
                 user_activities[activity['model']]['total_count'] += activity['count']
 
         return list(user_activities.values())

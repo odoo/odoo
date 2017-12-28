@@ -38,6 +38,7 @@
     ],
     'demo': [
         'data/mail_demo.xml',
+        'data/mail_activity_demo.xml',
         'data/mail_channel_demo.xml',
     ],
     'installable': True,
