@@ -349,6 +349,7 @@
                                     <t t-set="icon_class" t-value="'fa-lock'"/>
                                     <t t-set="form_action" t-value="'/quote/' + str(quotation.id) + '/transaction/token'"/>
                                     <t t-set="prepare_tx_url" t-value="'/quote/' + str(quotation.id) + '/transaction/'"/>
+                                    <t t-set="access_token" t-value="quotation.access_token"/>
                                 </t>
                             </div>
                           </div>
