@@ -220,11 +220,11 @@ class StockMove(models.Model):
         # You split also simply  when the quantity done is bigger than foreseen
         elif float_compare(self.quantity_done, self.product_uom_qty, precision_rounding=rounding) > 0:
             quantity_to_split = self.quantity_done - self.product_uom_qty
-            uom_qty_to_split = quantity_to_split # + no need to change existing self.product_uom_qty 
+            uom_qty_to_split = quantity_to_split # + no need to change existing self.product_uom_qty
             link_procurement = True
         if quantity_to_split:
-            extra_move = self.copy(default={'quantity_done': quantity_to_split, 'product_uom_qty': uom_qty_to_split, 'production_id': self.production_id.id, 
-                                            'raw_material_production_id': self.raw_material_production_id.id, 
+            extra_move = self.copy(default={'quantity_done': quantity_to_split, 'product_uom_qty': uom_qty_to_split, 'production_id': self.production_id.id,
+                                            'raw_material_production_id': self.raw_material_production_id.id,
                                             'procurement_id': link_procurement and self.procurement_id.id or False})
             extra_move.action_confirm()
             if self.has_tracking != 'none':
