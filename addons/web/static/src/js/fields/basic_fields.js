@@ -562,8 +562,8 @@ var FieldMonetary = InputField.extend({
             this.tagName = 'div';
             this.className += ' o_input';
 
-            // use the formatFloat function in edit
-            this.formatType = 'float';
+            // do not display currency symbol in edit
+            this.formatOptions.noSymbol = true;
         }
 
         this.formatOptions.currency = this.currency;
