@@ -161,7 +161,7 @@ class MrpProduction(models.Model):
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
     priority = fields.Selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority',
                                 readonly=True, states={'confirmed': [('readonly', False)]}, default='1')
-    is_locked = fields.Boolean('Is Locked', default=True)
+    is_locked = fields.Boolean('Is Locked', default=True, copy=False)
     show_final_lots = fields.Boolean('Show Final Lots', compute='_compute_show_lots')
     production_location_id = fields.Many2one('stock.location', "Production Location", related='product_id.property_stock_production')
 
@@ -216,8 +216,9 @@ class MrpProduction(models.Model):
             if order.bom_id.ready_to_produce == 'all_available':
                 order.availability = any(move.state not in ('assigned', 'done', 'cancel') for move in order.move_raw_ids) and 'waiting' or 'assigned'
             else:
-                partial_list = [x.state in ('partially_available', 'assigned') for x in order.move_raw_ids]
-                assigned_list = [x.state in ('assigned', 'done', 'cancel') for x in order.move_raw_ids]
+                move_raw_ids = order.move_raw_ids.filtered(lambda m: m.product_qty)
+                partial_list = [x.state in ('partially_available', 'assigned') for x in move_raw_ids]
+                assigned_list = [x.state in ('assigned', 'done', 'cancel') for x in move_raw_ids]
                 order.availability = (all(assigned_list) and 'assigned') or (any(partial_list) and 'partially_available') or 'waiting'
 
     @api.depends('move_raw_ids', 'is_locked', 'state', 'move_raw_ids.quantity_done')
