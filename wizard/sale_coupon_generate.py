@@ -37,7 +37,7 @@ class SaleCouponGenerate(models.TransientModel):
                     })
                 self.env['mail.mail'].create({
                     'subject': subject,
-                    'body': body,
+                    'body_html': body,
                     'email_from': self.env.user.email or '',
                     'email_to': partner.email,
                 })
