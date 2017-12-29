@@ -432,7 +432,9 @@ class StockMoveLine(models.Model):
                         Quant._update_available_quantity(ml.product_id, ml.location_id, taken_from_untracked_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
                 Quant._update_available_quantity(ml.product_id, ml.location_dest_id, quantity, lot_id=ml.lot_id, package_id=ml.result_package_id, owner_id=ml.owner_id, in_date=in_date)
         # Reset the reserved quantity as we just moved it to the destination location.
-        (self - ml_to_delete).with_context(bypass_reservation_update=True).write({'product_uom_qty': 0.00})
+        reset_move_line = (self - ml_to_delete).filtered(lambda ml: ml.product_uom_qty != 0)
+        if reset_move_line:
+            reset_move_line.with_context(bypass_reservation_update=True).write({'product_uom_qty': 0.00})
 
     def _log_message(self, record, move, template, vals):
         data = vals.copy()
@@ -499,6 +501,6 @@ class StockMoveLine(models.Model):
                     candidate.product_uom_qty = self.product_id.uom_id._compute_quantity(quantity_split, self.product_uom_id, rounding_method='HALF-UP')
                     quantity -= quantity_split
                     move_to_recompute_state |= candidate.move_id
-                if quantity == 0.0:
+                if quantity <= 0.0:
                     break
             move_to_recompute_state._recompute_state()
