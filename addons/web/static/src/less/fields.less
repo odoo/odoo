@@ -156,8 +156,8 @@
             }
         }
 
-        .o-tag-color(@size: 0) when (@size < @odoo-nb-ui-color) {
-            .o_tag_color_@{size} when (@size = 0) {
+        .o-tag-color(@size: 0) when (@size = 0) {
+            .o_tag_color_@{size} {
                 & {
                     background-color: white;
                     color: ~"@{odoo-color-@{size}}";
@@ -167,7 +167,10 @@
                     background-color: ~"@{odoo-color-@{size}}";
                 }
             }
-            .o_tag_color_@{size} when (@size > 0) {
+            .o-tag-color(@size + 1);
+        }
+        .o-tag-color(@size: 0) when (@size > 0) and (@size < @odoo-nb-ui-color) {
+            .o_tag_color_@{size} {
                 &, &::after {
                     background-color: ~"@{odoo-color-@{size}}";
                 }
@@ -175,7 +178,6 @@
             .o-tag-color(@size + 1);
         }
         .o-tag-color();
-
     }
 
     // Stars
