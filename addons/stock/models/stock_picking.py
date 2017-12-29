@@ -666,10 +666,8 @@ class Picking(models.Model):
 
     @api.multi
     def do_unreserve(self):
-        for move in self:
-            for move_line in move.move_lines:
-                move_line._do_unreserve()
-        self.write({'state': 'confirmed'})
+        for picking in self:
+            picking.move_lines._do_unreserve()
 
     @api.multi
     def button_validate(self):
