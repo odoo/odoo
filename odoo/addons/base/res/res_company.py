@@ -256,7 +256,7 @@ class Company(models.Model):
     def on_change_country(self, country_id):
         # This function is called from account/models/chart_template.py, hence decorated with `multi`.
         self.ensure_one()
-        currency_id = self._get_user_currency()
+        currency_id = self._get_user_currency().id
         if country_id:
             currency_id = self.env['res.country'].browse(country_id).currency_id.id
         return {'value': {'currency_id': currency_id}}
