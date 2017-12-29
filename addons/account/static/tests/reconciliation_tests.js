@@ -1144,7 +1144,7 @@ QUnit.module('account', {
     });
 
     QUnit.test('Reconciliation manual', function (assert) {
-        assert.expect(12);
+        assert.expect(13);
 
         var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
 
@@ -1182,6 +1182,9 @@ QUnit.module('account', {
         assert.strictEqual(clientAction.$('.o_reconciliation_line:eq(1) .o_reconcile:visible').length, 1, "should display 'Reconcile' button in green");
 
         clientAction.$('.o_reconciliation_line:eq(1) .o_reconcile:visible').trigger('click');
+
+        assert.strictEqual(clientAction.$('.o_reconciliation_line[data-mode!="inactive"]').length, 1, "should have only one line open");
+
         clientAction.$('.o_reconciliation_line:eq(1) [data-line-id="23"] .cell_label').trigger('click');
         clientAction.$('.o_reconciliation_line:eq(1) [data-line-id="24"] .cell_label').trigger('click');
 
