@@ -101,9 +101,20 @@ class SaleOrderLine(models.Model):
     def write(self, values):
         lines = False
         if 'product_uom_qty' in values:
-            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            lines = self.filtered(
-                lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
+            self.ensure_one()
+
+            # Take care that there will be no negative initial demand
+            moves = self.mapped('move_ids')
+            pending_moves = moves.filtered(lambda r: r.state not in ['done', 'cancel'])
+            done_moves = moves.filtered(lambda r: r.state == 'done') - pending_moves
+            returned_moves = done_moves.mapped('returned_move_ids')
+            delivered_moves = done_moves - returned_moves
+            move_equilibrium = sum(delivered_moves.mapped('move_line_ids').mapped('qty_done')) - sum(returned_moves.mapped('move_line_ids').mapped('qty_done')) + sum(pending_moves.mapped('product_uom_qty'))
+            diff_qty = values['product_uom_qty'] - self.product_uom_qty
+
+            if move_equilibrium + diff_qty >= 0:
+                lines = self.filtered(lambda r: r.state == 'sale')
+
         res = super(SaleOrderLine, self).write(values)
         if lines:
             lines._action_launch_procurement_rule()
@@ -234,10 +245,14 @@ class SaleOrderLine(models.Model):
             if line.state != 'sale' or not line.product_id.type in ('consu','product'):
                 continue
             qty = 0.0
-            for move in line.move_ids.filtered(lambda r: r.state != 'cancel'):
-                qty += move.product_qty
-            if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
-                continue
+
+            moves = line.move_ids.filtered(lambda r: r.state != 'cancel')
+            returned_moves = moves.mapped('returned_move_ids')
+            delivered_moves = moves - returned_moves
+            for move in delivered_moves:
+                qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom)
+            for move in returned_moves:
+                qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom)
 
             group_id = line.order_id.procurement_group_id
             if not group_id:
