@@ -222,11 +222,11 @@ class SaleOrderLine(models.Model):
             'planned_hours': planned_hours,
             'remaining_hours': planned_hours,
             'partner_id': self.order_id.partner_id.id,
+            'email_from': self.order_id.partner_id.email,
             'description': self.name + '<br/>',
             'project_id': project.id,
             'sale_line_id': self.id,
             'company_id': self.company_id.id,
-            'email_from': self.order_id.partner_id.email,
             'user_id': False, # force non assigned task, as created as sudo()
         }
 

@@ -5,7 +5,7 @@ from datetime import timedelta
 from lxml import etree
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -508,6 +508,7 @@ class Task(models.Model):
         change_default=True)
     notes = fields.Text(string='Notes')
     planned_hours = fields.Float("Planned Hours", help='It is the time planned to achieve the task. If this document has sub-tasks, it means the time needed to achieve this tasks and its childs.')
+    subtask_planned_hours = fields.Float("Subtask Planned Hours", compute='_compute_subtask_planned_hours', help="Computed using sum of hours planned of all subtasks created from main task. Usually these hours are less or equal to the Planned Hours (of main task).")
     remaining_hours = fields.Float(string='Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
     user_id = fields.Many2one('res.users',
         string='Assigned to',
@@ -585,6 +586,11 @@ class Task(models.Model):
         super(Task, self)._compute_portal_url()
         for task in self:
             task.portal_url = '/my/task/%s' % task.id
+
+    @api.depends('child_ids.planned_hours')
+    def _compute_subtask_planned_hours(self):
+        for task in self:
+            task.subtask_planned_hours = sum(task.child_ids.mapped('planned_hours'))
 
     @api.depends('child_ids')
     def _compute_subtask_count(self):
