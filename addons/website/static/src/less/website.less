@@ -1,6 +1,60 @@
 ///
-/// This file regroups the snippets-specific design rules.
+/// This file regroups the website design rules.
 ///
+
+font[style*='background'], font[class*='bg-'] {
+    padding: 0 2px;
+}
+
+// Odoo image background classes
+.oe_img_bg {
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    &.o_bg_img_opt_contain {
+        background-size: contain;
+        background-position: center center;
+    }
+    &.o_bg_img_opt_custom {
+        background-size: auto;
+    }
+    &.o_bg_img_opt_repeat {
+        background-repeat: repeat;
+    }
+    &.o_bg_img_opt_repeat_x {
+        background-repeat: repeat-x;
+    }
+    &.o_bg_img_opt_repeat_y {
+        background-repeat: repeat-y;
+    }
+}
+
+// O_UL
+.o_ul_toggle_self, .o_ul_toggle_next {
+    display: none;
+}
+.o_ul_folded {
+    .o_close {
+        display: none!important;
+    }
+    .o_ul_toggle_self, .o_ul_toggle_next {
+        display: inline-block;
+        line-height: inherit;
+        float: left;
+        position: relative;
+        margin-left: -1em;
+        top: -0.15em;
+        left: 0.2em;
+        font-size: 1.4em;
+        text-decoration: none;
+        &.o_open:before {
+            content: "";
+        }
+        &:before {
+            content: "";
+        }
+    }
+}
 
 .carousel, .parallax, .blockquote {
     overflow: hidden;
@@ -438,7 +492,6 @@ div.carousel {
 }
 
 // Company Team
-
 .s_company_team {
     @media (max-width: @screen-sm-max) {
         img {
@@ -447,9 +500,6 @@ div.carousel {
     }
 }
 
-// TODO this should be moved in a differently-named file but cannot be put in
-// wrapwrap.less file as it is now a portal file (portal/website split should be
-// reviewed).
 #wrapwrap .o_header_affix {
     .o-position-absolute(0, 0, auto, 0);
     position: fixed;
@@ -466,4 +516,32 @@ div.carousel {
 }
 #oe_main_menu_navbar + #wrapwrap .o_header_affix {
     top: @odoo-navbar-height;
+}
+
+.navbar .o_extra_menu_items.open > ul {
+    padding: 0;
+
+    > li {
+        &.divider {
+            display: none;
+        }
+        + li {
+            border-top: 1px solid @gray-lighter;
+        }
+        > a.dropdown-toggle {
+            background-color: @gray-lighter;
+            color: inherit; // Useful when the toggle is active
+            pointer-events: none; // hack to prevent clicking on it because dropdown always opened
+        }
+        > ul { // remove dropdown-menu default style as it is nested in another one
+            position: static;
+            float: none;
+            display: block;
+            max-height: none;
+            margin-top: 0;
+            padding: 0;
+            border: none;
+            box-shadow: none;
+        }
+    }
 }
