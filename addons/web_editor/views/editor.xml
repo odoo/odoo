@@ -53,7 +53,7 @@
 </template>
 
 <template id="less_helpers" inherit_id="web.less_helpers">
-    <xpath expr="." position="inside">
+    <xpath expr="link[last()]" position="after">
         <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.variables.less"/>
     </xpath>
 </template>
@@ -90,7 +90,6 @@
     <t t-call="web.less_helpers"/>
 
     <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.ui.less"/>
-    <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.ui.components.less"/>
 
     <script type="text/javascript" src="/web_editor/static/lib/nearest/jquery.nearest.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/editor/editor.js"/>

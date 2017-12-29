@@ -3,7 +3,7 @@
 <!-- Assets -->
 <template id="assets_backend" inherit_id="web.assets_backend" name="Website Backend Assets (used in backend interface)">
     <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" href="/website/static/src/less/website.backendDashboard.less"/>
+        <link rel="stylesheet" href="/website/static/src/less/website.backend.less"/>
     </xpath>
     <xpath expr="//script[last()]" position="after">
         <script type="text/javascript" src="/website/static/src/js/backend/button.js"/>
@@ -20,9 +20,8 @@
 
 <template id="assets_frontend" inherit_id="web.assets_frontend" name="Website Assets">
     <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.less"/>
         <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.ui.less"/>
-        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.ui.components.less"/>
-        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.snippets.less"/>
         <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.zoomodoo.less"/>
     </xpath>
     <xpath expr="//script[last()]" position="after">
