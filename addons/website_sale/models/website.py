@@ -204,7 +204,10 @@ class Website(models.Model):
             self = self.with_context(pricelist=pricelist_id)
 
         # Test validity of the sale_order_id
-        sale_order = self.env['sale.order'].sudo().browse(sale_order_id).exists() if sale_order_id else None
+        sale_order = self.env['sale.order'].sudo().browse(sale_order_id).exists() if sale_order_id else self.env['sale.order']
+        if sale_order and not self._context.get('checkout_complete') and sale_order.state != 'draft':
+            request.session['sale_order_id'] = None
+            sale_order = self.env['sale.order']
 
         # create so if needed
         if not sale_order and (force_create or code):
