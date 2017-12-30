@@ -12,6 +12,10 @@ from odoo.exceptions import UserError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_round, float_is_zero
 
+import logging
+
+_logger = logging.getLogger(__name__)
+
 PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
 
 
@@ -469,7 +473,14 @@ class StockMove(models.Model):
     def _do_unreserve(self):
         if any(move.state in ('done', 'cancel') for move in self):
             raise UserError(_('Cannot unreserve a done move'))
-        self.mapped('move_line_ids').unlink()
+        linked_ml = self.mapped('move_line_ids')
+        missed_moves = (self - linked_ml.mapped('move_id')).filtered(
+            lambda m: m.state in ['assigned', 'partially_available']
+        )
+        linked_ml.unlink()
+        if missed_moves:
+            _logger.warning('Reserved moves (%s) without move lines found -> Recompute state...', missed_moves)
+            missed_moves._recompute_state()
         return True
 
     def _push_apply(self):
