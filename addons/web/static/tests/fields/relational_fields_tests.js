@@ -4832,6 +4832,37 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('id field in one2many in a new record', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="id" invisible="1"/>' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    assert.deepEqual(args.args[0].turtles,
+                        [[0, false, {turtle_foo: "cat"}]],
+                        'should send proper commands');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        form.$('td.o_field_x2many_list_row_add a').click();
+        form.$('td input[name="turtle_foo"]').val('cat').trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
+
+        form.destroy();
+    });
+
     QUnit.test('sub form view with a required field', function (assert) {
         assert.expect(2);
         this.data.partner.fields.foo.required = true;
