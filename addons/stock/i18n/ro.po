@@ -72,6 +72,11 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
+"* Nou: Atunci când mișcarea este creata și nu este încă confirmată.\n"
+"* În așteptarea altei mișcări: Aceasta stare poate fi văzuta atunci când o mișcare este în așteptarea alteia, de exemplu într-un flux înlănțuit.\n"
+"* În așteptarea disponibilității: Aceasta stare este atinsă atunci când rezoluția de aprovizionare nu este imediată. Poate este nevoie ca programatorul să ruleze planificarea sau ca o componentă să fie fabricată...\n"
+"* Disponibil: Atunci când produsele sunt rezervate, starea este setata pe 'Disponibil'.\n"
+"* Efectuat: Atunci când transportul este procesat, starea este 'Efectuat'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -570,6 +575,8 @@ msgid ""
 "<strong>Stockable products</strong> are subject to the full inventory "
 "management system: minimum stock rules, automatic procurement, etc."
 msgstr ""
+"<strong>Produsele stocabile</strong> sunt supuse întregului sistem de "
+"gestionare a stocurilor: reguli minime de stoc, aprovizionări automate etc."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_head
@@ -641,6 +648,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"Un produs stocabil este un produs pentru care gestionați stocul. Aplicația \"Inventar\" trebuie instalată.\n"
+"Un produs consumabil, pe de altă parte, este un produs pentru care nu este gestionat stocul.\n"
+"Un serviciu este un produs nematerial pe care îl oferiți.\n"
+"Un conținut digital este un produs nematerial pe care îl vindeți online. Fișierele sunt atașate la produsele comercializate pe e-commerce, cum ar fi e-cărți, muzică, imagini, ... Trebuie instalat modulul \"Produs digital\"."
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -4422,6 +4433,10 @@ msgid ""
 "            the general inventory or whenever you need it, to adapt the\n"
 "            current inventory level of a product."
 msgstr ""
+"Inventarul periodic este utilizat pentru a verifica cantitatea de produse "
+"disponibile pe locație. Puteți să o utilizați o dată pe an când faceți "
+"inventarul general sau ori de câte ori aveți nevoie, pentru a adapta nivelul"
+" actual de inventar al unui produs."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7156,6 +7171,12 @@ msgid ""
 " generate a procurement request to increase the stock up to the maximum "
 "quantity."
 msgstr ""
+"Puteți defini regulile minime de stoc, astfel încât Odoo va crea în mod "
+"automat comenzi de producție sau cereri de ofertă în funcție de nivelul "
+"stocului. Odată ce stocul virtual al unui produs (= stoc în mână minus toate"
+" comenzile și rezervările confirmate) este sub cantitatea minimă, Odoo va "
+"genera o cerere de achiziție pentru a crește stocul până la cantitatea "
+"maximă."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -7177,6 +7198,9 @@ msgid ""
 "You can either do it immediately or mark it as Todo for future processing. "
 "Use your scanner to validate the transferred quantity quicker."
 msgstr ""
+"Puteți să-l faceți imediat sau să îl marcați că trebuie facut pentru "
+"procesarea ulterioară. Utilizați scanerul pentru a valida mai rapid "
+"cantitatea transferată."
 
 #. module: stock
 #: code:addons/stock/models/product.py:511
