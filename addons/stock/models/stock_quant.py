@@ -250,9 +250,9 @@ class StockQuant(models.Model):
         rounding = product_id.uom_id.rounding
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
         available_quantity = self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
-        if float_compare(quantity, 0, precision_rounding=rounding) > 0 and float_compare(quantity, available_quantity, precision_rounding=rounding) > 0:
+        if quants and float_compare(quantity, 0, precision_rounding=rounding) > 0 and float_compare(quantity, available_quantity, precision_rounding=rounding) > 0:
             raise UserError(_('It is not possible to reserve more products of %s than you have in stock.') % (', '.join(quants.mapped('product_id').mapped('display_name'))))
-        elif float_compare(quantity, 0, precision_rounding=rounding) < 0 and float_compare(abs(quantity), sum(quants.mapped('reserved_quantity')), precision_rounding=rounding) > 0:
+        elif quants and float_compare(quantity, 0, precision_rounding=rounding) < 0 and float_compare(abs(quantity), sum(quants.mapped('reserved_quantity')), precision_rounding=rounding) > 0:
             raise UserError(_('It is not possible to unreserve more products of %s than you have in stock.') % (', '.join(quants.mapped('product_id').mapped('display_name'))))
 
         reserved_quants = []
