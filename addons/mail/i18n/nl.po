@@ -448,6 +448,12 @@ msgid ""
 "                                    If you want to use only selected records please uncheck this selection box :\n"
 "                                </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">\n"
+"Indien u het wilt verzenden voor alle records die voldoen aan uw zoekcriteria vinkt u deze optie aan:</span>\n"
+"\n"
+"<span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">\n"
+"Indien u alleen geselecteerde records wilt gebruiken vinkt u deze selectie af:\n"
+"</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -489,6 +495,8 @@ msgid ""
 "<strong>Only records checked in list view will be used.</strong><br/>\n"
 "                                The email will be sent for all the records selected in the list."
 msgstr ""
+"<strong>Enkel records die aangevinkt zijn in de lijstweergave worden gebruikt.</strong><br/>\n"
+"Deze e-mail wordt verzonden naar alle records die geselecteerd zijn in de lijst."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -5802,7 +5810,7 @@ msgstr "Foutief geconfigureerde alias"
 #: code:addons/mail/models/mail_alias.py:278
 #, python-format
 msgid "incorrectly configured alias (unknown reference record)"
-msgstr ""
+msgstr "foutief geconfigureerde alias (onbekend gelinkt record)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_server

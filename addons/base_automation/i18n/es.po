@@ -92,7 +92,7 @@ msgstr "Asignado al usuario administrador"
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
 msgid "Automated Action"
-msgstr ""
+msgstr "Acción automatizada"
 
 #. module: base_automation
 #: model:ir.actions.act_window,name:base_automation.base_automation_act
@@ -166,12 +166,12 @@ msgstr "Antes de actualizar el dominio"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_binding_model_id
 msgid "Binding Model"
-msgstr ""
+msgstr "Modelo vinculante"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_binding_type
 msgid "Binding Type"
-msgstr ""
+msgstr "Tipo de vínculo"
 
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
@@ -200,7 +200,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Click to setup a new automated automation."
-msgstr ""
+msgstr "Pulsar para establecer una nueva automatización."
 
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
@@ -393,7 +393,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_model_id
 msgid "Model on which the server action runs."
-msgstr ""
+msgstr "Modelo sobre el que se aplica la acción de servidor."
 
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
@@ -474,7 +474,7 @@ msgstr "Código Python"
 #. module: base_automation
 #: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Remove Action"
-msgstr ""
+msgstr "Eliminar acción"
 
 #. module: base_automation
 #: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -502,6 +502,8 @@ msgid ""
 "Setting a value makes this action available in the sidebar for the given "
 "model."
 msgstr ""
+"Establecer un valor hace que esta acción esté disponible desde el menú "
+"lateral del modelo."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_state
@@ -516,7 +518,7 @@ msgstr "Asunto"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_trigger
 msgid "Trigger Condition"
-msgstr ""
+msgstr "Condición desencadenante"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_id
@@ -534,6 +536,13 @@ msgid ""
 "- 'Add Followers': add followers to a record (available in Discuss)\n"
 "- 'Send Email': automatically send an email (available in email_template)"
 msgstr ""
+"Tipo de acción de servidor. Están disponibles los siguientes valores:\n"
+"- 'Ejecutar código Python': un bloque de código Python que será ejecutado\n"
+"- 'Crear o duplicar un nuevo registro': crea un nuevo registro con nuevos valores, o duplica uno existente en la base de datos\n"
+"- 'Escribir en un registro': actualiza los valores de un registro\n"
+"- 'Ejecutar varias acciones': define una acción que lanza varias otras acciones de servidor\n"
+"- 'Añadir seguidores': añade seguidores a un registro (disponible en Discuss)\n"
+"- 'Enviar un correo electrónico': envía automáticamente un correo electrónico (disponible en email_template)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_usage
@@ -554,6 +563,11 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"Use acciones automatizadas para activar automáticamente acciones.\n"
+"Por ejemplo: una oportunidad creada por un determinado\n"
+"usuario podría ser asignada automáticamente a un equipo de ventas determinado,\n"
+"o una oportunidad que está en estado pendiente tras 14 días podría activar\n"
+"un recordatorio automático por e-mail."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_user_id

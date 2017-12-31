@@ -3,7 +3,7 @@
 # * purchase
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2017
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # Yuan Xulei <hi@yxl.name>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
@@ -144,12 +144,12 @@ msgstr "${object.subject}"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "3-way matching"
-msgstr "三匹配"
+msgstr "三方匹配"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_module_account_3way_match
 msgid "3-way matching: purchases, receptions and bills"
-msgstr "三匹配:采购，接受和发票"
+msgstr "三方匹配:采购，收货以及账单"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.mail_template_data_notification_email_purchase_order
@@ -313,7 +313,7 @@ msgstr "<strong>数量</strong>"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Date Req.</strong>"
-msgstr "<strong>交货日期</strong>"
+msgstr "<strong>要求日期</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -329,7 +329,7 @@ msgstr "<strong>说明</strong>"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Expected Date</strong>"
-msgstr "<strong>期望交货日期</strong>"
+msgstr "<strong>期望日期</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -399,6 +399,14 @@ msgstr "<strong>单价</strong>"
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Your Order Reference:</strong>"
 msgstr "<strong>您的订单参考：</strong>"
+
+#. module: purchase
+#: code:addons/purchase/models/stock.py:83
+#, python-format
+msgid ""
+"A sale order that generated this purchase order has been deleted. Check if "
+"an action is needed."
+msgstr ""
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
