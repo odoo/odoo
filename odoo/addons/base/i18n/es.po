@@ -309,6 +309,14 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Reconocimiento de ingresos.\n"
+"==========================\n"
+"Administre reconocimiento de ingresos en ventas de productos.\n"
+"Hace seguimiento de las cuotas del reconocimiento de ingresos, y crea los correspondientes asientos.\n"
+"\n"
+"    "
 
 #. module: base
 #: code:addons/base/models/res_config.py:315
@@ -1518,6 +1526,21 @@ msgid ""
 "\n"
 "Be careful with this module as it has audit implications. Cancelling accounting entries is not authorized in all countries.\n"
 msgstr ""
+"\n"
+"Permitir cancelación asientos contables.\n"
+"===================================\n"
+"\n"
+"Este módulo agrega una casilla de verificación en los diarios para habilitar la cancelación de asientos contables.\n"
+"\n"
+"Esta casilla solo es visible en los diarios con el modo desarrollador activado.\n"
+"\n"
+"Si esta casilla está marcada, se permite a los usuarios cancelar los asientos contables.\n"
+"\n"
+"El asiento cancelado se puede modificar, volver a validar o eliminar.\n"
+"\n"
+"También es aplicable a facturas, extractos bancarios, pagos ...\n"
+"\n"
+"Tenga cuidado con este módulo ya que tiene consecuencias en las auditorías. La cancelación de asientos contables no está autorizada en todos los países.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet
@@ -1700,6 +1723,11 @@ msgid ""
 "    This module requires the python library stdnum to work.\n"
 "    "
 msgstr ""
+"\n"
+"Auto-completado de direcciones basado en el NIF\n"
+"============================================\n"
+"\n"
+"Este módulo requiere para funcionar la librería stdnum de  python."
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_gengo
@@ -6143,7 +6171,7 @@ msgstr "<strong>Nombre</strong>"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_res_company_kanban
 msgid "<strong>Phone</strong>"
-msgstr ""
+msgstr "<strong>Teléfono</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
@@ -7077,7 +7105,7 @@ msgstr "Aplicación"
 #: model:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Application Accesses"
-msgstr ""
+msgstr "Permisos de aplicaciones"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_app
@@ -7735,7 +7763,7 @@ msgstr "Binario"
 #: model:ir.model.fields,field_description:base.field_ir_actions_binding_model_id_275
 #: model:ir.model.fields,field_description:base.field_ir_cron_binding_model_id
 msgid "Binding Model"
-msgstr ""
+msgstr "Modelo vinculante"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_client_binding_type
@@ -7747,7 +7775,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_binding_type_276
 #: model:ir.model.fields,field_description:base.field_ir_cron_binding_type
 msgid "Binding Type"
-msgstr ""
+msgstr "Tipo de vínculo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_blackbox_be
@@ -8102,7 +8130,7 @@ msgstr "Cambiar contraseña"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_country_form
 msgid "Change the way addresses are displayed in reports"
-msgstr ""
+msgstr "Cambie la forma en que las direcciones se muestran en los informes"
 
 #. module: base
 #: code:addons/base/models/res_partner.py:338
@@ -8267,6 +8295,8 @@ msgid ""
 "Choose a subview of partners that includes only address fields, to change "
 "the way users can input addresses."
 msgstr ""
+"Elija una subvista de empresas que incluya solo campos de direcciones, para "
+"cambiar la forma en que los usuarios pueden registrar direcciones."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server_smtp_encryption
@@ -9337,7 +9367,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_name_position
 msgid "Customer Name Position"
-msgstr ""
+msgstr "Posición nombre del cliente"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_portal
@@ -10164,7 +10194,7 @@ msgstr "Pasarela de e-mail"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing
 msgid "Email Marketing"
-msgstr ""
+msgstr "Marketing por email"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -11193,7 +11223,7 @@ msgstr "Opciones Generales"
 #: model:ir.ui.menu,name:base.menu_wizard_update_translations
 #: model:ir.ui.view,arch_db:base.wizard_update_translations
 msgid "Generate Missing Terms"
-msgstr ""
+msgstr "Generar términos pendientes"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_property_view_search
@@ -12439,7 +12469,7 @@ msgstr "Editor incorporado"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_address_view_id
 msgid "Input View"
-msgstr ""
+msgstr "Vista para entrada"
 
 #. module: base
 #: code:addons/base/models/ir_module.py:434
@@ -13261,7 +13291,7 @@ msgstr "Launchpad"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_address_format
 msgid "Layout in Reports"
-msgstr ""
+msgstr "Salida en informes"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_lead_automation
@@ -14200,7 +14230,7 @@ msgstr "Modelo no encontrado: %(model)s"
 #: model:ir.model.fields,help:base.field_ir_act_server_model_id
 #: model:ir.model.fields,help:base.field_ir_cron_model_id
 msgid "Model on which the server action runs."
-msgstr ""
+msgstr "Modelo sobre el que se aplica la acción de servidor."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_model
@@ -14241,7 +14271,7 @@ msgstr "Nombre de módulo"
 #. module: base
 #: model:ir.model,name:base.model_base_module_uninstall
 msgid "Module Uninstallation"
-msgstr ""
+msgstr "Desinstalación del módulo"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_update
@@ -18373,6 +18403,8 @@ msgid ""
 "Setting a value makes this action available in the sidebar for the given "
 "model."
 msgstr ""
+"Establecer un valor hace que esta acción esté disponible desde el menú "
+"lateral del modelo."
 
 #. module: base
 #: code:addons/base/models/res_users.py:520
@@ -20166,6 +20198,13 @@ msgid ""
 "- 'Add Followers': add followers to a record (available in Discuss)\n"
 "- 'Send Email': automatically send an email (available in email_template)"
 msgstr ""
+"Tipo de acción de servidor. Están disponibles los siguientes valores:\n"
+"- 'Ejecutar código Python': un bloque de código Python que será ejecutado\n"
+"- 'Crear o duplicar un nuevo registro': crea un nuevo registro con nuevos valores, o duplica uno existente en la base de datos\n"
+"- 'Escribir en un registro': actualiza los valores de un registro\n"
+"- 'Ejecutar varias acciones': define una acción que lanza varias otras acciones de servidor\n"
+"- 'Añadir seguidores': añade seguidores a un registro (disponible en Discuss)\n"
+"- 'Enviar un correo electrónico': envía automáticamente un correo electrónico (disponible en email_template)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint_type
@@ -20644,7 +20683,7 @@ msgstr "Usuarios"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_users
 msgid "Users & Companies"
-msgstr ""
+msgstr "Usuarios y compañías"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_groups_form

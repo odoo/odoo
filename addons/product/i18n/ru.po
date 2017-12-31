@@ -17,13 +17,14 @@
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
 # Артур Чеботарь <artcha.chebotar@gmail.com>, 2017
 # Andrey Samorukov <andrey.samorukov@me.com>, 2017
+# Yuriy Ney <k_wizard@mail.ru>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-12-13 14:37+0000\n"
 "PO-Revision-Date: 2017-12-13 14:37+0000\n"
-"Last-Translator: Andrey Samorukov <andrey.samorukov@me.com>, 2017\n"
+"Last-Translator: Yuriy Ney <k_wizard@mail.ru>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,7 +97,7 @@ msgstr "<span>кг</span>"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>m³</span>"
-msgstr ""
+msgstr "<span>м³</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
@@ -142,6 +143,9 @@ msgid ""
 " This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
+"Описание продукта, которое Вы хотели бы предоставлять вашим потребителям.Это"
+" описание будет отображаться в каждом заказе покупателя, заказе на доставку "
+"и счете покупателю/ кредитном обязательстве"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description_purchase
@@ -151,6 +155,9 @@ msgid ""
 "This description will be copied to every Purchase Order, Receipt and Vendor "
 "Bill/Credit Note."
 msgstr ""
+"Описание продукта, которое Вы хотите предоставлять вашим поставщикам. Это "
+"описание будет отображаться в каждом заказе на покупку, поступлении товара и"
+" счете поставщика/ кредитном обязательстве"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description
@@ -166,6 +173,8 @@ msgid ""
 "A price list contains rules to be evaluated in order to compute\n"
 "                the sale price of the products."
 msgstr ""
+"Прайс лист содержит правила вычисления, для порядка расчета цены продажи "
+"продуктов"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_type
@@ -291,7 +300,7 @@ msgstr "Штрих-код"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_barcode
 msgid "Barcode used for packaging identification."
-msgstr ""
+msgstr "Штрих код, используемый для идентификации упаковки."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_base
@@ -432,7 +441,7 @@ msgstr "Цветовая палитра"
 #. module: product
 #: model:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Common Product Catalog"
-msgstr ""
+msgstr "Общий каталог продуктов"
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -601,7 +610,7 @@ msgstr "День (дни)"
 #: code:addons/product/models/res_company.py:59
 #, python-format
 msgid "Default %(currency)s pricelist for %(company)s"
-msgstr ""
+msgstr "Прайслист по умолчанию %(currency)s для %(company)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_uom_id
@@ -634,7 +643,7 @@ msgstr "Описание"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Description for Customers"
-msgstr ""
+msgstr "Описание для потребителей"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_sequence
@@ -780,7 +789,7 @@ msgstr "Общая информация"
 #: model:ir.model.fields,help:product.field_product_product_packaging_ids
 #: model:ir.model.fields,help:product.field_product_template_packaging_ids
 msgid "Gives the different ways to package the same product."
-msgstr ""
+msgstr "Предоставляет различные варианты упаковки одного и того же продукта."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_sequence
@@ -797,7 +806,7 @@ msgstr "Глобально"
 #: code:addons/product/models/product_template.py:30
 #, python-format
 msgid "Go to Internal Categories"
-msgstr ""
+msgstr "Переход к внутренним Категориям"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_search_view
@@ -853,6 +862,8 @@ msgstr "Номер"
 msgid ""
 "If not set, the vendor price will apply to all variants of this products."
 msgstr ""
+"Если не установлено, цена продавца будет применена ко всем вариантам этих "
+"продуктов."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_active
@@ -1221,7 +1232,7 @@ msgstr "Прайс-лист"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_pricelist_item_ids
 msgid "Pricelist Item"
-msgstr ""
+msgstr "Пункт прайслиста"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_applied_on
@@ -2124,12 +2135,16 @@ msgstr ""
 #, python-format
 msgid "You have to set a logo or a layout for your company."
 msgstr ""
+"Вам необходимо установить логотип или скомпоновать необходимую информацию о "
+"вашей компании."
 
 #. module: product
 #: code:addons/product/wizard/product_price_list.py:28
 #, python-format
 msgid "You have to set your reports's header and footer layout."
 msgstr ""
+"Вам необходимо установить компоновку верхнего и нижнего колонтитулов вашего "
+"отчета."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
@@ -2168,6 +2183,8 @@ msgid ""
 "You must define at least one product category in order to be able to create "
 "products."
 msgstr ""
+"Вам необходимо указать хотя бы одну категорию продуктов, для того чтобы "
+"иметь возможность создать продукты."
 
 #. module: product
 #: model:product.uom,name:product.product_uom_cm
