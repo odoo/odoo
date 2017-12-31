@@ -33,6 +33,11 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+"* Starea \"Ciornă\" este utilizată atunci când un utilizator codifică o factură nouă și neconfirmată.\n"
+"* Starea \"Pro-forma\" este utilizată atunci când factura nu are un număr de factură.\n"
+"* Starea 'Deschis' este utilizată atunci când utilizatorul creează factură, este generat un număr de factură. Acesta rămâne în stare deschisă până când utilizatorul plătește factura.\n"
+"* Starea \"Plătit\" este setată automat atunci când factura este plătită. Înregistrările legate de jurnal pot fi sau nu reconciliate.\n"
+"* Starea \"Anulat\" este utilizată atunci când utilizatorul anulează factura."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
@@ -151,7 +156,7 @@ msgstr "30% in avans , restul la sfarsitul lunii in curs"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "5) For setup, you will need the following information:"
-msgstr ""
+msgstr "5) Pentru configurare, veți avea nevoie de următoarele informații:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -1308,7 +1313,7 @@ msgstr "Statistică cont"
 #. module: account
 #: model:ir.model,name:account.model_account_account_tag
 msgid "Account Tag"
-msgstr ""
+msgstr "Etichetă contabilă"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_tag_action
@@ -1518,7 +1523,7 @@ msgstr "Raport Contabil"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Accounting Settings"
-msgstr ""
+msgstr "Setări contabilitate"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
@@ -1963,6 +1968,10 @@ msgid ""
 "                Sheet and the Profit and Loss report use the category\n"
 "                (profit/loss or balance sheet)."
 msgstr ""
+"Un tip de cont este utilizat pentru a determina modul în care un cont este "
+"utilizat în fiecare jurnal. Metoda de amânare a unui tip de cont determină "
+"procesul de închidere anuală. Rapoartele, cum ar fi Bilanțul și Raportul de "
+"profit și pierdere, utilizează categoria (profit / pierdere sau bilanț)."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -2439,6 +2448,8 @@ msgid ""
 "Before continuing, you must install the Chart of Account related to your "
 "country (or the generic one if your country is not listed)."
 msgstr ""
+"Înainte de a continua, trebuie să instalați Planul de conturi al țării dvs. "
+"(sau cel generic dacă țara dvs. nu este listată)."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_belongs_to_company
@@ -3339,7 +3350,7 @@ msgstr "Control-Access"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_direct_costs
 msgid "Cost of Revenue"
-msgstr ""
+msgstr "Costul veniturilor"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:862
@@ -3641,7 +3652,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_credit_account_id
 msgid "Credit account"
-msgstr ""
+msgstr "Cont credit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_credit
@@ -4550,7 +4561,7 @@ msgstr "Februarie"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_state_ids
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_state_ids
 msgid "Federal States"
-msgstr ""
+msgstr "Statele federale"
 
 #. module: account
 #: selection:account.journal,bank_statements_source:0
@@ -4799,6 +4810,10 @@ msgid ""
 "vendors. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"Din acest raport, puteți avea o imagine de ansamblu a sumei facturate de la "
+"furnizorii dvs. Instrumentul de căutare poate fi, de asemenea, utilizat "
+"pentru a personaliza rapoartele facturilor și, astfel, potriviți această "
+"analiză cu nevoile dvs."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -6335,7 +6350,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:24
 #, python-format
 msgid "Let odoo try to reconcile entries for the user"
-msgstr ""
+msgstr "Lăsați Odoo să încerce să reconcilieze intrările pentru utilizator"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6751,7 +6766,7 @@ msgstr "Facturile mele"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "NET ASSETS"
-msgstr ""
+msgstr "ACTIVE NET"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -6783,7 +6798,7 @@ msgstr "Nume:"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_narration
 msgid "Narration"
-msgstr ""
+msgstr "Narațiune"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6814,7 +6829,7 @@ msgstr "Tranzacții noi"
 #: code:addons/account/models/account_move.py:1319
 #, python-format
 msgid "New expected payment date: "
-msgstr ""
+msgstr "O nouă dată de plată anticipată:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_sequence_number_next
@@ -7692,6 +7707,9 @@ msgid ""
 "Payments are used to register liquidity movements (send, collect or transfer money).\n"
 "                  You can then process those payments by your own means or by using installed facilities."
 msgstr ""
+"Plățile sunt utilizate pentru a înregistra mișcările de lichidități "
+"(trimiteți, colectați sau transferați bani). Puteți apoi să efectuați aceste"
+" plăți prin mijloace proprii sau prin utilizarea facilităților instalate."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -8665,13 +8683,13 @@ msgstr "Cautati Taxele"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_account_id
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_second_account_id
 msgid "Second Account"
-msgstr ""
+msgstr "Cont secundar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_amount
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_second_amount
 msgid "Second Amount"
-msgstr ""
+msgstr "Cont secundar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_amount_type
@@ -11089,6 +11107,7 @@ msgstr ""
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled!"
 msgstr ""
+"Încercați să reconciliați unele înregistrări care sunt deja reconciliate!"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_blocked
@@ -11390,6 +11409,9 @@ msgid ""
 " to manage automatically the booking of accounting entries related to "
 "differences between exchange rates."
 msgstr ""
+"Ar trebui să configurați \"Jurnalul schimb valutar\" în setările contabile, "
+"să gestionați automat rezervarea intrărilor contabile legate de diferențele "
+"dintre cursurile de schimb."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1857

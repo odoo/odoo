@@ -70,7 +70,7 @@ msgstr "%g restant de %g"
 #: code:addons/hr_holidays/models/hr_holidays.py:333
 #, python-format
 msgid "%s : %.2f day(s)"
-msgstr ""
+msgstr "%s : %.2f día(s)"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:335
@@ -110,12 +110,12 @@ msgstr "&lt;th class=\"text-center\" colspan="
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_kanban
 msgid "<small class=\"text-muted\">from</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">desde</small>"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_kanban
 msgid "<small class=\"text-muted\">to</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">a</small>"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -233,7 +233,7 @@ msgstr "Asignación para %s"
 #: code:addons/hr_holidays/models/hr_holidays.py:337
 #, python-format
 msgid "Allocation of %s : %.2f day(s) To %s"
-msgstr ""
+msgstr "Allocation of %s : %.2f día(s) a %s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_allocation_to_approve_count
@@ -543,6 +543,8 @@ msgid ""
 "Filters only on allocations and requests that belong to an leave type that "
 "is 'active' (active field is True)"
 msgstr ""
+"Filtra sólo las peticiones y  asignaciones que pertenecen a un tipo de "
+"ausencia que está 'activo' (campo 'activo' marcado)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_first_approver_id
@@ -822,7 +824,7 @@ msgstr "Resumen de ausencias"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
 msgid "Leaves Taken:"
-msgstr ""
+msgstr "Ausencias consumidas:"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_dept
@@ -937,7 +939,7 @@ msgstr "Responsable"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
 msgid "Max Leaves:"
-msgstr ""
+msgstr "Máximas ausencias:"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_max_leaves
@@ -1021,11 +1023,12 @@ msgstr "Número de ausencias"
 msgid ""
 "Number of days of the leave request according to your working schedule."
 msgstr ""
+"Número de días de su petición de ausencia de acuerdo con su plan de trabajo."
 
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_user
 msgid "Officer"
-msgstr "Oficial"
+msgstr "Empleado RRHH"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_categ_id
@@ -1044,6 +1047,10 @@ msgid ""
 "                type (recuperation, legal leaves, sickness) and the exact\n"
 "                number of open days related to your leave."
 msgstr ""
+"Una vez que haya guardado su petición de ausencia, será\n"
+"enviada a su responsable para su validación. Asegúrese de\n"
+"escoger el tipo de ausencia adecuado (compensación, vacaciones\n"
+"enfermedad) y el número exacto de días laborables de la ausencia."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:477
@@ -1213,13 +1220,13 @@ msgstr "Segunda aprobación"
 #: code:addons/hr_holidays/models/hr_holidays.py:596
 #, python-format
 msgid "See Allocation"
-msgstr ""
+msgstr "Ver asignación"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:596
 #, python-format
 msgid "See Leave"
-msgstr ""
+msgstr "Ver ausencia"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_holiday_type
@@ -1298,6 +1305,10 @@ msgid ""
 "The status is 'Refused', when leave request is refused by manager.\n"
 "The status is 'Approved', when leave request is approved by manager."
 msgstr ""
+"El estado es \"Enviar\" cuando se crea una solicitud de ausencia.\n"
+"El estado es \"Aprobar\", cuando la solicitud de ausencia es confirmada por el usuario.\n"
+"El estado es 'Rechazado', cuando la solicitud de ausencia es rechazada por el responsable.\n"
+"El estado es 'Aprobado', cuando la solicitud de ausencia es aprobada por el responsable."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_first_approver_id
@@ -1329,12 +1340,16 @@ msgstr ""
 msgid ""
 "This value is given by the sum of all leaves requests with a negative value."
 msgstr ""
+"Este valor se calcula sumando todas las peticiones de ausencias con un valor"
+" negativo."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_max_leaves
 msgid ""
 "This value is given by the sum of all leaves requests with a positive value."
 msgstr ""
+"Este valor se calcula sumando todas las peticiones de ausencias con un valor"
+" positivo."
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
@@ -1412,7 +1427,7 @@ msgstr "Validar"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Validator"
-msgstr ""
+msgstr "Validador"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
