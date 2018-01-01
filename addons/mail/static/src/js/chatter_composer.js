@@ -210,9 +210,11 @@ var ChatterComposer = composer.BasicComposer.extend({
             recipient_done = this.check_suggested_partners(checked_suggested_partners);
         }
         recipient_done.then(function (partner_ids) {
+            var source = self.options.is_log ? "note" : "message";
+            var key = self.model.replace(".", "_") + "_" + self.context.default_res_id  + "_" + source;
             var context = {
                 default_parent_id: self.id,
-                default_body: utils.get_text2html(self.$input.val()),
+                default_body: sessionStorage.getItem(key) || utils.get_text2html(self.$input.val()),
                 default_attachment_ids: _.pluck(self.get('attachment_ids'), 'id'),
                 default_partner_ids: partner_ids,
                 default_is_log: self.options.is_log,
@@ -234,7 +236,14 @@ var ChatterComposer = composer.BasicComposer.extend({
                 context: context,
             };
             self.do_action(action, {
-                on_close: self.trigger.bind(self, 'need_refresh'),
+                on_close: function(e) {
+                    var htmlBody = $('.modal .o_act_window .note-editable').html();
+                    sessionStorage.setItem(key, htmlBody);
+                    if (e === undefined) { //Here assuming that Send or cancel pressed
+                        sessionStorage.removeItem(key);
+                    }
+                    self.trigger_up('reload');
+                }
             }).then(self.trigger.bind(self, 'close_composer'));
         });
     }

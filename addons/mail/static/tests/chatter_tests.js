@@ -788,6 +788,7 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
                         default_res_id: 2,
                         default_res_model: "partner",
                         default_previous_activity_type_id: 2,
+                        default_note: "",
                     },
                     res_id: false,
                     res_model: 'mail.activity',

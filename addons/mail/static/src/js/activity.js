@@ -86,7 +86,8 @@ var AbstractActivityField = AbstractField.extend({
             self.activities = _.sortBy(self.activities, 'date_deadline');
         });
     },
-    _scheduleActivity: function (id, previous_activity_type_id, callback) {
+    _scheduleActivity: function (id, previous_activity_type_id) {
+        var key = this.model.replace(".", "_") + "_" + this.res_id  + "_activity";
         var action = {
             type: 'ir.actions.act_window',
             res_model: 'mail.activity',
@@ -97,11 +98,22 @@ var AbstractActivityField = AbstractField.extend({
             context: {
                 default_res_id: this.res_id,
                 default_res_model: this.model,
+                default_note: sessionStorage.getItem(key) || "",
                 default_previous_activity_type_id: previous_activity_type_id,
             },
             res_id: id || false,
         };
-        return this.do_action(action, { on_close: callback });
+        self = this;
+        this.do_action(action, {
+            on_close: function(e) {
+                var htmlBody = $('.modal .o_act_window .note-editable').html();
+                sessionStorage.setItem(key, htmlBody);
+                if (e === undefined) { // Here assuming that Schedule, Mark as Done or Discard button pressed
+                    sessionStorage.removeItem(key);
+                }
+                self.trigger_up('reload');
+            }
+        });
     },
 });
 
@@ -155,8 +167,7 @@ var Activity = AbstractActivityField.extend({
 
     // public
     scheduleActivity: function (previous_activity_type_id) {
-        var callback = this._reload.bind(this, {activity: true, thread: true});
-        return this._scheduleActivity(false, previous_activity_type_id, callback);
+        return this._scheduleActivity(false, previous_activity_type_id);
     },
     // private
     _reload: function (fieldsToReload) {
@@ -324,7 +335,7 @@ var KanbanActivity = AbstractActivityField.extend({
     },
     _onScheduleActivity: function (event) {
         var activity_id = $(event.currentTarget).data('activity-id') || false;
-        return this._scheduleActivity(activity_id, false, this._reload.bind(this));
+        return this._scheduleActivity(activity_id, false);
     },
 });
 
