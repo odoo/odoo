@@ -365,7 +365,7 @@ class Product(models.Model):
 
     def write(self, values):
         res = super(Product, self).write(values)
-        if 'active' in values and not values['active'] and self.mapped('orderpoint_ids').filtered(lambda r: r.active):
+        if 'active' in values and not values['active'] and self.env['stock.warehouse.orderpoint'].with_context(active_test=True).search([('product_id', 'in', self.ids)]):
             raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
         return res
 
