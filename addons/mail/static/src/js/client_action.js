@@ -271,20 +271,26 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
      * @private
      * @returns {Deferred}
      */
-    _loadMoreMessages: function () {
+    _loadMoreMessages: function (options) {
         var self = this;
         var oldest_msg_id = this.$('.o_thread_message').first().data('messageId');
         var oldest_msg_selector = '.o_thread_message[data-message-id="' + oldest_msg_id + '"]';
         var offset = -dom.getPosition(document.querySelector(oldest_msg_selector)).top;
+        var lastMessageID = options ? options.lastMessageID : false;
         return chat_manager
-            .get_messages({channel_id: this.channel.id, domain: this.domain, load_more: true})
+            .get_messages({channel_id: this.channel.id, domain: this.domain, load_more: true, lastMessageID: lastMessageID})
             .then(function (result) {
                 if (self.messages_separator_position === 'top') {
                     self.messages_separator_position = undefined; // reset value to re-compute separator position
                 }
                 self.thread.render(result, self._getThreadRenderingOptions(result));
                 offset += dom.getPosition(document.querySelector(oldest_msg_selector)).top;
-                self.thread.scroll_to({offset: offset});
+                // Scroll to buttom if lastMessageID
+                if (lastMessageID) {
+                    self.thread.scroll_to();
+                } else {
+                    self.thread.scroll_to({offset: offset});
+                }
             });
     },
     /**
@@ -770,7 +776,13 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             chat_manager.get_messages({channel_id: this.channel.id, domain: this.domain}).then(function (messages) {
                 var options = self._getThreadRenderingOptions(messages);
                 self.thread.remove_message_and_render(message.id, messages, options).then(function () {
-                    self._updateButtonStatus(messages.length === 0, type);
+                    options.lastMessageID = message.id;
+                    // load more messages if no messages available
+                    if (options.display_load_more && messages.length === 0) {
+                        self._loadMoreMessages(options);
+                    } else {
+                        self._updateButtonStatus(messages.length === 0, type);
+                    }
                 });
             });
         } else if (_.contains(message.channel_ids, current_channel_id)) {

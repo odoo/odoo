@@ -704,7 +704,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
             domain = domain.concat(options.domain || []);
         }
         if (options.load_more) {
-            var min_message_id = cache.messages[0].id;
+            var min_message_id = options.lastMessageID || cache.messages[0].id;
             domain = [['id', '<', min_message_id]].concat(domain);
         }
 
@@ -716,7 +716,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
             })
             .then(function (msgs) {
                 if (!cache.all_history_loaded) {
-                    cache.all_history_loaded =  msgs.length < LIMIT;
+                    cache.all_history_loaded =  !(msgs.length == LIMIT && msgs.length < needaction_counter);
                 }
                 cache.loaded = true;
 
@@ -839,7 +839,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         if ('channel_id' in options && options.load_more) {
             // get channel messages, force load_more
             channel = this.get_channel(options.channel_id);
-            return this._fetchFromChannel(channel, {domain: options.domain || {}, load_more: true});
+            return this._fetchFromChannel(channel, {domain: options.domain || {}, load_more: true, lastMessageID: options.lastMessageID});
         }
         if ('channel_id' in options) {
             // channel message, check in cache first

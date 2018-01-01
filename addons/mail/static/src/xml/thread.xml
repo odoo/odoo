@@ -9,7 +9,7 @@
             <t t-if="options.display_load_more and options.display_order == ORDER.DESC"
                t-call="mail.ChatThread.LoadMore"/>
         </t>
-        <t t-if="options.display_empty_channel">
+        <t t-if="options.display_empty_channel and !options.display_load_more">
             <t t-call="mail.EmptyChannel" />
         </t>
         <div t-if="options.display_no_match" class="o_mail_no_content">
