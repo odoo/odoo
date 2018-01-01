@@ -88,6 +88,18 @@
                               </td>
                           </tr>
                         </t>
+                        <t t-foreach="range(max(5-len(layout_category['lines']),0))" t-as="l">
+                            <tr>
+                                <td>&amp;nbsp;</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td groups="sale.group_show_price_subtotal"></td>
+                                <td groups="sale.group_show_price_total"></td>
+                                <td></td>
+                            </tr>
+                        </t>
 
                         <t t-if="(layout_category_size > 1  or page_size > 1) and layout_category['subtotal']" groups="sale.group_sale_layout">
                             <tr>

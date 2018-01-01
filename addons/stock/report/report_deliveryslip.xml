@@ -64,6 +64,10 @@
                                     <span t-field="move.product_uom"/>
                                 </td>
                             </tr>
+                            <tr t-foreach="range(max(5-len(o.move_lines),0))" t-as="move">
+                                <td>&amp;nbsp;</td>
+                                <td></td>
+                            </tr>
                         </tbody>
                     </table>
                     <t t-set="backorder" t-value="False"/>
@@ -127,6 +131,14 @@
                                     <span t-field="move_line.qty_done"/>
                                     <span t-field="move_line.product_uom_id"/>
                                 </td>
+                            </tr>
+                            <tr t-foreach="range(max(5-len(o.pack_operation_ids),0))" t-as="pack_operation">
+                                <td>&amp;nbsp;</td>
+                                <td t-if="has_serial_number"></td>
+                                <td></td>
+                                <t t-foreach="o.pack_operation_ids" t-as="pack_operation">
+                                    <td t-if="pack_operation.state == 'done'"></td>
+                                </t>
                             </tr>
                         </tbody>
                     </table>

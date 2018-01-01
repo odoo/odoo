@@ -54,6 +54,12 @@
                                     </td>
                                 </t>
                             </tr>
+                            <tr t-foreach="range(max(5-len(categ_data['products']),0))" t-as="product">
+                                <td>&amp;nbsp;</td>
+                                <t t-foreach="data['quantities']" t-as="quantity">
+                                    <td></td>
+                                </t>
+                            </tr>
                         </t>
                     </tbody>
                 </table>

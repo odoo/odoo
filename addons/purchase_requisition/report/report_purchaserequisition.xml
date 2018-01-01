@@ -60,6 +60,12 @@
                                         <span t-field="line_ids.schedule_date"/>
                                     </td>
                                 </tr>
+                                <tr t-foreach="range(max(5-len(o.line_ids),0))" t-as="line_ids">
+                                    <td>&amp;nbsp;</td>
+                                    <td></td>
+                                    <td groups="product.group_uom"></td>
+                                    <td></td>
+                                </tr>
                             </tbody>
                         </table>
                     </t>
@@ -70,7 +76,7 @@
                             <thead>
                                 <tr>
                                     <th><strong>Vendor </strong></th>
-                                    <th><strong>Date</strong></th>
+                                    <th class="text-center"><strong>Date</strong></th>
                                     <th class="text-right"><strong>Reference </strong></th>
                                 </tr>
                             </thead>
@@ -85,6 +91,11 @@
                                     <td class="text-right">
                                         <span t-field="purchase_ids.name"/>
                                     </td>
+                                </tr>
+                                <tr t-foreach="range(max(5-len(o.purchase_ids),0))" t-as="purchase_ids">
+                                    <td>&amp;nbsp;</td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                             </tbody>
                         </table>
