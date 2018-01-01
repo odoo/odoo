@@ -72,8 +72,8 @@ class TestEquipment(TransactionCase):
         # I check that Initially maintenance request is in the "New Request" stage
         self.assertEquals(maintenance_request_01.stage_id.id, self.ref('maintenance.stage_0'))
 
-        # I check that change the maintenance_request stage on click statusbar
-        maintenance_request_01.sudo(self.user).write({'stage_id': self.ref('maintenance.stage_1')})
+        # I check that only manager change the maintenance_request stage on click statusbar
+        maintenance_request_01.sudo(self.manager).write({'stage_id': self.ref('maintenance.stage_1')})
 
         # I check that maintenance request is in the "In Progress" stage
         self.assertEquals(maintenance_request_01.stage_id.id, self.ref('maintenance.stage_1'))
