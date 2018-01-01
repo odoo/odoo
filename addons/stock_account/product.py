@@ -126,6 +126,7 @@ class product_template(osv.osv):
                         move_vals = {
                             'journal_id': datas['stock_journal'],
                             'company_id': location.company_id.id,
+                            'ref': prod_variant.default_code,
                         }
                         move_id = move_obj.create(cr, uid, move_vals, context=context)
 
@@ -149,13 +150,15 @@ class product_template(osv.osv):
                                         'debit': amount_diff,
                                         'credit': 0,
                                         'move_id': move_id,
+                                        'product_id': prod_variant.id,
                                         }, context=context)
                         move_line_obj.create(cr, uid, {
                                         'name': _('Standard Price changed'),
                                         'account_id': credit_account_id,
                                         'debit': 0,
                                         'credit': amount_diff,
-                                        'move_id': move_id
+                                        'move_id': move_id,
+                                        'product_id': prod_variant.id,
                                         }, context=context)
             self.write(cr, uid, rec_id, {'standard_price': new_price})
         return True
