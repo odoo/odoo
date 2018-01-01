@@ -228,11 +228,12 @@ var BasicModel = AbstractModel.extend({
     deleteRecords: function (recordIds, modelName) {
         var self = this;
         var records = _.map(recordIds, function (id) { return self.localData[id]; });
+        var context = _.extend(records[0].getContext(), session.user_context);
         return this._rpc({
                 model: modelName,
                 method: 'unlink',
                 args: [_.pluck(records, 'res_id')],
-                context: session.user_context, // todo: combine with view context
+                context: context,
             })
             .then(function () {
                 _.each(records, function (record) {
