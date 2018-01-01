@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2017-11-27 08:04+0000\n"
+"PO-Revision-Date: 2017-12-15 16:46+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -369,7 +369,7 @@ msgstr "<span>新規</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<span>Not due</span>"
-msgstr ""
+msgstr "<span>将来期日</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -578,12 +578,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<strong>Partner's:</strong>"
-msgstr ""
+msgstr "<strong>取引先の:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<strong>Period Length (days)</strong>"
-msgstr ""
+msgstr "<strong>期間の長さ (日数)</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -595,7 +595,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Purchases</strong>"
-msgstr ""
+msgstr "<strong>購買</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -668,7 +668,7 @@ msgstr "<strong>参照元:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<strong>Start Date:</strong>"
-msgstr ""
+msgstr "<strong>開始日:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -686,7 +686,7 @@ msgstr "<strong>小計</strong>"
 #: model:ir.ui.view,arch_db:account.report_generalledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "<strong>Target Moves:</strong>"
-msgstr ""
+msgstr "<strong>対象仕訳:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -764,7 +764,7 @@ msgstr ""
 msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
-msgstr ""
+msgstr "1つの仕訳には複数の仕訳明細が含まれます。各仕訳明細には借方または貸方に金額が保持されます。"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
@@ -1027,7 +1027,7 @@ msgstr "アカウントテンプレート"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "Account Total"
-msgstr ""
+msgstr "勘定合計"
 
 #. module: account
 #: selection:account.financial.report,type:0
@@ -1694,7 +1694,7 @@ msgstr "8月"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Auto-detect"
-msgstr ""
+msgstr "自動検出"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -1977,7 +1977,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
 msgid "Browse available countries."
-msgstr ""
+msgstr "利用可能な勘定科目表を照会"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_budget
@@ -3125,7 +3125,7 @@ msgstr "日付"
 #. module: account
 #: selection:account.payment.term.line,option:0
 msgid "Day(s) after the end of the invoice month (Net EOM)"
-msgstr ""
+msgstr "請求月末起算"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
@@ -3431,7 +3431,7 @@ msgstr "請求書や受注のような印刷されるドキュメントのフッ
 msgid ""
 "Document: Customer account statement<br/>\n"
 "                    Date:"
-msgstr ""
+msgstr "ドキュメント: 滞納明細書\n日付:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3678,7 +3678,7 @@ msgstr "Excelテンプレート"
 #: code:addons/account/models/chart_template.py:158
 #, python-format
 msgid "Exchange Difference"
-msgstr ""
+msgstr "為替差"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_currency_exchange_journal_id
@@ -3816,7 +3816,7 @@ msgstr "財務レポート階層"
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_financial
 msgid "Financial report"
-msgstr ""
+msgstr "財務レポート"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5849,7 +5849,7 @@ msgid ""
 "                document: invoice, refund, vendor payment, bank statements,\n"
 "                etc. So, you should record journal entries manually only/mainly\n"
 "                for miscellaneous operations."
-msgstr ""
+msgstr "Odooは、請求書、返金、仕入先支払、銀行取引明細書等、各会計関連ドキュメントにつき1つの仕訳を生成します。ここでは、これら会計関連ドキュメントが存在しない場合のみ、マニュアルで仕訳を作成します。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7461,7 +7461,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_sign
 msgid "Sign on Reports"
-msgstr ""
+msgstr "レポートの正負符号"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7891,7 +7891,7 @@ msgstr "税テンプレート"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "Term Type"
-msgstr ""
+msgstr "条件タイプ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_ids
@@ -8383,7 +8383,7 @@ msgstr ""
 msgid ""
 "This is the accounting dashboard. If you have not yet\n"
 "                installed a chart of account, please install one first."
-msgstr ""
+msgstr "こちらは会計ダッシュボードです。勘定科目表のインストールが済んでいない場合は、初めに勘定科目表をインストールしてください。"
 
 #. module: account
 #: code:addons/account/models/account.py:304
@@ -9154,7 +9154,7 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "会計仕訳において貸方または借方の値が誤っています。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:774
