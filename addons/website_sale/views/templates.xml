@@ -350,7 +350,7 @@
           <div class="row">
             <div class="col-sm-4">
                 <ol class="breadcrumb">
-                    <li><a t-att-href="keep(category=0)" onclick="history.go(-1); return false;">Products</a></li>
+                    <li><a t-att-href="keep(category=0)">Products</a></li>
                     <li t-if="category"><a t-att-href="keep('/shop/category/%s' % slug(category), category=0)" t-field="category.name"/></li>
                     <li class="active"><span t-field="product.name"/></li>
                 </ol>
