@@ -16,6 +16,7 @@ var Widget = require('web.Widget');
 
 var Notification = Widget.extend({
     template: 'Notification',
+    xmlDependencies: ['/web/static/src/xml/notification.xml'],
     events: {
         'click .o_close': '_onClose',
     },
