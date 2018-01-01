@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2017-11-03 11:19+0000\n"
+"PO-Revision-Date: 2017-12-29 07:47+0000\n"
 "Last-Translator: Arma Gedonsky <armagedonsky@hot.ee>\n"
 "Language-Team: Estonian (http://www.transifex.com/odoo/odoo-9/language/et/)\n"
 "MIME-Version: 1.0\n"
@@ -47,7 +47,7 @@ msgstr "%s (koopia)"
 #: code:addons/project/static/src/xml/project.xml:8
 #, python-format
 msgid "&times;"
-msgstr ""
+msgstr "&korda;"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -624,7 +624,7 @@ msgstr ""
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr ""
+msgstr "Pythoni sõnastik, mida hinnatakse vaikimisi väärtuste määramiseks uute kirjete loomiseks sellele aliasele."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -711,12 +711,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_id
 msgid "Alias"
-msgstr ""
+msgstr "Alias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "Turvakontakti alias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_model
@@ -726,17 +726,17 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_name
 msgid "Alias Name"
-msgstr ""
+msgstr "Aliase nimi"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_domain
 msgid "Alias domain"
-msgstr ""
+msgstr "Aliase domeen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_model_id
 msgid "Aliased Model"
-msgstr ""
+msgstr "Aliase mudel"
 
 #. module: project
 #: code:addons/project/project.py:121
@@ -1282,7 +1282,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_closing_days
 msgid "Days to Close"
-msgstr ""
+msgstr "Päevi sulgemiseni"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_deadline
@@ -1485,7 +1485,7 @@ msgstr "Ülesande parandamine"
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Email Alias"
-msgstr ""
+msgstr "E-posti alias"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1579,7 +1579,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "Laiendatud filtrid"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
@@ -1812,7 +1812,7 @@ msgstr "ID"
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
-msgstr ""
+msgstr "Algse kirje ID, millele kuulub alias (nt: projekt, millele kuulub ülesande loomise alias)"
 
 #. module: project
 #. openerp-web
@@ -2104,7 +2104,7 @@ msgstr "Viimati muudetud"
 #: model:ir.model.fields,field_description:project.field_project_task_date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_last_stage_update
 msgid "Last Stage Update"
-msgstr ""
+msgstr "Viimase etapi värskendus"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_write_uid
@@ -2378,7 +2378,7 @@ msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr ""
+msgstr "Valikuline ID, mille külge lisatakse kõik sissetulevad sõnumid, isegi kui sellele ei vastatud. Kui määratud, siis kaob täielikult võimalus luua uusi kirjeid."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2455,7 +2455,7 @@ msgstr "Ülemmudel"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "Ülemkirje ühenduse ID"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_parent_ids
@@ -2468,7 +2468,7 @@ msgid ""
 "Parent model holding the alias. The model holding the alias reference is not"
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
-msgstr ""
+msgstr "Ülemmudel, millel on alias. Aliase mudeli viide ei pruugi olla mudel, mis on antud nii: alias_model_id (näide: projekt (ülem_mudel) ja ülesanne (mudel))"
 
 #. module: project
 #: model:ir.model,name:project.model_res_partner
@@ -2710,7 +2710,7 @@ msgstr "Tühistamise põhjus on dokumenteeritud"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "Kirje seose ID"
 
 #. module: project
 #: selection:project.config.settings,module_project_timesheet:0
@@ -2937,7 +2937,7 @@ msgstr "Tase"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "Etapp muudetud"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -2952,7 +2952,7 @@ msgstr "Etapi nimi"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "Etapp muudetud"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
@@ -3228,14 +3228,14 @@ msgid ""
 "The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
-msgstr ""
+msgstr "Aliasele vastv mudel (Odoo dokumendi laadi). Iga sissetulev kiri, mis ei vasta olemasolevale kirjele, põhjustab uue mudeli kirje loomise (nt projekti ülesanne)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_name
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr ""
+msgstr "E-maili aliase nimi, nt \"ametikoht\" kui soovid saada e-kirju <ametikoht@example.odoo.com>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_user_id
@@ -3244,7 +3244,7 @@ msgid ""
 "field is not set the system will attempt to find the right owner based on "
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
-msgstr ""
+msgstr "E-kirja saamisel loodud kirjete omanik, mis tulevad sellele e-posti aliasele. Kui see väli pole määratud, siis süsteem üritab leida õige omaniku lähtuvalt saatja (From) aadressist või kasutab administraatori kontot, kui ei leita ühtegi süsteemikontot sellise e-posti aadressiga."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3301,7 +3301,7 @@ msgstr ""
 msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
-msgstr ""
+msgstr "See etapp on kanban vaates volditud, kui puuduvad etapikirjed, mida kuvada."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3430,7 +3430,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unassigned"
-msgstr ""
+msgstr "Määramata"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -3487,7 +3487,7 @@ msgstr "Kasutaja"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_user_email
 msgid "User Email"
-msgstr ""
+msgstr "Kasutaja e-post"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3577,7 +3577,7 @@ msgstr "Veebilehe suhtluse ajalugu"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Welcome"
-msgstr ""
+msgstr "Tere tulemast"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3726,7 +3726,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "oe_kanban_text_red"
-msgstr ""
+msgstr "oe_kanban_tekst_punane"
 
 #. module: project
 #: model:ir.model,name:project.model_project_config_settings
@@ -3747,7 +3747,7 @@ msgstr "Ülesanded"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "to describe<br/> your experience or to suggest improvements !"
-msgstr ""
+msgstr "kirjeldamaks <br/> sinu kogemusi või tegema parandusettepanekuid!"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_project_count
