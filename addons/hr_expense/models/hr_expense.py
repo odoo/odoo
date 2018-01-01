@@ -340,15 +340,16 @@ class HrExpense(models.Model):
         # Match the first occurence of '[]' in the string and extract the content inside it
         # Example: '[foo] bar (baz)' becomes 'foo'. This is potentially the product code
         # of the product to encode on the expense. If not, take the default product instead
-        # which is 'Fixed Cost'
-        default_product = self.env.ref('hr_expense.product_product_fixed_cost')
+        # which is 'Fixed Cost' [FIX] Finding any product - if default product removed error occurred.
+        default_product = self.env['product.product'].search([['can_be_expensed', '=', True]], limit=1)
         pattern = '\[([^)]*)\]'
         product_code = re.search(pattern, expense_description)
         if product_code is None:
             product = default_product
         else:
             expense_description = expense_description.replace(product_code.group(), '')
-            product = self.env['product.product'].search([('default_code', 'ilike', product_code.group(1))]) or default_product
+            product = self.env['product.product'].search(
+                [('default_code', 'ilike', product_code.group(1))]) or default_product
 
         pattern = '[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?'
         # Match the last occurence of a float in the string
@@ -365,11 +366,12 @@ class HrExpense(models.Model):
                 price = float(price)
             except ValueError:
                 price = 1.0
-
         custom_values.update({
             'name': expense_description.strip(),
             'employee_id': employee.id,
             'product_id': product.id,
+            'account_id': product.property_account_expense_id.id,
+            'tax_ids': [(4, product.supplier_taxes_id.id)],
             'product_uom_id': product.uom_id.id,
             'quantity': 1,
             'unit_amount': price,
