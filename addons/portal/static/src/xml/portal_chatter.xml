@@ -35,16 +35,53 @@
                                 <input type='hidden' name="token" t-att-value="widget.options['token']" t-if="widget.options['token']"/>
                                 <input type='hidden' name="sha_in" t-att-value="widget.options['sha_in']" t-if="widget.options['sha_in']"/>
                                 <input type='hidden' name="sha_time" t-att-value="widget.options['sha_time']" t-if="widget.options['sha_time']"/>
+                                <input type='hidden' name="attachments" id="attachments"/>
                                 <div class="alert alert-danger mt8 mb0 o_portal_chatter_composer_error" style="display:none;">
                                     Oops! Something went wrong. Try to reload the page and log in.
                                 </div>
-                                <button t-attf-class="o_portal_chatter_composer_btn btn btn-primary mt8 o_website_message_post_helper" type="submit">Send</button>
+                                <div class="btn-group mt8">
+                                    <button t-attf-class="btn btn-sm btn-primary o_portal_chatter_composer_btn  o_website_message_post_helper" type="submit" style="float: left;">Send</button>
+                                    <button class="btn btn-sm btn-default btn-icon fa fa-paperclip filepicker o_composer_button_add_attachment" type="button"/>
+                                </div>
+                                <div class="o_composer_attachments_list"/>
                             </div>
                         </form>
+                        <span class="hide">
+                            <t t-call="HiddenInputFile">
+                                <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+                                <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
+                                <t t-set="multi_upload" t-value="true"/>
+                                <input type="hidden" name="model" value="mail.compose.message"/>
+                                <input type="hidden" name="id" value="0"/>
+                            </t>
+                        </span>
                     </div>
                 </div>
             </t>
             <hr/>
+        </div>
+    </t>
+
+    <t t-name="HiddenInputFile">
+        <div t-attf-class="o_hidden_input_file #{fileupload_class or ''}" t-att-style="fileupload_style">
+            <form class="o_form_binary_form" t-att-target="fileupload_id"
+                  method="post" enctype="multipart/form-data" t-att-action="fileupload_action || '/web/binary/upload'">
+                <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
+                <input type="hidden" name="callback" t-att-value="fileupload_id"/>
+                <input type="file" class="o_input_file" name="ufile"/>
+                <t t-raw="0"/>
+            </form>
+            <iframe t-att-id="fileupload_id" t-att-name="fileupload_id" style="display: none"/>
+        </div>
+    </t>
+
+    <t t-name="portal.Chatter.Attachments">
+        <div t-if="attachments.length > 0" class="o_attachments">
+            <t t-foreach="attachments" t-as='attachment'>
+                <t t-call="mail.Attachment">
+                     <t t-set="editable" t-value="true"/>
+                </t>
+            </t>
         </div>
     </t>
 

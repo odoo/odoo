@@ -32,12 +32,19 @@
                 <link rel="stylesheet" href="/mail/static/src/less/client_action.less" type="text/less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/chat_window.less" type="text/less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/extended_chat_window.less" type="text/less"/>
+                <link rel="stylesheet" href="/mail/static/src/less/composer_attachment.less" type="text/less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/composer.less" type="text/less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/chatter.less" type="text/less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/followers.less" type="text/less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/thread.less" type="text/less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/systray.less" type="text/less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/mail_activity.less"/>
+            </xpath>
+        </template>
+
+        <template id="assets_common" name="main_composer_attachment" inherit_id="web.assets_common">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/mail/static/src/js/attachment_mixin.js"></script>
             </xpath>
         </template>
 

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from werkzeug.exceptions import NotFound, Forbidden
+from ast import literal_eval
 
 from odoo import http
 from odoo.http import request
@@ -13,7 +14,7 @@ def _has_token_access(res_model, res_id, token=''):
     token_field = request.env[res_model]._mail_post_token_field
     return (token and record and consteq(record[token_field], token))
 
-def _message_post_helper(res_model='', res_id=None, message='', token='', nosubscribe=True, **kw):
+def _message_post_helper(res_model='', res_id=None, message='', attachments=None, token='', nosubscribe=True, **kw):
     """ Generic chatter function, allowing to write on *any* object that inherits mail.thread.
         If a token is specified, all logged in users will be able to write a message regardless
         of access rights; if the user is the public user, the message will be posted under the name
@@ -45,8 +46,13 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', nosubs
             raise Forbidden()
     kw.pop('csrf_token', None)
     kw.pop('attachment_ids', None)
+    if attachments:
+        attachments = literal_eval(attachments)
+        if isinstance(attachments, int):
+            attachments = [attachments]
     return record.with_context(mail_create_nosubscribe=nosubscribe).message_post(body=message,
                                                                                    message_type=kw.pop('message_type', "comment"),
+                                                                                   attachment_ids=attachments,
                                                                                    subtype=kw.pop('subtype', "mt_comment"),
                                                                                    author_id=author_id,
                                                                                    **kw)
@@ -55,10 +61,10 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', nosubs
 class PortalChatter(http.Controller):
 
     @http.route(['/mail/chatter_post'], type='http', methods=['POST'], auth='public', website=True)
-    def portal_chatter_post(self, res_model, res_id, message, **kw):
+    def portal_chatter_post(self, res_model, res_id, message, attachments, **kw):
         url = request.httprequest.referrer
-        if message:
-            _message_post_helper(res_model, int(res_id), message, **kw)
+        if message or attachments:
+            _message_post_helper(res_model, int(res_id), message, attachments, **kw)
             url = url + "#discussion"
         return request.redirect(url)
 

@@ -250,6 +250,16 @@
         <p t-if="invoice.fiscal_position_id.note">
             <span t-field="invoice.fiscal_position_id.note"/>
         </p>
+        <div class="row mt32">
+            <div class="col-md-12">
+                <h4><strong>Message and communication history</strong></h4>
+            </div>
+            <div class="col-md-10 col-md-offset-1 mt16">
+                <t t-call="portal.message_thread">
+                    <t t-set="object" t-value="invoice"/>
+                </t>
+            </div>
+        </div>
     </template>
 
     <template id="portal_invoice_error" name="Invoice error/warning display">
