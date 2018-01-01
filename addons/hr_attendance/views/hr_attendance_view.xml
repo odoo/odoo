@@ -88,7 +88,7 @@
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
             <pivot string="Attendance">
-                <field name="employee_id" type="row"/>
+                <field name="employee_id" type="row" groups="hr_attendance.group_hr_attendance_user" />
                 <field name="check_in" type="col"/>
                 <field name="worked_hours" type="measure"/>
             </pivot>

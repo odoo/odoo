@@ -6,10 +6,13 @@
             <field name="priority">20</field>
             <field name="arch" type="xml">
                 <pivot string="Leaves Summary">
-                    <field name="employee_id" type="row"/>
                     <field name="type" type="row"/>
+                    <field name="employee_id" type="row" groups="hr_holidays.group_hr_holidays_user"/>
                     <field name="date_from" type="col"/>
                     <field name="number_of_days" type="measure"/>
+                    <field name="payslip_status" groups="hr_holidays.group_hr_holidays_manager"/>
+                    <field name="holiday_type" groups="hr_holidays.group_hr_holidays_user"/>
+                    <field name="department_id" groups="hr_holidays.group_hr_holidays_user"/>
                 </pivot>
             </field>
         </record>

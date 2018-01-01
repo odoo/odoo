@@ -1206,9 +1206,23 @@
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
                 <pivot string="Journal Items">
-                    <field name="journal_id" type="row"/>
-                    <field name="date" type="col"/>
+                    <field name="journal_id" type="row" groups="account.group_account_manager" />
+                    <field name="date" type="col" groups="account.group_account_manager"/>
                     <field name="balance" type="measure"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="date_maturity" groups="account.group_account_manager"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="move_id" groups="account.group_account_manager" />
+                    <field name="account_id" groups="account.group_account_manager"/>
+                    <field name="company_currency_id" groups="base.group_multi_currency"/>
+                    <field name="debit" groups="account.group_account_manager"/>
+                    <field name="credit" groups="account.group_account_manager"/>
+                    <field name="product_uom_id" groups="product.group_uom"/>
+                    <field name="name" groups="account.group_account_manager"/>
+                    <field name="ref" groups="account.group_account_manager"/>
+                    <field name="partner_id" groups="account.group_account_manager"/>
+                    <field name="full_reconcile_id" groups="account.group_account_manager"/>
                 </pivot>
             </field>
         </record>

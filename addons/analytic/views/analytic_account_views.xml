@@ -277,7 +277,7 @@
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
                 <pivot string="Analytic Entries" >
-                    <field name="account_id" type="row"/>
+                    <field name="account_id" type="row" groups="analytic.group_analytic_accounting"/>
                     <field name="unit_amount" type="measure"/>
                     <field name="amount" type="measure"/>
                 </pivot>

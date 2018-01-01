@@ -9,6 +9,15 @@
                  <field name="team_id" type="col"/>
                  <field name="confirmation_date" interval="month" type="row"/>
                  <field name="price_subtotal" type="measure"/>
+                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                 <field name="company_id" groups="base.group_multi_company"/>
+                 <field name="pricelist_id" groups="product.group_sale_pricelist"/>
+                 <field name="product_uom" groups="product.group_uom"/>
+                 <field name="product_uom_qty" groups="product.group_uom"/>
+                 <field name="product_tmpl_id" groups="base.group_no_one"/>
+                 <field name="qty_delivered" groups="base.group_no_one"/>
+                 <field name="volume" groups="base.group_no_one"/>
+                 <field name="weight" groups="base.group_no_one"/>
              </pivot>
          </field>
     </record>

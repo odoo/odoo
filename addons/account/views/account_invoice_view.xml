@@ -21,6 +21,8 @@
                 <pivot string="Invoices" display_quantity="true">
                     <field name="partner_id"/>
                     <field name="amount_total_signed" type="measure"/>
+                    <field name="residual_company_signed" groups="base.group_no_one"/>
+                    <field name="amount_total_company_signed" groups="base.group_no_one"/>
                 </pivot>
             </field>
         </record>

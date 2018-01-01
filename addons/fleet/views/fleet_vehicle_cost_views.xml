@@ -44,10 +44,13 @@
             <field name="model">fleet.vehicle.cost</field>
             <field name="arch" type="xml">
                 <pivot string="Vehicles costs">
-                    <field name="vehicle_id" type="row"/>
+                    <field name="vehicle_id" type="row" groups="fleet.fleet_group_manager"/>
                     <field name="cost_type" type="row"/>
-                    <field name="date" interval="year" type="col"/>
-                    <field name="amount" type="measure"/>
+                    <field name="date" interval="year" type="col" groups="fleet.fleet_group_manager"/>
+                    <field name="amount" type="measure" groups="fleet.fleet_group_manager"/>
+                    <field name="cost_subtype_id" groups="fleet.fleet_group_manager"/>
+                    <field name="description" groups="fleet.fleet_group_manager"/>
+                    <field name="parent_id" groups="base.group_no_one"/>
                 </pivot>
             </field>
         </record>

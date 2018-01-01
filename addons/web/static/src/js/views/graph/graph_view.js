@@ -42,17 +42,6 @@ var GraphView = AbstractView.extend({
         var measure;
         var groupBys = [];
         viewInfo.fields = _.defaults({__count__: {string: _t("Count"), type: "integer"}}, viewInfo.fields);
-        viewInfo.arch.children.forEach(function (field) {
-            var name = field.attrs.name;
-            if (field.attrs.interval) {
-                name += ':' + field.attrs.interval;
-            }
-            if (field.attrs.type === 'measure') {
-                measure = name;
-            } else {
-                groupBys.push(name);
-            }
-        });
 
         var measures = {__count__: {string: _t("Count"), type: "integer"}};
         _.each(viewInfo.fields, function (field, name) {
@@ -60,6 +49,24 @@ var GraphView = AbstractView.extend({
                 if (field.type === 'integer' || field.type === 'float' || field.type === 'monetary') {
                     measures[name] = field;
                 }
+            }
+        });
+
+        viewInfo.arch.children.forEach(function (field) {
+            var name = field.attrs.name;
+            if (field.attrs.interval) {
+                name += ':' + field.attrs.interval;
+            }
+
+            if (field.attrs.disabled || field.attrs.invisible) {
+                delete measures[name];
+                return;
+            }
+
+            if (field.attrs.type === 'measure') {
+                measure = name;
+            } else {
+                groupBys.push(name);
             }
         });
 

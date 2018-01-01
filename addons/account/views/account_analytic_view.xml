@@ -56,7 +56,7 @@
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="analytic.view_account_analytic_line_pivot"/>
             <field name="arch" type="xml">
-                <field name="account_id" position="after">
+                <field name="account_id" position="after" groups="account.group_account_manager">
                     <field name="partner_id" type="row"/>
                 </field>
             </field>

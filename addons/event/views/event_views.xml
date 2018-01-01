@@ -395,6 +395,18 @@
                 <pivot string="Event" disable_linking="True">
                     <field name="name" type="row"/>
                     <field name="seats_reserved" type="measure"/>
+                    <field name="organizer_id" groups="event.group_event_manager"/>
+                    <field name="address_id" groups="event.group_event_manager"/>
+                    <field name="date_end" groups="base.group_no_one"/>
+                    <field name="twitter_hashtag" groups="event.group_event_manager"/>
+                    <field name="write_uid" groups="base.group_no_one"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="date_tz" groups="event.group_event_manager"/>
+                    <field name="date_begin" groups="base.group_no_one"/>
+                    <field name="seats_availability" groups="event.group_event_manager"/>
+                    <field name="website_published" groups="event.group_event_manager"/>
+                    <field name="auto_confirm" groups="base.group_no_one"/>
+                    <field name="seats_unconfirmed" groups="event.group_event_manager"/>
                 </pivot>
             </field>
         </record>
@@ -507,6 +519,9 @@
             <field name="arch" type="xml">
                 <pivot string="Registration" display_quantity="True">
                     <field name="event_id" type="row"/>
+                    <field name="date_closed" groups="base.group_no_one"/>
+                    <field name="date_open" groups="base.group_no_one"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </pivot>
             </field>
         </record>

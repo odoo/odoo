@@ -122,8 +122,22 @@
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
                 <pivot string="Purchase Order" display_quantity="True">
-                    <field name="partner_id" type="row"/>
+                    <field name="partner_id" type="row" groups="purchase.group_purchase_user"/>
                     <field name="amount_total" type="measure"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="date_approve" groups="base.group_no_one"/>
+                    <field name="date_order" groups="purchase.group_purchase_user"/>
+                    <field name="fiscal_position_id" groups="purchase.group_project_user"/>
+                    <field name="incoterm_id" groups="purchase.group_project_user"/>
+                    <field name="payment_term_id" groups="purchase.group_project_user"/>
+                    <field name="invoice_status" groups="purchase.group_project_user"/>
+                    <field name="partner_ref" groups="purchase.group_project_user"/>
+                    <field name="name" groups="purchase.group_project_user"/>
+                    <field name="date_planned" groups="purchase.group_project_user"/>
+                    <field name="amount_untaxed" groups="purchase.group_project_user"/>
+                    <field name="amount_tax" groups="purchase.group_project_user"/>
+                    <field name="amount_total" groups="purchase.group_project_user"/>
                 </pivot>
             </field>
         </record>

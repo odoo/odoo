@@ -645,8 +645,13 @@
             <field name="model">project.task</field>
             <field name="arch" type="xml">
                 <pivot string="Project Tasks">
-                    <field name="project_id" type="row"/>
-                    <field name="stage_id" type="col"/>
+                    <field name="project_id" type="row" groups="project.group_project_user"/>
+                    <field name="stage_id" type="col" groups="project.group_project_user"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="user_id" groups="project.group_project_user"/>
+                    <field name="name" groups="project.group_project_user"/>
+                    <field name="planned_hours" groups="project.group_project_user"/>
+                    <field name="remaining_hours" groups="project.group_project_user"/>
                 </pivot>
             </field>
         </record>
