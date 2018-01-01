@@ -879,6 +879,15 @@ class IrModelFields(models.Model):
                 if field:
                     model._add_field(name, field)
 
+    @api.multi
+    def recompute_custom_field(self):
+        # prevent unallowed RPC acces
+        self.check_access_rights('write')
+        for field in self.filtered(lambda x: x.state == 'manual' and x.store and x.compute):
+            records = self.env[field.model].with_context(active_test=False).search([])
+            records._recompute_todo(field)
+            records.recompute()
+
 
 class IrModelConstraint(models.Model):
     """

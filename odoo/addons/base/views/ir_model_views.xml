@@ -298,6 +298,9 @@
                                     <field name="depends" attrs="{'required': [('compute', '!=', False)] }"/>
                                     <field name="compute" widget="ace" options="{'mode': 'python'}"/>
                                 </group>
+                                <group groups="base.group_no_one">
+                                    <button type="object" string="RE-COMPUTE ALL RECORDS" name="recompute_custom_field" attrs="{'invisible':['|','|',('state','=','auto'),('store','=',False),('compute','=', False)]}" help="Use to recompute all records after update the python code."/>
+                                </group>
                                 <div groups="base.group_no_one">
                                     <h3>How to define a computed field</h3>
                                     <p>Computed fields are defined with the fields
