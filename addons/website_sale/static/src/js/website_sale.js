@@ -298,6 +298,13 @@ odoo.define('website_sale.website_sale', function (require) {
             }
         }
 
+        $.when(base.ready()).then(function() {
+            var $editable_price = $(oe_website_sale).find('.product_price .css_non_editable_mode_hidden');
+            $editable_price.on('click', '.oe_currency_value', function(ev) {
+                $(ev.target).selectContent();
+            });
+        });
+
         $(oe_website_sale).on('change', 'input.js_product_change', function () {
             var self = this;
             var $parent = $(this).closest('.js_product');
