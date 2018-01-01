@@ -1802,6 +1802,13 @@ class Selection(Field):
             selection = selection(env[self.model_name])
         return [value for value, _ in selection]
 
+    def convert_to_column(self, value, record, values=None):
+        #Call convert_to_cache to check the validity of value.
+        if value:
+            self.convert_to_cache(value, record)
+
+        return super(Selection, self).convert_to_column(value, record)
+
     def convert_to_cache(self, value, record, validate=True):
         if not validate:
             return value or False
