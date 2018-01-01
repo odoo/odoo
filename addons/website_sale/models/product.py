@@ -144,9 +144,9 @@ class ProductTemplate(models.Model):
             template.website_price_difference = product.website_price_difference
 
     def _default_website_sequence(self):
-        self._cr.execute("SELECT MIN(website_sequence) FROM %s" % self._table)
+        self._cr.execute("SELECT MAX(website_sequence) FROM %s" % self._table)
         min_sequence = self._cr.fetchone()[0]
-        return min_sequence and min_sequence - 1 or 10
+        return min_sequence and min_sequence + 1 or 0
 
     def set_sequence_top(self):
         self.website_sequence = self.sudo().search([], order='website_sequence desc', limit=1).website_sequence + 1
@@ -169,6 +169,18 @@ class ProductTemplate(models.Model):
             next_prodcut_tmpl.website_sequence, self.website_sequence = self.website_sequence, next_prodcut_tmpl.website_sequence
         else:
             return self.set_sequence_bottom()
+
+    def _drag_drop_product(self, sequence, dragged_product_sequence, target_product_id, direction=''):
+        self.ensure_one()
+        if sequence != dragged_product_sequence:
+            domain = [('id', 'not in', [self.id]), ('website_published', '=', self.website_published)]
+            domain += [('website_sequence', '<=', sequence), ('website_sequence', '>=', dragged_product_sequence)] if direction == 'up' else [('website_sequence', '>=', sequence), ('website_sequence', '<=', dragged_product_sequence)]
+            next_product_tmpl = self.search(domain, order='website_sequence desc')
+        else:
+            next_product_tmpl = self.search([('website_sequence', '=', sequence), ('id', 'not in', [self.id, target_product_id]), ('website_published', '=', self.website_published)], order='website_sequence desc')
+        self.website_sequence = sequence
+        for x in next_product_tmpl:
+            x.website_sequence = x.website_sequence - 1 if direction == 'up' else x.website_sequence + 1
 
     @api.multi
     def _compute_website_url(self):
