@@ -78,12 +78,13 @@
         </xpath>
         <xpath expr="//div[@name='invoice_address']" position="before">
             <div class="col-xs-5 col-xs-offset-7" groups="sale.group_delivery_invoice_address">
-                <strong t-if="o.partner_shipping_id == o.partner_id">Invoicing and shipping address:</strong>
-                <strong t-if="o.partner_shipping_id != o.partner_id">Invoicing address:</strong>
+                <t t-set="show_shipping_address" t-value="o.partner_shipping_id and o.partner_shipping_id != o.partner_id"/>
+                <strong t-if="not show_shipping_address">Invoicing and shipping address:</strong>
+                <strong t-if="show_shipping_address">Invoicing address:</strong>
                 <div t-field="o.partner_id"
                     t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                 <span t-if="o.partner_id.vat">TIN: <span t-field="o.partner_id.vat"/></span>
-                <div t-if="o.partner_shipping_id != o.partner_id" class="mt8">
+                <div t-if="show_shipping_address" class="mt8">
                     <strong>Shipping address:</strong>
                     <div t-field="o.partner_shipping_id"
                         t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
