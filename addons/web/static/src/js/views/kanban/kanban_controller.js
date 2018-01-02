@@ -297,52 +297,51 @@ var KanbanController = BasicController.extend({
     /**
      * @private
      * @param {OdooEvent} event
+     * @param {KanbanColumn} event.target the column in which the record should
+     *   be added
+     * @param {Object} event.data.values the field values of the record to
+     *   create; if values only contains the value of the 'display_name', a
+     *   'name_create' is performed instead of 'create'
      */
     _onQuickCreateRecord: function (event) {
         var self = this;
+        var values = event.data.values;
         var column = event.target;
-        var name = event.data.value;
-        var state = this.model.get(this.handle, {raw: true});
-        var columnState = this.model.get(column.db_id, {raw: true});
-        var context = columnState.getContext();
-        context['default_' + state.groupedBy[0]] = columnState.res_id;
 
-        this._rpc({
-                model: state.model,
-                method: 'name_create',
-                args: [name],
-                context: context,
-            })
-            .then(add_record)
+        // function that updates the kanban view once the record has been added
+        // it receives the local id of the created record in arguments
+        var update = function (db_id) {
+            self._updateEnv();
+
+            var columnState = self.model.getColumn(db_id);
+            return self.renderer
+                .updateColumn(columnState.id, columnState, {openQuickCreate: true})
+                .then(function () {
+                    if (event.data.openRecord) {
+                        self.trigger_up('open_record', {id: db_id, mode: 'edit'});
+                    }
+                });
+        };
+
+        this.model.createRecordInGroup(column.db_id, values)
+            .then(update)
             .fail(function (error, event) {
                 event.preventDefault();
+                var columnState = self.model.get(column.db_id, {raw: true});
+                var context = columnState.getContext();
+                var state = self.model.get(self.handle, {raw: true});
+                context['default_' + state.groupedBy[0]] = columnState.res_id;
                 new view_dialogs.FormViewDialog(self, {
                     res_model: state.model,
                     context: _.extend({default_name: name}, context),
                     title: _t("Create"),
                     disable_multiple_selection: true,
                     on_saved: function (record) {
-                        add_record([record.res_id]);
+                        self.model.addRecordToGroup(column.db_id, record.res_id)
+                            .then(update);
                     },
                 }).open();
             });
-
-        function add_record(records) {
-            return self.model
-                .addRecordToGroup(columnState.id, records[0])
-                .then(function (db_id) {
-                    self._updateEnv();
-
-                    var columnState = self.model.getColumn(db_id);
-                    return self.renderer
-                        .updateColumn(columnState.id, columnState, {openQuickCreate: true})
-                        .then(function () {
-                            if (event.data.openRecord) {
-                                self.trigger_up('open_record', {id: db_id, mode: 'edit'});
-                            }
-                        });
-                });
-        }
     },
     /**
      * @private

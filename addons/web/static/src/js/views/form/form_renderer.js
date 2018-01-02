@@ -18,9 +18,18 @@ var FormRenderer = BasicRenderer.extend({
     /**
      * @override
      */
-    init: function (parent, state, params) {
+    init: function () {
         this._super.apply(this, arguments);
         this.idsForLabels = {};
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        if (config.device.size_class <= config.device.SIZES.XXS) {
+            this.$el.addClass('o_xxs_form_view');
+        }
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------

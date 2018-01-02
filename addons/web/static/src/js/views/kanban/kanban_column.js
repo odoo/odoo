@@ -47,6 +47,8 @@ var KanbanColumn = Widget.extend({
         this.modelName = data.model;
 
         this.quick_create = options.quick_create;
+        this.quickCreateView = options.quickCreateView;
+        this.groupedBy = options.groupedBy;
         this.grouped_by_m2o = options.grouped_by_m2o;
         this.editable = options.editable;
         this.deletable = options.deletable;
@@ -156,6 +158,18 @@ var KanbanColumn = Widget.extend({
 
         return $.when.apply($, defs);
     },
+    /**
+     * Called when a record has been quick created, as a new column is rendered
+     * and appended into a fragment, before replacing the old column in the DOM.
+     * When this happens, the quick create widget is inserted into the new
+     * column directly, and it should be focused. However, as it is rendered
+     * into a fragment, the focus has to be set manually once in the DOM.
+     */
+    on_attach_callback: function () {
+        if (this.quickCreateWidget) {
+            this.quickCreateWidget.on_attach_callback();
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -163,6 +177,8 @@ var KanbanColumn = Widget.extend({
 
     /**
      * Adds the quick create record to the top of the column.
+     *
+     * @returns {Deferred}
      */
     addQuickCreate: function () {
         if (this.folded) {
@@ -173,11 +189,25 @@ var KanbanColumn = Widget.extend({
             return;
         }
         if (this.quickCreateWidget) {
-            return;
+            return $.Deferred().reject();
         }
-        var width = this.records.length ? this.records[0].$el.innerWidth() : this.$el.width() - 8;
-        this.quickCreateWidget = new RecordQuickCreate(this, width);
-        this.quickCreateWidget.insertAfter(this.$header);
+        this.trigger_up('close_quick_create'); // close other quick create widgets
+        var context = this.data.getContext();
+        context['default_' + this.groupedBy] = this.id;
+        this.quickCreateWidget = new RecordQuickCreate(this, {
+            context: context,
+            formViewRef: this.quickCreateView,
+            model: this.modelName,
+        });
+        return this.quickCreateWidget.insertAfter(this.$header);
+    },
+    /**
+     * Closes the quick create widget if it isn't dirty.
+     */
+    cancelQuickCreate: function () {
+        if (this.quickCreateWidget) {
+            this.quickCreateWidget.cancel();
+        }
     },
     /**
      * @returns {Boolean} true iff the column is empty
