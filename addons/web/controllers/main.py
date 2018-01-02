@@ -581,7 +581,7 @@ class WebClient(http.Controller):
     def version_info(self):
         return odoo.service.common.exp_version()
 
-    @http.route('/web/tests', type='http', auth="none")
+    @http.route('/web/tests', type='http', auth="user")
     def index(self, mod=None, **kwargs):
         return request.render('web.qunit_suite')
 
