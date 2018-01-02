@@ -16,7 +16,7 @@ except ImportError:
                     "Install it to support more countries, for example with `easy_install vatnumber`.")
     vatnumber = None
 
-from odoo import api, models, _
+from odoo import api, models, fields, _
 from odoo.tools.misc import ustr
 from odoo.exceptions import ValidationError
 
@@ -65,8 +65,40 @@ _ref_vat = {
 
 VIES_WSDL_URL = 'http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl'
 
+#TODO OCO DEBUG
+import logging
+_logger = logging.getLogger(__name__)
+
 class ResPartner(models.Model):
     _inherit = 'res.partner'
+
+    base_vat_vies_status = fields.Selection(string="Passed VIES", selection=[('passed', 'Correct VAT Number'), ('failed', 'Incorrect VAT Number'), ('exception', 'Could not Verify VAT'), ('unchecked', 'No Verification Intended')], compute='_compute_base_vat_vies_status', store=True) #TODO OCO DOC
+
+    @api.depends('vat', 'company_id.vat_check_vies')
+    def _compute_base_vat_vies_status(self):
+        eu_country_codes = self.env.ref('base.europe').country_ids.mapped('code')
+        for record in self:
+            if not record.company_id.vat_check_vies or not record.vat: #TODO OCO donc attention: il ne faut pas afficher les couleurs pour le champ TVA si le check n'est pas activé sur la company
+                record.base_vat_vies_status = 'unchecked'
+                return
+
+            country_code, vat_number = record._split_vat(record.vat) # TODO OCO un peu merdique
+            try:
+                rslt = False
+                if country_code.upper() in eu_country_codes and vat_number:
+                    rslt = bool(record.vies_vat_check(country_code, vat_number, except_to_simple_check=False))
+
+                if not rslt and record.company_id.country_id:
+                    # If the first verification failed, perhaps the VAT number
+                    # did not give any country prefix, as it was the same as the
+                    # company's, so we retry with it
+                    rslt = bool(record.vies_vat_check(record.company_id.country_id.code.lower(), record.vat, except_to_simple_check=False))
+
+                record.base_vat_vies_status = rslt and 'passed' or 'failed'
+
+            except Exception as e:
+                # Happens when the service was not available
+                record.base_vat_vies_status = 'exception'
 
     def _split_vat(self, vat):
         vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')
@@ -129,30 +161,31 @@ class ResPartner(models.Model):
 
     @api.constrains('vat')
     def check_vat(self):
+        #TODO OCO DOC seulement vérification syntaxique
+        #TODO OCO en fait, il faut surtout voir si on ne veut plus du tout de message d'erreur, même en cas d'erreur syntaxique dans la vérification simple => couleurs aussi, ou pas ?
+        #TODO OCO : pour VIES: on peut dire: True, vert ; False, rouge; Exception: orange
+        #TODO OCO: un petit bouton "retry" si c'est en orange, ça vaudrait quand même le coup, non ? :/ > un truc qui rappelle le compute d'un champ storé alors ... moui ? Ca rafraîchira la page, non ? (à voir :/)
+        #TODO OCO: ben si en fait: un bouton dans la ligne au-dessus de la form view, genre "RECHECK VAT", pourquoi pas. Uniquement visible en orange.
         if self.env.context.get('company_id'):
             company = self.env['res.company'].browse(self.env.context['company_id'])
         else:
             company = self.env.user.company_id
-        if company.vat_check_vies:
-            # force full VIES online check
-            check_func = self.vies_vat_check
-        else:
-            # quick and partial off-line checksum validation
-            check_func = self.simple_vat_check
+
+        # quick and partial off-line checksum validation #TODO OCO je considère qu'il faut la garder, mais il faut se faire confirmer ça plus tard (quand tu auras fait le reste)
         for partner in self:
             if not partner.vat:
                 continue
             #check with country code as prefix of the TIN
             vat_country, vat_number = self._split_vat(partner.vat)
-            if not check_func(vat_country, vat_number):
+            if not self.simple_vat_check(vat_country, vat_number):
                 #if fails, check with country code from country
-                country_code = partner.commercial_partner_id.country_id.code
+                country_code = partner.commercial_partner_country_id.code
                 if country_code:
-                    if not check_func(country_code.lower(), partner.vat):
+                    if not self.simple_vat_check(country_code.lower(), partner.vat):
                         msg = partner._construct_constraint_msg(country_code.lower())
                         raise ValidationError(msg)
 
-    def _construct_constraint_msg(self, country_code):
+    def _construct_constraint_msg(self, country_code): #TODO OCO retravailler les messages d'erreur
         self.ensure_one()
         vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
         vat_no = _ref_vat.get(country_code) or vat_no
