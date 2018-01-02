@@ -20,6 +20,10 @@ from odoo import api, models, fields, _
 from odoo.tools.misc import ustr
 from odoo.exceptions import ValidationError
 
+
+
+import random #TODO OCO TEST
+
 _eu_country_vat = {
     'GR': 'EL'
 }
@@ -72,14 +76,20 @@ _logger = logging.getLogger(__name__)
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    base_vat_vies_status = fields.Selection(string="Passed VIES", selection=[('passed', 'Correct VAT Number'), ('failed', 'Incorrect VAT Number'), ('exception', 'Could not Verify VAT'), ('unchecked', 'No Verification Intended')], compute='_compute_base_vat_vies_status', store=True) #TODO OCO DOC
+    base_vat_vies_status = fields.Selection(string="Passed VIES", selection=[('passed', 'Correct VAT Number'), ('failed', 'Incorrect VAT Number'), ('exception', 'Could not Verify VAT'), ('unchecked', 'No Verification Intended')], compute='compute_base_vat_vies_status', store=True) #TODO OCO DOC
 
     @api.depends('vat', 'company_id.vat_check_vies')
-    def _compute_base_vat_vies_status(self):
+    def compute_base_vat_vies_status(self):
+        # This function is not private, so that it can be called by the 'Recheck VIES' button
         eu_country_codes = self.env.ref('base.europe').country_ids.mapped('code')
         for record in self:
             if not record.company_id.vat_check_vies or not record.vat: #TODO OCO donc attention: il ne faut pas afficher les couleurs pour le champ TVA si le check n'est pas activé sur la company
                 record.base_vat_vies_status = 'unchecked'
+                return
+
+
+            if random.choice([True, False, True,True,True,True,True,True]): #TODO OCO TEST
+                record.base_vat_vies_status = 'exception'
                 return
 
             country_code, vat_number = record._split_vat(record.vat) # TODO OCO un peu merdique

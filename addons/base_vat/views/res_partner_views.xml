@@ -17,6 +17,10 @@
                     <field name="vat" string="VAT" style="color:Orange;" attrs="{'invisible': [('base_vat_vies_status', '!=', 'exception')]}"/>
                     <field name="vat" string="VAT" attrs="{'invisible': [('base_vat_vies_status', '!=', 'unchecked')]}"/>
                 </xpath>
+
+                <xpath expr="//header" position="inside">
+                    <button id="base_vat_recheck_vies" string="Recheck VIES" type="object" name="compute_base_vat_vies_status" attrs="{'invisible': [('base_vat_vies_status', '!=', 'exception')]}"/>
+                </xpath>
             </field>
         </record>
 
