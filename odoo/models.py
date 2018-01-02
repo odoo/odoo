@@ -4901,11 +4901,17 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             updates = defaultdict(set)
             for rec in recs:
                 try:
-                    vals = {n: rec[n] for n in ns}
+                    vals = {key: rec[key] for key in ns}
+                except KeyError:
+                    continue
                 except MissingError:
                     continue
-                vals = rec._convert_to_write(vals)
-                updates[frozendict(vals)].add(rec.id)
+
+                try:
+                    vals = rec._convert_to_write(vals)
+                    updates[frozendict(vals)].add(rec.id)
+                except MissingError:
+                    continue
             # update records in batch when possible
             with recs.env.norecompute():
                 for vals, ids in updates.items():
