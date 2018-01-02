@@ -385,6 +385,10 @@ var ActionManager = Widget.extend({
         return this.inner_widget;
     },
     history_back: function() {
+        if (this.dialog) {
+            this.dialog_stop();
+            return;
+        }
         var nb_views = this.inner_action.get_nb_views();
         if (nb_views > 1) {
             // Stay on this action, but select the previous view
@@ -861,7 +865,7 @@ var ActionManager = Widget.extend({
             });
         });
     },
-    ir_actions_act_url: function (action) {
+    ir_actions_act_url: function (action, options) {
         var url = action.url;
         if (session.debug && url && url.length && url[0] === '/') {
             url = $.param.querystring(url, {debug: session.debug});
@@ -872,6 +876,7 @@ var ActionManager = Widget.extend({
             return $.Deferred(); // The action is finished only when the redirection is done
         } else {
             window.open(url, '_blank');
+            options.on_close();
         }
         return $.when();
     },
