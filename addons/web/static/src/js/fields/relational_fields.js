@@ -783,12 +783,9 @@ var FieldX2Many = AbstractField.extend({
             return this._super();
         }
         if (this.renderer) {
-            this.renderer.updateState(this.value, {});
             this.currentColInvisibleFields = this._evalColumnInvisibleFields();
-            this.pager.updateState({
-                size: this.value.count,
-                columnInvisibleFields: this.currentColInvisibleFields,
-            });
+            this.renderer.updateState(this.value, {'columnInvisibleFields': this.currentColInvisibleFields});
+            this.pager.updateState({ size: this.value.count });
             return $.when();
         }
         var arch = this.view.arch;
