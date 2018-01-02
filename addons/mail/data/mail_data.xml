@@ -13,6 +13,19 @@
             <field eval="False" name="doall"/>
         </record>
 
+        <record id="ir_cron_mail_activity_notifiy" model="ir.cron">
+            <field name="name">Mail: Notify Activities</field>
+            <field name="model_id" ref="model_mail_activity_mixin"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_send_reminder_emails()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="nextcall" eval="DateTime.now().replace(minute=29, second=34, microsecond=7).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="doall" eval="False"/>
+        </record>
+
         <record id="ir_cron_module_update_notification" model="ir.cron">
             <field name="name">Publisher: Update Notification</field>
             <field name="model_id" ref="model_publisher_warranty_contract"/>

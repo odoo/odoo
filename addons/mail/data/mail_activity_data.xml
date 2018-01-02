@@ -4,19 +4,23 @@
         <record id="mail_activity_data_email" model="mail.activity.type">
             <field name="name">Email</field>
             <field name="icon">fa-envelope</field>
+            <field name="reminder_html" type="xml"><p>Dear {name} you have {count} mails to send today.</p><p class="cta">Prout</p></field>
         </record>
         <record id="mail_activity_data_call" model="mail.activity.type">
             <field name="name">Call</field>
             <field name="icon">fa-phone</field>
+            <field name="reminder_html" type="xml"><p>Dear {name} you have {count} calls planned today.</p><p class="cta">Prout</p></field>
             <field name="days">2</field>
         </record>
         <record id="mail_activity_data_meeting" model="mail.activity.type">
             <field name="name">Meeting</field>
             <field name="icon">fa-users</field>
+            <field name="reminder_html" type="xml"><p>Dear {name} you have {count} meetings planned today.</p><p class="cta">Prout</p></field>
         </record>
         <record id="mail_activity_data_todo" model="mail.activity.type">
             <field name="name">Todo</field>
             <field name="icon">fa-tasks</field>
+            <field name="reminder_html" type="xml"><p>Dear {name} you have {count} activities planned today.</p><p class="cta">Prout</p></field>
             <field name="days">5</field>
         </record>
     </data>

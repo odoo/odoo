@@ -47,6 +47,7 @@ class MailActivityType(models.Model):
         ('default', 'Other')], default='default',
         string='Category',
         help='Categories may trigger specific behavior like opening calendar view')
+    reminder_html = fields.Html('Reminder Text', help='Rendered using QWeb')
 
 
 class MailActivity(models.Model):
@@ -88,6 +89,7 @@ class MailActivity(models.Model):
     note = fields.Html('Note')
     feedback = fields.Html('Feedback')
     date_deadline = fields.Date('Due Date', index=True, required=True, default=fields.Date.today)
+    is_notified = fields.Boolean('Notified', help='Indicates whether a notification has been sent, either Inbox either email')
     # description
     user_id = fields.Many2one(
         'res.users', 'Assigned to',
@@ -271,6 +273,51 @@ class MailActivity(models.Model):
     def action_close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
 
+    @api.multi
+    def _action_notify(self):
+        import lxml
+
+        # classify activities to notify by type and main model
+        activities_sudo = self.sudo()
+
+        MailThread = self.env['mail.thread'].with_context(mail_notify_author=True)
+        IrQweb = self.env['ir.qweb'].sudo()
+
+        classified = dict()
+
+        for activity in activities_sudo:
+            act_type = activity.activity_type_id
+            if not classified.get(act_type):
+                classified[act_type] = dict()
+
+            user = activity.user_id
+            if not classified[act_type].get(user):
+                classified[act_type][user] = dict()
+
+            model = activity.res_model
+            if not classified[act_type][user].get(model):
+                classified[act_type][user][model] = list()
+
+            classified[act_type][user][model].append(activity)
+
+        for act_type, user_data in classified.items():
+            template = act_type.reminder_html
+            tree = lxml.html.fromstring(u'<t>%s</t>' % template)
+            for user, model_data in user_data.items():
+                variables = {'user': user}
+                for activities in model_data:
+                    variables['activity_count'] = len(activities)
+
+                    rendered = IrQweb.render(tree, variables)
+
+                    MailThread.message_notify(
+                        body=rendered,
+                        subject=_('Reminder for planned %s') % (act_type.display_name),
+                        partner_ids=[activity.user_id.partner_id.id],
+                    )
+
+        self.write({'is_notified': True})
+
 
 class MailActivityMixin(models.AbstractModel):
     """ Mail Activity Mixin is a mixin class to use if you want to add activities
@@ -356,3 +403,10 @@ class MailActivityMixin(models.AbstractModel):
             [('res_model', '=', self._name), ('res_id', 'in', record_ids)]
         ).unlink()
         return result
+
+    def _cron_send_reminder_emails(self):
+        activities = self.env['mail.activity'].sudo().search([
+            ('date_deadline', '<=', date.today() + timedelta(days=1)),
+            # ('is_notified', '=', False),
+        ])
+        activities._action_notify()
