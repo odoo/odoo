@@ -67,11 +67,18 @@ var PlannerDialog = Dialog.extend({
      * Fetch the planner's rendered template
      */
     willStart: function() {
+        var context = session.user_context;
+        // fallback context for frontend
+        if(_.isEmpty(context)) {
+            context = {
+                lang: (document.documentElement.getAttribute('lang')||'').replace('-', '_'),
+            };
+        }
         var def = (new Model('web.planner')).call('render', [
             this.planner.view_id[0],
             this.planner.planner_application
         ], {
-            context: session.user_context
+            context: context
         }).then((function (template) {
             this.$template = $(template);
         }).bind(this));
