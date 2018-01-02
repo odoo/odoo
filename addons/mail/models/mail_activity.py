@@ -280,7 +280,7 @@ class MailActivity(models.Model):
         # classify activities to notify by type and main model
         activities_sudo = self.sudo()
 
-        MailThread = self.env['mail.thread'].with_context(mail_notify_author=True)
+        MailThread = self.env['mail.thread'].with_context(message_notify=False)
         IrQweb = self.env['ir.qweb'].sudo()
 
         classified = dict()

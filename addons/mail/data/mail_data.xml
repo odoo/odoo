@@ -170,6 +170,20 @@
 </p>
 </div></field>
         </record>
+    </data>
 
+    <!-- Qweb-based mail templates -->
+    <data>
+        <template id="mail_bounce_catchall">
+<div>
+    <p>Dear <t t-esc="user.name"/>,</p>
+    <p><t t-raw="reminder"/></p>
+
+       <a href="${ctx['button_access']['url']}" style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">${ctx['button_access']['title']}</a>
+
+    <p>Regards,</p>
+</div>
+<blockquote><t t-esc="message['body']"/></blockquote>
+        </template>
     </data>
 </odoo>

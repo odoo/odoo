@@ -1929,6 +1929,8 @@ class MailThread(models.AbstractModel):
     @api.model
     @api.returns('self', lambda rec: rec.id)
     def message_notify(self, body, subject, partner_ids, **kwargs):
+        email_qweb_template = kwargs.get('email_qweb_template')
+
         if kwargs.get('author_id'):
             author = self.env['res.partner'].sudo().browse(kwargs['author_id'])
             email_from = formataddr((author.name, author.email))
@@ -1952,6 +1954,24 @@ class MailThread(models.AbstractModel):
         }
         message_values.update(kwargs)
         message = self.env['mail.message'].sudo().create(message_values)
+
+        NotificationSudo = self.env['mail.notification'].sudo()
+        for partner in message.partner_ids:
+            if partner.partner_share or (partner.user_id and partner.user_id.notification_type == 'email'):
+                NotificationSudo.create({
+                    'mail_message_id': message.id,
+                    'res_partner_id': partner.id,
+                    'is_email': True,
+                    'is_read': True,
+                })
+            else:
+                NotificationSudo.create({
+                    'mail_message_id': message.id,
+                    'res_partner_id': partner.id,
+                    'is_email': False,
+                    'is_read': False,
+                })
+
         return message
 
     @api.multi
