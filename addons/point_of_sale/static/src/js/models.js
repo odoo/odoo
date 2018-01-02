@@ -209,7 +209,7 @@ exports.PosModel = Backbone.Model.extend({
     },{
         model:  'account.tax',
         fields: ['name','amount', 'price_include', 'include_base_amount', 'amount_type', 'children_tax_ids'],
-        domain: null,
+        domain: function(self) {return [['company_id', '=', self.company && self.company.id || false]]},
         loaded: function(self, taxes){
             self.taxes = taxes;
             self.taxes_by_id = {};
