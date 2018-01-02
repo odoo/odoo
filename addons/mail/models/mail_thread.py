@@ -2130,7 +2130,7 @@ class MailThread(models.AbstractModel):
 
         # add followers coming from res.users relational fields that are tracked
         user_ids = [values[name] for name in user_field_lst if values.get(name)]
-        user_pids = [user.partner_id.id for user in self.env['res.users'].sudo().browse(user_ids)]
+        user_pids = [user.partner_id.id for user in self.env['res.users'].sudo().browse(user_ids) if user.partner_id.active]
         for partner_id in user_pids:
             new_partners.setdefault(partner_id, None)
 
