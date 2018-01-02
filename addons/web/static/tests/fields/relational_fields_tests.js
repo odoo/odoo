@@ -9447,7 +9447,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('one2many invisible depends on parent field', function (assert) {
-        assert.expect(2);
+        assert.expect(4);
 
         this.data.partner.records[0].p = [2];
         var form = createView({
@@ -9456,12 +9456,15 @@ QUnit.module('relational_fields', {
             data: this.data,
             arch:'<form string="Partners">' +
                     '<sheet>' +
+                        '<group>' +
+                            '<field name="product_id"/>' +
+                        '</group>' +
                         '<notebook>' +
                             '<page string="Partner page">' +
                                 '<field name="bar"/>' +
                                 '<field name="p">' +
                                     '<tree>' +
-                                        '<field name="foo"/>' +
+                                        '<field name="foo" attrs="{\'column_invisible\': [(\'parent.product_id\', \'!=\', False)]}"/>' +
                                         '<field name="bar" attrs="{\'column_invisible\': [(\'parent.bar\', \'=\', False)]}"/>' +
                                     '</tree>' +
                                 '</field>' +
@@ -9474,6 +9477,13 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('th').length, 2,
             "should be 2 columns in the one2many");
         form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_many2one[name="product_id"] input').click();
+        $('li.ui-menu-item a:contains(xpad)').trigger('mouseenter').click();
+        assert.strictEqual(form.$('th').length, 1,
+            "should be 1 column when the product_id is set");
+        form.$('.o_field_many2one[name="product_id"] input').val('').trigger('keyup');
+        assert.strictEqual(form.$('th').length, 2,
+            "should be 2 columns in the one2many when product_id is not set");
         form.$('.o_field_boolean[name="bar"] input').click();
         assert.strictEqual(form.$('th').length, 1,
             "should be 1 column after the value change");
