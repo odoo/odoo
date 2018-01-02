@@ -649,6 +649,57 @@ label.o_light_label, .o_light_label label {
     font-weight: normal;
 }
 
+// XXS form view specific rules
+.form-break-table() {
+    display: block;
+    margin-bottom: @odoo-form-spacing-unit * 4;
+
+    > tbody {
+        display: block;
+
+        > tr {
+            .o-flex-display();
+            .o-flex-flow(row, wrap);
+
+            > td {
+                .o-flex(1, 0, auto);
+                display: block;
+                max-width: 100%;
+                padding: 0;
+
+                width: auto!important;  // !important is required to override the width computed in JS
+                &.o_td_label {
+                    width: 94%!important; // The label must be on its own line except if the form field is small enough (checkbox)
+                    line-height: @odoo-label-font-size-factor;
+                }
+
+                .o_field_widget {
+                    margin-bottom: @odoo-form-spacing-unit * 2;
+                    &.o_field_boolean {
+                        margin-right: 0;
+                    }
+                }
+
+                .o_input_dropdown {
+                    width: auto;
+                    max-width: 100%;
+                }
+            }
+        }
+    }
+}
+.o_form_view.o_xxs_form_view {
+    .oe_title {
+        word-break: break-all;
+    }
+    .o_group {
+        &.o_inner_group {
+            .form-break-table();
+        }
+    }
+}
+
+// Settings form views
 .o_settings_container {
     .o-flex-display();
     .o-flex(0, 1, auto);

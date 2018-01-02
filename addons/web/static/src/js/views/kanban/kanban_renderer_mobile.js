@@ -38,9 +38,11 @@ KanbanRenderer.include({
 
     /**
      * Displays the quick create record in the active column
+     *
+     * @returns {Deferred}
      */
     addQuickCreate: function () {
-        this.widgets[this.activeColumnIndex].addQuickCreate();
+        return this.widgets[this.activeColumnIndex].addQuickCreate();
     },
     /**
      * Overrides to restore the left property and the scrollTop on the updated
