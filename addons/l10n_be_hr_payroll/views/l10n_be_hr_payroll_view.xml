@@ -141,7 +141,7 @@
                     <field name="disabled_children_bool"/>
                     <field name="disabled_children_number" attrs="{'invisible':[('disabled_children_bool','!=',True)]}" colspan="1" help="number of dependent children declared as disabled"/>
                     <field name="dependent_children" invisible="1"/>
-                    <field name="other_dependent_people"/>
+                    <field name="other_dependent_people" groups="hr.group_hr_user"/>
                     <field name="other_senior_dependent" attrs="{'invisible':[('other_dependent_people','!=',True)]}"/>
                     <field name="other_disabled_senior_dependent" attrs="{'invisible':[('other_dependent_people','!=',True)]}"/>
                     <field name="other_juniors_dependent" attrs="{'invisible':[('other_dependent_people','!=',True)]}"/>
