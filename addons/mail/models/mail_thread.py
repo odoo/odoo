@@ -1926,6 +1926,34 @@ class MailThread(models.AbstractModel):
     def _message_post_after_hook(self, message):
         pass
 
+    @api.model
+    @api.returns('self', lambda rec: rec.id)
+    def message_notify(self, body, subject, partner_ids, **kwargs):
+        if kwargs.get('author_id'):
+            author = self.env['res.partner'].sudo().browse(kwargs['author_id'])
+            email_from = formataddr((author.name, author.email))
+        else:
+            author = self.env.user.partner_id
+            email_from = formataddr((author.name, author.email))
+
+        message_values = {
+            'subject': subject,
+            'body': body,
+            'author_id': author.id,
+            'email_from': email_from,
+            'partner_ids': [(4, partner_id) for partner_id in partner_ids],
+            'message_type': 'notification',
+            'model': False,
+            'res_id': False,
+            'subtype_id': False,
+            'record_name': False,
+            'reply_to': self.env['mail.thread'].sudo().message_get_reply_to([0])[0],
+            'message_id': tools.generate_tracking_message_id('message-notify'),
+        }
+        message_values.update(kwargs)
+        message = self.env['mail.message'].sudo().create(message_values)
+        return message
+
     @api.multi
     def message_post_with_view(self, views_or_xmlid, **kwargs):
         """ Helper method to send a mail / post a message using a view_id to
