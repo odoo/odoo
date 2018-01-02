@@ -221,7 +221,8 @@ var FieldTextHtml = AbstractField.extend({
     start: function () {
         var self = this;
 
-        this.loaded = false;
+        this.editorLoadedDeferred = $.Deferred();
+        this.contentLoadedDeferred = $.Deferred();
         this.callback = _.uniqueId('FieldTextHtml_');
         window.odoo[this.callback+"_editor"] = function (EditorBar) {
             setTimeout(function () {
@@ -312,8 +313,6 @@ var FieldTextHtml = AbstractField.extend({
     old_initialize_content: function () {
         this.$el.closest('.modal-body').css('max-height', 'none');
         this.$iframe = this.$el.find('iframe');
-        // deactivate any button to avoid saving a not ready iframe
-        $('.o_cp_buttons, .o_statusbar_buttons').find('button').addClass('o_disabled').attr('disabled', true);
         this.document = null;
         this.$body = $();
         this.$content = $();
@@ -328,9 +327,7 @@ var FieldTextHtml = AbstractField.extend({
         this.$content = this.$body.find("#editable_area");
         this.render();
         this.add_button();
-        this.loaded = true;
-        // reactivate all the buttons when the field's content (the iframe) is loaded
-        $('.o_cp_buttons, .o_statusbar_buttons').find('button').removeClass('o_disabled').attr('disabled', false);
+        this.contentLoadedDeferred.resolve();
         setTimeout(self.resize, 0);
     },
     on_editor_loaded: function (EditorBar) {
@@ -339,6 +336,7 @@ var FieldTextHtml = AbstractField.extend({
         if (this.value && window.odoo[self.callback+"_updown"] && !(this.$content.html()||"").length) {
             this.render();
         }
+        this.editorLoadedDeferred.resolve();
         setTimeout(function () {
             setTimeout(self.resize,0);
         }, 0);
@@ -395,20 +393,25 @@ var FieldTextHtml = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Set the value when the widget is fully loaded (content + editor).
+     *
      * @override
      */
     commitChanges: function () {
-        if (!this.loaded || this.mode === 'readonly') {
+        var self = this;
+        var result = this._super.bind(this, arguments);
+        if (this.mode === 'readonly') {
             return;
         }
-        // switch to WYSIWYG mode if currently in code mode to get all changes
-        if (config.debug && this.mode === 'edit' && this.editor.rte) {
-            var layoutInfo = this.editor.rte.editable().data('layoutInfo');
-            $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
-        }
-        this.editor.snippetsMenu && this.editor.snippetsMenu.cleanForSave();
-        this._setValue(this.$content.html());
-        return this._super.apply(this, arguments);
+        return $.when(this.contentLoadedDeferred, this.editorLoadedDeferred, result).then(function () {
+            // switch to WYSIWYG mode if currently in code mode to get all changes
+            if (config.debug && self.editor.rte) {
+                var layoutInfo = self.editor.rte.editable().data('layoutInfo');
+                $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
+            }
+            self.editor.snippetsMenu && self.editor.snippetsMenu.cleanForSave();
+            self._setValue(self.$content.html());
+        });
     },
 });
 

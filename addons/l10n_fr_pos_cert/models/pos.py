@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime
+from datetime import datetime, timedelta
 from hashlib import sha256
 from json import dumps
 import pytz
@@ -43,7 +43,7 @@ class pos_session(models.Model):
         self.ensure_one()
         date_today = datetime.utcnow()
         session_start = Datetime.from_string(self.start_at)
-        if not date_today - datetime.timedelta(hours=24) <= session_start:
+        if not date_today - timedelta(hours=24) <= session_start:
             raise UserError(_("This session has been opened another day. To comply with the French law, you should close sessions on a daily basis. Please close session %s and open a new one.") % self.name)
         return True
 
