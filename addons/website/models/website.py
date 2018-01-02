@@ -815,7 +815,7 @@ class Menu(models.Model):
             url = self.page_id.sudo().url
         else:
             url = self.url
-            if not self.url.startswith('/'):
+            if url and not self.url.startswith('/'):
                 if '@' in self.url:
                     if not self.url.startswith('mailto'):
                         url = 'mailto:%s' % self.url
