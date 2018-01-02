@@ -99,6 +99,16 @@
                         <t t-call="account.portal_invoice_report"/>
                     </div>
                 </div>
+                <div class="row mt32">
+                    <div class="col-md-12">
+                        <h4><strong>Message and communication history</strong></h4>
+                    </div>
+                    <div class="col-md-10 col-md-offset-1 mt16">
+                        <t t-call="portal.message_thread">
+                            <t t-set="object" t-value="invoice"/>
+                        </t>
+                    </div>
+                </div>
             </div>
             <div class="oe_structure mb32"/>
         </t>
