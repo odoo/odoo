@@ -173,9 +173,6 @@ class ResPartner(models.Model):
     def check_vat(self):
         #TODO OCO DOC seulement vérification syntaxique
         #TODO OCO en fait, il faut surtout voir si on ne veut plus du tout de message d'erreur, même en cas d'erreur syntaxique dans la vérification simple => couleurs aussi, ou pas ?
-        #TODO OCO : pour VIES: on peut dire: True, vert ; False, rouge; Exception: orange
-        #TODO OCO: un petit bouton "retry" si c'est en orange, ça vaudrait quand même le coup, non ? :/ > un truc qui rappelle le compute d'un champ storé alors ... moui ? Ca rafraîchira la page, non ? (à voir :/)
-        #TODO OCO: ben si en fait: un bouton dans la ligne au-dessus de la form view, genre "RECHECK VAT", pourquoi pas. Uniquement visible en orange.
         if self.env.context.get('company_id'):
             company = self.env['res.company'].browse(self.env.context['company_id'])
         else:

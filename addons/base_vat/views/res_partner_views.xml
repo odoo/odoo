@@ -12,16 +12,16 @@
 
                 <xpath expr="//label[@for='street']" position="before">
                     <field name="base_vat_vies_status" invisible="1"/>
-                    <field name="vat" string="VAT" style="color:Red;" attrs="{'invisible': [('base_vat_vies_status', '!=', 'failed')]}"/>
-                    <field name="vat" string="VAT" style="color:Green;" attrs="{'invisible': [('base_vat_vies_status', '!=', 'passed')]}"/>
-                    <field name="vat" string="VAT" style="color:Orange;" attrs="{'invisible': [('base_vat_vies_status', '!=', 'exception')]}"/>
-                    <field name="vat" string="VAT" attrs="{'invisible': [('base_vat_vies_status', '!=', 'unchecked')]}"/>
+                        <field name="vat" string="VAT" style="color:Red;" attrs="{'invisible': [('base_vat_vies_status', '!=', 'failed')]}"/>
+                        <field name="vat" string="VAT" attrs="{'invisible': [('base_vat_vies_status', '!=', 'unchecked')]}"/>
+                        <field name="vat" string="VAT" style="color:Green;" attrs="{'invisible': [('base_vat_vies_status', '!=', 'passed')]}"/>
+                        <label string="VAT" style="font-weight: bold;" attrs="{'invisible': [('base_vat_vies_status', '!=', 'exception')]}"/>
+                        <div class="o_row" attrs="{'invisible': [('base_vat_vies_status', '!=', 'exception')]}">
+                            <field name="vat" string="VAT" style="color:Orange;"/>
+                            <button id="base_vat_recheck_vies" string="Recheck" type="object" name="compute_base_vat_vies_status" class="oe_read_only btn-default"/>
+                        </div>
                 </xpath>
-
-                <xpath expr="//header" position="inside">
-                    <button id="base_vat_recheck_vies" string="Recheck VIES" type="object" name="compute_base_vat_vies_status" attrs="{'invisible': [('base_vat_vies_status', '!=', 'exception')]}" class="oe_read_only"/>
-                </xpath>
-            </field>
+            </field> <!--TODO OCO si tu arrives à régler ce souci de layout, pense à aller retirer le header vide que tu as ajouté dans la vue mère-->
         </record>
 
         <record id="view_partner_short_form" model="ir.ui.view">
