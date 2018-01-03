@@ -36,7 +36,7 @@
                                     <li class="dropdown" t-ignore="true" t-if="not user_id._is_public()">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                             <b>
-                                                <span t-esc="(len(user_id.name)&gt;25) and (user_id.name[:23]+'...') if user_id.name else user_id.name"/>
+                                                <span t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
                                                 <span class="caret"></span>
                                             </b>
                                         </a>
