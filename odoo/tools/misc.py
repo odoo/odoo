@@ -22,8 +22,10 @@ import sys
 import threading
 import time
 import types
+import unicodedata
 import werkzeug.utils
 import zipfile
+
 from collections import defaultdict, Iterable, Mapping, MutableSet, OrderedDict
 from itertools import islice, groupby, repeat
 from lxml import etree
@@ -731,6 +733,19 @@ def attrgetter(*items):
         def g(obj):
             return tuple(resolve_attr(obj, attr) for attr in items)
     return g
+
+# ---------------------------------------------
+# String management
+# ---------------------------------------------
+
+# Inspired by http://stackoverflow.com/questions/517923
+def remove_accents(input_str):
+    """Suboptimal-but-better-than-nothing way to replace accented
+    latin letters by an ASCII equivalent. Will obviously change the
+    meaning of input_str and work only for some cases"""
+    input_str = ustr(input_str)
+    nkfd_form = unicodedata.normalize('NFKD', input_str)
+    return u''.join([c for c in nkfd_form if not unicodedata.combining(c)])
 
 class unquote(str):
     """A subclass of str that implements repr() without enclosing quotation marks
