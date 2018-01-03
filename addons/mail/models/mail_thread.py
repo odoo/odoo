@@ -66,8 +66,6 @@ class MailThread(models.AbstractModel):
        creating messages
      - ``tracking_disable``: at create and write, perform no MailThread features
        (auto subscription, tracking, post, ...)
-     - ``mail_save_message_last_post``: at message_post, update message_last_post
-       datetime field
      - ``mail_auto_delete``: auto delete mail notifications; True by default
        (technical hack for templates)
      - ``mail_notify_force_send``: if less than 50 email notifications to send,
@@ -95,7 +93,6 @@ class MailThread(models.AbstractModel):
     message_ids = fields.One2many(
         'mail.message', 'res_id', string='Messages',
         domain=lambda self: [('model', '=', self._name)], auto_join=True)
-    message_last_post = fields.Datetime('Last Message Date', help='Date of the last message posted on the record.')
     message_unread = fields.Boolean(
         'Unread Messages', compute='_get_message_unread',
         help="If checked new messages require your attention.")
@@ -1907,15 +1904,7 @@ class MailThread(models.AbstractModel):
         # Post the message
         new_message = MailMessage.create(values)
 
-        # Post-process: subscribe author, update message_last_post
-        # Note: the message_last_post mechanism is no longer used.  This
-        # will be removed in a later version.
-        if (self._context.get('mail_save_message_last_post') and
-                model and model != 'mail.thread' and self.ids and subtype_id):
-            subtype_rec = self.env['mail.message.subtype'].sudo().browse(subtype_id)
-            if not subtype_rec.internal:
-                # done with SUPERUSER_ID, because on some models users can post only with read access, not necessarily write access
-                self.sudo().write({'message_last_post': fields.Datetime.now()})
+        # Post-process: subscribe author
         if author_id and model and self.ids and message_type != 'notification' and not self._context.get('mail_create_nosubscribe'):
             self.message_subscribe([author_id], force=False)
 
