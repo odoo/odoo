@@ -11,7 +11,7 @@
         <field name="context">{'search_default_employee_id': [active_id], 'default_employee_id': active_id, 'search_default_group_type': 1,
             'search_default_year': 1}</field>
         <field name="domain">[('holiday_type','=','employee'), ('holiday_status_id.limit', '=', False), ('state','!=', 'refuse')]</field>
-        <field name="search_view_id" ref="view_hr_leave_allocation_filter"/>
+        <field name="search_view_id" ref="view_hr_holidays_filter_report"/>
     </record>
 
     <record id="hr_holidays_leaves_assign_tree_view" model="ir.ui.view">

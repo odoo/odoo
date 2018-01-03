@@ -28,18 +28,22 @@
                     <group>
                         <group name="description" string="Description">
                             <field name="name"/>
-                        </group>
-                        <group name="leave_request" string="Leave Request">
-                            <field name="time_type" groups="base.group_no_one"/>
-                            <field name="limit"/>
-                            <field name="sequence" attrs="{'invisible': [('limit', '=', False)]}" groups="base.group_no_one"/>
+                            <field name="unpaid"/>
+                            <field name="limit" attrs="{'invisible': [('accrual', '=', True)]}"/>
                             <field name="request_unit"/>
+                            <field name="sequence" attrs="{'invisible': [('limit', '!=', False)]}" groups="base.group_no_one"/>
+                            <field name="time_type" groups="base.group_no_one"/>
+                        </group>
+                        <group name="allocation_request" string="Allocation" attrs="{'invisible': [('unpaid', '=', True)]}">
+                            <field name="accrual"/>
+                            <field name="negative" attrs="{'invisible': [('accrual', '=', False)]}"/>
+                            <field name="balance_limit" attrs="{'invisible': [('accrual', '=', False)]}"/>
                         </group>
                         <group name="validation" string="Validation">
                             <field name="validation_type" widget="radio"/>
                         </group>
                         <group name="visibility" string="Visibility">
-                            <field name="employee_applicability" widget="radio" attrs="{'readonly': [('limit', '=', True)]}" force_save="1"/>
+                            <field name="employee_applicability" widget="radio" attrs="{'readonly': ['|', ('limit', '=', True), ('accrual', '=', True)]}" force_save="1"/>
                         </group>
                         <group name="calendar" string="Calendar">
                             <field name="categ_id"/>
