@@ -147,7 +147,7 @@
                                 Use the Produce button or process the work orders to create some finished products. 
                             </p>
                         </page>
-                        <page string="Miscellaneous">
+                        <page string="Miscellaneous" groups="stock.group_stock_multi_locations, base.group_no_one">
                             <group>
                                 <group groups="stock.group_stock_multi_locations">
                                     <field name="picking_type_id" domain="[('code', '=', 'mrp_operation')]" attrs="{'readonly': [('has_moves', '=', True)]}"/>
