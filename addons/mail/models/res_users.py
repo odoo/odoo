@@ -141,17 +141,20 @@ class Users(models.Model):
 
         user_activities = {}
         for activity in activity_data:
+            form_view_ref = False
             if not user_activities.get(activity['model']):
+                if hasattr(self.env[activity['model']], '_get_activity_form_view_ref'):
+                    form_view_ref = self.env[activity['model']]._get_activity_form_view_ref()
                 user_activities[activity['model']] = {
                     'name': activity['name'],
                     'model': activity['model'],
+                    'form_view_ref': form_view_ref,
                     'icon': modules.module.get_module_icon(self.env[activity['model']]._original_module),
                     'total_count': 0, 'today_count': 0, 'overdue_count': 0, 'planned_count': 0,
                 }
             user_activities[activity['model']]['%s_count' % activity['states']] += activity['count']
             if activity['states'] in ('today','overdue'):
                 user_activities[activity['model']]['total_count'] += activity['count']
-
         return list(user_activities.values())
 
 

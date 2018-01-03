@@ -263,6 +263,8 @@ class Lead(models.Model):
         if self.state_id:
             self.country_id = self.state_id.country_id.id
 
+    def _get_activity_form_view_ref(self):
+        return 'crm.crm_case_form_view_oppor'
     # ----------------------------------------
     # ORM override (CRUD, fields_view_get, ...)
     # ----------------------------------------

@@ -252,6 +252,7 @@ var ActivityMenu = Widget.extend({
         } else {
             context['search_default_activities_' + data.filter] = 1;
         }
+        context.form_view_ref = data.form_view_ref;
         this.do_action({
             type: 'ir.actions.act_window',
             name: data.model_name,
