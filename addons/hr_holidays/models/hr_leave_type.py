@@ -8,6 +8,7 @@ import logging
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
+from odoo.tools.float_utils import float_round
 
 _logger = logging.getLogger(__name__)
 
@@ -76,29 +77,61 @@ class HolidaysType(models.Model):
 
     valid = fields.Boolean(compute='_compute_valid', search='_search_valid', help='This indicates if it is still possible to use this type of leave')
 
+
     time_type = fields.Selection([('leave', 'Leave'), ('other', 'Other')], default='leave', string="Kind of Leave",
                                  help="Whether this should be computed as a holiday or as work time (eg: formation)")
     request_unit = fields.Selection([('day', 'Day'),
                                ('half', 'Half-day'),
                                ('hour', 'Hours')], default='day', string='Take Leaves in', required=True)
 
+    accrual = fields.Boolean('Is Accrual', default=False,
+                             help='This option forces this type of leave to be allocated accrually')
+
+    unpaid = fields.Boolean('Is Unpaid', default=False)
+
+    negative = fields.Boolean('Allow Negative', help="This option allows to take more leaves than allocated")
+
+    balance_limit = fields.Float('Max Balance Limit', default=0, help="The maximum quantity of allocated days on this allocation, zero meaning infinite amount")
+
+    _sql_constraints = [
+        ('no_negative_balance_limit', "CHECK(balance_limit >= 0)", "The max balance limit cannot be negative"),
+        ('no_accrual_unpaid', 'CHECK(NOT (accrual AND unpaid))', "A leave type cannot be accrual and considered as unpaid leaves")
+    ]
+
     @api.multi
     @api.constrains('validity_start', 'validity_stop')
     def _check_validity_dates(self):
-        for htype in self:
-            if htype.validity_start and htype.validity_stop and \
-               htype.validity_start > htype.validity_stop:
+        for leave_type in self:
+            if leave_type.validity_start and leave_type.validity_stop and \
+               leave_type.validity_start > leave_type.validity_stop:
                 raise ValidationError(_("End of validity period should be greater than start of validity period"))
+
+    @api.multi
+    @api.constrains('balance_limit', 'accrual')
+    def _check_balance_limit(self):
+        for leave_type in self:
+            if not leave_type.accrual and leave_type.balance_limit > 0:
+                raise ValidationError(_("Max balance limit can only be set for accrual leaves"))
 
     @api.onchange('limit')
     def _onchange_limit(self):
         if self.limit:
             self.employee_applicability = 'leave'
+            self.accrual = False
+
+    @api.onchange('accrual')
+    def _onchange_accrual(self):
+        if self.accrual:
+            self.limit = False
+            self.employee_applicability = 'both'
+        else:
+            self.negative = False
+            self.balance_limit = 0
 
     @api.multi
     @api.depends('validity_start', 'validity_stop', 'limit')
     def _compute_valid(self):
-        dt = self._context.get('default_date_from', fields.Date.today())
+        dt = self._context.get('default_date_from') or fields.Datetime.now()
 
         for holiday_type in self:
             if holiday_type.validity_start and holiday_type.validity_stop:
@@ -109,7 +142,8 @@ class HolidaysType(models.Model):
                 holiday_type.valid = True
 
     def _search_valid(self, operator, value):
-        dt = self._context.get('default_date_from', fields.Date.today()) or fields.Date.today()
+        dt = self._context.get('default_date_from') or fields.Datetime.now()
+
         signs = ['>=', '<='] if operator == '=' else ['<=', '>=']
 
         return ['|', ('validity_stop', operator, False), '&',
@@ -181,7 +215,7 @@ class HolidaysType(models.Model):
             if not record.limit:
                 name = "%(name)s (%(count)s)" % {
                     'name': name,
-                    'count': _('%g remaining out of %g') % (record.virtual_remaining_leaves or 0.0, record.max_leaves or 0.0)
+                    'count': _('%g remaining out of %g') % (float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0, float_round(record.max_leaves, precision_digits=2) or 0.0)
                 }
             res.append((record.id, name))
         return res

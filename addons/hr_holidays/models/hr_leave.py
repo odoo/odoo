@@ -44,7 +44,7 @@ class HolidaysRequest(models.Model):
     def default_get(self, fields_list):
         defaults = super(HolidaysRequest, self).default_get(fields_list)
 
-        LeaveType = self.env['hr.leave.type'].with_context(employee_id=defaults.get('employee_id'), default_date_from=defaults.get('date_from'))
+        LeaveType = self.env['hr.leave.type'].with_context(employee_id=defaults.get('employee_id'), default_date_from=defaults.get('date_from', fields.Datetime.now()))
         lt = LeaveType.search([('valid', '=', True), ('employee_applicability', 'in', ['leave', 'both'])])
 
         defaults['holiday_status_id'] = lt[0].id if len(lt) > 0 else defaults.get('holiday_status_id')
@@ -325,7 +325,7 @@ class HolidaysRequest(models.Model):
     @api.constrains('state', 'number_of_days_temp', 'holiday_status_id')
     def _check_holidays(self):
         for holiday in self:
-            if holiday.holiday_type != 'employee' or not holiday.employee_id or holiday.holiday_status_id.limit:
+            if holiday.holiday_type != 'employee' or not holiday.employee_id or holiday.holiday_status_id.limit or holiday.holiday_status_id.negative:
                 continue
             leave_days = holiday.holiday_status_id.get_days(holiday.employee_id.id)[holiday.holiday_status_id.id]
             if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1 or \

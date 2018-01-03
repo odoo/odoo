@@ -7,8 +7,10 @@
         <field name="arch" type="xml">
             <search string="Search allocations">
                 <field name="name"/>
+                <field name="accrual"/>
                 <filter domain="[('state','in',('confirm', 'validate1'))]" string="To Approve" name="approve"/>
                 <filter string="Approved Allocations" domain="[('state', '=', 'validate')]" name="validated"/>
+                <filter string="Accrual Allocations" domain="[('accrual', '=', True)]" name="accrual_allocation"/>
                 <separator/>
                 <filter name="active_types" string="Active Types" domain="[('holiday_status_id.active', '=', True)]" help="Filters only on allocations that belong to an leave type that is 'active' (active field is True)"/>
                 <separator/>
@@ -52,6 +54,7 @@
             <form string="Allocation Request">
                 <field name="can_reset" invisible="1"/>
                 <field name="can_approve" invisible="1"/>
+                <field name="accrual" invisible="1"/>
                 <header>
                     <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
                     <button string="Approve" name="action_approve" states="confirm" type="object" groups="hr_holidays.group_hr_holidays_user" class="oe_highlight"
@@ -72,12 +75,12 @@
                             <field name="type_request_unit" invisible="1"/>
                             <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
                             <field name="holiday_status_id" context="{'employee_id':employee_id}"/>
-                            <label string="Duration"/>
+                            <label string="Duration" attrs="{'invisible': [('accrual', '=', True)]}"/>
                             <div>
-                                <div attrs="{'invisible': [('type_request_unit', '=', 'hour')]}">
+                                <div attrs="{'invisible': ['|', ('type_request_unit', '=', 'hour'), ('accrual', '=', True)]}">
                                     <field name="number_of_days_temp" class="oe_inline" attrs="{'readonly': [('state', '=', 'validate')]}"/> days
                                 </div>
-                                <div attrs="{'invisible': [('type_request_unit', '!=', 'hour')]}">
+                                <div attrs="{'invisible': ['|', ('type_request_unit', '!=', 'hour'), ('accrual', '=', True)]}">
                                     <field name="number_of_hours" class="oe_inline" attrs="{'readonly': [('state', '=', 'validate')]}"/> hours
                                 </div>
                             </div>
@@ -87,6 +90,22 @@
                             <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','!=','employee')]}" groups="hr_holidays.group_hr_holidays_user"/>
                             <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'invisible':[('holiday_type','!=','category')]}"/>
                             <field name="department_id" groups="hr_holidays.group_hr_holidays_user" attrs="{'invisible':[('holiday_type','=','category')]}"/>
+                        </group>
+                        <group attrs="{'invisible': [('accrual', '=', True)]}">
+                            <label for="number_of_days_temp" string="Duration"/>
+                            <div class="o_row">
+                                <field name="number_of_days_temp"/> days
+                            </div>
+                        </group>
+                        <group attrs="{'invisible': [('accrual', '=', False)]}">
+                            <field name="date_to" string="Run Until" help="If no value set, runs indefinitely" class="oe_inline"/>
+
+                            <div class="o_row" colspan="2">
+                                Add <field name="number_per_interval" attrs="{'required': [('accrual', '=', True)]}"/>
+                                <field name="unit_per_interval" attrs="{'required': [('accrual', '=', True)]}"/> of leaves every
+                                <field name="interval_number" attrs="{'required': [('accrual', '=', True)]}"/>
+                                <field name="interval_unit" attrs="{'required': [('accrual', '=', True)]}"/>
+                            </div>
                         </group>
                         <field name="notes" nolabel="1" colspan="4" placeholder="Add a reason..."/>
                     </group>
@@ -110,7 +129,7 @@
                 <field name="department_id" invisible="1"/>
                 <field name="holiday_status_id"/>
                 <field name="name"/>
-                <field name="number_of_days" string="Allocated Days" sum="Remaining Days"/>
+                <field name="number_of_days" string="Allocated Days" sum="Total allocated days"/>
                 <field name="message_needaction" invisible="1"/>
                 <field name="state"/>
             </tree>
@@ -126,7 +145,7 @@
                 <field name="employee_id"/>
                 <field name="holiday_status_id"/>
                 <field name="name"/>
-                <field name="number_of_days" string="Allocated Days" sum="Remaining Days"/>
+                <field name="number_of_days" string="Allocated Days" sum="Total allocated days"/>
                 <field name="message_needaction" invisible="1"/>
                 <field name="state"/>
             </tree>

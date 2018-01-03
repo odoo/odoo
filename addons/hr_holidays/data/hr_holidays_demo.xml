@@ -3,19 +3,28 @@
 <data noupdate="1">
 
     <record id="hr_holiday_status_hl" model="hr.leave.type">
-      <field name="name">Overtime Compensation</field>
-      <field name="limit" eval="False"/>
-      <field name="color_name">blue</field>
-      <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
-      <field name="validity_stop" eval="time.strftime('%Y-12-31')"/>
-      <field name="request_unit">hour</field>
+        <field name="name">Overtime Compensation</field>
+        <field name="limit" eval="False"/>
+        <field name="color_name">blue</field>
+        <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
+        <field name="validity_stop" eval="time.strftime('%Y-12-31')"/>
+        <field name="request_unit">hour</field>
     </record>
 
     <record id="hr_holiday_status_dv" model="hr.leave.type">
-      <field name="name">Parental Leaves</field>
-      <field name="limit" eval="True"/>
-      <field name="color_name">brown</field>
-      <field name="validation_type">both</field>
+        <field name="name">Parental Leaves</field>
+        <field name="limit" eval="True"/>
+        <field name="color_name">brown</field>
+        <field name="validation_type">both</field>
+    </record>
+
+    <record id="holiday_status_cla" model="hr.leave.type">
+        <field name="name" eval="'Paid Time Off ' + time.strftime('%Y')"/>
+        <field name="limit" eval="False"/>
+        <field name="color_name">wheat</field>
+        <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
+        <field name="validity_stop" eval="time.strftime('%Y-12-31')"/>
+        <field name="accrual" eval="True"/>
     </record>
 
     <record id="hr_holidays_employee1_allocation_cl" model="hr.leave.allocation">
