@@ -21,9 +21,12 @@ class PaymentAcquirer(models.Model):
     _inherit = 'payment.acquirer'
 
     provider = fields.Selection(selection_add=[('wepay', 'WePay')])
-    wepay_account_id = fields.Char(string='Wepay Account ID', required_if_provider='wepay', groups='base.group_user', help="This is the ID of the payment account where you can collect money.")
-    wepay_client_id = fields.Char(string='Wepay Client ID', required_if_provider='wepay', groups='base.group_user', help="This is the ID of your API application")
-    wepay_access_token = fields.Char(string='Wepay Access Token', required_if_provider='wepay', groups='base.group_user', help="This is the access_token that grants this app permission to do things on behalf of you")
+    wepay_account_id = fields.Char(string='Wepay Account ID', groups='base.group_user', help="This is the ID of the payment account where you can collect money.")
+    wepay_client_id = fields.Char(string='Wepay Client ID', groups='base.group_user', help="This is the ID of your API application")
+    wepay_access_token = fields.Char(string='Wepay Access Token', groups='base.group_user', help="This is the access_token that grants this app permission to do things on behalf of you")
+    wepay_user_type = fields.Selection(
+        [('newuser', 'New User'), ('existinguser', 'Existing User')], string="Wepay", default='newuser', copy=False,
+        help="  * New User: User don't have Wepay account\n  * Existing User: User already have Wepay account")
 
     def _get_feature_support(self):
         """Get advanced feature support by provider.
@@ -44,16 +47,24 @@ class PaymentAcquirer(models.Model):
         """ wepay URLS """
         if environment == 'prod':
             return {
+                'authorization': 'https://www.wepay.com/v2/oauth2/authorize',
                 'checkout_create': 'https://wepayapi.com/v2/checkout/create',
                 'checkout': 'https://wepayapi.com/v2/checkout/',
                 'checkout_refund': 'https://wepayapi.com/v2/checkout/refund',
+                'create_account': 'https://wepayapi.com/v2/account/create',
                 'credict_card_create': 'https://wepayapi.com/v2/credit_card/create',
+                'token': 'https://wepayapi.com/v2/oauth2/token',
+                'user': 'https://wepayapi.com/v2/user',
             }
         return {
+            'authorization': 'https://stage.wepay.com/v2/oauth2/authorize',
             'checkout_create': 'https://stage.wepayapi.com/v2/checkout/create',
             'checkout': 'https://stage.wepayapi.com/v2/checkout/',
             'checkout_refund': 'https://stage.wepayapi.com/v2/checkout/refund',
+            'create_account': 'https://stage.wepayapi.com/v2/account/create',
             'credict_card_create': 'https://stage.wepayapi.com/v2/credit_card/create',
+            'token': 'https://stage.wepayapi.com/v2/oauth2/token',
+            'user': 'https://stage.wepayapi.com/v2/user',
         }
 
     @api.multi
@@ -147,6 +158,15 @@ class PaymentAcquirer(models.Model):
             if not data.get(field_name):
                 return False
         return True
+
+    @api.multi
+    def create_account(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/wepay/account_create/%s' % self.id,
+            'target': 'self',
+            'res_id': self.id,
+        }
 
 
 class PaymentTransaction(models.Model):

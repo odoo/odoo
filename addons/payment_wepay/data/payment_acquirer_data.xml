@@ -12,8 +12,25 @@
                 You will be redirected to the wepay website after clicking on the payment button.
             </p>
         </field>
-        <field name="wepay_account_id">12345</field>
-        <field name="wepay_client_id">12345</field>
-        <field name="wepay_access_token">dummy</field>
+    </record>
+
+    <record id="config_payment_wepay_test_client_id" model="ir.config_parameter">
+        <field name="key">payment_wepay_test_client_id</field>
+        <field name="value">122032</field>
+    </record>
+
+    <record id="config_payment_wepay_test_client_secret" model="ir.config_parameter">
+        <field name="key">payment_wepay_test_client_secret</field>
+        <field name="value">df31dc4650</field>
+    </record>
+
+    <record id="config_payment_wepay_prod_client_id" model="ir.config_parameter">
+        <field name="key">payment_wepay_prod_client_id</field>
+        <field name="value"></field>
+    </record>
+
+    <record id="config_payment_wepay_prod_client_secret" model="ir.config_parameter">
+        <field name="key">payment_wepay_prod_client_secret</field>
+        <field name="value"></field>
     </record>
 </odoo>

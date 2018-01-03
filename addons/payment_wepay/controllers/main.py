@@ -80,3 +80,49 @@ class WepayController(http.Controller):
                 token.validate()
                 res['verified'] = token.verified
         return res
+
+    @http.route("/wepay/account_create/<model('payment.acquirer'):acquirer>", auth="user")
+    def create_wepay_account(self, acquirer):
+        get_param = request.env['ir.config_parameter'].sudo().get_param
+        redirect_url = get_param('web.base.url') + "/wepay/account_done/"+str(acquirer.id)
+        client_id = get_param('payment_wepay_%s_client_id' % acquirer.environment)
+        return werkzeug.utils.redirect(acquirer.wepay_get_form_action_url()['authorization']+"?client_id="+client_id+"&redirect_uri="+redirect_url+"&scope=manage_accounts,collect_payments,view_user,preapprove_payments,send_money")
+
+    @http.route("/wepay/account_done/<model('payment.acquirer'):acquirer>", auth="user")
+    def wepay_account_done(self, acquirer, **post):
+        get_param = request.env['ir.config_parameter'].sudo().get_param
+        client_id = get_param('payment_wepay_%s_client_id' % acquirer.environment)
+        client_secret = get_param('payment_wepay_%s_client_secret' % acquirer.environment)
+
+        # Get access token of user
+        val = {
+            "client_id": client_id,
+            "client_secret": client_secret,
+            "redirect_uri": get_param('web.base.url') + "/wepay/account_done/"+str(acquirer.id),
+            "code": post['code'],
+        }
+        response = requests.post(acquirer.wepay_get_form_action_url()['token'], val)
+        response.raise_for_status()
+        vals = json.loads(response.text)
+        acquirer.write({
+            'wepay_access_token': vals.get('access_token'),
+            'website_published': True,
+            'wepay_user_type': 'existinguser',
+            'wepay_client_id': client_id
+        })
+
+        # get user details from access token
+        user_details_response = requests.post(acquirer.wepay_get_form_action_url()['user'], headers=acquirer.get_wepay_header())
+        user_details_response.raise_for_status()
+        user_details = json.loads(user_details_response.text)
+
+        # Create account for user to accept payment
+        user_create_account = json.dumps({
+            'name': user_details.get('user_name'),
+            'description': 'New User Account'
+        })
+        response = requests.post(acquirer.wepay_get_form_action_url()['create_account'], data=user_create_account, headers=acquirer.get_wepay_header())
+        response.raise_for_status()
+        vals = json.loads(response.text)
+        acquirer.write({'wepay_account_id': vals.get('account_id')})
+        return werkzeug.utils.redirect("/web#id="+str(acquirer.id)+"&model=payment.acquirer&view_type=form")
