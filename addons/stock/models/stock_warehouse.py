@@ -63,14 +63,11 @@ class Warehouse(models.Model):
     warehouse_count = fields.Integer(compute='_compute_warehouse_count')
     resupply_wh_ids = fields.Many2many(
         'stock.warehouse', 'stock_wh_resupply_table', 'supplied_wh_id', 'supplier_wh_id',
-        'Resupply Warehouses')
+        'Resupply From', help="Routes will be created automatically to resupply this warehouse from the warehouses ticked")
     resupply_route_ids = fields.One2many(
         'stock.location.route', 'supplied_wh_id', 'Resupply Routes',
         help="Routes will be created for these resupply warehouses and you can select them on products and product categories")
-    default_resupply_wh_id = fields.Many2one(
-        'stock.warehouse', 'Default Resupply Warehouse',
-        help="Goods will always be resupplied from this warehouse")
-
+    warehouse_count = fields.Integer(compute='_compute_warehouse_count')
     _sql_constraints = [
         ('warehouse_name_uniq', 'unique(name, company_id)', 'The name of the warehouse must be unique per company!'),
         ('warehouse_code_uniq', 'unique(code, company_id)', 'The code of the warehouse must be unique per company!'),
@@ -80,11 +77,6 @@ class Warehouse(models.Model):
     def _compute_warehouse_count(self):
         for warehouse in self:
             warehouse.warehouse_count = self.env['stock.warehouse'].search_count([('id', 'not in', warehouse.ids)])
-
-    @api.depends('default_resupply_wh_id', 'resupply_wh_ids')
-    def onchange_resupply_warehouses(self):
-        # If we are removing the default resupply, we don't have default_resupply_wh_id # TDE note: and we want one
-        self.resupply_wh_ids |= self.default_resupply_wh_id
 
     @api.model
     def create(self, vals):
@@ -144,15 +136,6 @@ class Warehouse(models.Model):
             new_resupply_whs = self.browse([wh['id'] for wh in resupply_whs])
             old_resupply_whs = {warehouse.id: warehouse.resupply_wh_ids for warehouse in warehouses}
 
-        if 'default_resupply_wh_id' in vals:
-            if vals.get('default_resupply_wh_id') and any(vals['default_resupply_wh_id'] == warehouse.id for warehouse in warehouses):
-                raise UserError(_('The default resupply warehouse should be different than itself.'))
-            for warehouse in warehouses.filtered(lambda wh: wh.default_resupply_wh_id):
-                # remove the existing resupplying route on the warehouse
-                to_remove_routes = Route.search([('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', '=', warehouse.default_resupply_wh_id.id)])
-                for inter_wh_route in to_remove_routes:
-                    warehouse.write({'route_ids': [(3, inter_wh_route.id)]})
-
         # If another partner assigned
         if vals.get('partner_id'):
             warehouses._update_partner_data(vals['partner_id'], vals.get('company_id'))
@@ -170,7 +153,7 @@ class Warehouse(models.Model):
                 to_add = new_resupply_whs - old_resupply_whs[warehouse.id]
                 to_remove = old_resupply_whs[warehouse.id] - new_resupply_whs
                 if to_add:
-                    warehouse.create_resupply_routes(to_add, warehouse.default_resupply_wh_id)
+                    warehouse.create_resupply_routes(to_add)
                 if to_remove:
                     Route.search([('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', 'in', to_remove.ids)]).write({'active': False})
                     # TDE FIXME: shouldn't we remove stock rules also ? because this could make them global (not sure)
@@ -270,7 +253,7 @@ class Warehouse(models.Model):
         crossdock_route = self._create_or_update_crossdock_route(routes_data)
 
         # create route selectable on the product to resupply the warehouse from another one
-        self.create_resupply_routes(self.resupply_wh_ids, self.default_resupply_wh_id)
+        self.create_resupply_routes(self.resupply_wh_ids)
 
         # return routes and mto stock rule to store on the warehouse
         return {
@@ -362,7 +345,7 @@ class Warehouse(models.Model):
                     self.env['stock.rule'].create(rule_vals)
         return crossdock_route
 
-    def create_resupply_routes(self, supplier_warehouses, default_resupply_wh):
+    def create_resupply_routes(self, supplier_warehouses):
         Route = self.env['stock.location.route']
         Rule = self.env['stock.rule']
 
@@ -389,10 +372,6 @@ class Warehouse(models.Model):
                 values={'route_id': inter_wh_route.id, 'propagate_warehouse_id': supplier_wh.id})
             for pull_rule_vals in pull_rules_list:
                 Rule.create(pull_rule_vals)
-
-            # if the warehouse is also set as default resupply method, assign this route automatically to the warehouse
-            if supplier_wh == default_resupply_wh:
-                (self | supplier_wh).write({'route_ids': [(4, inter_wh_route.id)]})
 
     # Routing tools
     # ------------------------------------------------------------
