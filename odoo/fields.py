@@ -1773,6 +1773,8 @@ class Selection(Field):
                 # use an OrderedDict to update existing values
                 selection_add = field.args['selection_add']
                 self.selection = list(OrderedDict(self.selection + selection_add).items())
+            if 'selection_mod' in field.args:
+                self.selection = field.args['selection_mod'](self.selection)
 
     def _description_selection(self, env):
         """ return the selection list (pairs (value, label)); labels are
