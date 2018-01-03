@@ -635,11 +635,11 @@ var FieldX2Many = AbstractField.extend({
         discard_changes: '_onDiscardChanges',
         edit_line: '_onEditLine',
         field_changed: '_onFieldChanged',
-        kanban_record_delete: '_onDeleteRecord',
-        list_record_delete: '_onDeleteRecord',
         open_record: '_onOpenRecord',
-        save_line: '_onSaveLine',
+        kanban_record_delete: '_onRemoveRecord',
+        list_record_remove: '_onRemoveRecord',
         resequence: '_onResequence',
+        save_line: '_onSaveLine',
         toggle_column_order: '_onToggleColumnOrder',
     }),
 
@@ -661,6 +661,7 @@ var FieldX2Many = AbstractField.extend({
         this.operations = [];
         this.isReadonly = this.mode === 'readonly';
         this.view = this.attrs.views[this.attrs.mode];
+        this.isMany2Many = this.field.type === 'many2many' || this.attrs.widget === 'many2many';
         this.activeActions = {};
         this.recordParams = {fieldName: this.name, viewType: this.viewType};
         var arch = this.view && this.view.arch;
@@ -798,6 +799,7 @@ var FieldX2Many = AbstractField.extend({
                 mode: this.mode,
                 addCreateLine: !this.isReadonly && this.activeActions.create,
                 addTrashIcon: !this.isReadonly && this.activeActions.delete,
+                isMany2Many: this.isMany2Many,
                 viewType: viewType,
                 columnInvisibleFields: this.currentColInvisibleFields,
             });
@@ -947,10 +949,9 @@ var FieldX2Many = AbstractField.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onDeleteRecord: function (ev) {
+    _onRemoveRecord: function (ev) {
         ev.stopPropagation();
-        var shouldForget = this.attrs.widget === 'many2many' || this.field.type === 'many2many';
-        var operation = shouldForget ? 'FORGET' : 'DELETE';
+        var operation = this.isMany2Many ? 'FORGET' : 'DELETE';
         this._setValue({
             operation: operation,
             ids: [ev.data.id],
