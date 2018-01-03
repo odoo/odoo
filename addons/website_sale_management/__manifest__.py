@@ -11,7 +11,7 @@ Display orders to invoice in website dashboard.
         'website_sale',
     ],
     'installable': True,
-    'autoinstall': True,
+    'auto_install': True,
     'data': [
     ],
     'demo': [

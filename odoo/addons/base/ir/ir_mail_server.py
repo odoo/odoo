@@ -144,7 +144,7 @@ class IrMailServer(models.Model):
                                             "- TLS (STARTTLS): TLS encryption is requested at start of SMTP session (Recommended)\n"
                                             "- SSL/TLS: SMTP sessions are encrypted with SSL/TLS through a dedicated port (default: 465)")
     smtp_debug = fields.Boolean(string='Debugging', help="If enabled, the full output of SMTP sessions will "
-                                                         "be written to the server log at DEBUG level"
+                                                         "be written to the server log at DEBUG level "
                                                          "(this is very verbose and may include confidential info!)")
     sequence = fields.Integer(string='Priority', default=10, help="When no specific mail server is requested for a mail, the highest priority one "
                                                                   "is used. Default priority is 10 (smaller number = higher priority)")
@@ -221,8 +221,8 @@ class IrMailServer(models.Model):
         if smtp_encryption == 'ssl':
             if 'SMTP_SSL' not in smtplib.__all__:
                 raise UserError(
-                    _("Your OpenERP Server does not support SMTP-over-SSL. "
-                      "You could use STARTTLS instead."
+                    _("Your Odoo Server does not support SMTP-over-SSL. "
+                      "You could use STARTTLS instead. "
                        "If SSL is needed, an upgrade to Python 2.6 on the server-side "
                        "should do the trick."))
             connection = smtplib.SMTP_SSL(smtp_server, smtp_port)

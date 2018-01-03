@@ -120,7 +120,7 @@ class PaymentAcquirer(models.Model):
         ('ask', 'Let the customer decide'),
         ('always', 'Always')],
         string='Save Cards', default='none',
-        help="This option allows customers to save their credit card as a payment token and to reuse it for a later purchase."
+        help="This option allows customers to save their credit card as a payment token and to reuse it for a later purchase. "
              "If you manage subscriptions (recurring invoicing), you need it to automatically charge the customer when you "
              "issue an invoice.")
     token_implemented = fields.Boolean('Saving Card Data supported', compute='_compute_feature_support', search='_search_is_tokenized')
