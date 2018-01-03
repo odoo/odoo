@@ -923,7 +923,7 @@ class Task(models.Model):
         res['headers'] = repr(headers)
         return res
 
-    def _message_post_after_hook(self, message):
+    def _message_post_after_hook(self, message, values):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -934,7 +934,7 @@ class Task(models.Model):
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
                     ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Task, self)._message_post_after_hook(message)
+        return super(Task, self)._message_post_after_hook(message, values)
 
     def action_assign_to_me(self):
         self.write({'user_id': self.env.user.id})

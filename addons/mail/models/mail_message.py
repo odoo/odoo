@@ -758,9 +758,6 @@ class Message(models.Model):
 
         message._invalidate_documents()
 
-        if not self.env.context.get('message_create_from_mail_mail'):
-            message._notify(force_send=self.env.context.get('mail_notify_force_send', True),
-                            user_signature=self.env.context.get('mail_notify_user_signature', True))
         return message
 
     @api.multi
