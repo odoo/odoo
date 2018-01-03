@@ -36,6 +36,8 @@ class AuthorizeController(http.Controller):
     def authorize_s2s_create_json(self, **kwargs):
         acquirer_id = int(kwargs.get('acquirer_id'))
         acquirer = request.env['payment.acquirer'].browse(acquirer_id)
+        if not kwargs.get('partner_id'):
+            kwargs = dict(kwargs, partner_id=request.env.user.partner_id.id)
         return acquirer.s2s_process(kwargs).id
 
     @http.route(['/payment/authorize/s2s/create_json_3ds'], type='json', auth='public', csrf=False)
@@ -44,6 +46,8 @@ class AuthorizeController(http.Controller):
         acquirer = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id')))
         
         try:
+            if not kwargs.get('partner_id'):
+                kwargs = dict(kwargs, partner_id=request.env.user.partner_id.id)
             token = acquirer.s2s_process(kwargs)
         except ValidationError as e:
             message = e.args[0]
