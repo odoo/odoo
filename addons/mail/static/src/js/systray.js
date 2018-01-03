@@ -124,11 +124,17 @@ var MessagingMenu = Widget.extend({
             var resID = $(event.currentTarget).data('res_id');
             var resModel = $(event.currentTarget).data('res_model');
             if (resModel && resID) {
-                this.do_action({
-                    type: 'ir.actions.act_window',
-                    res_model: resModel,
-                    views: [[false, 'form'], [false, 'kanban']],
-                    res_id: resID
+                this._rpc({
+                    model: resModel,
+                    method: 'get_formview_id',
+                    args: [[resID]],
+                }).then(function (view_id) {
+                    self.do_action({
+                        type: 'ir.actions.act_window',
+                        res_model: resModel,
+                        views: [[view_id, 'form'], [false, 'kanban']],
+                        res_id: resID
+                    });
                 });
             } else {
                 this.do_action('mail.mail_channel_action_client_chat', {clear_breadcrumbs: true})
