@@ -325,9 +325,11 @@ class MailComposer(models.TransientModel):
                 for attach_id in mail_values.pop('attachment_ids'):
                     new_attach_id = self.env['ir.attachment'].browse(attach_id).copy({'res_model': self._name, 'res_id': self.id})
                     attachment_ids.append(new_attach_id.id)
-                mail_values['attachment_ids'] = self.env['mail.thread']._message_preprocess_attachments(
+                mail_values['attachment_ids'] = self.env['mail.thread']._message_post_process_attachments(
                     mail_values.pop('attachments', []),
-                    attachment_ids, 'mail.message', 0)
+                    attachment_ids,
+                    {'model': 'mail.message', 'res_id': 0}
+                )
 
             results[res_id] = mail_values
         return results

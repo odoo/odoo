@@ -22,8 +22,7 @@ class MailController(http.Controller):
 
     @classmethod
     def _redirect_to_messaging(cls):
-        messaging_action = request.env['mail.thread']._get_inbox_action_xml_id()
-        url = '/web#%s' % url_encode({'action': messaging_action})
+        url = '/web#%s' % url_encode({'action': 'mail.mail_channel_action_client_chat'})
         return werkzeug.utils.redirect(url)
 
     @classmethod
