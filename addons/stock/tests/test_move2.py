@@ -202,7 +202,6 @@ class TestPickShip(TestStockCommon):
             'code': 'SWH'
         })
         warehouse_1.write({
-            'default_resupply_wh_id': warehouse_2.id,
             'resupply_wh_ids': [(6, 0, [warehouse_2.id])]
         })
         resupply_route = self.env['stock.location.route'].search([('supplier_wh_id', '=', warehouse_2.id), ('supplied_wh_id', '=', warehouse_1.id)])
@@ -1901,7 +1900,6 @@ class TestRoutes(TestStockCommon):
             'code': 'SWH'
         })
         warehouse_1.write({
-            'default_resupply_wh_id': warehouse_2.id,
             'resupply_wh_ids': [(6, 0, [warehouse_2.id])]
         })
         resupply_route = self.env['stock.location.route'].search([('supplier_wh_id', '=', warehouse_2.id), ('supplied_wh_id', '=', warehouse_1.id)])
