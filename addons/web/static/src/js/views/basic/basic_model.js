@@ -2675,7 +2675,7 @@ var BasicModel = AbstractModel.extend({
                             // this is a new id (maybe existing in DB, but new in JS)
                             relRecord = _.findWhere(relRecordAdded, {res_id: list.res_ids[i]});
                             changes = this._generateChanges(relRecord, options);
-                            if ('id' in changes) {
+                            if ('id' in changes && changes['id']) {
                                 // the subrecord already exists in db
                                 delete changes.id;
                                 if (this.isNew(record.id)) {
