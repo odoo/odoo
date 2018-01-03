@@ -5,9 +5,16 @@
 
 import logging
 
+import pytz
+
+from datetime import datetime, time
+from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.translate import _
+
+from odoo.addons.resource.models.resource import HOURS_PER_DAY
 
 _logger = logging.getLogger(__name__)
 
@@ -54,6 +61,10 @@ class HolidaysAllocation(models.Model):
             "\nThe status is 'To Approve', when leave request is confirmed by user." +
             "\nThe status is 'Refused', when leave request is refused by manager." +
             "\nThe status is 'Approved', when leave request is approved by manager.")
+    date_from = fields.Datetime('Start Date', readonly=True, index=True, copy=False,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
+    date_to = fields.Datetime('End Date', readonly=True, copy=False,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
     holiday_status_id = fields.Many2one("hr.leave.type", string="Leave Type", required=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         domain="[('valid', '=', True), ('employee_applicability', 'in', ['allocation', 'both']), ('limit', '=', False)]", default=_default_holiday_status_id)
@@ -86,6 +97,19 @@ class HolidaysAllocation(models.Model):
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
     type_request_unit = fields.Selection(related='holiday_status_id.request_unit')
+    accrual = fields.Boolean("Accrual", related='holiday_status_id.accrual', store=True, readonly=True)
+    number_per_interval = fields.Float("Number of unit per interval", readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    interval_number = fields.Integer("Number of unit between two intervals", readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    unit_per_interval = fields.Selection([
+        ('hours', 'Hour(s)'),
+        ('days', 'Day(s)')
+        ], string="Unit of time added at each interval", default='hours', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    interval_unit = fields.Selection([
+        ('weeks', 'Week(s)'),
+        ('months', 'Month(s)'),
+        ('years', 'Year(s)')
+        ], string="Unit of time between two intervals", default='weeks', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    nextcall = fields.Date("Date of the next accrual allocation", default=False, readonly=True)
 
     _sql_constraints = [
         ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL) or (holiday_type='department' AND department_id IS NOT NULL) )",
@@ -93,14 +117,80 @@ class HolidaysAllocation(models.Model):
         ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0."),
     ]
 
+    @api.model
+    def _update_accrual(self):
+        """
+            Method called by the cron task in order to increment the number_of_days when
+            necessary.
+        """
+        today = fields.Date.from_string(fields.Date.today())
+
+        holidays = self.search([('accrual', '=', True), ('state', '=', 'validate'),
+                                '|', ('date_to', '=', False), ('date_to', '>', fields.Datetime.now()),
+                                '|', ('nextcall', '=', False), ('nextcall', '<=', today)])
+
+        for holiday in holidays:
+            values = {}
+
+            delta = relativedelta(days=0)
+
+            if holiday.interval_unit == 'weeks':
+                delta = relativedelta(weeks=holiday.interval_number)
+            if holiday.interval_unit == 'months':
+                delta = relativedelta(months=holiday.interval_number)
+            if holiday.interval_unit == 'years':
+                delta = relativedelta(years=holiday.interval_number)
+
+            values['nextcall'] = (holiday.nextcall if holiday.nextcall else today) + delta
+
+            period_start = datetime.combine(today, time(0, 0, 0)) - delta
+            period_end = datetime.combine(today, time(0, 0, 0))
+
+            # We have to check when the employee has been created
+            # in order to not allocate him/her too much leaves
+            creation_date = fields.Datetime.from_string(holiday.employee_id.create_date)
+
+            # If employee is created after the period, we cancel the computation
+            if period_end <= creation_date:
+                holiday.write(values)
+                continue
+
+            # If employee created during the period, taking the date at which he has been created
+            if period_start <= creation_date:
+                period_start = creation_date
+
+            worked = holiday.employee_id.get_work_days_data(period_start, period_end, domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
+            left = holiday.employee_id.get_leave_days_data(period_start, period_end, domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
+            prorata = worked / (left + worked) if worked else 0
+
+            days_to_give = holiday.number_per_interval
+            if holiday.unit_per_interval == 'hours':
+                # As we encode everything in days in the database we need to convert
+                # the number of hours into days for this we use the
+                # mean number of hours set on the employee's calendar
+                days_to_give = days_to_give / holiday.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY
+
+            values['number_of_days_temp'] = holiday.number_of_days_temp + days_to_give * prorata
+
+            if holiday.holiday_status_id.balance_limit > 0:
+                values['number_of_days_temp'] = min(values['number_of_days_temp'], holiday.holiday_status_id.balance_limit)
+
+            values['number_of_hours'] = values['number_of_days_temp'] * holiday.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY
+
+            holiday.write(values)
+
     @api.multi
-    @api.depends('number_of_days_temp', 'type_request_unit', 'number_of_hours')
+    @api.depends('number_of_days_temp', 'type_request_unit', 'number_of_hours', 'holiday_status_id', 'employee_id')
     def _compute_number_of_days(self):
         for holiday in self:
+            number_of_days = holiday.number_of_days_temp
             if holiday.type_request_unit == 'hour':
-                holiday.number_of_days = holiday.number_of_hours / holiday.employee_id.resource_calendar_id.hours_per_day
-            else:
-                holiday.number_of_days = holiday.number_of_days_temp
+                # In this case we need the number of days to reflect the number of hours taken
+                number_of_days = holiday.number_of_hours / holiday.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY
+            if holiday.holiday_status_id.balance_limit > 0:
+                number_of_days = min(number_of_days, holiday.holiday_status_id.balance_limit)
+
+            holiday.number_of_days = number_of_days
 
     @api.multi
     def _compute_can_reset(self):
@@ -149,6 +239,23 @@ class HolidaysAllocation(models.Model):
     def _onchange_number_of_hours(self):
         self.number_of_days_temp = self.number_of_hours / self.employee_id.resource_calendar_id.hours_per_day
 
+    @api.onchange('holiday_status_id')
+    def _onchange_holiday_status_id(self):
+        self.date_to = self.holiday_status_id.validity_stop
+
+        if self.accrual:
+            self.number_of_days_temp = 0
+
+            if self.holiday_status_id.request_unit == 'hour':
+                self.unit_per_interval = 'hours'
+            else:
+                self.unit_per_interval = 'days'
+        else:
+            self.interval_number = 0
+            self.interval_unit = 'weeks'
+            self.number_per_interval = 0
+            self.unit_per_interval = 'hours'
+
     ####################################################
     # ORM Overrides methods
     ####################################################
@@ -185,6 +292,8 @@ class HolidaysAllocation(models.Model):
     @api.model
     def create(self, values):
         """ Override to avoid automatic logging of creation """
+        if values.get('accrual', False):
+            values['date_from'] = fields.Datetime.now()
         employee_id = values.get('employee_id', False)
         if not values.get('department_id'):
             values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})

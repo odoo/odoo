@@ -3,3 +3,4 @@
 
 from . import test_holidays_flow
 from . import test_hr_leave_type
+from . import test_accrual_allocations
