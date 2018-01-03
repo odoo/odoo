@@ -47,9 +47,9 @@ class MrpBom(models.Model):
         help="The operations for producing this BoM.  When a routing is specified, the production orders will "
              " be executed through work orders, otherwise everything is processed in the production order itself. ")
     ready_to_produce = fields.Selection([
-        ('all_available', 'All components available'),
-        ('asap', 'The components of 1st operation')], string='Manufacturing Readiness',
-        default='asap', required=True)
+        ('all_available', ' When all components are available'),
+        ('asap', 'When components for 1st operation are available')], string='Manufacturing Readiness',
+        default='asap', help="Defines when a Manufacturing Order is considered as ready to be started", required=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type', domain=[('code', '=', 'mrp_operation')],
         help=u"When a procurement has a ‘produce’ route with a operation type set, it will try to create "
