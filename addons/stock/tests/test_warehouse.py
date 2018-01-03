@@ -240,14 +240,12 @@ class TestWarehouse(TestStockCommon):
         warehouse_distribution = self.env['stock.warehouse'].create({
             'name': 'Dist.',
             'code': 'DIST',
-            'default_resupply_wh_id': warehouse_stock.id,
             'resupply_wh_ids': [(6, 0, [warehouse_stock.id])]
         })
 
         warehouse_shop = self.env['stock.warehouse'].create({
             'name': 'Shop',
             'code': 'SHOP',
-            'default_resupply_wh_id': warehouse_distribution.id,
             'resupply_wh_ids': [(6, 0, [warehouse_distribution.id])]
         })
 
@@ -318,7 +316,6 @@ class TestWarehouse(TestStockCommon):
         warehouse_shop_wavre = self.env['stock.warehouse'].create({
             'name': 'Shop Wavre',
             'code': 'SHWV',
-            'default_resupply_wh_id': warehouse_distribution_wavre.id,
             'resupply_wh_ids': [(6, 0, [warehouse_distribution_wavre.id])]
         })
 
@@ -330,7 +327,6 @@ class TestWarehouse(TestStockCommon):
         warehouse_shop_namur = self.env['stock.warehouse'].create({
             'name': 'Shop Namur',
             'code': 'SHNM',
-            'default_resupply_wh_id': warehouse_distribution_namur.id,
             'resupply_wh_ids': [(6, 0, [warehouse_distribution_namur.id])]
         })
 
@@ -443,7 +439,6 @@ class TestResupply(TestStockCommon):
         self.warehouse_2 = self.env['stock.warehouse'].create({
             'name': 'Small Warehouse',
             'code': 'SWH',
-            'default_resupply_wh_id': self.warehouse_1.id,
             'resupply_wh_ids': [(6, 0, [self.warehouse_1.id])]
         })
 
