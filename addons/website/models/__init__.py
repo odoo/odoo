@@ -12,3 +12,4 @@ from . import res_partner
 from . import web_planner
 from . import res_config_settings
 from . import ir_model_fields
+from . import ir_model
