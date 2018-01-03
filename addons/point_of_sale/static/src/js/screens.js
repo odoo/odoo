@@ -2030,6 +2030,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
         }
 
         order.initialize_validation_date();
+        order.finalized = true;
 
         if (order.is_to_invoice()) {
             var invoiced = this.pos.push_and_invoice_order(order);

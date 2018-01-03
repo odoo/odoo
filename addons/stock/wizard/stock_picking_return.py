@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
+from odoo.tools.float_utils import float_round
 
 
 class ReturnPickingLine(models.TransientModel):
@@ -12,6 +13,7 @@ class ReturnPickingLine(models.TransientModel):
 
     product_id = fields.Many2one('product.product', string="Product", required=True, domain="[('id', '=', product_id)]")
     quantity = fields.Float("Quantity", digits=dp.get_precision('Product Unit of Measure'), required=True)
+    uom_id = fields.Many2one('product.uom', string='Unit of Measure', related='move_id.product_uom')
     wizard_id = fields.Many2one('stock.return.picking', string="Wizard")
     move_id = fields.Many2one('stock.move', "Move")
 
@@ -49,7 +51,8 @@ class ReturnPicking(models.TransientModel):
                     move_dest_exists = True
                 quantity = move.product_qty - sum(move.move_dest_ids.filtered(lambda m: m.state in ['partially_available', 'assigned', 'done']).\
                                                   mapped('move_line_ids').mapped('product_qty'))
-                product_return_moves.append((0, 0, {'product_id': move.product_id.id, 'quantity': quantity, 'move_id': move.id}))
+                quantity = float_round(quantity, precision_rounding=move.product_uom.rounding)
+                product_return_moves.append((0, 0, {'product_id': move.product_id.id, 'quantity': quantity, 'move_id': move.id, 'uom_id': move.product_id.uom_id.id}))
 
             if not product_return_moves:
                 raise UserError(_("No products to return (only lines in Done state and not fully returned yet can be returned)!"))
@@ -72,6 +75,7 @@ class ReturnPicking(models.TransientModel):
         vals = {
             'product_id': return_line.product_id.id,
             'product_uom_qty': return_line.quantity,
+            'product_uom': return_line.product_id.uom_id.id,
             'picking_id': new_picking.id,
             'state': 'draft',
             'location_id': return_line.move_id.location_dest_id.id,

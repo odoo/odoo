@@ -16,10 +16,10 @@ var KioskMode = Widget.extend({
         var self = this;
         core.bus.on('barcode_scanned', this, this._onBarcodeScanned);
         self.session = Session;
-        this._rpc({
+        var def = this._rpc({
                 model: 'res.company',
                 method: 'search_read',
-                args: [[['id', '=', self.session.company_id]], ['name']],
+                args: [[['id', '=', this.session.company_id]], ['name']],
             })
             .then(function (companies){
                 self.company_name = companies[0].name;
@@ -27,7 +27,7 @@ var KioskMode = Widget.extend({
                 self.$el.html(QWeb.render("HrAttendanceKioskMode", {widget: self}));
                 self.start_clock();
             });
-        return self._super.apply(this, arguments);
+        return $.when(def, this._super.apply(this, arguments));
     },
 
     _onBarcodeScanned: function(barcode) {

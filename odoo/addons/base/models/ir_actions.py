@@ -372,7 +372,7 @@ class IrActionsServer(models.Model):
                                     oldname='srcmodel_id', help="Model for record creation / update. Set this field only to specify a different model than the base model.")
     crud_model_name = fields.Char(related='crud_model_id.name', readonly=True)
     link_field_id = fields.Many2one('ir.model.fields', string='Link using field',
-                                    help="Provide the field used to link the newly created record"
+                                    help="Provide the field used to link the newly created record "
                                          "on the record on used by the server action.")
     fields_lines = fields.One2many('ir.server.object.lines', 'server_id', string='Value Mapping', copy=True)
 
@@ -695,7 +695,7 @@ class IrActionsActClient(models.Model):
     res_model = fields.Char(string='Destination Model', help="Optional model, mostly used for needactions.")
     context = fields.Char(string='Context Value', default="{}", required=True, help="Context dictionary as Python expression, empty by default (Default: {})")
     params = fields.Binary(compute='_compute_params', inverse='_inverse_params', string='Supplementary arguments',
-                           help="Arguments sent to the client along with"
+                           help="Arguments sent to the client along with "
                                 "the view tag")
     params_store = fields.Binary(string='Params storage', readonly=True)
 

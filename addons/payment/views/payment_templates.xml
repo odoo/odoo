@@ -147,7 +147,7 @@
                         <i class="fa fa-lock"> Pay</i>
                     </t>
                 </button>
-                <button t-if="mode == 'manage'" id="o_payment_form_add_pm" class="btn btn-primary btn-lg mb8 mt8">
+                <button t-if="mode == 'manage' and s2s_acquirers" id="o_payment_form_add_pm" class="btn btn-primary btn-lg mb8 mt8">
                     <i class="fa fa-plus-circle"> Add new card</i>
                 </button>
             </div>
