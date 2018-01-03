@@ -23,11 +23,11 @@ ListRenderer.include({
         navigation_move: '_onNavigationMove',
     }),
     events: _.extend({}, ListRenderer.prototype.events, {
+        'click .o_field_x2many_list_row_add a': '_onAddRecord',
         'click tbody td.o_data_cell': '_onCellClick',
         'click tbody tr:not(.o_data_row)': '_onEmptyRowClick',
         'click tfoot': '_onFooterClick',
-        'click tr .o_list_record_delete': '_onTrashIconClick',
-        'click .o_field_x2many_list_row_add a': '_onAddRecord',
+        'click tr .o_list_record_remove': '_onRemoveIconClick',
     }),
     /**
      * @override
@@ -45,6 +45,10 @@ ListRenderer.include({
         // if addTrashIcon is true, there will be a small trash icon at the end
         // of each line, so the user can delete a record.
         this.addTrashIcon = params.addTrashIcon;
+
+        // replace the trash icon by X in case of many2many relations
+        // so that it means 'unlink' instead of 'remove'
+        this.isMany2Many = params.isMany2Many;
 
         this.currentRow = null;
         this.currentFieldIndex = null;
@@ -489,6 +493,7 @@ ListRenderer.include({
     /**
      * Editable rows are possibly extended with a trash icon on their right, to
      * allow deleting the corresponding record.
+     * For many2many editable lists, the trash bin is replaced by X.
      *
      * @override
      * @param {any} record
@@ -498,8 +503,10 @@ ListRenderer.include({
     _renderRow: function (record, index) {
         var $row = this._super.apply(this, arguments);
         if (this.addTrashIcon) {
-            var $icon = $('<span>', {class: 'fa fa-trash-o', name: 'delete'});
-            var $td = $('<td>', {class: 'o_list_record_delete'}).append($icon);
+            var $icon = this.isMany2Many ?
+                            $('<i>', {class: 'fa fa-times', name: 'unlink'}) :
+                            $('<i>', {class: 'fa fa-trash-o', name: 'delete'});
+            var $td = $('<td>', {class: 'o_list_record_remove'}).append($icon);
             $row.append($td);
         }
         return $row;
@@ -777,6 +784,17 @@ ListRenderer.include({
         }
     },
     /**
+     * Triggers a remove event. I don't know why we stop the propagation of the
+     * event.
+     *
+     * @param {MouseEvent} event
+     */
+    _onRemoveIconClick: function (event) {
+        event.stopPropagation();
+        var id = $(event.target).closest('tr').data('id');
+        this.trigger_up('list_record_remove', {id: id});
+    },
+    /**
      * If the list view editable, just let the event bubble. We don't want to
      * open the record in this case anyway.
      *
@@ -798,17 +816,6 @@ ListRenderer.include({
         if (this.currentRow === null) {
             this._super.apply(this, arguments);
         }
-    },
-    /**
-     * Triggers a delete event. I don't know why we stop the propagation of the
-     * event.
-     *
-     * @param {MouseEvent} event
-     */
-    _onTrashIconClick: function (event) {
-        event.stopPropagation();
-        var id = $(event.target).closest('tr').data('id');
-        this.trigger_up('list_record_delete', {id: id});
     },
     /**
      * When a click happens outside the list view, or outside a currently
