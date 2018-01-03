@@ -205,7 +205,7 @@ class TestHeavyMailPerformance(TransactionCase):
     @users('admin', 'emp')
     @warmup
     def test_complex_mail_mail_send(self):
-        message = self.env['mail.message'].sudo().with_context(message_create_from_mail_mail=True).create({
+        message = self.env['mail.message'].sudo().create({
             'subject': 'Test',
             'body': '<p>Test</p>',
             'author_id': self.env.user.partner_id.id,
