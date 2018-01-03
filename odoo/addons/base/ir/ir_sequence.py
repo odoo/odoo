@@ -119,7 +119,7 @@ class IrSequence(models.Model):
     implementation = fields.Selection([('standard', 'Standard'), ('no_gap', 'No gap')],
                                       string='Implementation', required=True, default='standard',
                                       help="Two sequence object implementations are offered: Standard "
-                                           "and 'No gap'. The later is slower than the former but forbids any"
+                                           "and 'No gap'. The later is slower than the former but forbids any "
                                            "gap in the sequence (while they are possible in the former).")
     active = fields.Boolean(default=True)
     prefix = fields.Char(help="Prefix value of the record for the sequence")
