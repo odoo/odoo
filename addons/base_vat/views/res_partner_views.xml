@@ -19,7 +19,7 @@
                 </xpath>
 
                 <xpath expr="//header" position="inside">
-                    <button id="base_vat_recheck_vies" string="Recheck VIES" type="object" name="compute_base_vat_vies_status" attrs="{'invisible': [('base_vat_vies_status', '!=', 'exception')]}"/>
+                    <button id="base_vat_recheck_vies" string="Recheck VIES" type="object" name="compute_base_vat_vies_status" attrs="{'invisible': [('base_vat_vies_status', '!=', 'exception')]}" class="oe_read_only"/>
                 </xpath>
             </field>
         </record>
