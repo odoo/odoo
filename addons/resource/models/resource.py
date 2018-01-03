@@ -722,7 +722,7 @@ class ResourceCalendarLeaves(models.Model):
     date_to = fields.Datetime('End Date', required=True)
     tz = fields.Selection(
         _tz_get, string='Timezone', default=lambda self: self._context.get('tz', self.env.user.tz or 'UTC'),
-        help="Timezone used when encoding the leave. It is used to correctly"
+        help="Timezone used when encoding the leave. It is used to correctly "
              "localize leave hours when computing time intervals.")
     resource_id = fields.Many2one(
         "resource.resource", 'Resource',
