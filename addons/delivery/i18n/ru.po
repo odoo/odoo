@@ -3,23 +3,23 @@
 # * delivery
 # 
 # Translators:
-# Sergey Vilizhanin <sv@grimmette.ru>, 2017
 # Viktor Pogrebniak <vp@aifil.ru>, 2017
-# Denis Trepalin <zekarious@gmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
+# Sergey Vilizhanin <sv@grimmette.ru>, 2017
+# Максим Дронь <dronmax@gmail.com>, 2017
 # Andrey Samorukov <andrey.samorukov@me.com>, 2017
 # Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
-# Максим Дронь <dronmax@gmail.com>, 2017
-# Evgeny <transingularity@gmail.com>, 2017
 # Gennady Marchenko <gennadym@gmail.com>, 2017
 # Mekan Bash <tmbashimov@gmail.com>, 2017
+# Evgeny <transingularity@gmail.com>, 2017
+# Denis Trepalin <zekarious@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:12+0000\n"
-"PO-Revision-Date: 2017-11-30 13:12+0000\n"
-"Last-Translator: Mekan Bash <tmbashimov@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-12-13 14:36+0000\n"
+"PO-Revision-Date: 2017-12-13 14:36+0000\n"
+"Last-Translator: Denis Trepalin <zekarious@gmail.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -163,7 +163,7 @@ msgstr "Действие при подтверждении заказов на �
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
 msgid "Active"
-msgstr "Актив"
+msgstr "Активно"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_amount
@@ -193,15 +193,6 @@ msgstr "На основании Правил"
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_weight_bulk
 msgid "Bulk Weight"
 msgstr "Объёмный Вес"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_stock_quant_package_shipping_weight
-msgid ""
-"Can be changed during the 'put in pack' to adjust the weight of the "
-"shipping."
-msgstr ""
-"Может быть изменен во время 'положить в пакет', чтобы отрегулировать вес "
-"доставки."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -437,7 +428,7 @@ msgstr "Получить процентную ставку и создать о�
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Group By"
-msgstr "Группировать по"
+msgstr "Группировать"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_product_hs_code
@@ -597,12 +588,6 @@ msgstr "Нет установленного перевозчика для это
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
-
-#. module: delivery
-#: model:product.product,name:delivery.product_product_delivery_normal
-#: model:product.template,name:delivery.product_product_delivery_normal_product_template
-msgid "Normal Delivery Charges"
-msgstr "Обычная стоимость доставки"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_number_of_packages
@@ -799,12 +784,6 @@ msgid "Stock Move"
 msgstr "Перемещение запасов"
 
 #. module: delivery
-#: model:product.product,name:delivery.product_product_delivery_poste
-#: model:product.template,name:delivery.product_product_delivery_poste_product_template
-msgid "The Poste"
-msgstr "Почта"
-
-#. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid ""
 "These methods allow to automatically compute the delivery price\n"
@@ -903,9 +882,19 @@ msgid "Weight Unit of Measure"
 msgstr "Единица измерения веса"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_quant_package_weight
+msgid "Weight computed based on the sum of the weights of the products."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
 msgid "Weight for Shipping"
 msgstr "Вес для перевозкы груза"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_quant_package_shipping_weight
+msgid "Weight used to compute the price of the delivery (if applicable)."
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_width
@@ -956,4 +945,4 @@ msgstr "Почтовые До"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "e.g. UPS Express"
-msgstr "нап. UPS Экспресс"
+msgstr " например UPS Express"

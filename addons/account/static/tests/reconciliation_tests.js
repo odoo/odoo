@@ -658,6 +658,98 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
+    QUnit.test('Reconciliation validate without proposition', function (assert) {
+        assert.expect(1);
+        // Test added to prevent this issue happening again: https://github.com/odoo/odoo/commit/3549688b21eb65e16b9c3f2b6462eb8d8b52cd47
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
+        testUtils.addMockEnvironment(clientAction, {
+            data: this.params.data,
+            session: {
+                currencies: {
+                    3: {
+                        digits: [69, 2],
+                        position: "before",
+                        symbol: "$"
+                    }
+                }
+            },
+        });
+
+        clientAction.appendTo($('#qunit-fixture'));
+
+        var widget = clientAction.widgets[0];
+        // Ensure that when we validate a line without any selection, it is the same
+        // as when we manually create a line with the line.balance and that only one
+        // line is send back to server.
+        testUtils.intercept(clientAction, 'call_service', function (event) {
+            assert.deepEqual(event.data.args[1].args,
+                [[5],[{partner_id: 8, counterpart_aml_dicts: [],
+                                    payment_aml_ids: [], new_aml_dicts: [{
+                                        account_id: 287,
+                                        credit: 1175,
+                                        debit: 0,
+                                        name: 'SAJ/2014/002 and SAJ/2014/003'
+                                    }]}]],
+                "Should call process_reconciliations with ids");
+        });
+
+        // click on validate button
+        widget.$('button.o_validate:not(:hidden)').trigger('click');
+        clientAction.destroy();
+    });
+
+    QUnit.test('Reconciliation validate with proposition', function (assert) {
+        assert.expect(1);
+        // Test added to check this functionality: https://github.com/odoo/odoo/commit/2f3b469dee6f18cbccce1cdf2a81cfe57960c533
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
+        testUtils.addMockEnvironment(clientAction, {
+            data: this.params.data,
+            session: {
+                currencies: {
+                    3: {
+                        digits: [69, 2],
+                        position: "before",
+                        symbol: "$"
+                    }
+                }
+            },
+        });
+
+        clientAction.appendTo($('#qunit-fixture'));
+
+        var widget = clientAction.widgets[0];
+        // Add a line as proposition
+        // open the first line
+        widget.$('.accounting_view thead td:first').trigger('click');
+        // select propositions
+        widget.$('.match .cell_account_code:first').trigger('click');
+
+        // Ensure that when we validate a line with propositions and that there is a remaining balance
+        // We also create a line which is the open balance.
+        testUtils.intercept(clientAction, 'call_service', function (event) {
+            assert.deepEqual(event.data.args[1].args,
+                [[5],[{partner_id: 8, 
+                                    counterpart_aml_dicts: [{
+                                        counterpart_aml_id: 109,
+                                        credit: 650,
+                                        debit: 0,
+                                        name: 'INV/2017/0002'
+                                    }],
+                                    payment_aml_ids: [], 
+                                    new_aml_dicts: [{
+                                        account_id: 287,
+                                        credit: 525,
+                                        debit: 0,
+                                        name: 'SAJ/2014/002 and SAJ/2014/003 : Open balance'
+                                    }]}]],
+                "Should call process_reconciliations with ids");
+        });
+
+        // click on validate button
+        widget.$('button.o_validate:not(:hidden)').trigger('click');
+        clientAction.destroy();
+    });
+
     QUnit.test('Reconciliation partial', function (assert) {
         assert.expect(10);
 

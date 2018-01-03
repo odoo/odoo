@@ -38,8 +38,9 @@ odoo.define('payment_stripe.stripe', function(require) {
                     });
                 }
                 ajax.jsonRpc("/payment/stripe/create_charge", 'call', {
-                    tokenid: token.id,
-                    email: token.email,
+                    tokenid: token.id,  // TBE TODO: for backward compatibility, remove on master
+                    email: token.email, // TBE TODO: for backward compatibility, remove on master
+                    token: token,
                     amount: $("input[name='amount']").val(),
                     acquirer_id: $("#acquirer_stripe").val(),
                     currency: $("input[name='currency']").val(),

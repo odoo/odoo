@@ -41,7 +41,7 @@ var KanbanColumn = Widget.extend({
         this.data = data;
 
         var value = data.value;
-        this.id = data.res_id || value;
+        this.id = data.res_id;
         this.folded = !data.isOpen;
         this.has_active_field = 'active' in data.fields;
         this.fields = data.fields;

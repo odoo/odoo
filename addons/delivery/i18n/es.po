@@ -3,33 +3,32 @@
 # * delivery
 # 
 # Translators:
-# Vicent Cubells <vicent.cubells@tecnativa.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2016
+# Antonio Trueba <atgayol@gmail.com>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# Alejandro Die Sanchis <marketing@domatix.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# Amaia Bastida <amaiatrainer@gmail.com>, 2016
+# José Vicente <txusev@gmail.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# Rafael Blasco <rafabn@antiun.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# Miguel Orueta <mo@landoo.es>, 2016
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# Miguel Orueta <mo@landoo.es>, 2017
-# Gustavo Valverde <g.valverde02@gmail.com>, 2017
-# Rafael Blasco <rafabn@antiun.com>, 2017
-# Eduardo Magdalena <emagdalena@close2circle.com>, 2017
-# José Vicente <txusev@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Daniel Blanco <daniel@blancomartin.com.ar>, 2017
-# Antonio Trueba <atgayol@gmail.com>, 2017
-# Ana Juaristi <ajuaristio@gmail.com>, 2017
-# Alejandro Die Sanchis <marketing@domatix.com>, 2017
-# Luis M. Triana <luis.triana@jarsa.com.mx>, 2017
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
 # Alejandro Santana <alejandrosantana@anubia.es>, 2017
-# RGB Consulting <odoo@rgbconsulting.com>, 2017
-# Amaia Bastida <amaiatrainer@gmail.com>, 2017
-# Ivan Nieto <ivan.n.s@tuta.io>, 2017
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
 # Nicole Kist <nki@odoo.com>, 2017
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:12+0000\n"
-"PO-Revision-Date: 2017-11-30 13:12+0000\n"
+"POT-Creation-Date: 2017-12-13 14:36+0000\n"
+"PO-Revision-Date: 2017-12-13 14:36+0000\n"
 "Last-Translator: Christopher Ormaza <chris.ormaza@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -75,6 +74,22 @@ msgid ""
 "<p>Thank you,</p>\n"
 "      </data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Estimado ${object.partner_id.name},</p>\n"
+"<p>Nos complace informarle de que su pedido ha sido enviado.</p>\n"
+"<p>\n"
+"%if object.carrier_tracking_ref:\n"
+"  Su código de referencia:\n"
+"  %if object.carrier_tracking_url:\n"
+"    <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"  %else:\n"
+"    ${object.carrier_tracking_ref}.\n"
+"  %endif\n"
+"%endif\n"
+"</p>\n"
+"<p>Consulte el albarán adjunto para más detalles.</p>\n"
+"<p>Gracias,</p>\n"
+"      </data>"
 
 #. module: delivery
 #: model:mail.template,body_html:delivery.mail_template_data_delivery_notification
@@ -132,6 +147,58 @@ msgid ""
 "        </table>\n"
 "      "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"font-family:Arial,Helvetica,sans-serif; padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
+"          <tbody>\n"
+"            <!-- HEADER -->\n"
+"            <tr>\n"
+"              <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table width=\"650\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                  <tr>\n"
+"                    <td valign=\"middle\">\n"
+"                      <span style=\"font-size:20px; color:white; font-weight: bold;\">${object.record_name}</span>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\">\n"
+"                      <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"                    </td>\n"
+"                  </tr>\n"
+"                </table>\n"
+"              </td>\n"
+"            </tr>\n"
+"            <!-- CONTENT -->\n"
+"            <tr>\n"
+"              <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table width=\"650\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\">\n"
+"                  <tbody>\n"
+"                    <td valign=\"top\" style=\"color: #555; font-size: 14px;\">${object.body | safe}</td>\n"
+"                  </tbody>\n"
+"                </table>\n"
+"              </td>\n"
+"            </tr>\n"
+"            <!-- FOOTER -->\n"
+"            <tr>\n"
+"              <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table width=\"650\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                  <tr>\n"
+"                    <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">${user.company_id.name}<br/>${user.company_id.phone or ''}</td>\n"
+"                    <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                      % if user.company_id.email:\n"
+"                      <a href=\"mailto:${user.company_id.email}\" style=\"text-decoration:none; color: white;\">${user.company_id.email}</a><br/>\n"
+"                      % endif\n"
+"                      % if user.company_id.website:\n"
+"                        <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: white;\">${user.company_id.website}</a>\n"
+"                      % endif\n"
+"                    </td>\n"
+"                  </tr>\n"
+"                </table>\n"
+"              </td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"              <td align=\"center\">Powered by <a href=\"https://www.odoo.com\">Odoo</a>.</td>\n"
+"            </tr>\n"
+"          </tbody>\n"
+"        </table>\n"
+"      "
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:76
@@ -159,7 +226,7 @@ msgstr "<strong>Transporte</strong>"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Tracking Number</strong>"
-msgstr ""
+msgstr "<strong>Identificador:</strong>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -180,7 +247,7 @@ msgstr "Activo"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_amount
 msgid "Amount"
-msgstr "Monto"
+msgstr "Importe"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_amount
@@ -207,14 +274,6 @@ msgid "Bulk Weight"
 msgstr "Peso a granel"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_stock_quant_package_shipping_weight
-msgid ""
-"Can be changed during the 'put in pack' to adjust the weight of the "
-"shipping."
-msgstr ""
-"Se puede cambiar durante el 'empaquetado' para ajustar el peso del envío."
-
-#. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Cancel"
 msgstr "Cancelar"
@@ -228,12 +287,12 @@ msgstr "Cancelar"
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
-msgstr "Forma de envío"
+msgstr "Transportista"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "Check price"
-msgstr ""
+msgstr "Revisar precio"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -292,7 +351,7 @@ msgstr "Transportista"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Delivery Cost"
-msgstr ""
+msgstr "Coste de envío"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -302,14 +361,14 @@ msgstr "Información de entrega"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_message
 msgid "Delivery Message"
-msgstr ""
+msgstr "Mensaje de entrega"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_res_users_property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_sale_order_carrier_id
 msgid "Delivery Method"
-msgstr "Forma de envío"
+msgstr "Método entrega"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
@@ -322,7 +381,7 @@ msgstr "Método de envío"
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_package
 msgid "Delivery Package Selection Wizard"
-msgstr ""
+msgstr "Asistente selección empaquetado"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_packaging_view
@@ -335,7 +394,7 @@ msgstr "Paquetes de entrega"
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_delivery_packaging_id
 #: model:ir.ui.view,arch_db:delivery.product_packaging_delivery_form
 msgid "Delivery Packaging"
-msgstr ""
+msgstr "Empaquetado"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
@@ -350,12 +409,12 @@ msgstr "Producto de envío"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_rating_success
 msgid "Delivery Rating Success"
-msgstr ""
+msgstr "Tasa de éxito en entregas"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Destination Availability"
-msgstr ""
+msgstr "Disponibilidad de destino"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sequence
@@ -372,7 +431,7 @@ msgstr "Descartar"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_display_name
 msgid "Display Name"
-msgstr "Nombre a Mostrar"
+msgstr "Nombre a mostrar"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -432,7 +491,7 @@ msgstr "Entrega gratuita"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_free_over
 msgid "Free if order amount is above"
-msgstr ""
+msgstr "Gratuito si el importe del pedido es superior a"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
@@ -447,7 +506,7 @@ msgstr "Obtener tarifas y crear envíos"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Group By"
-msgstr "Agrupar Por"
+msgstr "Agrupar por"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_product_hs_code
@@ -478,6 +537,8 @@ msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
 "value, the customer benefits from a free shipping"
 msgstr ""
+"Si el importe total del pedido (gastos de envío excluidos) es igual o "
+"superior a este valor, el envío es gratuito para el cliente."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:125
@@ -487,6 +548,9 @@ msgid ""
 "The shipping is free because the order amount exceeds %.2f.\n"
 "(The actual shipping cost is: %.2f)"
 msgstr ""
+"Información:\n"
+"El envío es gratuito debido a que el importe total excede de %.2f.\n"
+"(El coste real de envío es: %.2f)"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -513,21 +577,21 @@ msgstr "Es un envío"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier___last_update
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule___last_update
 msgid "Last Modified on"
-msgstr "Última Modificación en"
+msgstr "Última modificación en"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_write_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_write_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_write_uid
 msgid "Last Updated by"
-msgstr "Última Actualización por"
+msgstr "Última actualización por"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_write_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_write_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_write_date
 msgid "Last Updated on"
-msgstr "Última Actualización el"
+msgstr "Última actualización el"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_length
@@ -607,12 +671,8 @@ msgstr "No hay transportista establecido para esta orden."
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
-
-#. module: delivery
-#: model:product.product,name:delivery.product_product_delivery_normal
-#: model:product.template,name:delivery.product_product_delivery_normal_product_template
-msgid "Normal Delivery Charges"
-msgstr "Gastos de entrega normales."
+"Ninguna regla concordante con este pedido; los costes de envío no pueden ser"
+" calculados."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_number_of_packages
@@ -659,7 +719,7 @@ msgstr "Operación de empaquetado"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_stock_quant_package_id
 msgid "Physical Package"
-msgstr ""
+msgstr "Paquete físico"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
@@ -673,6 +733,8 @@ msgid ""
 "Please use \"Check price\" in order to compute a shipping price for this "
 "quotation."
 msgstr ""
+"Por favor, utilice \"Comprobar precio\" para calcular los gastos de envío de"
+" este presupuesto."
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -723,7 +785,7 @@ msgstr "Presupuesto"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Albarán de devolución"
+msgstr "Devolver albarán"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_list_base_price
@@ -748,7 +810,7 @@ msgstr "Guardar"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Send Confirmation Email"
-msgstr ""
+msgstr "Enviar email de confirmación"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -780,6 +842,8 @@ msgid ""
 "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
 "%.2f %s"
 msgstr ""
+"Mercancía enviada al transportista %s con identificador %s<br/>Coste: %.2f "
+"%s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
@@ -810,12 +874,6 @@ msgid "Stock Move"
 msgstr "Movimiento de existencias"
 
 #. module: delivery
-#: model:product.product,name:delivery.product_product_delivery_poste
-#: model:product.template,name:delivery.product_product_delivery_poste_product_template
-msgid "The Poste"
-msgstr "The Poste"
-
-#. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid ""
 "These methods allow to automatically compute the delivery price\n"
@@ -823,7 +881,7 @@ msgid ""
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
 "Estos métodos permiten calcular automáticamente el precio de la entrega\n"
-"                de acuerdo a su configuración; en el pedido de venta (basada en la\n"
+"                de acuerdo a su configuración; en el pedido de venta (basada en el\n"
 "                presupuesto) o la factura (basada en las órdenes de entrega)."
 
 #. module: delivery
@@ -852,7 +910,7 @@ msgstr "Referencia de seguimiento"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_url
 msgid "Tracking URL"
-msgstr ""
+msgstr "URL para seguimiento"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -914,9 +972,19 @@ msgid "Weight Unit of Measure"
 msgstr "UdM del peso"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_quant_package_weight
+msgid "Weight computed based on the sum of the weights of the products."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
 msgid "Weight for Shipping"
 msgstr "Peso para envío"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_quant_package_shipping_weight
+msgid "Weight used to compute the price of the delivery (if applicable)."
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_width
@@ -942,7 +1010,7 @@ msgstr ""
 #: code:addons/delivery/models/sale_order.py:71
 #, python-format
 msgid "You can add delivery price only on unconfirmed quotations."
-msgstr ""
+msgstr "Solo puede añadir gastos de envío en presupuestos sin confirmar."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:182

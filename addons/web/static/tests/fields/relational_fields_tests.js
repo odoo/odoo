@@ -258,6 +258,31 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('context in many2one and default get', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.int_field.default = 14;
+        this.data.partner.fields.trululu.default = 2;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="int_field"/>' +
+                        '<field name="trululu"  context="{\'blip\':int_field}"/>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'name_get') {
+                    assert.strictEqual(args.kwargs.context.blip, 14,
+                        'context should have been properly sent to the nameget rpc');
+                }
+                return this._super(route, args);
+            },
+        });
+        form.destroy();
+    });
+
     QUnit.test('editing a many2one (with form view opened with external button)', function (assert) {
         assert.expect(1);
         var form = createView({
@@ -2249,7 +2274,7 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "yopblipkawa",
             "should still have the 3 rows in the correct order");
 
-        // Drag and drop the fourth line in second position
+        // Drag and drop the second line in first position
         testUtils.dragAndDrop(
             form.$('.ui-sortable-handle').eq(1),
             form.$('tbody tr').first(),
@@ -2309,7 +2334,7 @@ QUnit.module('relational_fields', {
 
         form.$buttons.find('.o_form_button_edit').click();
 
-        // Drag and drop the fourth line in second position
+        // Drag and drop the second line in first position
         testUtils.dragAndDrop(
             form.$('.ui-sortable-handle').eq(1),
             form.$('tbody tr').first(),
@@ -2318,6 +2343,120 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(turtleOnchange, 2, "should trigger one onchange per line updated");
         assert.strictEqual(partnerOnchange, 1, "should trigger only one onchange on the parent");
+
+        form.destroy();
+    });
+
+    QUnit.test('onchange for embedded one2many with handle widget using same sequence', function (assert) {
+        assert.expect(4);
+
+        this.data.turtle.records[0].turtle_int = 1;
+        this.data.turtle.records[1].turtle_int = 1;
+        this.data.turtle.records[2].turtle_int = 1;
+        this.data.partner.records[0].turtles = [1, 2, 3];
+        var turtleOnchange = 0;
+        this.data.turtle.onchanges = {
+            turtle_int: function () {
+                turtleOnchange++;
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<notebook>' +
+                            '<page string="P page">' +
+                                '<field name="turtles">' +
+                                    '<tree default_order="turtle_int">' +
+                                        '<field name="turtle_int" widget="handle"/>' +
+                                        '<field name="turtle_foo"/>' +
+                                    '</tree>' +
+                                '</field>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                 '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1].turtles, [[1,1,{"turtle_int":2}],[4,2,false],[1,3,{"turtle_int":3}]],
+                        "should change all lines that have changed (the first one doesn't change because it has the same sequence)");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "yopblipkawa",
+            "should have the 3 rows in the correct order");
+
+        // Drag and drop the second line in first position
+        testUtils.dragAndDrop(
+            form.$('.ui-sortable-handle').eq(1),
+            form.$('tbody tr').first(),
+            {position: 'top'}
+        );
+
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipyopkawa",
+            "should still have the 3 rows in the correct order");
+        assert.strictEqual(turtleOnchange, 3, "should update all lines");
+
+        form.$buttons.find('.o_form_button_save').click();
+        form.destroy();
+    });
+
+    QUnit.test('onchange (with command 5) for embedded one2many with handle widget', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].turtles = [1, 2, 3];
+        this.data.partner.onchanges = {
+            turtles: function (obj) {
+                obj.turtles = [[5]].concat(obj.turtles);
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="turtles">' +
+                                '<tree editable="bottom" default_order="turtle_int">' +
+                                    '<field name="turtle_int" widget="handle"/>' +
+                                    '<field name="turtle_foo"/>' +
+                                '</tree>' +
+                            '</field>' +
+                        '</group>' +
+                    '</sheet>' +
+                 '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "yopblipkawa",
+            "should have the 3 rows in the correct order");
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_one2many .o_list_view tbody tr:first td:first').click();
+        form.$('.o_field_one2many .o_list_view tbody tr:first input:first').val('blurp').trigger('input');
+
+        // Drag and drop the third line in second position
+        testUtils.dragAndDrop(
+            form.$('.ui-sortable-handle').eq(2),
+            form.$('.o_field_one2many tbody tr').eq(1),
+            {position: 'top'}
+        );
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.strictEqual(form.$('.o_data_cell:not(.o_handle_cell)').text(), "blurpkawablip",
+            "should display to record in 'turtle_int' order");
 
         form.destroy();
     });
@@ -4140,6 +4279,48 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_data_row').text(), "first20second-20",
             "should correctly refresh the records after save");
+
+        form.destroy();
+        testUtils.unpatch(AbstractField);
+    });
+
+    QUnit.test('editable one2many with sub widgets are rendered in readonly', function (assert) {
+        assert.expect(2);
+
+        var editableWidgets = 0;
+        testUtils.patch(AbstractField, {
+            init: function () {
+                this._super.apply(this, arguments);
+                if (this.mode === 'edit') {
+                    editableWidgets++;
+                }
+            },
+        });
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="turtle_foo" widget="char" attrs="{\'readonly\': [(\'turtle_int\', \'==\', 11111)]}"/>' +
+                            '<field name="turtle_int"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(editableWidgets, 1,
+            "o2m is only widget in edit mode");
+        form.$('tbody td.o_field_x2many_list_row_add a').click();
+
+        assert.strictEqual(editableWidgets, 3,
+            "3 widgets currently in edit mode");
 
         form.destroy();
         testUtils.unpatch(AbstractField);
@@ -6718,6 +6899,63 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many field: change value before pending onchange returns', function (assert) {
+        var done = assert.async();
+        assert.expect(2);
+
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        this.data.partner.onchanges = {
+            int_field: function () {}
+        };
+        var def;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="p">' +
+                        '<tree editable="bottom">' +
+                            '<field name="int_field"/>' +
+                            '<field name="trululu"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'onchange') {
+                    // delay the onchange RPC
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        form.$('.o_field_x2many_list_row_add a').click();
+        def = $.Deferred();
+        form.$('.o_field_widget[name=int_field]')
+            .val('44')
+            .trigger('input');
+
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+        // set trululu before onchange
+        form.$('.o_field_many2one input').val('first').trigger('keydown').trigger('keyup');
+        // complete the onchange
+        def.resolve();
+        assert.strictEqual(form.$('.o_field_many2one input').val(), 'first',
+            'should have kept the new value');
+        concurrency.delay(0).then(function () {
+            // check name_search result
+            assert.strictEqual($dropdown.find('li:not(.o_m2o_dropdown_option)').length, 1,
+                        'autocomplete should contains 1 suggestion');
+
+            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+            form.destroy();
+            done();
+        });
+    });
+
     QUnit.test('focus is correctly reset after an onchange in an x2many', function (assert) {
         assert.expect(2);
 
@@ -8661,7 +8899,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('fieldmany2many tags in editable list', function (assert) {
-        assert.expect(4);
+        assert.expect(7);
 
         this.data.partner.records[0].timmy = [12];
 
@@ -8669,10 +8907,18 @@ QUnit.module('relational_fields', {
             View: ListView,
             model: 'partner',
             data: this.data,
+            context: {take: 'five'},
             arch:'<tree editable="bottom">' +
                     '<field name="foo"/>' +
                     '<field name="timmy" widget="many2many_tags"/>' +
                 '</tree>',
+            mockRPC: function (route, args) {
+                if (args.method === 'read' && args.model === 'partner_type') {
+                    assert.deepEqual(args.kwargs.context, {take: 'five'},
+                        'The context should be passed to the RPC');
+                }
+            return this._super.apply(this, arguments);
+            }
         });
 
         assert.strictEqual(list.$('.o_data_row:first .o_field_many2manytags .badge').length, 1,

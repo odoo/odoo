@@ -367,6 +367,8 @@ class Project(models.Model):
         groups = super(Project, self)._notification_recipients(message, groups)
 
         for group_name, group_method, group_data in groups:
+            if group_name in ['customer', 'portal']:
+                continue
             group_data['has_button_access'] = True
 
         return groups
@@ -817,6 +819,8 @@ class Task(models.Model):
 
         groups = [new_group] + groups
         for group_name, group_method, group_data in groups:
+            if group_name in ['customer', 'portal']:
+                continue
             group_data['has_button_access'] = True
 
         return groups

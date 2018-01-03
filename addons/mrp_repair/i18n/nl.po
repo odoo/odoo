@@ -3,18 +3,18 @@
 # * mrp_repair
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
-# Cas Vissers <casvissers@brahoo.nl>, 2017
-# Eric Geens <ericgeens@yahoo.com>, 2017
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:27+0000\n"
 "PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2017\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +54,7 @@ msgid ""
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
 " * De 'Concept' status wordt gebruikt wanneer een gebruiker een nieuwe reparatieopdracht aan het ingeven is.\n"
-"* De 'Bevestigd' status wordt gebruikt wanneer een gebruiker de reparatieopdracht bevestigd.\n"
+"* De 'Bevestigd' status wordt gebruikt wanneer een gebruiker de reparatieopdracht bevestigt.\n"
 "* De 'Gereed voor reparatie' status wordt gebruikt om te beginnen met het repareren. De gebruiker kan beginnen met de reparatie nadat reparatieopdracht is bevestigd.\n"
 "* De 'Te factureren \" status wordt gebruikt om de factuur vóór of na de reparatie te genereren.\n"
 "* De 'Verwerkt' status wordt ingesteld als de reparatie is voltooid.\n"
@@ -126,7 +126,7 @@ msgstr "<strong>Product om te repareren:</strong>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Shipping address :</strong>"
-msgstr "<strong>Afleveradres:</strong>"
+msgstr "<strong>Verzendadres:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -217,7 +217,7 @@ msgstr "Klik om een reparatie order aan te maken."
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_company_id
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Company"
-msgstr "Bedrijf"
+msgstr "Bedijf"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -328,7 +328,7 @@ msgstr "Wilt u echt de factu(u)r(en) aanmaken?"
 #. module: mrp_repair
 #: selection:mrp.repair.line,state:0
 msgid "Done"
-msgstr "Gereed"
+msgstr "Verwerkt"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,state:0
@@ -447,7 +447,7 @@ msgstr "Factuur adres:"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Invoice and shipping address:"
-msgstr "Factuur- en afleveradres"
+msgstr "Factuur- en verzendadres"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:389
@@ -570,7 +570,7 @@ msgstr "Geen geldige prijslijst regel gevonden!"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Notes"
-msgstr "Notities"
+msgstr "Opmerkingen"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fees_lines
@@ -862,7 +862,7 @@ msgstr "BTW"
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_tax_id
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Taxes"
-msgstr "BTW"
+msgstr "Belastingen"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:175
@@ -896,7 +896,7 @@ msgid ""
 "The status of a repair line is set automatically to the one of the linked "
 "repair order."
 msgstr ""
-"De status van een reparatie regel is automatisch ingesteld op de status van "
+"De status van een reparatie lijn is automatisch ingesteld op de status van "
 "de gerelateerde reparatie order."
 
 #. module: mrp_repair
@@ -958,12 +958,12 @@ msgstr "Maateenheid"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_untaxed
 msgid "Untaxed Amount"
-msgstr "Excl. BTW"
+msgstr "Onbelast bedrag"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Untaxed amount"
-msgstr "Excl. BTW"
+msgstr "Onbelast bedrag"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:175

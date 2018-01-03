@@ -290,7 +290,7 @@ function formatMonetary(value, field, options) {
         digits:  (currency && currency.digits) || options.digits,
     });
 
-    if (!currency) {
+    if (!currency || options.noSymbol) {
         return formatted_value;
     }
     if (currency.position === "after") {

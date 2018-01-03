@@ -3,19 +3,19 @@
 # * delivery
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
-# Volluta <volluta@tutanota.com>, 2017
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
-# Cas Vissers <casvissers@brahoo.nl>, 2017
-# Eric Geens <ericgeens@yahoo.com>, 2017
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Volluta <volluta@tutanota.com>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:12+0000\n"
-"PO-Revision-Date: 2017-11-30 13:12+0000\n"
-"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2017\n"
+"POT-Creation-Date: 2017-12-13 14:36+0000\n"
+"PO-Revision-Date: 2017-12-13 14:36+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -224,7 +224,7 @@ msgstr "<strong>Gewicht</strong>"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_integration_level
 msgid "Action while validating Delivery Orders"
-msgstr "Actie bij het bevestigen van leveringen."
+msgstr "Actie bij het valideren van uitgaande paklijsten."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
@@ -261,15 +261,6 @@ msgid "Bulk Weight"
 msgstr "Bruto gewicht"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_stock_quant_package_shipping_weight
-msgid ""
-"Can be changed during the 'put in pack' to adjust the weight of the "
-"shipping."
-msgstr ""
-"Kan worden gewijzigd bij het \"Doe in verpakking\" om het gewicht van de "
-"levering aan te passen."
-
-#. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Cancel"
 msgstr "Annuleer"
@@ -298,7 +289,7 @@ msgstr "Klik om een nieuwe aflevermethode toe te voegen."
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_company_id
 msgid "Company"
-msgstr "Bedrijf"
+msgstr "Bedijf"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
@@ -420,7 +411,7 @@ msgstr "Bepaal de weergave volgorde"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Discard"
-msgstr "Annuleren"
+msgstr "Negeren"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_display_name
@@ -470,8 +461,8 @@ msgid ""
 "Filling this form allows you to filter delivery carriers according to the "
 "delivery address of your customer."
 msgstr ""
-"Door het invullen van dit formulier kunt u vervoerders filteren op basis van"
-" het afleveradres van uw klant."
+"Met het invullen van dit formulier kunt u de vervoerders filteren op basis "
+"van het afleveradres van uw klant."
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -672,12 +663,6 @@ msgstr ""
 "berekend worden."
 
 #. module: delivery
-#: model:product.product,name:delivery.product_product_delivery_normal
-#: model:product.template,name:delivery.product_product_delivery_normal_product_template
-msgid "Normal Delivery Charges"
-msgstr "Normale vervoerskosten"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_number_of_packages
 msgid "Number of Packages"
 msgstr "Aantal pakketten"
@@ -722,7 +707,7 @@ msgstr "Verpakking bewerking"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_stock_quant_package_id
 msgid "Physical Package"
-msgstr ""
+msgstr "Fysieke verpakking"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
@@ -876,12 +861,6 @@ msgid "Stock Move"
 msgstr "Voorraadmutatie"
 
 #. module: delivery
-#: model:product.product,name:delivery.product_product_delivery_poste
-#: model:product.template,name:delivery.product_product_delivery_poste_product_template
-msgid "The Poste"
-msgstr "De Post"
-
-#. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid ""
 "These methods allow to automatically compute the delivery price\n"
@@ -890,7 +869,7 @@ msgid ""
 msgstr ""
 "Deze methodes geven u de mogelijkheid om automatisch de leverprijs\n"
 "te berekenen volgens uw instellingen; op het verkooporder (gebaseerd\n"
-"op offerte) of op de factuur (gebaseerd op de leveringen)."
+"op offerte) of op de factuur (gebaseerd op de aflevernota)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner_property_delivery_carrier_id
@@ -907,7 +886,7 @@ msgstr "Dit percentage wordt toegevoegd aan de afleverprijs."
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Tracking"
-msgstr "Tracering"
+msgstr "Volgen"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
@@ -979,9 +958,19 @@ msgid "Weight Unit of Measure"
 msgstr "Gewicht maateenheid"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_quant_package_weight
+msgid "Weight computed based on the sum of the weights of the products."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
 msgid "Weight for Shipping"
 msgstr "Gewicht voor levering"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_quant_package_shipping_weight
+msgid "Weight used to compute the price of the delivery (if applicable)."
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_width

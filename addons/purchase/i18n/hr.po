@@ -3,24 +3,24 @@
 # * purchase
 # 
 # Translators:
-# Bole <bole@dajmi5.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Tina Milas <tina@uvid.hr>, 2017
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
+# Tina Milas <tina@uvid.hr>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017
+# Bole <bole@dajmi5.com>, 2017
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017
 # Marko Carević <marko.carevic@live.com>, 2017
-# Mario Jureša <mario.juresa@uvid.hr>, 2017
 # Filip Cuk <filipcuk2@gmail.com>, 2017
 # Jasmina Otročak <jasmina@uvid.hr>, 2017
+# Mario Jureša <mario.juresa@uvid.hr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Jasmina Otročak <jasmina@uvid.hr>, 2017\n"
+"POT-Creation-Date: 2017-12-13 14:36+0000\n"
+"PO-Revision-Date: 2017-12-13 14:36+0000\n"
+"Last-Translator: Mario Jureša <mario.juresa@uvid.hr>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,7 +85,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:79
+#: code:addons/purchase/models/stock.py:121
 #, python-format
 msgid " Buy"
 msgstr "Kupi"
@@ -94,7 +94,7 @@ msgstr "Kupi"
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_count
 #: model:ir.model.fields,field_description:purchase.field_product_template_purchase_count
 msgid "# Purchases"
-msgstr "# Nabava"
+msgstr "# Nabavke"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_supplier_invoice_count
@@ -319,6 +319,23 @@ msgid "<strong>Your Order Reference:</strong>"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/models/stock.py:95
+#, python-format
+msgid ""
+"A sale order that generated this purchase order has been deleted. Check if "
+"an action is needed."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_line_product_type
+msgid ""
+"A stockable product is a product for which you manage stock. The \"Inventory\" app has to be installed.\n"
+"A consumable product, on the other hand, is a product for which stock is not managed.\n"
+"A service is a non-material product you provide.\n"
+"A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
+msgstr ""
+
+#. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
 msgid "A warning can be set on a product or a customer (Purchase)"
 msgstr "Upozorenje može biti postavljeno na proizvod ili na kupca (Nabava)"
@@ -332,7 +349,7 @@ msgstr "Dodaj naloge za nabavu"
 #: code:addons/purchase/controllers/portal.py:53
 #, python-format
 msgid "All"
-msgstr "Svi"
+msgstr "Sve"
 
 #. module: purchase
 #: selection:res.company,po_lock:0
@@ -342,18 +359,18 @@ msgstr "Dopusti uređivanje nabavnih naloga"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_account
 msgid "Allows you to specify an analytic account on purchase order lines."
-msgstr "Omogućuje Vam da odredite analitička konta za naloge za nabavu."
+msgstr "Omogućuje Vam da odredite analitička konta za naloge za nabavu"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_account_analytic_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_account_analytic_id
 msgid "Analytic Account"
-msgstr "Konto analitike"
+msgstr "Analitički konto"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
 msgid "Analytic Accounting for Purchases"
-msgstr "Analitičko računovodstvo za nabavu"
+msgstr "Analitičko računovodstvo za Nabavu"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_analytic_tag_ids
@@ -363,7 +380,7 @@ msgstr "Oznake analitike"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_group_analytic_account_for_purchases
 msgid "Analytic accounting for purchases"
-msgstr "Analitičko računovodstvo za nabavu"
+msgstr "Analitičko računovodstvo za Nabavu"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_date_approve
@@ -436,7 +453,7 @@ msgid "Blocking Message"
 msgstr "Blokiranje poruke"
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:73
+#: code:addons/purchase/models/stock.py:115
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -470,7 +487,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:76
+#: code:addons/purchase/models/stock.py:118
 #, python-format
 msgid "Can't find any generic Buy route."
 msgstr "Nije moguće pronaći generičku rutu nabave."
@@ -488,7 +505,7 @@ msgid "Cancelled"
 msgstr "Otkazano"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:737
+#: code:addons/purchase/models/purchase.py:739
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr "Ne možete obrisati prodajni nalog koji je u stanju '%s'."
@@ -496,13 +513,13 @@ msgstr "Ne možete obrisati prodajni nalog koji je u stanju '%s'."
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
 msgid "Click here to record a vendor bill."
-msgstr "Kliknite ovdje za spremanje računa dobavljača."
+msgstr "Kliknite ovdje za spremanje računa dobavljača"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
 msgid ""
 "Click to create a quotation that will be converted into a purchase order."
-msgstr "Kliknite za kreiranje ponude koja će se pretvoriti u narudžbenicu."
+msgstr "Klikni kako bi kreirao ponudu koja će se pretvoriti u narudžbenicu."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -518,7 +535,7 @@ msgstr "Kliknite za kreiranje računa dobavljača."
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
 #: model:ir.actions.act_window,help:purchase.product_product_action
 msgid "Click to define a new product."
-msgstr "Kliknite za definiranje novog proizvoda."
+msgstr "Klikni za definiranje novog proizvoda."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
@@ -545,7 +562,7 @@ msgid "Company"
 msgstr "Tvrtka"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:313
+#: code:addons/purchase/models/purchase.py:314
 #, python-format
 msgid "Compose Email"
 msgstr "Sastavi e-poštu"
@@ -568,7 +585,7 @@ msgstr "Potvrdi nabavni nalog u jednom koraku"
 #. module: purchase
 #: selection:res.company,po_lock:0
 msgid "Confirmed purchase orders are not editable"
-msgstr "Potvrđeni nabavni nalozi ne mogu se uređivati"
+msgstr "Potvrđeni nabavni nalozi ne mogu se uređivati."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -592,6 +609,7 @@ msgid "Created Purchase Order Line"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_create_uid
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_create_uid
 msgid "Created by"
 msgstr "Kreirao"
@@ -600,7 +618,7 @@ msgstr "Kreirao"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_create_date
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_create_date
 msgid "Created on"
-msgstr "Kreirano"
+msgstr "Datum kreiranja"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_currency_id
@@ -648,7 +666,7 @@ msgstr "Isporučene količine"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Deliveries & Invoices"
-msgstr "Primke i računi"
+msgstr "Otpremnice i računi"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_date_order
@@ -712,11 +730,6 @@ msgid "Dropshipping"
 msgstr "Dostava od dobavljača direktno kupcu"
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr "Čarobnjak za sastavljanje e-pošte"
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
 msgid ""
 "Encoding help. When selected, the associated purchase order lines are added "
@@ -734,7 +747,7 @@ msgid "Extended Filters"
 msgstr "Prošireni filteri"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:577
+#: code:addons/purchase/models/purchase.py:566
 #, python-format
 msgid "Extra line with %s "
 msgstr ""
@@ -806,7 +819,7 @@ msgstr ""
 #: code:addons/purchase/models/purchase.py:206
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
-msgstr "Kako biste mogli izbrisati nalog za nabavu, morate ga prvo otkazati."
+msgstr "Da bi mogli obrisati nalog za nabavu , morate na prije otkazati."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
@@ -1020,6 +1033,11 @@ msgid "My Activities"
 msgstr "Moje aktivnosti"
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "My Purchases"
+msgstr ""
+
+#. module: purchase
 #: code:addons/purchase/controllers/portal.py:44
 #, python-format
 msgid "Name"
@@ -1123,7 +1141,7 @@ msgstr "Status naloga"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Order of Day"
-msgstr "Narudžbe dana"
+msgstr "narudžebe dana"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.track_po_line_template
@@ -1241,6 +1259,11 @@ msgid "Product Template"
 msgstr "Predložak proizvoda"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_type
+msgid "Product Type"
+msgstr "Tip artikla"
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_uom
 msgid "Product Unit of Measure"
 msgstr "JM proizvoda"
@@ -1274,7 +1297,6 @@ msgstr "Osiguraj mehanizam dvostruke provjere za kupnju"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-#: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Purchase"
 msgstr "Nabava"
 
@@ -1305,11 +1327,6 @@ msgid "Purchase Analytics"
 msgstr ""
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
-msgid "Purchase Bills"
-msgstr ""
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_lead
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_po_lead
 msgid "Purchase Lead Time"
@@ -1328,7 +1345,6 @@ msgstr "Vodeće vrijeme nabave"
 #: model:ir.ui.view,arch_db:purchase.purchase_order_pivot
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
-#: model:res.request.link,name:purchase.req_link_purchase_order
 #, python-format
 msgid "Purchase Order"
 msgstr "Nalog za nabavu"
@@ -1355,6 +1371,7 @@ msgid "Purchase Order Line"
 msgstr "Stavka naloga nabave"
 
 #. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_tree
 msgid "Purchase Order Lines"
@@ -1403,6 +1420,14 @@ msgid "Purchase Orders Statistics"
 msgstr "Statistika naloga za nabavu"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_user_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_user_id
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Purchase Representative"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Purchase orders that have been invoiced."
 msgstr "Prodajni nalozi za koje je izdan račun."
@@ -1423,13 +1448,12 @@ msgid "Purchase-Standard Price"
 msgstr "Uobičajena nabavna cijena"
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
 #: model:ir.ui.menu,name:purchase.menu_purchase_root
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 #: model:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
 #: model:ir.ui.view,arch_db:purchase.view_warehouse_orderpoint_purchase_form
 msgid "Purchases"
-msgstr "Nabava"
+msgstr "Nabavke"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
@@ -1443,7 +1467,7 @@ msgid ""
 "customer. Otherwise, keep empty to deliver to your own company."
 msgstr ""
 "Navedite adresu ako želite da dobavljač izvrši dostavu direktno kupcu, inače"
-" ostavite prazno polje za isporuku u Vašu tvrtku."
+" ostavite prazno polje za isporuku u vašu Tvrtku."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1494,12 +1518,12 @@ msgstr "ZZN_${(object.name or '').replace('/','_')}"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "RFQs and Purchases"
-msgstr "ZZP i nabave"
+msgstr "ZzP i Nabave"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Re-Send RFQ by Email"
-msgstr "Ponovo pošalji ZZP e-mailom"
+msgstr "Ponovo pošalji ZZP emailom"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1586,13 +1610,6 @@ msgid "Reservation"
 msgstr "Rezervacija"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_create_uid
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_user_id
-#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
-msgid "Responsible"
-msgstr "Odgovoran"
-
-#. module: purchase
 #: model:ir.model,name:purchase.model_stock_return_picking
 msgid "Return Picking"
 msgstr "Povrat robe"
@@ -1631,7 +1648,7 @@ msgid ""
 msgstr ""
 "Odabirom opcije \"Upozorenje\" obavijestit ćete korisnika porukom, odabirom "
 "opcije \"Blokiranje poruke\" učinit ćete izuzetak s porukom i blokirati tok."
-" Poruku treba napisati u sljedećem polju."
+" Poruku treba napisati u slijedećem polju."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1641,7 +1658,7 @@ msgstr "Pošalji nabavni nalog e-mailom"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Send RFQ by Email"
-msgstr "Pošalji ZZP e-mailom"
+msgstr "Pošalji ZZP emailom"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_sequence
@@ -1667,7 +1684,7 @@ msgstr "Postavi na nacrt"
 #: model:ir.actions.act_window,name:purchase.action_purchase_configuration
 #: model:ir.ui.menu,name:purchase.menu_purchase_general_settings
 msgid "Settings"
-msgstr "Postavke"
+msgstr "Postave"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1695,7 +1712,7 @@ msgstr "Status"
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
 msgid "Stock Move"
-msgstr "Skladišni prijenos"
+msgstr "Skladišni prenos"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_form2
@@ -1768,7 +1785,7 @@ msgstr ""
 "raspoloživi dobavljači itd."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:649
+#: code:addons/purchase/models/purchase.py:651
 #, python-format
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
@@ -1798,7 +1815,7 @@ msgstr ""
 "proizvoda i ulazni račun. "
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:878
+#: code:addons/purchase/models/purchase.py:880
 #, python-format
 msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
@@ -1863,13 +1880,13 @@ msgid "This note will show up on purchase orders."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:203
+#: code:addons/purchase/models/account_invoice.py:209
 #, python-format
 msgid "This vendor bill has been created from: %s"
 msgstr "Ovaj ulazni račun kreirao je: %s"
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:217
+#: code:addons/purchase/models/account_invoice.py:223
 #, python-format
 msgid "This vendor bill has been modified from: %s"
 msgstr "Ovaj ulazni račun promijenio je: %s"
@@ -1925,7 +1942,7 @@ msgid "Transfer"
 msgstr "Prijenos"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:362
+#: code:addons/purchase/models/purchase.py:370
 #, python-format
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
@@ -1934,7 +1951,7 @@ msgstr ""
 "Nabavni nalog %s ne može se otkazati, jer su se neka primanja već obavila."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:365
+#: code:addons/purchase/models/purchase.py:373
 #, python-format
 msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
@@ -2094,7 +2111,7 @@ msgstr "Upozorenje"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:268
-#: code:addons/purchase/models/purchase.py:808
+#: code:addons/purchase/models/purchase.py:810
 #, python-format
 msgid "Warning for %s"
 msgstr "Upozorenje za %s"
@@ -2134,6 +2151,14 @@ msgstr ""
 "tome što ste kupili (usluge) ili primili (proizvodi)."
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:643
+#, python-format
+msgid ""
+"You cannot decrease the ordered quantity below the received quantity.\n"
+"Create a return first."
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_product_action
 msgid ""
 "You must define a product for everything you purchase, whether\n"
@@ -2156,7 +2181,7 @@ msgstr ""
 "kooperantima."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:395
+#: code:addons/purchase/models/purchase.py:412
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr "Morate postaviti lokaciju dobavljača za ovog partnera %s "

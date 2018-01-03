@@ -79,7 +79,7 @@
         </t>
     </xpath>
     <xpath expr="//form[@id='registration_form']" position="attributes">
-        <attribute name="t-if">event.event_ticket_ids</attribute>
+        <attribute name="t-if">event.event_ticket_ids and not all([ticket.is_expired for ticket in event.event_ticket_ids])</attribute>
     </xpath>
 </template>
 

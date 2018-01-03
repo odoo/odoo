@@ -3,15 +3,16 @@
 # * website_mail_channel
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
-# Florian Hatat <mininet@wanadoo.fr>, 2017
-# Quentin THEURET <odoo@kerpeo.com>, 2017
-# Saad Thaifa <saad.thaifa@gmail.com>, 2017
-# Xavier Belmere <Info@cartmeleon.com>, 2017
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Florian Hatat <mininet@wanadoo.fr>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Quentin THEURET <odoo@kerpeo.com>, 2016
+# Saad Thaifa <saad.thaifa@gmail.com>, 2016
+# ShevAbam <shevabam@gmail.com>, 2016
+# lucasdeliege <deliegelucas@gmail.com>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Eloïse Stilmant <est@odoo.com>, 2017
-# ShevAbam <shevabam@gmail.com>, 2017
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
 # fr rev <e2ffr02@hotmail.com>, 2017
 msgid ""
 msgstr ""
@@ -40,9 +41,9 @@ msgid ""
 msgstr ""
 "<?xml version=\"1.0\"?>\n"
 "<data><p>Bonjour,</p>\n"
-"<p>Vous avez demandé à vous abonner à la liste de diffusion <strong>${object.name}</strong>.</p>\n"
+"<p>Vous avez demandé à vous abonner à la liste de diffusion <strong>${object.name}</strong></p>\n"
 "<p>Pour confirmer votre demande, consultez le lien suivant :</p>\n"
-"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong>.</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
 "<p>Si vous avez effectué cette demande par erreur ou si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer ce message.</p>\n"
 "</data>"
 
@@ -59,9 +60,9 @@ msgid ""
 msgstr ""
 "<?xml version=\"1.0\"?>\n"
 "<data><p>Bonjour,</p>\n"
-"<p>Vous avez demandé à vous désabonner de la liste de diffusion <strong>${object.name}</strong>.</p>\n"
+"<p>Vous avez demandé à vous désabonner de la liste de diffusion <strong>${object.name}</strong></p>\n"
 "<p>Pour confirmer votre demande, consultez le lien suivant :</p>\n"
-"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong>.</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
 "<p>Si vous avez effectué cette demande par erreur ou si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer ce message.</p>\n"
 "</data>"
 
@@ -160,7 +161,7 @@ msgstr ""
 #. module: website_mail_channel
 #: model:ir.model,name:website_mail_channel.model_mail_mail
 msgid "Outgoing Mails"
-msgstr "Emails à envoyer"
+msgstr "Courriels à envoyer"
 
 #. module: website_mail_channel
 #: model:mail.template,subject:website_mail_channel.mail_template_list_subscribe
@@ -224,7 +225,7 @@ msgstr "Vous avez été correctement"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "a confirmation email has been sent."
-msgstr "un email de confirmation a été envoyé"
+msgstr "un courriel de confirmation a été envoyé"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -300,7 +301,7 @@ msgstr "montrer"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "subscribed"
-msgstr "abonné(e)"
+msgstr "abonnée"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
@@ -322,4 +323,4 @@ msgstr "désabonné"
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "your email..."
-msgstr "Votre adresse email..."
+msgstr "Votre adresse courriel..."

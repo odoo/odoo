@@ -474,13 +474,13 @@ QUnit.module('Views', {
 
         var n = 0;
         testUtils.intercept(list, "field_changed", function () {
-            n = 1;
+            n += 1;
         });
         $td.click();
         $td.find('input').val('abc').trigger('input');
-        assert.strictEqual(n, 1, "field_changed should not have been triggered");
-        list.$('td:not(.o_list_record_selector)').eq(2).click();
         assert.strictEqual(n, 1, "field_changed should have been triggered");
+        list.$('td:not(.o_list_record_selector)').eq(2).click();
+        assert.strictEqual(n, 1, "field_changed should not have been triggered");
         list.destroy();
     });
 

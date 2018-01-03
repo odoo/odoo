@@ -69,18 +69,21 @@ class Http(models.AbstractModel):
 
     @classmethod
     def _add_dispatch_parameters(cls, func):
-        if request.is_frontend:
-            context = dict(request.context)
-            if not context.get('tz'):
-                context['tz'] = request.session.get('geoip', {}).get('time_zone')
 
-            request.website = request.env['website'].get_current_website()  # can use `request.env` since auth methods are called
-            context['website_id'] = request.website.id
+        context = dict(request.context)
+        if not context.get('tz'):
+            context['tz'] = request.session.get('geoip', {}).get('time_zone')
+
+        request.website = request.env['website'].get_current_website()  # can use `request.env` since auth methods are called
+        context['website_id'] = request.website.id
+
+        # bind modified context
+        request.context = context
 
         super(Http, cls)._add_dispatch_parameters(func)
 
-        if request.is_frontend and request.routing_iteration == 1:
-            request.website = request.website.with_context(context)
+        if request.routing_iteration == 1:
+            request.website = request.website.with_context(request.context)
 
     @classmethod
     def _get_languages(cls):
@@ -90,7 +93,7 @@ class Http(models.AbstractModel):
 
     @classmethod
     def _get_language_codes(cls):
-        if request.website:
+        if getattr(request, 'website', False):
             return request.website._get_languages()
         return super(Http, cls)._get_language_codes()
 
