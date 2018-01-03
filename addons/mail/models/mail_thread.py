@@ -298,10 +298,6 @@ class MailThread(models.AbstractModel):
         # avoid tracking multiple temporary changes during copy
         return super(MailThread, self.with_context(mail_notrack=True)).copy_data(default=default)
 
-    # ------------------------------------------------------
-    # Technical methods (to clean / move to controllers ?)
-    # ------------------------------------------------------
-
     @api.model
     def get_empty_list_help(self, help):
         """ Override of BaseModel.get_empty_list_help() to generate an help message
@@ -371,6 +367,89 @@ class MailThread(models.AbstractModel):
                 node.set('options', repr(options))
             res['arch'] = etree.tostring(doc, encoding='unicode')
         return res
+
+    # ------------------------------------------------------
+    # Technical methods / wrappers / tools
+    # ------------------------------------------------------
+
+    @api.model
+    def _garbage_collect_attachments(self):
+        """ Garbage collect lost mail attachments. Those are attachments
+            - linked to res_model 'mail.compose.message', the composer wizard
+            - with res_id 0, because they were created outside of an existing
+                wizard (typically user input through Chatter or reports
+                created on-the-fly by the templates)
+            - unused since at least one day (create_date and write_date)
+        """
+        limit_date = datetime.datetime.utcnow() - datetime.timedelta(days=1)
+        limit_date_str = datetime.datetime.strftime(limit_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        self.env['ir.attachment'].search([
+            ('res_model', '=', 'mail.compose.message'),
+            ('res_id', '=', 0),
+            ('create_date', '<', limit_date_str),
+            ('write_date', '<', limit_date_str)]
+        ).unlink()
+        return True
+
+    @api.model
+    def check_mail_message_access(self, res_ids, operation, model_name=None):
+        """ mail.message check permission rules for related document. This method is
+            meant to be inherited in order to implement addons-specific behavior.
+            A common behavior would be to allow creating messages when having read
+            access rule on the document, for portal document such as issues. """
+        if model_name:
+            DocModel = self.env[model_name]
+        else:
+            DocModel = self
+        if hasattr(DocModel, '_mail_post_access'):
+            create_allow = DocModel._mail_post_access
+        else:
+            create_allow = 'write'
+
+        if operation in ['write', 'unlink']:
+            check_operation = 'write'
+        elif operation == 'create' and create_allow in ['create', 'read', 'write', 'unlink']:
+            check_operation = create_allow
+        elif operation == 'create':
+            check_operation = 'write'
+        else:
+            check_operation = operation
+
+        DocModel.check_access_rights(check_operation)
+        DocModel.browse(res_ids).check_access_rule(check_operation)
+
+    @api.multi
+    def message_change_thread(self, new_thread):
+        """
+        Transfer the list of the mail thread messages from an model to another
+
+        :param id : the old res_id of the mail.message
+        :param new_res_id : the new res_id of the mail.message
+        :param new_model : the name of the new model of the mail.message
+
+        Example :   my_lead.message_change_thread(my_project_task)
+                    will transfer the context of the thread of my_lead to my_project_task
+        """
+        self.ensure_one()
+        # get the subtype of the comment Message
+        subtype_comment = self.env.ref('mail.mt_comment')
+
+        # get the ids of the comment and not-comment of the thread
+        # TDE check: sudo on mail.message, to be sure all messages are moved ?
+        MailMessage = self.env['mail.message']
+        msg_comment = MailMessage.search([
+            ('model', '=', self._name),
+            ('res_id', '=', self.id),
+            ('subtype_id', '=', subtype_comment.id)])
+        msg_not_comment = MailMessage.search([
+            ('model', '=', self._name),
+            ('res_id', '=', self.id),
+            ('subtype_id', '!=', subtype_comment.id)])
+
+        # update the messages
+        msg_comment.write({"res_id": new_thread.id, "model": new_thread._name})
+        msg_not_comment.write({"res_id": new_thread.id, "model": new_thread._name, "subtype_id": None})
+        return True
 
     # ------------------------------------------------------
     # Automatic log / Tracking
@@ -504,55 +583,9 @@ class MailThread(models.AbstractModel):
 
         return True
 
-    #------------------------------------------------------
-    # mail.message wrappers and tools
-    #------------------------------------------------------
-
-    @api.model
-    def _garbage_collect_attachments(self):
-        """ Garbage collect lost mail attachments. Those are attachments
-            - linked to res_model 'mail.compose.message', the composer wizard
-            - with res_id 0, because they were created outside of an existing
-                wizard (typically user input through Chatter or reports
-                created on-the-fly by the templates)
-            - unused since at least one day (create_date and write_date)
-        """
-        limit_date = datetime.datetime.utcnow() - datetime.timedelta(days=1)
-        limit_date_str = datetime.datetime.strftime(limit_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-        self.env['ir.attachment'].search([
-            ('res_model', '=', 'mail.compose.message'),
-            ('res_id', '=', 0),
-            ('create_date', '<', limit_date_str),
-            ('write_date', '<', limit_date_str)]
-        ).unlink()
-        return True
-
-    @api.model
-    def check_mail_message_access(self, res_ids, operation, model_name=None):
-        """ mail.message check permission rules for related document. This method is
-            meant to be inherited in order to implement addons-specific behavior.
-            A common behavior would be to allow creating messages when having read
-            access rule on the document, for portal document such as issues. """
-        if model_name:
-            DocModel = self.env[model_name]
-        else:
-            DocModel = self
-        if hasattr(DocModel, '_mail_post_access'):
-            create_allow = DocModel._mail_post_access
-        else:
-            create_allow = 'write'
-
-        if operation in ['write', 'unlink']:
-            check_operation = 'write'
-        elif operation == 'create' and create_allow in ['create', 'read', 'write', 'unlink']:
-            check_operation = create_allow
-        elif operation == 'create':
-            check_operation = 'write'
-        else:
-            check_operation = operation
-
-        DocModel.check_access_rights(check_operation)
-        DocModel.browse(res_ids).check_access_rule(check_operation)
+    # ------------------------------------------------------
+    # Email Notification
+    # ------------------------------------------------------
 
     @api.model
     def _generate_notification_token(self, base_link, params):
@@ -705,32 +738,6 @@ class MailThread(models.AbstractModel):
             result[group_name] = group_data
 
         return result
-
-    # ------------------------------------------------------
-    # Email specific
-    # ------------------------------------------------------
-
-    @api.multi
-    def message_get_default_recipients(self, res_model=None, res_ids=None):
-        if res_model and res_ids:
-            if hasattr(self.env[res_model], 'message_get_default_recipients'):
-                return self.env[res_model].browse(res_ids).message_get_default_recipients()
-            records = self.env[res_model].sudo().browse(res_ids)
-        else:
-            records = self.sudo()
-        res = {}
-        for record in records:
-            recipient_ids, email_to, email_cc = set(), False, False
-            if 'partner_id' in self._fields and record.partner_id:
-                recipient_ids.add(record.partner_id.id)
-            elif 'email_from' in self._fields and record.email_from:
-                email_to = record.email_from
-            elif 'partner_email' in self._fields and record.partner_email:
-                email_to = record.partner_email
-            elif 'email' in self._fields:
-                email_to = record.email
-            res[record.id] = {'partner_ids': list(recipient_ids), 'email_to': email_to, 'email_cc': email_cc}
-        return res
 
     @api.model
     def message_get_reply_to(self, res_ids, default=None):
@@ -1550,9 +1557,31 @@ class MailThread(models.AbstractModel):
         msg_dict['body'], msg_dict['attachments'] = self._message_extract_payload(message, save_original=save_original)
         return msg_dict
 
-    #------------------------------------------------------
-    # Note specific
-    #------------------------------------------------------
+    # ------------------------------------------------------
+    # Recipient management
+    # ------------------------------------------------------
+
+    @api.multi
+    def message_get_default_recipients(self, res_model=None, res_ids=None):
+        if res_model and res_ids:
+            if hasattr(self.env[res_model], 'message_get_default_recipients'):
+                return self.env[res_model].browse(res_ids).message_get_default_recipients()
+            records = self.env[res_model].sudo().browse(res_ids)
+        else:
+            records = self.sudo()
+        res = {}
+        for record in records:
+            recipient_ids, email_to, email_cc = set(), False, False
+            if 'partner_id' in self._fields and record.partner_id:
+                recipient_ids.add(record.partner_id.id)
+            elif 'email_from' in self._fields and record.email_from:
+                email_to = record.email_from
+            elif 'partner_email' in self._fields and record.partner_email:
+                email_to = record.partner_email
+            elif 'email' in self._fields:
+                email_to = record.email
+            res[record.id] = {'partner_ids': list(recipient_ids), 'email_to': email_to, 'email_cc': email_cc}
+        return res
 
     @api.multi
     def _message_add_suggested_recipient(self, result, partner=None, email=None, reason=''):
@@ -1688,6 +1717,10 @@ class MailThread(models.AbstractModel):
                     ('author_id', '=', False)
                 ]).write({'author_id': partner_info['partner_id']})
         return result
+
+    # ------------------------------------------------------
+    # Post / Send message API
+    # ------------------------------------------------------
 
     def _message_post_process_attachments(self, attachments, attachment_ids, message_data):
         """ Preprocess attachments for mail_thread.message_post() or mail_mail.create().
@@ -2147,41 +2180,4 @@ class MailThread(models.AbstractModel):
         user_pids = [user.partner_id.id for user in to_add_users if user != self.env.user and user.notification_type == 'email']
         self._message_auto_subscribe_notify(user_pids)
 
-        return True
-
-    # ------------------------------------------------------
-    # Thread management
-    # ------------------------------------------------------
-
-    @api.multi
-    def message_change_thread(self, new_thread):
-        """
-        Transfer the list of the mail thread messages from an model to another
-
-        :param id : the old res_id of the mail.message
-        :param new_res_id : the new res_id of the mail.message
-        :param new_model : the name of the new model of the mail.message
-
-        Example :   my_lead.message_change_thread(my_project_task)
-                    will transfer the context of the thread of my_lead to my_project_task
-        """
-        self.ensure_one()
-        # get the subtype of the comment Message
-        subtype_comment = self.env.ref('mail.mt_comment')
-
-        # get the ids of the comment and not-comment of the thread
-        # TDE check: sudo on mail.message, to be sure all messages are moved ?
-        MailMessage = self.env['mail.message']
-        msg_comment = MailMessage.search([
-            ('model', '=', self._name),
-            ('res_id', '=', self.id),
-            ('subtype_id', '=', subtype_comment.id)])
-        msg_not_comment = MailMessage.search([
-            ('model', '=', self._name),
-            ('res_id', '=', self.id),
-            ('subtype_id', '!=', subtype_comment.id)])
-
-        # update the messages
-        msg_comment.write({"res_id": new_thread.id, "model": new_thread._name})
-        msg_not_comment.write({"res_id": new_thread.id, "model": new_thread._name, "subtype_id": None})
         return True
