@@ -16,7 +16,7 @@ try:
         # stdnum version >= 1.9
         stdnum_vat.country_codes = stdnum_vat._country_codes
 except ImportError:
-    _logger.warning('Python `stdnum` library not found, unable to call VIES service to detect address based on VAT number.') #TODO OCO à voir
+    _logger.warning('Python `stdnum` library not found, unable to call VIES service to detect address based on VAT number.')
     stdnum_vat = None
 
 
@@ -45,7 +45,7 @@ class ResPartner(models.Model):
             return False
 
         try:
-            partner_vat = stdnum_vat.compact(partner.vat) 
+            partner_vat = partner.compact_vat_number(partner.vat)
             result = partner.vies_vat_check(partner_vat[:2], partner_vat[2:], except_to_simple_check=False)
         except:
             # Avoid blocking the client when the service is unreachable/unavailable
@@ -90,15 +90,13 @@ class ResPartner(models.Model):
 
     @api.onchange('vat')
     def vies_vat_change(self):
-        if stdnum_vat is None:
-            return {}
-
+        eu_country_codes = self.env.ref('base.europe').country_ids.mapped('code')
         for partner in self:
             if not partner.vat:
                 continue
             # If a field is not set in the response, wipe it anyway
             non_set_address_fields = set(['street', 'street2', 'city', 'zip', 'state_id', 'country_id'])
-            if len(partner.vat) > 5 and partner.vat[:2].lower() in stdnum_vat.country_codes:
+            if len(partner.vat) > 5 and partner.vat[:2].lower() in eu_country_codes:
                 partner_name, partner_address = self._get_partner_vals(partner.vat)
 
                 if not partner.name and partner_name:

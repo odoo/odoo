@@ -20,10 +20,6 @@ from odoo import api, models, fields, _
 from odoo.tools.misc import ustr
 from odoo.exceptions import ValidationError
 
-
-
-import random #TODO OCO TEST
-
 _eu_country_vat = {
     'GR': 'EL'
 }
@@ -69,40 +65,40 @@ _ref_vat = {
 
 VIES_WSDL_URL = 'http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl'
 
-#TODO OCO DEBUG
-import logging
-_logger = logging.getLogger(__name__)
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    base_vat_vies_status = fields.Selection(string="Passed VIES", selection=[('passed', 'Correct VAT Number'), ('failed', 'Incorrect VAT Number'), ('exception', 'Could not Verify VAT'), ('unchecked', 'No Verification Intended')], compute='compute_base_vat_vies_status', store=True) #TODO OCO DOC
+    base_vat_vies_status = fields.Selection(string="Passed VIES",
+                                            selection=[('passed', 'Correct VAT Number'),
+                                                       ('failed', 'Incorrect VAT Number'),
+                                                       ('exception', 'Could not Verify VAT')],
+                                            compute='compute_base_vat_vies_status',
+                                            store=True,
+                                            help="The status of the VAT number verification throught VIES. It will be False in case no verification has been attented.")
 
     @api.depends('vat', 'company_id.vat_check_vies')
     def compute_base_vat_vies_status(self):
         # This function is not private, so that it can be called by the 'Recheck VIES' button
         eu_country_codes = self.env.ref('base.europe').country_ids.mapped('code')
         for record in self:
-            if not record.company_id.vat_check_vies or not record.vat: #TODO OCO donc attention: il ne faut pas afficher les couleurs pour le champ TVA si le check n'est pas activé sur la company
-                record.base_vat_vies_status = 'unchecked'
-                return
 
+            if not record.company_id.vat_check_vies or not record.vat:
+                record.base_vat_vies_status = False
+                continue
 
-            if random.choice([True, False, True,True,True,True,True,True]): #TODO OCO TEST
-                record.base_vat_vies_status = 'exception'
-                return
-
-            country_code, vat_number = record._split_vat(record.vat) # TODO OCO un peu merdique
+            country_code, vat_number = record._split_vat(record.vat)
             try:
                 rslt = False
                 if country_code.upper() in eu_country_codes and vat_number:
                     rslt = bool(record.vies_vat_check(country_code, vat_number, except_to_simple_check=False))
 
-                if not rslt and record.company_id.country_id:
+                company_country = record.company_id.country_id
+                if not rslt and company_country and company_country.code in eu_country_codes:
                     # If the first verification failed, perhaps the VAT number
                     # did not give any country prefix, as it was the same as the
                     # company's, so we retry with it
-                    rslt = bool(record.vies_vat_check(record.company_id.country_id.code.lower(), record.vat, except_to_simple_check=False))
+                    rslt = bool(record.vies_vat_check(company_country.code.lower(), record.vat, except_to_simple_check=False))
 
                 record.base_vat_vies_status = rslt and 'passed' or 'failed'
 
@@ -110,8 +106,15 @@ class ResPartner(models.Model):
                 # Happens when the service was not available
                 record.base_vat_vies_status = 'exception'
 
+    def compact_vat_number(self, vat):
+        """ Returns the vat number given in parameter, with all non-alphanumeric
+        characters removed (so, it allows removing all separators and spaces
+        from the VAT number).
+        """
+        return re.sub('\W', '', vat)
+
     def _split_vat(self, vat):
-        vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')
+        vat_country, vat_number = vat[:2].lower(), self.compact_vat_number(vat[2:])
         return vat_country, vat_number
 
     @api.model
@@ -135,11 +138,22 @@ class ResPartner(models.Model):
         return check_func(vat_number)
 
     @api.model
-    def vies_vat_check(self, country_code, vat_number, connection_timeout=5, except_to_simple_check=True): #TODO OCO DOC
-        try:
-            # Validate against  VAT Information Exchange System (VIES)
-            # see also http://ec.europa.eu/taxation_customs/vies/
+    def vies_vat_check(self, country_code, vat_number, connection_timeout=5, except_to_simple_check=True):
+        """ Validates a vat number against  VAT Information Exchange System (VIES)
+            (see also http://ec.europa.eu/taxation_customs/vies/).
 
+            :param country_code: a string containing the ISO country code of the
+                                 VAT number we wish to check
+            :param vat_number: the VAT number we wish to check, without its country code
+            :param connection_timeout: timeout value to use when contacting VIES, in seconds
+            :param except_to_simple_check: boolean value telling whether or not an
+                                           occuring while contacting VIES should be ignored
+                                           and trigger simple offline verification or not.
+                                           If this parameter is False, the exception
+                                           will be raised, otherwize, it will be caught
+                                           and ignored.
+        """
+        try:
             # Implemented by directly connecting to the web service instead of
             # using vatnumber or stdnum so that we can define our own timeout.
             client = Client(VIES_WSDL_URL, timeout=connection_timeout)
@@ -171,14 +185,14 @@ class ResPartner(models.Model):
 
     @api.constrains('vat')
     def check_vat(self):
-        #TODO OCO DOC seulement vérification syntaxique
-        #TODO OCO en fait, il faut surtout voir si on ne veut plus du tout de message d'erreur, même en cas d'erreur syntaxique dans la vérification simple => couleurs aussi, ou pas ?
+        """ Performs a simple offline syntactic check on the VAT number.
+        """
         if self.env.context.get('company_id'):
             company = self.env['res.company'].browse(self.env.context['company_id'])
         else:
             company = self.env.user.company_id
 
-        # quick and partial off-line checksum validation #TODO OCO je considère qu'il faut la garder, mais il faut se faire confirmer ça plus tard (quand tu auras fait le reste)
+        # quick and partial off-line checksum validation
         for partner in self:
             if not partner.vat:
                 continue
@@ -192,16 +206,10 @@ class ResPartner(models.Model):
                         msg = partner._construct_constraint_msg(country_code.lower())
                         raise ValidationError(msg)
 
-    def _construct_constraint_msg(self, country_code): #TODO OCO retravailler les messages d'erreur
+    def _construct_constraint_msg(self, country_code):
         self.ensure_one()
         vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
         vat_no = _ref_vat.get(country_code) or vat_no
-        if self.env.context.get('company_id'):
-            company = self.env['res.company'].browse(self.env.context['company_id'])
-        else:
-            company = self.env.user.company_id
-        if company.vat_check_vies:
-            return '\n' + _('The VAT number [%s] for partner [%s] either failed the VIES VAT validation check or did not respect the expected format %s.') % (self.vat, self.name, vat_no)
         return '\n' + _('The VAT number [%s] for partner [%s] does not seem to be valid. \nNote: the expected format is %s') % (self.vat, self.name, vat_no)
 
     __check_vat_ch_re1 = re.compile(r'(MWST|TVA|IVA)[0-9]{6}$')

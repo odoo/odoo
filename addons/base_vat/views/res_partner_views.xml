@@ -8,12 +8,10 @@
                 <xpath expr="//field[@name='vat']" position="replace">
                 </xpath>
 
-                <!--TODO OCO les xpath ne se font visiblement pas par ordre de dépendance, je suis obligé de bouger le champ ici plutôt que dans autocomplete :/-->
-
                 <xpath expr="//label[@for='street']" position="before">
                     <field name="base_vat_vies_status" invisible="1"/>
                         <field name="vat" string="VAT" style="color:Red;" attrs="{'invisible': [('base_vat_vies_status', '!=', 'failed')]}"/>
-                        <field name="vat" string="VAT" attrs="{'invisible': [('base_vat_vies_status', '!=', 'unchecked')]}"/>
+                        <field name="vat" string="VAT" attrs="{'invisible': [('base_vat_vies_status', '!=', False)]}"/>
                         <field name="vat" string="VAT" style="color:Green;" attrs="{'invisible': [('base_vat_vies_status', '!=', 'passed')]}"/>
                         <label string="VAT" style="font-weight: bold;" attrs="{'invisible': [('base_vat_vies_status', '!=', 'exception')]}"/>
                         <div class="o_row" attrs="{'invisible': [('base_vat_vies_status', '!=', 'exception')]}">
@@ -21,7 +19,7 @@
                             <button id="base_vat_recheck_vies" string="Recheck" type="object" name="compute_base_vat_vies_status" class="oe_read_only btn-default"/>
                         </div>
                 </xpath>
-            </field> <!--TODO OCO si tu arrives à régler ce souci de layout, pense à aller retirer le header vide que tu as ajouté dans la vue mère-->
+            </field>
         </record>
 
         <record id="view_partner_short_form" model="ir.ui.view">
@@ -29,10 +27,20 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_short_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='vat']" position="attributes">
-                    <attribute name="string">VAT</attribute>
+                <xpath expr="//field[@name='vat']" position="replace">
                 </xpath>
-                <!--TODO OCO voir où ce truc apparaît et si je dois y toucher-->
+
+                <xpath expr="//label[@for='street']" position="before">
+                    <field name="base_vat_vies_status" invisible="1"/>
+                        <field name="vat" string="VAT" style="color:Red;" attrs="{'invisible': [('base_vat_vies_status', '!=', 'failed')]}"/>
+                        <field name="vat" string="VAT" attrs="{'invisible': [('base_vat_vies_status', '!=', False)]}"/>
+                        <field name="vat" string="VAT" style="color:Green;" attrs="{'invisible': [('base_vat_vies_status', '!=', 'passed')]}"/>
+                        <label string="VAT" style="font-weight: bold;" attrs="{'invisible': [('base_vat_vies_status', '!=', 'exception')]}"/>
+                        <div class="o_row" attrs="{'invisible': [('base_vat_vies_status', '!=', 'exception')]}">
+                            <field name="vat" string="VAT" style="color:Orange;"/>
+                            <button id="base_vat_recheck_vies" string="Recheck" type="object" name="compute_base_vat_vies_status" class="oe_read_only btn-default"/>
+                        </div>
+                </xpath>
             </field>
         </record>
 </odoo>
