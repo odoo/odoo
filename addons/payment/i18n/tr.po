@@ -3,15 +3,18 @@
 # * payment
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Murat Kaplan <muratk@projetgrup.com>, 2017
-# Doğan Altunbay <doganaltunbay@gmail.com>, 2017
-# Ediz Duman <neps1192@gmail.com>, 2017
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
-# Saban Yildiz <sabany@projetgrup.com>, 2017
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2017
 # Hüseyin Cem Aras <hcemaras@gmail.com>, 2017
+# gezgin biri <gezginbiri@hotmail.com>, 2017
+# Murat Kaplan <muratk@projetgrup.com>, 2017
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
+# Yigit Aga <yagabey@gmail.com>, 2017
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2017
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
+# Saban Yildiz <sabany@projetgrup.com>, 2017
+# Doğan Altunbay <doganaltunbay@gmail.com>, 2017
 # Levent Karakaş <levent@mektup.at>, 2017
 msgid ""
 msgstr ""
@@ -203,7 +206,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
 msgid "Acquirer"
-msgstr "Ödeme Alıcı"
+msgstr "Alıcı"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_id
@@ -392,7 +395,7 @@ msgstr "Yapılandırma"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Configure"
-msgstr "Yapılandır"
+msgstr "Yapılandırma"
 
 #. module: payment
 #. openerp-web
@@ -441,7 +444,7 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:payment.field_payment_icon_create_date
 #: model:ir.model.fields,field_description:payment.field_payment_token_create_date
 msgid "Created on"
-msgstr "Oluşturulma"
+msgstr "Oluşturulma zamanı"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_create_date
@@ -456,7 +459,7 @@ msgstr "Kimlik bilgileri"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "Credit card(s)"
-msgstr "Kredi Kartları"
+msgstr "Kredi Kartı(ları)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_currency_id
@@ -471,12 +474,12 @@ msgstr "Özel"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_id
 msgid "Customer"
-msgstr "Müşteri"
+msgstr "Kayıtlı Müşteri"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_description
 msgid "Description"
-msgstr "Açıklama"
+msgstr "Tanım"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_sequence
@@ -574,7 +577,7 @@ msgstr "Yerel sabit ücretler"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_fixed
 msgid "Fixed international fees"
-msgstr "Uluslararası sabit ücretler"
+msgstr "Uluslararası sabit fiyatlar"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -594,7 +597,7 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.confirm
 msgid "From"
-msgstr "Kimden"
+msgstr "Tarihinden"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_search
@@ -625,7 +628,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image
 #: model:ir.model.fields,field_description:payment.field_payment_icon_image
 msgid "Image"
-msgstr "Görsel"
+msgstr "Resim"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon_image_payment_form
@@ -641,7 +644,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 #: model:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Install"
-msgstr "Yükle"
+msgstr "Kur"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_state
@@ -715,7 +718,7 @@ msgstr "Manuel Yapılandırma"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_medium
 msgid "Medium-sized image"
-msgstr "Orta boyutlu görsel"
+msgstr "Orta ölçekli resim"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_medium
@@ -775,7 +778,7 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Messages"
-msgstr "Mesajlar "
+msgstr "Mesajlar"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:395
@@ -989,7 +992,7 @@ msgstr "Paypal"
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Pending"
-msgstr "Beklemede"
+msgstr "Bekleyen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pending_msg
@@ -1056,7 +1059,7 @@ msgstr ""
 #. module: payment
 #: constraint:payment.acquirer:0
 msgid "Required fields not filled"
-msgstr "Zorunlu alanlar doldurulmamış"
+msgstr "zorunlu alanlar doldurulmamış"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_registration_view_template_id
@@ -1154,7 +1157,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_stripe
@@ -1170,7 +1173,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id
 msgid "Template for method registration"
-msgstr "Ödeme metodu için şablon"
+msgstr "Yöntem kayıtı için şablon"
 
 #. module: payment
 #: selection:payment.acquirer,environment:0

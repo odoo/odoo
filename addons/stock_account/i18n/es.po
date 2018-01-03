@@ -3,27 +3,29 @@
 # * stock_account
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Miguel Orueta <mo@landoo.es>, 2017
-# Gustavo Valverde <g.valverde02@gmail.com>, 2017
-# Daniel Blanco <daniel@blancomartin.com.ar>, 2017
-# José Vicente <txusev@gmail.com>, 2017
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
-# RGB Consulting <odoo@rgbconsulting.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2016
+# José Vicente <txusev@gmail.com>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# Miguel Orueta <mo@landoo.es>, 2016
 # Glen Sojo <inactive+glen.sojo@transifex.com>, 2017
-# Luis M. Triana <luis.triana@jarsa.com.mx>, 2017
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# Ana Juaristi <ajuaristio@gmail.com>, 2017
+# Gustavo Valverde <g.valverde02@gmail.com>, 2017
 # Antonio Trueba <atgayol@gmail.com>, 2017
-# Ivan Nieto <ivan.n.s@tuta.io>, 2017
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
+# Raquel Iciarte <ric@odoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 11:34+0000\n"
-"PO-Revision-Date: 2017-10-10 11:34+0000\n"
-"Last-Translator: Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-11-30 13:11+0000\n"
+"PO-Revision-Date: 2017-11-30 13:11+0000\n"
+"Last-Translator: Raquel Iciarte <ric@odoo.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,7 +83,7 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:409
+#: code:addons/stock_account/models/stock.py:452
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
@@ -92,7 +94,7 @@ msgstr ""
 "procesar esta operación."
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:411
+#: code:addons/stock_account/models/stock.py:454
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
@@ -116,6 +118,14 @@ msgid "Change Standard Price"
 msgstr "Cambiar precio estándar"
 
 #. module: stock_account
+#: code:addons/stock_account/models/product.py:243
+#, python-format
+msgid ""
+"Changing your cost method is an important change that will impact your "
+"inventory valuation. Are you sure you want to make that change?"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_inventory_accounting_date
 msgid ""
 "Choose the accounting date at which you want to value the stock moves "
@@ -131,7 +141,7 @@ msgid "Click to create a stock movement."
 msgstr "Pulse para crear un movimiento de stock"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:480
+#: code:addons/stock_account/models/stock.py:523
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -154,7 +164,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Costing"
-msgstr ""
+msgstr "Costes"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_cost_method
@@ -186,7 +196,7 @@ msgstr "Creado el"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_display_name
 msgid "Display Name"
-msgstr "Nombre a Mostrar"
+msgstr "Nombre a mostrar"
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -221,7 +231,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Include landed costs in product cost"
-msgstr ""
+msgstr "Incluir gastos de envío en el coste del producto"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -262,17 +272,17 @@ msgstr "Costes en destino"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price___last_update
 msgid "Last Modified on"
-msgstr "Última Modificación en"
+msgstr "Última modificación en"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_write_uid
 msgid "Last Updated by"
-msgstr "Última Actualización por"
+msgstr "Última actualización por"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_write_date
 msgid "Last Updated on"
-msgstr "Última Actualización el"
+msgstr "Última actualización el"
 
 #. module: stock_account
 #: selection:product.category,property_valuation:0
@@ -483,11 +493,36 @@ msgid "Templates for Account Chart"
 msgstr "Plantillas de plan contable"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:435
+#: code:addons/stock_account/models/stock.py:478
 #, python-format
 msgid ""
 "The cost of %s is currently equal to 0. Change the cost or the configuration"
 " of your product to avoid an incorrect valuation."
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:309
+#, python-format
+msgid ""
+"The move lines are not in a consistent state: some are entering and other "
+"are leaving the company. "
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:320
+#, python-format
+msgid ""
+"The move lines are not in a consistent states: they are doing an "
+"intercompany in a single step while they should go through the intercompany "
+"transit location."
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:318
+#, python-format
+msgid ""
+"The move lines are not in a consistent states: they do not share the same "
+"origin or destination company."
 msgstr ""
 
 #. module: stock_account
@@ -562,6 +597,12 @@ msgstr "Valoración"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move_value
 msgid "Value"
 msgstr "Valor"
+
+#. module: stock_account
+#: code:addons/stock_account/models/product.py:242
+#, python-format
+msgid "Warning"
+msgstr "Alerta"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -645,7 +686,7 @@ msgstr ""
 "producto, esta cuenta contiene el valor actual de los productos."
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:407
+#: code:addons/stock_account/models/stock.py:450
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
@@ -656,7 +697,7 @@ msgstr ""
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:130
-#: code:addons/stock_account/models/stock.py:413
+#: code:addons/stock_account/models/stock.py:456
 #, python-format
 msgid ""
 "You don't have any stock valuation account defined on your product category."

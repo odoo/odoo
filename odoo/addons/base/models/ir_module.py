@@ -418,17 +418,19 @@ class Module(models.Model):
                 todo = todo.mapped('dependencies_id.depend_id')
             return result
 
-        for category in install_mods.mapped('category_id').filtered('exclusive'):
-            # the installation is valid if all installed modules in category
-            # correspond to one module and all its dependencies in category
-            category_mods = install_mods.filtered(lambda mod: mod.category_id == category)
-            if not any(closure(module) & category_mods == category_mods
-                       for module in category_mods):
+        exclusives = self.env['ir.module.category'].search([('exclusive', '=', True)])
+        for category in exclusives:
+            # retrieve installed modules in category and sub-categories
+            categories = category.search([('id', 'child_of', category.ids)])
+            modules = install_mods.filtered(lambda mod: mod.category_id in categories)
+            # the installation is valid if all installed modules in categories
+            # belong to the transitive dependencies of one of them
+            if modules and not any(modules <= closure(module) for module in modules):
                 msg = _('You are trying to install incompatible modules in category "%s":')
                 labels = dict(self.fields_get(['state'])['state']['selection'])
                 raise UserError("\n".join([msg % category.name] + [
                     "- %s (%s)" % (module.shortdesc, labels[module.state])
-                    for module in category_mods
+                    for module in modules
                 ]))
 
         return dict(ACTION_DICT, name=_('Install'))

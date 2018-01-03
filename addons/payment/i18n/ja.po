@@ -125,7 +125,7 @@ msgid ""
 "<span class=\"text-success\">Production</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
-"<span class=\"text-success\">実稼働</span>\n"
+"<span class=\"text-success\">本番</span>\n"
 "                                    <span class=\"o_stat_text\">環境</span>"
 
 #. module: payment
@@ -223,12 +223,12 @@ msgstr "決済サービス参照"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon_acquirer_ids
 msgid "Acquirers"
-msgstr ""
+msgstr "決済サービス"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Acquirers list"
-msgstr ""
+msgstr "決済サービスリスト"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_kanban
@@ -617,7 +617,7 @@ msgstr "ID"
 msgid ""
 "If you leave it empty, the payment acquirer will be available for all the "
 "countries."
-msgstr ""
+msgstr "選択しない場合、この決済サービスは全ての国で利用可能とみなされます。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image
@@ -901,7 +901,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:payment.action_payment_icon
 #: model:ir.ui.menu,name:payment.payment_icon_menu
 msgid "Payment Icons"
-msgstr ""
+msgstr "支払アイコン"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_journal_id
@@ -946,7 +946,7 @@ msgstr "入金トランザクション"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_flow
 msgid "Payment flow"
-msgstr ""
+msgstr "支払フロー"
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:59
@@ -1015,7 +1015,7 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,environment:0
 msgid "Production"
-msgstr "製造"
+msgstr "本番"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_provider
@@ -1039,12 +1039,12 @@ msgstr "決済サービスデータベースに格納されたTXの参照"
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Refunded"
-msgstr ""
+msgstr "返金済"
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Refunding"
-msgstr ""
+msgstr "返金中"
 
 #. module: payment
 #: constraint:payment.acquirer:0
@@ -1059,7 +1059,7 @@ msgstr "S2Sフォームテンプレート"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "カード保存"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -1140,7 +1140,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_specific_countries
 msgid "Specific Countries"
-msgstr ""
+msgstr "国指定"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state
@@ -1151,12 +1151,12 @@ msgstr "ステータス"
 #: model:payment.acquirer,name:payment.payment_acquirer_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Stripe"
-msgstr "ストライプ"
+msgstr "Stripe"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_icon_ids
 msgid "Supported Payment Icons"
-msgstr ""
+msgstr "支払アイコン"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id
@@ -1182,12 +1182,12 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
 msgid "The customer encode his payment details on the website."
-msgstr ""
+msgstr "顧客はウェブサイト上で支払詳細を入力"
 
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
 msgid "The customer is redirected to the website of the acquirer."
-msgstr ""
+msgstr "顧客は決済サービスのウェブサイトに転送される"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:563
@@ -1238,6 +1238,8 @@ msgid ""
 "This template renders the acquirer button with all necessary values.\n"
 "                                            It is rendered with qWeb with the following evaluation context:"
 msgstr ""
+"このテンプレートは、決済サービスボタン必要な値割当とともに生成します。 \n"
+"QWebを使用し、次の評価コンテキストが適用されます:"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_transfer
@@ -1369,12 +1371,12 @@ msgstr "acquirer: payment.acquirer ブラウズレコード"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "amount: the transaction amount, a float"
-msgstr "amount:取引金額、浮動小数点"
+msgstr "amount: 取引金額、浮動小数点数"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "and more"
-msgstr ""
+msgstr "そしてさらに"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form

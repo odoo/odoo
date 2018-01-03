@@ -941,7 +941,7 @@
             <line t-foreach='payments' t-as='payment'>
                 <left><t t-esc='payment.name' /></left>
                 <right>
-                    <t t-esc='payment.total'/>
+                    <t t-esc='widget.format_currency_no_symbol(payment.total)'/>
                 </right>
             </line>
 
@@ -955,7 +955,7 @@
             <line t-foreach='taxes' t-as='taxe'>
                 <left><t t-esc='taxe.name' /></left>
                 <right>
-                    <t t-esc='taxe.total'/>
+                    <t t-esc='widget.format_currency_no_symbol(taxe.total)'/>
                 </right>
             </line>
 
@@ -966,7 +966,7 @@
             <line>
                 <left>Total:</left>
                 <right>
-                    <t t-esc='total_paid'/>
+                    <t t-esc='widget.format_currency_no_symbol(total_paid)'/>
                 </right>
             </line>
 

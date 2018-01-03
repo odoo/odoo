@@ -3,36 +3,32 @@
 # * delivery
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Micky Jault <micky037@hotmail.fr>, 2017
-# Richard Mathot <rim@odoo.com>, 2017
-# David Halgand <david.halgand@gmail.com>, 2017
-# Xavier Belmere <Info@cartmeleon.com>, 2017
-# Clo <clo@odoo.com>, 2017
-# Eloïse Stilmant <est@odoo.com>, 2017
-# Daniel & Delphine <dd2013@leschoupinous.net>, 2017
-# Fabien Pinckaers <fp@openerp.com>, 2017
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
-# Leo Schmitt <inactive+lschmitt@transifex.com>, 2017
-# Nancy Bolognesi <nb@microcom.ca>, 2017
-# Miguel Vidali <mvidali129@gmail.com>, 2017
-# Fabri Yohann <psn@fabri.pw>, 2017
-# Florian Hatat <mininet@wanadoo.fr>, 2017
-# Tony Galmiche <tony.galmiche@infosaone.com>, 2017
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
-# lap.odoo <lap@odoo.com>, 2017
-# Xavier Symons <xsy@openerp.com>, 2017
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
-# Not Telling <levequevincel2@gmail.com>, 2017
-# Simon CARRIER <carrier.sim@gmail.com>, 2017
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Leo Schmitt <inactive+lschmitt@transifex.com>, 2016
+# Florian Hatat <mininet@wanadoo.fr>, 2016
+# Tony Galmiche <tony.galmiche@infosaone.com>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Miguel Vidali <mvidali129@gmail.com>, 2016
+# Fabri Yohann <psn@fabri.pw>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Nancy Bolognesi <nb@microcom.ca>, 2016
+# Xavier Symons <xsy@openerp.com>, 2016
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
+# Not Telling <levequevincel2@gmail.com>, 2016
+# Simon CARRIER <carrier.sim@gmail.com>, 2016
+# Clo <clo@odoo.com>, 2016
+# Daniel & Delphine <dd2013@leschoupinous.net>, 2016
+# Fabien Pinckaers <fp@openerp.com>, 2016
+# Richard Mathot <rim@odoo.com>, 2016
 # fr trans <e2ftrans1@yahoo.com>, 2017
 # fr rev <e2ffr02@hotmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:12+0000\n"
-"PO-Revision-Date: 2017-11-30 13:12+0000\n"
+"POT-Creation-Date: 2017-12-13 14:36+0000\n"
+"PO-Revision-Date: 2017-12-13 14:36+0000\n"
 "Last-Translator: fr rev <e2ffr02@hotmail.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -246,7 +242,7 @@ msgstr "Action à la validation des bons de livraison"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
 msgid "Active"
-msgstr "Actif/ve"
+msgstr "Actif"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_amount
@@ -265,7 +261,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
-msgstr "Archivé/s"
+msgstr "Archivé"
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -276,15 +272,6 @@ msgstr "Fondé sur des règles"
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_weight_bulk
 msgid "Bulk Weight"
 msgstr "Poids du vrac"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_stock_quant_package_shipping_weight
-msgid ""
-"Can be changed during the 'put in pack' to adjust the weight of the "
-"shipping."
-msgstr ""
-"Peut être modifié lors de l'« ajout au colis » pour ajuster le poids de la "
-"livraison."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -394,7 +381,7 @@ msgstr "Méthodes de livraison"
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_package
 msgid "Delivery Package Selection Wizard"
-msgstr "Assistant de sélection de colis"
+msgstr "Assistant de sélection d'emballage"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_packaging_view
@@ -407,7 +394,7 @@ msgstr "Colis"
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_delivery_packaging_id
 #: model:ir.ui.view,arch_db:delivery.product_packaging_delivery_form
 msgid "Delivery Packaging"
-msgstr "Emballage de livraison"
+msgstr "Colisage"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
@@ -444,7 +431,7 @@ msgstr "Annuler"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_display_name
 msgid "Display Name"
-msgstr "Nom à afficher"
+msgstr "Nom affiché"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -488,7 +475,7 @@ msgid ""
 "delivery address of your customer."
 msgstr ""
 "Lorsque vous remplissez ce formulaire, vous pouvez filtrer les transporteurs"
-" en fonction de l'adresse de livraison de votre client."
+" vers l'adresse de livraison de votre client."
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -520,13 +507,13 @@ msgstr "Obtenir le prix et créer le colis"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Group By"
-msgstr "Regroupé par"
+msgstr "Regrouper par"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_product_hs_code
 #: model:ir.model.fields,field_description:delivery.field_product_template_hs_code
 msgid "HS Code"
-msgstr "Nomenclature douanière"
+msgstr "Code HS"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_height
@@ -574,7 +561,7 @@ msgstr "Installer plus de fournisseurs"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_integration_level
 msgid "Integration Level"
-msgstr "Degré d'intégration"
+msgstr "Niveau d'intégration"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
@@ -591,7 +578,7 @@ msgstr "Est une livraison"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier___last_update
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule___last_update
 msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr "Dernière Modification le"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_write_uid
@@ -660,7 +647,7 @@ msgstr "Valeur maximum"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_packaging_max_weight
 msgid "Maximum weight shippable in this packaging"
-msgstr "Poids maximum d'expédition pour cet emballage"
+msgstr "Poids maximum expédiable"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name
@@ -689,12 +676,6 @@ msgstr ""
 " les frais de livraison."
 
 #. module: delivery
-#: model:product.product,name:delivery.product_product_delivery_normal
-#: model:product.template,name:delivery.product_product_delivery_normal_product_template
-msgid "Normal Delivery Charges"
-msgstr "Frais de livraison normaux"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_number_of_packages
 msgid "Number of Packages"
 msgstr "Nombre de colis"
@@ -707,7 +688,7 @@ msgstr "Opérateur"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Package"
-msgstr "Localisation comptable"
+msgstr "Colis"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
@@ -852,8 +833,8 @@ msgstr "Mettre un prix"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_prod_environment
 msgid "Set to True if your credentials are certified for production."
 msgstr ""
-"Définissez la valeur sur True (Vrai) si vos identifiants sont certifiés pour"
-" la production."
+"Définissez la valeur sur Vrai si vos identifiants sont certifiés pour la "
+"production."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:168
@@ -862,7 +843,7 @@ msgid ""
 "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
 "%.2f %s"
 msgstr ""
-"Colis envoyé au transporteur %s pour expédition avec le numéro de suivi "
+"Colisage envoyé au transporteur %s pour expédition avec le numéro de suivi "
 "%s<br/>Coût : %.2f %s"
 
 #. module: delivery
@@ -874,7 +855,7 @@ msgstr "Frais de port"
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_shipping_weight
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
 msgid "Shipping Weight"
-msgstr "Poids d'expédition"
+msgstr "Poids d'expéditio"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_product_hs_code
@@ -893,12 +874,6 @@ msgstr "États"
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
 msgstr "Mouvement de stock"
-
-#. module: delivery
-#: model:product.product,name:delivery.product_product_delivery_poste
-#: model:product.template,name:delivery.product_product_delivery_poste_product_template
-msgid "The Poste"
-msgstr "La Poste"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -921,7 +896,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_margin
 msgid "This percentage will be added to the shipping price."
-msgstr "Ce pourcentage sera ajouté au prix d'expédition."
+msgstr "Ce pourcentage sera ajouté au prix d'expédition"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -998,9 +973,19 @@ msgid "Weight Unit of Measure"
 msgstr "Unité de mesure du poids"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_quant_package_weight
+msgid "Weight computed based on the sum of the weights of the products."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
 msgid "Weight for Shipping"
 msgstr "Poids pour l'expédition"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_quant_package_shipping_weight
+msgid "Weight used to compute the price of the delivery (if applicable)."
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_width

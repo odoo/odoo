@@ -139,6 +139,9 @@
     // Filters
     .o_filters_menu {
         .o-selected-li;
+        
+        max-height: ~"calc(100vh - 125px)";
+        overflow: auto;
 
         .o_filter_condition {
             .o-search-options-dropdown-custom-li;
@@ -175,6 +178,9 @@
     // Group By
     .o_group_by_menu {
         .o-selected-li;
+        
+        max-height: ~"calc(100vh - 125px)";
+        overflow: auto;
 
         .divider {display: none;} // hide the divider by default (no group)
         .o_add_group { // add button
@@ -188,6 +194,9 @@
         max-height: 75vh;
         overflow-y: auto;
         .o-selected-li;
+        
+        max-height: ~"calc(100vh - 125px)";
+        overflow: auto;
 
         .divider {display: none;} // hide the divider by default (no favorite)
         .o-searchview-custom-private, .o-searchview-custom-public {

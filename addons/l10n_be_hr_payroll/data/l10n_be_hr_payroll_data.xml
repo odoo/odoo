@@ -373,7 +373,7 @@ elif salary &lt;= 2461.27:
         <field name="code">Red.Spouse.Net</field>
         <field name="sequence">148</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = (employee.marital == 'married' and employee.spouse_net_revenue &lt;= 221.0) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
+        <field name="condition_python">result = (employee.marital == 'married' and employee.spouse_fiscal_status=='with income' and employee.spouse_net_revenue &lt;= 221.0) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">result = min(110.50, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
     </record>
@@ -384,7 +384,7 @@ elif salary &lt;= 2461.27:
         <field name="code">Red.Spouse.Oth.Net</field>
         <field name="sequence">149</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = (employee.marital == 'married' and not employee.spouse_net_revenue and employee.spouse_other_net_revenue &lt;= 440.0) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
+        <field name="condition_python">result = (employee.marital == 'married' and employee.spouse_fiscal_status=='with income' and not employee.spouse_net_revenue and employee.spouse_other_net_revenue &lt;= 440.0) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">result = min(220.0, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
     </record>

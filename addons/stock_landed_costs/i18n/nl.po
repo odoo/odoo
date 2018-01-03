@@ -3,18 +3,18 @@
 # * stock_landed_costs
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2017
-# Cas Vissers <casvissers@brahoo.nl>, 2017
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:52+0000\n"
 "PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2017\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +50,7 @@ msgstr "Aanvullende kosten"
 #: selection:product.template,split_method:0
 #: selection:stock.landed.cost.lines,split_method:0
 msgid "By Current Cost"
-msgstr "Op huidige kostprijs"
+msgstr "Op huidige kost"
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
@@ -83,12 +83,12 @@ msgstr "Geannuleerd"
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Click to create a new landed cost."
-msgstr "Klik om een nieuw extra kosten aan te maken."
+msgstr "Klik om een nieuwe extra kost aan te maken."
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
 msgid "Click to define a new kind of landed cost."
-msgstr "Klik om een nieuwe soort van extra kosten aan te maken."
+msgstr "Klik om een nieuwe soort van extra kost aan te maken."
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -157,7 +157,7 @@ msgstr "Schermnaam"
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 #: model:mail.message.subtype,name:stock_landed_costs.mt_stock_landed_cost_open
 msgid "Done"
-msgstr "Gereed"
+msgstr "Verwerkt"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -271,12 +271,12 @@ msgstr "Totale kosten"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed cost are computed based on the purchase unit of measure."
-msgstr "Extra kosten worden berekend op de inkoop maateenheid."
+msgstr "Extra kosten worden berekend om de inkoop maateenheid."
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
 msgid "Landed cost validated"
-msgstr "Extra kosten bevestigd"
+msgstr "Extra kosten gevalideerd"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost___last_update
@@ -323,7 +323,7 @@ msgstr ""
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:86
 #, python-format
 msgid "Only draft landed costs can be validated"
-msgstr "Alleen concept extra kosten kunnen bevestigd worden"
+msgstr "Alleen concept extra kosten kunnen gevalideerd worden"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_picking_ids
@@ -378,7 +378,7 @@ msgstr "Split methode"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_state
 msgid "State"
-msgstr "Staat / Provincie"
+msgstr "Status"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -434,7 +434,7 @@ msgstr "Totaal Waarde"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Validate"
-msgstr "Controleer"
+msgstr "Valideer"
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:80
@@ -443,7 +443,7 @@ msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
 "landed costs to reverse them"
 msgstr ""
-"Bevestigde extra kosten kunnen niet geannuleerd worden, maar u kan een "
+"Gevalideerde extra kosten kunnen niet geannuleerd worden, maar u kan een "
 "negatieve extra kost aanmaken om ze om te keren"
 
 #. module: stock_landed_costs

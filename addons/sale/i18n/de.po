@@ -4,40 +4,39 @@
 # 
 # Translators:
 # darenkster <inactive+darenkster@transifex.com>, 2017
-# Rudolf Schnapka <rs@techno-flex.de>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
-# Malte Jansen <work@maltejansen.de>, 2017
-# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
-# JackTheHunter <Maximilian.N98@gmail.com>, 2017
-# Ralf Hilgenstock <rh@dialoge.info>, 2017
-# Andi <flimflam@salasar.de>, 2017
-# Kontor Consulting <p.becker@kontor.consulting>, 2017
 # Tina Rittmüller <tr@ife.de>, 2017
 # Philipp Hug <philipp@hug.cx>, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
+# Rudolf Schnapka <rs@techno-flex.de>, 2017
+# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
 # Niki Waibel <niki.waibel@gmail.com>, 2017
-# Renzo Meister <info@jamotion.ch>, 2017
-# Gab_Odoo <gab@odoo.com>, 2017
+# Alexander Klockhaus <a.klockhaus@gmail.com>, 2017
 # key six <mobile.umts@gmail.com>, 2017
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
-# Henry Mineehen <info@mineehen.de>, 2017
-# Dejan Dinic <dejan.dinic@bluewin.ch>, 2017
+# Renzo Meister <info@jamotion.ch>, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
+# Ralf Hilgenstock <rh@dialoge.info>, 2017
 # Anja Funk <anja.funk@afimage.de>, 2017
-# Pascal <paesce@gentlemansclub.de>, 2017
+# Malte Jansen <work@maltejansen.de>, 2017
+# JackTheHunter <Maximilian.N98@gmail.com>, 2017
+# Kontor Consulting <p.becker@kontor.consulting>, 2017
+# Henry Mineehen <info@mineehen.de>, 2017
 # Mathias Neef <mn@copado.de>, 2017
 # Fabian Liesch <fabian.liesch@gmail.com>, 2017
-# Alexander Klockhaus <a.klockhaus@gmail.com>, 2017
-# Markus Wernersbach <inactive+wernersbacher@transifex.com>, 2017
+# Dejan Dinic <dejan.dinic@bluewin.ch>, 2017
+# Pascal <paesce@gentlemansclub.de>, 2017
+# Andi <flimflam@salasar.de>, 2017
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2017
 # Katharina Moritz <kmo@e2f.com>, 2017
 # DE T1 <e2f8846@yahoo.com>, 2017
+# Markus Wernersbach <inactive+wernersbacher@transifex.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: DE T1 <e2f8846@yahoo.com>, 2017\n"
+"POT-Creation-Date: 2017-12-13 14:37+0000\n"
+"PO-Revision-Date: 2017-12-13 14:37+0000\n"
+"Last-Translator: Markus Wernersbach <inactive+wernersbacher@transifex.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -361,7 +360,7 @@ msgstr "<strong>Ablaufdatum:</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr "<strong>Steuerzuordnungshinweis:</strong>"
+msgstr "<strong>Steuerzuordnung:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -482,7 +481,7 @@ msgid "Addresses in Sales Orders"
 msgstr "Adressen in Aufträgen"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:156
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:158
 #, python-format
 msgid "Advance: %s"
 msgstr "Anzahlung: %s"
@@ -525,14 +524,12 @@ msgid "Amount"
 msgstr "Betrag"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line_amt_invoiced
-#: model:ir.model.fields,field_description:sale.field_sale_report_amt_invoiced
+#: model:ir.model.fields,field_description:sale.field_sale_report_amount_invoiced
 msgid "Amount Invoiced"
 msgstr "Abgerechneter Betrag"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line_amt_to_invoice
-#: model:ir.model.fields,field_description:sale.field_sale_report_amt_to_invoice
+#: model:ir.model.fields,field_description:sale.field_sale_report_amount_to_invoice
 msgid "Amount To Invoice"
 msgstr "Abzurechnender Betrag"
 
@@ -546,7 +543,7 @@ msgstr "Betrag der zu fakturierenden Angebote"
 #: model:ir.model.fields,field_description:sale.field_sale_order_analytic_account_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_analytic_account_id
 msgid "Analytic Account"
-msgstr "Kostenstelle"
+msgstr "Analysekonto"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -635,11 +632,6 @@ msgid "Cancelled"
 msgstr "Abgebrochen"
 
 #. module: sale
-#: model:ir.ui.menu,name:sale.product_menu_catalog
-msgid "Catalog"
-msgstr "Katalog"
-
-#. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_use_quotations
 msgid ""
 "Check this box if you send quotations to your customers rather than "
@@ -719,6 +711,7 @@ msgstr "Auftrag bestätigen"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_confirmation_date
 #: model:ir.model.fields,field_description:sale.field_sale_report_confirmation_date
+#: model:ir.ui.view,arch_db:sale.view_order_tree
 msgid "Confirmation Date"
 msgstr "Bestätigung am"
 
@@ -785,6 +778,7 @@ msgstr "Aktuelles Verkaufsjahr"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_order_partner_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_partner_id
+#: model:ir.model.fields,field_description:sale.field_sale_report_partner_id
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Customer"
@@ -847,7 +841,7 @@ msgid "Delivered"
 msgstr "Ausgeliefert"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:824
+#: code:addons/sale/models/sale.py:816
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Delivered Quantity"
@@ -878,12 +872,6 @@ msgstr "Lieferadresse für aktuelle Rechnung."
 #: model:ir.model.fields,help:sale.field_sale_order_partner_shipping_id
 msgid "Delivery address for current sales order."
 msgstr "Lieferadresse für den aktuellen Auftrag."
-
-#. module: sale
-#: model:product.product,name:sale.advance_product_0
-#: model:product.template,name:sale.advance_product_0_product_template
-msgid "Deposit"
-msgstr "Anzahlung"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_default_deposit_product_id
@@ -950,7 +938,7 @@ msgid "Display Name"
 msgstr "Anzeigename"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:84
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:86
 #, python-format
 msgid "Down Payment"
 msgstr "Anzahlung"
@@ -981,7 +969,7 @@ msgid "Down payment (percentage)"
 msgstr "Anzahlung (Prozent)"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:81
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:83
 #, python-format
 msgid "Down payment of %s%%"
 msgstr "Anzahlung von %s%%"
@@ -1004,11 +992,6 @@ msgid "Draft Quotation"
 msgstr "Angebotsentwurf"
 
 #. module: sale
-#: model:ir.model,name:sale.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr "E-Mail Assistent"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_validity_date
 msgid "Expiration Date"
 msgstr "Ablaufdatum"
@@ -1019,7 +1002,7 @@ msgid "Extended Filters"
 msgstr "Erweiterte Filter"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:807
+#: code:addons/sale/models/sale.py:799
 #, python-format
 msgid "Extra line with %s "
 msgstr "Weitere Zeile mit %s "
@@ -1210,7 +1193,7 @@ msgid "Invoiced"
 msgstr "Abgerechnet"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:825
+#: code:addons/sale/models/sale.py:817
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Invoiced Quantity"
@@ -1253,7 +1236,6 @@ msgid "Invoices: Untaxed Total"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.menu,name:sale.menu_sale_invoicing
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.product_template_form_view_invoice_policy
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1567,7 +1549,6 @@ msgstr "Auftrag #"
 #: model:ir.model.fields,field_description:sale.field_sale_order_date_order
 #: model:ir.ui.view,arch_db:sale.portal_my_orders
 #: model:ir.ui.view,arch_db:sale.portal_my_quotations
-#: model:ir.ui.view,arch_db:sale.view_order_tree
 #, python-format
 msgid "Order Date"
 msgstr "Bestelldatum"
@@ -1630,7 +1611,7 @@ msgid "Ordered Qty"
 msgstr "Bestellte Anz."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:821
+#: code:addons/sale/models/sale.py:813
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Ordered Quantity"
@@ -1665,7 +1646,7 @@ msgstr "Aufträge"
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Orders to Invoice"
-msgstr ""
+msgstr "Aufträge zur Rechnung"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
@@ -1693,7 +1674,6 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_partner_id
-#: model:ir.model.fields,field_description:sale.field_sale_report_partner_id
 msgid "Partner"
 msgstr "Partner"
 
@@ -1735,7 +1715,7 @@ msgid "Please define an accounting sales journal for this company."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:916
+#: code:addons/sale/models/sale.py:905
 #, python-format
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
@@ -1873,6 +1853,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_template_action
 #: model:ir.ui.menu,name:sale.prod_config_main
+#: model:ir.ui.menu,name:sale.product_menu_catalog
 msgid "Products"
 msgstr "Produkte"
 
@@ -1894,7 +1875,7 @@ msgstr "Rechnungsmenge"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_uom_qty
 msgid "Qty Ordered"
-msgstr "Bestellte Menge"
+msgstr "Bestelle Menge"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_to_invoice
@@ -2049,9 +2030,9 @@ msgstr "Berichtswesen"
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
-#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Sales"
 msgstr "Verkauf"
@@ -2113,7 +2094,6 @@ msgstr "Information Umsatz"
 #: model:ir.model.fields,field_description:sale.field_res_users_sale_warn
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-#: model:res.request.link,name:sale.req_link_sale_order
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Sales Order"
 msgstr "Verkaufsauftrag"
@@ -2274,7 +2254,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_sequence
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_sequence
 msgid "Sequence"
-msgstr "Nummernfolge"
+msgstr "Reihenfolge"
 
 #. module: sale
 #: model:sale.layout_category,name:sale.sale_layout_cat_1
@@ -2510,7 +2490,7 @@ msgstr ""
 "dem Produktmaske berechnet."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:149
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:151
 #, python-format
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
@@ -2521,7 +2501,7 @@ msgstr ""
 "dieses Produkt."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:147
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:149
 #, python-format
 msgid ""
 "The product used to invoice a down payment should have an invoice policy set"
@@ -2534,7 +2514,7 @@ msgstr ""
 "erstellen."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:78
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:80
 #, python-format
 msgid "The value of the down payment amount must be positive."
 msgstr "Der Betrag der Anzahlung muss positiv sein."
@@ -2558,7 +2538,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:74
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:76
 #, python-format
 msgid ""
 "There is no income account defined for this product: \"%s\". You may have to"
@@ -2571,8 +2551,8 @@ msgstr ""
 #. module: sale
 #: code:addons/sale/models/sale.py:430 code:addons/sale/models/sale.py:434
 #, python-format
-msgid "There is no invoicable line."
-msgstr "Es gibt keine abrechenbare Position."
+msgid "There is no invoiceable line."
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_error
@@ -2643,6 +2623,7 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
+#: model:ir.ui.menu,name:sale.menu_sale_invoicing
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 #: selection:sale.order,invoice_status:0
@@ -2765,7 +2746,7 @@ msgid "Warning"
 msgstr "Warnung"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1006
+#: code:addons/sale/models/sale.py:993
 #, python-format
 msgid "Warning for %s"
 msgstr "Warnung für %s"
@@ -2809,11 +2790,11 @@ msgstr ""
 "Versuchen Sie es vorher abzubrechen."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1069
+#: code:addons/sale/models/sale.py:1056
 #, python-format
 msgid ""
-"You can not remove a sales order line.\n"
-"Discard changes and try setting the quantity to 0."
+"You can not remove an order line once the sales order is confirmed.\n"
+"You should rather set the quantity to 0."
 msgstr ""
 
 #. module: sale

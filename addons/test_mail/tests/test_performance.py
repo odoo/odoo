@@ -75,7 +75,7 @@ class TestMailPerformance(TransactionCase):
             'partner_id': self.env.ref('base.res_partner_12').id,
         })
 
-        with self.assertQueryCount(admin=20, demo=31):  # test_mail only: 17 - 25
+        with self.assertQueryCount(admin=30, demo=41):  # test_mail only: 17 - 25
             record.track = 'X'
 
     @users('admin', 'demo')
@@ -91,14 +91,14 @@ class TestMailPerformance(TransactionCase):
     @warmup
     def test_create_mail_with_tracking(self):
         """ Create records inheriting from 'mail.thread' (with field tracking). """
-        with self.assertQueryCount(admin=38, demo=54):  # test_mail only: 33 - 47
+        with self.assertQueryCount(admin=58, demo=78):  # test_mail only: 33 - 47
             self.env['test_performance.mail'].create({'name': 'X'})
 
     @users('admin', 'emp')
     @warmup
     def test_simple(self):
         """ Create records inheriting from 'mail.thread' (simple models) """
-        with self.assertQueryCount(admin=22, emp=29):  # test_mail only: 19 - 25
+        with self.assertQueryCount(admin=30, emp=39):  # test_mail only: 19 - 25
             self.env['mail.test.simple'].create({'name': 'Test'})
 
 
@@ -126,7 +126,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_activity(self):
         model = self.env['mail.test.activity']
 
-        with self.assertQueryCount(admin=25, emp=32):  # test_mail only: 22 - 28
+        with self.assertQueryCount(admin=33, emp=42):  # test_mail only: 22 - 28
             model.create({'name': 'Test'})
 
     @users('admin', 'emp')
@@ -225,7 +225,7 @@ class TestHeavyMailPerformance(TransactionCase):
         self.umbrella.message_subscribe(self.user_portal.partner_id.ids)
         record = self.umbrella.sudo(self.env.user)
 
-        with self.assertQueryCount(admin=118, emp=150):  # test_mail only: 112 - 143
+        with self.assertQueryCount(admin=120, emp=151):  # test_mail only: 112 - 143
             record.message_post(
                 body='<p>Test Post Performances</p>',
                 message_type='comment', subtype='mail.mt_comment')
@@ -257,7 +257,7 @@ class TestHeavyMailPerformance(TransactionCase):
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
-        with self.assertQueryCount(admin=315, emp=380):  # test_mail only: 298 - 359
+        with self.assertQueryCount(admin=327, emp=397):  # test_mail only: 298 - 359
             rec = self.env['mail.test.full'].create({
                 'name': 'Test',
                 'umbrella_id': umbrella_id,

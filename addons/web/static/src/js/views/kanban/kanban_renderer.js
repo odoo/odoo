@@ -94,7 +94,7 @@ var KanbanRenderer = BasicRenderer.extend({
         this._super.apply(this, arguments);
 
         this.widgets = [];
-        this.qweb = new QWeb(session.debug, {_s: session.origin});
+        this.qweb = new QWeb(session.debug, {_s: session.origin}, false);
         var templates = findInNode(this.arch, function (n) { return n.tag === 'templates';});
         transformQwebTemplate(templates, state.fields);
         this.qweb.add_template(utils.json_node_to_xml(templates));
@@ -235,6 +235,10 @@ var KanbanRenderer = BasicRenderer.extend({
             }
         });
 
+        // remove previous sorting
+        if(this.$el.sortable('instance') !== undefined) {
+            this.$el.sortable('destroy');
+        }
         if (this.groupedByM2O) {
             // Enable column sorting
             this.$el.sortable({
@@ -249,7 +253,10 @@ var KanbanRenderer = BasicRenderer.extend({
                 stop: function () {
                     var ids = [];
                     self.$('.o_kanban_group').each(function (index, u) {
-                        ids.push($(u).data('id'));
+                        // Ignore 'Undefined' column
+                        if (_.isNumber($(u).data('id'))) {
+                            ids.push($(u).data('id'));
+                        }
                     });
                     self.trigger_up('resequence_columns', {ids: ids});
                 },

@@ -4,20 +4,20 @@
 # 
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
-# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
 # Bole <bole@dajmi5.com>, 2017
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
 # Tina Milas <tina@uvid.hr>, 2017
-# Mario Jureša <mario.juresa@uvid.hr>, 2017
 # Marko Carević <marko.carevic@live.com>, 2017
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
+# Mario Jureša <mario.juresa@uvid.hr>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 11:34+0000\n"
-"PO-Revision-Date: 2017-10-10 11:34+0000\n"
-"Last-Translator: Marko Carević <marko.carevic@live.com>, 2017\n"
+"POT-Creation-Date: 2017-11-30 13:11+0000\n"
+"PO-Revision-Date: 2017-11-30 13:11+0000\n"
+"Last-Translator: Mario Jureša <mario.juresa@uvid.hr>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,7 +75,7 @@ msgid "Cancel"
 msgstr "Odustani"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:409
+#: code:addons/stock_account/models/stock.py:452
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
@@ -83,7 +83,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:411
+#: code:addons/stock_account/models/stock.py:454
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
@@ -101,7 +101,15 @@ msgstr "Promjeni cijenu"
 #: model:ir.model,name:stock_account.model_stock_change_standard_price
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "Change Standard Price"
-msgstr "Promijeni uobičajenu cijenu"
+msgstr "Change Standard Price"
+
+#. module: stock_account
+#: code:addons/stock_account/models/product.py:243
+#, python-format
+msgid ""
+"Changing your cost method is an important change that will impact your "
+"inventory valuation. Are you sure you want to make that change?"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_inventory_accounting_date
@@ -116,7 +124,7 @@ msgid "Click to create a stock movement."
 msgstr "Kliknite za kreiranje skladišnog prijenosa."
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:480
+#: code:addons/stock_account/models/stock.py:523
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -225,7 +233,7 @@ msgstr "Lokacije inventure"
 #: model:ir.ui.view,arch_db:stock_account.product_valuation_form_view
 #: model:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Inventory Valuation"
-msgstr "Popis vrednovanja"
+msgstr "Popis Vrednovanja"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_invoice
@@ -419,7 +427,7 @@ msgstr "Dnevnik zalihe"
 #: model:ir.model,name:stock_account.model_stock_move
 #: model:ir.model.fields,field_description:stock_account.field_account_move_stock_move_id
 msgid "Stock Move"
-msgstr "Skladišni prijenos"
+msgstr "Skladišni prenos"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.stock_move_valuation_action
@@ -466,11 +474,36 @@ msgid "Templates for Account Chart"
 msgstr "Predložak kontnog plana"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:435
+#: code:addons/stock_account/models/stock.py:478
 #, python-format
 msgid ""
 "The cost of %s is currently equal to 0. Change the cost or the configuration"
 " of your product to avoid an incorrect valuation."
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:309
+#, python-format
+msgid ""
+"The move lines are not in a consistent state: some are entering and other "
+"are leaving the company. "
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:320
+#, python-format
+msgid ""
+"The move lines are not in a consistent states: they are doing an "
+"intercompany in a single step while they should go through the intercompany "
+"transit location."
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:318
+#, python-format
+msgid ""
+"The move lines are not in a consistent states: they do not share the same "
+"origin or destination company."
 msgstr ""
 
 #. module: stock_account
@@ -535,6 +568,12 @@ msgid "Value"
 msgstr "Vrijednost"
 
 #. module: stock_account
+#: code:addons/stock_account/models/product.py:242
+#, python-format
+msgid "Warning"
+msgstr "Upozorenje"
+
+#. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_input_categ_id
 msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
@@ -593,7 +632,7 @@ msgstr ""
 "will hold the current value of the products."
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:407
+#: code:addons/stock_account/models/stock.py:450
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
@@ -602,7 +641,7 @@ msgstr ""
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:130
-#: code:addons/stock_account/models/stock.py:413
+#: code:addons/stock_account/models/stock.py:456
 #, python-format
 msgid ""
 "You don't have any stock valuation account defined on your product category."

@@ -152,7 +152,7 @@ class AssetsBundle(object):
         Not really a full checksum.
         We compute a SHA1 on the rendered bundle + max linked files last_modified date
         """
-        check = u"%s%s%s" % (json.dumps(self.files), u",".join(self.remains), self.last_modified)
+        check = u"%s%s%s" % (json.dumps(self.files, sort_keys=True), u",".join(self.remains), self.last_modified)
         return hashlib.sha1(check.encode('utf-8')).hexdigest()
 
     def clean_attachments(self, type):

@@ -9,10 +9,10 @@
 # danimaribeiro <danimaribeiro@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2017-12-13 14:36+0000\n"
+"PO-Revision-Date: 2017-12-13 14:36+0000\n"
 "Last-Translator: danimaribeiro <danimaribeiro@gmail.com>, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -83,7 +83,13 @@ msgid "<strong>Transactions</strong>"
 msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:53
+#: code:addons/account_payment/models/payment.py:80
+#, python-format
+msgid "Amount Mismatch (%s)"
+msgstr ""
+
+#. module: account_payment
+#: code:addons/account_payment/controllers/payment.py:52
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -114,13 +120,13 @@ msgid "Number of payment transactions"
 msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:50
+#: code:addons/account_payment/controllers/payment.py:49
 #, python-format
 msgid "Pay & Confirm"
 msgstr "Pagar & Confirmar"
 
 #. module: account_payment
-#: code:addons/account_payment/models/payment.py:119
+#: code:addons/account_payment/models/payment.py:131
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 #, python-format
 msgid "Pay Now"
@@ -151,6 +157,14 @@ msgstr "Transações de Pagamento"
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "Status"
 msgstr "Situação"
+
+#. module: account_payment
+#: code:addons/account_payment/models/payment.py:81
+#, python-format
+msgid ""
+"The invoice was not confirmed despite response from the acquirer (%s): "
+"invoice amount is %r but acquirer replied with %r."
+msgstr ""
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error

@@ -76,8 +76,9 @@ def _configure_journals(cr, registry):
                     # create the property
                     env['ir.property'].create(vals)
 
-    if not tools.config['without_demo']:
-        account_id = env['account.account'].search([('tag_ids', '=', env.ref('account.demo_stock_account').id)], limit=1).id
+    stock_account = env.ref('account.demo_stock_account', False)
+    if stock_account:
+        account_id = env['account.account'].search([('tag_ids', '=', stock_account.id)], limit=1).id
         fields_id = env['ir.model.fields'].search([('model', '=', 'product.category'), ('name', '=', 'property_stock_valuation_account_id')], limit=1).id
         if not account_id:
             account_id = env['account.account'].search([('user_type_id', '=', env.ref('account.data_account_type_current_assets').id)], limit=1).id

@@ -12,3 +12,4 @@ List of contributors:
 
 Laurent Destailleur ldestailleur@teclib.com https://github.com/eldy
 David Halgand dhalgand@teclib.com https://github.com/halgandd
+Guillaume Masson gmasson@teclib.com https://github.com/metaminux

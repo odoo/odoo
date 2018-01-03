@@ -3,13 +3,12 @@
 # * stock_landed_costs
 # 
 # Translators:
-# liAnGjiA <liangjia@qq.com>, 2017
-# Jeffery CHEN <jeffery9@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# 卓忆科技 <zhanghao@jointd.com>, 2017
-# Talway <9010446@qq.com>, 2017
-# Yaorong Li <55yaorong.li@gmail.com>, 2017
-# Gary Wei <Gary.wei@elico-corp.com>, 2017
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Talway <9010446@qq.com>, 2016
+# 卓忆科技 <zhanghao@jointd.com>, 2016
+# Gary Wei <Gary.wei@elico-corp.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2016
 # 苏州远鼎 <tiexinliu@126.com>, 2017
 msgid ""
 msgstr ""
@@ -42,7 +41,7 @@ msgstr "科目"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_account_journal_id
 msgid "Account Journal"
-msgstr "会计日记账"
+msgstr "科目日记账"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_additional_landed_cost
@@ -101,7 +100,7 @@ msgstr "计算"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_price_unit
 msgid "Cost"
-msgstr "费用"
+msgstr "成本"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_cost_line_id
@@ -112,7 +111,7 @@ msgstr "成本行"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_cost_lines
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Cost Lines"
-msgstr "成本明细"
+msgstr "成本行"
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:90
@@ -139,7 +138,7 @@ msgstr "创建时间"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_date
 msgid "Date"
-msgstr "日期   "
+msgstr "日期"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_name
@@ -279,14 +278,14 @@ msgstr "到岸成本已验证"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines___last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines___last_update
 msgid "Last Modified on"
-msgstr "最后修改时间"
+msgstr "最后修改日"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_write_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_write_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_write_uid
 msgid "Last Updated by"
-msgstr "最后更新者"
+msgstr "最后更新人"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_write_date
@@ -298,7 +297,7 @@ msgstr "最后更新时间"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Month"
-msgstr "月"
+msgstr "月份"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_name
@@ -322,7 +321,7 @@ msgstr "只有批准草稿状态的到岸成本"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_picking_ids
 msgid "Pickings"
-msgstr "拣货"
+msgstr "分拣"
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:295
@@ -387,7 +386,7 @@ msgstr "库存到岸成本"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
 msgid "Stock Landed Cost Lines"
-msgstr "库存到岸成本明细"
+msgstr "库存到岸成本行"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_move
@@ -408,7 +407,7 @@ msgid ""
 "landed costs. Landed costs are only possible for products configured in real"
 " time valuation with real price costing method. Please make sure it is the "
 "case, or you selected the correct picking"
-msgstr "选择的拣货不包含任何影响到岸成本的移动。登录成本仅仅影响哪些设置为实时使用真实成本的方法估值的产品。请确认是这种情况，或你选择正确的拣货"
+msgstr "选择的分拣不包含任何影响到岸成本的移动。登录成本仅仅影响哪些设置为实时使用真实成本的方法估值的产品。请确认是这种情况，或你选择正确的分拣"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_amount_total

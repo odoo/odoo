@@ -54,10 +54,9 @@
         <record id="view_rule_tree" model="ir.ui.view">
             <field name="model">ir.rule</field>
             <field name="arch" type="xml">
-                <tree string="Record Rules" decoration-info="global">
+                <tree string="Record Rules" decoration-info="not groups">
                     <field name="name"/>
                     <field name="model_id"/>
-                    <field name="global" invisible="1"/>
                     <field name="groups" widget="many2many_tags" options="{'no_create':True}"/>
                     <field name="domain_force"/>
                     <field name="perm_read"/>

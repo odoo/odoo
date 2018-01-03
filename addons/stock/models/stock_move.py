@@ -115,9 +115,9 @@ class StockMove(models.Model):
         ('make_to_stock', 'Default: Take From Stock'),
         ('make_to_order', 'Advanced: Apply Procurement Rules')], string='Supply Method',
         default='make_to_stock', required=True,
-        help="By default, the system will take from the stock in the source location and passively wait for availability."
+        help="By default, the system will take from the stock in the source location and passively wait for availability. "
              "The other possibility allows you to directly create a procurement on the source location (and thus ignore "
-             "its current stock) to gather products. If we want to chain moves and have this one to wait for the previous,"
+             "its current stock) to gather products. If we want to chain moves and have this one to wait for the previous, "
              "this second option should be chosen.")
     scrapped = fields.Boolean('Scrapped', related='location_dest_id.scrap_location', readonly=True, store=True)
     scrap_ids = fields.One2many('stock.scrap', 'move_id')
@@ -265,14 +265,17 @@ class StockMove(models.Model):
         detect errors. """
         raise UserError(_('The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`.'))
 
-    @api.one
+    @api.multi
     @api.depends('move_line_ids.product_qty')
     def _compute_reserved_availability(self):
         """ Fill the `availability` field on a stock move, which is the actual reserved quantity
         and is represented by the aggregated `product_qty` on the linked move lines. If the move
         is force assigned, the value will be 0.
         """
-        self.reserved_availability = self.product_id.uom_id._compute_quantity(sum(self.move_line_ids.mapped('product_qty')), self.product_uom, rounding_method='HALF-UP')
+        result = {data['move_id'][0]: data['product_qty'] for data in 
+            self.env['stock.move.line'].read_group([('move_id', 'in', self.ids)], ['move_id','product_qty'], ['move_id'])}
+        for rec in self:
+            rec.reserved_availability = rec.product_id.uom_id._compute_quantity(result.get(rec.id, 0.0), rec.product_uom, rounding_method='HALF-UP')
 
     @api.one
     @api.depends('state', 'product_id', 'product_qty', 'location_id')
@@ -402,7 +405,7 @@ class StockMove(models.Model):
                     if propagated_date_field:
                         current_date = datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT)
                         new_date = datetime.strptime(vals.get(propagated_date_field), DEFAULT_SERVER_DATETIME_FORMAT)
-                        delta = new_date - current_date
+                        delta = relativedelta.relativedelta(new_date, current_date)
                         if abs(delta.days) >= move.company_id.propagation_minimum_delta:
                             old_move_date = datetime.strptime(move.move_dest_ids[0].date_expected, DEFAULT_SERVER_DATETIME_FORMAT)
                             new_move_date = (old_move_date + relativedelta.relativedelta(days=delta.days or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
@@ -466,14 +469,7 @@ class StockMove(models.Model):
     def _do_unreserve(self):
         if any(move.state in ('done', 'cancel') for move in self):
             raise UserError(_('Cannot unreserve a done move'))
-        for move in self:
-            move.move_line_ids.unlink()
-            if move.procure_method == 'make_to_order' and not move.move_orig_ids:
-                move.state = 'waiting'
-            elif move.move_orig_ids and not all(orig.state in ('done', 'cancel') for orig in move.move_orig_ids):
-                move.state = 'waiting'
-            else:
-                move.state = 'confirmed'
+        self.mapped('move_line_ids').unlink()
         return True
 
     def _push_apply(self):
@@ -1136,7 +1132,9 @@ class StockMove(models.Model):
             elif move.reserved_availability and move.reserved_availability <= move.product_uom_qty:
                 move.state = 'partially_available'
             else:
-                if move.move_orig_ids:
+                if move.procure_method == 'make_to_order' and not move.move_orig_ids:
+                    move.state = 'waiting'
+                elif move.move_orig_ids and not all(orig.state in ('done', 'cancel') for orig in move.move_orig_ids):
                     move.state = 'waiting'
                 else:
                     move.state = 'confirmed'

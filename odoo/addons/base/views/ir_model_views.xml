@@ -175,10 +175,9 @@
                         </page>
                         <page string="Record Rules">
                             <field name="rule_ids">
-                                <tree string="Record Rules" editable="top" decoration-info="global">
+                                <tree string="Record Rules" editable="top" decoration-info="not groups">
                                     <field name="name"/>
                                     <field name="groups" widget="many2many_tags" options="{'no_create':True}"/>
-                                    <field name="global" invisible="1"/>
                                     <field name="domain_force"/>
                                     <field name="perm_read"/>
                                     <field name="perm_write"/>

@@ -3,23 +3,22 @@
 # * sale_stock
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Gary Wei <Gary.wei@elico-corp.com>, 2016
+# 卓忆科技 <zhanghao@jointd.com>, 2016
+# Talway <9010446@qq.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 # xiaobin wu <bd5dml@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Talway <9010446@qq.com>, 2017
-# Gary Wei <Gary.wei@elico-corp.com>, 2017
-# Connie Xiao <connie.xiao@elico-corp.com>, 2017
-# waveyeung <waveyeung@qq.com>, 2017
-# 卓忆科技 <zhanghao@jointd.com>, 2017
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
+# waveyeung <waveyeung@qq.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2017-12-13 14:37+0000\n"
+"PO-Revision-Date: 2017-12-13 14:37+0000\n"
 "Last-Translator: 苏州远鼎 <tiexinliu@126.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -29,17 +28,59 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:170
+#: code:addons/sale_stock/models/sale_order.py:179
 #, python-format
 msgid ""
 "\n"
-"There are %s %s available accross all warehouses."
+"There are %s %s available across all warehouses.\n"
+"\n"
 msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
+msgid ""
+"<span class=\"label label-danger label-text-align\"><i class=\"fa fa-fw fa-"
+"times\"/> Cancelled</span>"
+msgstr ""
+"<span class=\"label label-danger label-text-align\"><i class=\"fa fa-fw fa-"
+"times\"/> 已取消</span>"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
+msgid ""
+"<span class=\"label label-info label-text-align\"><i class=\"fa fa-fw fa-"
+"clock-o\"/> Preparation</span>"
+msgstr ""
+"<span class=\"label label-info label-text-align\"><i class=\"fa fa-fw fa-"
+"clock-o\"/> 准备</span>"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
+msgid ""
+"<span class=\"label label-success label-text-align\"><i class=\"fa fa-fw fa-"
+"truck\"/> Shipped</span>"
+msgstr ""
+"<span class=\"label label-success label-text-align\"><i class=\"fa fa-fw fa-"
+"truck\"/> 已送货</span>"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
+msgid ""
+"<span class=\"label label-warning label-text-align\"><i class=\"fa fa-fw fa-"
+"clock-o\"/> Partially Available</span>"
+msgstr ""
+"<span class=\"label label-warning label-text-align\"><i class=\"fa fa-fw fa-"
+"clock-o\"/> 部分可用 </span>"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
-msgstr "<strong>客户参照:</strong>"
+msgstr "<strong>客户参考:</strong>"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
+msgid "<strong>Delivery Orders</strong>"
+msgstr "<strong>交货单</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
@@ -132,7 +173,7 @@ msgstr "贸易术语是一系列的销售术语,用来划分交易成本和买�
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr "国际商业条款是一系列用于国际交易的商业条款。"
+msgstr "国际商业条款是一系列预定义的用于国际贸易的商业条款。"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
@@ -178,7 +219,7 @@ msgid "Move forward expected delivery dates by"
 msgstr "将预期交货日期提前"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:174
+#: code:addons/sale_stock/models/sale_order.py:186
 #, python-format
 msgid "Not enough inventory!"
 msgstr "库存不够！"
@@ -189,15 +230,15 @@ msgid "Order-Specific Routes"
 msgstr "以具体的路线"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:188
+#: code:addons/sale_stock/models/sale_order.py:200
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr "订货数量减少！"
+msgstr "订货数量减少"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
 msgid "Package"
-msgstr "包裹"
+msgstr "包装"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_ids
@@ -212,7 +253,7 @@ msgstr "补货组"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_group
 msgid "Procurement Requisition"
-msgstr "补货申请"
+msgstr "补货请求"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_rule
@@ -246,7 +287,7 @@ msgstr "销售订单线"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move_sale_line_id
 msgid "Sale Line"
-msgstr "销售明细"
+msgstr "销售明细行"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group_sale_id
@@ -281,7 +322,7 @@ msgstr "销售订单统计"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
 msgid "Sales Safety Days"
-msgstr "销售安全天数"
+msgstr "销售送货安全期"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -331,7 +372,7 @@ msgstr "送货管理"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
 msgid "Shipping Policy"
-msgstr "交货策略"
+msgstr "送货策略"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -353,7 +394,7 @@ msgid ""
 msgstr "这允许应用在销售订单行的一种特殊的路径（如直销、定做）在不寻常的情况下。为了销售订单，路线必须有“销售订单线”选项在他们的设置形式检查。"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:273
+#: code:addons/sale_stock/models/sale_order.py:298
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
 msgstr "这个产品是由%.2f%s包装的。你应该卖掉。%.2f%s"
@@ -361,7 +402,7 @@ msgstr "这个产品是由%.2f%s包装的。你应该卖掉。%.2f%s"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "调拨"
+msgstr "转账"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_warehouse_id
@@ -370,7 +411,7 @@ msgid "Warehouse"
 msgstr "仓库"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:272
+#: code:addons/sale_stock/models/sale_order.py:297
 #, python-format
 msgid "Warning"
 msgstr "警告"
@@ -386,15 +427,23 @@ msgid "When to start shipping"
 msgstr "何时开始装运"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:189
+#: code:addons/sale_stock/models/sale_order.py:201
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
-msgstr "你在减少订单数量，不要忘记需要手工更新发货单的数量。"
+msgstr "你在减少订单数量，不要忘记需要手工更新发货单的数量"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:166
+#: code:addons/sale_stock/models/sale_order.py:338
+#, python-format
+msgid ""
+"You cannot decrease the ordered quantity below the delivered quantity.\n"
+"Create a return first."
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:175
 #, python-format
 msgid ""
 "You plan to sell %s %s but you only have %s %s available in %s warehouse."
@@ -408,4 +457,4 @@ msgstr "天"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
 msgid "res.config.settings"
-msgstr "res.config.settings"
+msgstr "设置-基础设置"

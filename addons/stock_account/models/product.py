@@ -237,6 +237,9 @@ class ProductCategory(models.Model):
 
     @api.onchange('property_cost_method')
     def onchange_property_valuation(self):
+        if not self._origin:
+            # don't display the warning when creating a product category
+            return
         return {
             'warning': {
                 'title': _("Warning"),

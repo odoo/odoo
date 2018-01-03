@@ -200,6 +200,8 @@ class CustomerPortal(Controller):
         # vat validation
         partner = request.env["res.partner"]
         if data.get("vat") and hasattr(partner, "check_vat"):
+            if data.get("country_id"):
+                data["vat"] = request.env["res.partner"].fix_eu_vat_number(int(data.get("country_id")), data.get("vat"))
             partner_dummy = partner.new({
                 'vat': data['vat'],
                 'country_id': (int(data['country_id'])

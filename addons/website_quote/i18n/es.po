@@ -3,39 +3,36 @@
 # * website_quote
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# José Vicente <txusev@gmail.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Antonio Trueba <atgayol@gmail.com>, 2016
+# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# Cristóbal Martí Oliver <info@moblesmarti.com>, 2016
+# Alejandro Die Sanchis <marketing@domatix.com>, 2016
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2016
+# David Perez <david@closemarketing.es>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
 # Juan José Scarafía <scarafia.juanjose@gmail.com>, 2017
-# Gustavo Valverde <g.valverde02@gmail.com>, 2017
-# Eduardo Magdalena <emagdalena@close2circle.com>, 2017
-# José Vicente <txusev@gmail.com>, 2017
-# Daniel Blanco <daniel@blancomartin.com.ar>, 2017
-# oihane <oihanecruce@gmail.com>, 2017
-# Antonio Trueba <atgayol@gmail.com>, 2017
-# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2017
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
-# Carles Antoli <carlesantoli@hotmail.com>, 2017
 # RGB Consulting <odoo@rgbconsulting.com>, 2017
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# Cristóbal Martí Oliver <info@moblesmarti.com>, 2017
-# David de León <leceda09@gmail.com>, 2017
-# Alejandro Die Sanchis <marketing@domatix.com>, 2017
-# Ivan Nieto <ivan.n.s@tuta.io>, 2017
-# Ana Juaristi <ajuaristio@gmail.com>, 2017
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
-# David Perez <david@closemarketing.es>, 2017
-# Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2017
-# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 # e2f_es_ t8 <e2f_es_t8@outlook.com>, 2017
-# e2f_EPV Translator <e2f_EPV@outlook.com>, 2017
 # e2f_es_ t7 <e2f_es_t7@outlook.com>, 2017
 # ES T2 <e2f48ds4f2ds1@outlook.com>, 2017
+# e2f_EPV Translator <e2f_EPV@outlook.com>, 2017
+# Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2017
+# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-24 09:00+0000\n"
 "PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: ES T2 <e2f48ds4f2ds1@outlook.com>, 2017\n"
+"Last-Translator: Christopher Ormaza <chris.ormaza@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -126,7 +123,7 @@ msgstr ""
 "                % endif\n"
 "\n"
 "                <p>Si tiene alguna pregunta, no dude en contactar con nosotros.</p><br/>\n"
-"                <p>Gracias por elegir ${object.company_id.name}.</p>\n"
+"                <p>Gracias por elegir ${object.company_id.name or \"us\"}.</p>\n"
 "            </td>\n"
 "        </tr><tr>\n"
 "            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
@@ -198,7 +195,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Accept"
-msgstr "<i class=\"fa fa-check\"/> Aceptar"
+msgstr "Aceptar"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -208,12 +205,12 @@ msgstr "<i class=\"fa fa-check\"/> Aceptar y pagar"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Accept Order"
-msgstr "<i class=\"fa fa-check\"/> Aceptar Pedido"
+msgstr "Aceptar Pedido"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Pay Now"
-msgstr "<i class=\"fa fa-check\"/> Pagar Ahora"
+msgstr "Pagar Ahora"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.chatter
@@ -223,7 +220,7 @@ msgstr "<i class=\"fa fa-comment\"/> Opinión"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-times\"/> Reject"
-msgstr "<i class=\"fa fa-times\"/> Rechazar"
+msgstr "Rechazar"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -380,7 +377,7 @@ msgid ""
 "                                  Contact us for new quote."
 msgstr ""
 "<strong>Esta oferta ha caducado!</strong><br/>\n"
-"                                  Contáctenos para un nuevo presupuesto."
+"                                  Contáctenos para una nueva cotización."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -393,8 +390,8 @@ msgid ""
 "<strong>This quotation has been canceled.</strong> Contact us to get a new "
 "quote."
 msgstr ""
-"<strong>Este presupuesto ha sido cancelado.</strong> Contáctenos para "
-"obtener un nuevo presupuesto."
+"<strong>Esta cotización ha sido cancelada.</strong> Contáctenos para obtener"
+" una nueva cotización."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -428,7 +425,7 @@ msgstr "Activo"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 msgid "Add to order lines"
-msgstr "Añadir a las líneas de pedido"
+msgstr "Añadir a líneas de pedido"
 
 #. module: website_quote
 #: model:product.product,name:website_quote.product_product_quote_3
@@ -449,7 +446,7 @@ msgstr "JQuery avanzado"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "Amount"
-msgstr "Monto"
+msgstr "Importe"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_amount_undiscounted
@@ -464,7 +461,7 @@ msgstr "Todo socio oficial de Odoo se compromete a:"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_search
 msgid "Archived"
-msgstr "Archivado"
+msgstr "Archivada"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -482,7 +479,7 @@ msgid ""
 "                                       commitment we put on strong services."
 msgstr ""
 "Somos una empresa líder en el suministro de servicios profesionales,\n"
-"                                       y por eso sabemos que nuestro éxito radica en el\n"
+" y por eso sabemos que nuestro éxito radica en el\n"
 "                                       compromiso que adquirimos en nuestros servicios más destacados."
 
 #. module: website_quote
@@ -592,7 +589,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.actions.act_window,help:website_quote.action_sale_quotation_template
 msgid "Click here to create your template."
-msgstr "Haga clic aquí para crear su plantilla."
+msgstr "Haga click aquí para crear su plantilla"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -730,7 +727,7 @@ msgstr "Descuento (%)"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_display_name
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_display_name
 msgid "Display Name"
-msgstr "Nombre a Mostrar"
+msgstr "Nombre a mostrar"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -743,7 +740,7 @@ msgstr "Navegar entre Secuencias"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Edit Quote"
-msgstr "Editar presupuesto"
+msgstr "Editar Cotización"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -790,7 +787,7 @@ msgstr "Accede a las sesiones de formación (que se actualizan semanalmente)"
 #: model:ir.model.fields,help:website_quote.field_sale_quote_line_sequence
 msgid "Gives the sequence order when displaying a list of sale quote lines."
 msgstr ""
-"Da el orden de secuencia al mostrar una lista de líneas de presupuesto de "
+"Da el orden de secuencia al mostrar una lista de líneas de cotización de "
 "venta."
 
 #. module: website_quote
@@ -879,10 +876,11 @@ msgid ""
 "                        template (from the Configuration menu), all future quotations will\n"
 "                        use this modified template."
 msgstr ""
-"Si modifica un presupuesto desde la \"Vista previa\" del mismo, conseguirá\n"
-"                        actualizar el presupuesto para ese cliente exclusivamente. Si modifica la plantilla\n"
-"                        del presupuesto (desde el menú Configuración), todos los presupuestos\n"
-"                        utilizarán la plantilla modificada a partir de entonces."
+"Si modifica un presupuesto desde la \"Vista previa\" del mismo\n"
+"                    conseguirá\n"
+"actualizar el presupuesto para ese cliente exclusivamente. Si modifica la plantilla\n"
+"                       del presupuesto (desde el menú Configuración), todos los presupuestos a partir de entonces\n"
+"                        utilizarán la platilla modificada."
 
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template_active
@@ -965,7 +963,7 @@ msgstr "Ha completado toda la formación sobre Odoo"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option___last_update
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template___last_update
 msgid "Last Modified on"
-msgstr "Última Modificación en"
+msgstr "Última modificación en"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_write_uid
@@ -973,7 +971,7 @@ msgstr "Última Modificación en"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_write_uid
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_write_uid
 msgid "Last Updated by"
-msgstr "Última Actualización por"
+msgstr "Última actualización por"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_write_date
@@ -981,7 +979,7 @@ msgstr "Última Actualización por"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_write_date
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_write_date
 msgid "Last Updated on"
-msgstr "Última Actualización el"
+msgstr "Última actualización el"
 
 #. module: website_quote
 #: model:product.product,description_sale:website_quote.product_product_quote_1
@@ -1079,7 +1077,7 @@ msgstr "Nueva experiencia interactiva de aprendizaje"
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template_number_of_days
 msgid "Number of days for the validity date computation of the quotation"
 msgstr ""
-"Número de días para el cálculo de la la fecha de validez del presupuesto"
+"Número de días para el cálculo de la la fecha de validez de la cotización"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1264,7 +1262,7 @@ msgid ""
 msgstr ""
 "La calidad de nuestros productos es\n"
 "                                       nuestra seña de identidad. Y la conseguimos\n"
-"                                       gracias a nuestra atención constante por la estructura, el rendimiento y la profesionalidad."
+"                                       con nuestra atención constante por la tela, el rendimiento y la artesanía."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
@@ -1310,12 +1308,12 @@ msgstr "Presupuesto"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_number_of_days
 msgid "Quotation Duration"
-msgstr "Duración del presupuesto"
+msgstr "Duración de la Cotización"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_option
 msgid "Quotation Option"
-msgstr "Opción de presupuesto"
+msgstr "Opción de Cotización"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_template_id
@@ -1334,7 +1332,7 @@ msgstr "Líneas de plantilla de presupuesto"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_quote_id
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_template_id
 msgid "Quotation Template Reference"
-msgstr "Referencia de la plantilla de presupuesto "
+msgstr "Referencia de la plantilla de presupuesto"
 
 #. module: website_quote
 #: model:ir.actions.act_window,name:website_quote.action_sale_quotation_template
@@ -1346,7 +1344,7 @@ msgstr "Plantillas de presupuesto"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_quote_viewed
 msgid "Quotation Viewed"
-msgstr "Presupuesto Visto"
+msgstr "Cotización Vista"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -1559,8 +1557,8 @@ msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
 msgstr ""
-"Se enviará esta plantilla de correo electrónico como confirmación. Déjela en"
-" blanco si no quiere enviar nada."
+"Se enviará esta plantilla de email como confirmación. Déjela vacía si no "
+"quiere enviar nada."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
@@ -1572,7 +1570,7 @@ msgid ""
 msgstr ""
 "Esta es una <strong>plantilla de presupuesto de ejemplo</strong>. Debe personalizarla\n"
 "                                según sus necesidades desde la aplicación de <i>Ventas</i>\n"
-"                                , con el siguiente menú: Configuración /\n"
+"                                , con el menú: Configuración /\n"
 "                                Plantillas de presupuesto."
 
 #. module: website_quote
@@ -1719,13 +1717,13 @@ msgid ""
 "                                       happy to buy them."
 msgstr ""
 "Siempre garantizamos que nuestros productos tengan\n"
-"                                      un precio justo para que se alegre\n"
+"                                      un precio justo, de forma que se alegrará\n"
 "                                       de comprarlos."
 
 #. module: website_quote
 #: model:ir.actions.report,name:website_quote.report_web_quote
 msgid "Web Quotation"
-msgstr "Presupuesto Web"
+msgstr "Cotización Web"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -1766,13 +1764,13 @@ msgstr ""
 "                        un presupuesto automáticamente con las descripciones\n"
 "                        de todos los productos de la propuesta. La tabla de contenidos\n"
 "                        de la izquierda se genera de forma automática con los estilos\n"
-"                       que haya usado en la descripción (encabezado 1, encabezado 2...)"
+"                       que haya usado en la descripción (encabezado 1, encabezado 2, ...)"
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:150
 #, python-format
 msgid "You cannot add options to a confirmed order."
-msgstr "No puede añadir opciones a un pedido confirmado."
+msgstr "No puede añadir opciones a una orden confirmada."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -1810,7 +1808,7 @@ msgstr "Sus ventajas"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Your feedback....."
-msgstr "Su opinión..."
+msgstr "Sus comentarios..."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
