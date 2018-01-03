@@ -576,6 +576,7 @@ class TestPickShip(TestStockCommon):
         picking_pack.button_validate()
         self.assertEqual(first_pack.location_id, output_sub_location)
         self.assertEqual(second_pack.location_id, output_sub_location)
+        self.assertEqual(len(picking_pack.entire_package_ids), 2)
         picking_ship.action_assign()
         self.assertEqual(picking_ship.move_line_ids[:1].location_id, output_sub_location)
         for move_line in picking_ship.move_line_ids:
@@ -646,6 +647,23 @@ class TestPickShip(TestStockCommon):
 
         self.assertEqual(picking_client.move_lines.state, 'confirmed', 'The move should be confirmed since all the origin moves are processed.')
         self.assertEqual(picking_client.state, 'confirmed', 'The picking should be confirmed since all the moves are confirmed.')
+
+    def test_unreserve(self):
+        picking_pick, picking_client = self.create_pick_ship()
+
+        self.assertEqual(picking_pick.state, 'confirmed')
+        picking_pick.do_unreserve()
+        self.assertEqual(picking_pick.state, 'confirmed')
+        location = self.env['stock.location'].browse(self.stock_location)
+        self.env['stock.quant']._update_available_quantity(self.productA, location, 10.0)
+        picking_pick.action_assign()
+        self.assertEqual(picking_pick.state, 'assigned')
+        picking_pick.do_unreserve()
+        self.assertEqual(picking_pick.state, 'confirmed')
+
+        self.assertEqual(picking_client.state, 'waiting')
+        picking_client.do_unreserve()
+        self.assertEqual(picking_client.state, 'waiting')
 
 
 class TestSinglePicking(TestStockCommon):

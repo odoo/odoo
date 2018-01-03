@@ -3,6 +3,7 @@ odoo.define('web.kanban_tests', function (require) {
 
 var core = require('web.core');
 var KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
+var KanbanRenderer = require('web.KanbanRenderer');
 var KanbanView = require('web.KanbanView');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
@@ -1015,7 +1016,19 @@ QUnit.module('Views', {
     });
 
     QUnit.test('delete a column in grouped on m2o', function (assert) {
-        assert.expect(26);
+        assert.expect(32);
+
+        testUtils.patch(KanbanRenderer, {
+            _renderGrouped: function () {
+                this._super.apply(this, arguments);
+                // set delay and revert animation time to 0 so dummy drag and drop works
+                if (this.$el.sortable('instance')) {
+                    this.$el.sortable('option', {delay: 0, revert: 0});
+                }
+            },
+        });
+
+        var resequencedIDs;
 
         var kanban = createView({
             View: KanbanView,
@@ -1029,6 +1042,12 @@ QUnit.module('Views', {
                     '</kanban>',
             groupBy: ['product_id'],
             mockRPC: function (route, args) {
+                if (route === '/web/dataset/resequence') {
+                    resequencedIDs = args.ids;
+                    assert.strictEqual(_.reject(args.ids, _.isNumber).length, 0,
+                        "column resequenced should be existing records with IDs");
+                    return $.when(true);
+                }
                 if (args.method) {
                     assert.step(args.method);
                 }
@@ -1071,7 +1090,7 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.o_kanban_group:last').data('id'), 3,
             'last column should now be [3, "hello"]');
         assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should still have two columns");
-        assert.ok(!kanban.$('.o_kanban_group:first').data('id'),
+        assert.ok(!_.isNumber(kanban.$('.o_kanban_group:first').data('id')),
             'first column should have no id (Undefined column)');
         // check available actions on 'Undefined' column
         assert.ok(kanban.$('.o_kanban_group:first .o_kanban_toggle_fold').length,
@@ -1087,7 +1106,32 @@ QUnit.module('Views', {
         assert.verifySteps(['read_group', 'unlink', 'read_group']);
         assert.strictEqual(kanban.renderer.widgets.length, 2,
             "the old widgets should have been correctly deleted");
+
+        // test column drag and drop having an 'Undefined' column
+        testUtils.dragAndDrop(
+            kanban.$('.o_kanban_header_title:first'),
+            kanban.$('.o_kanban_header_title:last'), {position: 'right'}
+        );
+        assert.strictEqual(resequencedIDs, undefined,
+            "resequencing require at least 2 not Undefined columns");
+        kanban.$('.o_column_quick_create input').val('once third column');
+        kanban.$('.o_column_quick_create button.o_kanban_add').click();
+        var newColumnID = kanban.$('.o_kanban_group:last').data('id');
+        testUtils.dragAndDrop(
+            kanban.$('.o_kanban_header_title:first'),
+            kanban.$('.o_kanban_header_title:last'), {position: 'right'}
+        );
+        assert.deepEqual([3, newColumnID], resequencedIDs,
+            "moving the Undefined column should not affect order of other columns")
+        testUtils.dragAndDrop(
+            kanban.$('.o_kanban_header_title:first'),
+            kanban.$('.o_kanban_header_title:nth(1)'), {position: 'right'}
+        );
+        assert.deepEqual([newColumnID, 3], resequencedIDs,
+            "moved column should be resequenced accordingly")
+
         kanban.destroy();
+        testUtils.unpatch(KanbanRenderer);
     });
 
     QUnit.test('create a column, delete it and create another one', function (assert) {

@@ -12,6 +12,7 @@ class TestStockValuation(TransactionCase):
         self.customer_location = self.env.ref('stock.stock_location_customers')
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.partner = self.env['res.partner'].create({'name': 'xxx'})
+        self.owner1 = self.env['res.partner'].create({'name': 'owner1'})
         self.uom_unit = self.env.ref('product.product_uom_unit')
         self.product1 = self.env['product.product'].create({
             'name': 'Product A',
@@ -2207,6 +2208,24 @@ class TestStockValuation(TransactionCase):
         move5._action_done()
 
         self.assertEqual(move5.value, -477.6)
+
+        # Receives 10 units but assign them to an owner, the valuation should not be impacted.
+        move6 = self.env['stock.move'].create({
+            'name': '10 units to an owner',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'price_unit': 99,
+        })
+        move6._action_confirm()
+        move6._action_assign()
+        move6.move_line_ids.owner_id = self.owner1.id
+        move6.move_line_ids.qty_done = 10.0
+        move6._action_done()
+
+        self.assertEqual(move6.value, 0)
 
     def test_average_perpetual_2(self):
         self.product1.product_tmpl_id.cost_method = 'average'

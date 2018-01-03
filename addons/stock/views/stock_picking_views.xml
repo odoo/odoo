@@ -273,7 +273,7 @@
                                     <field name="is_initial_demand_editable" invisible="1"/>
                                     <field name="product_uom_qty" attrs="{'readonly': ['|', ('is_initial_demand_editable', '=', False), ('in_entire_package', '=', True)], 'required': [('product_id', '!=', False)]}"/>
                                     <field name="is_locked" invisible="1"/>
-                                    <field name="qty_done" attrs="{'readonly': ['|', ('state', 'in', ('done', 'cancel')), ('is_locked', '=', True), ('in_entire_package', '=', True)]}"/>
+                                    <field name="qty_done" attrs="{'readonly': ['|', ('state', 'in', ('done', 'cancel')), ('is_locked', '=', True), ('in_entire_package', '=', True)]}" force_save="1"/>
                                 </tree>
                             </field>
                             <field name="entire_package_detail_ids" context="{'picking_id': id, 'tree_view_ref': 'stock.view_quant_package_picking_tree'}" attrs="{'invisible': ['|', ('picking_type_entire_packs', '=', False), ('show_operations', '=', False)]}" readonly="0"/>

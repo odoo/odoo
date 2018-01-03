@@ -67,7 +67,6 @@ return AbstractModel.extend({
             domain: params.domain,
             context: params.context,
         };
-        this.defaultGroupedBy = params.groupedBy;
         return this._loadGraph();
     },
     /**
@@ -96,7 +95,7 @@ return AbstractModel.extend({
             this.chart.domain = params.domain;
         }
         if ('groupBy' in params) {
-            this.chart.groupedBy = params.groupBy.length ? params.groupBy : this.defaultGroupedBy;
+            this.chart.groupedBy = params.groupBy.length ? params.groupBy : this.initialGroupBys;
         }
         if ('measure' in params) {
             this.chart.measure = params.measure;
@@ -121,7 +120,7 @@ return AbstractModel.extend({
      * @returns {Deferred}
      */
     _loadGraph: function () {
-        var groupedBy = this.chart.groupedBy.length ? this.chart.groupedBy : this.initialGroupBys;
+        var groupedBy = this.chart.groupedBy;
         var fields = _.map(groupedBy, function (groupBy) {
             return groupBy.split(':')[0];
         });

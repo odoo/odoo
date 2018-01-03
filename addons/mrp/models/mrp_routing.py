@@ -22,7 +22,7 @@ class MrpRouting(models.Model):
         copy=True, oldname='workcenter_lines')
     location_id = fields.Many2one(
         'stock.location', 'Production Location',
-        help="Keep empty if you produce at the location where you find the raw materials."
+        help="Keep empty if you produce at the location where you find the raw materials. "
              "Set a location if you produce at a fixed location. This can be a partner location "
              "if you subcontract the manufacturing operations.")
     company_id = fields.Many2one(
@@ -49,8 +49,8 @@ class MrpRoutingWorkcenter(models.Model):
     routing_id = fields.Many2one(
         'mrp.routing', 'Parent Routing',
         index=True, ondelete='cascade', required=True,
-        help="The routing contains all the Work Centers used and for how long. This will create work orders afterwards"
-        "which alters the execution of the manufacturing order. ")
+        help="The routing contains all the Work Centers used and for how long. This will create work orders afterwards "
+        "which alters the execution of the manufacturing order.")
     note = fields.Text('Description')
     company_id = fields.Many2one(
         'res.company', 'Company',

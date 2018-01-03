@@ -415,11 +415,12 @@ QUnit.module('Views', {
     QUnit.test('editable list: add a line and discard', function (assert) {
         assert.expect(11);
 
-        var oldDestroy = basicFields.FieldChar.prototype.destroy;
-        basicFields.FieldChar.prototype.destroy = function () {
-            assert.step('destroy');
-            oldDestroy.apply(this, arguments);
-        };
+        testUtils.patch(basicFields.FieldChar, {
+            destroy: function () {
+                assert.step('destroy');
+                this._super.apply(this, arguments);
+            },
+        });
 
         var list = createView({
             View: ListView,
@@ -456,7 +457,7 @@ QUnit.module('Views', {
         assert.verifySteps(['destroy'],
             "should have destroyed the widget of the removed line");
 
-        basicFields.FieldChar.prototype.destroy = oldDestroy;
+        testUtils.unpatch(basicFields.FieldChar);
         list.destroy();
     });
 
@@ -473,13 +474,13 @@ QUnit.module('Views', {
 
         var n = 0;
         testUtils.intercept(list, "field_changed", function () {
-            n = 1;
+            n += 1;
         });
         $td.click();
         $td.find('input').val('abc').trigger('input');
-        assert.strictEqual(n, 1, "field_changed should not have been triggered");
-        list.$('td:not(.o_list_record_selector)').eq(2).click();
         assert.strictEqual(n, 1, "field_changed should have been triggered");
+        list.$('td:not(.o_list_record_selector)').eq(2).click();
+        assert.strictEqual(n, 1, "field_changed should not have been triggered");
         list.destroy();
     });
 

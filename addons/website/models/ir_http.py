@@ -83,7 +83,7 @@ class Http(models.AbstractModel):
         super(Http, cls)._add_dispatch_parameters(func)
 
         if request.routing_iteration == 1:
-            request.website = request.website.with_context(context)
+            request.website = request.website.with_context(request.context)
 
     @classmethod
     def _get_languages(cls):

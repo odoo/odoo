@@ -9,7 +9,7 @@ class Partner(models.Model):
     _inherit = 'res.partner'
 
     country_enforce_cities = fields.Boolean(related='country_id.enforce_cities')
-    city_id = fields.Many2one('res.city', string='Company')
+    city_id = fields.Many2one('res.city', string='City')
 
     @api.onchange('city_id')
     def _onchange_city_id(self):

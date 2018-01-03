@@ -364,7 +364,7 @@ class IrModelFields(models.Model):
                 raise ValueError(selection)
         except Exception:
             _logger.info('Invalid selection list definition for fields.selection', exc_info=True)
-            raise UserError(_("The Selection Options expression is not a valid Pythonic expression."
+            raise UserError(_("The Selection Options expression is not a valid Pythonic expression. "
                               "Please provide an expression in the [('key','Label'), ...] format."))
 
     @api.constrains('name', 'state')

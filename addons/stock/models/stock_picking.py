@@ -407,7 +407,7 @@ class Picking(models.Model):
             packages = self.env['stock.quant.package']
             for ml in picking.move_line_ids:
                 if ml.package_id.id == ml.result_package_id.id:
-                    if picking._check_move_lines_map_quant_package(ml.package_id):
+                    if picking.state in ('done', 'cancel') or picking._check_move_lines_map_quant_package(ml.package_id):
                         packages |= ml.package_id
             picking.entire_package_ids = packages
             picking.entire_package_detail_ids = packages
@@ -542,7 +542,19 @@ class Picking(models.Model):
         # call `_action_assign` on every confirmed move which location_id bypasses the reservation
         self.filtered(lambda picking: picking.location_id.usage in ('supplier', 'inventory', 'production') and picking.state == 'confirmed')\
             .mapped('move_lines')._action_assign()
-        return True
+        if self.env.context.get('planned_picking') and len(self) == 1:
+            action = self.env.ref('stock.action_picking_form')
+            result = action.read()[0]
+            result['res_id'] = self.id
+            result['context'] = {
+                'search_default_picking_type_id': [self.picking_type_id.id],
+                'default_picking_type_id': self.picking_type_id.id,
+                'contact_display': 'partner_address',
+                'planned_picking': False,
+            }
+            return result
+        else:
+            return True
 
     @api.multi
     def action_assign(self):
@@ -654,10 +666,8 @@ class Picking(models.Model):
 
     @api.multi
     def do_unreserve(self):
-        for move in self:
-            for move_line in move.move_lines:
-                move_line._do_unreserve()
-        self.write({'state': 'confirmed'})
+        for picking in self:
+            picking.move_lines._do_unreserve()
 
     @api.multi
     def button_validate(self):

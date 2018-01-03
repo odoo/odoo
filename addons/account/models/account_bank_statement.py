@@ -346,7 +346,7 @@ class AccountBankStatement(models.Model):
 class AccountBankStatementLine(models.Model):
     _name = "account.bank.statement.line"
     _description = "Bank Statement Line"
-    _order = "statement_id desc, sequence, id desc"
+    _order = "statement_id desc, date desc, sequence, id desc"
 
     name = fields.Char(string='Label', required=True)
     date = fields.Date(required=True, default=lambda self: self._context.get('date', fields.Date.context_today(self)))

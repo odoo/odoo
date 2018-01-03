@@ -389,9 +389,10 @@ class MrpWorkorder(models.Model):
             self.qty_producing = float_round(self.production_id.product_qty - self.qty_produced, precision_rounding=rounding)
             self._generate_lot_ids()
 
+        if self.next_work_order_id and self.production_id.product_id.tracking != 'none':
+            self.next_work_order_id._assign_default_final_lot_id()
+
         if float_compare(self.qty_produced, self.production_id.product_qty, precision_rounding=rounding) >= 0:
-            if self.next_work_order_id and self.production_id.product_id.tracking != 'none':
-                self.next_work_order_id._assign_default_final_lot_id()
             self.button_finish()
         return True
 
@@ -517,4 +518,4 @@ class MrpWorkorder(models.Model):
     @api.depends('qty_production', 'qty_produced')
     def _compute_qty_remaining(self):
         for wo in self:
-            wo.qty_remaining = float_round(wo.qty_production - wo.qty_produced, precision_rounding=wo.production_id.product_uom_id)
+            wo.qty_remaining = float_round(wo.qty_production - wo.qty_produced, precision_rounding=wo.production_id.product_uom_id.rounding)

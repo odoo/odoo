@@ -170,14 +170,21 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         console.log('Tour Manager is ready.  running_tour=' + this.running_tour);
     },
     /**
-     * Registers a tour described by the following arguments (in order)
-     * @param [String] tour's name
-     * @param [Object] dict of options (optional), available options are:
-     *   test [Boolean] true if the tour is dedicated to tests (it won't be enabled by default)
-     *   skip_enabled [Boolean] true to add a link to consume the whole tour in its tips
-     *   url [String] the url to load when manually running the tour
-     *   rainbowMan [Bool] use to display the rainbow effect at the end of tour
-     * @param [Array] dict of steps, each step being a dict containing a tip description
+     * Registers a tour described by the following arguments *in order*
+     *
+     * @param [string] name - tour's name
+     * @param [Object] - options (optional), available options are:
+     * @param [boolean] - true if this is only for tests
+     * @param [boolean]
+     *        true to add a link in its tips to consume the whole tour
+     * @param [string]
+     *        the url to load when manually running the tour
+     * @param [boolean]
+     *        whether or not the rainbowman must be shown at the end of the tour
+     * @param [Deferred]
+     *        indicates when the tour can be started
+     * @param [Object] steps - steps' descriptions, each step being an object
+     *                     containing a tip description
      */
     register: function() {
         var args = Array.prototype.slice.call(arguments);
@@ -193,7 +200,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             name: name,
             steps: steps,
             url: options.url,
-            rainbowMan: options.rainbowMan || true,
+            rainbowMan: options.rainbowMan === undefined ? true : !!options.rainbowMan,
             test: options.test,
             wait_for: options.wait_for || $.when(),
         };
@@ -402,13 +409,14 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     _consume_tour: function (tour_name, error) {
         delete this.active_tooltips[tour_name];
         //display rainbow at the end of any tour
-        if (this.rainbowMan && this.tours[tour_name].current_step === this.tours[tour_name].steps.length){
+        if (this.tours[tour_name].rainbowMan && this.running_tour !== tour_name
+         && this.tours[tour_name].current_step === this.tours[tour_name].steps.length) {
             var $rainbow_message = $('<strong>' +
                                 '<b>Good job!</b>' +
                                 ' You went through all steps of this tour.' +
                                 '</strong>');
             new RainbowMan({message: $rainbow_message, click_close: false}).appendTo(this.$body);
-        };
+        }
         this.tours[tour_name].current_step = 0;
         local_storage.removeItem(get_step_key(tour_name));
         if (this.running_tour === tour_name) {

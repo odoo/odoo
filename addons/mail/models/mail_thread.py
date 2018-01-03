@@ -2150,7 +2150,7 @@ class MailThread(models.AbstractModel):
                         new_channels.setdefault(header_follower.channel_id.id, set()).add(new_subtype.id)
 
         # add followers coming from res.users relational fields that are tracked
-        to_add_users = self.env['res.users'].sudo().browse([values[name] for name in user_field_lst if values.get(name)])
+        to_add_users = self.env['res.users'].sudo().browse([values[name] for name in user_field_lst if values.get(name)]).filtered(lambda u: u.partner_id.active)
         for partner in to_add_users.mapped('partner_id'):
             new_partners.setdefault(partner.id, None)
 
