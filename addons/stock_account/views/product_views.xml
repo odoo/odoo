@@ -41,7 +41,7 @@
                         <div class="o_row">
                             <field name="standard_price"
                                 attrs="{'readonly':[('valuation','=','real_time')]}"
-                                widget='monetary' options="{'currency_field': 'currency_id'}" />
+                                widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" />
                             <button string="Update Cost" type="action"
                             name="%(action_view_change_standard_price)d"
                             attrs="{'invisible':['|', '|', ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['average', 'standard']), ('product_variant_count', '>', 1)]}"
