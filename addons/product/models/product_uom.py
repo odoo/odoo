@@ -43,6 +43,12 @@ class ProductUoM(models.Model):
         ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!'),
         ('rounding_gt_zero', 'CHECK (rounding>0)', 'The rounding precision must be greater than 0!')
     ]
+    
+    @api.constrains('factor','uom_type')
+    def _check_factor_uom_type(self):
+        for unit in self:
+            if unit.uom_type == 'reference' and unit.factor != 1:
+                raise UserError(_('The factor of this reference unit : %s need to be egal to 1.') % unit.display_name)
 
     @api.one
     @api.depends('factor')
