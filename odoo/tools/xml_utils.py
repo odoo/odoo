@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from lxml import etree
 from odoo.tools.misc import file_open
-
+from odoo.exceptions import UserError
 
 def check_with_xsd(tree_or_str, stream):
     raise UserError("Method 'check_with_xsd' deprecated ")
