@@ -230,18 +230,6 @@ else:
         <field name="condition_python">result = employee.resident_bool==True</field>
         <field name="appears_on_payslip" eval="False"/>
     </record>
-    <record id="hr_salary_rule_pp_reduction_low_salary" model="hr.salary.rule">
-        <field name="category_id" ref="hr_salary_rule_pp_reductions"/> 
-        <field name="name">Withholding Tax Reduction for Low Salaries</field>
-        <field name="code">PPRed.0</field>
-        <field name="sequence">131</field>
-        <field name="condition_select">python</field>
-        <field name="condition_python">result = categories.GROSS &lt;= 2027.86 and categories.GROSS &gt; 565.02</field> 
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">
-result = 5.83
-        </field>
-    </record>
     <record id="hr_salary_rule_pp_reduction_employees" model="hr.salary.rule">
         <field name="category_id" ref="hr_salary_rule_pp_reductions"/> 
         <field name="name">Withholding Tax Reduction for Low Salaries (ONSS)</field>
@@ -559,7 +547,6 @@ result = -contract.car_atn
             ref('hr_payroll_rules_retained_net'),
             ref('hr_salary_rule_commission_on_target'),
             ref('hr_salary_rule_pp_reduction_employees'),
-            ref('hr_salary_rule_pp_reduction_low_salary'),
 
         ])]" name="rule_ids"/>
         <field name="company_id" ref="base.main_company"/>    
