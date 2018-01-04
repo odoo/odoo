@@ -1,7 +1,6 @@
 odoo.define('web.kanban_tests', function (require) {
 "use strict";
 
-var core = require('web.core');
 var KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
 var KanbanRenderer = require('web.KanbanRenderer');
 var KanbanView = require('web.KanbanView');
@@ -9,7 +8,6 @@ var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 var widgetRegistry = require('web.widget_registry');
 
-var createAsyncView = testUtils.createAsyncView;
 var createView = testUtils.createView;
 
 QUnit.module('Views', {
@@ -1422,6 +1420,43 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.o_kanban_group[data-id=5] .o_column_title').text(), 'ged',
             'title of the column should be "ged"');
         assert.strictEqual(nbRPCs, 4, 'should have done 1 write, 1 read_group and 2 search_read');
+        kanban.destroy();
+    });
+
+    QUnit.test('cancel column quick create by pressing ESCAPE', function (assert) {
+        assert.expect(4);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+        });
+
+        assert.strictEqual(kanban.$('.o_column_quick_create').length, 1, "should have a quick create column");
+        assert.notOk(kanban.$('.o_column_quick_create input').is(':visible'),
+            "the input should not be visible");
+
+        kanban.$('.o_column_quick_create').click();
+
+        assert.ok(kanban.$('.o_column_quick_create input').is(':visible'),
+            "the input should be visible");
+
+        // discard the column creation by pressing ESCAPE
+        kanban.$('.o_column_quick_create input').trigger($.Event('keydown', {
+            keyCode: $.ui.keyCode.ESCAPE,
+            which: $.ui.keyCode.ESCAPE,
+        }));
+
+        assert.notOk(kanban.$('.o_column_quick_create input').is(':visible'),
+            "the input should not be visible anymore");
+
         kanban.destroy();
     });
 
