@@ -15,16 +15,18 @@ class StockQuantityHistory(models.TransientModel):
         if self.compute_at_date:
             tree_view_id = self.env.ref('stock_account.view_stock_product_tree2').id
             form_view_id = self.env.ref('stock.product_form_view_procurement_button').id
+            search_view_id = self.env.ref('stock_account.view_inventory_valuation_search').id
             # We pass `to_date` in the context so that `qty_available` will be computed across
             # moves until date.
             action = {
                 'type': 'ir.actions.act_window',
                 'views': [(tree_view_id, 'tree'), (form_view_id, 'form')],
                 'view_mode': 'tree,form',
-                'name': _('Products'),
+                'name': _('Inventory Valuation'),
                 'res_model': 'product.product',
                 'domain': "[('type', '=', 'product'), ('qty_available', '!=', 0)]",
                 'context': dict(self.env.context, to_date=self.date, company_owned=True),
+                'search_view_id': search_view_id
             }
             return action
         else:
