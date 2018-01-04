@@ -160,5 +160,5 @@ def execute(db, uid, obj, method, *args, **kw):
         res = execute_cr(cr, uid, obj, method, *args, **kw)
         if res is None:
             _logger.info('The method %s of the object %s should not return `None` !', method, obj)
-            res = True
+            res = 'None'
         return res
