@@ -225,7 +225,7 @@ class StockMove(models.Model):
     def _check_uom(self):
         moves_error = self.filtered(lambda move: move.product_id.uom_id.category_id.id != move.product_uom.category_id.id)
         if moves_error:
-            user_warning = _('You try to move a product using a UoM that is not compatible with the UoM of the product moved. Please use an UoM in the same UoM category.')
+            user_warning = _('You try to move a product using a UoM (%s) that is not compatible with the UoM (%s) of the product moved (%s). Please use an UoM in the same UoM category.' % (self.product_id.uom_id.name, self.product_uom.name, self.product_id.name))
             user_warning += '\n\nBlocking: %s' % ' ,'.join(moves_error.mapped('name'))
             raise UserError(user_warning)
 
