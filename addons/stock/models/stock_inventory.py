@@ -366,19 +366,30 @@ class InventoryLine(models.Model):
     def create(self, values):
         if 'product_id' in values and 'product_uom_id' not in values:
             values['product_uom_id'] = self.env['product.product'].browse(values['product_id']).uom_id.id
-        existings = self.search([
-            ('product_id', '=', values.get('product_id')),
-            ('inventory_id.state', '=', 'confirm'),
-            ('location_id', '=', values.get('location_id')),
-            ('partner_id', '=', values.get('partner_id')),
-            ('package_id', '=', values.get('package_id')),
-            ('prod_lot_id', '=', values.get('prod_lot_id'))])
         res = super(InventoryLine, self).create(values)
-        if existings:
-            raise UserError(_("You cannot have two inventory adjustments in progress for the same product (%s) "
-                              "in the same location, for the same package, the same owner and the same lot number. "
-                              "Please validate or cancel the first inventory adjustment before creating a new one.") % (res.product_id.display_name))
+        res._check_no_duplicate_line()
         return res
+
+    @api.multi
+    def write(self,vals):
+        res = super(InventoryLine, self).write(vals)
+        self._check_no_duplicate_line()
+        return res
+
+    def _check_no_duplicate_line(self):
+        for line in self:
+            existings = self.search([
+                ('id', '!=', self.id),
+                ('product_id', '=', self.product_id.id),
+                ('inventory_id.state', '=', 'confirm'),
+                ('location_id', '=', self.location_id.id),
+                ('partner_id', '=', self.partner_id.id),
+                ('package_id', '=', self.package_id.id),
+                ('prod_lot_id', '=', self.prod_lot_id.id)])
+            if existings:
+                raise UserError(_("You cannot have two inventory adjustments in state 'In Progress' with the same product,"
+                                   " same location, same package, same owner and same lot. Please first validate"
+                                   " the first inventory adjustment before creating another one."))
 
     @api.constrains('product_id')
     def _check_product_id(self):
