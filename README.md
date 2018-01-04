@@ -34,4 +34,4 @@ Then follow <a href="https://www.odoo.com/documentation/11.0/tutorials.html">the
 
 Contributing
 ------------
-Do you want to contribute? Please read our [contributing guidelines](https://github.com/OCA/maintainer-tools/blob/master/CONTRIBUTING.md).
+Do you want to contribute? Please read our [contributing guidelines](CONTRIBUTING.md).
