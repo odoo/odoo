@@ -8,10 +8,9 @@ import pytz
 import babel.dates
 from collections import OrderedDict
 
-from odoo import http, fields, _
+from odoo import http, fields
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.controllers.main import QueryURL
-from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import html2plaintext
 
@@ -263,46 +262,6 @@ class WebsiteBlog(http.Controller):
             })
         return response
 
-    def _blog_post_message(self, blog_post_id, message_content, **post):
-        BlogPost = request.env['blog.post']
-        # for now, only portal and user can post comment on blog post.
-        if request.env.user.id == request.website.user_id.id:
-            raise UserError(_('Public user cannot post comments on blog post.'))
-        # get the partner of the current user
-        partner_id = request.env.user.partner_id.id
-
-        message = BlogPost.message_post(
-            int(blog_post_id),
-            body=message_content,
-            message_type='comment',
-            subtype='mt_comment',
-            author_id=partner_id,
-            path=post.get('path', False),
-        )
-        return message.id
-
-    def _get_discussion_detail(self, ids, publish=False, **post):
-        values = []
-        for message in request.env['mail.message'].sudo().browse(ids):
-            values.append({
-                "id": message.id,
-                "author_name": message.author_id.name,
-                "author_image": message.author_id.image and \
-                    (b"data:image/png;base64,%s" % message.author_id.image) or \
-                    b'/website_blog/static/src/img/anonymous.png',
-                "date": message.date,
-                'body': html2plaintext(message.body),
-                'website_published' : message.website_published,
-                'publish' : publish,
-            })
-        return values
-
-    @http.route(['/blog/post_discussion'], type='json', auth="public", website=True)
-    def post_discussion(self, blog_post_id, **post):
-        publish = request.env.user.has_group('website.group_website_publisher')
-        message_id = self._blog_post_message(blog_post_id, post.get('comment'), **post)
-        return self._get_discussion_detail([message_id], publish, **post)
-
     @http.route('/blog/<int:blog_id>/post/new', type='http', auth="public", website=True)
     def blog_post_create(self, blog_id, **post):
         new_blog_post = request.env['blog.post'].create({
@@ -322,32 +281,8 @@ class WebsiteBlog(http.Controller):
         new_blog_post = request.env['blog.post'].with_context(mail_create_nosubscribe=True).browse(int(blog_post_id)).copy()
         return werkzeug.utils.redirect("/blog/%s/post/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
 
-    @http.route('/blog/post_get_discussion/', type='json', auth="public", website=True)
-    def discussion(self, post_id=0, path=None, count=False, **post):
-        domain = [('res_id', '=', int(post_id)), ('model', '=', 'blog.post'), ('path', '=', path)]
-        #check current user belongs to website publisher group
-        publish = request.env.user.has_group('website.group_website_publisher')
-        if not publish:
-            domain.append(('website_published', '=', True))
-        messages = request.env['mail.message'].sudo().search(domain, count=count)
-        if count:
-            return messages.ids
-        return self._get_discussion_detail(messages.ids, publish, **post)
-
-    @http.route('/blog/post_get_discussions/', type='json', auth="public", website=True)
-    def discussions(self, post_id=0, paths=None, count=False, **post):
-        ret = []
-        for path in paths:
-            result = self.discussion(post_id=post_id, path=path, count=count, **post)
-            ret.append({"path": path, "val": result})
-        return ret
-
     @http.route('/blog/post_change_background', type='json', auth="public", website=True)
     def change_bg(self, post_id=0, cover_properties={}, **post):
         if not post_id:
             return False
         return request.env['blog.post'].browse(int(post_id)).write({'cover_properties': json.dumps(cover_properties)})
-
-    @http.route('/blog/get_user/', type='json', auth="public", website=True)
-    def get_user(self, **post):
-        return [False if request.session.uid else True]
