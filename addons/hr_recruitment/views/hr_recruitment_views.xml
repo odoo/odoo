@@ -240,12 +240,28 @@
         </field>
     </record>
 
+    <record id="quick_create_applicant_form" model="ir.ui.view">
+        <field name="name">hr.applicant.form.quick_create</field>
+        <field name="model">hr.applicant</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="partner_name"/>
+                    <field name="email_from"/>
+                    <field name="job_id" options="{'no_open': True}"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
     <!-- Hr Applicant Kanban View -->
     <record model="ir.ui.view" id="hr_kanban_view_applicant">
         <field name="name">Hr Applicants kanban</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="stage_id" class="o_kanban_applicant">
+            <kanban default_group_by="stage_id" class="o_kanban_applicant" quick_create_view="hr_recruitment.quick_create_applicant_form">
                 <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Requirements"}}'/>
                 <field name="color"/>
                 <field name="priority"/>
