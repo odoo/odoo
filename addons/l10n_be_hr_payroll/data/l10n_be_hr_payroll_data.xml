@@ -364,7 +364,7 @@ elif salary &lt;= 2461.27:
         <field name="condition_select">python</field>
         <field name="condition_python">result = (employee.other_dependent_people and employee.dependent_juniors) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = min(35.0 * employee.dependent_juniors, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
+        <field name="amount_python_compute">result = min(36.0 * employee.dependent_juniors, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
     </record>
     <record id="hr_salary_rule_reduction_insufficient_net" model="hr.salary.rule">
         <field name="category_id" ref='hr_salary_rule_category_family_reductions'/>
