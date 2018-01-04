@@ -9,9 +9,9 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     @api.returns('self', lambda value: value.id)
-    def message_post(self, body='', subject=None, message_type='notification', subtype=None, parent_id=False, attachments=None, content_subtype='html', **kwargs):
+    def message_post(self, **kwargs):
         rating_value = kwargs.get('rating_value')
-        message = super(MailThread, self).message_post(body=body, subject=subject, message_type=message_type, subtype=subtype, parent_id=parent_id, attachments=attachments, content_subtype=content_subtype, **kwargs)
+        message = super(MailThread, self).message_post(**kwargs)
         if rating_value:
             ir_model = self.env['ir.model'].sudo().search([('model', '=', self._name)])
             self.env['rating.rating'].create({
