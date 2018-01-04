@@ -137,7 +137,7 @@ class TestAdvMailPerformance(TransactionCase):
             'default_res_model': 'mail.test.activity',
         })
 
-        with self.assertQueryCount(admin=46, emp=51):  # test_mail only: 35 - 40
+        with self.assertQueryCount(admin=47, emp=52):  # test_mail only: 35 - 40
             model.create({
                 'summary': 'Test Activity',
                 'res_id': record.id,
@@ -225,7 +225,7 @@ class TestHeavyMailPerformance(TransactionCase):
         self.umbrella.message_subscribe(self.user_portal.partner_id.ids)
         record = self.umbrella.sudo(self.env.user)
 
-        with self.assertQueryCount(admin=126, emp=158):  # test_mail only: 120 - 151
+        with self.assertQueryCount(admin=128, emp=160):  # test_mail only: 120 - 151
             record.message_post(
                 body='<p>Test Post Performances</p>',
                 message_type='comment', subtype='mail.mt_comment')
@@ -241,7 +241,7 @@ class TestHeavyMailPerformance(TransactionCase):
         record = self.umbrella.sudo(self.env.user)
         template = self.env.ref('test_mail.mail_test_tpl')
 
-        with self.assertQueryCount(admin=184, emp=231):  # test_mail only: 176 - 223
+        with self.assertQueryCount(admin=186, emp=233):  # test_mail only: 176 - 223
             record.message_post_with_template(template.id, message_type='comment', composition_mode='comment')
 
         self.assertEqual(record.message_ids[0].body, '<p>Adding stuff on %s</p>' % record.name)
