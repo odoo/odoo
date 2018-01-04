@@ -78,11 +78,10 @@ var LivechatButton = Widget.extend({
 
     start: function () {
         this.$el.text(this.options.button_text);
-        var small_screen = config.device.size_class === config.device.SIZES.XS;
         if (this.history) {
             _.each(this.history.reverse(), this.add_message.bind(this));
             this.open_chat();
-        } else if (!small_screen && this.rule.action === 'auto_popup') {
+        } else if (!config.device.isMobile && this.rule.action === 'auto_popup') {
             var auto_popup_cookie = utils.get_cookie('im_livechat_auto_popup');
             if (!auto_popup_cookie || JSON.parse(auto_popup_cookie)) {
                 this.auto_popup_timeout = setTimeout(this.open_chat.bind(this), this.rule.auto_popup_timer*1000);
