@@ -223,6 +223,11 @@ class TestFields(common.TransactionCase):
         double_size = message.double_size
         self.assertEqual(double_size, message.size)
 
+        record = self.env['test_new_api.cascade'].create({'foo': "Hi"})
+        self.assertEqual(record.baz, "<[Hi]>")
+        record.foo = "Ho"
+        self.assertEqual(record.baz, "<[Ho]>")
+
     def test_13_inverse(self):
         """ test inverse computation of fields """
         Category = self.env['test_new_api.category']
