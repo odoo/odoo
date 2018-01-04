@@ -19,7 +19,7 @@
             <field name="inherit_id" ref="base.view_partner_bank_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='acc_number']" position="after">
-                    <field name="l10n_ch_postal_manual"/>
+                    <field name="l10n_ch_postal"/>
                 </xpath>
             </field>
         </record>
@@ -30,7 +30,7 @@
             <field name="inherit_id" ref="account.view_account_bank_journal_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='bank_acc_number']" position="after">
-                    <field name="l10n_ch_postal_manual"/>
+                    <field name="l10n_ch_postal"/>
                 </xpath>
             </field>
         </record>
