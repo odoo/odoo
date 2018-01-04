@@ -253,7 +253,7 @@ class SaleOrder(models.Model):
         if partner.sale_warn == 'no-message' and partner.parent_id:
             partner = partner.parent_id
 
-        if partner.sale_warn != 'no-message':
+        if partner.sale_warn and partner.sale_warn != 'no-message':
             # Block if partner only has warning but parent company is blocked
             if partner.sale_warn != 'block' and partner.parent_id and partner.parent_id.sale_warn == 'block':
                 partner = partner.parent_id
