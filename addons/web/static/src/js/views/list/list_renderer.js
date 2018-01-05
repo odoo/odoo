@@ -277,6 +277,7 @@ var ListRenderer = BasicRenderer.extend({
         }
         if (node.attrs.widget || (options && options.renderWidgets)) {
             var widget = this._renderFieldWidget(node, record, _.pick(options, 'mode'));
+            this._handleAttributes(widget.$el, node);
             return $td.append(widget.$el);
         }
         var name = node.attrs.name;
@@ -287,6 +288,7 @@ var ListRenderer = BasicRenderer.extend({
             escape: true,
             isPassword: 'password' in node.attrs,
         });
+        this._handleAttributes($td, node);
         return $td.html(formattedValue);
     },
     /**
