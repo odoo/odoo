@@ -94,7 +94,7 @@ class HrContract(models.Model):
             elif contract.transport_mode == 'public_transport':
                 contract.transport_employer_cost = contract.public_transport_reimbursed_amount
             elif contract.transport_mode == 'others':
-                contract.transport_employer_cost == contract.others_reimbursed_amount
+                contract.transport_employer_cost = contract.others_reimbursed_amount
 
     @api.depends('commission_on_target')
     def _compute_warrants_cost(self):
