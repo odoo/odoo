@@ -2,10 +2,8 @@ odoo.define('web.MockServer', function (require) {
 "use strict";
 
 var Class = require('web.Class');
-var data_manager = require('web.data_manager');
 var Domain = require('web.Domain');
 var pyeval = require('web.pyeval');
-var utils = require('web.utils');
 
 var MockServer = Class.extend({
     /**
@@ -57,6 +55,15 @@ var MockServer = Class.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Mocks a fields_get RPC for a given model.
+     *
+     * @param {string} model
+     * @returns {Object}
+     */
+    fieldsGet: function (model) {
+        return this.data[model].fields;
+    },
+    /**
      * helper: read a string describing an arch, and returns a simulated
      * 'field_view_get' call to the server. Calls processViews() of data_manager
      * to mimick the real behavior of a call to loadViews().
@@ -77,13 +84,10 @@ var MockServer = Class.extend({
         }
         var fields = $.extend(true, {}, this.data[model].fields);
         var fvg = this._fieldsViewGet(params.arch, model, fields, viewOptions.context);
-        var fields_views = {};
-        fields_views[fvg.type] = fvg;
-        data_manager.processViews(fields_views, fields);
         if (toolbar) {
             fvg.toolbar = toolbar;
         }
-        return fields_views[fvg.type];
+        return fvg;
     },
     /**
      * Simulate a complete RPC call. This is the main method for this class.
@@ -166,7 +170,7 @@ var MockServer = Class.extend({
      * 'fields_view_get' call to the server.
      *
      * @private
-     * @param {string|Object} arch a string OR a parsed xml document
+     * @param {string} arch a string OR a parsed xml document
      * @param {string} model a model name (that should be in this.data)
      * @param {Object} fields
      * @param {Object} context
@@ -179,29 +183,32 @@ var MockServer = Class.extend({
         var onchanges = this.data[model].onchanges || {};
         var fieldNodes = {};
 
+        var doc;
         if (typeof arch === 'string') {
-            var doc = $.parseXML(arch).documentElement;
-            arch = utils.xml_to_json(doc, true);
+            doc = $.parseXML(arch).documentElement;
+        } else {
+            doc = arch;
         }
 
-        var inTreeView = (arch.tag === 'tree');
+        var inTreeView = (doc.tagName === 'tree');
 
-        this._traverse(arch, function (node) {
-            if (typeof node === "string") {
+        this._traverse(doc, function (node) {
+            if (node.nodeType === Node.TEXT_NODE) {
                 return false;
             }
             var modifiers = {};
 
-            var isField = (node.tag === 'field');
+            var isField = (node.tagName === 'field');
 
             if (isField) {
-                fieldNodes[node.attrs.name] = node;
+                var fieldName = node.getAttribute('name');
+                fieldNodes[fieldName] = node;
 
                 // 'transfer_field_to_modifiers' simulation
-                var field = fields[node.attrs.name];
+                var field = fields[fieldName];
 
                 if (!field) {
-                    throw new Error("Field " + node.attrs.name + " does not exist");
+                    throw new Error("Field " + fieldName + " does not exist");
                 }
                 var defaultValues = {};
                 var stateExceptions = {};
@@ -209,7 +216,7 @@ var MockServer = Class.extend({
                     stateExceptions[attr] = [];
                     defaultValues[attr] = !!field[attr];
                 });
-                _.each(field['states'] || {}, function (modifs, state) {
+                _.each(field.states || {}, function (modifs, state) {
                     _.each(modifs, function (modif) {
                         if (defaultValues[modif[0]] !== modif[1]) {
                             stateExceptions[modif[0]].append(state);
@@ -226,36 +233,42 @@ var MockServer = Class.extend({
             }
 
             // 'transfer_node_to_modifiers' simulation
-            if (node.attrs.attrs) {
-                var attrs = pyeval.py_eval(node.attrs.attrs);
+            var attrs = node.getAttribute('attrs');
+            if (attrs) {
+                attrs = pyeval.py_eval(attrs);
                 _.extend(modifiers, attrs);
-                delete node.attrs.attrs;
+                node.removeAttribute('attrs');
             }
-            if (node.attrs.states) {
+
+            var states = node.getAttribute('states');
+            if (states) {
                 if (!modifiers.invisible) {
                     modifiers.invisible = [];
                 }
-                modifiers.invisible.push(["state", "not in", node.attrs.states.split(",")]);
+                modifiers.invisible.push(["state", "not in", states.split(",")]);
             }
             _.each(modifiersNames, function (a) {
-                if (node.attrs[a]) {
+                var mod = node.getAttribute(a);
+                if (mod) {
                     var pyevalContext = window.py.dict.fromJSON(context || {});
-                    var v = pyeval.py_eval(node.attrs[a], {context: pyevalContext}) ? true: false;
+                    var v = pyeval.py_eval(mod, {context: pyevalContext}) ? true: false;
                     if (inTreeView && a === 'invisible') {
-                        modifiers['column_invisible'] = v;
+                        modifiers.column_invisible = v;
                     } else if (v || !(a in modifiers) || !_.isArray(modifiers[a])) {
                         modifiers[a] = v;
                     }
                 }
             });
 
-            // 'transfer_modifiers_to_node' simulation
             _.each(modifiersNames, function (a) {
                 if (a in modifiers && (!!modifiers[a] === false || (_.isArray(modifiers[a]) && !modifiers[a].length))) {
                     delete modifiers[a];
                 }
             });
-            node.attrs.modifiers = JSON.stringify(modifiers);
+
+            if (Object.keys(modifiers).length) {
+                node.setAttribute('modifiers', JSON.stringify(modifiers));
+            }
 
             return !isField;
         });
@@ -264,29 +277,34 @@ var MockServer = Class.extend({
         _.each(fieldNodes, function (node, name) {
             var field = fields[name];
             if (field.type === "many2one" || field.type === "many2many") {
-                node.attrs.can_create = node.attrs.can_create || "true";
-                node.attrs.can_write = node.attrs.can_write || "true";
+                var canCreate = node.getAttribute('can_create');
+                node.setAttribute('can_create', canCreate || "true");
+                var canWrite = node.getAttribute('can_write');
+                node.setAttribute('can_write', canWrite || "true");
             }
             if (field.type === "one2many" || field.type === "many2many") {
                 field.views = {};
-                _.each(node.children, function (children) {
+                _.each(node.childNodes, function (children) {
                     relModel = field.relation;
                     relFields = $.extend(true, {}, self.data[relModel].fields);
-                    field.views[children.tag] = self._fieldsViewGet(children, relModel,
+                    field.views[children.tagName] = self._fieldsViewGet(children, relModel,
                         relFields, context);
                 });
             }
 
             // add onchanges
             if (name in onchanges) {
-                node.attrs.on_change="1";
+                node.setAttribute('on_change', "1");
             }
         });
+
+        var xmlSerializer = new XMLSerializer();
+        var processedArch = xmlSerializer.serializeToString(doc);
         return {
-            arch: arch,
+            arch: processedArch,
             fields: _.pick(fields, _.keys(fieldNodes)),
             model: model,
-            type: arch.tag === 'tree' ? 'list' : arch.tag,
+            type: doc.tagName === 'tree' ? 'list' : doc.tagName,
         };
     },
     /**
@@ -1040,7 +1058,7 @@ var MockServer = Class.extend({
     _traverse: function (tree, f) {
         var self = this;
         if (f(tree)) {
-            _.each(tree.children, function (c) { self._traverse(c, f); });
+            _.each(tree.childNodes, function (c) { self._traverse(c, f); });
         }
     },
     /**

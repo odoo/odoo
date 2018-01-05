@@ -114,36 +114,12 @@ QUnit.module('Views', {
                     '<field name="stop_date"/>'+
                 '</group>'+
             '</form>',
-        "event,1,form": {
-            attrs: {},
-            children: [
-                {
-                    attrs: {
-                        modifiers: '{"invisible": true}',
-                        name: "allday"
-                    },
-                    children: [],
-                    tag: 'field'
-                },
-                {
-                    attrs: {
-                        modifiers: '{"invisible": [["allday","=",false]]}',
-                        name: "start"
-                    },
-                    children: [],
-                    tag: 'field'
-                },
-                {
-                    attrs: {
-                        modifiers: '{"invisible": [["allday","=",true]]}',
-                        name: "stop"
-                    },
-                    children: [],
-                    tag: 'field'
-                }
-            ],
-            tag: "form"
-        }
+        "event,1,form":
+            '<form>' +
+                '<field name="allday" invisible="1"/>' +
+                '<field name="start" attrs=\'{"invisible": [["allday","=",false]]}\'/>' +
+                '<field name="stop" attrs=\'{"invisible": [["allday","=",true]]}\'/>' +
+            '</form>',
     };
 
     QUnit.test('simple calendar rendering', function (assert) {

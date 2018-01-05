@@ -347,11 +347,13 @@ ActionManager.include({
         _.each(action.views, function (view) {
             var viewType = view[1];
             var fieldsView = fieldsViews[viewType];
-            var View = view_registry.get(fieldsView.arch.attrs.js_class || viewType);
+            var parsedXML = new DOMParser().parseFromString(fieldsView.arch, "text/xml");
+            var key = parsedXML.documentElement.getAttribute('js_class');
+            var View = view_registry.get(key || viewType);
             if (View) {
                 views.push({
                     accessKey: View.prototype.accessKey,
-                    fieldsView: fieldsViews[viewType],
+                    fieldsView: fieldsView,
                     icon: View.prototype.icon,
                     isMobileFriendly: View.prototype.mobile_friendly,
                     multiRecord: View.prototype.multi_record,
