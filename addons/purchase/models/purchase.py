@@ -261,7 +261,7 @@ class PurchaseOrder(models.Model):
         if partner.purchase_warn == 'no-message' and partner.parent_id:
             partner = partner.parent_id
 
-        if partner.purchase_warn != 'no-message':
+        if partner.purchase_warn and partner.purchase_warn != 'no-message':
             # Block if partner only has warning but parent company is blocked
             if partner.purchase_warn != 'block' and partner.parent_id and partner.parent_id.purchase_warn == 'block':
                 partner = partner.parent_id
