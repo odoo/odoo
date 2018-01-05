@@ -729,6 +729,18 @@ class SaleOrderLine(models.Model):
                         msg += _("Invoiced Quantity") + ": %s <br/>" % (line.qty_invoiced,)
                     msg += "</ul>"
                     order.message_post(body=msg)
+
+        # Prevent writing on a locked SO.
+        protected_fields = self._get_protected_fields()
+        if 'done' in self.mapped('order_id.state') and any(f in values.keys() for f in protected_fields):
+            fields = self.env['ir.model.fields'].search([
+                ('name', 'in', protected_fields), ('model', '=', self._name)
+            ])
+            raise UserError(
+                _('It is forbidden to modify the following fields in a locked order:\n%s')
+                % '\n'.join(fields.mapped('field_description'))
+            )
+
         result = super(SaleOrderLine, self).write(values)
         if lines:
             lines._action_procurement_create()
@@ -983,6 +995,12 @@ class SaleOrderLine(models.Model):
             uom_factor = 1.0
 
         return product[field_name] * uom_factor * cur_factor, currency_id.id
+
+    def _get_protected_fields(self):
+        return [
+            'product_id', 'name', 'price_unit', 'product_uom', 'product_uom_qty',
+            'tax_id', 'analytic_tag_ids'
+        ]
 
     @api.onchange('product_id', 'price_unit', 'product_uom', 'product_uom_qty', 'tax_id')
     def _onchange_discount(self):
