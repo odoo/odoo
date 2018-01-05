@@ -339,6 +339,8 @@ class MrpProduction(models.Model):
         else:
             source_location = self.location_src_id
         original_quantity = self.product_qty - self.qty_produced
+        if original_quantity == 0:
+            return self.env['stock.move']
         data = {
             'sequence': bom_line.sequence,
             'name': self.name,
