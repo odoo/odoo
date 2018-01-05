@@ -83,7 +83,7 @@
                         <page string="Inventory" name="inventory" groups="stock.group_stock_user,product.group_stock_packaging" attrs="{'invisible':[('type', '=', 'service')]}">
                             <group name="packaging" string="Packaging"
                                 colspan="4"
-                                attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '>', 1)]}"
+                                attrs="{'invisible':['|', '|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '>', 1)], 'readonly': [('id', '=', False)]}"
                                 groups="product.group_stock_packaging">
                                 <field name="packaging_ids" nolabel="1" context="{'default_product_id': product_variant_id,'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}"/>
                             </group>
@@ -234,7 +234,8 @@
                         </group>
                         <group name="packaging" string="Packaging"
                             colspan="4"
-                            groups="product.group_stock_packaging">
+                            groups="product.group_stock_packaging"
+                            attrs="{'readonly': [('id', '=', False)]}">
                             <field name="packaging_ids" nolabel="1" context="{'default_product_id': id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}"/>
                         </group>
                     </sheet>
