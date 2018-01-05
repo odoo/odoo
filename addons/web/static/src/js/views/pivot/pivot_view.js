@@ -35,10 +35,6 @@ var PivotView = AbstractView.extend({
     init: function (viewInfo, params) {
         this._super.apply(this, arguments);
 
-        var arch = viewInfo.arch;
-        var fields = _.extend({
-            __count: {string: _t("Count"), type: "integer"}
-        }, viewInfo.fields);
         var activeMeasures = [];
         var colGroupBys = [];
         var rowGroupBys = [];
@@ -46,7 +42,8 @@ var PivotView = AbstractView.extend({
         var measures = {};
         var groupableFields = {};
 
-        _.each(fields, function (field, name) {
+        this.fields.__count = {string: _t("Count"), type: "integer"};
+        _.each(this.fields, function (field, name) {
             if ((name !== 'id') && (field.store === true)) {
                 if (_.contains(['integer', 'float', 'monetary'], field.type)) {
                     measures[name] = field;
@@ -58,7 +55,7 @@ var PivotView = AbstractView.extend({
         });
         measures.__count = {string: _t("Count"), type: "integer"};
 
-        arch.children.forEach(function (field) {
+        this.arch.children.forEach(function (field) {
             var name = field.attrs.name;
             if (field.attrs.interval) {
                 name += ':' + field.attrs.interval;
@@ -84,17 +81,17 @@ var PivotView = AbstractView.extend({
                 rowGroupBys.push(name);
             }
         });
-        if ((!activeMeasures.length) || arch.attrs.display_quantity) {
+        if ((!activeMeasures.length) || this.arch.attrs.display_quantity) {
             activeMeasures.push('__count');
         }
 
         this.loadParams.measures = activeMeasures;
         this.loadParams.colGroupBys = colGroupBys;
         this.loadParams.rowGroupBys = rowGroupBys;
-        this.loadParams.fields = fields;
+        this.loadParams.fields = this.fields;
 
-        this.controllerParams.title = params.title || arch.attrs.string || _t("Untitled");
-        this.controllerParams.enableLinking = !arch.attrs.disable_linking;
+        this.controllerParams.title = params.title || this.arch.attrs.string || _t("Untitled");
+        this.controllerParams.enableLinking = !this.arch.attrs.disable_linking;
         this.controllerParams.measures = measures;
         this.controllerParams.groupableFields = groupableFields;
         // retrieve form and list view ids from the action to open those views

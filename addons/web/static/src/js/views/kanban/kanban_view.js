@@ -30,16 +30,14 @@ var KanbanView = BasicView.extend({
     init: function (viewInfo, params) {
         this._super.apply(this, arguments);
 
-        var arch = viewInfo.arch;
-
         this.loadParams.limit = this.loadParams.limit || 40;
         // in mobile, columns are lazy-loaded, so set 'openGroupByDefault' to
         // false so that they will won't be loaded by the initial load
         this.loadParams.openGroupByDefault = config.device.isMobile ? false : true;
         this.loadParams.type = 'list';
-        this.loadParams.groupBy = arch.attrs.default_group_by ? [arch.attrs.default_group_by] : (params.groupBy || []);
+        this.loadParams.groupBy = this.arch.attrs.default_group_by ? [this.arch.attrs.default_group_by] : (params.groupBy || []);
         var progressBar;
-        utils.traverse(arch, function (n) {
+        utils.traverse(this.arch, function (n) {
             var isProgressBar = (n.tag === 'progressbar');
             if (isProgressBar) {
                 progressBar = _.clone(n.attrs);
@@ -54,16 +52,16 @@ var KanbanView = BasicView.extend({
 
         var activeActions = this.controllerParams.activeActions;
         activeActions = _.extend(activeActions, {
-            group_create: arch.attrs.group_create ? JSON.parse(arch.attrs.group_create) : true,
-            group_edit: arch.attrs.group_edit ? JSON.parse(arch.attrs.group_edit) : true,
-            group_delete: arch.attrs.group_delete ? JSON.parse(arch.attrs.group_delete) : true,
+            group_create: this.arch.attrs.group_create ? JSON.parse(this.arch.attrs.group_create) : true,
+            group_edit: this.arch.attrs.group_edit ? JSON.parse(this.arch.attrs.group_edit) : true,
+            group_delete: this.arch.attrs.group_delete ? JSON.parse(this.arch.attrs.group_delete) : true,
         });
 
         this.rendererParams.column_options = {
             editable: activeActions.group_edit,
             deletable: activeActions.group_delete,
             group_creatable: activeActions.group_create && !config.device.isMobile,
-            quick_create: params.isQuickCreateEnabled || this._isQuickCreateEnabled(viewInfo),
+            quick_create: params.isQuickCreateEnabled || this._isQuickCreateEnabled(),
             hasProgressBar: !!progressBar,
         };
         this.rendererParams.record_options = {
@@ -72,7 +70,7 @@ var KanbanView = BasicView.extend({
             read_only_mode: params.readOnlyMode,
         };
 
-        this.controllerParams.on_create = arch.attrs.on_create;
+        this.controllerParams.on_create = this.arch.attrs.on_create;
 
         this.controllerParams.readOnlyMode = false;
         this.controllerParams.hasButtons = true;
@@ -90,17 +88,17 @@ var KanbanView = BasicView.extend({
      * @private
      * @param {Object} viewInfo
      */
-    _isQuickCreateEnabled: function (viewInfo) {
+    _isQuickCreateEnabled: function () {
         var groupBy = this.loadParams.groupBy[0];
         groupBy = groupBy !== undefined ? groupBy.split(':')[0] : undefined;
-        if (groupBy !== undefined && !_.contains(['char', 'boolean', 'many2one'], viewInfo.fields[groupBy].type)) {
+        if (groupBy !== undefined && !_.contains(['char', 'boolean', 'many2one'], this.fields[groupBy].type)) {
             return false;
         }
         if (!this.controllerParams.activeActions.create) {
             return false;
         }
-        if (viewInfo.arch.attrs.quick_create !== undefined) {
-            return JSON.parse(viewInfo.arch.attrs.quick_create);
+        if (this.arch.attrs.quick_create !== undefined) {
+            return JSON.parse(this.arch.attrs.quick_create);
         }
         return true;
     },

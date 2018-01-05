@@ -28,6 +28,7 @@ var Class = require('web.Class');
 var AbstractModel = require('web.AbstractModel');
 var AbstractRenderer = require('web.AbstractRenderer');
 var AbstractController = require('web.AbstractController');
+var utils = require('web.utils');
 
 var AbstractView = Class.extend({
     // name displayed in view switchers
@@ -85,18 +86,32 @@ var AbstractView = Class.extend({
      * @param {boolean} [params.action.views]
      */
     init: function (viewInfo, params) {
+        // in general, the fieldsView has to be processed by the View (e.g. the
+        // arch is a string that needs to be parsed) ; the only exception is for
+        // inline form views inside form views, as they are processed alongside
+        // the main view, but they are opened in a FormViewDialog which
+        // instantiates another FormView (unlike kanban or list subviews for
+        // which only a Renderer is instantiated)
+        if (typeof viewInfo.arch === 'string') {
+            this.fieldsView = this._processFieldsView(viewInfo);
+        } else {
+            this.fieldsView = viewInfo;
+        }
+        this.fields = this.fieldsView.viewFields;
+        this.arch = this.fieldsView.arch;
+
         this.rendererParams = {
-            arch: viewInfo.arch,
+            arch: this.arch,
             noContentHelp: params.action && params.action.help,
         };
 
         this.controllerParams = {
             modelName: params.modelName,
             activeActions: {
-                edit: viewInfo.arch.attrs.edit ? JSON.parse(viewInfo.arch.attrs.edit) : true,
-                create: viewInfo.arch.attrs.create ? JSON.parse(viewInfo.arch.attrs.create) : true,
-                delete: viewInfo.arch.attrs.delete ? JSON.parse(viewInfo.arch.attrs.delete) : true,
-                duplicate: viewInfo.arch.attrs.duplicate ? JSON.parse(viewInfo.arch.attrs.duplicate) : true,
+                edit: this.arch.attrs.edit ? JSON.parse(this.arch.attrs.edit) : true,
+                create: this.arch.attrs.create ? JSON.parse(this.arch.attrs.create) : true,
+                delete: this.arch.attrs.delete ? JSON.parse(this.arch.attrs.delete) : true,
+                duplicate: this.arch.attrs.duplicate ? JSON.parse(this.arch.attrs.duplicate) : true,
             },
             groupable: this.groupable,
             controllerID: params.controllerID,
@@ -134,7 +149,7 @@ var AbstractView = Class.extend({
         //   'name,id desc'
         // but we need it like:
         //   [{name: 'id', asc: false}, {name: 'name', asc: true}]
-        var defaultOrder = viewInfo.arch.attrs.default_order;
+        var defaultOrder = this.arch.attrs.default_order;
         if (defaultOrder) {
             this.loadParams.orderedBy = _.map(defaultOrder.split(','), function (order) {
                 order = order.trim().split(' ');
@@ -234,6 +249,22 @@ var AbstractView = Class.extend({
     _loadData: function (parent) {
         var model = this.getModel(parent);
         return model.load(this.loadParams);
+    },
+    /**
+     * Processes a fieldsView. In particular, parses its arch.
+     *
+     * @private
+     * @param {Object} fieldsView
+     * @param {string} fieldsView.arch
+     * @returns {Object} the processed fieldsView
+     */
+    _processFieldsView: function (fieldsView) {
+        var fv = _.extend({}, fieldsView);
+        var doc = $.parseXML(fv.arch).documentElement;
+        var stripWhitespaces = doc.nodeName.toLowerCase() !== 'kanban';
+        fv.arch = utils.xml_to_json(doc, stripWhitespaces);
+        fv.viewFields = _.defaults({}, fv.viewFields, fv.fields);
+        return fv;
     },
 });
 

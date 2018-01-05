@@ -36,19 +36,18 @@ var ListView = BasicView.extend({
     init: function (viewInfo, params) {
         this._super.apply(this, arguments);
 
-        var arch = viewInfo.arch;
-        var mode = arch.attrs.editable && !params.readonly ? "edit" : "readonly";
+        var mode = this.arch.attrs.editable && !params.readonly ? "edit" : "readonly";
 
-        this.controllerParams.editable = arch.attrs.editable;
+        this.controllerParams.editable = this.arch.attrs.editable;
         this.controllerParams.hasSidebar = params.hasSidebar;
         this.controllerParams.toolbarActions = viewInfo.toolbar;
         this.controllerParams.noLeaf = !!this.loadParams.context.group_by_no_leaf;
         this.controllerParams.mode = mode;
 
-        this.rendererParams.arch = arch;
+        this.rendererParams.arch = this.arch;
         this.rendererParams.hasSelectors =
                 'hasSelectors' in params ? params.hasSelectors : true;
-        this.rendererParams.editable = params.readonly ? false : arch.attrs.editable;
+        this.rendererParams.editable = params.readonly ? false : this.arch.attrs.editable;
 
         this.loadParams.limit = this.loadParams.limit || 80;
         this.loadParams.type = 'list';
