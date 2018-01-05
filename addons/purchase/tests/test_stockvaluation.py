@@ -171,7 +171,7 @@ class TestStockValuation(TransactionCase):
 
         # the unit price of the move is the unit price of the purchase order line converted in
         # the company's currency
-        self.assertEqual(move1.price_unit, price_unit_usd)
+        self.assertAlmostEqual(move1.price_unit, price_unit_usd)
 
         # change the rate of the currency
         self.env['res.currency.rate'].create({
@@ -187,7 +187,7 @@ class TestStockValuation(TransactionCase):
         self.assertLess(price_unit_usd_new_rate, price_unit_usd)
 
         # the unit price on the stock move is not directly updated
-        self.assertEquals(move1.price_unit, price_unit_usd)
+        self.assertAlmostEqual(move1.price_unit, price_unit_usd)
 
         # validate the receipt
         res_dict = picking1.button_validate()
