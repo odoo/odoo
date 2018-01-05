@@ -117,6 +117,25 @@
         <field name="seats_max">5</field>
     </record>
 
+    <record id="event_sale_order_1" model="sale.order">
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="partner_invoice_id" ref="base.res_partner_2"/>
+        <field name="partner_shipping_id" ref="base.res_partner_2"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="pricelist_id" ref="product.list0"/>
+        <field name="team_id" ref="sales_team.team_sales_department"/>
+        <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
+    </record>
+    <record id="event_sale_order_line_1" model="sale.order.line">
+        <field name="order_id" ref="event_sale_order_1"/>
+        <field name="name">Open Days in Los Angeles</field>
+        <field name="product_id" ref="event_0_product"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="event_ticket_id" ref="event_0_ticket_1"/>
+        <field name="product_uom_qty">1</field>
+        <field name="price_unit">1000.0</field>
+    </record>
+    <function model="sale.order" name="action_confirm" eval="[[ref('event_sale_order_1')]]"/>
 
     <record id="event.event_1" model="event.event">
             <field name="badge_back"><![CDATA[
