@@ -1298,6 +1298,25 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
     },
 });
 
+var FieldBinaryDownloadLink = AbstractFieldBinary.extend({
+    template: 'FieldBinaryDownloadLink',
+    events: _.extend({}, AbstractFieldBinary.prototype.events, {
+        'click': function (ev) {
+            ev.stopPropagation();
+        },
+    }),
+    supportedFieldTypes: ['binary'],
+    init: function () {
+        this._super.apply(this, arguments);
+        this.filename = _t("Binary File");
+        if (this.nodeOptions.filename && this.recordData[this.nodeOptions.filename]) {
+            this.filename = this.recordData[this.nodeOptions.filename];
+        }
+        this.url = "data:application/octet-stream;base64," + this.value;
+        this.text = _t("Download");
+    },
+});
+
 var PriorityWidget = AbstractField.extend({
     // the current implementation of this widget makes it
     // only usable for fields of type selection
@@ -2528,6 +2547,7 @@ return {
     TranslatableFieldMixin: TranslatableFieldMixin,
     DebouncedField: DebouncedField,
     FieldEmail: FieldEmail,
+    FieldBinaryDownloadLink: FieldBinaryDownloadLink,
     FieldBinaryFile: FieldBinaryFile,
     FieldBinaryImage: FieldBinaryImage,
     FieldBoolean: FieldBoolean,
