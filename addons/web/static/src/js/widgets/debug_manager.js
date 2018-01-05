@@ -782,7 +782,7 @@ if (core.debug) {
                 // Instantiate the DebugManager and insert it into the DOM once dialog is opened
                 this.opened(function() {
                     self.debug_manager = new DebugManager(self);
-                    var $header = self.$modal.find('.modal-header');
+                    var $header = self.$modal.find('.modal-header:first');
                     return self.debug_manager.prependTo($header).then(function() {
                         self.debug_manager.update('action', parent.dialog_widget.action, parent.dialog_widget);
                     });
