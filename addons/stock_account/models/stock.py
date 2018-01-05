@@ -549,7 +549,6 @@ class StockMove(models.Model):
                 'stock_move_id': self.id,
             })
             new_account_move.post()
-            new_account_move.write({'account_move_ids': new_account_move.id}) #TODO OCO ajouté par tes soins
 
     def _account_entry_move(self):
         """ Accounting Valuation Entries """
@@ -587,6 +586,16 @@ class StockMove(models.Model):
             # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
             self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_src, acc_dest, journal_id)
+
+        if self.company_id.anglo_saxon_accounting:
+            self.reconcile_valuation_with_invoices()
+
+    def _get_related_invoices(self): # To be overridden in purchase and sale
+        return self.env['account.invoice'] #TODO OCO overrider
+
+    def reconcile_valuation_with_invoices(self):
+        self.ensure_one()
+        self._get_related_invoices().anglo_saxon_reconcile_valuation()
 
 
 class StockReturnPicking(models.TransientModel):

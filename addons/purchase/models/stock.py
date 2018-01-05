@@ -89,6 +89,13 @@ class StockMove(models.Model):
         else:
             return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
 
+    def _get_related_invoices(self):
+        """ Overridden to return the vendor bills related to this stock move.
+        """
+        rslt = super(StockMove, self)._get_related_invoices()
+        rslt += self.picking_id.purchase_id.invoice_ids
+        return rslt
+
 
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
