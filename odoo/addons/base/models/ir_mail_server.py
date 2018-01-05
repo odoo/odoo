@@ -151,10 +151,6 @@ class IrMailServer(models.Model):
     active = fields.Boolean(default=True)
 
     @api.multi
-    def name_get(self):
-        return [(server.id, "(%s)" % server.name) for server in self]
-
-    @api.multi
     def test_smtp_connection(self):
         for server in self:
             smtp = False
