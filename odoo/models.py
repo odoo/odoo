@@ -3822,7 +3822,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     del vals['module']      # duplicated vals is not linked to any module
                     vals['res_id'] = target_id
                     if vals['lang'] == old.env.lang and field.translate is True:
-                        vals['source'] = old_wo_lang[name]
+                        # force a source if the new_val was not changed by copy override
+                        if new_val == old[name]:
+                            vals['source'] = old_wo_lang[name]
                         # the value should be the new value (given by copy())
                         vals['value'] = new_val
                     Translation.create(vals)
