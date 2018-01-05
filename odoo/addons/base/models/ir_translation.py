@@ -592,7 +592,7 @@ class IrTranslation(models.Model):
             query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, module)
                         SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s, %(module)s
                         FROM res_lang l
-                        WHERE l.active AND NOT EXISTS (
+                        WHERE l.active AND l.translatable AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
                             WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s
                         );
@@ -612,7 +612,7 @@ class IrTranslation(models.Model):
             query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, module)
                         SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s, %(module)s
                         FROM res_lang l
-                        WHERE l.active AND l.code != 'en_US' AND NOT EXISTS (
+                        WHERE l.active AND l.translatable AND l.code != 'en_US' AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
                             WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s
                         );
