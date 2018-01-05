@@ -37,6 +37,7 @@ class TestSaleService(CommonTest):
         task = project.task_ids.filtered(lambda t: t.name == '%s:%s' % (sale_order.name, self.product_delivery_timesheet2.name))
         self.assertTrue(task, 'Sale Service: task is not created')
         self.assertEqual(task.partner_id, sale_order.partner_id, 'Sale Service: customer should be the same on task and on SO')
+        self.assertEqual(task.email_from, sale_order.partner_id.email, 'Sale Service: Task Email should be the same as the SO customer Email')
         # register timesheet on task
         self.env['account.analytic.line'].create({
             'name': 'Test Line',

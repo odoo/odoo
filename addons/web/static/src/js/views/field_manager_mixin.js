@@ -53,7 +53,7 @@ var FieldManagerMixin = {
                     return self.model.save(dataPointID).then(function () {
                         return self._confirmSave(dataPointID);
                     });
-                } else {
+                } else if (options.notifyChange !== false) {
                     return self._confirmChange(dataPointID, result, event);
                 }
             });
