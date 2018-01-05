@@ -2081,6 +2081,39 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('transferring class attributes in one2many sub fields', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="turtle_foo" class="hey"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('td.hey').length, 1,
+            'should have a td with the desired class');
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('td.hey').length, 1,
+            'should have a td with the desired class');
+
+        form.$('td.o_data_cell').click();
+
+        assert.strictEqual(form.$('input[name="turtle_foo"].hey').length, 1,
+            'should have an input with the desired class');
+
+        form.destroy();
+    });
+
     QUnit.test('one2many with date and datetime', function (assert) {
         assert.expect(2);
 
