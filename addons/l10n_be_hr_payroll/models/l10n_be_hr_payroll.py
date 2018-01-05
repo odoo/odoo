@@ -176,6 +176,16 @@ class HrContract(models.Model):
             contract.double_holidays = contract.wage * 0.92
             contract.thirteen_month = contract.wage
 
+    @api.onchange('transport_mode')
+    def _onchange_transport_mode(self):
+        if self.transport_mode != 'company_car':
+            self.fuel_card = 0
+            self.company_car_total_depreciated_cost = 0
+        if self.transport_mode != 'others':
+            self.others_reimbursed_amount = 0
+        if self.transport_mode != 'public_transports':
+            self.public_transport_reimbursed_amount = 0
+
     @api.onchange('mobile', 'mobile_plus')
     def _onchange_mobile(self):
         if self.mobile_plus and not self.mobile:
