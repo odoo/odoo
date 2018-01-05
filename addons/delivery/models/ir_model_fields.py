@@ -18,5 +18,5 @@ class IrModelFields(models.Model):
             if name in carriers:
                 self.env['delivery.carrier'].search([
                     ('delivery_type', '=', name)
-                ]).unlink()
+                ]).write({'delivery_type': 'fixed'})
         return super(IrModelFields, self).unlink()
