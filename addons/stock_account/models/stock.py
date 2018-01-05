@@ -71,7 +71,7 @@ class StockMoveLine(models.Model):
             if move.product_id.valuation == 'real_time' and (move._is_in() or move._is_out()):
                 move.with_context(force_valuation_amount=correction_value)._account_entry_move()
         return res
-    
+
     @api.multi
     def write(self, vals):
         if 'qty_done' in vals:
@@ -456,7 +456,7 @@ class StockMove(models.Model):
             raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
         journal_id = accounts_data['stock_journal'].id
         return journal_id, acc_src, acc_dest, acc_valuation
-    
+
     def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id):
         """
         Generate the account.move.line values to post to track the stock valuation difference due to the
@@ -549,6 +549,7 @@ class StockMove(models.Model):
                 'stock_move_id': self.id,
             })
             new_account_move.post()
+            new_account_move.write({'account_move_ids': new_account_move.id}) #TODO OCO ajouté par tes soins
 
     def _account_entry_move(self):
         """ Accounting Valuation Entries """

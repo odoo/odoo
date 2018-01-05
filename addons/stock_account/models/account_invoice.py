@@ -38,6 +38,54 @@ class AccountInvoice(models.Model):
 
         return self.env['product.product']._anglo_saxon_sale_move_lines(i_line.name, i_line.product_id, i_line.uom_id, i_line.quantity, price_unit, currency=currency, amount_currency=amount_currency, fiscal_position=inv.fiscal_position_id, account_analytic=i_line.account_analytic_id, analytic_tags=i_line.analytic_tag_ids)
 
+    def _get_related_stock_moves(self): #TODO OCO à overrider
+        """ To be overridden for customer invoices and vendor bills in order to
+        return the stock moves related to this invoice.
+        """
+        return self.env['stock.move']
+
+    def _get_products_set(self):
+        """ Returns a recordset of the products contained in this invoice's lines
+        """
+        return self.mapped('invoice_line_ids.product_id')
+
+    def _get_anglosaxon_interim_account(self, product):
+        """ Returns the interim account used in anglosaxon accounting for
+        this invoice"""
+        if self.type in ('out_invoice', 'out_refund'):
+            return product.product_tmpl_id._get_product_accounts()['stock_output']
+        elif self.type in ('in_invoice', 'in_refund'):
+            return product.product_tmpl_id.get_product_accounts()['stock_input']
+
+        return None
+
+    def invoice_validate(self):
+        super(AccountInvoice, self).invoice_validate()
+        self.anglo_saxon_reconcile_valuation()
+
+    def anglo_saxon_reconcile_valuation(self):
+        """ Reconciles the entries made in the interim accounts in anglosaxon accounting,
+        reconciling stock valuation move lines with the invoice's.
+        """
+        for invoice in self:
+            if invoice.company_id.anglo_saxon_accounting:
+                invoice_stock_moves_id_list = self._get_related_stock_moves().ids
+                for product in self._get_products_set():
+                    if product.valuation == 'real_time' and product.cost_method == 'fifo':
+                        # We first get the invoice's move lines ...
+                        product_interim_account = invoice._get_anglosaxon_interim_account(product)
+                        to_reconcile = self.env['account.move.line'].search([('move_id','=',invoice.move_id.id), ('product_id','=',product.id), ('account_id','=',product_interim_account.id), ('reconciled','=',False)])
+
+                        # And then the stock valuation ones.
+                        product_stock_moves = self.env['stock.move'].search([('id','in',invoice_stock_moves_id_list), ('product_id','=',product.id)])
+
+                        for valuation_line in product_stock_moves.mapped('account_move_ids.line_ids'):
+                            if valuation_line.account_id == product_interim_account and not valuation_line.reconciled:
+                                to_reconcile += valuation_line
+
+                        if to_reconcile:
+                            to_reconcile.reconcile()
+
 
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"

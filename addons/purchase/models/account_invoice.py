@@ -163,6 +163,8 @@ class AccountInvoice(models.Model):
             for line in res:
                 if line.get('invl_id', 0) == i_line.id and reference_account_id == line['account_id']:
                     valuation_price_unit = i_line.product_id.uom_id._compute_price(i_line.product_id.standard_price, i_line.uom_id)
+                    interim_account_price = company_currency.round(valuation_price_unit * line['quantity'])
+
                     if i_line.product_id.cost_method != 'standard' and i_line.purchase_line_id:
                         #for average/fifo/lifo costing method, fetch real cost price from incomming moves
                         valuation_price_unit = i_line.purchase_line_id.product_uom._compute_price(i_line.purchase_line_id.price_unit, i_line.uom_id)
@@ -176,9 +178,27 @@ class AccountInvoice(models.Model):
                                 valuation_total_qty += val_stock_move.product_qty
                             valuation_price_unit = valuation_price_unit_total / valuation_total_qty
                             valuation_price_unit = i_line.product_id.uom_id._compute_price(valuation_price_unit, i_line.uom_id)
+
+                            # We compute the amount to be written into the interim account
+                            interim_account_price = valuation_price_unit_total + (i_line.quantity - valuation_total_qty) * valuation_price_unit
+                            # The second part of this addition can hence decrease the value, it is important in case more products were received than the quantity on the invoice
+
+                        elif i_line.product_id.cost_method == 'real': # In this condition, we have a real price-valuated product which has not yet been received
+                            valuation_price_unit = i_line.purchase_line_id.price_unit
+                            interim_account_price = valuation_price_unit * i_line.quantity
+
                     if inv.currency_id.id != company_currency.id:
+                            # We express everyhting in the invoice currency
                             valuation_price_unit = company_currency.with_context(date=inv.date_invoice).compute(valuation_price_unit, inv.currency_id, round=False)
-                    if valuation_price_unit != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:
+                            interim_account_price = company_currency.with_context(date=inv.date_invoice).compute(interim_account_price, inv.currency_id, round=False)
+
+                    invoice_cur_prec = inv.currency_id.decimal_places
+
+                    if float_compare(valuation_price_unit, i_line.price_unit, precision_digits=invoice_cur_prec) != 0 and float_compare(line['price_unit'], i_line.price_unit, precision_digits=invoice_cur_prec) == 0:
+
+                        if not acc: #If no price difference account was set at all and we need one, we raise an error
+                            raise UserError("You first need to specify a price difference account for this product before posting entries into it")
+
                         # price with discount and without tax included
                         price_unit = i_line.price_unit * (1 - (i_line.discount or 0.0) / 100.0)
                         tax_ids = []
@@ -192,7 +212,7 @@ class AccountInvoice(models.Model):
                                     if child.type_tax_use != 'none':
                                         tax_ids.append((4, child.id, None))
                         price_before = line.get('price', 0.0)
-                        line.update({'price': inv.currency_id.round(valuation_price_unit * line['quantity'])})
+                        line.update({'price': company_currency.round(interim_account_price)})
                         diff_res.append({
                             'type': 'src',
                             'name': i_line.name[:64],
@@ -230,6 +250,16 @@ class AccountInvoice(models.Model):
                 message = _("This vendor bill has been modified from: %s") % (",".join(["<a href=# data-oe-model=purchase.order data-oe-id="+str(order.id)+">"+order.name+"</a>" for order in purchase]))
                 invoice.message_post(body=message)
         return result
+
+    def _get_related_stock_moves(self):
+        """ Overridden from stock_account.
+        Returns the stock moves associated to this invoice."""
+        rslt = super(AccountInvoice, self)._get_related_stock_moves()
+
+        if self.type in ('in_invoice', 'in_refund'):
+            rslt += self.mapped('invoice_line_ids.purchase_line_id.move_ids')
+
+        return rslt
 
 class AccountInvoiceLine(models.Model):
     """ Override AccountInvoice_line to add the link to the purchase order line it is related to"""
