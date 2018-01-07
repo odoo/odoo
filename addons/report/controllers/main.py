@@ -34,7 +34,8 @@ class ReportController(Controller):
         if data.get('context'):
             # Ignore 'lang' here, because the context in data is the one from the webclient *but* if
             # the user explicitely wants to change the lang, this mechanism overwrites it.
-            data['context'] = json.loads(data['context'])
+            if not isinstance(data['context'], dict):
+                data['context'] = json.loads(data['context'])
             if data['context'].get('lang'):
                 del data['context']['lang']
             context.update(data['context'])
@@ -83,6 +84,7 @@ class ReportController(Controller):
         """
         requestcontent = json.loads(data)
         url, type = requestcontent[0], requestcontent[1]
+        context = requestcontent[2] if len(requestcontent) > 2 else {}
         try:
             if type == 'qweb-pdf':
                 reportname = url.split('/report/pdf/')[1].split('?')[0]
@@ -93,7 +95,7 @@ class ReportController(Controller):
 
                 if docids:
                     # Generic report:
-                    response = self.report_routes(reportname, docids=docids, converter='pdf')
+                    response = self.report_routes(reportname, docids=docids, converter='pdf', context=context)
                 else:
                     # Particular report:
                     data = url_decode(url.split('?')[1]).items()  # decoding the args represented in JSON
