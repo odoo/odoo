@@ -113,7 +113,6 @@ class MrpWorkorder(models.Model):
     final_lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial Number', domain="[('product_id', '=', product_id)]",
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
-    tracking = fields.Selection(related='production_id.product_id.tracking')
     time_ids = fields.One2many(
         'mrp.workcenter.productivity', 'workorder_id')
     is_user_working = fields.Boolean(

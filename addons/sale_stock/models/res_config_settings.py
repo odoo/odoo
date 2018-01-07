@@ -19,7 +19,7 @@ class ResConfigSettings(models.TransientModel):
     default_picking_policy = fields.Selection([
         ('direct', 'Ship products as soon as available, with back orders'),
         ('one', 'Ship all products at once')
-        ], "Shipping Management", default='direct', default_model="sale.order", required=True)
+        ], "Picking Policy", default='direct', default_model="sale.order", required=True)
 
     @api.onchange('use_security_lead')
     def _onchange_use_security_lead(self):

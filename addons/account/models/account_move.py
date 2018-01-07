@@ -1562,9 +1562,9 @@ class AccountPartialReconcile(models.Model):
     amount = fields.Monetary(currency_field='company_currency_id', help="Amount concerned by this matching. Assumed to be always positive")
     amount_currency = fields.Monetary(string="Amount in Currency")
     currency_id = fields.Many2one('res.currency', string='Currency')
-    company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True,
+    company_currency_id = fields.Many2one('res.currency', string="Company Currency", related='company_id.currency_id', readonly=True,
         help='Utility field to express amount currency')
-    company_id = fields.Many2one('res.company', related='debit_move_id.company_id', store=True, string='Currency')
+    company_id = fields.Many2one('res.company', related='debit_move_id.company_id', store=True, string='Company')
     full_reconcile_id = fields.Many2one('account.full.reconcile', string="Full Reconcile", copy=False)
     max_date = fields.Date(string='Max Date of Matched Lines', compute='_compute_max_date',
         readonly=True, copy=False, store=True,

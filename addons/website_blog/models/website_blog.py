@@ -148,7 +148,7 @@ class BlogPost(models.Model):
     post_date = fields.Datetime('Publishing date', compute='_compute_post_date', inverse='_set_post_date', store=True,
                                 help="The blog post will be visible for your visitors as of this date on the website if it is set as published.")
     create_uid = fields.Many2one('res.users', 'Created by', index=True, readonly=True)
-    write_date = fields.Datetime('Last Modified on', index=True, readonly=True)
+    write_date = fields.Datetime('Last Updated on', index=True, readonly=True)
     write_uid = fields.Many2one('res.users', 'Last Contributor', index=True, readonly=True)
     author_avatar = fields.Binary(related='author_id.image_small', string="Avatar")
     visits = fields.Integer('No of Views')

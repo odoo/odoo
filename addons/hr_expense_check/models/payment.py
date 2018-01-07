@@ -14,6 +14,7 @@ class HrExpenseRegisterPaymentWizard(models.TransientModel):
              "you can manage the numbering in the journal configuration page.")
     payment_method_code_2 = fields.Char(related='payment_method_id.code',
                                       help="Technical field used to adapt the interface to the payment type selected.",
+                                      string="Payment Method Code 2",
                                       readonly=True)
 
     @api.onchange('journal_id')

@@ -48,7 +48,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         ], string='What do you want to invoice?', default=_get_advance_payment_method, required=True)
     product_id = fields.Many2one('product.product', string='Down Payment Product', domain=[('type', '=', 'service')],
         default=_default_product_id)
-    count = fields.Integer(default=_count, string='# of Orders')
+    count = fields.Integer(default=_count, string='Order Count')
     amount = fields.Float('Down Payment Amount', digits=dp.get_precision('Account'), help="The amount to be invoiced in advance, taxes excluded.")
     deposit_account_id = fields.Many2one("account.account", string="Income Account", domain=[('deprecated', '=', False)],
         help="Account used for deposits", default=_default_deposit_account_id)

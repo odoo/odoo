@@ -195,7 +195,7 @@ class View(models.Model):
                              ('search', 'Search'),
                              ('qweb', 'QWeb')], string='View Type')
     arch = fields.Text(compute='_compute_arch', inverse='_inverse_arch', string='View Architecture', nodrop=True)
-    arch_base = fields.Text(compute='_compute_arch_base', inverse='_inverse_arch_base', string='View Architecture')
+    arch_base = fields.Text(compute='_compute_arch_base', inverse='_inverse_arch_base', string='Base View Architecture')
     arch_db = fields.Text(string='Arch Blob', translate=xml_translate, oldname='arch')
     arch_fs = fields.Char(string='Arch Filename')
     inherit_id = fields.Many2one('ir.ui.view', string='Inherited View', ondelete='restrict', index=True)
@@ -207,7 +207,7 @@ class View(models.Model):
                          help="ID of the view defined in xml file")
     groups_id = fields.Many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
                                  string='Groups', help="If this field is empty, the view applies to all users. Otherwise, the view applies to the users of those groups only.")
-    model_ids = fields.One2many('ir.model.data', 'res_id', domain=[('model', '=', 'ir.ui.view')], auto_join=True)
+    model_ids = fields.One2many('ir.model.data', 'res_id', string="Models", domain=[('model', '=', 'ir.ui.view')], auto_join=True)
     create_date = fields.Datetime(readonly=True)
     write_date = fields.Datetime(string='Last Modification Date', readonly=True)
 

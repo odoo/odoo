@@ -28,7 +28,7 @@ class ResConfigSettings(models.TransientModel):
         help="Share your partners to all companies defined in your instance.\n"
              " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
              " * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies.")
-    default_custom_report_footer = fields.Boolean("Custom Report Footer")
+    default_custom_report_footer = fields.Boolean("Default Custom Report Footer")
     report_footer = fields.Text(related="company_id.report_footer", string='Custom Report Footer', help="Footer text displayed at the bottom of all reports.")
     group_multi_currency = fields.Boolean(string='Multi-Currencies',
             implied_group='base.group_multi_currency',

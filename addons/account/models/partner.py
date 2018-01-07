@@ -380,7 +380,7 @@ class ResPartner(models.Model):
         groups='account.group_account_invoice')
     currency_id = fields.Many2one('res.currency', compute='_get_company_currency', readonly=True,
         string="Currency", help='Utility field to express amount currency')
-    contracts_count = fields.Integer(compute='_compute_contracts_count', string="Contracts", type='integer')
+    contracts_count = fields.Integer(compute='_compute_contracts_count', string="Contracts Count", type='integer')
     journal_item_count = fields.Integer(compute='_compute_journal_item_count', string="Journal Items", type="integer")
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Payable", oldname="property_account_payable",
