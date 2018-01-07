@@ -786,7 +786,12 @@ class IrModelFields(models.Model):
     def _reflect_model(self, model):
         """ Reflect the given model's fields. """
         self.clear_caches()
+        duplicate_fields_label = {}
         for field in model._fields.values():
+            if field.string in duplicate_fields_label:
+                _logger.warning('Two fields (%s, %s) of %s have the same label: %s.', field.name, duplicate_fields_label[field.string], model, field.string)
+            else:
+                duplicate_fields_label[field.string] = field.name
             self._reflect_field(field)
 
         if not self.pool._init:
