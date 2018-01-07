@@ -9,7 +9,7 @@ class AccountMoveLineReconcile(models.TransientModel):
     _name = 'account.move.line.reconcile'
     _description = 'Account move line reconcile'
 
-    trans_nbr = fields.Integer(string='# of Transaction', readonly=True)
+    trans_nbr = fields.Integer(string='Transaction Count', readonly=True)
     credit = fields.Float(string='Credit amount', readonly=True, digits=0)
     debit = fields.Float(string='Debit amount', readonly=True, digits=0)
     writeoff = fields.Float(string='Write-Off amount', readonly=True, digits=0)

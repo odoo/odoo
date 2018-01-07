@@ -23,8 +23,8 @@ class ResConfigSettings(models.TransientModel):
     group_stock_adv_location = fields.Boolean("Multi-Step Routes",
         implied_group='stock.group_adv_location',
         help="Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks).")
-    group_warning_stock = fields.Boolean("Warnings", implied_group='stock.group_warning_stock')
-    propagation_minimum_delta = fields.Integer(related='company_id.propagation_minimum_delta', string="No Rescheduling Propagation")
+    group_warning_stock = fields.Boolean("Warnings for Stock", implied_group='stock.group_warning_stock')
+    propagation_minimum_delta = fields.Integer(related='company_id.propagation_minimum_delta', string="Minimum Delta for Propagation")
     use_propagation_minimum_delta = fields.Boolean(
         string="No Rescheduling Propagation",
         oldname='default_new_propagation_minimum_delta',

@@ -95,7 +95,7 @@
                     <field name="name"/>
                     <field name="account_id" groups="account.group_account_user"/>
                     <field name="base"/>
-                    <field name="amount_total"/>
+                    <field name="amount_total" string="Amount"/>
                     <field name="currency_id" invisible="1"/>
                 </tree>
             </field>
@@ -112,7 +112,7 @@
                         <field name="account_id" groups="account.group_account_user"/>
                         <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
                         <field name="manual"/>
-                        <field name="amount_total"/>
+                        <field name="amount_total" string="Amount"/>
                         <field name="base"/>
                         <field name="currency_id" invisible="1"/>
                     </group>
@@ -279,7 +279,7 @@
                                     <field name="discount" groups="base.group_no_one"/>
                                     <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'type':parent.type}"
                                         domain="[('type_tax_use','=','purchase'),('company_id', '=', parent.company_id)]"/>
-                                    <field name="price_subtotal"/>
+                                    <field name="price_subtotal" string="Amount"/>
                                     <field name="currency_id" invisible="1"/>
                                 </tree>
                             </field>
@@ -429,7 +429,7 @@
                                     <field name="discount" groups="base.group_no_one"/>
                                     <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'type':parent.type}"
                                         domain="[('type_tax_use','=','sale'),('company_id', '=', parent.company_id)]"/>
-                                    <field name="price_subtotal"/>
+                                    <field name="price_subtotal" string="Subtotal"/>
                                     <field name="currency_id" invisible="1"/>
                                 </tree>
                                 <kanban class="o_kanban_mobile">
