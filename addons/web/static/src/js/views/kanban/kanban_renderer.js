@@ -141,15 +141,23 @@ var KanbanRenderer = BasicRenderer.extend({
      *
      * @param {string} localID the column id
      * @param {Object} columnState
+     * @param {Object} [options]
+     * @param {boolean} [options.openQuickCreate] if true, directly opens the
+     *   QuickCreate widget in the updated column
      *
      * @returns {Deferred}
      */
-    updateColumn: function (localID, columnState) {
+    updateColumn: function (localID, columnState, options) {
         var newColumn = new KanbanColumn(this, columnState, this.columnOptions, this.recordOptions);
         var index = _.findIndex(this.widgets, {db_id: localID});
         var column = this.widgets[index];
         this.widgets[index] = newColumn;
-        return newColumn.insertAfter(column.$el).then(column.destroy.bind(column));
+        return newColumn.insertAfter(column.$el).then(function () {
+            if (options && options.openQuickCreate) {
+                newColumn.addQuickCreate();
+            }
+            column.destroy();
+        });
     },
     /**
      * Updates a given record with its new state.

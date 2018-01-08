@@ -355,11 +355,13 @@ var KanbanController = BasicController.extend({
                     self._updateEnv();
 
                     var columnState = self.model.getColumn(db_id);
-                    return self.renderer.updateColumn(columnState.id, columnState).then(function () {
-                        if (event.data.openRecord) {
-                            self.trigger_up('open_record', {id: db_id, mode: 'edit'});
-                        }
-                    });
+                    return self.renderer
+                        .updateColumn(columnState.id, columnState, {openQuickCreate: true})
+                        .then(function () {
+                            if (event.data.openRecord) {
+                                self.trigger_up('open_record', {id: db_id, mode: 'edit'});
+                            }
+                        });
                 });
         }
     },
