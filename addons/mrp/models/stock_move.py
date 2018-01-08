@@ -212,10 +212,24 @@ class StockMove(models.Model):
                 ml.with_context(bypass_reservation_update=True).write({'product_uom_qty': new_qty_reserved, 'qty_done': 0})
 
         if float_compare(qty_to_add, 0, precision_rounding=self.product_uom.rounding) > 0:
+            # Search for a sub-location where the product is available. This might not be perfectly
+            # correct if the quantity available is spread in several sub-locations, but at least
+            # we should be closer to the reality. Anyway, no reservation is made, so it is still
+            # possible to change it afterwards.
+            quants = self.env['stock.quant']._gather(self.product_id, self.location_id, lot_id=lot, strict=False)
+            available_quantity = self.product_id.uom_id._compute_quantity(
+                self.env['stock.quant']._get_available_quantity(
+                    self.product_id, self.location_id, lot_id=lot, strict=False
+                ), self.product_uom
+            )
+            location_id = False
+            if float_compare(qty_to_add, available_quantity, precision_rounding=self.product_uom.rounding) < 0:
+                location_id = quants.filtered(lambda r: r.quantity > 0)[-1:].location_id
+
             vals = {
                 'move_id': self.id,
                 'product_id': self.product_id.id,
-                'location_id': self.location_id.id,
+                'location_id': location_id.id if location_id else self.location_id.id,
                 'location_dest_id': self.location_dest_id.id,
                 'product_uom_qty': 0,
                 'product_uom_id': self.product_uom.id,
