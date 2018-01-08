@@ -2963,7 +2963,7 @@ QUnit.module('basic_fields', {
             "input should contain field value in edit mode");
 
         // change value in edit mode
-        form.$('input[type="text"].o_field_widget').val('new').trigger('input');
+        form.$('input[type="text"].o_field_widget').val('new').trigger('change');
 
         // save
         form.$buttons.find('.o_form_button_save').click();
@@ -3009,7 +3009,7 @@ QUnit.module('basic_fields', {
         assert.ok($cell.parent().hasClass('o_selected_row'), 'should be set as edit mode');
         assert.strictEqual($cell.find('input').val(), 'yop',
             'should have the corect value in internal input');
-        $cell.find('input').val('new').trigger('input');
+        $cell.find('input').val('new').trigger('change');
 
         // save
         list.$buttons.find('.o_list_button_save').click();
@@ -3071,7 +3071,7 @@ QUnit.module('basic_fields', {
             "input should contain field value in edit mode");
 
         // change value in edit mode
-        form.$('input[type="text"].o_field_widget').val('new').trigger('input');
+        form.$('input[type="text"].o_field_widget').val('new').trigger('change');
 
         // save
         form.$buttons.find('.o_form_button_save').click();
@@ -3119,7 +3119,7 @@ QUnit.module('basic_fields', {
         assert.ok($cell.parent().hasClass('o_selected_row'), 'should be set as edit mode');
         assert.strictEqual($cell.find('input').val(), 'yop',
             'should have the corect value in internal input');
-        $cell.find('input').val('new').trigger('input');
+        $cell.find('input').val('new').trigger('change');
 
         // save
         list.$buttons.find('.o_list_button_save').click();
@@ -3160,7 +3160,7 @@ QUnit.module('basic_fields', {
         });
 
         var val = '<script>throw Error();</script><script>throw Error();</script>';
-        form.$('input').val(val).trigger('input');
+        form.$('input').val(val).trigger('change');
 
         // save
         form.$buttons.find('.o_form_button_save').click();
