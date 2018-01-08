@@ -26,7 +26,7 @@ class MailMail(models.Model):
             mail_sudo.statistics_ids.write({'message_id': mail_sudo.message_id, 'state': 'outgoing'})
         return mail
 
-    def _get_tracking_url(self, partner=None):
+    def _get_tracking_url(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         track_url = werkzeug.urls.url_join(
             base_url, 'mail/track/%(mail_id)s/blank.gif?%(params)s' % {
@@ -53,12 +53,12 @@ class MailMail(models.Model):
         return url
 
     @api.multi
-    def send_get_mail_body(self, partner=None):
+    def _send_prepare_body(self):
         """ Override to add the tracking URL to the body and to add
         Statistic_id in shorted urls """
         # TDE: temporary addition (mail was parameter) due to semi-new-API
         self.ensure_one()
-        body = super(MailMail, self).send_get_mail_body(partner=partner)
+        body = super(MailMail, self)._send_prepare_body()
 
         if self.mailing_id and body and self.statistics_ids:
             for match in re.findall(URL_REGEX, self.body_html):
@@ -75,15 +75,15 @@ class MailMail(models.Model):
 
         # generate tracking URL
         if self.statistics_ids:
-            tracking_url = self._get_tracking_url(partner)
+            tracking_url = self._get_tracking_url()
             if tracking_url:
                 body = tools.append_content_to_html(body, tracking_url, plaintext=False, container_tag='div')
         return body
 
     @api.multi
-    def send_get_email_dict(self, partner=None):
+    def _send_prepare_values(self, partner=None):
         # TDE: temporary addition (mail was parameter) due to semi-new-API
-        res = super(MailMail, self).send_get_email_dict(partner)
+        res = super(MailMail, self)._send_prepare_values(partner)
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         if self.mailing_id and res.get('body') and res.get('email_to'):
             emails = tools.email_split(res.get('email_to')[0])
