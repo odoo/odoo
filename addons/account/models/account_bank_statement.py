@@ -541,7 +541,11 @@ class AccountBankStatementLine(models.Model):
     def get_move_lines_for_reconciliation_widget(self, partner_id=None, excluded_ids=None, str=False, offset=0, limit=None):
         """ Returns move lines for the bank statement reconciliation widget, formatted as a list of dicts
         """
-        aml_recs = self.get_move_lines_for_reconciliation(partner_id=partner_id, excluded_ids=excluded_ids, str=str, offset=offset, limit=limit)
+        # Domain for fiscal_year_date selection
+        additional_domain = None
+        if self.company_id.account_opening_date:
+            additional_domain = [('date_maturity', '>=', self.company_id.account_opening_date)]
+        aml_recs = self.get_move_lines_for_reconciliation(partner_id=partner_id, excluded_ids=excluded_ids, str=str, offset=offset, limit=limit, additional_domain=additional_domain)
         target_currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id
         return aml_recs.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency, target_date=self.date)
 
