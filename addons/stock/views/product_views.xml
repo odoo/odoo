@@ -97,18 +97,6 @@
                     </group>
                 </group>
                 <group name="inventory_valuation" position="after">
-                    <group string="Logistics" name="group_lots_and_weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
-                        <label for="weight"/>
-                        <div class="o_row" name="weight">
-                            <field name="weight"/>
-                            <span>kg</span>
-                        </div>
-                        <label for="volume"/>
-                        <div class="o_row" name="volume">
-                            <field name="volume" string="Volume"/>
-                            <span>m³</span>
-                        </div>
-                    </group>
                      <group string="Counterpart Locations" name="stock_property" groups="base.group_no_one">
                         <field name="property_stock_production" domain="[('usage','=','production')]"/>
                         <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>
