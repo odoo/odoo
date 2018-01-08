@@ -230,7 +230,7 @@ class TestHeavyMailPerformance(TransactionCase):
         })
         mail_ids = mail.ids
 
-        with self.assertQueryCount(admin=16, emp=24):  # com runbot 16 - 24 // test_mail only: 13 - 21
+        with self.assertQueryCount(admin=15, emp=23):  # test_mail only: 13 - 21
             self.env['mail.mail'].browse(mail_ids).send()
 
         self.assertEqual(mail.body_html, '<p>Test</p>')
