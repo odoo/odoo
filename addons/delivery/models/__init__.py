@@ -9,3 +9,4 @@ import sale_order
 import partner
 import stock_picking
 import stock_move
+import ir_model_fields
