@@ -19,7 +19,7 @@ The module adds following features:
 
     Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)
 """,
-    'depends': ['l10n_fr'],
+    'depends': ['l10n_fr', 'account_lock_constrains'],
     'installable': True,
     'auto_install': False,
     'application': False,

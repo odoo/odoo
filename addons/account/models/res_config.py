@@ -76,8 +76,8 @@ class AccountConfigSettings(models.TransientModel):
 
     fiscalyear_last_day = fields.Integer(related='company_id.fiscalyear_last_day', default=31)
     fiscalyear_last_month = fields.Selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], related='company_id.fiscalyear_last_month', default=12)
-    period_lock_date = fields.Date(string="Lock Date for Non-Advisers", related='company_id.period_lock_date', help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date. Use it for period locking inside an open fiscal year, for example.")
-    fiscalyear_lock_date = fields.Date(string="Lock Date", related='company_id.fiscalyear_lock_date', help="No users, including Advisers, can edit accounts prior to and inclusive of this date. Use it for fiscal year locking for example.")
+    period_lock_date = fields.Date(string="Lock Date for Non-Advisers", related='company_id.period_lock_date', help='The users who are not Advisors cannot change accounting entries prior to and inclusive of this date.')
+    fiscalyear_lock_date = fields.Date(string="Lock Date", related='company_id.fiscalyear_lock_date', help='All users, including Advisors, cannot change accounting entries prior to and inclusive of this date.')
 
     module_account_accountant = fields.Boolean(string='Full accounting features: journals, legal statements, chart of accounts, etc.',
         help="""If you do not check this box, you will be able to do invoicing & payments,
