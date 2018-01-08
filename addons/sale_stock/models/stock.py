@@ -31,7 +31,6 @@ class StockMove(models.Model):
         related to this stock move.
         """
         rslt = super(StockMove, self)._get_related_invoices()
-        import pdb; pdb.set_trace()
         rslt += self.picking_id.sale_id.invoice_ids
         return rslt
 

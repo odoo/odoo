@@ -202,6 +202,7 @@ class StockMove(models.Model):
 
     @api.model
     def _run_fifo(self, move, quantity=None):
+        _logger.warn("TOURNICOTI") #TODO OCO
         move.ensure_one()
         # Find back incoming stock moves (called candidates here) to value this move.
         valued_move_lines = move.move_line_ids.filtered(lambda ml: ml.location_id._should_be_valued() and not ml.location_dest_id._should_be_valued() and not ml.owner_id)

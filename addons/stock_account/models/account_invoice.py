@@ -63,10 +63,11 @@ class AccountInvoice(models.Model):
         super(AccountInvoice, self).invoice_validate()
         self.anglo_saxon_reconcile_valuation()
 
-    def anglo_saxon_reconcile_valuation(self):
+    def anglo_saxon_reconcile_valuation(self, equalize_interim_writings=False): #TODO OCO setter le paramètre à true dans stock.py (ATTENTION: c'est seulement cool quand on livre tout d'un coup :/ Il faudrait un genre de garde-fou si jamais il n'y a qu'une partie des produits qui est concernée ... Il va sans doute falloir bouger tout sur les stock moves quand même ... :/) ==> Risque d'être tendu :/ :> Si ça s'avère impossible, ne faire ça que quand le stock move achève la livraison (et uniquement sur les SO !!!)
         """ Reconciles the entries made in the interim accounts in anglosaxon accounting,
         reconciling stock valuation move lines with the invoice's.
         """
+        company_currency = invoice.company_id.currency_id
         for invoice in self:
             if invoice.company_id.anglo_saxon_accounting:
                 invoice_stock_moves_id_list = self._get_related_stock_moves().ids
@@ -84,6 +85,13 @@ class AccountInvoice(models.Model):
                                 to_reconcile += valuation_line
 
                         if to_reconcile:
+
+                            if equalize_interim_writings: #TODO OCO nettoyer
+                                balance = company_currency.round(sum(to_reconcile.mapped('balance')))
+                                if not company_currency.is_zero(balance):
+                                    #équilibrer avec une ligne sur le journal de stock.
+                                    #Je me demande si refaire carrément un account move pour la rectification n'est pas plus judicieux ...
+
                             to_reconcile.reconcile()
 
 
