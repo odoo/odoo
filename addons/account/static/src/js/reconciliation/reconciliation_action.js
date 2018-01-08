@@ -93,7 +93,6 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
                     'valuemax': self.model.valuemax,
                     'defaultDisplayQty': self.model.defaultDisplayQty,
                     'title': self.title,
-                    'show_rainbowman': self.action_manager && self.action_manager.webclient.show_rainbowman || false,
                 });
             });
     },

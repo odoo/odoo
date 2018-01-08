@@ -97,7 +97,6 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
         this.menu_dm = new concurrency.DropMisordered();
         this.action_mutex = new concurrency.Mutex();
         this.set('title_part', {"zopenerp": "Odoo"});
-        this.show_rainbowman = false;
     },
     start: function () {
         var self = this;
@@ -390,7 +389,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
         var data = e.data || {};
         var type = data.type || 'rainbow_man';
         if (type === 'rainbow_man') {
-            if (this.show_rainbowman) {
+            if (session.show_rainbowman) {
                 new RainbowMan(data).appendTo(this.$el);
             }
         } else {
