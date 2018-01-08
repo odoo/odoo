@@ -24,6 +24,10 @@ class ResConfigSettings(models.TransientModel):
         implied_group='product.group_product_pricelist')
     group_pricelist_item = fields.Boolean("Show pricelists to customers",
          implied_group='product.group_pricelist_item')
+    product_weight_in_lbs = fields.Selection([
+        ('0', 'Kilogram'),
+        ('1', 'Pound'),
+    ], 'Weight unit of measure', config_parameter='product.weight_in_lbs', default='0')
 
 
     @api.model

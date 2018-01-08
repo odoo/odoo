@@ -55,6 +55,18 @@
                                     <field name="currency_id" invisible="1"/>
                                     <field name="product_variant_id" invisible="1"/>
                                 </group>
+                                <group name="group_lots_and_weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
+                                    <label for="weight"/>
+                                    <div class="o_row" name="weight">
+                                        <field name="weight"/>
+                                        <span><field name="weight_uom_name"/></span>
+                                    </div>
+                                    <label for="volume"/>
+                                    <div class="o_row" name="volume">
+                                        <field name="volume" string="Volume"/>
+                                        <span>m³</span>
+                                    </div>
+                                </group>
                             </group>
                         </page>
                         <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales">
