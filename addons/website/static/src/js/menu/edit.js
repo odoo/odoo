@@ -2,7 +2,6 @@ odoo.define('website.editMenu', function (require) {
 'use strict';
 
 var core = require('web.core');
-var weContext = require('web_editor.context');
 var editor = require('web_editor.editor');
 var websiteNavbarData = require('website.navbar');
 
@@ -23,7 +22,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        this._editorAutoStart = (weContext.getExtra().editable && window.location.search.indexOf('enable_editor') >= 0);
+        var editable = !!(document.documentElement.dataset.editable || $('[data-oe-model]').length); // temporary hack, this should be done in python
+        this._editorAutoStart = (editable && window.location.search.indexOf('enable_editor') >= 0);
     },
     /**
      * Auto-starts the editor if necessary or add the welcome message otherwise.

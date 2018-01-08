@@ -3,7 +3,7 @@ odoo.define('website.utils', function (require) {
 
 var ajax = require('web.ajax');
 var core = require('web.core');
-var weContext = require('web_editor.context');
+var session = require('web.session')
 
 var qweb = core.qweb;
 
@@ -22,7 +22,7 @@ function autocompleteWithPages(self, $input) {
                 args: [null, request.term],
                 kwargs: {
                     limit: 15,
-                    context: weContext.get(),
+                    context: session.user_context,
                 },
             }).then(function (exists) {
                 var rs = _.map(exists, function (r) {

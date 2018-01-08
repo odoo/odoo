@@ -9,6 +9,7 @@
                         is_system: <t t-esc="json.dumps(request.env.user._is_system())"/>,
                         is_website_user: <t t-esc="json.dumps(request.env.user._is_public())"/>,
                         user_id: <t t-esc="json.dumps(request.env.user.id)" />,
+                        user_context: <t t-raw="json.dumps({'lang': lang})" />,
                         is_frontend: true,
                     };
                 </script>

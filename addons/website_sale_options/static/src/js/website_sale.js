@@ -3,7 +3,7 @@ odoo.define('website_sale_options.website_sale', function(require) {
 
 var ajax = require('web.ajax');
 require('web.dom_ready');
-var weContext = require("web_editor.context");
+var session = require('web.session')
 require('website_sale.website_sale');
 
 $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
@@ -17,7 +17,7 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
         ajax.jsonRpc("/shop/modal", 'call', {
                 'product_id': product_id,
                 'kwargs': {
-                   'context': _.extend({'quantity': quantity}, weContext.get())
+                   'context': _.extend({'quantity': quantity}, session.user_context)
                 },
             }).then(function (modal) {
                 var $modal = $(modal);
@@ -39,7 +39,7 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
                     var $a = $(this);
                     $form.ajaxSubmit({
                         url:  '/shop/cart/update_option',
-                        data: {lang: weContext.get().lang},
+                        data: {lang: session.user_context.lang},
                         success: function (quantity) {
                             if (!$a.hasClass('js_goto_shop')) {
                                 window.location.pathname = window.location.pathname.replace(/shop([\/?].*)?$/, "shop/cart");

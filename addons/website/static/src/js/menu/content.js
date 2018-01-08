@@ -3,8 +3,8 @@ odoo.define('website.contentMenu', function (require) {
 
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+var session = require('web.session')
 var time = require('web.time');
-var weContext = require('web_editor.context');
 var widget = require('web_editor.widget');
 var websiteNavbarData = require('website.navbar');
 var websiteRootData = require('website.WebsiteRoot');
@@ -67,7 +67,7 @@ var PagePropertiesDialog = widget.Dialog.extend({
     willStart: function () {
         var defs = [this._super.apply(this, arguments)];
         var self = this;
-        var context = weContext.get();
+        var context = session.user_context;
 
         defs.push(this._rpc({
             model: 'website.page',
@@ -93,7 +93,7 @@ var PagePropertiesDialog = widget.Dialog.extend({
      */
     start: function () {
         var self = this;
-        var context = weContext.get();
+        var context = session.user_context;
 
         var defs = [this._super.apply(this, arguments)];
 
@@ -180,7 +180,7 @@ var PagePropertiesDialog = widget.Dialog.extend({
      */
     save: function (data) {
         var self = this;
-        var context = weContext.get();
+        var context = session.user_context;
         var url = this.$('#page_url').val();
 
         var date_publish = this.$('#date_publish').val();
@@ -429,7 +429,7 @@ var EditMenuDialog = widget.Dialog.extend({
     willStart: function () {
         var defs = [this._super.apply(this, arguments)];
         var self = this;
-        var context = weContext.get();
+        var context = session.user_context;
         defs.push(this._rpc({
             model: 'website.menu',
             method: 'get_tree',
@@ -477,7 +477,7 @@ var EditMenuDialog = widget.Dialog.extend({
         var new_menu = this.$('.oe_menu_editor').nestedSortable('toArray', {startDepthCount: 0});
         var levels = [];
         var data = [];
-        var context = weContext.get();
+        var context = session.user_context;
         // Resequence, re-tree and remove useless data
         new_menu.forEach(function (menu) {
             if (menu.id) {
@@ -723,7 +723,7 @@ var PageManagement = Widget.extend({
     },
     _onClonePageButtonClick: function (ev) {
         var pageId = $(ev.currentTarget).data('id');
-        var context = weContext.get();
+        var context = session.user_context;
         this._rpc({
             model: 'website.page',
             method: 'clone_page',
@@ -738,7 +738,7 @@ var PageManagement = Widget.extend({
     _onDeletePageButtonClick: function (ev) {
         var pageId = $(ev.currentTarget).data('id');
         var self = this;
-        var context = weContext.get();
+        var context = session.user_context;
 
         var def = $.Deferred();
         // Search the page dependencies

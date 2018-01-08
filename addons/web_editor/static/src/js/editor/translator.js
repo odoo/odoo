@@ -5,7 +5,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var localStorage = require('web.local_storage');
 var Widget = require('web.Widget');
-var weContext = require('web_editor.context');
+var session = require('web.session');
 var rte = require('web_editor.rte');
 var weWidgets = require('web_editor.widget');
 
@@ -33,7 +33,7 @@ var RTETranslatorWidget = rte.Class.extend({
                 args: [
                     [+$el.data('oe-translation-id')],
                     this._getEscapedElement($el).html(),
-                    context || weContext.get()
+                    context || session.user_context
                 ],
             });
         }
@@ -157,7 +157,7 @@ var TranslatorMenuBar = Widget.extend({
         this.$target_attr = $target.find('.o_translatable_attribute');
         this.$target_attribute = $('.o_editable_translatable_attribute');
 
-        this.lang = lang || weContext.get().lang;
+        this.lang = lang || session.user_context.lang;
 
         this.rte = new RTETranslatorWidget(this, this._getRTEConfig);
     },
@@ -312,7 +312,7 @@ var TranslatorMenuBar = Widget.extend({
      * @returns {Deferred} (never resolved as the page is reloading anyway)
      */
     _save: function () {
-        return this.rte.save(weContext.get({lang: this.lang})).then(function () {
+        return this.rte.save(_.extend({}, session.user_contet, {lang: this.lang})).then(function () {
             window.location.href = window.location.href.replace(/&?edit_translations(=[^&]*)?/g, '');
             return $.Deferred();
         });
