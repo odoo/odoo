@@ -931,7 +931,7 @@ var CalendarView = View.extend({
                     }},
 
                     {text: _t("Delete"), close: true, click: function() {
-                        self.remove_event(id);
+                        self.remove_event(parseInt(id));
                     }},
 
                     {text: _t("Close"), close: true}
