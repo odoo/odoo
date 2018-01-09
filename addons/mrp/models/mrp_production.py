@@ -43,7 +43,7 @@ class MrpProduction(models.Model):
         return location and location.id or False
 
     name = fields.Char(
-        'Reference', copy=False, readonly=True, default=lambda x: _('New'))
+        'Reference', copy=False, readonly=True, states={'draft': [('readonly', False)]}, default=lambda x: _('New'))
     origin = fields.Char(
         'Source', copy=False,
         help="Reference of the document that generated this production order request.")
