@@ -517,32 +517,21 @@ body .modal {
 }
 
 // Pages Management
-.o_page_management_info{
-    .o_switch{
+.o_page_management_info {
+    .o_switch {
         padding-top: 7px;
     }
 }
-.popover_dep{
-    overflow-x: auto;
-}
-#edit_website_pages{
-    .fa-check{
-        color: #00a09d;
-    }
-    .fa-eye-slash{
-        color: #00a09d;
-    }
-    th{
+#edit_website_pages {
+    th {
         background-color: @odoo-brand-primary;
         color: white;
     }
-    td{
-        a.fa{
-            color: @odoo-brand-primary;
-            margin-left: 5px;
-        }
-        .text-muted{
-            opacity: 0.5;
-        }
+    td > a.fa {
+        margin-left: 5px;
+        color: @odoo-brand-primary;
+    }
+    .fa-check, .fa-eye-slash {
+        color: @odoo-brand-optional;
     }
 }

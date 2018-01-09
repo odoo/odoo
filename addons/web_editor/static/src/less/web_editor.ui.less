@@ -237,11 +237,6 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 }
 
 // DROPZONES
-@-webkit-keyframes dropZoneInsert {
-    to {
-        background-color: fade(@odoo-brand-primary, 20%);
-    }
-}
 @keyframes dropZoneInsert {
     to {
         background-color: fade(@odoo-brand-primary, 20%);
@@ -1073,7 +1068,7 @@ body.editor_enable {
 // Mixins for buttons with alpha bg-color
 .o_alpha_button_preview () {
     position: relative;
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAClJREFUeNpivHnzJgMSUFNTQ+YyMeAFNJVm/P//PzL/1q1bg8VpAAEGAMiICJs4Ce8uAAAAAElFTkSuQmCC');
+    background-image: url('/web_editor/static/src/img/transparent.png');
     background-size: 10px auto;
     z-index: 1;
 
@@ -1084,6 +1079,36 @@ body.editor_enable {
         z-index: -1;
         background-color: inherit;
     }
+}
+
+// Animations
+@keyframes fadeInDownSmall {
+    0% {
+        opacity: 0;
+        .translate(0, -5px);
+    }
+    100% {
+        opacity: 1;
+        .translate(0, 0);
+    }
+}
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+    }
+    25% {
+        opacity: 1;
+    }
+    75% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+@keyframes inputHighlighter {
+    from { background: @odoo-brand-optional; }
+    to   { width: 0; background: transparent; }
 }
 
 // INPUTS

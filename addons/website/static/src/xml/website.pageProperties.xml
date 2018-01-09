@@ -6,10 +6,14 @@
 <t t-name="website.get_tooltip_dependencies">
     <t t-foreach="dependencies" t-as="dep">
         <b><t t-esc="dep"/></b>
-        <ul class="popover_dep">
-            <t t-foreach="dep_value" t-as="item">
-                <li><a t-att-href="item_value['link']"><t t-esc="item_value['item']"/></a></li>
-            </t>
+        <ul>
+            <li t-foreach="dep_value" t-as="item">
+                <a t-att-href="item_value['link']"
+                   t-att-title="item_value['item']"
+                   class="o_text_overflow">
+                    <t t-esc="item_value['item']"/>
+                </a>
+            </li>
         </ul>
     </t>
 </t>
