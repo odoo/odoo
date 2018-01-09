@@ -75,6 +75,10 @@ in each method::
 
         # other tests...
 
+.. warning::
+
+    Function that do not start with 'test_' as function name will not be run!
+
 Running tests
 -------------
 
