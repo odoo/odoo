@@ -166,9 +166,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.basic_composer.on('input_focused', this, this._onComposerFocused);
         this.extended_composer.on('post_message', this, this._onPostMessage);
         this.extended_composer.on('input_focused', this, this._onComposerFocused);
-            // manually call do_search to generate the initial domain and filter
-            // the messages in the default channel
-            self.searchview.do_search();
 
         var defs = [];
         defs.push(this._renderButtons());
@@ -384,6 +381,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.searchview = new SearchView(this, this.dataset, this.fields_view, options);
         return this.searchview.appendTo($("<div>")).then(function () {
             self.$searchview_buttons = self.searchview.$buttons.contents();
+            // manually call do_search to generate the initial domain and filter
+            // the messages in the default channel
+            self.searchview.do_search();
         });
     },
     /**
