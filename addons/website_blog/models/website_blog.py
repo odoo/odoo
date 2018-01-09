@@ -133,7 +133,7 @@ class BlogPost(osv.Model):
         'author_avatar': fields.related(
             'author_id', 'image_small',
             string="Avatar", type="binary"),
-        'visits': fields.integer('No of Views'),
+        'visits': fields.integer('No of Views', copy=False),
         'ranking': fields.function(_compute_ranking, string='Ranking', type='float'),
     }
 
