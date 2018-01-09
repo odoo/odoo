@@ -166,6 +166,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.basic_composer.on('input_focused', this, this._onComposerFocused);
         this.extended_composer.on('post_message', this, this._onPostMessage);
         this.extended_composer.on('input_focused', this, this._onComposerFocused);
+            // manually call do_search to generate the initial domain and filter
+            // the messages in the default channel
+            self.searchview.do_search();
 
         var defs = [];
         defs.push(this._renderButtons());
@@ -908,7 +911,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             contexts: [session.user_context],
         });
         this.domain = result.domain;
-        this._fetchAndRenderThread();
+        if (this.channel) {
+            // initially (when _onSearch is called manually), there is no
+            // channel set yet, so don't try to fetch and render the thread as
+            // this will be done as soon as the default channel is set
+            this._fetchAndRenderThread();
+        }
     },
     /**
      * @private
