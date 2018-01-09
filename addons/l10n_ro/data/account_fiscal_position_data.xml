@@ -39,6 +39,11 @@
         <field name="note">Pozitia se refera la livrari extracomunitare care sunt taxabile.</field>
     </record>
 
+    <record id="fiscal_position_template_8" model="account.fiscal.position.template">
+        <field name="name">Regim TVA la Incasare</field>
+        <field name="chart_template_id" ref="ro_chart_template"/>
+    </record>
+
     <!-- account.fiscal.position.tax.template -->
     <!-- Inverse taxation -->
     <!-- Sales -->
@@ -360,4 +365,69 @@
         <field name="tax_src_id" ref="tvad_24"/>
         <field name="tax_dest_id" ref="tvatinea"/>
     </record>
+
+    <!-- TVA la Incasare -->
+    <!-- Sales -->    
+    <record id="afptt_tvaincasare_1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_8"/>
+        <field name="tax_src_id" ref="tvac_00"/>
+        <field name="tax_dest_id" ref="tvaic_00"/>
+    </record>
+    <record id="afptt_tvaincasare_2" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_8"/>
+        <field name="tax_src_id" ref="tvac_05"/>
+        <field name="tax_dest_id" ref="tvaic_05"/>
+    </record>
+    <record id="afptt_tvaincasare_3" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_8"/>
+        <field name="tax_src_id" ref="tvac_09"/>
+        <field name="tax_dest_id" ref="tvaic_09"/>
+    </record>
+    <record id="afptt_tvaincasare_4" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_8"/>
+        <field name="tax_src_id" ref="tvac_19"/>
+        <field name="tax_dest_id" ref="tvaic_19"/>
+    </record>
+    <record id="afptt_tvaincasare_4_1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_8"/>
+        <field name="tax_src_id" ref="tvac_20"/>
+        <field name="tax_dest_id" ref="tvaic_20"/>
+    </record>
+    <record id="afptt_tvaincasare_5" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_8"/>
+        <field name="tax_src_id" ref="tvac_24"/>
+        <field name="tax_dest_id" ref="tvaic_24"/>
+    </record>
+    <!-- Purchases -->
+    <record id="afptt_tvaincasare_6" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_8"/>
+        <field name="tax_src_id" ref="tvad_00"/>
+        <field name="tax_dest_id" ref="tvaid_00"/>
+    </record>
+    <record id="afptt_tvaincasare_7" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_8"/>
+        <field name="tax_src_id" ref="tvad_05"/>
+        <field name="tax_dest_id" ref="tvaid_05"/>
+    </record>
+    <record id="afptt_tvaincasare_8" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_8"/>
+        <field name="tax_src_id" ref="tvad_09"/>
+        <field name="tax_dest_id" ref="tvaid_09"/>
+    </record>
+    <record id="afptt_tvaincasare_9" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_8"/>
+        <field name="tax_src_id" ref="tvad_19"/>
+        <field name="tax_dest_id" ref="tvaid_19"/>
+    </record>
+    <record id="afptt_tvaincasare_9_1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_8"/>
+        <field name="tax_src_id" ref="tvad_20"/>
+        <field name="tax_dest_id" ref="tvaid_20"/>
+    </record>
+    <record id="afptt_tvaincasare_10" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_8"/>
+        <field name="tax_src_id" ref="tvad_24"/>
+        <field name="tax_dest_id" ref="tvaid_24"/>
+    </record>
+    
 </odoo>
