@@ -31,9 +31,6 @@ var utils = {
      * @return {string} bin_size (human-readable)
      */
     binaryToBinsize: function (value) {
-        if (!value) {
-            return this.human_size(0);
-        }
         if (!this.is_bin_size(value)) {
             // Computing approximate size out of base64 encoded string
             // http://en.wikipedia.org/wiki/Base64#MIME
