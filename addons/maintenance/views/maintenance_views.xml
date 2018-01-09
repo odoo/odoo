@@ -149,7 +149,6 @@
                                 </div>
                                 <div class="o_kanban_record_body">
                                     <span name="owner_user_id" t-if="record.owner_user_id.raw_value">Requested by : <field name="owner_user_id"/><br/></span>
-                                    <span name="technician_user_id" t-if="record.technician_user_id.raw_value">Responsible : <field name="technician_user_id"/><br/></span>
                                     <span class="oe_grey" t-if="record.equipment_id.raw_value"><field name="equipment_id"/><br/></span>
                                     <span t-if="record.category_id.raw_value"><field name="category_id"/></span>
                                 </div>
@@ -426,8 +425,6 @@
                                 </div>
                                 <div class="o_kanban_record_body">
                                     <div t-if="record.serial_no.raw_value"><field name="serial_no"/></div>
-                                    <div t-if="!record.owner_user_id.raw_value">Unassigned</div>
-                                    <div t-if="record.owner_user_id.raw_value"><field name="owner_user_id"/></div>
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
@@ -582,19 +579,17 @@
                     </h1>
                 </div>
                 <group>
-                    <group col="4">
-                        <field name="technician_user_id"/>
-                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                    </group>
-                    <group name="group_alias" attrs="{'invisible': [('alias_domain', '=', False)]}" groups="base.group_no_one">
-                        <label for="alias_name" string="Email Alias"/>
-                        <div name="alias_def">
-                            <field name="alias_id" class="oe_read_only oe_inline" string="Email Alias" required="0"/>
-                            <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;">
-                                <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
-                            </div>
+                    <field name="technician_user_id" class="oe_inline"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" class="oe_inline"/>
+                </group>
+                <group name="group_alias" attrs="{'invisible': [('alias_domain', '=', False)]}" groups="base.group_no_one">
+                    <label for="alias_name" string="Email Alias"/>
+                    <div name="alias_def">
+                        <field name="alias_id" class="oe_read_only oe_inline" string="Email Alias" required="0"/>
+                        <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;">
+                            <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                         </div>
-                    </group>
+                    </div>
                 </group>
                 <field name="note" nolabel="1"/>
                 </sheet>
