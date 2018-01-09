@@ -97,11 +97,13 @@ var x2ManyCommands = {
     // (0, virtualID, {values})
     CREATE: 0,
     create: function (virtualID, values) {
+        delete values.id;
         return [x2ManyCommands.CREATE, virtualID || false, values];
     },
     // (1, id, {values})
     UPDATE: 1,
     update: function (id, values) {
+        delete values.id;
         return [x2ManyCommands.UPDATE, id, values];
     },
     // (2, id[, _])
@@ -2669,7 +2671,6 @@ var BasicModel = AbstractModel.extend({
                     _.each(relRecordUpdated, function (relRecord) {
                         var changes = self._generateChanges(relRecord, options);
                         if (!_.isEmpty(changes)) {
-                            delete changes.id;
                             var command = x2ManyCommands.update(relRecord.res_id, changes);
                             commands[fieldName].push(command);
                         }
@@ -2689,7 +2690,6 @@ var BasicModel = AbstractModel.extend({
                             relRecord = _.findWhere(relRecordUpdated, {res_id: list.res_ids[i]});
                             changes = relRecord ? this._generateChanges(relRecord, options) : {};
                             if (!_.isEmpty(changes)) {
-                                delete changes.id;
                                 command = x2ManyCommands.update(relRecord.res_id, changes);
                                 didChange = true;
                             } else {
@@ -2700,7 +2700,7 @@ var BasicModel = AbstractModel.extend({
                             // this is a new id (maybe existing in DB, but new in JS)
                             relRecord = _.findWhere(relRecordAdded, {res_id: list.res_ids[i]});
                             changes = this._generateChanges(relRecord, options);
-                            if ('id' in changes) {
+                            if (changes.id) {
                                 // the subrecord already exists in db
                                 delete changes.id;
                                 if (this.isNew(record.id)) {
