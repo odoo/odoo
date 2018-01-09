@@ -97,7 +97,9 @@ class ProductProduct(models.Model):
         """ Changes the Standard Price of Product and creates an account move accordingly."""
         AccountMove = self.env['account.move']
 
-        locations = self.env['stock.location'].search([('usage', '=', 'internal'), ('company_id', '=', self.env.user.company_id.id)])
+        quant_locs = self.env['stock.quant'].sudo().read_group([('product_id', 'in', self.ids)], ['location_id'], ['location_id'])
+        quant_loc_ids = [loc['location_id'][0] for loc in quant_locs]
+        locations = self.env['stock.location'].search([('usage', '=', 'internal'), ('company_id', '=', self.env.user.company_id.id), ('id', 'in', quant_loc_ids)])
 
         product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in self}
 
