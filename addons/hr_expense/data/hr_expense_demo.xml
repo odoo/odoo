@@ -67,5 +67,204 @@
             <field eval="5.0" name="quantity"/>
         </record>
 
+        <record id="hr_expense_sheet_1" model="hr.expense.sheet">
+            <field name="name">Trip to New Jersey</field>
+            <field name="state">cancel</field>
+        </record>
+        <record id="hr_expense_sheet_2" model="hr.expense.sheet">
+            <field name="name">Accomodation in US</field>
+            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="state">cancel</field>
+        </record>
+        <record id="hr_expense_sheet_3" model="hr.expense.sheet">
+            <field name="name">On Site Consultance For San francisco Customer</field>
+            <field name="employee_id" ref="hr.employee_jod"/>
+        </record>
+        <record id="hr_expense_sheet_4" model="hr.expense.sheet">
+            <field name="name">GAP Analysis For US Customer</field>
+            <field name="employee_id" ref="hr.employee_qdp"/>
+        </record>
+        <record id="hr_expense_sheet_5" model="hr.expense.sheet">
+            <field name="name">On Site system setup to customer</field>
+            <field name="state">post</field>
+        </record>
+        <record id="hr_expense_sheet_6" model="hr.expense.sheet">
+            <field name="name">Training to customer employees</field>
+            <field name="state">approve</field>
+        </record>
+        <record id="hr_expense_sheet_7" model="hr.expense.sheet">
+            <field name="name">Application deployement of latest version</field>
+            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="state">post</field>
+        </record>
+        <record id="hr_expense_sheet_8" model="hr.expense.sheet">
+            <field name="name">Visit to Canada for promotional programs</field>
+            <field name="state">approve</field>
+            <field name="employee_id" ref="hr.employee_qdp"/>
+        </record>
+
+        <record id="hotel_bill_expense_NJ" model="hr.expense">
+            <field name="name">NJ Hotel Expenses</field>
+            <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
+            <field name="product_id" ref="product.expense_hotel"/>
+            <field name="unit_amount" eval="500.0"/>
+            <field name="product_uom_id" ref="product.product_uom_day"/>
+            <field name="quantity" eval="3.0" />
+            <field name="date" eval="(DateTime.today() + relativedelta(days=-5))"/>
+            <field name="sheet_id" ref="hr_expense_sheet_1"/>
+        </record>
+        <record id="air_expense_NJ" model="hr.expense">
+            <field name="name">Air travel expenses</field>
+            <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
+            <field name="product_id" ref="air_ticket"/>
+            <field name="unit_amount" eval="500.0"/>
+            <field name="product_uom_id" ref="product.product_uom_day"/>
+            <field name="quantity" eval="2.0" />
+            <field name="date" eval="(DateTime.today() + relativedelta(days=-5))"/>
+            <field name="sheet_id" ref="hr_expense_sheet_1"/>
+        </record>
+        <record id="travel_by_air_expense_to_SAN" model="hr.expense">
+            <field name="name">Travel by Air for on Site Consultance For San francisco Customer</field>
+            <field name="analytic_account_id" ref="analytic.analytic_our_super_product"/>
+            <field name="product_id" ref="air_ticket"/>
+            <field name="unit_amount" eval="800.0"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="quantity" eval="1.0" />
+            <field name="sheet_id" ref="hr_expense_sheet_3"/>
+            <field name="date" eval="(DateTime.today() + relativedelta(days=-8))"/>
+            <field name="employee_id" ref="hr.employee_jod"/>
+        </record>
+        <record id="hotel_bill_expense_SAN" model="hr.expense">
+            <field name="name">San francisco Hotel Expenses</field>
+            <field name="analytic_account_id" ref="analytic.analytic_our_super_product"/>
+            <field name="product_id" ref="product.expense_hotel"/>
+            <field name="unit_amount" eval="600.0"/>
+            <field name="product_uom_id" ref="product.product_uom_day"/>
+            <field name="quantity" eval="2.0" />
+            <field name="date" eval="(DateTime.today() + relativedelta(days=-8))"/>
+            <field name="sheet_id" ref="hr_expense_sheet_3"/>
+        </record>
+
+        <record id="hr_expense_air_ticket_1" model="ir.attachment">
+            <field name="name">john_doe_air_ticket.pdf</field>
+            <field name="datas_fname">john_doe_air_ticket.pdf</field>
+            <field name="datas" type="base64" file="hr_expense/data/john_doe_air_ticket.pdf"></field>
+            <field name="res_model">hr.expense</field>
+            <field name="res_id" ref="travel_by_air_expense_to_SAN"/>
+        </record>
+
+        <record id="travel_by_car_expense_to_PEN" model="hr.expense">
+            <field name="name">Travel by car US from New York to Pennsylvania</field>
+            <field name="analytic_account_id" ref="analytic.analytic_our_super_product"/>
+            <field name="product_id" ref="car_travel"/>
+            <field name="unit_amount" eval="200.0"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="quantity" eval="1.0" />
+            <field name="date" eval="(DateTime.today() + relativedelta(days=-3))"/>
+            <field name="sheet_id" ref="hr_expense_sheet_4"/>
+        </record>
+        <record id="hotel_expense_in_PEN" model="hr.expense">
+            <field name="name">Hotel expense in Pennsylvania</field>
+            <field name="analytic_account_id" ref="analytic.analytic_our_super_product"/>
+            <field name="product_id" ref="product.expense_hotel"/>
+            <field name="unit_amount" eval="250.0"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="quantity" eval="1.0" />
+            <field name="date" eval="(DateTime.today() + relativedelta(days=-3))"/>
+            <field name="sheet_id" ref="hr_expense_sheet_4"/>
+        </record>
+        <record id="travel_by_air_expense_to_US" model="hr.expense">
+            <field name="name">Travel by Air for GAP Analysis For US Customer</field>
+            <field name="analytic_account_id" ref="analytic.analytic_our_super_product"/>
+            <field name="product_id" ref="air_ticket"/>
+            <field name="unit_amount" eval="600.0" />
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="quantity" eval="1.0"/>
+            <field name="date" eval="(DateTime.today() + relativedelta(days=-6))"/>
+            <field name="employee_id" ref="hr.employee_qdp"/>
+        </record>
+        <record id="hotel_bill_expense_US" model="hr.expense">
+            <field name="name">Hotel Expenses</field>
+            <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
+            <field name="product_id" ref="product.expense_hotel"/>
+            <field name="unit_amount" eval="400.0" />
+            <field name="product_uom_id" ref="product.product_uom_day"/>
+            <field name="quantity" eval="5.0"/>
+            <field name="sheet_id" ref="hr_expense_sheet_2"/>
+            <field name="date" eval="(DateTime.today() + relativedelta(days=-6))"/>
+            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="state">draft</field>
+        </record>
+        <record id="travel_by_car_expense_to_Paris" model="hr.expense">
+            <field name="name">System setup at customer's location</field>
+            <field name="analytic_account_id" ref="analytic.analytic_our_super_product"/>
+            <field name="product_id" ref="car_travel"/>
+            <field name="unit_amount" eval="400.0"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="quantity" eval="1.0" />
+            <field name="date" eval="(DateTime.today() + relativedelta(days=-4))"/>
+            <field name="sheet_id" ref="hr_expense_sheet_5"/>
+        </record>
+        <record id="hotel_expense_in_Paris" model="hr.expense">
+            <field name="name">Residence at customer's location</field>
+            <field name="analytic_account_id" ref="analytic.analytic_our_super_product"/>
+            <field name="product_id" ref="product.expense_hotel"/>
+            <field name="unit_amount" eval="300.0"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="quantity" eval="1.0" />
+            <field name="date" eval="(DateTime.today() + relativedelta(days=-3))"/>
+            <field name="sheet_id" ref="hr_expense_sheet_5"/>
+        </record>
+        <record id="air_travel_expense_to_Paris" model="hr.expense">
+            <field name="name">Travelling at customer's location</field>
+            <field name="analytic_account_id" ref="analytic.analytic_our_super_product"/>
+            <field name="product_id" ref="air_ticket"/>
+            <field name="unit_amount" eval="600.0"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="quantity" eval="1.0" />
+            <field name="date" eval="(DateTime.today() + relativedelta(days=-3))"/>
+            <field name="sheet_id" ref="hr_expense_sheet_5"/>
+        </record>
+        <record id="hotel_bill_expense_NY" model="hr.expense">
+            <field name="name">Hotel Expenses at New York city(customer training)</field>
+            <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
+            <field name="product_id" ref="product.expense_hotel"/>
+            <field name="unit_amount" eval="200.0"/>
+            <field name="product_uom_id" ref="product.product_uom_day"/>
+            <field name="quantity" eval="5.0"/>
+            <field name="date" eval="(DateTime.today() + relativedelta(days=-2))"/>
+            <field name="sheet_id" ref="hr_expense_sheet_6"/>
+        </record>
+        <record id="travel_bill_expense_NY" model="hr.expense">
+            <field name="name">Travel Expenses from hotel to customer location</field>
+            <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
+            <field name="product_id" ref="car_travel"/>
+            <field name="unit_amount" eval="2400.0"/>
+            <field name="product_uom_id" ref="product.product_uom_day"/>
+            <field name="quantity" eval="1.0"/>
+            <field name="date" eval="(DateTime.today() + relativedelta(days=-2))"/>
+            <field name="sheet_id" ref="hr_expense_sheet_6"/>
+        </record>
+        <record id="hotel_bill_expense_PN" model="hr.expense">
+            <field name="name">Hotel Expenses</field>
+            <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
+            <field name="product_id" ref="product.expense_hotel"/>
+            <field name="unit_amount" eval="400.0"/>
+            <field name="product_uom_id" ref="product.product_uom_day"/>
+            <field name="quantity" eval="2.0"/>
+            <field name="sheet_id" ref="hr_expense_sheet_7"/>
+            <field name="date" eval="(DateTime.today() + relativedelta(days=-9))"/>
+            <field name="employee_id" ref="hr.employee_qdp"/>
+        </record>
+        <record id="travel_by_car_expense_to_Canada" model="hr.expense">
+            <field name="name">Trip to Canada customers for promotional programs</field>
+            <field name="analytic_account_id" ref="analytic.analytic_our_super_product"/>
+            <field name="product_id" ref="car_travel"/>
+            <field name="unit_amount" eval="400.0"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="quantity" eval="2.0"/>
+            <field name="sheet_id" ref="hr_expense_sheet_8"/>
+            <field name="employee_id" ref="hr.employee_qdp"/>
+        </record>
     </data>
 </odoo>
