@@ -84,6 +84,7 @@ odoo.define('payment.payment_form', function (require) {
                     }
 
                     $(button).attr('disabled', true);
+                    $(button).children('.fa-plus-circle').removeClass('fa-plus-circle')
                     $(button).prepend('<span class="o_loader"><i class="fa fa-refresh fa-spin"></i>&nbsp;</span>');
 
                     var verify_validity = this.$el.find('input[name="verify_validity"]');
@@ -120,10 +121,12 @@ odoo.define('payment.payment_form', function (require) {
                         }
                         // here we remove the 'processing' icon from the 'add a new payment' button
                         $(button).attr('disabled', false);
+                        $(button).children('.fa').addClass('fa-plus-circle')
                         $(button).find('span.o_loader').remove();
                     }).fail(function (message, data) {
                         // if the rpc fails, pretty obvious
                         $(button).attr('disabled', false);
+                        $(button).children('.fa').addClass('fa-plus-circle')
                         $(button).find('span.o_loader').remove();
 
                         self.displayError(
@@ -244,6 +247,7 @@ odoo.define('payment.payment_form', function (require) {
                 }
                 // We add a 'processing' icon into the 'add a new payment' button
                 $(button).attr('disabled', true);
+                $(button).children('.fa-plus-circle').removeClass('fa-plus-circle')
                 $(button).prepend('<span class="o_loader"><i class="fa fa-refresh fa-spin"></i>&nbsp;</span>');
 
                 // we force the check when adding a card trough here
@@ -283,10 +287,12 @@ odoo.define('payment.payment_form', function (require) {
                     }
                     // here we remove the 'processing' icon from the 'add a new payment' button
                     $(button).attr('disabled', false);
+                    $(button).children('.fa').addClass('fa-plus-circle')
                     $(button).find('span.o_loader').remove();
                 }).fail(function (message, data) {
                     // if the rpc fails, pretty obvious
                     $(button).attr('disabled', false);
+                    $(button).children('.fa').addClass('fa-plus-circle')
                     $(button).find('span.o_loader').remove();
 
                     self.displayError(
