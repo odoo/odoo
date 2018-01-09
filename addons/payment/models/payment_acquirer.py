@@ -101,19 +101,19 @@ class PaymentAcquirer(models.Model):
         help='Message displayed after having done the payment process.')
     pending_msg = fields.Html(
         'Pending Message', translate=True,
-        default='<i>Pending,</i> Your online payment has been successfully processed. But your order is not validated yet.',
+        default=lambda s: _('<i>Pending,</i> Your online payment has been successfully processed. But your order is not validated yet.'),
         help='Message displayed, if order is in pending state after having done the payment process.')
     done_msg = fields.Html(
         'Done Message', translate=True,
-        default='<i>Done,</i> Your online payment has been successfully processed. Thank you for your order.',
+        default=lambda s: _('<i>Done,</i> Your online payment has been successfully processed. Thank you for your order.'),
         help='Message displayed, if order is done successfully after having done the payment process.')
     cancel_msg = fields.Html(
         'Cancel Message', translate=True,
-        default='<i>Cancel,</i> Your payment has been cancelled.',
+        default=lambda s: _('<i>Cancel,</i> Your payment has been cancelled.'),
         help='Message displayed, if order is cancel during the payment process.')
     error_msg = fields.Html(
         'Error Message', translate=True,
-        default='<i>Error,</i> Please be aware that an error occurred during the transaction. The order has been confirmed but will not be paid. Do not hesitate to contact us if you have any questions on the status of your order.',
+        default=lambda s: _('<i>Error,</i> Please be aware that an error occurred during the transaction. The order has been confirmed but will not be paid. Do not hesitate to contact us if you have any questions on the status of your order.'),
         help='Message displayed, if error is occur during the payment process.')
     save_token = fields.Selection([
         ('none', 'Never'),

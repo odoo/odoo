@@ -26,13 +26,13 @@ class ProjectTaskType(models.Model):
         string='Starred Explanation', translate=True,
         help='Explanation text to help users using the star on tasks or issues in this stage.')
     legend_blocked = fields.Char(
-        'Red Kanban Label', default='Blocked', translate=True, required=True,
+        'Red Kanban Label', default=lambda s: _('Blocked'), translate=True, required=True,
         help='Override the default value displayed for the blocked state for kanban selection, when the task or issue is in that stage.')
     legend_done = fields.Char(
-        'Green Kanban Label', default='Ready for Next Stage', translate=True, required=True,
+        'Green Kanban Label', default=lambda s: _('Ready for Next Stage'), translate=True, required=True,
         help='Override the default value displayed for the done state for kanban selection, when the task or issue is in that stage.')
     legend_normal = fields.Char(
-        'Grey Kanban Label', default='In Progress', translate=True, required=True,
+        'Grey Kanban Label', default=lambda s: _('In Progress'), translate=True, required=True,
         help='Override the default value displayed for the normal state for kanban selection, when the task or issue is in that stage.')
     mail_template_id = fields.Many2one(
         'mail.template',
