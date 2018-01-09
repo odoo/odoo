@@ -137,7 +137,7 @@ class MaintenanceEquipment(models.Model):
     assign_date = fields.Date('Assigned Date', track_visibility='onchange')
     cost = fields.Float('Cost')
     note = fields.Text('Note')
-    warranty = fields.Date('Warranty')
+    warranty_date = fields.Date('Warranty Expiration Date', oldname='warranty')
     color = fields.Integer('Color Index')
     scrap_date = fields.Date('Scrap Date')
     maintenance_ids = fields.One2many('maintenance.request', 'equipment_id')
