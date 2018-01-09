@@ -5452,8 +5452,9 @@ QUnit.module('relational_fields', {
                 '</form>',
             mockRPC: function (route, args) {
                 if (args.method === 'create') {
+                    var virtualID = args.args[0].turtles[0][1];
                     assert.deepEqual(args.args[0].turtles,
-                        [[0, false, {turtle_foo: "cat"}]],
+                        [[0, virtualID, {turtle_foo: "cat"}]],
                         'should send proper commands');
                 }
                 return this._super.apply(this, arguments);
