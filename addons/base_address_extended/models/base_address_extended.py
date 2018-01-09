@@ -28,9 +28,9 @@ class Partner(models.Model):
 
     street_name = fields.Char('Street Name', compute='_split_street',
                               inverse='_set_street', store=True)
-    street_number = fields.Char('House Number', compute='_split_street',
+    street_number = fields.Char('House', compute='_split_street', help="House Number",
                                 inverse='_set_street', store=True)
-    street_number2 = fields.Char('Door Number', compute='_split_street',
+    street_number2 = fields.Char('Door', compute='_split_street', help="Door Number",
                                  inverse='_set_street', store=True)
 
     def get_street_fields(self):
