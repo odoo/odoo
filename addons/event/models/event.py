@@ -291,6 +291,12 @@ class EventEvent(models.Model):
             self.message_subscribe([vals['organizer_id']])
         return res
 
+    @api.multi
+    def copy(self, default=None):
+        self.ensure_one()
+        default = dict(default or {}, name=_("%s (copy)") % (self.name))
+        return super(EventEvent, self).copy(default)
+
     @api.one
     def button_draft(self):
         self.state = 'draft'

@@ -298,14 +298,14 @@ Best Regards,''')
         unaffected_earnings_type = self.env.ref("account.data_unaffected_earnings")
         account = self.env['account.account'].search([('company_id', '=', self.id),
                                                       ('user_type_id', '=', unaffected_earnings_type.id)])
-        if not account:
-            account = self.env['account.account'].create({
+        if account:
+            return account[0]
+        return self.env['account.account'].create({
                 'code': '999999',
                 'name': _('Undistributed Profits/Losses'),
                 'user_type_id': unaffected_earnings_type.id,
                 'company_id': self.id,
             })
-        return account
 
     def get_opening_move_differences(self, opening_move_lines):
         currency = self.currency_id
