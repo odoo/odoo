@@ -6916,7 +6916,6 @@ QUnit.module('relational_fields', {
                 if (args.method === 'read' && args.model === 'partner') {
                     assert.deepEqual(args.kwargs.context, {
                         active_field: 2,
-                        bin_size: true,
                         someKey: 'some value',
                     }, "sent context should be correct");
                 }
