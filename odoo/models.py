@@ -1619,13 +1619,14 @@ class BaseModel(object):
             if parent_field in values
         }
 
-        # compute missing fields
+        # compute missing fields current model or only direct inherited models
         missing_defaults = {
             name
             for name, field in self._fields.iteritems()
             if name not in values
             if name not in MAGIC_COLUMNS
-            if not (field.inherited and field.related_field.model_name in avoid_models)
+            if not (field.inherited and (field.base_field.model_name != field.related_field.model_name
+                                         or field.related_field.model_name in avoid_models))
         }
 
         if not missing_defaults:

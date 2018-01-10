@@ -65,7 +65,10 @@ return Widget.extend({
         for (var i = 0; i < raw_data.length; i++) {
             data_pt = raw_data[i].attributes;
             values = [];
-            if (this.groupbys.length === 1) data_pt.value = [data_pt.value];
+            if (this.groupbys.length === 1) {
+                data_pt.value = [data_pt.value];
+                data_pt.grouped_on = [data_pt.grouped_on];
+            }
             for (j = 0; j < data_pt.value.length; j++) {
                 var field = _.isArray(data_pt.grouped_on) ? data_pt.grouped_on[j] : data_pt.grouped_on;
                 values[j] = this.sanitize_value(data_pt.value[j], field);
