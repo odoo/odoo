@@ -365,12 +365,6 @@ return core.Class.extend({
                                 child.attrs.modifiers.column_invisible || false;
                         }
                     });
-
-                    // detect editables list has they behave differently with respect
-                    // to the sorting (changes are not sorted directly)
-                    if (mode === 'list' && view.arch.attrs.editable) {
-                         attrs.keepChangesUnsorted = true;
-                    }
                 }
             }
             if (attrs.Widget.prototype.fieldsToFetch) {

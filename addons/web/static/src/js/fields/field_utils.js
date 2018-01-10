@@ -28,6 +28,20 @@ var _t = core._t;
 //------------------------------------------------------------------------------
 
 /**
+ * 
+ * @param {string} value base64 representation of the binary
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored) 
+ * @param {Object} [options] additional options (note: this parameter is ignored)
+ */
+function formatBinary(value, field, options) {
+    if (!value) {
+        return '';
+    }
+    return utils.human_size(value.length / 1.37); // base64 estimated size: http://en.wikipedia.org/wiki/Base64#MIME
+}
+
+/**
  * @todo Really? it returns a jQuery element...  We should try to avoid this and
  * let DOM utility functions handle this directly. And replace this with a
  * function that returns a string so we can get rid of the forceString.
@@ -286,8 +300,12 @@ function formatMonetary(value, field, options) {
         currency = session.get_currency(currency_id);
     }
 
+    var digits = (currency && currency.digits) || options.digits;
+    if (options.field_digits === true) {
+        digits = field.digits || digits;
+    }
     var formatted_value = formatFloat(value, field, {
-        digits:  (currency && currency.digits) || options.digits,
+        digits: digits,
     });
 
     if (!currency || options.noSymbol) {
@@ -557,7 +575,7 @@ function parseMany2one(value) {
 
 return {
     format: {
-        binary: _.identity, // todo
+        binary: formatBinary,
         boolean: formatBoolean,
         char: formatChar,
         date: formatDate,

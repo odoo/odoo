@@ -94,7 +94,7 @@ class HrContract(models.Model):
             elif contract.transport_mode == 'public_transport':
                 contract.transport_employer_cost = contract.public_transport_reimbursed_amount
             elif contract.transport_mode == 'others':
-                contract.transport_employer_cost == contract.others_reimbursed_amount
+                contract.transport_employer_cost = contract.others_reimbursed_amount
 
     @api.depends('commission_on_target')
     def _compute_warrants_cost(self):
@@ -175,6 +175,16 @@ class HrContract(models.Model):
         for contract in self:
             contract.double_holidays = contract.wage * 0.92
             contract.thirteen_month = contract.wage
+
+    @api.onchange('transport_mode')
+    def _onchange_transport_mode(self):
+        if self.transport_mode != 'company_car':
+            self.fuel_card = 0
+            self.company_car_total_depreciated_cost = 0
+        if self.transport_mode != 'others':
+            self.others_reimbursed_amount = 0
+        if self.transport_mode != 'public_transports':
+            self.public_transport_reimbursed_amount = 0
 
     @api.onchange('mobile', 'mobile_plus')
     def _onchange_mobile(self):

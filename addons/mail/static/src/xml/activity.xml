@@ -44,7 +44,7 @@
                                     </dd>
                                     <dt>Assigned to</dt>
                                     <dd class="mb8">
-                                        <img t-attf-src="/web/image#{activity.user_id[0] >= 0 ? ('/res.users/' + activity.user_id[0] + '/image_small') : ''}" height="18" width="18" class="img-circle mr4" t-att-title="activity.create_uid[1]"/>
+                                        <img t-attf-src="/web/image#{activity.user_id[0] >= 0 ? ('/res.users/' + activity.user_id[0] + '/image_small') : ''}" height="18" width="18" class="img-circle mr4" t-att-title="activity.user_id[1]"/>
                                         <b><t t-esc="activity.user_id[1]"/></b>
                                         <em>, due on </em><span t-attf-class="o_activity_color_#{activity.state}"><t t-esc="activity.date_deadline.format(date_format)"/></span>
                                     </dd>

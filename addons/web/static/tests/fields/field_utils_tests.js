@@ -127,6 +127,15 @@ QUnit.test('format one2many', function(assert) {
     assert.strictEqual(fieldUtils.format.one2many({data: [1, 2]}), '2 records');
 });
 
+QUnit.test('format binary', function (assert) {
+    assert.expect(1);
+
+    // base64 estimated size (bytes) = value.length / 1.37 (http://en.wikipedia.org/wiki/Base64#MIME)
+    // Here: 4 / 1.37 = 2.91970800 => 2.92 (rounded 2 decimals by utils.human_size)
+    assert.strictEqual(fieldUtils.format.binary('Cg=='), '2.92 Bytes');
+
+});
+
 QUnit.test('parse float', function(assert) {
     assert.expect(10);
 

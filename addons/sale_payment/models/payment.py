@@ -13,6 +13,7 @@ class PaymentTransaction(models.Model):
 
     # YTI FIXME: The auto_join seems useless
     sale_order_id = fields.Many2one('sale.order', string='Sales Order', auto_join=True)
+    so_state = fields.Selection('sale.order', string='Sale Order State', related='sale_order_id.state')
 
     @api.model
     def form_feedback(self, data, acquirer_name):

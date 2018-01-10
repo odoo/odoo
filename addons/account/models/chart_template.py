@@ -290,7 +290,8 @@ class AccountChartTemplate(models.Model):
             tmp1, tmp2 = self.parent_id._install_template(company, code_digits=code_digits, transfer_account_id=transfer_account_id, acc_ref=acc_ref, taxes_ref=taxes_ref)
             acc_ref.update(tmp1)
             taxes_ref.update(tmp2)
-        tmp1, tmp2 = self._load_template(company, code_digits=code_digits, transfer_account_id=transfer_account_id, account_ref=acc_ref, taxes_ref=taxes_ref)
+        # Ensure, even if individually, that everything is translated according to the company's language.
+        tmp1, tmp2 = self.with_context(lang=company.partner_id.lang)._load_template(company, code_digits=code_digits, transfer_account_id=transfer_account_id, account_ref=acc_ref, taxes_ref=taxes_ref)
         acc_ref.update(tmp1)
         taxes_ref.update(tmp2)
         return acc_ref, taxes_ref
@@ -856,6 +857,8 @@ class WizardMultiChartsAccounts(models.TransientModel):
         all the provided information to create the accounts, the banks, the journals, the taxes, the
         accounting properties... accordingly for the chosen company.
         '''
+        # Ensure everything is translated consitingly to the company's language, not the user's one.
+        self = self.with_context(lang=self.company_id.partner_id.lang)
         if not self.env.user._is_admin():
             raise AccessError(_("Only administrators can change the settings"))
 
