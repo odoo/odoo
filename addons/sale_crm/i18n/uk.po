@@ -7,13 +7,14 @@
 # Zoriana Zaiats <sorenabell@quintagroup.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Yaroslav Molochko <onorua@gmail.com>, 2016
+# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Yaroslav Molochko <onorua@gmail.com>, 2016\n"
+"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,12 +35,12 @@ msgstr "К-сть замовлень"
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "<span class=\"o_stat_text\"> Orders</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Замовлення</span>"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "<span class=\"o_stat_text\"> Quote(s) </span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Комерційна(і) пропозиція(ї) </span>"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_associate_member
@@ -47,11 +48,13 @@ msgid ""
 "A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
 msgstr ""
+"Учасник, з яким ви хочете об'єднати інших учасників. Буде розглянуто стан "
+"членства об'єднаного учасника."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
 msgid "Associate Member"
-msgstr ""
+msgstr "Доданий учасник"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_cancel
@@ -63,12 +66,12 @@ msgstr "Дата відміни членства"
 #: code:addons/sale_crm/static/src/js/tour.js:16
 #, python-format
 msgid "Click here to see more options."
-msgstr ""
+msgstr "Натисніть тут, щоби переглянути більше опцій."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_count
 msgid "Count Payment Token"
-msgstr ""
+msgstr "Підрахунок платежу Токена"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_state
@@ -98,7 +101,7 @@ msgstr "Дата, до якої членство залишається акти
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_free_member
 msgid "Free Member"
-msgstr ""
+msgstr "Вільний учасник"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_account_invoice
@@ -108,7 +111,7 @@ msgstr "Рахунок"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
 msgid "Invoiced in Sale Orders Target"
-msgstr ""
+msgstr "Зараховано в ціль продажу замовлень на продаж"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_state
@@ -121,6 +124,13 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
+"Це вказує на стан членства.\n"
+"-Не учасник: Учасник, який не підтвердив жодного членства.\n"
+"-Скасований учасник: Учасник, який скасував своє членство.\n"
+"-Старий учасник: Учасник, чиє членство закінчилося.\n"
+"-Учасник, який очікує: Учасник, який підтвердив своє членство і чий рахунок буде створюватися.\n"
+"-Рахунок-фактура учасника: Учасник, чий рахунок було створено.\n"
+"-Учасник, що сплачує:Учасник, який сплатив рахунок за членство."
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
@@ -132,12 +142,12 @@ msgstr "Привід/Нагода"
 #: code:addons/sale_crm/static/src/js/tour.js:20
 #, python-format
 msgid "Let's have a look at the quotations of this sales team."
-msgstr ""
+msgstr "Давайте подивимось на комерційні пропозиції цієї команди продажів."
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Log in the chatter from which opportunity the order originates"
-msgstr ""
+msgstr "Увійдіть у чат, звідки надсилається замовлення"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_member_lines
@@ -147,7 +157,7 @@ msgstr "Членство"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_amount
 msgid "Membership Amount"
-msgstr ""
+msgstr "Сума членства"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_stop
@@ -162,12 +172,12 @@ msgstr "Дата початку членства"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn_msg
 msgid "Message for Sales Order"
-msgstr ""
+msgstr "Повідомлення для замовлення на продаж"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn_msg
 msgid "Message for Stock Picking"
-msgstr ""
+msgstr "Повідомлення для збирання запасів"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
@@ -177,7 +187,7 @@ msgstr "Нова пропозиція"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
 msgid "Number of Quotations"
-msgstr ""
+msgstr "Номер комерційних пропозицій"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order_opportunity_id
@@ -192,7 +202,7 @@ msgstr "Замовлення"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_ids
 msgid "Payment Tokens"
-msgstr ""
+msgstr "Платежі Токенів"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
@@ -214,7 +224,7 @@ msgstr "Замовлення на продаж"
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_free_member
 msgid "Select if you want to give free membership."
-msgstr ""
+msgstr "Оберіть, якщо хочете надати безкоштовне члентсво."
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_picking_warn
@@ -237,7 +247,7 @@ msgstr "Відбір запасів"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
 msgid "Sum of Orders"
-msgstr ""
+msgstr "Сума замовлень"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids
@@ -247,7 +257,7 @@ msgstr "Мітки"
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_amount
 msgid "The price negotiated by the partner"
-msgstr ""
+msgstr "Ціна, узгоджена партнером"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_customer

@@ -9,13 +9,14 @@
 # Manami Hashi <manami@roomsfor.hk>, 2016
 # NOKA Shigekazu <shigekazu.noka@gmail.com>, 2016
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
+# 前園義博 <yoshihiro.maezono@pro-spire.co.jp>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:43+0000\n"
 "PO-Revision-Date: 2016-10-10 08:43+0000\n"
-"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
+"Last-Translator: 前園義博 <yoshihiro.maezono@pro-spire.co.jp>, 2017\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -284,6 +285,14 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>${object.name}様,\n"
+"お世話になっております。</p>\n"
+"\n"
+"<p>お問い合わせ頂きありがとうございます。</p>\n"
+"<p>これはイベントのためのあなたのバッジです ${object.event_id.name}.</p>\n"
+"<p>何にか質問があれば、お問い合わせください。</p>\n"
+"<p>宜しくお願い致します。</p>"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_cancel_state
@@ -317,28 +326,28 @@ msgstr ""
 msgid ""
 "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the"
 " event or change the dates on which it is held.)</em>"
-msgstr ""
+msgstr "<em>(チャンバー・ワークスは、イベントを取り消し、再命名または再配置、<br>または開催日を変更する権利を留保します。)</em>"
 
 #. module: event
 #: model:event.event,description:event.event_0
 msgid ""
 "<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn <i>Odoo"
 " Programming</i></font>"
-msgstr ""
+msgstr "Odooプログラミングを学ぶこと"
 
 #. module: event
 #: model:event.event,description:event.event_1
 msgid ""
 "<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn "
 "<i>technical aspects</i></font>"
-msgstr ""
+msgstr "技術的に学ぶこと"
 
 #. module: event
 #: model:event.event,description:event.event_3
 msgid ""
 "<font style=\"font-size: 24px;\">to learn <i>business applications "
 "development</i></font>"
-msgstr ""
+msgstr "<font style=\"font-size: 24px;\">ビジネス<i>アプリケーション開発 を学ぶこと</i></font>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -346,6 +355,8 @@ msgid ""
 "<i class=\"fa fa-clock-o\"/>\n"
 "                                        <b>To</b>"
 msgstr ""
+"<i class=\"fa fa-clock-o\"/>\n"
+"                                        <b>To</b>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -370,13 +381,13 @@ msgstr "<i>バックエンドとユーザーインターフェイスを備えた
 #: model:event.event,description:event.event_3
 msgid ""
 "<i>You will be able to develop simple dynamic components in HTML pages.</i>"
-msgstr ""
+msgstr "<i>HTMLページで簡単な動的コンポーネントを開発することができます。</i>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "<i>to</i>"
-msgstr ""
+msgstr "<i>to</i>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -407,7 +418,7 @@ msgstr ""
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "<strong>Conference on Business Apps</strong>"
-msgstr ""
+msgstr "<strong>ビジネスに関する会議アプリケーション</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -436,7 +447,7 @@ msgstr "<strong>価格には以下のものが含まれます：</strong>"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "<strong>Program:</strong>"
-msgstr ""
+msgstr "<strong>プログラム:</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -448,7 +459,7 @@ msgstr "<strong>要件:</strong>"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "<strong>Where to find us:</strong>"
-msgstr ""
+msgstr "<strong>私たちを見つける場所:</strong>"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_active
@@ -465,7 +476,7 @@ msgstr "高度なJQuery"
 #. module: event
 #: selection:event.mail,interval_type:0
 msgid "After each registration"
-msgstr ""
+msgstr "各登録後"
 
 #. module: event
 #: selection:event.mail,interval_type:0
@@ -514,7 +525,7 @@ msgstr "配列"
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 #: selection:report.event.registration,registration_state:0
 msgid "Attended"
-msgstr ""
+msgstr "出席した"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_date_closed
@@ -524,7 +535,7 @@ msgstr "出席日"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Attended the Event"
-msgstr ""
+msgstr "イベントに出席しました"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -566,22 +577,22 @@ msgstr "空席"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_back
 msgid "Badge Back"
-msgstr ""
+msgstr "バッジの裏側"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_front
 msgid "Badge Front"
-msgstr ""
+msgstr "バッジの前側"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
 msgid "Badge Inner Left"
-msgstr ""
+msgstr "バッジの左側"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerright
 msgid "Badge Inner Right"
-msgstr ""
+msgstr "バッジの右側"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_configuration
@@ -591,12 +602,12 @@ msgstr "バーコードインターフェイス"
 #. module: event
 #: selection:event.mail,interval_type:0
 msgid "Before the event"
-msgstr ""
+msgstr "イベント前に"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Best regards,"
-msgstr ""
+msgstr "宜しくお願い致します。"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -658,7 +669,7 @@ msgstr "カテゴリ"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)"
-msgstr ""
+msgstr "Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)"
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -693,7 +704,7 @@ msgstr "会議"
 #. module: event
 #: model:event.event,name:event.event_2
 msgid "Conference on Business Apps"
-msgstr ""
+msgstr "ビジネスアプリケーションに関する会議"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
@@ -880,7 +891,7 @@ msgstr "表示名"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_sequence
 msgid "Display order"
-msgstr ""
+msgstr "注文の表示する"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -906,7 +917,7 @@ msgstr "ドラフト"
 msgid ""
 "During this conference, our team will give a detailed overview of our "
 "business applications. You’ll know all the benefits of using it."
-msgstr ""
+msgstr "この会議で、私たちのチームはビジネスアプリケーションの詳細な概要を説明します。 あなたはそれを使うことのすべての利点を知るでしょう。"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_email
@@ -916,7 +927,7 @@ msgstr "Eメール"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Email Schedule"
-msgstr ""
+msgstr "Eメールスケジュール"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_template_id
@@ -931,7 +942,7 @@ msgstr "終了日"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end_located
 msgid "End Date Located"
-msgstr ""
+msgstr "終了日"
 
 #. module: event
 #: model:ir.model,name:event.model_event_event
@@ -946,7 +957,7 @@ msgstr "イベント"
 #. module: event
 #: model:ir.actions.report.xml,name:event.report_event_event_badge
 msgid "Event Badge"
-msgstr ""
+msgstr "イベントバッジ"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -956,7 +967,7 @@ msgstr "イベントの開始日"
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_type
 msgid "Event Categories"
-msgstr ""
+msgstr "イベントカテゴリー"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -992,12 +1003,12 @@ msgstr "イベントロゴ"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Event Mail Scheduler"
-msgstr ""
+msgstr "イベントメールスケジュール"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_tree
 msgid "Event Mail Schedulers"
-msgstr ""
+msgstr "Event Mail Scheduler"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -1080,7 +1091,7 @@ msgstr "イベント分析"
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
-msgstr ""
+msgstr "イベントメールスケジューラ"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1100,7 +1111,7 @@ msgstr "確定しているイベント"
 #. module: event
 #: model:event.type,name:event.event_type_1
 msgid "Exhibition"
-msgstr ""
+msgstr "展示会"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
@@ -1110,7 +1121,7 @@ msgstr "見込"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Expected attendees"
-msgstr ""
+msgstr "期待される出席者"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -1125,14 +1136,14 @@ msgstr "イベント終了"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "For any additional information, please contact us at"
-msgstr ""
+msgstr "追加情報については、下記までご連絡ください。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_seats_max
 msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
-msgstr ""
+msgstr "イベントごとに最大座席数（出席者数）を定義することができます。この数を超えると、登録は受け付けられません。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_seats_min
@@ -1141,6 +1152,7 @@ msgid ""
 "attendees), if it does not reach the mentioned registrations the event can "
 "not be confirmed (keep 0 to ignore this rule)"
 msgstr ""
+"各イベントについて、最小予約席(出席者数)を定義することができます。記載されている登録に達していない場合、そのイベントは確認できません(このルールを無視するために0を保持します)"
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -1150,7 +1162,7 @@ msgstr "ファンクショナルウェビナー"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Functional flow of the main applications;"
-msgstr ""
+msgstr "主なアプリケーションの機能フロー。"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1169,7 +1181,7 @@ msgstr "グループ化"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Having attended this conference, participants should be able to:"
-msgstr ""
+msgstr "この会議に出席した参加者は、次のことができるはずです。"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1197,7 +1209,7 @@ msgstr "デバッグ方法"
 msgid ""
 "I did not expect such a great learning experience. I feel like I can develop"
 " anything now."
-msgstr ""
+msgstr "私はそのような偉大な学習経験を期待していませんでした。私は今何かを開発できるように感じる。"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_id
@@ -1219,11 +1231,13 @@ msgid ""
 " status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
 msgstr ""
+"イベントが作成された場合、ステータスは「ドラフト」です。 イベントが特定の日付で確認された場合、ステータスは「確認済」に設定されます。 "
+"イベントが終了すると、ステータスは「完了」に設定されます。 イベントがキャンセルされると、ステータスは「キャンセル」に設定されます。"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
 msgid "Immediately"
-msgstr ""
+msgstr "すぐに"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1288,22 +1302,22 @@ msgstr "QWeb入門"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Introduction, CRM, Sales Management"
-msgstr ""
+msgstr "紹介、CRM、販売管理"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_default_registration_max
 msgid "It will select this default maximum value when you choose this event"
-msgstr ""
+msgstr "このイベントを選択すると、このデフォルトの最大値が選択されます。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_default_registration_min
 msgid "It will select this default minimum value when you choose this event"
-msgstr ""
+msgstr "このイベントを選択すると、このデフォルトの最小値が選択されます"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_color
 msgid "Kanban Color Index"
-msgstr ""
+msgstr "カンバンカラーインデックス"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings___last_update
@@ -1359,32 +1373,32 @@ msgstr "ループ"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Luigi Roni, Senior Event Manager"
-msgstr ""
+msgstr "Luigi Roni, シニアイベントマネージャー"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_mail_ids
 msgid "Mail Schedule"
-msgstr ""
+msgstr "メールスケジュール"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_scheduler_id
 msgid "Mail Scheduler"
-msgstr ""
+msgstr "メールスケジュール"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
-msgstr ""
+msgstr "メールスケジュール"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_mail_sent
 msgid "Mail Sent"
-msgstr ""
+msgstr "メール送信"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_mail_sent
 msgid "Mail Sent on Event"
-msgstr ""
+msgstr "イベントでメールを送る"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_mail_registration_ids
@@ -1447,7 +1461,7 @@ msgstr "新規"
 #: code:addons/event/models/event.py:442
 #, python-format
 msgid "Next month"
-msgstr ""
+msgstr "来月"
 
 #. module: event
 #: selection:event.config.settings,module_website_event_questions:0
@@ -1517,11 +1531,13 @@ msgid ""
 "    track registrations and participations, automate the confirmation emails,\n"
 "    sell tickets, etc."
 msgstr ""
+"Odooは、あなたのイベントをスケジュールし、効率的に整理するのに役立ちます：\n"
+"     確認の電子メールを自動化したり、チケットを販売したりすることができます。"
 
 #. module: event
 #: model:event.event,name:event.event_0
 msgid "Open Days in Los Angeles"
-msgstr ""
+msgstr "ロサンゼルスでOpen Days"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_organizer_id
@@ -1545,7 +1561,7 @@ msgstr ""
 msgid ""
 "Participants are expected to have some knowledge in programming. A basic "
 "knowledge of the Python programming is recommended."
-msgstr ""
+msgstr "参加者はプログラミングにある程度の知識が必要です。 Pythonプログラミングの基本知識が推奨されます。"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1569,17 +1585,17 @@ msgstr "電話"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Point of Sale (POS), Introduction to report customization."
-msgstr ""
+msgstr "POS、レポートのカスタマイズを紹介"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Project management, Human resources, Contract management."
-msgstr ""
+msgstr "プロジェクト管理、人材管理、契約管理"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
-msgstr ""
+msgstr "購買、販売 &amp;  購買管理、財務会計"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1593,7 +1609,7 @@ msgstr "Pythonオブジェクト"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Read Great Contents"
-msgstr ""
+msgstr "素晴らしい内容を読む"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_registration_origin
@@ -1605,7 +1621,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Register with this event"
-msgstr ""
+msgstr "このイベントの登録者"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
@@ -1618,7 +1634,7 @@ msgstr "登録"
 #. module: event
 #: model:ir.actions.report.xml,name:event.report_event_registration_badge
 msgid "Registration Badge"
-msgstr ""
+msgstr "バッジ登録"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_date_open
@@ -1628,27 +1644,27 @@ msgstr "登録日"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration Day"
-msgstr ""
+msgstr "登録日"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration ID"
-msgstr ""
+msgstr "登録ID"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail_registration
 msgid "Registration Mail Scheduler"
-msgstr ""
+msgstr "メールスケジュールを登録"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration Mails"
-msgstr ""
+msgstr "登録メール"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration Month"
-msgstr ""
+msgstr "登録月"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_registration_state
@@ -1658,7 +1674,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_website_event_questions
 msgid "Registration Survey"
-msgstr ""
+msgstr "登録アンケート"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -1668,7 +1684,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration mail"
-msgstr ""
+msgstr "登録メール"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -1723,12 +1739,12 @@ msgstr "担当者"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_event_barcode
 msgid "Scan badges to confirm attendances"
-msgstr ""
+msgstr "参加者を確認するため、バッジをスキャンする"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_scheduled_date
 msgid "Scheduled Sent Mail"
-msgstr ""
+msgstr "予定送信メール"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_scheduled_date
@@ -1758,7 +1774,7 @@ msgstr "予定に設定"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Set To Unconfirmed"
-msgstr ""
+msgstr "未確認に設定する"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_global_settings
@@ -1768,7 +1784,7 @@ msgstr "管理設定"
 #. module: event
 #: model:event.type,name:event.event_type_3
 msgid "Show"
-msgstr ""
+msgstr "表示"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_origin
@@ -1783,7 +1799,7 @@ msgstr "開始日"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_begin_located
 msgid "Start Date Located"
-msgstr ""
+msgstr "開始日"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1836,7 +1852,7 @@ msgstr ""
 #: code:addons/event/models/event.py:440
 #, python-format
 msgid "This month"
-msgstr ""
+msgstr "今月"
 
 #. module: event
 #: code:addons/event/models/event.py:438
@@ -1918,7 +1934,7 @@ msgstr "開発の概念とアーキテクチャを理解する。"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Understand the various modules;"
-msgstr ""
+msgstr "様々な理解モジュールを理解する"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_unit
@@ -1967,7 +1983,7 @@ msgstr "変数と演算子"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
-msgstr ""
+msgstr "在庫管理, 製造管理 (MRP) &amp; 販売, 輸出入."
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
@@ -1986,7 +2002,7 @@ msgstr "週"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "What do people say about this course?"
-msgstr ""
+msgstr "このコースについて人々は何を言いますか？"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -2024,17 +2040,17 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
 msgid "Your badge for ${object.event_id.name}"
-msgstr ""
+msgstr "あなたのバッジ"
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription
 msgid "Your registration at ${object.event_id.name}"
-msgstr ""
+msgstr "登録は: ${object.event_id.name}"
 
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
 msgid "badge_of_${(object.event_id.name or '').replace('/','_')}"
-msgstr ""
+msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -2051,7 +2067,7 @@ msgstr ""
 #. module: event
 #: model:ir.model,name:event.model_event_confirm
 msgid "event.confirm"
-msgstr ""
+msgstr "event.confirm"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail

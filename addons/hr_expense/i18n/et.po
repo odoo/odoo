@@ -8,13 +8,15 @@
 # Rivo Zängov <eraser@eraser.ee>, 2017
 # Wanradt Koell <wanradt@gmail.com>, 2017
 # Ahto Reinaru <ahto.reinaru@gmail.com>, 2017
+# Egon Raamat <egon@avalah.ee>, 2017
+# Eneli Õigus <enelioigus@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Ahto Reinaru <ahto.reinaru@gmail.com>, 2017\n"
+"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2017\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +38,8 @@ msgid ""
 "<i class=\"text-muted oe_edit_only\">Use [Reference] as a subject prefix for"
 " incoming receipts</i>"
 msgstr ""
+"<i class=\"text-muted oe_edit_only\">Kasutage sissetulevatel kviitungitel "
+"[viide] teemat eesliitena</i>"
 
 #. module: hr_expense
 #. openerp-web
@@ -65,6 +69,8 @@ msgid ""
 "<p>The accountant receive approved expense reports.</p><p>He can post "
 "journal entries in one click if taxes and accounts are right.</p>"
 msgstr ""
+"<p>Raamatupidaja saab kinnitatud kuluaruande.</p><p>Tal on võimalik teha "
+"kanne ühe klikiga, kui maksud ja kontod on õiged.</p>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -76,22 +82,22 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Date:</strong>"
-msgstr ""
+msgstr "<strong>Kuupäev:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Description:</strong>"
-msgstr ""
+msgstr "<strong>Kirjeldus:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Employee:</strong>"
-msgstr ""
+msgstr "<strong>Töötaja: </strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Payment By:</strong>"
-msgstr ""
+msgstr "<strong>Makstud:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -101,7 +107,7 @@ msgstr "<strong>Kokku</strong>"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Validated By:</strong>"
-msgstr ""
+msgstr "<strong>Kinnitas:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -117,6 +123,8 @@ msgid ""
 "A payment of %s %s with the reference <a href='/mail/view?%s'>%s</a> related"
 " to your expense %s has been made."
 msgstr ""
+"Makse %s%s, mis on seotud <a href='/mail/view?%s'>%s</a> sinu kuludega %s on"
+" tehtud."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_id
@@ -136,7 +144,7 @@ msgstr "Raamatupidamine"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_accounting_date
 msgid "Accounting Date"
-msgstr ""
+msgstr "Raamatupidamise kuupäev"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -146,13 +154,13 @@ msgstr "Raamatupidamise kirjed"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Actual expense sheets, not the refused ones"
-msgstr ""
+msgstr "Tegelikud kuluaruanded, mitte tagasilükatud"
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
 #: model:product.template,name:hr_expense.air_ticket_product_template
 msgid "Air Flight"
-msgstr ""
+msgstr "Lennureis"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_alias_domain
@@ -163,24 +171,24 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_all
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_all
 msgid "All Expense Reports"
-msgstr ""
+msgstr "Kõik kuluaruanded"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_all
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_all_expenses
 msgid "All Expenses"
-msgstr ""
+msgstr "Kõik kulud"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_account_id
+msgid "An expense account is expected"
+msgstr "Kulukonto on nõutud"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_analytic_account_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Analytic Account"
 msgstr "Analüütiline konto"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_account_id
-msgid "An expense account is expected"
-msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
@@ -201,7 +209,7 @@ msgstr "Heakskiidetud"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Approved Expenses"
-msgstr ""
+msgstr "Kinnitatud kulud"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_bank_journal_id
@@ -211,7 +219,7 @@ msgstr "Panga päevik"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_reference
 msgid "Bill Reference"
-msgstr ""
+msgstr "Arve viide"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_product_product_can_be_expensed
@@ -230,12 +238,12 @@ msgstr "Loobu"
 #: model:product.product,name:hr_expense.car_travel
 #: model:product.template,name:hr_expense.car_travel_product_template
 msgid "Car Travel Expenses"
-msgstr ""
+msgstr "Auto sõidukulud"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Certified honest and conform,<br/>(Date and signature).<br/><br/>"
-msgstr ""
+msgstr "Sertifitseeritud ja vastav, <br/>(kuupäev ja allkiri).<br/>"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
@@ -244,25 +252,25 @@ msgstr ""
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_post
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
 msgid "Click here to create a new expense report."
-msgstr ""
+msgstr "Kliki, et lisada uus kuluaruanne."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_request_approve_expense_sheet
 #: model:ir.actions.act_window,help:hr_expense.action_request_to_pay_expense_sheet
 #: model:ir.actions.act_window,help:hr_expense.action_request_to_post_expense_sheet
 msgid "Click here to create new expenses."
-msgstr ""
+msgstr "Kliki, et luua uusi kulusid."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:304
 #, python-format
 msgid "Click to add a new expense,"
-msgstr ""
+msgstr "Kliki, et lisada uus kulu,"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Click to create a new expense category."
-msgstr ""
+msgstr "Kliki, et luua uus kulukategooria."
 
 #. module: hr_expense
 #. openerp-web
@@ -307,12 +315,12 @@ msgstr "Kinnitatud kulud"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Congratulations, you're done!"
-msgstr ""
+msgstr "Palju õnne, said hakkama!"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "Create a new expense.<br>"
-msgstr ""
+msgstr "Loo uus kulu.<br>"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_create_uid
@@ -348,7 +356,7 @@ msgstr "Kuupäev"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_alias_prefix
 msgid "Default Alias Name for Expenses"
-msgstr ""
+msgstr "Vaikimisi kulude asendusnimi "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_department_id
@@ -379,12 +387,12 @@ msgstr "Dokumendid"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Don't hesitate to"
-msgstr ""
+msgstr "Ärge kartke"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_register_payment_view_form
 msgid "Draft Payment"
-msgstr ""
+msgstr "Makse mustand"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_employee_id
@@ -397,17 +405,17 @@ msgstr "Tootaja"
 #. module: hr_expense
 #: selection:hr.expense,payment_mode:0
 msgid "Employee (to reimburse)"
-msgstr ""
+msgstr "Töötaja (hüvitama)"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_address_id
 msgid "Employee Home Address"
-msgstr ""
+msgstr "Töötaja kodune aadress"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "End"
-msgstr ""
+msgstr "Lõpp"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense
@@ -419,7 +427,7 @@ msgstr "Kulu"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_name
 msgid "Expense Description"
-msgstr ""
+msgstr "Kulu kirjeldus"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
@@ -429,7 +437,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_journal_id
 msgid "Expense Journal"
-msgstr ""
+msgstr "Kulu kanne"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_expense_line_ids
@@ -441,23 +449,23 @@ msgstr "Kuluread"
 #: model:ir.ui.menu,name:hr_expense.menu_hr_product
 #: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Expense Products"
-msgstr ""
+msgstr "Tootekulu"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_sheet
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id
 msgid "Expense Report"
-msgstr ""
+msgstr "Kuluaruanne"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_state
 msgid "Expense Report State"
-msgstr ""
+msgstr "Kuluaruande olek"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_name
 msgid "Expense Report Summary"
-msgstr ""
+msgstr "Kuluaruande kokkuvõte"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_my_reports
@@ -465,65 +473,65 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Expense Reports"
-msgstr ""
+msgstr "Kuluaruanded"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_filtered
 msgid "Expense Reports Analysis"
-msgstr ""
+msgstr "Kuluaruannete analüüs"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_approve
 msgid "Expense Reports To Approve"
-msgstr ""
+msgstr "Kinnitamist ootavad kuluaruanded "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_pay
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_pay
 msgid "Expense Reports To Pay"
-msgstr ""
+msgstr "Makset ootavad kuluaruanded"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_post
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_post
 msgid "Expense Reports To Post"
-msgstr ""
+msgstr "Saatmist ootavad kuluaruanded"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_approve
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_to_approve
 msgid "Expense Reports to Approve"
-msgstr ""
+msgstr "Kinnitamist ootavad kuluaruanded"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Expense Sheet"
-msgstr ""
+msgstr "Kululeht"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Expense refuse reason"
-msgstr ""
+msgstr "Kulu tagasilükkamise põhjus"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense report approved"
-msgstr ""
+msgstr "Kuluaruanne on kinnitatud"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
 msgid "Expense report paid"
-msgstr ""
+msgstr "Kuluaruande eest on tasutud"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense report refused"
-msgstr ""
+msgstr "Kuluaruanne on tagasi lükatud"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_confirmed
 msgid "Expense report submitted, waiting approval"
-msgstr ""
+msgstr "Kuluaruanne on saadetud, ootab heakskiitu"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
@@ -545,24 +553,24 @@ msgstr "Kulud"
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_graph
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_pivot
 msgid "Expenses Analysis"
-msgstr ""
+msgstr "Kuluanalüüsid"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Expenses Month"
-msgstr ""
+msgstr "Kulu kuu"
 
 #. module: hr_expense
 #: model:ir.actions.report.xml,name:hr_expense.action_report_hr_expense_sheet
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Expenses Report"
-msgstr ""
+msgstr "Kuluaruanne"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department_expense_sheets_to_approve_count
 msgid "Expenses Reports to Approve"
-msgstr ""
+msgstr "Heakskiitud ootavad kuluaruanded"
 
 #. module: hr_expense
 #: model:mail.message.subtype,name:hr_expense.mt_department_expense_confirmed
@@ -573,13 +581,13 @@ msgstr "Kulud kinnitamiseks"
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Expenses by Month"
-msgstr ""
+msgstr "Kulud kuu lõikes"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:399
 #, python-format
 msgid "Expenses must belong to the same Employee."
-msgstr ""
+msgstr "Kulud peavad kuuluma samale töötajale."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:511
@@ -588,39 +596,40 @@ msgid ""
 "Expenses must have an expense journal specified to generate accounting "
 "entries."
 msgstr ""
+"Raamatupidamiskannete tegemiseks peab kuludel olema määratud kulukonto."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:403
 #, python-format
 msgid "Expenses must have been paid by the same entity (Company or employee)"
-msgstr ""
+msgstr "Kulud tuleb katta sama üksuse poolt (ettevõte või töötaja)"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Expenses of Your Team Member"
-msgstr ""
+msgstr "Sinu tiimi liikme kulud"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Expenses to Invoice"
-msgstr ""
+msgstr "Kulud arveks"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses_to_submit
 msgid "Expenses to Submit"
-msgstr ""
+msgstr "Kulud, mis on vaja saata"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "Expenses will go through these steps:"
-msgstr ""
+msgstr "Kulud läbivad järgmised etapid:"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Former Employees"
-msgstr ""
+msgstr "Endised töötajad"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_approved_expense
@@ -628,6 +637,8 @@ msgid ""
 "From here the accountant will be able to approve as well as refuse the "
 "expenses which are verified by the HR Manager."
 msgstr ""
+"Siin saab raamatupidaja kinnitada ning tagasi lükata personalijuhi poolt "
+"kinnitatud kulusid."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -653,7 +664,7 @@ msgstr "Rühmitamine"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Have a wonderful day,<br/>- The Odoo Team"
-msgstr ""
+msgstr "Ilusat päeva,<br/>- Odoo tiim"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_hide_payment_method
@@ -664,7 +675,7 @@ msgstr ""
 #: model:product.product,name:hr_expense.hotel_rent
 #: model:product.template,name:hr_expense.hotel_rent_product_template
 msgid "Hotel Accommodation"
-msgstr ""
+msgstr "Majutus hotellis"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
@@ -698,7 +709,7 @@ msgstr "Päeviku kanne"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "Andmiku kanne"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense___last_update
@@ -737,7 +748,7 @@ msgstr "Juhataja"
 #: code:addons/hr_expense/static/src/js/tour.js:41
 #, python-format
 msgid "Managers can get all reports to approve from this menu."
-msgstr ""
+msgstr "Juhtidel on võimalik selle menüü kaudu kiita heaks kõik aruanded"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_communication
@@ -753,13 +764,13 @@ msgstr "Minu kulutused"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "My Expenses to Submit"
-msgstr ""
+msgstr "Minu saadetavad kulud"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_all
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "My Reports"
-msgstr ""
+msgstr "Minu aruanded"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -769,7 +780,7 @@ msgstr "Mu meeskonna kulud"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "My Team Reports"
-msgstr ""
+msgstr "Minu tiimi aruanded"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -779,7 +790,7 @@ msgstr "Nimi"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "New Expense"
-msgstr ""
+msgstr "Uus kulu"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -799,45 +810,45 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:218
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
-msgstr ""
+msgstr "Töötajal %s ei leitud kodust aadressi, palun seadista üks."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:197
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
-msgstr ""
+msgstr "Kandes %s ei leitud kreeditkontot, palun seadista üks."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Not Refused"
-msgstr ""
+msgstr "EI ole tagasi lükatud"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
 msgid "Notes..."
-msgstr ""
+msgstr "Märkmed ..."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_attachment_number
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_attachment_number
 msgid "Number of Attachments"
-msgstr ""
+msgstr "Manuste arv"
 
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_user
 msgid "Officer"
-msgstr ""
+msgstr "Ametnik"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_refused_expenses
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "Once approved, your expense report, goes to the accounting,"
-msgstr ""
+msgstr "Kinnitatud kuluaruanne läheb raamatupidamisele,"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "Once approved, your expenses report goes to the accounting,"
-msgstr ""
+msgstr "Kui kuluaruanne on kinnitatud, siis see läheb raamatupidamisele,"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
@@ -851,7 +862,7 @@ msgstr ""
 msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
-msgstr ""
+msgstr "Pärast kulu loomist saada see oma juhile kinnitamiseks."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -859,6 +870,18 @@ msgid ""
 "Once your email gateway is configured, come back to this screen\n"
 "                            to setup the next steps."
 msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:537
+#, python-format
+msgid "Only HR Officers can approve expenses"
+msgstr "Ainult personaliametnikud saavad kulusid kinnitada"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:528
+#, python-format
+msgid "Only HR Officers can refuse expenses"
+msgstr "Ainult personaliametnikud saavad kulusid tagasi lükata"
 
 #. module: hr_expense
 #: selection:hr.expense.sheet,state:0
@@ -874,13 +897,13 @@ msgstr "Partner"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_amount
 msgid "Payment Amount"
-msgstr ""
+msgstr "Makse summe"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_payment_mode
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_payment_mode
 msgid "Payment By"
-msgstr ""
+msgstr "Maksis"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_payment_date
@@ -890,19 +913,19 @@ msgstr "Makse kuupäev"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_journal_id
 msgid "Payment Method"
-msgstr ""
+msgstr "Maksemeetod"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_payment_method_id
 msgid "Payment Type"
-msgstr ""
+msgstr "Makse tüüp"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_refused_expenses
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "Periodically, you submit expenses report to your manager,"
-msgstr ""
+msgstr "Kuluaruanne tuleb saata juhile perioodiliselt,"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_web_planner
@@ -916,6 +939,8 @@ msgid ""
 "Please configure Default Expense account for Product expense: "
 "`property_account_expense_categ_id`."
 msgstr ""
+"Palun seadista vaikimisi kulukonto tootega seotud kuludeks: "
+"`property_account_expense_categ_id`."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -982,7 +1007,7 @@ msgstr "Keeldu"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_refuse_wizard_action
 msgid "Refuse Expense"
-msgstr ""
+msgstr "Lükka kulu tagasi"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0 selection:hr.expense.sheet,state:0
@@ -996,7 +1021,7 @@ msgstr "Tagasi lükatud"
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses_refused
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Refused Expenses"
-msgstr ""
+msgstr "Tagasi lükatud kulud"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_register_payment_wizard_action
@@ -1014,7 +1039,7 @@ msgstr "Aruanne"
 #: selection:hr.expense,state:0
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Reported"
-msgstr ""
+msgstr "Raporteeritud"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_reports
@@ -1024,22 +1049,22 @@ msgstr "Raportid"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_request_approve_expense_sheet
 msgid "Reports to Approve"
-msgstr ""
+msgstr "Kinnitamist ootavad aruanded"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_request_to_pay_expense_sheet
 msgid "Reports to Pay"
-msgstr ""
+msgstr "Makset ootavad aruanded"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_request_to_post_expense_sheet
 msgid "Reports to Post"
-msgstr ""
+msgstr "Saatmist ootavad aruanded"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Resubmit"
-msgstr ""
+msgstr "Saatke uuesti"
 
 #. module: hr_expense
 #. openerp-web
@@ -1056,12 +1081,14 @@ msgstr ""
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product"
 " Unit of Measure"
-msgstr ""
+msgstr "Valitud mõõtühik ei kuulu toote mõõteühikuga sama kategooria alla"
 
 #. module: hr_expense
 #: model:web.planner,tooltip_planner:hr_expense.planner_hr_expense
 msgid "Send receipts by email to create expenses efficiently."
 msgstr ""
+"Saatke kviitungid e-maili teel, et kulude loomine oleks võimalikult "
+"efektiivne"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_global_settings
@@ -1071,18 +1098,18 @@ msgstr "Seaded"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Setup"
-msgstr ""
+msgstr "Seadistamine"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
 msgid "Setup your domain alias"
-msgstr ""
+msgstr "Seadista oma domeeni teine nimi"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product_can_be_expensed
 #: model:ir.model.fields,help:hr_expense.field_product_template_can_be_expensed
 msgid "Specify whether the product can be selected in an HR expense."
-msgstr ""
+msgstr "Täpsustage, kas toodet saab valida personali kuludes."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
@@ -1099,7 +1126,7 @@ msgstr "Olek"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_state
 msgid "Status of the expense."
-msgstr ""
+msgstr "Kulu olek."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1114,13 +1141,13 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
 msgid "Submit to Manager"
-msgstr ""
+msgstr "Esitage juhile"
 
 #. module: hr_expense
 #: selection:hr.expense.sheet,state:0
 #: model:mail.message.subtype,name:hr_expense.mt_expense_confirmed
 msgid "Submitted"
-msgstr ""
+msgstr "Esitatud"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_untaxed_amount
@@ -1139,6 +1166,8 @@ msgid ""
 "Technical field used to hide the payment method if the selected journal has "
 "only one available which is 'manual'"
 msgstr ""
+"Tehniline väli, mida kasutatakse maksemeetodi peitmiseks, kui andmikul on "
+"valitud manuaalne meetod."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1155,34 +1184,34 @@ msgstr ""
 #, python-format
 msgid ""
 "The accountant can register a payment to reimburse the employee directly."
-msgstr ""
+msgstr "Raamatupidaja saab märkida töötaja hüvitise maksmise."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_refused_expenses
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "The accountant validates entries and reimburse you."
-msgstr ""
+msgstr "Raamatupidaja kinnitab kanded ja hüvitab sulle."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "The accountant validates journal entries and reimburse you."
-msgstr ""
+msgstr "Raamatupidaja kinnitab pearaamatu kanded ning maksab hüvitise."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_journal_id
 msgid "The journal used when the expense is done."
-msgstr ""
+msgstr "Kulu tekkimisel kasutatud andmik."
 
 #. module: hr_expense
 #: code:addons/hr_expense/wizard/hr_expense_register_payment.py:35
 #, python-format
 msgid "The payment amount must be strictly positive."
-msgstr ""
+msgstr "Makse summa peab olema rangelt positiivne."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_bank_journal_id
 msgid "The payment method used when the expense is paid by the company."
-msgstr ""
+msgstr "Makseviis, mida kasutatatakse juhul kui kulu eest tasus ettevõte."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1196,7 +1225,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_refused_expenses
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "The steps to process expenses are:"
-msgstr ""
+msgstr "Kulude töötlemise sammud:"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_to_approve
@@ -1212,13 +1241,13 @@ msgstr "Maksmiseks"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "To Post"
-msgstr ""
+msgstr "Saatmiseks"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "To Submit"
-msgstr ""
+msgstr "Esitamiseks"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1260,7 +1289,7 @@ msgstr "Mõõtühik"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_approved_expense
 msgid "Unreported Expenses"
-msgstr ""
+msgstr "Teatamata kulud"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_register_payment_view_form
@@ -1270,22 +1299,22 @@ msgstr "Valideeri"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_responsible_id
 msgid "Validation By"
-msgstr ""
+msgstr "Kinnitas"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_expenses_tree
 msgid "View Attached Documents"
-msgstr ""
+msgstr "Vaata manuses olevaid dokumente"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "View Attachments"
-msgstr ""
+msgstr "Vaata manuseid"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
 msgid "View Report"
-msgstr ""
+msgstr "Vaata aruannet"
 
 #. module: hr_expense
 #. openerp-web
@@ -1297,13 +1326,14 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "We hope this feature helped you manage your expenses efficiently."
-msgstr ""
+msgstr "Me loodame, et see võimalus aitas sul efektiivselt hallata kulusid."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:508
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr ""
+"Sul on võimalik luua raamatupidamiskanne ainult kinnitatud kulu(de)le."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1327,19 +1357,19 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:566
 #, python-format
 msgid "You cannot add expense lines of another employee."
-msgstr ""
+msgstr "Te ei saa teisele töötajale kuluridasid lisada."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:433
 #, python-format
 msgid "You cannot delete a posted expense."
-msgstr ""
+msgstr "Te ei saa postitatud kulu kustutada."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:446
 #, python-format
 msgid "You cannot delete a posted or paid expense."
-msgstr ""
+msgstr "Te ei saa kustutada postitatud või makstud kulu."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:576
@@ -1352,24 +1382,30 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:106
 #, python-format
 msgid "You cannot report expenses for different employees in the same report!"
+msgstr "Te ei saa esitada erinevate töötajate kulusid ühes aruandes!"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:605
+#, python-format
+msgid "You cannot report expenses with different payment modes."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:104
+#: code:addons/hr_expense/models/hr_expense.py:105
 #, python-format
 msgid "You cannot report twice the same line!"
-msgstr ""
+msgstr "Te ei saa esitada sama rida kaks korda!"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "You record expenses"
-msgstr ""
+msgstr "Te salvestate kulusid"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_refused_expenses
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "You record expenses,"
-msgstr ""
+msgstr "Te salvestate kulusid,"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1388,17 +1424,17 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "e.g. Lunch"
-msgstr ""
+msgstr "nt lõuna"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
 msgid "e.g. Lunch with Customer"
-msgstr ""
+msgstr "nt lõuna kliendiga"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "e.g. Trip to NY"
-msgstr ""
+msgstr "nt reis NY-i"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_config_settings
@@ -1414,7 +1450,7 @@ msgstr "või"
 #: code:addons/hr_expense/models/hr_expense.py:305
 #, python-format
 msgid "or send receipts by email to %s."
-msgstr ""
+msgstr "või saada kviitung e-kirja teel %s."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1424,4 +1460,4 @@ msgstr "Saada meile email"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "to describe<br/> your experience or to suggest improvements!"
-msgstr ""
+msgstr "kirjeldamaks <br/> teie kogemust või soovitama parandusi!"

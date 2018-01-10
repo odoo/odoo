@@ -71,7 +71,10 @@ class StockQuant(models.Model):
             valuation_update = newprice - quant.cost
             # this is where we post accounting entries for adjustment, if needed
             # If neg quant period already closed (likely with manual valuation), skip update
-            if not quant.company_id.currency_id.is_zero(valuation_update) and move._check_lock_date():
+            lock_date = max(move.company_id.period_lock_date, move.company_id.fiscalyear_lock_date)
+            if self.user_has_groups('account.group_account_manager'):
+                lock_date = move.company_id.fiscalyear_lock_date
+            if not quant.company_id.currency_id.is_zero(valuation_update) and lock_date and move.date[:10] > lock_date:
                 quant.with_context(force_valuation_amount=valuation_update)._account_entry_move(move)
 
             # update the standard price of the product, only if we would have

@@ -9,7 +9,7 @@
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2016
 # Alberto Vincenzi <alberto.vincenzi@gmail.com>, 2016
 # Paolo Valier <paolo.valier@hotmail.it>, 2016
-# Marius Marolla <mariusmarolla@gmail.com>, 2016
+# Marius Marolla <mariusmarolla@entersys.it>, 2016
 # p_amoruso <p.amoruso@elvenstudio.it>, 2016
 # Christian <chris@effeci.info>, 2016
 # Giuseppe Castellani <giuseppecastellani@gmail.com>, 2016
@@ -159,7 +159,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
 msgid "# Days to Deadline"
-msgstr ""
+msgstr "# Giorni alla Scadenza"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
@@ -911,6 +911,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_active
 msgid "Active"
 msgstr "Attivo"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Activities"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -2481,6 +2486,11 @@ msgstr "Numero di documenti allegati"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
+msgid "Objectives"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Odoo Project is a super fast and easy way to make your activities and tasks visible to\n"
 "                        everyone in your company. Follow how things progress, see when things are stuck, know\n"
@@ -2761,6 +2771,7 @@ msgstr "Attività di Progetto"
 #: model:ir.model.fields,field_description:project.field_project_task_type_project_ids
 #: model:ir.ui.menu,name:project.menu_projects_config
 #: model:ir.ui.view,arch_db:project.analytic_account_inherited_form
+#: model:ir.ui.view,arch_db:project.project_planner
 #: model:ir.ui.view,arch_db:project.view_project
 msgid "Projects"
 msgstr "Progetti"
@@ -2768,7 +2779,7 @@ msgstr "Progetti"
 #. module: project
 #: model:mail.channel,name:project.mail_channel_project_task
 msgid "Projects & Tasks"
-msgstr ""
+msgstr "Progetti & Attività"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_rating_project
@@ -3154,12 +3165,12 @@ msgstr "Modificato stadio attività"
 #: model:ir.model.fields,field_description:project.field_project_task_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_name
 msgid "Task Title"
-msgstr ""
+msgstr "Titolo Attività"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task Title..."
-msgstr ""
+msgstr "Titolo Attività..."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_blocked

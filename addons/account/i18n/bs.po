@@ -109,7 +109,7 @@ msgstr "${object.company_id.name} Faktura (Ref ${object.number or 'n/a'})"
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_notification_email_account_invoice
 msgid "${object.subject}"
-msgstr ""
+msgstr "${object.subject}"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:467
@@ -186,7 +186,7 @@ msgstr ": Glavna knjiga"
 #: code:addons/account/models/account.py:397
 #, python-format
 msgid ": Refund"
-msgstr ""
+msgstr ": Povrat"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
@@ -526,12 +526,12 @@ msgstr "<strong>-Odoo Tim</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>1. Register Outstanding Invoices</strong>"
-msgstr ""
+msgstr "<strong>1. Registracija prekoračenih faktura</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>2. Register Unmatched Payments</strong>"
-msgstr ""
+msgstr "<strong>2. Registracija nezatvorenih uplata</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -544,6 +544,8 @@ msgid ""
 "<strong>Automated documents sending:</strong> automatically send your "
 "invoices by email or snail mail."
 msgstr ""
+"<strong>Automatizovano slanje dokumenata:</strong> automatski pošaljite vaše"
+" Fakture putem email-a ili snail maila."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -556,6 +558,8 @@ msgid ""
 "<strong>Banking interface:</strong> with live bank feed synchronization and "
 "bank statement import."
 msgstr ""
+"<strong>Bankovni interface:</strong> sa sinhronizacijom obavještenja banke u"
+" stvarnom vremenu i uvozom izvoda iz banke."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -706,7 +710,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Next action:</strong><br/>"
-msgstr ""
+msgstr "<strong>Sljedeća akcija:</strong><br/>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2405,6 +2409,8 @@ msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
 "Please go to Account Configuration."
 msgstr ""
+"Nije bilo moguće pronaći kontni plan za ovu kompaniju. Trebate je konfigurisati.\n"
+"Molimo da odete na konfiguraciju računovodstva."
 
 #. module: account
 #: code:addons/account/models/account.py:425
@@ -3806,7 +3812,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Don't hesitate to"
-msgstr ""
+msgstr "Ne ustručavajte se da"
 
 #. module: account
 #: selection:account.invoice.report,state:0
@@ -3987,7 +3993,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Enjoy your Odoo experience,"
-msgstr ""
+msgstr "Uživajte u Odoo iskustvu,"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_form
@@ -4657,7 +4663,7 @@ msgstr "ID"
 #: code:addons/account/models/chart_template.py:182
 #, python-format
 msgid "INV"
-msgstr ""
+msgstr "FAK"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:386
@@ -4994,6 +5000,8 @@ msgid ""
 "Intermediary account used when moving money from a liquidity account to "
 "another"
 msgstr ""
+"Prenosni konto korišćen prilikom prenosa novca sa jednog konta likvidnosti "
+"na drugi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_narration
@@ -5175,6 +5183,8 @@ msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
 msgstr ""
+"Faktura_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
+"and 'draft' or ''}"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -5225,7 +5235,7 @@ msgstr "Statistika faktura"
 #: code:addons/account/models/account_journal_dashboard.py:172
 #, python-format
 msgid "Invoices owed to you"
-msgstr ""
+msgstr "Fakture koje duguju vama"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5796,7 +5806,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_partner_last_time_entries_checked
 #: model:ir.model.fields,field_description:account.field_res_users_last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
-msgstr ""
+msgstr "Poljednje poređenje Faktura i Uplata"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5952,7 +5962,7 @@ msgstr "Upravljanje"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Managing bank fees"
-msgstr ""
+msgstr "Upravljanje provizijama banke"
 
 #. module: account
 #: model:account.payment.method,name:account.account_payment_method_manual_in
@@ -6297,6 +6307,9 @@ msgid ""
 "No users, including Advisers, can edit accounts prior to and inclusive of "
 "this date. Use it for fiscal year locking for example."
 msgstr ""
+"Nijedan korisnik, uključujući savjetnike, ne može uređivati knjiženja prije "
+"uključujući ovaj datum. Koristite ovo da na primjer zaključate fiskalnu "
+"godinu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_code_digits
@@ -6546,6 +6559,9 @@ msgid ""
 "of this date. Use it for period locking inside an open fiscal year, for "
 "example."
 msgstr ""
+"Samo korisnici sa 'Savjetnik' grupom može uređivati knjiženja prije i "
+"uključujući ovaj datum. Koristite ovu opciju na primjer da zaključate "
+"otvorenu fiskalnu godinu."
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -10646,7 +10662,7 @@ msgstr "konfigurišite vaše bankovne račune."
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "the customer list"
-msgstr ""
+msgstr "lista kupaca"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
@@ -10656,7 +10672,7 @@ msgstr "nadređena kompanija"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "the product list"
-msgstr ""
+msgstr "lista proizvoda"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

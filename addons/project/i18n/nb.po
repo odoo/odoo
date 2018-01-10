@@ -5,18 +5,20 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # Aleksander <aleksander@provendo.no>, 2016
-# Mari Løken <mari@tinderbox.no>, 2016
+# Mari Løken <inactive+mari123@transifex.com>, 2016
 # Roy Edvard Ellingsen <roy@royedvard.com>, 2016
 # Jan Vidar Strømsvold <OdooTransifex@stromsvold.be>, 2016
-# Joachim Flottorp <joachimflottorp@gmail.com>, 2016
+# Joachim Flottorp (Joachim flottorp) <joachimflottorp@gmail.com>, 2016
 # Eirik Halvorsen <eirik386@gmail.com>, 2017
+# Viktor Basso <viktor@voit.no>, 2017
+# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
 "PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: Eirik Halvorsen <eirik386@gmail.com>, 2017\n"
+"Last-Translator: Jorunn D. Newth <jdn@eyenetworks.no>, 2017\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -139,6 +141,11 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Kjære ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Takk for forespørselen.<br /></p>\n"
+"<p>Har du (flere) spørsmål, gi oss beskjed.</p>\n"
+"<p>Beste hilsen,</p>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_opening_days
@@ -153,7 +160,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
 msgid "# Days to Deadline"
-msgstr ""
+msgstr "# dager til fristen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
@@ -184,11 +191,13 @@ msgid ""
 "(Un)archiving a project automatically (un)archives its tasks and issues. Do "
 "you want to proceed?"
 msgstr ""
+"Å arkivere eller av-arkivere et prosjekt vil automatisk (av-)arkivere alle "
+"tilknyttede oppgaver og saker. Vil du fortsette?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "- The Odoo Team"
-msgstr ""
+msgstr "Odoo-teamet"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -200,6 +209,8 @@ msgstr "1. Lær mer om oppgaver, saker og timeregistrering"
 msgid ""
 "2. Now, take some time to list <strong>the Projects you'll need:</strong>"
 msgstr ""
+"2. Sett av litt tid til å liste opp <strong>prosjektene du vil "
+"trenge:</strong>"
 
 #. module: project
 #. openerp-web
@@ -209,20 +220,22 @@ msgid ""
 "<b>Assign the task</b> to someone. <i>You can create and invite a new user "
 "on the fly.</i>"
 msgstr ""
+"<b>Tildel oppgaven</b> til noen. <i>Du kan opprette og invitere en ny bruker"
+" direkte.</i>"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:83
 #, python-format
 msgid "<b>Click the save button</b> to apply your changes to the task."
-msgstr ""
+msgstr "<b>Klikk 'Lagre'-knappen</b> for å lagre endringene i oppgaven."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:48
 #, python-format
 msgid "<b>Drag &amp; drop tasks</b> between columns as you work on them."
-msgstr ""
+msgstr "<b>Dra og slipp oppgaver</b> mellom kolonnene når du jobber med dem."
 
 #. module: project
 #. openerp-web
@@ -239,12 +252,12 @@ msgstr ""
 #: code:addons/project/static/src/js/tour.js:54
 #, python-format
 msgid "<b>Star tasks</b> to mark team priorities."
-msgstr ""
+msgstr "<b>Merk oppgaver med en stjerne</b> for å vise teamprioriteringer."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<i class=\"fa fa-user\"/> Person Responsible"
-msgstr ""
+msgstr "<i class=\"fa fa-user\"/> Ansvarlig person"
 
 #. module: project
 #: code:addons/project/models/project.py:122
@@ -256,12 +269,19 @@ msgid ""
 "                        documents to your project.\n"
 "                    </p>"
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                        Dokumenter legges ved oppgavene og sakene i prosjektet ditt.</p><p>\n"
+"                        Send meldinger eller loggfør interne notater med vedlegg for å knytte \n"
+"dokumenter til prosjektet ditt.\n"
+"                    </p>"
 
 #. module: project
 #: code:addons/project/models/project.py:150
 #, python-format
 msgid "<p class=\"oe_view_nocontent_create\">Click to create a new project.</p>"
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">Klikk for å opprette et nytt "
+"prosjekt.</p>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -271,22 +291,22 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install now"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Installer nå"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat"
-msgstr ""
+msgstr "<span class=\"fa fa-comment-o\"/> Nettstedchat"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat on"
-msgstr ""
+msgstr "<span class=\"fa fa-comment-o\"/> Nettstedchat på"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-envelope-o\"/> Email Our Project Expert"
-msgstr ""
+msgstr "<span class=\"fa fa-envelope-o\"/> Send epost til vår prosjektekspert"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -294,6 +314,8 @@ msgid ""
 "<span class=\"fa fa-thumbs-o-down\"/> The <strong> Wrong Way</strong> to use"
 " projects:"
 msgstr ""
+"<span class=\"fa fa-thumbs-o-down\"/> Den <strong>gale måten</strong> å "
+"bruke prosjekter på:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -301,6 +323,8 @@ msgid ""
 "<span class=\"fa fa-thumbs-o-up\"/> The <strong>Right Way</strong> to use "
 "projects:"
 msgstr ""
+"<span class=\"fa fa-thumbs-o-up\"/> Den <strong>riktige måten</strong> å "
+"bruke prosjekter på:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
@@ -350,6 +374,10 @@ msgid ""
 "                                            <strong> Via Chrome extension</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-puzzle-piece\"/>\n"
+"                                            <strong> Via Chrome-utvidelse</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -382,6 +410,11 @@ msgid ""
 "                                            <span class=\"small\">Check Workload</span>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-thumb-tack\"/>\n"
+"                                            <strong> Øvelse 1</strong><br/>\n"
+"                                            <span class=\"small\">Sjekk arbeidsmengde</span>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -438,6 +471,9 @@ msgid ""
 "                                    We have special options for unlimited number of customizations !\n"
 "                                    </span>"
 msgstr ""
+"<span><strong>Kontakt oss for å tilpasse applikasjonen:</strong><br/>\n"
+"                                    Vi har egne valgmuligheter for ubegrensede tilpasninger!\n"
+"                                    </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -470,7 +506,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong> Prepare an agenda (and keep to it)</strong>"
-msgstr ""
+msgstr "<strong> Forbered en dagsorden (og hold deg til den)</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -517,7 +553,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>About Employees:</strong>"
-msgstr ""
+msgstr "<strong>Om ansatte:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -532,11 +568,13 @@ msgid ""
 "<strong>An internal activity</strong> that should be done within a defined "
 "period of time."
 msgstr ""
+"<strong>En intern aktivitet</strong> som må gjøres innenfor et definert "
+"tidsrom."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Analyze reports</strong> (every a year)"
-msgstr ""
+msgstr "<strong>Analyser rapporter</strong> (hvert år)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -549,6 +587,8 @@ msgid ""
 "<strong>Ask participants to prepare</strong><br/>\n"
 "                                To run an effective meeting, prepare participants beforehand. Inform them of how they are expected to contribute."
 msgstr ""
+"<strong>Be deltakerne om å forberede seg</strong><br/>\n"
+"                                For å holde et effektivt møte, forbered deltakerne først. Informer dem om hvordan de er forventet å bidra. "
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -556,6 +596,8 @@ msgid ""
 "<strong>Be careful about the messages you send</strong><br/>\n"
 "                                    Sending a message through Odoo will automatically send an email containing your message to all the followers including internal employees, external users or customers."
 msgstr ""
+"<strong>Vær forsiktig med hvilke meldinger du sender</strong><br/>\n"
+"                                    Å sende en melding via Odoo vil automatisk sende epost med meldingen din til alle følgere, inkludert ansatte, eksterne brukere og kunder."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -575,11 +617,13 @@ msgid ""
 "<strong>Click on 'Reporting' on the main menu</strong> and generate "
 "statistics relevent to each profiles:"
 msgstr ""
+"<strong>Velg 'Rapportering' i hovedmenyen</strong> og generer statistikker "
+"som er relevante for hver profil:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Contact us now:</strong><br/>"
-msgstr ""
+msgstr "<strong>Kontakt oss nå:</strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -594,16 +638,18 @@ msgid ""
 "<strong>Define a Naming Convention</strong><br/>\n"
 "                                    Add keywords in the 'Task title' field, for example [Customer name] or [Website]. This will help you navigate and search through the dozens of tasks in your project."
 msgstr ""
+"<strong>Definer en navneregel</strong><br/>\n"
+"                                    Legg til nøkkelord i feltet 'Oppgavetittel', for eksempel [Kundenavn] eller [Nettsted]. Dette vil hjelpe deg å navigere og søke gjennom alle oppgavene du etter hvert får i prosjektet."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Enter your activities</strong> (every day)"
-msgstr ""
+msgstr "<strong>Legg inn aktiviteter</strong> (hver dag)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Example: </strong>"
-msgstr ""
+msgstr "<strong>Eksempel: </strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -641,12 +687,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>For tasks:</strong>"
-msgstr ""
+msgstr "<strong>For oppgaver:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Getting reports</strong> on what your employees are working on"
-msgstr ""
+msgstr "<strong>Få rapporter</strong> om hva de ansatte jobber med"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -654,6 +700,7 @@ msgid ""
 "<strong>Getting statistics</strong> on how much time a task takes to be "
 "completed"
 msgstr ""
+"<strong>Få statistikk</strong> on how much time a task takes to be completed"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -685,7 +732,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Invoice your customers</strong> (every month)"
-msgstr ""
+msgstr "<strong>Fakturer kundene</strong> (hver måned)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -697,6 +744,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Need help to structure your projects?</strong><br/>"
 msgstr ""
+"<strong>Trenger du hjelp til å strukturere prosjektene dine?</strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -711,11 +759,13 @@ msgstr ""
 msgid ""
 "<strong>Need help with defining your Projects? Contact us now.</strong><br/>"
 msgstr ""
+"<strong>Trenger du hjelp med å definere prosjektene dine? Kontakt oss "
+"nå.</strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Notes</strong>"
-msgstr ""
+msgstr "<strong>Notater</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -746,7 +796,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Stages and Requirements</strong> for next stage:"
-msgstr ""
+msgstr "<strong>Stadier og krav</strong> for neste stadium:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -758,7 +808,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>There are two ways of managing your Kanban stages:</strong>"
-msgstr ""
+msgstr "<strong>Det er to måter å administrere kanban-stadiene på:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -766,6 +816,8 @@ msgid ""
 "<strong>To increase the efficiency of your Projects</strong>, you should "
 "have a look at some of our other apps:"
 msgstr ""
+"<strong>For å gjøre prosjektene dine mer effektive</strong>, bør du se på "
+"noen av de andre appene våre:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -791,12 +843,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>What Activities</strong> would you like to manage?"
-msgstr ""
+msgstr "<strong>Hvilke aktiviteter</strong> would you like to manage?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>What do you expect</strong> from using Odoo Project?"
-msgstr ""
+msgstr "<strong>Hva forventer du</strong> å oppnå ved å bruke Odoo Prosjekt?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -858,14 +910,14 @@ msgstr "Godta e-poster fra"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Account Preferences"
-msgstr ""
+msgstr "Kontoinnstillinger"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:38
 #, python-format
 msgid "Action has a clear description"
-msgstr ""
+msgstr "Handlingen har en klar beskrivelse"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -888,6 +940,11 @@ msgid "Active"
 msgstr "Aktiv"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Activities"
+msgstr "Aktiviteter"
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
 msgstr "Legg til beskrivelse..."
@@ -900,6 +957,8 @@ msgid ""
 "Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. "
 "Specification &gt; Development &gt; Done</i>"
 msgstr ""
+"Legg til kolonner for å sette opp <b>stadier for oppgavene "
+"dine</b>.<br/><i>For eksempel Spesifikasjon &gt; Utvikling &gt; Fullført</i>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
@@ -911,7 +970,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:55
 #, python-format
 msgid "Added in current sprint"
-msgstr ""
+msgstr "Lagt til i inneværende sprint"
 
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_2
@@ -936,12 +995,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_name
 msgid "Alias Name"
-msgstr ""
+msgstr "Aliasnavn"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_domain
 msgid "Alias domain"
-msgstr ""
+msgstr "Aliasdomene"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_model_id
@@ -1031,7 +1090,7 @@ msgstr "Tildelt til"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_assign
 msgid "Assigning Date"
-msgstr ""
+msgstr "Dato for tildeling"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -1065,7 +1124,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Available on the Apple Store"
-msgstr ""
+msgstr "Tilgjengelig i Apple Store"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1081,7 +1140,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:63
 #, python-format
 msgid "Backlog"
-msgstr ""
+msgstr "Backlog"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_balance
@@ -1160,7 +1219,7 @@ msgstr "Kansellert"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Change their Stages in the Project Stages tab"
-msgstr ""
+msgstr "Endre stadiene i fanen Prosjektstadier."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_account_analytic_account_use_tasks
@@ -1176,25 +1235,27 @@ msgid ""
 "Choose a <b>project name</b>. (e.g. Website Launch, Product Development, "
 "Office Party, etc.)"
 msgstr ""
+"Velg et <b>prosjektnavn</b>. (For eksempel lansering av nettsted, "
+"produktutvikling, firmafest, osv.)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Choose a Project Email"
-msgstr ""
+msgstr "Velg prosjekt-epost"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:54
 #, python-format
 msgid "Clear description and purpose"
-msgstr ""
+msgstr "Klar beskrivelse og formål"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:59
 #, python-format
 msgid "Click on a card to get the details of the task."
-msgstr ""
+msgstr "Klikk på et kort for å se detaljer for oppgaven."
 
 #. module: project
 #. openerp-web
@@ -1203,28 +1264,30 @@ msgstr ""
 msgid ""
 "Click on the card to <b>go to your project</b> and start organizing tasks."
 msgstr ""
+"Klikk på et kort for å <b>gå til prosjektet</b> og begynne å organisere "
+"oppgaver."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:67
 #, python-format
 msgid "Click on this button to modify the task."
-msgstr ""
+msgstr "Klikk på denne knappen for å endre oppgaven."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.project_tags_action
 msgid "Click to add a new tag."
-msgstr ""
+msgstr "Klikk for å legge til en ny tag."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
 msgid "Click to add a stage in the task pipeline."
-msgstr ""
+msgstr "Klikk for å legge til et stadium i prosessen."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "Click to create a new project.<br>"
-msgstr ""
+msgstr "Klikk for å opprette et nytt prosjekt.<br>"
 
 #. module: project
 #: selection:project.config.settings,module_pad:0
@@ -1241,7 +1304,7 @@ msgstr "Fargeindeks"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Communication campaign"
-msgstr ""
+msgstr "Kommunikasjonskampanje"
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -1275,7 +1338,7 @@ msgstr "Konfigurasjon"
 #: code:addons/project/static/src/js/tour.js:93
 #, python-format
 msgid "Configuration options are available in the Settings app."
-msgstr ""
+msgstr "Du finner valgmuligheter for konfigurasjon i appen Innstillinger."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_config_settings
@@ -1288,11 +1351,13 @@ msgid ""
 "Congratulations on choosing Odoo Project to help running your company more "
 "efficiently!"
 msgstr ""
+"Gratulerer med valget av Odoo Prosjekt for å drive selskapet ditt mer "
+"effektivt!"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Congratulations, you're done !"
-msgstr ""
+msgstr "Gratulerer, du er ferdig!"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1314,14 +1379,14 @@ msgstr "Kontrakt/Analytisk"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Control projects quality and satisfaction"
-msgstr ""
+msgstr "Kontroller prosjektkvalitet og fornøydhet"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:33
 #, python-format
 msgid "Copywriting / Design"
-msgstr ""
+msgstr "Tekstforfatting / utforming"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -1331,12 +1396,12 @@ msgstr "Opprett"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create a Gantt chart with your projects tasks and deadlines"
-msgstr ""
+msgstr "Opprett et Gantt-skjema med prosjektoppgavene og fristene dine"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
 msgid "Create a Project"
-msgstr ""
+msgstr "Opprett et prosjekt"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all_config
@@ -1349,11 +1414,13 @@ msgid ""
 "Create a task by sending an email to a project alias with one of your "
 "colleagues in copy"
 msgstr ""
+"Opprett en oppgave ved å sende epost til et prosjektalias med kopi til en "
+"kollega"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create at least 3 tasks"
-msgstr ""
+msgstr "Opprett minst 3 oppgaver"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1363,7 +1430,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_create_date
 msgid "Create date"
-msgstr ""
+msgstr "Opprettet dato"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1437,50 +1504,50 @@ msgstr "Kundens e-post"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Customer Service"
-msgstr ""
+msgstr "Kundestøtte"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:73
 #, python-format
 msgid "Customer feedback has been requested"
-msgstr ""
+msgstr "Tilbakemeldinger fra kunde er etterspurt"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:91
 #, python-format
 msgid "Customer has cancelled repair"
-msgstr ""
+msgstr "Kunden har avbestilt reparasjon"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:71
 #, python-format
 msgid "Customer has reported new issue"
-msgstr ""
+msgstr "Kunden har rapportert en ny sak"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:70
 #, python-format
 msgid "Customer service has found new issue"
-msgstr ""
+msgstr "Kundestøtte har funnet en ny sak"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Customer support tickets"
-msgstr ""
+msgstr "Kundestøttesaker"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Customization"
-msgstr ""
+msgstr "Tilpasning"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_projects
 msgid "Dashboard"
-msgstr ""
+msgstr "Dashboard"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_deadline
@@ -1496,7 +1563,7 @@ msgstr "Debet"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_defaults
 msgid "Default Values"
-msgstr ""
+msgstr "Standardverdier"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
@@ -1523,14 +1590,14 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Deploy"
-msgstr ""
+msgstr "Rull ut"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:19
 #, python-format
 msgid "Deployment"
-msgstr ""
+msgstr "Utrulling"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_description
@@ -1549,7 +1616,7 @@ msgstr "Utvikling"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Development Process"
-msgstr ""
+msgstr "Utviklingsproses"
 
 #. module: project
 #. openerp-web
@@ -1572,21 +1639,21 @@ msgstr "Visnings navn"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
 msgid "Displayed Image"
-msgstr ""
+msgstr "Vist bilde"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:34
 #, python-format
 msgid "Distribute"
-msgstr ""
+msgstr "Distribuer"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:42
 #, python-format
 msgid "Distribution is completed"
-msgstr ""
+msgstr "Distribusjon fullført"
 
 #. module: project
 #: selection:project.config.settings,generate_project_alias:0
@@ -1622,12 +1689,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Don't hesitate to"
-msgstr ""
+msgstr "Ikke nøl med"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Don't hesitate to select only the events you are interested in!"
-msgstr ""
+msgstr "Ikke nøl med å velge bare arrangementene du er interessert i!"
 
 #. module: project
 #. openerp-web
@@ -1657,7 +1724,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit Task"
-msgstr ""
+msgstr "Rediger oppgave"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1677,7 +1744,7 @@ msgstr "E-post"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "End"
-msgstr ""
+msgstr "Slutt"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_end
@@ -1730,7 +1797,7 @@ msgstr "Eksempler"
 #: code:addons/project/static/src/js/web_planner_project.js:74
 #, python-format
 msgid "Expert advice has been requested"
-msgstr ""
+msgstr "Ekspertråd har blitt etterspurt"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_date
@@ -1757,14 +1824,14 @@ msgstr "Ekstra informasjon."
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Extra useful for when you're with a customer or in a meeting."
-msgstr ""
+msgstr "Ekstra nyttig når du er med en kunde eller i møter"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:88
 #, python-format
 msgid "Feedback from customer requested"
-msgstr ""
+msgstr "Tilbakemelding fra kunde etterspurt"
 
 #. module: project
 #. openerp-web
@@ -1790,12 +1857,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Followed by Me"
-msgstr ""
+msgstr "Fulgt av meg"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "For employees, the"
-msgstr ""
+msgstr "For ansatte"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1810,6 +1877,8 @@ msgid ""
 "For the Odoo Team,<br/>\n"
 "                            Fabien Pinckaers, Founder"
 msgstr ""
+"For Odoo-teamet,<br/>\n"
+"                         Fabien Pinckaers, grunnlegger"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1817,11 +1886,13 @@ msgid ""
 "For the same reason, don't create a Project based on weeks or time (example:"
 " Scrum)."
 msgstr ""
+"Av samme grunn, ikke opprett prosjekter basert på uker eller tid (for "
+"eksempel Scrum)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Forecasts"
-msgstr ""
+msgstr "Prognoser"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_forecast
@@ -1831,27 +1902,27 @@ msgstr ""
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
 msgid "GTD"
-msgstr ""
+msgstr "GTD"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Generate a timesheet report to attach to your customer invoices"
-msgstr ""
+msgstr "Generer en timelisterapport som kan legges ved kundefakturaer"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Get full synchronization with Odoo"
-msgstr ""
+msgstr "Få full synkronisering med Odoo"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Get it on Google Play"
-msgstr ""
+msgstr "Skaff fra Google Play"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Get more apps"
-msgstr ""
+msgstr "Få flere apper"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_label_tasks
@@ -1888,11 +1959,13 @@ msgstr "Lykke til!"
 msgid ""
 "Green: the Task is ready for next stage (the job for this stage is complete)"
 msgstr ""
+"Grønn: Oppgaven er klar for neste stadium (jobben på dette stadiet er "
+"fullført)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Grey: the Task is in progress (someone is working on it)"
-msgstr ""
+msgstr "Grå: Oppgaven er under behandling (noen jobber med den)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1904,12 +1977,12 @@ msgstr "Grupper etter"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Here are some of the <strong>available customizations</strong>"
-msgstr ""
+msgstr "Her er noen av de <strong>tilgjengelige tilpasningene</strong>"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 msgid "Here, you can create new tasks"
-msgstr ""
+msgstr "Her kan du opprette nye oppgaver"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -1932,7 +2005,7 @@ msgstr ""
 #: code:addons/project/models/project.py:567
 #, python-format
 msgid "I take it"
-msgstr ""
+msgstr "Jeg tar den"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_id
@@ -1956,19 +2029,19 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:103
 #, python-format
 msgid "Idea has been transformed into concrete actions"
-msgstr ""
+msgstr "Idé er transformert til konkrete tiltak"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:102
 #, python-format
 msgid "Idea is fully explained"
-msgstr ""
+msgstr "Ideen er forklart fullt ut"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Ideally, a person should only be responsible for one project."
-msgstr ""
+msgstr "Ideelt sett bør én person bare være ansvarlig for ett prosjekt"
 
 #. module: project
 #. openerp-web
@@ -1980,7 +2053,7 @@ msgstr "Idéer"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Identify problems and blocking points more easily"
-msgstr ""
+msgstr "Identifiser problemer og hindringer lettere"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type_mail_template_id
@@ -2003,7 +2076,7 @@ msgstr ""
 msgid ""
 "If you don't want to receive email notifications, you can uncheck the option"
 " in your"
-msgstr ""
+msgstr "Hvis du ikke vil motta epostvarslinger, kan du slå det av i"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2023,17 +2096,17 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Implement"
-msgstr ""
+msgstr "Implementer"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Improve"
-msgstr ""
+msgstr "Forbedre"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Improve collaboration with customers"
-msgstr ""
+msgstr "Forbedre samarbeidet med kunder"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -2098,14 +2171,14 @@ msgstr "Versjon"
 #: code:addons/project/static/src/js/web_planner_project.js:72
 #, python-format
 msgid "Issue is being worked on"
-msgstr ""
+msgstr "Saken er under arbeid"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:75
 #, python-format
 msgid "Issue is resolved"
-msgstr ""
+msgstr "Saken er løst"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2146,6 +2219,8 @@ msgstr ""
 msgid ""
 "It's for logging every change, event or message related to the Document."
 msgstr ""
+"Der kan alle endringer, hendelser og meldinger tilknyttet dokumentet "
+"loggføres."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2170,12 +2245,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Kanban Stage"
-msgstr ""
+msgstr "Kanban-stadium"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Kanban Stages"
-msgstr ""
+msgstr "Kanban-stadier"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_kanban_state
@@ -2192,12 +2267,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Keep track of messages and conversations"
-msgstr ""
+msgstr "Hold styr på meldinger og samtaler"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Know what my employees are working on"
-msgstr ""
+msgstr "Vite hva mine ansatte jobber med"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -2249,7 +2324,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tour.js:18
 #, python-format
 msgid "Let's create your first project."
-msgstr ""
+msgstr "La oss opprette ditt første prosjekt."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_module_pad
@@ -2274,7 +2349,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "List, plan and track things to do"
-msgstr ""
+msgstr "List opp, planlegg og spor det du har å gjøre"
 
 #. module: project
 #: selection:report.project.task.user,priority:0
@@ -2313,7 +2388,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Marketing Department"
-msgstr ""
+msgstr "Markedsføringsavdeling"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
@@ -2333,12 +2408,12 @@ msgstr "Mer Informasjon"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
-msgstr ""
+msgstr "Mer effektiv kommunikasjon mellom ansatte"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "My Favorites"
-msgstr ""
+msgstr "Favorittene mine"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -2366,7 +2441,7 @@ msgstr "Navn"
 #: model:project.task,legend_blocked:project.project_task_7
 #: model:project.task.type,legend_blocked:project.project_stage_1
 msgid "Need functional or technical help"
-msgstr ""
+msgstr "Trenger funksjonell eller teknisk hjelp"
 
 #. module: project
 #. openerp-web
@@ -2389,7 +2464,7 @@ msgstr "Ny Oppgave"
 #: code:addons/project/static/src/js/web_planner_project.js:86
 #, python-format
 msgid "New repair added"
-msgstr ""
+msgstr "Ny reparasjon lagt til"
 
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
@@ -2411,7 +2486,7 @@ msgstr "Normal"
 #: model:project.task,legend_blocked:project.project_task_9
 #: model:project.task.type,legend_blocked:project.project_stage_0
 msgid "Not validated"
-msgstr ""
+msgstr "Ikke validert"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
@@ -2428,7 +2503,7 @@ msgstr "Varsling."
 #: code:addons/project/static/src/js/tour.js:43
 #, python-format
 msgid "Now that the project is set up, <b>create a few tasks</b>."
-msgstr ""
+msgstr "Nå som prosjektet er satt opp, <b>opprett noen oppgaver</b>."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_opening_days
@@ -2444,6 +2519,11 @@ msgstr "Antall dager for å lukke oppgaven"
 #: model:ir.model.fields,field_description:project.field_project_project_doc_count
 msgid "Number of documents attached"
 msgstr "Antall dokumenter vedlagt"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Objectives"
+msgstr "Mål"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2472,7 +2552,7 @@ msgstr ""
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "On invitation only"
-msgstr ""
+msgstr "Bare etter invitasjon"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2504,7 +2584,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Organize meetings"
-msgstr ""
+msgstr "Organiser møter"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all_config
@@ -2512,12 +2592,15 @@ msgid ""
 "Organize your activities (plan tasks, track issues, invoice timesheets) for "
 "internal, personal or customer projects."
 msgstr ""
+"Organiser aktivitetene dine (planlegg oppgaver, spor saker, fakturer "
+"timelister) for interne, personlige eller kunderettede prosjekter."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Organize your company, from personal tasks to collaborative meeting minutes."
 msgstr ""
+"Organiser selskapet, fra personlige oppgaver til samarbeid om møtereferater."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -2584,12 +2667,12 @@ msgstr "Partner"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Plan your activities for the day"
-msgstr ""
+msgstr "Planlegg aktivitetene dine for dagen"
 
 #. module: project
 #: model:ir.model,name:project.model_web_planner
 msgid "Planner"
-msgstr ""
+msgstr "Planlegger"
 
 #. module: project
 #: code:addons/project/models/project.py:723
@@ -2598,6 +2681,7 @@ msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
 "to delete."
 msgstr ""
+"Vennligst fjern oppgaver i prosjektet tilknyttet kontoene du vil slette."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_contact
@@ -2611,7 +2695,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Prepare"
-msgstr ""
+msgstr "Forbered"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_priority
@@ -2622,7 +2706,7 @@ msgstr "Prioritet"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
 msgid "Priority Management Explanation"
-msgstr ""
+msgstr "Forklaring av prioriteringsadministrasjon"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_privacy_visibility
@@ -2632,7 +2716,7 @@ msgstr "Privat"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Product or software version"
-msgstr ""
+msgstr "Produkt- eller programvareversjon"
 
 #. module: project
 #: model:ir.model,name:project.model_project_project
@@ -2656,7 +2740,7 @@ msgstr "Prosjektalias"
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_project_count
 #: model:ir.model.fields,field_description:project.field_project_project_project_count
 msgid "Project Count"
-msgstr ""
+msgstr "Prosjektantall"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
@@ -2719,6 +2803,7 @@ msgstr "Prosjektoppgaver"
 #: model:ir.model.fields,field_description:project.field_project_task_type_project_ids
 #: model:ir.ui.menu,name:project.menu_projects_config
 #: model:ir.ui.view,arch_db:project.analytic_account_inherited_form
+#: model:ir.ui.view,arch_db:project.project_planner
 #: model:ir.ui.view,arch_db:project.view_project
 msgid "Projects"
 msgstr "Prosjekter"
@@ -2726,7 +2811,7 @@ msgstr "Prosjekter"
 #. module: project
 #: model:mail.channel,name:project.mail_channel_project_task
 msgid "Projects & Tasks"
-msgstr ""
+msgstr "Prosjekter og oppgaver"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_rating_project
@@ -2738,7 +2823,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:40
 #, python-format
 msgid "Ready for layout / copywriting"
-msgstr ""
+msgstr "Klar for layout / språkbearbeidelse"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -2765,14 +2850,14 @@ msgstr "Klar til testing"
 #: code:addons/project/static/src/js/web_planner_project.js:41
 #, python-format
 msgid "Ready to be displayed, published or sent"
-msgstr ""
+msgstr "Klar til å vises, publiseres eller sendes"
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_16
 #: model:project.task,legend_done:project.project_task_19
 #: model:project.task.type,legend_done:project.project_stage_3
 msgid "Ready to reopen"
-msgstr ""
+msgstr "Klar til å gjenåpnes"
 
 #. module: project
 #. openerp-web
@@ -2780,22 +2865,22 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
-msgstr ""
+msgstr "Årsak til kansellering er dokumentert"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of ${object.name}"
-msgstr ""
+msgstr "Mottakelse av ${object.name}"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "Tråd-ID for oppføring"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Red: the Task is blocked (there's a problem)"
-msgstr ""
+msgstr "Rød: Oppgaven er blokkert (det er et problem)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_code
@@ -2807,7 +2892,7 @@ msgstr "Referanse"
 #: code:addons/project/static/src/js/web_planner_project.js:51
 #, python-format
 msgid "Release"
-msgstr ""
+msgstr "Lansering"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_remaining_hours
@@ -2819,26 +2904,26 @@ msgstr "Gjenstående timer"
 #: code:addons/project/static/src/js/project.js:48
 #, python-format
 msgid "Remove Cover Image"
-msgstr ""
+msgstr "Fjern forsidebilde"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Repair Workshop"
-msgstr ""
+msgstr "Reparasjonsverksted"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:87
 #, python-format
 msgid "Repair has started"
-msgstr ""
+msgstr "Reparasjon er påbegynt"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:90
 #, python-format
 msgid "Repair is completed"
-msgstr ""
+msgstr "Reparasjon er fullført"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2855,7 +2940,7 @@ msgstr "Rapporter"
 #: code:addons/project/static/src/js/web_planner_project.js:89
 #, python-format
 msgid "Request for parts has been sent"
-msgstr ""
+msgstr "Forespørsel om deler er sendt"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2865,17 +2950,17 @@ msgstr "Ansvaret."
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Responsibility"
-msgstr ""
+msgstr "Ansvar"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Runs outside Odoo, always available"
-msgstr ""
+msgstr "Kjører utenfor Odoo og er alltid tilgjengelig"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Scrum Methodology"
-msgstr ""
+msgstr "Scrum-metodologi"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_management
@@ -2897,7 +2982,7 @@ msgstr "Velg"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Send an alert when a task is stuck in red for more than a few days"
-msgstr ""
+msgstr "Send et varsel når en oppgave står fast på rød i mer enn et par dager"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2916,19 +3001,19 @@ msgstr "Sekvens"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Service Level Agreement (SLA)"
-msgstr ""
+msgstr "Service Level Agreement (SLA)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
-msgstr ""
+msgstr "Sett forsidebilde"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project.js:45
 #, python-format
 msgid "Set a Cover Image"
-msgstr ""
+msgstr "Sett et forsidebilde"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_general_settings
@@ -2940,17 +3025,17 @@ msgstr "Innstillinger"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Severity"
-msgstr ""
+msgstr "Alvorlighetsgrad"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Share files and manage versions"
-msgstr ""
+msgstr "Del filer og administrer versjoner"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_is_favorite
 msgid "Show Project on dashboard"
-msgstr ""
+msgstr "Vis prosjekt på dashbord"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2962,7 +3047,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Software development"
-msgstr ""
+msgstr "Programvareutvikling"
 
 #. module: project
 #. openerp-web
@@ -2976,14 +3061,14 @@ msgstr "Spesifikasjon"
 #: code:addons/project/static/src/js/web_planner_project.js:23
 #, python-format
 msgid "Specification is validated"
-msgstr ""
+msgstr "Spesifikasjonen er validert"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:22
 #, python-format
 msgid "Specification of task is written"
-msgstr ""
+msgstr "Spesifikasjon av oppgaven er skrevet"
 
 #. module: project
 #. openerp-web
@@ -3008,7 +3093,7 @@ msgstr "Stadium endret"
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Stage Description and Tooltips"
-msgstr ""
+msgstr "Beskrivelse og hjelpetekster for stadium"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_name
@@ -3029,7 +3114,7 @@ msgstr "Faser"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Start / Stop a timer in one click"
-msgstr ""
+msgstr "Start / stopp en tidtaker med ett klikk"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_date_start
@@ -3044,7 +3129,7 @@ msgstr "Startdato"
 #. module: project
 #: sql_constraint:project.tags:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Tagnavnet eksisterer allerede!"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
@@ -3083,7 +3168,7 @@ msgstr "Oppgave blokkert"
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Opened"
-msgstr ""
+msgstr "Oppgave åpnet"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
@@ -3094,7 +3179,7 @@ msgstr "Oppgaveflyt"
 #: model:mail.message.subtype,name:project.mt_project_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready"
-msgstr ""
+msgstr "Oppgave klar"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -3112,12 +3197,12 @@ msgstr "Oppgavestadium endret"
 #: model:ir.model.fields,field_description:project.field_project_task_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_name
 msgid "Task Title"
-msgstr ""
+msgstr "Oppgavetittel"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task Title..."
-msgstr ""
+msgstr "Oppgavetittel..."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_blocked
@@ -3134,31 +3219,31 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:24
 #, python-format
 msgid "Task is Developed"
-msgstr ""
+msgstr "Oppgaven er utviklet"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:104
 #, python-format
 msgid "Task is completed"
-msgstr ""
+msgstr "Oppgaven er fullført"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:25
 #, python-format
 msgid "Task is tested"
-msgstr ""
+msgstr "Oppgaven er testet"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
 msgid "Task opened"
-msgstr ""
+msgstr "Oppgaven er åpnet"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
 msgid "Task ready for Next Stage"
-msgstr ""
+msgstr "Oppgave klar for neste stadium"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
@@ -3203,12 +3288,12 @@ msgstr "Oppgavestadier"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Tasks analysis"
-msgstr ""
+msgstr "Oppgaveanalyse"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Tasks are the main mechanism in Odoo and are activated by default."
-msgstr ""
+msgstr "Oppgaver er hovedmekanismen i Odoo og er slått på som standard."
 
 #. module: project
 #: model:ir.model,name:project.model_report_project_task_user
@@ -3227,7 +3312,7 @@ msgstr "Test"
 #: code:addons/project/static/src/js/web_planner_project.js:57
 #, python-format
 msgid "Test is OK, need to document"
-msgstr ""
+msgstr "Test er OK, må dokumenteres"
 
 #. module: project
 #. openerp-web
@@ -3284,6 +3369,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "The same features as the Chrome extension, but on your mobile phone!"
 msgstr ""
+"Samme funksjonalitet som utvidelsen for Chrome, men på mobiltelefonen!"
 
 #. module: project
 #. openerp-web
@@ -3351,12 +3437,12 @@ msgstr ""
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
 msgid "Time Estimation on Tasks"
-msgstr ""
+msgstr "Tidsestimat på oppgaver"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Time Scheduling"
-msgstr ""
+msgstr "Tidsplanlegging"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
@@ -3375,7 +3461,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Timesheets can be used for several purposes:"
-msgstr ""
+msgstr "Timelister kan brukes til flere formål:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3401,6 +3487,8 @@ msgid ""
 "To configure these Kanban Statuses, go to the 'Project Stages' tab of a "
 "Project."
 msgstr ""
+"For å konfigurere disse Kanban-statusene, gå til fanen 'Prosjektstadier' for"
+" et prosjekt."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3410,7 +3498,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "To use Timesheets, go to your"
-msgstr ""
+msgstr "For å bruke timelister, gå til"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_remaining_hours
@@ -3423,7 +3511,7 @@ msgstr ""
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
 msgid "Track customer satisfaction on tasks"
-msgstr ""
+msgstr "Mål kundefornøydhet på oppgaver"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -3446,12 +3534,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_label_tasks
 msgid "Use Tasks as"
-msgstr ""
+msgstr "Bruk oppgaver som"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Use Timesheets"
-msgstr ""
+msgstr "Bruk timelister"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3468,13 +3556,15 @@ msgid ""
 "Use the <b>implementation guide</b> to setup Project Management in your "
 "company."
 msgstr ""
+"Bruk <b>implementasjonsguiden</b> for å sette opp prosjektstyring i firmaet "
+"ditt."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:88
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your tasks pipeline</b>."
-msgstr ""
+msgstr "Bruk navigasjonsstien for å <b>gå tilbake til oppgaveoversikten</b>."
 
 #. module: project
 #: model:project.task.type,legend_priority:project.project_stage_0
@@ -3510,26 +3600,26 @@ msgstr "Gyldighet"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "View statistics (time spent, efficiency, etc.)"
-msgstr ""
+msgstr "Vis statistikk (tidsbruk, effektivitet, osv.)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "View statistics for the week"
-msgstr ""
+msgstr "Vis ukesstatistikk"
 
 #. module: project
 #: code:addons/project/models/project.py:204
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by all employees"
-msgstr ""
+msgstr "Synlig for alle ansatte"
 
 #. module: project
 #: code:addons/project/models/project.py:205
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by following customers"
-msgstr ""
+msgstr "Synlig for følgende kunder"
 
 #. module: project
 #. openerp-web
@@ -3537,7 +3627,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:81
 #, python-format
 msgid "Wait. Customer"
-msgstr ""
+msgstr "Vent. Kunde"
 
 #. module: project
 #. openerp-web
@@ -3545,7 +3635,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:82
 #, python-format
 msgid "Wait. Expert"
-msgstr ""
+msgstr "Vent. Ekspert"
 
 #. module: project
 #. openerp-web
@@ -3554,6 +3644,8 @@ msgstr ""
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
 msgstr ""
+"Vil du ha en bedre måte å <b>styre prosjektene dine</b> på? <i>Det begynner "
+"her.</i>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3563,7 +3655,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "We can automate steps in your workflow, for example:"
-msgstr ""
+msgstr "Vi kan automatisere steg i arbeidsflyten din, for eksempel:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3578,6 +3670,8 @@ msgid ""
 "We hope this process helped you implement our project management "
 "application."
 msgstr ""
+"Vi håper denne prosessen hjalp deg med å implementere prosjektledelsesappen "
+"vår."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3585,6 +3679,8 @@ msgid ""
 "We've developed a super simple and efficient Chrome extension to enter your "
 "timesheets:<br/><br/>"
 msgstr ""
+"Vi har utviklet en superenkel og effektiv Chrome-utvidelse for å føre "
+"timelister:<br/><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3611,7 +3707,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is the number of missed deadlines?"
-msgstr ""
+msgstr "Hvor mange utløpte frister er det?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3621,19 +3717,19 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is their average number of working hours over the year?"
-msgstr ""
+msgstr "Hva er deres gjennomsnittlige antall arbeidstimer i løpet av et år?"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_is_favorite
 msgid "Whether this project should be displayed on the dashboard or not"
-msgstr ""
+msgstr "Hvorvidt dette prosjektet skal vises på dashbord"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:39
 #, python-format
 msgid "Work has started"
-msgstr ""
+msgstr "Arbeidet har begynt"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_resource_calendar_id
@@ -3643,7 +3739,7 @@ msgstr "Arbeidstid"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
 msgid "Workload"
-msgstr ""
+msgstr "Arbeidsmengde"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_write_date
@@ -3669,6 +3765,8 @@ msgstr ""
 msgid ""
 "You can even include any report in your dashboard for permanent access!"
 msgstr ""
+"Du kan til og med legge til enhver rapport på dashbordet ditt for varig "
+"tilgang!"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3676,6 +3774,8 @@ msgid ""
 "You can learn more about Timesheets in the 'Use Timesheets' section of this "
 "planner."
 msgstr ""
+"Du kan lære mer om timelister i \"Bruk timelister\"-delen av denne "
+"planleggeren"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -3694,7 +3794,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "You can save your reports to easily reuse it later"
-msgstr ""
+msgstr "Du kan lagre rapportene dine for enkel gjenbruk"
 
 #. module: project
 #: code:addons/project/models/project.py:70
@@ -3708,32 +3808,32 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Activities"
-msgstr ""
+msgstr "Aktivitetene dine"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Objectives"
-msgstr ""
+msgstr "Målene dine"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_module_install_project
 msgid "Your Odoo Project application is up and running"
-msgstr ""
+msgstr "Odoo Prosjekt-applikasjonen er oppe og kjører"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Projects"
-msgstr ""
+msgstr "Prosjektene dine"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Projects:"
-msgstr ""
+msgstr "Prosjektene dine:"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "activate a sample project"
-msgstr ""
+msgstr "aktiver et eksempelprosjekt"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3743,12 +3843,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. Office Party"
-msgstr ""
+msgstr "for eksempel firmafest"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "etc.."
-msgstr ""
+msgstr "osv."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3763,7 +3863,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "oe_kanban_text_red"
-msgstr ""
+msgstr "oe_kanban_text_red"
 
 #. module: project
 #: model:ir.model,name:project.model_project_config_settings
@@ -3773,28 +3873,28 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "send us an email"
-msgstr ""
+msgstr "send oss en epostmelding"
 
 #. module: project
 #: code:addons/project/models/project.py:466
 #, python-format
 msgid "tasks"
-msgstr ""
+msgstr "oppgaver"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "to describe<br/> your experience or to suggest improvements !"
-msgstr ""
+msgstr "for å beskrive <br/>dine erfaringer eller foreslå forbedringer!"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "to play with."
-msgstr ""
+msgstr "å leke med."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "using the above recommendations"
-msgstr ""
+msgstr "ved hjelp av anbefalingene ovenfor"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3816,9 +3916,9 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "with Timesheet"
-msgstr ""
+msgstr "med timelister"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "you listed on the previous step"
-msgstr ""
+msgstr "du listet opp på forrige steg"

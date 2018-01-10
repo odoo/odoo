@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
-
 from odoo.addons.account.tests.account_test_users import AccountTestUsers
-
+from openerp.tests.common import TransactionCase
+from openerp.tools import float_compare
 import time
 
 
@@ -26,12 +25,6 @@ class TestTax(AccountTestUsers):
             'name': "Percent tax",
             'amount_type': 'percent',
             'amount': 10,
-            'sequence': 3,
-        })
-        self.percent_tax_bis = self.tax_model.create({
-            'name': "Percent tax bis",
-            'amount_type': 'percent',
-            'amount': 21,
             'sequence': 3,
         })
         self.division_tax = self.tax_model.create({
@@ -74,125 +67,47 @@ class TestTax(AccountTestUsers):
         self.bank_account = self.bank_journal.default_debit_account_id
         self.expense_account = self.env['account.account'].search([('user_type_id.type', '=', 'payable')], limit=1) #Should be done by onchange later
 
-    def _check_compute_all_results(self, base, total_included, total_excluded, taxes, res):
-        self.assertAlmostEqual(res['base'], base)
-        self.assertAlmostEqual(res['total_included'], total_included)
-        self.assertAlmostEqual(res['total_excluded'], total_excluded)
-        for i in range(0, len(taxes)):
-            self.assertAlmostEqual(res['taxes'][i]['base'], taxes[i][0])
-            self.assertAlmostEqual(res['taxes'][i]['amount'], taxes[i][1])
-
     def test_tax_group_of_group_tax(self):
         self.fixed_tax.include_base_amount = True
+        self.group_tax.include_base_amount = True
+        self.group_of_group_tax.include_base_amount = True
         res = self.group_of_group_tax.compute_all(200.0)
-        self._check_compute_all_results(
-            220,    # 'base'
-            263,    # 'total_included'
-            200,    # 'total_excluded'
-            [
-                # base , amount     | seq | amount | incl | incl_base
-                # ---------------------------------------------------
-                (200.0, 10.0),    # |  1  |    10  |      |     t
-                (210.0, 21.0),    # |  3  |    10% |      |
-                (210.0, 10.0),    # |  1  |    10  |      |     t
-                (220.0, 22.0),    # |  3  |    10% |      |
-                # ---------------------------------------------------
-            ],
-            res
-        )
+        self.assertEquals(res['total_excluded'], 200.0)
+        # After calculation of first group
+        # base = 210
+        # total_included = 231
+        # Base of the first grouped is passed
+        # Base after the second group (220) is dropped.
+        # Base of the group of groups is passed out,
+        # so we obtain base as after first group
+        self.assertEquals(res['base'], 210.0)
+        self.assertEquals(res['total_included'], 263.0)
 
     def test_tax_group(self):
         res = self.group_tax.compute_all(200.0)
-        self._check_compute_all_results(
-            200,    # 'base'
-            230,    # 'total_included'
-            200,    # 'total_excluded'
-            [
-                # base , amount     | seq | amount | incl | incl_base
-                # ---------------------------------------------------
-                (200.0, 10.0),    # |  1  |    10  |      |
-                (200.0, 20.0),    # |  3  |    10% |      |
-                # ---------------------------------------------------
-            ],
-            res
-        )
+        self.assertEquals(res['total_excluded'], 200.0)
+        self.assertEquals(res['total_included'], 230.0)
+        self.assertEquals(len(res['taxes']), 2)
+        self.assertEquals(res['taxes'][0]['amount'], 10.0)
+        self.assertEquals(res['taxes'][1]['amount'], 20.0)
 
     def test_tax_percent_division(self):
         self.division_tax.price_include = True
         self.division_tax.include_base_amount = True
-        res_division = self.division_tax.compute_all(200.0)
-        self._check_compute_all_results(
-            220,    # 'base'
-            220,    # 'total_included'
-            200,    # 'total_excluded'
-            [
-                # base , amount     | seq | amount | incl | incl_base
-                # ---------------------------------------------------
-                (200.0, 20.0),    # |  4  |    10/ |   t  |     t
-                # ---------------------------------------------------
-            ],
-            res_division
-        )
         self.percent_tax.price_include = False
         self.percent_tax.include_base_amount = False
+        res_division = self.division_tax.compute_all(200.0)
         res_percent = self.percent_tax.compute_all(200.0)
-        self._check_compute_all_results(
-            200,    # 'base'
-            220,    # 'total_included'
-            200,    # 'total_excluded'
-            [
-                # base , amount     | seq | amount | incl | incl_base
-                # ---------------------------------------------------
-                (200.0, 20.0),    # |  3  |    10% |      |
-                # ---------------------------------------------------
-            ],
-            res_percent
-        )
+        self.assertEquals(res_division['taxes'][0]['amount'], 20.0)
+        self.assertEquals(res_percent['taxes'][0]['amount'], 20.0)
         self.division_tax.price_include = False
         self.division_tax.include_base_amount = False
-        res_division = self.division_tax.compute_all(200.0)
-        self._check_compute_all_results(
-            200,     # 'base'
-            222.22,  # 'total_included'
-            200,     # 'total_excluded'
-            [
-                # base , amount     | seq | amount | incl | incl_base
-                # ---------------------------------------------------
-                (200.0, 22.22),   # |  4  |    10/ |      |
-                # ---------------------------------------------------
-            ],
-            res_division
-        )
         self.percent_tax.price_include = True
         self.percent_tax.include_base_amount = True
+        res_division = self.division_tax.compute_all(200.0)
         res_percent = self.percent_tax.compute_all(200.0)
-        self._check_compute_all_results(
-            200,     # 'base'
-            200,     # 'total_included'
-            181.82,  # 'total_excluded'
-            [
-                # base , amount     | seq | amount | incl | incl_base
-                # ---------------------------------------------------
-                (181.82, 18.18),  # |  3  |    10% |   t  |     t
-                # ---------------------------------------------------
-            ],
-            res_percent
-        )
-        self.percent_tax_bis.price_include = True
-        self.percent_tax_bis.include_base_amount = True
-        res_percent = self.percent_tax_bis.compute_all(7.0)
-        self._check_compute_all_results(
-            7.0,   # 'base'
-            7.0,   # 'total_included'
-            5.79,  # 'total_excluded'
-            [
-                # base , amount     | seq | amount | incl | incl_base
-                # ---------------------------------------------------
-                (5.79, 1.21),  # |  3  |    21% |   t  |     t
-                # ---------------------------------------------------
-            ],
-            res_percent
-        )
+        self.assertEquals(res_division['taxes'][0]['amount'], 22.22)
+        self.assertEquals(res_percent['taxes'][0]['amount'], 18.18)
 
     def test_tax_sequence_normalized_set(self):
         self.division_tax.sequence = 1
@@ -200,53 +115,19 @@ class TestTax(AccountTestUsers):
         self.percent_tax.sequence = 3
         taxes_set = (self.group_tax | self.division_tax)
         res = taxes_set.compute_all(200.0)
-        self._check_compute_all_results(
-            200,     # 'base'
-            252.22,  # 'total_included'
-            200,     # 'total_excluded'
-            [
-                # base , amount     | seq | amount | incl | incl_base
-                # ---------------------------------------------------
-                (200.0, 22.22),   # |  1  |    10/ |      |
-                (200.0, 10.0),    # |  2  |    10  |      |
-                (200.0, 20.0),    # |  3  |    10% |      |
-                # ---------------------------------------------------
-            ],
-            res
-        )
+        self.assertEquals(res['taxes'][0]['amount'], 22.22)
+        self.assertEquals(res['taxes'][1]['amount'], 10.0)
+        self.assertEquals(res['taxes'][2]['amount'], 20.0)
 
     def test_tax_include_base_amount(self):
         self.fixed_tax.include_base_amount = True
         res = self.group_tax.compute_all(200.0)
-        self._check_compute_all_results(
-            210,     # 'base'
-            231,     # 'total_included'
-            200,     # 'total_excluded'
-            [
-                # base , amount     | seq | amount | incl | incl_base
-                # ---------------------------------------------------
-                (200.0, 10.0),    # |  1  |    10  |      |     t
-                (210.0, 21.0),    # |  3  |    10% |      |
-                # ---------------------------------------------------
-            ],
-            res
-        )
+        self.assertEquals(res['total_included'], 231.0)
 
     def test_tax_currency(self):
         self.division_tax.amount = 15.0
         res = self.division_tax.compute_all(200.0, currency=self.env.ref('base.VEF'))
-        self._check_compute_all_results(
-            200,       # 'base'
-            235.2941,  # 'total_included'
-            200,       # 'total_excluded'
-            [
-                # base , amount      | seq | amount | incl | incl_base
-                # ---------------------------------------------------
-                (200.0, 35.2941),  # |  4  |    15/ |      |
-                # ---------------------------------------------------
-            ],
-            res
-        )
+        self.assertAlmostEqual(res['total_included'], 235.2941)
 
     def test_tax_move_lines_creation(self):
         """ Test that creating a move.line with tax_ids generates the tax move lines and adjust line amount when a tax is price_include """
@@ -291,58 +172,3 @@ class TestTax(AccountTestUsers):
         aml_with_taxes = move.line_ids.filtered(lambda l: set(l.tax_ids.ids) == set([self.group_tax.id, self.fixed_tax_bis.id]))
         self.assertEquals(len(aml_with_taxes), 1)
         self.assertEquals(aml_with_taxes.credit, 190)
-
-    def test_advanced_taxes_computation_0(self):
-        '''Test more advanced taxes computation (see issue 34471).'''
-        tax_1 = self.env['account.tax'].create({
-            'name': 'test_advanced_taxes_computation_0_1',
-            'amount_type': 'percent',
-            'amount': 10,
-            'price_include': True,
-            'include_base_amount': True,
-            'sequence': 1,
-        })
-        tax_2 = self.env['account.tax'].create({
-            'name': 'test_advanced_taxes_computation_0_2',
-            'amount_type': 'percent',
-            'amount': 10,
-            'sequence': 2,
-        })
-        tax_3 = self.env['account.tax'].create({
-            'name': 'test_advanced_taxes_computation_0_3',
-            'amount_type': 'percent',
-            'amount': 10,
-            'price_include': True,
-            'sequence': 3,
-        })
-        tax_4 = self.env['account.tax'].create({
-            'name': 'test_advanced_taxes_computation_0_4',
-            'amount_type': 'percent',
-            'amount': 10,
-            'sequence': 4,
-        })
-        tax_5 = self.env['account.tax'].create({
-            'name': 'test_advanced_taxes_computation_0_5',
-            'amount_type': 'percent',
-            'amount': 10,
-            'price_include': True,
-            'sequence': 5,
-        })
-        taxes = tax_1 + tax_2 + tax_3 + tax_4 + tax_5
-        res = taxes.compute_all(132.0)
-        self._check_compute_all_results(
-            110,     # 'base'
-            154,     # 'total_included'
-            100,     # 'total_excluded'
-            [
-                # base , amount     | seq | amount | incl | incl_base
-                # ---------------------------------------------------
-                (100.0, 10.0),    # |  1  |    10% |   t  |     t
-                (110.0, 11.0),    # |  3  |    10% |      |
-                (110.0, 11.0),    # |  3  |    10% |   t  |
-                (110.0, 11.0),    # |  3  |    10% |      |
-                (110.0, 11.0),    # |  3  |    10% |   t  |
-                # ---------------------------------------------------
-            ],
-            res
-        )

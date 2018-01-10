@@ -18,13 +18,14 @@
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2016
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2016
 # Tommi Rintala <tommi.rintala@gmail.com>, 2016
+# Jukka Paulin <jukka.paulin@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Tommi Rintala <tommi.rintala@gmail.com>, 2016\n"
+"Last-Translator: Jukka Paulin <jukka.paulin@gmail.com>, 2017\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1084,6 +1085,8 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
 msgstr ""
+"Voit tarkastella laskuja ennen\n"
+"hyväksymistä."
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
@@ -1207,6 +1210,8 @@ msgid ""
 "the date automatically based on the template if online quotation is "
 "installed."
 msgstr ""
+"Aseta käsin tarjouksen viimeinen voimassaolopäivä, tai voimassaolopäivä "
+"määräytyy automaattisesti (jos Verkkosivutarjoukset -moduli on asennettu)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_margin
@@ -1302,6 +1307,8 @@ msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
 msgstr ""
+"Huomaa! Kun Myyntitarjouksesta tulee Myyntitilaus, se siirretään automaattisesti\n"
+"Myyntitarjoukset -listalta Myyntitilauksiin."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -1309,6 +1316,8 @@ msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved\n"
 "            from the Quotations list to the Sales Order list."
 msgstr ""
+"Huomaa! Kun Myyntitarjouksesta tulee Myyntitilaus, se siirretään automaattisesti\n"
+"Myyntitarjoukset -listalta Myyntitilauksiin."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1317,6 +1326,8 @@ msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved from the "
 "Quotations list to the Sales Order list."
 msgstr ""
+"Huomaa! Kun Myyntitarjouksesta tulee Myyntitilaus, se siirretään automaattisesti\n"
+"Myyntitarjoukset -listalta Myyntitilauksiin."
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
@@ -1340,6 +1351,10 @@ msgid ""
 "                    From the <i>Sales Orders</i> menu, you can track delivery\n"
 "                    orders or services."
 msgstr ""
+"Kun tarjous on vahvistettu, se muuttuu Myyntitilaukseksi.\n"
+"Voit tällöin laskuttaa ja merkitä laskulle tulleet maksut.\n"
+"Valikosta <i>Myyntitilaukset</i>voit tarkastella tilaukseen liittyviä\n"
+"toimituksia ja palveluita."
 
 #. module: sale
 #. openerp-web
@@ -1347,6 +1362,8 @@ msgstr ""
 #, python-format
 msgid "Once your quotation is ready, you can save, print or send it by email."
 msgstr ""
+"Kun tarjouksesi on valmis, voit tallentaa, tulostaa tai lähettää sen "
+"sähköpostilla."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_quote
@@ -1423,6 +1440,8 @@ msgid ""
 "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
 "Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
 msgstr ""
+"Tilattu määrä: Lasku joka perustuu asiakkaan tilaamaan määrään.\n"
+"Toimitettu määrä: Laskutus perustuu toimittajan toteumaan (aika- tai määräperuste)."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1484,7 +1503,7 @@ msgstr "Maksuehdot"
 #. module: sale
 #: model:res.groups,name:sale.group_sale_layout
 msgid "Personalize sale order and invoice report"
-msgstr ""
+msgstr "Personoi myyntitilaus ja laskutusraportti"
 
 #. module: sale
 #: selection:sale.config.settings,group_sale_layout:0
@@ -1499,7 +1518,7 @@ msgstr ""
 #: code:addons/sale/models/sale.py:276
 #, python-format
 msgid "Please define an accounting sale journal for this company."
-msgstr ""
+msgstr "Määritä käytettävä myyntikirjanpito tälle yritykselle."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:770
@@ -1760,7 +1779,7 @@ msgstr "Raporttien määritykset"
 #. module: sale
 #: model:ir.ui.menu,name:sale.Report_configuration
 msgid "Report Layout Categories"
-msgstr ""
+msgstr "Raportti Asettelu Ryhmät"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1792,7 +1811,7 @@ msgstr "Myyntihinta"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
 msgid "Sale pricelist setting"
-msgstr ""
+msgstr "Myyntihinnaston asetukset"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
@@ -1939,7 +1958,7 @@ msgstr "Myyjä"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
 msgid "Search Name"
-msgstr ""
+msgstr "Hae nimeä"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2116,17 +2135,17 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_show_tax
 msgid "Tax Display"
-msgstr ""
+msgstr "Veronäyttö"
 
 #. module: sale
 #: model:res.groups,name:sale.group_show_price_subtotal
 msgid "Tax display B2B"
-msgstr ""
+msgstr "Veronäyttö B2B"
 
 #. module: sale
 #: model:res.groups,name:sale.group_show_price_total
 msgid "Tax display B2C"
-msgstr ""
+msgstr "Veronäyttö B2C"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_tax
@@ -2154,6 +2173,8 @@ msgid ""
 "The Sale Order %s linked to the Analytic Account must be validated before "
 "registering expenses."
 msgstr ""
+"Analyyttiseen tiliin liitetty myyntitilaus %spitää vahvistaa ennen kulujen "
+"rekisteröintiä."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
@@ -2180,6 +2201,8 @@ msgid ""
 "The printed reports will display the incoterms for the sales orders and the "
 "related invoices"
 msgstr ""
+"Tulosteissa näkyvät myyntitilauksien toimituslausekkeet (Incoterms) ja "
+"tilauksiin liittyvät myyntilaskut."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:148
@@ -2188,6 +2211,8 @@ msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
 msgstr ""
+"Tuote, josta on tehty ennakkomaksu, pitäisi olla tyyppiä 'Palvelu'. Käytä "
+"jotain muuta tuotetta, tai päivitä tämä tuote."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:146

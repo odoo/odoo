@@ -138,7 +138,7 @@ msgstr "Durata de Modificare a Activelor"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
 msgid "Asset End Date"
-msgstr ""
+msgstr "Data de sfârșit Activ"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_asset_method_time
@@ -153,7 +153,7 @@ msgstr "Numele Activelor"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
 msgid "Asset Start Date"
-msgstr ""
+msgstr "Data de început Activ"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_name
@@ -166,7 +166,7 @@ msgstr "Tipul bunului"
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal_purchase
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_list_normal_purchase
 msgid "Asset Types"
-msgstr ""
+msgstr "Tipuri active"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_category
@@ -224,7 +224,7 @@ msgstr ""
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
 msgid "Assets and Revenues"
-msgstr ""
+msgstr "Active și venituri"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
@@ -348,7 +348,7 @@ msgstr "Calculeaza Activele"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Compute Depreciation"
-msgstr ""
+msgstr "Calcul depreciere"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -388,7 +388,7 @@ msgstr "Creat în"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_depreciated_value
 msgid "Cumulative Depreciation"
-msgstr ""
+msgstr "Depreciere cumulativă"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:568
@@ -603,7 +603,7 @@ msgstr ""
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
 msgid "Generate Entries"
-msgstr "Generati Inregistrari"
+msgstr "Generați Înregistrări"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_gross_value
@@ -732,7 +732,7 @@ msgstr "Liniar"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_check
 msgid "Linked"
-msgstr ""
+msgstr "Asociat"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -783,7 +783,7 @@ msgstr "Numărul Devalorizarilor"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Number of Entries"
-msgstr ""
+msgstr "Număr de intrări"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_period
@@ -972,6 +972,14 @@ msgstr "Perioada de timp dintre doua devalorizari, in luni"
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_method_number
 msgid "The number of depreciations needed to depreciate your asset"
 msgstr "Numărul de devalorizari necesar pentru a va devaloriza activele"
+
+#. module: account_asset
+#: code:addons/account_asset/models/account_asset.py:477
+#, python-format
+msgid ""
+"This depreciation is already linked to a journal entry! Please post or "
+"delete it."
+msgstr ""
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard

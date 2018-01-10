@@ -17,13 +17,14 @@
 # Maciej Wichowski <maciej.wichowski@openglobe.pl>, 2016
 # Paweł Michoń <michon.pawel@wp.pl>, 2017
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2017
+# Andrzej Donczew <a.donczew@hadron.eu.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2017\n"
+"Last-Translator: Andrzej Donczew <a.donczew@hadron.eu.com>, 2017\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -113,6 +114,8 @@ msgid ""
 "${(object.name or '').replace('/','_')}${object.state == 'draft' and "
 "'_draft' or ''}"
 msgstr ""
+"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
+"'_draft' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -232,6 +235,13 @@ msgid ""
 "                to buy an extra pack of hours, because he used all his support\n"
 "                hours.</i>"
 msgstr ""
+"<i>PRZYKŁAD: Klient przychodzi po upatrzony przez siebie model fotela. "
+"Zdecydowany jest aby go kupić. Sprzedawca negocjując doradza mu, że "
+"<b>okazjonalnie</b> mają fotel tylko o <b>nieco droższy</b>, i  o wiele "
+"wygodniejszy. Klient miał zamiar kupić fotel, jednak po przeanalizowaniu "
+"oferty stwierdza, że proponowany przez sprzedawcę fotel jest znacznie "
+"wygodniejszy i do tego niewiele droższy. W rezultacie, klient decyduje się "
+"na lepszy-droższy fotel.</i>"
 
 #. module: sale
 #. openerp-web
@@ -305,7 +315,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Account used for deposits"
-msgstr ""
+msgstr "Account used for deposits"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_pagebreak
@@ -447,7 +457,7 @@ msgstr "Informacja blokująca"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
 msgid "Breaks Page"
-msgstr ""
+msgstr "Breaks Page"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
@@ -467,7 +477,7 @@ msgstr "Wg zespołu sprzedaży"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_delivered_updateable
 msgid "Can Edit Delivered"
-msgstr ""
+msgstr "Can Edit Delivered"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -837,7 +847,7 @@ msgstr "Rozszerzone filtry"
 #: code:addons/sale/models/sale.py:688
 #, python-format
 msgid "Extra line with %s "
-msgstr ""
+msgstr "Extra line with %s "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_fiscal_position_id
@@ -859,6 +869,9 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"From this report, you can have an overview of the amount invoiced to your "
+"customer. The search tool can also be used to personalise your Invoices "
+"reports and so, match this analysis to your needs."
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
@@ -898,6 +911,8 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
+"If the sale is locked, you can not modify it anymore. However, you will "
+"still be able to invoice or deliver."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -1167,6 +1182,9 @@ msgid ""
 "the date automatically based on the template if online quotation is "
 "installed."
 msgstr ""
+"Manually set the expiration date of your quotation (offer), or it will set "
+"the date automatically based on the template if online quotation is "
+"installed."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_margin
@@ -1303,6 +1321,10 @@ msgid ""
 "                    From the <i>Sales Orders</i> menu, you can track delivery\n"
 "                    orders or services."
 msgstr ""
+"Once the quotation is confirmed, it becomes a sales order.\n"
+"                    You'll be able to invoice it and collect payments.\n"
+"                    From the <i>Sales Orders</i> menu, you can track delivery\n"
+"                    orders or services."
 
 #. module: sale
 #. openerp-web
@@ -1388,6 +1410,8 @@ msgid ""
 "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
 "Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
 msgstr ""
+"Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
+"Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1412,6 +1436,12 @@ msgid ""
 "                policy based on <i>ordered quantities</i> for which you have\n"
 "                delivered more than what have been ordered."
 msgstr ""
+"Up-selling jest metodą, która podwyższa wartość sprzedawanego produktu. "
+"Stosując tę technikę niejako namawia się klienta do kupienia dobra wyższej "
+"klasy – droższego. Polega ona na tym, że negocjuje się z klientem, oferując "
+"mu ulepszone wersje produktu, który chce kupić lub z wyższej półki – "
+"lepszych jakościowo. Ważne jest, aby robić to płynnie i powoli. Nie należy "
+"od razu oferować klientowi luksusowych produktów."
 
 #. module: sale
 #. openerp-web
@@ -1488,12 +1518,12 @@ msgstr "zredukowano cenę"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr ""
+msgstr "Price Reduce Tax excl"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr ""
+msgstr "Price Reduce Tax inc"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_pricelist
@@ -1943,7 +1973,7 @@ msgid ""
 msgstr ""
 "Wybór \"Ostrzeżenie\" spowoduje ostrzeżenie użytkownika informacją. Wybór "
 "\"Informacja blokująca\" spowoduje wyświetlenie wyjątku z tekstem informacji"
-" i zablowowanie dalszego działania. Informację wpisz w następnym polu."
+" i zablokowanie dalszego działania. Informację wpisz w następnym polu."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_sale_digital
@@ -1979,7 +2009,7 @@ msgstr "Usługi"
 #: code:addons/sale/static/src/js/sale.js:19
 #, python-format
 msgid "Set an invoicing target: "
-msgstr ""
+msgstr "Podaj wartość do osiągnięcia:"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -2083,17 +2113,17 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_show_tax
 msgid "Tax Display"
-msgstr ""
+msgstr "Podatki"
 
 #. module: sale
 #: model:res.groups,name:sale.group_show_price_subtotal
 msgid "Tax display B2B"
-msgstr ""
+msgstr "Tax display B2B"
 
 #. module: sale
 #: model:res.groups,name:sale.group_show_price_total
 msgid "Tax display B2C"
-msgstr ""
+msgstr "Tax display B2C"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_tax
@@ -2107,7 +2137,7 @@ msgstr "Podatki"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_taxes_id
 msgid "Taxes used for deposits"
-msgstr ""
+msgstr "Taxes used for deposits"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_note
@@ -2125,7 +2155,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
 msgid "The amount to be invoiced in advance, taxes excluded."
-msgstr ""
+msgstr "The amount to be invoiced in advance, taxes excluded."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_project_id
@@ -2183,6 +2213,8 @@ msgid ""
 "There is no income account defined for this product: \"%s\". You may have to"
 " install a chart of account from Accounting app, settings menu."
 msgstr ""
+"There is no income account defined for this product: \"%s\". You may have to"
+" install a chart of account from Accounting app, settings menu."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:366 code:addons/sale/models/sale.py:370
@@ -2232,6 +2264,11 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"This report performs analysis on your sales orders. Analysis check your "
+"sales revenues and sort it by different group criteria (salesman, partner, "
+"product, etc.) Use this report to perform analysis on sales not having "
+"invoiced yet. If you want to analyse your turnover, you should use the "
+"Invoice Analysis report in the Accounting application."
 
 #. module: sale
 #: selection:product.template,track_service:0
@@ -2317,13 +2354,13 @@ msgstr "ilość nieopodatkowana"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "Upselling"
-msgstr ""
+msgstr "Sprzedaż Łączona"
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Upselling Opportunity"
-msgstr ""
+msgstr "Upselling Opportunity"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_pricelist
@@ -2479,4 +2516,4 @@ msgstr "sale.config.settings"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_layout_category
 msgid "sale.layout_category"
-msgstr ""
+msgstr "sale.layout_category"

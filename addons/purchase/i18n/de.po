@@ -25,13 +25,17 @@
 # key six <mobile.umts@gmail.com>, 2016
 # Andi <flimflam@salasar.de>, 2017
 # Malte Jansen <work@maltejansen.de>, 2017
+# DE T1 <e2f8846@yahoo.com>, 2017
+# DE R1 <e2fes1@hotmail.com>, 2017
+# Katharina Moritz <kmo@e2f.com>, 2017
+# Mark Lorenz <bandworm@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Malte Jansen <work@maltejansen.de>, 2017\n"
+"Last-Translator: Mark Lorenz <bandworm@gmail.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,6 +93,26 @@ msgid ""
 "<p>You can reply to this email if you have any questions.</p>\n"
 "<p>Thank you,</p>\n"
 msgstr ""
+"\n"
+"<p>Sehr geehrte/r ${object.partner_id.name} \n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"Anbei finden Sie eine <strong>${object.state in ('draft', 'sent') und einen „Kostenvoranschlag“ oder „Bestellbestätigung“} ${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    mit Referenz: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (RFQ origin: ${object.origin})\n"
+"% endif\n"
+"ergeben <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"von ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"<p>Bei Fragen antworten Sie einfach auf diese E-Mail.</p>\n"
+"<p>Vielen Dank,</p>\n"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_stock_dropshipping
@@ -119,7 +143,7 @@ msgstr "# Eingangsrechnungen"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_count
 msgid "# of Bills"
-msgstr ""
+msgstr "# Rechnungen"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_nbr_lines
@@ -694,7 +718,7 @@ msgstr "Erweiterte Filter"
 #: code:addons/purchase/models/purchase.py:559
 #, python-format
 msgid "Extra line with %s "
-msgstr ""
+msgstr "Weitere Zeile mit %s "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_fiscal_position_id
@@ -813,7 +837,7 @@ msgstr "Freigabestufen"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_po_double_validation
 msgid "Levels of Approvals *"
-msgstr ""
+msgstr "Genehmigungsstufen *"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
@@ -927,7 +951,7 @@ msgstr "Notizen"
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
 msgid "Nothing to Bill"
-msgstr ""
+msgstr "Nichts abzurechnen"
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
@@ -1144,7 +1168,7 @@ msgstr "Eine doppelte Bestellfreigabe ermöglichen"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_normal_action_puchased
 msgid "Purchasable Products"
-msgstr ""
+msgstr "Bestellbare Produkte"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
@@ -1607,6 +1631,9 @@ msgid ""
 "                purchase process: prices, procurement logistics, accounting data,\n"
 "                available vendors, etc."
 msgstr ""
+"Das Produktformular beinhaltet spezifische Informationen\n"
+"zur Verbesserung des Einkaufsprozesses: Preise, Beschaffungslogistik,\n"
+"Buchungsinformationen, verfügbare Lieferanten, etc."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -1665,6 +1692,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "This changes the scheduled date of all order lines to the given date"
 msgstr ""
+"Dies ändert das geplante Datum aller Auftragszeilen auf das angegebene Datum"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner_property_purchase_currency_id
@@ -1701,13 +1729,13 @@ msgstr ""
 #: code:addons/purchase/models/account_invoice.py:184
 #, python-format
 msgid "This vendor bill has been created from: %s"
-msgstr ""
+msgstr "Diese Lieferantenrechnung wurde erstellt von: %s"
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:198
 #, python-format
 msgid "This vendor bill has been modified from: %s"
-msgstr ""
+msgstr "Diese Lieferantenrechnung wurde geändert von: %s"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -1770,6 +1798,8 @@ msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
 "bills."
 msgstr ""
+"Die Bestellung kann nicht storniert werden, zuerst müssen Sie die "
+"korrespondierenden Lieferantenrechnungen löschen."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
@@ -1822,6 +1852,10 @@ msgid ""
 "            and Odoo will fill the bill automatically according to ordered\n"
 "            or received quantities."
 msgstr ""
+"Benutzen Sie dieses Menü zur Prüfung der Rechnungen, die Sie von Ihren "
+"Lieferanten erhalten werden. Bei der Eingabe einer neuen Rechnung "
+"hinterlegen Sie die Bestellung, damit Odoo dann die Rechnung automatisch "
+"hinsichtlich der bestellten oder erhaltenen Menge komplettieren kann."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -1918,7 +1952,7 @@ msgstr "Volumen"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: selection:purchase.order,invoice_status:0
 msgid "Waiting Bills"
-msgstr ""
+msgstr "Wartende Rechnungen"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_warehouse
@@ -1990,6 +2024,9 @@ msgid ""
 "                it's a physical product, a consumable or services you buy to\n"
 "                subcontractors."
 msgstr ""
+"Sie müssen zuerst für alles ein Produkt definieren, damit Sie etwas "
+"einkaufen können, sei es ein physisches Produkt, Verbrauchsmaterial oder "
+"eine Dienstleistung, die Sie selbst bei Subunternehmern einkaufen. "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -1998,6 +2035,9 @@ msgid ""
 "            it's a physical product, a consumable or services you buy to\n"
 "            subcontractors."
 msgstr ""
+"Sie müssen zuerst für alles ein Produkt definieren, damit Sie etwas "
+"einkaufen können, sei es ein physisches Produkt, Verbrauchsmaterial oder "
+"eine Dienstleistung, die Sie selbst bei Subunternehmern einkaufen. "
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:389

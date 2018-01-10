@@ -9,13 +9,14 @@
 # Eirini Spiridonidou <eirinisofia999@gmail.com>, 2016
 # Stefanos Nikou <stefanos.nikou@gmail.com>, 2016
 # Giota Dandidou <giotadandidou@gmail.com>, 2017
+# George Tarasidis <george_tarasidis@yahoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Giota Dandidou <giotadandidou@gmail.com>, 2017\n"
+"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2017\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +34,7 @@ msgstr "Παραγωγή"
 #: model:ir.model.fields,field_description:mrp.field_product_product_bom_count
 #: model:ir.model.fields,field_description:mrp.field_product_template_bom_count
 msgid "# Bill of Material"
-msgstr ""
+msgstr "# Λογαριασμός των Υλικών (ΒοΜ)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workorder_done_count
@@ -595,7 +596,7 @@ msgstr "Κάντε κλικ για να προσθέσετε ένα κέντρο
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid "Click to create a bill of material."
-msgstr ""
+msgstr "Κάντε κλικ για να δημιουργήσετε ένα Λογαριασμό των Υλικών (ΒοΜ)"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
@@ -805,7 +806,7 @@ msgstr "Τρέχουσα Παραγωγή"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Current Qty"
-msgstr ""
+msgstr "Τρέχουσα Ποσότητα"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_qty_producing
@@ -933,7 +934,7 @@ msgstr "Διάρκεια"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_tree_view
 msgid "Duration (minutes)"
-msgstr ""
+msgstr "Διάρκεια (σε λεπτά)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_time_mode
@@ -995,7 +996,7 @@ msgstr "Αναμενόμενη Διάρκεια"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_duration_expected
 msgid "Expected duration (in minutes)"
-msgstr ""
+msgstr "Αναμενόμενη διάρκεια (σε λεπτά)"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
@@ -1186,7 +1187,7 @@ msgstr "Σε εξέλιξη"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_lots_lot_produced_qty
 msgid "Informative, not used in matching"
-msgstr ""
+msgstr "Ενημερωτικό, που δεν χρησιμοποιείται στην αντιστοίχιση"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_form
@@ -1562,7 +1563,7 @@ msgstr "Μάρκαρε ως Ολοκληρωμένη"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom
 msgid "Master Data"
-msgstr ""
+msgstr "Βασικά Δεδομένα"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_mps
@@ -2468,27 +2469,27 @@ msgstr "Αναζήτηση"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Search Bill Of Material"
-msgstr ""
+msgstr "Εύρεση Λογαριασμού των Υλικών (ΒοΜ)"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Search Bill Of Material Components"
-msgstr ""
+msgstr "Εύρεση Συστατικών Λογαριασμού των Υλικών (ΒοΜ)"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Search Production"
-msgstr ""
+msgstr "Αναζήτηση Παραγωγής"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 msgid "Search Work Orders"
-msgstr ""
+msgstr "Αναζήτηση Κέντρου Εργασίας"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Search for mrp workcenter"
-msgstr ""
+msgstr "Αναζήτηση Κέντρο Εργασίας στην Παραγωγή"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_config_settings_manufacturing_lead
@@ -2819,12 +2820,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_stop
 msgid "Time in minutes for the cleaning."
-msgstr ""
+msgstr "Χρόνος καθαρισμού σε λεπτά."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_start
 msgid "Time in minutes for the setup."
-msgstr ""
+msgstr "Χρόνος εγκατάστασης σε λεπτά."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_time_cycle_manual
@@ -2919,7 +2920,7 @@ msgstr "Παρακολούθηση"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Unblock"
-msgstr ""
+msgstr "Ξεμπλοκάρισμα"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
@@ -3495,7 +3496,7 @@ msgstr "λεπτά"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_line
 msgid "mrp.bom.line"
-msgstr ""
+msgstr "mrp.bom.line"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_config_settings
@@ -3515,7 +3516,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_scrap
 msgid "stock.scrap"
-msgstr ""
+msgstr "stock.scrap"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit

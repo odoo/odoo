@@ -23,8 +23,7 @@
                         </div>
                         <div class="col-xs-3">
                             <strong>Product:</strong><br/>
-                            <span t-field="o.product_id.code"/>
-                            <span t-field="o.product_id.name"/>
+                            <span t-field="o.product_id"/>
                         </div>
                         <div class="col-xs-3">
                             <strong>Quantity:</strong><br/>
@@ -94,8 +93,7 @@
                                 </tr>
                                 <tr t-foreach="o.move_raw_ids" t-as="line">
                                     <td>
-                                        <span t-field="line.product_id.code"/>
-                                        <span t-field="line.product_id.name"/>
+                                        <span t-field="line.product_id"/>
                                     </td>
                                     <td class="text-right">
                                         <span t-field="line.product_uom_qty"/>

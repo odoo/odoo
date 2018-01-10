@@ -161,7 +161,7 @@ class StockMove(models.Model):
     def create_lots(self):
         lots = self.env['stock.move.lots']
         for move in self:
-            unlink_move_lots = move.move_lot_ids.filtered(lambda x : (x.quantity_done == 0) and not x.workorder_id)
+            unlink_move_lots = move.move_lot_ids.filtered(lambda x : (x.quantity_done == 0) and x.done_wo)
             unlink_move_lots.sudo().unlink()
             group_new_quant = {}
             old_move_lot = {}
@@ -282,7 +282,7 @@ class StockMove(models.Model):
             preferred_domain_list = [preferred_domain] + [fallback_domain] + [fallback_domain2]
             if move.has_tracking == 'none':
                 quants = quant_obj.quants_get_preferred_domain(move.product_qty, move, domain=main_domain, preferred_domain_list=preferred_domain_list)
-                self.env['stock.quant'].quants_move(quants, move, move.location_dest_id)
+                self.env['stock.quant'].quants_move(quants, move, move.location_dest_id, owner_id=move.restrict_partner_id.id)
             else:
                 for movelot in move.active_move_lot_ids:
                     if float_compare(movelot.quantity_done, 0, precision_rounding=rounding) > 0:
@@ -290,10 +290,10 @@ class StockMove(models.Model):
                             raise UserError(_('You need to supply a lot/serial number.'))
                         qty = move.product_uom._compute_quantity(movelot.quantity_done, move.product_id.uom_id)
                         quants = quant_obj.quants_get_preferred_domain(qty, move, lot_id=movelot.lot_id.id, domain=main_domain, preferred_domain_list=preferred_domain_list)
-                        self.env['stock.quant'].quants_move(quants, move, move.location_dest_id, lot_id = movelot.lot_id.id)
+                        self.env['stock.quant'].quants_move(quants, move, move.location_dest_id, lot_id = movelot.lot_id.id, owner_id=move.restrict_partner_id.id)
             moves_to_unreserve |= move
             # Next move in production order
-            if move.move_dest_id:
+            if move.move_dest_id and move.move_dest_id.state not in ('done', 'cancel'):
                 move.move_dest_id.action_assign()
         moves_to_unreserve.quants_unreserve()
         moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})

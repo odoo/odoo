@@ -9,13 +9,14 @@
 # Yaroslav Molochko <onorua@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # ТАрас <tratatuta@i.ua>, 2016
+# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: ТАрас <tratatuta@i.ua>, 2016\n"
+"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +40,9 @@ msgid ""
 "                                    and set as value  (your own domain followed by <i>'/google_account/authentication'</i>):\n"
 "                                    <br/>==&gt;"
 msgstr ""
+"<br/>Тепер потрібно налаштувати дозволені сторінки, на які ви будете переходити. Для цього потрібно заповнити поле<b>\"URI-адреса авторизованого перенаправлення\"</b>\n"
+"                                    і встановити як значення (до вашого власного домену доданий <i>'/google_account/authentication'</i>):\n"
+"                                    <br/>==&gt;"
 
 #. module: google_calendar
 #: model:ir.actions.act_window,name:google_calendar.action_config_settings_google_calendar
@@ -65,6 +69,8 @@ msgid ""
 "All events have been disconnected from your previous account. You can now "
 "restart the synchronization"
 msgstr ""
+"Усі події були відключені від попереднього облікового запису. Тепер ви "
+"можете перезапустити синхронізацію"
 
 #. module: google_calendar
 #. openerp-web
@@ -74,6 +80,8 @@ msgid ""
 "An administrator needs to configure Google Synchronization before you can "
 "use it!"
 msgstr ""
+"Адміністратор повинен налаштувати Синхронізацію Google, перш ніж "
+"користуватися нею!"
 
 #. module: google_calendar
 #. openerp-web
@@ -83,6 +91,8 @@ msgid ""
 "An error occured while disconnecting events from your previous account. "
 "Please retry or contact your administrator."
 msgstr ""
+"Під час від'єднання подій від попереднього облікового запису сталася "
+"помилка. Повторіть спробу або зв'яжіться з вашим адміністратором."
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
@@ -106,6 +116,9 @@ msgid ""
 "                                    <br/> Specify an email address and a product name, then save.\n"
 "                                    <br/><br/>"
 msgstr ""
+"Перевірте, чи встановлено тип програми <b>'Web застосування'</b>, потім натисніть на <b>'Налаштувати екран згоди'</b>.\n"
+"                                    <br/>Вкажіть адресу електронної пошти та назву товару, а потім збережіть.\n"
+"                                    <br/><br/>"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
@@ -113,6 +126,8 @@ msgid ""
 "Click on <b>'Create a project...'</b> and enter a project name and change your id if you want. Don't forget to accept the Terms of Services\n"
 "                                    <br/><br/>"
 msgstr ""
+"Натисніть на <b>'Створити проект...'</b>, введіть назву проекту та змініть ваш id+ якщо ви цього хочете. Не забудьте прийняти Загальні положення та умови\n"
+"                                    <br/><br/>"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_base_config_settings_cal_client_id
@@ -135,7 +150,7 @@ msgstr "Налаштування"
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid "Connect on your google account and go to"
-msgstr ""
+msgstr "Підключіться до свого облікового запису Google і перейдіть до"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_display_name
@@ -147,7 +162,7 @@ msgstr "Назва для відображення"
 #: code:addons/google_calendar/static/src/js/google_calendar.js:60
 #, python-format
 msgid "Do you want to do this now?"
-msgstr ""
+msgstr "Ви хочете зробити це зараз?"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_event
@@ -159,34 +174,34 @@ msgstr "Подія"
 #: code:addons/google_calendar/static/src/js/google_calendar.js:74
 #, python-format
 msgid "Event disconnection error"
-msgstr ""
+msgstr "Помилка відключення події"
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:70
 #, python-format
 msgid "Event disconnection success"
-msgstr ""
+msgstr "Подія успішно відключена"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee_google_internal_event_id
 msgid "Google Calendar Event Id"
-msgstr ""
+msgstr "ID події Google календаря "
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid "Google Client ID"
-msgstr ""
+msgstr "ID клієнта Google "
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid "Google Client Secret"
-msgstr ""
+msgstr "Таємниця клієнта Google"
 
 #. module: google_calendar
 #: sql_constraint:calendar.attendee:0
 msgid "Google ID should be unique!"
-msgstr ""
+msgstr "Google ID повинен бути унікальним!"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_calendar.py:673
@@ -196,6 +211,9 @@ msgid ""
 "\n"
 " %s"
 msgstr ""
+"Google втрачається ... наступна синхронізація буде повністю синхронізована.\n"
+"\n"
+" %s"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_id
@@ -210,6 +228,8 @@ msgid ""
 "In order to do this, you first need to disconnect all existing events from "
 "the old account."
 msgstr ""
+"Щоб це зробити, вам спочатку потрібно від'єднати всі існуючі події від "
+"старого облікового запису."
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
@@ -217,6 +237,8 @@ msgid ""
 "In the menu on left side, select the sub menu <b>'Credentials'</b> (from menu APIs and auth) and click on button <b>'Create new Client ID'</b>\n"
 "                                    <br/><br/>"
 msgstr ""
+"У меню зліва оберіть підменю <b>'Повноваження'</b> (з меню API та auth) та натисніть на кнопку <b>'Створити новий ID клієнта'</b>\n"
+"                                    <br/><br/>"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
@@ -226,6 +248,10 @@ msgid ""
 "                                    <br/> When it's done, the Calendar API overview will be available\n"
 "                                    <br/><br/>"
 msgstr ""
+"У меню зліва оберіть підменю API (з інтерфейсу меню та авторизації) та натисніть кнопку <b>'Календар API'</b>.\n"
+"                                    <br/> Активуйте календар API, натисканням на синю кнопку <b>'Включити API'</b>.\n"
+"                                    <br/> Коли це буде зроблено, огляд календаря API буде доступний\n"
+"                                    <br/><br/>"
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_res_users_google_calendar_cal_id
@@ -233,6 +259,8 @@ msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
 msgstr ""
+"ID останнього календаря, який був синхронізований. Якщо він буде змінений, "
+"ми видалимо всі посилання між GoogleID і Odoo Google Internal ID"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar___last_update
@@ -247,12 +275,12 @@ msgstr "Дата останньої синхронізації"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee_oe_synchro_date
 msgid "Odoo Synchro Date"
-msgstr ""
+msgstr "Дата синхронізації Odoo"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event_oe_update_date
 msgid "Odoo Update Date"
-msgstr ""
+msgstr "Дата оновлення Odoo"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
@@ -260,18 +288,20 @@ msgid ""
 "Once done, you will have the both informations (<b>Client ID</b> and <b>Client Secret</b>) that you need to insert in the 2 fields below!\n"
 "                                    <br/><br/>"
 msgstr ""
+"Після цього ви матимете обидві дані (<b>ID клієнта</b> та <b>таємницю клієнта</b>), які потрібно вставити у 2 рядка нижче!\n"
+"                                    <br/><br/>"
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:40
 #, python-format
 msgid "Redirection"
-msgstr ""
+msgstr "Перенаправлення"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_rtoken
 msgid "Refresh Token"
-msgstr ""
+msgstr "Оновити токен"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
@@ -288,7 +318,7 @@ msgstr "Показати інструктаж"
 #: code:addons/google_calendar/static/src/js/google_calendar.js:90
 #, python-format
 msgid "Sync with <b>Google</b>"
-msgstr ""
+msgstr "Синхронізувати з <b>Google</b>"
 
 #. module: google_calendar
 #. openerp-web
@@ -298,6 +328,8 @@ msgid ""
 "The Google Synchronization needs to be configured before you can use it, do "
 "you want to do it now?"
 msgstr ""
+"Синхронізацію Google потрібно налаштувати, перш ніж використовувати її, чи "
+"хочете ви це зробити зараз?"
 
 #. module: google_calendar
 #. openerp-web
@@ -307,6 +339,8 @@ msgid ""
 "The account you are trying to synchronize (%s) is not the same as the last "
 "one used (%s)!"
 msgstr ""
+"Аккаунт, який ви хочете синхронізувати (%s) не той самий, який був "
+"використаний останнього разу (%s)!"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
@@ -314,21 +348,23 @@ msgid ""
 "To setup the signin process with Google, first you have to perform the "
 "following steps"
 msgstr ""
+"Щоб налаштувати процес входу в систему Google, спочатку потрібно виконати "
+"наступні кроки"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_token_validity
 msgid "Token Validity"
-msgstr ""
+msgstr "Термін дії токена"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_base_config_settings_server_uri
 msgid "URI for tuto"
-msgstr ""
+msgstr "URI-адреса для tuto"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_token
 msgid "User token"
-msgstr ""
+msgstr "Токен користувача"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_users
@@ -341,12 +377,13 @@ msgstr "Користувачі"
 #, python-format
 msgid "You will be redirected to Google to authorize access to your calendar!"
 msgstr ""
+"Ви будете переадресовані в Google, щоб дозволити доступ до вашого календаря!"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_calendar.py:296
 #, python-format
 msgid "Your token is invalid or has been revoked !"
-msgstr ""
+msgstr "Ваш токен недійсний або його було скасовано!"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_base_config_settings
@@ -356,9 +393,9 @@ msgstr "base.config.settings"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar
 msgid "google.calendar"
-msgstr ""
+msgstr "google.calendar"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid "https://console.developers.google.com/"
-msgstr ""
+msgstr "https://console.developers.google.com/"

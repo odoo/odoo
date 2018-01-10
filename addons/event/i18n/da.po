@@ -177,7 +177,7 @@ msgstr ""
 "            <tr>\n"
 "                <td style=\"padding:15px 20px 0px 20px;\">\n"
 "                    <h2 style=\"font-weight:300;\">\n"
-"                        Hi ${object.name},\n"
+"                        Hej ${object.name},\n"
 "                    </h2>\n"
 "                    <p style=\"font-size:16px;\">\n"
 "                        Vær opmærksom på, at arrangementet\n"
@@ -424,7 +424,7 @@ msgstr ""
 "                <td style=\"padding:15px 20px 0px 20px;\">\n"
 "                    <h2 style=\"font-weight:300;\">\n"
 "                        Hej ${object.name}, her er din ordrebekræftelse på\n"
-"                        % if 'website_url' in object.event_id og object.event_id.website_url:\n"
+"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
 "                        % else:\n"
 "                            <strong>${object.event_id.name}</strong>\n"
@@ -904,7 +904,7 @@ msgstr "Ring til ORM"
 #: model:ir.ui.view,arch_db:event.view_event_configuration
 #: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Cancel"
-msgstr "Annullér"
+msgstr "Annuller"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -1521,60 +1521,60 @@ msgstr "Installer og administrer din egen server"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_event_barcode
 msgid "Install the event_barcode module"
-msgstr ""
+msgstr "Installér event_barcode modul"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_event_sale
 msgid "Install the event_sale module"
-msgstr ""
+msgstr "Installér event_sale modul"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_website_event_track
 msgid "Install the module website_event_track"
-msgstr ""
+msgstr "Installér modulet website_event_track"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_website_event_questions
 msgid "Install the website_event_questions module"
-msgstr ""
+msgstr "Installér website_event_questions modulet"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Integrated Help"
-msgstr ""
+msgstr "Integreret hjælp"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_nbr
 msgid "Interval"
-msgstr ""
+msgstr "Interval"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Introduction to JQuery"
-msgstr ""
+msgstr "Introduktion til JQuery"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Introduction to Javascript"
-msgstr ""
+msgstr "Introduktion til Javascript"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Introduction to QWeb"
-msgstr ""
+msgstr "Introduktion til QWeb"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Introduction, CRM, Sales Management"
-msgstr ""
+msgstr "Introduktion, CRM, Salg"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_default_registration_max
@@ -1652,32 +1652,32 @@ msgstr "Luigi Roni, Senior Event Manager"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_mail_ids
 msgid "Mail Schedule"
-msgstr ""
+msgstr "Planlægning af mailudsendelse"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_scheduler_id
 msgid "Mail Scheduler"
-msgstr ""
+msgstr "Planlægning af mailudsendelser"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
-msgstr ""
+msgstr "Planlægning af mailudsendelser"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_mail_sent
 msgid "Mail Sent"
-msgstr ""
+msgstr "Mail sendt"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_mail_sent
 msgid "Mail Sent on Event"
-msgstr ""
+msgstr "Mail sendt om arrangement"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_mail_registration_ids
 msgid "Mail registration ids"
-msgstr ""
+msgstr "Mail registrerings ids"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
@@ -1687,7 +1687,7 @@ msgstr "Leder"
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
 msgid "Manually confirm every registration"
-msgstr ""
+msgstr "Bekræft manuelt alle tilmeldinger"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_seats_max
@@ -1724,7 +1724,7 @@ msgstr "Måned(er)"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "My Events"
-msgstr "Mine aftaler"
+msgstr "Mine arrangementer"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -1740,12 +1740,12 @@ msgstr "Næste måned"
 #. module: event
 #: selection:event.config.settings,module_website_event_questions:0
 msgid "No extra questions on registrations"
-msgstr ""
+msgstr "Ingen ekstra spørgsmål om tilmeldinger"
 
 #. module: event
 #: selection:event.config.settings,module_website_event_track:0
 msgid "No mini website per event"
-msgstr ""
+msgstr "Ingen mini hjemmeside pr. arrangement"
 
 #. module: event
 #: code:addons/event/models/event.py:214
@@ -1757,7 +1757,7 @@ msgstr "Ikke flere disponible pladser."
 #: code:addons/event/models/event.py:314
 #, python-format
 msgid "No more seats available for this event."
-msgstr ""
+msgstr "Ikke flere ledige pladser til dette arrangement."
 
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
@@ -1789,14 +1789,14 @@ msgstr "Antal tilmeldinger"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Odoo Official Website"
-msgstr ""
+msgstr "Odoo's officielle website"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Odoo Web Client"
-msgstr ""
+msgstr "Odoo webkunde"
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -1805,16 +1805,19 @@ msgid ""
 "    track registrations and participations, automate the confirmation emails,\n"
 "    sell tickets, etc."
 msgstr ""
+"Odoo hjælper dig med at planlægge og organisere dine arrangementer:\n"
+"    holde styr på tilmeldinger og deltagelser, automatisere bekræftelses e-mails,\n"
+"    sælge billetter m.v."
 
 #. module: event
 #: model:event.event,name:event.event_0
 msgid "Open Days in Los Angeles"
-msgstr ""
+msgstr "Åbne dage i Los Angeles"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_organizer_id
 msgid "Organizer"
-msgstr "Organisator"
+msgstr "Arrangør"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
@@ -1834,6 +1837,8 @@ msgid ""
 "Participants are expected to have some knowledge in programming. A basic "
 "knowledge of the Python programming is recommended."
 msgstr ""
+"Deltagerne forventes at have viden om programmering. En grundlæggende viden "
+"om Python programmering anbefales."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1843,11 +1848,13 @@ msgid ""
 "Participants preferably have a functional knowledge of our software (see "
 "Functional Training)."
 msgstr ""
+"Det anbefales at deltagerne har en funktionel viden om vores software (se "
+"Funktionsuddannelse)"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Partner"
-msgstr "Partner"
+msgstr "Kontakt"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_phone
@@ -1857,31 +1864,31 @@ msgstr "Telefon"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Point of Sale (POS), Introduction to report customization."
-msgstr ""
+msgstr "Point of Sale (POS), Introduktion til rapport tilpasning."
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Project management, Human resources, Contract management."
-msgstr ""
+msgstr "Projektledelse, HR, Kundestyring."
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
-msgstr ""
+msgstr "Køb, Salg & amp; Indkøbsstyring, Finansbogholderi"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Python Objects"
-msgstr ""
+msgstr "Python objekter"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Read Great Contents"
-msgstr ""
+msgstr "Læs fantasktisk indhold"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_registration_origin
@@ -1889,6 +1896,8 @@ msgid ""
 "Reference of the document that created the registration, for example a sale "
 "order"
 msgstr ""
+"Reference på det dokument, der oprettede registreringen, f.eks. en "
+"salgsordre"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -1983,7 +1992,7 @@ msgstr "Svar til e-mail"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Report Engine"
-msgstr ""
+msgstr "Rapportering"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -2021,12 +2030,12 @@ msgstr "Planlagt afsendt mail"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_scheduled_date
 msgid "Scheduled Time"
-msgstr ""
+msgstr "Planlagt tid"
 
 #. module: event
 #: model:event.type,name:event.event_type_0
 msgid "Seminar"
-msgstr ""
+msgstr "Seminar"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
@@ -2104,6 +2113,10 @@ msgid ""
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
 msgstr ""
+"E-mailadressen til arrangøren vil sandsynligvis blive sat her, og vil være "
+"'Reply-To' af mails sendt automatisk ved et arrangement eller "
+"tilmeldingsbekræftelse. Du kan også sætte e-mailadressen til din mail "
+"gateway, hvis du bruger en."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -2113,12 +2126,14 @@ msgid ""
 "This course help me build my first application within a month. Definetly "
 "worth its price."
 msgstr ""
+"Dette kursus hjælper mig med at opbygge min første App inden for en måned. "
+"Helt sikkert prisen værd."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail_template_id
 msgid ""
 "This field contains the template of the mail that will be automatically sent"
-msgstr ""
+msgstr "Dette felt indeholder skabelonen til den mail, der automatisk sendes"
 
 #. module: event
 #: code:addons/event/models/event.py:440
@@ -2176,7 +2191,7 @@ msgstr "Træning"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Training Center Module"
-msgstr ""
+msgstr "Træningsmodul"
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
@@ -2187,26 +2202,26 @@ msgstr "Ikke bekræftet"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
-msgstr ""
+msgstr "Ubekræftede pladsbestillinger"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Underscore"
-msgstr ""
+msgstr "Understregning"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Understand the development concepts and architecture;"
-msgstr ""
+msgstr "Forstå udviklingsbegreber og arkitektur;"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Understand the various modules;"
-msgstr ""
+msgstr "Forstå de forskellige moduler;"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_unit
@@ -2252,12 +2267,12 @@ msgstr "Bruger"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Variables &amp; Operators"
-msgstr ""
+msgstr "Variabler & amp; Operatører"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
-msgstr ""
+msgstr "Lagerstyring, Produktion (MRP) & amp; Salg, Import / Eksport."
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
@@ -2278,19 +2293,19 @@ msgstr "Uge(r)"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "What do people say about this course?"
-msgstr ""
+msgstr "Hvad siger folk om dette kursus?"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "What you will learn?"
-msgstr ""
+msgstr "Hvad vil du lære?"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_type
 msgid "When to Run "
-msgstr ""
+msgstr "Hvornår skal e-mail sendes"
 
 #. module: event
 #: model:event.event,description:event.event_0

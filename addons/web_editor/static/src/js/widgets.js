@@ -617,7 +617,7 @@ var fontIconsDialog = Widget.extend({
             e.stopPropagation();
 
             this.$('#fa-icon').val(e.target.getAttribute('data-id'));
-            $(".font-icons-icon").removeClass("o_selected");
+            this.$(".font-icons-icon").removeClass("o_selected");
             $(e.target).addClass("o_selected");
         },
         'dblclick .font-icons-icon': function () {
@@ -743,7 +743,7 @@ var fontIconsDialog = Widget.extend({
                     continue;
                 case '': continue;
                 default:
-                    $(".font-icons-icon").removeClass("o_selected").filter("[data-alias*=',"+cls+",']").addClass("o_selected");
+                    this.$(".font-icons-icon").removeClass("o_selected").filter("[data-alias*=',"+cls+",']").addClass("o_selected");
                     if (this.alias.indexOf(cls) !== -1) {
                         this.$('#fa-icon').val(cls);
                     }
@@ -876,7 +876,7 @@ var VideoDialog = Widget.extend({
         this.$iframe = this.$("iframe");
         var $media = $(this.media);
         if ($media.hasClass("media_iframe_video")) {
-            var src = $media.data('src');
+            var src = $media.data('oe-expression') || $media.data('src');
             this.$("input#urlvideo").val(src);
             this.$("input#autoplay").prop("checked", (src || "").indexOf("autoplay") >= 0);
             this.get_video();

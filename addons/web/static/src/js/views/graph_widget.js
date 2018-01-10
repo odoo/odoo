@@ -70,7 +70,8 @@ return Widget.extend({
                 data_pt.grouped_on = [data_pt.grouped_on];
             }
             for (j = 0; j < data_pt.value.length; j++) {
-                values[j] = this.sanitize_value(data_pt.value[j], data_pt.grouped_on[j]);
+                var field = _.isArray(data_pt.grouped_on) ? data_pt.grouped_on[j] : data_pt.grouped_on;
+                values[j] = this.sanitize_value(data_pt.value[j], field);
             }
             value = is_count ? data_pt.length : data_pt.aggregates[this.measure];
             this.data.push({
@@ -102,7 +103,7 @@ return Widget.extend({
             }));
         } else {
             var chart = this['display_' + this.mode]();
-            if (chart) {
+            if (chart && chart.tooltip.chartContainer) {
                 chart.tooltip.chartContainer(this.$el[0]);
             }
         }

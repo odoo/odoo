@@ -162,13 +162,13 @@ msgstr "Хөрөнгийн Эхлэл Огноо"
 #: model:ir.model.fields,field_description:account_asset.field_product_template_asset_category_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Asset Type"
-msgstr "Хөрөнгийн Төрөл"
+msgstr "Хөрөнгийн ангилал"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal_purchase
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_list_normal_purchase
 msgid "Asset Types"
-msgstr "Хөрөнгийн төрөл"
+msgstr "Хөрөнгийн ангилал"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_category
@@ -795,7 +795,7 @@ msgstr "Элэгдэх тоо"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Number of Entries"
-msgstr "Бичилтийн тоо"
+msgstr "Ашиглах хугацаа"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_period
@@ -805,7 +805,7 @@ msgstr "Мөчлөг дахь сарын тоо"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "One Entry Every"
-msgstr "Мөчлөг дахь бичилтийн тоо"
+msgstr "Элэгдэл бодох давтамж"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:570
@@ -986,6 +986,14 @@ msgid "The number of depreciations needed to depreciate your asset"
 msgstr "Хөрөнгийг элэгдүүлэхэд шаардлагатай элэгдүүлэлтийн тоо"
 
 #. module: account_asset
+#: code:addons/account_asset/models/account_asset.py:477
+#, python-format
+msgid ""
+"This depreciation is already linked to a journal entry! Please post or "
+"delete it."
+msgstr ""
+
+#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
 msgid ""
 "This wizard will post installment/depreciation lines for the selected month.<br/>\n"
@@ -1004,7 +1012,7 @@ msgstr "Хугацааны арга"
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Time Method Based On"
-msgstr "Хугцааны Аргын Суурь"
+msgstr "Хугацааны Аргын Суурь"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_type

@@ -5,13 +5,14 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # Torvald Baade Bringsvor <bringsvor@bringsvor.com>, 2017
+# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Torvald Baade Bringsvor <bringsvor@bringsvor.com>, 2017\n"
+"Last-Translator: Jorunn D. Newth <jdn@eyenetworks.no>, 2017\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -99,17 +100,17 @@ msgstr ""
 #. module: rating_project
 #: model:mail.template,subject:rating_project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Service Rating Request"
-msgstr ""
+msgstr "${object.project_id.company_id.name}: Ber om vurdering av tjeneste"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
 msgid "% On tasks"
-msgstr ""
+msgstr "% på oppgaver"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid "Automatic kanban status"
-msgstr ""
+msgstr "Automatisk kanbanstatus"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
@@ -125,7 +126,7 @@ msgstr ""
 #: model:ir.ui.menu,name:rating_project.rating_rating_menu_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "Customer Ratings"
-msgstr ""
+msgstr "Kundevurderinger"
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_task
@@ -133,6 +134,8 @@ msgid ""
 "Customer ratings on tasks. If you have no rating, change your project "
 "Settings to activate it."
 msgstr ""
+"Kundevurderinger på oppgaver. Hvis du ikke har vurderinger, endre "
+"prosjektinnstillingene for å aktivere det."
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_project
@@ -140,16 +143,18 @@ msgid ""
 "Customer ratings on tasks/issues. If you have no rating, change your project"
 " Settings to activate it."
 msgstr ""
+"Kundevurderinger på oppgaver/saker. Hvis du ikke har vurderinger, endre "
+"prosjektinnstillingene for å aktivere det."
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status
 msgid "Customer(s) Ratings"
-msgstr ""
+msgstr "Kundevurderinger"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Daily"
-msgstr ""
+msgstr "Daglig"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
@@ -161,12 +166,12 @@ msgstr ""
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_project
 msgid "Happy % on Project"
-msgstr ""
+msgstr "Glad % på prosjekt"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_task
 msgid "Happy % on Task"
-msgstr ""
+msgstr "Fornøyd % på oppgave"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_project_rating_status
@@ -181,22 +186,22 @@ msgstr ""
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Higly Dissatisfied"
-msgstr ""
+msgstr "Siste vurdering: Svært misfornøyd"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Not Satisfied"
-msgstr ""
+msgstr "Siste vurdering: Ikke fornøyd"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Satisfied"
-msgstr ""
+msgstr "Siste vurdering: Fornøyd"
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "No rating"
-msgstr ""
+msgstr "Ingen vurdering"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
@@ -206,7 +211,7 @@ msgstr ""
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Once a Month"
-msgstr ""
+msgstr "Én gang i måneden"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
@@ -214,11 +219,13 @@ msgid ""
 "Percentage of happy ratings over the past 30 days. Get rating details from "
 "the More menu."
 msgstr ""
+"Prosentandel glade vurderinger siste 30 dager. Få vurderingsdetaljer fra "
+"Mer-menyen."
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "Periodical Rating"
-msgstr ""
+msgstr "Periodisk vurdering"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_project
@@ -238,12 +245,12 @@ msgstr "Vurdering"
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_rating_template_id
 msgid "Rating Email Template"
-msgstr ""
+msgstr "Epostmal for vurdering"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status_period
 msgid "Rating Frequency"
-msgstr ""
+msgstr "Vurderingsfrekvens"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_request_deadline
@@ -253,12 +260,12 @@ msgstr ""
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "Rating when changing stage"
-msgstr ""
+msgstr "Vurdering når stadium endres"
 
 #. module: rating_project
 #: model:mail.message.subtype,description:rating_project.mt_task_rating
 msgid "Ratings"
-msgstr ""
+msgstr "Vurderinger"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_rating_template_id
@@ -276,7 +283,7 @@ msgstr "Oppgave"
 #: model:mail.message.subtype,name:rating_project.mt_project_task_rating
 #: model:mail.message.subtype,name:rating_project.mt_task_rating
 msgid "Task Rating"
-msgstr ""
+msgstr "Oppgavevurdering"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task_type
@@ -286,7 +293,7 @@ msgstr "Oppgavefase"
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Twice a Month"
-msgstr ""
+msgstr "To ganger i måneden"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -296,4 +303,4 @@ msgstr "Ukentlig"
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Yearly"
-msgstr ""
+msgstr "Årlig"

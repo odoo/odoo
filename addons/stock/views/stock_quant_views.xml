@@ -116,6 +116,7 @@
             <pivot string="Inventory">
                 <field name="location_id" type="row"/>
                 <field name="qty" type="measure"/>
+                <field name="inventory_value" type="measure"/>
             </pivot>
         </field>
     </record>
@@ -159,9 +160,8 @@
                 <field name="location_id"/>
                 <field name="packaging_id"/>
                 <group  expand='0' string='Group by...'>
-                   <filter string='Location' domain="[]" context="{'group_by' : 'location_id'}"/>
+                   <!-- FORWARD-PORT UP TO v11 -->
                    <filter string='Packaging' domain="[]" context="{'group_by' : 'packaging_id'}"/>
-                   <filter string='Company' domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
                </group>
             </search>
         </field>

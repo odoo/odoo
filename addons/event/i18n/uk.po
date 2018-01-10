@@ -8,13 +8,14 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # zhanna shewchuk <zhanna_shewchuk@rambler.ru>, 2016
 # Zoriana Zaiats <sorenabell@quintagroup.com>, 2016
+# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:43+0000\n"
 "PO-Revision-Date: 2016-10-10 08:43+0000\n"
-"Last-Translator: Zoriana Zaiats <sorenabell@quintagroup.com>, 2016\n"
+"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -149,6 +150,129 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td>\n"
+"                    <a href=\"/\">\n"
+"                        <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
+"                    </a>\n"
+"                </td>\n"
+"                <td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                        <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">Більше подій</a>\n"
+"                    % endif\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td style=\"padding:15px 20px 0px 20px;\">\n"
+"                    <h2 style=\"font-weight:300;\">\n"
+"                        Hi ${object.name},\n"
+"                    </h2>\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Будь ласка, майте на увазі, що ця подія\n"
+"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
+"                        % else:\n"
+"                            <strong>${object.event_id.name}</strong>\n"
+"                        % endif\n"
+"                        відбувається\n"
+"                        <strong>${object.get_date_range_str()}</strong>\n"
+"                    </p>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"                <td style=\"padding:15px 20px 0px 20px;\">\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                            </td>\n"
+"                            <td style=\"padding:30px 10px 25px 10px;width:50%;vertical-align:top;\">\n"
+"                                % if object.event_id.address_id.street:\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street},</p>\n"
+"                                    % set location = object.event_id.address_id.street\n"
+"                                % endif\n"
+"                                % if object.event_id.address_id.street2:\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street2},</p>\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.street2)\n"
+"                                % endif\n"
+"                                % if object.event_id.address_id.city:\n"
+"                                    ${object.event_id.address_id.city},\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.city)\n"
+"                                % endif\n"
+"                                % if object.event_id.address_id.state_id.name:\n"
+"                                    ${object.event_id.address_id.state_id.name},\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.state_id.name)\n"
+"                                % endif\n"
+"                                % if object.event_id.address_id.zip:\n"
+"                                    ${object.event_id.address_id.zip},\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.zip)\n"
+"                                % endif\n"
+"                                % if object.event_id.address_id.country_id.name:\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.country_id.name}</p>\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.country_id.name)\n"
+"                                % endif\n"
+"                            </td>\n"
+"                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                            </td>\n"
+"                            <td style=\"padding:25px 10px 25px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><strong>З</strong> ${object.event_id.date_begin_located}</div>\n"
+"                                <div><strong>до</strong> ${object.event_id.date_end_located}</div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>TZ</strong> ${object.event_id.date_tz}</i></div>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    % if object.event_id.organizer_id.email:\n"
+"                        <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                            <tr>\n"
+"                                <td style=\"padding:10px 0px 25px 0px;\">\n"
+"                                    <h2 style=\"font-weight:300;margin:10px 0px\">Питання щодо цієї події?</h2>\n"
+"                                    <div>Будь ласка, зв'яжіться  з організатором<a href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></div>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    % endif\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding:25px 0px;\">\n"
+"                                <strong>Додайте цю подію до вашого календаря</strong>\n"
+"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
+"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Outlook</a>\n"
+"                                <a href=\"https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Yahoo</a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
+"        <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"            <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x100&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\" />\n"
+"        </a>\n"
+"    </div>\n"
+"    <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td style=\"padding-top:10px;font-size: 12px;\">\n"
+"                    <div>Цей лист було відправлено до <a href=\"mailto:${object.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.email}</a></div>\n"
+"                    <p style=\"margin:0px 0px 9px 0px;padding-top:10px;\">Copyright © ${object.company_id.name}</p>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -272,6 +396,124 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td>\n"
+"                    <a href=\"/\">\n"
+"                        <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
+"                    </a>\n"
+"                </td>\n"
+"                <td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                        <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">Більше подій</a>\n"
+"                    % endif\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td style=\"padding:15px 20px 0px 20px;\">\n"
+"                    <h2 style=\"font-weight:300;\">\n"
+"                        Вітаємо ${object.name}, ось підтвердження вашого замовлення\n"
+"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
+"                        % else:\n"
+"                            <strong>${object.event_id.name}</strong>\n"
+"                        % endif\n"
+"                    </h2>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"                <td style=\"padding:15px 20px 0px 20px;\">\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                            </td>\n"
+"                            <td style=\"padding:30px 10px 25px 10px;width:50%;vertical-align:top;\">\n"
+"                                % if object.event_id.address_id.street:\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street},</p>\n"
+"                                    % set location = object.event_id.address_id.street\n"
+"                                % endif\n"
+"                                % if object.event_id.address_id.street2:\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street2},</p>\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.street2)\n"
+"                                % endif\n"
+"                                % if object.event_id.address_id.city:\n"
+"                                    ${object.event_id.address_id.city},\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.city)\n"
+"                                % endif\n"
+"                                % if object.event_id.address_id.state_id.name:\n"
+"                                    ${object.event_id.address_id.state_id.name},\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.state_id.name)\n"
+"                                % endif\n"
+"                                % if object.event_id.address_id.zip:\n"
+"                                    ${object.event_id.address_id.zip},\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.zip)\n"
+"                                % endif\n"
+"                                % if object.event_id.address_id.country_id.name:\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.country_id.name}</p>\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.country_id.name)\n"
+"                                % endif\n"
+"                            </td>\n"
+"                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                            </td>\n"
+"                            <td style=\"padding:25px 10px 25px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><strong>З</strong> ${object.event_id.date_begin_located}</div>\n"
+"                                <div><strong>до</strong> ${object.event_id.date_end_located}</div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>TZ</strong> ${object.event_id.date_tz}</i></div>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    % if object.event_id.organizer_id.email:\n"
+"                        <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                            <tr>\n"
+"                                <td style=\"padding:10px 0px 25px 0px;\">\n"
+"                                    <h2 style=\"font-weight:300;margin:10px 0px\">Питання щодо цієї події?</h2>\n"
+"                                    <div>Будь ласка, зв'яжіться з організатором <a href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></div>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    % endif\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding:25px 0px;\">\n"
+"                                <strong>Додайте цю подію до календаря</strong>\n"
+"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
+"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Outlook</a>\n"
+"                                <a href=\"https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Yahoo</a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
+"        <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"            <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x100&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\" />\n"
+"        </a>\n"
+"    </div>\n"
+"    <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td style=\"padding-top:10px;font-size: 12px;\">\n"
+"                    <div>Цей лист було відправлено до <a href=\"mailto:${object.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.email}</a></div>\n"
+"                    <p style=\"margin:0px 0px 9px 0px;padding-top:10px;\">Copyright © ${object.company_id.name}</p>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -283,6 +525,12 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Шановний ${object.name},</p>\n"
+"<p>Дякуємо за ваше звернення.</p>\n"
+"<p>Ось позначка вашої події ${object.event_id.name}.</p>\n"
+"<p>Якщо у вас виникли запитання, повідомте нас про це.</p>\n"
+"<p>З найкращими побажаннями,</p>"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_cancel_state
@@ -317,6 +565,8 @@ msgid ""
 "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the"
 " event or change the dates on which it is held.)</em>"
 msgstr ""
+"<em>(Chamber Works залишає за собою право скасувати, <br>перейменувати чи "
+"переобчислити події або змінити дати, на яких вона зберігається.)</em>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -324,6 +574,8 @@ msgid ""
 "<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn <i>Odoo"
 " Programming</i></font>"
 msgstr ""
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">вивчити "
+"<i>програмування Odoo</i></font>"
 
 #. module: event
 #: model:event.event,description:event.event_1
@@ -331,6 +583,8 @@ msgid ""
 "<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn "
 "<i>technical aspects</i></font>"
 msgstr ""
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">вивчити "
+"<i>технічні аспекти</i></font>"
 
 #. module: event
 #: model:event.event,description:event.event_3
@@ -338,6 +592,8 @@ msgid ""
 "<font style=\"font-size: 24px;\">to learn <i>business applications "
 "development</i></font>"
 msgstr ""
+"<font style=\"font-size: 24px;\">вивчити <i>розробку бізнес-"
+"додатків</i></font>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -478,7 +734,7 @@ msgstr "Розширений JQuery"
 #. module: event
 #: selection:event.mail,interval_type:0
 msgid "After each registration"
-msgstr ""
+msgstr "Після кожної реєстрації"
 
 #. module: event
 #: selection:event.mail,interval_type:0
@@ -493,7 +749,7 @@ msgstr "Всі події - безкоштовні"
 #. module: event
 #: selection:event.config.settings,module_website_event_questions:0
 msgid "Allow adding extra questions on registrations"
-msgstr ""
+msgstr "Дозвольте додавати додаткові запитання щодо реєстрації"
 
 #. module: event
 #: selection:event.config.settings,module_event_sale:0
@@ -590,7 +846,7 @@ msgstr "Передня сторона"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
 msgid "Badge Inner Left"
-msgstr ""
+msgstr "Значок всередині ліворуч"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerright
@@ -773,7 +1029,7 @@ msgstr "Контакт"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Controllers and Views"
-msgstr ""
+msgstr "Контроль та перегляди"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_country_id
@@ -921,6 +1177,8 @@ msgid ""
 "During this conference, our team will give a detailed overview of our "
 "business applications. You’ll know all the benefits of using it."
 msgstr ""
+"Під час цієї конференції наша команда надасть детальний огляд наших бізнес-"
+"додатків. Ви будете знати всі переваги його використання."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_email
@@ -970,12 +1228,12 @@ msgstr "Дата початку події"
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_type
 msgid "Event Categories"
-msgstr ""
+msgstr "Категорії зустрічі"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Event Category"
-msgstr ""
+msgstr "Категорія зустрічі"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
@@ -1065,7 +1323,7 @@ msgstr "Тип Події"
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
 msgid "Event Types"
-msgstr ""
+msgstr "Типи зустрічі"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.report_event_registration_graph
@@ -1170,7 +1428,7 @@ msgstr "Вебінар-практикум"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Functional flow of the main applications;"
-msgstr ""
+msgstr "Функціональний потік основних додатків;"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1208,7 +1466,7 @@ msgstr "Година (години)"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "How to Debug"
-msgstr ""
+msgstr "Як налагодити"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1218,6 +1476,8 @@ msgid ""
 "I did not expect such a great learning experience. I feel like I can develop"
 " anything now."
 msgstr ""
+"Я не очікував такого чудового досвіду навчання. Я відчуваю, що зараз я можу "
+"розвивати щось."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_id
@@ -1239,6 +1499,10 @@ msgid ""
 " status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
 msgstr ""
+"Якщо подія створена, статус має назву \"Чернетка\". Якщо подія підтверджена "
+"для певних дат, статус встановлено на \"Підтверджено\". Якщо подія "
+"закінчиться, статус встановлено на \"Готово\". Якщо подія скасована, статус "
+"встановлено на \"Скасовано\"."
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -1255,22 +1519,22 @@ msgstr "Встановіть та адмініструйте свій власн
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_event_barcode
 msgid "Install the event_barcode module"
-msgstr ""
+msgstr "Встановіть модуль event_barcode"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_event_sale
 msgid "Install the event_sale module"
-msgstr ""
+msgstr "Встановіть модуль event_sale"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_website_event_track
 msgid "Install the module website_event_track"
-msgstr ""
+msgstr "Встановіть модуль website_event_track"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_website_event_questions
 msgid "Install the website_event_questions module"
-msgstr ""
+msgstr "Встановіть модуль website_event_questions"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1383,7 +1647,7 @@ msgstr "Повторення"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Luigi Roni, Senior Event Manager"
-msgstr ""
+msgstr "Luigi Roni, старший менеджер подій"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_mail_ids
@@ -1423,7 +1687,7 @@ msgstr "Керівник"
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
 msgid "Manually confirm every registration"
-msgstr ""
+msgstr "Підтвердіть кожну реєстрацію вручну"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_seats_max
@@ -1476,7 +1740,7 @@ msgstr "Наступного місяця"
 #. module: event
 #: selection:event.config.settings,module_website_event_questions:0
 msgid "No extra questions on registrations"
-msgstr ""
+msgstr "Немає додаткових питань під час реєстрації"
 
 #. module: event
 #: selection:event.config.settings,module_website_event_track:0
@@ -1498,7 +1762,7 @@ msgstr "Не залишилося вільних місць."
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
 msgid "No validation step on registration"
-msgstr ""
+msgstr "Немає крок перевірки під час реєстрації"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_nbevent
@@ -1532,7 +1796,7 @@ msgstr "Офіційний сайт Odoo "
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Odoo Web Client"
-msgstr ""
+msgstr "Клієнт Odoo Web "
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -1541,6 +1805,9 @@ msgid ""
 "    track registrations and participations, automate the confirmation emails,\n"
 "    sell tickets, etc."
 msgstr ""
+"Odoo допомагає вам планувати та ефективно організувати ваші події:\n"
+"     відстежувати реєстрацію та участь, автоматизувати електронні листи з підтвердженням,\n"
+"     продавати квитки тощо."
 
 #. module: event
 #: model:event.event,name:event.event_0
@@ -1597,7 +1864,7 @@ msgstr "Телефон"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Point of Sale (POS), Introduction to report customization."
-msgstr ""
+msgstr "Точка продажу (POS), введення в налаштування звітів."
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1608,20 +1875,21 @@ msgstr "Менеджмент проектів, Управління персон
 #: model:event.event,description:event.event_2
 msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
 msgstr ""
+"Купівля, продаж та посилення Управління закупівлями, Фінансовий облік."
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Python Objects"
-msgstr ""
+msgstr "Об'єкти Python"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Read Great Contents"
-msgstr ""
+msgstr "Читати великий зміст"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_registration_origin
@@ -1629,6 +1897,8 @@ msgid ""
 "Reference of the document that created the registration, for example a sale "
 "order"
 msgstr ""
+"Довідка про документ, який створив реєстрацію, наприклад, замовлення на "
+"продаж"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -1686,7 +1956,7 @@ msgstr "Статус реєстрації"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_website_event_questions
 msgid "Registration Survey"
-msgstr ""
+msgstr "Огляд реєстрації"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -1706,7 +1976,7 @@ msgstr "Реєстрації"
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "Reminder for ${object.event_id.name}"
-msgstr ""
+msgstr "Нагадування для ${object.event_id.name}"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_default_reply_to
@@ -1751,7 +2021,7 @@ msgstr "Відповідальний"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_event_barcode
 msgid "Scan badges to confirm attendances"
-msgstr ""
+msgstr "Сканування позначок для підтвердження відвідувань"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_scheduled_date
@@ -1844,6 +2114,10 @@ msgid ""
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
 msgstr ""
+"Електронна адреса організатора, ймовірно, буде розміщена тут, і ефект "
+"матиметься у \"Відповідь\" поштових повідомлень, що автоматично надсилаються"
+" під час підтвердження події або реєстрації. Ви також можете вказати адресу "
+"електронної пошти вашого поштового сервера, якщо ви його використовуєте."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1872,7 +2146,7 @@ msgstr "Цього місяця"
 #: code:addons/event/models/event.py:438
 #, python-format
 msgid "This week"
-msgstr ""
+msgstr "Цього тижня"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_event_sale
@@ -1901,7 +2175,7 @@ msgstr "Сьогодні"
 #: code:addons/event/models/event.py:436
 #, python-format
 msgid "Tomorrow"
-msgstr ""
+msgstr "Завтра"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_website_event_track
@@ -1971,6 +2245,8 @@ msgstr "Непрочитані повідомлення"
 msgid ""
 "Unselect this option to manually manage draft event and draft registration"
 msgstr ""
+"Скасувати вибір цієї опції, щоби вручну керувати чорновою подією та проектом"
+" реєстрації"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1992,7 +2268,7 @@ msgstr "Користувач"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Variables &amp; Operators"
-msgstr ""
+msgstr "Змінні та оператори"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -2064,7 +2340,7 @@ msgstr "Ваш бейдж для ${object.event_id.name}"
 #. module: event
 #: model:mail.template,subject:event.event_subscription
 msgid "Your registration at ${object.event_id.name}"
-msgstr ""
+msgstr "Ваша реєстрація в ${object.event_id.name}"
 
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
@@ -2081,31 +2357,31 @@ msgstr "напої та ланч; "
 #. module: event
 #: model:ir.model,name:event.model_event_config_settings
 msgid "event.config.settings"
-msgstr ""
+msgstr "event.config.settings"
 
 #. module: event
 #: model:ir.model,name:event.model_event_confirm
 msgid "event.confirm"
-msgstr ""
+msgstr "event.confirm"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail
 msgid "event.mail"
-msgstr ""
+msgstr "event.mail"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "events@openerp.com"
-msgstr ""
+msgstr "events@openerp.com"
 
 #. module: event
 #: model:ir.model,name:event.model_report_event_registration
 msgid "report.event.registration"
-msgstr ""
+msgstr "report.event.registration"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "training material."
-msgstr ""
+msgstr "навчальний матеріал."

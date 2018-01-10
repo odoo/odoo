@@ -4,16 +4,16 @@
 # 
 # Translators:
 # krnkris <krnkris@freemail.hu>, 2016
+# gezza <geza.nagy@oregional.hu>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
-# gezza <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-20 07:12+0000\n"
 "PO-Revision-Date: 2017-10-20 07:12+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2016\n"
+"Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -740,9 +740,9 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Használja az interjú űrlapokat a toborzási folyamatok alatt.\n"
-"        Ez a modul a felmérő modullal integrált\n"
-"        különböző munkahelyekhez szükséges interjúk meghatározásához.\n"
+"        Interjú űrlapok használata a toborzási folyamatok során.\n"
+"        Ez a modul a kérdőív modullal integrált,\n"
+"        lehetővé teszi különböző munkakörökhöz szükséges interjúk meghatározását.\n"
 "    "
 
 #. module: base
@@ -1387,11 +1387,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Könyvelési tételek megszakítását teszi lehetővé.\n"
+"Könyvelési tételek visszavonását teszi lehetővé.\n"
 "====================================\n"
 "\n"
-"Ez a modul hozzáadja a 'Megengedi a bevitel megszakítását' mezőt a könyvelés napló forma nézetéhez.\n"
-"Ha igazra van állítva akkor megengedi a felhasználónak a beírt értékek & számlák törlését.\n"
+"Ez a modul hozzáadja a 'Tételek visszavonásának engedélyezése' mezőt a könyvelési napló űrlap nézetéhez.\n"
+"Ha igazra van állítva akkor engedélyezett a felhasználók számára a tételek és számlák visszavonása.\n"
 "    "
 
 #. module: base
@@ -7587,7 +7587,7 @@ msgstr "Csoportok hozzáférése"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_menu_access
 msgid "Access Menu"
-msgstr "Hozzáférési menü"
+msgstr "Menü hozzáférés"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.edit_menu_access
@@ -9589,7 +9589,7 @@ msgstr "Kolumbiai számlatükör és adórendszer"
 #: model:ir.model.fields,field_description:base.field_res_partner_color
 #: model:ir.model.fields,field_description:base.field_res_users_color
 msgid "Color Index"
-msgstr "Szín jegyzék"
+msgstr "Szín index"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_column1
@@ -9617,8 +9617,8 @@ msgid ""
 "Comma-separated list of allowed view modes, such as 'form', 'tree', "
 "'calendar', etc. (Default: tree,form)"
 msgstr ""
-"Vesszővel elválasztott lista az engedélyezett nézetekről, mint például "
-"'űrlap', 'fa', 'naptár', etc. (Alapértelmezett: fa, űrlap)"
+"Vesszővel elválasztott lista az engedélyezett nézet módokról, például "
+"'űrlap', 'fa', 'naptár', stb. (Alapértelmezett: fa, űrlap)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_comment
@@ -9730,7 +9730,7 @@ msgstr "Vállalat regisztrációs azonosítója"
 #: model:ir.model.fields,field_description:base.field_res_partner_contact_address
 #: model:ir.model.fields,field_description:base.field_res_users_contact_address
 msgid "Complete Address"
-msgstr "Cím kitöltése"
+msgstr "Teljes cím"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data_complete_name
@@ -10013,7 +10013,7 @@ msgstr "Costa Rica - Könyvelés"
 #: code:addons/base/res/res_partner.py:601
 #, python-format
 msgid "Couldn't create contact without email address!"
-msgstr "Nem hozható létre Kontakt e-mail cím nélkül!"
+msgstr "Nem hozható létre kapcsolat e-mail cím nélkül!"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country
@@ -11240,7 +11240,7 @@ msgstr "E-mail"
 #: model:ir.ui.view,arch_db:base.view_users_form
 #: model:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "Email Address"
-msgstr "Email címek"
+msgstr "E-mail címek"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fetchmail
@@ -12098,7 +12098,7 @@ msgstr "Űrlap"
 #: model:ir.model.fields,help:base.field_res_partner_email_formatted
 #: model:ir.model.fields,help:base.field_res_users_email_formatted
 msgid "Format email address \"Name <email@domain>\""
-msgstr "Email cím formátuma \"Név <email@domén>\""
+msgstr "E-mail cím formátuma \"Név <email@domén>\""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_email_formatted
@@ -12854,7 +12854,7 @@ msgstr "Hogyan határozzon meg egy számított mezőt"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_survey
 msgid "Hr Recruitment Interview Forms"
-msgstr "HR emberi erőforrás toborzási űrlap"
+msgstr "HR toborzási interjú űrlapok"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_survey
@@ -13357,7 +13357,7 @@ msgstr "Indiai bérszámfejtés"
 #. module: base
 #: selection:res.partner,company_type:0
 msgid "Individual"
-msgstr "Egyéni"
+msgstr "Egyén"
 
 #. module: base
 #: model:res.country,name:base.id
@@ -13682,7 +13682,7 @@ msgstr "Készlet, Logisztikák, Raktározás"
 #. module: base
 #: selection:res.partner,type:0
 msgid "Invoice address"
-msgstr "Számlázási címek"
+msgstr "Számlázási cím"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account
@@ -15737,8 +15737,8 @@ msgid ""
 "One2Many fields cannot be synchronized as part of `commercial_fields` or "
 "`address fields`"
 msgstr ""
-"One2Many mezőken nem szinkronizálhat a `kereskedelmi_mezők` vagy `címzés "
-"mezők` részeként"
+"One2Many mezők nem szinkronizálhatók a `commercial_fields` vagy `address "
+"fields` részeként"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
@@ -15913,7 +15913,7 @@ msgstr "Egyéb tulajdonos"
 #. module: base
 #: selection:res.partner,type:0
 msgid "Other address"
-msgstr "Egyéb címek"
+msgstr "Egyéb cím"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
@@ -18773,6 +18773,12 @@ msgid "Thailand - Accounting Reports"
 msgstr "Thaiföld - Főkönyvi kimutatások"
 
 #. module: base
+#: code:addons/base/res/res_users.py:288
+#, python-format
+msgid "The \"App Switcher\" action cannot be selected as home action."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -19583,7 +19589,7 @@ msgstr "Átmenetek"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_trans_implied_ids
 msgid "Transitively inherits"
-msgstr "Tárgyak származtatásai"
+msgstr "Átmenetes öröklés"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_translate
@@ -21090,9 +21096,9 @@ msgid ""
 "            \n"
 "%(country_code)s: the code of the country"
 msgstr ""
-"Meg tudja adni a címzés szokásos módjának a formáját ami jellemző az országára.\n"
+"Az ország címzési formátuma.\n"
 "\n"
-"Használhatja a python-stílusu sor mintát a cím összes mezejéhez (például, használja '%(street)s' az 'utca' mező kiírásához) valamint\n"
+"Python stílusú minták használhatók a cím mezőkhöz (pld: '%(street)s' az 'utca' mező kiírásához) valamint\n"
 "            \n"
 "%(state_name)s: az állam nevéhez\n"
 "            \n"

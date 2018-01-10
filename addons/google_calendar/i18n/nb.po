@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
-# Mari Løken <mari@tinderbox.no>, 2016
+# Mari Løken <inactive+mari123@transifex.com>, 2016
 # Joachim Flottorp <joachimflottorp@gmail.com>, 2016
+# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Joachim Flottorp <joachimflottorp@gmail.com>, 2016\n"
+"Last-Translator: Jorunn D. Newth <jdn@eyenetworks.no>, 2017\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,7 +44,7 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.ui.menu,name:google_calendar.menu_calendar_google_tech_config
 msgid "API Credentials"
-msgstr ""
+msgstr "API-påloggingsdetaljer"
 
 #. module: google_calendar
 #. openerp-web
@@ -60,6 +61,8 @@ msgid ""
 "All events have been disconnected from your previous account. You can now "
 "restart the synchronization"
 msgstr ""
+"Alle arrangementer er frakoblet din forrige konto. Du kan nå starte "
+"synkroniseringen på nytt."
 
 #. module: google_calendar
 #. openerp-web
@@ -69,6 +72,7 @@ msgid ""
 "An administrator needs to configure Google Synchronization before you can "
 "use it!"
 msgstr ""
+"En administrator må sette opp Google-synkronisering før du kan bruke den!"
 
 #. module: google_calendar
 #. openerp-web
@@ -78,6 +82,8 @@ msgid ""
 "An error occured while disconnecting events from your previous account. "
 "Please retry or contact your administrator."
 msgstr ""
+"En feil oppsto under frakobling av kalenderoppføringer fra den forrige "
+"kontoen din. Prøv igjen eller kontakt administrator."
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
@@ -92,7 +98,7 @@ msgstr "Kalender"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_cal_id
 msgid "Calendar ID"
-msgstr ""
+msgstr "Kalender-ID"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
@@ -112,12 +118,12 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_base_config_settings_cal_client_id
 msgid "Client_id"
-msgstr ""
+msgstr "Client_id"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_base_config_settings_cal_client_secret
 msgid "Client_key"
-msgstr ""
+msgstr "Client_key"
 
 #. module: google_calendar
 #. openerp-web
@@ -130,7 +136,7 @@ msgstr "Konfigurasjon"
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid "Connect on your google account and go to"
-msgstr ""
+msgstr "Koble deg til med Google-kontoen din og gå til"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_display_name
@@ -142,7 +148,7 @@ msgstr "Visnings navn"
 #: code:addons/google_calendar/static/src/js/google_calendar.js:60
 #, python-format
 msgid "Do you want to do this now?"
-msgstr ""
+msgstr "Vil du gjøre dette nå?"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_event
@@ -154,34 +160,34 @@ msgstr "Arrangement."
 #: code:addons/google_calendar/static/src/js/google_calendar.js:74
 #, python-format
 msgid "Event disconnection error"
-msgstr ""
+msgstr "Feil ved frakobling av kalenderoppføringer"
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:70
 #, python-format
 msgid "Event disconnection success"
-msgstr ""
+msgstr "Vellykket frakobling av kalenderoppføringer"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee_google_internal_event_id
 msgid "Google Calendar Event Id"
-msgstr ""
+msgstr "Google Calendar Event Id"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid "Google Client ID"
-msgstr ""
+msgstr "Google klient-ID"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid "Google Client Secret"
-msgstr ""
+msgstr "Google klient-hemmelighet"
 
 #. module: google_calendar
 #: sql_constraint:calendar.attendee:0
 msgid "Google ID should be unique!"
-msgstr ""
+msgstr "Google-ID må være unik!"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_calendar.py:673
@@ -191,6 +197,9 @@ msgid ""
 "\n"
 " %s"
 msgstr ""
+"Vi mistet kontakt med Google... Neste synkronisering vil være en fullstendig synkronisering.\n"
+"\n"
+"%s"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_id
@@ -205,6 +214,8 @@ msgid ""
 "In order to do this, you first need to disconnect all existing events from "
 "the old account."
 msgstr ""
+"For å gjøre dette, må du først frakoble alle eksisterende "
+"kalenderoppføringer fra den gamle kontoen."
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
@@ -228,6 +239,8 @@ msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
 msgstr ""
+"Siste kalender-ID som er synkronisert. Hvis den endres, fjerner vi alle "
+"koblinger mellom Google-ID og Odoo Google intern ID "
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar___last_update
@@ -237,17 +250,17 @@ msgstr "Sist oppdatert "
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_last_sync_date
 msgid "Last synchro date"
-msgstr ""
+msgstr "Siste synkroniseringsdato"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee_oe_synchro_date
 msgid "Odoo Synchro Date"
-msgstr ""
+msgstr "Odoo-synkroniseringsdato"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event_oe_update_date
 msgid "Odoo Update Date"
-msgstr ""
+msgstr "Odoo-oppdateringsdato"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
@@ -261,17 +274,17 @@ msgstr ""
 #: code:addons/google_calendar/static/src/js/google_calendar.js:40
 #, python-format
 msgid "Redirection"
-msgstr ""
+msgstr "Omdirigering"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_rtoken
 msgid "Refresh Token"
-msgstr ""
+msgstr "Oppdateringstoken"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid "Return at Top"
-msgstr ""
+msgstr "Tilbake til toppen."
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_base_config_settings_google_cal_sync
@@ -283,7 +296,7 @@ msgstr ""
 #: code:addons/google_calendar/static/src/js/google_calendar.js:90
 #, python-format
 msgid "Sync with <b>Google</b>"
-msgstr ""
+msgstr "Synkroniser med <b>Google</b>"
 
 #. module: google_calendar
 #. openerp-web
@@ -293,6 +306,8 @@ msgid ""
 "The Google Synchronization needs to be configured before you can use it, do "
 "you want to do it now?"
 msgstr ""
+"Google-synkronisering må settes opp før du kan bruke den, vil du gjøre det "
+"nå="
 
 #. module: google_calendar
 #. openerp-web
@@ -302,6 +317,8 @@ msgid ""
 "The account you are trying to synchronize (%s) is not the same as the last "
 "one used (%s)!"
 msgstr ""
+"Kontoen du prøver å synkronisere (%s), er ikke den samme som den forrige som"
+" ble brukt (%s)!"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
@@ -313,17 +330,17 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_token_validity
 msgid "Token Validity"
-msgstr ""
+msgstr "Tokengyldighet"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_base_config_settings_server_uri
 msgid "URI for tuto"
-msgstr ""
+msgstr "URI for tuto"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_token
 msgid "User token"
-msgstr ""
+msgstr "Brukertoken"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_users
@@ -336,12 +353,14 @@ msgstr "Brukere"
 #, python-format
 msgid "You will be redirected to Google to authorize access to your calendar!"
 msgstr ""
+"Du vil bli videresendt til Google for å autorisere tilgang til kalenderen "
+"din!"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_calendar.py:296
 #, python-format
 msgid "Your token is invalid or has been revoked !"
-msgstr ""
+msgstr "Ugyldig eller tilbakekalt bruker for synkronisering!"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_base_config_settings
@@ -351,7 +370,7 @@ msgstr "Base.Konfigurasjon.Innstillinger."
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar
 msgid "google.calendar"
-msgstr ""
+msgstr "google.calendar"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings

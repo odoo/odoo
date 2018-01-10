@@ -696,7 +696,7 @@ class SaleOrderLine(models.Model):
     def create(self, values):
         values.update(self._prepare_add_missing_fields(values))
         line = super(SaleOrderLine, self).create(values)
-        if line.state == 'sale':
+        if line.order_id.state == 'sale':
             line._action_procurement_create()
             msg = _("Extra line with %s ") % (line.product_id.display_name,)
             line.order_id.message_post(body=msg)
@@ -729,6 +729,18 @@ class SaleOrderLine(models.Model):
                         msg += _("Invoiced Quantity") + ": %s <br/>" % (line.qty_invoiced,)
                     msg += "</ul>"
                     order.message_post(body=msg)
+
+        # Prevent writing on a locked SO.
+        protected_fields = self._get_protected_fields()
+        if 'done' in self.mapped('order_id.state') and any(f in values.keys() for f in protected_fields):
+            fields = self.env['ir.model.fields'].search([
+                ('name', 'in', protected_fields), ('model', '=', self._name)
+            ])
+            raise UserError(
+                _('It is forbidden to modify the following fields in a locked order:\n%s')
+                % '\n'.join(fields.mapped('field_description'))
+            )
+
         result = super(SaleOrderLine, self).write(values)
         if lines:
             lines._action_procurement_create()
@@ -851,14 +863,11 @@ class SaleOrderLine(models.Model):
         if self.order_id.pricelist_id.discount_policy == 'with_discount':
             return product.with_context(pricelist=self.order_id.pricelist_id.id).price
         final_price, rule_id = self.order_id.pricelist_id.get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
-        pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
-        if pricelist_item.base == 'pricelist':
-            base_price, rule_id = pricelist_item.base_pricelist_id.get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
-            base_price = pricelist_item.base_pricelist_id.currency_id.compute(base_price, self.order_id.pricelist_id.currency_id)
-        else:
-            base_price = product[pricelist_item.base] if pricelist_item else product.lst_price
-            base_price = product.currency_id.compute(base_price, self.order_id.pricelist_id.currency_id)
-        # negative discounts (= surcharge) are included in the display price (= unit price)
+        context_partner = dict(self.env.context, partner_id=self.order_id.partner_id.id, date=self.order_id.date_order)
+        base_price, currency_id = self.with_context(context_partner)._get_real_price_currency(self.product_id, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
+        if currency_id != self.order_id.pricelist_id.currency_id.id:
+            base_price = self.env['res.currency'].browse(currency_id).with_context(context_partner).compute(base_price, self.order_id.pricelist_id.currency_id)
+        # negative discounts (= surcharge) are included in the display price
         return max(base_price, final_price)
 
     @api.multi
@@ -987,6 +996,12 @@ class SaleOrderLine(models.Model):
 
         return product[field_name] * uom_factor * cur_factor, currency_id.id
 
+    def _get_protected_fields(self):
+        return [
+            'product_id', 'name', 'price_unit', 'product_uom', 'product_uom_qty',
+            'tax_id', 'analytic_tag_ids'
+        ]
+
     @api.onchange('product_id', 'price_unit', 'product_uom', 'product_uom_qty', 'tax_id')
     def _onchange_discount(self):
         self.discount = 0.0
@@ -1001,11 +1016,10 @@ class SaleOrderLine(models.Model):
 
         price, rule_id = self.order_id.pricelist_id.with_context(pricelist_context).get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
         new_list_price, currency_id = self.with_context(context_partner)._get_real_price_currency(self.product_id, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
-        new_list_price = self.env['account.tax']._fix_tax_included_price_company(new_list_price, self.product_id.taxes_id, self.tax_id, self.company_id)
 
         if new_list_price != 0:
-            if self.product_id.company_id and self.order_id.pricelist_id.currency_id != self.product_id.company_id.currency_id:
-                # new_list_price is in company's currency while price in pricelist currency
+            if self.order_id.pricelist_id.currency_id.id != currency_id:
+                # we need new_list_price in the same currency as price, which is in the SO's pricelist's currency
                 new_list_price = self.env['res.currency'].browse(currency_id).with_context(context_partner).compute(new_list_price, self.order_id.pricelist_id.currency_id)
             discount = (new_list_price - price) / new_list_price * 100
             if discount > 0:

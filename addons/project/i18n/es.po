@@ -32,14 +32,13 @@
 # Juan Fernando Cano González <jfcano@nanobytes.es>, 2016
 # Miguel Orueta <mo@landoo.es>, 2016
 # Mariano Rodríguez <mahrodriguez@gmail.com>, 2017
-# Janire Olagibel <janire.olaguibel@es.gt.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
 "PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: Janire Olagibel <janire.olaguibel@es.gt.com>, 2017\n"
+"Last-Translator: Mariano Rodríguez <mahrodriguez@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -171,17 +170,17 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_opening_days
 msgid "# Days to Assign"
-msgstr "# Días para Asignar"
+msgstr "Nº días para asignar"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_closing_days
 msgid "# Days to Close"
-msgstr "# Días para Finalizar"
+msgstr "Nº días para finalizar"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
 msgid "# Days to Deadline"
-msgstr "# Días para fecha límite"
+msgstr "Nº días para fecha límite"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
@@ -192,7 +191,7 @@ msgstr "Nº tareas"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_no_of_days
 msgid "# Working Days"
-msgstr "# Días laborables"
+msgstr "Nº días laborables"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
@@ -1062,6 +1061,11 @@ msgstr "Activar proyecto de ejemplo"
 #: model:ir.model.fields,field_description:project.field_project_task_active
 msgid "Active"
 msgstr "Activo"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Activities"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -2014,7 +2018,7 @@ msgstr "Finalmente la tarea es desplegada"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_fold
 msgid "Folded in Kanban"
-msgstr "Doblado en Kanban"
+msgstr "Plegada en Kanban"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2747,6 +2751,11 @@ msgstr "Número de documentos adjuntos"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
+msgid "Objectives"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Odoo Project is a super fast and easy way to make your activities and tasks visible to\n"
 "                        everyone in your company. Follow how things progress, see when things are stuck, know\n"
@@ -3054,6 +3063,7 @@ msgstr "Tareas del proyecto"
 #: model:ir.model.fields,field_description:project.field_project_task_type_project_ids
 #: model:ir.ui.menu,name:project.menu_projects_config
 #: model:ir.ui.view,arch_db:project.analytic_account_inherited_form
+#: model:ir.ui.view,arch_db:project.project_planner
 #: model:ir.ui.view,arch_db:project.view_project
 msgid "Projects"
 msgstr "Proyectos"

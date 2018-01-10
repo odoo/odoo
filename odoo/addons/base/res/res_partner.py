@@ -201,7 +201,7 @@ class Partner(models.Model, FormatAddress):
     # company_type is only an interface field, do not use it in business logic
     company_type = fields.Selection(string='Company Type',
         selection=[('person', 'Individual'), ('company', 'Company')],
-        compute='_compute_company_type', readonly=False)
+        compute='_compute_company_type', inverse='_write_company_type')
     company_id = fields.Many2one('res.company', 'Company', index=True, default=_default_company)
     color = fields.Integer(string='Color Index', default=0)
     user_ids = fields.One2many('res.users', 'partner_id', string='Users', auto_join=True)
@@ -372,6 +372,10 @@ class Partner(models.Model, FormatAddress):
         for partner in self:
             partner.company_type = 'company' if partner.is_company else 'person'
 
+    def _write_company_type(self):
+        for partner in self:
+            partner.is_company = partner.company_type == 'company'
+
     @api.onchange('company_type')
     def onchange_company_type(self):
         self.is_company = (self.company_type == 'company')
@@ -505,7 +509,7 @@ class Partner(models.Model, FormatAddress):
         result = True
         # To write in SUPERUSER on field is_company and avoid access rights problems.
         if 'is_company' in vals and self.user_has_groups('base.group_partner_manager') and not self.env.uid == SUPERUSER_ID:
-            result = super(Partner, self).sudo().write({'is_company': vals.get('is_company')})
+            result = super(Partner, self.sudo()).write({'is_company': vals.get('is_company')})
             del vals['is_company']
         result = result and super(Partner, self).write(vals)
         for partner in self:

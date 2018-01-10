@@ -13,17 +13,19 @@
 # peso <peer.sommerlund@gmail.com>, 2016
 # Jesper Carstensen <jc@danodoo.dk>, 2016
 # Visti Kristensen <visti@vkdata.dk>, 2016
+# Kenneth Hansen <kenneth@vkdata.dk>, 2016
 # Nicolaj Helmer Hansen <nhh@softwarehuset.com>, 2016
 # jonas jensen <j.jensen@tcomp.dk>, 2016
-# Kenneth Hansen <kenneth@vkdata.dk>, 2016
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2016
+# JonathanStein <jstein@image.dk>, 2017
+# lhmflexerp <lhm@flexerp.dk>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: Pernille Kristensen <pernillekristensen1994@gmail.com>, 2016\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -117,6 +119,11 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+" * Statussen 'Kladde' anvendes når en bruger er ved at indtaste en ny og ubekræftet Faktura\n"
+" * Statussen 'Pro-forma' anvendes når fakturaen ikke har et fakturanummer.\n"
+" * Statussen 'Åben' anvendes når en bruger opretter faktura, og et fakturanummer genereres. Den forbliver i åben status, indtil brugeren betaler fakturaen.\n"
+" * Statussen 'Betalt' angives automatisk når fakturaen er betalt. Dens relaterede journalposteringer kan både være udlignede og uudlignede.\n"
+" * Statussen 'Annulleret' anvendes når brugeren annullerer fakturaen."
 
 #. module: account
 #. openerp-web
@@ -633,7 +640,7 @@ msgstr "<span>Rapporter</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>View</span>"
-msgstr "<span>Visning</span>"
+msgstr "<span>visning</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1239,7 +1246,7 @@ msgstr "Konto destination"
 #: model:ir.model,name:account.model_account_move
 #: model:ir.ui.view,arch_db:account.view_move_form
 msgid "Account Entry"
-msgstr "Konto indtastning"
+msgstr "Konto postering"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_bank_journal_id
@@ -1983,7 +1990,7 @@ msgstr "Analysekonto"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_analytic_account_id
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Analytic Account"
-msgstr "Analysekonto"
+msgstr "Analyse konto"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
@@ -1997,7 +2004,7 @@ msgstr "Analytisk regnskab"
 #: model:ir.ui.menu,name:account.menu_action_analytic_account_tree2
 #: model:ir.ui.view,arch_db:account.partner_view_button_contracts_count
 msgid "Analytic Accounts"
-msgstr "Analysekonti"
+msgstr "Analyse konto"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_tag_menu
@@ -2014,12 +2021,12 @@ msgstr "Analytiske omostninger"
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_reporting
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
 msgid "Analytic Entries"
-msgstr "Posteringer på analysekonti"
+msgstr "Analytiske posteringer"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analyse linje"
+msgstr "Analytisk linie"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -2318,7 +2325,7 @@ msgstr "Bank kontoudtog"
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "Linje på kontoudtog"
+msgstr "Bank kontoudtogslinie"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_line
@@ -2687,7 +2694,7 @@ msgstr "Kassedifference fundet under optællingen (%s)"
 #. module: account
 #: model:ir.model,name:account.model_account_cashbox_line
 msgid "CashBox Line"
-msgstr "Kasselinje"
+msgstr "Kontantkasse linje"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line_cashbox_id
@@ -2964,7 +2971,7 @@ msgstr "Mønt/regningsværdi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag_color
 msgid "Color Index"
-msgstr "Farveindex"
+msgstr "Farve index"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_label_filter
@@ -3169,7 +3176,7 @@ msgstr "Konfigurér Regnskab"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Configure your company data"
-msgstr "Opsæt virksomhedsoplysninger"
+msgstr "Opsæt firma oplysninger"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_cashbox
@@ -4164,7 +4171,7 @@ msgstr "Enten gå gennem både debet og kredit eller ingen."
 #. module: account
 #: model:ir.model,name:account.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "Guide til at skrive e-mail"
+msgstr "Wizard til at oprette Email"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_enable_filter
@@ -5729,7 +5736,7 @@ msgstr "Journal indtastningsnummer"
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 #: model:ir.ui.view,arch_db:account.view_move_line_form2
 msgid "Journal Item"
-msgstr "Journalpost"
+msgstr "journal post"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_label
@@ -6475,6 +6482,8 @@ msgid ""
 "                        to use some of them, you should check their <strong>Active</strong>\n"
 "                        field."
 msgstr ""
+"De fleste valutaer findes allerede på listen. Hvis du ønsker at bruge nogle "
+"af dem, skal du sætte kryds i <strong>Aktiv</strong>-feltet"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -6816,6 +6825,10 @@ msgid ""
 "                invoice by email and he can pay online and/or import it\n"
 "                in his own system."
 msgstr ""
+"Odoos elektroniske fakturering gør det lettere og muligt\n"
+"                at fastgøre indsamlingen af kundernes betalinger.\n"
+"                Din kunde modtager fakturaen via e-mail, og han kan betale\n"
+"                online og / eller importere den i sit eget system."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_confirm_view
@@ -7416,6 +7429,8 @@ msgid ""
 "Payments are used to register liquidity movements (send, collect or transfer money).\n"
 "                  You can then process those payments by your own means or by using installed facilities."
 msgstr ""
+"Betalingerne bruges til at registrere likviditetsbevægelser (sende, indsamle eller overføre penge).\n"
+" Du kan derefter behandle disse betalinger selv eller ved at bruge de installerede muligheder."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7673,14 +7688,14 @@ msgstr "Proforma fakturaer"
 #: model:ir.model.fields,field_description:account.field_account_move_line_product_id
 #: model:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "Product"
-msgstr "Produkt"
+msgstr "Vare"
 
 #. module: account
 #: model:ir.model,name:account.model_product_category
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_categ_id
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Product Category"
-msgstr "Produktkategori"
+msgstr "Produkt kategori"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_product_qty
@@ -7800,7 +7815,7 @@ msgstr "Python kode"
 #: model:ir.model.fields,field_description:account.field_account_move_line_quantity
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Quantity"
-msgstr "Mængde"
+msgstr "Antal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_currency_exchange_journal_id
@@ -8843,7 +8858,7 @@ msgstr "Momsbeskrivelse"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Tax Excluded Price"
-msgstr "Momsekskluderet pris"
+msgstr "Beløb uden moms"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_tax_group_id
@@ -9152,6 +9167,8 @@ msgid ""
 "The Deposit Ticket module can also be used to settle credit card batch made "
 "of multiple transactions."
 msgstr ""
+"Modulet Depositumbilletter kan også bruges til at afregne kreditkort-batch "
+"bestående af flere transaktioner."
 
 #. module: account
 #: code:addons/account/models/account_move.py:851
@@ -9878,6 +9895,9 @@ msgid ""
 " Fiscal Position: they serve to automatically set the right tax and/or "
 "account according to the customer country and state."
 msgstr ""
+"For at kontrollere den pågældende moms, når en virksomhed faktureres, "
+"anvender Odoo fiskale positioner: det vil sige, at momsen automatisk bliver "
+"justeret i forhold til virksomhedens land."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_tree
@@ -9906,7 +9926,7 @@ msgstr "For at bruge <strong>multi-valuta-indstillingen: </strong>"
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_cashbox
 #, python-format
 msgid "Total"
-msgstr "Total"
+msgstr "I alt"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_tree
@@ -10475,6 +10495,8 @@ msgid ""
 "                                        manager a CSV file containing all your\n"
 "                                        products."
 msgstr ""
+"Vi kan håndtere hele importprocessen for dig: Send blot en CSV-fil med alle "
+"dine varer."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10853,7 +10875,7 @@ msgstr "Du har"
 #: code:addons/account/models/account_payment.py:360
 #, python-format
 msgid "You have to define a sequence for %s in your company."
-msgstr ""
+msgstr "Du skal definere en sekvens for %s i dit firma."
 
 #. module: account
 #: code:addons/account/wizard/account_report_general_ledger.py:21
@@ -10914,6 +10936,7 @@ msgid ""
 "You should have defined an 'Internal Transfer Account' in your cash "
 "register's journal!"
 msgstr ""
+"Du skulle have defineret en \"intern overførselskonto 'i dit kassejournal!"
 
 #. module: account
 #. openerp-web
@@ -10930,6 +10953,8 @@ msgid ""
 "                                waiting for the document to be issued by\n"
 "                                your supplier/customer."
 msgstr ""
+"Du vil kunne redigere og bekræfte denne kreditnota direkte eller gemme den "
+"som en kladde, som skal godkendes af din leverandør/kunde."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -11184,7 +11209,7 @@ msgstr "kundelisten"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
-msgstr "overordnet virksomhed"
+msgstr "overordnet firma"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
