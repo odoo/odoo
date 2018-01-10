@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <data>
-<template id="report_mrprepairorder">
+<template id="report_repairorder">
         <t t-foreach="docs" t-as="o">
             <t t-call="web.external_layout">
                 <t t-set="o" t-value="o.with_context({'lang': o.partner_id.lang})" />
@@ -158,10 +158,10 @@
         </t>
 </template>
 
-<template id="report_mrprepairorder2">
+<template id="report_repairorder2">
     <t t-call="web.html_container">
         <t t-foreach="docs" t-as="doc">
-            <t t-call="mrp_repair.report_mrprepairorder" t-lang="doc.partner_id.lang"/>
+            <t t-call="repair.report_repairorder" t-lang="doc.partner_id.lang"/>
         </t>
     </t>
 </template>

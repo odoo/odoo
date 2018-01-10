@@ -3,8 +3,8 @@
     <data>
 
     <record id="view_repair_order_tree" model="ir.ui.view">
-        <field name="name">mrp.repair.tree</field>
-        <field name="model">mrp.repair</field>
+        <field name="name">repair.tree</field>
+        <field name="model">repair.order</field>
         <field name="arch" type="xml">
             <tree string="Repairs order" decoration-muted="state in ('done','cancel')" decoration-info="state=='draft'">
                 <field name="name" />
@@ -19,8 +19,8 @@
     </record>
 
     <record id="view_repair_order_form" model="ir.ui.view">
-        <field name="name">mrp.repair.form</field>
-        <field name="model">mrp.repair</field>
+        <field name="name">repair.form</field>
+        <field name="model">repair.order</field>
         <field name="arch" type="xml">
             <form string="Repair Order">
                <header>
@@ -187,9 +187,9 @@
     </record>
 
 
-    <record id="view_mrp_repair_kanban" model="ir.ui.view">
-        <field name="name">mrp.repair.kanban</field>
-        <field name="model">mrp.repair</field>
+    <record id="view_repair_kanban" model="ir.ui.view">
+        <field name="name">repair.kanban</field>
+        <field name="model">repair.order</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
                 <field name="name" />
@@ -227,8 +227,8 @@
     </record>
 
     <record id="view_repair_order_form_filter" model="ir.ui.view">
-          <field name="name">mrp.repair.select</field>
-          <field name="model">mrp.repair</field>
+          <field name="name">repair.select</field>
+          <field name="model">repair.order</field>
           <field name="arch" type="xml">
               <search string="Search Repair Orders">
                   <field name="name" string="Repair Orders"/>
@@ -268,7 +268,7 @@
          <record id="action_repair_order_tree" model="ir.actions.act_window">
             <field name="name">Repair Orders</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.repair</field>
+            <field name="res_model">repair.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_repair_order_form_filter"/>
@@ -288,7 +288,7 @@
         </record>
 
         <menuitem action="action_repair_order_tree" id="menu_repair_order" groups="stock.group_stock_user" name="Repairs" sequence="36"
-            web_icon="mrp_repair,static/description/icon.png"/>
+            web_icon="repair,static/description/icon.png"/>
 
     </data>
 </odoo>

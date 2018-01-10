@@ -12,11 +12,11 @@ from odoo.tools import float_compare
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    repair_id = fields.Many2one('mrp.repair')
+    repair_id = fields.Many2one('repair.order')
 
 
 class Repair(models.Model):
-    _name = 'mrp.repair'
+    _name = 'repair.order'
     _description = 'Repair Order'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'create_date desc'
@@ -30,7 +30,7 @@ class Repair(models.Model):
 
     name = fields.Char(
         'Repair Reference',
-        default=lambda self: self.env['ir.sequence'].next_by_code('mrp.repair'),
+        default=lambda self: self.env['ir.sequence'].next_by_code('repair.order'),
         copy=False, required=True,
         states={'confirmed': [('readonly', True)]})
     product_id = fields.Many2one(
@@ -83,7 +83,7 @@ class Repair(models.Model):
         help="Products repaired are all belonging to this lot", oldname="prodlot_id")
     guarantee_limit = fields.Date('Warranty Expiration', states={'confirmed': [('readonly', True)]})
     operations = fields.One2many(
-        'mrp.repair.line', 'repair_id', 'Parts',
+        'repair.line', 'repair_id', 'Parts',
         copy=True, readonly=True, states={'draft': [('readonly', False)]})
     pricelist_id = fields.Many2one(
         'product.pricelist', 'Pricelist',
@@ -105,13 +105,13 @@ class Repair(models.Model):
         copy=False, readonly=True, track_visibility="onchange",
         help="Move created by the repair order")
     fees_lines = fields.One2many(
-        'mrp.repair.fee', 'repair_id', 'Operations',
+        'repair.fee', 'repair_id', 'Operations',
         copy=True, readonly=True, states={'draft': [('readonly', False)]})
     internal_notes = fields.Text('Internal Notes')
     quotation_notes = fields.Text('Quotation Notes')
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get('mrp.repair'))
+        default=lambda self: self.env['res.company']._company_default_get('repair.order'))
     invoiced = fields.Boolean('Invoiced', copy=False, readonly=True)
     repaired = fields.Boolean('Repaired', copy=False, readonly=True)
     amount_untaxed = fields.Float('Untaxed Amount', compute='_amount_untaxed', store=True)
@@ -216,7 +216,7 @@ class Repair(models.Model):
                 'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'stock.warn.insufficient.qty.repair',
-                'view_id': self.env.ref('mrp_repair.stock_warn_insufficient_qty_repair_form_view').id,
+                'view_id': self.env.ref('repair.stock_warn_insufficient_qty_repair_form_view').id,
                 'type': 'ir.actions.act_window',
                 'context': {
                     'default_product_id': self.product_id.id,
@@ -255,9 +255,9 @@ class Repair(models.Model):
     @api.multi
     def action_send_mail(self):
         self.ensure_one()
-        template_id = self.env.ref('mrp_repair.mail_template_mrp_repair_quotation').id
+        template_id = self.env.ref('repair.mail_template_repair_quotation').id
         ctx = {
-            'default_model': 'mrp.repair',
+            'default_model': 'repair.order',
             'default_res_id': self.id,
             'default_use_template': bool(template_id),
             'default_template_id': template_id,
@@ -274,7 +274,7 @@ class Repair(models.Model):
 
     @api.multi
     def print_repair_order(self):
-        return self.env.ref('mrp_repair.action_report_mrp_repair_order').report_action(self)
+        return self.env.ref('repair.action_report_repair_order').report_action(self)
 
     def action_repair_invoice_create(self):
         for repair in self:
@@ -491,12 +491,12 @@ class Repair(models.Model):
 
 
 class RepairLine(models.Model):
-    _name = 'mrp.repair.line'
+    _name = 'repair.line'
     _description = 'Repair Line'
 
     name = fields.Char('Description', required=True)
     repair_id = fields.Many2one(
-        'mrp.repair', 'Repair Order Reference',
+        'repair.order', 'Repair Order Reference',
         index=True, ondelete='cascade')
     type = fields.Selection([
         ('add', 'Add'),
@@ -605,11 +605,11 @@ class RepairLine(models.Model):
 
 
 class RepairFee(models.Model):
-    _name = 'mrp.repair.fee'
+    _name = 'repair.fee'
     _description = 'Repair Fees Line'
 
     repair_id = fields.Many2one(
-        'mrp.repair', 'Repair Order Reference',
+        'repair.order', 'Repair Order Reference',
         index=True, ondelete='cascade', required=True)
     name = fields.Char('Description', index=True, required=True)
     product_id = fields.Many2one('product.product', 'Product')
