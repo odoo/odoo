@@ -159,24 +159,40 @@ Best Regards,'''))
     def setting_init_bank_account_action(self):
         """ Called by the 'Bank Accounts' button of the setup bar."""
         company = self.env.user.company_id
-        view_id = self.env.ref('account.setup_bank_journal_form').id
 
         res = {
             'type': 'ir.actions.act_window',
             'name': _('Bank Account'),
-            'view_mode': 'form',
             'res_model': 'account.journal',
-            'target': 'new',
-            'views': [[view_id, 'form']],
+            'context': {'default_type': 'bank'}
         }
 
-        # If some bank journal already exists, we open it in the form, so the user can edit it.
+        # If some bank journal already exists, we open it in the tree view.
         # Otherwise, we just open the form in creation mode.
-        bank_journal = self.env['account.journal'].search([('company_id','=', company.id), ('type','=','bank')], limit=1)
-        if bank_journal:
-            res['res_id'] = bank_journal.id
+        bank_journal = self.env['account.journal'].search([('company_id','=', company.id), ('type','=','bank')])
+
+        if len(bank_journal) > 1:
+            view_id_tree = self.env.ref('account.view_account_bank_journal_tree').id
+            view_id_form = self.env.ref('account.view_account_bank_journal_form').id
+            res.update({
+                'view_mode': 'tree',
+                'views': [(view_id_tree, 'list'), (view_id_form, 'form')],
+                'view_id': view_id_tree,
+                'domain': [('type', '=', 'bank')],
+                'view_type': 'list'
+                })
+            """ Mark the 'bank setup' step as done in the setup bar and in the company."""
+            company.account_setup_bank_data_done = True
+
         else:
-            res['context'] = {'default_type': 'bank'}
+            view_id = self.env.ref('account.setup_bank_journal_form').id
+            res.update({
+                'res_id': bank_journal.id or False,
+                'view_mode': 'form',
+                'views': [[view_id, 'form']],
+                'target': 'new',
+                'view_type': 'form'
+            })
         return res
 
     @api.model
