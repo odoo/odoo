@@ -106,10 +106,10 @@ class StockPicking(models.Model):
             picking.weight = sum(move.weight for move in picking.move_lines if move.state != 'cancel')
 
     @api.multi
-    def do_transfer(self):
+    def action_done(self):
         # TDE FIXME: should work in batch
         self.ensure_one()
-        res = super(StockPicking, self).do_transfer()
+        res = super(StockPicking, self).action_done()
 
         if self.carrier_id and self.carrier_id.integration_level == 'rate_and_ship':
             self.send_to_shipper()
