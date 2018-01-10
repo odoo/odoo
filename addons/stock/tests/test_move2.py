@@ -1848,3 +1848,45 @@ class TestRoutes(TransactionCase):
         self.assertEqual(picking_pick.partner_id.id, False)
         self.assertEqual(picking_pick.origin, False)
 
+    def test_push_rule_on_move_1(self):
+        """ Create a route with a push rule, force it on a move, check that it is applied.
+        """
+        product1 = self.env['product.product'].create({
+            'name': 'product a',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        uom_unit = self.env.ref('product.product_uom_unit')
+        stock_location = self.env.ref('stock.stock_location_stock')
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+
+        push_location = self.env['stock.location'].create({
+            'location_id': stock_location.location_id.id,
+            'name': 'push location',
+        })
+
+        # TODO: maybe add a new type on the "applicable on" fields?
+        route = self.env['stock.location.route'].create({
+            'name': 'new route',
+            'push_ids': [(0, False, {
+                'name': 'create a move to push location',
+                'location_from_id': stock_location.id,
+                'location_dest_id': push_location.id,
+                'auto': 'manual',
+                'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            })],
+        })
+        move1 = self.env['stock.move'].create({
+            'name': 'move with a route',
+            'location_id': stock_location.id,
+            'location_dest_id': stock_location.id,
+            'product_id': product1.id,
+            'product_uom': uom_unit.id,
+            'product_uom_qty': 1.0,
+            'route_ids': [(4, route.id)]
+        })
+        move1._action_confirm()
+
+        pushed_move = move1.move_dest_ids
+        self.assertEqual(pushed_move.location_dest_id.id, push_location.id)
+
