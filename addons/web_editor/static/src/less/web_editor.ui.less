@@ -4,7 +4,7 @@
     .o-position-absolute(0, 0, auto, 0);
     position: fixed;
     height: @odoo-navbar-height;
-    z-index: 1003;
+    z-index: @zindex-modal - 9;
 
     background-color: rgba(0,0,0,0);
     .o-transition(background-color, 400ms, @o-we-md-ease);
@@ -93,7 +93,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
     .o-position-absolute(0, auto, 0, -@o-we-sidebar-width);
     position: fixed;
     width: @o-we-sidebar-width;
-    z-index: 1003;
+    z-index: @zindex-modal - 9;
 
     font-family: Roboto, @font-family-sans-serif;
     border-right: 1px solid @o-we-color-divider;
