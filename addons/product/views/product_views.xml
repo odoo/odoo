@@ -47,7 +47,7 @@
                                     <field name="categ_id" string="Product Category"/>
                                 </group>
                                 <group name="group_standard_price">
-                                    <field name="list_price" string="Sales Price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                    <field name="list_price" string="Sales Price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                                     <field name="company_id" groups="base.group_multi_company"
                                         options="{'no_create': True}"/>
                                     <field name="uom_id" groups="product.group_uom" options="{'no_create': True}"/>
@@ -214,8 +214,8 @@
                         <group>
                             <group name="pricing" string="Pricing">
                                 <field name="product_variant_count" invisible="1"/>
-                                <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
-                                <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
+                                <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                                 <field name="currency_id" invisible='1'/>
                             </group>
                             <group name="weight">

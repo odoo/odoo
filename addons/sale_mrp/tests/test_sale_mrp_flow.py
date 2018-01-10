@@ -335,8 +335,15 @@ class TestSaleMrpFlow(common.TransactionCase):
         product.invoice_policy = 'delivery'
         # Remove the MTO route as purchase is not installed and since the procurement removal the exception is directly raised
         product.write({'route_ids': [(6, 0, [self.warehouse.manufacture_pull_id.route_id.id])]})
+
+        partner = self.env.ref('base.res_partner_1')
+        # if `delivery` module is installed, a default property is set for the carrier to use
+        # However this will lead to an extra line on the SO (the delivery line), which will force
+        # the SO to have a different flow (and `invoice_state` value)
+        partner.property_delivery_carrier_id = False
+
         f = Form(self.env['sale.order'])
-        f.partner_id = self.env.ref('base.res_partner_1')
+        f.partner_id = partner
         with f.order_line.new() as line:
             line.product_id = product
             line.product_uom_qty = 5

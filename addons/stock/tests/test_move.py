@@ -2690,6 +2690,47 @@ class StockMove(TransactionCase):
         scrapped_move.quantity_done = 8
         self.assertEqual(scrap.scrap_qty, 8, 'Scrap quantity is not updated.')
 
+    def test_scrap_5(self):
+        """ Scrap the product of a reserved move line where the product is reserved in another
+        unit of measure. Check that the move line is correctly updated after the scrap.
+        """
+        # 4 units are available in stock
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 4)
+
+        # try to reserve a dozen
+        partner = self.env['res.partner'].create({'name': 'Kimberley'})
+        picking = self.env['stock.picking'].create({
+            'name': 'A single picking with one move to scrap',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'partner_id': partner.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        move1 = self.env['stock.move'].create({
+            'name': 'A move to confirm and scrap its product',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_dozen.id,
+            'product_uom_qty': 1.0,
+            'picking_id': picking.id,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        self.assertEqual(move1.reserved_availability, 0.33)
+
+        # scrap a unit
+        scrap = self.env['stock.scrap'].create({
+            'product_id': self.product1.id,
+            'product_uom_id': self.product1.uom_id.id,
+            'scrap_qty': 1,
+            'picking_id': picking.id,
+        })
+        scrap.action_validate()
+
+        self.assertEqual(scrap.state, 'done')
+        self.assertEqual(move1.reserved_availability, 0.25)
+
     def test_in_date_1(self):
         """ Check that moving a tracked quant keeps the incoming date.
         """

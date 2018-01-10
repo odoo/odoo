@@ -381,6 +381,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.searchview = new SearchView(this, this.dataset, this.fields_view, options);
         return this.searchview.appendTo($("<div>")).then(function () {
             self.$searchview_buttons = self.searchview.$buttons.contents();
+            // manually call do_search to generate the initial domain and filter
+            // the messages in the default channel
+            self.searchview.do_search();
         });
     },
     /**
@@ -908,7 +911,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             contexts: [session.user_context],
         });
         this.domain = result.domain;
-        this._fetchAndRenderThread();
+        if (this.channel) {
+            // initially (when _onSearch is called manually), there is no
+            // channel set yet, so don't try to fetch and render the thread as
+            // this will be done as soon as the default channel is set
+            this._fetchAndRenderThread();
+        }
     },
     /**
      * @private

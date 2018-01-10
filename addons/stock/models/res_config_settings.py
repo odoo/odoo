@@ -72,6 +72,8 @@ class ResConfigSettings(models.TransientModel):
     @api.multi
     def set_values(self):
         super(ResConfigSettings, self).set_values()
+        if not self.user_has_groups('stock.group_stock_manager'):
+            return
         self.env['ir.config_parameter'].sudo().set_param('stock.use_propagation_minimum_delta', self.use_propagation_minimum_delta)
         """ If we are not in multiple locations, we can deactivate the internal
         operation types of the warehouses, so they won't appear in the dashboard.

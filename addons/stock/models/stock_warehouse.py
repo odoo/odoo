@@ -455,6 +455,7 @@ class Warehouse(models.Model):
                 self.Routing(warehouse.lot_stock_id, warehouse.wh_pack_stock_loc_id, warehouse.pick_type_id),
                 self.Routing(warehouse.wh_pack_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.pack_type_id),
                 self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id)],
+            'company_id': warehouse.company_id.id,
         }) for warehouse in self)
 
     def _get_reception_delivery_route_values(self, route_type):
@@ -495,7 +496,8 @@ class Warehouse(models.Model):
             'product_categ_selectable': True,
             'active': self.delivery_steps != 'ship_only' and self.reception_steps != 'one_step',
             'company_id': self.company_id.id,
-            'sequence': 20}
+            'sequence': 20,
+        }
 
     # Pull / Push tools
     # ------------------------------------------------------------
