@@ -9,6 +9,7 @@ from operator import itemgetter
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
+from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_round, float_is_zero
 
@@ -484,16 +485,22 @@ class StockMove(models.Model):
             # if the move is a returned move, we don't want to check push rules, as returning a returned move is the only decent way
             # to receive goods without triggering the push rules again (which would duplicate chained operations)
             domain = [('location_from_id', '=', move.location_dest_id.id)]
-            # priority goes to the route defined on the product and product category
-            routes = move.product_id.route_ids | move.product_id.categ_id.total_route_ids
-            rules = Push.search(domain + [('route_id', 'in', routes.ids)], order='route_sequence, sequence', limit=1)
+            # first priority goes to the preferred routes defined on the move itself (e.g. coming from a SO line)
+            rules = self.env['stock.location.path']
+            if move.route_ids:
+                rules = Push.search(expression.AND([[('route_id', 'in', move.route_ids.ids)], domain]), order='route_sequence, sequence', limit=1)
+            # second priority goes to the route defined on the product and product category
+            if not rules:
+                product_routes = move.product_id.route_ids | move.product_id.categ_id.total_route_ids
+                if product_routes:
+                    rules = Push.search(expression.AND([[('route_id', 'in', product_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
             if not rules:
                 # TDE FIXME/ should those really be in a if / elif ??
                 # then we search on the warehouse if a rule can apply
                 if move.warehouse_id:
-                    rules = Push.search(domain + [('route_id', 'in', move.warehouse_id.route_ids.ids)], order='route_sequence, sequence', limit=1)
+                    rules = Push.search(expression.AND([[('route_id', 'in', move.warehouse_id.route_ids.ids)], domain]), order='route_sequence, sequence', limit=1)
                 elif move.picking_id.picking_type_id.warehouse_id:
-                    rules = Push.search(domain + [('route_id', 'in', move.picking_id.picking_type_id.warehouse_id.route_ids.ids)], order='route_sequence, sequence', limit=1)
+                    rules = Push.search(expression.AND([[('route_id', 'in', move.picking_id.picking_type_id.warehouse_id.route_ids.ids)], domain]), order='route_sequence, sequence', limit=1)
             # Make sure it is not returning the return
             if rules and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rules.location_dest_id.id):
                 rules._apply(move)
