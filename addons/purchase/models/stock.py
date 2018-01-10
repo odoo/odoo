@@ -34,14 +34,14 @@ class StockMove(models.Model):
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
         distinct_fields = super(StockMove, self)._prepare_merge_moves_distinct_fields()
-        distinct_fields.append('purchase_line_id')
+        distinct_fields += ['purchase_line_id', 'created_purchase_line_id']
         return distinct_fields
 
     @api.model
     def _prepare_merge_move_sort_method(self, move):
         move.ensure_one()
         keys_sorted = super(StockMove, self)._prepare_merge_move_sort_method(move)
-        keys_sorted.append(move.purchase_line_id.id)
+        keys_sorted += [move.purchase_line_id.id, move.created_purchase_line_id.id]
         return keys_sorted
 
     @api.multi
