@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class MakeInvoice(models.TransientModel):
-    _name = 'mrp.repair.make_invoice'
+    _name = 'repair.order.make_invoice'
     _description = 'Make Invoice'
 
     group = fields.Boolean('Group by partner invoice address')
@@ -16,7 +16,7 @@ class MakeInvoice(models.TransientModel):
             return {'type': 'ir.actions.act_window_close'}
         new_invoice = {}
         for wizard in self:
-            repairs = self.env['mrp.repair'].browse(self._context['active_ids'])
+            repairs = self.env['repair.order'].browse(self._context['active_ids'])
             new_invoice = repairs.action_invoice_create(group=wizard.group)
 
             # We have to udpate the state of the given repairs, otherwise they remain 'to be invoiced'.

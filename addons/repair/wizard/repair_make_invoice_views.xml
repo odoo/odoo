@@ -6,7 +6,7 @@
         
         <record id="view_make_invoice" model="ir.ui.view">
             <field name="name">Make Invoice</field>
-            <field name="model">mrp.repair.make_invoice</field>
+            <field name="model">repair.order.make_invoice</field>
             <field name="arch" type="xml">
             <form string="Create invoices">
                 <group string="Do you really want to create the invoice(s)?">
@@ -21,12 +21,12 @@
         </record>
 
         <act_window name="Create Invoice"            
-            res_model="mrp.repair.make_invoice"
-            src_model="mrp.repair"
+            res_model="repair.order.make_invoice"
+            src_model="repair.order"
             view_mode="form"
             target="new"        
             key2="client_action_multi"    
-            id="act_mrp_repair_invoice"
+            id="act_repair_invoice"
             multi="True"/>        
         
     </data>
