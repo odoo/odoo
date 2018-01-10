@@ -60,7 +60,7 @@ tour.register('shop_customize', {
         },
         {
             content: "check quantity",
-            trigger: '.my_cart_quantity:containsExact(2)',
+            trigger: '.my_cart_quantity:containsExact(2),.o_extra_menu_items .fa-plus',
             run: function () {}, // it's a check
         },
         {

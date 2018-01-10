@@ -53,7 +53,7 @@ tour.register('event_buy_tickets', {
         },
         {
             content: "Check that the cart contains exactly 3 triggers",
-            trigger: 'a:has(.my_cart_quantity:containsExact(3))',
+            trigger: 'a:has(.my_cart_quantity:containsExact(3)),.o_extra_menu_items .fa-plus',
             run: function () {}, // it's a check
         },
         {
@@ -67,7 +67,7 @@ tour.register('event_buy_tickets', {
         },
         {
             content: "Now click on `Process Checkout`",
-            extra_trigger: 'a:has(.my_cart_quantity):contains(4)',
+            extra_trigger: 'a:has(.my_cart_quantity):contains(4),#cart_products input.js_quantity[value="3"]',
             trigger: '.btn-primary:contains("Process Checkout")'
         },
         {

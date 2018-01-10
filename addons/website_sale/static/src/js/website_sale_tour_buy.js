@@ -45,7 +45,7 @@ tour.register('shop_buy_product', {
         },
         {
             content: "add one more iPod",
-            extra_trigger: '.my_cart_quantity:contains(2)',
+            extra_trigger: '#cart_products tr:contains("Headphones")',
             trigger: '#cart_products tr:contains("16 GB") a.js_add_cart_json:eq(1)',
         },
         {
