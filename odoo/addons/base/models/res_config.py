@@ -451,24 +451,27 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
 
         defaults, groups, modules, configs, others = [], [], [], [], []
         for name, field in self._fields.items():
-            if name.startswith('default_') and hasattr(field, 'default_model'):
+            if name.startswith('default_'):
+                if not hasattr(field, 'default_model'):
+                    raise Exception("Field %s without attribute 'default_model'" % field)
                 defaults.append((name, field.default_model, name[8:]))
-            elif name.startswith('group_') and field.type in ('boolean', 'selection') and \
-                    hasattr(field, 'implied_group'):
+            elif name.startswith('group_'):
+                if field.type not in ('boolean', 'selection'):
+                    raise Exception("Field %s must have type 'boolean' or 'selection'" % field)
+                if not hasattr(field, 'implied_group'):
+                    raise Exception("Field %s without attribute 'implied_group'" % field)
                 field_group_xmlids = getattr(field, 'group', 'base.group_user').split(',')
                 field_groups = Groups.concat(*(ref(it) for it in field_group_xmlids))
                 groups.append((name, field_groups, ref(field.implied_group)))
-            elif name.startswith('module_') and field.type in ('boolean', 'selection'):
+            elif name.startswith('module_'):
+                if field.type not in ('boolean', 'selection'):
+                    raise Exception("Field %s must have type 'boolean' or 'selection'" % field)
                 module = IrModule.sudo().search([('name', '=', name[7:])], limit=1)
                 modules.append((name, module))
             elif hasattr(field, 'config_parameter'):
-                if field.type in ('boolean', 'char', 'selection', 'many2one', 'integer', 'float'):
-                    configs.append((name, field.config_parameter))
-                else:
-                    msg = "Error with field %s !" \
-                          "Automatic ir.config_parameter getting/setting is not implemented for %s's." \
-                          % (name, field.type)
-                    raise Exception(msg)
+                if field.type not in ('boolean', 'integer', 'float', 'char', 'selection', 'many2one'):
+                    raise Exception("Field %s must have type 'boolean', 'integer', 'float', 'char', 'selection' or 'many2one'" % field)
+                configs.append((name, field.config_parameter))
             else:
                 others.append(name)
 
