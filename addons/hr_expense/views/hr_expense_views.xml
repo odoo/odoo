@@ -67,12 +67,12 @@
                     </div>
                     <group>
                         <group>
-                            <field name="product_id" context="{'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view'}"/>
+                            <field name="product_id" required="1" context="{'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view'}"/>
                             <field name="unit_amount" required="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <label for="quantity"/>
                             <div>
                                 <field name="quantity" class="oe_inline"/>
-                                <field name="product_uom_id" widget="selection" class="oe_inline" groups="uom.group_uom"/>
+                                <field name="product_uom_id" required="1" widget="selection" class="oe_inline" groups="uom.group_uom"/>
                             </div>
                             <field name="tax_ids" domain="[('type_tax_use', '=', 'purchase')]" widget="many2many_tags" groups="account.group_account_user"/>
                         </group><group>
@@ -301,7 +301,7 @@
                                 <label for="default_code"/>
                                 <div>
                                     <field name="default_code"/>
-                                    <i class="text-muted oe_edit_only">Use [Reference] as a subject prefix for incoming receipts</i>
+                                    <i class="text-muted oe_edit_only">Use this reference as a subject prefix when submitting by email.</i>
                                 </div>
                             </group>
                             <group string="Accounting">

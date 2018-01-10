@@ -47,8 +47,9 @@ class HrExpense(models.Model):
     name = fields.Char('Description', readonly=True, required=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]})
     date = fields.Date(readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, default=fields.Date.context_today, string="Date")
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_employee_id, domain=lambda self: self._get_employee_id_domain())
-    product_id = fields.Many2one('product.product', string='Product', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, domain=[('can_be_expensed', '=', True)], required=True)
-    product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', required=True, readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_product_uom_id)
+    # product_id not required to allow create an expense without product via mail alias, but should be required on the view.
+    product_id = fields.Many2one('product.product', string='Product', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, domain=[('can_be_expensed', '=', True)])
+    product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_product_uom_id)
     unit_amount = fields.Float("Unit Price", readonly=True, required=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, digits=dp.get_precision('Product Price'))
     quantity = fields.Float(required=True, readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, digits=dp.get_precision('Product Unit of Measure'), default=1)
     tax_ids = fields.Many2many('account.tax', 'expense_tax', 'expense_id', 'tax_id', string='Taxes', states={'done': [('readonly', True)], 'post': [('readonly', True)]})
@@ -128,6 +129,9 @@ class HrExpense(models.Model):
             account = self.product_id.product_tmpl_id._get_product_accounts()['expense']
             if account:
                 self.account_id = account
+            return {'domain': {'product_uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}}
+        else:
+            return {'domain': {'product_uom_id': []}}
 
     @api.onchange('product_uom_id')
     def _onchange_product_uom_id(self):
@@ -412,9 +416,6 @@ class HrExpense(models.Model):
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):
-        if custom_values is None:
-            custom_values = {}
-
         email_address = email_split(msg_dict.get('email_from', False))[0]
 
         employee = self.env['hr.employee'].search([
@@ -425,50 +426,116 @@ class HrExpense(models.Model):
 
         expense_description = msg_dict.get('subject', '')
 
-        # Match the first occurence of '[]' in the string and extract the content inside it
-        # Example: '[foo] bar (baz)' becomes 'foo'. This is potentially the product code
-        # of the product to encode on the expense. If not, take the default product instead
-        # which is 'Fixed Cost'
-        default_product = self.env.ref('hr_expense.product_product_fixed_cost')
-        pattern = '\[([^)]*)\]'
-        product_code = re.search(pattern, expense_description)
-        if product_code is None:
-            product = default_product
+        if employee.user_id:
+            currencies = employee.user_id.company_id.currency_id | employee.user_id.company_ids.mapped('currency_id')
         else:
-            expense_description = expense_description.replace(product_code.group(), '')
-            products = self.env['product.product'].search([('default_code', 'ilike', product_code.group(1))]) or default_product
-            product = products.filtered(lambda p: p.default_code == product_code.group(1)) or products[0]
-        account = product.product_tmpl_id._get_product_accounts()['expense']
+            currencies = employee.company_id.currency_id
 
-        pattern = '[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?'
-        # Match the last occurence of a float in the string
-        # Example: '[foo] 50.3 bar 34.5' becomes '34.5'. This is potentially the price
-        # to encode on the expense. If not, take 1.0 instead
-        expense_price = re.findall(pattern, expense_description)
-        # TODO: International formatting
-        if not expense_price:
-            price = 1.0
-        else:
-            price = expense_price[-1][0]
-            expense_description = expense_description.replace(price, '')
-            try:
-                price = float(price)
-            except ValueError:
-                price = 1.0
-
-        custom_values.update({
-            'name': expense_description.strip(),
+        product, price, currency_id, expense_description = self._parse_expense_subject(expense_description, currencies)
+        vals = {
             'employee_id': employee.id,
-            'product_id': product.id,
+            'name': expense_description,
+            'unit_amount': price,
+            'product_id': product.id if product else None,
             'product_uom_id': product.uom_id.id,
             'tax_ids': [(4, tax.id, False) for tax in product.supplier_taxes_id],
             'quantity': 1,
-            'unit_amount': price,
             'company_id': employee.company_id.id,
-        })
+            'currency_id': currency_id.id
+        }
+
+        account = product.product_tmpl_id._get_product_accounts()['expense']
         if account:
-            custom_values['account_id'] = account.id
-        return super(HrExpense, self).message_new(msg_dict, custom_values)
+            vals['account_id'] = account.id
+
+        expense = super(HrExpense, self).message_new(msg_dict, dict(custom_values or {}, **vals))
+        self._send_expense_success_mail(msg_dict, expense)
+        return expense
+
+
+    @api.model
+    def _parse_product(self, expense_description):
+        """
+        Parse the subject to find the product.
+        Product code should be the first word of expense_description
+        Return product.product and updated description
+        """
+
+        product_code = expense_description.split(' ')[0]
+        product = self.env['product.product'].search([('can_be_expensed', '=', True), ('default_code', '=ilike', product_code)], limit=1)
+        if product:
+            expense_description = expense_description.replace(product_code, '')
+
+        return product, expense_description
+
+    @api.model
+    def _parse_price(self, expense_description, currencies):
+        """ Return price, currency and updated description """
+        symbols, symbols_pattern, float_pattern = [], '', '[+-]?(\d+[.,]?\d*)'
+        price = 0.0
+        for currency in currencies:
+            symbols.append(re.escape(currency.symbol))
+            symbols.append(re.escape(currency.name))
+        symbols_pattern = '|'.join(symbols)
+        price_pattern = "((%s)?\s?%s\s?(%s)?)" % (symbols_pattern, float_pattern, symbols_pattern)
+        matches = re.findall(price_pattern, expense_description)
+        if matches:
+            match = max(matches, key=lambda match: len([group for group in match if group])) # get the longuest match. e.g. "2 chairs 120$" -> the price is 120$, not 2
+            full_str = match[0]
+            currency_str = match[1] or match[3]
+            price = match[2].replace(',', '.')
+
+            if currency_str:
+                currency = currencies.filtered(lambda c: currency_str in [c.symbol, c.name])[0]
+                currency = currency or currencies[0]
+            expense_description = expense_description.replace(full_str, ' ') # remove price from description
+            expense_description = re.sub(' +', ' ', expense_description.strip())
+
+        price = float(price)
+        return price, currency, expense_description
+
+    @api.model
+    def _parse_expense_subject(self, expense_description, currencies):
+        """ Fetch product, price and currency info from mail subject.
+
+            Product can be identified based on product name or product code.
+            It can be passed between [] or it can be placed at start.
+
+            When parsing, only consider currencies passed as parameter.
+            This will fetch currency in symbol($) or ISO name (USD).
+
+            Some valid examples:
+                Travel by Air [TICKET] USD 1205.91
+                TICKET $1205.91 Travel by Air
+                Extra expenses 29.10EUR [EXTRA]
+        """
+        product, expense_description = self._parse_product(expense_description)
+        price, currency_id, expense_description = self._parse_price(expense_description, currencies)
+
+        return product, price, currency_id, expense_description
+
+    # TODO: Make api.multi
+    def _send_expense_success_mail(self, msg_dict, expense):
+        mail_template_id = 'hr_expense.hr_expense_template_register' if expense.employee_id.user_id else 'hr_expense.hr_expense_template_register_no_user'
+        expense_template = self.env.ref(mail_template_id)
+        rendered_body = expense_template.render({'expense': expense}, engine='ir.qweb')
+        body = self.env['mail.thread']._replace_local_links(rendered_body)
+        if expense.employee_id.user_id.partner_id:
+            expense.message_post(
+                partner_ids=expense.employee_id.user_id.partner_id.ids,
+                subject='Re: %s' % msg_dict.get('subject', ''),
+                body=body,
+                subtype_id=self.env.ref('mail.mt_note').id,
+                notif_layout='mail.mail_notification_light',
+            )
+        else:
+            self.env['mail.mail'].create({
+                'body_html': body,
+                'subject': 'Re: %s' % msg_dict.get('subject', ''),
+                'email_to': msg_dict.get('email_from', False),
+                'auto_delete': True,
+                'references': msg_dict.get('message_id'),
+            }).send()
 
 
 class HrExpenseSheet(models.Model):
