@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="mrp_repair_rmrp1" model="mrp.repair">
+    <record id="repair_r1" model="repair.order">
         <field name="address_id" ref="base.res_partner_address_1"/>
         <field name="guarantee_limit" eval="datetime.today().strftime('%Y-%m-%d')"/>
         <field name="invoice_method">none</field>
@@ -9,7 +9,7 @@
         <field name="partner_invoice_id" ref="base.res_partner_address_1"/>
         <field name="location_dest_id" ref="base.res_partner_address_1"/>
         <field name="location_id" ref="stock.stock_location_stock"/>
-        <field name="operations" model="mrp.repair.line" eval="[(5, 0, 0), (0, 0, {
+        <field name="operations" model="repair.line" eval="[(5, 0, 0), (0, 0, {
             'location_dest_id': obj().env.ref('stock.location_production').id,
             'location_id': obj().env.ref('stock.stock_location_stock').id,
             'name': '[M-Las] Mouse, Laser',
@@ -20,7 +20,7 @@
             'state': 'draft',
             'type': 'add',
         })]"/>
-        <field name="fees_lines" model="mrp.repair.fee" eval="[(5, 0, 0), (0, 0, {
+        <field name="fees_lines" model="repair.fee" eval="[(5, 0, 0), (0, 0, {
             'name': 'Laptop formatting fees',
             'product_id': obj().env.ref('product.product_product_11c').id,
             'product_uom_qty': 1.0,
@@ -30,7 +30,7 @@
         <field name="partner_id" ref="base.res_partner_12"/>
     </record>
 
-    <record id="mrp_repair_rmrp0" model="mrp.repair">
+    <record id="repair_r0" model="repair.order">
         <field name="product_id" ref="product.product_product_5"/>
         <field name="product_uom" ref="product.product_uom_unit"/>
         <field name="address_id" ref="base.res_partner_address_1"/>
@@ -39,7 +39,7 @@
         <field name="partner_invoice_id" ref="base.res_partner_address_1"/>
         <field name="location_dest_id" ref="stock.stock_location_14"/>
         <field name="location_id" ref="stock.stock_location_stock"/>
-        <field name="operations" model="mrp.repair.line" eval="[(5, 0, 0), (0, 0, {
+        <field name="operations" model="repair.line" eval="[(5, 0, 0), (0, 0, {
             'location_dest_id': obj().env.ref('stock.location_production').id,
             'location_id': obj().env.ref('stock.stock_location_stock').id,
             'name': '[M-Wir] Mouse, Wireless',
@@ -50,7 +50,7 @@
             'state': 'draft',
             'type': 'add',
         })]"/>
-        <field name="fees_lines" model="mrp.repair.fee" eval="[(5, 0, 0), (0, 0, {
+        <field name="fees_lines" model="repair.fee" eval="[(5, 0, 0), (0, 0, {
             'name': 'Monitor screen repair',
             'product_id': obj().env.ref('product.product_product_5c').id,
             'product_uom_qty': 1.0,
@@ -60,7 +60,7 @@
         <field name="partner_id" ref="base.res_partner_12"/>
     </record>
 
-    <record id="mrp_repair_rmrp2" model="mrp.repair">
+    <record id="repair_r2" model="repair.order">
         <field name="product_id" ref="product.product_product_6"/>
         <field name="product_uom" ref="product.product_uom_unit"/>
         <field name="address_id" ref="base.res_partner_address_1"/>
@@ -69,7 +69,7 @@
         <field name="partner_invoice_id" ref="base.res_partner_address_1"/>
         <field name="location_dest_id" ref="stock.stock_location_stock"/>
         <field name="location_id" ref="stock.stock_location_14"/>
-        <field name="operations" model="mrp.repair.line" eval="[(5, 0, 0), (0, 0, {
+        <field name="operations" model="repair.line" eval="[(5, 0, 0), (0, 0, {
             'location_dest_id': obj().env.ref('stock.location_production').id,
             'location_id': obj().env.ref('stock.stock_location_stock').id,
             'name': '[RAM-SR5] RAM DDR SR5',
@@ -80,7 +80,7 @@
             'state': 'draft',
             'type': 'add',
         })]"/>
-        <field name="fees_lines" model="mrp.repair.fee" eval="[(5, 0, 0), (0, 0, {
+        <field name="fees_lines" model="repair.fee" eval="[(5, 0, 0), (0, 0, {
             'name': 'SIM card holder repair',
             'product_id': obj().env.ref('product.product_product_6c').id,
             'product_uom_qty': 1.0,

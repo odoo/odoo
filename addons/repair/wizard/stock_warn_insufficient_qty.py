@@ -7,7 +7,7 @@ class StockWarnInsufficientQtyRepair(models.TransientModel):
     _name = 'stock.warn.insufficient.qty.repair'
     _inherit = 'stock.warn.insufficient.qty'
 
-    repair_id = fields.Many2one('mrp.repair', string='Repair')
+    repair_id = fields.Many2one('repair.order', string='Repair')
 
     def action_done(self):
         self.ensure_one()
