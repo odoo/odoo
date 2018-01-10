@@ -48,9 +48,9 @@ class Forum(models.Model):
     description = fields.Text(
         'Description',
         translate=True,
-        default='This community is for professionals and enthusiasts of our products and services. '
-                'Share and discuss the best content and new marketing ideas, '
-                'build your professional profile and become a better marketer together.')
+        default=lambda s: _('This community is for professionals and enthusiasts of our products and services. '
+                            'Share and discuss the best content and new marketing ideas, '
+                            'build your professional profile and become a better marketer together.'))
     welcome_message = fields.Html(
         'Welcome Message',
         default = """<section class="bg-info" style="height: 168px;"><div class="container">

@@ -16,6 +16,7 @@ formatting.
 
 This module applies this feature to Leads and Contacts.""",
     'data': [
+        'views/res_company_view.xml'
     ],
     'depends': ['base'],
 }
