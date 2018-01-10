@@ -243,6 +243,8 @@ following attributes:
     format if you define the page dimensions.
 ``dpi``
     output DPI; 90 by default
+``zoom``
+    Zoom level output; 1.0 by default
 ``margin_top``, ``margin_bottom``, ``margin_left``, ``margin_right``
     margin sizes in mm
 ``page_height``, ``page_width``
@@ -270,6 +272,7 @@ Example::
         <field name="header_line" eval="False"/>
         <field name="header_spacing">3</field>
         <field name="dpi">80</field>
+        <field name="zoom">1.0</field>
     </record>
 
 .. _reference/reports/custom_reports:

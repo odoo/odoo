@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -60,6 +59,7 @@ class report_paperformat(models.Model):
     header_line = fields.Boolean('Display a header line', default=False)
     header_spacing = fields.Integer('Header spacing', default=35)
     dpi = fields.Integer('Output DPI', required=True, default=90)
+    zoom = fields.Float('Output Zoom Level', default=1.0)
     report_ids = fields.One2many('ir.actions.report', 'paperformat_id', 'Associated reports', help="Explicitly associated reports")
 
     @api.constrains('format')

@@ -243,6 +243,11 @@ class IrActionsReport(models.Model):
                 else:
                     command_args.extend(['--dpi', str(paperformat_id.dpi)])
 
+            if specific_paperformat_args and specific_paperformat_args.get('data-report-zoom'):
+                command_args.extend(['--zoom', str(specific_paperformat_args['data-report-zoom'])])
+            elif paperformat_id.zoom:
+                command_args.extend(['--zoom', str(paperformat_id.zoom)])
+
             if specific_paperformat_args and specific_paperformat_args.get('data-report-header-spacing'):
                 command_args.extend(['--header-spacing', str(specific_paperformat_args['data-report-header-spacing'])])
             elif paperformat_id.header_spacing:
