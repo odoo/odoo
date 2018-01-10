@@ -1260,3 +1260,14 @@ class StockMove(models.Model):
             vals = self._prepare_move_line_vals(quantity=0)
             vals['qty_done'] = qty
             ml = self.env['stock.move.line'].create(vals)
+
+    def _get_upstream_documents_and_responsibles(self):
+        if self.move_orig_ids and any(m.state not in ('done', 'cancel') for m in self.move_orig_ids):
+            result = set()
+            for move in self.move_orig_ids:
+                if move.state not in ('done', 'cancel'):
+                    for document, responsible in move._get_upstream_documents_and_responsibles():
+                        result.add((document, responsible))
+            return result
+        else:
+            return [(self.picking_id, self.product_id.responsible_id)]
