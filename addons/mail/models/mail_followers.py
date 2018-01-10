@@ -32,6 +32,7 @@ class Followers(models.Model):
     subtype_ids = fields.Many2many(
         'mail.message.subtype', string='Subtype',
         help="Message subtypes followed, meaning subtypes that will be pushed onto the user's Wall.")
+    user_id = fields.Many2one('res.users', string="Follower Author", default=lambda self: self.env.user)
 
     @api.model
     def _add_follower_command(self, res_model, res_ids, partner_data, channel_data, force=True):
@@ -80,7 +81,7 @@ class Followers(models.Model):
         gen_new_pids = [pid for pid in partner_data if pid not in p_exist]
         gen_new_cids = [cid for cid in channel_data if cid not in c_exist]
         for pid in gen_new_pids:
-            generic.append([0, 0, {'res_model': res_model, 'partner_id': pid, 'subtype_ids': [(6, 0, partner_data.get(pid) or default_subtypes.ids)]}])
+            generic.append([0, 0, {'res_model': res_model, 'partner_id': pid, 'user_id': self.env.user.id, 'subtype_ids': [(6, 0, partner_data.get(pid) or default_subtypes.ids)]}])
         for cid in gen_new_cids:
             generic.append([0, 0, {'res_model': res_model, 'channel_id': cid, 'subtype_ids': [(6, 0, channel_data.get(cid) or default_subtypes.ids)]}])
 
@@ -98,6 +99,7 @@ class Followers(models.Model):
                     command.append((0, 0, {
                         'res_model': res_model,
                         'partner_id': new_pid,
+                        'user_id': self.env.user.id,
                         'subtype_ids': [(6, 0, partner_data.get(new_pid) or default_subtypes.ids)],
                     }))
                 for new_cid in new_cids:

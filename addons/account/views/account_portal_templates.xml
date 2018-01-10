@@ -42,7 +42,8 @@
                 <t t-foreach="invoices" t-as="invoice">
                     <tr>
                         <td>
-                            <a t-attf-href="/my/invoices/#{invoice.id}" t-att-title="invoice.number"><t t-esc="invoice.number"/></a>
+                            <a t-attf-href="/my/invoices/#{invoice.id}" t-att-title="invoice.number"><t t-esc="invoice.number"/></a>&amp;nbsp;
+                            <t t-if="shared_doc[invoice.id]['shared']"><span class="label label-info">Shared</span></t>
                         </td>
                         <td><span t-field="invoice.date_invoice"/></td>
                         <td class='hidden-xs'><span t-field="invoice.date_due"/></td>
@@ -84,12 +85,14 @@
                                     <span t-if="invoice.type == 'in_refund'">Vendor Credit Note</span>
                                     <span t-if="invoice.type == 'in_invoice'">Vendor Bill</span>
                                     <span t-field="invoice.number"/>
+                                    <t t-if="shared_doc[invoice.id]['shared']"><span class="label label-info">Shared by <t t-esc="shared_doc[invoice.id]['shared_by'].sudo().name"/></span></t>
                                 </h4>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-12 hidden-print" id="o_portal_account_actions">
                                 <a target="_blank" t-att-href="'/my/invoices/pdf/%s?%s' % (invoice.id, keep_query())" class="pull-right" title="Download">
                                     <i class="fa fa-download fa-2x" aria-hidden="true"/>
                                 </a>
+                                <a href="#" class="mr8 pull-right share_doc" data-model="account.invoice" t-att-data-url="url" t-att-data-res_id="invoice.id" t-att-data-name="invoice.number"><i class="fa fa-share-alt fa-2x"/></a>
                             </div>
                         </div>
                     </div>

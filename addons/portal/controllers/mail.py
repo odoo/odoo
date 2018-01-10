@@ -3,7 +3,7 @@
 
 from werkzeug.exceptions import NotFound, Forbidden
 
-from odoo import http
+from odoo import http, exceptions
 from odoo.http import request
 from odoo.tools import consteq
 
@@ -100,3 +100,12 @@ class PortalChatter(http.Controller):
             'messages': Message.search(domain, limit=limit, offset=offset).portal_message_format(),
             'message_count': Message.search_count(domain)
         }
+
+    @http.route(['/portal/send_share_email'], type='json', auth='user', website=True)
+    def send_share_email(self, partner_ids, model, res_id, body):
+        try:
+            request.env[model].browse(res_id).message_post(body=body, partner_ids=partner_ids)
+            result = True
+        except exceptions:
+            result = False
+        return result

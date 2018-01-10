@@ -3,6 +3,7 @@ odoo.define('portal.portal', function (require) {
 
     require('web.dom_ready');
 
+var ShareDocument = require("portal.share_document");
 
     if (!$('.o_portal').length) {
         return $.Deferred().reject("DOM doesn't contain '.o_portal'");
@@ -45,4 +46,20 @@ odoo.define('portal.portal', function (require) {
             }
         });
     }
+
+// bind the event to the button
+    $('.share_doc').click(function(e){
+        var url = $(this).data('url');
+        var model = $(this).data('model');
+        var active_id = $(this).data('res_id');
+        var name = $(this).data('name');
+        var share = new ShareDocument({
+            'res_id': active_id,
+            'res_model': model,
+            'url': url,
+            'name': name,
+        });
+        share.appendTo('body');
+
+    });
 });

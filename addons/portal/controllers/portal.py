@@ -140,6 +140,19 @@ class CustomerPortal(Controller):
             'archive_groups': [],
         }
 
+    def _check_shared_document(self, model_records):
+        shared_doc = dict.fromkeys(model_records.ids, False)
+        partner = request.env.user.partner_id
+        is_portal = request.env.user.has_group('base.group_portal')
+        for record in model_records:
+            shared_doc[record.id] = {'shared': False, 'shared_by': False}
+
+            if partner in record.message_follower_ids.mapped('partner_id') and (partner != record.partner_id) and (record.create_uid != request.env.user) and is_portal:
+                data = request.env['mail.followers'].search([('res_model', '=', record._name), ('res_id', '=', record.id), ('partner_id', '=', partner.id)])
+                shared_doc[record.id]['shared'] = True
+                shared_doc[record.id]['shared_by'] = data.user_id
+        return shared_doc
+
     @route(['/my', '/my/home'], type='http', auth="user", website=True)
     def home(self, **kw):
         values = self._prepare_portal_layout_values()

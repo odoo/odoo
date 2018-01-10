@@ -121,7 +121,10 @@
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div class="o_kanban_record_top mb16">
                                     <div class="o_kanban_record_headings mt4">
-                                        <strong class="o_kanban_record_title"><span><t t-esc="record.partner_id.value"/></span></strong>
+                                        <strong class="o_kanban_record_title">
+                                            <span><t t-esc="record.partner_id.value"/></span>
+                                            <button name="%(portal.action_mail_share_document)d" type="action" class="btn-link"><i class="fa fa-share-alt fa-1x"></i></button>
+                                        </strong>
                                     </div>
                                     <strong><field name="amount_total" widget="monetary"/></strong>
                                 </div>
@@ -214,7 +217,7 @@
                     </div>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" readonly="1"/>
+                            <field name="name" readonly="1"/><button name="%(portal.action_mail_share_document)d" type="action"><i class="fa fa-share-alt fa-2x"></i></button>
                         </h1>
                     </div>
                     <group>

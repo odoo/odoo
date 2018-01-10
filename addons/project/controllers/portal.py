@@ -51,6 +51,8 @@ class CustomerPortal(CustomerPortal):
 
         # content according to pager and archive selected
         projects = Project.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+        shared_doc = self._check_shared_document(projects)
+
         request.session['my_projects_history'] = projects.ids[:100]
 
         values.update({
@@ -62,14 +64,16 @@ class CustomerPortal(CustomerPortal):
             'default_url': '/my/projects',
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
-            'sortby': sortby
+            'sortby': sortby,
+            'shared_doc': shared_doc
         })
         return request.render("project.portal_my_projects", values)
 
     @http.route(['/my/project/<int:project_id>'], type='http', auth="user", website=True)
     def portal_my_project(self, project_id=None, **kw):
         project = request.env['project.project'].browse(project_id)
-        vals = {'project': project}
+        shared_doc = self._check_shared_document(project)
+        vals = {'project': project, 'shared_doc': shared_doc}
         history = request.session.get('my_projects_history', [])
         vals.update(get_records_pager(history, project))
         return request.render("project.portal_my_project", vals)
@@ -141,6 +145,9 @@ class CustomerPortal(CustomerPortal):
         )
         # content according to pager and archive selected
         tasks = request.env['project.task'].search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+
+        shared_doc = self._check_shared_document(tasks)
+
         request.session['my_tasks_history'] = tasks.ids[:100]
 
         values.update({
@@ -158,15 +165,18 @@ class CustomerPortal(CustomerPortal):
             'sortby': sortby,
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
             'filterby': filterby,
+            'shared_doc': shared_doc
         })
         return request.render("project.portal_my_tasks", values)
 
     @http.route(['/my/task/<int:task_id>'], type='http', auth="user", website=True)
     def portal_my_task(self, task_id=None, **kw):
         task = request.env['project.task'].browse(task_id)
+        shared_doc = self._check_shared_document(task)
         vals = {
             'task': task,
-            'user': request.env.user
+            'user': request.env.user,
+            'shared_doc': shared_doc
         }
         history = request.session.get('my_tasks_history', [])
         vals.update(get_records_pager(history, task))

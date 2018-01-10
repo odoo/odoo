@@ -100,7 +100,8 @@
                 <t t-foreach="orders" t-as="order">
                     <tr>
                         <td>
-                            <a t-attf-href="/my/orders/{{order.id}}?{{keep_query()}}"><t t-esc="order.name"/></a>
+                            <a t-attf-href="/my/orders/{{order.id}}?{{keep_query()}}"><t t-esc="order.name"/></a>&amp;nbsp;
+                            <t t-if="shared_doc[order.id]['shared']"><span class="label label-info">shared</span></t>
                         </td>
                         <td>
                           <span t-field="order.date_order" t-options="{'widget': 'date'}"/>&amp;nbsp;
@@ -144,6 +145,7 @@
                         <t t-if="order.state in ('sent', 'cancel')">Quotation</t>
                         <t t-else="">Order</t>
                         <span t-esc="order.name"/>
+                        <t t-if="shared_doc[order.id]['shared']"><span class="label label-info">Shared by <t t-esc="shared_doc[order.id]['shared_by'].sudo().name"/></span></t>
                         <t t-if="order.state == 'cancel'">
                             <span class="label label-default"><i class="fa fa-fw fa-remove"/> Cancelled</span>
                         </t>
@@ -167,6 +169,8 @@
                     <a target="_blank" t-att-href="'/my/orders/pdf/%s?%s' % (order.id, keep_query())" class="ml8 pull-right mt4 mr8" title="Download">
                         <i class="fa fa-download fa-2x" aria-hidden="true"/>
                     </a>
+                    <a href="#" class="pull-right share_doc" data-model="sale.order" t-att-data-url="url" t-att-data-res_id="order.id" t-att-data-name="order.name"><i class="fa fa-share-alt fa-2x"/></a>
+                    <!-- <t t-call='portal.share_link'/> -->
                 </div>
               </div>
             </div>
