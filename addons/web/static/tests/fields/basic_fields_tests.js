@@ -587,6 +587,52 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('float field with monetary widget and decimal precision', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records = [{
+            id: 1,
+            qux: -8.89859,
+            currency_id: 1,
+        }]
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="qux" widget="monetary" options="{\'field_digits\': True}"/>' +
+                        '<field name="currency_id" invisible="1"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            session: {
+                currencies: _.indexBy(this.data.currency.records, 'id'),
+            },
+        });
+
+        // Non-breaking space between the currency and the amount
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '$\u00a0-8.9',
+            'The value should be displayed properly.');
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('input').val(), '-8.9',
+            'The input should be rendered without the currency symbol.');
+        assert.strictEqual(form.$('input').parent().children().first().text(), '$',
+            'The input should be preceded by a span containing the currency symbol.');
+
+        form.$('input').val('109.2458938598598').trigger('input');
+        assert.strictEqual(form.$('input').val(), '109.2458938598598',
+            'The value should not be formated yet.');
+
+        form.$buttons.find('.o_form_button_save').click();
+        // Non-breaking space between the currency and the amount
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '$\u00a0109.2',
+            'The new value should be rounded properly.');
+
+        form.destroy();
+    });
+
     QUnit.module('FieldEmail');
 
     QUnit.test('email field in form view', function (assert) {
@@ -1470,6 +1516,40 @@ QUnit.module('basic_fields', {
 
         form.destroy();
         session.get_file = oldGetFile;
+    });
+
+    QUnit.test('download_link widget in list view', function (assert) {
+        assert.expect(5);
+        
+        this.data.partner.fields.filename = { string: "Filename", type: "char" };
+        this.data.partner.records[0].filename = "document.txt";
+
+        var form = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree string="Partners">' +
+                      '<field name="document" widget="download_link" options="{\'filename\': \'filename\'}"/>' +
+                      '<field name="filename"/>' +
+                  '</tree>',
+            res_id: 1,
+        });
+
+        assert.ok(form.$('.o_data_cell').first().hasClass("o_download_link_cell"),
+            "this should be a download link cell");
+        assert.ok(form.$('.o_data_cell').first().find('a').eq(0),
+            "there should be a link in the cell");
+        assert.strictEqual(form.$('.o_data_cell').first().find('a').eq(0).attr('download'),
+            "document.txt",
+            "it should download a file named 'document.txt'");
+        assert.strictEqual(form.$('.o_data_cell').first().find('a').eq(0).attr('href').trim(),
+            "data:application/octet-stream;base64,coucou==",
+            "it should have the appropriate link of a binary");
+        assert.strictEqual(form.$('.o_data_cell').first().find('a').eq(0).text(),
+            "Download",
+            "the text of the link should be 'Download'");
+
+        form.destroy();
     });
 
     QUnit.test('text field rendering in list view', function (assert) {
