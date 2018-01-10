@@ -38,7 +38,7 @@ ACONF="/etc/apache2/sites-available/000-default.conf"
 mv $ACONF $ACONF.orig
 
 echo '<VirtualHost *:80>
-ServerName $DOMAIN
+ServerName $_IP
 ServerAdmin webmaster@localhost
         Redirect permanent / https://$DOMAIN
         TransferLog /var/log/apache2/$DOMAIN.log
