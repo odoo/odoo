@@ -170,8 +170,8 @@ class Route(models.Model):
         '''when a route is deactivated, deactivate also its pull and push rules'''
         res = super(Route, self).write(values)
         if 'active' in values:
-            self.mapped('push_ids').filtered(lambda path: path.active != values['active']).write({'active': values['active']})
-            self.mapped('pull_ids').filtered(lambda rule: rule.active != values['active']).write({'active': values['active']})
+            self.with_context(active_test=False).mapped('push_ids').write({'active': values['active']})
+            self.with_context(active_test=False).mapped('pull_ids').write({'active': values['active']})
         return res
 
     def view_product_ids(self):
