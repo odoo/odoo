@@ -239,15 +239,16 @@ var KanbanController = BasicController.extend({
      * @private
      */
     _onButtonNew: function () {
-        var data = this.model.get(this.handle, {raw: true});
-        if (data.groupedBy.length > 0 && data.count > 0 && this.on_create === 'quick_create') {
+        var state = this.model.get(this.handle, {raw: true});
+        var hasColumns = state.groupedBy.length > 0 && state.data.length > 0;
+        if (hasColumns && this.on_create === 'quick_create') {
             // Activate the quick create in the first column
             this.renderer.addQuickCreate();
         } else if (this.on_create && this.on_create !== 'quick_create') {
             // Execute the given action
             this.do_action(this.on_create, {
                 on_close: this.reload.bind(this),
-                additional_context: data.context,
+                additional_context: state.context,
             });
         } else {
             // Open the form view

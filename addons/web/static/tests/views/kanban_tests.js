@@ -576,7 +576,6 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
         });
-        kanban.renderButtons();
 
         assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').length, 2,
             "there should be 2 records in first column");
@@ -604,6 +603,48 @@ QUnit.module('Views', {
         var $firstRecord = kanban.$('.o_kanban_group:first .o_kanban_record:first');
         assert.strictEqual($firstRecord.text(), 'test',
             "the first record of the first column should be the new one");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('quick create record in empty grouped kanban', function (assert) {
+        assert.expect(3);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban on_create="quick_create">' +
+                    '<field name="product_id"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    // override read_group to return empty groups, as this is
+                    // the case for several models (e.g. project.task grouped
+                    // by stage_id)
+                    var result = [
+                        {__domain: [['product_id', '=', 3]], product_id_count: 0},
+                        {__domain: [['product_id', '=', 5]], product_id_count: 0},
+                    ];
+                    return $.when(result);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 2,
+            "there should be 2 columns");
+        assert.strictEqual(kanban.$('.o_kanban_record').length, 0,
+            "both columns should be empty");
+
+        kanban.$buttons.find('.o-kanban-button-new').click();
+
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_quick_create').length, 1,
+            "should have opened the quick create in the first column");
 
         kanban.destroy();
     });
