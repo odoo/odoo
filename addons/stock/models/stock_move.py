@@ -1146,3 +1146,14 @@ class StockMove(models.Model):
                     move.state = 'waiting'
                 else:
                     move.state = 'confirmed'
+
+    def _get_upstream_documents_and_responsibles(self):
+        if self.move_orig_ids and any(m.state not in ('done', 'cancel') for m in self.move_orig_ids):
+            result = set()
+            for move in self.move_orig_ids:
+                if move.state not in ('done', 'cancel'):
+                    for document, responsible in move._get_upstream_documents_and_responsibles():
+                        result.add((document, responsible))
+            return result
+        else:
+            return [(self.picking_id, self.product_id.responsible_id)]
