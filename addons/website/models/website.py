@@ -166,7 +166,7 @@ class website(osv.osv):
         'social_youtube': fields.char('Youtube Account'),
         'social_googleplus': fields.char('Google+ Account'),
         'google_analytics_key': fields.char('Google Analytics Key'),
-        'user_id': fields.many2one('res.users', string='Public User'),
+        'user_id': fields.many2one('res.users', string='Public User', required=True),
         'compress_html': fields.boolean('Compress HTML'),
         'cdn_activated': fields.boolean('Activate CDN for assets'),
         'cdn_url': fields.char('CDN Base URL'),
