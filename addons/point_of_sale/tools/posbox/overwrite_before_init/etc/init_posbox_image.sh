@@ -21,7 +21,7 @@ apt-get update && apt-get -y upgrade
 # Do not be too fast to upgrade to more recent firmware and kernel than 4.38
 # Firmware 4.44 seems to prevent the LED mechanism from working
 
-PKGS_TO_INSTALL="adduser postgresql-client python python-dateutil python-decorator python-docutils python-feedparser python-imaging python-jinja2 python-ldap python-libxslt1 python-lxml python-mako python-mock python-openid python-passlib python-psutil python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-pypdf python-reportlab python-requests python-tz python-vatnumber python-vobject python-werkzeug python-xlwt python-yaml postgresql python-gevent python-serial python-pip python-dev localepurge vim mc mg screen iw hostapd isc-dhcp-server git rsync console-data lightdm xserver-xorg-video-fbdev xserver-xorg-input-evdev iceweasel xdotool unclutter x11-utils openbox python-netifaces rpi-update"
+PKGS_TO_INSTALL="adduser postgresql-client python python-dateutil python-decorator python-docutils python-feedparser python-imaging python-jinja2 python-ldap python-libxslt1 python-lxml python-mako python-mock python-openid python-passlib python-psutil python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-pypdf python-reportlab python-requests python-tz python-vatnumber python-vobject python-werkzeug python-xlwt python-yaml postgresql python-gevent python-serial python-pip python-dev localepurge vim mc mg screen iw hostapd isc-dhcp-server git rsync console-data lightdm xserver-xorg-video-fbdev xserver-xorg-input-evdev iceweasel xdotool unclutter x11-utils openbox python-netifaces rpi-update dnsmasq apache2"
 
 # KEEP OWN CONFIG FILES DURING PACKAGE CONFIGURATION
 # http://serverfault.com/questions/259226/automatically-keep-current-version-of-config-files-when-apt-get-install
@@ -30,6 +30,36 @@ apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-conf
 apt-get clean
 localepurge
 rm -rf /usr/share/doc
+
+#Enable and setup Apache2 reverse proxy configuration
+a2enmod proxy proxy_http ssl headers
+
+ACONF="/etc/apache2/sites-available/000-default.conf"
+mv $ACONF $ACONF.orig
+
+echo '<VirtualHost *:80>
+ServerName $DOMAIN
+ServerAdmin webmaster@localhost
+        Redirect permanent / https://$DOMAIN
+        TransferLog /var/log/apache2/$DOMAIN.log
+</VirtualHost>
+
+<VirtualHost *:443>
+ServerName $DOMAIN
+ServerAdmin webmaster@localhost     
+        ProxyRequests Off   
+        SSLProxyEngine on   
+        SSLEngine on   
+        SSLCertificateFile $CERT   
+        SSLCertificateKeyFile $KEY   
+        RequestHeader set "X-Forwarded-Proto" "https"        
+            ProxyPass / http://127.0.0.1:8069/        
+            ProxyPassReverse / http://127.0.0.1:8069/   
+        ProxyErrorOverride off   
+        TransferLog /var/log/apache2/$DOMAIN.log   
+#Fix IE problem (httpapache proxy dav error 408/409)   
+        SetEnv proxy-nokeepalive 1
+</VirtualHost>' | tee /etc/apache2/sites-available/000-default.conf
 
 # python-usb in wheezy is too old
 # the latest pyusb from pip does not work either, usb.core.find() never returns
