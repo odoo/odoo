@@ -84,7 +84,7 @@ class TestAccountEntry(TestExpenseCommon):
 
         message_parsed = {
             'message_id': 'the-world-is-a-ghetto',
-            'subject': '[EXP_AF] 9876',
+            'subject': 'EXP_AF 9876',
             'email_from': 'mark.brown23@example.com',
             'to': 'catchall@yourcompany.com',
             'body': "Don't you know, that for me, and for you",
@@ -95,6 +95,27 @@ class TestAccountEntry(TestExpenseCommon):
 
         air_ticket = self.env.ref("hr_expense.air_ticket")
         self.assertEquals(expense.product_id, air_ticket)
+        self.assertEquals(expense.tax_ids.ids, [])
+        self.assertEquals(expense.total_amount, 9876.0)
+        self.assertTrue(expense.employee_id in user_demo.employee_ids)
+
+    def test_expense_from_email_without_product(self):
+        user_demo = self.env.ref('base.user_demo')
+        self.tax.price_include = False
+
+        message_parsed = {
+            'message_id': 'the-world-is-a-ghetto',
+            'subject': 'no product code 9876',
+            'email_from': 'mark.brown23@example.com',
+            'to': 'catchall@yourcompany.com',
+            'body': "Don't you know, that for me, and for you",
+            'attachments': [],
+        }
+
+        expense = self.env['hr.expense'].message_new(message_parsed)
+
+        air_ticket = self.env.ref("hr_expense.air_ticket")
+        self.assertFalse(expense.product_id, "No product should be linked")
         self.assertEquals(expense.tax_ids.ids, [])
         self.assertEquals(expense.total_amount, 9876.0)
         self.assertTrue(expense.employee_id in user_demo.employee_ids)
