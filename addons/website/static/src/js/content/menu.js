@@ -87,8 +87,9 @@ sAnimation.registry.autohideMenu = sAnimation.Class.extend({
      * @override
      */
     start: function () {
-        this.$topMenu = this.$('#top_menu');
-        this.$items = this.$topMenu.children();
+        var $allItems = this.$('#top_menu').children();
+        this.$unfoldableItems = $allItems.filter('.divider, .divider ~ li');
+        this.$items = $allItems.not(this.$unfoldableItems);
 
         $(window).on('resize', _.debounce(this._adapt.bind(this), 500));
         this._adapt();
@@ -117,13 +118,14 @@ sAnimation.registry.autohideMenu = sAnimation.Class.extend({
         }
 
         this.maxWidth = this.$el.width();
-        this.maxWidth -= _.reduce(this.$el.children().not('.navbar-collapse'), function (sum, el) {
-            return sum + $(el).outerWidth(true);
+        var $unfoldable = this.$unfoldableItems.add(this.$el.children().not('.navbar-collapse'));
+        this.maxWidth -= _.reduce($unfoldable, function (sum, el) {
+            return sum + computeFloatOuterWidthWithMargins(el);
         }, 0);
 
         var nbItems = this.$items.length;
         var menuItemsWidth = _.reduce(this.$items, function (sum, el) {
-            return sum + $(el).outerWidth(true);
+            return sum + computeFloatOuterWidthWithMargins(el);
         }, 0);
 
         if (menuItemsWidth > this.maxWidth) {
@@ -131,16 +133,22 @@ sAnimation.registry.autohideMenu = sAnimation.Class.extend({
             this.$extraItemsToggle.append($('<a/>', {href: '#', class: 'dropdown-toggle', 'data-toggle': 'dropdown'})
                 .append($('<i/>', {class: 'fa fa-plus'})));
             this.$extraItemsToggle.append($('<ul/>', {class: 'dropdown-menu'}));
-            this.$extraItemsToggle.appendTo(this.$topMenu);
+            this.$extraItemsToggle.insertAfter(this.$items.last());
 
-            menuItemsWidth += this.$extraItemsToggle.outerWidth(true);
+            menuItemsWidth += computeFloatOuterWidthWithMargins(this.$extraItemsToggle[0]);
             do {
-                menuItemsWidth -= this.$items.eq(--nbItems).outerWidth(true);
+                menuItemsWidth -= computeFloatOuterWidthWithMargins(this.$items.eq(--nbItems)[0]);
             } while (menuItemsWidth > this.maxWidth);
 
             var $extraItems = this.$items.slice(nbItems).detach();
             this.$extraItemsToggle.children('ul').append($extraItems);
             this.$extraItemsToggle.toggleClass('active', $extraItems.hasClass('active'));
+        }
+
+        function computeFloatOuterWidthWithMargins(el) {
+            var rect = el.getBoundingClientRect();
+            var style = window.getComputedStyle(el);
+            return rect.right - rect.left + parseFloat(style.marginLeft) + parseFloat(style.marginRight);
         }
     },
     /**
@@ -148,7 +156,7 @@ sAnimation.registry.autohideMenu = sAnimation.Class.extend({
      */
     _restore: function () {
         if (this.$extraItemsToggle) {
-            this.$extraItemsToggle.find("> ul > *").appendTo(this.$topMenu);
+            this.$extraItemsToggle.find("> ul > *").insertBefore(this.$extraItemsToggle);
             this.$extraItemsToggle.remove();
             delete this.$extraItemsToggle;
         }

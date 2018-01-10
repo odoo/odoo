@@ -36,6 +36,7 @@
     <template id="header" inherit_id="website.layout" name="Header Shop My Cart Link">
         <xpath expr="//header//ul[@id='top_menu']/li" position="before">
             <t t-set="website_sale_order" t-value="website.sale_get_order()" />
+            <li class="divider hidden"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
             <li id="my_cart" t-att-class="'' if website_sale_order and website_sale_order.cart_quantity else 'hidden'">
                 <a href="/shop/cart">
                     <i class="fa fa-shopping-cart"></i>
