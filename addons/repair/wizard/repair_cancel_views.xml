@@ -6,7 +6,7 @@
         
         <record id="view_cancel_repair" model="ir.ui.view">
             <field name="name">Cancel Repair</field>
-            <field name="model">mrp.repair.cancel</field>
+            <field name="model">repair.cancel</field>
             <field name="arch" type="xml">
                 <form string="Cancel Repair Order">
                     <group>
@@ -23,7 +23,7 @@
         <record id="action_cancel_repair" model="ir.actions.act_window">
             <field name="name">Cancel Repair Order</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.repair.cancel</field>
+            <field name="res_model">repair.cancel</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>

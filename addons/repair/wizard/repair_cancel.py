@@ -6,14 +6,14 @@ from odoo.exceptions import UserError
 
 
 class RepairCancel(models.TransientModel):
-    _name = 'mrp.repair.cancel'
+    _name = 'repair.cancel'
     _description = 'Cancel Repair'
 
     @api.multi
     def cancel_repair(self):
         if not self._context.get('active_id'):
             return {'type': 'ir.actions.act_window_close'}
-        repair = self.env['mrp.repair'].browse(self._context['active_id'])
+        repair = self.env['repair.order'].browse(self._context['active_id'])
         if repair.invoiced or repair.invoice_method == 'none':
             repair.action_cancel()
         else:
@@ -24,10 +24,10 @@ class RepairCancel(models.TransientModel):
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         res = super(RepairCancel, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar,submenu=submenu)
         repair_id = self._context.get('active_id')
-        if not repair_id or self._context.get('active_model') != 'mrp.repair':
+        if not repair_id or self._context.get('active_model') != 'repair.order':
             return res
 
-        repair = self.env['mrp.repair'].browse(repair_id)
+        repair = self.env['repair.order'].browse(repair_id)
         if not repair.invoiced:
             res['arch'] = """
                 <form string="Cancel Repair">
