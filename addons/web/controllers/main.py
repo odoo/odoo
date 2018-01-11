@@ -24,6 +24,7 @@ import werkzeug
 import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
+from collections import OrderedDict
 from werkzeug.urls import url_decode, iri_to_uri
 from xml.etree import ElementTree
 
@@ -155,10 +156,10 @@ def module_installed(environment):
     # TODO The following code should move to ir.module.module.list_installed_modules()
     Modules = environment['ir.module.module']
     domain = [('state','=','installed'), ('name','in', loadable)]
-    modules = {
-        module.name: module.dependencies_id.mapped('name')
+    modules = OrderedDict(
+        (module.name, module.dependencies_id.mapped('name'))
         for module in Modules.search(domain)
-    }
+    )
 
     sorted_modules = topological_sort(modules)
     return sorted_modules
