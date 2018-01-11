@@ -24,7 +24,7 @@ tour.register('hr_expense_tour' ,
     trigger: ".o_required_modifier input",
     extra_trigger: ".o_expense_form",
     content: _t("Write the name of the product, or select an existing one."),
-    position: "top",
+    position: "bottom",
 }, {
     trigger: '.o_form_button_save',
     extra_trigger: ".o_expense_form",
