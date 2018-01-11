@@ -7,6 +7,7 @@ import re
 import time
 
 from odoo import api, fields, models, tools, _
+from odoo.exceptions import UserError
 
 CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
 
@@ -209,6 +210,14 @@ class CurrencyRate(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env.user.company_id)
+
+    @api.multi
+    @api.constrains('name')
+    def _check_rate(self):
+        for rate in self:
+            if self.search([('name', '=', rate.name), ('id', '!=', rate.id), ('currency_id', '=', rate.currency_id.id), '|', ('company_id', '=', rate.company_id.id), ('company_id', '=', False)]):
+                raise UserError(_('You cannot have two rates for the same datetime, currency and company.'))
+
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=80):
