@@ -19,14 +19,6 @@ var FieldTimezoneMismatch = FieldSelection.extend({
     /**
      * @override
      */
-    start: function () {
-        var interval = navigator.platform.toUpperCase().indexOf('MAC') >= 0 ? 60000 : 1000;
-        this._datetime = setInterval(this._renderDateTimeTimezone.bind(this), interval);
-        return this._super.apply(this, arguments);
-    },
-    /**
-     * @override
-     */
     destroy: function () {
         clearInterval(this._datetime);
         return this._super();
@@ -49,16 +41,13 @@ var FieldTimezoneMismatch = FieldSelection.extend({
      *
      * @private
      */
-    _renderDateTimeTimezone: function () {
+    _getDateTimeTimezone: function () {
         if (!this.mismatch) {
             return;
         }
         var offset = this.recordData.tz_offset.match(/([+-])([0-9]{2})([0-9]{2})/);
         offset = (offset[1] === '-' ? -1 : 1) * (parseInt(offset[2])*60 + parseInt(offset[3]));
-        var datetime = field_utils.format.datetime(moment.utc().add(offset, 'minutes'), this.field, {timezone: false});
-        var content = this.$option.html().split(' ')[0];
-        content += '    ('+ datetime + ')';
-        this.$option.html(content);
+        return field_utils.format.datetime(moment.utc().add(offset, 'minutes'), this.field, {timezone: false});
     },
     /**
      * Display the timezone alert
@@ -74,10 +63,6 @@ var FieldTimezoneMismatch = FieldSelection.extend({
         this.$el = this.$el.first();
         var value = this.$el.val();
 
-        if (this.$option) {
-            this.$option.html(this.$option.html().split(' ')[0]);
-        }
-
         var userOffset = this.recordData.tz_offset;
         this.mismatch = false;
         if (userOffset && value !== "" && value !== "false") {
@@ -91,13 +76,10 @@ var FieldTimezoneMismatch = FieldSelection.extend({
         if (this.mismatch){
             var $span = $('<span class="fa fa-exclamation-triangle o_tz_warning"/>');
             $span.insertAfter(this.$el);
-            $span.attr('title', _t("Timezone Mismatch : The timezone of your browser doesn't match the selected one. The time in Odoo is displayed according to your field timezone."));
+            var datetime = this._getDateTimeTimezone();
+            $span.attr('title', _t("Timezone Mismatch : The timezone of your browser doesn't match the selected one. The time in Odoo is displayed according to your field timezone.")
+                                + "\n" + datetime);
             this.$el = this.$el.add($span);
-
-            this.$option = this.$('option').filter(function () {
-                return $(this).attr('value') === value;
-            });
-            this._renderDateTimeTimezone();
         }
     },
 });
