@@ -6,8 +6,10 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button name="action_view_transaction" type="object" class="oe_stat_button" icon="fa-money" attrs="{'invisible': [('payment_transaction_count', '=', 0)]}">
-                    <field name="payment_transaction_count" widget="statinfo" string="Transactions"/>
+                <button name="action_view_payments" type="object" class="oe_stat_button" icon="fa-money"
+                        attrs="{'invisible': [('payment_ids_nbr', '=', 0)]}">
+                    <field name="payment_ids" invisible="1"/>
+                    <field name="payment_ids_nbr" widget="statinfo" string="Payments"/>
                 </button>
             </xpath>
         </field>

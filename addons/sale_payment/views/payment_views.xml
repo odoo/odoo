@@ -8,11 +8,26 @@
         <field name='domain'>[('sale_order_id.team_id', '=', active_id), ('state', '=', 'pending')]</field>
     </record>
 
-    <record id="payment_transaction_action_authorized" model="ir.actions.act_window">
-        <field name="name">Authorized Payment Transactions</field>
+    <record id="payment_transaction_action_capture" model="ir.actions.act_window">
+        <field name="name">Payment Transactions to Capture</field>
         <field name="res_model">payment.transaction</field>
         <field name='view_type'>form</field>
         <field name='view_mode'>tree,form</field>
-        <field name='domain'>[('sale_order_id.team_id', '=', active_id), ('state', '=', 'authorized')]</field>
+        <field name='domain'>[('sale_order_id.team_id', '=', active_id), ('capture', '=', True)]</field>
+    </record>
+
+    <record id="view_sale_payment_form_inherit_payment" model="ir.ui.view">
+        <field name="name">view.sale.payment.form.inherit.payment</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_sale_orders" type="object" class="oe_stat_button" icon="fa-money"
+                        attrs="{'invisible': [('sale_order_ids_nbr', '=', 0)]}">
+                    <field name="sale_order_ids" invisible="1"/>
+                    <field name="sale_order_ids_nbr" widget="statinfo" string="Sale Orders"/>
+                </button>
+            </xpath>
+        </field>
     </record>
 </odoo>

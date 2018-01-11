@@ -44,7 +44,7 @@
 
     <template id="portal_invoice_page_inherit_payment" name="Payment on My Invoices" inherit_id="account.portal_invoice_page">
         <xpath expr="//div[@id='o_portal_account_actions']/a" position="before">
-            <t t-set="tx_ids" t-value="invoice.payment_tx_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
+            <t t-set="tx_ids" t-value="invoice.get_portal_transactions()"/>
             <a t-if="not tx_ids and invoice.state == 'open' and invoice.amount_total"
                     class="btn btn-primary pull-right ml8" href="#portal_pay">
                 <i class="fa fa-arrow-circle-right"/> Pay Now
@@ -88,7 +88,7 @@
 
     <template id="portal_invoice_report" name="Invoice portal page inherit payment" inherit_id="account.portal_invoice_report">
         <xpath expr="//div[@name='customer_address']" position="after">
-            <t t-set="tx_ids" t-value="invoice.payment_tx_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
+            <t t-set="tx_ids" t-value="invoice.get_portal_transactions()"/>
             <t t-if="tx_ids">
                 <div>
                     <strong>Transactions</strong>
@@ -98,10 +98,10 @@
                     <div>
                         <span t-esc="tx.reference"/>
                         <span class="text-muted" t-field="tx.create_date"/>
-                        <t t-if="tx.state == 'done'">
+                        <t t-if="tx.state == 'posted'">
                             <span class="label label-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Done</span>
                         </t>
-                        <t t-if="tx.state != 'done'">
+                        <t t-if="tx.state != 'posted'">
                             <span class="label label-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> Waiting</span>
                             <t t-if="tx.state_message"><br /><span t-esc="tx.state_message"/></t>
                         </t>
@@ -118,33 +118,16 @@
             <t t-if="error == 'pay_invoice_invalid_doc'">
                 There was an error processing your payment: invalid invoice.
             </t>
-            <t t-if="error == 'pay_invoice_invalid_doc_state'">
-                There was an error processing your payment: invalid invoice state.
-            </t>
             <t t-if="error == 'pay_invoice_invalid_token'">
                 There was en error processing your payment: invalid credit card ID.
             </t>
 
-            <t t-if="error == 'pay_invoice_tx_amount'">
-                There was an error processing your payment: transaction amount issue.<br />
-                <t t-if="invoice.payment_tx_id">
-                    <t t-esc="invoice.payment_tx_id.amount"/> / <t t-esc="invoice.amount_total"/>
-                </t>
-            </t>
             <t t-if="error == 'pay_invoice_tx_fail'">
                 There was an error processing your payment: transaction failed.<br />
-                <t t-if="invoice.payment_tx_id and invoice.payment_tx_id.state_message">
-                    <t t-esc="invoice.payment_tx_id.state_message"/>
+                <t t-set="tx_id" t-value="invoice.get_portal_last_transaction()"/>
+                <t t-if="tx_id and tx_id.state_message">
+                    <t t-esc="tx_id.state_message"/>
                 </t>
-            </t>
-            <t t-if="error == 'pay_invoice_tx_state'">
-                There was an error processing your payment: transaction issue.<br />
-                <t t-if="invoice.payment_tx_id and invoice.payment_tx_id.state_message">
-                    <t t-esc="invoice.payment_tx_id.state_message"/>
-                </t>
-            </t>
-            <t t-if="error == 'pay_invoice_tx_confirm'">
-                There was an error processing your payment: impossible to validate invoice.
             </t>
             <t t-if="error == 'pay_invoice_tx_token'">
                 There was an error processing your payment: issue with credit card ID validation.

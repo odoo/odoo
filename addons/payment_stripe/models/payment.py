@@ -155,7 +155,6 @@ class PaymentTransactionStripe(models.Model):
     @api.multi
     def stripe_s2s_do_refund(self, **kwargs):
         self.ensure_one()
-        self.state = 'refunding'
         result = self._create_stripe_refund()
         return self._stripe_s2s_validate_tree(result)
 
@@ -190,18 +189,17 @@ class PaymentTransactionStripe(models.Model):
     @api.multi
     def _stripe_s2s_validate_tree(self, tree):
         self.ensure_one()
-        if self.state not in ('draft', 'pending', 'refunding'):
+        if self.state != 'draft':
             _logger.info('Stripe: trying to validate an already validated tx (ref %s)', self.reference)
             return True
 
         status = tree.get('status')
         if status == 'succeeded':
-            new_state = 'refunded' if self.state == 'refunding' else 'done'
             self.write({
-                'state': new_state,
-                'date_validate': fields.datetime.now(),
+                'payment_date': fields.datetime.now(),
                 'acquirer_reference': tree.get('id'),
             })
+            self._set_transaction_posted()
             self.execute_callback()
             if self.payment_token_id:
                 self.payment_token_id.verified = True
@@ -210,11 +208,11 @@ class PaymentTransactionStripe(models.Model):
             error = tree['error']['message']
             _logger.warn(error)
             self.sudo().write({
-                'state': 'error',
                 'state_message': error,
                 'acquirer_reference': tree.get('id'),
-                'date_validate': fields.datetime.now(),
+                'payment_date': fields.datetime.now(),
             })
+            self._set_transaction_cancel()
             return False
 
     @api.multi

@@ -218,7 +218,7 @@
                                   </a>
                               </div>
                           </div>
-                          <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.require_payment and tx_state != 'done')" style="padding: 10px">
+                          <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.require_payment and tx_state != 'posted')" style="padding: 10px">
                               <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
                                   <i class="fa fa-check"></i> Pay Now
                               </a>
@@ -378,7 +378,7 @@
                         </div>
                       </div>
 
-                      <div class="alert alert-warning alert-dismissable hidden-print" t-if="quotation.state == 'cancel'">
+                      <div class="alert alert-warning alert-dismissable hidden-print" t-if="quotation.state == 'cancelled'">
                           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
                           <strong>This quotation has been canceled.</strong> Contact us to get a new quote.
                       </div>
@@ -396,7 +396,7 @@
                               <i class="fa fa-times"></i> Reject
                           </a>
                       </div>
-                      <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.require_payment and tx_state != 'done')" style="padding: 10px">
+                      <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.require_payment and tx_state != 'posted')" style="padding: 10px">
                           <a class="btn btn-primary" data-toggle="modal" data-target="#modalaccept">
                               <i class="fa fa-check"></i> Pay Now
                           </a>
