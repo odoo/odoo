@@ -159,7 +159,7 @@ class MailMail(models.Model):
         return self.body_html or ''
 
     @api.multi
-    def _send_prepare_values(self, partner=None):
+    def _send_prepare_values(self, attachments):
         """Return a dictionary for specific email values, depending on a
         partner, or generic to the whole recipients given by mail.email_to.
 
@@ -168,16 +168,56 @@ class MailMail(models.Model):
         self.ensure_one()
         body = self._send_prepare_body()
         body_alternative = tools.html2plaintext(body)
-        if partner:
-            email_to = [formataddr((partner.name or 'False', partner.email or 'False'))]
-        else:
-            email_to = tools.email_split_and_format(self.email_to)
-        res = {
+
+        headers = {}
+        ICP = self.env['ir.config_parameter'].sudo()
+        bounce_alias = ICP.get_param("mail.bounce.alias")
+        catchall_domain = ICP.get_param("mail.catchall.domain")
+        if bounce_alias and catchall_domain:
+            if self.model and self.res_id:
+                headers['Return-Path'] = '%s+%d-%s-%d@%s' % (bounce_alias, self.id, self.model, self.res_id, catchall_domain)
+            else:
+                headers['Return-Path'] = '%s+%d@%s' % (bounce_alias, self.id, catchall_domain)
+        if self.headers:
+            try:
+                headers.update(safe_eval(self.headers))
+            except Exception:
+                pass
+
+        base_mail_values = {
+            'email_from': self.email_from,
+            'subject': self.subject,
             'body': body,
             'body_alternative': body_alternative,
-            'email_to': email_to,
+            'reply_to': self.reply_to,
+            'attachments': attachments,
+            'message_id': self.message_id,
+            'references': self.references,
+            'object_id': '%s-%s' % (self.res_id, self.model) if self.res_id and self.model else False,
+            'subtype': 'html',
+            'subtype_alternative': 'plain',
+            'headers': headers,
         }
-        return res
+
+        # specific behavior to customize the send email for notified partners
+        email_list = []
+        if self.email_to:
+            email_list.append(
+                dict(
+                    base_mail_values,
+                    email_to=tools.email_split_and_format(self.email_to)
+                )
+            )
+        for partner in self.recipient_ids:
+            email_list.append(
+                dict(
+                    base_mail_values,
+                    email_to=[formataddr((partner.name or 'False', partner.email or 'False'))]
+                )
+            )
+        if email_list and self.email_cc:
+            email_list[0]['email_cc'] = tools.email_split(self.email_cc)
+        return email_list
 
     @api.multi
     def _split_by_server(self):
@@ -253,29 +293,6 @@ class MailMail(models.Model):
                 attachments = [(a['datas_fname'], base64.b64decode(a['datas']), a['mimetype'])
                                for a in mail.attachment_ids.sudo().read(['datas_fname', 'datas', 'mimetype'])]
 
-                # specific behavior to customize the send email for notified partners
-                email_list = []
-                if mail.email_to:
-                    email_list.append(mail._send_prepare_values())
-                for partner in mail.recipient_ids:
-                    email_list.append(mail._send_prepare_values(partner=partner))
-
-                # headers
-                headers = {}
-                ICP = self.env['ir.config_parameter'].sudo()
-                bounce_alias = ICP.get_param("mail.bounce.alias")
-                catchall_domain = ICP.get_param("mail.catchall.domain")
-                if bounce_alias and catchall_domain:
-                    if mail.model and mail.res_id:
-                        headers['Return-Path'] = '%s+%d-%s-%d@%s' % (bounce_alias, mail.id, mail.model, mail.res_id, catchall_domain)
-                    else:
-                        headers['Return-Path'] = '%s+%d@%s' % (bounce_alias, mail.id, catchall_domain)
-                if mail.headers:
-                    try:
-                        headers.update(safe_eval(mail.headers))
-                    except Exception:
-                        pass
-
                 # Writing on the mail object may fail (e.g. lock on user) which
                 # would trigger a rollback *after* actually sending the email.
                 # To avoid sending twice the same email, provoke the failure earlier
@@ -287,22 +304,8 @@ class MailMail(models.Model):
 
                 # build an RFC2822 email.message.Message object and send it without queuing
                 res = None
-                for email in email_list:
-                    msg = IrMailServer.build_email(
-                        email_from=mail.email_from,
-                        email_to=email.get('email_to'),
-                        subject=mail.subject,
-                        body=email.get('body'),
-                        body_alternative=email.get('body_alternative'),
-                        email_cc=tools.email_split(mail.email_cc),
-                        reply_to=mail.reply_to,
-                        attachments=attachments,
-                        message_id=mail.message_id,
-                        references=mail.references,
-                        object_id=mail.res_id and ('%s-%s' % (mail.res_id, mail.model)),
-                        subtype='html',
-                        subtype_alternative='plain',
-                        headers=headers)
+                for email in mail._send_prepare_values(attachments):
+                    msg = IrMailServer.build_email(**email)
                     try:
                         res = IrMailServer.send_email(
                             msg, mail_server_id=mail.mail_server_id.id, smtp_session=smtp_session)
