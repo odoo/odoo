@@ -345,7 +345,7 @@
             <field name="arch" type="xml">
                 <form string="Job">
                     <header>
-                        <button name="set_recruit" string="Launch Recruitment" states="open" type="object" class="oe_highlight" groups="base.group_user"/>
+                        <button name="set_recruit" string="Start Recruitment" states="open" type="object" class="oe_highlight" groups="base.group_user"/>
                         <button name="set_open" string="Stop Recruitment" states="recruit" type="object" groups="base.group_user"/>
                         <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
                     </header>
@@ -403,11 +403,12 @@
                                     <strong><field name="name"/></strong>
                                 </div>
                                 <div>
-                                    <span><field name="department_id"/></span>
+                                    <span><field name="department_id"/>&amp;nbsp;</span>
                                 </div>
                                 <div>
                                     <span>Vacancies : <field name="expected_employees"/></span>
-                                    <span class="pull-right label label-default"><field name="state"/>
+                                    <span t-att-class="'pull-right label label-success' if record.state.raw_value == 'recruit' else 'pull-right label label-danger'">
+                                        <field name="state"/>
                                     </span>
                                 </div>
                             </div>
