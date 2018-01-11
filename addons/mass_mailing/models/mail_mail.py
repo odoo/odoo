@@ -81,17 +81,18 @@ class MailMail(models.Model):
         return body
 
     @api.multi
-    def _send_prepare_values(self, partner=None):
-        # TDE: temporary addition (mail was parameter) due to semi-new-API
-        res = super(MailMail, self)._send_prepare_values(partner)
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        if self.mailing_id and res.get('body') and res.get('email_to'):
-            emails = tools.email_split(res.get('email_to')[0])
-            email_to = emails and emails[0] or False
-            unsubscribe_url = self._get_unsubscribe_url(email_to)
-            link_to_replace = base_url + '/unsubscribe_from_list'
-            if link_to_replace in res['body']:
-                res['body'] = res['body'].replace(link_to_replace, unsubscribe_url if unsubscribe_url else '#')
+    def _send_prepare_values(self, attachments):
+        res = super(MailMail, self)._send_prepare_values(attachments)
+        if res and self.mailing_id:
+            for email in res:
+                if email['body'] and email['email_to']:
+                    base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                    link_to_replace = base_url + '/unsubscribe_from_list'
+                    if link_to_replace in email['body']:
+                        emails = tools.email_split(email['email_to'][0])
+                        email_to = emails and emails[0] or False
+                        unsubscribe_url = self._get_unsubscribe_url(email_to)
+                        email['body'] = email['body'].replace(link_to_replace, unsubscribe_url if unsubscribe_url else '#')
         return res
 
     @api.multi
