@@ -791,7 +791,7 @@ class Menu(models.Model):
 
     _parent_store = True
     _parent_order = 'sequence'
-    _order = "sequence"
+    _order = "sequence, id"
 
     def _default_sequence(self):
         menu = self.search([], limit=1, order="sequence DESC")
@@ -807,6 +807,14 @@ class Menu(models.Model):
     child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
     parent_left = fields.Integer('Parent Left', index=True)
     parent_right = fields.Integer('Parent Rigth', index=True)
+    is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
+
+    @api.one
+    def _compute_visible(self):
+        visible = True
+        if self.page_id and not self.page_id.sudo().is_visible and not self.user_has_groups('base.group_user'):
+            visible = False
+        self.is_visible = visible
 
     @api.model
     def clean_url(self):
@@ -815,7 +823,7 @@ class Menu(models.Model):
             url = self.page_id.sudo().url
         else:
             url = self.url
-            if not self.url.startswith('/'):
+            if url and not self.url.startswith('/'):
                 if '@' in self.url:
                     if not self.url.startswith('mailto'):
                         url = 'mailto:%s' % self.url

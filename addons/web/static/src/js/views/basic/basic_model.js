@@ -2374,7 +2374,7 @@ var BasicModel = AbstractModel.extend({
                 });
                 record.data[fieldName] = list.id;
                 if (!fieldInfo.__no_fetch) {
-                    var def = self._readUngroupedList(list).then(function () {
+                    var def = self._readUngroupedList(list).then(function (list) {
                         return $.when(
                             self._fetchX2ManysBatched(list),
                             self._fetchReferencesBatched(list)
