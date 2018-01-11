@@ -329,6 +329,13 @@ class account_payment(models.Model):
                 move.button_cancel()
                 move.unlink()
             rec.state = 'draft'
+    
+    # ESTE CODIGO FE MODIFICADO POR TRESCLOUD
+    @api.multi
+    def copy(self, default=None):
+        default = dict(default or {})
+        default.update(move_name=False)
+        return super(account_payment, self).copy(default)
 
     @api.multi
     def unlink(self):
