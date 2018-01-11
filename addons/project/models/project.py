@@ -542,6 +542,8 @@ class Task(models.Model):
     working_days_open = fields.Float(compute='_compute_elapsed', string='Working days to assign', store=True, group_operator="avg")
     working_days_close = fields.Float(compute='_compute_elapsed', string='Working days to close', store=True, group_operator="avg")
 
+    _constraints = [(models.BaseModel._check_recursion, 'Circular references are not permitted between tasks and sub-tasks', ['parent_id'])]
+
     def _compute_attachment_ids(self):
         for task in self:
             attachment_ids = self.env['ir.attachment'].search([('res_id', '=', task.id), ('res_model', '=', 'project.task')]).ids
@@ -628,6 +630,12 @@ class Task(models.Model):
     def _onchange_user(self):
         if self.user_id:
             self.date_start = fields.Datetime.now()
+
+    @api.constrains('parent_id', 'child_ids')
+    def _check_subtask_level(self):
+        for task in self:
+            if task.parent_id and task.child_ids:
+                raise ValidationError(_('Task %s can not have a parent task and subtasks. Only one subtask level is allowed.' % (task.name,)))
 
     @api.multi
     def copy(self, default=None):
