@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="intrastat_report_export_xml_items">
+            <t t-foreach="items" t-as="item">
+                <Item>
+                    <Dim prop="EXSEQCODE"
+                         t-esc="item['sequence']"/>
+                    <Dim prop="EXTRF"
+                         t-esc="item['system']"/>
+                    <Dim prop="EXCNT"
+                         t-esc="item['country_code']"/>
+                    <Dim prop="EXTTA"
+                         t-esc="item['transaction_code']"/>
+                    <Dim prop="EXREG"
+                         t-esc="item['region_code']"/>
+                    <Dim prop="EXTGO"
+                         t-esc="item['commodity_code']"/>
+                    <Dim prop="EXTXVAL"
+                         t-esc="item['value']"/>
+                    <Dim prop="EXWEIGHT"
+                         t-esc="item['weight']"/>
+                    <Dim prop="EXUNITS"
+                         t-esc="item['quantity']"/>
+                    <Dim prop="EXTPC"
+                         t-if="extended"
+                         t-esc="item['invoice_transport'] or item['company_transport'] or ''"/>
+                    <Dim prop="EXDELTRM"
+                         t-if="extended"
+                         t-esc="item['invoice_incoterm'] or item['company_incoterm'] or ''"/>
+                </Item>
+            </t>
+        </template>
+
+        <template id="intrastat_report_export_xml">
+            <DeclarationReport xmlns="http://www.onegate.eu/2010-01-01">
+                <Administration>
+                    <From declarerType="KBO" t-esc="company.company_registry"/>
+                    <To>NBB</To>
+                    <Domain>SXX</Domain>
+                </Administration>
+                <Report t-code="'EX19E' if extended else 'EX19S'" date="2018-01">
+                    <Data t-att-action="'nihil' if len(in_vals) == 0 else None" close="true"
+                          t-form="'EXF19E' if extended else 'EXF19S'">
+                        <t t-call="account_intrastat.intrastat_report_export_xml_items">
+                            <t t-set="items" t-value="in_vals"/>
+                        </t>
+                    </Data>
+                </Report>
+                <Report t-code="'EX29E' if extended else 'EX29S'" date="2018-01">
+                    <Data t-att-action="'nihil' if len(out_vals) == 0 else None" close="true"
+                          t-form="'EXF29E' if extended else 'EXF29S'">
+                        <t t-call="account_intrastat.intrastat_report_export_xml_items">
+                            <t t-set="items" t-value="out_vals"/>
+                        </t>
+                    </Data>
+                </Report>
+            </DeclarationReport>
+        </template>
+    </data>
+</odoo>

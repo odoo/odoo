@@ -7,7 +7,7 @@ from odoo import fields, models
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    incoterms_id = fields.Many2one('stock.incoterms', string="Incoterms",
+    incoterms_id = fields.Many2one('account.incoterms', string="Incoterms",
         help="Incoterms are series of sales terms. They are used to divide transaction costs and responsibilities between buyer and seller and reflect state-of-the-art transportation practices.",
         readonly=True, states={'draft': [('readonly', False)]})
 

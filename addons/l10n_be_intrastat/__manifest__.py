@@ -8,16 +8,10 @@
 Generates Intrastat XML report for declaration
 Based on invoices.
     """,
-    'depends': ['report_intrastat', 'sale_stock', 'account', 'l10n_be'],
+    'depends': ['account_intrastat'],
     'data': [
         'data/l10n_be_intrastat_chart_data.xml',
-        'data/report.intrastat.code.csv',
-        'data/l10n_be_intrastat_transaction_codes_data.xml',
-        'data/l10n_be_intrastat_transport_modes_data.xml',
         'security/l10n_be_intrastat_security.xml',
-        'security/ir.model.access.csv',
-        'views/l10n_be_intrastat_view.xml',
         'views/res_users_views.xml',
-        'wizard/l10n_be_intrastat_declaration_view.xml',
     ],
 }

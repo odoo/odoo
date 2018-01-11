@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="invoice_supplier_form_inherit_account_intrastat" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.form.inherit.account.intrastat</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_due']" position="after">
+                    <field name="transport_mode_id"/>
+                    <field name="intrastat_country_id" />
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="invoice_line_form_inherit_account_intrastat" model="ir.ui.view">
+            <field name="name">account.invoice.line.form.inherit.account.intrastat</field>
+            <field name="model">account.invoice.line</field>
+            <field name="inherit_id" ref="account.view_invoice_line_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='discount']" position="after">
+                    <field name="intrastat_transaction_id" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
