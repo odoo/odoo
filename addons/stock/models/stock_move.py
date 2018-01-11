@@ -471,7 +471,7 @@ class StockMove(models.Model):
     def _do_unreserve(self):
         if any(move.state in ('done', 'cancel') for move in self):
             raise UserError(_('Cannot unreserve a done move'))
-        self.mapped('move_line_ids').unlink()
+        self.mapped('move_line_ids').filtered(lambda ml: ml.qty_done == 0).unlink()
         return True
 
     def _push_apply(self):
