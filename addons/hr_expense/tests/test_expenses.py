@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
+from odoo.modules.module import get_module_resource
 
 
 class TestCheckJournalEntry(TransactionCase):
@@ -12,6 +13,7 @@ class TestCheckJournalEntry(TransactionCase):
     def setUp(self):
         super(TestCheckJournalEntry, self).setUp()
 
+        self.Expense = self.env['hr.expense']
         self.tax = self.env['account.tax'].create({
             'name': 'Expense 10%',
             'amount': 10,
@@ -57,7 +59,7 @@ class TestCheckJournalEntry(TransactionCase):
             'name': 'Expense for John Smith',
             'employee_id': self.employee.id,
         })
-        self.expense_line = self.env['hr.expense'].create({
+        self.expense_line = self.Expense.create({
             'name': 'Car Travel Expenses',
             'employee_id': self.employee.id,
             'product_id': self.product.id,
@@ -87,3 +89,24 @@ class TestCheckJournalEntry(TransactionCase):
                     self.assertAlmostEquals(line.debit, 636.36)
                 else:
                     self.assertAlmostEquals(line.debit, 63.64)
+
+    def test_expense_email_message(self):
+        self.Mail = self.env['mail.mail']
+        company_email = '\"' + self.env.user.company_id.name + \
+                        '\" <' + self.env.user.company_id.email + '>'
+        # Mail script will fetch request and process it after reading file.
+        request_file = open(get_module_resource('hr_expense', 'tests', 'expense_request.eml'), 'rb')
+        request_message = request_file.read()
+        self.env['mail.thread'].message_process('hr.expense', request_message)
+        # After processing file, expense is created.
+        expense = self.Expense.search(['|',
+                                      ('employee_id.work_email', 'ilike', 'demo@yourcompany.example.com'),
+                                      ('employee_id.user_id.email', 'ilike', 'demo@yourcompany.example.com')], 
+                                      limit=1)
+        self.assertTrue(expense.ids, 'No expense recorded.')
+        # Mail record is created to notify sender, that his/her expense is created successfully
+        outgoing_mail = self.Mail.search([
+                            ('mail_message_id', 'in', expense.message_ids.ids),
+                            ('state', '=', 'sent')])
+        self.assertTrue(outgoing_mail.email_from, company_email)
+        self.assertTrue(outgoing_mail.state, 'sent')  # Check for mail status

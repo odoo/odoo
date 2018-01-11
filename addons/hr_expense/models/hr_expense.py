@@ -374,15 +374,15 @@ class HrExpense(models.Model):
         # Example: '[foo] bar (baz)' becomes 'foo'. This is potentially the product code
         # of the product to encode on the expense. If not, take the default product instead
         # which is 'Fixed Cost'
+        # Check for the product name/code with []
         default_product = self.env.ref('hr_expense.product_product_fixed_cost')
-        pattern = '\[([^)]*)\]'
-        product_code = re.search(pattern, expense_description)
-        if product_code is None:
-            product = default_product
+        prod_pattern = '\[(.*?)\]'
+        prod_names = re.findall(prod_pattern, expense_description)
+        # Below code will check for each product name/code if its present or not in expense description
+        if prod_names:
+            product = self.env['product.product'].search(['|', ('name', '=', prod_names[0]), ('default_code', '=', prod_names[0])], limit=1) or default_product
         else:
-            expense_description = expense_description.replace(product_code.group(), '')
-            product = self.env['product.product'].search([('default_code', 'ilike', product_code.group(1))]) or default_product
-
+            product = default_product
         pattern = '[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?'
         # Match the last occurence of a float in the string
         # Example: '[foo] 50.3 bar 34.5' becomes '34.5'. This is potentially the price
@@ -408,7 +408,21 @@ class HrExpense(models.Model):
             'unit_amount': price,
             'company_id': employee.company_id.id,
         })
-        return super(HrExpense, self).message_new(msg_dict, custom_values)
+        if custom_values.get('employee_id'):
+            res = super(HrExpense, self).message_new(msg_dict, custom_values)
+            result = res.message_post_with_view('hr_expense.hr_expense_success_email_template',
+                values=custom_values,
+                partner_ids=[(4, res.employee_id.user_id.partner_id.id)],
+                auto_delete=False,
+                auto_delete_message=False,
+                composition_mode='mass_mail')
+            return res
+        else:
+            base_partner = self.env.ref('base.partner_root')
+            tmpl_id = self.env.ref('hr_expense.hr_expense_falied_email_template')
+            tmpl_id.write({'email_to': email_address})
+            return tmpl_id.sudo().send_mail(base_partner.id, force_send=True)
+
 
 class HrExpenseSheet(models.Model):
 
