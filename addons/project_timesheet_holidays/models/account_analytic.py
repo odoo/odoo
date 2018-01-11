@@ -8,7 +8,6 @@ from odoo.exceptions import UserError
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
-    # TODO: See if it is the right type
     holiday_id = fields.Many2one("hr.leave", string='Leave Request')
 
     @api.multi

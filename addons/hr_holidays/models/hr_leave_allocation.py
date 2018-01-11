@@ -190,15 +190,11 @@ class HolidaysAllocation(models.Model):
         return self.write({'state': 'confirm'})
 
     @api.multi
-    def _check_security_action_approve(self):
-        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-            raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
-
-    @api.multi
     def action_approve(self):
         # if double_validation: this method is the first approval approval
         # if not double_validation: this method calls action_validate() below
-        self._check_security_action_approve()
+        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
 
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         if any(holiday.state != 'confirm' for holiday in self):
@@ -209,13 +205,9 @@ class HolidaysAllocation(models.Model):
         return True
 
     @api.multi
-    def _check_security_action_validate(self):
+    def action_validate(self):
         if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
-
-    @api.multi
-    def action_validate(self):
-        self._check_security_action_validate()
 
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
@@ -243,7 +235,8 @@ class HolidaysAllocation(models.Model):
 
     @api.multi
     def action_refuse(self):
-        self._check_security_action_refuse()
+        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            raise UserError(_('Only an HR Officer or Manager can refuse leave requests.'))
 
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
@@ -257,11 +250,6 @@ class HolidaysAllocation(models.Model):
             # If a category that created several holidays, cancel all related
             holiday.linked_request_ids.action_refuse()
         return True
-
-    @api.multi
-    def _check_security_action_refuse(self):
-        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-            raise UserError(_('Only an HR Officer or Manager can refuse leave requests.'))
 
     ####################################################
     # Messaging methods
